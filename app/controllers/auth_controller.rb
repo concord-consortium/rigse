@@ -1,47 +1,23 @@
 class AuthController < ApplicationController
-  before_filter :verify_logged_in, :except => [:access_token, :login]
+
+  before_filter :verify_logged_in, :except => [ :access_token, 
+                                                :login,
+                                                :oauth_authorize ]
+
   skip_before_filter :authenticate_user!, :only => [:authorize]  # this is handled by verify_logged_in
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
 
-    action = params[:action]
+    session.delete :sso_callback_params
+    session.delete :sso_application
 
-    if action == 'oauth_authorize'
-
-        #
-        # Calling as SSO provider
-        #
-        # Example params
-        # {"response_type"=>"code", "client_id"=>"localhost", "redirect_uri"=>"http://app.lara.docker/users/auth/cc_portal_localhost/callback", "state"=>"8d300e331c03b2255a4d56269b09fa906f1ff5349e943099", "controller"=>"auth", "action"=>"oauth_authorize"}
-        #
-        #
-        # puts "INFO *** Calling as SSO provider"
-
-        if current_user.nil?
-            session[:sso_callback_params] = params
-            session[:sso_application]     = application
-            redirect_to auth_login_path
-        end
-
-    else
-
-        #
-        # Example params
-        # {"controller"=>"auth", "action"=>"user", "format"=>"json"}
-        #
-        # puts "INFO *** Not calling as SSO provider"
-
-        session.delete :sso_callback_params
-        session.delete :sso_application
-
-        if current_user.nil?
-            redirect_to auth_login_path
-        end
-
+    if current_user.nil?
+        redirect_to auth_login_path
     end
 
   end
+
 
   def login
     # Renders a nice login form (views/auth/login.haml).
@@ -72,6 +48,14 @@ class AuthController < ApplicationController
   end
 
   def oauth_authorize
+
+    if current_user.nil?
+        session[:sso_callback_params] = params
+        session[:sso_application]     = application
+        redirect_to auth_login_path
+        return
+    end
+
     AccessGrant.prune!
     access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
     redirect_to access_grant.redirect_uri_for(params[:redirect_uri])
