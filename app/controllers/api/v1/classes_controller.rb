@@ -40,9 +40,10 @@ class API::V1::ClassesController < API::APIController
     render :json => {
       classes: user_with_clazzes.clazzes.map do |clazz|
         next {
-          :uri => api_v1_class_url(clazz.id),
-          :name => clazz.name,
-          :class_hash => clazz.class_hash
+          :id           => clazz.id,
+          :uri          => api_v1_class_url(clazz.id),
+          :name         => clazz.name,
+          :class_hash   => clazz.class_hash
         }
       end
     }
