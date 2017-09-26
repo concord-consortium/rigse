@@ -200,12 +200,15 @@
         data:       data,
    	 	success:    function(response) {
 
+          // console.log("INFO Got standard search results.")
+
           message.hide();
 
           if(response.statements.length == 0) {
             results.html('');
             message.html('No results found.');
             message.show();
+            Portal.hideModal();
             return;
           }
 
