@@ -466,9 +466,9 @@ class API::V1::MaterialsController < API::APIController
         puts "Parent is #{parent}"
 
         parents.push({
-                    uri:                parent['uri'],
-                    description:        parent['description'],
-                    statement_notation: parent['statement_notation']
+                    uri:                parent[:uri],
+                    description:        parent[:description],
+                    statement_notation: parent[:statement_notation]
                 })
 
         parent_uri = parent[:is_child_of]
