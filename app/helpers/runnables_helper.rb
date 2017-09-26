@@ -61,8 +61,15 @@ module RunnablesHelper
   end
 
   def runnable_type_label(component)
+
     runnable = component.is_a?(Portal::Offering) ? component.runnable : component
+    
+    if runnable.respond_to?(:material_type) && runnable.material_type == 'Interactive'
+        return I18n.t(runnable.material_type.to_s.underscore.to_sym).titleize
+    end
+
     runnable_type = runnable.class
+
     runnable_type = runnable.template_type.constantize if runnable.respond_to?(:template_type) && !runnable.template_type.blank?
     return runnable_type.display_name
   end
