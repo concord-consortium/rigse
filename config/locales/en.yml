@@ -48,14 +48,14 @@ en:
         zero: external activities
         one: external activity
         other: external activities
-      Interactive: Interactive
+      Interactive: Model
       interactive:
-        zero: interactives
-        one: interactive
-        other: interactives
+        zero: models
+        one: model
+        other: models
   investigation: sequence
   activity: activity
-  interactive: interactive
+  interactive: model
   material: material
   instructional_materials: Instructional Materials
   recent_activity:
@@ -184,6 +184,17 @@ en:
 
 'en-ITSI-LEARN':
   material: activity
+
+  activerecord:
+    models:
+      Interactive:  Interactive
+      interactive:
+        zero:       interactives
+        one:        interactive
+        other:      interactives
+
+  interactive:      interactive
+
   instructional_materials: Activities
   offerings_for_class:
     no_materials: "No activities assigned to this class."

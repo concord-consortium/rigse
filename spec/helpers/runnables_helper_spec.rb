@@ -91,14 +91,14 @@ describe RunnablesHelper do
       end
 
       describe "when the external activity template is an investigation" do
-        let(:runnable) { mock_model(ExternalActivity, :template_type => "Investigation")}
+        let(:runnable) { mock_model(ExternalActivity, :template_type => "Investigation", :material_type => "Investigation" )}
         it "should include the word investigation (or sequence)" do
           subject.should == t('activerecord.models.Investigation')
         end
       end
 
       describe "when the external activity template is an activity" do
-        let(:runnable) { mock_model(ExternalActivity, :template_type => "Activity")}
+        let(:runnable) { mock_model(ExternalActivity, :template_type => "Activity", :material_type => "Activity" )}
         it "should include the word investigation (or sequence)" do
           subject.should == t('activerecord.models.Activity')
         end
