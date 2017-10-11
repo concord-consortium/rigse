@@ -30,5 +30,29 @@ namespace :app do
       end
     end
 
+    desc 'migrate interactive tags to external_activities'
+    task :migrate_interactive_tags => :environment do
+
+        Interactive.includes(
+                :material_properties,
+                :grade_levels,
+                :subject_areas,
+                :sensors ).find_each(
+                    :conditions => "external_activity_id IS NOT NULL") do |ia|
+
+            ea = ExternalActivity.find(ia.external_activity_id)
+
+            ea.material_property_list   = ia.material_property_list
+            ea.grade_level_list         = ia.grade_level_list
+            ea.subject_area_list        = ia.subject_area_list
+            ea.sensor_list              = ia.sensor_list
+
+            ea.projects                 = ia.projects
+            ea.cohorts                  = ia.cohorts
+
+            ea.save
+        end
+    end
+
   end
 end
