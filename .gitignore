@@ -104,3 +104,4 @@ config/app_environment_variables.rb
 config/environments/local-development.rb
 certs
 .env
+*.DS_Store
