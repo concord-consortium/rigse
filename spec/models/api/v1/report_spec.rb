@@ -4,7 +4,6 @@ require 'spec_helper'
 describe API::V1::Report do
   let(:offering)          { FactoryGirl.create(:portal_offering) }
 
-
   describe "class methods" do
     # def self.update_feedback_settings(offering, embeddable, feedback_settings)
     describe "update_feedback_settings" do
@@ -53,8 +52,8 @@ describe API::V1::Report do
           its(:enable_score)         { should be true  }
         end
       end
-
     end
+
     describe "updating feedback on an answer" do
       let(:score)                { nil }
       let(:text_feedback)        { nil }
@@ -126,15 +125,109 @@ describe API::V1::Report do
         end
       end
     end
+
     describe "#page_json" do
       let(:url)    { "http//unlikely.com/foo/bar" }
       let(:page)   { FactoryGirl.create(:page, url: url, name: "page 1") }
       let(:report) { API::V1::Report.new(offering: offering)             }
+      let(:json)   { report.page_json(page,answers) }
       let(:answers){ [] }
       it "should return json" do
-        expect(report.page_json(page,answers)).to include(url: url)
-        expect(report.page_json(page,answers)).to include(name: "page 1")
+        expect(json).to include(url: url)
+        expect(json).to include(name: "page 1")
+
       end
     end
+
+    describe "activity level feedback" do
+      let(:url)              { "http//unlikely.com/foo/bar" }
+      let(:activity)         { FactoryGirl.create(:activity) }
+      let(:learner)          { FactoryGirl.create(:full_portal_learner, {offering:offering}) }
+      let(:student)          { learner.student }
+      let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback) }
+      let(:activity_feedback){ Portal::OfferingActivityFeedback.for_offering_and_activity(offering, activity) }
+      let(:feedback_id)      { activity_feedback.id }
+      let(:learner_id)       { learner.id }
+      let(:report)           { API::V1::Report.new(offering: offering) }
+      let(:json)             { report.activity_json(activity, []) }
+      let(:feedback_params)  { {} }
+      before(:each) do
+        offering.runnable.activities << activity
+        activity_feedback.set_feedback_options(feedback_params)
+      end
+
+      describe "without any student feedback" do
+        it "should return json without feedback" do
+          expect(json).to include(activity_feedback: [])
+        end
+
+        describe "the default configuration (no feedback)" do
+          it "should have json like this" do
+            expect(json).to include(enable_text_feedback: false)
+            expect(json).to include(score_type: "none")
+            expect(json).to include(max_score: 10)
+          end
+        end
+
+        describe "when configured to have an automatic score and text feedback" do
+          let(:feedback_params) { {enable_text_feedback: true, score_type: "auto", max_score: 20} }
+          it "should have json like this" do
+            expect(json).to include(enable_text_feedback: true)
+            expect(json).to include(score_type: "auto")
+            expect(json).to include(max_score: 20)
+          end
+        end
+      end
+
+      describe "with some student feedback" do
+        let(:score)            { 5 }
+        let(:text_feedback)    { "good work" }
+        let(:has_been_reviewed){ true }
+
+        before(:each) do
+          # create some old feedback
+          Delorean.time_travel_to("1 month ago") do
+            Portal::LearnerActivityFeedback.update_feedback(
+              learner,
+              activity_feedback,
+              { score: 4, text_feedback: text_feedback, has_been_reviewed: false  }
+            )
+            Portal::LearnerActivityFeedback.update_feedback(
+              learner,
+              activity_feedback,
+              { score: 5, text_feedback: text_feedback, has_been_reviewed: true }
+            )
+          end
+        end
+
+        it "should return json including only one updated feedback for student" do
+          feedback = json[:activity_feedback].first
+          expect(feedback).to include({:student_id => student.id})
+          expect(feedback).to include({:learner_id => learner.id})
+          expect(feedback[:feedbacks].length).to eql(1)
+          expect(feedback[:feedbacks].first).to include({:score => 5})
+          expect(feedback[:feedbacks].first).to include({:feedback => "good work"})
+          expect(feedback[:feedbacks].first).to include({:has_been_reviewed => true})
+        end
+
+        describe "adding more feedback" do
+          before(:each) do
+            Portal::LearnerActivityFeedback.update_feedback(
+              learner,
+              activity_feedback,
+              { score: 7, text_feedback: text_feedback, has_been_reviewed: true }
+            )
+          end
+
+          it "should have two feedback records" do
+            feedback = json[:activity_feedback].first
+            expect(feedback[:feedbacks].length).to eql(2)
+            expect(feedback[:feedbacks].first).to include({:score => 7})
+          end
+        end
+      end
+    end
+
   end
+
 end

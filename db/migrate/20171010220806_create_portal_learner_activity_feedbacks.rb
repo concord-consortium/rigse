@@ -1,9 +1,9 @@
 class CreatePortalLearnerActivityFeedbacks < ActiveRecord::Migration
   def change
     create_table :portal_learner_activity_feedbacks do |t|
-      t.text :text_feedback
-      t.integer :score
-      t.boolean :has_been_reviewed
+      t.text :text_feedback, default: ""
+      t.integer :score, default: 10
+      t.boolean :has_been_reviewed, default: false
       t.references :portal_learner
       t.references :activity_feedback
 

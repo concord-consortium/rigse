@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170921190628) do
+ActiveRecord::Schema.define(:version => 20171010220806) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1425,12 +1425,12 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
 
   create_table "portal_learner_activity_feedbacks", :force => true do |t|
     t.text     "text_feedback"
-    t.integer  "score"
-    t.boolean  "has_been_reviewed"
+    t.integer  "score",                :default => 10
+    t.boolean  "has_been_reviewed",    :default => false
     t.integer  "portal_learner_id"
     t.integer  "activity_feedback_id"
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
   end
 
   add_index "portal_learner_activity_feedbacks", ["activity_feedback_id"], :name => "index_portal_learner_activity_feedbacks_on_activity_feedback_id"

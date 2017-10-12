@@ -17,7 +17,7 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
   belongs_to :activity
   has_many   :learner_activity_feedbacks, class_name: "Portal::LearnerActivityFeedback", foreign_key: "activity_feedback_id"
 
-  def self.for_offering_and_activity(offering,activity)
+  def self.for_offering_and_activity(offering, activity)
     params = { portal_offering_id: offering.id, activity_id: activity.id }
     found  = self.where(params).order('created_at desc').first
     unless(found)
@@ -30,7 +30,7 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
     if opts[:enable_text_feedback].present?
       self.enable_text_feedback = opts[:enable_text_feedback]
     end
-    if opts[:max_score]
+    if opts[:max_score].present?
       self.max_score = opts[:max_score]
     end
     if SCORE_TYPES.include? opts[:score_type]
