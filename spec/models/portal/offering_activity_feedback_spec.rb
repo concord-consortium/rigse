@@ -51,12 +51,9 @@ describe Portal::OfferingActivityFeedback do
         before(:each) do
           activity_feedback.set_feedback_options({enable_text_feedback: false})
         end
-        it "should not be using text feedback" do
-          activity_feedback.enable_text_feedback.should == true
-        end
-        it "should still have max score of 12" do
-          activity_feedback.max_score.should == 12
-        end
+        subject { activity_feedback.reload }
+        its(:enable_text_feedback) { should be false }
+        its(:max_score) {should be 12 }
       end
     end
   end

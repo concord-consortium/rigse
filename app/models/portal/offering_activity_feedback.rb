@@ -27,16 +27,12 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
   end
 
   def set_feedback_options(opts)
-    if opts[:enable_text_feedback].present?
-      self.enable_text_feedback = opts[:enable_text_feedback]
+    if opts.key? :score_type
+      unless SCORE_TYPES.include? opts[:score_type]
+        opts.delete :score_type
+      end
     end
-    if opts[:max_score].present?
-      self.max_score = opts[:max_score]
-    end
-    if SCORE_TYPES.include? opts[:score_type]
-      self.score_type = opts[:score_type]
-    end
-    self.save
+    self.update_attributes(opts)
   end
 
 end
