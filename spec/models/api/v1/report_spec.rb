@@ -226,6 +226,104 @@ describe API::V1::Report do
           end
         end
       end
+
+      describe "update activity feedback_settings using the API" do
+        let(:enable_text_feedback)   { nil }
+        let(:score_type)             { "none" }
+        let(:max_score)              { nil }
+        let(:feedback_settings) do
+          {
+              'activity_feedback_id' => feedback_id,
+              'learner_id' => learner_id,
+              'max_score' => max_score,
+              'score_type' => score_type,
+              'enable_text_feedback' => enable_text_feedback
+          }
+        end
+
+        before(:each) do
+          API::V1::Report.update_activity_feedback_settings(feedback_settings)
+          activity_feedback.reload
+        end
+
+        describe "setting automatic score, enable_feedback, and max_score of 12" do
+          subject { activity_feedback }
+          let(:score_type)           { "manual" }
+          let(:max_score)            { 12 }
+          let(:enable_text_feedback) { true }
+
+          its(:max_score)            { should eq 12 }
+          its(:score_type)           { should eq "manual" }
+          its(:enable_text_feedback) { should eq true }
+
+          describe "changing the max_score to 0" do
+            let(:max_score)            { 0 }
+
+            its(:max_score)            { should eq 0 }
+            its(:enable_text_feedback) { should eq true }
+            its(:score_type)           { should eq "manual"}
+          end
+
+          describe "enabling auto scoring" do
+            let(:score_type)           { "auto" }
+
+            its(:max_score)            { should eq 12 }
+            its(:enable_text_feedback) { should be true }
+            its(:score_type)           { should eq "auto"  }
+          end
+        end
+      end
+
+      describe "updating activity feedback for a learner using the API" do
+        let(:score)                { nil }
+        let(:text_feedback)        { nil }
+        let(:has_been_reviewed)    { nil }
+        let(:feedback) do
+          {
+              'learner_id'           => learner_id,
+              'activity_feedback_id' => feedback_id,
+              'score'                => score,
+              'text_feedback'        => text_feedback,
+              'has_been_reviewed'    => has_been_reviewed
+          }
+        end
+
+        before(:each) do
+          API::V1::Report.submit_activity_feedback(feedback)
+        end
+
+        describe "giving activity level feedback feedback" do
+          let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)}
+          describe 'giving feedback without marking complete' do
+            let(:text_feedback) { "good job" }
+            let(:score)         {  10        }
+            subject             { learner_feedback.first }
+
+            its(:score)         { should eql 10 }
+            its(:text_feedback) { should eql "good job" }
+          end
+
+          describe "marking feedback complete" do
+            subject                 { learner_feedback.first }
+            let(:has_been_reviewed) { true }
+            let(:score)             { 10   }
+
+            its(:has_been_reviewed) { should be true }
+
+            it "Should create a subsequent entry in the list of feedbacks on next update." do
+              learner_feedback.should have(1).feedback
+              a = API::V1::Report.submit_activity_feedback({
+                "score"                => 11,
+                "has_been_reviewed"    => true,
+                "learner_id"           => learner_id,
+                "activity_feedback_id" => feedback_id
+              })
+              new_feedback = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)
+              new_feedback.should have(2).feedbacks
+            end
+          end
+        end
+      end
     end
 
   end

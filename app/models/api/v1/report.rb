@@ -1,6 +1,6 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
-  REPORT_VERSION = "1.0.2"
+  REPORT_VERSION = "1.0.3"
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -356,8 +356,20 @@ class API::V1::Report
     if answer.respond_to?(:learner) && answer.learner
       answer.learner.report_learner.update_fields()
     end
-
   end
 
+  def self.update_activity_feedback_settings(activity_feedback_hash)
+    activity_feedback_id = activity_feedback_hash.delete('activity_feedback_id')
+    return false unless activity_feedback_id
+    activity_feedback_settings = Portal::OfferingActivityFeedback.find(activity_feedback_id)
+    activity_feedback_settings.set_feedback_options(activity_feedback_hash.symbolize_keys)
+  end
+
+  def self.submit_activity_feedback(activity_feedback_hash)
+    learner_id = activity_feedback_hash.delete('learner_id')
+    activity_feedback_id = activity_feedback_hash.delete('activity_feedback_id')
+    return unless learner_id && activity_feedback_id
+    Portal::LearnerActivityFeedback.update_feedback(learner_id, activity_feedback_id, activity_feedback_hash.symbolize_keys)
+  end
 
 end
