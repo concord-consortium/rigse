@@ -34,7 +34,7 @@ class API::V1::ReportsController < API::APIController
       API::V1::Report.update_feedback_settings(offering, params[:feedback_opts])
     end
     if params[:actvity_feedback_opts]
-      API::V1::Report.update_activity_feedback_settings(offering, params[:feedback_opts])
+      API::V1::Report.update_activity_feedback_settings(params[:actvity_feedback_opts])
     end
     if params[:feedback]
       API::V1::Report.submit_feedback(params[:feedback])
