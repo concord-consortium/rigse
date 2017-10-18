@@ -66,3 +66,7 @@
 = require 'poll_to_update_student_data_percentages'
 = require 'automatically_closing_popup_link'
 */
+
+function toggleSecondaryMenu() {
+  jQuery('#secondary').toggleClass('open');
+}

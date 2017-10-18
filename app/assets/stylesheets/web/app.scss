@@ -140,12 +140,17 @@ body#tinymce {
   min-width: 860px; }
 
 #wrapper {
+  box-sizing: border-box;
   clear: both;
   min-height: 80%;
   height: auto !important;
   margin: 0 auto;
+  max-width: 1170px;
+  min-width: 320px;
+  padding: 0 15px;
   position: relative;
-  width: 1170px; }
+  width: 100%;
+ }
 
 /* HEADER */
 #header {
@@ -363,7 +368,6 @@ body#tinymce {
 #content {
   overflow: hidden;
   overflow-y: visible;
-  padding-top: 10px;
   padding-right: 5px;
   //:position relative
 }
@@ -371,12 +375,12 @@ body#tinymce {
 /* ------- #primary ------- */
 
 #primary {
-  display: inline;
-  float: left;
-  margin: 0 0 0 290px;
+  display: inline-block;
+  margin: 57px 0 0 125px;
   min-height: 400px;
+  overflow: auto;
   padding: 0;
-  width: 880px;
+  vertical-align: top;
   div.right {
     margin: 0;
     padding: 10px 5px;
@@ -670,12 +674,12 @@ li.item_selectable {
 #secondary {
   background: #ea6d2f;
   color: #313131;
-  float: left;
+  display: inline-block;
   font: 100 16px museo-sans, verdana, helvetica, arial, sans-serif;
   height: auto;
-  margin: 20px 0 50px -1160px;
+  margin: 20px 0 50px 0;
   padding: 0 0 30px;
-  width: 235px;
+  vertical-align: top;
   a {
     color: #fff;
     display: inline-block;
@@ -732,7 +736,9 @@ li.item_selectable {
       }
     }
   }
-
+  .secondary-mobile-menu-toggle {
+    display: none;
+  }
    }
 
 .user-info-box {
@@ -1229,9 +1235,7 @@ ul.quiet_list {
   width: 100%;
   a { border-bottom: dotted 1px #479492; }
   .footer-inner {
-    left: 50%;
     margin: 0 auto;
-    width: 1170px;
     p {
       font-family: museo-sans, verdana, helvetica, sans-serif;
       padding: 0;}}
@@ -2132,4 +2136,110 @@ span.badge {
 }
 .icon-social-linkedin:before {
   content: "\e924";
+}
+
+@media screen and (max-width: 950px) {
+  #primary {
+    display: block;
+    float: none;
+    margin: 0;
+
+    #content {
+      overflow: auto;
+      padding-bottom: 30px;
+      }
+    }
+  #secondary {
+    padding-bottom: 0;
+
+    #utility-links {
+      padding-bottom: 0;
+
+      ul.aux-links {
+        border: none;
+      }
+    }
+
+    .padded_content {
+      display: none;
+      transition: .2s;
+    }
+    .secondary-mobile-menu-toggle {
+      color: #fff;
+      cursor: pointer;
+      display: block;
+      font-weight: 500;
+      padding: 20px;
+      position: relative;
+
+      &:after {
+        content: "\e905";
+        font-family: "icomoon";
+        font-size: 12px;
+        margin: 5px 0 0 10px;
+        position: absolute;
+        right: 20px;
+        transition: .2s;
+      }
+    }
+
+    &.open {
+      .padded_content {
+        display: block;
+        transition: .2s;
+      }
+      .secondary-mobile-menu-toggle {
+
+        &:after {
+          content: "\e906";
+        }
+      }
+    }
+  }
+
+  .classdata {
+    td {
+      display: block;
+      padding-left: 5px;
+      width: 100%;
+
+      &.title {
+        padding-left: 10px;
+      }
+    }
+  }
+  .classsetupform {
+    label.right {
+      text-align: left;
+    }
+    td {
+      display: block;
+      width: 100%;
+
+      &.title {
+        padding-left: 10px;
+      }
+    }
+    input[type='text'], textarea {
+      width: 95%;
+    }
+    #div_teacher_list td {
+      display: table-cell;
+    }
+  }
+  .offering-title {
+    width: 50%;
+  }
+  .offering-prop-checkbox {
+    margin-left: 0;
+    width: 17.5%;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .classsetupform {
+    input[type='text'], textarea {
+
+    }
+  }
 }
