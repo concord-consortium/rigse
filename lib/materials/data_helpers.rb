@@ -323,7 +323,7 @@ module Materials
         target: '_blank'
       }
 
-      if external && material.launch_url
+      if external && material.launch_url.present?
         if policy(material).matedit?
           links[:external_edit] = {
             url: matedit_external_activity_url(material, iFrame: false),

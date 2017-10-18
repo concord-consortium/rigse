@@ -35,6 +35,10 @@ RailsPortal::Application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
   # Turn this off if localizing
+  #
+  # Example testing other locales set:
+  # config.i18n.default_locale = 'en-ITSI-LEARN'
+  #
   config.i18n.default_locale = 'en'
   config.i18n.fallbacks = true
 
