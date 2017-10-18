@@ -73,17 +73,23 @@
 .student_list th div.progressbar_container{height:20px;padding-top:0;}
 
 .legend_progress{
-  background-color:#FFCC99;
-  border:solid 1px #666;
-  width:10px;
-  height:10px;
+  background-color: #FFCC99;
+  border: solid 1px #666;
+  display: block;
+  float: left;
+  height: 15px;
+  margin: 3px 5px 0 0;
+  width: 15px;
 }
 
 .legend_not_started{
-  background-color:White;
-  border:solid 1px #666;
-  width:10px;
-  height:10px;
+  background-color: #fff;
+  border: solid 1px #666;
+  display: block;
+  float: left;
+  height: 15px;
+  margin: 3px 5px 0 0;
+  width: 15px;
 }
 
 .progressbar{
@@ -144,8 +150,11 @@
 .legend_completed {
   background-color: #FF8513;
   border: solid 1px #666;
-  width: 10px;
-  height: 10px;
+  display: block;
+  float: left;
+  height: 15px;
+  margin: 3px 5px 0 0;
+  width: 15px;
 }
 .legend_row {
   height: 35px;
@@ -158,13 +167,22 @@
   padding-bottom:5px;
 }
 .recent_activity_container table {
-  margin: 0px
+  margin: 0 auto;
+}
+
+.legend-container {
+
+  table {
+    margin: 1em auto;
+
+    td { padding: 0 10px; }
+  }
 }
 
 .status_count_graph{
   margin:0;
   padding:0;
-  width:470px;
+  width:100%;
   float:right;
 }
 .status_count_graph td {
@@ -352,4 +370,25 @@ select#material_select {
   width: 100%;
   padding: 5px;
   margin-bottom: 5px;
+}
+
+@media screen and (max-width: 950px) {
+  .recent_activity_container table {
+    margin: 1em 0 0;
+  }
+  .floatL { float: none; }
+  .student_list { width: 100%; }
+  td.student_name div.progressbar_container {
+    width: 100%;
+  }
+  .legend-container table {
+      margin: 0;
+
+    td {
+      clear: both;
+      display: block;
+      padding: 0;
+      width: 100%;
+    }
+  }
 }
