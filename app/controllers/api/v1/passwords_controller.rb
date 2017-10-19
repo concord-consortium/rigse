@@ -38,7 +38,16 @@ class API::V1::PasswordsController < API::APIController
             render status: 403, :json => { :message => message }
             return
         end
-    
+   
+        #
+        # Check if this is a student account
+        #
+        if user.only_a_student?
+            message = "Please contact your teacher to reset your password for you."
+            render status: 403, :json => { :message => message }
+            return
+        end
+
         @password = Password.new(:user => user, :email => user.email)
         if @password.save
             PasswordMailer.forgot_password(@password).deliver
