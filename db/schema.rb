@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170921190628) do
+ActiveRecord::Schema.define(:version => 20171010220806) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1423,6 +1423,19 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
     t.datetime "updated_at",                     :null => false
   end
 
+  create_table "portal_learner_activity_feedbacks", :force => true do |t|
+    t.text     "text_feedback"
+    t.integer  "score",                :default => 10
+    t.boolean  "has_been_reviewed",    :default => false
+    t.integer  "portal_learner_id"
+    t.integer  "activity_feedback_id"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+  end
+
+  add_index "portal_learner_activity_feedbacks", ["activity_feedback_id"], :name => "index_portal_learner_activity_feedbacks_on_activity_feedback_id"
+  add_index "portal_learner_activity_feedbacks", ["portal_learner_id"], :name => "index_portal_learner_activity_feedbacks_on_portal_learner_id"
+
   create_table "portal_learners", :force => true do |t|
     t.string   "uuid",              :limit => 36
     t.integer  "student_id"
@@ -2123,6 +2136,16 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
   add_index "portal_nces06_schools", ["SEASCH"], :name => "index_portal_nces06_schools_on_SEASCH"
   add_index "portal_nces06_schools", ["STID"], :name => "index_portal_nces06_schools_on_STID"
   add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
+
+  create_table "portal_offering_activity_feedbacks", :force => true do |t|
+    t.boolean  "enable_text_feedback", :default => false
+    t.integer  "max_score",            :default => 10
+    t.string   "score_type",           :default => "none"
+    t.integer  "activity_id"
+    t.integer  "portal_offering_id"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+  end
 
   create_table "portal_offering_embeddable_metadata", :force => true do |t|
     t.integer  "offering_id"
