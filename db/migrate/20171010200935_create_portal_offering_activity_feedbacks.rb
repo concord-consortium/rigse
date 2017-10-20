@@ -10,6 +10,3 @@ class CreatePortalOfferingActivityFeedbacks < ActiveRecord::Migration
     end
   end
 end
-
-
-# /Users/npaessel/lab/cc/portal/db/migrate/20171010200935_create_portal_offering_activity_feedbacks.rb

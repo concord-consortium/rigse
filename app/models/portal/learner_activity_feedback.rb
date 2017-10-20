@@ -21,7 +21,7 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
   def self.for_learner_and_activity_feedback(learner,activity_feedback)
     learner_id, activity_feedback_id = self._attribute_ids(learner, activity_feedback)
     self.where({portal_learner_id: learner_id, activity_feedback_id: activity_feedback_id})
-        .order("updated_at desc") # most recent first
+        .order("created_at desc") # most recent first
   end
 
   def self.open_feedback_for(learner, activity_feedback)
