@@ -24,7 +24,9 @@ class API::V1::PasswordsController < API::APIController
         #
         if user.nil?
             message = "Cannot find user or email."
-            render status: 403, :json => { :message => message }
+            reason  = "user_not_found"
+            render status: 403, :json => {  :reason => reason,
+                                            :message => message }
             return
         end
     
@@ -35,7 +37,10 @@ class API::V1::PasswordsController < API::APIController
             provider    = user.authentications[0].provider.titleize
             message     = "This is a #{provider} authenticated account. " <<
                             "Please use #{provider} to make password changes."
-            render status: 403, :json => { :message => message }
+            reason      = "external_auth_user"
+            render status: 403, :json => {  :reason => reason,
+                                            :provider => provider,
+                                            :message => message }
             return
         end
    
@@ -44,7 +49,9 @@ class API::V1::PasswordsController < API::APIController
         #
         if user.only_a_student?
             message = "Please contact your teacher to reset your password for you."
-            render status: 403, :json => { :message => message }
+            reason  = "student_user"
+            render status: 403, :json => {  :reason => reason,
+                                            :message => message }
             return
         end
 
@@ -60,7 +67,9 @@ class API::V1::PasswordsController < API::APIController
             message =   
                 "This account has not set a valid email address. " <<
                 "Please contact your school manager to access your account."
-            render status: 403, :json => { :message => message }
+            reason  = "email_invalid"
+            render status: 403, :json => {  :reason => reason,
+                                            :message => message }
             return
         end
     
