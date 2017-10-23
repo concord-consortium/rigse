@@ -675,6 +675,9 @@ RailsPortal::Application.routes.draw do
             get :collaborators_data
           end
         end
+        namespace :passwords do
+          post  :reset_password
+        end
         namespace :materials do
           get   :own
           get   :featured
