@@ -60,6 +60,12 @@ services:
       DYNAMIC_ROBOTS_TXT:
 
       #
+      # When PORTAL_FEATURES has "allow_cors" set this to a list of
+      # origins, or * for all.
+      #
+      CORS_ORIGINS:
+
+      #
       # Set the portal version displayed in the UI footer.
       #
       CC_PORTAL_VERSION:
