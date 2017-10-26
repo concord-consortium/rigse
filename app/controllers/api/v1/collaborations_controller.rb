@@ -43,7 +43,7 @@ class API::V1::CollaborationsController < API::APIController
   # Input handling
 
   def create_input
-    result = params.permit(:offering_id, {students: [:id, :password]})
+    result = params.permit(:offering_id, {students: [:id]})
     result[:owner_id] = current_visitor.portal_student && current_visitor.portal_student.id
     result[:host_with_port] = request.host_with_port
     result[:protocol] = request.protocol

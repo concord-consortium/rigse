@@ -28,20 +28,8 @@ angular.module('ccCollaboration', ['ui.select'])
         event.preventDefault()
         ccCollaborationSetup.start {offeringId: attrs.offeringId, jnlpUrl: attrs.jnlpUrl}
   ])
-  # Validates students password, note that ID of the student should be provided, e.g.:
-  # <input type="password" cc-good-student-password="123">
-  .directive('ccStudentPassword', ['$http', ($http) ->
-    require: 'ngModel',
-    scope:
-      ccStudentPassword: '='
-    link: ($scope, element, attrs, ngModel) ->
-      $scope.$watch 'ccStudentPassword', ->
-        # Student changed, validate again.
-        ngModel.$validate()
-        ngModel.$asyncValidators.goodStudentPassword = (password) ->
-          # Note that $scope.ccStudentPassword is equal to student ID.
-          $http.post Portal.API_V1.STUDENT_CHECK_PASSWORD.replace(999, $scope.ccStudentPassword), {password: password}
-  ])
+
+
   #
   # Controllers
   #
@@ -86,7 +74,7 @@ angular.module('ccCollaboration', ['ui.select'])
       params = {
         offering_id: @offeringId
         # Skip name attribute, it's not necessary.
-        students: @collaborators.map (c) -> {id: c.id, password: c.password}
+        students: @collaborators.map (c) -> {id: c.id}
       }
       @runStarted = true
       @_createCollaboration params
