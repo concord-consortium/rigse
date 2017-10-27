@@ -6,6 +6,8 @@ describe API::V1::PasswordsController do
                                     :login => 'testuser',
                                     :email => 'foo@foo.com' ) }
 
+    SUCCESS_MESSAGE = "An email has been sent containing your username and a link for changing your password if you've forgotten it."
+
     describe "POST to reset_password" do
 
         before(:each) do
@@ -17,7 +19,7 @@ describe API::V1::PasswordsController do
                 post :reset_password, { :login_or_email => user1.email }
                 expect(response.status).to eq(200)
                 body = JSON.parse(response.body)
-                expect(body['message']).to eq('A link to change your password has been sent to foo@foo.com.')
+                expect(body['message']).to eq(SUCCESS_MESSAGE)
             end
         end
 
@@ -26,7 +28,7 @@ describe API::V1::PasswordsController do
                 post :reset_password, { :login_or_email => user1.login }
                 expect(response.status).to eq(200)
                 body = JSON.parse(response.body)
-                expect(body['message']).to eq('A link to change your password has been sent to foo@foo.com.')
+                expect(body['message']).to eq(SUCCESS_MESSAGE)
             end
         end
 
