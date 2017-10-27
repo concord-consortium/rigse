@@ -322,6 +322,11 @@ class User < ActiveRecord::Base
     return access_grants.create!(access_token_expires_at: time.from_now + 1.second).access_token
   end
 
+  # Creates a new access token valid for given time with an associated learner.
+  def create_access_token_with_learner_valid_for(time, learner)
+    return access_grants.create!(access_token_expires_at: time.from_now + 1.second, learner_id: learner.id).access_token
+  end
+
   def active_for_authentication?
     super && user_active?
   end
