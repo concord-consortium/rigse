@@ -1,9 +1,10 @@
 class AccessGrant < ActiveRecord::Base
   belongs_to :user
   belongs_to :client
+  belongs_to :learner, :class_name => "Portal::Learner"
   before_create :generate_tokens
 
-  attr_accessible :access_token, :access_token_expires_at, :client_id, :code, :refresh_token, :state, :user_id
+  attr_accessible :access_token, :access_token_expires_at, :client_id, :code, :refresh_token, :state, :user_id, :learner_id
   ExpireTime = 1.week
 
   # Returns all access grants valid at given time, ordered by expire date.
