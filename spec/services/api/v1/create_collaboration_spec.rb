@@ -47,11 +47,6 @@ describe API::V1::CreateCollaboration do
       it { should have(1).error_on :offering_id }
     end
 
-    describe "incorrect student password" do
-      before { params['students'][0]['password'] = "wrong_password" }
-      it { should have(1).error_on :"students[0]" }
-    end
-
     describe "incorrect student ID" do
       before { params['students'][1]['id'] = 99999999 }
       it { should have(1).error_on :"students[1]" }

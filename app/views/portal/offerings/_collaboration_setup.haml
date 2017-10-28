@@ -12,15 +12,7 @@
           %ui-select-choices{'repeat' => 'collaborator in colCtrl.availableCollaborators | filter: {name: $select.search} | orderBy: "name"' }
             {{collaborator.name}}
 
-        %input{'type'                => 'password',
-               'placeholder'         => 'Password',
-               'required'            => true,
-               'ng-disabled'         => '!colCtrl.currentCollaborator',
-               'cc-student-password' => 'colCtrl.currentCollaborator.id',
-               'ng-model'            => 'colCtrl.currentPassword',
-               'ng-model-options'    => '{updateOn: "default blur", debounce: {default: 500, blur: 0}}'}
-
-        %button{'ng-disabled' => 'collaborator.$invalid || collaborator.$pending', 'ng-click' => 'colCtrl.addCollaborator()'}
+        %button{'ng-disabled' => '!colCtrl.currentCollaborator', 'ng-click' => 'colCtrl.addCollaborator()'}
           Add
 
       .collaborators

@@ -39,10 +39,6 @@ class API::V1::CreateCollaboration
         errors.add(:"students[#{idx}]", "Student does not exist")
         return false
       end
-      if !password_valid?(s)
-        errors.add(:"students[#{idx}]", "Student's password is incorrect")
-        return false
-      end
     end
     true
   end
