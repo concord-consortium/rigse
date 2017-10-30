@@ -1,6 +1,6 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
-  REPORT_VERSION = "1.0.2"
+  REPORT_VERSION = "1.0.3"
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)
@@ -186,11 +186,33 @@ class API::V1::Report
 
   def activity_json(activity, answers, associations_to_load=nil)
     sections = associations_to_load ? activity.sections.includes(associations_to_load) : activity.sections
+    activity_feedback = Portal::OfferingActivityFeedback.for_offering_and_activity(@offering, activity)
     {
       id: activity.id,
       type: 'Activity',
       name: activity.name,
+      activity_feedback_id: activity_feedback.id,
+      enable_text_feedback: activity_feedback.enable_text_feedback,
+      score_type: activity_feedback.score_type,
+      max_score: activity_feedback.max_score,
+      activity_feedback:  @offering.learners.map { |l| learner_activity_feedback_json(l,activity_feedback) },
       children: sections.map { |s| section_json(s, answers) }
+    }
+  end
+
+  def learner_activity_feedback_json(learner, activity_feedback)
+    student = learner.student
+    learner_activity_feedbacks = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)
+    return {
+      "student_id": student.id,
+      "learner_id": learner.id,
+      "feedbacks": learner_activity_feedbacks.map do |feedback|
+        {
+          score: feedback.score,
+          feedback: feedback.text_feedback,
+          has_been_reviewed: feedback.has_been_reviewed
+        }
+      end
     }
   end
 
@@ -334,8 +356,20 @@ class API::V1::Report
     if answer.respond_to?(:learner) && answer.learner
       answer.learner.report_learner.update_fields()
     end
-
   end
 
+  def self.update_activity_feedback_settings(activity_feedback_hash)
+    activity_feedback_id = activity_feedback_hash.delete('activity_feedback_id')
+    return false unless activity_feedback_id
+    activity_feedback_settings = Portal::OfferingActivityFeedback.find(activity_feedback_id)
+    activity_feedback_settings.set_feedback_options(activity_feedback_hash.symbolize_keys)
+  end
+
+  def self.submit_activity_feedback(activity_feedback_hash)
+    learner_id = activity_feedback_hash.delete('learner_id')
+    activity_feedback_id = activity_feedback_hash.delete('activity_feedback_id')
+    return unless learner_id && activity_feedback_id
+    Portal::LearnerActivityFeedback.update_feedback(learner_id, activity_feedback_id, activity_feedback_hash.symbolize_keys)
+  end
 
 end

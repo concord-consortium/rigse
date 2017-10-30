@@ -140,13 +140,5 @@ describe PasswordsController do
       flash[:error].should be_nil
     end
 
-    it "will produce an error message for an unknown email address" do
-      @params[:password][:email] = "bad_____email_____1234567@test.com"
-      PasswordMailer.should_not_receive(:forgot_password)
-
-      post :create_by_email, @params
-
-      flash[:error].should_not be_nil
-    end
   end
 end

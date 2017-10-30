@@ -102,7 +102,7 @@ describe API::V1::ReportsController do
       it 'it should render the report json' do
         show
         response.status.should eql(200)
-        json_path("report_version").should eql "1.0.2"
+        json_path("report_version").should eql "1.0.3"
         json_path("report.name").should eql "the activity"
         json_path("class.students").should include_hash({"started_offering"=>true, "name"=>"joe user"})
         max_score_should_be 0
@@ -190,6 +190,47 @@ describe API::V1::ReportsController do
         md.enable_text_feedback.should be_false
         md.enable_score.should be_false
         md.max_score.should eq 20
+      end
+    end
+  end
+
+  describe "enabling feedback options for an activity" do
+    let(:activity_feedback)    { Portal::OfferingActivityFeedback.create() }
+    let(:activity_feedback_id) { activity_feedback.id }
+    let(:found_feedback)       { Portal::OfferingActivityFeedback.find(activity_feedback_id)}
+    let(:enable_text_feedback) { false }
+    let(:score_type)           { Portal::OfferingActivityFeedback::SCORE_NONE }
+    let(:max_score)            { 10 }
+    let(:opts)                 {  { 'actvity_feedback_opts' => feedback_opts } }
+    let(:feedback_opts)        do
+      {
+          'activity_feedback_id' => activity_feedback_id,
+          'enable_text_feedback' => enable_text_feedback,
+          'score_type'           => score_type,
+          'max_score'            => max_score
+      }
+    end
+    describe "switching to automatic scoring from the API" do
+      let(:score_type)  { Portal::OfferingActivityFeedback::SCORE_AUTO  }
+      it "should make the scoring automatic" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        found_feedback.score_type.should eql Portal::OfferingActivityFeedback::SCORE_AUTO
+        found_feedback.enable_text_feedback.should be_false
+        found_feedback.max_score.should eq 10
+      end
+    end
+
+    describe "when chaging the max score to 20" do
+      let(:max_score)   { 20 }
+      it "should make max score be 20" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        found_feedback.score_type.should eql Portal::OfferingActivityFeedback::SCORE_NONE
+        found_feedback.enable_text_feedback.should be_false
+        found_feedback.max_score.should eq 20
       end
     end
   end
