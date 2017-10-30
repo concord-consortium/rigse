@@ -59,8 +59,7 @@ class API::V1::PasswordsController < API::APIController
         if @password.save
             PasswordMailer.forgot_password(@password).deliver
             message =   
-                "A link to change your password has been sent " <<
-                "to #{@password.email}."
+                "We've sent you an email containing your username and a link for changing your password if you've forgotten it."
             render status: 200, :json => { :message => message }
             return
         else
