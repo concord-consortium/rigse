@@ -1654,14 +1654,14 @@ td.title { padding-left: 20px; text-align: left; }
   display: inline-block;
   font-weight: 500;
   text-transform: uppercase;
-  width: 575px;
+  width: 75%;
 }
 .offering-prop-checkbox {
   display: inline-block;
   font-weight: 500;
-  margin-left: 30px;
+  margin: 0;
   text-align: center;
-  width: 90px;
+  width: 10%;
 }
 
 .classsetupform #sortable {
@@ -2137,6 +2137,8 @@ span.badge {
 .icon-social-linkedin:before {
   content: "\e924";
 }
+
+.chosen-container { width: 100% !important; }
 
 @media screen and (max-width: 950px) {
   #primary {
