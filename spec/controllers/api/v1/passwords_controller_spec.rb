@@ -6,7 +6,7 @@ describe API::V1::PasswordsController do
                                     :login => 'testuser',
                                     :email => 'foo@foo.com' ) }
 
-    SUCCESS_MESSAGE = "An email has been sent containing your username and a link for changing your password if you've forgotten it."
+    SUCCESS_MESSAGE = "We've sent you an email containing your username and a link for changing your password if you've forgotten it."
 
     describe "POST to reset_password" do
 
