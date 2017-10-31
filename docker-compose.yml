@@ -42,7 +42,7 @@ services:
       #
       # portal-pages URLs
       #
-      PORTAL_PAGES_LIBRARY_URL:
+      PORTAL_PAGES_LIBRARY_URL: https://portal-pages.concord.org/library
       EXTERNAL_CSS_URL:
 
       GOOGLE_ANALYTICS_ACCOUNT:
