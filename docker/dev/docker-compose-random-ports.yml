@@ -9,7 +9,7 @@
 # if you are making changes to docker-compose.yml or this file it is useful to
 # run `docker-compose config` which shows how the two files get merged together
 
-version: '2'
+version: '3'
 services:
   app:
     ports:
