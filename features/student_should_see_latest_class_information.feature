@@ -10,7 +10,6 @@ Feature: Student should see latest class information
     And I am logged in with the username teacher
     And I am on the class edit page for "Mathematics"
     And I fill in Class Name with "Basic Electronics"
-    And I select Term "Fall" from the drop down
     And I fill Description with "This is a biology class"
     And I fill Class Word with "betrx"
     And I uncheck investigation with label "Lumped circuit abstraction"
@@ -26,8 +25,7 @@ Feature: Student should see latest class information
   Scenario: Student should see all the updated information of a class
     When I login with username: taylor
     And I follow "Basic Electronics"
-    Then I should see "Semester: Fall"
-    And I should see "Class Word: betrx"
+    Then I should see "Class Word: betrx"
     And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "Static discipline"

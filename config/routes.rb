@@ -225,8 +225,6 @@ RailsPortal::Application.routes.draw do
 
       resources :school_memberships
 
-      resources :semesters
-
       resources :students do
         collection do
           get :signup

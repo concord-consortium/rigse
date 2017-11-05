@@ -7,7 +7,6 @@ namespace :portal do
       Portal::District.delete_all
       Portal::School.delete_all
       Portal::SchoolMembership.delete_all
-      Portal::Semester.delete_all
       Portal::Subject.delete_all
       Portal::Course.delete_all
       Portal::GradeLevel.delete_all
