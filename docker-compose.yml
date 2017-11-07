@@ -70,6 +70,12 @@ services:
       #
       CC_PORTAL_VERSION:
 
+      #
+      # Set rollbar access tokens
+      #
+      ROLLBAR_ACCESS_TOKEN:
+      ROLLBAR_CLIENT_ACCESS_TOKEN:
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse

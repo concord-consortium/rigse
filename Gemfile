@@ -31,6 +31,9 @@ source "http://rubygems.org"
   gem "httpclient",           "~> 2.2"
   gem "httparty"
 
+  gem 'rollbar'
+  gem 'oj', '~> 2.12.14'
+
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
   # gem 'capistrano-autoscaling', "0.0.8.3", :path => "../capistrano-autoscaling/"
   gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
