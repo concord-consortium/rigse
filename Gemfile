@@ -4,8 +4,6 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
-  gem "rubygems-update",    '2.6.14'
-
   gem "mysql2",             '~> 0.3.16', :platforms => [:ruby,:mingw]
 
   platforms :jruby do
