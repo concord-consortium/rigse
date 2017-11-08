@@ -17,11 +17,14 @@ env:
   - secure: ebGYa+ExFODy1+aVIrppCkyuO/z4RLBHQ8oGE7+h4a3Hdzxx4kSvfRt3nIeklMpTBt0M55hpY/MnZxHt1N0fhSkqfjeJrsYaagatBXezPiW34ZZCbS2E/pJ3pYiL2zzZS3hER30oGGNthYXuU3LI8gjLL8NHXvg5dxrHVaQeD1M=
   - ARTIFACTS_BUCKET=cc-travis-artifacts
 
+#
+# Hack fix:
+# https://github.com/rubygems/rubygems/pull/2065/files
+# Copy bundler/templates files to:
+# /home/travis/.rvm/rubies/ruby-2.2.6/lib/ruby/site_ruby/2.2.0/bundler/templates
+#
 before_install:
-  - rvm use @global
-  - gem uninstall bundler -x
-  - gem install bundler --version=1.13.7
-  - bundler --version
+  - find /home/travis/.rvm/rubies/ruby-2.2.6/lib/ruby/gems -name bundler
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
 
