@@ -2221,17 +2221,6 @@ ActiveRecord::Schema.define(:version => 20171105200238) do
   add_index "portal_schools", ["nces_school_id"], :name => "index_portal_schools_on_nces_school_id"
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
 
-  create_table "portal_semesters", :force => true do |t|
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description", :limit => 16777215
-    t.integer  "school_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
   create_table "portal_student_clazzes", :force => true do |t|
     t.string   "uuid",        :limit => 36
     t.string   "name"
