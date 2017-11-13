@@ -203,8 +203,8 @@ Feature: Teacher can search and assign instructional materials to a class
   @javascript
   Scenario: Teacher can see a message in the popup if the investigation is assigned to all the classes
     When the following classes exist:
-          | name        | teacher               | semester |
-          | New Class   | teacher_with_no_class | Fall     |
+          | name        | teacher               |
+          | New Class   | teacher_with_no_class |
     And I am logged in with the username teacher_with_no_class
     And I am on the the preview investigation page for the investigation "differential calculus"
     And I follow "Assign Investigation"
@@ -219,8 +219,8 @@ Feature: Teacher can search and assign instructional materials to a class
   @javascript
   Scenario: Teacher can see a message in the popup if the activity is assigned to all the classes
     When the following classes exist:
-          | name        | teacher               | semester |
-          | New Class   | teacher_with_no_class | Fall     |
+          | name        | teacher               |
+          | New Class   | teacher_with_no_class |
     And I am logged in with the username teacher_with_no_class
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
@@ -235,8 +235,8 @@ Feature: Teacher can search and assign instructional materials to a class
   @javascript
   Scenario: Teacher can see a message if assign to a class popup is opened without creating any class
     When the following classes exist:
-          | name        | teacher               | semester |
-          | New Class   | teacher_with_no_class | Fall     |
+          | name        | teacher               |
+          | New Class   | teacher_with_no_class |
     And I am logged in with the username teacher_with_no_class
     And I go to the Manage Class Page
     And I uncheck "teacher_clazz[]"

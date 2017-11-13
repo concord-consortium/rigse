@@ -118,8 +118,6 @@ describe Portal::Clazz do
       # new_clazz = Portal::Clazz.new(params)
       # new_clazz.valid?.should == false
       # 
-      # params[:semester_id] = @semester.id
-      # 
       # new_clazz = Portal::Clazz.new(params)
       # new_clazz.valid?.should == true
     end

@@ -7,8 +7,7 @@ describe SearchController do
 
   let(:admin_settings)   { Factory.create(:admin_settings, :include_external_activities => false) }
 
-  let(:mock_semester)   { Factory.create(:portal_semester, :name => "Fall") }
-  let(:mock_school)     { Factory.create(:portal_school, :semesters => [mock_semester]) }
+  let(:mock_school)     { Factory.create(:portal_school) }
 
   let(:teacher_user)    { Factory.create(:confirmed_user, :login => "teacher_user") }
   let(:teacher)         { Factory.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }

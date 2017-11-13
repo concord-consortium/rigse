@@ -11,9 +11,8 @@
         %tr
           %td.title= label_tag :name, 'Class Name:', :class=>"right", :style=>"white-space:nowrap"
           %td= f.text_field :name
-        %tr
-          %td.title= label_tag :semester, 'Term:', :class=>"right", :style=>"white-space:nowrap"
-          %td= f.collection_select(:semester_id, @semesters, :id, :name, options = {}, :class =>"string")
+
+
         - if !(portal_clazz.id.nil?)
           %tr
             %td.title= label_tag :teachers, 'Teachers:', :class=>"right", :style=>"white-space:nowrap"

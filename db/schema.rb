@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171024192110) do
+ActiveRecord::Schema.define(:version => 20171105200238) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -865,8 +865,8 @@ ActiveRecord::Schema.define(:version => 20171024192110) do
     t.datetime "archive_date"
     t.string   "credits"
     t.string   "license_code"
-    t.boolean  "append_auth_token"
     t.boolean  "enable_sharing",                               :default => true
+    t.boolean  "append_auth_token"
     t.string   "material_type",                                :default => "Activity"
   end
 
@@ -2222,17 +2222,6 @@ ActiveRecord::Schema.define(:version => 20171024192110) do
   add_index "portal_schools", ["district_id"], :name => "index_portal_schools_on_district_id"
   add_index "portal_schools", ["nces_school_id"], :name => "index_portal_schools_on_nces_school_id"
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
-
-  create_table "portal_semesters", :force => true do |t|
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description", :limit => 16777215
-    t.integer  "school_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
 
   create_table "portal_student_clazzes", :force => true do |t|
     t.string   "uuid",        :limit => 36

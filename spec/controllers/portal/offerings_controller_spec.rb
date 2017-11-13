@@ -191,8 +191,7 @@ describe Portal::OfferingsController do
 
   describe "POST offering_collapsed_status" do
     before(:each) do
-      @mock_semester = Factory.create(:portal_semester, :name => "Fall")
-      @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+      @mock_school = Factory.create(:portal_school)
 
       @admin_user = Factory.next(:admin_user)
       @manager_user = Factory.next(:manager_user)
