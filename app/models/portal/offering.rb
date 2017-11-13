@@ -1,3 +1,10 @@
+#
+# A Portal::Offering represents a material assigned to a class.
+#
+# - The runnable_type and runnable_id point to the material type and
+# material id of the material assigned.
+# - The clazz_id points to the class to which the material was assigned.
+#
 class Portal::Offering < ActiveRecord::Base
   self.table_name = :portal_offerings
 

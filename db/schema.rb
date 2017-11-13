@@ -23,9 +23,11 @@ ActiveRecord::Schema.define(:version => 20171105200238) do
     t.string   "state"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
+    t.integer  "learner_id"
   end
 
   add_index "access_grants", ["client_id"], :name => "index_access_grants_on_client_id"
+  add_index "access_grants", ["learner_id"], :name => "index_access_grants_on_learner_id"
   add_index "access_grants", ["user_id"], :name => "index_access_grants_on_user_id"
 
   create_table "activities", :force => true do |t|
