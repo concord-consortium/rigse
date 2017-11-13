@@ -311,6 +311,7 @@ class SearchController < ApplicationController
 
     @unassigned_collections = @collections - @assigned_collections
 
+    @skip_reload = params[:skip_reload] == 'true'
     render :partial => 'material_unassigned_collections'
   end
 
@@ -325,7 +326,9 @@ class SearchController < ApplicationController
     collection_ids = params[:materials_collection_id] || []
     runnable_ids = params[:material_id].split(',')
     runnable_type = params[:material_type].classify
+    skip_reload = params[:skip_reload] == 'true'
     assign_summary_data = []
+
 
     collection_ids.each do|collection_id|
       already_assigned_material_names = []
@@ -368,7 +371,7 @@ class SearchController < ApplicationController
         if collection_ids.count > 0
           material_names = materials.map {|m| "<b>#{m.name}</b>" }.join(", ").gsub("'","\\'")
           page << "close_popup()"
-          page << "getMessagePopup('<div class=\"feedback_message\">#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully.</div>')"
+          page << "getMessagePopup('<div class=\"feedback_message\">#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully.</div>', #{skip_reload})"
         else
           page << "$('error_message').update('Select at least one collection to assign this #{runnable_type}');$('error_message').show()"
         end
