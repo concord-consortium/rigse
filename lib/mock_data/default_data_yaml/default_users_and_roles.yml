@@ -50,26 +50,12 @@ schools:
     name: Fake School
     description: Fake School
     uuid: 00000000-0000-0000-0000-000000000011
-    semesters:
-      semester_1:
-        name: Fall
-        uuid: 00000000-0000-0000-0000-000000000012
-      semester_2:
-        name: Spring
-        uuid: 00000000-0000-0000-0000-000000000013
     grade_levels: '9'
 
   school_2:
     name: VJTI
     description: Tech School best in the world
     uuid: 00000000-0000-0000-0000-000000000014
-    semesters:
-      semester_1:
-        name: Fall
-        uuid: 00000000-0000-0000-0000-000000000015
-      semester_2:
-        name: Spring
-        uuid: 00000000-0000-0000-0000-000000000016
     grade_levels: '9'
 
 

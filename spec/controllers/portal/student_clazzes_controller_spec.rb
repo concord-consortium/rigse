@@ -12,8 +12,7 @@ describe Portal::StudentClazzesController do
   
   describe "Delete remove a student" do
     before(:each) do
-      @mock_semester = Factory.create(:portal_semester, :name => "Fall")
-      @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+      @mock_school = Factory.create(:portal_school)
       @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
       @authorized_student = Factory.create(:portal_student, :user =>Factory.create(:confirmed_user, :login => "authorized_student"))
       

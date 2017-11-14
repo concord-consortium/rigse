@@ -2,8 +2,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::SiteNoticesController do
   before(:each) do
-    @mock_semester = Factory.create(:portal_semester, :name => "Fall")
-    @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+    @mock_school = Factory.create(:portal_school)
 
     @admin_user = Factory.next(:admin_user)
     @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")

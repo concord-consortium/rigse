@@ -183,7 +183,6 @@ module MockData
     if default_district
       DEFAULT_DATA[:schools].each do |school, school_info|
 
-        semester_info = school_info.delete(:semesters)
         grade_levels_info = school_info.delete(:grade_levels)
         grade_levels = grade_levels_info.split(',').map{|c| c.strip }
 
@@ -209,17 +208,6 @@ module MockData
         end
 
         if school
-          semester_count = 0
-          semester_info.each do |semester, sem_info|
-            sem = Portal::Semester.find_or_create_by_uuid(sem_info[:uuid])
-            sem.name = sem_info[:name]
-            sem.school_id = school.id
-            sem.save!
-            semester_count += 1
-          end
-
-          puts
-          puts "Generated/updated #{semester_count} portal semesters for school '#{school.name}'"
 
           grade_levels.map! { |gl| default_grades_levels.find { |dgl| dgl.name == gl } }
           grade_levels.compact
