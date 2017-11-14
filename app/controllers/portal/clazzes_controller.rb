@@ -78,7 +78,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Clazz
-    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.new
     if params[:teacher_id]
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
@@ -98,7 +97,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
     @portal_clazz = Portal::Clazz.find(params[:id])
-    @semesters = Portal::Semester.all
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz }
       return
@@ -115,7 +113,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Clazz
-    @semesters = Portal::Semester.all
 
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
@@ -199,7 +196,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
-    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.find(params[:id])
 
     if request.xhr?
@@ -676,8 +672,7 @@ class Portal::ClazzesController < ApplicationController
         :grades => class_to_copy.grades,
         :teacher_id => teacher.id,
         :teacher => class_to_copy.teacher,
-        :course => class_to_copy.course,
-        :semester_id => class_to_copy.semester_id
+        :course => class_to_copy.course
     )
 
     class_to_copy.teachers.each do |other_teacher|

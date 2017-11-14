@@ -4,8 +4,7 @@ class Portal::Clazz < ActiveRecord::Base
   acts_as_replicatable
 
   belongs_to :course, :class_name => "Portal::Course", :foreign_key => "course_id"
-  belongs_to :semester, :class_name => "Portal::Semester", :foreign_key => "semester_id"
-  # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
+
 
   has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id",
     :order => :position
@@ -106,8 +105,7 @@ class Portal::Clazz < ActiveRecord::Base
   end
 
   def title
-    semester_name = semester ? semester.name : 'unknown'
-    "Class: #{name}, Semester: #{semester_name}"
+    "Class: #{name}"
   end
 
   def teachers_label

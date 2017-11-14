@@ -48,7 +48,6 @@ Feature: Teacher edits and saves class information
   @javascript
   Scenario: Teacher saves class setup information
     When I fill in Class Name with "Basic Electronics"
-    And I select Term "Fall" from the drop down
     And I fill Description with "This is a biology class"
     And I fill Class Word with "BETRX"
     And I uncheck investigation with label "Lumped circuit abstraction"

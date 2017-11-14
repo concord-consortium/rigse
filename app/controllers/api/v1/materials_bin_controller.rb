@@ -8,6 +8,8 @@ class API::V1::MaterialsBinController < API::APIController
   # Note that materials are filtered by cohorts of the current visitor!
   def collections
     status = 200
+    skip_lightbox_reloads = (params[:skip_lightbox_reloads] == true.to_s)
+
     # Preserver order of collections provided by client!
     collection_by_id = MaterialsCollection.where(id: params[:id]).index_by { |mc| mc.id.to_s }
     collections = Array(params[:id]).map do |id|
@@ -18,7 +20,7 @@ class API::V1::MaterialsBinController < API::APIController
         render json: {:message => message}, :status => status
         return
       end
-      materials_collection_data(col.name, col.materials(allowed_cohorts, show_assessment_items), params[:assigned_to_class])
+      materials_collection_data(col.name, col.materials(allowed_cohorts, show_assessment_items), params[:assigned_to_class], 0, skip_lightbox_reloads)
     end
     render json: collections, :status => status
   end
@@ -74,10 +76,17 @@ class API::V1::MaterialsBinController < API::APIController
     materials
   end
 
-  def materials_collection_data(name, materials, assigned_to_class)
+  def materials_collection_data(name,
+                                materials,
+                                assigned_to_class,
+                                include_related         = 0,
+                                skip_lightbox_reloads   = false)
     {
         name: name,
-        materials: materials_data(materials, assigned_to_class)
+        materials: materials_data(  materials,
+                                    assigned_to_class,
+                                    include_related,
+                                    skip_lightbox_reloads )
     }
   end
 end

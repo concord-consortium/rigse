@@ -9,7 +9,6 @@ class Portal::School < ActiveRecord::Base
   belongs_to :country, :class_name => "Portal::Country", :foreign_key => "country_id"
 
   has_many :courses, :dependent => :destroy, :class_name => "Portal::Course", :foreign_key => "school_id"
-  has_many :semesters, :dependent => :destroy, :class_name => "Portal::Semester", :foreign_key => "school_id"
 
   # has_many :grade_levels, :class_name => "Portal::GradeLevel", :foreign_key => "school_id"
 

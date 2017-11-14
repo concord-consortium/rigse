@@ -1,12 +1,15 @@
 
-function get_Assign_To_Collection_Popup(material_id,material_type, lightbox_material_text)
+function get_Assign_To_Collection_Popup(material_id,
+                                        material_type,
+                                        lightbox_material_text,
+                                        skip_reload )
 {
     lightbox_material_text = lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         title:"Assign " + lightbox_material_text + " to a Collection"
     };
-    var target_url = "/search/get_current_material_unassigned_collections";
+    var target_url = "/search/get_current_material_unassigned_collections?skip_reload=" + (skip_reload || false);
      var options = {
         method: 'post',
         parameters : {'material_type':material_type,'material_id':material_id},
