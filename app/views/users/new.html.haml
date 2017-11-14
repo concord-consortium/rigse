@@ -2,7 +2,7 @@
 
 :javascript
   if (Portal.currentUser.isAnonymous) {
-    PortalPages.renderSignupModal({});
+    PortalPages.renderSignupModal({ oauthProviders: Portal.oauthProviders });
   } else {
     window.location.href = "/";
   }
