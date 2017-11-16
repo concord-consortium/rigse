@@ -554,6 +554,7 @@ class API::V1::MaterialsController < API::APIController
     statement_notation_q    = params[:asn_statement_notation_query]
     statement_label_q       = params[:asn_statement_label_query]
     description_q           = params[:asn_description_query]
+    uri_q                   = params[:asn_uri_query]
 
     material_type           = params[:material_type]
     material_id             = params[:material_id]
@@ -602,6 +603,10 @@ class API::V1::MaterialsController < API::APIController
 
     if description_q.present?
         query_string << " description:'*#{description_q}*'"
+    end
+
+    if uri_q.present?
+        query_string << " identifier:'#{uri_q}'"
     end
 
     query_string << ")"
