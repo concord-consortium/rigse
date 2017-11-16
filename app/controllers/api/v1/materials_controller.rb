@@ -24,6 +24,7 @@ class API::V1::MaterialsController < API::APIController
                         "type,"                 <<
                         "statement_notation,"   <<
                         "statement_label,"      <<
+                        "education_level,"      <<
                         "description,"          <<
                         "list_id"
 
@@ -376,6 +377,7 @@ class API::V1::MaterialsController < API::APIController
             description:        statement.description,
             statement_label:    statement.statement_label,
             statement_notation: statement.statement_notation,
+            education_level:    statement.education_level,
             doc:                statement.doc,
             is_applied:         true
         })
@@ -468,7 +470,8 @@ class API::V1::MaterialsController < API::APIController
         parents.push({
                     uri:                parent[:uri],
                     description:        parent[:description],
-                    statement_notation: parent[:statement_notation]
+                    statement_notation: parent[:statement_notation],
+                    education_level:    parent[:education_level]
                 })
 
         parent_uri = parent[:is_child_of]
@@ -491,6 +494,7 @@ class API::V1::MaterialsController < API::APIController
   						:description		=> statement[:description],
   						:statement_label    => statement[:statement_label],
   						:statement_notation => statement[:statement_notation],
+  						:education_level    => statement[:education_level],
                         :parents            => parents )
 
     render json: {  :message => "Successfully added standard." },
@@ -682,6 +686,7 @@ class API::V1::MaterialsController < API::APIController
             description:        hit["data"]["description"],
             statement_label:    hit["data"]["statement_label"].join(" "),
             statement_notation: hit["data"]["statement_notation"].join(" "),
+            education_level:    hit["data"]["education_level"],
             doc:                doc.nil? ? "Unknown" : doc.name,
             is_child_of:        hit["data"]["is_child_of"][0],
             is_part_of:         hit["data"]["is_part_of"][0],

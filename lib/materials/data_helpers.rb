@@ -187,10 +187,12 @@ module Materials
     
         standard_statements.each do |statement|
             standard_statements_json.push( {
-                type:           statement.doc,
-                uri:            statement.uri,
-                notation:       statement.statement_notation,
-                description:    statement.description
+                type:               statement.doc,
+                uri:                statement.uri,
+                parents:            statement.parents,
+                notation:           statement.statement_notation,
+                education_level:    statement.education_level,
+                description:        statement.description
             });
         end
 
