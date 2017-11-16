@@ -49,6 +49,12 @@ window.StandardsRowClass = React.createClass
     else 
       buttonText = "Remove"
 
+    leaf = ""
+    if statement.is_leaf
+      leaf = "&#10004;"
+
+    # console.log("[DEBUG] Adding statement", statement);
+
     (tr {className: 'asn_results_tr'},
       (td {className: 'asn_results_td'}, statement.doc)
       (td {className: 'asn_results_td asn_results_td_fixed'}, 
@@ -58,6 +64,9 @@ window.StandardsRowClass = React.createClass
         (TextPreview { config: { text: statement.statement_label, preview: true} } )
       )
       (td {className: 'asn_results_td'}, statement.statement_notation)
+      (td {className: 'asn_results_td'},
+        (div { dangerouslySetInnerHTML: { __html: leaf } } )
+      )
       (td {className: 'asn_results_td_right'}, 
         (button {onClick: @handleButton}, 
           buttonText

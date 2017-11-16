@@ -31,4 +31,6 @@ class StandardStatement < ActiveRecord::Base
   attr_accessible   :education_level
   serialize         :education_level
 
+  attr_accessible   :is_leaf
+
 end
