@@ -94,7 +94,7 @@ source "http://rubygems.org"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
   # to support hosting paperclip attachments on S3, and Load Balancing
   gem "aws-sdk",              "~> 1.55.0"
-  gem 'newrelic_rpm',         "~> 3.15", ">= 3.15.0.314"
+  gem 'newrelic_rpm', '~> 4.6', '>= 4.6.0.338'
   gem "tinymce-rails",        "~>3.5.6"
   gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
     :branch => "remove-addon-support"
