@@ -170,7 +170,7 @@ class ExternalActivity < ActiveRecord::Base
   scope :contributed, where(:is_official => false)
   scope :archived, where(:is_archived => true)
 
-  def url(learner = nil)
+  def url(learner = nil, domain = nil)
     begin
       uri = URI.parse(read_attribute(:url))
       if learner
@@ -180,9 +180,10 @@ class ExternalActivity < ActiveRecord::Base
           AccessGrant.prune!
           token = learner.user.create_access_token_with_learner_valid_for(3.minutes, learner)
           append_query(uri, "token=#{token}")
+          append_query(uri, "domain=#{domain}&domain_uid=#{learner.user.id}") if domain
         end
       end
-      return uri.to_sc
+      return uri.to_s
     rescue
       return read_attribute(:url)
     end
