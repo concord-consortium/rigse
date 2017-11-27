@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171105200238) do
+ActiveRecord::Schema.define(:version => 20171116215453) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2787,6 +2787,8 @@ ActiveRecord::Schema.define(:version => 20171105200238) do
     t.integer  "material_id"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.string   "education_level"
+    t.boolean  "is_leaf"
   end
 
   add_index "standard_statements", ["uri", "material_type", "material_id"], :name => "standard_unique", :unique => true

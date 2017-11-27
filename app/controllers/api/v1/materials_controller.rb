@@ -21,9 +21,11 @@ class API::V1::MaterialsController < API::APIController
   @@asn_return_fields = "identifier,"           <<
                         "is_part_of,"           <<
                         "is_child_of,"          <<
+                        "has_child,"            <<
                         "type,"                 <<
                         "statement_notation,"   <<
                         "statement_label,"      <<
+                        "education_level,"      <<
                         "description,"          <<
                         "list_id"
 
@@ -376,6 +378,8 @@ class API::V1::MaterialsController < API::APIController
             description:        statement.description,
             statement_label:    statement.statement_label,
             statement_notation: statement.statement_notation,
+            education_level:    statement.education_level,
+            is_leaf:            statement.is_leaf,
             doc:                statement.doc,
             is_applied:         true
         })
@@ -447,8 +451,8 @@ class API::V1::MaterialsController < API::APIController
 
     while parent_uri != doc_uri
 
-      puts "Parent  #{parent_uri}"
-      puts "Doc     #{doc_uri}"
+      # puts "Parent  #{parent_uri}"
+      # puts "Doc     #{doc_uri}"
 
       query_string = "identifier:'#{parent_uri}'"
 
@@ -463,19 +467,20 @@ class API::V1::MaterialsController < API::APIController
         hits    = response['hits']['hit']
         parent  = process_asn_response(hits)[0]
         
-        puts "Parent is #{parent}"
+        # puts "Parent is #{parent}"
 
         parents.push({
                     uri:                parent[:uri],
                     description:        parent[:description],
-                    statement_notation: parent[:statement_notation]
+                    statement_notation: parent[:statement_notation],
+                    education_level:    parent[:education_level]
                 })
 
         parent_uri = parent[:is_child_of]
 
-        puts "After push"
-        puts "Parent  #{parent_uri}"
-        puts "Doc     #{doc_uri}"
+        # puts "After push"
+        # puts "Parent  #{parent_uri}"
+        # puts "Doc     #{doc_uri}"
 
       else
         break
@@ -491,6 +496,8 @@ class API::V1::MaterialsController < API::APIController
   						:description		=> statement[:description],
   						:statement_label    => statement[:statement_label],
   						:statement_notation => statement[:statement_notation],
+  						:education_level    => statement[:education_level],
+  						:is_leaf            => statement[:is_leaf],
                         :parents            => parents )
 
     render json: {  :message => "Successfully added standard." },
@@ -547,6 +554,7 @@ class API::V1::MaterialsController < API::APIController
     statement_notation_q    = params[:asn_statement_notation_query]
     statement_label_q       = params[:asn_statement_label_query]
     description_q           = params[:asn_description_query]
+    uri_q                   = params[:asn_uri_query]
 
     material_type           = params[:material_type]
     material_id             = params[:material_id]
@@ -595,6 +603,10 @@ class API::V1::MaterialsController < API::APIController
 
     if description_q.present?
         query_string << " description:'*#{description_q}*'"
+    end
+
+    if uri_q.present?
+        query_string << " identifier:'#{uri_q}'"
     end
 
     query_string << ")"
@@ -667,6 +679,8 @@ class API::V1::MaterialsController < API::APIController
         #
         doc = docs_map[hit["data"]["is_part_of"][0]]
 
+        # puts "Parsing #{hit['data']}"
+
         statements.push( {
 
             # Use join() on these arrays. Sometimes a "description" will
@@ -682,6 +696,8 @@ class API::V1::MaterialsController < API::APIController
             description:        hit["data"]["description"],
             statement_label:    hit["data"]["statement_label"].join(" "),
             statement_notation: hit["data"]["statement_notation"].join(" "),
+            education_level:    hit["data"]["education_level"],
+            is_leaf:            (hit["data"]["has_child"][0] != "true"),
             doc:                doc.nil? ? "Unknown" : doc.name,
             is_child_of:        hit["data"]["is_child_of"][0],
             is_part_of:         hit["data"]["is_part_of"][0],
