@@ -70,7 +70,7 @@ class Portal::OfferingsController < ApplicationController
            }.to_query
            redirect_to(uri.to_s)
          else
-           redirect_to(@offering.runnable.url(learner))
+           redirect_to(@offering.runnable.url(learner, root_url))
          end
        }
 

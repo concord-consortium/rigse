@@ -45,7 +45,7 @@ describe ExternalActivity do
       url = "http://www.concord.org/#3"
       activity.append_learner_id_to_url = true
       activity.url = url
-      activity.url(learner).should eql(url + "?learner=34")
+      activity.url(learner).should eql("http://www.concord.org/?learner=34#3")
     end
   end
 
