@@ -56,6 +56,8 @@ window.StandardsTableClass = React.createClass
           (th {className: 'asn_results_th'},        "Description")
           (th {className: 'asn_results_th'},        "Label")
           (th {className: 'asn_results_th'},        "Notation")
+          (th {className: 'asn_results_th'},        "URI")
+          (th {className: 'asn_results_th'},        "Grades")
           (th {className: 'asn_results_th'},        "Leaf")
           (th {className: 'asn_results_th_right'},  "Action")
         )
