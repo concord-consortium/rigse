@@ -38,6 +38,10 @@ class ExternalReport < ActiveRecord::Base
   # and the short-lived bearer token for the user.
   def url_for(offering_id, user, protocol, host)
     grant = client.updated_grant_for(user, ReportTokenValidFor)
+    if user.portal_teacher
+      grant.teacher = user.portal_teacher
+      grant.save!
+    end
     token = grant.access_token
     username = user.login
     "#{url}?offering=#{offering_api_url(offering_id, protocol, host)}&token=#{token}&username=#{username}"

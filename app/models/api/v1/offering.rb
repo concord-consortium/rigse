@@ -23,6 +23,7 @@ class API::V1::Offering
   attribute :teacher, String
   attribute :clazz, String
   attribute :clazz_id, Integer
+  attribute :clazz_info_url, String
   attribute :activity, String
   attribute :activity_url, String
   attribute :students, Array[OfferingStudent]
@@ -31,6 +32,7 @@ class API::V1::Offering
     self.teacher = offering.clazz.teacher.name
     self.clazz = offering.clazz.name
     self.clazz_id = offering.clazz.id
+    self.clazz_info_url = offering.clazz.class_info_url(protocol, host_with_port)
     self.activity = offering.name
     self.activity_url = offering.runnable.respond_to?(:url) ? offering.runnable.url : nil
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port) }

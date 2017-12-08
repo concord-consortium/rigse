@@ -48,8 +48,8 @@ describe BearerToken:JwtBearerTokenAuthenticatable do
     end
 
     it 'the token should have the claims embedded' do
-      decoded_token[:data]['claims']['bar'].should eql true
-      decoded_token[:data]['claims']['baz'].should eql 'bam'
+      decoded_token[:data]['bar'].should eql true
+      decoded_token[:data]['baz'].should eql 'bam'
     end
   end
 
