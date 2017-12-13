@@ -200,7 +200,7 @@ module Materials
         # Add license info
         #
         license_info_json = nil
-        if material.license
+        if material.respond_to?(:license) && material.license
             license = material.license
             license_info_json = {
                 name:           license.name,
