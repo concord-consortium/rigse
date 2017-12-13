@@ -197,6 +197,23 @@ module Materials
         end
 
         #
+        # Add license info
+        #
+        license_info_json = nil
+        if material.license
+            license = material.license
+            license_info_json = {
+                name:           license.name,
+                code:           license.code,
+                deed:           license.deed,
+                legal:          license.legal,
+                image:          license.image,
+                description:    license.description,
+                number:         license.number
+            }
+        end
+
+        #
         # Determine if we should enable social media sharing
         #
         enable_sharing = true
@@ -262,7 +279,9 @@ module Materials
           user: user_data,
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
-       
+
+          license_info: license_info_json,
+
           related_materials: related_materials,
 
           standard_statements: standard_statements_json,
