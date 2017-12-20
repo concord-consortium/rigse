@@ -39,10 +39,12 @@ module SignedJWT
       aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
       iat: now,
       exp: now + expires_in,
-      uid: user.id,
-      claims: claims
+      uid: user.id
     }
+
     begin
+      # merge claims into payload, preventing duplicates
+      payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
       rsa_private = OpenSSL::PKey::RSA.new(app.private_key)
       JWT.encode payload, rsa_private, self.rsa_algorithm
     rescue Exception => e

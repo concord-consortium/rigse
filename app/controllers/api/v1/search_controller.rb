@@ -25,10 +25,13 @@ class API::V1::SearchController < API::APIController
   end
 
   def group_data(type, collection)
+
+    skip_lightbox_reloads = (params[:skip_lightbox_reloads] == true.to_s)
+
     {
       type: type.to_s.pluralize,
       header: view_context.t(type).pluralize.titleize,
-      materials: materials_data(collection, nil, params[:include_related].to_i || 0),
+      materials: materials_data(collection, nil, params[:include_related].to_i || 0, skip_lightbox_reloads),
       pagination: {
         current_page: collection.current_page,
         total_pages: collection.total_pages,

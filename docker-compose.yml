@@ -1,6 +1,6 @@
 # This file is meant for development, in production we use a slightly different
 # configuration
-version: '2'
+version: '3'
 services:
   app:
     build:
@@ -42,7 +42,7 @@ services:
       #
       # portal-pages URLs
       #
-      PORTAL_PAGES_LIBRARY_URL:
+      PORTAL_PAGES_LIBRARY_URL: "${PORTAL_PAGES_LIBRARY_URL:-https://portal-pages.concord.org/library}"
       EXTERNAL_CSS_URL:
 
       GOOGLE_ANALYTICS_ACCOUNT:
@@ -60,9 +60,21 @@ services:
       DYNAMIC_ROBOTS_TXT:
 
       #
+      # When PORTAL_FEATURES has "allow_cors" set this to a list of
+      # origins, or * for all.
+      #
+      CORS_ORIGINS:
+
+      #
       # Set the portal version displayed in the UI footer.
       #
       CC_PORTAL_VERSION:
+
+      #
+      # Set rollbar access tokens
+      #
+      ROLLBAR_ACCESS_TOKEN:
+      ROLLBAR_CLIENT_ACCESS_TOKEN:
 
     # no ports are published, see below for details
     volumes:

@@ -12,9 +12,10 @@ module Materials
       Sanitize.fragment(html_fragment, Sanitize::Config::BASIC)
     end
 
-    def materials_data( materials, 
-                        assigned_to_class   = nil, 
-                        include_related     = 0 )
+    def materials_data( materials,
+                        assigned_to_class       = nil,
+                        include_related         = 0,
+                        skip_lightbox_reloads   = false )
       data = []
 
       if assigned_to_class
@@ -186,11 +187,30 @@ module Materials
     
         standard_statements.each do |statement|
             standard_statements_json.push( {
-                type:           statement.doc,
-                uri:            statement.uri,
-                notation:       statement.statement_notation,
-                description:    statement.description
+                type:               statement.doc,
+                uri:                statement.uri,
+                parents:            statement.parents,
+                notation:           statement.statement_notation,
+                education_level:    statement.education_level,
+                description:        statement.description
             });
+        end
+
+        #
+        # Add license info
+        #
+        license_info_json = nil
+        if material.respond_to?(:license) && material.license
+            license = material.license
+            license_info_json = {
+                name:           license.name,
+                code:           license.code,
+                deed:           license.deed,
+                legal:          license.legal,
+                image:          license.image,
+                description:    license.description,
+                number:         license.number
+            }
         end
 
         #
@@ -235,7 +255,12 @@ module Materials
           projects:         projects,
 
           publication_status: material.publication_status,
-          links: links_for_material(material),
+
+          #
+          # Links for assigning materials to classes and collections
+          #
+          links: links_for_material(material, skip_lightbox_reloads),
+
           preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
           edit_url: (material.is_a?(ExternalActivity) && policy(material).matedit?) ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
           unarchive_url: (material.is_a?(ExternalActivity) && policy(material).unarchive?) ? view_context.unarchive_external_activity_url(material) : nil,
@@ -254,7 +279,9 @@ module Materials
           user: user_data,
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
-       
+
+          license_info: license_info_json,
+
           related_materials: related_materials,
 
           standard_statements: standard_statements_json,
@@ -285,7 +312,8 @@ module Materials
              material.author_email == current_visitor.email
     end
 
-    def links_for_material(material)
+    def links_for_material( material,
+                            skip_lightbox_reloads = false )
       external = false
       if material.is_a? Investigation
         browse_url = browse_investigation_url(material)
@@ -383,7 +411,7 @@ module Materials
         links[:assign_material] = {
             text: "Assign to a Class",
             url: "javascript:void(0)",
-            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')"
+            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads})"
         }
       end
 
@@ -391,7 +419,7 @@ module Materials
         links[:assign_collection] = {
           text: "Add to Collection",
           url: "javascript:void(0)",
-          onclick: "get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')"
+          onclick: "get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads})"
         }
       end
 

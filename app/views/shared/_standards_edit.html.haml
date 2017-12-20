@@ -45,6 +45,11 @@
               Description
             %td
               %input{:id => "asn_description_query", :type => "text" }
+          %tr
+            %td
+              URI
+            %td
+              %input{:id => "asn_uri_query", :type => "text" }
             %td{:class => "asn_search_table_td_right"}
               %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
       %div{:id => "asn_search_results_message" }
@@ -63,6 +68,7 @@
     var PARAM_INPUTS = [    "asn_document_id",
                             "asn_statement_notation_query",
                             "asn_statement_label_query",
+                            "asn_uri_query",
                             "asn_description_query" ];
 
 

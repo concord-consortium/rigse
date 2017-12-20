@@ -232,11 +232,11 @@ image above has instructions on doing this.
 1. Connect to the running docker instance of your "app" service. 
 > `$ docker-compose exec app bash`
 2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
-    * `docker/dev/run-rspec.sh`
+    * `docker/dev/run-spec.sh`
     * `docker/dev/run-cucumber.sh`
 
     E.g. 
-    > `$ /rigse/docker/dev/run-rspec.sh`
+    > `$ ./docker/dev/run-rspec.sh`
 
 
  

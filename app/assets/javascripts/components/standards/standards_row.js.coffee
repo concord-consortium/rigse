@@ -1,4 +1,4 @@
-{div, tr, td, button} = React.DOM
+{div, tr, td, button, a} = React.DOM
 
 window.StandardsRowClass = React.createClass
 
@@ -49,6 +49,19 @@ window.StandardsRowClass = React.createClass
     else 
       buttonText = "Remove"
 
+    leaf = ""
+    if statement.is_leaf
+      leaf = "&#10004;"
+
+    grades = ""
+    if statement.education_level?
+      for i in [0...statement.education_level.length]
+        if i > 0
+          grades += ", "
+        grades += statement.education_level[i]
+
+    # console.log("[DEBUG] Adding statement", statement);
+
     (tr {className: 'asn_results_tr'},
       (td {className: 'asn_results_td'}, statement.doc)
       (td {className: 'asn_results_td asn_results_td_fixed'}, 
@@ -58,6 +71,13 @@ window.StandardsRowClass = React.createClass
         (TextPreview { config: { text: statement.statement_label, preview: true} } )
       )
       (td {className: 'asn_results_td'}, statement.statement_notation)
+      (td {className: 'asn_results_td'}, 
+        (a {href: statement.uri, target: '_blank', dangerouslySetInnerHTML: { __html: '&#128279;' } } )
+      )
+      (td {className: 'asn_results_td'}, grades)
+      (td {className: 'asn_results_td'},
+        (div { dangerouslySetInnerHTML: { __html: leaf } } )
+      )
       (td {className: 'asn_results_td_right'}, 
         (button {onClick: @handleButton}, 
           buttonText

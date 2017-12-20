@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170921190628) do
+ActiveRecord::Schema.define(:version => 20171116215453) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -23,9 +23,11 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
     t.string   "state"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
+    t.integer  "learner_id"
   end
 
   add_index "access_grants", ["client_id"], :name => "index_access_grants_on_client_id"
+  add_index "access_grants", ["learner_id"], :name => "index_access_grants_on_learner_id"
   add_index "access_grants", ["user_id"], :name => "index_access_grants_on_user_id"
 
   create_table "activities", :force => true do |t|
@@ -863,8 +865,8 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
     t.datetime "archive_date"
     t.string   "credits"
     t.string   "license_code"
-    t.boolean  "append_auth_token"
     t.boolean  "enable_sharing",                               :default => true
+    t.boolean  "append_auth_token"
     t.string   "material_type",                                :default => "Activity"
   end
 
@@ -1422,6 +1424,19 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
   end
+
+  create_table "portal_learner_activity_feedbacks", :force => true do |t|
+    t.text     "text_feedback"
+    t.integer  "score",                :default => 10
+    t.boolean  "has_been_reviewed",    :default => false
+    t.integer  "portal_learner_id"
+    t.integer  "activity_feedback_id"
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
+  end
+
+  add_index "portal_learner_activity_feedbacks", ["activity_feedback_id"], :name => "index_portal_learner_activity_feedbacks_on_activity_feedback_id"
+  add_index "portal_learner_activity_feedbacks", ["portal_learner_id"], :name => "index_portal_learner_activity_feedbacks_on_portal_learner_id"
 
   create_table "portal_learners", :force => true do |t|
     t.string   "uuid",              :limit => 36
@@ -2124,6 +2139,16 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
   add_index "portal_nces06_schools", ["STID"], :name => "index_portal_nces06_schools_on_STID"
   add_index "portal_nces06_schools", ["nces_district_id"], :name => "index_portal_nces06_schools_on_nces_district_id"
 
+  create_table "portal_offering_activity_feedbacks", :force => true do |t|
+    t.boolean  "enable_text_feedback", :default => false
+    t.integer  "max_score",            :default => 10
+    t.string   "score_type",           :default => "none"
+    t.integer  "activity_id"
+    t.integer  "portal_offering_id"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+  end
+
   create_table "portal_offering_embeddable_metadata", :force => true do |t|
     t.integer  "offering_id"
     t.integer  "embeddable_id"
@@ -2197,17 +2222,6 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
   add_index "portal_schools", ["district_id"], :name => "index_portal_schools_on_district_id"
   add_index "portal_schools", ["nces_school_id"], :name => "index_portal_schools_on_nces_school_id"
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
-
-  create_table "portal_semesters", :force => true do |t|
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description", :limit => 16777215
-    t.integer  "school_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
 
   create_table "portal_student_clazzes", :force => true do |t|
     t.string   "uuid",        :limit => 36
@@ -2773,6 +2787,8 @@ ActiveRecord::Schema.define(:version => 20170921190628) do
     t.integer  "material_id"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
+    t.string   "education_level"
+    t.boolean  "is_leaf"
   end
 
   add_index "standard_statements", ["uri", "material_type", "material_id"], :name => "standard_unique", :unique => true
