@@ -98,6 +98,15 @@ class HomeController < ApplicationController
   end
 
   def authoring
+    authorize :home, :authoring?
+  end
+
+  def create_collabspace_template
+    jwt = SignedJWT::create_portal_token(current_user, {:domain => root_url})
+    collabspace_url = ENV['COLLABSPACE_URL'] || "https://workspaces.concord.org/collabspace/"
+    collabspace_url << '/' unless collabspace_url.end_with?('/')
+    create_url = "#{collabspace_url}?jwtToken=#{jwt}#action=create-template"
+    redirect_to create_url
   end
 
   # view_context is a reference to the View template object
@@ -268,16 +277,16 @@ class HomeController < ApplicationController
         # Get slug to append to redirect url
         #
         slug = nil
-        if    @lightbox_resource && 
+        if    @lightbox_resource &&
                 @lightbox_resource.name &&
                 @lightbox_resource.name.respond_to?(:parameterize)
-    
+
             slug = @lightbox_resource.name.parameterize
-    
+
         end
-    
+
         # logger.info("INFO redirecting for #{id}")
-    
+
         #
         # Redirect to external_activity under /resource/:id/:slug
         #

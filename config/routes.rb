@@ -754,6 +754,7 @@ RailsPortal::Application.routes.draw do
     match '/admin' => 'home#admin', :as => :admin
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
     match 'authoring' => 'home#authoring', :as => :authoring
+    match '/create_collabspace_template' => 'home#create_collabspace_template', :as => :create_collabspace_template
 
     match '/banner' => 'misc#banner', :as => :banner
     match '/time' => 'misc_metal#time', :as => :time
