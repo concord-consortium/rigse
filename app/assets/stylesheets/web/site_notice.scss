@@ -41,30 +41,30 @@
 }
 
 .notice_container .notice_date {
-  width: 85px;
+  width: 15%;
 }
 .notice_container .delete_notice {
-  width: 50px;
+  width: 5%;
   font-weight: bold;
   text-align: center;
 }
 .notice_container .notice_text {
-  width: 450px;
+  width: 80%;
   text-align: left;
 }
 
 .notice_container .notice_date_with_border {
-  width: 85px;
+  width: 15%;
   border-bottom:solid 1px #ddd;
 }
 .notice_container .delete_notice_with_border {
-  width: 50px;
+  width: 5%;
   font-weight: bold;
   text-align: center;
   border-bottom:solid 1px #ddd;
 }
 .notice_container .notice_text_with_border {
-  width: 450px;
+  width: 80%;
   text-align: left;
   border-bottom:solid 1px #ddd;
 }
@@ -101,10 +101,10 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
 }
 
 .notice_container{
-  padding: 5px 10px 10px 0px;
+  padding: 5px 0 10px;
   overflow:hidden;
-  border-top:solid 2px #bbb; 
-  border-bottom:solid 2px #bbb; 
+  border-top:solid 2px #bbb;
+  border-bottom:solid 2px #bbb;
 }
 .showhide_notices{
   float:right;
@@ -114,20 +114,26 @@ a.create_notice, a.create_notice:visited, a.create_notice:active {
   height : 50px;
 }
 .all_notice_to_render p{
-  margin:0px;  
+  margin:0px;
 }
 
 .all_notice_to_render{
   margin:0px;
   padding:2px;
-} 
-.all_notice_to_render td{
-  vertical-align:top;
-  padding:2px;
+  width: 100%;
+}
+.all_notice_to_render {
+  tr:nth-child(even) {
+    background: #f5f5f5;
+  }
+  td{
+    vertical-align:top;
+    padding:2px;
+  }
 }
 .user_notice_container_div{
   max-height : 125px;
-  overflow: auto;  
+  overflow: auto;
   clear:both;
 }
 
@@ -144,15 +150,15 @@ a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_coll
     font-weight: normal;
     margin: 7px 0;
     padding: 3px 7px;
-    text-align: center; 
-    -webkit-border-radius: 12px;    
+    text-align: center;
+    -webkit-border-radius: 12px;
 }
 
 .cell{
   border:1px solid black;
 }
 .notice_headertext{
-  font-weight:bold; 
+  font-weight:bold;
   background-color:Transparent;
 }
 .back_link{
@@ -164,3 +170,34 @@ a.notice_expand_collapse, a.notice_expand_collapse:visited, a.notice_expand_coll
 .notice_list{border-right:solid 1px #999;border-bottom:solid 1px #999;}
 .notice_list th{border-left:solid 1px #999;border-top:solid 1px #999;}
 .notice_list td{border-left:solid 1px #999;border-top:solid 1px #999;}
+
+@media screen and (max-width: 450px) {
+  .notice_container {
+    td {
+      clear: both;
+      display: block;
+      width: 100%;
+    }
+    .notice_date, .notice_date_with_border {
+      width: 100%;
+    }
+    .delete_notice, .delete_notice_with_border {
+      text-align: left;
+      width: 100%;
+
+      a:after {
+        color: #ea6d2f;
+        content: ' delete notice';
+        font-weight: 300;
+      }
+      a:hover {
+        &:after {
+        color: #ffc320;
+        }
+      }
+    }
+    .notice_text, .notice_text_with_border {
+      width: 100%;
+    }
+  }
+}
