@@ -2278,4 +2278,54 @@ span.badge {
       }
     }
   }
+
+  .maincontainer {
+    padding: 0;
+  }
+
+  .add_student {
+
+    td {
+      clear: both;
+      display: block;
+      padding-left: 0 !important;
+      width: 100% !important;
+
+      td:nth-child(1) {
+        margin-bottom: 10px;
+      }
+    }
+    td:nth-child(3) {
+      text-align: left !important;
+    }
+  }
+
+  .classdata {
+
+    .labelvalue, td, td.title {
+      padding-left: 0;
+    }
+  }
+  .classsummary {
+    float: none;
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .classsummary + div {
+    clear: both;
+    display: block;
+    text-align: left !important;
+  }
+
+  .roster_student_list {
+
+    .item, td {
+      padding-left: 0 !important;
+
+      td {
+        padding-left: 5px !important;
+      }
+    }
+  }
 }
