@@ -57,7 +57,7 @@ services:
       #
       # Set to true to enable dynamic robots.txt
       #
-      DYNAMIC_ROBOTS_TXT:
+      DYNAMIC_ROBOTS_TXT: 'true'
 
       #
       # When PORTAL_FEATURES has "allow_cors" set this to a list of
