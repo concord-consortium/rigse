@@ -206,7 +206,6 @@
   font-weight:normal;
   margin-right: 12px;
   white-space:nowrap;
-  width:100px;
 
   .expandcollapse {
     color: #ea6d2f;
@@ -389,6 +388,50 @@ select#material_select {
       display: block;
       padding: 0;
       width: 100%;
+    }
+  }
+
+  .recent_activity_table td {
+    clear: both;
+    display: block;
+    width: 95%;
+  }
+  .legend_row {
+    width: 100%;
+
+    td {
+      height: 35px;
+    }
+  }
+  .progressbar_container {
+    width: 100%;
+  }
+
+  .progress_summary_container .inProgressSummary {
+    width: 100%;
+
+    .progressbar_container {
+      width: 100% !important;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .recent_activity_table {
+    .inProgressSummary {
+      margin-left: 0;
+      td {
+        width: 100%;
+      }
+    } 
+    #recent_activity_inprogress {
+      .progress_summary_container {
+        width: 100%;
+
+        td.student_progress {
+          padding: 0;
+        }
+      }
     }
   }
 }
