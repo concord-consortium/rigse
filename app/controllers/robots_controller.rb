@@ -19,10 +19,7 @@ class RobotsController < ApplicationController
             "Allow: /$",
             "Allow: /home",
             "Allow: /about",
-            "Allow: /assets/*",
             "Allow: /collections",
-            "Allow: /mini-profiler-resources/*",
-            "Allow: /api/*",
             "Allow: /resources/*"
         ]
 
@@ -116,7 +113,7 @@ class RobotsController < ApplicationController
                     next
                 end
 
-                slug = material.name.respond_to?(:parameterize) ?
+                slug = material.name.respond_to?(:parameterize) ? 
                         material.name.parameterize : nil
 
                 xml.url {
@@ -124,7 +121,7 @@ class RobotsController < ApplicationController
                     xml.lastmod "#{material.updated_at.strftime('%Y-%m-%d')}"
                 }
 
-            end
+            end 
 
             #
             # Add public collections
