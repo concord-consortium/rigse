@@ -2247,11 +2247,18 @@ span.badge {
 }
 
 @media screen and (max-width: 450px) {
+  .home-page-content #page-header + .cols:not(.no-collapse),
+  .portal-pages-finder-results.cols {
+    margin: 0 auto !important;
+  }
   input {
     -webkit-appearance: none;
     -webkit-border-radius:0;
     border-radius:0;
   }
+  input[type=checkbox] {
+    -webkit-appearance: checkbox;
+    }
   form.edit_user {
     padding: 0;
 
@@ -2335,5 +2342,42 @@ span.badge {
     td, td.title {
       padding-left: 0;
     }
+  }
+
+  .search_table {
+    width: 100%;
+
+    td {
+      clear: both;
+      display: block;
+      padding: 0;
+      width: 100%;
+
+      #search_term {
+        width: 91%;
+      }
+
+      .go_button {
+        margin: 10px 10px 10px 0;
+        text-align: right;
+      }
+    }
+  }
+  .filters td {
+    clear: both;
+    display: block;
+    width: 100%;
+  }
+  .tablecell input[type='checkbox'] {
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+  }
+  .authored_by_me input[type='checkbox'], .only_show_archived input[type='checkbox'] {
+    border: solid 1px #999;
+    display: inline-block;
+    height: 15px;
+    padding: 0;
+    width: 15px;
   }
 }
