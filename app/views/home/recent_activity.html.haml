@@ -4,9 +4,9 @@
 = render :partial => "notice"
 -if @clazz_offerings.length > 0
   .recent_activity_container
-    %table{:width=>"100%"}
-      %tr
-        %td{:width=>"75%",:style=>"float:right"}
+    %table
+      %tr{:class => 'legend-container'}
+        %td{}
           = render :partial => 'portal/clazzes/progress_bar_legend'
 
     = render :partial => 'recent', :collection => @clazz_offerings, :as => :clazz_offering, :locals => { :report_learner => @report_learner}
@@ -15,4 +15,3 @@
   %br
   .no_recent_activity
     = @no_recent_activity_msg.html_safe
-    

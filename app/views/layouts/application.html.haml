@@ -4,6 +4,7 @@
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name]
     %title= page_title
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1"}
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
@@ -70,19 +71,9 @@
       #top
         %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
     = render :partial => 'shared/project_header'
-    #wrapper.wrapper
-      #primary{ :class => @wide_content_layout ? "wide" : nil}
-        #content.main_content_colors
-          #content_header.main_content_colors
-            = content_for :content_header
-          #js_flash{:style=>"display: none;"}
-          = render :partial=>"layouts/flashes"
-
-          = content_for :layout
-
-
+    #wrapper{ :class => "wrapper cols" }
       - unless @wide_content_layout
-        #secondary
+        #secondary{ :class => "col-3" }
           - if @investigation
             / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
@@ -98,6 +89,15 @@
             -# handle the case of users that are not portal_teachers
             = render :partial => 'shared/left_menu', :locals => {:top_node => nil, :selects => []}
           = content_for :side_bar
+
+      #primary{ :class => @wide_content_layout ? "wide col-12" : "col-8"}
+        #content.main_content_colors
+          #content_header.main_content_colors
+            = content_for :content_header
+          #js_flash{:style=>"display: none;"}
+          = render :partial=>"layouts/flashes"
+
+          = content_for :layout
 
     = render :partial => 'shared/footer'
 

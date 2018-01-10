@@ -140,12 +140,17 @@ body#tinymce {
   min-width: 860px; }
 
 #wrapper {
+  box-sizing: border-box;
   clear: both;
   min-height: 80%;
   height: auto !important;
   margin: 0 auto;
+  max-width: 1170px;
+  min-width: 320px;
+  padding: 0 15px;
   position: relative;
-  width: 1170px; }
+  width: 100%;
+ }
 
 /* HEADER */
 #header {
@@ -363,7 +368,6 @@ body#tinymce {
 #content {
   overflow: hidden;
   overflow-y: visible;
-  padding-top: 10px;
   padding-right: 5px;
   //:position relative
 }
@@ -371,12 +375,12 @@ body#tinymce {
 /* ------- #primary ------- */
 
 #primary {
-  display: inline;
-  float: left;
-  margin: 0 0 0 290px;
+  display: inline-block;
+  margin: 57px 0 0 125px;
   min-height: 400px;
+  overflow: auto;
   padding: 0;
-  width: 880px;
+  vertical-align: top;
   div.right {
     margin: 0;
     padding: 10px 5px;
@@ -670,12 +674,12 @@ li.item_selectable {
 #secondary {
   background: #ea6d2f;
   color: #313131;
-  float: left;
+  display: inline-block;
   font: 100 16px museo-sans, verdana, helvetica, arial, sans-serif;
   height: auto;
-  margin: 20px 0 50px -1160px;
+  margin: 20px 0 50px 0;
   padding: 0 0 30px;
-  width: 235px;
+  vertical-align: top;
   a {
     color: #fff;
     display: inline-block;
@@ -732,7 +736,9 @@ li.item_selectable {
       }
     }
   }
-
+  .secondary-mobile-menu-toggle {
+    display: none;
+  }
    }
 
 .user-info-box {
@@ -1229,9 +1235,7 @@ ul.quiet_list {
   width: 100%;
   a { border-bottom: dotted 1px #479492; }
   .footer-inner {
-    left: 50%;
     margin: 0 auto;
-    width: 1170px;
     p {
       font-family: museo-sans, verdana, helvetica, sans-serif;
       padding: 0;}}
@@ -1650,14 +1654,14 @@ td.title { padding-left: 20px; text-align: left; }
   display: inline-block;
   font-weight: 500;
   text-transform: uppercase;
-  width: 575px;
+  width: 75%;
 }
 .offering-prop-checkbox {
   display: inline-block;
   font-weight: 500;
-  margin-left: 30px;
+  margin: 0;
   text-align: center;
-  width: 90px;
+  width: 10%;
 }
 
 .classsetupform #sortable {
@@ -1669,7 +1673,7 @@ td.title { padding-left: 20px; text-align: left; }
 }
 
 .offering {
-  padding: 30px 0;
+  padding: 5px 0;
 }
 .offering .offering-title, .offering .offering-title label {
   font-weight: 300;
@@ -2132,4 +2136,248 @@ span.badge {
 }
 .icon-social-linkedin:before {
   content: "\e924";
+}
+
+.chosen-container { width: 100% !important; }
+
+@media screen and (max-width: 950px) {
+  #primary {
+    display: block;
+    float: none;
+    margin: 0;
+
+    #content {
+      overflow: auto;
+      padding-bottom: 30px;
+      }
+    }
+  #secondary {
+    padding-bottom: 0;
+
+    #utility-links {
+      padding-bottom: 0;
+
+      ul.aux-links {
+        border: none;
+      }
+    }
+
+    .padded_content {
+      display: none;
+      transition: .2s;
+    }
+    .secondary-mobile-menu-toggle {
+      color: #fff;
+      cursor: pointer;
+      display: block;
+      font-weight: 500;
+      padding: 20px;
+      position: relative;
+
+      &:after {
+        content: "\e905";
+        font-family: "icomoon";
+        font-size: 12px;
+        margin: 5px 0 0 10px;
+        position: absolute;
+        right: 20px;
+        transition: .2s;
+      }
+    }
+
+    &.open {
+      .padded_content {
+        display: block;
+        transition: .2s;
+      }
+      .secondary-mobile-menu-toggle {
+
+        &:after {
+          content: "\e906";
+        }
+      }
+    }
+  }
+
+  .classdata {
+    td {
+      display: block;
+      padding-left: 5px;
+      width: 100%;
+
+      &.title {
+        padding-left: 10px;
+      }
+    }
+  }
+  .classsetupform {
+    label.right {
+      text-align: left;
+    }
+    td {
+      display: block;
+      width: 100%;
+
+      &.title {
+        padding-left: 10px;
+      }
+    }
+    input[type='text'], textarea {
+      width: 95%;
+    }
+    #div_teacher_list td {
+      display: table-cell;
+    }
+  }
+  .offering-title {
+    width: 50%;
+  }
+  .offering-prop-checkbox {
+    margin-left: 0;
+    width: 17.5%;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .classsetupform {
+    input[type='text'], textarea {
+
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .home-page-content #page-header + .cols:not(.no-collapse),
+  .portal-pages-finder-results.cols {
+    margin: 0 auto !important;
+  }
+  input {
+    -webkit-appearance: none;
+    -webkit-border-radius:0;
+    border-radius:0;
+  }
+  input[type=checkbox] {
+    -webkit-appearance: checkbox;
+    }
+  form.edit_user {
+    padding: 0;
+
+    .item {
+      padding: 0;
+
+      #left-col, #right-col {
+        clear: both;
+        float: none;
+        width: 94%;
+
+        fieldset {
+          border: none;
+          padding: 0;
+
+          input {
+            width: 100%;
+          }
+          legend {
+            margin: 0;
+            padding: 5px 0 !important;
+          }
+        }
+      }
+    }
+  }
+
+  .maincontainer {
+    padding: 0;
+  }
+
+  .add_student {
+
+    td {
+      clear: both;
+      display: block;
+      padding-left: 0 !important;
+      width: 100% !important;
+
+      td:nth-child(1) {
+        margin-bottom: 10px;
+      }
+    }
+    td:nth-child(3) {
+      text-align: left !important;
+    }
+  }
+
+  .classdata {
+
+    .labelvalue, td, td.title {
+      padding-left: 0;
+    }
+  }
+  .classsummary {
+    float: none;
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .classsummary + div {
+    clear: both;
+    display: block;
+    text-align: left !important;
+  }
+
+  .roster_student_list {
+
+    .item, td {
+      padding-left: 0 !important;
+
+      td {
+        padding-left: 5px !important;
+      }
+    }
+  }
+
+  .classsetupform {
+    padding-left: 0;
+
+    td, td.title {
+      padding-left: 0;
+    }
+  }
+
+  .search_table {
+    width: 100%;
+
+    td {
+      clear: both;
+      display: block;
+      padding: 0;
+      width: 100%;
+
+      #search_term {
+        width: 91%;
+      }
+
+      .go_button {
+        margin: 10px 10px 10px 0;
+        text-align: right;
+      }
+    }
+  }
+  .filters td {
+    clear: both;
+    display: block;
+    width: 100%;
+  }
+  .tablecell input[type='checkbox'] {
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+  }
+  .authored_by_me input[type='checkbox'], .only_show_archived input[type='checkbox'] {
+    border: solid 1px #999;
+    display: inline-block;
+    height: 15px;
+    padding: 0;
+    width: 15px;
+  }
 }

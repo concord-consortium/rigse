@@ -31,7 +31,7 @@
               - if alternate_report_link_for(current_offering)
                 %span.linkbutton.pit= alternate_report_link_for(current_offering)
         - if current_offering.clazz.students.length > 0
-          %tr
+          %tr.legend-container
             %td{:colspan=>"2"}= render :partial => 'progress_bar_legend'
         %tr
           %td{:colspan=>"2"}

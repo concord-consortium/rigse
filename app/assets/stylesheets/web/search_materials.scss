@@ -253,6 +253,17 @@ search_materials{
   span, a {
     margin: 0 1px;
   }
+  span.material_meta_data {
+    display: inline-block;
+    margin-bottom: 5px;
+
+    span {
+      margin-right: 3px;
+    }
+  }
+  a.button {
+    margin-bottom: 5px;
+  }
 }
 
 .material_list .material_list_item:nth-child(even) {

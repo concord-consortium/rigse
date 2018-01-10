@@ -41,6 +41,8 @@
             %li= link_to link.name, link.href
 
   - if top_node
+    .secondary-mobile-menu-toggle{onclick: "toggleSecondaryMenu()"}
+      Menu
     .padded_content
       = render :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => top_node, :selects => selects}
       - if top_node.is_a? Portal::Teacher
