@@ -21,6 +21,17 @@ def addTokenForLearner(user, client, learner, expires_at)
   grant.access_token
 end
 
+def addTokenForTeacher(user, client, teacher, expires_at)
+  grant = user.access_grants.create({
+      :client => client,
+      :state => nil,
+      :teacher => teacher,
+      :access_token_expires_at => expires_at },
+    :without_protection => true
+  )
+  grant.access_token
+end
+
 describe BearerToken:BearerTokenAuthenticatable do
   after(:each) { Delorean.back_to_the_present }
   let(:domain_matchers) { "" }
@@ -31,7 +42,9 @@ describe BearerToken:BearerTokenAuthenticatable do
   let(:user_token)      { addToken(user, client, expires) }
   let(:user_headers)    { {"Authorization" => "Bearer #{user_token}"} }
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
+  let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
   let(:learner_headers) { {"Authorization" => "Bearer #{learner_token}"} }
+  let(:teacher_headers) { {"Authorization" => "Bearer #{teacher_token}"} }
   let(:user)            { FactoryGirl.create(:user) }
   let(:runnable)        { Factory.create(:activity, runnable_opts)    }
   let(:offering)        { Factory(:portal_offering, offering_opts)    }
@@ -105,7 +118,7 @@ describe BearerToken:BearerTokenAuthenticatable do
     end
   end
 
-  context 'a learer with a short-lived authentication token' do
+  context 'a learner with a short-lived authentication token' do
     before(:each) {
       request.stub!(:headers).and_return(learner_headers)
     }
@@ -121,4 +134,19 @@ describe BearerToken:BearerTokenAuthenticatable do
     end
   end
 
+  context 'a teacher with a short-lived authentication token' do
+    before(:each) {
+      request.stub!(:headers).and_return(teacher_headers)
+    }
+
+    let(:expires) { Time.now + 10.minutes}
+    it 'should authenticate the teacher' do
+      strategy.authenticate!.should eql :success
+    end
+
+    it 'should be able to get the teacher from the token' do
+      grant = AccessGrant.find_by_access_token(teacher_token)
+      grant.teacher.should eql class_teacher
+    end
+  end
 end

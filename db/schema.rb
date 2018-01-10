@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171116215453) do
+ActiveRecord::Schema.define(:version => 20171204200632) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -24,10 +24,12 @@ ActiveRecord::Schema.define(:version => 20171116215453) do
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
     t.integer  "learner_id"
+    t.integer  "teacher_id"
   end
 
   add_index "access_grants", ["client_id"], :name => "index_access_grants_on_client_id"
   add_index "access_grants", ["learner_id"], :name => "index_access_grants_on_learner_id"
+  add_index "access_grants", ["teacher_id"], :name => "index_access_grants_on_teacher_id"
   add_index "access_grants", ["user_id"], :name => "index_access_grants_on_user_id"
 
   create_table "activities", :force => true do |t|

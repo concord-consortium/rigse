@@ -2,11 +2,14 @@ class API::V1::ClassesController < API::APIController
 
   # GET api/v1/classes/:id
   def show
-    if current_visitor.anonymous?
+    user, role = check_for_auth_token()
+    return if !user
+
+    if user.anonymous?
       return error('You must be logged in to use this endpoint')
     end
 
-    if !current_visitor.portal_student && !current_visitor.portal_teacher
+    if !user.portal_student && !user.portal_teacher
       error('You must be logged in as a student or teacher to use this endpoint')
     end
 
@@ -15,8 +18,8 @@ class API::V1::ClassesController < API::APIController
       return error('The requested class was not found')
     end
 
-    student_in_class = current_visitor.portal_student && current_visitor.portal_student.has_clazz?(clazz)
-    teacher_in_class = !student_in_class || (current_visitor.portal_teacher && current_visitor.portal_teacher.has_clazz?(clazz))
+    student_in_class = user.portal_student && user.portal_student.has_clazz?(clazz)
+    teacher_in_class = !student_in_class || (user.portal_teacher && user.portal_teacher.has_clazz?(clazz))
 
     if (!student_in_class && !teacher_in_class)
       return error('You are not a student or teacher of the requested class')
@@ -28,11 +31,14 @@ class API::V1::ClassesController < API::APIController
   # GET api/v1/classes/mine
   # lists the users classes
   def mine
-    if current_visitor.anonymous?
+    user, role = check_for_auth_token()
+    return if !user
+
+    if user.anonymous?
       return error('You must be logged in to use this endpoint')
     end
 
-    user_with_clazzes = current_visitor.portal_student || current_visitor.portal_teacher
+    user_with_clazzes = user.portal_student || user.portal_teacher
     if !user_with_clazzes
       error('You must be logged in as a student or teacher to use this endpoint')
     end
@@ -91,6 +97,8 @@ class API::V1::ClassesController < API::APIController
   end
 
   private
+
+
 
   def render_info(clazz)
     state = nil

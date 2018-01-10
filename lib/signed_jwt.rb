@@ -6,11 +6,15 @@ module SignedJWT
   end
 
   def self.create_portal_token(user, claims={}, expires_in=3600)
+    now = Time.now.to_i
     payload = {
-      exp: Time.now.to_i + expires_in,
-      uid: user.id,
-      claims: claims
+      alg: self.hmac_algorithm,
+      iat: now,
+      exp: now + expires_in,
+      uid: user.id
     }
+    # merge claims into payload, preventing duplicates
+    payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
     begin
       JWT.encode payload, self.hmac_secret, self.hmac_algorithm
     rescue Exception => e
@@ -33,7 +37,7 @@ module SignedJWT
 
     now = Time.now.to_i
     payload = {
-      alg: 'RS256',
+      alg: self.rsa_algorithm,
       iss: app.client_email,
       sub: app.client_email,
       aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',

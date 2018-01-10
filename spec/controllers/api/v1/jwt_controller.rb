@@ -26,15 +26,27 @@ def addTokenForLearner(user, client, learner, expires_at)
   grant.access_token
 end
 
-describe API::V1::JwtController do
+def addTokenForTeacher(user, client, teacher, expires_at)
+  grant = user.access_grants.create({
+      :client => client,
+      :state => nil,
+      :teacher => teacher,
+      :access_token_expires_at => expires_at },
+    :without_protection => true
+  )
+  grant.access_token
+end
+
+describe API::V1::JwtController, :type => :controller do
 
   let(:expires)         { Time.now + 1000000000.minutes}
   let(:user_token)      { addToken(user, client, expires) }
   let(:user)            { FactoryGirl.create(:user) }
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
+  let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
   let(:runnable)        { Factory.create(:activity, runnable_opts)    }
   let(:offering)        { Factory(:portal_offering, offering_opts)    }
-  let(:clazz)           { Factory(:portal_clazz, teachers: [class_teacher], students:[student], logging: true) }
+  let(:clazz)           { Factory(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
   let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)   { {name: 'the activity'}              }
   let(:class_teacher)   { Factory.create(:portal_teacher)     }
@@ -83,7 +95,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
   describe "GET #firebase" do
 
-    context "when a valid authentication header token is sent without a learner" do
+    context "when a valid authentication header token is sent without a learner or teacher" do
       before(:each) {
         set_auth_token(user_token)
         FirebaseApp.create!(firebase_app_attributes)
@@ -121,8 +133,105 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         decoded_token[:data]["logging"].should eql true
         decoded_token[:data]["domain_uid"].should eql user.id
         decoded_token[:data]["class_info_url"].should_not be_nil
+        decoded_token[:data]["claims"]["user_type"].should eq "learner"
+        decoded_token[:data]["claims"]["user_id"].should_not be_nil
+        decoded_token[:data]["claims"]["class_hash"].should_not be_nil
+        decoded_token[:data]["claims"]["offering_id"].should eq offering.id
+      end
+    end
+
+    context "when a valid authentication header token is sent with a teacher" do
+      before(:each) {
+        set_auth_token(teacher_token)
+        FirebaseApp.create!(firebase_app_attributes)
+      }
+
+      it "returns a valid JWT with teacher params without a class hash" do
+        get :firebase, {:firebase_app => "test app"}, :format => :json
+        expect(response.status).to eq(201)
+
+        body = JSON.parse(response.body)
+        token = body["token"]
+        decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+
+        decoded_token[:data]["uid"].should eql user.id
+        decoded_token[:data]["domain"].should eql root_url
+        decoded_token[:data]["claims"]["user_type"].should eq "teacher"
+        decoded_token[:data]["claims"]["user_id"].should_not be_nil
+        decoded_token[:data]["claims"]["class_hash"].should eq nil
+      end
+
+      it "returns a valid JWT with teacher params with a class hash" do
+        get :firebase, {:firebase_app => "test app", :class_hash => clazz.class_hash}, :format => :json
+        expect(response.status).to eq(201)
+
+        body = JSON.parse(response.body)
+        token = body["token"]
+        decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+
+        decoded_token[:data]["claims"]["class_hash"].should eq clazz.class_hash
       end
     end
   end
 
+  describe "GET #portal"
+  context "when a valid authentication header token is sent without a learner or teacher" do
+    before(:each) {
+      set_auth_token(user_token)
+    }
+
+    it "returns a valid JWT" do
+      get :portal, {}, :format => :json
+      expect(response.status).to eq(201)
+
+      body = JSON.parse(response.body)
+      token = body["token"]
+      decoded_token = SignedJWT::decode_portal_token(token)
+      decoded_token[:data]["uid"].should eql user.id
+    end
+  end
+
+  context "when a valid authentication header token is sent with a learner" do
+    before(:each) {
+      set_auth_token(learner_token)
+    }
+
+    it "returns a valid JWT with learner params" do
+      get :portal, {}, :format => :json
+      expect(response.status).to eq(201)
+
+      body = JSON.parse(response.body)
+      token = body["token"]
+      decoded_token = SignedJWT::decode_portal_token(token)
+
+      decoded_token[:data]["uid"].should eql user.id
+      decoded_token[:data]["domain"].should eql root_url
+      decoded_token[:data]["user_type"].should eq "learner"
+      decoded_token[:data]["user_id"].should_not be_nil
+      decoded_token[:data]["learner_id"].should eq learner.id
+      decoded_token[:data]["class_info_url"].should_not be_nil
+      decoded_token[:data]["offering_id"].should eq offering.id
+    end
+  end
+
+  context "when a valid authentication header token is sent with a teacher" do
+    before(:each) {
+      set_auth_token(teacher_token)
+    }
+
+    it "returns a valid JWT with teacher params without a class hash" do
+      get :portal, {}, :format => :json
+      expect(response.status).to eq(201)
+
+      body = JSON.parse(response.body)
+      token = body["token"]
+      decoded_token = SignedJWT::decode_portal_token(token)
+
+      decoded_token[:data]["uid"].should eql user.id
+      decoded_token[:data]["domain"].should eql root_url
+      decoded_token[:data]["user_type"].should eq "teacher"
+      decoded_token[:data]["user_id"].should_not be_nil
+      decoded_token[:data]["teacher_id"].should eq class_teacher.id
+    end
+  end
 end

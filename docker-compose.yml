@@ -76,6 +76,11 @@ services:
       ROLLBAR_ACCESS_TOKEN:
       ROLLBAR_CLIENT_ACCESS_TOKEN:
 
+      #
+      # Set JWT HMAC secret
+      #
+      JWT_HMAC_SECRET:
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse
