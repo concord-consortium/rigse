@@ -27,7 +27,7 @@ class API::V1::ShowCollaboratorsData
         # Not sure why this is needed, but currently LARA expects that value for regular activity run.
         learner_id: learner.id,
         # This URL can be used by external activity system to publish back  student answers.
-        endpoint_url: learner.remote_endpoint_url(self.protocol, self.host_with_port)
+        endpoint_url: learner.remote_endpoint_url
       }
     end
   end

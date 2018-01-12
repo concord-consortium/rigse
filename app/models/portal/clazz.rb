@@ -4,8 +4,7 @@ class Portal::Clazz < ActiveRecord::Base
   acts_as_replicatable
 
   belongs_to :course, :class_name => "Portal::Course", :foreign_key => "course_id"
-  belongs_to :semester, :class_name => "Portal::Semester", :foreign_key => "semester_id"
-  # belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
+
 
   has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id",
     :order => :position
@@ -106,8 +105,7 @@ class Portal::Clazz < ActiveRecord::Base
   end
 
   def title
-    semester_name = semester ? semester.name : 'unknown'
-    "Class: #{name}, Semester: #{semester_name}"
+    "Class: #{name}"
   end
 
   def teachers_label
@@ -299,6 +297,15 @@ class Portal::Clazz < ActiveRecord::Base
 
   def class_info_url(protocol, host)
     Rails.application.routes.url_helpers.api_v1_class_url(id: self.id, protocol: protocol, host: host)
+  end
+
+  def external_class_reports
+    self.offerings.includes(:runnable)
+      .select{ |o| o.runnable && o.runnable.respond_to?(:external_report) && o.runnable.external_report }
+      .map{ |o| o.runnable.external_report }
+      .select{ |r| r.report_type == "class" }
+      .uniq{ |r| r.id }
+      .sort{ |r1, r2| r1.launch_text <=> r2.launch_text }
   end
 
 end

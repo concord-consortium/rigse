@@ -15,6 +15,7 @@
   margin-top:15px;
 }
 .search_table td{
+  padding: 5px;
   vertical-align:middle;
 }
 .result_material
@@ -24,7 +25,7 @@
 }
 .filterheader
 {
-  color: #EE864E;
+  color: #313131;
   margin-bottom:2px;
   font-weight:bold;
   font-size:13px;
@@ -40,12 +41,12 @@ width: 300px;
 }
 #filter_container
 {
- background-color:#fbf4da;
+ background-color:#f5f5f5;
  margin-top:10px;
   }
 .filters
 {
-  background-color:#fbf4da;
+  background-color:#f5f5f5;
   margin:0px 0px 15px 15px;
   float:left;
   font-size:12px;
@@ -78,17 +79,58 @@ width: 300px;
     font-size: 0.75em;
     color: #999;
 }
+
+/**
+ *
+ * Stem finder favorite material styles
+ *
+ */
+.stem-finder-result-favorite {
+  position: 	absolute;
+  top: 			0px;
+  right: 		5px;
+  color: 		#FFFFFF;
+  font-size: 	32px;
+  cursor:       default;
+}
+.stem-finder-result-favorite-active {
+  color: 		#F8CF4D;
+}
+
+/**
+ *
+ * Legacy favorite material styles
+ *
+ */
+.legacy-favorite {
+  position: 	absolute;
+  top: 			0px;
+  margin-top:   -10px;
+  right: 		0px;
+  color: 		#FFFFFF;
+  font-size: 	32px;
+  font-family:  initial;
+  cursor:       default;
+}
+.legacy-favorite-active {
+  color: 		#F8CF4D;
+}
+.legacy-favorite-outline {
+  color: 		#CCCCCC;
+}
+
 .material_icon {
-  float:left;
-  margin:17px 10px 0 5px;
-  padding: 0px;
-  height: 100px;
-  width: 120px;
-  overflow: hidden;
-  text-align:center;
-  .thumb_link {
-    cursor: pointer;
-  }
+    position:   relative;
+    float:      left;
+    margin:     17px 10px 0 5px;
+    padding:    0px;
+    height:     100px;
+    width:      120px;
+    overflow:   hidden;
+    text-align: center;
+    .thumb_link {
+        cursor: pointer;
+    }
 }
 .material_type{
   width:120px;
@@ -180,6 +222,9 @@ search_materials{
 .probes_label{
   text-transform:none;
 }
+.material_list {
+  margin: 0 10px;
+}
 .material_list .material_list_item {
   overflow:hidden;
 
@@ -208,14 +253,25 @@ search_materials{
   span, a {
     margin: 0 1px;
   }
+  span.material_meta_data {
+    display: inline-block;
+    margin-bottom: 5px;
+
+    span {
+      margin-right: 3px;
+    }
+  }
+  a.button {
+    margin-bottom: 5px;
+  }
 }
 
 .material_list .material_list_item:nth-child(even) {
-  background-color: #f9eec1;
+  background-color: #fcfcfc;
 }
 
 .material_list .material_list_item:nth-child(odd) {
-  background-color: #FFFBED;
+  background-color: #f5f5f5;
 }
 
 .landing_page {
@@ -293,16 +349,16 @@ vertical-align: middle;
 }
 .materials_container
 {
-  border:1px solid #AAA;
+  background: #fff;
+  border:1px solid #0592af;
   margin-top:10px;
 }
 .material_list_header
 {
- background-color: #EDC323;
- color:#555;
+ background-color: #0592af;
+ color:#fff;
  font-weight:bold;
- padding:2px;
- padding-left: 5px;
+ padding:5px 10px;
 }
 .materials_container .pagination {
   padding:0px 0px 5px 10px;
@@ -442,9 +498,9 @@ span.clazz_count{padding-left:5px;font-style:italic;}
 span.material_meta_data {
   span {
     font-size: 10px;
-    padding: 0.2em;
+    padding: 5px 10px;
     color: white;
-    margin-left: 0.2em;
+    margin-right: 0.2em;
     text-transform: lowercase;
   }
   .is_community {
@@ -458,7 +514,7 @@ span.material_meta_data {
     background-color: #479492;
   }
   .RunsInBrowser {
-    background-color: #479492;
+    background-color: #007c8b;
   }
   .RequiresDownload {
     color: #479492;

@@ -39,6 +39,21 @@ class API::V1::TeachersController < API::APIController
       attributes = teacher_registration.attributes
       attributes.delete(:password)
       attributes.delete(:password_confirmation)
+
+      #
+      # For teachers, if we came from omniauth set the valid email address.
+      #
+      if session[:omniauth_email]
+        current_user.email = session['omniauth_email']
+        current_user.save!
+        session['omniauth_email'] = nil
+      end 
+
+      if session[:omniauth_origin]
+        attributes["omniauth_origin"]   = session[:omniauth_origin]
+        session[:omniauth_origin]       = nil
+      end
+    
       render status: 201, json: attributes
     else
       error(teacher_registration.errors)
@@ -62,6 +77,35 @@ class API::V1::TeachersController < API::APIController
       error({'login' => 'username taken'})
     end
   end
+
+  #
+  # Check if login is both a valid login name and
+  # if the login is available.
+  #
+  def login_valid
+    valid = User.login_regex.match(params[:username])
+    if valid
+      login_available 
+    else
+      error({'login' => 'username not valid'})
+    end
+  end
+
+  #
+  # Determine if a user's given name or surname is valid based on
+  # what pattern is defined in the User class.
+  #
+  def name_valid
+    name = params[:name]
+
+    valid = User.name_regex.match(name)
+    if valid
+      render :json => {'message' => 'ok'}
+    else
+      error({'name' => 'name not valid'})
+    end
+  end
+
 
   private
 

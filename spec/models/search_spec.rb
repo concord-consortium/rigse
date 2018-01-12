@@ -357,7 +357,7 @@ describe Search do
         end
 
         describe "When there is no template" do
-          let(:external_activity){FactoryGirl.create(:external_activity, external_base.merge(public_opts).merge(official))}
+          let(:external_activity){FactoryGirl.create(:external_activity, external_base.merge(public_opts).merge(official).merge({:material_type => 'Activity'}))}
           it "should be listed in the Activity results" do
             subject.results[Search::InvestigationMaterial].should_not include(external_activity)
             subject.results[Search::ActivityMaterial].should include(external_activity)
@@ -424,9 +424,9 @@ describe Search do
             let(:cohort2_activities) { collection(:activity, 2, cohort2_opts)}
             let(:both_activity)      { collection(:activity, 1, both_opts)}
 
-            let(:blank_external)     { collection(:external_activity, 1, external_base.merge(official).merge(public_opts)) }
-            let(:cohort1_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort1_opts)) }
-            let(:cohort2_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort2_opts)) }
+            let(:blank_external)     { collection(:external_activity, 1, external_base.merge(official).merge(public_opts).merge({:material_type => 'Activity'}) ) }
+            let(:cohort1_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort1_opts).merge({:material_type => 'Activity'})) }
+            let(:cohort2_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort2_opts).merge({:material_type => 'Activity'})) }
 
             let(:materials) do
               [

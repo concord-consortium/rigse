@@ -11,10 +11,6 @@ And /^I fill Class Word with "([a-zA-Z0-9]+)"$/ do |classWord|
   fill_in('portal_clazz_class_word' , :with => classWord)
 end
 
-And /^I select Term "([A-Z]{1}[a-z]+)" from the drop down$/ do |term|
-  select(term , :from => 'portal_clazz_semester_id')
-end
-
 And /^I uncheck investigation with label "(.+)"$/ do |investigation_name|
   uncheck(investigation_name)
 end

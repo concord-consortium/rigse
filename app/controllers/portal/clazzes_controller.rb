@@ -10,6 +10,15 @@ class Portal::ClazzesController < ApplicationController
   before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
   before_filter :student_teacher_admin_or_config, :only => [:show]
 
+  #
+  # Check that the current teacher owns the class they are
+  # accessing.
+  #
+  include RestrictedTeacherController
+  before_filter :check_teacher_owns_clazz, :only => [   :roster,
+                                                        :materials,
+                                                        :fullstatus ]
+
   def current_clazz
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -69,7 +78,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Clazz
-    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.new
     if params[:teacher_id]
       @portal_clazz.teacher = Portal::Teacher.find(params[:teacher_id])
@@ -89,7 +97,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
     @portal_clazz = Portal::Clazz.find(params[:id])
-    @semesters = Portal::Semester.all
     if request.xhr?
       render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz }
       return
@@ -106,7 +113,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Clazz
-    @semesters = Portal::Semester.all
 
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
@@ -190,7 +196,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
-    @semesters = Portal::Semester.all
     @portal_clazz = Portal::Clazz.find(params[:id])
 
     if request.xhr?
@@ -533,9 +538,8 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
+
     @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
     if request.xhr?
@@ -574,7 +578,8 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
+
+    if current_user.nil? || !current_visitor.portal_teacher
       raise Pundit::NotAuthorizedError
     end
 
@@ -594,9 +599,16 @@ class Portal::ClazzesController < ApplicationController
         arrActiveTeacherClazz = []
       end
 
+      arrTeacherClazzPosition.each do |teacher_clazz_id|
+        o = Portal::TeacherClazz.find(teacher_clazz_id);
+        check_teacher_owns_clazz_id(o.clazz_id)
+      end
+
       position = 1
       arrTeacherClazzPosition.each do |teacher_clazz_id|
+
         teacher_clazz = Portal::TeacherClazz.find(teacher_clazz_id);
+
         teacher_clazz.position = position;
         if (arrActiveTeacherClazz.include?(teacher_clazz_id))
           teacher_clazz.active = true
@@ -606,7 +618,14 @@ class Portal::ClazzesController < ApplicationController
         teacher_clazz.clazz.save!
         teacher_clazz.save!
         position += 1;
+
       end
+
+      #
+      # Reload this otherwise we have stale data in memory
+      # getting passed to our partial below for rendering.
+      #
+      current_user.portal_teacher.teacher_clazzes.reload
 
       render(:update) { |page|
         page.replace_html 'clazz_list_container', :partial => 'portal/clazzes/clazzes_list', :locals => {:top_node => @teacher, :selects => []}
@@ -653,8 +672,7 @@ class Portal::ClazzesController < ApplicationController
         :grades => class_to_copy.grades,
         :teacher_id => teacher.id,
         :teacher => class_to_copy.teacher,
-        :course => class_to_copy.course,
-        :semester_id => class_to_copy.semester_id
+        :course => class_to_copy.course
     )
 
     class_to_copy.teachers.each do |other_teacher|
@@ -688,9 +706,7 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
 
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
 
@@ -722,9 +738,8 @@ class Portal::ClazzesController < ApplicationController
     # authorize @clazz
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
-    unless current_visitor.portal_teacher
-      raise Pundit::NotAuthorizedError
-    end
+
+
     @portal_clazz = Portal::Clazz.find(params[:id]);
 
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
@@ -771,4 +786,13 @@ class Portal::ClazzesController < ApplicationController
       render :json => {:error => "No class found"}, :status => :not_found
     end
   end
+
+  def external_report
+    portal_clazz = Portal::Clazz.find(params[:id])
+    report = ExternalReport.find(params[:report_id])
+    next_url = report.url_for_class(portal_clazz.id, current_visitor, request.protocol, request.host_with_port)
+    redirect_to next_url
+  end
+
+
 end

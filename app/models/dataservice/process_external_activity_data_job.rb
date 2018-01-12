@@ -25,7 +25,9 @@ class Dataservice::ProcessExternalActivityDataJob
 
     # process the json data
     answers.each do |student_response|
+
       begin
+
         case student_response["type"]
         when "open_response"
           embeddable = template.open_responses.detect {|e| e.external_id == student_response["question_id"]}
@@ -47,10 +49,21 @@ class Dataservice::ProcessExternalActivityDataJob
         else
           raise UnknownRespose.new("type: #{student_response["type"]}\nContent: #{content}")
         end
+
+      #
       # We could broaden this to StdErr, but this should catch most cases
       # which will be NPE-like cases
-      rescue NameError => stderr
-        log_exception(stderr, learner_id, student_response)
+      #
+      rescue NameError => e
+
+        Delayed::Worker.logger.debug("*** rescue #{e}")
+        Delayed::Worker.logger.debug("*** learner_id #{learner_id}")
+        Delayed::Worker.logger.debug("*** student_response " <<
+                                        "#{student_response}")
+        Delayed::Worker.logger.error e.backtrace.join("\n")
+
+        log_exception(e, learner_id, student_response)
+
       end
     end
     learner.report_learner.last_run = Time.now
@@ -59,14 +72,20 @@ class Dataservice::ProcessExternalActivityDataJob
 
   def internal_process_open_response(data, embeddable)
     if data["answer"].nil?
-      raise MissingAnswer.new("Open response is missing answer value")
+      data["answer"] = ''
     end
     process_open_response(embeddable.id, data["answer"], data["is_final"])
   end
 
   def internal_process_multiple_choice(data, embeddable)
     choice_ids = data["answer_ids"].map {|aid| choice = embeddable.choices.detect{|ch| ch.external_id == aid }; choice ? choice.id : nil }
-    process_multiple_choice(choice_ids.compact.uniq, {}, data["is_final"])
+
+    # Delayed::Worker.logger.debug("*** choice_ids #{choice_ids}")
+
+    process_multiple_choice(embeddable.id,
+                            choice_ids.compact.uniq,
+                            {},
+                            data["is_final"])
   end
 
   def internal_process_image_question(data,embeddable)

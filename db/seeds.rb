@@ -1,4 +1,4 @@
-def create_district_school_semester
+def create_district_school
   # Make a district
   site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
   site_district.description = "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
@@ -11,9 +11,6 @@ def create_district_school_semester
   site_school.state = "MA"
   site_school.save!
 
-  # start with two semesters
-  site_school_fall_semester = Portal::Semester.find_or_create_by_name_and_school_id('Fall', site_school.id)
-  site_school_spring_semester = Portal::Semester.find_or_create_by_name_and_school_id('Spring', site_school.id)
 end
 
 def create_roles
@@ -158,7 +155,7 @@ def create_settings
   end
 end
 
-create_district_school_semester
+create_district_school
 create_roles
 create_default_users
 create_grades
@@ -166,4 +163,9 @@ create_settings
 
 # populate Countries table
 Portal::Country.from_csv_file
+
+#
+# Populate default Standard Documents
+#
+StandardDocument.create_defaults
 

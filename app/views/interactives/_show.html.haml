@@ -41,4 +41,8 @@
       %br
       %b Interactive Size:
       = "#{interactive.width} x #{interactive.height}"
+    - if interactive.respond_to?(:external_activity_id)
+      %br
+      %b External Activity ID:
+      = "#{interactive.external_activity_id}"
   %div{:style => "clear:both"}

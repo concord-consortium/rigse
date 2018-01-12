@@ -243,7 +243,6 @@ namespace :deploy do
       touch #{shared_path}/config/initializers/site_keys.rb &&
       touch #{shared_path}/config/initializers/subdirectory.rb &&
       touch #{shared_path}/config/database.yml &&
-      touch #{shared_path}/config/google_analytics.yml
       touch #{shared_path}/config/padlet.yml
     CMD
 
@@ -258,7 +257,6 @@ namespace :deploy do
       ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml &&
       ln -nfs #{shared_path}/config/settings.yml #{release_path}/config/settings.yml &&
       ln -nfs #{shared_path}/config/installer.yml #{release_path}/config/installer.yml &&
-      ln -nfs #{shared_path}/config/paperclip.yml #{release_path}/config/paperclip.yml &&
       ln -nfs #{shared_path}/config/aws_s3.yml #{release_path}/config/aws_s3.yml &&
       ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml &&
       ln -nfs #{shared_path}/config/padlet.yml #{release_path}/config/padlet.yml &&
@@ -274,7 +272,6 @@ namespace :deploy do
     CMD
     # This is part of the setup necessary for using newrelics reporting gem
     # run "ln -nfs #{shared_path}/config/newrelic.yml #{release_path}/config/newrelic.yml"
-    run "ln -nfs #{shared_path}/config/google_analytics.yml #{release_path}/config/google_analytics.yml"
 
     # support for running SproutCore app from the public directory
     run "ln -nfs #{shared_path}/public/static #{release_path}/public/static"
@@ -326,10 +323,10 @@ namespace :setup do
 
   desc "setup the NCES districts: download and configure NCES districts"
   task :districts, :roles => :app do
-    run_remote_rake "portal:setup:download_nces_data --trace"  
+    run_remote_rake "portal:setup:download_nces_data --trace"
     run_remote_rake "portal:setup:import_nces_from_files --trace"
     run_remote_rake "portal:setup:create_districts_and_schools_from_nces_data --trace"
-  end 
+  end
 end
 
 #############################################################
@@ -337,12 +334,6 @@ end
 #############################################################
 
 namespace :import do
-
-  desc 'import grade span expectations from files in config/rigse_data/'
-  task :import_gses_from_file, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:setup:import_gses_from_file --trace"
-  end
 
   desc"Generate OtrunkExamples:: Rails models from the content in the otrunk-examples dir."
   task :generate_otrunk_examples_rails_models, :roles => :app do
@@ -405,12 +396,6 @@ namespace :convert do
   task :wrap_orphaned_activities_in_investigations, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
       "bundle exec rake RAILS_ENV=#{rails_env} app:make:investigations --trace"
-  end
-
-  desc 'set new grade_span_expectation attribute: gse_key'
-  task :set_gse_keys, :roles => :db, :only => { :primary => true } do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:set_gse_keys --trace"
   end
 
   desc 'find page_elements whithout owners and reclaim them'

@@ -108,5 +108,11 @@ namespace :app do
     task :unsuspend_default_users => :environment do
       User.unsuspend_default_users
     end
+
+    desc "Create Standard Documents"
+    task :create_standard_documents => :environment do
+      StandardDocument.create_defaults
+    end
+
   end
 end

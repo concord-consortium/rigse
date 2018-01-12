@@ -1,0 +1,240 @@
+-# Expects locals: object
+- if object && (policy(object).admin_or_material_admin? || policy(object).author?)
+
+  = field_set_tag 'Standards' do
+
+    %div{:id => "asn_search_modal" }
+      %div{:class => "special-msg asn_modal_msg"}
+
+    %div
+      Applied Standards
+      %div{:id => "applied_standards_div"}
+      %br
+    %div
+      %table{:class => "asn_add_table"}
+        %tr
+          %td
+            Add Standards
+          %td{:class => "asn_add_table_td_right"}
+            %input{:id => "add_statement_button", :type => "button", :value => "Add", :onclick => "window.toggleAddDiv()"}
+    %div{:id => "add_statement_div"}
+      %form
+        %table{:class => "asn_search_table"}
+          %tr
+            %td
+              Standard Document
+            %td
+              %select{:id => "asn_document_id", :multiple => false}
+                - StandardDocument.all.each do |s|
+                  %option{value: s.uri} #{s.name}
+            %td
+          %tr
+            %td
+              Notation
+            %td
+              %input{:id => "asn_statement_notation_query", :type => "text" }
+            %td
+          %tr
+            %td
+              Label
+            %td
+              %input{:id => "asn_statement_label_query", :type => "text" }
+            %td
+          %tr
+            %td
+              Description
+            %td
+              %input{:id => "asn_description_query", :type => "text" }
+          %tr
+            %td
+              URI
+            %td
+              %input{:id => "asn_uri_query", :type => "text" }
+            %td{:class => "asn_search_table_td_right"}
+              %input{:type => "button", :value => "Search",   :onclick => "window.searchASN()"}
+      %div{:id => "asn_search_results_message" }
+      %div{:id => "asn_search_results", :class => "asn_results_div"}
+      %br
+
+:javascript
+  jQuery(document).ready(function() {
+
+    jQuery("#asn_search_results_message").hide();
+    jQuery("#add_statement_div").hide();
+
+    //
+    // Form parameters sent to ASN as query params (through controller)
+    //
+    var PARAM_INPUTS = [    "asn_document_id",
+                            "asn_statement_notation_query",
+                            "asn_statement_label_query",
+                            "asn_uri_query",
+                            "asn_description_query" ];
+
+
+    //
+    //
+    //
+    window.clearSearchForm = function(event) {
+      for(var i = 0; i < PARAM_INPUTS.length; i++) {
+        if(PARAM_INPUTS[i] != "asn_document_id") {
+          jQuery("#"+PARAM_INPUTS[i]).attr('value', '');
+        }
+      }
+    };  // end window.clearSearchForm()
+
+
+    //
+    // Handle user pressing enter on form fields. Otherwise the
+    // modal popup is dismissed.
+    //
+    window.onKeyPress = function(event) {
+      if (event.which === 13) {
+        window.searchASN();
+        event.preventDefault();
+      }
+    };  // end window.onKeyPress()
+
+
+    //
+    // Need to attach these handlers here. HAML can't seem to correctly
+    // register them with :onkeypress maybe because this takes an 
+    // event parameter.
+    //
+    for(var i = 0; i < PARAM_INPUTS.length; i++) {
+      jQuery("#"+PARAM_INPUTS[i]).keypress(function(event) {
+        window.onKeyPress(event);
+      });
+    }
+
+
+    //
+    // Load the standards associated with this material.
+    //
+    window.loadAppliedStandards = function() {
+
+      apiUrl    = "/api/v1/materials/get_materials_standards"
+      data      = { material_type:  "#{object.class.name.underscore}",
+                    material_id:    "#{object.id}" };
+      div       = jQuery("#applied_standards_div");
+
+      div.html('&nbsp;&nbsp;<i>Loading applied standards</i>.');
+
+      jQuery.ajax({
+        type:       "GET",
+        dataType:   "json",
+        url:        apiUrl,
+        data:       data,
+   	 	success:    function(response) {
+
+          if(response.statements.length == 0) {
+            div.html('&nbsp;&nbsp;<i>No standards applied</i>.');
+            return;
+          }
+
+          response["material"] = { 
+            material_type:  "#{object.class.name.underscore}",
+            material_id:    "#{object.id}" };
+
+          ReactDOM.render(StandardsTable(response), div[0]);
+        }
+      });
+
+ 
+    }; // end window.loadAppliedStandards()
+
+
+    //
+    // Toggle the visibility of the add statement div
+    //
+    window.toggleAddDiv = function() {
+      div       = jQuery("#add_statement_div");
+      button    = jQuery("#add_statement_button");
+
+      if(div.is(':visible')) {
+
+        div.hide();
+        var results = jQuery("#asn_search_results");
+        results.html('');
+        button.attr('value', 'Add');
+        window.clearSearchForm();
+
+      } else {
+
+        div.show();
+        button.attr('value', 'Done');
+
+      }
+
+    };  // end window.toggleAddDiv()
+
+
+    //
+    // Perform ASN search
+    //
+    window.searchASN = function(startIndex) {
+
+      var data          = {};
+      var apiUrl        = "/api/v1/materials/get_standard_statements";
+      var results       = jQuery("#asn_search_results");
+      var message       = jQuery("#asn_search_results_message");
+
+      results.html('');
+
+      message.html('Searching...');
+      message.show();
+
+      //
+      // Collect form paramter values to send as ajax data.
+      //
+      for(var i = 0; i < PARAM_INPUTS.length; i++) {
+        data[PARAM_INPUTS[i]] = jQuery("#"+PARAM_INPUTS[i]).attr("value");
+      }
+      data["material_type"] = "#{object.class.name.underscore}";
+      data["material_id"]   = "#{object.id}";
+
+      if(startIndex) {
+        data["start"] = startIndex;
+      }
+
+      Portal.showModal("#asn_search_modal", "Processing...", true);
+
+      jQuery.ajax({
+        type:       "GET",
+        dataType:   "json",
+        url:        apiUrl,
+        data:       data,
+   	 	success:    function(response) {
+
+          // console.log("INFO Got standard search results.")
+
+          message.hide();
+
+          if(response.statements.length == 0) {
+            results.html('');
+            message.html('No results found.');
+            message.show();
+            Portal.hideModal();
+            return;
+          }
+
+          response["material"] = { 
+            material_type:  "#{object.class.name.underscore}",
+            material_id:    "#{object.id}" };
+
+          ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
+          Portal.hideModal();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          console.log("ERROR", xhr.responseText);
+          Portal.hideModal();
+        }
+      });
+
+    };  // end window.searchASN()
+
+    window.loadAppliedStandards();
+
+  }); 
+
+  

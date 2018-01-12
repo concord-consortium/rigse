@@ -1,5 +1,5 @@
 .manage_classes_panel#manage_classes_panel
-  .header Manage Class List
+  %h1 Manage Class List
   -if(@teacher.teacher_clazzes.length == 0)
     = 'To get started,'
     %a{ :id => "create_class", :href => new_portal_clazz_path } create a class
@@ -21,10 +21,8 @@
         - active_classes_array.push(0)
       - position_of_classes.push(teacher_clazz.position)
     .total_Class_summary My Classes (#{@teacher.clazzes.length} Total, #{active_class_count} Active)
-    %br
-    %br
-    %br
-    .checkbox_title Active classes
+    %hr{:class => 'hr-thick'}
+    .checkbox_title Active Classes
 
     - if @teacher.teacher_clazzes.length > 0
       %ul.sortable{:id=>"sortable"}

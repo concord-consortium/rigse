@@ -1,6 +1,6 @@
 development: &non_production_settings
   :site_name: Rails Portal (development)
-  :site_url: http://localhost:3000
+  :site_url: <%= ENV["SITE_URL"] || 'http://localhost:3000' %> 
   :authoring_site_url: //authoring.staging.concord.org
   :codap_url: http://codap.concord.org/releases/latest/
   :log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di

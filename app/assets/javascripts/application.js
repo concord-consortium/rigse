@@ -42,7 +42,6 @@
 = require 'search_materials_add_to_collection'
 = require 'search_materials_expand'
 = require 'progress_disclosure'
-= require 'anonymizer'
 = require 'bookmarks'
 = require 'run_status'
 = require 'create_status'
@@ -67,8 +66,7 @@
 = require 'daypicker-overlay'
 = require 'component'
 = require 'jquery_nested_form'
-= require 'main_nav_more_menu'
-= require 'main_nav_collections_menu'
 = require 'poll_to_update_student_data_percentages'
 = require 'automatically_closing_popup_link'
+= require 'secondary-menu-toggle'
 */

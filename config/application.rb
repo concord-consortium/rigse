@@ -126,6 +126,7 @@ module RailsPortal
         resource '/api/v1/offerings/*', :headers => :any, :methods => [:get, :put]
         resource '/api/v1/offering/*', :headers => :any, :methods => [:get, :put]
         resource '/api/v1/classes/*', :headers => :any, :methods => [:get]
+        resource '/api/v1/jwt/*', :headers => :any, :methods => [:get]
       end
 
       # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
@@ -148,7 +149,6 @@ module RailsPortal
     config.assets.precompile += %w(
       print.css
       otml.css
-      clazzes_nav.js
       student_roster.js
       class_setup_info.js
       manage_classes.js
@@ -162,12 +162,11 @@ module RailsPortal
       pie/PIE.js
       calpicker/calendar_date_select.js
       calpicker/silver.css
-      contentflow_configured.css
-      contentflow_configured.js
-      contentflow_report_fix.js
       web/search_materials.css
       readme.css
       print.css
+      import_progress.js
+      import_model_library.js
     )
 
     # pre-compile any fonts in the assets/ directory as well

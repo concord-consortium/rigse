@@ -4,6 +4,7 @@
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name]
     %title= page_title
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1"}
     %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
@@ -26,15 +27,20 @@
     != stylesheet_link_tag 'print', {'media' => 'print'}
 
     / Include museo fonts.
-    %script{ :src => "https://use.typekit.com/hdw8ayt.js"}
+    %script{ :src => "https://use.typekit.com/juj7nhw.js"}
     %script
-      try { Typekit.load(); } catch (e) {}
+      try{Typekit.load({ async: true });}catch(e){}
 
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
     / TODO: if themes need their own javascript, add theme_ to this:
     != javascript_include_tag 'application'
 
+    / add the portal pages javascript and css if defined
+    = render :partial => "layouts/portal_pages_library"
+
+    / add the external css if defined
+    = render :partial => "layouts/external_css"
 
     / TODO: See if there's a less un-Rails-like calendar widget which will go in the asset pipeline
     = calpicker_includes "silver"
@@ -56,8 +62,7 @@
     /[if lt IE 10]
       = javascript_include_tag("pie/PIE")
 
-    - if USING_GOOGLE_ANALYTICS
-      = javascript_tag google_analytics_config
+    = google_analytics_config
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
 
   %body{:class => 'blank', :'ng-app' => 'cc-portal'}
@@ -65,3 +70,4 @@
     = render :partial=>"layouts/flashes"
     = content_for :layout
     = render :partial => 'shared/footer'
+    = content_for :after_footer

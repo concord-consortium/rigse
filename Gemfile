@@ -18,8 +18,11 @@ source "http://rubygems.org"
 
   gem "devise",               "~>2.1.0"
   gem 'devise-encryptable'
+
   gem 'omniauth'
-  gem 'omniauth-oauth'  # for schoology integration
+  gem 'omniauth-oauth'                      # For schoology integration.
+  gem "omniauth-google-oauth2"              # For google login integration.
+
   gem 'test-unit',            '~> 3.0'
 
   gem "rails",                "~> 3.2.22"
@@ -27,6 +30,9 @@ source "http://rubygems.org"
   gem 'strong_parameters'
   gem "httpclient",           "~> 2.2"
   gem "httparty"
+
+  gem 'rollbar'
+  gem 'oj', '~> 2.12.14'
 
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
   # gem 'capistrano-autoscaling', "0.0.8.3", :path => "../capistrano-autoscaling/"
@@ -40,10 +46,11 @@ source "http://rubygems.org"
 
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem "spreadsheet",          "~> 0.7.3"  #see http://spreadsheet.rubyforge.org/
+  gem 'axlsx',                "~> 2.0", ">= 2.0.1"
 
-  # ruby-ole is a spreadsheet dependency but v1.2.11.1 doesn't work on Ruby 1.9.3
-  gem "ruby-ole",             "~> 1.2.11.2"
+  # currently (2017-06-13) axlsx requires an older version of rubyzip, hopefully this will
+  # shortly be remedied
+  gem 'rubyzip',              "~> 1.0.0"
 
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"
@@ -93,10 +100,8 @@ source "http://rubygems.org"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
   # to support hosting paperclip attachments on S3, and Load Balancing
   gem "aws-sdk",              "~> 1.55.0"
-  gem 'newrelic_rpm',         "~> 3.15", ">= 3.15.0.314"
+  gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
   gem "tinymce-rails",        "~>3.5.6"
-  gem "contentflow",          :git => 'git://github.com/concord-consortium/contentflow',
-    :branch => "remove-addon-support"
 
 # Ideally we pre-compile all asetts and then run production
 # with out the asset compiling requirements. But We have dynamic assets
@@ -136,6 +141,8 @@ source "http://rubygems.org"
   gem 'rack-cors', :require => 'rack/cors'
 
   gem 'pundit'
+
+  gem 'jwt'
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets

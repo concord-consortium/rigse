@@ -29,7 +29,7 @@ class Report::LearnerController < ApplicationController
 
   def logs_query
     authorize Report::Learner
-    @remote_endpoints = @select_learners.map { |l| l.learner.remote_endpoint_url(request.protocol, request.host_with_port) }
+    @remote_endpoints = @select_learners.map { |l| l.learner.remote_endpoint_url }
     render :layout => false
   end
 
@@ -101,17 +101,15 @@ class Report::LearnerController < ApplicationController
     hide_names = params[:hide_names] == 'on'
 
     if params[:commit] == @button_texts[:usage]
-      sio = StringIO.new
       runnables =  @learner_selector.runnables_to_report_on
       report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :include_child_usage => params[:include_child_usage], :url_helpers => @url_helpers, :hide_names => hide_names)
-      report.run_report(sio)
-      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "usage.xls" )
+      book = report.run_report
+      send_data(book.to_data_string, :type => book.mime_type, :filename => "usage.#{book.file_extension}" )
     elsif params[:commit] == @button_texts[:details]
-      sio = StringIO.new
       runnables =  @learner_selector.runnables_to_report_on
       report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :url_helpers => @url_helpers, :hide_names => hide_names)
-      report.run_report(sio)
-      send_data(sio.string, :type => "application/vnd.ms.excel", :filename => "detail.xls" )
+      book = report.run_report
+      send_data(book.to_data_string, :type => book.mime_type, :filename => "details.#{book.file_extension}" )
     elsif params[:commit] == @button_texts[:arg_block]
       arg_block(@select_learners)
     elsif params[:commit] == @button_texts[:log_manager]
@@ -183,7 +181,7 @@ class Report::LearnerController < ApplicationController
 
     @report_url = "#{authoring_sites.first}/c_rater/argumentation_blocks/report"
     @remote_endpoints = learners.map do |learner|
-      learner.learner.remote_endpoint_url(request.protocol, request.host_with_port)
+      learner.learner.remote_endpoint_url
     end
 
     # intentionally leave out student name - results should be semi-anonymized
@@ -193,7 +191,7 @@ class Report::LearnerController < ApplicationController
     rows = learners.map do |learner|
       columns.map do |column|
         # except for remote_endpoint, column names are just names of Report::Learner instance methods
-        column == :remote_endpoint ? learner.learner.remote_endpoint_url(request.protocol, request.host_with_port) : learner.send(column)
+        column == :remote_endpoint ? learner.learner.remote_endpoint_url : learner.send(column)
       end
     end
 

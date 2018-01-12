@@ -2,7 +2,7 @@
 %div{:id=>"action_menu_wrapper"}
   %div{ :id => dom_id_for(user, :item), :class => 'item' }
     %div.action_menu
-      %div.action_menu_header_left
+      %div.action_menu_header_left{:style=>"white-space: nowrap"}
         =link_to name_for_component(user), user
         - if imported_user
           %span.tiny{:style=>"font-weight:normal"}
@@ -11,6 +11,8 @@
           %span.badge= "Teacher"
         - if user.portal_student
           %span.badge= "Student"
+        - if user.is_oauth_user?
+          %span.badge= "#{user.authentications[0].provider.titleize} user"
       %div.action_menu_header_right
         %ul.menu
           - if user.portal_teacher && policy(user).teacher_page?
@@ -22,7 +24,7 @@
           - else
             - if policy(user).limited_edit?
               %li.menu=link_to 'edit', limited_edit_user_path(user)
-          - if policy(user).reset_password?
+          - if policy(user).reset_password? && !user.is_oauth_user?
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
           - if user.state == 'pending' && policy(user).confirm?
             %li.menu=link_to 'Activate', confirm_user_path(user)
@@ -38,22 +40,27 @@
         %li
           login:
           = user.login
+        %br
         %li
           email:
           = user.email
+        %br
         %li
           Roles:
           = user.roles.map{|r| r.title.capitalize}.join(', ')
+        %br
         - if user.portal_teacher
           %li
             Cohorts:
           - user.portal_teacher.cohorts.each do |c|
             %li
               = c.fullname
+          %br
           %li
             Schools:
             %li
               = "#{user.portal_teacher.school_names.join(', ')}"
+          %br
       %li
         Status: #{user.state}
         - if imported_user

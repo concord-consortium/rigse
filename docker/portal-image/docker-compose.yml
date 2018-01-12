@@ -27,8 +27,6 @@ services:
       PORTAL_FEATURES:
     ports:
     - '80'
-    volumes:
-      - code:/rigse
     networks:
       # the portal network allows external connections
       portal:
@@ -43,8 +41,6 @@ services:
       - solr
   solr:
     image: concordconsortium/docker-solr-portal
-    volumes:
-      - code:/rigse
     ports:
     - '8983'
     command: /bin/bash ./start-solr.sh
@@ -57,7 +53,6 @@ services:
       # use a named volume here so the database is preserved after a down and up
       - mysql:/var/lib/mysql
 volumes:
-  code:
   mysql:
 networks:
   # create a portal network so other services such as LARA can be part of this network

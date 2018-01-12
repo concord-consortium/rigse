@@ -35,6 +35,10 @@ RailsPortal::Application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
   # Turn this off if localizing
+  #
+  # Example testing other locales set:
+  # config.i18n.default_locale = 'en-ITSI-LEARN'
+  #
   config.i18n.default_locale = 'en'
   config.i18n.fallbacks = true
 
@@ -45,7 +49,7 @@ RailsPortal::Application.configure do
   config.assets.debug = true
   config.after_initialize do
     Bullet.enable = true
-    Bullet.bullet_logger = true
+    # Bullet.bullet_logger = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end

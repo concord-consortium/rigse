@@ -60,44 +60,44 @@ describe Admin::ExternalReportsController do
     end
 
     describe "GET index" do
-      it "won't alow the index, redirects to root" do
+      it "won't alow the index, redirects to manager home" do
         get :index
-        assert_redirected_to :root
+        assert_redirected_to :getting_started
       end
     end
 
     describe "DELETE destroy" do
-      it "wont allow delete, redirects to root" do
+      it "wont allow delete, redirects to manager home" do
         delete :destroy, :id => report_id
-        assert_redirected_to :root
+        assert_redirected_to :getting_started
       end
     end
 
     describe "GET show" do
-      it "wont allow show, redirects to root" do
+      it "wont allow show, redirects to manager home" do
         get :show, :id => report_id
-        assert_redirected_to :root
+        assert_redirected_to :getting_started
       end
     end
 
     describe "GET edit" do
-      it "wont allow edit, redirects to root" do
+      it "wont allow edit, redirects to manager home" do
         get :edit, :id => report_id
-        assert_redirected_to :root
+        assert_redirected_to :getting_started
       end
     end
 
     describe "GET new" do
-      it "wont allow new, redirects to root" do
+      it "wont allow new, redirects to manager home" do
         get :new
-        assert_redirected_to :root
+        assert_redirected_to :getting_started
       end
     end
 
     describe "PUT update" do
-      it "wont allow update, redirects to root" do
+      it "wont allow update, redirects to manager home" do
         put :update, :id => report_id, :report => {:params => 'params'}
-        assert_redirected_to :root
+        assert_redirected_to :getting_started
       end
     end
   end

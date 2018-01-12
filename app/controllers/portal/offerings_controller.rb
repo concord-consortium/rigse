@@ -63,14 +63,14 @@ class Portal::OfferingsController < ApplicationController
            uri.query = {
              :domain => root_url,
              :externalId => learner.id,
-             :returnUrl => learner.remote_endpoint_url(request.protocol, request.host_with_port),
+             :returnUrl => learner.remote_endpoint_url,
              :logging => @offering.clazz.logging || @offering.runnable.logging,
              :domain_uid => current_visitor.id,
              :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port)
            }.to_query
            redirect_to(uri.to_s)
          else
-           redirect_to(@offering.runnable.url(learner))
+           redirect_to(@offering.runnable.url(learner, root_url))
          end
        }
 
@@ -134,84 +134,6 @@ class Portal::OfferingsController < ApplicationController
     @offering.deactivate!
     redirect_to :back
   end
-
-  def multiple_choice_report
-    @offering = Portal::Offering.find(params[:id], :include => :learners)
-    authorize @offering
-    @offering_report = Report::Offering::Investigation.new(@offering)
-
-    respond_to do |format|
-      format.html { render :layout => 'report' }# multiple_choice_report.html.haml
-    end
-  end
-
-  def open_response_report
-    @offering = Portal::Offering.find(params[:id], :include => :learners)
-    authorize @offering
-    @offering_report = Report::Offering::Investigation.new(@offering)
-
-    respond_to do |format|
-      format.html { render :layout => 'report' }# open_response_report.html.haml
-    end
-  end
-
-  def separated_report
-    @offering = Portal::Offering.find(params[:id])
-    authorize @offering
-    reportUtil = Report::Util.reload(@offering)  # force a reload of this offering
-    @learners = reportUtil.learners
-
-    @page_elements = reportUtil.page_elements
-
-    respond_to do |format|
-      format.html { render :layout => 'report' }# report.html.haml
-    end
-  end
-
-  def report_embeddable_filter
-    @offering = Portal::Offering.find(params[:id])
-    authorize @offering
-    @report_embeddable_filter = @offering.report_embeddable_filter
-    @filtered = true
-    activity_report_id = params[:activity_id]
-    if params[:commit] == "Show all"
-      @report_embeddable_filter.ignore = true
-    else
-      @report_embeddable_filter.ignore = false
-    end
-    if params[:filter]
-      embeddables = params[:filter].collect{|type, ids|
-        logger.info "processing #{type}: #{ids.inspect}"
-        klass = type.constantize
-        ids.collect{|id|
-          klass.find(id.to_i)
-        }
-      }.flatten.compact.uniq
-    else
-      embeddables = []
-    end
-
-    if activity_report_id
-      activity = ::Activity.find(activity_report_id.to_i)
-      activity_embeddables = activity.page_elements.map{|pe|pe.embeddable}
-      @report_embeddable_filter.embeddables = (@report_embeddable_filter.embeddables - activity_embeddables) | embeddables
-    else
-      @report_embeddable_filter.embeddables = embeddables
-    end
-
-    respond_to do |format|
-      if @report_embeddable_filter.save
-          flash[:notice] = 'Report filter was successfully updated.'
-          format.html { redirect_to :back }
-          format.xml  { head :ok }
-      else
-        format.html { redirect_to :back }
-        format.xml  { render :xml => @report_embeddable_filter.errors, :status => :unprocessable_entity }
-      end
-
-    end
-  end
-
 
   def answers
     @offering = Portal::Offering.find(params[:id])

@@ -4,11 +4,10 @@
     %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
     - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name]
     %title= page_title
-    %meta{ :content => "no", "http-equiv" => "imagetoolbar" }
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1"}
     %meta{ :name => "distribution", :content => "all" }
     %meta{ :name => "robots", :content => "all" }
     %meta{ :name => "resource-type", :content => "document" }
-    %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => asset_path("favicon.ico"), :rel => "shortcut icon"}/
 
     - @meta_tags = @meta_tags || {}
@@ -26,15 +25,20 @@
     != stylesheet_link_tag 'print', {'media' => 'print'}
 
     / Include museo fonts.
-    %script{ :src => "https://use.typekit.com/hdw8ayt.js"}
+    %script{ :src => "https://use.typekit.com/juj7nhw.js"}
     %script
-      try { Typekit.load(); } catch (e) {}
+      try{Typekit.load({ async: true });}catch(e){}
 
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
     / TODO: if themes need their own javascript, add theme_ to this:
     != javascript_include_tag 'application'
 
+    / add the portal pages javascript and css if defined
+    = render :partial => "layouts/portal_pages_library"
+
+    / add the external css if defined
+    = render :partial => "layouts/external_css"
 
     / TODO: See if there's a less un-Rails-like calendar widget which will go in the asset pipeline
     = calpicker_includes "silver"
@@ -56,8 +60,7 @@
     /[if lt IE 10]
       = javascript_include_tag("pie/PIE")
 
-    - if USING_GOOGLE_ANALYTICS
-      = javascript_tag google_analytics_config
+    = google_analytics_config
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
   %body{:class => current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }.unshift(current_visitor.has_role?('guest') ? 'main-nav-hidden' : '').join(' ').squish, :'ng-app' => 'cc-portal'}
 
@@ -67,20 +70,10 @@
       / For non-visual user agents:
       #top
         %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
-    #wrapper.wrapper
-      = render :partial => 'shared/project_header'
-      #primary{ :class => @wide_content_layout ? "wide" : nil}
-        #content.main_content_colors
-          #content_header.main_content_colors
-            = content_for :content_header
-          #js_flash{:style=>"display: none;"}
-          = render :partial=>"layouts/flashes"
-
-          = content_for :layout
-
-
+    = render :partial => 'shared/project_header'
+    #wrapper{ :class => "wrapper cols" }
       - unless @wide_content_layout
-        #secondary
+        #secondary{ :class => "col-3" }
           - if @investigation
             / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
@@ -89,9 +82,23 @@
           - elsif @portal_school
             = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}
           - elsif @portal_teacher && (@portal_teacher.user == current_visitor)
-            = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
+            = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
           - elsif @portal_student && (@portal_student.user == current_visitor)
-            = render :partial => 'portal/clazzes/clazzes_nav', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
+            = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
+          - elsif current_user.present?
+            -# handle the case of users that are not portal_teachers
+            = render :partial => 'shared/left_menu', :locals => {:top_node => nil, :selects => []}
           = content_for :side_bar
 
+      #primary{ :class => @wide_content_layout ? "wide col-12" : "col-8"}
+        #content.main_content_colors
+          #content_header.main_content_colors
+            = content_for :content_header
+          #js_flash{:style=>"display: none;"}
+          = render :partial=>"layouts/flashes"
+
+          = content_for :layout
+
     = render :partial => 'shared/footer'
+
+    = content_for :after_footer

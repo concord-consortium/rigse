@@ -1,30 +1,12 @@
-#lead.project-header
-  %h1{:class => theme_name}
-    %a{ :href => root_path }= "#{APP_CONFIG[:site_name]}"
-- if current_visitor.anonymous? || @emulate_anonymous_user
-  = render :partial => "shared/header_login_box"
-- else
-  .welcome-box
-    %table{ :width => "100%" }
-      %tbody
-        %tr
-          %td
-            %b
-              Welcome
-              = "#{current_visitor.name}"
-            %br
-            - if current_settings && ((current_settings.help_type == 'external url') || (current_settings.help_type == 'help custom html'))
-              = link_to 'Help | ', '/help', :target=>"_blank"
-            = link_to 'My Preferences', preferences_user_path(current_visitor)
-            - if @original_user != current_visitor
-              |
-              - switch_user_form_id = "switch_user_id_#{@original_user.id}"
-              = link_to 'Switch Back','javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
-              = form_for @original_user, :url => switch_user_path(@original_user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
-                = hidden_field_tag 'user[id]', @original_user.id
-                = hidden_field_tag 'commit', 'Switch'
-            |
-            = link_to 'Logout', destroy_user_session_path
+%div{:id => "portal-pages-header", :style => { alignContent: "left" } }
 
-= render :partial => 'shared/main_nav_trail'
+- options = {}
+- if @after_sign_in_path
+  - options[:afterSigninPath] = @after_sign_in_path
+- if local_assigns[:extra_options]
+  - options.merge!(extra_options)
 
+%script{:type=>"text/javascript"}
+  var pageHeaderOptions = #{raw options.to_json};
+  pageHeaderOptions.oauthProviders = Portal.oauthProviders;
+  PortalPages.renderPageHeader( pageHeaderOptions, "portal-pages-header");

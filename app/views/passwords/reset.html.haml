@@ -1,6 +1,6 @@
-= title_tag "Reset Your Password"
-%h2= 'Change Password.'
-%h3= 'Please enter a new password and confirm it.'
+= title_tag "Change Password"
+%h1= 'Change Password'
+%p= 'Please enter a new password and confirm it.'
 
 = form_for :user_reset_password, :url => { :action => 'update_users_password' } do |f|
   %div{:id => dom_id_for(@user_reset_password,:form), :class =>"action_menu reset_password"}
@@ -18,6 +18,6 @@
       .aligned
         %ul.quiet_list
           %li= submit_tag "Save"
-          %li= submit_tag "Cancel"
+          %li= submit_tag "Cancel", :class => 'secondary'
 
   = hidden_field_tag :reset_code, params[:reset_code]

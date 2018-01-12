@@ -1,15 +1,23 @@
 class AuthController < ApplicationController
-  before_filter :verify_logged_in, :except => [:access_token, :login]
+
+  before_filter :verify_logged_in, :except => [ :access_token, 
+                                                :login,
+                                                :oauth_authorize ]
+
   skip_before_filter :authenticate_user!, :only => [:authorize]  # this is handled by verify_logged_in
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
+
+    session.delete :sso_callback_params
+    session.delete :sso_application
+
     if current_user.nil?
-      session[:sso_callback_params] = params
-      session[:sso_application] = application
-      redirect_to auth_login_path
+        redirect_to auth_login_path
     end
+
   end
+
 
   def login
     # Renders a nice login form (views/auth/login.haml).
@@ -29,12 +37,25 @@ class AuthController < ApplicationController
       redirect_path = redirect_uri.to_s
 
       redirect_to @after_sign_in_path
+    elsif current_user
+      #
+      # User is signed in but there is no after_sign_in_path
+      #
+      redirect_to view_context.current_user_home_path
     else
       render :layout => false
     end
   end
 
   def oauth_authorize
+
+    if current_user.nil?
+        session[:sso_callback_params] = params
+        session[:sso_application]     = application
+        redirect_to auth_login_path
+        return
+    end
+
     AccessGrant.prune!
     access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
     redirect_to access_grant.redirect_uri_for(params[:redirect_uri])

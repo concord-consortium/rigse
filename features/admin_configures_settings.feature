@@ -123,6 +123,4 @@ Feature: Admin configures settings
     And I save the settings
     And I press "Preview Home Page"
     Then the newly opened window should have content "Creating Home Page"
-    And the newly opened window should have content "Username"
-    And the newly opened window should have content "Password"
     And I close the newly opened window

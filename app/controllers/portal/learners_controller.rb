@@ -1,6 +1,6 @@
 class Portal::LearnersController < ApplicationController
 
-  layout 'report', :only => %w{report open_response_report multiple_choice_report bundle_report}
+  layout 'report', :only => %w{report bundle_report}
 
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
@@ -14,8 +14,8 @@ class Portal::LearnersController < ApplicationController
   public
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_config, :except => [:show, :report, :open_response_report, :multiple_choice_report,:activity_report]
-  before_filter :teacher_admin_or_config, :only => [:open_response_report, :multiple_choice_report,:activity_report]
+  before_filter :admin_or_config, :except => [:show, :report, :activity_report]
+  before_filter :teacher_admin_or_config, :only => [:activity_report]
   before_filter :handle_jnlp_session, :only => [:show]
   before_filter :authorize_show, :only => [:show]
 
@@ -104,41 +104,6 @@ class Portal::LearnersController < ApplicationController
       format.xml  { render :xml => @portal_learners }
     end
   end
-
-  # GET /portal/learners/1/open_response_report
-  # GET /portal/learners/1/open_response_report.xml
-  def open_response_report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Learner
-    # authorize @learner
-    # authorize Portal::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    @portal_learner = Portal::Learner.find(params[:id])
-
-    respond_to do |format|
-      format.html # report.html.haml
-    end
-  end
-
-  # GET /portal/learners/1/multiple_choice_report
-  # GET /portal/learners/1/multiple_choice_report.xml
-  def multiple_choice_report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Learner
-    # authorize @learner
-    # authorize Portal::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    @portal_learner = Portal::Learner.find(params[:id])
-
-    respond_to do |format|
-      format.html # report.html.haml
-    end
-  end
-
 
   def report
     # This report is for the teacher at the moment so for authentication

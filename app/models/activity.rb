@@ -115,6 +115,7 @@ class Activity < ActiveRecord::Base
       subject_area_list
     end
     integer :project_ids, :multiple => true, :references => Admin::Project
+
   end
 
   send_update_events_to :investigation

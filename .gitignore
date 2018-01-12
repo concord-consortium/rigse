@@ -2,8 +2,8 @@
 log/*.log
 tmp/*
 .DS_Store
-doc/api
-doc/app
+docs/api
+docs/app
 rerun.txt
 coverage
 db/*.sqlite3
@@ -41,7 +41,7 @@ public/stylesheets/*packaged*
 public/investigations
 public/page_cache
 config/settings-backup.yml
-doc/guides
+docs/guides
 import_log.txt*
 public/stylesheets/themes/
 resources/bitrock_installer/jars/*
@@ -77,8 +77,8 @@ public/stylesheets/*.css
 bin/
 .rspec
 *.orig
-doc/gource/*.mp4
-doc/gource/*.webm
+docs/gource/*.mp4
+docs/gource/*.webm
 *.tmproj
 .redcar
 .idea
@@ -93,8 +93,6 @@ users_error*
 users_updated.csv
 *.sublime-project
 *.sublime-workspace
-config/paperclip.yml
-config/google_analytics.yml
 chromedriver.log
 public/assets/
 public/*/calendar_date_select
@@ -106,3 +104,4 @@ config/app_environment_variables.rb
 config/environments/local-development.rb
 certs
 .env
+*.DS_Store

@@ -15,8 +15,7 @@ describe Portal::ClazzesController do
   end
 
   before(:each) do
-    @mock_semester = Factory.create(:portal_semester, :name => "Fall")
-    @mock_school = Factory.create(:portal_school, :semesters => [@mock_semester])
+    @mock_school = Factory.create(:portal_school)
 
     # set up our user types
     @normal_user = Factory.next(:anonymous_user)
@@ -332,7 +331,6 @@ describe Portal::ClazzesController do
           :name => "New Test Class",
           :class_word => "1020304050",
           :school => @mock_school.id,
-          :semester_id => @mock_semester.id,
           :description => "Test!",
           :teacher_id => @authorized_teacher.id,
           :grade_levels => {
@@ -477,7 +475,6 @@ describe Portal::ClazzesController do
         :portal_clazz => {
           :name => "New Test Class",
           :class_word => "1020304050",
-          :semester_id => @mock_semester.id,
           :description => "Test!",
           :teacher_id => @authorized_teacher.id,
           :grade_levels => {
@@ -550,7 +547,6 @@ describe Portal::ClazzesController do
           :portal_clazz => {
             :name => 'electrical engineering circuits and system',
             :class_word => 'EECS',
-            :semester_id => @mock_semester.id,
             :description => 'Test!',
             :teacher_id => @authorized_teacher.id.to_s,
             :grade_levels => {
@@ -813,11 +809,10 @@ describe Portal::ClazzesController do
         :id => @mock_clazz.id
       }
     end
-    it "should redirect to home page for anonymous user" do
-      sign_in @normal_user
+    it "should not allow access for anonymous user" do
+      sign_out :user
       get :fullstatus, @params
       response.should_not be_success
-      response.should redirect_to root_url
     end
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user

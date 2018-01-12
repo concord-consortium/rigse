@@ -2,12 +2,10 @@
     height:32px;
     padding-left:10px;
     background-color:White;
-    border-left:2px solid #444;
-    border-top:2px solid #444;
-    border-right:2px solid #444;
-}      
+    border: none;
+}
 .lightbox_focused .nw {
-}       
+}
 
 .lightbox .ne {
     height:32px;
@@ -26,29 +24,30 @@
     text-align:center;
     overflow: hidden;
     padding-left:60px;
-    line-height: 20px; 
+    line-height: 20px;
     color: #000;
 }
 
-.lightbox_focused .n {
-}
+.lightbox_focused .n {}
 
 .lightbox .content {
     background-color:#fff;
     color:#00233a;
-    overflow:auto;
+    // padding-bottom: 55px;
+    // height: auto !important;
+    // overflow:auto;
 }
 
 .lightbox .w {
-    border-left:1px solid #444;
-    border-right:1px solid #444;
-    border-bottom:1px solid #444;
+    border-left:1px solid #fff;
+    border-right:1px solid #fff;
+    border-bottom:1px solid #fff;
 }
 
 .lightbox .e {
-    border-left:1px solid #444;
-    border-right:1px solid #444;
-    border-bottom:1px solid #444;
+    border-left:1px solid #fff;
+    border-right:1px solid #fff;
+    border-bottom:1px solid #fff;
 }
 
 
@@ -64,11 +63,11 @@
 .lightbox_focused .se {
 }
 
-.lightbox_focused .se_sizer { 
+.lightbox_focused .se_sizer {
   width:12px;
   height:12px;
 }
- 
+
 .lightbox .se_resize_handle {
 }
 
@@ -76,7 +75,7 @@
 }
 
 .lightbox .s {
-} 
+}
 
 .lightbox_focused .s {
 }
@@ -94,7 +93,7 @@
     position: absolute;
     top:1px;
     /*left:7px;*/
-    height: 30px;  
+    height: 30px;
     float:right;
     margin-right:-10px;
     cursor:move;
@@ -107,29 +106,29 @@ div.buttons{
 
 .lightbox .buttons a.close {
     float:right;
-    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0; 
+    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0;
     background-repeat: no-repeat;
     height:29px;
     width:29px;
-    margin: -16px -16px 0 0px;        
-    padding-top:0px; /* padding-top = buttons order, it will be reset to 0, do not use padding, use margin*/       
+    margin: -16px -16px 0 0px;
+    padding-top:0px; /* padding-top = buttons order, it will be reset to 0, do not use padding, use margin*/
     overflow:hidden;
 }
-  
+
 .lightbox_focused .buttons a.close {
-    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0; 
+    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0;
     background-repeat: no-repeat;
     float:right;
 }
 
 .lightbox .buttons.over a.close {
-    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0; 
+    background:transparent image-url("window/lightbox/buttons.png") no-repeat 0 0;
     float:right;
 }
 
 .lightbox .buttons a.maximize {
 }
-  
+
 .lightbox_focused .buttons a.maximize {
 }
 
@@ -137,7 +136,7 @@ div.buttons{
 }
 
 .lightbox .buttons a.minimize {
-}  
+}
 
 .lightbox_focused .buttons a.minimize {
 }
@@ -173,6 +172,5 @@ div.buttons{
     font-size:18px;
     padding-top:5px;
     cursor:move;
-    width:95%;
     text-align:left;
 }

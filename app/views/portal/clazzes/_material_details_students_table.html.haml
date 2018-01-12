@@ -17,7 +17,7 @@
       %table.student_list
         %tr
           %th
-            %div.progressbar_container 
+            %div.progressbar_container
               ACTIVITY
         - student_statuses.each do |student_status|
           - student = student_status.student
@@ -88,5 +88,5 @@
 
     .clearboth{:style=>"height:10px"}
   - else
-    %div.item.messagetext 
+    %div.item.messagetext
       %br No students have registered for this class yet.

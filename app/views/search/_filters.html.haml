@@ -73,7 +73,7 @@
                   = label_tag 'activity','Activity'
                 .tablecell
                   = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
-                  = label_tag 'interactive','Interactive'
+                  = label_tag 'interactive', t(:interactive).titleize
                 %br
                 .filterheader
                   Material Properties
@@ -89,11 +89,6 @@
                     Requires Download
                     %span.tip
                       These materials download a file to your computer, and start using Java Web Start.
-                %br
-                .filterheader
-                  Interactive Types
-                .tablecell
-                  = render :partial=>"search/model_types_filter"
               %td.probescolumn
                 .filterheader
                   Sensor Use

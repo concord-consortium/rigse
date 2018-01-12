@@ -1,4 +1,5 @@
 class HomeController < ApplicationController
+  include Materials::DataHelpers
 
   protected
 
@@ -14,6 +15,9 @@ class HomeController < ApplicationController
   def index
     homePage = HomePage.new(current_visitor, current_settings)
     flash.keep
+
+    @open_graph = default_open_graph
+
     case homePage.redirect
       when HomePage::MyClasses
         redirect_to :my_classes
@@ -58,7 +62,7 @@ class HomeController < ApplicationController
 
   def doc
     if document_path = params[:document].gsub(/\.\.\//, '')
-      @document = FormattedDoc.new(File.join('doc', document_path))
+      @document = FormattedDoc.new(File.join('docs', document_path))
       render :action => "formatted_doc", :layout => "technical_doc"
     end
   end
@@ -67,6 +71,23 @@ class HomeController < ApplicationController
   end
 
   def about
+    @page_title = 'About'
+    @open_graph = default_open_graph
+    @open_graph[:title] = "About the #{APP_CONFIG[:site_name]}"
+
+    render layout: 'minimal'
+  end
+
+  def collections
+    @page_title = 'Collections'
+    @open_graph = default_open_graph
+    @open_graph[:title] = @page_title
+    @open_graph[:description] = %{
+      Many of the Concord Consortium's educational STEM resources are part of collections
+      created by our various research projects. Each collection has specific learning
+      goals within the context of a larger subject area.
+    }.gsub(/\s+/, " ").strip
+  render layout: 'minimal'
   end
 
   def requirements
@@ -199,6 +220,125 @@ class HomeController < ApplicationController
   end
 
 
+  #
+  #
+  # Handle /stem-reources/ routes to either pre-populate stem finder filters
+  # or render an individual material resource lightbox.
+  #
+  #
+  def stem_resources
+
+    # logger.info("INFO stem_resources")
+
+    if ! params[:id]
+      case params[:type]
+      when "activity", "sequence"
+
+        # logger.info("INFO loading external_activity")
+
+        @lightbox_resource = ExternalActivity.find_by_id(params[:id_or_filter_value])
+        if @lightbox_resource
+            id = @lightbox_resource.id
+        end
+
+      when "interactive"
+
+        interactive = Interactive.find_by_id(params[:id_or_filter_value])
+
+        if interactive && interactive.respond_to?(:external_activity_id)
+            id = interactive.external_activity_id
+            @lightbox_resource = ExternalActivity.find_by_id(id)
+        end
+
+      else
+        #
+        # Otherwise assume the type is referring to a filter name.
+        # And in this case the id_or_filter_value is a filter value.
+        #
+        index
+        return
+      end
+
+      #
+      # If id is non nil, redirect to valid resource.
+      #
+      if ! id.nil?
+
+        #
+        # Get slug to append to redirect url
+        #
+        slug = nil
+        if    @lightbox_resource && 
+                @lightbox_resource.name &&
+                @lightbox_resource.name.respond_to?(:parameterize)
+    
+            slug = @lightbox_resource.name.parameterize
+    
+        end
+    
+        # logger.info("INFO redirecting for #{id}")
+    
+        #
+        # Redirect to external_activity under /resource/:id/:slug
+        #
+        redirect_to view_context.stem_resources_url(id, slug)
+        return
+
+      end
+
+    end
+
+    # logger.info("INFO loading #{params[:id]}")
+
+    external_activity_id = params[:id]
+    @lightbox_resource = ExternalActivity.find_by_id(external_activity_id)
+
+    # logger.info("INFO found lightbox_resource #{@lightbox_resource}")
+
+    #
+    # Check that user has permission to view the resource.
+    #
+    if  @lightbox_resource                                      &&
+        @lightbox_resource.respond_to?(:publication_status)     &&
+        @lightbox_resource.publication_status != 'published'
+
+        if current_user.nil?
+            #
+            # Block anonymous user.
+            #
+            @lightbox_resource = nil
+        else
+            #
+            # For logged in user, block if user is not either resource owner
+            # or admin.
+            #
+            if ! (current_user.id == @lightbox_resource.user_id || current_user.has_role?('admin'))
+                @lightbox_resource = nil
+            end
+        end
+    end
+
+    if @lightbox_resource
+      @lightbox_resource = materials_data([@lightbox_resource], nil, 4).shift()
+      @page_title = @lightbox_resource[:name]
+      @resource_icon = @lightbox_resource[:icon]
+      @open_graph = {
+        title: @page_title,
+        description: @lightbox_resource[:description] ||
+          "Check out this educational resource from the Concord Consortium.",
+        image: @resource_icon[:url] ||
+          "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
+      }
+    else
+      @page_title = "Resource not found"
+    end
+    @auto_show_lightbox_resource = true
+
+    homePage = HomePage.new(current_visitor, current_settings)
+    load_notices
+    load_featured_materials
+    render :home, locals: homePage.view_options, layout: homePage.layout, status: @lightbox_resource.nil? ? 404: 200
+  end
 
   protected
 
@@ -210,5 +350,19 @@ class HomeController < ApplicationController
 
   def load_featured_materials
     @show_featured_materials = true
+  end
+
+  def default_open_graph
+    open_graph = {}
+    if ENV['OG_TITLE']
+      open_graph[:title] = ENV['OG_TITLE']
+    end
+    if ENV['OG_DESCRIPTION']
+      open_graph[:description] = ENV['OG_DESCRIPTION']
+    end
+    if ENV['OG_IMAGE_URL']
+      open_graph[:image] = ENV['OG_IMAGE_URL']
+    end
+    open_graph
   end
 end

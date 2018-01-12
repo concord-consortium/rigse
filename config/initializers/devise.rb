@@ -207,7 +207,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  if ENV['SCHOOLOGY_CONSUMER_KEY'] && ENV['SCHOOLOGY_CONSUMER_SECRET']
+  if ENV['SCHOOLOGY_CONSUMER_KEY'].present? && ENV['SCHOOLOGY_CONSUMER_SECRET'].present?
     SETUP_PROC = lambda do |env|
       host = env['rack.session'][:schoology_host]
       if host
@@ -215,6 +215,17 @@ Devise.setup do |config|
       end
     end
     config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'], scope: 'user', strategy_class: 'OmniAuth::Strategies::Schoology', setup: SETUP_PROC
+  end
+
+
+  if ENV['GOOGLE_CLIENT_KEY'].present? && ENV['GOOGLE_CLIENT_SECRET'].present?
+
+    config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_KEY'], ENV['GOOGLE_CLIENT_SECRET'],
+    {   :name => "google",
+        :scope => [ 'https://www.googleapis.com/auth/userinfo.profile',
+                    'https://www.googleapis.com/auth/userinfo.email'    ]
+    }
+
   end
 
   # ==> Warden configuration

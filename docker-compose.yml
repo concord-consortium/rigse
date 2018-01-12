@@ -1,6 +1,6 @@
 # This file is meant for development, in production we use a slightly different
 # configuration
-version: '2'
+version: '3'
 services:
   app:
     build:
@@ -11,10 +11,76 @@ services:
       DB_HOST: mysql
       DB_USER: root
       DB_PASSWORD: xyzzy
+
+      #
+      # Solr hosts and ports
+      #
       SOLR_HOST: solr
       SOLR_PORT: 8983
+      TEST_SOLR_HOST: solr-test
+      TEST_SOLR_PORT: 8981
+
       PORTAL_FEATURES:
+
+      #
+      # OAuth keys
+      #
+      SCHOOLOGY_CONSUMER_KEY:
+      SCHOOLOGY_CONSUMER_SECRET:
+      GOOGLE_CLIENT_KEY:
+      GOOGLE_CLIENT_SECRET:
+
+      SITE_URL:
       RESEARCHER_REPORT_ONLY:
+      REPORT_VIEW_URL:
+
+      #
+      # ASN API key
+      #
+      ASN_API_KEY:
+
+      #
+      # portal-pages URLs
+      #
+      PORTAL_PAGES_LIBRARY_URL: "${PORTAL_PAGES_LIBRARY_URL:-https://portal-pages.concord.org/library}"
+      EXTERNAL_CSS_URL:
+
+      GOOGLE_ANALYTICS_ACCOUNT:
+
+      #
+      # OG tag default values
+      #
+      OG_TITLE:
+      OG_DESCRIPTION:
+      OG_IMAGE_URL:
+
+      #
+      # Set to true to enable dynamic robots.txt
+      #
+      DYNAMIC_ROBOTS_TXT:
+
+      #
+      # When PORTAL_FEATURES has "allow_cors" set this to a list of
+      # origins, or * for all.
+      #
+      CORS_ORIGINS:
+
+      #
+      # Set the portal version displayed in the UI footer.
+      #
+      CC_PORTAL_VERSION:
+
+      #
+      # Set rollbar access tokens
+      #
+      ROLLBAR_ACCESS_TOKEN:
+      ROLLBAR_CLIENT_ACCESS_TOKEN:
+
+      #
+      # Set JWT HMAC secret
+      #
+      JWT_HMAC_SECRET:
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse
@@ -40,6 +106,21 @@ services:
     volumes:
       # use a named volume here so the database is preserved after a down and up
       - mysql:/var/lib/mysql
+  solr-test:
+    image: concordconsortium/docker-solr-portal
+    environment:
+      TEST_SOLR_PORT: 8981
+    #
+    # Mount the portal source in the container under /rigse
+    #
+    volumes:
+      - .:/rigse
+    #
+    # Invoke the docker/dev/start-solr-test.sh script allowing us
+    # to specify a port and other parameters.
+    #
+    command: ["/bin/bash", "-c", "/rigse/docker/dev/start-solr-test.sh -f -p $${TEST_SOLR_PORT}" ]
+
 volumes:
   bundle:
   mysql:

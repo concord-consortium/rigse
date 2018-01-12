@@ -13,7 +13,7 @@
 #
 # This external mysql will not work on Docker for Mac without some extra configuration:
 #    https://docs.docker.com/docker-for-mac/networking/#/i-want-to-connect-from-a-container-to-a-service-on-the-host
-version: '2'
+version: '3'
 services:
   app:
     environment:

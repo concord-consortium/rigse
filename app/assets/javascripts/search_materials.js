@@ -205,8 +205,13 @@ function close_popup()
 
 
 
-function get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text, skip_reload)
+function get_Assign_To_Class_Popup( material_id,
+                                    material_type,
+                                    lightbox_material_text,
+                                    skip_reload )
 {
+    // console.log("[DEBUG] get_Assign_To_Class_Popup skip_reload", skip_reload);
+
     lightbox_material_text = lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
@@ -336,6 +341,8 @@ var g_messageModal = null;
 
 function getMessagePopup(message, skip_reload)
 {
+    // console.log("[DEBUG] getMessagePopup skip_reload", skip_reload);
+
     g_messageModal = g_messageModal || null;
     if(g_messageModal !== null)
     {
@@ -348,7 +355,7 @@ function getMessagePopup(message, skip_reload)
 
     var lightboxConfig = {
         width: 375,
-        height: 150,
+        height: 250,
         closeOnNextPopup: true,
         type: Lightbox.type.ALERT,
         content: content,

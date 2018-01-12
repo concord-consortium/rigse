@@ -1,0 +1,23 @@
+%h1
+  Favorite Resources
+%p
+  To remove saved resources, simply uncheck the star icon.
+.ajax_results
+  Finding favorites...
+
+:javascript
+
+  jQuery(document).ready(function() {
+
+    var dest    = '.ajax_results';
+    var apiUrl  = '#{api_v1_materials_get_favorites_path}';
+
+    jQuery.ajax({
+      dataType: "json",
+      url: apiUrl,
+      success: function(data) {
+        Portal.renderMaterialsList(data, dest);
+      }
+    })
+
+  });

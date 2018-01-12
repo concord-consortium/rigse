@@ -149,6 +149,7 @@ RailsPortal::Application.routes.draw do
 
     namespace :portal do
 
+      get 'classes/:id/external_report/:report_id' => 'clazzes#external_report', :as => :external_class_report
       resources :clazzes, :path => :classes do
         member do
           post :add_teacher
@@ -182,7 +183,6 @@ RailsPortal::Application.routes.draw do
           match 'manage', :to => 'clazzes#manage_classes'
           #post :manage_classes_save, :as => 'manage_save'
         end
-
       end
 
       resources :clazzes, :path => :classes do
@@ -199,8 +199,6 @@ RailsPortal::Application.routes.draw do
 
       resources :learners do
         member do
-          get :open_response_report
-          get :multiple_choice_report
           get :report
           get :bundle_report
           get :activity_report
@@ -213,11 +211,7 @@ RailsPortal::Application.routes.draw do
         member do
           get :deactivate
           get :activate
-          get :open_response_report
-          get :multiple_choice_report
           get :report
-          get :separated_report
-          post :report_embeddable_filter
           post :answers
           post :offering_collapsed_status
           post :get_recent_student_report
@@ -230,8 +224,6 @@ RailsPortal::Application.routes.draw do
       resources :schools
 
       resources :school_memberships
-
-      resources :semesters
 
       resources :students do
         collection do
@@ -276,7 +268,7 @@ RailsPortal::Application.routes.draw do
     match '/signup' => 'users#new', :as => :signup
     match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil
     match '/forgot_password' => 'passwords#login', :as => :forgot_password
-    match '/forgot_password/email' => 'passwords#email', :as => :forgot_password_email
+    match '/forgot_password/email' => 'passwords#login', :as => :forgot_password_email
     match '/change_password/:reset_code' => 'passwords#reset', :as => :change_password
     match '/password/:user_id/questions' => 'passwords#questions', :as => :password_questions
     match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions
@@ -292,6 +284,7 @@ RailsPortal::Application.routes.draw do
         put :unsuspend
         get :interface
         put :switch
+        get :favorites
         get :preferences
         put :preferences
         get :reset_password
@@ -387,6 +380,15 @@ RailsPortal::Application.routes.draw do
         end
       end
       get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
+
+      # can't use resources here as the key is a natural key instead of id and Rails 3 doesn't allow you to specifiy the param name
+      get '/commons_licenses/' => 'commons_licenses#index', :as => :commons_licenses
+      get '/commons_licenses/new' => 'commons_licenses#new', :as => :new_commons_license
+      get '/commons_licenses/:code' => 'commons_licenses#show', :as => :commons_license
+      get '/commons_licenses/:code/edit' => 'commons_licenses#edit', :as => :edit_commons_license
+      post '/commons_licenses/' => 'commons_licenses#create', :as => :create_commons_license
+      put '/commons_licenses/:code' => 'commons_licenses#update', :as => :update_commons_license
+      delete '/commons_licenses/:code' => 'commons_licenses#destroy', :as => :delete_commons_license
     end
 
     resources :materials_collections do
@@ -488,10 +490,8 @@ RailsPortal::Application.routes.draw do
         post :sort_pages
         get :duplicate
         post :delete_page
-        get :details_report
         post :add_page
         get :add_page
-        get :usage_report
         get :print
       end
     end
@@ -524,10 +524,8 @@ RailsPortal::Application.routes.draw do
       end
       member do
         get :duplicate
-        get :details_report
         post :add_activity
         get :add_activity
-        get :usage_report
         post :sort_activities
         get :print
         post :delete_activity
@@ -539,8 +537,6 @@ RailsPortal::Application.routes.draw do
     match '/investigations/list/filter' => 'investigations#index', :as => :list_filter_investigation, :method => :get
     match '/investigations/teacher/:id.otml' => 'investigations#teacher', :as => :investigation_teacher_otml, :method => :get, :format => :otml
     match '/investigations/teacher/:id.dynamic_otml' => 'investigations#teacher', :as => :investigation_teacher_dynamic_otml, :method => :get, :format => :dynamic_otml
-    match '/investigations/reports/usage' => 'investigations#usage_report', :as => :investigation_usage_report, :method => :get
-    match '/investigations/reports/details' => 'investigations#details_report', :as => :investigation_details_report, :method => :get
     match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
     match '/report/learner/logs_query' => 'report/learner#logs_query', :as => :learner_logs_query, :method => :get
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
@@ -646,12 +642,15 @@ RailsPortal::Application.routes.draw do
 
     namespace :api, :defaults => {:format => :json} do
       namespace :v1 do
+        devise_for :users
         resources :countries
         resources :projects
         resources :teachers do
           collection do
             get :email_available
             get :login_available
+            get :login_valid
+            get :name_valid
           end
         end
         resources :students do
@@ -674,10 +673,21 @@ RailsPortal::Application.routes.draw do
             get :collaborators_data
           end
         end
+        namespace :passwords do
+          post  :reset_password
+        end
         namespace :materials do
-          get :own
-          get :featured
-          post :assign_to_class
+          get   :own
+          get   :featured
+          post  :assign_to_class
+          get   :all
+          post  :add_favorite
+          post  :remove_favorite
+          get   :get_favorites
+          get   :get_standard_statements
+          get   :get_materials_standards
+          post  :add_materials_standard
+          post  :remove_materials_standard
         end
         namespace :materials_bin do
           get :collections
@@ -699,9 +709,22 @@ RailsPortal::Application.routes.draw do
           end
         end
 
-        resources :classes, only: [:show]
+        resources :classes, only: [:show] do
+          member do
+            get :log_links
+          end
+        end
         namespace :classes do
           get :info
+          get :mine
+        end
+
+        namespace :jwt do
+          post :firebase
+        end
+
+        namespace :service do
+          get :solr_initialized
         end
         resources :report_learners_es
       end
@@ -711,15 +734,18 @@ RailsPortal::Application.routes.draw do
       match '/login/:username' => 'users#backdoor', :as => :login_backdoor
     end
 
+    match "api/v1/materials/:material_type/:id", to: "api/v1/materials#show"
+
     match '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     match '/readme' => 'home#readme', :as => :readme
-    match '/doc/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
+    match '/docs/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
     match '/home'       => 'home#index', :as => :home
     match '/my_classes' => 'home#my_classes', :as => :my_classes
     match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
     match '/getting_started' => 'home#getting_started', :as => :getting_started
     match '/about' => 'home#about', :as => :about
     match '/report' => 'home#report', :as => :report
+    match '/collections' => 'home#collections', :as => :about
     match '/test_exception' => 'home#test_exception', :as => :test_exception
     match '/' => 'home#index', :as => :root
     match '/requirements' => 'home#requirements', :as => :requirements
@@ -735,7 +761,14 @@ RailsPortal::Application.routes.draw do
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
     post  '/installer_report' => 'misc#installer_report', :as => :installer_report
 
+    match '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
+
+    match '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
+
     match '/:controller(/:action(/:id))'
+
+    get 'robots.txt'    => 'robots#index'
+    get 'sitemap.xml'   => 'robots#sitemap'
 
     root :to => 'home#index'
   end

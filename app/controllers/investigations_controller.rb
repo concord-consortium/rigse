@@ -8,14 +8,12 @@ class InvestigationsController < AuthoringController
 
   include RestrictedController
   include ControllerParamUtils
-  #access_rule 'researcher', :only => [:usage_report, :details_report]
 
   # PUNDIT_CHECK_FILTERS
   before_filter :setup_object, :except => [:index,:list_filter,:preview_index]
   before_filter :render_scope, :only => [:show]
   # editing / modifying / deleting require editable-ness
-  before_filter :manager_or_researcher, :only => [:usage_report, :details_report]
-  before_filter :can_edit, :except => [:usage_report, :details_report, :preview_index, :list_filter, :index,:show,:teacher,:print,:printable_index,:create,:new,:duplicate,:export, :gse_select]
+  before_filter :can_edit, :except => [:preview_index, :list_filter, :index,:show,:teacher,:print,:printable_index,:create,:new,:duplicate,:export, :gse_select]
   before_filter :can_create, :only => [:new, :create, :duplicate]
 
   in_place_edit_for :investigation, :name
@@ -549,51 +547,6 @@ class InvestigationsController < AuthoringController
       page[dom_id_for(@component, :item)].scrollTo()
       page.visual_effect :highlight, dom_id_for(@component, :item)
     end
-  end
-
-  def usage_report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
-    sio = get_report(:usage)
-    filename = @investigation.id.nil? ? "investigations-published-usage.xls" : "investigation-#{@investigation.id}-usage.xls"
-    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
-  end
-
-  def details_report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Investigation
-    # authorize @investigation
-    # authorize Investigation, :new_or_create?
-    # authorize @investigation, :update_edit_or_destroy?
-    sio = get_report(:detail)
-    filename = @investigation.id.nil? ? "investigations-published-details.xls" : "investigation-#{@investigation.id}-details.xls"
-    send_data(sio.string, :type => "application/vnd.ms.excel", :filename => filename )
-  end
-
-  private
-
-  def get_report(type)
-    sio = StringIO.new
-    opts = {:verbose => false}
-    opts[:runnables] = [@investigation] unless @investigation.id.nil?
-    opts[:blobs_url] = dataservice_blobs_url
-    opts[:url_helpers] = Reports::UrlHelpers.new(:protocol => request.protocol, :host_with_port => request.host_with_port)
-    rep = nil
-    case type
-    when :detail
-      rep = Reports::Detail.new(opts)
-    when :usage
-      rep = Reports::Usage.new(opts)
-    end
-    rep.run_report(sio) if rep
-    return sio
   end
 
 end

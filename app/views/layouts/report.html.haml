@@ -17,8 +17,15 @@
     = render :partial => 'dynamic_scripts/all'
 
     != javascript_include_tag 'application'
+
+    / add the portal pages javascript and css if defined
+    = render :partial => "layouts/portal_pages_library"
+
+    / add the external css if defined
+    = render :partial => "layouts/external_css"
+
     = calpicker_includes "silver"
-    
+
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?
@@ -28,8 +35,7 @@
     - if @container_type
       = javascript_tag "var container_type = '#{@container_type}';"
 
-    - if USING_GOOGLE_ANALYTICS
-      = javascript_tag google_analytics_config
+    = google_analytics_config
 
   %body
 
@@ -50,7 +56,3 @@
 
         = content_for :layout
       = render :partial => 'shared/footer'
-      #under_footer
-        - if current_visitor.has_role?('admin')
-          = display_system_info
-

@@ -156,6 +156,10 @@ class Portal::Teacher < ActiveRecord::Base
     end
   end
 
+  def my_classes_url(protocol, host)
+    Rails.application.routes.url_helpers.api_v1_classes_mine(protocol: protocol, host: host)
+  end
+
   private
 
   def add_to_default_cohort

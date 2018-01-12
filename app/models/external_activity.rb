@@ -1,7 +1,9 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
 
+  #
   # see https://github.com/sunspot/sunspot/blob/master/README.md
+  #
   searchable do
     text :name
     string :name
@@ -23,8 +25,10 @@ class ExternalActivity < ActiveRecord::Base
     end
 
     integer :offerings_count
+
     boolean :is_official
     boolean :is_archived
+
     boolean :is_assessment_item
     boolean :is_template do
       false
@@ -56,20 +60,27 @@ class ExternalActivity < ActiveRecord::Base
       material_property_list
     end
     string  :cohort_ids, :multiple => true, :references => Admin::Cohort
+
     string  :grade_levels, :multiple => true do
       grade_level_list
     end
+
     string  :subject_areas, :multiple => true do
       subject_area_list
     end
+
     string  :sensors, :multiple => true do
       sensor_list
     end
+
     integer :project_ids, :multiple => true, :references => Admin::Project
+
   end
 
   belongs_to :user
   belongs_to :external_report
+
+  has_many :favorites, as: :favoritable
 
   # offerings are not deleted if they have learners, so you need to explicitly remove the learners
   # before you can delete the offering
@@ -88,10 +99,38 @@ class ExternalActivity < ActiveRecord::Base
 
   acts_as_replicatable
 
+  belongs_to :license,
+    :class_name  => 'CommonsLicense',
+    :primary_key => 'code',
+    :foreign_key => 'license_code'
+
   include Cohorts
   include Publishable
   include SearchModelInterface
   include Archiveable
+
+  #
+  # Override the material_type method from SearchModelInterface
+  #
+  def material_type
+    attributes['material_type']
+  end
+
+  #
+  # Ensure changes to the template_type update the material_type
+  #
+  before_validation :if => :template_type_changed? do |ea|
+    ea.material_type = template_type
+  end
+
+  #
+  # Ensure changes to the template update the material_type
+  #
+  alias_method :original_template=, :template=
+  def template=(t)
+    self.original_template 	= t
+    self.material_type  	= t.class.name
+  end
 
   validate :valid_url
 
@@ -131,21 +170,23 @@ class ExternalActivity < ActiveRecord::Base
   scope :contributed, where(:is_official => false)
   scope :archived, where(:is_archived => true)
 
-  def url(learner = nil)
+  def url(learner = nil, domain = nil)
     begin
       uri = URI.parse(read_attribute(:url))
       if learner
         append_query(uri, "learner=#{learner.id}") if append_learner_id_to_url
         append_query(uri, "c=#{learner.user.id}") if append_survey_monkey_uid
+        if append_auth_token
+          AccessGrant.prune!
+          token = learner.user.create_access_token_with_learner_valid_for(3.minutes, learner)
+          append_query(uri, "token=#{token}")
+          append_query(uri, "domain=#{domain}&domain_uid=#{learner.user.id}") if domain
+        end
       end
-      return uri.to_sc
+      return uri.to_s
     rescue
       return read_attribute(:url)
     end
-  end
-
-  def material_type
-    template_type ? template_type : 'Activity'
   end
 
   def display_name
@@ -178,7 +219,7 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   def activities
-    template.activities if material_type == 'Investigation'
+    template.activities if template_type == 'Investigation'
   end
   # end methods required by Search::SearchMaterial
 
@@ -213,7 +254,6 @@ class ExternalActivity < ActiveRecord::Base
   def options_for_external_report
     ExternalReport.all.map { |r| [r.name, r.id] }
   end
-
 
   private
 

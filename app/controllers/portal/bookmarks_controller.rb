@@ -3,6 +3,15 @@ class Portal::BookmarksController < ApplicationController
 
   def index
     @portal_clazz = get_current_clazz
+
+    #
+    # Create a tmp bookmark to perform pundit auth check.
+    #
+    mark = Portal::GenericBookmark.new()
+    mark.user = current_user
+    mark.clazz = get_current_clazz
+    authorize mark
+
     @bookmarks = Portal::Bookmark.where(clazz_id: @portal_clazz)
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
@@ -10,6 +19,8 @@ class Portal::BookmarksController < ApplicationController
 
   def add_padlet
     mark = Portal::PadletBookmark.create_for_user(current_visitor, get_current_clazz)
+    authorize mark
+
     render :update do |page|
       page.insert_html :bottom,
         "bookmarks_box",
@@ -26,6 +37,8 @@ class Portal::BookmarksController < ApplicationController
     mark = Portal::GenericBookmark.new(props)
     mark.user = current_visitor
     mark.clazz = get_current_clazz
+    authorize mark
+
     mark.save!
     render :update do |page|
       page.insert_html :bottom,

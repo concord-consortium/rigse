@@ -1,18 +1,14 @@
 - content_for(:project_info) do
+  %h1
+    About the STEM Resource Finder
   %p
-    Since 1994, the Concord Consortium has been developing deeply digital tools and learning activities that capture
-    the power of curiosity and create revolutionary new approaches to science, math and engineering education.
-    This new portal is being developed as a central repository for our simulations and activities,
-    giving teachers and students access to open educational resources across our projects, past and present.
-    The portal currently offers a limited number of research-based activities. We’re actively working on adding
-    new resources, so check back often!
+    = I18n.t('HomePage.Teacher.Intro')
   %p
-    = link_to "Preview the activities.", search_url
+    = link_to "Preview the activities.", root_url
   %p
     %strong
       Why sign up?
-    When you register as a teacher, you can browse activities, create classes, assign activities to your students, follow their progress, and view reports of their work.
-  %p
-    Looking for more? Our
-    = link_to "STEM Resource Finder", "https://concord.org/stem-resources"
-    includes hundreds of other models and activities.
+    When you register as a teacher, you can browse activities, create classes,
+    assign activities to your students, follow their progress,
+    and view reports of their work.
+

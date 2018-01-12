@@ -233,7 +233,19 @@ class ApplicationController < ActionController::Base
     if request.format && request.format.html? && current_visitor && current_visitor.require_portal_user_type && !current_visitor.has_portal_user_type?
       unless session_sensitive_path
         flash.keep
-        redirect_to portal_user_type_selector_path
+
+        #
+        # TODO If there were some way render the underlying content of
+        # the omniauth_origin url beneath the modal signup popup, that would
+        # be nice.
+        #
+        # Also if this could be passed in, rather than stored in the
+        # session, that would.
+        #
+        # Otherwise, this is not actually used.
+        #
+        redirect_to portal_user_type_selector_path(omniauth_origin: session["omniauth.origin"])
+
       end
     end
   end
@@ -269,26 +281,24 @@ class ApplicationController < ActionController::Base
   # so it has access to the parameters that were passed in. This allows us to pass
   # a hidden param :after_sign_in_path to the sign in form.
   def after_sign_in_path_for(resource)
-    redirect_path = root_path
+
+    redirect_path = view_context.current_user_home_path
+
     if ENV['RESEARCHER_REPORT_ONLY']
+      # force all users to try to go to the researcher page on a report only portal
       redirect_path = learner_report_path
-    elsif current_user.portal_student
-      redirect_path = my_classes_path
-    elsif params[:after_sign_in_path]
-      # add an extra param to this path we don't go in a loop, see pundit_user_not_authorized
+    elsif !current_user.portal_student && params[:after_sign_in_path].present?
+      # users that aren't student can be redirected to other pages after logging in if
+      # the after_sign_in_path param is provided
+
       redirect_uri = URI.parse(params[:after_sign_in_path])
       query = Rack::Utils.parse_query(redirect_uri.query)
+      # add an extra param to this path, so we don't go in a loop, see pundit_user_not_authorized
       query["redirecting_after_sign_in"] = '1'
       redirect_uri.query = Rack::Utils.build_query(query)
       redirect_path = redirect_uri.to_s
-    elsif APP_CONFIG[:recent_activity_on_login] && current_user.portal_teacher
-      if current_user.has_active_classes?
-        # Teachers with active classes are redirected to the "Recent Activity" page
-        redirect_path = recent_activity_path
-      else
-        redirect_path = getting_started_path
-      end
     end
+
     if session[:sso_callback_params]
       AccessGrant.prune!
       access_grant = current_user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)

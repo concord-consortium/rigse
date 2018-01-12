@@ -7,13 +7,22 @@ class API::V1::MaterialsBinController < API::APIController
   #   - ?id=:id or ?id[]=:id1&id[]=:id2 - returns collections with given IDs
   # Note that materials are filtered by cohorts of the current visitor!
   def collections
+    status = 200
+    skip_lightbox_reloads = (params[:skip_lightbox_reloads] == true.to_s)
+
     # Preserver order of collections provided by client!
     collection_by_id = MaterialsCollection.where(id: params[:id]).index_by { |mc| mc.id.to_s }
     collections = Array(params[:id]).map do |id|
       col = collection_by_id[id]
-      materials_collection_data(col.name, col.materials(allowed_cohorts, show_assessment_items), params[:assigned_to_class])
+      if col.nil?
+        message = "Invalid collection ID #{id}."
+        status  = 400 # bad request
+        render json: {:message => message}, :status => status
+        return
+      end
+      materials_collection_data(col.name, col.materials(allowed_cohorts, show_assessment_items), params[:assigned_to_class], 0, skip_lightbox_reloads)
     end
-    render json: collections
+    render json: collections, :status => status
   end
 
   # GET /api/v1/materials_bin/unofficial_materials?user_id=:user_id
@@ -67,10 +76,17 @@ class API::V1::MaterialsBinController < API::APIController
     materials
   end
 
-  def materials_collection_data(name, materials, assigned_to_class)
+  def materials_collection_data(name,
+                                materials,
+                                assigned_to_class,
+                                include_related         = 0,
+                                skip_lightbox_reloads   = false)
     {
         name: name,
-        materials: materials_data(materials, assigned_to_class)
+        materials: materials_data(  materials,
+                                    assigned_to_class,
+                                    include_related,
+                                    skip_lightbox_reloads )
     }
   end
 end

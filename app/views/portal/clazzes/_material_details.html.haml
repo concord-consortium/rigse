@@ -1,39 +1,38 @@
 - runnable = current_offering.runnable # note this assumes the runnable is a Investigation
 %div.clearboth{:id=>"material_tab_#{current_offering.id}_data", :style=>"display:none"}
-  %br
-    %div
-      %table.investigationdata{:width=>"100%"}
-        %tr
-          %td.subheader= (runnable.class.display_name == 'External Activity' ? 'Activity' : runnable.class.display_name) + ':'
-          %td
-            %div{:style=>"float:left;font-size:16px;font-weight:bold;"}
-              = current_offering.name
-            %div{:style=>"float:left;padding-top:2px"}
-              = "(assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
-          %td{:style=>"white-space:nowrap"}
-            = render :partial => '/browse/preview', :locals => {:material => runnable, :current_visitor => current_visitor}
-            %div{:style=>"height:10px"}
-            = teacher_guide_link(runnable)
-      - if runnable.is_a? Investigation
-        %br
-        %div
-          = render :partial => 'investigation_activities', :locals => { :investigation => runnable }
-
+  %div
+    %table.investigationdata{:width=>"100%"}
+      %tr
+        %td.subheader= (runnable.class.display_name == 'External Activity' ? 'Activity' : runnable.class.display_name) + ':'
+        %td
+          %span{:style=>"font-weight: bold;"}
+            = current_offering.name
+          %span
+            = " (assigned on #{current_offering.created_at.strftime('%d %B %Y')})"
+        %td{:style=>"text-align: right; white-space:nowrap"}
+          = render :partial => '/browse/preview', :locals => {:material => runnable, :current_visitor => current_visitor}
+          %div{:style=>"height:10px"}
+          = teacher_guide_link(runnable)
+    - if runnable.is_a? Investigation
+      %br
       %div
-        %table{:width=>"100%"}
-          %tr
-            %td{:width=>"200px"}
-              %span.subheader
-                Student Submissions
-            %td
-              %div.right
-                - if current_offering.reportable?
-                  %span.linkbutton.pie= report_link_for(current_offering, 'Report', 'Run Report')
-                - if alternate_report_link_for(current_offering)
-                  %span.linkbutton.pit= alternate_report_link_for(current_offering)
-          - if current_offering.clazz.students.length > 0
-            %tr
-              %td{:colspan=>"2"}= render :partial => 'progress_bar_legend'
-          %tr
-            %td{:colspan=>"2"}
-              = render :partial => 'material_details_students_table', :locals => {:offering => current_offering}
+        = render :partial => 'investigation_activities', :locals => { :investigation => runnable }
+
+    %div
+      %table{:width=>"100%"}
+        %tr
+          %td{:width=>"200px"}
+            %span.subheader
+              Student Submissions
+          %td
+            %div.right
+              - if current_offering.reportable?
+                %span.linkbutton.pie= report_link_for(current_offering, 'Report', 'Run Report')
+              - if alternate_report_link_for(current_offering)
+                %span.linkbutton.pit= alternate_report_link_for(current_offering)
+        - if current_offering.clazz.students.length > 0
+          %tr.legend-container
+            %td{:colspan=>"2"}= render :partial => 'progress_bar_legend'
+        %tr
+          %td{:colspan=>"2"}
+            = render :partial => 'material_details_students_table', :locals => {:offering => current_offering}

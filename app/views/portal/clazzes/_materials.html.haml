@@ -1,23 +1,21 @@
 = javascript_include_tag "instructional_materials.js"
 = javascript_include_tag "share_material.js"
 - clazz_offerings = @portal_clazz.teacher_visible_offerings.sort{|a,b| a.position<=>b.position}
+- external_class_reports = @portal_clazz.external_class_reports()
 - material_text = t("material").pluralize.capitalize
 .maincontainer.pie
   .container
     .content
       = f.error_messages
     .right
+      %h1 Assignments for #{portal_clazz.name}
       = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
-      .header Assignments for #{portal_clazz.name}
       %br
-      %table.classdata.classdata-buttons
-        %tr
-          %td
-            = link_to "Manage #{material_text}", edit_portal_clazz_url(portal_clazz), :class=>"button pie"
-          %td{:style => "padding-left:10px"}
-            = link_to "Assign #{material_text}", assign_materials_link, :class=>"button pie"
-      %br.clearboth
-      %br.clearboth
+      .classdata.classdata-buttons
+        - external_class_reports.each do |ecr|
+          = link_to ecr.launch_text, portal_external_class_report_url(portal_clazz, ecr), :target => '_blank', :title => ecr.name, :class=>"pie"
+        = link_to "Manage #{material_text}", edit_portal_clazz_url(portal_clazz), :class=>"pie"
+        = link_to "Assign #{material_text}", assign_materials_link, :class=>"pie"
       - if clazz_offerings.length > 0
         %div.clearboth
           =select_tag('material_select', options_for_select(clazz_offerings.map { |o| [o.name, "material_tab_#{o.id}_data"] }))

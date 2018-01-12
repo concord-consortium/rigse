@@ -43,6 +43,7 @@ class Report::UtilLearner
   end
 
   def complete_number(activity = nil)
+
     if activity
       # filter saveables by only the embeddables with the same activity
       embeddables = @reportables.select { |r| r[:activity] && r[:activity].id == activity.id}.map { |r| r[:embeddable]}
@@ -59,6 +60,7 @@ class Report::UtilLearner
     else
       total = Float(embeddables.size)
     end
+
     return total < 0.5 ? 0.0 : (completed/total) * 100.0
   end
 end
