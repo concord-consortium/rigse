@@ -685,8 +685,8 @@ DEPENDENCIES
   jwt
   launchy (~> 2.0.5)
   lol_dba
-  mysql2 (~> 0.3.16)
   momentjs-rails (~> 2.17.1)
+  mysql2 (~> 0.3.16)
   nested_form
   net-sftp (~> 2.0)
   newrelic_rpm (~> 4.4, >= 4.4.0.336)

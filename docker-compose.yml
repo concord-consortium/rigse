@@ -81,6 +81,11 @@ services:
       #
       JWT_HMAC_SECRET:
 
+      #
+      # override this to specify a different elastic search server
+      #
+      ELASTICSEARCH_URL: "${ELASTICSEARCH_URL:-http://elasticsearch}"
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse
@@ -121,7 +126,7 @@ services:
     #
     command: ["/bin/bash", "-c", "/rigse/docker/dev/start-solr-test.sh -f -p $${TEST_SOLR_PORT}" ]
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.1
     environment:
       - discovery.type=single-node
     ports:
@@ -131,6 +136,13 @@ services:
     networks:
       - portal
       - default
+  logstash:
+    image: docker.elastic.co/logstash/logstash-oss:6.1.1
+    # need to mount the jdbc driver in docker/dev
+    # need to mount the config also in docker/dev
+    volumes:
+      - ./docker/dev/mysql-connector-java-5.1.41-bin.jar:/usr/share/logstash/mysql-connector-java-5.1.41-bin.jar
+      - ./docker/dev/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
 
 volumes:
   bundle:
