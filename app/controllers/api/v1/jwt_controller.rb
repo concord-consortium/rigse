@@ -1,6 +1,7 @@
 class API::V1::JwtController < API::APIController
 
   require 'digest/md5'
+  skip_before_filter :verify_authenticity_token
 
   def portal
     user, role = check_for_auth_token()

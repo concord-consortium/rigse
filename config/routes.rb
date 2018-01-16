@@ -720,7 +720,12 @@ RailsPortal::Application.routes.draw do
         end
 
         namespace :jwt do
+          post :portal
           post :firebase
+        end
+
+        namespace :external_activities do
+          post :create_collabspace_activity
         end
 
         namespace :service do

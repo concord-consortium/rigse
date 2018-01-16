@@ -102,7 +102,7 @@ class HomeController < ApplicationController
   end
 
   def create_collabspace_template
-    jwt = SignedJWT::create_portal_token(current_user, {:domain => root_url})
+    jwt = SignedJWT::create_portal_token(current_user, {:user_type => "user", :user_id => url_for(current_user), :domain => root_url, first_name: current_user.first_name, last_name: current_user.last_name})
     collabspace_url = ENV['COLLABSPACE_URL'] || "https://workspaces.concord.org/collabspace/"
     collabspace_url << '/' unless collabspace_url.end_with?('/')
     create_url = "#{collabspace_url}?jwtToken=#{jwt}#action=create-template"

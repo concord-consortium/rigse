@@ -21,7 +21,7 @@
     = link_to "Create #{ExternalActivity.display_name}", new_external_activity_path, :class => 'button'
 
 %div{:style=> "margin: 1em; padding: 1em;"}
-  %h4= link_to "Create CollabSpace Activity", create_collabspace_template_path, :class => 'button'
+  %h4= link_to "Launch CollabSpace Editor", create_collabspace_template_path, :class => 'button'
 
 - if current_visitor.has_role?('admin')
   %div{:style=> "margin: 1em; padding: 1em;"}
