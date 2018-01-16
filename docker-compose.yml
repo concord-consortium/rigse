@@ -84,7 +84,7 @@ services:
       #
       # override this to specify a different elastic search server
       #
-      ELASTICSEARCH_URL: "${ELASTICSEARCH_URL:-http://elasticsearch}"
+      ELASTICSEARCH_URL: "${ELASTICSEARCH_URL:-http://elasticsearch:9200}"
 
     # no ports are published, see below for details
     volumes:
