@@ -182,14 +182,14 @@ en:
         Instructions_html: |
           <p>
           To get started, <b>Add a New Class</b> by clicking the link on the left and enter
-          <b>Class Setup Information</b>, including class name, description, and applicable
+          Class Setup Information, including class name, description, and applicable
           grade level(s). Create a unique class word, which students will use to enroll in
           this class.
           </p>
           <p>
-          <b>You can search High-Adventure Science resources to assign to your class.</b>
+          Click the “Search Resources” button below to see all of the assignable High-Adventure Science curricular materials!
           </p><p>
-          <a href="/search" class="button search">Search resources</a>
+          <a href="/search" class="button search">Search Resources</a>
           </p>
 
 'en-ITSI-LEARN':
