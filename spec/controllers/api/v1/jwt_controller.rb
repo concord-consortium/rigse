@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'digest/md5'
 
 def set_auth_token(auth_token)
   request.env["Authorization"] = "Bearer #{auth_token}"
@@ -42,6 +43,8 @@ describe API::V1::JwtController, :type => :controller do
   let(:expires)         { Time.now + 1000000000.minutes}
   let(:user_token)      { addToken(user, client, expires) }
   let(:user)            { FactoryGirl.create(:user) }
+  let(:url_for_user)    { "http://test.host/users/#{user.id}" } # can't use url_for(user) helper in specs
+  let(:uid)             { Digest::MD5.hexdigest(url_for_user) }
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
   let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
   let(:runnable)        { Factory.create(:activity, runnable_opts)    }
@@ -108,7 +111,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         body = JSON.parse(response.body)
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-        decoded_token[:data]["uid"].should eql user.id
+        decoded_token[:data]["uid"].should eql uid
       end
     end
 
@@ -126,7 +129,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-        decoded_token[:data]["uid"].should eql user.id
+        decoded_token[:data]["uid"].should eql uid
         decoded_token[:data]["domain"].should eql root_url
         decoded_token[:data]["externalId"].should eql learner.id
         decoded_token[:data]["returnUrl"].should_not be_nil
@@ -134,7 +137,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         decoded_token[:data]["domain_uid"].should eql user.id
         decoded_token[:data]["class_info_url"].should_not be_nil
         decoded_token[:data]["claims"]["user_type"].should eq "learner"
-        decoded_token[:data]["claims"]["user_id"].should_not be_nil
+        decoded_token[:data]["claims"]["user_id"].should eq url_for_user
         decoded_token[:data]["claims"]["class_hash"].should_not be_nil
         decoded_token[:data]["claims"]["offering_id"].should eq offering.id
       end
@@ -154,10 +157,10 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-        decoded_token[:data]["uid"].should eql user.id
+        decoded_token[:data]["uid"].should eql uid
         decoded_token[:data]["domain"].should eql root_url
         decoded_token[:data]["claims"]["user_type"].should eq "teacher"
-        decoded_token[:data]["claims"]["user_id"].should_not be_nil
+        decoded_token[:data]["claims"]["user_id"].should eq url_for_user
         decoded_token[:data]["claims"]["class_hash"].should eq nil
       end
 

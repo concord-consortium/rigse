@@ -1,5 +1,7 @@
 class API::V1::JwtController < API::APIController
 
+  require 'digest/md5'
+
   def portal
     user, role = check_for_auth_token()
     return if !user
@@ -87,8 +89,11 @@ class API::V1::JwtController < API::APIController
       }
     end
 
+    # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string
+    uid = Digest::MD5.hexdigest(url_for(user))
+
     begin
-      render status: 201, json: {token: SignedJWT::create_firebase_token(user, params[:firebase_app], 3600, claims)}
+      render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
     rescue Exception => e
       error(e.message, 500)
     end
