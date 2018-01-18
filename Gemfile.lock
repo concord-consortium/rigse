@@ -80,6 +80,7 @@ GIT
 
 GEM
   remote: http://rubygems.org/
+  remote: https://rails-assets.org/
   specs:
     Ascii85 (1.0.1)
     POpen4 (0.1.4)
@@ -351,6 +352,8 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile2 (2.1.0)
+    momentjs-rails (2.17.1)
+      railties (>= 3.1)
     multi_json (1.12.2)
     multi_test (0.1.2)
     multi_xml (0.5.1)
@@ -441,6 +444,9 @@ GEM
       activesupport (= 3.2.22.5)
       bundler (~> 1.0)
       railties (= 3.2.22.5)
+    rails-assets-react (15.5.4)
+    rails-assets-react-day-picker (5.4.1)
+      rails-assets-react
     railties (3.2.22.5)
       actionpack (= 3.2.22.5)
       activesupport (= 3.2.22.5)
@@ -679,6 +685,7 @@ DEPENDENCIES
   jwt
   launchy (~> 2.0.5)
   lol_dba
+  momentjs-rails (~> 2.17.1)
   mysql2 (~> 0.3.16)
   nested_form
   net-sftp (~> 2.0)
@@ -698,6 +705,7 @@ DEPENDENCIES
   rack-cors
   rack-mini-profiler
   rails (~> 3.2.22)
+  rails-assets-react-day-picker (~> 5.4.1)!
   rake (~> 0.9.2)
   rb-fchange
   rb-fsevent

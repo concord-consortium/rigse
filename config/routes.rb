@@ -726,6 +726,7 @@ RailsPortal::Application.routes.draw do
         namespace :service do
           get :solr_initialized
         end
+        resources :report_learners_es
       end
     end
 

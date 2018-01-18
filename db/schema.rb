@@ -2444,6 +2444,8 @@ ActiveRecord::Schema.define(:version => 20171204200632) do
     t.string   "teachers_district"
     t.string   "teachers_state"
     t.string   "teachers_email"
+    t.string   "permission_form_ids"
+    t.string   "teacher_ids"
   end
 
   add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"

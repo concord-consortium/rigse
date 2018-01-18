@@ -81,43 +81,33 @@ class Report::LearnerController < ApplicationController
     if params[:commit] =~ /update learners/i
       update_learners
     elsif params[:commit] == @button_texts[:logs_query]
-      redirect_to learner_logs_query_path(request.GET.except(:commit))
+      # strip the commit=logs_query param so we don't have an infinite redirect,
+      # but keep a valid commit param so we load the query data
+      redirect_to learner_logs_query_path(request.GET.merge({:commit => true}))
       return
     end
 
     @no_log_manager = APP_CONFIG[:codap_url].nil? || APP_CONFIG[:log_manager_data_interactive_url].nil?
 
-    # helper model to limit learner selections:
-    @learner_selector = Report::Learner::Selector.new(params, current_visitor)
+    if params.has_key?(:commit)
+      # Selector makes a request to the Elasticsearch API and processes the results
+      @learner_selector = Report::Learner::Selector.new(params, current_visitor)
+      # The learners we have selected:
+      @select_learners  = @learner_selector.learners
+      @url_helpers = Reports::UrlHelpers.new(:protocol => request.protocol, :host_with_port => request.host_with_port)
+      hide_names = params[:hide_names] == 'on'
+    end
 
-    # The learners we have selected:
-    @select_learners  = @learner_selector.learners
-
-    # some information to help researchers narrow search:
-    # we might be able to speed this up by doing:
-    # @select_learners.select("count(distinct student_id) AS 'student_count', " +
-    #                         "count(distinct class_id) AS 'class_count', " +
-    #                         "count(distinct runnable_id) AS 'runnable_count'")
-    # note the last one should be a separate query that groups by runnable_type and counts that grouping
-    @infos = {
-      "learners:"       => @select_learners.size,
-      "students:"       => @select_learners.map {|l| l.student_id}.uniq.size,
-      "classes:"        => @select_learners.map {|l| l.class_id}.uniq.size
-    }
-    @select_learners.map {|l| l.runnable_type}.uniq.each{|runnable_type|
-      @infos[runnable_type.pluralize + ":"] = @select_learners.select{|l| l.runnable_type == runnable_type}.map{|l| l.runnable_id}.uniq.size
-    }
-
-    @url_helpers = Reports::UrlHelpers.new(:protocol => request.protocol, :host_with_port => request.host_with_port)
+    hide_names = params[:hide_names] == 'on'
 
     if params[:commit] == @button_texts[:usage]
       runnables =  @learner_selector.runnables_to_report_on
-      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :include_child_usage => params[:include_child_usage], :url_helpers => @url_helpers, :hide_names => @learner_selector.hide_names)
+      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :include_child_usage => params[:include_child_usage], :url_helpers => @url_helpers, :hide_names => hide_names)
       book = report.run_report
       send_data(book.to_data_string, :type => book.mime_type, :filename => "usage.#{book.file_extension}" )
     elsif params[:commit] == @button_texts[:details]
       runnables =  @learner_selector.runnables_to_report_on
-      report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :url_helpers => @url_helpers, :hide_names => @learner_selector.hide_names)
+      report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :url_helpers => @url_helpers, :hide_names => hide_names)
       book = report.run_report
       send_data(book.to_data_string, :type => book.mime_type, :filename => "details.#{book.file_extension}" )
     elsif params[:commit] == @button_texts[:arg_block]

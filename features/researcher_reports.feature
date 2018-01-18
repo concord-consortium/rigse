@@ -114,21 +114,10 @@ Feature: Investigations can be reported on
       | login      | password   | email                  |
       | researcher | researcher | researcher@concord.org |
 
-    And the following student answers:
-        | student | class    | investigation       | question_prompt | answer |
-        | student | My Class | first investigation | a               | b      |
-        | student | My Class | first investigation | a               | a      |
-        | student | My Class | first investigation | c               | b      |
-
     And a mocked remote endpoint url
 
     And I am logged in with the username researcher
-    And I am on the researcher reports page
-    Then I should see "You have selected:"
-    When I press "Apply Filters"
-    Then I should see "You have selected:"
-    When I press "Usage Report"
+    And I try to go to the researcher reports page and click usage report
     Then I should receive an Excel spreadsheet
-    When I am on the researcher reports page
-    And I press "Details Report"
+    When I try to go to the researcher reports page and click details report
     Then I should receive an Excel spreadsheet

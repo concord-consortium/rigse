@@ -81,6 +81,11 @@ services:
       #
       JWT_HMAC_SECRET:
 
+      #
+      # override this to specify a different elastic search server
+      #
+      ELASTICSEARCH_URL: "${ELASTICSEARCH_URL:-http://elasticsearch:9200}"
+
     # no ports are published, see below for details
     volumes:
       - .:/rigse
@@ -120,6 +125,31 @@ services:
     # to specify a port and other parameters.
     #
     command: ["/bin/bash", "-c", "/rigse/docker/dev/start-solr-test.sh -f -p $${TEST_SOLR_PORT}" ]
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      # this should be left unspecified so the random ports approach can be used
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - portal
+      - default
+  logstash:
+    build:
+      context: docker/logstash
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: mysql
+      DB_NAME: portal_development
+      DB_USER: root
+      DB_PASSWORD: xyzzy
+      ES_TYPE: local
+      ES_HOST: elasticsearch
+    volumes:
+      # override logstash config to use local elastic search
+      - ./docker/logstash/logstash-dev.conf:/usr/share/logstash/pipeline/logstash.conf
 
 volumes:
   bundle:
