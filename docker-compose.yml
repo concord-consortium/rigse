@@ -148,8 +148,8 @@ services:
       ES_TYPE: local
       ES_HOST: elasticsearch
     volumes:
-      # override logstash config that is part of the image to make local development easier
-      - ./docker/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      # override logstash config to use local elastic search
+      - ./docker/logstash/logstash-dev.conf:/usr/share/logstash/pipeline/logstash.conf
 
 volumes:
   bundle:
