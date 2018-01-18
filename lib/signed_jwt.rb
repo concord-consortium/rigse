@@ -31,7 +31,7 @@ module SignedJWT
     {data: decoded[0], header: decoded[1]}
   end
 
-  def self.create_firebase_token(user, firebase_app_name, expires_in=3600, claims={})
+  def self.create_firebase_token(uid, firebase_app_name, expires_in=3600, claims={})
     app = FirebaseApp.find_by_name(firebase_app_name)
     raise SignedJWT::Error.new("Unknown firebase app name: #{firebase_app_name}") if app.nil?
 
@@ -43,7 +43,7 @@ module SignedJWT
       aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
       iat: now,
       exp: now + expires_in,
-      uid: user.id
+      uid: uid
     }
 
     begin

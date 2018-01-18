@@ -1,4 +1,5 @@
 require File.expand_path('../../spec_helper', __FILE__)
+require 'digest/md5'
 
 describe FirebaseApp do
   before(:each) do
@@ -25,7 +26,7 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
 -----END RSA PRIVATE KEY-----"
     }
   end
-  let(:user) { FactoryGirl.create(:user) }
+  let(:uid) { Digest::MD5.hexdigest("test") }
 
   it "should create a new instance given valid attributes" do
     FirebaseApp.create!(@valid_attributes)
@@ -33,22 +34,22 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
 
   it "should be valid when used in a signed JWT" do
     FirebaseApp.create!(@valid_attributes)
-    token = SignedJWT::create_firebase_token(user, @valid_app_name)
+    token = SignedJWT::create_firebase_token(uid, @valid_app_name)
     decoded_token = SignedJWT::decode_firebase_token(token, @valid_app_name)
-    decoded_token[:data]["uid"].should eql user.id
+    decoded_token[:data]["uid"].should eql uid
     decoded_token[:data]["iss"].should eql @valid_client_email
     decoded_token[:data]["sub"].should eql @valid_client_email
     decoded_token[:data]["aud"].should eql "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit"
   end
 
   it "should throw an error in a signed JWT when it doesn't exist" do
-    expect { SignedJWT::create_firebase_token(user, @valid_app_name) }.to raise_error(SignedJWT::Error)
+    expect { SignedJWT::create_firebase_token(uid, @valid_app_name) }.to raise_error(SignedJWT::Error)
   end
 
   it "should create a valid JWT with claims" do
     FirebaseApp.create!(@valid_attributes)
     claims = {foo: "bar"}
-    token = SignedJWT::create_firebase_token(user, @valid_app_name, 3600, claims)
+    token = SignedJWT::create_firebase_token(uid, @valid_app_name, 3600, claims)
     decoded_token = SignedJWT::decode_firebase_token(token, @valid_app_name)
     decoded_token[:data]["foo"].should eql "bar"
   end
@@ -56,7 +57,7 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
   it "should throw an error when create a JWT with claims if reserved keys are used" do
     FirebaseApp.create!(@valid_attributes)
     claims = {sub: "bar"}
-    expect { SignedJWT::create_firebase_token(user, @valid_app_name, 3600, claims) }.to raise_error(SignedJWT::Error)
+    expect { SignedJWT::create_firebase_token(uid, @valid_app_name, 3600, claims) }.to raise_error(SignedJWT::Error)
   end
 
 end
