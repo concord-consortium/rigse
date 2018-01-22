@@ -724,9 +724,7 @@ RailsPortal::Application.routes.draw do
           post :firebase
         end
 
-        namespace :external_activities do
-          post :create_collabspace_activity
-        end
+        resources :external_activities, :only => [:create]
 
         namespace :service do
           get :solr_initialized

@@ -2,12 +2,14 @@ class API::V1::ExternalActivitiesController < API::APIController
 
   skip_before_filter :verify_authenticity_token
 
-  def create_collabspace_activity
+  def create
+    authorize [:api, :v1, :external_activity]
+
     user, role = check_for_auth_token()
     return if !user
 
-    name = params[:name]
-    url = params[:url]
+    name = params.require(:name)
+    url = params.require(:url)
 
     begin
       validated_url = URI.parse(url)
@@ -19,13 +21,21 @@ class API::V1::ExternalActivitiesController < API::APIController
       return error("Invalid url", 422)
     end
 
+    external_report_id = 0
+    if params[:external_report_url]
+      external_report = ExternalReport.find_by_url(params[:external_report_url])
+      if external_report
+        external_report_id = external_report.id
+      end
+    end
+
     external_activity = ExternalActivity.create(
       :name               => name,
       :url                => url,
-      :publication_status => "published",
+      :publication_status => params[:publication_status] || "published",
       :user               => user,
-      :append_auth_token  => true,
-      :external_report_id => ENV["COLLABSPACE_REPORT_ID"]
+      :append_auth_token  => params[:append_auth_token] || false,
+      :external_report_id => external_report_id
     )
 
     if !external_activity.valid?
