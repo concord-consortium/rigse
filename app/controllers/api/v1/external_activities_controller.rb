@@ -32,7 +32,7 @@ class API::V1::ExternalActivitiesController < API::APIController
     external_activity = ExternalActivity.create(
       :name               => name,
       :url                => url,
-      :publication_status => params[:publication_status] || "published",
+      :publication_status => params[:publication_status] || "private",
       :user               => user,
       :append_auth_token  => params[:append_auth_token] || false,
       :external_report_id => external_report_id
