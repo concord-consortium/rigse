@@ -389,6 +389,8 @@ RailsPortal::Application.routes.draw do
       post '/commons_licenses/' => 'commons_licenses#create', :as => :create_commons_license
       put '/commons_licenses/:code' => 'commons_licenses#update', :as => :update_commons_license
       delete '/commons_licenses/:code' => 'commons_licenses#destroy', :as => :delete_commons_license
+
+      resources :authoring_sites
     end
 
     resources :materials_collections do
@@ -757,7 +759,7 @@ RailsPortal::Application.routes.draw do
     match '/admin' => 'home#admin', :as => :admin
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
     match 'authoring' => 'home#authoring', :as => :authoring
-    match '/create_collabspace_template' => 'home#create_collabspace_template', :as => :create_collabspace_template
+    match '/authoring_site_redirect/:id' => 'home#authoring_site_redirect', :as => :authoring_site_redirect
 
     match '/banner' => 'misc#banner', :as => :banner
     match '/time' => 'misc_metal#time', :as => :time

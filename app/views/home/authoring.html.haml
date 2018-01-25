@@ -20,8 +20,10 @@
           = link_to item.name, item
     = link_to "Create #{ExternalActivity.display_name}", new_external_activity_path, :class => 'button'
 
-%div{:style=> "margin: 1em; padding: 1em;"}
-  %h4= link_to "Launch CollabSpace Editor", create_collabspace_template_path, :class => 'button'
+- if @authoring_sites.length > 0
+  - @authoring_sites.each do |authoring_site|
+    %div{:style=> "margin: 1em; padding: 1em;"}
+      %h4= link_to "Launch #{authoring_site.name}", authoring_site_redirect_path(authoring_site), :class => 'button'
 
 - if current_visitor.has_role?('admin')
   %div{:style=> "margin: 1em; padding: 1em;"}

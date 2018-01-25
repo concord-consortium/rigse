@@ -12,4 +12,8 @@ class HomePolicy < ApplicationPolicy
     teacher? || manager_or_project_admin?
   end
 
+  def authoring_site_redirect?
+    teacher? || manager_or_project_admin?
+  end
+
 end

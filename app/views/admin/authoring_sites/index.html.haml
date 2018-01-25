@@ -1,0 +1,11 @@
+%h1
+  Authoring Sites
+- if @admin_authoring_sites.length > 0
+  = render partial: 'show', collection: @admin_authoring_sites, as: :admin_authoring_site
+- else
+  %div{:style=>"margin:10px 0"}
+    You have no authoring sites.
+    %br
+    To create an authoring site click the "Create New Authoring Site" button.
+
+= link_to 'Create New Authoring Site', new_admin_authoring_site_path, {:class => 'button'}
