@@ -1,0 +1,16 @@
+.item
+  .content
+    - if admin_authoring_site.errors.any?
+      %ul.menu_v.error-explanation
+        %li Authoring site can't be saved, there are errors in form:
+        - admin_authoring_site.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          URL:
+          = f.text_field :url
+      = submit_tag

@@ -1,17 +1,19 @@
-class HomePolicy < Struct.new(:user, :home)
-  attr_reader :user, :home
-
-  def initialize(context, home)
-    @user = context.user
-    @home = home
-  end
+class HomePolicy < ApplicationPolicy
 
   def admin?
-    user && (user.is_project_admin? || user.is_project_researcher? || user.has_role?('manager','admin','researcher'))
+    manager_or_researcher_or_project_researcher?
   end
 
   def recent_activity?
-    user && user.portal_teacher
+    teacher?
+  end
+
+  def authoring?
+    teacher? || manager_or_project_admin?
+  end
+
+  def authoring_site_redirect?
+    teacher? || manager_or_project_admin?
   end
 
 end

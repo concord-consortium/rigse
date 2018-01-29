@@ -1,0 +1,8 @@
+%h1 Edit Authoring Site
+
+= form_for(@admin_authoring_site) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => {:f => f, :admin_authoring_site => @admin_authoring_site}
+
+= link_to 'Back', admin_authoring_sites_path
+

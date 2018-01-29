@@ -228,6 +228,13 @@ ActiveRecord::Schema.define(:version => 20180127143049) do
     t.integer  "user_id"
   end
 
+  create_table "authoring_sites", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "clients", :force => true do |t|
     t.string   "name"
     t.string   "app_id"
@@ -2436,10 +2443,10 @@ ActiveRecord::Schema.define(:version => 20180127143049) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",           :limit => 2147483647
+    t.text     "answers",             :limit => 2147483647
     t.string   "runnable_type"
     t.float    "complete_percent"
-    t.text     "permission_forms",  :limit => 16777215
+    t.text     "permission_forms",    :limit => 16777215
     t.integer  "num_submitted"
     t.string   "teachers_district"
     t.string   "teachers_state"

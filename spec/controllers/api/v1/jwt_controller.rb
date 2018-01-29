@@ -105,7 +105,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       }
 
       it "returns a valid JWT" do
-        get :firebase, {:firebase_app => "test app"}, :format => :json
+        post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
 
         body = JSON.parse(response.body)
@@ -122,7 +122,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       }
 
       it "returns a valid JWT with learner params" do
-        get :firebase, {:firebase_app => "test app"}, :format => :json
+        post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
 
         body = JSON.parse(response.body)
@@ -150,7 +150,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       }
 
       it "returns a valid JWT with teacher params without a class hash" do
-        get :firebase, {:firebase_app => "test app"}, :format => :json
+        post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
 
         body = JSON.parse(response.body)
@@ -165,7 +165,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       end
 
       it "returns a valid JWT with teacher params with a class hash" do
-        get :firebase, {:firebase_app => "test app", :class_hash => clazz.class_hash}, :format => :json
+        post :firebase, {:firebase_app => "test app", :class_hash => clazz.class_hash}, :format => :json
         expect(response.status).to eq(201)
 
         body = JSON.parse(response.body)
@@ -184,7 +184,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     }
 
     it "returns a valid JWT" do
-      get :portal, {}, :format => :json
+      post :portal, {}, :format => :json
       expect(response.status).to eq(201)
 
       body = JSON.parse(response.body)
@@ -200,7 +200,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     }
 
     it "returns a valid JWT with learner params" do
-      get :portal, {}, :format => :json
+      post :portal, {}, :format => :json
       expect(response.status).to eq(201)
 
       body = JSON.parse(response.body)
@@ -223,7 +223,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     }
 
     it "returns a valid JWT with teacher params without a class hash" do
-      get :portal, {}, :format => :json
+      post :portal, {}, :format => :json
       expect(response.status).to eq(201)
 
       body = JSON.parse(response.body)
