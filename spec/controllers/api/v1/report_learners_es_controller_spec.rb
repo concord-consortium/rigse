@@ -19,7 +19,7 @@ describe API::V1::ReportLearnersEsController do
                                     }
                                 }, "count_teachers" => {
                                     "cardinality" => {
-                                        "field" => "teacher_name_and_id.keyword"
+                                        "field" => "teachers_map.keyword"
                                     }
                                 }, "count_runnables" => {
                                     "cardinality" => {
@@ -31,7 +31,7 @@ describe API::V1::ReportLearnersEsController do
                                     }
                                 }, "teachers" => {
                                     "terms" => {
-                                        "field" => "teacher_name_and_id.keyword", "size" => 500
+                                        "field" => "teachers_map.keyword", "size" => 500
                                     }
                                 }, "runnables" => {
                                     "terms" => {
@@ -39,13 +39,11 @@ describe API::V1::ReportLearnersEsController do
                                     }
                                 }, "permission_forms" => {
                                     "terms" => {
-                                        "field" => "permission_forms.keyword", "size" => 1000
-                                    }, "aggs" => {
-                                        "permission_form_ids" => {
-                                            "terms" => {
-                                                "field" => "permission_form_ids.keyword"
-                                            }
-                                        }
+                                        "field" => "permission_forms_map.keyword", "size" => 1000
+                                    }
+                                }, "permission_forms_ids" => {
+                                    "terms" => {
+                                        "field" => "permission_forms_id.keyword", "size" => 1000
                                     }
                                 }
                               },
@@ -142,8 +140,10 @@ describe API::V1::ReportLearnersEsController do
 
         restricted_search_body = search_body
         restricted_search_body["query"]["bool"]["filter"] = [{
-          "terms" => {"permission_form_ids" => [@form1.id]}
+          "terms" => {"permission_forms_id" => [@form1.id]}
         }]
+        restricted_search_body["aggs"]["permission_forms_ids"]["terms"]["include"] =
+          [@form1.id]
 
         assert_requested :post, /report_learners\/_search$/,
           headers: {'Content-Type'=>'application/json'},

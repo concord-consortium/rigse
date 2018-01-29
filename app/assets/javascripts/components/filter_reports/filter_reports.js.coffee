@@ -64,12 +64,26 @@ window.FilterReports = React.createClass
         aggs = data.aggregations
         if fieldName
           newState = { filterables: @state.filterables }
+          buckets = aggs[fieldName].buckets
+          ids_field = "#{fieldName}_ids"
+          if aggs[ids_field]
+            # some fields have a separate id aggregration that is filtered
+            # based on the access of the current user
+            # we use this to filter the buckets in the main field aggregration
+            filtered_ids = aggs[ids_field].buckets.map( (b) ->
+              b.key
+            )
+
+            buckets = buckets.filter( (b) ->
+              filtered_ids.indexOf(b.key.match(/\d+/)[0]) != -1
+            )
+
           if searchString
             # merge results
             newState.filterables[fieldName] ?= [] # aggs[fieldName].buckets
-            newState.filterables[fieldName] = newState.filterables[fieldName].concat(aggs[fieldName].buckets)
+            newState.filterables[fieldName] = newState.filterables[fieldName].concat(buckets)
           else
-            newState.filterables[fieldName] = aggs[fieldName].buckets
+            newState.filterables[fieldName] = buckets
           newState["waitingFor_#{_fieldName}"] = false
         else
           newState = {
@@ -118,17 +132,6 @@ window.FilterReports = React.createClass
     @query params, "runnables"
     @query params, "permission_forms"
 
-  processNestedAgg: (agg, nestedIdName) ->
-    ret = []
-    for a in agg
-      names = a.key?.split(",")
-      ids = a[nestedIdName].buckets
-      if names and (names.length is ids.length)
-        for name, i in names
-          idAndName = "#{ids[i].key}:#{name}"
-          ret.push idAndName
-    ret
-
   renderTopInfo: ->
     if (Object.keys(@state.counts)).length
       Object.keys(@state.counts).map( (k) => (span {style: {paddingLeft: 12}, key: k},
@@ -140,10 +143,7 @@ window.FilterReports = React.createClass
 
   renderInput: (name) ->
     return unless @state.filterables[name]
-    if name is "permission_forms"
-      agg = @processNestedAgg(@state.filterables[name], "permission_form_ids")
-    else
-      agg = @state.filterables[name]
+    agg = @state.filterables[name]
 
     isLoading = @state["waitingFor_#{name}"]
     placeholder = unless isLoading then "Select ..." else "Loading ..."

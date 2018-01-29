@@ -187,17 +187,11 @@ class Report::Learner < ActiveRecord::Base
     update_field "offering.clazz.name", "class_name"
     update_field "offering.clazz.school.name", "school_name"
     update_field "offering.clazz.school.id",    "school_id"
-    update_field("offering.clazz.teachers", "teachers_name") do |ts|
-      ts.map{ |t| t.user.name}.join(", ")
-    end
-    update_field("offering.clazz.teachers", "teacher_ids") do |ts|
-      ts.map{ |t| t.id}.join(", ")
-    end
 
     update_teacher_info_fields
 
     update_permission_forms
-    update_permission_form_ids
+
     # check to see if we can obtain the last run info
     if self.learner.offering.internal_report?
       calculate_last_run
@@ -214,28 +208,41 @@ class Report::Learner < ActiveRecord::Base
     self.save
   end
 
-  # this is a separate method so that it can be called in the migration of the learner data
+  def escape_comma(string)
+    string.gsub(',', ' ')
+  end
+
   def update_teacher_info_fields
+    update_field("offering.clazz.teachers", "teachers_name") do |ts|
+      ts.map{ |t| escape_comma(t.user.name) }.join(", ")
+    end
     update_field("offering.clazz.teachers", "teachers_district") do |ts|
-      ts.map{ |t| t.schools.map{ |s| s.district.name}.join(", ")}.join(", ")
+      ts.map{ |t| t.schools.map{ |s| escape_comma(s.district.name)}.join(", ")}.join(", ")
     end
     update_field("offering.clazz.teachers", "teachers_state") do |ts|
-      ts.map{ |t| t.schools.map{ |s| s.district.state}.join(", ")}.join(", ")
+      ts.map{ |t| t.schools.map{ |s| escape_comma(s.district.state)}.join(", ")}.join(", ")
     end
     update_field("offering.clazz.teachers", "teachers_email") do |ts|
-      ts.map{ |t| t.user.email}.join(", ")
+      ts.map{ |t| escape_comma(t.user.email)}.join(", ")
     end
+    update_field("offering.clazz.teachers", "teachers_id") do |ts|
+      ts.map{ |t| t.id}.join(", ")
+    end
+    update_field("offering.clazz.teachers", "teachers_map") do |ts|
+      ts.map{ |t| "#{t.id}: #{escape_comma(t.user.name)}"}.join(", ")
+    end
+
   end
 
   def update_permission_forms
     update_field("student.permission_forms", "permission_forms") do |pfs|
-      pfs.map{ |p| p.name }.join(",")
+      pfs.map{ |p| escape_comma(p.fullname) }.join(",")
     end
-  end
-
-  def update_permission_form_ids
-    update_field("student.permission_forms", "permission_form_ids") do |pfs|
+    update_field("student.permission_forms", "permission_forms_id") do |pfs|
       pfs.map{ |p| p.id }.join(",")
+    end
+    update_field("student.permission_forms", "permission_forms_map") do |pfs|
+      pfs.map{ |p| "#{p.id}: #{escape_comma(p.fullname)}" }.join(",")
     end
   end
 

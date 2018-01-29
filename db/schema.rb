@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20171204200632) do
+ActiveRecord::Schema.define(:version => 20180127143049) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2444,8 +2444,10 @@ ActiveRecord::Schema.define(:version => 20171204200632) do
     t.string   "teachers_district"
     t.string   "teachers_state"
     t.string   "teachers_email"
-    t.string   "permission_form_ids"
-    t.string   "teacher_ids"
+    t.string   "permission_forms_id"
+    t.string   "teachers_id"
+    t.text     "teachers_map"
+    t.text     "permission_forms_map"
   end
 
   add_index "report_learners", ["class_id"], :name => "index_report_learners_on_class_id"

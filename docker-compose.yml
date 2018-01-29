@@ -148,9 +148,8 @@ services:
       ES_TYPE: local
       ES_HOST: elasticsearch
     volumes:
-      # override logstash config to use local elastic search
-      - ./docker/logstash/logstash-dev.conf:/usr/share/logstash/pipeline/logstash.conf
-
+      # override logstash output to use local elastic search
+      - ./docker/logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.1
 volumes:
