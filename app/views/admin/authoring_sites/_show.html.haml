@@ -1,0 +1,20 @@
+%div{id: dom_id_for(admin_authoring_site), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3= admin_authoring_site.name
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_authoring_site_path(admin_authoring_site)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:admin_authoring_site.id), data: {method: 'delete', confirm: "Delete this authoring site?"} } delete
+  %div{id: dom_id_for(admin_authoring_site, :item), class: 'item'}
+    %div{id: dom_id_for(admin_authoring_site, :details), class: 'content'}
+      %p
+        %ul.menu_v
+          %li
+            Name:
+            = admin_authoring_site.name
+          %li
+            Url:
+            = admin_authoring_site.url

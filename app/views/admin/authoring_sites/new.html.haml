@@ -1,0 +1,6 @@
+%h1
+  Create Authoring Site
+
+= form_for(@admin_authoring_site, url: url_for(controller: 'authoring_sites', action: 'create')) do |f|
+  = render partial: 'form', locals: { admin_authoring_site: @admin_authoring_site, f: f }
+
