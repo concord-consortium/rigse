@@ -78,6 +78,7 @@ window.FilterReports = React.createClass
               students: aggs.count_students.value
               classes:  aggs.count_classes.value
               teachers:  aggs.count_teachers.value
+              runnables: aggs.count_runnables.value
             }
           }
         @setState newState

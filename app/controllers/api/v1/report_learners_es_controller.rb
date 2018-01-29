@@ -162,6 +162,11 @@ class API::V1::ReportLearnersEsController < API::APIController
             :field => "teacher_name_and_id.keyword"
           }
         },
+        :count_runnables => {
+          :cardinality => {
+            :field => "runnable_id"
+          }
+        },
         :schools => {
           :terms => {
             :field => "school_name_and_id.keyword",
