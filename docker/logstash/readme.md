@@ -5,15 +5,16 @@ changed.
 It reads data from a mysql database and outputs it to either a local ES
 or a Amazon ES instance.
 
-There are two configuration files. Only logstash.conf is built into the image.
-logstash-dev.conf is intended to be used by docker-compose to override logstash.conf an
-it connects to a local elasticsearch server.
+There are three configuration files.
+logstash.conf - this contains the mysql input config and the filter config
+logstash-output.conf - this contains the aws elasticsearch output config
+logstash-output-dev.conf - this contains the local elasticsearch output config
 
-*Important* If you make changes to the input or filter sections of the configuration
-files, you should make the same changes to the other file.
+logstash.conf and logstash-output.conf are built into image made by the Dockerfile.
+The docker-compose file at the top level of this repo then overrides logstash-output
+when docker-compose is used to run this locally.
 
-The logstash.conf file is configured to connect to a AWS Elasticsearch domain. It uses
-these environment variables:
+The config files uses these environment variables:
 
 DB_HOST - portal database hostname
 DB_PORT - portal database port default 3306
@@ -22,14 +23,3 @@ DB_USER - portal database user
 DB_PASSWORD - portal database password
 ES_HOST - hostname of the elasticsearch domain
 AWS_REGION - aws region of the aws es server
-
-
-The logstash-dev.conf file is intended to be brought in by docker compose to override
-the logstash.conf file that is built into the image. It uses these environment variables:
-
-DB_HOST - portal database hostname
-DB_PORT - portal database port default 3306
-DB_NAME - portal database name
-DB_USER - portal database user
-DB_PASSWORD - portal database password
-ES_HOST - hostname of the elasticsearch server

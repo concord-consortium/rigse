@@ -47,6 +47,9 @@ class API::V1::ReportLearnersEsController < API::APIController
     filters = []
     hits = 0
 
+    # Based on this code sometimes schools is a list of ids and sometimes
+    # it might be just one id, or it might be an id:name
+    # FIXME: document what types of data schools can be better
     if options[:schools] && !options[:schools].empty?
       if /\A(\d+,*)+\z/.match(options[:schools])
         schools = options[:schools].split(',').map(&:to_i)
@@ -63,18 +66,22 @@ class API::V1::ReportLearnersEsController < API::APIController
         }
       end
     end
+
+    # Based on this code sometimes teachers is a list of ids and sometimes
+    # it might be just one id, or it might be an id:name
+    # FIXME: document what types of data teachers can be better
     if options[:teachers] && !options[:teachers].empty?
       if /\A(\d+,*)+\z/.match(options[:teachers])
         teachers = options[:teachers].split(',').map(&:to_i)
         filters << {
           :terms => {
-            :teacher_ids => teachers
+            :teachers_id => teachers
           }
         }
       else
         filters << {
           :prefix => {
-            :teacher_name_and_id => options[:teachers].downcase
+            :teachers_map => options[:teachers].downcase
           }
         }
       end
@@ -108,7 +115,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     if !all_access || !pfs.empty?
       filters << {
         :terms => {
-          :permission_form_ids => pfs
+          :permission_forms_id => pfs
         }
       }
     end
@@ -159,7 +166,12 @@ class API::V1::ReportLearnersEsController < API::APIController
         },
         :count_teachers => {
           :cardinality => {
-            :field => "teacher_name_and_id.keyword"
+            :field => "teachers_map.keyword"
+          }
+        },
+        :count_runnables => {
+          :cardinality => {
+            :field => "runnable_id"
           }
         },
         :schools => {
@@ -170,7 +182,7 @@ class API::V1::ReportLearnersEsController < API::APIController
         },
         :teachers => {
           :terms => {
-            :field => "teacher_name_and_id.keyword",
+            :field => "teachers_map.keyword",
             :size => smallAggSize
           }
         },
@@ -180,34 +192,49 @@ class API::V1::ReportLearnersEsController < API::APIController
             :size => largeAggSize
           }
         },
+        # The permission form buckets returned here may include forms the current user
+        # does not has access too. This can happen because some students might have
+        # multiple permission forms assigned to them. Both of these permission forms will
+        # be added to the document in elasticsearch, so both will show up in the aggregration
+        # this is addressed through the use of the 'include' which is added down below
         :permission_forms => {
           :terms => {
-            :field => "permission_forms.keyword",
+            :field => "permission_forms_map.keyword",
             :size => largeAggSize
           },
-          :aggs => {
-            :permission_form_ids => {
-              :terms => {
-                :field => "permission_form_ids.keyword"
-              }
-            }
+        },
+        :permission_forms_ids => {
+          :terms => {
+            :field => "permission_forms_id.keyword",
+            :size => largeAggSize,
           }
         }
       }
+
+      # limit the ids of the returned permission form ids based on what the user
+      # has access to
+      if !all_access
+        aggs[:permission_forms_ids][:terms][:include] = viewable_permission_form_ids
+      end
     end
 
     search_url = "#{ENV['ELASTICSEARCH_URL']}/report_learners/_search"
 
-    esSearchResult = HTTParty.post(search_url,
-      :body => {
-        :size => hits,
-        :aggs => aggs,
-        :query => {
-          :bool => {
-            :filter => filters
-          }
+    query = {
+      :size => hits,
+      :aggs => aggs,
+      :query => {
+        :bool => {
+          :filter => filters
         }
-      }.to_json,
+      }
+    }
+
+    logger.info "ES Query:"
+    logger.info query
+
+    esSearchResult = HTTParty.post(search_url,
+      :body => query.to_json,
       :headers => { 'Content-Type' => 'application/json' } )
     return esSearchResult
   end
