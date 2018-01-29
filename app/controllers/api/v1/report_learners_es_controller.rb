@@ -203,16 +203,21 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     search_url = "#{ENV['ELASTICSEARCH_URL']}/report_learners/_search"
 
-    esSearchResult = HTTParty.post(search_url,
-      :body => {
-        :size => hits,
-        :aggs => aggs,
-        :query => {
-          :bool => {
-            :filter => filters
-          }
+    query = {
+      :size => hits,
+      :aggs => aggs,
+      :query => {
+        :bool => {
+          :filter => filters
         }
-      }.to_json,
+      }
+    }
+
+    logger.info "ES Query:"
+    logger.info query
+
+    esSearchResult = HTTParty.post(search_url,
+      :body => query.to_json,
       :headers => { 'Content-Type' => 'application/json' } )
     return esSearchResult
   end
