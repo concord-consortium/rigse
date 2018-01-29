@@ -145,7 +145,7 @@ window.FilterReports = React.createClass
     else
       agg = @state.filterables[name]
 
-    isLoading = agg.length is 0
+    isLoading = @state["waitingFor_#{name}"]
     placeholder = unless isLoading then "Select ..." else "Loading ..."
 
     # convert to all strings
@@ -171,7 +171,7 @@ window.FilterReports = React.createClass
         multi: true
         joinValues: true
         placeholder: placeholder
-        isLoading: @state["waitingFor_#{name}"]
+        isLoading: isLoading
         value: @state[name]
         onInputChange: (value) =>
           if (value.length == 4)
