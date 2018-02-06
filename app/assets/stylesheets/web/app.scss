@@ -10,7 +10,8 @@ html, input, textarea, select {
   font-size: 100%; }
 
 html, body {
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   }
 
 /*keep ie happy */
@@ -963,7 +964,7 @@ a.button.secondary, button.secondary, input.button.secondary, input[type='submit
 a.button {
   display: inline-block;
   background: #ea6d2f;
-  border: none;
+  border: solid 2px transparent;
   color: white;
   font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
   padding: 10px 20px;
