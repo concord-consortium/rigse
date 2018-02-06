@@ -99,10 +99,7 @@ table {
     }
   }
 body {
-  background: {
-    color: #fff;
-    image: image-url("styles/bg-body.png");
-    repeat: repeat; };
+  background: #fff;
   color: #3f3f3f;
 
   &.blank {
