@@ -61,10 +61,10 @@
 .reportsummary{text-align:left;border:0;margin:0px;margin-left:-1px;width:100%}
 .reportsummary tr { vertical-align: middle; }
 .reportsummary td { text-align:center; vertical-align:middle;min-width:70px;height:20px;background-color:White;border:solid 1px #ccc;padding:4px}
-.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;border:solid 1px #ccc;min-width:70px;height:20px;;padding:4px}
-.reportsummary th.activity { text-align:center; vertical-align:middle;font-weight:bold;background-color:#FCF7E4; border:solid 1px #ccc;min-width:70px;height:20px;;padding:4px}
+.reportsummary th { text-align:center; vertical-align:middle;font-weight:bold;border:solid 1px #ccc;max-width:250px;min-width:70px;height:20px;padding:4px}
+.reportsummary th.activity { background-color:#FCF7E4; border:solid 1px #ccc;font-weight:bold;height:20px;min-width:70px;overflow:hidden;text-overflow:ellipsis;padding:4px;text-align:center; vertical-align:middle;white-space:nowrap;}
 .student_name{white-space:nowrap}
-.progress_div{overflow:auto;text-align:left}
+.progress_div{max-width: 575px; overflow:auto;text-align:left}
 
 .student_list{text-align:left;border:0;margin-top:0px;width:100px}
 .student_list tr { vertical-align: middle; }
@@ -403,6 +403,9 @@ select#material_select {
       height: 35px;
     }
   }
+  .data_container {
+    .student_div, .student_div.floatL { float: left; }
+  }
   .progressbar_container {
     width: 100%;
   }
@@ -433,5 +436,8 @@ select#material_select {
         }
       }
     }
+  }
+  .data_container {
+    .progress_div { max-width: 350px; }
   }
 }
