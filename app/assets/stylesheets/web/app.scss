@@ -1643,7 +1643,7 @@ table.roster_student_list a { white-space: 'nowrap'}
     }
   }
 td.title { padding-left: 20px; text-align: left; }
-.maincontainer{padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
+.maincontainer{overflow-x: hidden; padding:10px 10px 10px 10px;background-color:White;-moz-border-radius: 20px; -webkit-border-radius: 20px;-khtml-border-radius: 20px;border-radius: 20px;min-height:600px}
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 80%; }
 #sortable li { margin: 0 0 5px 0; padding: 0.4em; cursor:move }
