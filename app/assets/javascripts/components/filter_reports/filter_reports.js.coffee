@@ -71,7 +71,9 @@ window.FilterReports = React.createClass
             # based on the access of the current user
             # we use this to filter the buckets in the main field aggregration
             filtered_ids = aggs[ids_field].buckets.map( (b) ->
-              b.key
+              # sometimes this will be an integer and sometimes it will be a string
+              # convert it to a string for consistency
+              b.key.toString()
             )
 
             buckets = buckets.filter( (b) ->

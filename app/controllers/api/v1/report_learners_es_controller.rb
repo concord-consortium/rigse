@@ -205,7 +205,7 @@ class API::V1::ReportLearnersEsController < API::APIController
         },
         :permission_forms_ids => {
           :terms => {
-            :field => "permission_forms_id.keyword",
+            :field => "permission_forms_id",
             :size => largeAggSize,
           }
         }
