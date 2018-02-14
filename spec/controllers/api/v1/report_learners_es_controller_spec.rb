@@ -43,7 +43,7 @@ describe API::V1::ReportLearnersEsController do
                                     }
                                 }, "permission_forms_ids" => {
                                     "terms" => {
-                                        "field" => "permission_forms_id.keyword", "size" => 1000
+                                        "field" => "permission_forms_id", "size" => 1000
                                     }
                                 }
                               },
