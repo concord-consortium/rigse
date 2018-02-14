@@ -1,7 +1,7 @@
 And /^(?:|I )click link "(.+)" for (investigation|activity) "(.+)" on the materials preview page$/ do |link, material_type, material_name|
   case material_type
     when "investigation"
-      within(:xpath,"//table[@class = 'browse_material_header']") do
+      within(:xpath,"//div[@class = 'browse_material_data']/div[@class = 'description']") do
         click_link(link)
       end
     when "activity"

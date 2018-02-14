@@ -10,7 +10,8 @@ html, input, textarea, select {
   font-size: 100%; }
 
 html, body {
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   }
 
 /*keep ie happy */
@@ -99,10 +100,7 @@ table {
     }
   }
 body {
-  background: {
-    color: #fff;
-    image: image-url("styles/bg-body.png");
-    repeat: repeat; };
+  background: #fff;
   color: #3f3f3f;
 
   &.blank {
@@ -966,7 +964,7 @@ a.button.secondary, button.secondary, input.button.secondary, input[type='submit
 a.button {
   display: inline-block;
   background: #ea6d2f;
-  border: none;
+  border: solid 2px transparent;
   color: white;
   font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
   padding: 10px 20px;

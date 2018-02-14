@@ -30,33 +30,11 @@
   %div
     = render :partial => '/browse/investigation_other_data', :locals => {:material_other_data => parent_material.other_data}
 .browse_material_data
-  %table.browse_material_header
-    %tr
-      %td
-        .title
-          = parent_material.title
-        .material_type
-          = material.display_name
-      %td{:style=>'padding-top:0'}
-        %div{:style=>'float:left;padding:3px'}
-          = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
-        -if external
-          - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
-            %div{:style=>'float:left;padding:3px'}
-              = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button", :target => "_blank"
-        -if external
-          - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
-            %div{:style=>'float:left;padding:3px'}
-              = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"  
-        %div{:style=>'float:left;padding:3px'}
-          - if current_visitor.portal_teacher
-            = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}')", :id=>"btn_Assign"
-          - else
-            = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"msgPopupDescriptionText()", :id=>"btn_Assign", :class=>"button"
-        %div{:style=>'float:left;padding:3px',:class=>"share"}
-          %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Share')"}Share &#9660;
-          .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Share", :style=>"display:none", :class=>"Expand_Collapse_share" }
-            = render :partial => '/browse/share', :locals => {:material_url => parent_material.url,:material_title=>parent_material.title}      
+  .browse_material_header
+    .title
+      = parent_material.title
+    .material_type
+      = material.display_name
   %br
   .description
     - if current_visitor.portal_teacher && parent_material.description_for_teacher.present?
@@ -75,6 +53,25 @@
           (archived)
         - if policy(material).edit?
           = link_to "(portal settings)", edit_polymorphic_url(material)
+    %div{:style=>'float:left;padding:3px'}
+      = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
+    -if external
+      - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
+        %div{:style=>'float:left;padding:3px'}
+          = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button", :target => "_blank"
+    -if external
+      - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
+        %div{:style=>'float:left;padding:3px'}
+          = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"
+    %div{:style=>'float:left;padding:3px'}
+      - if current_visitor.portal_teacher
+        = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}')", :id=>"btn_Assign"
+      - else
+        = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"msgPopupDescriptionText()", :id=>"btn_Assign", :class=>"button"
+    %div{:style=>'float:left;padding:3px',:class=>"share"}
+      %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Share')"}Share &#9660;
+      .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Share", :style=>"display:none", :class=>"Expand_Collapse_share" }
+        = render :partial => '/browse/share', :locals => {:material_url => parent_material.url,:material_title=>parent_material.title}
 
   %br
   %br

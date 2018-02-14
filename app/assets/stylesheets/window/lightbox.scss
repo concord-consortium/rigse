@@ -148,7 +148,8 @@ div.buttons{
 }
 
 .lightbox_overlay {
-    position:absolute;
+    height: 100% !important;
+    position: fixed !important;
     top:0;
     left:0;
     width:100%;
