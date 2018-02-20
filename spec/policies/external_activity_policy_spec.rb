@@ -73,7 +73,7 @@ describe ExternalActivityPolicy do
   end
 
 
-  context "for a project admin" do
+  context "for a material admin" do
     let(:project_a)   { FactoryGirl.create(:project)                                 }
     let(:active_user) { FactoryGirl.create(:user, admin_for_projects: [project_a])   }
     let(:activity)    { FactoryGirl.create(:external_activity, projects: [project_a])}
@@ -89,6 +89,20 @@ describe ExternalActivityPolicy do
     it { should permit(:unarchive)                }
     it { should permit(:duplicate)                }
     it { should permit(:edit_credits)             }
+  end
+
+  context "for an admin of a project that is not one of the material's projects" do
+    let(:project_a)   { FactoryGirl.create(:project)                                 }
+    let(:active_user) { FactoryGirl.create(:user, admin_for_projects: [project_a])   }
+    before(:each) do
+      active_user.add_role_for_project('admin', project_a)
+    end
+    it { should permit(:edit_projects)            }
+    it { should permit(:edit_cohorts)             }
+    it { should permit(:edit)                     }
+    # this type of user needs to be able to update the activity so that it can make a
+    # material part of a project that isn't already part of the project.
+    it { should permit(:update)                   }
   end
 
 end
