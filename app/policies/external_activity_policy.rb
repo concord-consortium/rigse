@@ -41,11 +41,20 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   # FIMXE: This single update permission is used by all users when they are changing the
-  # settings. The edit_basic and the other fine grained permissions in MaterialSharedPolicy 
-  # only control which fields are visible. So for example it would be possible for an 
+  # settings. The edit_basic and the other fine grained permissions in MaterialSharedPolicy
+  # only control which fields are visible. So for example it would be possible for an
   # owner who is not an admin to change some advanced settings.
   def update?
-    admin_or_material_admin? || owner?
+    # the edit here refers to the edit in material_shared_policy
+    # that edit lets any admin, project_admin, or material_admin to edit the material
+    # admins and material_admins makes sense in this case. project_admins require access
+    # so they can update project and project cohorts of materials they aren't the owner of
+    # and are not part of their project yet
+    # This is needed when there are multiple authors on a project. An non project admin
+    # author creates the material.  Then the project admins needs to find it and mark
+    # configure the advanced configuration options. Otherwise a portal admin needs to
+    # get involved.
+    edit? || owner?
   end
 
   def archive?
