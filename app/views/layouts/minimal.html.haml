@@ -66,6 +66,7 @@
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
 
   %body{:class => 'blank', :'ng-app' => 'cc-portal'}
+    = content_for :start_of_body
     #js_flash{:style=>"display: none;"}
     = render :partial=>"layouts/flashes"
     = content_for :layout

@@ -1986,6 +1986,10 @@ span.badge {
   margin-bottom: 5px;
 }
 
+#auto_show_lightbox_resource {
+  position: relative;
+  z-index: 1000;
+}
 
 /* Icons */
 @font-face {

@@ -15,7 +15,7 @@
   = render :partial => "project_cards"
 
 - if defined?(@auto_show_lightbox_resource) && @auto_show_lightbox_resource
-  - content_for :after_footer do
+  - content_for :start_of_body do
     #auto_show_lightbox_resource
     %script{:type=>"text/javascript"}
       PortalPages.settings.autoShowingLightboxResource = #{raw @lightbox_resource.to_json };
