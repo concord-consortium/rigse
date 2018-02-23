@@ -45,6 +45,8 @@
       = t('authoring.external_report_description')
     = field_set_tag 'Teacher Guide (URL)' do
       = f.text_field :teacher_guide_url, :size => 60
+    = field_set_tag t('authoring.rubric_url_label') do
+      = f.text_field :rubric_url, :size => 60
     = field_set_tag 'Thumbnail image URL (300 x 250 px)' do
       = f.text_field :thumbnail_url, :size => 60
     = field_set_tag 'Feature On Landing Page' do
