@@ -3,7 +3,7 @@
 licenses:
   - code        : CC0
     name        : Public Domain, all uses and modifications allowed (no rights reserved)
-    description : CC0 enables scientists, educators, artists and other creators and owners of copyright- or database-protected content to waive those interests in their works and thereby place them as completely as possible in the public domain, so that others may freely build upon, enhance and reuse the works for any purposes without restriction under copyright or database law.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may freely build upon, enhance, and reuse the works for any purposes, both non-commercial and commercial, without restriction under copyright or database law. No attribution is required.
     deed        : http://creativecommons.org/about/cc0
     legal       : http://creativecommons.org/about/cc0
     image       : http://i.creativecommons.org/p/zero/1.0/88x31.png
@@ -11,61 +11,60 @@ licenses:
 
   - code        : CC-BY 4.0
     name        : Modifications YES, commercial use YES, sharing required  NO (CC-BY-4.0)
-    description : This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may distribute, remix, tweak, and build upon this resource, non-commercially and commercially, as long as you provide credit to the Concord Consortium.
     number      : 1
 
   - code        : CC-BY-SA 4.0
     name        : Modifications YES, commercial use YES, sharing required YES (CC-BY-SA-4.0)
-    description : This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may remix, tweak, and build upon this resource for non-commercial and commercial purposes, as long as you provide credit to the Concord Consortium and license your new creations under identical terms.
     number      : 2
 
   - code        : CC-BY-NC 4.0
     name        : Modifications YES, commercial use  NO, sharing required NO (CC-BY-NC-4.0)
-    description : This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may remix, tweak, and build upon this resource non-commercially, as long as you provide credit to the Concord Consortium. Commercial use of this resource is not allowed.
     number      : 3
 
   - code        : CC-BY-NC-SA 4.0
     name        : Modifications YES, commercial use  NO, sharing required YES (CC-BY-NC-SA-4.0)
-    description : This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may remix, tweak, and build upon this resource non-commercially, as long as you provide credit to the Concord Consortium and license your new creations under identical terms. Commercial use of this resource is not allowed.
     number      : 4
 
   - code        : CC-BY-ND 4.0
     name        : Modifications  NO, commercial use YES, sharing required  NO (CC-BY-ND-4.0)
-    description : This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may redistribute this resource, commercially and non-commercially, as long as it is passed along unchanged and in whole, with credit to the Concord Consortium.
     number      : 5
 
   - code        : CC-BY-NC-ND 4.0
     name        : Modifications  NO, commercial use  NO, sharing required  NO (CC-BY-NC-ND-4.0)
-    description : This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may download this resource and share it with others as long as you provide credit to the Concord Consortium. Modification and/or commercial use of this resource is not allowed.
     number      : 6
 
   - code        : CC-BY 3.0
     name        : Modifications YES, commercial use YES, sharing required  NO (CC-BY-3.0)
-    description : This license lets others distribute, remix, tweak, and build upon your work, even commercially, as long as they credit you for the original creation. This is the most accommodating of licenses offered. Recommended for maximum dissemination and use of licensed materials.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may distribute, remix, tweak, and build upon this resource, commercially and non-commercially, as long as you provide credit to the Concord Consortium.
     number      : 7
 
   - code        : CC-BY-SA 3.0
     name        : Modifications YES, commercial use YES, sharing required YES (CC-BY-SA-3.0)
-    description : This license lets others remix, tweak, and build upon your work even for commercial purposes, as long as they credit you and license their new creations under the identical terms. This license is often compared to “copyleft” free and open source software licenses. All new works based on yours will carry the same license, so any derivatives will also allow commercial use. This is the license used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licensed projects.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may remix, tweak, and build upon this resource for non-commercial and commercial purposes, as long as you provide credit to the Concord Consortium and license your new creations under identical terms.
     number      : 8
 
   - code        : CC-BY-NC 3.0
     name        : Modifications YES, commercial use  NO, sharing required NO (CC-BY-NC-3.0)
-    description : This license lets others remix, tweak, and build upon your work non-commercially, and although their new works must also acknowledge you and be non-commercial, they don’t have to license their derivative works on the same terms.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may remix, tweak, and build upon this resource non-commercially, as long as you provide credit to the Concord Consortium. Commercial use of this resource is not allowed.
     number      : 9
 
   - code        : CC-BY-NC-SA 3.0
     name        : Modifications YES, commercial use  NO, sharing required YES (CC-BY-NC-SA-3.0)
-    description : This license lets others remix, tweak, and build upon your work non-commercially, as long as they credit you and license their new creations under the identical terms.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may remix, tweak, and build upon this resource non-commercially, as long as you credit the Concord Consortium and license your new creations under identical terms. Commercial use of this resource is not allowed.
     number      : 10
 
   - code        : CC-BY-ND 3.0
     name        : Modifications  NO, commercial use YES, sharing required  NO (CC-BY-ND-3.0)
-    description : This license allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to you.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may redistribute this resource, commercially and non-commercially, as long as it is passed along unchanged and in whole, with credit to the Concord Consortium.
     number      : 11
 
   - code        : CC-BY-NC-ND 3.0
     name        : Modifications  NO, commercial use  NO, sharing required  NO (CC-BY-NC-ND-3.0)
-    description : This license is the most restrictive of our six main licenses, only allowing others to download your works and share them with others as long as they credit you, but they can’t change them in any way or use them commercially.
+    description : This resource is provided under the terms of the Creative Commons license linked below. You may download and share this resource with others as long as you provide credit to the Concord Consortium. Modification and/or commercial use of this resource is not allowed.
     number      : 12
-
