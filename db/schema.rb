@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180127143049) do
+ActiveRecord::Schema.define(:version => 20180223203056) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -877,6 +877,7 @@ ActiveRecord::Schema.define(:version => 20180127143049) do
     t.boolean  "enable_sharing",                               :default => true
     t.boolean  "append_auth_token"
     t.string   "material_type",                                :default => "Activity"
+    t.string   "rubric_url"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public", :length => {"is_featured"=>nil, "publication_status"=>191}
@@ -2443,10 +2444,10 @@ ActiveRecord::Schema.define(:version => 20180127143049) do
     t.integer  "num_answerables"
     t.integer  "num_answered"
     t.integer  "num_correct"
-    t.text     "answers",             :limit => 2147483647
+    t.text     "answers",              :limit => 2147483647
     t.string   "runnable_type"
     t.float    "complete_percent"
-    t.text     "permission_forms",    :limit => 16777215
+    t.text     "permission_forms",     :limit => 16777215
     t.integer  "num_submitted"
     t.string   "teachers_district"
     t.string   "teachers_state"
