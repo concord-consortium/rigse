@@ -33,8 +33,10 @@
         var visiblePort = window.innerHeight;
         var miniFrameContainer = 200;
         var computedSize = visiblePort - (footerHeight);
+        var containerSize = computedSize + 150;
         computedSize = Math.max(computedSize,miniFrameContainer);
         $("#iframe_container").css('height', computedSize + "px");
+        $("#primary").css('height', containerSize + "px");
       };
 
       var resizeIframe = function() {
