@@ -130,7 +130,7 @@
           %input#submit.button{:name => "submit", :type => "submit", :value => "Log In"}/
           %p#forgot-login
             = link_to "Forgot your login?", forgot_password_path, :title => "Reset your password"
-            = link_to "Need to register?", home_path, :title => "Create a #{APP_CONFIG[:site_name]} account"
+            = link_to "Need to register?", signup_path, :title => "Create a #{APP_CONFIG[:site_name]} account"
         - if Devise.omniauth_providers.length > 0
           %div{:style => "width: 100%; height: 11px; border-bottom: 1px solid black; margin-bottom: 20px; margin-top: 10px; text-align: center"}
             %span{:style => "background-color: #FFFFFF; padding: 0 10px;"}
