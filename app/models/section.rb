@@ -10,7 +10,7 @@ class Section < ActiveRecord::Base
 
   has_one :investigation, :through => :activity
 
-  has_many :pages, :dependent => :destroy ,:order => :position, :dependent => :destroy do
+  has_many :pages ,:order => :position, :dependent => :destroy do
     def student_only
       find(:all, :conditions => {'teacher_only' => false})
     end
