@@ -2,7 +2,10 @@
 require 'spec_helper'
 
 describe API::V1::Report do
-  let(:offering)          { FactoryGirl.create(:portal_offering) }
+  let(:investigation)      { FactoryGirl.create(:investigation) }
+  let(:external_activity)  { FactoryGirl.create(:external_activity, template: investigation) }
+  let(:runnable)           { investigation }
+  let(:offering)           { FactoryGirl.create(:portal_offering, runnable: runnable) }
 
   describe "class methods" do
     # def self.update_feedback_settings(offering, embeddable, feedback_settings)
@@ -278,12 +281,14 @@ describe API::V1::Report do
         let(:score)                { nil }
         let(:text_feedback)        { nil }
         let(:has_been_reviewed)    { nil }
+        let(:rubric_feedback)      { nil }
         let(:feedback) do
           {
               'learner_id'           => learner_id,
               'activity_feedback_id' => feedback_id,
               'score'                => score,
               'text_feedback'        => text_feedback,
+              'rubric_feedback'      => rubric_feedback,
               'has_been_reviewed'    => has_been_reviewed
           }
         end
@@ -292,15 +297,17 @@ describe API::V1::Report do
           API::V1::Report.submit_activity_feedback(feedback)
         end
 
-        describe "giving activity level feedback feedback" do
+        describe "giving activity level feedback" do
           let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)}
           describe 'giving feedback without marking complete' do
-            let(:text_feedback) { "good job" }
-            let(:score)         {  10        }
+            let(:text_feedback)   { "good job" }
+            let(:score)           {  10        }
+            let(:rubric_feedback) { {"C1" => {"id"=>"R3"}} }
             subject             { learner_feedback.first }
 
-            its(:score)         { should eql 10 }
-            its(:text_feedback) { should eql "good job" }
+            its(:score)           { should eql 10 }
+            its(:text_feedback)   { should eql "good job" }
+            its(:rubric_feedback) { should eql rubric_feedback }
           end
 
           describe "marking feedback complete" do

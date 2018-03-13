@@ -24,7 +24,9 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
     params = { portal_offering_id: offering.id, activity_id: activity.id }
     found  = self.where(params).order('created_at desc').first
     unless(found)
-      params[:rubric_url] = offering.runnable.rubric_url
+      if(offering.runnable.respond_to? :rubric_url)
+        params[:rubric_url] = offering.runnable.rubric_url
+      end
       found= self.create(params)
     end
     return found
