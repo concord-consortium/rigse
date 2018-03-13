@@ -21,7 +21,8 @@ describe API::V1::ReportsController do
   let(:open_response)     { Factory.create(:open_response)}
   let(:section)           { Factory.create(:section) }
   let(:page)              { Factory.create(:page) }
-  let(:runnable)          { Factory.create(:activity, runnable_opts)    }
+  let(:activity)          { Factory.create(:activity, runnable_opts)          }
+  let(:runnable)          { Factory.create(:external_activity, runnable_opts) }
   let(:offering)          { Factory(:portal_offering, offering_opts)    }
   let(:clazz)             { Factory(:portal_clazz, teachers: [class_teacher], students:[student_a,student_b]) }
   let(:offering_opts)     { {clazz: clazz, runnable: runnable}  }
@@ -84,7 +85,9 @@ describe API::V1::ReportsController do
   before(:each) do
     page.add_embeddable(open_response)
     section.pages << page
-    runnable.sections << section
+    activity.sections << section
+    activity.save
+    runnable.template = activity
     runnable.save
     Portal::Offering.stub!(:find).and_return(offering)
     sign_in user
@@ -201,13 +204,17 @@ describe API::V1::ReportsController do
     let(:enable_text_feedback) { false }
     let(:score_type)           { Portal::OfferingActivityFeedback::SCORE_NONE }
     let(:max_score)            { 10 }
+    let(:rubric_url)           { nil }
+    let(:use_rubric)           { false }
     let(:opts)                 {  { 'actvity_feedback_opts' => feedback_opts } }
     let(:feedback_opts)        do
       {
           'activity_feedback_id' => activity_feedback_id,
           'enable_text_feedback' => enable_text_feedback,
           'score_type'           => score_type,
-          'max_score'            => max_score
+          'max_score'            => max_score,
+          'rubric_url'           => rubric_url,
+          'use_rubric'           => use_rubric
       }
     end
     describe "switching to automatic scoring from the API" do
@@ -228,11 +235,71 @@ describe API::V1::ReportsController do
         update(opts)
         show
         response.status.should eql(200)
-        found_feedback.score_type.should eql Portal::OfferingActivityFeedback::SCORE_NONE
-        found_feedback.enable_text_feedback.should be_false
         found_feedback.max_score.should eq 20
+      end
+    end
+
+    describe "when adding a rubric url do" do
+      let(:expected_url) { "http://foo.bar/" }
+      let(:rubric_url)   {  expected_url     }
+      it "should make the rubric_url be http://foo.bar" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        found_feedback.rubric_url.should eq expected_url
+      end
+    end
+    describe "when enabling a rubric" do
+      let(:use_rubric)    { true }
+      it "should specify to use a rubric" do
+        update(opts)
+        show
+        response.status.should eql(200)
+        found_feedback.use_rubric.should be_true
       end
     end
   end
 
+  describe "posting learner activity feedback" do
+    let(:learner_id)          { learner_a.id }
+    let(:activity_feedback)   { Portal::OfferingActivityFeedback.for_offering_and_activity(offering, activity) }
+    let(:activity_feedback_id){ activity_feedback.id }
+    let(:score) { 10 }
+    let(:text_feedback) { "good work" }
+    let(:rubric_feedback) do
+      {
+        C1: {
+          id: "R1",
+          score: 1,
+          label: "Beginning",
+          description: "Not meeting expected goals."
+        },
+        C2: {
+          id: "R2",
+          score: 2,
+          label: "Developing",
+          description: "Approaching proficiency."
+        }
+      }
+    end
+    let(:opts) do
+      {
+        activity_feedback: {
+          learner_id: learner_id,
+          activity_feedback_id: activity_feedback_id,
+          score: score,
+          rubric_feedback: rubric_feedback,
+          text_feedback: text_feedback
+        }
+      }
+    end
+
+    it "should update the learners feedback" do
+      update(opts)
+      show
+      response.status.should eql(200)
+      feedback = Portal::LearnerActivityFeedback.open_feedback_for(learner, activity_feedback)
+      feedback.rubric_feedback["C1"]["id"].should eql "R1"
+    end
+  end
 end

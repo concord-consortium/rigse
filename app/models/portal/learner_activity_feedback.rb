@@ -5,10 +5,13 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
   attr_accessible :has_been_reviewed,
     :score,
     :text_feedback,
+    :rubric_feedback,
     :activity_feedback,
     :activity_feedback_id,
     :portal_learner,
     :portal_learner_id
+
+  serialize :rubric_feedback, JSON
 
   def self._attribute_ids(*attributes)
     results = []
