@@ -25,7 +25,7 @@
       = t('authoring.description_for_teacher_description')
       = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
     = field_set_tag t('authoring.material_type_label') do
-      = f.select :material_type, 
+      = f.select :material_type,
         [ [ Activity.display_name,      Activity.name       ],
           [ Investigation.display_name, Investigation.name  ],
           [ Interactive.display_name,   Interactive.name    ] ]
@@ -68,6 +68,12 @@
     = field_set_tag 'Student Report Enabled' do
       = f.check_box :student_report_enabled
       = t('authoring.student_report_enabled_description')
+    = field_set_tag 'Saves Student Data' do
+      - if current_user.has_role? 'admin','manager'
+        = f.check_box :saves_student_data
+      - else
+        = f.check_box :saves_student_data, :disabled => true
+      This activity saves student data which can be viewed by their teacher.
     = field_set_tag 'Extra Options' do
       .config
         = f.check_box :popup
