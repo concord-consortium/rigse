@@ -195,6 +195,8 @@ class API::V1::Report
       enable_text_feedback: activity_feedback.enable_text_feedback,
       score_type: activity_feedback.score_type,
       max_score: activity_feedback.max_score,
+      rubric_url: activity_feedback.rubric_url,
+      use_rubric: activity_feedback.use_rubric || false,
       activity_feedback:  @offering.learners.map { |l| learner_activity_feedback_json(l,activity_feedback) },
       children: sections.map { |s| section_json(s, answers) }
     }
@@ -210,7 +212,8 @@ class API::V1::Report
         {
           score: feedback.score,
           feedback: feedback.text_feedback,
-          has_been_reviewed: feedback.has_been_reviewed
+          has_been_reviewed: feedback.has_been_reviewed,
+          rubric_feedback: feedback.rubric_feedback
         }
       end
     }

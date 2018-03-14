@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180223203056) do
+ActiveRecord::Schema.define(:version => 20180309155805) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1443,6 +1443,7 @@ ActiveRecord::Schema.define(:version => 20180223203056) do
     t.integer  "activity_feedback_id"
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
+    t.text     "rubric_feedback"
   end
 
   add_index "portal_learner_activity_feedbacks", ["activity_feedback_id"], :name => "index_portal_learner_activity_feedbacks_on_activity_feedback_id"
@@ -2157,6 +2158,9 @@ ActiveRecord::Schema.define(:version => 20180223203056) do
     t.integer  "portal_offering_id"
     t.datetime "created_at",                               :null => false
     t.datetime "updated_at",                               :null => false
+    t.string   "rubric_url"
+    t.boolean  "use_rubric"
+    t.text     "rubric"
   end
 
   create_table "portal_offering_embeddable_metadata", :force => true do |t|

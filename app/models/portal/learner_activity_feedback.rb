@@ -5,15 +5,23 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
   attr_accessible :has_been_reviewed,
     :score,
     :text_feedback,
+    :rubric_feedback,
     :activity_feedback,
     :activity_feedback_id,
     :portal_learner,
     :portal_learner_id
 
+  serialize :rubric_feedback, JSON
+
   def self._attribute_ids(*attributes)
     results = []
     for attribute in attributes do
-      results.push(attribute.is_a?(Numeric) ? attribute : attribute.id)
+      case attribute
+      when Numeric, String
+        results.push(attribute)
+      else
+        results.push(attribute.id)
+      end
     end
     return results
   end
@@ -31,8 +39,21 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
     if results
       return results
     end
-    l = learner.is_a?(Numeric) ? Portal::Learner.find(learner) : learner
-    f = activity_feedback.is_a?(Numeric) ? Portal::OfferingActivityFeedback.find(activity_feedback) : activity_feedback
+
+    case learner
+    when Numeric, String
+      l = Portal::Learner.find(learner)
+    else
+      l = learner
+    end
+
+    case activity_feedback
+    when Numeric, String
+      f = Portal::OfferingActivityFeedback.find(activity_feedback)
+    else
+      f = activity_feedback
+    end
+
     return self.create({portal_learner:l, activity_feedback: f})
   end
 
