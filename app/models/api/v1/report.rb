@@ -196,6 +196,7 @@ class API::V1::Report
       score_type: activity_feedback.score_type,
       max_score: activity_feedback.max_score,
       rubric_url: activity_feedback.rubric_url,
+      rubric: activity_feedback.rubric,
       use_rubric: activity_feedback.use_rubric || false,
       activity_feedback:  @offering.learners.map { |l| learner_activity_feedback_json(l,activity_feedback) },
       children: sections.map { |s| section_json(s, answers) }
