@@ -16,6 +16,8 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
     :rubric_url,
     :rubric
 
+  serialize :rubric, JSON
+
   belongs_to :portal_offering, class_name: "Portal::Offering"
   belongs_to :activity
   has_many   :learner_activity_feedbacks, class_name: "Portal::LearnerActivityFeedback", foreign_key: "activity_feedback_id"

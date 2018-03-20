@@ -234,13 +234,19 @@ describe API::V1::Report do
         let(:enable_text_feedback)   { nil }
         let(:score_type)             { "none" }
         let(:max_score)              { nil }
+        let(:use_rubric)             { nil }
+        let(:rubric_url)             { nil }
+        let(:rubric)                 { nil }
         let(:feedback_settings) do
           {
               'activity_feedback_id' => feedback_id,
               'learner_id' => learner_id,
               'max_score' => max_score,
               'score_type' => score_type,
-              'enable_text_feedback' => enable_text_feedback
+              'enable_text_feedback' => enable_text_feedback,
+              'use_rubric' => use_rubric,
+              'rubric_url' => rubric_url,
+              'rubric' => rubric
           }
         end
 
@@ -273,6 +279,24 @@ describe API::V1::Report do
             its(:max_score)            { should eq 12 }
             its(:enable_text_feedback) { should be true }
             its(:score_type)           { should eq "auto"  }
+          end
+
+          describe "enabling rubric" do
+            let(:use_rubric)   { true }
+
+            its(:use_rubric)   { should be_true }
+          end
+
+          describe "setting the rubric URL" do
+            let(:rubric_url)   { "http://somplace.com/api/blarg.json" }
+
+            its(:rubric_url)   { should eql rubric_url }
+          end
+
+          describe "setting the rubric" do
+            let(:rubric)   { {"version" => "1.0", "timestamp" => Time.now.to_i} }
+
+            its(:rubric)   { should eql rubric }
           end
         end
       end
