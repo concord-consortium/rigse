@@ -46,7 +46,11 @@ module Materials
         has_activities = material.respond_to?(:activities) && !material.activities.nil?
         has_pretest = material.respond_to?(:has_pretest) && material.has_pretest
 
-        saves_student_data = material.respond_to?(:saves_student_data) && material.saves_student_data
+        if material.respond_to?(:saves_student_data)
+          saves_student_data = material.saves_student_data
+        else
+          saves_student_data = true
+        end
 
         user_data = nil
         if material.user && (!material.user.name.nil?)
