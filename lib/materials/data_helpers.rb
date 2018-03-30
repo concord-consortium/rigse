@@ -46,6 +46,12 @@ module Materials
         has_activities = material.respond_to?(:activities) && !material.activities.nil?
         has_pretest = material.respond_to?(:has_pretest) && material.has_pretest
 
+        if material.respond_to?(:saves_student_data)
+          saves_student_data = material.saves_student_data
+        else
+          saves_student_data = true
+        end
+
         user_data = nil
         if material.user && (!material.user.name.nil?)
           user_data = {
@@ -100,7 +106,7 @@ module Materials
 
         project_ids = material.projects.map { |p| p.id }
 
-        projects = material.projects.map { |p| 
+        projects = material.projects.map { |p|
             url = nil
             if p.landing_page_slug
                 url = project_page_url(p.landing_page_slug)
@@ -119,7 +125,7 @@ module Materials
         #
         related_materials = []
         if include_related > 0
-          
+
             cohort_ids  = []
             user_id     = nil
 
@@ -177,14 +183,14 @@ module Materials
         #
         # Include associated standards
         #
-        standard_statements = 
+        standard_statements =
             StandardStatement.find_all_by_material_type_and_material_id(
                 material.class.name.underscore,
                 material.id,
                 :order => "uri ASC")
 
         standard_statements_json = []
-    
+
         standard_statements.each do |statement|
             standard_statements_json.push( {
                 type:               statement.doc,
@@ -273,6 +279,7 @@ module Materials
           sensors: view_context.probe_types(material).map { |p| p.name },
           has_activities: has_activities,
           has_pretest: has_pretest,
+          saves_student_data: saves_student_data,
           activities: has_activities ? material.activities.map{ |a| {id: a.id, name: a.name} } : [],
           lara_activity_or_sequence: material.respond_to?(:lara_activity_or_sequence?) ? material.lara_activity_or_sequence? : false,
           parent: parent_data,

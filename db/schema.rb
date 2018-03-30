@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180309155805) do
+ActiveRecord::Schema.define(:version => 20180326133200) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.integer  "user_id"
     t.string   "uuid",                    :limit => 36
     t.string   "name"
-    t.text     "description",             :limit => 2147483647
+    t.text     "description",             :limit => 16777215
     t.datetime "created_at",                                                       :null => false
     t.datetime "updated_at",                                                       :null => false
     t.integer  "position"
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.integer  "offerings_count",                               :default => 0
     t.boolean  "student_report_enabled",                        :default => true
     t.boolean  "show_score",                                    :default => false
-    t.text     "description_for_teacher", :limit => 2147483647
+    t.text     "description_for_teacher", :limit => 16777215
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
     t.boolean  "is_featured",                                   :default => false
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
-  add_index "activities", ["is_featured", "publication_status"], :name => "featured_public", :length => {"is_featured"=>nil, "publication_status"=>191}
-  add_index "activities", ["publication_status"], :name => "pub_status", :length => {"publication_status"=>191}
+  add_index "activities", ["is_featured", "publication_status"], :name => "featured_public"
+  add_index "activities", ["publication_status"], :name => "pub_status"
 
   create_table "admin_cohort_items", :force => true do |t|
     t.integer "admin_cohort_id"
@@ -95,8 +95,8 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "admin_project_materials", ["material_id", "material_type"], :name => "admin_proj_mat_mat_idx", :length => {"material_id"=>nil, "material_type"=>191}
-  add_index "admin_project_materials", ["project_id", "material_id", "material_type"], :name => "admin_proj_mat_proj_mat_idx", :length => {"project_id"=>nil, "material_id"=>nil, "material_type"=>191}
+  add_index "admin_project_materials", ["material_id", "material_type"], :name => "admin_proj_mat_mat_idx"
+  add_index "admin_project_materials", ["project_id", "material_id", "material_type"], :name => "admin_proj_mat_proj_mat_idx"
   add_index "admin_project_materials", ["project_id"], :name => "admin_proj_mat_proj_idx"
 
   create_table "admin_project_users", :force => true do |t|
@@ -257,7 +257,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.datetime "updated_at",                      :null => false
   end
 
-  add_index "commons_licenses", ["code"], :name => "index_commons_licenses_on_code", :length => {"code"=>191}
+  add_index "commons_licenses", ["code"], :name => "index_commons_licenses_on_code"
 
   create_table "dataservice_blobs", :force => true do |t|
     t.binary   "content",                    :limit => 16777215
@@ -274,7 +274,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
   end
 
   add_index "dataservice_blobs", ["bundle_content_id"], :name => "index_dataservice_blobs_on_bundle_content_id"
-  add_index "dataservice_blobs", ["checksum"], :name => "index_dataservice_blobs_on_checksum", :length => {"checksum"=>191}
+  add_index "dataservice_blobs", ["checksum"], :name => "index_dataservice_blobs_on_checksum"
   add_index "dataservice_blobs", ["learner_id"], :name => "index_dataservice_blobs_on_learner_id"
   add_index "dataservice_blobs", ["periodic_bundle_content_id"], :name => "pbc_idx"
 
@@ -306,7 +306,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
   end
 
   add_index "dataservice_bucket_loggers", ["learner_id"], :name => "index_dataservice_bucket_loggers_on_learner_id"
-  add_index "dataservice_bucket_loggers", ["name"], :name => "index_dataservice_bucket_loggers_on_name", :length => {"name"=>191}
+  add_index "dataservice_bucket_loggers", ["name"], :name => "index_dataservice_bucket_loggers_on_name"
 
   create_table "dataservice_bundle_contents", :force => true do |t|
     t.integer  "bundle_logger_id"
@@ -356,7 +356,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.datetime "updated_at",                  :null => false
   end
 
-  add_index "dataservice_jnlp_sessions", ["token"], :name => "index_dataservice_jnlp_sessions_on_token", :length => {"token"=>191}
+  add_index "dataservice_jnlp_sessions", ["token"], :name => "index_dataservice_jnlp_sessions_on_token"
 
   create_table "dataservice_launch_process_events", :force => true do |t|
     t.string   "event_type"
@@ -400,7 +400,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.datetime "updated_at",                                                        :null => false
   end
 
-  add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index", :length => {"key"=>191}
+  add_index "dataservice_periodic_bundle_parts", ["key"], :name => "parts_key_index"
   add_index "dataservice_periodic_bundle_parts", ["periodic_bundle_logger_id"], :name => "bundle_logger_index"
 
   create_table "delayed_jobs", :force => true do |t|
@@ -666,7 +666,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.boolean  "is_required",                        :default => false, :null => false
   end
 
-  add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id", :length => {"external_id"=>191}
+  add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
 
   create_table "embeddable_inner_page_pages", :force => true do |t|
     t.integer  "inner_page_id"
@@ -874,16 +874,17 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.datetime "archive_date"
     t.string   "credits"
     t.string   "license_code"
-    t.boolean  "enable_sharing",                               :default => true
     t.boolean  "append_auth_token"
+    t.boolean  "enable_sharing",                               :default => true
     t.string   "material_type",                                :default => "Activity"
     t.string   "rubric_url"
+    t.boolean  "saves_student_data",                           :default => true
   end
 
-  add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public", :length => {"is_featured"=>nil, "publication_status"=>191}
-  add_index "external_activities", ["publication_status"], :name => "pub_status", :length => {"publication_status"=>191}
-  add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path", :length => {"save_path"=>191}
-  add_index "external_activities", ["template_id", "template_type"], :name => "index_external_activities_on_template_id_and_template_type", :length => {"template_id"=>nil, "template_type"=>191}
+  add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
+  add_index "external_activities", ["publication_status"], :name => "pub_status"
+  add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
+  add_index "external_activities", ["template_id", "template_type"], :name => "index_external_activities_on_template_id_and_template_type"
   add_index "external_activities", ["user_id"], :name => "index_external_activities_on_user_id"
 
   create_table "external_reports", :force => true do |t|
@@ -925,8 +926,6 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.string   "base_channel_name"
     t.integer  "max_users_in_room"
     t.boolean  "send_bred_dragons"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "title"
     t.string   "hidden_genes"
     t.text     "static_genes",               :limit => 16777215
@@ -943,7 +942,11 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.boolean  "show_color_labels"
     t.text     "congratulations",            :limit => 16777215
     t.boolean  "show_tooltips",                                  :default => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
   end
+
+  add_index "geniverse_activities", ["route"], :name => "index_activities_on_route"
 
   create_table "geniverse_articles", :force => true do |t|
     t.integer  "group"
@@ -953,16 +956,16 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.boolean  "submitted"
     t.text     "teacherComment", :limit => 16777215
     t.boolean  "accepted"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   create_table "geniverse_cases", :force => true do |t|
     t.string   "name"
     t.integer  "order"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "introImageUrl"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "geniverse_dragons", :force => true do |t|
@@ -973,8 +976,6 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.integer  "mother_id"
     t.integer  "father_id"
     t.boolean  "bred"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "user_id"
     t.integer  "stableOrder"
     t.boolean  "isEgg",                         :default => false
@@ -983,6 +984,8 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.integer  "breeder_id"
     t.string   "breedTime",       :limit => 16
     t.boolean  "isMatchDragon",                 :default => false
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
   end
 
   add_index "geniverse_dragons", ["activity_id"], :name => "index_dragons_on_activity_id"
@@ -995,24 +998,22 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
   create_table "geniverse_help_messages", :force => true do |t|
     t.string   "page_name"
     t.text     "message",    :limit => 16777215
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
   end
 
   create_table "geniverse_unlockables", :force => true do |t|
     t.string   "title"
     t.text     "content",            :limit => 16777215
     t.string   "trigger"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.boolean  "open_automatically",                     :default => false
+    t.datetime "created_at",                                                :null => false
+    t.datetime "updated_at",                                                :null => false
   end
 
   create_table "geniverse_users", :force => true do |t|
     t.string   "username"
     t.string   "password_hash"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "group_id"
     t.integer  "member_id"
     t.string   "first_name"
@@ -1021,6 +1022,8 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
     t.string   "class_name"
     t.text     "metadata",      :limit => 2147483647
     t.string   "avatar"
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
   end
 
   add_index "geniverse_users", ["username", "password_hash"], :name => "index_users_on_username_and_password_hash", :length => {"username"=>125, "password_hash"=>125}
@@ -1154,7 +1157,7 @@ ActiveRecord::Schema.define(:version => 20180309155805) do
   end
 
   add_index "learner_processing_events", ["learner_id"], :name => "index_learner_processing_events_on_learner_id"
-  add_index "learner_processing_events", ["url"], :name => "index_learner_processing_events_on_url", :length => {"url"=>191}
+  add_index "learner_processing_events", ["url"], :name => "index_learner_processing_events_on_url"
 
   create_table "legacy_collaborations", :force => true do |t|
     t.integer  "bundle_content_id"
