@@ -45,7 +45,15 @@ services:
       PORTAL_PAGES_LIBRARY_URL: "${PORTAL_PAGES_LIBRARY_URL:-https://portal-pages.concord.org/library}"
       EXTERNAL_CSS_URL:
 
-      GOOGLE_ANALYTICS_ACCOUNT:
+      #
+      # Google analytics property ID
+      #
+      GOOGLE_ANALYTICS_ACCOUNT: 
+
+      #
+      # Google Optimizer property ID
+      #
+      GOOGLE_OPTIMIZER_ACCOUNT:
 
       #
       # OG tag default values

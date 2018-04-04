@@ -977,18 +977,20 @@ module ApplicationHelper
 
   def google_analytics_config
     if ENV['GOOGLE_ANALYTICS_ACCOUNT']
-      javascript_tag <<CONFIG
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '#{ENV['GOOGLE_ANALYTICS_ACCOUNT']}']);
-_gaq.push(['_trackPageview']);
+      snippet = <<SNIPPET
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', '#{ENV['GOOGLE_ANALYTICS_ACCOUNT']}', 'auto');
+SNIPPET
+      if ENV['GOOGLE_OPTIMIZER_ACCOUNT']
+        snippet += "ga('require', '#{ENV['GOOGLE_OPTIMIZER_ACCOUNT']}');\n"
+      end
+      snippet += "ga('send', 'pageview');\n"
 
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-CONFIG
-   end
+      javascript_tag snippet
+    end
   end
 
   # This fixes an error in polymorphic_url brought on because the Admin::Settings model name is plural.
