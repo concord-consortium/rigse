@@ -1,0 +1,44 @@
+#footer
+  .footer-inner.cols
+    .col-12
+      %img{:src => "https://ngss-assessment-resources.concord.org/footer-logos-ngsa.png", :style => "display: block; margin: 0 auto 55px;"}
+      %p#funding
+        Next Generation Science Assessment is a collaboration among
+        #{link_to 'Michigan State University', 'http://create4stem.msu.edu/', :target => '_blank'}
+        ,
+        #{link_to 'SRI International', 'https://www.sri.com/', :target => '_blank'}
+        ,
+        #{link_to 'University of Illinois at Chicago', 'https://www.uic.edu/', :target => '_blank'}
+        , and the
+        #{link_to 'Concord Consortium', 'http://concord.org/', :target => '_blank'}
+        \. This work is supported by grants from the
+        #{link_to 'Gordon and Betty Moore Foundation', 'https://www.moore.org/', :target => '_blank'}
+        (grant #4482) and the
+        #{link_to 'National Science Foundation', 'http://nsf.gov/', :target => '_blank'}
+        (grants DRL-1316874, DRL-1316903, DRL-1316908). Views expressed are not necessarily those of the funders.
+    .col-12
+      %p#license
+        %a{:href => "https://creativecommons.org/licenses/by-nc/4.0/", :target => "_blank"}
+          %img{:style => "float:left; padding-right:15px; padding-top:5px; padding-bottom:5px;", :src => "https://nextgenscience.wpengine.com/wp-content/uploads/2015/12/by-nc.png", :width => "105"}
+        The assessment tasks are licensed under a
+        #{link_to 'Creative Commons Attribution-NonCommercial 4.0 International license', 'https://creativecommons.org/licenses/by-nc/4.0/', :target => "_blank"}
+        \. This license permits you to copy, distribute, and display such content so long as you attribute the Next Generation Science Assessment Project and do not use commercially.
+    .col-12
+      %p
+        Copyright
+        %span.copyright
+          &copy;
+        - now = DateTime.now
+        - copyright_year = now.year
+        = copyright_year
+        \. All rights reserved.
+        %br
+        #{link_to 'Privacy Policy','https://concord.org/privacy-policy', :id=>"privacy-policy-link", :target=>"_blank"}
+        &middot;
+        For technical assistance, contact:
+        = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
+        \. For all other questions/feedback, contact: For all other questions/feedback contact:
+        = mail_to('contact@nextgenscienceassessment.org', 'contact@nextgenscienceassessment.org', :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
+        %br
+        Version:
+        = ENV['CC_PORTAL_VERSION']

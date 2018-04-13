@@ -3,7 +3,9 @@
   %head
     %meta{:charset => "utf-8"}/
     %title Log In to the Concord Consortium
-    %link{:href => "http://fonts.googleapis.com/css?family=Lato:400,700", :rel => "stylesheet", :type => "text/css"}/
+    %script{:src => "https://use.typekit.com/juj7nhw.js"}
+    %script
+      try{Typekit.load({ async: true });}catch(e){}
     :css
       html, body, div, span, applet, object, iframe,
       h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -31,40 +33,41 @@
         display: block;
       }
       a:link, a:visited {
-        color: #0093b0;
+        color: #ea6d2f;
         text-decoration: none;
         display: block;
       }
       a:active, a:hover {
-        color: #e86e2f;
+        color: #ffc320;
       }
       body {
         line-height: 1;
-        background: #fee9aa;
+        background: #f1f1f1;
         color: #3f3f3f;
-        font: 100% lato, verdana, arial, helvetica, sans-serif;
+        font: 300 100% museo-sans, helvetica, arial, sans-serif;
       }
       #page-wrap {
         margin: 2em auto;
-        width: 22em;
+        width: 24em;
       }
       #login-form {
         background: #fff;
-        border-radius: .75em;
         margin-bottom: 1em;
-        padding: 1.25em 1.5em 2em;
+        padding: 30px 40px 40px;
         position: relative;
-        box-shadow: 0 2px 2px rgba(51, 51, 51, .3);
       }
       img {
         display: block;
         height: auto;
-        margin: 0 auto .75em;
+        margin: 0 auto 30px;
         width: 180px;
       }
+      img.ngsa {
+        width: 250px;
+      }
       input[type=email], input[type=password], input[type=text] {
-        border: solid 1px #bbb;
-        border-radius: .25em;
+        border: solid 2px #0592af;
+        color: #080D09;
         font-size: 1em;
         height: 2em;
         padding: .25em .5em;
@@ -76,33 +79,25 @@
         border: solid 1px #860024;
       }
       .button {
-        background: #eb8723;
+        background: #ea6d2f;
         border: none;
         color: #fff;
         cursor: pointer;
         display: block;
         font-family: lato, arial, helvetica, sans-serif;
         font-size: 1em;
+        font-weight: 500;
         margin: 0;
-        padding: .5em .625em;
+        padding: 10px 20px;
         text-align: center;
         text-decoration: none;
         width: 9em;
-        -moz-border-radius: .1875em;
-        -webkit-border-radius: .1875em;
-        border-radius: .1875em;
-        box-shadow: 0 3px 0 #e16a3e;
-        background: -moz-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
-        background: -ms-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
-        background: -o-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
-        background: -webkit-linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
-        background: linear-gradient(top, rgb(244, 182, 38) 0%, rgb(235, 135, 35) 100%);
       }
       p { font-size: 1em; margin-bottom: 1em; }
       p#forgot-login {
-        bottom: -1em;
+        bottom: -.8em;
         font-size: .8em;
-        line-height: 140%;
+        line-height: 130%;
         position: absolute;
         right: 2em;
         text-align: right;
@@ -116,7 +111,7 @@
         %div{:style => "position: relative"}
           - if @after_sign_in_path.present?
             = hidden_field_tag('after_sign_in_path', @after_sign_in_path)
-          = image_tag "cc-logo.png", :title => "The Concord Consortium", :alt => "The Concord Consortium"
+          = render partial: 'shared/logo'
           %p
             Log in with your #{APP_CONFIG[:site_name]} account
             = @app_name.present? ? " to access the #{@app_name}" : ""
