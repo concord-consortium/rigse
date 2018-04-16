@@ -975,12 +975,6 @@ module ApplicationHelper
     nil
   end
 
-  def google_analytics_style
-    if ENV['GOOGLE_OPTIMIZER_ACCOUNT']
-      content_tag('style') { ".async-hide { opacity: 0 !important}" }
-    end
-  end
-
   def google_analytics_config
     snippet = ''
     if ENV['GOOGLE_ANALYTICS_ACCOUNT']
@@ -1007,7 +1001,7 @@ SNIPPET
       end
       snippet += "ga('send', 'pageview');"
 
-      javascript_tag snippet
+      ENV['GOOGLE_OPTIMIZER_ACCOUNT'] ? ( content_tag('style') { ".async-hide { opacity: 0 !important}" } + "\n" +  javascript_tag(snippet) ) : javascript_tag(snippet)
     end
   end
 
