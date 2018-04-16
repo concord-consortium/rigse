@@ -20,3 +20,6 @@
   - if ENV['GOOGLE_OPTIMIZER_ACCOUNT']
     :javascript
       ga('require', '#{ENV['GOOGLE_OPTIMIZER_ACCOUNT']}');
+
+  :javascript
+    ga('send', 'pageview');
