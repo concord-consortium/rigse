@@ -62,7 +62,7 @@
     /[if lt IE 10]
       = javascript_include_tag("pie/PIE")
 
-    = google_analytics_config
+    = render :partial => 'shared/analytics'
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
 
   %body{:class => 'blank', :'ng-app' => 'cc-portal'}
