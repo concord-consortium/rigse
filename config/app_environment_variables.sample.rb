@@ -46,7 +46,7 @@ ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbg
 #
 # Path to portal-pages "library" dir containing
 # portal-pages.js and portal-pages.css
-# E.g. PORTAL_PAGES_LIBRARY_URL=http://localhost:10000/library
+# E.g. PORTAL_PAGES_LIBRARY_URL=http://localhost:10000
 #
 
 # EXTERNAL_CSS_URL
