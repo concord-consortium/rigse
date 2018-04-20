@@ -9,14 +9,9 @@
 
 #
 # Any additional arguments to this script are passed directly to the
-# unison cli. E.g. you might use:
-# "docker/dev/start-unison.sh -prefer ."
-# to tell unison that in the event of conflicts it should resolve them by
-# favoring the "." replica (local dir)
+# unison command line
 #
 
 port=$(docker-compose port unison 5000 | awk -F: '{print $NF}')
 echo Connecting to unison on port: $port
-unison . socket://localhost:$port/ -repeat watch -auto -batch $*
-
-
+unison . socket://localhost:$port/ -repeat watch -auto -batch -prefer . $*
