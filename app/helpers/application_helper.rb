@@ -512,20 +512,6 @@ module ApplicationHelper
     end
   end
 
-  def open_response_learner_stat(learner)
-    reportUtil = Report::Util.factory(learner.offering)
-    answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
-    total = reportUtil.embeddables(:type => Embeddable::OpenRespose).size
-    " Open Response: #{answered}/#{total} "
-  end
-
-  def multiple_choice_learner_stat(learner)
-    reportUtil = Report::Util.factory(learner.offering)
-    answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
-    correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
-    total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
-    " Multiple Choice: #{answered}/#{correct}/#{total} "
-  end
 
   def sessions_learner_stat(learner)
     sessions = learner.bundle_logger.bundle_contents.count
