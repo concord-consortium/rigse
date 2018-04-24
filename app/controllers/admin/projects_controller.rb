@@ -25,6 +25,7 @@ class Admin::ProjectsController < ApplicationController
       image: @project.project_card_image_url ||
         "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
     }
+    render layout: 'minimal'
   end
 
   # GET /admin/projects
