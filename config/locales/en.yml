@@ -12,15 +12,6 @@ en:
       "dataservice/bundle_logger": BundleLogger
       "dataservice/console_content": ConsoleContent
       "dataservice/console_logger": ConsoleLogger
-      "embeddable/biologica/breed_offspring" : "Biologica Breed Offspring"
-      "embeddable/biologica/chromosome" : "Biologica Chromosome"
-      "embeddable/biologica/chromosome_zoom" : "Biologica Chromosome Zoom"
-      "embeddable/biologica/meiosis_view" : "Biologica Meiosis View"
-      "embeddable/biologica/multiple_organism" : "Biologica Multiple Organism"
-      "embeddable/biologica/organism" : "Biologica Organism"
-      "embeddable/biologica/pedigree" : "Biologica Pedigree"
-      "embeddable/biologica/static_organism" : "Biologica Static Organism View"
-      "embeddable/biologica/world" : "Biologica World"
       "embeddable/data_collector" : Graph
       "embeddable/drawing_tool" : "Draw Tool"
       "embeddable/image_question" : "Image Question"
