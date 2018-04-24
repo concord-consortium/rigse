@@ -1,6 +1,6 @@
 %div{:id=>dom_id_for(page, :add_menu), :class=>'dropdown'}
   %ul
-    - hide_types = [Embeddable::InnerPage, Embeddable::Biologica::World, Embeddable::Biologica::Organism, Embeddable::Biologica::StaticOrganism, Embeddable::Biologica::Chromosome, Embeddable::Biologica::ChromosomeZoom, Embeddable::Biologica::BreedOffspring, Embeddable::Biologica::Pedigree, Embeddable::Biologica::MultipleOrganism, Embeddable::Biologica::MeiosisView]
+    - hide_types = [Embeddable::InnerPage]
     - Page.element_types.each do |type|
       - next if hide_types.include? type
       %li= link_to_remote "#{type.display_name}", |

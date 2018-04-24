@@ -4,15 +4,6 @@ default:
   Dataservice::BundleLogger : BundleLogger
   Dataservice::ConsoleContent : ConsoleContent
   Dataservice::ConsoleLogger : ConsoleLogger
-  Embeddable::Biologica::BreedOffspring : Biologica Breed Offspring
-  Embeddable::Biologica::Chromosome : Biologica Chromosome
-  Embeddable::Biologica::ChromosomeZoom : Biologica Chromosome Zoom
-  Embeddable::Biologica::MeiosisView : Biologica Meiosis View
-  Embeddable::Biologica::MultipleOrganism : Biologica Multiple Organism
-  Embeddable::Biologica::Organism : Biologica Organism
-  Embeddable::Biologica::Pedigree : Biologica Pedigree
-  Embeddable::Biologica::StaticOrganism : Biologica Static Organism View
-  Embeddable::Biologica::World : Biologica World
   Embeddable::DataCollector : Graph
   Embeddable::DrawingTool : Draw Tool
   Embeddable::ImageQuestion : Image Question
