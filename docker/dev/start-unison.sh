@@ -14,4 +14,4 @@
 
 port=$(docker-compose port unison 5000 | awk -F: '{print $NF}')
 echo Connecting to unison on port: $port
-unison . socket://localhost:$port/ -repeat watch -auto -batch -prefer . $*
+unison . socket://localhost:$port/ -repeat watch -auto -batch -prefer . -ignore 'Path .git' $*
