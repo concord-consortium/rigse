@@ -23,3 +23,7 @@
 
   :javascript
     ga('send', 'pageview');
+- else
+  -# no-op 'ga', so javascript instrumented with 'ga' events doesn't throw errors
+  :javascript
+    window.ga = function(){}
