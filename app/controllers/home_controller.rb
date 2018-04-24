@@ -162,77 +162,7 @@ class HomeController < ApplicationController
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
     @notices = notices_hash[:notices]
     @notice_display_type = notices_hash[:notice_display_type]
-
-    @clazz_offerings=Array.new
-
-    @recent_activity_msgs = {
-      :no_offerings => "#{t('recent_activity.no_offerings')}<br>#{t('recent_activity.no_activity')}",
-      :no_students => "#{t('recent_activity.no_students')}<br>#{t('recent_activity.no_activity')}",
-      :no_activity => t('recent_activity.no_activity')
-    }
-    @no_recent_activity_msg = nil
-    @offerings_count = 0
-    @student_count = 0
-
-    portal_teacher = current_visitor.portal_teacher
-    teacher_clazzes = portal_teacher.clazzes
-    portal_teacher_clazzes = portal_teacher.teacher_clazzes
-
-    portal_teacher_offerings = [];
-    portal_student_ids = []
-    teacher_clazzes.each do|teacher_clazz|
-      if portal_teacher_clazzes.find_by_clazz_id(teacher_clazz.id).active
-        @offerings_count += teacher_clazz.teacher_visible_offerings.count
-
-        students = teacher_clazz.students
-        portal_student_ids.concat(students.map{|s| s.id})
-        student_count = students.count
-        @student_count += student_count
-        if student_count > 0
-          portal_teacher_offerings.concat(teacher_clazz.teacher_visible_offerings)
-        end
-      end
-    end
-
-
-    if @offerings_count == 0
-      @no_recent_activity_msg = @recent_activity_msgs[:no_offerings]
-      return
-    elsif @student_count == 0
-      @no_recent_activity_msg = @recent_activity_msgs[:no_students]
-      return
-    end
-
-
-    learner_offerings = (Report::Learner.where("complete_percent > 0").where(:offering_id => portal_teacher_offerings.map{|o| o.id }, :student_id => portal_student_ids).order("last_run DESC")).select(:offering_id).uniq
-
-    if (learner_offerings.count == 0)
-      # There are no report learners for this filter
-      @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
-      return
-    end
-
-
-    learner_offerings.each do |learner_offering|
-      portal_teacher_offerings.each do|teacher_offering|
-        reportlearner = Report::Learner.find_by_offering_id(learner_offering.offering_id)
-        if reportlearner.offering_id == teacher_offering.id
-          offering = Portal::Offering.find(reportlearner.offering_id)
-          if offering.inprogress_students_count > 0 || offering.completed_students_count > 0
-            @clazz_offerings.push(offering)
-          end
-        end
-      end
-    end
-
-
-    if (@clazz_offerings.count == 0)
-      @no_recent_activity_msg = @recent_activity_msgs[:no_activity]
-      return
-    end
-
   end
-
 
   #
   #

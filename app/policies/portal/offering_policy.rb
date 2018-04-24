@@ -38,10 +38,6 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_student?
   end
 
-  def get_recent_student_report?
-    class_teacher_or_admin? || class_student?
-  end
-
   def report?
     class_teacher_or_admin?
   end

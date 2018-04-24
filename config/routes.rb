@@ -214,7 +214,6 @@ RailsPortal::Application.routes.draw do
           get :report
           post :answers
           post :offering_collapsed_status
-          post :get_recent_student_report
           get :activity_report
           get :student_report
           post :student_report
