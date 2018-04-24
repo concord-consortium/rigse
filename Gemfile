@@ -184,7 +184,7 @@ group :development do
   gem "awesome_print"
   gem "interactive_editor"
   gem "ruby-prof"
-  gem "spring"  # automatic rails application preloader (similar to Spork)
+  gem "spring", "~> 1.7.2" # automatic rails application preloader (similar to Spork)
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
@@ -213,7 +213,6 @@ group :test, :cucumber do
   gem "webmock",            "~> 1.11.0", :require => false
   gem "capybara-mechanize", "~> 0.3.0"
   gem 'capybara-screenshot'
-  gem "codeclimate-test-reporter", require: nil
   gem "connection_pool"
 end
 
@@ -229,7 +228,7 @@ group :test, :cucumber, :development do
 end
 
 group :test, :development do
-  gem 'jasmine'
+  gem "jasmine", "~> 2.3.0"
 end
 
 group :assets do
