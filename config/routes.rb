@@ -705,6 +705,9 @@ RailsPortal::Application.routes.draw do
         resources :reports, only: [:show, :update]
 
         resources :offerings, only: [:show] do
+          collection do
+            get :for_current_user
+          end
           member do
             get :for_class
             get :for_teacher

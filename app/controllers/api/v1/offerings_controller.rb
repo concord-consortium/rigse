@@ -1,3 +1,7 @@
+# This API is mostly used by Dashboard:
+# https://github.com/concord-consortium/HASDashboard
+# and some of the Portal Pages:
+# https://github.com/concord-consortium/portal-pages
 class API::V1::OfferingsController < API::APIController
 
   def show
@@ -33,6 +37,21 @@ class API::V1::OfferingsController < API::APIController
     render :json => @offering_api.to_json, :callback => params[:callback]
   end
 
+  # Returns a list for the currently logged in user (teacher).
+  # Pretty similar to to #for_teacher but without awkward teacher lookup (current user is used instead).
+  def for_current_user
+    unless current_user && current_user.portal_teacher
+      render :json => [].to_json, :callback => params[:callback]
+      return
+    end
+    clazz_ids = current_user.portal_teacher.clazz_ids
+    offerings = Portal::Offering
+                    .where(clazz_id: clazz_ids)
+                    .includes(learners: {student: :user}, clazz: {students: :user})
+
+    offering_api = offerings_to_api_offering(offerings, request)
+    render :json => offering_api.to_json, :callback => params[:callback]
+  end
 
   protected
   def offerings_to_api_offering(offerings, request)
