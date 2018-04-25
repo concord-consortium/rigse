@@ -4,6 +4,10 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
+  def api_for_current_user?
+    teacher?
+  end
+
   # Used by API::V1::ReportsController:
   def api_report?
     class_teacher_or_admin?

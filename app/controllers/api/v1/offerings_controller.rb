@@ -41,10 +41,7 @@ class API::V1::OfferingsController < API::APIController
   # Returns a list for the currently logged in user (teacher).
   # Pretty similar to to #for_teacher but without awkward teacher lookup (current user is used instead).
   def for_current_user
-    unless current_user && current_user.portal_teacher
-      render :json => [].to_json, :callback => params[:callback]
-      return
-    end
+    authorize Portal::Offering, :api_for_current_user?
     clazz_ids = current_user.portal_teacher.clazz_ids
     offerings = Portal::Offering
                     .where(clazz_id: clazz_ids)

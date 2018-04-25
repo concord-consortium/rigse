@@ -47,4 +47,13 @@ module ReportLearnerSpecHelper
       # TODO: test mutliple choices and others, that are harder to make...
     end
   end
+
+  # A bit more friendly helper that accepts student and automatically handles learner and report_learner updates.
+  def add_answer_for_student(student, offering, question, answer_hash)
+    learner = Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student.id)
+    add_answer_for_learner(learner, question, answer_hash)
+    learner.report_learner.update_answers()
+    learner.report_learner.last_run = Time.now
+    learner.report_learner.save
+  end
 end
