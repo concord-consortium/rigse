@@ -20,7 +20,7 @@ class API::V1::Offering
       self.last_name = student.user.last_name
       self.username = student.user.login
       self.user_id = student.user.id
-      learner = offering.learners.where(student_id: student.id).first
+      learner = offering.learners.find { |l| l.student_id === student.id }
       # Learner object is available only if student has started the activity.
       self.started_activity = learner ? true : false
       self.endpoint_url = learner ? learner.remote_endpoint_url : nil
