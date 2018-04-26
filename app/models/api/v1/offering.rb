@@ -57,14 +57,14 @@ class API::V1::Offering
     self.activity = offering.name
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
-    self.external_report =  if runnable.respond_to?(:external_report) && runnable.external_report
-                              {
-                                url: portal_external_report_url(id: offering.id, report_id: runnable.external_report.id, protocol: protocol, host: host_with_port),
-                                launch_text: runnable.external_report.launch_text
-                              }
-                            else
-                              nil
-                            end
+    if runnable.respond_to?(:external_report) && runnable.external_report
+      self.external_report =  {
+        url: portal_external_report_url(id: offering.id, report_id: runnable.external_report.id, protocol: protocol, host: host_with_port),
+        launch_text: runnable.external_report.launch_text
+      }
+    else
+      self.external_report = nil
+    end
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering) }
   end
 end
