@@ -87,7 +87,7 @@ describe API::V1::OfferingsController do
     end
   end
 
-  describe "for_current_user" do
+  describe "API response structure" do
     let(:open_response_1)   { Factory.create(:open_response) }
     let(:open_response_2)   { Factory.create(:open_response) }
     let(:open_response_3)   { Factory.create(:open_response) }
@@ -164,6 +164,7 @@ describe API::V1::OfferingsController do
         offering["id"] = @offering.id
         offering["clazz"].should eq clazz.name
         offering["activity"].should eq runnable.name
+        offering["report_url"].should eql report_portal_offering_url(id: @offering.id, host: 'test.host')
         offering["students"].length.should eq 2
 
         student1 = offering["students"][0]
@@ -296,6 +297,27 @@ describe API::V1::OfferingsController do
                                                     { "activity" => activity_1.name, "progress" => 100 },
                                                     { "activity" => activity_2.name, "progress" => 100 }
                                                 ]
+      end
+    end
+
+    describe "when offering has an external report" do
+      let (:external_report) { FactoryGirl.create(:external_report) }
+
+      before (:each) do
+        # Create a new teacher without any offerings.
+        sign_in teacher.user
+        @offering = Factory(:portal_offering, offering_opts)
+        runnable.external_report = external_report
+        runnable.save
+      end
+      it "returns information about external report" do
+        get :for_current_user
+        response.status.should eq 200
+        json = JSON.parse(response.body)
+        offering = json[0]
+        offering["external_report"].should_not eq nil
+        offering["external_report"]["url"].should eq portal_external_report_url(id: @offering.id, report_id: external_report.id, host: 'test.host')
+        offering["external_report"]["launch_text"].should eq external_report.launch_text
       end
     end
   end

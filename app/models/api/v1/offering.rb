@@ -1,3 +1,5 @@
+include Rails.application.routes.url_helpers
+
 class API::V1::Offering
   include Virtus.model
 
@@ -41,16 +43,28 @@ class API::V1::Offering
   attribute :clazz_info_url, String
   attribute :activity, String
   attribute :activity_url, String
+  attribute :report_url, String
+  attribute :external_report, Hash
   attribute :students, Array[OfferingStudent]
 
   def initialize(offering, protocol, host_with_port)
+    runnable = offering.runnable
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
     self.clazz = offering.clazz.name
     self.clazz_id = offering.clazz.id
     self.clazz_info_url = offering.clazz.class_info_url(protocol, host_with_port)
     self.activity = offering.name
-    self.activity_url = offering.runnable.respond_to?(:url) ? offering.runnable.url : nil
+    self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
+    self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
+    self.external_report =  if runnable.respond_to?(:external_report) && runnable.external_report
+                              {
+                                url: portal_external_report_url(id: offering.id, report_id: runnable.external_report.id, protocol: protocol, host: host_with_port),
+                                launch_text: runnable.external_report.launch_text
+                              }
+                            else
+                              nil
+                            end
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering) }
   end
 end

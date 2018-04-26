@@ -4,10 +4,18 @@
 # https://github.com/concord-consortium/portal-pages
 class API::V1::OfferingsController < API::APIController
 
+  # Optimize SQL queries based on API::V1::Offering structure.
+  INCLUDES_DEF = {
+      runnable: [:template, :external_report],
+      learners: [:report_learner, {learner_activities: :activity, student: :user}],
+      clazz: {students: :user}
+  }
+
   def show
-    offering = Portal::Offering.find(params[:id], include: [
-        :runnable, learners: [:report_learner, {learner_activities: :activity, student: :user}], clazz: {students: :user}
-    ])
+    offering = Portal::Offering
+                   .where(id: params[:id])
+                   .includes(INCLUDES_DEF)
+                   .first
     authorize offering, :api_show?
     @offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port)
     render :json => @offering_api.to_json, :callback => params[:callback]
@@ -19,7 +27,7 @@ class API::V1::OfferingsController < API::APIController
     authorize offering, :api_show?
     offerings = Portal::Offering
                     .where(clazz_id: offering.clazz.id)
-                    .includes(:runnable, learners: [:report_learner, {learner_activities: :activity, student: :user}], clazz: {students: :user})
+                    .includes(INCLUDES_DEF)
     offering_api = offerings_to_api_offering(offerings, request)
     render :json => offering_api.to_json, :callback => params[:callback]
   end
@@ -32,8 +40,7 @@ class API::V1::OfferingsController < API::APIController
     clazz_ids = teacher.clazz_ids
     offerings = Portal::Offering
                     .where(clazz_id: clazz_ids)
-                    .includes(:runnable, learners: [:report_learner, {learner_activities: :activity, student: :user}], clazz: {students: :user})
-
+                    .includes(INCLUDES_DEF)
     offering_api = offerings_to_api_offering(offerings, request)
     render :json => offering_api.to_json, :callback => params[:callback]
   end
@@ -45,13 +52,13 @@ class API::V1::OfferingsController < API::APIController
     clazz_ids = current_user.portal_teacher.clazz_ids
     offerings = Portal::Offering
                     .where(clazz_id: clazz_ids)
-                    .includes(:runnable, learners: [:report_learner, {learner_activities: :activity, student: :user}], clazz: {students: :user})
-
+                    .includes(INCLUDES_DEF)
     offering_api = offerings_to_api_offering(offerings, request)
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 
   protected
+
   def offerings_to_api_offering(offerings, request)
     filtered_offerings = offerings.reject { |o| o.archived? }
     filtered_offerings.map do |offering|
