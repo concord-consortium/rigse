@@ -4,7 +4,7 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
-  def api_for_current_user?
+  def api_own?
     teacher?
   end
 
@@ -67,5 +67,4 @@ class Portal::OfferingPolicy < ApplicationPolicy
   def class_teacher_or_admin?
     class_teacher? || admin?
   end
-
 end

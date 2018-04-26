@@ -1,6 +1,5 @@
-include Rails.application.routes.url_helpers
-
 class API::V1::Offering
+  include Rails.application.routes.url_helpers
   include Virtus.model
 
   class OfferingStudent

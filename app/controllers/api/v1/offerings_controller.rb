@@ -16,45 +16,41 @@ class API::V1::OfferingsController < API::APIController
                    .where(id: params[:id])
                    .includes(INCLUDES_DEF)
                    .first
+    unless offering
+      return error('offering not found', 404)
+    end
     authorize offering, :api_show?
-    @offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port)
-    render :json => @offering_api.to_json, :callback => params[:callback]
+    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port)
+    render :json => offering_api.to_json, :callback => params[:callback]
   end
 
-  # Return a list for all of the classes
+  def own
+    authorize Portal::Offering, :api_own?
+    # if ?class_id param is present, offerings will be limited just to one class.
+    clazz_ids = current_user.portal_teacher.clazz_ids
+    if params[:class_id].present?
+      # Intersection of own classes and provided class_id. We don't want to let user check offerings of class which
+      # is not owned by him.
+      clazz_ids = clazz_ids & [params[:class_id].to_i]
+    end
+    offerings = Portal::Offering
+                    .where(clazz_id: clazz_ids)
+                    .includes(INCLUDES_DEF)
+    offering_api = offerings_to_api_offering(offerings, request)
+    render :json => offering_api.to_json, :callback => params[:callback]
+  end
+
+  # DEPRECIATED
+  # This route is still used directly by https://github.com/concord-consortium/sharinator
   def for_class
     offering =  Portal::Offering.find(params[:id])
-    authorize offering, :api_show?
-    offerings = Portal::Offering
-                    .where(clazz_id: offering.clazz.id)
-                    .includes(INCLUDES_DEF)
-    offering_api = offerings_to_api_offering(offerings, request)
-    render :json => offering_api.to_json, :callback => params[:callback]
+    params[:class_id] = offering.clazz.id
+    own
   end
 
-  # return a list for the teachers
+  # DEPRECIATED
   def for_teacher
-    offering = Portal::Offering.find(params[:id])
-    authorize offering, :api_show?
-    teacher = offering.clazz.teacher
-    clazz_ids = teacher.clazz_ids
-    offerings = Portal::Offering
-                    .where(clazz_id: clazz_ids)
-                    .includes(INCLUDES_DEF)
-    offering_api = offerings_to_api_offering(offerings, request)
-    render :json => offering_api.to_json, :callback => params[:callback]
-  end
-
-  # Returns a list for the currently logged in user (teacher).
-  # Pretty similar to to #for_teacher but without awkward teacher lookup (current user is used instead).
-  def for_current_user
-    authorize Portal::Offering, :api_for_current_user?
-    clazz_ids = current_user.portal_teacher.clazz_ids
-    offerings = Portal::Offering
-                    .where(clazz_id: clazz_ids)
-                    .includes(INCLUDES_DEF)
-    offering_api = offerings_to_api_offering(offerings, request)
-    render :json => offering_api.to_json, :callback => params[:callback]
+    own
   end
 
   protected
@@ -65,6 +61,4 @@ class API::V1::OfferingsController < API::APIController
       API::V1::Offering.new(offering, request.protocol, request.host_with_port)
     end
   end
-
 end
-

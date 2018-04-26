@@ -705,10 +705,12 @@ RailsPortal::Application.routes.draw do
 
         resources :offerings, only: [:show] do
           collection do
-            get :for_current_user
+            get :own
           end
           member do
+            # DEPRECIATED
             get :for_class
+            # DEPRECIATED
             get :for_teacher
           end
         end

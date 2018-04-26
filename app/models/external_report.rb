@@ -20,14 +20,16 @@ class ExternalReport < ActiveRecord::Base
 
   def offering_api_url(offering_id, protocol, host)
     routes = Rails.application.routes.url_helpers
-    opts = {protocol:protocol, host:host}
+    opts = { protocol: protocol, host: host }
     case report_type
       when OfferingReport
         routes.api_v1_offering_url(offering_id, opts)
-      when ClassReport
-        routes.for_class_api_v1_offering_url(offering_id, opts)
       when TeacherReport
-        routes.for_teacher_api_v1_offering_url(offering_id, opts)
+        routes.own_api_v1_offerings_url(opts)
+      when ClassReport
+        # Limit own offerings to one class.
+        opts[:class_id] = Portal::Offering.find(offering_id).clazz.id
+        routes.own_api_v1_offerings_url(opts)
       else
         routes.api_v1_offering_url(offering_id, opts)
     end
@@ -44,7 +46,7 @@ class ExternalReport < ActiveRecord::Base
     end
     token = grant.access_token
     username = user.login
-    "#{url}?offering=#{offering_api_url(offering_id, protocol, host)}&token=#{token}&username=#{username}"
+    "#{url}?offering=#{CGI.escape(offering_api_url(offering_id, protocol, host))}&token=#{token}&username=#{username}"
   end
 
   def url_for_class(class_id, user, protocol, host)
