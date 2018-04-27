@@ -200,10 +200,11 @@ class Portal::OfferingsController < ApplicationController
 
   def external_report
     offering_id = params[:id]
-    authorize Portal::Offering.find(offering_id)
+    offering = Portal::Offering.find(offering_id)
+    authorize offering
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    next_url = report.url_for(offering_id, current_visitor, request.protocol, request.host_with_port)
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port)
     redirect_to next_url
   end
 
