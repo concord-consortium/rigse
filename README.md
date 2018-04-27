@@ -50,6 +50,8 @@ Install Docker and make sure that docker-compose is installed too (it should be 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
     docker-compose up # this will take 15 minutes to download gems
+    
+Increase memory available to Docker to 4GiB-5GiB (OSX: Preferences... -> Advanced tab).
 
 Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000). On OS X this might
 take more than 5 minutes to load the first page. Look in the terminal where you ran
