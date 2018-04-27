@@ -703,10 +703,7 @@ RailsPortal::Application.routes.draw do
         end
         resources :reports, only: [:show, :update]
 
-        resources :offerings, only: [:show] do
-          collection do
-            get :own
-          end
+        resources :offerings, only: [:show, :index] do
           member do
             # DEPRECIATED
             get :for_class

@@ -58,6 +58,8 @@ class API::V1::Offering
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
     if runnable.respond_to?(:external_report) && runnable.external_report
       self.external_report =  {
+        id: runnable.external_report.id,
+        name: runnable.external_report.name,
         url: portal_external_report_url(id: offering.id, report_id: runnable.external_report.id, protocol: protocol, host: host_with_port),
         launch_text: runnable.external_report.launch_text
       }

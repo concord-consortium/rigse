@@ -2,9 +2,8 @@ require 'spec_helper'
 include ReportLearnerSpecHelper
 
 describe API::V1::OfferingsController do
-  let(:admin_user)        { Factory.next(:admin_user)     }
-  let(:simple_user)       { Factory.next(:confirmed_user) }
-  let(:manager_user)      { Factory.next(:manager_user)   }
+  let(:admin_user)        { Factory.next(:admin_user) }
+  let(:manager_user)      { Factory.next(:manager_user) }
   let(:teacher)           { Factory.create(:portal_teacher) }
   let(:open_response_1)   { Factory.create(:open_response) }
   let(:open_response_2)   { Factory.create(:open_response) }
@@ -268,13 +267,23 @@ describe API::V1::OfferingsController do
     end
   end
 
-  describe "GET #own" do
+  describe "GET #index" do
     describe "when user is not logged in" do
       before (:each) do
         logout_user
       end
       it "returns 403 error" do
-        get :own
+        get :index
+        response.status.should eql(403)
+      end
+    end
+
+    describe "when user is a student" do
+      before (:each) do
+        sign_in student_a.user
+      end
+      it "returns 403 error" do
+        get :index
         response.status.should eql(403)
       end
     end
@@ -284,7 +293,7 @@ describe API::V1::OfferingsController do
         sign_in teacher.user
       end
       it "returns an empty array" do
-        get :own
+        get :index
         response.status.should eql(200)
         json = JSON.parse(response.body)
         json.should eq []
@@ -298,7 +307,7 @@ describe API::V1::OfferingsController do
         @offering = offering
       end
       it "returns 200 and valid json response" do
-        get :own
+        get :index
         response.status.should eql(200)
         json = JSON.parse(response.body)
         json.length.should eq 1
@@ -313,44 +322,116 @@ describe API::V1::OfferingsController do
       let(:clazz_2)    { Factory.create(:portal_clazz, teachers: [teacher]) }
       let(:offering_2) { Factory.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
 
-      before (:each) do
-        sign_in teacher.user
-        # Make sure that the offering is created.
-        @own_offerings = [offering, offering_2]
-        @other_offerings = [offering_b]
+      describe "and teacher is logged in" do
+        before (:each) do
+          sign_in teacher.user
+          # Make sure that the offering is created.
+          @own_offerings = [offering, offering_2]
+          @other_offerings = [offering_b]
+        end
+
+        it "should return list of own offerings only" do
+          get :show, id: offering.id
+          offering_1_json = JSON.parse(response.body)
+          get :show, id: offering_2.id
+          offering_2_json = JSON.parse(response.body)
+
+          get :index
+          response.status.should eql(200)
+          json = JSON.parse(response.body)
+          json.should eq [offering_1_json, offering_2_json]
+        end
+
+        describe "when class_id param is provided" do
+          describe "and teacher is an owner of given class" do
+            it "should return list of his offerings for this class" do
+              get :show, id: offering.id
+              offering_json = JSON.parse(response.body)
+
+              get :index, class_id: clazz.id
+              response.status.should eql(200)
+              json = JSON.parse(response.body)
+              json.should eq [offering_json]
+            end
+          end
+
+          describe "and teacher is not an owner of given class" do
+            it "should return 403 error" do
+              get :index, class_id: clazz_b.id
+              response.status.should eql(403)
+            end
+          end
+        end
+
+        describe "when user_id param is provided" do
+          describe "and teacher is a given user" do
+            it "should return list of his all offerings" do
+              get :show, id: offering.id
+              offering_1_json = JSON.parse(response.body)
+              get :show, id: offering_2.id
+              offering_2_json = JSON.parse(response.body)
+
+
+              get :index, user_id: teacher.user.id
+              response.status.should eql(200)
+              json = JSON.parse(response.body)
+              json.should eq [offering_1_json, offering_2_json]
+            end
+          end
+
+          describe "and teacher is not a given user" do
+            it "should return 403 error" do
+              get :index, class_id: clazz_b.id
+              response.status.should eql(403)
+            end
+          end
+        end
       end
 
-      it "should return list of own offerings only" do
-        get :show, id: offering.id
-        offering_1_json = JSON.parse(response.body)
-        get :show, id: offering_2.id
-        offering_2_json = JSON.parse(response.body)
+      describe "and admin is logged in" do
+        before (:each) do
+          sign_in admin_user
+          # Make sure that the offering is created.
+          @all_offerings = [offering, offering_2, offering_b]
+        end
 
-        get :own
-        response.status.should eql(200)
-        json = JSON.parse(response.body)
-        json.should eq [offering_1_json, offering_2_json]
-      end
+        it "should return list of all the offerings" do
+          get :show, id: offering.id
+          offering_1_json = JSON.parse(response.body)
+          get :show, id: offering_2.id
+          offering_2_json = JSON.parse(response.body)
+          get :show, id: offering_b.id
+          offering_b_json = JSON.parse(response.body)
 
-      describe "when class_id param is provided" do
-        describe "and teacher is an owner of given class" do
-          it "should return list of his offerings for this class" do
+          get :index
+          response.status.should eql(200)
+          json = JSON.parse(response.body)
+          json.should eq [offering_1_json, offering_2_json, offering_b_json]
+        end
+
+        describe "when class_id param is provided" do
+          it "should return list of all the offerings for this class" do
             get :show, id: offering.id
             offering_json = JSON.parse(response.body)
 
-            get :own, class_id: clazz.id
+            get :index, class_id: clazz.id
             response.status.should eql(200)
             json = JSON.parse(response.body)
             json.should eq [offering_json]
           end
         end
 
-        describe "and teacher is not an owner of given class" do
-          it "should return empty array" do
-            get :own, class_id: clazz_b.id
+        describe "when user_id param is provided" do
+          it "should return list of all user offerings" do
+            get :show, id: offering.id
+            offering_1_json = JSON.parse(response.body)
+            get :show, id: offering_2.id
+            offering_2_json = JSON.parse(response.body)
+
+            get :index, user_id: teacher.user.id
             response.status.should eql(200)
             json = JSON.parse(response.body)
-            json.should eq []
+            json.should eq [offering_1_json, offering_2_json]
           end
         end
       end
@@ -371,7 +452,7 @@ describe API::V1::OfferingsController do
         get :show, id: offering.id
         show_json = JSON.parse(response.body)
 
-        get :own
+        get :index
         response.status.should eql(200)
         own_json = JSON.parse(response.body)
         own_json.should eq [ show_json ]
@@ -416,6 +497,9 @@ describe API::V1::OfferingsController do
         get :for_class, id: offering_3.id
         json = JSON.parse(response.body)
         json.should eq [offering_3_json]
+
+        get :for_class, id: offering_b.id
+        response.status.should eql(403) # Different class, no access!
       end
     end
   end
@@ -436,15 +520,22 @@ describe API::V1::OfferingsController do
         @other_offerings = [offering_b]
       end
 
-      it "should return list of all the offerings for the signed in teacher" do
+      it "should return list of all the offerings for the owner of given offering (teacher)" do
         get :show, id: offering.id
         offering_1_json = JSON.parse(response.body)
         get :show, id: offering_2.id
         offering_2_json = JSON.parse(response.body)
 
-        get :for_teacher
+        get :for_teacher, id: offering.id
         json = JSON.parse(response.body)
         json.should eq [offering_1_json, offering_2_json]
+
+        get :for_teacher, id: offering_2.id
+        json = JSON.parse(response.body)
+        json.should eq [offering_1_json, offering_2_json]
+
+        get :for_teacher, id: offering_b.id
+        response.status.should eql(403) # different class, no access!
       end
     end
   end

@@ -24,20 +24,48 @@ class API::V1::OfferingsController < API::APIController
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 
-  def own
-    authorize Portal::Offering, :api_own?
-    # if ?class_id param is present, offerings will be limited just to one class.
-    clazz_ids = current_user.portal_teacher.clazz_ids
-    if params[:class_id].present?
-      # Intersection of own classes and provided class_id. We don't want to let user check offerings of class which
-      # is not owned by him.
-      clazz_ids = clazz_ids & [params[:class_id].to_i]
+  def index
+    authorize Portal::Offering, :api_index?
+    # policy_scope will limit offerings to ones available to given user.
+    # All the other filtering will filter this initial set of offerings.
+    offerings = policy_scope(Portal::Offering).includes(INCLUDES_DEF)
+
+    # Process additional params to limit final offerings set.
+    class_ids = []
+
+    if params[:user_id]
+      user = User.find(params[:user_id])
+      if !current_user.has_role?('admin') && current_user != user
+        # Only admin can list offerings of other users / teachers.
+        return error('access denied', 403)
+      end
+      if user.portal_teacher
+        class_ids.concat(user.portal_teacher.clazz_ids)
+      else
+        # User is not a teacher, nothing to return.
+        return render :json => [].to_json, :callback => params[:callback]
+      end
     end
-    offerings = Portal::Offering
-                    .where(clazz_id: clazz_ids)
-                    .includes(INCLUDES_DEF)
-    offering_api = offerings_to_api_offering(offerings, request)
-    render :json => offering_api.to_json, :callback => params[:callback]
+
+    if params[:class_id].present?
+      clazz = Portal::Clazz.find(params[:class_id])
+      if !current_user.has_role?('admin') && !clazz.is_teacher?(current_user)
+        # Only admin can list offerings of somebody else's class.
+        return error('access denied', 403)
+      end
+      class_ids.push(params[:class_id])
+    end
+
+    # Apply filtering.
+    if class_ids.length > 0
+      offerings = offerings.where(clazz_id: class_ids)
+    end
+
+    filtered_offerings = offerings.reject { |o| o.archived? }
+    filtered_offerings = filtered_offerings.map do |offering|
+      API::V1::Offering.new(offering, request.protocol, request.host_with_port)
+    end
+    render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
 
   # DEPRECIATED
@@ -45,20 +73,13 @@ class API::V1::OfferingsController < API::APIController
   def for_class
     offering =  Portal::Offering.find(params[:id])
     params[:class_id] = offering.clazz.id
-    own
+    index
   end
 
   # DEPRECIATED
   def for_teacher
-    own
-  end
-
-  protected
-
-  def offerings_to_api_offering(offerings, request)
-    filtered_offerings = offerings.reject { |o| o.archived? }
-    filtered_offerings.map do |offering|
-      API::V1::Offering.new(offering, request.protocol, request.host_with_port)
-    end
+    offering =  Portal::Offering.find(params[:id])
+    params[:user_id] = offering.clazz.teacher.user.id
+    index
   end
 end

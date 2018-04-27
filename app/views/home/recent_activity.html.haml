@@ -3,4 +3,4 @@
 #recent-activity
 
 :javascript
-  PortalPages.renderRecentActivity({}, 'recent-activity');
+  PortalPages.renderRecentActivity({dataUrl: Portal.API_V1.OFFERINGS + '?user_id=#{current_user.id}'}, 'recent-activity');

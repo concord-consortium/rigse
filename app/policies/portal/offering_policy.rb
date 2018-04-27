@@ -4,8 +4,21 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
-  def api_own?
-    teacher?
+  def api_index?
+    teacher? || admin?
+  end
+
+  class Scope < Scope
+    def resolve
+      if user && user.has_role?('admin')
+        all
+      elsif user && user.portal_teacher
+        clazz_ids = user.portal_teacher.clazz_ids
+        scope.where(clazz_id: clazz_ids)
+      else
+        none
+      end
+    end
   end
 
   # Used by API::V1::ReportsController:
