@@ -238,7 +238,7 @@ image above has instructions on doing this.
     E.g. 
     > `$ ./docker/dev/run-rspec.sh`
 
+## Docker crashing or running very slow
 
- 
-
-
+It is possible that not enough memory is available to Docker. Make sure that it is at least 4GiB-5GiB (default: 2GiB).
+If you are using OS X, go to `Preferences...` and then `Advanced` tab.  
