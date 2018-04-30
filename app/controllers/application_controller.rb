@@ -128,6 +128,16 @@ class ApplicationController < ActionController::Base
     @_settings ||= Admin::Settings.default_settings
   end
 
+  def configured_search_path
+    if current_settings.custom_search_path.present?
+      current_settings.custom_search_path
+    else
+      search_path # config/routes.rb
+    end
+  end
+  # Make this method available as a helper method too (in templates).
+  helper_method :configured_search_path
+
   # Automatically respond with 404 for ActiveRecord::RecordNotFound
   def record_not_found
     render :file => File.join(::Rails.root.to_s, 'public', '404'), :formats => [:html], :status => 404

@@ -26,6 +26,36 @@ class API::V1::OfferingsController < API::APIController
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 
+  # PUT /portal_offerings/1
+  def update
+    offering = Portal::Offering.find(params[:id])
+    authorize offering
+    offering.update_attributes!(params.permit(:active, :locked))
+    if params[:position]
+      new_pos = params[:position].to_i
+      class_offerings = offering.clazz.teacher_visible_offerings
+      old_pos = class_offerings.index(offering) + 1
+      class_offerings.each_with_index do |off, index|
+        pos = index + 1
+        if off === offering
+          # Update given offering.
+          off.position = new_pos
+        elsif new_pos > old_pos && pos > old_pos && pos <= new_pos
+          # Move items up.
+          off.position = pos - 1
+        elsif new_pos < old_pos && pos >= new_pos && pos < old_pos
+          # Move items down.
+          off.position = pos + 1
+        else
+          # Make sure that positions are normalized and correct.
+          off.position = pos
+        end
+        off.save!
+      end
+    end
+    render :json => {message: 'OK'}, :callback => params[:callback]
+  end
+
   def index
     authorize Portal::Offering, :api_index?
     # policy_scope will limit offerings to ones available to given user.
