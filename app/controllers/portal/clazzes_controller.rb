@@ -196,19 +196,6 @@ class Portal::ClazzesController < ApplicationController
         object_params = params[:portal_clazz]
         grade_levels = object_params.delete(:grade_levels)
 
-        clazz_investigations_ids = params[:clazz_investigations_ids]
-        clazz_active_investigations = params[:clazz_active_investigations] || []
-        clazz_locked_investigations = params[:clazz_locked_investigations] || []
-        unless clazz_investigations_ids.nil?
-          @portal_clazz.teacher_visible_offerings.each do |offering|
-            offering.update_attributes!(
-              position: clazz_investigations_ids.index(offering.id.to_s) + 1,
-              active: clazz_active_investigations.include?(offering.id.to_s),
-              locked: clazz_locked_investigations.include?(offering.id.to_s)
-            )
-          end
-        end
-
         if Admin::Settings.default_settings.enable_grade_levels?
           if grade_levels
             # This logic will attempt to prevent someone from removing all grade levels from a class.
