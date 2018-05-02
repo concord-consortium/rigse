@@ -40,9 +40,25 @@
 }
 
 #listings {
-  float: left;
-  display: inline-block;
   clear: both;
+  display: inline-block;
+  float: left;
+  margin-bottom: 30px;
+
+  &.scrollable {
+    overflow: scroll;
+    width: 746px;
+    &::-webkit-scrollbar {
+      height: 7px;
+      -webkit-appearance: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      background-color: rgba(0,0,0,.5);
+      -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+  }
+
   tr.teacher_info {
     border-top: 2px solid;
     padding-bottom: 20px;
