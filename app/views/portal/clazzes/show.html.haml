@@ -1,0 +1,15 @@
+- is_teacher = @portal_clazz.is_teacher?(current_visitor)
+- can_manage = is_teacher || current_visitor.has_role?("manager", "researcher", "admin")
+= render_portal_clazz_partial 'portal/clazzes/show'
+= render_portal_clazz_partial 'portal/clazzes/links'
+- if can_manage
+  %p
+    = link_to 'Manage Student Roster',
+    roster_portal_clazz_url(@portal_clazz),
+    :class => "button pie",
+    :id=>"btn_manage_student_roster"
+  %p
+    = render :partial => 'shared/offering_for_teacher', :collection => @portal_clazz.offerings, :as => :offering
+- elsif
+  = render :partial => 'shared/lightbox_report'
+  = render :partial => 'shared/offerings_for_student', :locals => { :offerings => @offerings }

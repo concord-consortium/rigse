@@ -152,7 +152,6 @@ module RailsPortal
       class_setup_info.js
       manage_classes.js
       full_status.js
-      instructional_materials.js
       preview_home_page.js
       preview_help_page.js
       share_material.js

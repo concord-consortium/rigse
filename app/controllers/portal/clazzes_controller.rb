@@ -48,6 +48,29 @@ class Portal::ClazzesController < ApplicationController
     end
   end
 
+  # GET /portal_clazzes/1
+  # GET /portal_clazzes/1.xml
+  def show
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+    # authorize @clazz
+    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    @portal_clazz.refresh_saveable_response_objects
+    @teacher = @portal_clazz.parent
+    if current_settings.allow_default_class
+      @offerings = @portal_clazz.offerings_with_default_classes(current_visitor)
+    else
+      @offerings = @portal_clazz.offerings
+    end
+
+    # Save the left pane sub-menu item
+    Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['NONE'])
+
+    respond_to do |format|
+       format.html # show.html.erb
+       format.xml  { render :xml => @portal_clazz }
+     end
+  end
 
   # GET /portal_clazzes/new
   # GET /portal_clazzes/new.xml
