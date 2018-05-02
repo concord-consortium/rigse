@@ -3,7 +3,7 @@
   = render :partial => 'search_form',      :locals => {:form => @form}
   - unless @teachers.blank?
     %h3 Teachers:
-    #listings
+    #listings.scrollable
       %table#admin_teachers_table
         %tr
           %th Teacher
