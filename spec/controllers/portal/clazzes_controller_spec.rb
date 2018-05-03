@@ -580,19 +580,6 @@ describe Portal::ClazzesController do
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
     end
-
-    it "all the deactivated offerings should actually get deactivated in the database" do
-      login_admin
-      @post_params[:clazz_investigations_ids] = @mock_clazz.offerings.map(&:id)
-      @post_params[:clazz_active_investigations] = Array[]
-      post :update, @post_params
-
-      @mock_clazz.reload
-
-      @mock_clazz.offerings.each do |offering|
-        assert_equal(offering.active, false)
-      end
-    end
   end
 
   describe "Post add a new student to a class" do

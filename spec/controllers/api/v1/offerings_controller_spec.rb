@@ -159,10 +159,10 @@ describe API::V1::OfferingsController do
         student1["started_activity"].should eq true
         student1["last_run"].should_not eq nil
         student1["total_progress"].should eq 25
-        student1["detailed_progress"].should eq [
-                                                  { "activity" => activity_1.name, "progress" => 50 },
-                                                  { "activity" => activity_2.name, "progress" => 0 }
-                                                ]
+        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student1["detailed_progress"][0]["progress"].should eq 50
+        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student1["detailed_progress"][1]["progress"].should eq 0
 
         student2 = json["students"][1]
         student2["started_activity"].should eq false
@@ -191,19 +191,19 @@ describe API::V1::OfferingsController do
         student1["started_activity"].should eq true
         student1["last_run"].should_not eq nil
         student1["total_progress"].should eq 25
-        student1["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 50 },
-                                                    { "activity" => activity_2.name, "progress" => 0 }
-                                                ]
+        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student1["detailed_progress"][0]["progress"].should eq 50
+        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student1["detailed_progress"][1]["progress"].should eq 0
 
         student2 = json["students"][1]
         student2["started_activity"].should eq true
         student2["last_run"].should_not eq nil
         student2["total_progress"].should eq 50
-        student2["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 0 },
-                                                    { "activity" => activity_2.name, "progress" => 100 }
-                                                ]
+        student2["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student2["detailed_progress"][0]["progress"].should eq 0
+        student2["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student2["detailed_progress"][1]["progress"].should eq 100
       end
     end
 
@@ -232,19 +232,20 @@ describe API::V1::OfferingsController do
         student1["started_activity"].should eq true
         student1["last_run"].should_not eq nil
         student1["total_progress"].should eq 100
-        student1["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 100 },
-                                                    { "activity" => activity_2.name, "progress" => 100 }
-                                                ]
+        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student1["detailed_progress"][0]["progress"].should eq 100
+        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student1["detailed_progress"][1]["progress"].should eq 100
+
 
         student2 = json["students"][1]
         student2["started_activity"].should eq true
         student2["last_run"].should_not eq nil
         student2["total_progress"].should eq 100
-        student2["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 100 },
-                                                    { "activity" => activity_2.name, "progress" => 100 }
-                                                ]
+        student2["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student2["detailed_progress"][0]["progress"].should eq 100
+        student2["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student2["detailed_progress"][1]["progress"].should eq 100
       end
     end
 

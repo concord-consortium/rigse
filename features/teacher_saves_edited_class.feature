@@ -50,19 +50,7 @@ Feature: Teacher edits and saves class information
     When I fill in Class Name with "Basic Electronics"
     And I fill Description with "This is a biology class"
     And I fill Class Word with "BETRX"
-    And I uncheck investigation with label "Lumped circuit abstraction"
-    And I move investigation named "Non Linear Devices" to the top of the list
     And I press "Save"
     Then I should be on Instructional Materials page for "Basic Electronics"
     And I should see "Class was successfully updated."
-    
-    
-  Scenario: Teacher can see message if no materials are in the class
-    When the following teacher and class mapping exists:
-      | class_name                 | teacher   |
-      | Class_with_no_assignment   | peterson  |
-    And I am logged in with the username peterson
-    And I am on "the class edit page for "Class_with_no_assignment""
-    Then I should see "No materials assigned to this class."
-    
-    
+
