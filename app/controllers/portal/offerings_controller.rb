@@ -176,25 +176,6 @@ class Portal::OfferingsController < ApplicationController
 
   end
 
-  def get_recent_student_report
-    offering = Portal::Offering.find(params[:id])
-    authorize offering
-    students = offering.clazz.students
-    if !students.nil? && students.length > 0
-      students = students.sort{|a,b| a.user.full_name.downcase<=>b.user.full_name.downcase}
-    end
-    learners = offering.learners
-    progress_report = ""
-    div_id = "DivHideShowDetail"+ offering.id.to_s
-    render :update do |page|
-      page.replace_html(div_id, :partial => "home/recent_student_report", :locals => { :offering => offering, :students=>students, :learners=>learners})
-      page << "setRecentActivityTableHeaders(null,#{params[:id]})"
-    end
-    return
-  end
-
-
-
   # report shown to students
   def student_report
     offering_id = params[:id]
@@ -219,10 +200,11 @@ class Portal::OfferingsController < ApplicationController
 
   def external_report
     offering_id = params[:id]
-    authorize Portal::Offering.find(offering_id)
+    offering = Portal::Offering.find(offering_id)
+    authorize offering
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    next_url = report.url_for(offering_id, current_visitor, request.protocol, request.host_with_port)
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port)
     redirect_to next_url
   end
 

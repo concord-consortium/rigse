@@ -20,36 +20,6 @@ function showHideActivityButtons(investigation_id, oLink){
     oLink.update(strLinkText);
 }
 
-
-function showHideActivityDetails(investigation_id, oLink, strURL){
-    setRecentActivityTableHeaders(1,investigation_id);
-    var bVisible = false;
-    $$('.DivHideShowDetail'+investigation_id).each(function(oButtonContainer){
-        oButtonContainer.toggle();
-        bVisible = bVisible || oButtonContainer.getStyle('display')=='none';
-    });
-
-    var strLinkText = "";
-    var strExpandCollapseText = "";
-    if(bVisible){
-        strLinkText = "Show Detail";
-        strExpandCollapseText = "+";
-    }
-    else{
-        strLinkText = "Hide Detail";
-        strExpandCollapseText = "-";
-    }
-
-    $('oExpandCollapseText_'+investigation_id).update(strExpandCollapseText);
-    oLink.update(strLinkText);
-
-    if($('DivHideShowDetail'+investigation_id).children.length === 0)
-        new Ajax.Request(strURL, {asynchronous:true, evalScripts:true, method:'post'});
-
-    setRecentActivityTableHeaders(null,investigation_id);
-}
-
-
 // handle the material select
 document.observe("dom:loaded", function() {
     var materialSelect = $$("select#material_select");

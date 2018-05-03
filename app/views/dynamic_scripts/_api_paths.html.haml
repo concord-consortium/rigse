@@ -1,10 +1,15 @@
 - fake_id = 999
 :javascript
   Portal.API_V1 = {
+    FAKE_ID: "#{fake_id}",
+
     COUNTRIES: "#{api_v1_countries_path}",
     SECURITY_QUESTIONS: "#{api_v1_security_questions_path}",
     STUDENTS: "#{api_v1_students_path}",
     STUDENT_CHECK_PASSWORD: "#{check_password_api_v1_student_path(fake_id)}",
+    studentCheckPassword: function (studentId) {
+      return this.STUDENT_CHECK_PASSWORD.replace(this.FAKE_ID, studentId);
+    },
     TEACHERS: "#{api_v1_teachers_path}",
     STATES: "#{api_v1_states_path}",
     DISTRICTS: "#{api_v1_districts_path}",
@@ -34,6 +39,23 @@
     MATERIALS_BIN_COLLECTIONS: "#{api_v1_materials_bin_collections_path}",
     MATERIALS_BIN_UNOFFICIAL_MATERIALS: "#{api_v1_materials_bin_unofficial_materials_path}",
     MATERIALS_BIN_UNOFFICIAL_MATERIALS_AUTHORS: "#{api_v1_materials_bin_unofficial_materials_authors_path}",
+
+    //
+    // Offerings
+    //
+    OFFERING: "#{api_v1_offering_path(fake_id)}",
+    offering: function (offeringId) {
+      return this.OFFERING.replace(this.FAKE_ID, offeringId);
+    },
+    OFFERINGS: "#{api_v1_offerings_path}",
+
+    //
+    // Classes
+    //
+    CLASS: "#{api_v1_class_path(fake_id)}",
+    class: function (classId) {
+      return this.CLASS.replace(this.FAKE_ID, classId);
+    },
 
     //
     // Favorites

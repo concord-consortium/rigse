@@ -2,8 +2,7 @@ class ExternalReport < ActiveRecord::Base
 
   OfferingReport = 'offering'
   ClassReport = 'class'
-  TeacherReport = 'teacher'
-  ReportTypes = [OfferingReport, ClassReport, TeacherReport]
+  ReportTypes = [OfferingReport, ClassReport]
   belongs_to :client
   has_many :external_activities
   attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type
@@ -18,25 +17,8 @@ class ExternalReport < ActiveRecord::Base
     ReportTypes.map { |rt| [rt, rt] }
   end
 
-  def offering_api_url(offering_id, protocol, host)
-    routes = Rails.application.routes.url_helpers
-    opts = {protocol:protocol, host:host}
-    case report_type
-      when OfferingReport
-        routes.api_v1_offering_url(offering_id, opts)
-      when ClassReport
-        routes.for_class_api_v1_offering_url(offering_id, opts)
-      when TeacherReport
-        routes.for_teacher_api_v1_offering_url(offering_id, opts)
-      else
-        routes.api_v1_offering_url(offering_id, opts)
-    end
-  end
-
-  # Return a the external_report url
-  # with parameters for the offering_api_url
-  # and the short-lived bearer token for the user.
-  def url_for(offering_id, user, protocol, host)
+  # Return a the external_report url and the short-lived bearer token for the user.
+  def url_for_offering(offering, user, protocol, host)
     grant = client.updated_grant_for(user, ReportTokenValidFor)
     if user.portal_teacher
       grant.teacher = user.portal_teacher
@@ -44,7 +26,12 @@ class ExternalReport < ActiveRecord::Base
     end
     token = grant.access_token
     username = user.login
-    "#{url}?offering=#{offering_api_url(offering_id, protocol, host)}&token=#{token}&username=#{username}"
+    routes = Rails.application.routes.url_helpers
+    offering_url = CGI.escape(routes.api_v1_offering_url(offering.id, protocol: protocol, host: host))
+    class_id = offering.clazz.id
+    class_offerings_url = CGI.escape(routes.api_v1_offerings_url(class_id: class_id, protocol: protocol, host: host))
+    class_url = CGI.escape(routes.api_v1_class_url(class_id, protocol: protocol, host: host))
+    "#{url}?reportType=offering&offering=#{offering_url}&classOfferings=#{class_offerings_url}&class=#{class_url}&token=#{token}&username=#{username}"
   end
 
   def url_for_class(class_id, user, protocol, host)
@@ -52,8 +39,9 @@ class ExternalReport < ActiveRecord::Base
     token = grant.access_token
     username = user.login
     routes = Rails.application.routes.url_helpers
-    class_url = routes.api_v1_class_url(class_id, {protocol:protocol, host:host})
-    "#{url}?class=#{class_url}&token=#{token}&username=#{username}"
+    class_url = CGI.escape(routes.api_v1_class_url(class_id, protocol: protocol, host: host))
+    class_offerings_url = CGI.escape(routes.api_v1_offerings_url(class_id: class_id, protocol: protocol, host: host))
+    "#{url}?reportType=class&class=#{class_url}&classOfferings=#{class_offerings_url}&token=#{token}&username=#{username}"
   end
 
 end

@@ -214,7 +214,6 @@ RailsPortal::Application.routes.draw do
           get :report
           post :answers
           post :offering_collapsed_status
-          post :get_recent_student_report
           get :activity_report
           get :student_report
           post :student_report
@@ -704,9 +703,11 @@ RailsPortal::Application.routes.draw do
         end
         resources :reports, only: [:show, :update]
 
-        resources :offerings, only: [:show] do
+        resources :offerings, only: [:show, :index] do
           member do
+            # DEPRECIATED
             get :for_class
+            # DEPRECIATED
             get :for_teacher
           end
         end

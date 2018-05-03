@@ -4,6 +4,23 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin?
   end
 
+  def api_index?
+    teacher? || admin?
+  end
+
+  class Scope < Scope
+    def resolve
+      if user && user.has_role?('admin')
+        all
+      elsif user && user.portal_teacher
+        clazz_ids = user.portal_teacher.clazz_ids
+        scope.where(clazz_id: clazz_ids)
+      else
+        none
+      end
+    end
+  end
+
   # Used by API::V1::ReportsController:
   def api_report?
     class_teacher_or_admin?
@@ -38,10 +55,6 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_student?
   end
 
-  def get_recent_student_report?
-    class_teacher_or_admin? || class_student?
-  end
-
   def report?
     class_teacher_or_admin?
   end
@@ -67,5 +80,4 @@ class Portal::OfferingPolicy < ApplicationPolicy
   def class_teacher_or_admin?
     class_teacher? || admin?
   end
-
 end
