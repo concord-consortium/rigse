@@ -6,7 +6,9 @@ class API::V1::OfferingsController < API::APIController
 
   # Optimize SQL queries based on API::V1::Offering structure.
   INCLUDES_DEF = {
-      runnable: [:template, :external_report],
+      # TODO when we only support external activity runnables then the following
+      # line can be used to optimize the database requests
+      # runnable: [:template, :external_report],
       learners: [:report_learner, {learner_activities: :activity, student: :user}],
       clazz: {students: :user}
   }
