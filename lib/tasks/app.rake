@@ -31,16 +31,6 @@ namespace :app do
     end
 
 
-    desc "setup initial probe_type for data_collectors that don't have one"
-    task :set_probe_type_for_data_collectors => :environment do
-      Embeddable::DataCollector.find(:all).each do |dc| 
-        if pt = Probe::ProbeType.find_by_name(dc.y_axis_label)
-          dc.probe_type = pt
-          dc.save
-        end
-      end
-    end
-    
     #######################################################################
     #
     # Raise an error unless the Rails.env is development,

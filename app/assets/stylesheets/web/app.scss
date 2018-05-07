@@ -1192,10 +1192,7 @@ ul.quiet_list {
     // cursor: pointer;
     font-size: 9pt;
   }
-.data_collector {
-  display: block;
-  width: 100%;
-  height: 400px; }
+
 #school_toggle_write_in {
   cursor: pointer;
 }
@@ -1292,15 +1289,6 @@ ul.quiet_list {
   li.menu {list-style-type: none;}
 }
 
-.inner_page * {
-  .page {
-      border: 1px solid;
-      margin: 2px;
-  }
-  .content {
-    padding-bottom: 0.5em;
-  }
-}
 
 /* CSS for Manage Classes Page*/
 

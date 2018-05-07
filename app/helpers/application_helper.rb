@@ -761,23 +761,6 @@ module ApplicationHelper
     end
   end
 
-  def generate_javascript_datastore(data_collector)
-    #
-    # data: [ [1,2.5], [2,3.7], [2.5,6.78] ]
-    #
-    js = ''
-    if data_collector.data_store_values
-      if data_collector.data_store_values.length > 0
-        js << "var default_data_#{data_collector.id} = #{data_collector.data_store_values.in_groups_of(2).inspect};\n"
-      else
-        js << "var default_data_#{data_collector.id} = [];\n"
-      end
-    else
-      js << "var default_data_#{data_collector.id} = [];\n"
-    end
-    js
-  end
-
   # expects styles to contain space seperated list of style classes.
   def style_for_teachers(component,style_classes=[])
     if (for_teacher_only?(component))

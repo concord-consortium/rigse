@@ -109,9 +109,6 @@ namespace :app do
       OK_TO_BE_NIL = [
         [User, :portal_teacher],
         [User, :portal_student],
-        [Embeddable::DataCollector, :calibration],
-        [Embeddable::DataCollector, :data_table],
-        [Embeddable::DataCollector, :prediction_graph_source],
         [MavenJnlp::VersionedJnlp, :icon],
         [Activity, :original],
         [Dataservice::BundleLogger, :in_progress_bundle],

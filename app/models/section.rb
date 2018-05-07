@@ -16,12 +16,6 @@ class Section < ActiveRecord::Base
     end
   end
 
-  # has_many :data_collectors, :class_name => 'Embeddable::DataCollector',
-  #    :finder_sql => proc { "SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
-  #    INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
-  #    INNER JOIN pages ON page_elements.page_id = pages.id
-  #    WHERE pages.section_id = #{id}" }
-
   has_many :page_elements,
     :finder_sql => proc { "SELECT page_elements.* FROM page_elements
     INNER JOIN pages ON page_elements.page_id = pages.id

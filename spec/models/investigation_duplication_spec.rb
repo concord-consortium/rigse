@@ -26,11 +26,6 @@ describe Investigation do
       snapshot_button = (Factory :lab_book_snapshot, {:user => @original_author, :target_element => draw_tool})
       snapshot_button.pages << @source_investigation.activities[0].sections[0].pages[0]
 
-      prediction_graph = (Factory :data_collector, {:user => @original_author})
-      prediction_graph.pages << @source_investigation.activities[0].sections[0].pages[0]
-      displaying_graph = (Factory :data_collector, {:user => @original_author, :prediction_graph_source => prediction_graph})
-      displaying_graph.pages << @source_investigation.activities[0].sections[0].pages[0]
-
       @source_investigation.reload
       @dest_investigation = @source_investigation.duplicate(@new_author)
       @dest_investigation.save
@@ -103,13 +98,6 @@ describe Investigation do
         dest_snap.target_element.should == dest_draw_tool
       end
 
-      it "should have a data collector which points to the new investigation prediction graph" do
-        source_prediction_graph = @source_investigation.pages.first.data_collectors.first
-        dest_prediction_graph = @dest_investigation.pages.first.data_collectors.first
-        source_dc = @source_investigation.pages.first.data_collectors.last
-        dest_dc = @dest_investigation.pages.first.data_collectors.last
-        dest_dc.prediction_graph_source.should == dest_prediction_graph
-      end
     end
   end
 

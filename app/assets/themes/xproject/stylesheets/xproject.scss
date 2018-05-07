@@ -445,11 +445,6 @@ li.tiny {
 .item_list {
   cursor: move; }
 
-.data_collector {
-  display: block;
-  width: 600px;
-  height: 400px; }
-
 .tinymce_textarea {
   width: 700px;
   height: 700px;
@@ -491,29 +486,6 @@ li.tiny {
     letter-spacing: normal;
     font-size: 12pt; } }
 
-.data_table_title {
-  font-size: 1.2em;
-  font-style: bold;
-  padding: 5px 10px 10px 10px;
-  text-align: center; }
-
-.data_table {
-  width: 100%;
-  .title {
-    font-size: 18pt;
-    font-style: bold; }
-  th {
-    font-size: 12pt;
-    text-decoration: underline;
-    border-style: solid;
-    border-bottom-width: 2px;
-    border-right-width: 1px;
-    padding: 5px; }
-  td {
-    padding: 5px;
-    padding-left: 10px;
-    border-style: dotted;
-    border-right-width: 1px; } }
 
 ul {
   padding-left: 10px;

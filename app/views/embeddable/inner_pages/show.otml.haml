@@ -1,5 +1,0 @@
-- content_for(:otrunk_doc_id) do
-  =@inner_page.uuid
-- content_for(:inner_page_object_id) do
-  =dom_id_for(@inner_page)
-= render :partial => "show", :locals => { :inner_page => @inner_page,  :teacher_mode => @teacher_mode }

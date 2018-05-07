@@ -12,16 +12,14 @@ class Page < ActiveRecord::Base
 
   # this could work if the finder sql was redone
   # has_one :investigation,
-  #   :finder_sql => proc { "SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
-  #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
+  #   :finder_sql => proc { "SELECT grapyhthing.* FROM grapyhthing
+  #   INNER JOIN page_elements ON grapyhthing.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::GraphyThing"
   #   INNER JOIN pages ON page_elements.page_id = pages.id
   #   WHERE pages.section_id = #{id}" }
 
   # Order by ID is important, see: https://www.pivotaltracker.com/story/show/79237764
   # Some older elements in DB can have always position equal to 1.
   has_many :page_elements, :order => 'position ASC, id ASC', :dependent => :destroy
-  has_many :inner_page_pages, :dependent => :destroy, :class_name => 'Embeddable::InnerPagePage'
-  has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
 
   # The array of embeddables is defined in conf/initializers/embeddables.rb
   # The order of this array determines the order they show up in the Add menu
@@ -134,16 +132,7 @@ class Page < ActiveRecord::Base
   end
 
   def find_section
-    case parent
-      when Section
-        return parent
-      when Embeddable::InnerPage
-        # kind of hackish:
-        if(parent.parent)
-          return parent.parent.section
-        end
-    end
-    return nil
+    return parent
   end
 
   def find_activity
@@ -197,7 +186,7 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return self.inner_page_pages.size > 0 ? self.inner_page_pages[0].inner_page : section
+    return section
   end
 
   include TreeNode
@@ -209,10 +198,6 @@ class Page < ActiveRecord::Base
   end
 
   def has_inner_page?
-    i_pages = page_elements.collect {|e| e.embeddable_type == Embeddable::InnerPage.name}
-    if (i_pages.size > 0)
-      return true
-    end
     return false
   end
 

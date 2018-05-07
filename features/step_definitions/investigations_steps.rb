@@ -18,10 +18,6 @@ Given /^the following linked investigations exist:$/ do |table|
       draw_tool.pages << inv.activities[0].sections[0].pages[0]
       snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => draw_tool})
       snapshot_button.pages << inv.activities[0].sections[0].pages[0]
-      prediction_graph = (Factory :data_collector, {:user => user})
-      prediction_graph.pages << inv.activities[0].sections[0].pages[0]
-      displaying_graph = (Factory :data_collector, {:user => user, :prediction_graph_source => prediction_graph})
-      displaying_graph.pages << inv.activities[0].sections[0].pages[0]
       inv.reload
   end
 end
@@ -326,18 +322,7 @@ Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do 
   investigation.offerings_count.should == count.to_i
 end
 
-Then /^the investigation "([^"]*)" should have correct linked prediction graphs/ do |inv_name|
-  copy = Investigation.find_by_name inv_name
-  orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
 
-  orig_prediction_graph = orig.pages.first.data_collectors.first
-  copy_prediction_graph = copy.pages.first.data_collectors.first
-
-  orig_dc = orig.pages.first.data_collectors.last
-  copy_dc = copy.pages.first.data_collectors.last
-
-  copy_dc.prediction_graph_source.should == copy_prediction_graph
-end
 
 Then /^the investigation "([^"]*)" should have correct linked snapshot buttons/ do |inv_name|
   copy = Investigation.find_by_name inv_name
@@ -407,56 +392,6 @@ And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^
   # draft.name << " (draft) "
   # draft.save
   # @drafts << draft.reload
-  
-end
-
-And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to probe "([^"]*)"$/ do |investigation_name, activity_name, probe_name|
-  
-  domain_name = "random domain"
-  
-  @domain = Factory.create( :rigse_domain, { :name => domain_name } )
-  knowledge_statement = Factory.create( :rigse_knowledge_statement, { :domain => @domain } )
-  assessment_target = Factory.create( :rigse_assessment_target, { :knowledge_statement => knowledge_statement })
-  
-  @grade = "10-11"
-  grade_span_expection  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => assessment_target, :grade_span => @grade} )
-  
-  
-  @probe_type = Probe::ProbeType.find_by_name(probe_name)
-  unless @probe_type
-    @probe_type = Factory.create(:probe_type, :name => probe_name)
-    @probe_type.save!
-  end
-  
-  investigation_hash = {
-    :name => investigation_name,
-    :grade_span_expectation => grade_span_expection
-  }
-  
-  investigation = Factory.create(:investigation, investigation_hash)
-  investigation.publish
-  investigation.save!
-  
-  @probe_activity = Factory.create(:activity, :investigation_id => investigation.id, :name => activity_name)
-  @probe_activity.save!
-  
-  section = Factory.create(:section,:activity_id => @probe_activity.id)
-  section.save!
-  page = Factory.create(:page, :section => section)
-  page.save!
-  
-  page_element = PageElement.new
-  page_element.page = page
-  page_element.embeddable_type = 'Embeddable::DataCollector'
-  page_element.save!
-  
-  embeddable_data_collectors = Factory.create(:data_collector)
-  
-  page_element.embeddable = embeddable_data_collectors
-  page_element.save!
-  
-  embeddable_data_collectors.probe_type = @probe_type
-  embeddable_data_collectors.save!
   
 end
 

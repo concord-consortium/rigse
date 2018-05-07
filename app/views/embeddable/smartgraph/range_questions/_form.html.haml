@@ -10,8 +10,6 @@
     %br/
     Answer style: 
     = f.select(:answer_style, Embeddable::Smartgraph::RangeQuestion.answer_styles, { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :answer_style_select)})
-  = field_set_tag 'data collector' do
-    = f.select(:data_collector_id, Embeddable::DataCollector.by_scope(@scope).collect{|dc| ["#{dc.name} (#{dc.id})", dc.id]}, { :prompt => true }, {:id => dom_id_for(smartgraph_range_question, :item, :data_collector_select)})
   = field_set_tag 'correct answer' do
     Range min:
     = f.text_field(:correct_range_min, :id => dom_id_for(smartgraph_range_question, :item, :correct_range_min_field), :size => 8)

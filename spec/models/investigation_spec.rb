@@ -99,93 +99,6 @@ describe Investigation do
       APP_CONFIG[:use_gse] = @enable_gses
     end
 
-    # before(:each) do
-    #   @bio = Factory.create( :rigse_domain,            { :name => "biology" } )
-    #   bio_ks = Factory.create( :rigse_knowledge_statement, { :domain => @bio     } )
-    #   bio_at = Factory.create( :rigse_assessment_target,       { :knowledge_statement => bio_ks })
-    #   
-    #   @physics = Factory.create( :rigse_domain,            { :name => "physics"  } )
-    #   physics_ks = Factory.create( :rigse_knowledge_statement, { :domain => @physics  } )
-    #   physics_at = Factory.create( :rigse_assessment_target,       { :knowledge_statement => physics_ks })
-    #   
-    #   @seven = "7"
-    #   @eight = "8"
-    # 
-    #   physics7  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => physics_at, :grade_span => @seven} )
-    #   physics8  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => physics_at, :grade_span => @eight} )
-    # 
-    #   bio7      = Factory.create( :rigse_grade_span_expectation, {:assessment_target => bio_at, :grade_span => @seven} )
-    #   bio8      = Factory.create( :rigse_grade_span_expectation, {:assessment_target => bio_at, :grade_span => @eight} )
-    # 
-    #   invs = [
-    #     {
-    #       :name                   => "grade 7 physics",
-    #       :grade_span_expectation => physics7
-    #     },
-    #     {
-    #       :name                   => "grade 8 physics",
-    #       :grade_span_expectation => physics8
-    #     },
-    #     {
-    #       :name                   => "grade 7 bio",
-    #       :grade_span_expectation => bio7
-    #     },
-    #     {
-    #       :name                   => "grade 8 bio",
-    #       :grade_span_expectation => bio8
-    #     },
-    #   ]
-    #   @published = []
-    #   @drafts = []
-    #   invs.each do |inv|
-    #     published = Factory.create(:investigation, inv)
-    #     published.name << " (published) "
-    #     published.publish!
-    #     published.save
-    #     @published << published.reload
-    #     draft = Factory.create(:investigation, inv)
-    #     draft.name << " (draft) "
-    #     draft.save
-    #     @drafts << draft.reload
-    #   end
-    #   @public_non_gse = Factory.create(:investigation, :name => "published non-gse investigation");
-    #   @public_non_gse.publish!
-    #   @public_non_gse.save
-    #   @public_non_gse.reload
-    #   @draft_non_gse  = Factory.create(:investigation, :name => "draft non-gse investigation"); 
-    # 
-    #   @investigation = Investigation.find_by_name_and_publication_status('grade 7 physics', 'published')
-    #   
-    #   @probe_activity_published = Factory.create(:activity, :name => 'probe_activity(published)')
-    #   @probe_activity_published.investigation = @investigation
-    #   @probe_activity_published.save!
-    #   
-    #   section = Factory.create(:section)
-    #   section.activity = @probe_activity_published
-    #   section.save!
-    #   
-    #   page = Factory.create(:page)
-    #   page.section = section
-    #   page.save!
-    #   
-    #   page_element = PageElement.new
-    #   page_element.id = 1
-    #   page_element.page = page
-    #   page_element.embeddable_type = 'Embeddable::DataCollector'
-    #   page_element.save!
-    #   
-    #   embeddable_data_collectors = Factory.create(:data_collector)
-    #   
-    #   page_element.embeddable = embeddable_data_collectors
-    #   page_element.save!
-    #   
-    #   @probe_type = Factory.create(:probe_type)
-    #   embeddable_data_collectors.probe_type = @probe_type
-    #   embeddable_data_collectors.save!
-    # end
-    # search (including drafts):
-    # search for drafts in grade 8                # two entries
-    
     it "should find all grade 8 phsysics investigations, including drafts" do
       pending "Equivalent spec suite elsewhere"
       options = {
@@ -366,9 +279,6 @@ describe Investigation do
       @m_choice_b = Factory(:multiple_choice)
       @sub_page = Factory(:page)
       @sub_page.page_elements << Factory(:page_element, :embeddable => @m_choice)
-      @inner_page = Factory(:inner_page)
-      @inner_page.sub_pages << @sub_page
-      @page.page_elements << Factory(:page_element, :embeddable => @inner_page)
       @page.page_elements << Factory(:page_element, :embeddable => @m_choice_b)
       @page.page_elements << Factory(:page_element, :embeddable => Factory(:xhtml))
       @section.pages << @page

@@ -12,7 +12,6 @@ en:
       "dataservice/bundle_logger": BundleLogger
       "dataservice/console_content": ConsoleContent
       "dataservice/console_logger": ConsoleLogger
-      "embeddable/data_collector" : Graph
       "embeddable/drawing_tool" : "Draw Tool"
       "embeddable/image_question" : "Image Question"
       "embeddable/lab_book_snapshot" : "Snapshot Button"

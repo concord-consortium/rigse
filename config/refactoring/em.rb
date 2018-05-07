@@ -432,7 +432,7 @@ class ModelCollection
     clean_and_create_new_scoped_dirs
 
     # embeddable
-    @embeddable_models = %w{data_collector data_table drawing_tool inner_page inner_page_page
+    @embeddable_models = %w{drawing_tool
       lab_book_snapshot multiple_choice multiple_choice_choice mw_modeler_page n_logo_model open_response 
       raw_otml smartgraph/range_question xhtml}
     @models = @embeddable_models.collect { |m| ModelProcessor.new("app/models/#{m}.rb", 'embeddable') }
@@ -500,39 +500,12 @@ class ModelCollection
       smartgraph.resources :range_questions
     end
 
-    embeddable.namespace(:biologica) do |biologica|
-      biologica.resources :chromosome_zooms, :member => { :destroy => :post }
-      biologica.resources :multiple_organisms, :member => { :destroy => :post }
-      biologica.resources :breed_offsprings, :member => { :destroy => :post }
-      biologica.resources :meiosis_views, :member => { :destroy => :post }
-      biologica.resources :chromosomes, :member => { :destroy => :post }
-      biologica.resources :pedigrees, :member => { :destroy => :post }
-      biologica.resources :static_organisms, :member => { :destroy => :post }
-      biologica.resources :organisms, :member => { :destroy => :post }
-      biologica.resources :worlds, :member => { :destroy => :post }
-    end
-
-    embeddable.resources :inner_pages, :member => {
-      :destroy => :post,
-      :add_page => :post,
-      :add_element => :post,
-      :set_page => :post,
-      :sort_pages => :post, 
-      :delete_page => :post
-    }
-
     embeddable.resources :lab_book_snapshots, :member => { :destroy => :post }
 
     embeddable.resources :raw_otmls, :member => { :destroy => :post }
 
     embeddable.resources :n_logo_models, :member => { :destroy => :post }
     embeddable.resources :mw_modeler_pages, :member => { :destroy => :post }
-
-    embeddable.resources :data_tables, :member => {
-      :print => :get,
-      :destroy => :post,
-      :update_cell_data => :post
-    }
 
     embeddable.resources :multiple_choices, :member => {
       :print => :get,
@@ -555,11 +528,6 @@ class ModelCollection
       :destroy => :post
     }
 
-    embeddable.resources :data_collectors, :member => {
-      :print => :get,
-      :destroy => :post,
-      :change_probe_type => :put
-    }
   end
 
 # ********* end of scoped routing for page-embeddables, probes, and RI GSEs  *********

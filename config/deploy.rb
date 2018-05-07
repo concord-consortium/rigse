@@ -434,12 +434,6 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:pub_status --trace"
   end
 
-  desc "Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor"
-  task :data_collectors_with_invalid_graph_types, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:data_collectors_with_invalid_graph_types --trace"
-  end
-
   desc "copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name"
   task :copy_truncated_xhtml_into_name, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +
@@ -487,12 +481,6 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:convert_clazzes_to_multi_teacher --trace"
   end
 
-  # Wed Jan 6 2010
-  desc "Fixup inner pages: add static_page associations (run deploy:migrate first!)"
-  task :add_static_pages_to_inner_pages, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:add_static_page_to_inner_pages --trace"
-  end
 
   # Feb 3, 2010
   desc "Extract and process learner responses from existing OTrunk bundles"

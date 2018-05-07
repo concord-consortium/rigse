@@ -2,11 +2,8 @@
 # Page model, which uses order to list these alphabetically by display
 # name, with "Smartgraphs" embeddables at the end of the list.
 # This base list is used by Activity, Investigation, and Section.
-BASE_EMBEDDABLES = [ 
-"Embeddable::DataTable",
+BASE_EMBEDDABLES = [
 "Embeddable::DrawingTool",
-"Embeddable::DataCollector",
-"Embeddable::InnerPage",
 "Embeddable::MwModelerPage",
 "Embeddable::MultipleChoice",
 "Embeddable::NLogoModel",
@@ -22,11 +19,8 @@ ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(3, "Embeddable::ImageQuestion").insert
 
 # This is the full list in order
 # [
-#     Embeddable::DataTable,
 #     Embeddable::DrawingTool,
-#     Embeddable::DataCollector,
 #     Embeddable::ImageQuestion,
-#     Embeddable::InnerPage,
 #     Embeddable::MwModelerPage,
 #     Embeddable::MultipleChoice,
 #     Embeddable::NLogoModel,

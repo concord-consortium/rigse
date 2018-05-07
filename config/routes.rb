@@ -76,33 +76,11 @@ RailsPortal::Application.routes.draw do
       namespace :smartgraph do
         resources :range_questions
       end
-      namespace :biologica do
-        resources :chromosome_zooms
-        resources :multiple_organisms
-        resources :breed_offsprings
-        resources :meiosis_views
-        resources :chromosomes
-        resources :pedigrees
-        resources :static_organisms
-        resources :organisms
-        resources :worlds
-      end
-      resources :inner_pages do
-        member do
-          post :sort_pages
-          post :add_page
-          post :add_element
-        end
-        match 'delete_page/:page_id', :controller => 'embeddable__inner_pages', :action => 'delete_page'
-      end
-
-
 
       resources :lab_book_snapshots
       resources :raw_otmls
       resources :n_logo_models
       resources :mw_modeler_pages
-      resources :data_tables do
         member do
           post :update_cell_data
         end
@@ -115,11 +93,6 @@ RailsPortal::Application.routes.draw do
       resources :drawing_tools
       resources :xhtmls
       resources :open_responses
-      resources :data_collectors do
-        member do
-          put :change_probe_type
-        end
-      end
       resources :sound_graphers
       resources :image_questions
       resources :video_players
@@ -409,47 +382,9 @@ RailsPortal::Application.routes.draw do
     resources :teacher_notes
     resources :author_notes
     resources :lab_book_snapshots
-
-    # resources :inner_pages do
-    #   member do
-    #     post :sort_pages
-    #     post :delete_page
-    #     post :add_page
-    #     post :add_element
-    #     post :set_page
-    #   end
-    # end
-
-    resources :biologica_chromosome_zooms
-
-    resources :biologica_multiple_organisms
-
-    resources :biologica_breed_offsprings
-
-    resources :biologica_meiosis_views
-
-    resources :biologica_chromosomes
-
-    resources :biologica_pedigrees
-
-    resources :biologica_static_organisms
-
-    resources :biologica_organisms
-
-    resources :biologica_worlds
-
     resources :raw_otmls
-
     resources :n_logo_models
-
     resources :mw_modeler_pages
-
-    resources :data_tables do
-      member do
-        post :update_cell_data
-        get :print
-      end
-    end
 
     resources :multiple_choices do
       member do
@@ -476,12 +411,6 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    resources :data_collectors do
-      member do
-        put :change_probe_type
-        get :print
-      end
-    end
 
     resources :sections do
       collection do
@@ -514,7 +443,6 @@ RailsPortal::Application.routes.draw do
     resources :pages do
       resources :xhtmls
       resources :open_responses
-      resources :data_collectors
     end
 
     resources :page_elements

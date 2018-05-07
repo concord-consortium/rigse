@@ -23,15 +23,10 @@ describe Embeddable::Smartgraph::RangeQuestionsController do
               end
               assert_select('scriptVariables') do
                 assert_select('OTScriptVariableRealObject') do
-                  assert_select('reference') do
-                    assert_select('OTSmartGraphTool') do
-                      assert_select('dataCollector')
-                    end
-                  end
                 end
               end
             end
-          end 
+          end
         end
       end
     end
@@ -53,18 +48,12 @@ end
 #               %script= h(range_question.script_text)
 #           %scriptVariables
 #             %OTScriptVariableRealObject{ :name => "smart" }
-#               %reference
-#                 %OTSmartGraphTool{ :local_id => ot_local_id_for(range_question, :smartgraph_tool), :name => "smart"}
-#                   %dataCollector= render_scoped_reference(range_question.data_collector)
 #             %OTScriptVariable{ :name => "smart_graph_range_response" }
 #               %reference
 #                 %OTBlob{ :local_id => ot_local_id_for(range_question, :range_response), :src => "http://continuum.concord.org/otrunk/examples/LOOPS/scripts/smart_graph_range_response.rb" }
 #             %OTScriptVariable{ :name => "otrunk_ruby_script_tools" }
 #               %reference
 #                 %OTBlob{ :local_id => ot_local_id_for(range_question, :script_tools), :src => "http://continuum.concord.org/otrunk/examples/LOOPS/scripts/otrunk_ruby_script_tools.rb" }
-#             %OTScriptVariable{ :name => "graph" }
-#               %reference
-#                 = render_scoped_reference(range_question.data_collector)
 #             %OTScriptVariable{ :name => "times_incorrect" }
 #               %reference
 #                 %OTInt{ :value => "0" }
@@ -104,5 +93,4 @@ end
 #         %object{ :refid => ot_refid_for(range_question, :check_answer_button) }
 #         %br
 #         %object{ :refid => ot_refid_for(range_question, :smartgraph_tool) }
-#   %context= render_scoped_reference(range_question.data_collector)
-# 
+#

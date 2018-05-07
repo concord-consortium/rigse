@@ -767,15 +767,6 @@ module MockData
           snapshot_button.save!
           snapshot_button.pages << page
 
-          prediction_graph = Embeddable::DataCollector.find_or_create_by_uuid(:uuid => prediction_graph_uuid)
-          prediction_graph.pages << page
-
-          displaying_graph = Embeddable::DataCollector.find_or_create_by_uuid(displaying_graph_uuid)
-          displaying_graph.user_id = user.id
-          displaying_graph.prediction_graph_id = prediction_graph.id
-          displaying_graph.save!
-          displaying_graph.pages << page
-
           update_count += 1
           print '+'
         else
@@ -806,16 +797,6 @@ module MockData
                  }
           snapshot_button = Embeddable::LabBookSnapshot.create!(info)
           snapshot_button.pages << page
-          prediction_graph = Embeddable::DataCollector.create!(:user_id => user.id, :uuid => prediction_graph_uuid)
-          prediction_graph.pages << page
-
-          info = {
-                   :user_id => user.id,
-                   :prediction_graph_id => prediction_graph.id,
-                   :uuid => displaying_graph_uuid
-                 }
-          displaying_graph =  Embeddable::DataCollector.create!(info)
-          displaying_graph.pages << page
 
           create_count += 1
           print '.'

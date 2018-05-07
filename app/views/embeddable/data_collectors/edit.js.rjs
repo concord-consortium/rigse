@@ -1,1 +1,0 @@
-page.replace_html dom_id_for(@data_collector), :partial => 'remote_form', :object =>  @data_collector

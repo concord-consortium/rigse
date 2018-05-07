@@ -7,9 +7,7 @@ class Embeddable::Smartgraph::RangeQuestion < ActiveRecord::Base
   has_many :page_elements, :as => :embeddable
   has_many :pages, :through =>:page_elements
   has_many :teacher_notes, :as => :authored_entity
-  
-  belongs_to :data_collector, :class_name => 'Embeddable::DataCollector'
-  
+
   @@answer_styles = %w{ number label }
 
   include Changeable
@@ -32,10 +30,6 @@ class Embeddable::Smartgraph::RangeQuestion < ActiveRecord::Base
   validates_numericality_of :highlight_range_min
   validates_numericality_of :highlight_range_max
   
-  # Have to do on => update so that a default one can be created when editing at the page level
-  # Actually, we can't do this at all, or the user won't get saved to the question, causing editing problems.
-  # validates_presence_of :data_collector, :on => :update
-
   default_value_for :name, "Smartgraph Range Question"
   default_value_for :description, "description ..."
   

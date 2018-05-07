@@ -24,7 +24,6 @@ class DefaultRunnable
     
     def create_default_investigation_for_user(user, name, logging)
       puts
-      @@prediction_graph = nil
       unless investigation = user.investigations.find_by_name(name)
         puts "creating '#{name}' Investigation for user '#{user.login}'"
         investigation = Investigation.create do |i|
@@ -42,83 +41,11 @@ class DefaultRunnable
           '<p>Find the hottest thing in the room with the temperature probe.</p>', 
           "Student's explore their environment with a tempemerature probe.")
         temperature_probe = Probe::ProbeType.find_by_name('temperature')
-        DefaultRunnable.add_data_collector_to_page(page1, temperature_probe, false)
         investigation.deep_set_user(user)
       end
       investigation
     end
 
-    def recreate_sensor_testing_investigation_for_user(user)
-      name = "Sensor Testing"
-      uuid = "576EE406-DCCF-4A5D-AE62-41DB3A098F4D"
-      description = "An activity with one data collector for each type of sensor"
-      @@prediction_graph = nil
-      old = Investigation.find_by_uuid(uuid)
-      if old
-        old.offerings.each {|o| o.delete }
-        old.destroy
-      end
-      puts "creating '#{name}' for user '#{user.login}'"
-      investigation = Investigation.create( :name => name, :description => description, :uuid => uuid)
-      counter = 1
-      Probe::ProbeType.all.sort{ |a,b| a.name.downcase <=> b.name.downcase}.each do |type|
-        description = "activity for testing #{type.name} data collection"
-        activity = Activity.create( :name => type.name, :description => description )
-        investigation.activities << activity
-        type.calibrations.sort{ |a,b| a.name.downcase <=> b.name.downcase}.each do |calibration|
-          section = DefaultRunnable.add_section_to_activity(activity, calibration.name, calibration.description)
-          data_collector_for(section,type,calibration)
-          counter = counter + 1
-        end
-        # and add one without a calibration
-        section = DefaultRunnable.add_section_to_activity(activity, "(no calibration)", "probe #{type.name} with no calibration")
-        data_collector_for(section,type,nil)
-        counter = counter + 1
-      end
-
-      # add an example of a digital display
-      activity = Activity.create( :name => 'Digital Display', :description => 'Example of Digital Display' )
-      investigation.activities << activity
-      section = DefaultRunnable.add_section_to_activity(activity, "Digital Display", "Example of Digital Display")
-      dc = data_collector_for(section,Probe::ProbeType.find_by_name('Temperature'),nil)
-      dc.is_digital_display = true
-      dc.save
-      counter = counter + 1
-
-      investigation.deep_set_user(user)
-      investigation
-    end
-
-    def data_collector_for(section,type,calibration)
-      if calibration
-        calibration_name = calibration.name
-        calibration_desc = calibration.description
-        unit = calibration.physical_unit.unit_symbol
-        y_axis_label = calibration.name
-      else
-        calibration_name = "no calibration"
-        calibration_desc = "without any calibration"
-        unit = type.unit
-        y_axis_label = type.name
-      end
-      name = "#{type.name}- #{calibration_name}"
-      description = "<h3>#{type.name} (id:#{type.id})"
-      description << "- #{calibration_name} </h3>"
-      description << "<p>probe #{type.name}<br/>#{calibration_desc}</p>"
-      description << "<hr/>"
-      page,xhtml = DefaultRunnable.add_page_to_section(section,name,description)
-      data_collector = Embeddable::DataCollector.create(
-        :name => name,
-        :probe_type => type,
-        :calibration => calibration,
-        :y_axis_label => y_axis_label,
-        :y_axis_units => unit,
-        :y_axis_min => type.min,
-        :y_axis_max => type.max
-      )
-      data_collector.pages << page
-      data_collector
-    end
 
     def add_page_to_section(section, name, html_content='', page_description='')
       if html_content.empty?
@@ -185,31 +112,9 @@ class DefaultRunnable
 
     def add_prediction_graph_response_to_page(page, question_prompt)
       add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable = Embeddable::DataCollector.create do |d|
-        d.name = page.name + ": Prediction graph for #{@@first_probe_type.name}."
-        d.title = d.name
-        d.graph_type_id = 2
-        d.probe_type = @@first_probe_type
-        d.description = "This a Prediction graph for #{@@first_probe_type.name} into which a student can draw graph data."
-      end
-      @@prediction_graph = page_embeddable
       page_embeddable.pages << page
     end
 
-    def add_data_collector_to_page(page, probe_type, multiple_graphs)
-      page_embeddable = Embeddable::DataCollector.create do |d|
-        d.name = page.name + ": #{probe_type.name} Data Collector"
-        d.title = d.name
-        d.probe_type = probe_type
-        d.multiple_graphable_enabled = multiple_graphs
-        if @@prediction_graph
-          d.prediction_graph_source = @@prediction_graph
-          @@prediction_graph = nil
-        end
-        d.description = "This a Data Collector Graph that will collect data from a #{probe_type.name} sensor."
-      end
-      page_embeddable.pages << page
-    end
 
     def add_xhtml_to_page(page, html_content)
       page_embeddable = Embeddable::Xhtml.create do |x|

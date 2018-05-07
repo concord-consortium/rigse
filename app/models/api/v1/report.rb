@@ -166,7 +166,7 @@ class API::V1::Report
       runnable = runnable.template
     end
     # Provide chain of associations to load to avoid N+1 queries (values obtained thanks to Bullet gem).
-    associations_to_load = {sections: {pages: [{page_elements: :embeddable}, :section, {inner_page_pages: :inner_page}]}}
+    associations_to_load = {sections: {pages: [{page_elements: :embeddable}, :section ]}}
     if runnable.is_a? Investigation
       investigation_json(runnable, answers, associations_to_load)
     elsif runnable.is_a? Activity

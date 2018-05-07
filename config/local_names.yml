@@ -4,7 +4,6 @@ default:
   Dataservice::BundleLogger : BundleLogger
   Dataservice::ConsoleContent : ConsoleContent
   Dataservice::ConsoleLogger : ConsoleLogger
-  Embeddable::DataCollector : Graph
   Embeddable::DrawingTool : Draw Tool
   Embeddable::ImageQuestion : Image Question
   Embeddable::LabBookSnapshot : Snapshot Button
