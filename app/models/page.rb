@@ -25,11 +25,6 @@ class Page < ActiveRecord::Base
   # The order of this array determines the order they show up in the Add menu
   @@element_types = ALL_EMBEDDABLES
 
-  if !APP_CONFIG[:include_otrunk_examples]
-    # Strip this embeddable type if the app isn't configured to support it
-    @@element_types.reject! { |e| e == "Embeddable::RawOtml" }
-  end
-
   # @@element_types.each do |type|
   #   unless defined? type.dont_make_associations
   #     eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
@@ -46,8 +41,6 @@ class Page < ActiveRecord::Base
   end
 
   include ResponseTypes
-
-  has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity

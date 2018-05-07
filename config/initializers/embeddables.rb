@@ -6,20 +6,14 @@ BASE_EMBEDDABLES = [
 "Embeddable::MultipleChoice",
 "Embeddable::OpenResponse",
 "Embeddable::Smartgraph::RangeQuestion",
-"Embeddable::RawOtml",
 "Embeddable::Xhtml" #displays as "Text"
 ]
 
-# These additional embeddables are used by Page (which also sometimes removes RawOtml)
-ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(3, "Embeddable::ImageQuestion").insert(11, "Embeddable::SoundGrapher").insert(14, "Embeddable::VideoPlayer")
+ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(0, "Embeddable::ImageQuestion")
 
 # This is the full list in order
 # [
 #     Embeddable::ImageQuestion,
 #     Embeddable::MultipleChoice,
 #     Embeddable::OpenResponse,
-#     Embeddable::Smartgraph::RangeQuestion,
-#     Embeddable::SoundGrapher,
-#     Embeddable::Xhtml, #displays as "Text"
-#     Embeddable::VideoPlayer
 #   ]

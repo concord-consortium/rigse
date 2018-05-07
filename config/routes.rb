@@ -76,7 +76,6 @@ RailsPortal::Application.routes.draw do
       namespace :smartgraph do
         resources :range_questions
       end
-      resources :raw_otmls
       resources :n_logo_models
       resources :multiple_choices do
         member do
@@ -373,7 +372,6 @@ RailsPortal::Application.routes.draw do
 
     resources :teacher_notes
     resources :author_notes
-    resources :raw_otmls
     resources :n_logo_models
     resources :multiple_choices do
       member do
