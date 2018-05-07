@@ -62,7 +62,6 @@ module OtmlHelper
       org.concord.framework.otrunk.wrapper.OTInt
       org.concord.framework.otrunk.wrapper.OTBoolean
       org.concord.framework.otrunk.wrapper.OTBlob
-      org.concord.graph.util.state.OTDrawingTool2
       org.concord.otrunk.OTSystem
       org.concord.otrunk.control.OTButton
       org.concord.otrunk.ui.OTCardContainer
@@ -139,12 +138,10 @@ module OtmlHelper
     [
       ['text_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['question_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
-      ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
       ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
       ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
       ['digital_display_view', 'org.concord.data.state.OTDigitalDisplay', 'org.concord.data.state.OTDigitalDisplayView'],
-      ['data_drawing_tool_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
       ['rites_container', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerView'],
@@ -185,7 +182,6 @@ module OtmlHelper
       ['question_edit_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionEditView'],
 #      ['choice_radio_button_edit_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonEditView'],
-      ['data_drawing_tool_edit_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.otrunk.graph.OTDataDrawingToolEditView'],
       ['udl_container_edit_view', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerEditView'],
       ['curriculum_unit_edit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitEditView'],
 #      ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],

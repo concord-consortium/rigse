@@ -3,7 +3,6 @@
 # name, with "Smartgraphs" embeddables at the end of the list.
 # This base list is used by Activity, Investigation, and Section.
 BASE_EMBEDDABLES = [
-"Embeddable::DrawingTool",
 "Embeddable::MwModelerPage",
 "Embeddable::MultipleChoice",
 "Embeddable::NLogoModel",
@@ -19,7 +18,6 @@ ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(3, "Embeddable::ImageQuestion").insert
 
 # This is the full list in order
 # [
-#     Embeddable::DrawingTool,
 #     Embeddable::ImageQuestion,
 #     Embeddable::MwModelerPage,
 #     Embeddable::MultipleChoice,

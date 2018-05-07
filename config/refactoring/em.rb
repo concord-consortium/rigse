@@ -432,8 +432,8 @@ class ModelCollection
     clean_and_create_new_scoped_dirs
 
     # embeddable
-    @embeddable_models = %w{drawing_tool
-      lab_book_snapshot multiple_choice multiple_choice_choice mw_modeler_page n_logo_model open_response 
+    @embeddable_models = %w{lab_book_snapshot multiple_choice
+      multiple_choice_choice mw_modeler_page n_logo_model open_response
       raw_otml smartgraph/range_question xhtml}
     @models = @embeddable_models.collect { |m| ModelProcessor.new("app/models/#{m}.rb", 'embeddable') }
 
@@ -511,11 +511,6 @@ class ModelCollection
       :print => :get,
       :destroy => :post,
       :add_choice => :post
-    }
-
-    embeddable.resources :drawing_tools, :member => {
-      :print => :get,
-      :destroy => :post
     }
 
     embeddable.resources :xhtmls, :member => {

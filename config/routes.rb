@@ -90,7 +90,6 @@ RailsPortal::Application.routes.draw do
           post :add_choice
         end
       end
-      resources :drawing_tools
       resources :xhtmls
       resources :open_responses
       resources :sound_graphers
@@ -392,13 +391,7 @@ RailsPortal::Application.routes.draw do
         get :print
       end
     end
-
-    resources :drawing_tools do
-      member do
-        get :print
-      end
-    end
-
+    
     resources :xhtmls do
       member do
         get :print

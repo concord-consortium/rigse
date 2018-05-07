@@ -755,15 +755,9 @@ module MockData
           open_response.save!
           open_response.pages << page
 
-          draw_tool = Embeddable::DrawingTool.find_or_create_by_uuid(:uuid)
-          draw_tool.user_id = user.id
-          draw_tool.background_image_url = "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"
-          draw_tool.save!
-          draw_tool.pages << page
-
           snapshot_button = Embeddable::LabBookSnapshot.find_or_create_by_uuid(lab_book_snapshot)
           snapshot_button.user_id = user.id
-          snapshot_button.target_element = draw_tool
+          snapshot_button.target_element = open_response
           snapshot_button.save!
           snapshot_button.pages << page
 
@@ -784,15 +778,7 @@ module MockData
 
           info = {
                    :user_id => user.id,
-                   :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg",
-                   :uuid => draw_tool_uuid
-                 }
-          draw_tool = Embeddable::DrawingTool.create!(info)
-          draw_tool.pages << page
-
-          info = {
-                   :user_id => user.id,
-                   :target_element => draw_tool,
+                   :target_element => open_response,
                    :uuid => lab_book_snapshot
                  }
           snapshot_button = Embeddable::LabBookSnapshot.create!(info)

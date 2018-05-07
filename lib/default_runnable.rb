@@ -101,15 +101,6 @@ class DefaultRunnable
       page_embeddable.pages << page
     end
 
-    def add_drawing_response_to_page(page, question_prompt)
-      add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable = Embeddable::DrawingTool.create do |dt|
-        dt.name = page.name + ": Drawing Tool"
-        dt.description = "Drawing tool."
-      end
-      page_embeddable.pages << page
-    end
-
     def add_prediction_graph_response_to_page(page, question_prompt)
       add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
       page_embeddable.pages << page

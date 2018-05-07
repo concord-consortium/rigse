@@ -14,9 +14,7 @@ Given /^the following linked investigations exist:$/ do |table|
       inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
       open_response = (Factory :open_response, {:user => user})
       open_response.pages << inv.activities[0].sections[0].pages[0]
-      draw_tool = (Factory :drawing_tool, {:user => user, :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"})
-      draw_tool.pages << inv.activities[0].sections[0].pages[0]
-      snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => draw_tool})
+      snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => open_response})
       snapshot_button.pages << inv.activities[0].sections[0].pages[0]
       inv.reload
   end
@@ -328,13 +326,13 @@ Then /^the investigation "([^"]*)" should have correct linked snapshot buttons/ 
   copy = Investigation.find_by_name inv_name
   orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
 
-  orig_draw_tool = orig.pages.first.drawing_tools.first
-  copy_draw_tool = copy.pages.first.drawing_tools.first
+  open_response = orig.pages.first.open_responses.first
+  copy_open_response = copy.pages.first.open_responses.first
 
   orig_snap = orig.pages.first.lab_book_snapshots.first
   copy_snap = copy.pages.first.lab_book_snapshots.first
 
-  copy_snap.target_element.should == copy_draw_tool
+  copy_snap.target_element.should == copy_open_response
 end
 
 def show_actions_menu
