@@ -22,7 +22,7 @@ class Embeddable::ImageQuestion < ActiveRecord::Base
     end
 
     def default_prompt
-      "Please insert a snapshot of your drawings here."
+      "Please insert snapshot of your drawings here."
     end
   end
 

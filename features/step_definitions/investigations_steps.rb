@@ -14,8 +14,6 @@ Given /^the following linked investigations exist:$/ do |table|
       inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
       open_response = (Factory :open_response, {:user => user})
       open_response.pages << inv.activities[0].sections[0].pages[0]
-      snapshot_button = (Factory :lab_book_snapshot, {:user => user, :target_element => open_response})
-      snapshot_button.pages << inv.activities[0].sections[0].pages[0]
       inv.reload
   end
 end
@@ -321,19 +319,6 @@ Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do 
 end
 
 
-
-Then /^the investigation "([^"]*)" should have correct linked snapshot buttons/ do |inv_name|
-  copy = Investigation.find_by_name inv_name
-  orig = Investigation.find_by_name inv_name.gsub(/^copy of /, '')
-
-  open_response = orig.pages.first.open_responses.first
-  copy_open_response = copy.pages.first.open_responses.first
-
-  orig_snap = orig.pages.first.lab_book_snapshots.first
-  copy_snap = copy.pages.first.lab_book_snapshots.first
-
-  copy_snap.target_element.should == copy_open_response
-end
 
 def show_actions_menu
   # this requires a javascript enabled driver

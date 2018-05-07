@@ -718,7 +718,6 @@ module MockData
       page_uuid = inv.delete(:page_uuid)
       open_response_uuid = inv.delete(:open_response_uuid)
       draw_tool_uuid = inv.delete(:draw_tool_uuid)
-      lab_book_snapshot = inv.delete(:lab_book_snapshot)
       prediction_graph_uuid = inv.delete(:prediction_graph_uuid)
       displaying_graph_uuid = inv.delete(:displaying_graph_uuid)
 
@@ -755,12 +754,6 @@ module MockData
           open_response.save!
           open_response.pages << page
 
-          snapshot_button = Embeddable::LabBookSnapshot.find_or_create_by_uuid(lab_book_snapshot)
-          snapshot_button.user_id = user.id
-          snapshot_button.target_element = open_response
-          snapshot_button.save!
-          snapshot_button.pages << page
-
           update_count += 1
           print '+'
         else
@@ -775,14 +768,6 @@ module MockData
 
           open_response = Embeddable::OpenResponse.create!(:user_id => user.id, :uuid => open_response_uuid)
           open_response.pages << page
-
-          info = {
-                   :user_id => user.id,
-                   :target_element => open_response,
-                   :uuid => lab_book_snapshot
-                 }
-          snapshot_button = Embeddable::LabBookSnapshot.create!(info)
-          snapshot_button.pages << page
 
           create_count += 1
           print '.'

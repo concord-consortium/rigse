@@ -76,8 +76,6 @@ RailsPortal::Application.routes.draw do
       namespace :smartgraph do
         resources :range_questions
       end
-
-      resources :lab_book_snapshots
       resources :raw_otmls
       resources :n_logo_models
       resources :mw_modeler_pages
@@ -380,7 +378,6 @@ RailsPortal::Application.routes.draw do
 
     resources :teacher_notes
     resources :author_notes
-    resources :lab_book_snapshots
     resources :raw_otmls
     resources :n_logo_models
     resources :mw_modeler_pages
@@ -391,7 +388,7 @@ RailsPortal::Application.routes.draw do
         get :print
       end
     end
-    
+
     resources :xhtmls do
       member do
         get :print

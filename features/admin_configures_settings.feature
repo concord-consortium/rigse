@@ -79,21 +79,7 @@ Feature: Admin configures settings
     When I fill in "admin_settings[custom_css]" with ".testing_css_class_here {position:relative; padding:5px;}"
     And I save the settings
     Then I should see ".testing_css_class_here"
-    
-  # OTLabbookButton useBitmap="true"
-  # OTLabbookBundle scaleDrawTools="false"
-  @javascript
-  Scenario: Admin configures bitmap snapshots
-    Given The default settings and jnlp resources exist using factories
-    And I am logged in with the username admin
-    And am on the admin settings page
-    Then I should see the sites name
-    When I follow "edit settings"
-    Then I should see "Use Bitmaps in Labbook Exclusively:"
-    When I check "Use Bitmaps in Labbook Exclusively"
-    And I save the settings
-    Then I should see "Use Bitmaps in Labbook Exclusively: Yes"
-    
+
   Scenario: Admin creates a new settings
     Given The default settings and jnlp resources exist using factories
     And I am logged in with the username admin

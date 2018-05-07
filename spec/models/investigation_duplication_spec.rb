@@ -21,9 +21,6 @@ describe Investigation do
       open_response = (Factory :open_response, {:user => @original_author})
       open_response.pages << @source_investigation.activities[0].sections[0].pages[0]
 
-      snapshot_button = (Factory :lab_book_snapshot, {:user => @original_author, :target_element => open_response})
-      snapshot_button.pages << @source_investigation.activities[0].sections[0].pages[0]
-
       @source_investigation.reload
       @dest_investigation = @source_investigation.duplicate(@new_author)
       @dest_investigation.save
@@ -86,14 +83,6 @@ describe Investigation do
         @dest_investigation.pages.first.page_elements.first.should_not be_nil
         @dest_investigation.pages.first.page_elements.first.should be_changeable(@new_author)
         @dest_investigation.pages.first.page_elements.first.should_not be_changeable(@original_author)
-      end
-
-      it "should have a lab book button which points to the new investigation drawing tool" do
-        source_draw_tool = @source_investigation.pages.first.open_responses.first
-        dest_draw_tool = @dest_investigation.pages.first.open_responses.first
-        source_snap = @source_investigation.pages.first.lab_book_snapshots.first
-        dest_snap = @dest_investigation.pages.first.lab_book_snapshots.first
-        dest_snap.target_element.should == dest_draw_tool
       end
 
     end

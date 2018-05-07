@@ -5,7 +5,6 @@ default:
   Dataservice::ConsoleContent : ConsoleContent
   Dataservice::ConsoleLogger : ConsoleLogger
   Embeddable::ImageQuestion : Image Question
-  Embeddable::LabBookSnapshot : Snapshot Button
   Embeddable::MultipleChoice : Multiple Choice Question
   Embeddable::MwModelerPage : Molecular Workbench Model
   Embeddable::NLogoModel : Net Logo Model

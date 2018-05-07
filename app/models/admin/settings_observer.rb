@@ -6,12 +6,5 @@ class Admin::SettingsObserver < ActiveRecord::Observer
       css_path = "#{ActionController::Base.page_cache_directory}/stylesheets/settings.css"
       File.delete(css_path) if File.exists?(css_path)
     end
-    if settings.use_bitmap_snapshots_changed?
-      investigations_path = File.join(ActionController::Base.page_cache_directory, "investigations")
-      cached_files = File.join(investigations_path,"*.otml")
-      Dir.glob(cached_files).each do |otml_file|
-        File.delete(otml_file) if File.exists?(otml_file)
-      end
-    end
   end
 end

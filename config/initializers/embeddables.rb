@@ -8,7 +8,6 @@ BASE_EMBEDDABLES = [
 "Embeddable::NLogoModel",
 "Embeddable::OpenResponse",
 "Embeddable::Smartgraph::RangeQuestion",
-"Embeddable::LabBookSnapshot", #displays as "Snapshot"
 "Embeddable::RawOtml",
 "Embeddable::Xhtml" #displays as "Text"
 ]
@@ -24,7 +23,6 @@ ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(3, "Embeddable::ImageQuestion").insert
 #     Embeddable::NLogoModel,
 #     Embeddable::OpenResponse,
 #     Embeddable::Smartgraph::RangeQuestion,
-#     Embeddable::LabBookSnapshot, #displays as "Snapshot"
 #     Embeddable::SoundGrapher,
 #     Embeddable::Xhtml, #displays as "Text"
 #     Embeddable::VideoPlayer

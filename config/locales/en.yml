@@ -13,7 +13,6 @@ en:
       "dataservice/console_content": ConsoleContent
       "dataservice/console_logger": ConsoleLogger
       "embeddable/image_question" : "Image Question"
-      "embeddable/lab_book_snapshot" : "Snapshot Button"
       "embeddable/multiple_choice" : "Multiple Choice Question"
       "embeddable/mw_modeler_page" : "Molecular Workbench Model"
       "embeddable/n_logo_model" : "Net Logo Model"
