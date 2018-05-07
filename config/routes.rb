@@ -81,7 +81,6 @@ RailsPortal::Application.routes.draw do
       resources :xhtmls
       resources :open_responses
       resources :image_questions
-      resources :video_players
     end
 
     namespace :browse do
