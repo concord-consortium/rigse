@@ -42,7 +42,6 @@ class User < ActiveRecord::Base
   has_many :xhtmls, :class_name => 'Embeddable::Xhtml'
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
   has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
-  has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
 
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'

@@ -4,7 +4,6 @@
 # This base list is used by Activity, Investigation, and Section.
 BASE_EMBEDDABLES = [
 "Embeddable::MultipleChoice",
-"Embeddable::NLogoModel",
 "Embeddable::OpenResponse",
 "Embeddable::Smartgraph::RangeQuestion",
 "Embeddable::RawOtml",
@@ -18,7 +17,6 @@ ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(3, "Embeddable::ImageQuestion").insert
 # [
 #     Embeddable::ImageQuestion,
 #     Embeddable::MultipleChoice,
-#     Embeddable::NLogoModel,
 #     Embeddable::OpenResponse,
 #     Embeddable::Smartgraph::RangeQuestion,
 #     Embeddable::SoundGrapher,

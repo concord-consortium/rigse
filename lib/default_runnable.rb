@@ -74,15 +74,6 @@ class DefaultRunnable
       add_xhtml_to_page(page, "unsupported model type: #{model.model_type.name}")
     end
 
-    def add_nl_model_to_page(page, model)
-      page_embeddable = Embeddable::NLogoModel.create do |mw|
-        mw.name = model.name
-        mw.description = model.description
-        mw.authored_data_url = model.url
-      end
-      page_embeddable.pages << page
-    end
-
     def add_open_response_to_page(page, question_prompt)
       page_embeddable = Embeddable::OpenResponse.create do |o|
         o.name = page.name + ": Open Response Question"

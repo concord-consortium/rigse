@@ -1,8 +1,0 @@
-%div{:id => dom_id_for(n_logo_model, :details), :class => 'content'}
-  = wrap_edit_link_around_content(n_logo_model, options={:complete => mce_init_string}) do
-    %ul
-
-      %li
-        Authored Data URL: 
-        %a{:href => n_logo_model.authored_data_url}
-          = n_logo_model.authored_data_url
