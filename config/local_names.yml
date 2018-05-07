@@ -6,7 +6,6 @@ default:
   Dataservice::ConsoleLogger : ConsoleLogger
   Embeddable::ImageQuestion : Image Question
   Embeddable::MultipleChoice : Multiple Choice Question
-  Embeddable::Smartgraph::RangeQuestion : Smartgraph Range Question
   Embeddable::Xhtml : Text
   Portal::Clazz : Class
   Portal::Nces06District : NCES District

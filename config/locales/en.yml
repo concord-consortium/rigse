@@ -15,7 +15,6 @@ en:
       "embeddable/image_question" : "Image Question"
       "embeddable/multiple_choice" : "Multiple Choice Question"
       "embeddable/n_logo_model" : "Net Logo Model"
-      "embeddable/smartgraph/range_question" : "Smartgraph Range Question"
       "embeddable/xhtml" : Text
       "portal/clazz": Class
       "portal/nces06_district" : "NCES District"

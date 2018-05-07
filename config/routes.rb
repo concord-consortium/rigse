@@ -73,10 +73,6 @@ RailsPortal::Application.routes.draw do
     end
 
     namespace :embeddable do
-      namespace :smartgraph do
-        resources :range_questions
-      end
-      resources :n_logo_models
       resources :multiple_choices do
         member do
           post :add_choice
@@ -87,10 +83,6 @@ RailsPortal::Application.routes.draw do
       resources :sound_graphers
       resources :image_questions
       resources :video_players
-    end
-
-    namespace :smartgraph do
-      resources :range_questions
     end
 
     namespace :browse do
