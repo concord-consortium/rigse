@@ -37,8 +37,8 @@ class DefaultRunnable
         end
         investigation.activities << activity
         section1 = DefaultRunnable.add_section_to_activity(activity, "Collect Data ...", "Collect Data using probes.")
-        page1, xhtml = DefaultRunnable.add_page_to_section(section1, "Find the hottest",
-          '<p>Find the hottest thing in the room with the temperature probe.</p>', 
+        page1, open_response = DefaultRunnable.add_page_to_section(section1, "Find the hottest",
+          '<p>Find the hottest thing in the room with the temperature probe.</p>',
           "Student's explore their environment with a tempemerature probe.")
         temperature_probe = Probe::ProbeType.find_by_name('temperature')
         investigation.deep_set_user(user)
@@ -55,7 +55,7 @@ class DefaultRunnable
         end
         page_embeddable = nil
       else
-        page_embeddable = Embeddable::Xhtml.create do |x|
+        page_embeddable = Embeddable::OpenResponse.create do |x|
           x.name = name + ": Body Content (html)"
           x.description = ""
           x.content = html_content
@@ -71,7 +71,7 @@ class DefaultRunnable
     end
 
     def add_model_to_page(page, model)
-      add_xhtml_to_page(page, "unsupported model type: #{model.model_type.name}")
+      puts "unsupported model type: #{model.model_type.name}"
     end
 
     def add_open_response_to_page(page, question_prompt)
@@ -79,21 +79,6 @@ class DefaultRunnable
         o.name = page.name + ": Open Response Question"
         o.description = ""
         o.prompt = question_prompt
-      end
-      page_embeddable.pages << page
-    end
-
-    def add_prediction_graph_response_to_page(page, question_prompt)
-      add_xhtml_to_page(page, question_prompt) if page.page_elements.empty?
-      page_embeddable.pages << page
-    end
-
-
-    def add_xhtml_to_page(page, html_content)
-      page_embeddable = Embeddable::Xhtml.create do |x|
-        x.name = page.name + ": Body Content (html)"
-        x.description = ""
-        x.content = html_content
       end
       page_embeddable.pages << page
     end

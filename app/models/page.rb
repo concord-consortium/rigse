@@ -155,20 +155,9 @@ class Page < ActiveRecord::Base
     element.save
   end
 
-  #
-  # after_create :add_xhtml
-  #
-  # def add_xhtml
-  #   if(self.page_elements.size < 1)
-  #     xhtml = Embeddable::Xhtml.create
-  #     xhtml.pages << self
-  #     xhtml.save
-  #   end
-  # end
 
-  #
   # return element.id for the component passed in
-  # so for example, pass in an xhtml item in, and get back a page_elements object.
+  # so for example, pass in an MultipleChoice item in, and get back a page_elements object.
   # assumes that this page contains component.  Because this can cause confusion,
   # if we pass in a page_element we directly return that.
   def element_for(component)

@@ -31,7 +31,7 @@ class Embeddable::OpenResponse < ActiveRecord::Base
   include TruncatableXhtml
   # Including TruncatableXhtml adds a before_save hook which will automatically
   # generate a name attribute for the model instance if there is any content on 
-  # the main xhtml attribute (examples: content or prompt) that can plausibly be 
+  # the main xhtml attribute (examples: content or prompt) that can plausibly be
   # turned into a name. Otherwise the default_value_for :name specified below is used.
 
   self.extend SearchableModel

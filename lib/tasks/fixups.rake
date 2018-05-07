@@ -99,9 +99,9 @@ namespace :app do
 
     desc 'copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name'
     task :copy_truncated_xhtml_into_name => :environment do
-      models = [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice]
+      models = [Embeddable::OpenResponse, Embeddable::MultipleChoice]
       puts "\nprocessing #{models.join(', ')} models to generate new names from soft-truncated xhtml.\n"
-      [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice].each do |klass|
+      models.each do |klass|
         puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute\n"
         klass.find_in_batches(:batch_size => 100) do |group|
           group.each { |x| x.save! }

@@ -14,8 +14,6 @@ en:
       "dataservice/console_logger": ConsoleLogger
       "embeddable/image_question" : "Image Question"
       "embeddable/multiple_choice" : "Multiple Choice Question"
-      "embeddable/n_logo_model" : "Net Logo Model"
-      "embeddable/xhtml" : Text
       "portal/clazz": Class
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"

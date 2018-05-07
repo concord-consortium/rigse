@@ -39,7 +39,6 @@ class User < ActiveRecord::Base
   has_many :external_activities
   has_many :security_questions
 
-  has_many :xhtmls, :class_name => 'Embeddable::Xhtml'
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
   has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
 

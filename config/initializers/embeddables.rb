@@ -4,8 +4,7 @@
 # This base list is used by Activity, Investigation, and Section.
 BASE_EMBEDDABLES = [
 "Embeddable::MultipleChoice",
-"Embeddable::OpenResponse",
-"Embeddable::Xhtml" #displays as "Text"
+"Embeddable::OpenResponse"
 ]
 
 ALL_EMBEDDABLES = BASE_EMBEDDABLES.insert(0, "Embeddable::ImageQuestion")

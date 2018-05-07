@@ -434,12 +434,6 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:pub_status --trace"
   end
 
-  desc "copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name"
-  task :copy_truncated_xhtml_into_name, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:copy_truncated_xhtml_into_name --trace"
-  end
-
   desc "Create bundle and console loggers for learners"
   task :create_bundle_and_console_loggers_for_learners, :roles => :app do
     run "cd #{deploy_to}/#{current_dir} && " +

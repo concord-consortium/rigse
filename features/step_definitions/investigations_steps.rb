@@ -43,7 +43,6 @@ Given /^the author "([^"]*)" created an investigation named "([^"]*)" with text 
   section.pages << page
   activity.sections << section
   investigation.activities << activity
-  page.add_embeddable(Embeddable::Xhtml.create(hash))
   page.add_embeddable(Embeddable::OpenResponse.create(hash))
   page.save
   investigation.save

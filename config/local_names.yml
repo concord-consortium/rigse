@@ -6,7 +6,6 @@ default:
   Dataservice::ConsoleLogger : ConsoleLogger
   Embeddable::ImageQuestion : Image Question
   Embeddable::MultipleChoice : Multiple Choice Question
-  Embeddable::Xhtml : Text
   Portal::Clazz : Class
   Portal::Nces06District : NCES District
   Portal::Nces06School : NCES School
