@@ -80,7 +80,6 @@ RailsPortal::Application.routes.draw do
       end
       resources :xhtmls
       resources :open_responses
-      resources :sound_graphers
       resources :image_questions
       resources :video_players
     end
