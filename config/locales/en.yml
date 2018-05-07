@@ -14,7 +14,6 @@ en:
       "dataservice/console_logger": ConsoleLogger
       "embeddable/image_question" : "Image Question"
       "embeddable/multiple_choice" : "Multiple Choice Question"
-      "embeddable/mw_modeler_page" : "Molecular Workbench Model"
       "embeddable/n_logo_model" : "Net Logo Model"
       "embeddable/smartgraph/range_question" : "Smartgraph Range Question"
       "embeddable/xhtml" : Text

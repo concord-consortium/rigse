@@ -78,11 +78,6 @@ RailsPortal::Application.routes.draw do
       end
       resources :raw_otmls
       resources :n_logo_models
-      resources :mw_modeler_pages
-        member do
-          post :update_cell_data
-        end
-      end
       resources :multiple_choices do
         member do
           post :add_choice
@@ -380,8 +375,6 @@ RailsPortal::Application.routes.draw do
     resources :author_notes
     resources :raw_otmls
     resources :n_logo_models
-    resources :mw_modeler_pages
-
     resources :multiple_choices do
       member do
         post :add_choice
