@@ -717,9 +717,6 @@ module MockData
       section_uuid = inv.delete(:section_uuid)
       page_uuid = inv.delete(:page_uuid)
       open_response_uuid = inv.delete(:open_response_uuid)
-      draw_tool_uuid = inv.delete(:draw_tool_uuid)
-      prediction_graph_uuid = inv.delete(:prediction_graph_uuid)
-      displaying_graph_uuid = inv.delete(:displaying_graph_uuid)
 
       if user
         investigation = nil

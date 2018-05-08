@@ -285,8 +285,8 @@ describe Investigation do
       @investigation.activities << @activity
     end
 
-    it "should have 2 multiple choices" do
-      @investigation.should have(2).reportable_elements
+    it "should have 1 multiple choices" do
+      @investigation.should have(1).reportable_elements
       @investigation.reportable_elements.each do |elm|
         elm[:embeddable].should be_a(Embeddable::MultipleChoice)
       end
