@@ -353,13 +353,6 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    namespace :otrunk_example do
-      resources :otrunk_imports
-      resources :otml_categories
-      resources :otml_files
-      resources :otrunk_view_entries
-    end
-
     resources :teacher_notes
     resources :author_notes
     resources :n_logo_models
@@ -435,8 +428,6 @@ RailsPortal::Application.routes.draw do
 
     match '/investigations/list/preview/' => 'investigations#preview_index', :as => :investigation_preview_list, :method => :get
     match '/investigations/list/filter' => 'investigations#index', :as => :list_filter_investigation, :method => :get
-    match '/investigations/teacher/:id.otml' => 'investigations#teacher', :as => :investigation_teacher_otml, :method => :get, :format => :otml
-    match '/investigations/teacher/:id.dynamic_otml' => 'investigations#teacher', :as => :investigation_teacher_dynamic_otml, :method => :get, :format => :dynamic_otml
     match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
     match '/report/learner/logs_query' => 'report/learner#logs_query', :as => :learner_logs_query, :method => :get
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get

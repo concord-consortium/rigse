@@ -1,6 +1,0 @@
-%OTText{ :local_id => ot_local_id_for( <%= singular_name %>, :name ), :rows => '2', :columns => '40' }
-  %text= <%= singular_name %>.name
-%OTCompoundDoc{:local_id => ot_local_id_for(<%= singular_name %>)}
-  %bodyText
-    = <%= singular_name %>.description  
-    %object{ :refid => ot_refid_for(<%= singular_name %>, :name) }
