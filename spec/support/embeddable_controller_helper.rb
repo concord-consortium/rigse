@@ -79,57 +79,5 @@ shared_examples_for 'an embeddable controller' do
 
     end
 
-    describe "with mime type of config" do
-
-      it "renders the requested #{model_ivar_name_lambda.call} as config without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
-        get :show, :id => "37", :format => 'config'
-        assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template("shared/_show")
-        assert_select('java') do
-          assert_select('object[class=?]', 'net.sf.sail.core.service.impl.LauncherServiceImpl') do
-            assert_select('void[property=?]', 'properties') do
-              assert_select('object[class=?]', 'java.util.Properties') do
-                assert_select('void[method=?]', 'setProperty') do
-                  assert_select('string', controller.polymorphic_url(@model_ivar, :format => :dynamic_otml))
-                end
-              end
-            end
-          end
-        end
-      end
-
-    end
-
-    describe "with mime type of dynamic_otml" do
-
-      it "renders the requested #{model_ivar_name_lambda.call} as dynamic_otml without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
-        get :show, :id => "37", :format => 'dynamic_otml'
-        assigns[@model_ivar_name].should equal(@model_ivar)
-        assert_select('otrunk') do
-          assert_select('imports')
-          assert_select('objects') do
-            assert_select('OTSystem') do
-              assert_select('includes') do
-                assert_select('OTInclude[href=?]', controller.polymorphic_url(@model_ivar, :format => :otml))
-              end
-              assert_select('bundles') do
-                assert_select('OTInterfaceManager[local_id=?]', 'interface_manager') do
-                  assert_select('deviceConfigs') do
-                    assert_select('OTDeviceConfig')
-                  end
-                end
-              end
-              assert_select('overlays')
-              assert_select('root') do
-                assert_select('object')
-              end
-            end
-          end
-        end
-      end
-
-    end
   end
 end

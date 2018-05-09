@@ -1,28 +1,3 @@
-# edit:
-# if teacher_mode && runnable.class == Investigation 
-#   otml_url = investigation_teacher_dynamic_otml_url(runnable)
-# else
-#   otml_url = polymorphic_url(runnable, :format => :dynamic_otml, :teacher_mode => false, :action => :edit)
-# end
-# properties = { 
-#   'sailotrunk.hidetree' => 'false',
-#   }
-# 
-# learn:
-# console_post_url = dataservice_console_logger_console_contents_url(console_logger, :format => :bundle)
-# bundle_url = dataservice_bundle_logger_url(bundle_logger, :format => :bundle)
-# bundle_post_url = dataservice_bundle_logger_bundle_contents_url(bundle_logger, :format => :bundle)
-# 
-# show:
-# if teacher_mode && runnable.class == Investigation 
-#   otml_url = investigation_teacher_dynamic_otml_url(runnable)
-# else
-#   otml_url = polymorphic_url(runnable, :format => :dynamic_otml, :teacher_mode => teacher_mode)
-# end
-# properties = { 
-#   'sailotrunk.hidetree' => 'false',
-#   }
-
 all_properties = {
   'sds_time' => (Time.now.to_f * 1000).to_i,
   'sailotrunk.otmlurl' => otml_url
