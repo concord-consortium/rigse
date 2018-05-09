@@ -33,7 +33,7 @@ describe Rack::ConfigSessionCookies do
         end
       end
       it "should not set cookies for disallowed paths" do
-          %w[blah.html blah.css blah.otml blah blah.jpg].each do |path|
+          %w[blah.html blah.css blah blah.jpg].each do |path|
           session_param = "_fake_session_key=1234#{path}1234"
           env = make_env(:path => path, :query => session_param)
           @tester.call(env)

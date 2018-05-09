@@ -14,4 +14,3 @@ Feature: Teacher runs student jnlps
   Scenario: Teacher runs student jnlp from Class Page
     When I run the student's investigation for "Class_with_no_assignment"
     Then a jnlp file is downloaded
-    And the jnlp file for "Aerodynamics" has a read-only configuration for the student and offering

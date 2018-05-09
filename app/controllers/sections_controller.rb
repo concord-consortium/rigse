@@ -20,13 +20,11 @@ class SectionsController < ApplicationController
     if (params[:id])
       @section = Section.find(params[:id], :include=> :pages)
       format = request.parameters[:format]
-      unless format == 'otml' || format == 'jnlp'
-        if @section
-          @page_title=@section.name
-          @activity = @section.activity
-          if @activity
-            @investigation = @activity.investigation
-          end
+      if @section
+        @page_title=@section.name
+        @activity = @section.activity
+        if @activity
+          @investigation = @activity.investigation
         end
       end
     end
@@ -91,8 +89,6 @@ class SectionsController < ApplicationController
       }
       format.jnlp   { render :partial => 'shared/installer', :locals => { :runnable => @section, :teacher_mode => @teacher_mode } }
       format.config { render :partial => 'shared/show', :locals => { :runnable => @section, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
-      format.otml { render :layout => 'layouts/section' } # section.otml.haml
-      format.dynamic_otml { render :partial => 'shared/show', :locals => {:runnable => @section, :teacher_mode => @teacher_mode} }
       format.xml  { render :xml => @section }
       format.json { render :json => @section }
     end

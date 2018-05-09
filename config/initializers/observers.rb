@@ -22,7 +22,7 @@
 #
 # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
 # # begin
-#   ActiveRecord::Base.observers = :user_observer, :investigation_observer
+#   ActiveRecord::Base.observers = :user_observer
 #   ActiveRecord::Base.instantiate_observers
 #   puts "Started observers"
 # # rescue

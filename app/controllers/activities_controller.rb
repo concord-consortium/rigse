@@ -32,11 +32,9 @@ class ActivitiesController < ApplicationController
       @activity = Activity.new
     end
     format = request.parameters[:format]
-    unless format == 'otml' || format == 'jnlp'
-      if @activity
-        @page_title = @activity.name
-        @investigation = @activity.investigation
-      end
+    if @activity
+      @page_title = @activity.name
+      @investigation = @activity.investigation
     end
   end
 
@@ -103,7 +101,6 @@ class ActivitiesController < ApplicationController
         end
         render :partial => 'shared/show', :locals => {:runnable => @activity, :teacher_mode => @teacher_mode}
       }
-      format.otml { render :layout => 'layouts/activity' } # activity.otml.haml
       format.xml  { render :xml => @activity }
       format.json  { render :json => @activity }
       format.pdf {render :layout => false }

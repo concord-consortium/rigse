@@ -454,11 +454,7 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:find_and_delete_invalid_dataservice_bundle_content_objects --trace"
   end
 
-  desc "generate otml, valid_xml, and empty attributes for BundleContent objects"
-  task :generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} app:convert:generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects --trace"
-  end
+  
 
   # Thursday October 8, 2009
 

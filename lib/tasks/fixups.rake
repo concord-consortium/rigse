@@ -170,16 +170,6 @@ namespace :app do
       end
     end
 
-    desc "generate otml, valid_xml, and empty attributes for BundleContent objects"
-    task :generate_otml_valid_xml_and_empty_attributes_for_bundle_content_objects => :environment do
-      count = Dataservice::BundleContent.count
-      puts "\nRe-saving #{count} Dataservice::BundleContent model instances\n\n"      
-      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |group|
-        group.each { |bc| !bc.save! }
-        print '.'; STDOUT.flush
-      end
-    end
-    
     desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
     task :convert_clazzes_to_multi_teacher => :environment do
       MultiteacherClazzes.make_all_multi_teacher
@@ -211,61 +201,6 @@ namespace :app do
       puts
     end
 
-    MULTI_CHOICE = /<object refid="([a-fA-F0-9\-]+)!\/(?:embeddable__)?multiple_choice_(\d+)\/input\/choices\[(\d+)\]"(.*?)>/m
-    desc "Fix learner bundle contents so that Multiple Choice answers point using an OTrunk local id instead of a path id."
-    task :convert_choice_answers_to_local_ids => :environment do
-      include ApplicationHelper
-      unchanged = {}
-      changed = {}
-      problems = {}
-      Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |batch|
-        print '.'; STDOUT.flush
-        batch.each do |bundle_content|
-          new_otml = bundle_content.otml.gsub(MULTI_CHOICE) {
-            retval = ""
-            begin
-              m_choice = Embeddable::MultipleChoice.find($2.to_i)
-              if m_choice
-                choice = m_choice.choices[$3.to_i]
-                if choice
-                  retval = "<object refid=\"#{$1}!/#{ot_local_id_for(choice)}\"#{$4}>"
-                else
-                  raise "Couldn't find choice #{$3} in Multiple Choice #{$2}"
-                end
-              else
-                raise "Couldn't find Multiple Choice #{$2}"
-              end
-            rescue => e
-              problems[bundle_content.id] ||= []
-              problems[bundle_content.id] << "#{e} (#{$&})"
-              retval = $&  
-            end
-            retval
-          }
-          if new_otml != bundle_content.otml
-            changed[bundle_content.id] = true
-            bundle_content.otml = new_otml
-            # Now convert the otml into actual bundle content
-            bundle_content.body = bundle_content.convert_otml_to_body
-            bundle_content.save
-          else
-            unchanged[bundle_content.id] = true
-          end
-
-        end # end batch.each
-      end # end find_in_batches
-      puts "Finished fixing multiple choice references."
-      puts "#{changed.size} bundles changed, #{unchanged.size} were unchanged."
-      puts "The following #{problems.size} bundles had problems: "
-      problems.entries.sort.each do |entry|
-        puts "  BC #{entry[0]} (#{changed[entry[0]] ? "changed" : "unchanged"}):"
-        puts Dataservice::BundleContent.find(entry[0], :select => 'bundle_logger_id, created_at').description
-        entry[1].each do |prob|
-          puts "    #{prob}"
-        end
-      end
-    end # end task
-    
     # seb: 20100513
     desc "Populate the new leaid, state, and zipcode portal district and school attributes with data from the NCES tables"
     task :populate_new_district_and_school_attributes_with_data_from_nces_tables => :environment do

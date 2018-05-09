@@ -68,18 +68,6 @@ Feature: Admin configures settings
     And I am on the clazz create page
     Then I should see "Grade Levels:"
     
-  @javascript
-  Scenario: Admin modifies css for otml
-    Given The default settings and jnlp resources exist using factories
-    And I am logged in with the username admin
-    And am on the admin settings page
-    Then I should see the sites name
-    When I follow "edit settings"
-    Then I should see "Custom stylesheet for OTML:"
-    When I fill in "admin_settings[custom_css]" with ".testing_css_class_here {position:relative; padding:5px;}"
-    And I save the settings
-    Then I should see ".testing_css_class_here"
-
   Scenario: Admin creates a new settings
     Given The default settings and jnlp resources exist using factories
     And I am logged in with the username admin

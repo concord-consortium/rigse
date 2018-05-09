@@ -137,11 +137,10 @@ class UsersController < ApplicationController
   end
 
   def interface
-    # Select the probeware vendor and interface to use when generating jnlps and otml
-    # files. This redult is saved in a session variable and if the user is logged-in
+    # Select the probeware vendor and interface
+    # This redult is saved in a session variable and if the user is logged-in
     # the selection is also saved into their user record.
-    # The result is expressed not only in the jnlp and otml files which are
-    # downloaded to the users computer but the vendor_interface id (vid) which is
+    # The result is vendor_interface id (vid) which is
     # also included in the contruction of the url
     @user = User.find(params[:id])
     if request.xhr?

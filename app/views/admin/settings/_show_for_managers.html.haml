@@ -9,4 +9,3 @@
         .form_like
           = field_set_tag 'Home Page Content' do
             %p= admin_settings.home_page_content.html_safe unless admin_settings.home_page_content.nil?
-          = render :partial => 'custom_css', :locals => { :admin_settings => admin_settings }

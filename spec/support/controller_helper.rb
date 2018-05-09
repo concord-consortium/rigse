@@ -96,32 +96,6 @@ def generate_portal_resources_with_mocks
   # @mock_grade_level ||= mock_model(Portal::GradeLevel, stubs)
 end
 
-def generate_otrunk_example_with_mocks
-  @mock_otml_category ||= mock_model(OtrunkExample::OtmlCategory,
-    :name => "BasicExamples"
-  )
-
-  @mock_otml_file ||= mock_model(OtrunkExample::OtmlFile,
-    :content => nil,
-    :path => "/Users/stephen/dev/test/rites/public/otrunk-examples/BasicExamples/basic_drawing.otml",
-    :otml_category => @mock_otml_category
-  )
-
-  @mock_otrunk_import ||= mock_model(OtrunkExample::OtrunkImport,
-    :classname => "OTSystem",
-    :fq_classname => "org.concord.otrunk.OTSystem"
-  )
-
-  @mock_otrunk_view_entry ||= mock_model(OtrunkExample::OtrunkViewEntry,
-    :classname => "OTDataDrawingToolView",
-    :standard_edit_view => false,
-    :standard_view => false,
-    :fq_classname => "org.concord.datagraph.state.OTDataDrawingToolView",
-    :edit_view => false,
-    :otrunk_import => @mock_otrunk_import
-  )
-end
-
 def login_admin
   logged_in_user = Factory.next :admin_user
   sign_in logged_in_user
