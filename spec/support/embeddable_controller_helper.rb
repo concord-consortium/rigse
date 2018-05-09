@@ -5,10 +5,6 @@ shared_examples_for 'an embeddable controller' do
   model_class_lambda      = lambda { controller_class_lambda.call.name[/(.*)Controller/, 1].singularize.constantize }
   model_ivar_name_lambda  = lambda { model_class_lambda.call.name.delete_module.underscore_module }
 
-  def with_tags_like_an_otml(model_name)
-    self.send("with_tags_like_an_otml_#{model_name}".to_sym)
-  end
-
   def create_new(model_name)
     method_name = "create_new_#{model_name}".to_sym
     if self.respond_to?(method_name)
@@ -135,50 +131,5 @@ shared_examples_for 'an embeddable controller' do
       end
 
     end
-
-    describe "with mime type of otml" do
-
-      it "renders the requested #{model_ivar_name_lambda.call} as otml without error" do
-        @model_class.stub!(:find).with("37").and_return(@model_ivar)
-        get :show, :id => "37", :format => 'otml'
-        assigns[@model_ivar_name].should equal(@model_ivar)
-        response.should render_template(:show)
-        assert_select('otrunk') do
-          assert_select('imports')
-          assert_select('objects') do
-            assert_select('OTSystem') do
-              assert_select('bundles') do
-                assert_select('OTViewBundle') do
-                  assert_select('frame')
-                  assert_select('modes')
-                  assert_select('views')
-                end
-                assert_select('OTInterfaceManager[local_id=?]', 'interface_manager') do
-                  assert_select('deviceConfigs') do
-                    assert_select('OTDeviceConfig')
-                  end
-                end
-                assert_select('OTScriptEngineBundle[local_id=?]', 'script_engine_bundle') do
-                  assert_select('engines') do
-                    assert_select('OTScriptEngineEntry')
-                  end
-                end
-                assert_select('OTLabbookBundle')
-              end
-              assert_select('root') do
-                assert_select('OTCompoundDoc') do
-                  assert_select('bodyText')
-                end
-              end
-              assert_select('library') do
-                with_tags_like_an_otml(@model_ivar_name)
-               end
-            end
-          end
-        end
-      end
-
-    end
-
   end
 end
