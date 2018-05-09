@@ -105,6 +105,7 @@ class API::V1::ClassesController < API::APIController
     end
 
     render :json => {
+      :id => clazz.id,
       :uri => api_v1_class_url(clazz.id),
       :name => clazz.name,
       :state => state,
