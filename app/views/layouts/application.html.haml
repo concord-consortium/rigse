@@ -62,7 +62,10 @@
 
     = render :partial => 'shared/analytics'
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
-  %body{:class => current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }.unshift(current_visitor.has_role?('guest') ? 'main-nav-hidden' : '').join(' ').squish, :'ng-app' => 'cc-portal'}
+
+  - role_classes = current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }
+  - guest_classes = current_user.nil? ? ['main-nav-hidden'] : []
+  %body{:class => (guest_classes + role_classes).join(' ').squish, :'ng-app' => 'cc-portal'}
 
     #note{:style=>"display: none;"}
     = content_for :lightboxes
