@@ -64,8 +64,8 @@
 
     = render :partial => 'shared/analytics'
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
-
-  %body{:class => 'blank', :'ng-app' => 'cc-portal'}
+  - role_classes = current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }
+  %body{:class => (['blank'] + role_classes).join(' ').squish, :'ng-app' => 'cc-portal'}
     #js_flash{:style=>"display: none;"}
     = render :partial=>"layouts/flashes"
     = content_for :layout
