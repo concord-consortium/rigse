@@ -14,6 +14,8 @@ class Activity < ActiveRecord::Base
 
   has_many :learner_activities, :dependent => :destroy, :class_name => "Report::LearnerActivity"
 
+  has_many :activity_feedbacks, :class_name => "Portal::LearnerActivity"
+
   has_many :external_activities, :as => :template
 
   has_many :sections, :order => :position, :dependent => :destroy do

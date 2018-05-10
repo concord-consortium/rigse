@@ -204,7 +204,6 @@ describe API::V1::ReportsController do
     let(:enable_text_feedback) { false }
     let(:score_type)           { Portal::OfferingActivityFeedback::SCORE_NONE }
     let(:max_score)            { 10 }
-    let(:rubric_url)           { nil }
     let(:use_rubric)           { false }
     let(:opts)                 {  { 'actvity_feedback_opts' => feedback_opts } }
     let(:feedback_opts)        do
@@ -213,7 +212,6 @@ describe API::V1::ReportsController do
           'enable_text_feedback' => enable_text_feedback,
           'score_type'           => score_type,
           'max_score'            => max_score,
-          'rubric_url'           => rubric_url,
           'use_rubric'           => use_rubric
       }
     end
@@ -239,16 +237,6 @@ describe API::V1::ReportsController do
       end
     end
 
-    describe "when adding a rubric url do" do
-      let(:expected_url) { "http://foo.bar/" }
-      let(:rubric_url)   {  expected_url     }
-      it "should make the rubric_url be http://foo.bar" do
-        update(opts)
-        show
-        response.status.should eql(200)
-        found_feedback.rubric_url.should eq expected_url
-      end
-    end
     describe "when enabling a rubric" do
       let(:use_rubric)    { true }
       it "should specify to use a rubric" do
@@ -262,7 +250,7 @@ describe API::V1::ReportsController do
 
   describe "posting learner activity feedback" do
     let(:learner_id)          { learner_a.id }
-    let(:activity_feedback)   { Portal::OfferingActivityFeedback.for_offering_and_activity(offering, activity) }
+    let(:activity_feedback)   { Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity) }
     let(:activity_feedback_id){ activity_feedback.id }
     let(:score) { 10 }
     let(:text_feedback) { "good work" }

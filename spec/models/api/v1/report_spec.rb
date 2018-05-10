@@ -148,7 +148,7 @@ describe API::V1::Report do
       let(:learner)          { FactoryGirl.create(:full_portal_learner, {offering:offering}) }
       let(:student)          { learner.student }
       let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback) }
-      let(:activity_feedback){ Portal::OfferingActivityFeedback.for_offering_and_activity(offering, activity) }
+      let(:activity_feedback){ Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity) }
       let(:feedback_id)      { activity_feedback.id }
       let(:learner_id)       { learner.id }
       let(:report)           { API::V1::Report.new(offering: offering) }
@@ -285,12 +285,6 @@ describe API::V1::Report do
             let(:use_rubric)   { true }
 
             its(:use_rubric)   { should be_true }
-          end
-
-          describe "setting the rubric URL" do
-            let(:rubric_url)   { "http://somplace.com/api/blarg.json" }
-
-            its(:rubric_url)   { should eql rubric_url }
           end
 
           describe "setting the rubric" do

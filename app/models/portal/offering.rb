@@ -23,6 +23,8 @@ class Portal::Offering < ActiveRecord::Base
 
   has_many :collaborations, :class_name => "Portal::Collaboration"
 
+  has_many :activity_feedbacks, class_name: "Portal::OfferingActivityFeedback", foreign_key: "portal_offering_id"
+
   [:name, :description, :icon_image].each { |m| delegate m, :to => :runnable }
 
   has_many :open_responses, :dependent => :destroy, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
