@@ -12,7 +12,7 @@ CSS rules and class names for icons are specified in /app/assets/stylesheets/web
 
 To add new icons to the IcoMoon font files, use the IcoMoon app at icomoon.io/app.
 
-First, create a project, then import selection.json using the Import Icons button.
+First, create a project, then import icomoon.svg using the Import Icons button and select all the icons imported.
 
 Next, add additional icons by selecting from the default IcoMoon set or importing custom icons in SVG format.
 
