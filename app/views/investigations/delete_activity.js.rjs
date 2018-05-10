@@ -1,9 +1,0 @@
-safe_js(page,'investigation_sections_list') do
-  page.visual_effect :highlight, 'investigation_sections_list'
-end
-
-[:item,:tab].each do |domid|
-  safe_js(page,dom_id_for(@activity, domid)) do
-    page.remove dom_id_for(@activity, domid)
-  end
-end 

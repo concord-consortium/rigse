@@ -1,7 +1,0 @@
-safe_js(page,'section_pages_list') do
-  page.visual_effect :highlight, 'section_pages_list'
-end
-
-safe_js(page,dom_id_for(@page, :item)) do
-  page.remove dom_id_for(@page, :item)
-end

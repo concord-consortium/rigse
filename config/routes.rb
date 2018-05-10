@@ -84,16 +84,6 @@ RailsPortal::Application.routes.draw do
     end
 
     namespace :browse do
-      resources :investigations do
-        member do
-          post :show
-        end
-      end
-      resources :activities do
-        member do
-          post :show
-        end
-      end
       resources :external_activities, path: 'eresources' do
         member do
           post :show
@@ -363,96 +353,17 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    resources :xhtmls do
-      member do
-        get :print
-      end
-    end
-
     resources :open_responses do
       member do
         get :print
       end
     end
 
-
-    resources :sections do
-      collection do
-        get :printable_index
-      end
-      member do
-        post :sort_pages
-        get :duplicate
-        post :delete_page
-        post :add_page
-        get :add_page
-        get :print
-      end
-    end
-
-    resources :pages do
-      member do
-        post :sort_elements
-        get :duplicate
-        post :delete_element
-        post :paste_link
-        get :preview
-        post :add_element
-        get :print
-        post :paste
-      end
-    end
-
-    match '/page/list/filter' => 'pages#index', :as => :list_filter_page, :method => :post
-    resources :pages do
-      resources :xhtmls
-      resources :open_responses
-    end
-
-    resources :page_elements
-
-    resources :investigations do
-      collection do
-        get :printable_index
-      end
-      member do
-        get :duplicate
-        post :add_activity
-        get :add_activity
-        post :sort_activities
-        get :print
-        post :delete_activity
-        get :export
-      end
-    end
-
-    match '/investigations/list/preview/' => 'investigations#preview_index', :as => :investigation_preview_list, :method => :get
-    match '/investigations/list/filter' => 'investigations#index', :as => :list_filter_investigation, :method => :get
     match '/report/learner' => 'report/learner#index', :as => :learner_report, :method => :get
     match '/report/learner/logs_query' => 'report/learner#logs_query', :as => :learner_logs_query, :method => :get
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
     match '/report/learner/report_only' => 'report/learner#report_only', :as => :learner_report_only, :method => :get
-    resources :activities do
-      member do
-        get :duplicate
-        post :add_section
-        get :add_section
-        post :sort_sections
-        get :print
-        post :delete_section
-        get :export
-      end
-    end
 
-    match '/activity/list/filter' => 'activities#index', :as => :list_filter_activity, :method => :post
-    resources :activities do
-
-      resources :sections do
-        resources :pages do
-          resources :page_elements
-        end
-      end
-    end
 
     match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
     match '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :method => :post, :version => /v\d+/

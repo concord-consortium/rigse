@@ -1,8 +1,0 @@
-<%= link_to_remote('Delete', 
-		:confirm => 'really delete this step?',
-		:class => 'delete',
-		:url => {
-		:controller => 'page_elements',
-		:action => 'delete_step', 
-		:step_id => @act_step.step.id,
-		:activity_id => @act_step.activity.id}) %>
