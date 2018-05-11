@@ -2,7 +2,8 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
   SCORE_AUTO   = "auto"
   SCORE_NONE   = "none"
   SCORE_MANUAL = "manual"
-  SCORE_TYPES = [SCORE_AUTO, SCORE_MANUAL, SCORE_NONE]
+  SCORE_RUBRIC = "rubric"
+  SCORE_TYPES = [SCORE_AUTO, SCORE_MANUAL, SCORE_RUBRIC, SCORE_NONE]
 
   self.table_name = :portal_offering_activity_feedbacks
   attr_accessible :enable_text_feedback,
