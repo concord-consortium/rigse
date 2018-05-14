@@ -365,7 +365,6 @@ module ApplicationHelper
     component_display_name = component.class.display_name.downcase
     text = params[:text] || 'duplicate'
     name = component.name
-    #url = duplicate_investigation_url(component)
     url = polymorphic_url(component, :action => :duplicate, :params => params)
     link_button("itsi_copy.png", url,
       :title => "copy the #{component_display_name}: '#{name}'") +

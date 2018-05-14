@@ -322,11 +322,7 @@ module Materials
     def links_for_material( material,
                             skip_lightbox_reloads = false )
       external = false
-      if material.is_a? Investigation
-        browse_url = browse_investigation_url(material)
-      elsif material.is_a? Activity
-        browse_url = browse_activity_url(material)
-      elsif material.is_a? ExternalActivity
+      if material.is_a? ExternalActivity
         browse_url = browse_external_activity_url(material)
         external = true
       elsif material.is_a? Interactive
