@@ -4,13 +4,6 @@ class PageElement < ActiveRecord::Base
   acts_as_list :scope => :page_id
   belongs_to :embeddable, :polymorphic => true
 
-  # this could work if the finder sql was redone
-  # has_one :investigation,
-  #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
-  #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::GraphyThing"
-  #   INNER JOIN pages ON page_elements.page_id = pages.id
-  #   WHERE pages.section_id = #{id}'
-
   # TODO the old scope (now page_by_investigation) didn't include elements in inner pages.
   # this method combines elements in pages, with elements in innerpages
   # it may or may not be possible to integrate them into one scope

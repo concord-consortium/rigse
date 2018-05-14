@@ -10,13 +10,6 @@ class Page < ActiveRecord::Base
 
   has_one :activity, :through => :section
 
-  # this could work if the finder sql was redone
-  # has_one :investigation,
-  #   :finder_sql => proc { "SELECT grapyhthing.* FROM grapyhthing
-  #   INNER JOIN page_elements ON grapyhthing.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::GraphyThing"
-  #   INNER JOIN pages ON page_elements.page_id = pages.id
-  #   WHERE pages.section_id = #{id}" }
-
   # Order by ID is important, see: https://www.pivotaltracker.com/story/show/79237764
   # Some older elements in DB can have always position equal to 1.
   has_many :page_elements, :order => 'position ASC, id ASC', :dependent => :destroy

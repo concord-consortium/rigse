@@ -53,6 +53,7 @@ class Interactive < ActiveRecord::Base
       false
     end
 
+    # TODO: Support probes via tags
     integer :probe_type_ids, :multiple => true do
       nil
     end
