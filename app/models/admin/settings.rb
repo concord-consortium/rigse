@@ -57,9 +57,6 @@ class Admin::Settings < ActiveRecord::Base
     super hashy
   end
 
-  def using_custom_css?
-    return (! (self.custom_css.nil? || self.custom_css.strip.empty?))
-  end
 
   def display_type
     self.default_settings? ? 'Default ' : ''

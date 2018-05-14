@@ -645,7 +645,6 @@ RailsPortal::Application.routes.draw do
     match '/test_exception' => 'home#test_exception', :as => :test_exception
     match '/' => 'home#index', :as => :root
     match '/requirements' => 'home#requirements', :as => :requirements
-    match '/stylesheets/settings.css' => 'home#settings_css', :as => :settings_css
     match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     match '/admin' => 'home#admin', :as => :admin
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data

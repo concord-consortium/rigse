@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180509192628) do
+ActiveRecord::Schema.define(:version => 20180514200133) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -133,7 +133,6 @@ ActiveRecord::Schema.define(:version => 20180509192628) do
     t.boolean  "use_student_security_questions",                     :default => false
     t.boolean  "allow_default_class"
     t.boolean  "enable_grade_levels",                                :default => false
-    t.text     "custom_css",                     :limit => 16777215
     t.boolean  "use_bitmap_snapshots",                               :default => false
     t.boolean  "teachers_can_author",                                :default => true
     t.boolean  "enable_member_registration",                         :default => false

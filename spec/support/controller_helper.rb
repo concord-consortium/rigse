@@ -72,7 +72,6 @@ def generate_default_settings_and_jnlps_with_mocks
     :active                         => true,
     :home_page_content              => nil,
     :use_student_security_questions => false,
-    :using_custom_css?              => false,
     :use_bitmap_snapshots?          => false,
     :allow_adhoc_schools            => false,
     :allow_adhoc_schools?           => false,

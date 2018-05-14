@@ -9,7 +9,6 @@ class HomeController < ApplicationController
 
   public
 
-  caches_page   :settings_css
   theme "rites"
 
   def index
@@ -125,15 +124,6 @@ class HomeController < ApplicationController
 
   def test_exception
     raise 'This is a test. This is only a test.'
-  end
-
-  def settings_css
-    @settings = Admin::Settings.default_settings
-    if @settings.using_custom_css?
-      render :text => @settings.custom_css
-    else
-      render :nothing => true, :status => 404
-    end
   end
 
   def report

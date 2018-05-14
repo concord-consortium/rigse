@@ -4,7 +4,6 @@ describe InvestigationsController do
   before(:each) do
     @current_settings = mock(
       :name => "test settings",
-      :using_custom_css? => false,
       :use_student_security_questions => false,
       :use_bitmap_snapshots? => false,
       :require_user_consent? => false,

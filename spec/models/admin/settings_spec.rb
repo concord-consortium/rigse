@@ -67,21 +67,6 @@ describe Admin::Settings do
       @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces -1).things
     end
 
-    describe "custom_css" do
-      before(:each) do
-        @css =  ".testing {position:relative; padding:5px;}"
-      end
-      it "it should allow for custom css" do
-        @new_valid_settings.custom_css = @css
-        @new_valid_settings.should be_valid
-        @new_valid_settings.should be_using_custom_css
-      end
-      it "not be using custom css by default" do
-        @new_valid_settings.should_not be_using_custom_css
-      end
-    end
-
-
     describe "#available_bookmark_types" do
       subject  { @new_valid_settings.available_bookmark_types }
 
