@@ -1,5 +1,0 @@
-- content_for(:otrunk_doc_id) do
-  =@<%= singular_name %>.uuid
-- content_for(:<%= singular_name %>_object_id) do
-  =dom_id_for(@<%= singular_name %>)
-= render :partial => "show", :locals => { :<%= singular_name %> => @<%= singular_name %> }

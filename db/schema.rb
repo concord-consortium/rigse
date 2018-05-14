@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180326133200) do
+ActiveRecord::Schema.define(:version => 20180514200133) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -133,7 +133,6 @@ ActiveRecord::Schema.define(:version => 20180326133200) do
     t.boolean  "use_student_security_questions",                     :default => false
     t.boolean  "allow_default_class"
     t.boolean  "enable_grade_levels",                                :default => false
-    t.text     "custom_css",                     :limit => 16777215
     t.boolean  "use_bitmap_snapshots",                               :default => false
     t.boolean  "teachers_can_author",                                :default => true
     t.boolean  "enable_member_registration",                         :default => false
@@ -839,48 +838,6 @@ ActiveRecord::Schema.define(:version => 20180326133200) do
 
   add_index "materials_collections", ["project_id"], :name => "index_materials_collections_on_project_id"
 
-  create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
-    t.integer "otml_category_id"
-    t.integer "otrunk_import_id"
-  end
-
-  add_index "otml_categories_otrunk_imports", ["otml_category_id", "otrunk_import_id"], :name => "otc_oti", :unique => true
-
-  create_table "otml_files_otrunk_imports", :id => false, :force => true do |t|
-    t.integer "otml_file_id"
-    t.integer "otrunk_import_id"
-  end
-
-  add_index "otml_files_otrunk_imports", ["otml_file_id", "otrunk_import_id"], :name => "otf_oti", :unique => true
-
-  create_table "otml_files_otrunk_view_entries", :id => false, :force => true do |t|
-    t.integer "otml_file_id"
-    t.integer "otrunk_view_entry_id"
-  end
-
-  add_index "otml_files_otrunk_view_entries", ["otml_file_id", "otrunk_view_entry_id"], :name => "otf_otve", :unique => true
-
-  create_table "otrunk_example_otml_categories", :force => true do |t|
-    t.string   "uuid"
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "otrunk_example_otml_categories", ["name"], :name => "index_otrunk_example_otml_categories_on_name", :unique => true
-
-  create_table "otrunk_example_otml_files", :force => true do |t|
-    t.string   "uuid"
-    t.integer  "otml_category_id"
-    t.string   "name"
-    t.string   "path"
-    t.text     "content",          :limit => 16777215
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-  end
-
-  add_index "otrunk_example_otml_files", ["otml_category_id"], :name => "index_otrunk_example_otml_files_on_otml_category_id"
-  add_index "otrunk_example_otml_files", ["path"], :name => "index_otrunk_example_otml_files_on_path", :unique => true
 
   create_table "otrunk_example_otrunk_imports", :force => true do |t|
     t.string   "uuid"

@@ -55,25 +55,6 @@ describe HomeController do
     response.body.should include(content)
   end
 
-  describe "GET /stylesheets/settings.css" do
-    describe "when settings are configured to use custom styles" do
-      it "should return the custom css" do
-        css_text = ".some_class { font-height: 10px; }"
-        @test_settings.stub(:custom_css).and_return(css_text)
-        @test_settings.stub(:using_custom_css?).and_return(true)
-        get :settings_css
-        response.body.should include(css_text)
-      end
-    end
-    describe "when settings are not configured to use custom styles" do
-      it "should return 404" do
-        @test_settings.stub(:using_custom_css?).and_return(false)
-        get :settings_css
-        response.should_not be_success
-      end
-    end
-  end
-
   describe "Post preview_home_page" do
     it "should set variables to preview home page" do
       anonymous_user = Factory.next(:anonymous_user)

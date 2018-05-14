@@ -166,15 +166,6 @@ module ApplicationHelper
   end
 
   def render_partial_for(component,_opts={})
-    ## if we're rendering otml, only render if the thing we're rendering hasn't
-    ## already been rendered before.
-    if self.formats.include?('otml') || self.formats.include?(:otml)
-      if already_rendered?(component)
-        return ""
-      else
-        mark_rendered(component)
-      end
-    end
     class_name = component.class.name.underscore
     demodulized_class_name = component.class.name.delete_module.underscore_module
 
@@ -322,41 +313,6 @@ module ApplicationHelper
     link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
   end
 
-  def otml_url_for(component,options={})
-    url = url_for(
-      :controller => component.class.name.pluralize.underscore,
-      :action => :show,
-      :format => :otml,
-      :id  => component.id,
-      :only_path => false,
-      :teacher_mode => options[:teacher_mode] )
-    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-  end
-
-  def edit_otml_url_for(component)
-    url = url_for(
-      :controller => component.class.name.pluralize.underscore,
-      :action => :edit,
-      :format => :otml,
-      :id  => component.id,
-      :only_path => false )
-    URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-  end
-
-  def update_otml_url_for(component, escape=true)
-    url = url_for(
-      :controller => component.class.name.pluralize.underscore,
-      :action => :update,
-      :format => :otml,
-      :id  => component.id,
-      :only_path => false )
-    if escape
-      URI.escape(url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-    else
-      url
-    end
-  end
-
   def learner_report_link_for(learner, action='report', link_text='Report ', title=nil)
     return "" unless learner.reportable?
 
@@ -428,15 +384,6 @@ module ApplicationHelper
     url = polymorphic_url(component,:params => params)
     link_button("print.png", url, :title => "print the #{component_display_name}: '#{name}'") +
     link_to(link_text,url, :target => '_blank')
-  end
-
-  def otml_link_for(component, params={})
-    link_to('otml',
-      :controller => component.class.name.pluralize.underscore,
-      :action => :show,
-      :format => :otml,
-      :id  => component.id,
-      :params => params)
   end
 
   def delete_button_for(model, options={})

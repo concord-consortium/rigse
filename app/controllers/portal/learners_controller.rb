@@ -59,9 +59,7 @@ class Portal::LearnersController < ApplicationController
         # no valid jnlp_session could be found for this token
         render :partial => 'shared/sail',
           :formats => [:config],
-          :locals => {
-            :otml_url => "#{APP_CONFIG[:site_url]}/otml/invalid-jnlp-session.otml"
-          }
+          :locals => {}
       end
     end
   end

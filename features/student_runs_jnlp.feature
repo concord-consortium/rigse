@@ -11,7 +11,6 @@ Feature: Student runs a jnlps
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded
-    And the jnlp file for "Aerodynamics" has a configuration for the student and offering
 
   @pending
   Scenario: Student runs the same jnlp a second time

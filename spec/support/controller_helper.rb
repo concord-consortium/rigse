@@ -72,7 +72,6 @@ def generate_default_settings_and_jnlps_with_mocks
     :active                         => true,
     :home_page_content              => nil,
     :use_student_security_questions => false,
-    :using_custom_css?              => false,
     :use_bitmap_snapshots?          => false,
     :allow_adhoc_schools            => false,
     :allow_adhoc_schools?           => false,
@@ -94,32 +93,6 @@ def generate_portal_resources_with_mocks
   @mock_grade_level = mock_model(Portal::GradeLevel)
   # @mock_grade ||= mock_model(Portal::Grade, stubs)
   # @mock_grade_level ||= mock_model(Portal::GradeLevel, stubs)
-end
-
-def generate_otrunk_example_with_mocks
-  @mock_otml_category ||= mock_model(OtrunkExample::OtmlCategory,
-    :name => "BasicExamples"
-  )
-
-  @mock_otml_file ||= mock_model(OtrunkExample::OtmlFile,
-    :content => nil,
-    :path => "/Users/stephen/dev/test/rites/public/otrunk-examples/BasicExamples/basic_drawing.otml",
-    :otml_category => @mock_otml_category
-  )
-
-  @mock_otrunk_import ||= mock_model(OtrunkExample::OtrunkImport,
-    :classname => "OTSystem",
-    :fq_classname => "org.concord.otrunk.OTSystem"
-  )
-
-  @mock_otrunk_view_entry ||= mock_model(OtrunkExample::OtrunkViewEntry,
-    :classname => "OTDataDrawingToolView",
-    :standard_edit_view => false,
-    :standard_view => false,
-    :fq_classname => "org.concord.datagraph.state.OTDataDrawingToolView",
-    :edit_view => false,
-    :otrunk_import => @mock_otrunk_import
-  )
 end
 
 def login_admin

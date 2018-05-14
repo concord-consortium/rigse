@@ -106,8 +106,6 @@
         = render :partial => "home_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
       %p
         = render :partial => "help_page_item", :locals => { :admin_settings => admin_settings, :f => f }
-      %p
-        = render :partial => "custom_css_field", :locals => { :admin_settings => admin_settings, :f => f }
       = field_set_tag '<b>Vendor Interfaces</b>' do
         - Probe::VendorInterface.all.each do |interface|
           - domid = interface.name.gsub(/\s+/,"_")

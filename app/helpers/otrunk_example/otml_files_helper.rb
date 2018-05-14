@@ -1,2 +1,0 @@
-module OtrunkExample::OtmlFilesHelper
-end

@@ -505,19 +505,6 @@ to install this plugin we followed this procedure:
 1. `gem install --no-ri haml`
 1. `haml --rails path/to/rigse_app`
 
-### Rendering OTML
-
-The sass template rites.otml.sass generates the css file: rites.otml.css
-which is used for styling the xhtml content in
-OTCompoundDoc elements.
-
-The Java OTrunk system uses Java html editor kit for rendering xhtml and
-implements a very limited version of CSS that is somewhere
-between CSS1 and CSS2. You can find out more about this implementations
-limitations here: [Java 1.5: Class
-CSS](http://java.sun.com/j2se/1.5.0/docs/api/javax/swing/text/html/CSS.html)
-
-
 
 ## Installers
 

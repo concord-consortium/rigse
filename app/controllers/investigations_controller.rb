@@ -1,8 +1,4 @@
 class InvestigationsController < AuthoringController
-  # This doesn't work, but the technique is described here:
-  # vendor/rails/actionpack/lib/action_controller/caching/pages.rb:91
-  # caches_page :show if => Proc.new { |c| c.request.format == :otml }
-
   # caches_action :show
   # cache_sweeper :investigation_sweeper, :only => [ :update ]
 
@@ -19,15 +15,7 @@ class InvestigationsController < AuthoringController
   in_place_edit_for :investigation, :name
   in_place_edit_for :investigation, :description
 
-  after_filter :cache_otml
-
   protected
-
-  def cache_otml
-    if request.format == :otml
-      cache_page(response.body, request.path)
-    end
-  end
 
   def can_create
     if (current_visitor.anonymous?)
@@ -61,9 +49,7 @@ class InvestigationsController < AuthoringController
     end
     @page_title = @investigation.name
     format = request.parameters[:format]
-    unless format == 'otml' || format == 'jnlp'
-      if @investigation
-      end
+    if @investigation
     end
   end
 
@@ -136,8 +122,6 @@ class InvestigationsController < AuthoringController
   # GET /investigations/1
   # GET /investigations/1.jnlp
   # GET /investigations/1.config
-  # GET /investigations/1.dynamic_otml
-  # GET /investigations/1.otml
   def show
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
@@ -157,26 +141,12 @@ class InvestigationsController < AuthoringController
       }
 
       format.config { render :partial => 'shared/show', :locals => { :runnable => @investigation, :teacher_mode => @teacher_mode, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
-      format.dynamic_otml {
-        learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
-        if learner && learner.bundle_logger.in_progress_bundle
-          launch_event = Dataservice::LaunchProcessEvent.create(
-            :event_type => Dataservice::LaunchProcessEvent::TYPES[:activity_otml_requested],
-            :event_details => "Activity content loaded. Activity should now be running...",
-            :bundle_content => learner.bundle_logger.in_progress_bundle
-          )
-        end
-        render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode}
-      }
-      format.otml   { render :layout => 'layouts/investigation' } # investigation.otml.haml
       format.xml    { render :xml => @investigation }
       format.json   { render :json => @investigation }
       format.pdf    { render :layout => false }
     end
   end
 
-  # GET /investigations/teacher/1.otml
-  # GET /investigations/teacher/1.dynamic_otml
   def teacher
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -187,12 +157,6 @@ class InvestigationsController < AuthoringController
     # authorize @investigation, :update_edit_or_destroy?
     # display for teachers? Later we can determin via roles?
     @teacher_mode = true
-    # whay doesn't this work with: respond_to do |format| ??
-    if request.format == :otml
-      render :layout => 'layouts/investigation', :action => :show
-    elsif request.format == :dynamic_otml
-      render :partial => 'shared/show', :locals => {:runnable => @investigation, :teacher_mode => @teacher_mode}
-    end
   end
 
   # GET /pages/new
