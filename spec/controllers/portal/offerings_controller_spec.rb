@@ -81,16 +81,11 @@ describe Portal::OfferingsController do
       @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
 
       @runnable = Factory(:page)
-      @xhtml = Factory(:xhtml)
       @multiple_choice = Factory(:multiple_choice)
       @open_response = Factory(:open_response)
 
-      @xhtml.pages << @runnable
       @multiple_choice.pages << @runnable
       @open_response.pages << @runnable
-
-      @xhtml.save
-      @xhtml.reload
 
       @multiple_choice.save
       @multiple_choice.create_default_choices
@@ -132,11 +127,6 @@ describe Portal::OfferingsController do
       response.body.should =~ mc_regex
       response.body =~ mc_regex
       $1.to_i.should == @multiple_choice.id
-
-      xhtml_regex = /<div.*?id='details_embeddable__xhtml_(\d+)'/
-      response.body.should =~ xhtml_regex
-      response.body =~ xhtml_regex
-      $1.to_i.should == @xhtml.id
     end
 
     it 'should create saveables when the form is submitted' do

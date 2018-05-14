@@ -77,14 +77,6 @@ class Activity < ActiveRecord::Base
       end
     end
 
-    integer :probe_type_ids, :multiple => true do |act|
-      act.data_collectors.map { |dc| dc.probe_type_id }.compact
-    end
-
-    boolean :no_probes do |act|
-      act.data_collectors.map { |dc| dc.probe_type_id }.compact.size < 1
-    end
-
     boolean :teacher_only
 
     integer :offerings_count do |act|
@@ -141,22 +133,6 @@ class Activity < ActiveRecord::Base
     {
       :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(",") : gs ]
     }
-  }
-
-  scope :probe_type, {
-    :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
-  }
-
-  scope :probe, lambda { |pt|
-    pt = pt.size > 0 ? pt.map{|i| i.to_i} : []
-    {
-      :conditions => ['probe_probe_types.id in (?)', pt ]
-    }
-  }
-
-  scope :no_probe,{
-    :select => "activities.id",
-    :joins => "INNER JOIN sections ON sections.activity_id = activities.id INNER JOIN pages ON pages.section_id = sections.id INNER JOIN page_elements ON page_elements.page_id = pages.id INNER JOIN embeddable_data_collectors ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = 'Embeddable::DataCollector' INNER JOIN probe_probe_types ON probe_probe_types.id = embeddable_data_collectors.probe_type_id"
   }
 
   scope :activity_group, {
@@ -245,54 +221,7 @@ class Activity < ActiveRecord::Base
     )
   end
 
-  @@opening_xhtml = <<-HEREDOC
-<h3>Procedures</h3>
-<p><em>What activities will you and your students do and how are they connected to the objectives?</em></p>
-<p></p>
-<h4>What will you be doing?</h4>
-<p><em>How do you activate and assess students' prior knowledge and connect it to this new learning?</em></li>
-<p></p>
-<p><em>How do you get students engaged in this lesson?</em></li>
-<p></p>
-<h4>What will the students be doing?</h4>
-<p><em>Students will discuss the following driving question:</em></p>
-<p></p>
-<p><em>Key components:</p>
-<p></p>
-<p><em>Starting conditions:</p>
-<p></p>
-<p><em>Ability to change variables:</p>
-<p></p>
-  HEREDOC
-
-  @@engagement_xhtml = <<-HEREDOC
-<h3>Engagement</h3>
-<h4>What will you be doing?</h4>
-<p><em>What questions can you pose to encourage students to take risks and to deepen students' understanding?</em></p>
-<p></p>
-<p><em>How do you facilitate student discourse?</em></p>
-<p></p>
-<p><em>How do you facilitate the lesson so that all students are active learners and reflective during this lesson?</em></p>
-<p></p>
-<p><em>How do you monitor students' learning throughout this lesson?</em></p>
-<p></p>
-<p><em>What formative assessment is imbedded in the lesson?</em></p>
-<p></p>
-<h4>What will the students be doing?</h4>
-<p></p>
-  HEREDOC
-
-  @@closure_xhtml = <<-HEREDOC
-<h3>Closure</h3>
-<h4>What will you be doing?</h4>
-<p><em>What kinds of questions do you ask to get meaningful student feedback?</em></p>
-<p></p>
-<p><em>What opportunities do you provide for students to share their understandings of the task(s)?</em></p>
-<p></p>
-<h4>What will the students be doing?</h4>
-<p></p>
-  HEREDOC
-
+ 
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
   def reportable_elements

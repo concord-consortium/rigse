@@ -71,11 +71,7 @@ h4, .content, .editable_block {
       clear: both;
       margin: 2em;
       page-break-inside: avoid; }
-    .data_collector {
-      display: block;
-      clear: both;
-      width: 400px;
-      height: 200px; } }
+    }
   .teacher_content {
     display: block;
     float: right;
@@ -115,7 +111,7 @@ table {
         text-align: right; } } } }
 
 /* CANVAS, FLOTR */
-canvas, .flotr-overlay, .data_collector, .flotr-axis-title {
+canvas, .flotr-overlay, .flotr-axis-title {
   clear: both;
   display: block;
   min-height: 400px;

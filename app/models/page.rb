@@ -10,27 +10,13 @@ class Page < ActiveRecord::Base
 
   has_one :activity, :through => :section
 
-  # this could work if the finder sql was redone
-  # has_one :investigation,
-  #   :finder_sql => proc { "SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
-  #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
-  #   INNER JOIN pages ON page_elements.page_id = pages.id
-  #   WHERE pages.section_id = #{id}" }
-
   # Order by ID is important, see: https://www.pivotaltracker.com/story/show/79237764
   # Some older elements in DB can have always position equal to 1.
   has_many :page_elements, :order => 'position ASC, id ASC', :dependent => :destroy
-  has_many :inner_page_pages, :dependent => :destroy, :class_name => 'Embeddable::InnerPagePage'
-  has_many :inner_pages, :class_name => 'Embeddable::InnerPage', :through => :inner_page_pages
 
   # The array of embeddables is defined in conf/initializers/embeddables.rb
   # The order of this array determines the order they show up in the Add menu
   @@element_types = ALL_EMBEDDABLES
-
-  if !APP_CONFIG[:include_otrunk_examples]
-    # Strip this embeddable type if the app isn't configured to support it
-    @@element_types.reject! { |e| e == "Embeddable::RawOtml" }
-  end
 
   # @@element_types.each do |type|
   #   unless defined? type.dont_make_associations
@@ -48,8 +34,6 @@ class Page < ActiveRecord::Base
   end
 
   include ResponseTypes
-
-  has_many :raw_otmls, :through => :page_elements, :source => :embeddable, :source_type => 'Embeddable::RawOtml'
 
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
@@ -134,16 +118,7 @@ class Page < ActiveRecord::Base
   end
 
   def find_section
-    case parent
-      when Section
-        return parent
-      when Embeddable::InnerPage
-        # kind of hackish:
-        if(parent.parent)
-          return parent.parent.section
-        end
-    end
-    return nil
+    return parent
   end
 
   def find_activity
@@ -173,20 +148,9 @@ class Page < ActiveRecord::Base
     element.save
   end
 
-  #
-  # after_create :add_xhtml
-  #
-  # def add_xhtml
-  #   if(self.page_elements.size < 1)
-  #     xhtml = Embeddable::Xhtml.create
-  #     xhtml.pages << self
-  #     xhtml.save
-  #   end
-  # end
 
-  #
   # return element.id for the component passed in
-  # so for example, pass in an xhtml item in, and get back a page_elements object.
+  # so for example, pass in an MultipleChoice item in, and get back a page_elements object.
   # assumes that this page contains component.  Because this can cause confusion,
   # if we pass in a page_element we directly return that.
   def element_for(component)
@@ -197,7 +161,7 @@ class Page < ActiveRecord::Base
   end
 
   def parent
-    return self.inner_page_pages.size > 0 ? self.inner_page_pages[0].inner_page : section
+    return section
   end
 
   include TreeNode
@@ -209,10 +173,6 @@ class Page < ActiveRecord::Base
   end
 
   def has_inner_page?
-    i_pages = page_elements.collect {|e| e.embeddable_type == Embeddable::InnerPage.name}
-    if (i_pages.size > 0)
-      return true
-    end
     return false
   end
 

@@ -230,10 +230,6 @@ body#tinymce {
     background: transparent image-url("banners/interactions.png") 0 0 no-repeat; }
   &.inquiryspace {
     background: transparent image-url("banners/inquiryspace.png") 0 0 no-repeat; }
-  // &.loops {
-  //   background: white image-url("new/banners/loops.png") 0 0 no-repeat; }
-  &.smartgraphs {
-    background: transparent image-url("banners/smartgraphs.png") 0 0 no-repeat; }
   &.rites {
     background: transparent image-url("banners/rites.png") 0 0 no-repeat; }
   &.sparks {
@@ -1192,10 +1188,7 @@ ul.quiet_list {
     // cursor: pointer;
     font-size: 9pt;
   }
-.data_collector {
-  display: block;
-  width: 100%;
-  height: 400px; }
+
 #school_toggle_write_in {
   cursor: pointer;
 }
@@ -1292,15 +1285,6 @@ ul.quiet_list {
   li.menu {list-style-type: none;}
 }
 
-.inner_page * {
-  .page {
-      border: 1px solid;
-      margin: 2px;
-  }
-  .content {
-    padding-bottom: 0.5em;
-  }
-}
 
 /* CSS for Manage Classes Page*/
 

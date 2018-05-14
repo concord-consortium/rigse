@@ -12,15 +12,8 @@ en:
       "dataservice/bundle_logger": BundleLogger
       "dataservice/console_content": ConsoleContent
       "dataservice/console_logger": ConsoleLogger
-      "embeddable/data_collector" : Graph
-      "embeddable/drawing_tool" : "Draw Tool"
       "embeddable/image_question" : "Image Question"
-      "embeddable/lab_book_snapshot" : "Snapshot Button"
       "embeddable/multiple_choice" : "Multiple Choice Question"
-      "embeddable/mw_modeler_page" : "Molecular Workbench Model"
-      "embeddable/n_logo_model" : "Net Logo Model"
-      "embeddable/smartgraph/range_question" : "Smartgraph Range Question"
-      "embeddable/xhtml" : Text
       "portal/clazz": Class
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"

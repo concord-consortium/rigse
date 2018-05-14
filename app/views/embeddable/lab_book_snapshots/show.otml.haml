@@ -1,5 +1,0 @@
-- content_for(:otrunk_doc_id) do
-  =@lab_book_snapshot.uuid
-- content_for(:lab_book_snapshot_object_id) do
-  =dom_id_for(@lab_book_snapshot)
-= render :partial => "show", :locals => { :lab_book_snapshot => @lab_book_snapshot }

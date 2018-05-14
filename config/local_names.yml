@@ -4,15 +4,8 @@ default:
   Dataservice::BundleLogger : BundleLogger
   Dataservice::ConsoleContent : ConsoleContent
   Dataservice::ConsoleLogger : ConsoleLogger
-  Embeddable::DataCollector : Graph
-  Embeddable::DrawingTool : Draw Tool
   Embeddable::ImageQuestion : Image Question
-  Embeddable::LabBookSnapshot : Snapshot Button
   Embeddable::MultipleChoice : Multiple Choice Question
-  Embeddable::MwModelerPage : Molecular Workbench Model
-  Embeddable::NLogoModel : Net Logo Model
-  Embeddable::Smartgraph::RangeQuestion : Smartgraph Range Question
-  Embeddable::Xhtml : Text
   Portal::Clazz : Class
   Portal::Nces06District : NCES District
   Portal::Nces06School : NCES School

@@ -119,9 +119,8 @@ describe Activity do
 
     let (:section)      { Factory.create(:section, :activity_id => probe_activity_published.id) }
     let (:page)         { Factory.create(:page, :section_id => section.id) }
-    let (:probe_type)   { Factory.create(:probe_type) }
-    let (:embeddable_data_collectors) { Factory.create(:data_collector, :probe_type => probe_type) }
-    let (:page_element) { Factory.create(:page_element, :page => page, :embeddable => embeddable_data_collectors) }
+    let (:open_response) { Factory.create(:open_response)}
+    let (:page_element) { Factory.create(:page_element, :page => page, :embeddable => open_response) }
   end
 
   describe "#is_template method" do

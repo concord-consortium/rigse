@@ -717,10 +717,6 @@ module MockData
       section_uuid = inv.delete(:section_uuid)
       page_uuid = inv.delete(:page_uuid)
       open_response_uuid = inv.delete(:open_response_uuid)
-      draw_tool_uuid = inv.delete(:draw_tool_uuid)
-      lab_book_snapshot = inv.delete(:lab_book_snapshot)
-      prediction_graph_uuid = inv.delete(:prediction_graph_uuid)
-      displaying_graph_uuid = inv.delete(:displaying_graph_uuid)
 
       if user
         investigation = nil
@@ -755,27 +751,6 @@ module MockData
           open_response.save!
           open_response.pages << page
 
-          draw_tool = Embeddable::DrawingTool.find_or_create_by_uuid(:uuid)
-          draw_tool.user_id = user.id
-          draw_tool.background_image_url = "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg"
-          draw_tool.save!
-          draw_tool.pages << page
-
-          snapshot_button = Embeddable::LabBookSnapshot.find_or_create_by_uuid(lab_book_snapshot)
-          snapshot_button.user_id = user.id
-          snapshot_button.target_element = draw_tool
-          snapshot_button.save!
-          snapshot_button.pages << page
-
-          prediction_graph = Embeddable::DataCollector.find_or_create_by_uuid(:uuid => prediction_graph_uuid)
-          prediction_graph.pages << page
-
-          displaying_graph = Embeddable::DataCollector.find_or_create_by_uuid(displaying_graph_uuid)
-          displaying_graph.user_id = user.id
-          displaying_graph.prediction_graph_id = prediction_graph.id
-          displaying_graph.save!
-          displaying_graph.pages << page
-
           update_count += 1
           print '+'
         else
@@ -790,32 +765,6 @@ module MockData
 
           open_response = Embeddable::OpenResponse.create!(:user_id => user.id, :uuid => open_response_uuid)
           open_response.pages << page
-
-          info = {
-                   :user_id => user.id,
-                   :background_image_url => "https://lh4.googleusercontent.com/-xcAHK6vd6Pc/Tw24Oful6sI/AAAAAAAAB3Y/iJBgijBzi10/s800/4757765621_6f5be93743_b.jpg",
-                   :uuid => draw_tool_uuid
-                 }
-          draw_tool = Embeddable::DrawingTool.create!(info)
-          draw_tool.pages << page
-
-          info = {
-                   :user_id => user.id,
-                   :target_element => draw_tool,
-                   :uuid => lab_book_snapshot
-                 }
-          snapshot_button = Embeddable::LabBookSnapshot.create!(info)
-          snapshot_button.pages << page
-          prediction_graph = Embeddable::DataCollector.create!(:user_id => user.id, :uuid => prediction_graph_uuid)
-          prediction_graph.pages << page
-
-          info = {
-                   :user_id => user.id,
-                   :prediction_graph_id => prediction_graph.id,
-                   :uuid => displaying_graph_uuid
-                 }
-          displaying_graph =  Embeddable::DataCollector.create!(info)
-          displaying_graph.pages << page
 
           create_count += 1
           print '.'

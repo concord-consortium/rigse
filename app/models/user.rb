@@ -39,14 +39,8 @@ class User < ActiveRecord::Base
   has_many :external_activities
   has_many :security_questions
 
-  has_many :data_collectors, :class_name => 'Embeddable::DataCollector'
-  has_many :xhtmls, :class_name => 'Embeddable::Xhtml'
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
   has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
-  has_many :data_tables, :class_name => 'Embeddable::DataTable'
-  has_many :drawing_tools, :class_name => 'Embeddable::DrawingTool'
-  has_many :mw_modeler_pages, :class_name => 'Embeddable::MwModelerPage'
-  has_many :n_logo_models, :class_name => 'Embeddable::NLogoModel'
 
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'

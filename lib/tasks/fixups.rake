@@ -97,44 +97,11 @@ namespace :app do
       end
     end
 
-    desc 'Data Collectors with a static graph_type to a static attribute; Embeddable::DataCollectors with a graph_type_id of nil to Sensor'
-    task :data_collectors_with_invalid_graph_types => :environment do
-      puts <<-HEREDOC
-
-This task will search for all Data Collectors with a graph_type_id == 3 (Static)
-which was used to indicate a static graph type, and set the graph_type_id to 1 
-(Sensor) and set the new boolean attribute static to true.
-
-In addition it will set the graph_type_id to 1 if the existing graph_type_id is nil.
-These Embeddable::DataCollectors appeared to be created by the ITSI importer.
-
-There is no way for this transformation to tell whether the original graph was a 
-sensor or prediction graph_type so it sets the type to 1 (Sensor).
-
-      HEREDOC
-      old_style_static_graphs = Embeddable::DataCollector.find_all_by_graph_type_id(3)
-      puts "converting #{old_style_static_graphs.length} old style static graphs and changing type to Sensor"
-      attributes = { :graph_type_id => 1, :static => true }
-      old_style_static_graphs.each do |dc| 
-        dc.update_attributes(attributes)
-        print '.'; STDOUT.flush
-      end
-      puts
-      nil_graph_types = Embeddable::DataCollector.find_all_by_graph_type_id(nil)
-      puts "changing type of #{nil_graph_types.length} Embeddable::DataCollectors with nil graph_type_ids to Sensor"
-      attributes = { :graph_type_id => 1, :static => false }
-      nil_graph_types.each do |dc| 
-        dc.update_attributes(attributes)
-        print '.'; STDOUT.flush
-      end
-      puts
-    end
-
     desc 'copy truncated Embeddable::Xhtml from Embeddable::Xhtml#content, Embeddable::OpenResponse and Embeddable::MultipleChoice#prompt into name'
     task :copy_truncated_xhtml_into_name => :environment do
-      models = [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice]
+      models = [Embeddable::OpenResponse, Embeddable::MultipleChoice]
       puts "\nprocessing #{models.join(', ')} models to generate new names from soft-truncated xhtml.\n"
-      [Embeddable::Xhtml, Embeddable::OpenResponse, Embeddable::MultipleChoice].each do |klass|
+      models.each do |klass|
         puts "\nprocessing #{klass.count} #{klass} model instances, extracting truncated text from xhtml and generating new name attribute\n"
         klass.find_in_batches(:batch_size => 100) do |group|
           group.each { |x| x.save! }
@@ -218,19 +185,6 @@ sensor or prediction graph_type so it sets the type to 1 (Sensor).
       MultiteacherClazzes.make_all_multi_teacher
     end
 
-    desc "Fixup inner pages so they have a satic area (run migrations first)"
-    task :add_static_page_to_inner_pages => :environment do
-      innerPageElements = PageElement.all.select { |pe| pe.embeddable_type == "Embeddable::InnerPage" }
-      innerPages = innerPageElements.map { |pe| pe.embeddable }
-      innerPages.each do |ip|
-        if ip.static_page.nil?
-          ip.static_page = Page.new
-          ip.static_page.user = ip.user
-          ip.save
-        end
-      end
-    end
-    
     # Feb 3, 2010
     desc "Extract and process learner responses from existing OTrunk bundles"
     task :extract_learner_responses_from_existing_bundles => :environment do

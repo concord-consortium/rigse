@@ -4,20 +4,11 @@ class PageElement < ActiveRecord::Base
   acts_as_list :scope => :page_id
   belongs_to :embeddable, :polymorphic => true
 
-  # this could work if the finder sql was redone
-  # has_one :investigation,
-  #   :finder_sql => 'SELECT embeddable_data_collectors.* FROM embeddable_data_collectors
-  #   INNER JOIN page_elements ON embeddable_data_collectors.id = page_elements.embeddable_id AND page_elements.embeddable_type = "Embeddable::DataCollector"
-  #   INNER JOIN pages ON page_elements.page_id = pages.id
-  #   WHERE pages.section_id = #{id}'
-  
   # TODO the old scope (now page_by_investigation) didn't include elements in inner pages.
   # this method combines elements in pages, with elements in innerpages
   # it may or may not be possible to integrate them into one scope
   def self.by_investigation(investigation)
-    page_page_elements = PageElement.page_by_investigation(investigation)
-    inner_page_page_elements = PageElement.inner_page_by_investigation(investigation)
-    return (page_page_elements + inner_page_page_elements).compact.uniq
+    return PageElement.page_by_investigation(investigation)
   end
   
   scope :page_by_investigation, lambda {|investigation|
@@ -29,11 +20,7 @@ class PageElement < ActiveRecord::Base
       :order => 'activity_position asc, section_position asc, page_position asc, page_elements.position asc'
     }
   }
-  
-  def self.inner_page_by_investigation(investigation)
-    Embeddable::InnerPage.all.select{|p| p.investigation.id == investigation.id}.collect{|ip| ip.children.collect{|p| p.children}}.flatten.uniq
-  end
-  
+
   # to be used with the by_investigation scope only
   scope :student_only, lambda {
     { :conditions => {'pages.teacher_only' => false, 'sections.teacher_only' => false, 'activities.teacher_only' => false }

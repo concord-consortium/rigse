@@ -1,8 +1,0 @@
-%div{:id => dom_id_for(mw_modeler_page, :details), :class => 'content'}
-  = wrap_edit_link_around_content(mw_modeler_page, options={:complete => mce_init_string}) do
-    %ul
-
-      %li
-        Authored Data URL: 
-        %a{:href => mw_modeler_page.authored_data_url}
-          = mw_modeler_page.authored_data_url

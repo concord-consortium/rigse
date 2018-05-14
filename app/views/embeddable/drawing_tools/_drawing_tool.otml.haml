@@ -1,7 +1,0 @@
-- opts = {:local_id => ot_local_id_for(drawing_tool)}
-- opts[:preferredHeight] = drawing_tool.preferred_height if drawing_tool.preferred_height
-%OTDrawingTool2{opts}
-  %stamps
-  - if drawing_tool.background_image_url
-    %backgroundSrc
-      %OTBlob{ :src => drawing_tool.background_image_url, :name => h(drawing_tool.background_image_url) }

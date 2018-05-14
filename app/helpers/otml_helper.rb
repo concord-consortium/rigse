@@ -62,7 +62,6 @@ module OtmlHelper
       org.concord.framework.otrunk.wrapper.OTInt
       org.concord.framework.otrunk.wrapper.OTBoolean
       org.concord.framework.otrunk.wrapper.OTBlob
-      org.concord.graph.util.state.OTDrawingTool2
       org.concord.otrunk.OTSystem
       org.concord.otrunk.control.OTButton
       org.concord.otrunk.ui.OTCardContainer
@@ -139,16 +138,12 @@ module OtmlHelper
     [
       ['text_edit_view', 'org.concord.otrunk.ui.OTText', 'org.concord.otrunk.ui.swing.OTTextEditView'],
       ['question_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionView'],
-      ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
-      ['data_collector_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.datagraph.state.OTDataCollectorView'],
       ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
       ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
       ['digital_display_view', 'org.concord.data.state.OTDigitalDisplay', 'org.concord.data.state.OTDigitalDisplayView'],
-      ['data_drawing_tool_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.datagraph.state.OTDataDrawingToolView'],
       ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
       ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
-      ['data_table_view', 'org.concord.data.state.OTDataTable', 'org.concord.data.state.OTDataTableView'],
       ['rites_container', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerView'],
       ['curriculum_unit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitView'],
       ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
@@ -187,15 +182,6 @@ module OtmlHelper
       ['question_edit_view', 'org.concord.otrunk.ui.question.OTQuestion', 'org.concord.otrunk.ui.question.OTQuestionEditView'],
 #      ['choice_radio_button_edit_view', 'org.concord.otrunk.ui.OTChoice', 'org.concord.otrunk.ui.swing.OTChoiceComboBoxEditView'],
       ['lab_book_button_view', 'org.concord.otrunk.labbook.OTLabbookButton', 'org.concord.otrunk.labbook.ui.OTLabbookButtonEditView'],
-#      ['data_drawing_tool2_view', 'org.concord.graph.util.state.OTDrawingTool2', 'org.concord.datagraph.state.OTDataDrawingToolView'],
-#      ['blob_image_view', 'org.concord.framework.otrunk.wrapper.OTBlob', 'org.concord.otrunk.ui.swing.OTBlobImageView'],
-      ['data_collector_edit_view', 'org.concord.datagraph.state.OTDataCollector', 'org.concord.otrunk.graph.OTDataCollectorEditView'],
-#      ['data_graph_view', 'org.concord.datagraph.state.OTDataGraph', 'org.concord.datagraph.state.OTDataGraphView'],
-#      ['data_field_view', 'org.concord.data.state.OTDataField', 'org.concord.data.state.OTDataFieldView'],
-      ['data_drawing_tool_edit_view', 'org.concord.graph.util.state.OTDrawingTool', 'org.concord.otrunk.graph.OTDataDrawingToolEditView'],
-#      ['multi_data_graph_view', 'org.concord.datagraph.state.OTMultiDataGraph', 'org.concord.datagraph.state.OTMultiDataGraphView'],
-#      ['button_view', 'org.concord.otrunk.control.OTButton', 'org.concord.otrunk.control.OTButtonView'],
-      ['data_table_edit_view', 'org.concord.data.state.OTDataTable', 'org.concord.otrunk.ui.swing.OTDataTableEditView'],
       ['udl_container_edit_view', 'org.concord.otrunk.ui.OTRITESContainer', 'org.concord.otrunk.ui.OTRITESContainerEditView'],
       ['curriculum_unit_edit_view', 'org.concord.otrunk.ui.OTCurriculumUnit', 'org.concord.otrunk.ui.swing.OTCurriculumUnitEditView'],
 #      ['section_view', 'org.concord.otrunk.ui.OTSection', 'org.concord.otrunk.ui.swing.OTSectionView'],
@@ -304,37 +290,7 @@ module OtmlHelper
       end
     end
   end
-  
-  # %OTDataStore{ :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' }
-  #   - if data_collector.data_store_values.length > 0
-  #     %values
-  #       - data_collector.data_store_values.each do |value|
-  #         %float= value
-  # 
-  def generate_otml_datastore(data_collector)
-    capture_haml do
-      if data_collector.data_table
-        haml_tag :object, :refid => ot_refid_for(data_collector.data_table, :data_store)
-      else
-        haml_tag :OTDataStore, :local_id => ot_local_id_for(data_collector, :data_store), :numberChannels => '2' do
-          haml_tag :channelDescriptions do
-            haml_tag :OTDataChannelDescription
-            haml_tag :OTDataChannelDescription
-          end
-          if data_collector.data_store_values && data_collector.data_store_values.length > 0
-            haml_tag :values do
-              data_collector.data_store_values.each do |value|
-                haml_tag(:float, :<) do
-                  haml_concat(value)
-                end
-              end
-            end
-          end
-        end
-      end
-    end
-  end
-  
+
   def otml_time_limit_seconds(seconds)
     if seconds
       (seconds * 1000).to_i
