@@ -62,13 +62,11 @@ Feature: Teacher can search and assign instructional materials to a class
     
   Scenario: Teacher should be able to see different properties of materials
     When the investigation "Digestive System 2" with activity "Bile Juice" belongs to domain "Biological Science" and has grade "10-11"
-    And the investigation "A Weather Underground" with activity "A heat spontaneously" belongs to probe "Temperature"
     And I am on the the preview investigation page for the investigation "Digestive System 2"
     Then I should see "Biological Science"
     And I should see "10-11"
     And I am on the the preview investigation page for the investigation "A Weather Underground"
-    And I should see "Temperature"
-    
+
     
   @javascript
   Scenario: Teacher should be able to share investigation
@@ -137,7 +135,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher should see message the class name in which activities are assigned
-    When the Activity "Fluid Mechanics" is assigned to the class "Mathematics"
+    When the external activity "Fluid Mechanics" is assigned to the class "Mathematics"
     And I am on the the preview investigation page for the investigation "Mechanics"
     And I uncheck "Mechanics" from the investigation preview page
     And I follow "Assign Individual Activities"
@@ -160,7 +158,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup of assign activity if  activity is already as part of investigation
-    When the Investigation "Mechanics" is assigned to the class "Physics"
+    When the external activity "Mechanics" is assigned to the class "Physics"
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
     Then I should see /(Already assigned as part of "Mechanics")/ within the lightbox in focus
@@ -168,7 +166,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if investigation is assigned to any class
-    When the Investigation "Mechanics" is assigned to the class "Physics"
+    When the external activity "Mechanics" is assigned to the class "Physics"
     And I am on the the preview investigation page for the investigation "Mechanics"
     And I follow "Assign Investigation"
     Then I should see "Already assigned to the following class(es)" within the lightbox in focus
@@ -177,7 +175,7 @@ Feature: Teacher can search and assign instructional materials to a class
     
   @javascript
   Scenario: Teacher can see a message in the popup if activity is assigned to any class
-    When the Activity "Fluid Mechanics" is assigned to the class "Mathematics"
+    When the external activity "Fluid Mechanics" is assigned to the class "Mathematics"
     And I am on the the preview activity page for the activity "Fluid Mechanics"
     And I follow "Assign Individual Activities"
     Then I should see "Already assigned to the following class(es)" within the lightbox in focus

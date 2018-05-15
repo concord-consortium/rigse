@@ -10,16 +10,6 @@ describe Dataservice::BlobsController do
     @mock_blob ||= mock_model(Dataservice::Blob, stubs)
   end
 
-  describe "GET index" do
-    it "assigns all dataservice_blobs as @dataservice_blobs" do
-      pending
-      # this tests the default controller, but now we're setting @dataservice_blobs to be a search collection
-      # Dataservice::Blob.stub(:all).and_return([mock_blob])
-      # get :index
-      # assigns[:dataservice_blobs].should == [mock_blob]
-    end
-  end
-
   describe "GET show" do
     it "assigns the requested blob as @blob" do
       Dataservice::Blob.stub(:find).with("37").and_return(mock_blob)

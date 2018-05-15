@@ -7,7 +7,7 @@ Feature: Student runs html activity
     Given the most basic default settings
     And the database has been seeded
     And a simple activity with a multiple choice exists
-    And the activity "simple activity" is assigned to the class "My Class"
+    And the external activity "simple activity" is assigned to the class "My Class"
   
   @lightweight
   Scenario: Student runs html

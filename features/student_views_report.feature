@@ -8,7 +8,7 @@ Feature: Student views report
     Given the most basic default settings
     And the database has been seeded
     And a simple activity with a multiple choice exists
-    And the activity "simple activity" is assigned to the class "Class_with_no_assignment"
+    And the external activity "simple activity" is assigned to the class "Class_with_no_assignment"
 
   @lightweight
   Scenario: Student sees report link

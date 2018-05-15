@@ -82,6 +82,15 @@ module RunnablesHelper
     text
   end
 
+  def updated_time_text(thing)
+    if(thing.respond_to? :updated_at)
+      return thing.updated_at
+    elsif(thing.respond_to? :created_at)
+      return thing.created_at
+    end
+    return ""
+  end
+  
   def run_url_for(component, params = {}, format = nil)
     if component.instance_of? Interactive
       return component.url
@@ -98,6 +107,9 @@ module RunnablesHelper
       # the user id is not actually used to generate the response or authorize it
       user_portal_offering_url(current_visitor, component, params)
     else
+      unless component.instance_of? ExternalActivity
+        raise StandardError, "Bad runnable component #{component.class}"
+      end
       polymorphic_url(component, params)
     end
   end

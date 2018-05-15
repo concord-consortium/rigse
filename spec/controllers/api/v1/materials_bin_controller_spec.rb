@@ -13,10 +13,8 @@ describe API::V1::MaterialsBinController do
 
   describe 'GET collections' do
     let(:collection) { FactoryGirl.create(:materials_collection) }
-    let(:ext_act) { FactoryGirl.create_list(:external_activity, 3) }
-    let(:act) { FactoryGirl.create_list(:activity, 3) }
-    let(:inv) { FactoryGirl.create_list(:investigation, 3) }
-    let(:materials) { ext_act + act + inv }
+    let(:ext_act) { FactoryGirl.create_list(:external_activity, 9) }
+    let(:materials) { ext_act }
     before(:each) do
       # Assign some materials to cohorts and mark the first one as assessment item.
       materials.each_with_index do |m, i|

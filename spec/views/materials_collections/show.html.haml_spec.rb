@@ -19,7 +19,6 @@ describe "materials_collections/show" do
   it "renders attributes in accordion (with materials)" do
     @materials_collection = assign(:materials_collection, FactoryGirl.create(:materials_collection_with_items))
     render
-
     assert_select ".list-item-wrapper .accordion_content .editable_block h4", :text => "Some name".to_s, :count => 1
     assert_select ".list-item-wrapper .accordion_content .editable_block p", :text => "Some description".to_s, :count => 1
     assert_select ".list-item-wrapper .accordion_content .editable_block .material_items .material_item", :count => 5

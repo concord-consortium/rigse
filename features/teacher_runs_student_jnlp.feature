@@ -7,7 +7,7 @@ Feature: Teacher runs student jnlps
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And the student "student" belongs to class "Class_with_no_assignment"
-    And the investigation "Aerodynamics" is assigned to the class "Class_with_no_assignment"
+    And the external activity "Aerodynamics" is assigned to the class "Class_with_no_assignment"
     And the student "student" has run the investigation "Aerodynamics" in the class "Class_with_no_assignment"
     And I login with username: teacher
 
