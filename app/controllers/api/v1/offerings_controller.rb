@@ -32,25 +32,8 @@ class API::V1::OfferingsController < API::APIController
     authorize offering
     offering.update_attributes!(params.permit(:active, :locked))
     if params[:position]
-      new_pos = params[:position].to_i
-      class_offerings = offering.clazz.teacher_visible_offerings
-      old_pos = class_offerings.index(offering)
-      class_offerings.each_with_index do |off, index|
-        if off === offering
-          # Update given offering.
-          off.position = new_pos
-        elsif new_pos > old_pos && index > old_pos && index <= new_pos
-          # Move items up.
-          off.position = index - 1
-        elsif new_pos < old_pos && index >= new_pos && index < old_pos
-          # Move items down.
-          off.position = index + 1
-        else
-          # Make sure that positions are normalized and correct.
-          off.position = index
-        end
-        off.save!
-      end
+      clazz = offering.clazz
+      clazz.update_offering_position(offering, params[:position].to_i)
     end
     render :json => {message: 'OK'}, :callback => params[:callback]
   end
