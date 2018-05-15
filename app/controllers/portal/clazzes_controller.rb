@@ -67,9 +67,9 @@ class Portal::ClazzesController < ApplicationController
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['NONE'])
 
     respond_to do |format|
-       format.html # show.html.erb
-       format.xml  { render :xml => @portal_clazz }
-     end
+      format.html # show.html.erb
+      format.xml {render :xml => @portal_clazz}
+    end
   end
 
   # GET /portal_clazzes/new
