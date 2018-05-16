@@ -4,13 +4,14 @@ require 'spec_helper'
 describe API::V1::MaterialsController do
   describe 'GET featured' do
     before(:each) do
-      FactoryGirl.create_list(:investigation, 2)
-      FactoryGirl.create_list(:activity, 2)
-      FactoryGirl.create_list(:external_activity, 2)
-      Activity.first.update_attributes!(is_featured: true, publication_status: 'published')
-      ExternalActivity.first.update_attributes!(is_featured: true, publication_status: 'published')
-      Investigation.first.update_attributes!(is_featured: true, publication_status: 'published')
-      Investigation.last.update_attributes!(is_featured: true) # not published, shouldn't be returned!
+      activity_params = [
+        {is_featured: true, publication_status: 'published'},
+        {is_featured: true, publication_status: 'published'},
+        {is_featured: true},
+        {is_featured: false},
+        {is_featured: true, publication_status: 'published'}
+      ]
+      activity_params.each { |p| FactoryGirl.create(:external_activity, p) }
     end
 
     it 'should return list of featured activities' do
@@ -22,17 +23,14 @@ describe API::V1::MaterialsController do
 
     describe 'prioritization' do
       it 'should respect prioritize priority_type parameters' do
-        get :featured, {prioritize: Activity.first.id, priority_type: 'activity'}
-        materials = JSON.parse(response.body)
-        expect(materials[0]['id']).to eql(Activity.first.id)
 
         get :featured, {prioritize: ExternalActivity.first.id, priority_type: 'external_activity'}
         materials = JSON.parse(response.body)
         expect(materials[0]['id']).to eql(ExternalActivity.first.id)
 
-        get :featured, {prioritize: Investigation.first.id, priority_type: 'investigation'}
+        get :featured, {prioritize: ExternalActivity.last.id, priority_type: 'external_activity'}
         materials = JSON.parse(response.body)
-        expect(materials[0]['id']).to eql(Investigation.first.id)
+        expect(materials[0]['id']).to eql(ExternalActivity.last.id)
       end
     end
   end
@@ -42,8 +40,8 @@ describe API::V1::MaterialsController do
     before(:each) do
       sign_in user
       @m1 = FactoryGirl.create(:external_activity, user: user)
-      @m2 = FactoryGirl.create(:activity, user: user)
-      @m3 = FactoryGirl.create(:investigation, user: user)
+      @m2 = FactoryGirl.create(:external_activity, user: user)
+      @m3 = FactoryGirl.create(:external_activity, user: user)
       # Materials defined below should NOT be listed:
       e1 = FactoryGirl.create(:external_activity)
       e2 = FactoryGirl.create(:external_activity)

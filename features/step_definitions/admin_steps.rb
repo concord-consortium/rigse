@@ -87,6 +87,11 @@ Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fulln
   end
 end
 
+Then /^(?:|I )look for the user by searching "([^"]*)"$/ do |search|
+  fill_in("search", :with => search)
+  click_button('Search')
+end
+
 Then /^(?:|I )activate the user from user list by searching "([^"]*)"$/ do |search|
   fill_in("search", :with => search)
   click_button('Search')

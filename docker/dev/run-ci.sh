@@ -5,6 +5,11 @@
 #   – Or make an alias `alias dci='docker-compose run --rm app ./docker/dev/run-ci.sh'`
 #        then type `dci` to start Continuous Integration Testing.
 #   – Or run from shell in docker (`docker-compose run --rm bash` … ./docker/dev/run-ci.sh`)
+export XVFB_LOG=/tmp/xvfb.docker.log
+export DISPLAY=:99
+
+pkill Xvfb
+Xvfb $DISPLAY -ac 2>&1 -screen 0 1920x1080x16 >> $XVFB_LOG &
 
 #
 # Prepare spec tests

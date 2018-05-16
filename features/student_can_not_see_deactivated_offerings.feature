@@ -15,7 +15,7 @@ Feature: Student can not see deactivated offerings
 
   Scenario: Student should not see deactivated offerings
     When I am on the class page for "class_with_no_students"
-    And I follow "Deactivate" on the investigation "Plant reproduction" from the class "class_with_no_students"
+    And I follow "Deactivate" on the external activity "Plant reproduction" from the class "class_with_no_students"
     And I log out
     And I login with username: monty
     Then I should be on my classes page

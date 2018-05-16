@@ -88,6 +88,13 @@ module NavigationHelpers
       "/recent_activity"
     when /the search instructional materials page/
       "/search"
+    when /browse materials page for "(.+)"/
+      eresource = ExternalActivity.find_by_name $1
+      "/browse/eresources/#{eresource.id}"
+    when /material preview page for "(.+)"/
+      eresource = ExternalActivity.find_by_name $1
+      slug = eresource.name.parameterize
+      "/resources/#{eresource.id}/#{slug}"
     when /Instructional Materials page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
       "/portal/classes/#{portal_clazz.id}/materials"

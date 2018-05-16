@@ -1,9 +1,23 @@
+def makeMaterial(assignable)
+  case assignable
+  when ExternalActivity
+    assignable
+  else
+    material = ExternalActivity.create(name: assignable.name)
+    material.template = assignable
+    material.save
+    material
+  end
+end
+
 def polymorphic_assign(assignable_type, assignable_name, clazz_name)
   clazz = Portal::Clazz.find_by_name(clazz_name)
-  assignable = assignable_type.gsub(/\s/, "_").classify.constantize.find_by_name(assignable_name)
-  assignable.should_not be_nil
+  typeName = assignable_type.gsub(/\s/, "_")
+  assignable = typeName.classify.constantize.find_by_name(assignable_name)
+  material = makeMaterial(assignable)
+  material.should_not be_nil
   Factory.create(:portal_offering, {
-    :runnable => assignable,
+    :runnable => material,
     :clazz => clazz
   })
 end

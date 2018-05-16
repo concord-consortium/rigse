@@ -22,6 +22,7 @@ module MockData
   @default_classes = nil
   @default_investigations = nil
   @default_activities = nil
+  @default_external_activities = nil
   @default_mcq = nil
   @default_image_question = nil
 
@@ -504,10 +505,10 @@ module MockData
 
     default_investigations = []
     default_activities = []
-
+    default_external_activities = []
     @default_investigations = default_investigations
     @default_activities = default_activities
-
+    @default_external_activities = default_external_activities
     # pages
     puts
     puts
@@ -640,15 +641,27 @@ module MockData
           update_count += 1
           print '+'
         else
+          make_template = act.delete(:make_template)
+          sub_activities = act.delete(:activities)
           act[:user_id] = user.id
           default_ext_act = ExternalActivity.create!(act)
+          if (make_template)
+            default_ext_act.template = FactoryGirl.create(:activity, name: default_ext_act.name)
+          end
+          if(sub_activities)
+            investigation = FactoryGirl.create(:investigation, name: default_ext_act.name)
+            acts = sub_activities.each do |a|
+              investigation.activities.create(name: a)
+            end
+            default_ext_act.template = investigation
+          end
           default_ext_act.publish
           default_ext_act.is_official = true
           default_ext_act.save!
           create_count += 1
           print '.'
         end
-        default_activities << default_ext_act if default_ext_act
+        default_external_activities << default_ext_act if default_ext_act
       end
     end
     puts
@@ -667,8 +680,9 @@ module MockData
             study_material = @default_investigations.find{|i| i.name == assignable[:name]}
           elsif assignable[:type] == 'Activity'
             study_material = @default_activities.find{|a| a.name == assignable[:name]}
+          elsif assignable[:type] == 'ExternalActivity'
+            study_material = @default_external_activities.find{|a| a.name == assignable[:name]}
           end
-
           if study_material
             offering_uuid = assignable[:offering_uuid]
 

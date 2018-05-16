@@ -72,7 +72,7 @@ Feature: Admin can work with materials collections
       | testing fast cars | how fast can cars go? | author |
     When I am on the search instructional materials page
     And I search for "testing fast cars" on the search instructional materials page
-    And I follow the "Add to Collection" link for the investigation "testing fast cars"
+    And I follow the "Add to Collection" link for the material "testing fast cars"
     Then I should see "Select Collection(s)"
     And I should see "Collection 1"
     And I should see "Collection 4"

@@ -135,7 +135,7 @@ Then /^I should not see the "([^"]*)" checkbox in the list filter$/ do |arg1|
   page.should_not have_selector("input[name='#{arg1}'][type='checkbox']")
 end
 
-When /^I show offerings count on the investigations page$/ do 
+When /^I show offerings count on the investigations page$/ do
   visit "/investigations?include_usage_count=true"
 end
 
@@ -347,34 +347,34 @@ Then /^I cannot duplicate the investigation$/ do
   page.should have_no_content('duplicate')
 end
 
-And /^the investigation "([^"]*)" with activity "([^"]*)" belongs to domain "([^"]*)" and has grade "([^"]*)"$/ do |investigation_name, activity_name, domain_name, grade_value|
-  @domain = Factory.create( :rigse_domain, { :name => domain_name } )
-  knowledge_statement = Factory.create( :rigse_knowledge_statement, { :domain => @domain } )
+And /^the investigation "([^"]*)" belongs to domain "([^"]*)" and has grade "([^"]*)"$/ do |investigation_name, domain_name, grade_value|
+  domain = Factory.create( :rigse_domain, { :name => domain_name } )
+  knowledge_statement = Factory.create( :rigse_knowledge_statement, { :domain => domain } )
   assessment_target = Factory.create( :rigse_assessment_target, { :knowledge_statement => knowledge_statement })
-  
-  @grade = grade_value
-  grade_span_expection  = Factory.create( :rigse_grade_span_expectation, {:assessment_target => assessment_target, :grade_span => @grade} )
-  
-  investigation = 
-    {
-      :name => investigation_name,
-      :grade_span_expectation => grade_span_expection
-    }
-      
-  @published ||= []
-  @drafts ||= []
-  
-  published = Factory.create(:investigation, investigation)
-  # published.name << " (published) "
-  published.publish!
-  # published.save
-  @published << published.reload
-  Factory.create(:activity, :investigation_id => published.id , :name => activity_name)
-  # draft = Factory.create(:investigation, investigation)
-  # draft.name << " (draft) "
-  # draft.save
-  # @drafts << draft.reload
-  
+
+  grade_span_expection  = Factory.create(
+    :rigse_grade_span_expectation, {
+      assessment_target: assessment_target,
+      grade_span: grade_value
+  })
+
+  investigation = {
+    name: investigation_name,
+    grade_span_expectation: grade_span_expection,
+    publication_status: 'published'
+  }
+  e_activity =  {
+    name: investigation_name,
+    publication_status: 'published',
+    is_official: true,
+    material_type: 'investigation'
+  }
+
+  investigation = Factory.create(:investigation, investigation)
+  external_activity = Factory.create(:external_activity, e_activity)
+  external_activity.template = investigation
+  external_activity.save
+  binding.pry
 end
 
 When /^(?:|I )create investigations "(.+)" before "(.+)" by date$/ do |investigation_name1, investigation_name2|

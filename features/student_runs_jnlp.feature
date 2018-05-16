@@ -1,3 +1,4 @@
+@pending
 Feature: Student runs a jnlps
   In order to use a super cool Java activity
   As a student
@@ -7,7 +8,8 @@ Feature: Student runs a jnlps
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And I login with username: student
-  
+
+  @pending
   Scenario: Student runs jnlp
     When I run the investigation
     Then a jnlp file is downloaded

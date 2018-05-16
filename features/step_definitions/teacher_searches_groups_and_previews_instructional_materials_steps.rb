@@ -5,7 +5,8 @@ end
 Given /"(.+)" has been updated recently/ do |name|
   inv = Investigation.find_by_name(name)
   act = Activity.find_by_name(name)
-  [inv,act].compact.each do |mat|
+  external_act = ExternalActivity.find_by_name(name)
+  [inv,act, external_act].compact.each do |mat|
     mat.touch
     puts "updating #{mat.class.name} #{name}"
   end
@@ -119,6 +120,14 @@ And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do
 end
 
 And /^(?:|I )follow (investigation|activity) link "(.+)" on the search instructional materials page$/ do |material_type, material_name|
+  within(".materials_container.#{material_type.pluralize}") do
+    # for some reason this is not always visible initially, the approach below will cause capybara's waiting
+    # mechanism to kick in waiting for the element to become visible
+    find('a', :text => material_name, :visible => true).click
+  end
+end
+
+And /^(?:|I )follow the (investigation|activity) preview link for "(.+)" on the search instructional materials page$/ do |material_type, material_name|
   within(".materials_container.#{material_type.pluralize}") do
     # for some reason this is not always visible initially, the approach below will cause capybara's waiting
     # mechanism to kick in waiting for the element to become visible
