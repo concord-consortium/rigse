@@ -4,19 +4,10 @@
 # https://github.com/concord-consortium/portal-pages
 class API::V1::OfferingsController < API::APIController
 
-  # Optimize SQL queries based on API::V1::Offering structure.
-  INCLUDES_DEF = {
-      # TODO when we only support external activity runnables then the following
-      # line can be used to optimize the database requests
-      # runnable: [:template, :external_report],
-      learners: [:report_learner, {learner_activities: :activity, student: :user}],
-      clazz: {students: :user}
-  }
-
   def show
     offering = Portal::Offering
                    .where(id: params[:id])
-                   .includes(INCLUDES_DEF)
+                   .includes(API::V1::Offering::INCLUDES_DEF)
                    .first
     unless offering
       return error('offering not found', 404)
@@ -42,7 +33,7 @@ class API::V1::OfferingsController < API::APIController
     authorize Portal::Offering, :api_index?
     # policy_scope will limit offerings to ones available to given user.
     # All the other filtering will filter this initial set of offerings.
-    offerings = policy_scope(Portal::Offering).includes(INCLUDES_DEF)
+    offerings = policy_scope(Portal::Offering).includes(API::V1::Offering::INCLUDES_DEF)
 
     # Process additional params to limit final offerings set.
     class_ids = []

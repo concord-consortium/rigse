@@ -186,7 +186,8 @@ class API::V1::Report
 
   def activity_json(activity, answers, associations_to_load=nil)
     sections = associations_to_load ? activity.sections.includes(associations_to_load) : activity.sections
-    activity_feedback = Portal::OfferingActivityFeedback.for_offering_and_activity(@offering, activity)
+    activity_feedback = Portal::OfferingActivityFeedback.for_offering_and_activity(@offering, activity) ||
+                        Portal::OfferingActivityFeedback.create_for_offering_and_activity(@offering, activity)
     {
       id: activity.id,
       type: 'Activity',

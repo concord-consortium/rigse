@@ -14,7 +14,6 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
     :activity,
     :activity_id,
     :use_rubric,
-    :rubric_url,
     :rubric
 
   serialize :rubric, JSON
@@ -24,15 +23,19 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
   has_many   :learner_activity_feedbacks, class_name: "Portal::LearnerActivityFeedback", foreign_key: "activity_feedback_id"
 
   def self.for_offering_and_activity(offering, activity)
-    params = { portal_offering_id: offering.id, activity_id: activity.id }
-    found  = self.where(params).order('created_at desc').first
-    unless(found)
-      if(offering.runnable.respond_to? :rubric_url)
-        params[:rubric_url] = offering.runnable.rubric_url
-      end
-      found= self.create(params)
+    self.where(portal_offering_id: offering.id, activity_id: activity.id).order('created_at desc').first
+  end
+
+  def self.create_for_offering_and_activity(offering, activity)
+    self.create(portal_offering_id: offering.id, activity_id: activity.id)
+  end
+
+  def rubric_url
+    if portal_offering.runnable.respond_to? :rubric_url
+      portal_offering.runnable.rubric_url
+    else
+      nil
     end
-    return found
   end
 
   def set_feedback_options(opts)
@@ -44,4 +47,7 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
     self.update_attributes(opts)
   end
 
+  def enable_score_feedback
+    score_type != SCORE_NONE
+  end
 end

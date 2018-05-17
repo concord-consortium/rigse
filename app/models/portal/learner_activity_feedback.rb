@@ -1,5 +1,5 @@
 class Portal::LearnerActivityFeedback < ActiveRecord::Base
-  belongs_to :portal_learner, class_name:  "Portal::Learner"
+  belongs_to :portal_learner, class_name: "Portal::Learner"
   belongs_to :activity_feedback, class_name: "Portal::OfferingActivityFeedback"
   self.table_name = :portal_learner_activity_feedbacks
   attr_accessible :has_been_reviewed,
@@ -12,6 +12,8 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
     :portal_learner_id
 
   serialize :rubric_feedback, JSON
+
+  default_scope :order => 'created_at DESC'
 
   def self._attribute_ids(*attributes)
     results = []

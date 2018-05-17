@@ -2,6 +2,24 @@ class API::V1::Offering
   include Rails.application.routes.url_helpers
   include Virtus.model
 
+  # Optimize SQL queries based on API::V1::Offering structure.
+  INCLUDES_DEF = {
+      # It's questionable whether :learner_activity_feedbacks should be loaded eagerly. There are multiple instances
+      # of learner activity feedback per given learner, but this API is interested only in the most recent one.
+      # Eager loading will load all of them, though. Another option would be to remove it and use following query:
+      # Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback).first
+      # It loads only one feedback per learner, but will require N separate queries (1 per learner).
+      # I feel that eager loading (single SQL query) should be faster anyway, as in most cases there shouldn't
+      # be too many separate feedback objects for given learner. A new one is created when teacher first marks feedback
+      # as completed, and then updates it later again.
+      activity_feedbacks: :learner_activity_feedbacks,
+      learners: [:report_learner, {learner_activities: :activity, student: :user}],
+      clazz: {students: :user}
+      # TODO when we only support external activity runnables then the following
+      # line can be used to optimize the database requests
+      # runnable: [:template, :external_report]
+  }
+
   class OfferingStudent
     include Rails.application.routes.url_helpers
     include Virtus.model
@@ -18,7 +36,7 @@ class API::V1::Offering
     attribute :total_progress, Float
     attribute :detailed_progress, Array
 
-    def initialize(student, offering, protocol, host_with_port)
+    def initialize(student, offering, activity_feedbacks, protocol, host_with_port)
       self.name = student.user.name
       self.first_name = student.user.first_name
       self.last_name = student.user.last_name
@@ -37,10 +55,25 @@ class API::V1::Offering
               activity_id: la.activity.id,
               activity_name: la.activity.name,
               progress: la.complete_percent,
-              learner_activity_report_url: portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port)
+              learner_activity_report_url: portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port),
+              feedback: feedback_json(learner, activity_feedbacks[la.activity.id])
           }
         end
       end
+    end
+
+    def feedback_json(learner, activity_feedback)
+      # Use .find instead of SQL queries to take benefit of eager loading. See notes above whether it's the best idea
+      # or not. Another option would be:
+      # learner_feedback = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback).first
+      learner_feedback = activity_feedback && activity_feedback.learner_activity_feedbacks.find { |laf| laf.portal_learner_id === learner.id }
+      return nil unless learner_feedback
+      {
+          has_been_reviewed: learner_feedback.has_been_reviewed,
+          score: learner_feedback.score,
+          text_feedback: learner_feedback.text_feedback,
+          rubric_feedback: learner_feedback.rubric_feedback
+      }
     end
   end
 
@@ -67,6 +100,7 @@ class API::V1::Offering
     self.activity = offering.name
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.material_type = runnable.material_type
+
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
     if runnable.respond_to?(:external_report) && runnable.external_report
       self.external_report =  {
@@ -76,13 +110,26 @@ class API::V1::Offering
         launch_text: runnable.external_report.launch_text
       }
     end
+    # Cache feedback activity objects and pass them to student model.
+    activity_feedbacks = {}
     self.activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
+      activity_feedback = offering.activity_feedbacks.find { |af| af.activity_id == activity.id }
+      activity_feedbacks[activity.id] = activity_feedback
       {
         id: activity.id,
         name: activity.name,
-        activity_report_url: portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port)
+        activity_report_url: portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port),
+        feedback_options: activity_feedback && {
+          score_feedback_enabled: !!activity_feedback.enable_score_feedback,
+          text_feedback_enabled: !!activity_feedback.enable_text_feedback,
+          rubric_feedback_enabled: !!activity_feedback.use_rubric,
+          score_type: activity_feedback.score_type,
+          max_score: activity_feedback.max_score,
+          rubric_url: activity_feedback.rubric_url,
+          rubric: activity_feedback.rubric
+        }
       }
     end
-    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port) }
+    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, activity_feedbacks, protocol, host_with_port) }
   end
 end
