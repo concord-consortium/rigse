@@ -12,7 +12,6 @@ Feature: Student should see latest class information
     And I fill in Class Name with "Basic Electronics"
     And I fill Description with "This is a biology class"
     And I fill Class Word with "betrx"
-    And I uncheck investigation with label "Lumped circuit abstraction"
     And I press "Save"
     Then I should not see "Save"
 
@@ -26,7 +25,6 @@ Feature: Student should see latest class information
     When I login with username: taylor
     And I follow "Basic Electronics"
     Then I should see "Class Word: betrx"
-    And I should not see "Lumped circuit abstraction"
     And I should see "Non Linear Devices"
     And I should see "Static discipline"
     

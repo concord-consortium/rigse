@@ -159,10 +159,10 @@ describe API::V1::OfferingsController do
         student1["started_activity"].should eq true
         student1["last_run"].should_not eq nil
         student1["total_progress"].should eq 25
-        student1["detailed_progress"].should eq [
-                                                  { "activity" => activity_1.name, "progress" => 50 },
-                                                  { "activity" => activity_2.name, "progress" => 0 }
-                                                ]
+        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student1["detailed_progress"][0]["progress"].should eq 50
+        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student1["detailed_progress"][1]["progress"].should eq 0
 
         student2 = json["students"][1]
         student2["started_activity"].should eq false
@@ -191,19 +191,19 @@ describe API::V1::OfferingsController do
         student1["started_activity"].should eq true
         student1["last_run"].should_not eq nil
         student1["total_progress"].should eq 25
-        student1["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 50 },
-                                                    { "activity" => activity_2.name, "progress" => 0 }
-                                                ]
+        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student1["detailed_progress"][0]["progress"].should eq 50
+        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student1["detailed_progress"][1]["progress"].should eq 0
 
         student2 = json["students"][1]
         student2["started_activity"].should eq true
         student2["last_run"].should_not eq nil
         student2["total_progress"].should eq 50
-        student2["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 0 },
-                                                    { "activity" => activity_2.name, "progress" => 100 }
-                                                ]
+        student2["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student2["detailed_progress"][0]["progress"].should eq 0
+        student2["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student2["detailed_progress"][1]["progress"].should eq 100
       end
     end
 
@@ -232,19 +232,20 @@ describe API::V1::OfferingsController do
         student1["started_activity"].should eq true
         student1["last_run"].should_not eq nil
         student1["total_progress"].should eq 100
-        student1["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 100 },
-                                                    { "activity" => activity_2.name, "progress" => 100 }
-                                                ]
+        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student1["detailed_progress"][0]["progress"].should eq 100
+        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student1["detailed_progress"][1]["progress"].should eq 100
+
 
         student2 = json["students"][1]
         student2["started_activity"].should eq true
         student2["last_run"].should_not eq nil
         student2["total_progress"].should eq 100
-        student2["detailed_progress"].should eq [
-                                                    { "activity" => activity_1.name, "progress" => 100 },
-                                                    { "activity" => activity_2.name, "progress" => 100 }
-                                                ]
+        student2["detailed_progress"][0]["activity_name"].should eq activity_1.name
+        student2["detailed_progress"][0]["progress"].should eq 100
+        student2["detailed_progress"][1]["activity_name"].should eq activity_2.name
+        student2["detailed_progress"][1]["progress"].should eq 100
       end
     end
 
@@ -456,6 +457,93 @@ describe API::V1::OfferingsController do
         response.status.should eql(200)
         own_json = JSON.parse(response.body)
         own_json.should eq [ show_json ]
+      end
+    end
+  end
+
+  describe "PUT #update" do
+    describe "when user is not logged in" do
+      before (:each) do
+        logout_user
+      end
+      it "returns 403 error" do
+        put :update, id: offering.id, active: false
+        response.status.should eql(403)
+      end
+    end
+
+    describe "when user is a student" do
+      before (:each) do
+        sign_in student_a.user
+      end
+      it "returns 403 error" do
+        put :update, id: offering.id, active: false
+        response.status.should eql(403)
+      end
+    end
+
+    describe "when user is not logged in" do
+      before (:each) do
+        logout_user
+      end
+      it "returns 403 error" do
+        put :update, id: offering.id, active: false
+        response.status.should eql(403)
+      end
+    end
+
+    describe "when user is teacher, but does not own the offering" do
+      before (:each) do
+        sign_in Factory.create(:portal_teacher).user
+      end
+      it "returns 403 error" do
+        put :update, id: offering.id, active: false
+        response.status.should eql(403)
+      end
+    end
+
+    describe "when user is teacher and owns the offering" do
+      before (:each) do
+        sign_in teacher.user
+      end
+
+      it "should update basic params of the offering" do
+        new_active = !offering.active
+        put :update, id: offering.id, active: new_active
+        response.status.should eql(200)
+        offering.reload
+        offering.active.should eq new_active
+
+        new_locked = !offering.locked
+        put :update, id: offering.id, locked: new_locked
+        response.status.should eql(200)
+        offering.reload
+        offering.locked.should eq new_locked
+      end
+
+      describe "when there are multiple offerings" do
+        let(:offering_1) { offering }
+        let(:offering_2) { Factory.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+        let(:offering_3) { Factory.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+
+        it "should let user reorder them" do
+          clazz.offerings.should eq [ offering_1, offering_2, offering_3 ]
+
+          put :update, id: offering_1.id, position: 1
+          response.status.should eql(200)
+          clazz.reload
+          clazz.offerings.should eq [ offering_2, offering_1, offering_3 ]
+
+          put :update, id: offering_2.id, position: 2
+          response.status.should eql(200)
+          clazz.reload
+          clazz.offerings.should eq [ offering_1, offering_3, offering_2 ]
+
+          put :update, id: offering_3.id, position: 0
+          response.status.should eql(200)
+          clazz.reload
+          clazz.offerings.should eq [ offering_3, offering_1, offering_2 ]
+        end
       end
     end
   end

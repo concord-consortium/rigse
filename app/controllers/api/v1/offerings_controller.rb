@@ -26,6 +26,18 @@ class API::V1::OfferingsController < API::APIController
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 
+  # PUT /portal_offerings/1
+  def update
+    offering = Portal::Offering.find(params[:id])
+    authorize offering
+    offering.update_attributes!(params.permit(:active, :locked))
+    if params[:position]
+      clazz = offering.clazz
+      clazz.update_offering_position(offering, params[:position].to_i)
+    end
+    render :json => {message: 'OK'}, :callback => params[:callback]
+  end
+
   def index
     authorize Portal::Offering, :api_index?
     # policy_scope will limit offerings to ones available to given user.

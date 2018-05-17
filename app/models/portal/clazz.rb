@@ -275,6 +275,27 @@ class Portal::Clazz < ActiveRecord::Base
     self.active_offerings.includes(:runnable).select{ |o| (! o.runnable.archived?) }
   end
 
+  def update_offering_position(offering, new_pos)
+    class_offerings = offering.clazz.teacher_visible_offerings
+    old_pos = class_offerings.index(offering)
+    class_offerings.each_with_index do |off, index|
+      if off == offering
+        # Update given offering.
+        off.position = new_pos
+      elsif new_pos > old_pos && index > old_pos && index <= new_pos
+        # Move items up.
+        off.position = index - 1
+      elsif new_pos < old_pos && index >= new_pos && index < old_pos
+        # Move items down.
+        off.position = index + 1
+      else
+        # Make sure that positions are normalized and correct.
+        off.position = index
+      end
+      off.save!
+    end
+  end
+
   def update_offerings_position
     offerings = self.offerings.sort {|a,b| a.position <=> b.position}
     position = 1

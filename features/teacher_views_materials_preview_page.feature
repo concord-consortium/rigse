@@ -123,9 +123,6 @@ Feature: Teacher can search and assign instructional materials to a class
     When I check "Physics"
     And I follow "Save"
     And I should see "Fluid Mechanics is assigned to the selected class(es) successfully." within the lightbox in focus
-    And I go to Instructional Materials page for "Physics"
-    Then I should see "Fluid Mechanics"
-    
     
   @javascript
   Scenario: Teacher should see message if assignment of activities is done without checking the activity

@@ -98,8 +98,6 @@ class API::V1::ClassesController < API::APIController
 
   private
 
-
-
   def render_info(clazz)
     state = nil
     if school = clazz.school
@@ -107,25 +105,46 @@ class API::V1::ClassesController < API::APIController
     end
 
     render :json => {
-      :uri => url_for(clazz),
+      :id => clazz.id,
+      :uri => api_v1_class_url(clazz.id),
       :name => clazz.name,
       :state => state,
       :class_hash => clazz.class_hash,
-      :teachers => clazz.teachers.includes(:user).map{|teacher|
+      :class_word => clazz.class_word,
+      :edit_path => edit_portal_clazz_path(clazz),
+      :assign_materials_path => configured_search_path,
+      :teachers => clazz.teachers.includes(:user).map { |teacher|
         {
           :id => url_for(teacher.user),
           :first_name => teacher.user.first_name,
           :last_name => teacher.user.last_name
         }
       },
-      :students => clazz.students.includes(:user).map {|student|
+      :students => clazz.students.includes(:user).map { |student|
         {
           :id => url_for(student.user),
           :email => student.user.email,
           :first_name => student.user.first_name,
           :last_name => student.user.last_name
         }
-      }
+      },
+      :offerings => clazz.offerings.map { |offering|
+        {
+          :id => offering.id,
+          :name => offering.name,
+          :active => offering.active,
+          :locked => offering.locked,
+          :url => api_v1_offering_url(offering.id)
+        }
+      },
+      :external_class_reports => clazz.external_class_reports.map { |external_report|
+        {
+            :id => external_report.id,
+            :name => external_report.name,
+            :launch_text => external_report.launch_text,
+            :url => portal_external_class_report_url(clazz, external_report)
+        }
+      },
     }
   end
 

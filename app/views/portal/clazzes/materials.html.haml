@@ -1,5 +1,4 @@
-= form_for(@portal_clazz) do |f|
-  = render :partial => 'materials',
-    :locals => { :portal_clazz => @portal_clazz,
-                 :f => f,
-                 :assign_materials_link => configured_search_path }
+#assignments-page
+
+:javascript
+  PortalPages.renderAssignments({classDataUrl: Portal.API_V1.class("#{@portal_clazz.id}")}, 'assignments-page')
