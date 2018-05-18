@@ -48,14 +48,14 @@ class API::V1::Offering
       self.endpoint_url = learner ? learner.remote_endpoint_url : nil
       self.total_progress = learner ? learner.report_learner.complete_percent : 0
       self.last_run = learner ? learner.report_learner.last_run : nil
-      self.learner_report_url = learner ? report_portal_learner_url(learner, protocol: protocol, host: host_with_port) : nil
-      if learner
+      self.learner_report_url = learner && learner.reportable? ? report_portal_learner_url(learner, protocol: protocol, host: host_with_port) : nil
+      if learner && learner.learner_activities.count > 0
         self.detailed_progress = learner.learner_activities.map do |la|
           {
               activity_id: la.activity.id,
               activity_name: la.activity.name,
               progress: la.complete_percent,
-              learner_activity_report_url: portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port),
+              learner_activity_report_url: learner.reportable? ? portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port) : nil,
               feedback: feedback_json(learner, activity_feedbacks[la.activity.id])
           }
         end
@@ -123,7 +123,7 @@ class API::V1::Offering
       {
         id: activity.id,
         name: activity.name,
-        activity_report_url: portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port),
+        activity_report_url: offering.reportable? ? portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port) : nil,
         feedback_options: activity_feedback && {
           score_feedback_enabled: !!activity_feedback.enable_score_feedback,
           text_feedback_enabled: !!activity_feedback.enable_text_feedback,
