@@ -113,6 +113,11 @@ class API::V1::Offering
     # Cache feedback activity objects and pass them to student model.
     activity_feedbacks = {}
     self.activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
+      if activity.respond_to?(:template) && activity.template
+        # Use template model for reporting purposes when we're dealing with ExternalActivity.
+        # That's the general assumption in many other places. Reporting code and URL helpers expect template object ID.
+        activity = activity.template
+      end
       activity_feedback = offering.activity_feedbacks.find { |af| af.activity_id == activity.id }
       activity_feedbacks[activity.id] = activity_feedback
       {
