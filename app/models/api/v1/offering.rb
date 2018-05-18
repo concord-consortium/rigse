@@ -87,7 +87,7 @@ class API::V1::Offering
   attribute :material_type, String
   attribute :report_url, String
   attribute :external_report, Hash
-  attribute :activities, Array
+  attribute :reportable_activities, Array
   attribute :students, Array[OfferingStudent]
 
   def initialize(offering, protocol, host_with_port)
@@ -110,30 +110,33 @@ class API::V1::Offering
         launch_text: runnable.external_report.launch_text
       }
     end
-    # Cache feedback activity objects and pass them to student model.
-    activity_feedbacks = {}
-    self.activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
-      if activity.respond_to?(:template) && activity.template
-        # Use template model for reporting purposes when we're dealing with ExternalActivity.
-        # That's the general assumption in many other places. Reporting code and URL helpers expect template object ID.
-        activity = activity.template
-      end
-      activity_feedback = offering.activity_feedbacks.find { |af| af.activity_id == activity.id }
-      activity_feedbacks[activity.id] = activity_feedback
-      {
-        id: activity.id,
-        name: activity.name,
-        activity_report_url: offering.reportable? ? portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port) : nil,
-        feedback_options: activity_feedback && {
-          score_feedback_enabled: !!activity_feedback.enable_score_feedback,
-          text_feedback_enabled: !!activity_feedback.enable_text_feedback,
-          rubric_feedback_enabled: !!activity_feedback.use_rubric,
-          score_type: activity_feedback.score_type,
-          max_score: activity_feedback.max_score,
-          rubric_url: activity_feedback.rubric_url,
-          rubric: activity_feedback.rubric
+    if offering.reportable?
+      # Cache feedback activity objects and pass them to student model.
+      activity_feedbacks = {}
+      self.reportable_activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
+        if activity.respond_to?(:template) && activity.template
+          # Use template model for reporting purposes when we're dealing with ExternalActivity.
+          # That's the general assumption in many other places. Reporting code and URL helpers expect template object ID.
+          activity = activity.template
+        end
+        activity_feedback = offering.activity_feedbacks.find { |af| af.activity_id == activity.id }
+        activity_feedbacks[activity.id] = activity_feedback
+        {
+            id: activity.id,
+            name: activity.name,
+            type: activity.class.to_s,
+            activity_report_url: offering.reportable? ? portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port) : nil,
+            feedback_options: activity_feedback && {
+                score_feedback_enabled: !!activity_feedback.enable_score_feedback,
+                text_feedback_enabled: !!activity_feedback.enable_text_feedback,
+                rubric_feedback_enabled: !!activity_feedback.use_rubric,
+                score_type: activity_feedback.score_type,
+                max_score: activity_feedback.max_score,
+                rubric_url: activity_feedback.rubric_url,
+                rubric: activity_feedback.rubric
+            }
         }
-      }
+      end
     end
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, activity_feedbacks, protocol, host_with_port) }
   end
