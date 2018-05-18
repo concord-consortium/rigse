@@ -34,10 +34,8 @@ class Report::OfferingStudentStatus
       if offering_reportable?
         learner.report_learner.complete_percent || 0
       else
-        # return 99.99 because all we can tell is whether it is in progress
-        # if we return 100 then the progress bar will indicate it is compelete
-        # 99.99 is enough to fill up the progress bar but keep the in_progress color
-        99.99
+        # Offering is not reportable, but it has been started. Return 100%.
+        100
       end
     else
       0
