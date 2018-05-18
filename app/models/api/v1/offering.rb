@@ -87,6 +87,7 @@ class API::V1::Offering
   attribute :material_type, String
   attribute :report_url, String
   attribute :external_report, Hash
+  attribute :reportable, Boolean
   attribute :reportable_activities, Array
   attribute :students, Array[OfferingStudent]
 
@@ -100,7 +101,7 @@ class API::V1::Offering
     self.activity = offering.name
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.material_type = runnable.material_type
-
+    self.reportable = offering.reportable?
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
     if runnable.respond_to?(:external_report) && runnable.external_report
       self.external_report =  {
