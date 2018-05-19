@@ -48,14 +48,14 @@ class API::V1::Offering
       self.endpoint_url = learner ? learner.remote_endpoint_url : nil
       self.total_progress = learner ? learner.report_learner.complete_percent : 0
       self.last_run = learner ? learner.report_learner.last_run : nil
-      self.learner_report_url = learner ? report_portal_learner_url(learner, protocol: protocol, host: host_with_port) : nil
-      if learner
+      self.learner_report_url = learner && learner.reportable? ? report_portal_learner_url(learner, protocol: protocol, host: host_with_port) : nil
+      if learner && learner.learner_activities.count > 0
         self.detailed_progress = learner.learner_activities.map do |la|
           {
               activity_id: la.activity.id,
               activity_name: la.activity.name,
               progress: la.complete_percent,
-              learner_activity_report_url: portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port),
+              learner_activity_report_url: learner.reportable? ? portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port) : nil,
               feedback: feedback_json(learner, activity_feedbacks[la.activity.id])
           }
         end
@@ -87,7 +87,8 @@ class API::V1::Offering
   attribute :material_type, String
   attribute :report_url, String
   attribute :external_report, Hash
-  attribute :activities, Array
+  attribute :reportable, Boolean
+  attribute :reportable_activities, Array
   attribute :students, Array[OfferingStudent]
 
   def initialize(offering, protocol, host_with_port)
@@ -100,7 +101,7 @@ class API::V1::Offering
     self.activity = offering.name
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.material_type = runnable.material_type
-
+    self.reportable = offering.reportable?
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
     if runnable.respond_to?(:external_report) && runnable.external_report
       self.external_report =  {
@@ -110,30 +111,33 @@ class API::V1::Offering
         launch_text: runnable.external_report.launch_text
       }
     end
-    # Cache feedback activity objects and pass them to student model.
-    activity_feedbacks = {}
-    self.activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
-      if activity.respond_to?(:template) && activity.template
-        # Use template model for reporting purposes when we're dealing with ExternalActivity.
-        # That's the general assumption in many other places. Reporting code and URL helpers expect template object ID.
-        activity = activity.template
-      end
-      activity_feedback = offering.activity_feedbacks.find { |af| af.activity_id == activity.id }
-      activity_feedbacks[activity.id] = activity_feedback
-      {
-        id: activity.id,
-        name: activity.name,
-        activity_report_url: portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port),
-        feedback_options: activity_feedback && {
-          score_feedback_enabled: !!activity_feedback.enable_score_feedback,
-          text_feedback_enabled: !!activity_feedback.enable_text_feedback,
-          rubric_feedback_enabled: !!activity_feedback.use_rubric,
-          score_type: activity_feedback.score_type,
-          max_score: activity_feedback.max_score,
-          rubric_url: activity_feedback.rubric_url,
-          rubric: activity_feedback.rubric
+    if offering.reportable?
+      # Cache feedback activity objects and pass them to student model.
+      activity_feedbacks = {}
+      self.reportable_activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
+        if activity.respond_to?(:template) && activity.template
+          # Use template model for reporting purposes when we're dealing with ExternalActivity.
+          # That's the general assumption in many other places. Reporting code and URL helpers expect template object ID.
+          activity = activity.template
+        end
+        activity_feedback = offering.activity_feedbacks.find { |af| af.activity_id == activity.id }
+        activity_feedbacks[activity.id] = activity_feedback
+        {
+            id: activity.id,
+            name: activity.name,
+            type: activity.class.to_s,
+            activity_report_url: offering.reportable? ? portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port) : nil,
+            feedback_options: activity_feedback && {
+                score_feedback_enabled: !!activity_feedback.enable_score_feedback,
+                text_feedback_enabled: !!activity_feedback.enable_text_feedback,
+                rubric_feedback_enabled: !!activity_feedback.use_rubric,
+                score_type: activity_feedback.score_type,
+                max_score: activity_feedback.max_score,
+                rubric_url: activity_feedback.rubric_url,
+                rubric: activity_feedback.rubric
+            }
         }
-      }
+      end
     end
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, activity_feedbacks, protocol, host_with_port) }
   end

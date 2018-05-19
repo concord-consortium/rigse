@@ -201,7 +201,8 @@ class Report::Learner < ActiveRecord::Base
       self.num_answered = 0
       self.num_submitted = 0
       self.num_correct = 0
-      self.complete_percent = 99.9
+      # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
+      self.complete_percent = 100
       self.last_run = Time.now
     end
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")

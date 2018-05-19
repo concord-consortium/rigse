@@ -29,7 +29,7 @@ describe Report::OfferingStudentStatus do
           _offering.stub!(:individual_reportable?).and_return(false)
           _offering
         end
-        its(:complete_percent){should == 99.99}
+        its(:complete_percent){should == 100}
       end
       context "when the offering is reportable" do
         let :offering do
