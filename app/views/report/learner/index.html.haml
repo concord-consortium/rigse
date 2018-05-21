@@ -1,5 +1,5 @@
 
-- if ENV['RESEARCHER_REPORT_ONLY']
+- if ENV['RESEARCHER_REPORT_ONLY'].present?
   - # in this case we are only showing a minmal layout. So provide the user with a
   - # simple header
   %div

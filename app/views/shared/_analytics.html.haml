@@ -1,5 +1,5 @@
-- if ENV['GOOGLE_ANALYTICS_ACCOUNT']
-  - if ENV['GOOGLE_OPTIMIZER_ACCOUNT']
+- if ENV['GOOGLE_ANALYTICS_ACCOUNT'].present?
+  - if ENV['GOOGLE_OPTIMIZER_ACCOUNT'].present?
     :css
       .async-hide { opacity: 0 !important}
 
@@ -17,7 +17,7 @@
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
     ga('create', '#{ENV['GOOGLE_ANALYTICS_ACCOUNT']}', 'auto');
 
-  - if ENV['GOOGLE_OPTIMIZER_ACCOUNT']
+  - if ENV['GOOGLE_OPTIMIZER_ACCOUNT'].present?
     :javascript
       ga('require', '#{ENV['GOOGLE_OPTIMIZER_ACCOUNT']}');
 

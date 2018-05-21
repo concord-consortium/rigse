@@ -177,7 +177,7 @@ module RailsPortal
     end
 
     # do not initialize on precompile so that the Dockerfile can run the precompile
-    if ENV['DOCKER_NO_INIT_ON_PRECOMPILE']
+    if ENV['DOCKER_NO_INIT_ON_PRECOMPILE'].present?
       config.assets.initialize_on_precompile = false
     end
 

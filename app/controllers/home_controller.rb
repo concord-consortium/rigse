@@ -288,13 +288,13 @@ class HomeController < ApplicationController
 
   def default_open_graph
     open_graph = {}
-    if ENV['OG_TITLE']
+    if ENV['OG_TITLE'].present?
       open_graph[:title] = ENV['OG_TITLE']
     end
-    if ENV['OG_DESCRIPTION']
+    if ENV['OG_DESCRIPTION'].present?
       open_graph[:description] = ENV['OG_DESCRIPTION']
     end
-    if ENV['OG_IMAGE_URL']
+    if ENV['OG_IMAGE_URL'].present?
       open_graph[:image] = ENV['OG_IMAGE_URL']
     end
     open_graph

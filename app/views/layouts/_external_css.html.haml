@@ -1,2 +1,2 @@
-- if ENV['EXTERNAL_CSS_URL']
+- if ENV['EXTERNAL_CSS_URL'].present?
   %link{ :href => ENV['EXTERNAL_CSS_URL'], :rel => "stylesheet", :type => "text/css" }

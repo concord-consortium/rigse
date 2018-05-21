@@ -62,7 +62,7 @@ class CreateMaterialProperties < ActiveRecord::Migration
   # New models that have added to app/models/** expect that their tables exist.
   # Loading those new models here, will throw exceptions. (As happened to me)
   def reindex
-    if ENV["REINDEX_SOLR"] # We would need to set this explicitly to re-index
+    if ENV["REINDEX_SOLR"].present? # We would need to set this explicitly to re-index
       Sunspot.session = Sunspot::SessionProxy::Retry5xxSessionProxy.new(Sunspot.session)
       reindex_options = { :batch_commit => false }
       Dir.glob(Rails.root.join('app/models/**/*.rb')).each { |path| require path }
