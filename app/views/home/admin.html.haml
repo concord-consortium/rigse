@@ -9,7 +9,7 @@
   - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
     %li.trail=link_to('Authoring', authoring_path)
   - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?
-    - if ENV['RESEARCHER_REPORT_HOST']
+    - if ENV['RESEARCHER_REPORT_HOST'].present?
       %li= link_to 'Reports', "#{ENV['RESEARCHER_REPORT_HOST']}#{auth_login_path(after_sign_in_path: learner_report_path)}",
                             target: "_blank"
     - else

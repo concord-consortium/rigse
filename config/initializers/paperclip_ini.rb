@@ -1,4 +1,5 @@
-if ENV["S3_BUCKET"] && ENV["S3_SECRET_ACCESS_KEY"] && ENV["S3_ACCESS_KEY_ID"]
+if ENV["S3_BUCKET"].present? && ENV["S3_SECRET_ACCESS_KEY"].present? &&
+  ENV["S3_ACCESS_KEY_ID"].present?
   Paperclip::Attachment.default_options[:storage] = :s3
   Paperclip::Attachment.default_options[:s3_credentials] = {
     access_key_id: ENV["S3_ACCESS_KEY_ID"],
