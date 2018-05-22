@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
       render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       if current_user
-        if ENV['RESEARCHER_REPORT_ONLY'].present?
+        if BoolENV['RESEARCHER_REPORT_ONLY']
           # if we are here then current user is not authorized to access the reports.
           # The normal code path would send them in a redirect loop
           # instead sign them out and show them a page telling them this ia report only portal
@@ -294,7 +294,7 @@ class ApplicationController < ActionController::Base
 
     redirect_path = view_context.current_user_home_path
 
-    if ENV['RESEARCHER_REPORT_ONLY'].present?
+    if BoolENV['RESEARCHER_REPORT_ONLY']
       # force all users to try to go to the researcher page on a report only portal
       redirect_path = learner_report_path
     elsif !current_user.portal_student && params[:after_sign_in_path].present?
