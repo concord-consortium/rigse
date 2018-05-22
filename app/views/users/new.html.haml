@@ -2,7 +2,12 @@
 
 :javascript
   if (Portal.currentUser.isAnonymous) {
-    PortalPages.renderSignupModal({ oauthProviders: Portal.oauthProviders });
+    PortalPages.renderSignupModal(
+      {
+        oauthProviders: Portal.oauthProviders,
+        closeable: false
+      }
+    );
   } else {
     window.location.href = "/";
   }
