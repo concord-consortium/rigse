@@ -145,34 +145,39 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity10.html
     uuid: 00000000-0000-0000-0000-000000000172
-    
+
   ext_activity_11:
     name: parallel lines
     user: author
+    description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity11.html
     uuid: 00000000-0000-0000-0000-000000000173
 
   ext_activity_12:
     name: graphs and lines
     user: author
+    description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity12.html
     uuid: 00000000-0000-0000-0000-000000000174
-    
+
   ext_activity_13:
     name: circles
     user: author
+    description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity13.html
     uuid: 00000000-0000-0000-0000-000000000175
-    
+
   ext_activity_14:
     name: boolean algebra
     user: author
+    description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity14.html
     uuid: 00000000-0000-0000-0000-000000000176
-                     
+
   ext_activity_15:
     name: Atmosphere
     user: author
+    description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity15.html
     uuid: 00000000-0000-0000-0000-000000000177
 
@@ -181,12 +186,14 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity16.html
     uuid: 00000000-0000-0000-0000-000000001016
+    description: this is a great activity
 
   ext_activity_17:
     name: Atomic Energy
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity17.html
     uuid: 00000000-0000-0000-0000-000000001017
+    description: this is a great activity
     activities:
       - Radio activity
       - Nuclear Energy
@@ -196,18 +203,21 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity18.html
     uuid: 00000000-0000-0000-0000-000000001018
+    description: this is a great activity
 
   ext_activity_19:
     name: Aerodynamics
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity19.html
     uuid: 00000000-0000-0000-0000-000000001019
+    description: this is a great activity
 
   ext_activity_20:
     name: Electricity
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity20.html
     uuid: 00000000-0000-0000-0000-000000001020
+    description: this is a great activity
 
   ext_activity_21:
     name: Radioactivity
@@ -221,7 +231,6 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity22.html
     uuid: 00000000-0000-0000-0000-000000001022
-    make_template: true
     description: this is a great activity
 
   ext_activity_23:
@@ -229,7 +238,6 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity23.html
     uuid: 00000000-0000-0000-0000-000000001023
-    make_template: true
     description: this is a great activity
 
   ext_activity_24:
@@ -237,7 +245,6 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity24.html
     uuid: 00000000-0000-0000-0000-000000001024
-    make_template: true
     description: this is a great activity
 
   ext_activity_25:
@@ -245,7 +252,6 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity25.html
     uuid: 00000000-0000-0000-0000-000000001025
-    make_template: true
     description: this is a great activity
 
   ext_activity_26:
@@ -253,7 +259,6 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity26.html
     uuid: 00000000-0000-0000-0000-000000001026
-    make_template: true
     description: this is a great activity
 
   ext_activity_27:
@@ -267,7 +272,6 @@ external_activities:
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity28.html
     uuid: 00000000-0000-0000-0000-000000001028
-    make_template: true
     description: this is a great activity
 
   ext_activity_29:
@@ -275,7 +279,7 @@ external_activities:
     user: author
     description: Triangle is a great material
     url: http://fake-lara.com/mock_html/test-external-activity29.html
-    make_template: true
+
     uuid: 00000000-0000-0000-0000-000000001029
 
   ext_activity_30:
@@ -297,6 +301,16 @@ external_activities:
     activities:
       - Plutonium
       - Uranium
+
+  ext_activity_32:
+    name: testing fast cars
+    user: author
+    description: how fast can cars go?
+    url: http://fake-lara.com/mock_html/test-external-activity32.html
+    uuid: 00000000-0000-0000-0000-000000001032
+    activities:
+      - Porsche
+      - VW Bug
 
 materials_collections:
   collection_1:

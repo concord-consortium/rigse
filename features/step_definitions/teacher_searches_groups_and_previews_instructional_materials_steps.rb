@@ -69,46 +69,12 @@ end
 
 
 Then /^the search results should be paginated on the search instructional materials page$/ do
-  #pagination for investigations
-  within(".results_container .materials_container.investigations") do
-    if page.respond_to? :should
-      page.should have_link("Next")
-    else
-      assert page.has_link?("Next")
-    end
-
-    page.should have_content("Previous")
-
-    step 'I follow "Next"'
-    if page.respond_to? :should
-      page.should have_link("Previous")
-    else
-      assert page.has_link?("Previous")
-    end
-
-    page.should have_content("Next")
-  end
-
-  #pagination for activity
-  step 'I am on the search instructional materials page'
-  within(".results_container .materials_container.activities") do
-    if page.respond_to? :should
-      page.should have_link("Next")
-    else
-      assert page.has_link?("Next")
-    end
-
-    page.should have_content("Previous")
-
-    step 'I follow "Next"'
-    if page.respond_to? :should
-      page.should have_link("Previous")
-    else
-      assert page.has_link?("Previous")
-    end
-
-    page.should have_content("Next")
-  end
+  #pagination for any material
+  next_text = "Next"
+  previous_text = "Previous"
+  page.find(:css, ".search_resultscontainer .pagination a", text: next_text)
+  step "I follow \"#{next_text}\""
+  page.find(:css, ".search_resultscontainer .pagination a", text: previous_text)
 end
 
 And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|

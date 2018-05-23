@@ -121,6 +121,8 @@ module NavigationHelpers
       "/interactives/#{interactive}/edit"
     when /the signin page/
       "/auth/login"
+    when /the new material page/
+      "/eresources/new"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

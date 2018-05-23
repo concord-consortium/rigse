@@ -645,11 +645,15 @@ module MockData
           sub_activities = act.delete(:activities)
           act[:user_id] = user.id
           default_ext_act = ExternalActivity.create!(act)
-          if (make_template)
-            default_ext_act.template = FactoryGirl.create(:activity, name: default_ext_act.name)
-          end
+          default_ext_act.template = FactoryGirl.create(:activity,
+            name: default_ext_act.name,
+            description:default_ext_act.description
+          )
           if(sub_activities)
-            investigation = FactoryGirl.create(:investigation, name: default_ext_act.name)
+            investigation = FactoryGirl.create(:investigation,
+              name: default_ext_act.name,
+              description: default_ext_act.description
+            )
             acts = sub_activities.each do |a|
               investigation.activities.create(name: a)
             end

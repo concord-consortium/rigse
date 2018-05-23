@@ -1,65 +1,69 @@
-Feature: Teacher can search and filter instructional materials
+Feature: Teacher filters instructional materials
 
-  As a teacher
-  I should be able to search and filter instructional materials
-  In order to find suitable study materials for the class
+  As Teacher
+  In order to find materials
+  I need to search for them by subject and grade
+
   Background:
-    Given The default settings and jnlp resources exist using factories
-    And the database has been seeded
-    And the investigation "Digestive System" belongs to domain "Biological Science" and has grade "10-11"
-    And The materials have been indexed
-    And I am logged in with the username teacher
-    And I am on the search instructional materials page
+    Given the database has been seeded
+    And I am logged in with the username admin
 
   @javascript @search
-  Scenario: Teacher should be able to filter the search results on the basis of domains
-    When I check "Biological Science"
-    And I wait 2 seconds
-    Then I should see "Digestive System"
+  Scenario: Searching Tagged materials
+    Given the following Admin::tag records exist:
+      | scope         | tag       |
+      | grade_levels  | 5         |
+      | grade_levels  | 7         |
+      | subject_areas | Math      |
+      | subject_areas | Science   |
+      | model_types   | mt_Video  |
 
-  # @javascript @search
-  # Scenario: Teacher should be able to filter the search results on the basis of grades
-  #   When I check "10-11"
-  #   Then I should see "Digestive System"
-  #   And I should see "Bile Juice"
+    # Create a first grade math activity:
+    And I am on the new material page
+    Then I should see "(new) /eresources"
+    When I fill in "external_activity[name]" with "My grade 5 Math Activity"
+    And I check "external_activity[is_official]"
+    And I select "published" from "external_activity[publication_status]"
+    And under "Grade Levels" I check "5"
+    And under "Subject Areas" I check "Math"
+    And I press "Save"
 
-  # @javascript @search
-  # Scenario: Teacher views all investigations and activities for all grades
-  #   Then I should see "Digestive System"
-  #   And I should see "Bile Juice"
+    # Create a 7th grade Science Activity
+    And I am on the new material page
+    Then I should see "(new) /eresources"
+    When I fill in "external_activity[name]" with "My grade 7 Science Activity"
+    And I check "external_activity[is_official]"
+    And I select "published" from "external_activity[publication_status]"
+    And under "Grade Levels" I check "7"
+    And under "Subject Areas" I check "Science"
+    And I press "Save"
 
-  # @javascript @search
-  # Scenario: Teacher should be able to filter the search results on the basis of probes
-  #   When I check "Temperature"
-  #   And I should see "A Weather Underground"
-  #   And I should see "A heat spontaneously"
-  #   And I should not see "Digestive System"
-  #   And I should not see "Bile Juice"
-  #   And I uncheck "Temperature"
-  #   And I check "UVA Intensity"
-  #   Then I should not see "A Weather Underground"
-  #   And I should not see "A heat spontaneously"
-  #   And I check "Temperature"
-  #   And I should see "A Weather Underground"
-  #   And I should see "A heat spontaneously"
+    Given I am on the search instructional materials page
+    And I uncheck "Sequence"
+    And I check "Math"
+    And I wait 3 seconds
+    Then I should see "My grade 5 Math Activity"
+    And  I should not see "My grade 7 Science Activity"
 
+    When I check "Science"
+    And I uncheck "Math"
+    And I wait 3 seconds
 
-  # @javascript @search
-  # Scenario: Teacher views all investigations and activities with sensors
-  #   When I follow "check all"
-  #   And I uncheck "Sensors Not Necessary"
-  #   Then I should see "A Weather Underground"
-  #   And I should see "A heat spontaneously"
-  #   And I should not see "Digestive System"
-  #   And I should not see "Bile Juice"
+    Then I should see "My grade 7 Science Activity"
+    And I should not see "My grade 5 Math Activity"
 
+    When I uncheck "Math"
+    And I uncheck "Science"
+    And I check "grade_level_7-8"
+    And I wait 3 seconds
 
-  # @javascript @search
-  # Scenario: Teacher views investigations and activities without sensors
-  #   When I check "Sensors Not Necessary"
-  #   Then I should not see "A Weather Underground"
-  #   And I should not see "A heat spontaneously"
-  #   When I uncheck "Sensors Not Necessary"
-  #   And I follow "clear"
-  #   And I should see "A Weather Underground"
-  #   And I should see "A heat spontaneously"
+    Then I should not see "My grade 5 Math Activity"
+    And I should see "My grade 7 Science Activity"
+
+    When I uncheck "grade_level_7-8"
+    And I check "grade_level_5-6"
+    And I wait 3 seconds
+
+    Then I should see "My grade 5 Math Activity"
+    And I should not see "My grade 7 Science Activity"
+

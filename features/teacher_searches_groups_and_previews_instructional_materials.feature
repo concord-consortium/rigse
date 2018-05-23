@@ -126,11 +126,10 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
   @javascript @search
   Scenario: Teacher should be able to see grouped search results on the basis of material type
-    When I enter search text "Geometry" on the search instructional materials page
     And I uncheck "Sequence"
     And I check "Activity"
+    When I enter search text "Geometry" on the search instructional materials page
     And I press "GO"
-    And I wait 2 seconds
     Then I should see "Geometry"
     And I should not see "Radioactivity"
     And I should not see "Geometry sequence"
