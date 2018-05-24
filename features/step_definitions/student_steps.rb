@@ -1,7 +1,3 @@
-def set_request_stub(method, address, stub)
-  @request_stub_map ||= {}
-  @request_stub_map[[method,address]] = stub
-end
 
 Given /^the following students exist:$/ do |table|
   table.hashes.each do |hash|
@@ -81,11 +77,7 @@ When /^(?:|I )run the (?:investigation|activity|external activity)$/ do
   # and addtionally if groups are turned on then there will be another link that is Run with Other Students
   button = find(".solo.button")
   url = button[:href]
-  # stub = set_request_stub("GET", url, "Your content for #{url}")
   button.click()
-  # stub.should have_been_requested
-  # offering = url.match(/offerings\/(\d+)/)[1]
-  # Portal::Offering.find(offering).find_or_create_learner(user.portal_student)
 end
 
 
