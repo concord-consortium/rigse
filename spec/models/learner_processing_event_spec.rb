@@ -8,7 +8,11 @@ describe LearnerProcessingEvent do
   let(:lara_start)               { 10.minutes.ago }
   let(:lara_end)                 { 5.minutes.ago  }
   let(:portal_start)             { 2.minutes.ago  }
-  let(:record)                   { LearnerProcessingEvent.build_proccesing_event(learner, lara_start, lara_end, portal_start)}
+  let(:answers_length)           { 1 }
+  let(:record)                   {
+    LearnerProcessingEvent.build_proccesing_event(
+      learner, lara_start, lara_end, portal_start, answers_length)
+  }
   before(:each) do
 
   end
