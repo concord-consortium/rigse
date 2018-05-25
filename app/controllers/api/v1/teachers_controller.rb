@@ -14,11 +14,9 @@ class API::V1::TeachersController < API::APIController
       # The errors in this case will be passed down to the registration form.
       # The use of school_id is so the error message is shown in the form.
       if current_user.portal_teacher
-        error(school_id: I18n.t('Registration.ErrorLoggedInAsTeacher'))
-        return
+        return error(school_id: I18n.t('Registration.ErrorLoggedInAsTeacher'))
       elsif current_user.portal_student
-        error(school_id: I18n.t('Registration.ErrorLoggedInAsStudent'))
-        return
+        return error(school_id: I18n.t('Registration.ErrorLoggedInAsStudent'))
       else
         teacher_registration.set_user current_user
       end
@@ -29,8 +27,7 @@ class API::V1::TeachersController < API::APIController
       if school_id
         teacher_registration.school_id = school_id
       else
-        error(school_reg_errors)
-        return
+        return error(school_reg_errors)
       end
     end
 
@@ -47,16 +44,16 @@ class API::V1::TeachersController < API::APIController
         current_user.email = session['omniauth_email']
         current_user.save!
         session['omniauth_email'] = nil
-      end 
+      end
 
       if session[:omniauth_origin]
         attributes["omniauth_origin"]   = session[:omniauth_origin]
         session[:omniauth_origin]       = nil
       end
-    
+
       render status: 201, json: attributes
     else
-      error(teacher_registration.errors)
+      return error(teacher_registration.errors)
     end
   end
 
@@ -65,7 +62,7 @@ class API::V1::TeachersController < API::APIController
     if !found
       render :json => {'message' => 'ok'}
     else
-      error({'email' => 'address taken'})
+      return error({'email' => 'address taken'})
     end
   end
 
@@ -74,7 +71,7 @@ class API::V1::TeachersController < API::APIController
     if !found
       render :json => {'message' => 'ok'}
     else
-      error({'login' => 'username taken'})
+      return error({'login' => 'username taken'})
     end
   end
 
@@ -85,9 +82,9 @@ class API::V1::TeachersController < API::APIController
   def login_valid
     valid = User.login_regex.match(params[:username])
     if valid
-      login_available 
+      login_available
     else
-      error({'login' => 'username not valid'})
+      return error({'login' => 'username not valid'})
     end
   end
 
@@ -102,7 +99,7 @@ class API::V1::TeachersController < API::APIController
     if valid
       render :json => {'message' => 'ok'}
     else
-      error({'name' => 'name not valid'})
+      return error({'name' => 'name not valid'})
     end
   end
 

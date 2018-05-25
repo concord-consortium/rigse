@@ -10,7 +10,7 @@ class API::V1::ClassesController < API::APIController
     end
 
     if !user.portal_student && !user.portal_teacher
-      error('You must be logged in as a student or teacher to use this endpoint')
+      return error('You must be logged in as a student or teacher to use this endpoint')
     end
 
     clazz = Portal::Clazz.find_by_id(params[:id])
@@ -40,7 +40,7 @@ class API::V1::ClassesController < API::APIController
 
     user_with_clazzes = user.portal_student || user.portal_teacher
     if !user_with_clazzes
-      error('You must be logged in as a student or teacher to use this endpoint')
+      return error('You must be logged in as a student or teacher to use this endpoint')
     end
 
     render :json => {

@@ -12,7 +12,7 @@ class API::V1::CollaborationsController < API::APIController
     if result
       render status: 201, json: result
     else
-      error(create_collaboration.errors)
+      return error(create_collaboration.errors)
     end
   end
 
@@ -34,7 +34,7 @@ class API::V1::CollaborationsController < API::APIController
     if result
       render json: result
     else
-      error(show_endpoints.errors)
+      return error(show_endpoints.errors)
     end
   end
 

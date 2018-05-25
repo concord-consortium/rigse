@@ -35,7 +35,7 @@ class API::V1::JwtController < API::APIController
     begin
       render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
     rescue Exception => e
-      error(e.message, 500)
+      return error(e.message, 500)
     end
   end
 
@@ -96,7 +96,7 @@ class API::V1::JwtController < API::APIController
     begin
       render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
     rescue Exception => e
-      error(e.message, 500)
+      return error(e.message, 500)
     end
   end
 
