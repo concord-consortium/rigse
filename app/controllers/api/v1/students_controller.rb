@@ -12,11 +12,9 @@ class API::V1::StudentsController < API::APIController
       # The errors in this case will be passed down to the registration form.
       # The use of class_word is so the error message is shown in the form.
       if current_user.portal_teacher
-        error(class_word: I18n.t('Registration.ErrorLoggedInAsTeacher'))
-        return
+        return error(class_word: I18n.t('Registration.ErrorLoggedInAsTeacher'))
       elsif current_user.portal_student
-        error(class_word: I18n.t('Registration.ErrorLoggedInAsStudent'));
-        return
+        return error(class_word: I18n.t('Registration.ErrorLoggedInAsStudent'));
       else
         registration.set_user current_user
       end
@@ -42,7 +40,7 @@ class API::V1::StudentsController < API::APIController
 
       render :json => attributes
     else
-      error(registration.errors)
+      return error(registration.errors)
     end
   end
 
@@ -53,7 +51,7 @@ class API::V1::StudentsController < API::APIController
     if found
       render :json => {'message' => 'ok'}
     else
-      error({'class_word' => 'class word not found'})
+      return error({'class_word' => 'class word not found'})
     end
   end
 

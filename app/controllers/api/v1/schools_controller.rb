@@ -4,7 +4,7 @@ class API::V1::SchoolsController < API::APIController
     country_id  = params['country_id']
     zipcode = params['zipcode']
     if country_id.blank? || zipcode.blank?
-      error("'country_id' and 'zipcode' are required for school list")
+      return error("'country_id' and 'zipcode' are required for school list")
     else
       @schools = API::V1::SchoolRegistration.for_country_and_zipcode(country_id, zipcode)
     end
@@ -17,7 +17,7 @@ class API::V1::SchoolsController < API::APIController
       registration.save
       render :json => registration.attributes
     else
-      error(registration.errors)
+      return error(registration.errors)
     end
   end
 

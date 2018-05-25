@@ -11,6 +11,9 @@ class API::APIController < ApplicationController
 
   public
 
+  # NOTE: this approach requires you to return from the
+  # method to prevent a double render problem. An easy way to do this:
+  #  return error(...)
   def error(message, status = 400)
     render :json =>
       {
@@ -21,23 +24,23 @@ class API::APIController < ApplicationController
   end
 
   def show
-    error("Show not configured for this resource")
+    return error("Show not configured for this resource")
   end
 
   def create
-    error("create not configured for this resource")
+    return error("create not configured for this resource")
   end
 
   def update
-    error("update not configured for this resource")
+    return error("update not configured for this resource")
   end
 
   def index
-    error("index not configured for this resource")
+    return error("index not configured for this resource")
   end
 
   def destroy
-    error("destroy not configured for this resource")
+    return error("destroy not configured for this resource")
   end
 
   def check_for_auth_token
@@ -47,12 +50,10 @@ class API::APIController < ApplicationController
       grant = AccessGrant.find_by_access_token(token)
 
       if !grant
-        error('Cannot find AccessGrant for token #{token}')
-        return
+        return error('Cannot find AccessGrant for token #{token}')
       end
       if grant.access_token_expires_at < Time.now
-        error('AccessGrant has expired')
-        return
+        return error('AccessGrant has expired')
       end
 
       role = {
@@ -66,15 +67,13 @@ class API::APIController < ApplicationController
       begin
         decoded_token = SignedJWT::decode_portal_token(portal_token)
       rescue Exception => e
-        error(e.message)
-        return
+        return error(e.message)
       end
       data = decoded_token[:data]
 
       user = User.find_by_id(data["uid"])
       if !user
-        error('User in token not found')
-        return
+        return error('User in token not found')
       end
 
       role = {
@@ -84,8 +83,7 @@ class API::APIController < ApplicationController
 
       return [user, role]
     elsif !current_user
-      error('You must be logged in to use this endpoint')
-      return
+      return error('You must be logged in to use this endpoint')
     else
       return [current_user, nil]
     end
