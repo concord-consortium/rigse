@@ -11,7 +11,7 @@ class Dataservice::V1::ProcessExternalActivityDataJob < Dataservice::ProcessExte
   def lara_start
     # this will be nil if there aren't any dirty answers when lara sent the data
     # and we want to leave it that way
-    DateTime.parse(lara_start_str) rescue nil
+    DateTime.parse(JSON.parse(content)['lara_start']) rescue nil
   end
 
   def lara_end
