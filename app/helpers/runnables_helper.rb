@@ -45,16 +45,16 @@ module RunnablesHelper
       end
       if display_workgroups_run_link?(offering)
         options[:class] = student_run_button_css(offering, ["in_group"])
-        # These attributes use by AngularJS code, see: angular/collaboration.js.coffee
-        options[:'cc-setup-collaboration'] = true
-        options[:'data-offering-id'] = offering.id
         # Collaboration setup works differently for external activities and JNLP ones.
         # jnlp-url attribute lets us distinguish between them.
         if !offering.external_activity?
           options[:'data-jnlp-url'] = run_url_for(offering)
         end
-        haml_tag :a, options do
-          haml_concat group_label
+        options[:label] = group_label
+        options[:offeringId] = offering.id
+        haml_tag :span, {:id => 'run-with-collaborators-button'}
+        haml_tag :script do
+          haml_concat "PortalPages.renderRunWithCollaborators(#{options.to_json}, 'run-with-collaborators-button');"
         end
       end
     end
@@ -63,8 +63,8 @@ module RunnablesHelper
   def runnable_type_label(component)
 
     runnable = component.is_a?(Portal::Offering) ? component.runnable : component
-    
-    if  runnable.is_a?(ExternalActivity) && 
+
+    if  runnable.is_a?(ExternalActivity) &&
         runnable.respond_to?(:material_type) &&
         !runnable.material_type.nil?
 
