@@ -1,5 +1,15 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
+def runnable_params(runnable, clazz)
+  post_params = {
+    :runnable_id => runnable.id,
+    :runnable_type => "ExternalActivity",
+    :dragged_dom_id => "external_activity_#{runnable.id}",
+    :dropped_dom_id => "clazz_offerings",
+    :id => clazz.id
+  }
+end
+
 describe Portal::ClazzesController do
   render_views
 
@@ -511,15 +521,8 @@ describe Portal::ClazzesController do
   describe "POST add_offering" do
     it "should run without error" do
       login_admin
-      page = Factory.create(:page)
-      post_params = {
-        :runnable_id => page.id,
-        :runnable_type => "page",
-        :dragged_dom_id => "page_#{page.id}",
-        :dropped_dom_id => "clazz_offerings",
-        :id => @mock_clazz.id
-      }
-
+      external_activity = Factory.create(:external_activity)
+      post_params = runnable_params(external_activity, @mock_clazz)
       post :add_offering, post_params
     end
   end
@@ -527,15 +530,8 @@ describe Portal::ClazzesController do
 
   describe "Post edit class information" do
     before(:each) do
-      page = Factory.create(:page)
-      post_params = {
-        :runnable_id => page.id,
-        :runnable_type => "page",
-        :dragged_dom_id => "page_#{page.id}",
-        :dropped_dom_id => "clazz_offerings",
-        :id => @mock_clazz.id
-      }
-
+      external_activity = Factory.create(:external_activity)
+      post_params = runnable_params(external_activity, @mock_clazz)
       post :add_offering, post_params
       offers = Array.new
       @mock_clazz.offerings.each do|offering|

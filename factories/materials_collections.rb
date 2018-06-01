@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :materials_collection_item do
     sequence(:position)
-    association :material, factory: :investigation
+    association :material, factory: :external_activity
     association :materials_collection
   end
 

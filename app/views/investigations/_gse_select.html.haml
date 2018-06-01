@@ -1,2 +1,0 @@
-= select(:investigation, :grade_span_expectation_id, related_gses.collect { |gse| [gse.gse_key, gse.id] }, { :selected => selected_gse.id || "", :include_blank => "Select a GSE" })
-= observe_field :investigation_grade_span_expectation_id, :url => { :controller=>'grade_span_expectations', :action => "summary"}, :with => 'id' , :update => {:success => 'gse_summary_container'}

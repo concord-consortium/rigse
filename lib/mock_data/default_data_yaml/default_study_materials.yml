@@ -5,7 +5,7 @@ mult_cho_questions:
     correct_answer: a
     uuid: 00000000-0000-0000-0000-000000000049
   
-  mcq_2: 
+  mcq_2:
     prompt: b
     answers: a,b,c,d
     correct_answer: a
@@ -40,234 +40,6 @@ image_questions:
   imgq_1:
     prompt: image_q
     uuid: 00000000-0000-0000-0000-000000000055
-    
-
-empty_investigations:
-  empt_inv_1:
-    name: draft g
-    user: teacher
-    offerings_count: 5
-    publication_status: draft
-    uuid: 00000000-0000-0000-0000-000000000056
-    
-  empt_inv_2: 
-    name: b Investigation
-    user: teacher
-    offerings_count: 5
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000057
-     
-  empt_inv_3:
-    name: a Investigation
-    user: teacher
-    offerings_count: 5
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000058
-    
-  empt_inv_4:
-    name: c Investigation
-    user: teacher
-    offerings_count: 5
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000059
-    
-  empt_inv_5:
-    name: d Investigation
-    user: teacher
-    offerings_count: 5
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000060
-      
-  empt_inv_6: 
-    name: e Investigation
-    user: teacher
-    offerings_count: 5
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000061
-      
-  empt_inv_7:
-    name: f Investigation
-    user: teacher
-    offerings_count: 5
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000062
-    
-  empt_inv_8: 
-    name: NewestInv
-    user: teacher
-    offerings_count: 5
-    created_at: <%=Wed Jan 26 12:00:00 -0500 2111%>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000063
-    
-  empt_inv_9:
-    name: MediumInv
-    user: teacher
-    offerings_count: 10
-    created_at: <%=Wed Jan 23 12:00:00 -0500 2111%>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000064
-       
-  empt_inv_10:
-    name: OldestInv
-    user: teacher
-    offerings_count: 20
-    created_at: <%=Wed Jan 20 12:00:00 -0500 2111%>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000065
-
-
-simple_investigations:
-  sim_inv_1:
-    name: Radioactivity
-    user: author
-    publication_status: published
-    description: Nuclear Energy is a great subject
-    uuid: 00000000-0000-0000-0000-000000000066
-    activity_uuid: 00000000-0000-0000-0000-000000000067 
-    section_uuid: 00000000-0000-0000-0000-000000000068
-    page_uuid: 00000000-0000-0000-0000-000000000069
-    
-  sim_inv_2:
-    name: Set Theory
-    user: author
-    publication_status: published
-    description: Set Theory is a great subject
-    uuid: 00000000-0000-0000-0000-000000000070
-    activity_uuid: 00000000-0000-0000-0000-000000000071
-    section_uuid: 00000000-0000-0000-0000-000000000072
-    page_uuid: 00000000-0000-0000-0000-000000000073
-    
-  sim_inv_3:
-    name: Mechanics
-    user: author
-    publication_status: published
-    description: Mechanics is a great subject
-    uuid: 00000000-0000-0000-0000-000000000074
-    activity_uuid: 00000000-0000-0000-0000-000000000075
-    section_uuid: 00000000-0000-0000-0000-000000000076
-    page_uuid: 00000000-0000-0000-0000-000000000077
-      
-  sim_inv_4:
-    name: Geometry
-    user: author
-    publication_status: published
-    description: Triangle is a great subject
-    uuid: 00000000-0000-0000-0000-000000000078
-    activity_uuid: 00000000-0000-0000-0000-000000000079
-    section_uuid: 00000000-0000-0000-0000-000000000080
-    page_uuid: 00000000-0000-0000-0000-000000000081
-      
-  sim_inv_5:
-    name: integral calculus
-    user: author
-    publication_status: published
-    description: integral calculus is a great subject
-    uuid: 00000000-0000-0000-0000-000000000082
-    activity_uuid: 00000000-0000-0000-0000-000000000083
-    section_uuid: 00000000-0000-0000-0000-000000000084
-    page_uuid: 00000000-0000-0000-0000-000000000085
-    
-  sim_inv:
-    name: differential calculus
-    user: author
-    publication_status: published
-    description: differential calculus is a great subject
-    uuid: 00000000-0000-0000-0000-000000000086
-    activity_uuid: 00000000-0000-0000-0000-000000000087
-    section_uuid: 00000000-0000-0000-0000-000000000088
-    page_uuid: 00000000-0000-0000-0000-000000000089
-      
-  sim_inv_7:
-    name: differential equations
-    user: author
-    publication_status: published
-    description: differential equations is a great subject
-    uuid: 00000000-0000-0000-0000-000000000090
-    activity_uuid: 00000000-0000-0000-0000-000000000091
-    section_uuid: 00000000-0000-0000-0000-000000000092
-    page_uuid: 00000000-0000-0000-0000-000000000093
-    
-  sim_inv_8:
-    name: organic chemistry
-    user: author
-    publication_status: published
-    description: organic chemistry is a great subject
-    uuid: 00000000-0000-0000-0000-000000000094
-    activity_uuid: 00000000-0000-0000-0000-000000000095
-    section_uuid: 00000000-0000-0000-0000-000000000096
-    page_uuid: 00000000-0000-0000-0000-000000000097
-      
-  sim_inv_9:
-    name: inorganic chemistry
-    user: author
-    publication_status: published
-    description: inorganic chemistry is a great subject
-    uuid: 00000000-0000-0000-0000-000000000098
-    activity_uuid: 00000000-0000-0000-0000-000000000099
-    section_uuid: 00000000-0000-0000-0000-000000000100
-    page_uuid: 00000000-0000-0000-0000-000000000101
-     
-  sim_inv_10:
-    name: graph theory
-    user: author
-    publication_status: published
-    description: graph theory is a great subject
-    uuid: 00000000-0000-0000-0000-000000000102
-    activity_uuid: 00000000-0000-0000-0000-000000000103
-    section_uuid: 00000000-0000-0000-0000-000000000104
-    page_uuid: 00000000-0000-0000-0000-000000000105
-  
-  sim_inv_11:
-    name: investigaion_not_assigned
-    user: author
-    publication_status: published
-    description: investigaion_not_assigned is a great subject
-    uuid: 00000000-0000-0000-0000-000000000106
-    activity_uuid: 00000000-0000-0000-0000-000000000107
-    section_uuid: 00000000-0000-0000-0000-000000000108
-    page_uuid: 00000000-0000-0000-0000-000000000109
-    
-  sim_inv_12: 
-    name: testing fast cars
-    user: author
-    publication_status: published
-    description: how fast can cars go
-    uuid: 00000000-0000-0000-0000-000000000110
-    activity_uuid: 00000000-0000-0000-0000-000000000111
-    section_uuid: 00000000-0000-0000-0000-000000000112
-    page_uuid: 00000000-0000-0000-0000-000000000113
-      
-  sim_inv_13:
-    name: Lumped circuit abstraction
-    user: author
-    publication_status: published
-    description: LCA is a great subject
-    uuid: 00000000-0000-0000-0000-000000000114
-    activity_uuid:  00000000-0000-0000-0000-000000000115
-    section_uuid: 00000000-0000-0000-0000-000000000116
-    page_uuid: 00000000-0000-0000-0000-000000000117
-      
-  sim_inv_14: 
-    name: Static discipline
-    user: author
-    publication_status: published
-    description: SD is a great subject
-    uuid: 00000000-0000-0000-0000-000000000118
-    activity_uuid: 00000000-0000-0000-0000-000000000119
-    section_uuid: 00000000-0000-0000-0000-000000000120
-    page_uuid: 00000000-0000-0000-0000-000000000121
-  
-  sim_inv_15:
-    name: Non Linear Devices
-    user: author
-    publication_status: published
-    description: NLD is a great subject
-    uuid: 00000000-0000-0000-0000-000000000122
-    activity_uuid: 00000000-0000-0000-0000-000000000123
-    section_uuid: 00000000-0000-0000-0000-000000000124
-    page_uuid: 00000000-0000-0000-0000-000000000125
-    
 
 pages:
   page_1:
@@ -289,298 +61,6 @@ linked_investigations:
     page_uuid: 00000000-0000-0000-0000-000000000132
     open_response_uuid: 00000000-0000-0000-0000-000000000133
 
-investigations_with_mcq:
-  mcq_inv_1:
-    uuid: 00000000-0000-0000-0000-000000000138
-    name: Plant reproduction
-    activities:
-      activitiy_1:
-        uuid: 00000000-0000-0000-0000-000000000139
-        name: Plant activity
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000140
-            name: section b
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000141
-                name: page 2
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000050
-            prompt: b
-        image_questions:
-          imgq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        activity_teacher_only: false
-
-  mcq_inv_2:
-    uuid: 00000000-0000-0000-0000-000000000142
-    name: Aerodynamics
-    activities:
-      activitiy_1:
-        uuid: 00000000-0000-0000-0000-000000000143
-        name: Air activity
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000144
-            name: section c
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000145
-                name: page 3
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000051
-            prompt: c
-        image_questions:
-          imgq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        activity_teacher_only: false
-        
-      activitiy_2:
-        uuid: 00000000-0000-0000-0000-000000000146
-        name: Aeroplane
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000147
-            name: section c
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000148
-                name: page 3
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000052
-            prompt: d
-        image_questions:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        activity_teacher_only: true
-        
-  mcq_inv_3:
-    uuid: 00000000-0000-0000-0000-000000000149
-    name: Arithmatics
-    activities:
-      activitiy_1:
-        uuid: 00000000-0000-0000-0000-000000000150
-        name: Linear algebra
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000151
-            name: section a
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000152
-                name: page 1
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000050
-            prompt: b
-        image_questions:
-          imgq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        :activity_teacher_only: false
-
-
-  mcq_inv_4:
-    uuid: 00000000-0000-0000-0000-000000000153
-    name: Atomic Energy
-    activities:
-      activitiy_1:
-        uuid: 00000000-0000-0000-0000-000000000154
-        name: Radio activity
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000155
-            name: section a
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000156
-                name: page 1
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000049
-            prompt: a
-        image_questions:
-          imgq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        activity_teacher_only: false
-        
-      activitiy_2:
-        uuid: 00000000-0000-0000-0000-000000000157
-        name: Nuclear Energy
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000158
-            name: section b
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000159
-                name: page 2
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000050
-            prompt: b
-        image_questions:
-          imgq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        activity_teacher_only: false
-    
-
-  mcq_inv_5:
-    uuid: 00000000-0000-0000-0000-000000000160
-    name: Electricity
-    activities:
-      activitiy_1:
-        uuid: 00000000-0000-0000-0000-000000000161
-        name: current
-        sections:
-          section_1:
-            uuid: 00000000-0000-0000-0000-000000000162
-            name: section b
-            pages:
-              page_1:
-                uuid: 00000000-0000-0000-0000-000000000163
-                name: page 2
-        multiple_choices:
-          mcq_1:
-            uuid: 00000000-0000-0000-0000-000000000050
-            prompt: b
-        image_questions:
-          imgq_1:
-            uuid: 00000000-0000-0000-0000-000000000055
-            prompt: image_q
-        user: teacher
-        activity_teacher_only: false
-
-
-activities:
-  activity_1:
-    name: Radioactive decay
-    user: author
-    publication_status: published
-    description: Nuclear Energy is a great material
-    investigation: Radioactivity
-    uuid: 00000000-0000-0000-0000-000000000164
-  
-  activity_2:
-    name: Gamma Rays
-    user: author
-    publication_status: published
-    description: :Gamma Rays is a great material
-    investigation: Radioactivity
-    uuid: 00000000-0000-0000-0000-000000000165
-    
-  activity_3:
-    name: Diagram
-    user: author
-    publication_status: published
-    description: Venn Diagram is a great material
-    investigation: Set Theory
-    uuid: 00000000-0000-0000-0000-000000000166
-  
-  activity_4:
-    name: operations on sets
-    user: author
-    publication_status: published
-    description: operations on sets is a great material
-    investigation: Set Theory
-    uuid: 00000000-0000-0000-0000-000000000167
-    
-  activity_5:
-    name: Fluid Mechanics
-    user: author
-    publication_status: published
-    description: Fluid Mechanics is a great material
-    investigation: Mechanics
-    uuid: 00000000-0000-0000-0000-000000000168
-    
-  activity_6:
-    name: Circular Motion
-    user: author
-    publication_status: published
-    description: Circular Motion is a great material
-    investigation: Mechanics
-    uuid: 00000000-0000-0000-0000-000000000169
-    
-  activity_7:
-    name: Quantum Mechanics
-    user: author
-    publication_status: published
-    description: Quantum Mechanics is a great material
-    investigation: Mechanics
-    uuid: 00000000-0000-0000-0000-000000000170
-                    
-  activity_8:
-    name: Geometry
-    user: author
-    publication_status: published
-    description: Triangle is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000171
-
-  activity_9:
-    name: intersecting lines
-    user: author
-    publication_status: published
-    description: intersecting lines is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000172
-    
-  activity_10:
-    name: parallel lines
-    user: author
-    publication_status: published
-    description: parallel lines is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000173
-          
-  activity_11:
-    name: graphs and lines
-    user: author
-    publication_status: published
-    description: parallel lines is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000174
-    
-  activity_12:
-    name: circles
-    user: author
-    publication_status: published
-    description: circles is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000175
-    
-  activity_13:
-    name: boolean algebra
-    user: author
-    publication_status: published
-    description: boolean algebra is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000176
-                     
-  activity_14:
-    name: Atmosphere
-    user: author
-    publication_status: published
-    description: :Atmosphere is a great material
-    investigation: Geometry
-    uuid: 00000000-0000-0000-0000-000000000177
-      
-      
 mcq_activities:
   mcq_activity_1:
     name: Algebra
@@ -603,14 +83,234 @@ mcq_activities:
     user: teacher
     activity_teacher_only: false
     uuid: 00000000-0000-0000-0000-000000000180
-    
 
 external_activities:
   ext_activity_1:
     name: My Activity
     user: teacher
-    url: /mock_html/test-external-activity.html
+    url: http://fake-lara.com/mock_html/test-external-activity.html
     uuid: 00000000-0000-0000-0000-000000000181
+
+  ext_activity_2:
+    name: Radioactive decay
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity2.html
+    uuid: 00000000-0000-0000-0000-000000000164
+
+  ext_activity_3:
+    name: Gamma Rays
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity3.html
+    uuid: 00000000-0000-0000-0000-000000000165
+    
+  ext_activity_4:
+    name: Diagram
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity4.html
+    uuid: 00000000-0000-0000-0000-000000000166
+  
+  ext_activity_5:
+    name: operations on sets
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity5.html
+    uuid: 00000000-0000-0000-0000-000000000167
+
+  ext_activity_6:
+    name: Fluid Mechanics
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity6.html
+    uuid: 00000000-0000-0000-0000-000000000168
+    
+  ext_activity_7:
+    name: Circular Motion
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity7.html
+    uuid: 00000000-0000-0000-0000-000000000169
+
+  ext_activity_8:
+    name: Quantum Mechanics
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity8.html
+    uuid: 00000000-0000-0000-0000-000000000170
+
+  ext_activity_9:
+    name: Geometry
+    user: author
+    description: smaller geometry activity
+    url: http://fake-lara.com/mock_html/test-external-activity9.html
+    uuid: 00000000-0000-0000-0000-000000000171
+
+  ext_activity_10:
+    name: intersecting lines
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity10.html
+    uuid: 00000000-0000-0000-0000-000000000172
+
+  ext_activity_11:
+    name: parallel lines
+    user: author
+    description: this is a great activity
+    url: http://fake-lara.com/mock_html/test-external-activity11.html
+    uuid: 00000000-0000-0000-0000-000000000173
+
+  ext_activity_12:
+    name: graphs and lines
+    user: author
+    description: this is a great activity
+    url: http://fake-lara.com/mock_html/test-external-activity12.html
+    uuid: 00000000-0000-0000-0000-000000000174
+
+  ext_activity_13:
+    name: circles
+    user: author
+    description: this is a great activity
+    url: http://fake-lara.com/mock_html/test-external-activity13.html
+    uuid: 00000000-0000-0000-0000-000000000175
+
+  ext_activity_14:
+    name: boolean algebra
+    user: author
+    description: this is a great activity
+    url: http://fake-lara.com/mock_html/test-external-activity14.html
+    uuid: 00000000-0000-0000-0000-000000000176
+
+  ext_activity_15:
+    name: Atmosphere
+    user: author
+    description: this is a great activity
+    url: http://fake-lara.com/mock_html/test-external-activity15.html
+    uuid: 00000000-0000-0000-0000-000000000177
+
+  ext_activity_16:
+    name: Plant reproduction
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity16.html
+    uuid: 00000000-0000-0000-0000-000000001016
+    description: this is a great activity
+
+  ext_activity_17:
+    name: Atomic Energy
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity17.html
+    uuid: 00000000-0000-0000-0000-000000001017
+    description: this is a great activity
+    activities:
+      - Radio activity
+      - Nuclear Energy
+
+  ext_activity_18:
+    name: Algebra
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity18.html
+    uuid: 00000000-0000-0000-0000-000000001018
+    description: this is a great activity
+
+  ext_activity_19:
+    name: Aerodynamics
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity19.html
+    uuid: 00000000-0000-0000-0000-000000001019
+    description: this is a great activity
+
+  ext_activity_20:
+    name: Electricity
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity20.html
+    uuid: 00000000-0000-0000-0000-000000001020
+    description: this is a great activity
+
+  ext_activity_21:
+    name: Radioactivity
+    user: author
+    description: smaller radioactive activity
+    url: http://fake-lara.com/mock_html/test-external-activity21.html
+    uuid: 00000000-0000-0000-0000-000000001021
+
+  ext_activity_22:
+    name: Lumped circuit abstraction
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity22.html
+    uuid: 00000000-0000-0000-0000-000000001022
+    description: this is a great activity
+
+  ext_activity_23:
+    name: Static discipline
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity23.html
+    uuid: 00000000-0000-0000-0000-000000001023
+    description: this is a great activity
+
+  ext_activity_24:
+    name: Non Linear Devices
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity24.html
+    uuid: 00000000-0000-0000-0000-000000001024
+    description: this is a great activity
+
+  ext_activity_25:
+    name: simple activity
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity25.html
+    uuid: 00000000-0000-0000-0000-000000001025
+    description: this is a great activity
+
+  ext_activity_26:
+    name: differential calculus
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity26.html
+    uuid: 00000000-0000-0000-0000-000000001026
+    description: this is a great activity
+
+  ext_activity_27:
+    name: integral calculus
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity27.html
+    uuid: 00000000-0000-0000-0000-000000001027
+
+  ext_activity_28:
+    name: differential calculus
+    user: author
+    url: http://fake-lara.com/mock_html/test-external-activity28.html
+    uuid: 00000000-0000-0000-0000-000000001028
+    description: this is a great activity
+
+  ext_activity_29:
+    name: Geometry (two)
+    user: author
+    description: Triangle is a great material
+    url: http://fake-lara.com/mock_html/test-external-activity29.html
+
+    uuid: 00000000-0000-0000-0000-000000001029
+
+  ext_activity_30:
+    name: Geometry sequence
+    user: author
+    description: Triangle is a great subject
+    url: http://fake-lara.com/mock_html/test-external-activity30.html
+    uuid: 00000000-0000-0000-0000-000000001030
+    activities:
+      - Curvey shapes
+      - Polygons
+
+  ext_activity_31:
+    name: Radioactivity sequence
+    user: author
+    description: Nuclear Energy is a great subject
+    url: http://fake-lara.com/mock_html/test-external-activity31.html
+    uuid: 00000000-0000-0000-0000-000000001031
+    activities:
+      - Plutonium
+      - Uranium
+
+  ext_activity_32:
+    name: testing fast cars
+    user: author
+    description: how fast can cars go?
+    url: http://fake-lara.com/mock_html/test-external-activity32.html
+    uuid: 00000000-0000-0000-0000-000000001032
+    activities:
+      - Porsche
+      - VW Bug
 
 materials_collections:
   collection_1:

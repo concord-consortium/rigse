@@ -4,12 +4,6 @@
   Authoring
 
 %div{:style=> "margin: 1em; padding: 1em;"}
-  %h4= "#{Investigation.display_name.pluralize} you've authored"
-  %ul
-    - current_visitor.investigations.each do |inv|
-      %li
-        = link_to_container(inv)
-  = link_to "Create #{Investigation.display_name}", new_investigation_path, :class => 'button'
 
 - if current_visitor.has_role?('admin') || current_visitor.external_activities.present?
   %div{:style=> "margin: 1em; padding: 1em;"}

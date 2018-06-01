@@ -47,6 +47,7 @@ Feature: A manager updates account information for another user
     When there is an unactivated user named "justsignedup"
     And I am logged in with the username mymanager
     And I am on the user list page
+    And I look for the user by searching "justsignedup"
     And I should see "justsignedup"
     And I activate the user from user list by searching "justsignedup"
     Then I should be on the user list page

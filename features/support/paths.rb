@@ -33,8 +33,6 @@ module NavigationHelpers
       "/admin/settings/#{Admin::Settings.default_settings.id}/edit"
     when /the current settings show page/
       "/admin/settings/#{Admin::Settings.default_settings.id}/show"
-    when /the create investigation page/
-      "/investigations/new"
     when /the researcher reports page and click usage report/
       WebMock.stub_request(:post, /report_learners\/_search$/).
         to_return(:status => 200, :body => { "hits" => { "hits" => [] } }.to_json,
@@ -50,19 +48,6 @@ module NavigationHelpers
     when /the class edit page for "([^"]*)"/
         clazz = Portal::Clazz.find_by_name($1)
         edit_portal_clazz_path(clazz)
-    when /the investigations printable index page/
-      "/investigations/printable_index"
-    when /the investgations page/
-      "/investigations/"
-    when /the investigations page for "(.*)"/
-      inv = Investigation.find_by_name $1
-      investigation_path inv
-    when /the first page of the "(.*)" investigation/
-      investigation = Investigation.find_by_name($1)
-      page = investigation.pages.first
-      page_path(page)
-    when /the investigations like "(.*)"/
-      "/investigations?name=#{$1}"
     when /the clazz create page/
       new_portal_clazz_path
     when /the user preferences page for the user "(.*)"/
@@ -103,21 +88,22 @@ module NavigationHelpers
       "/recent_activity"
     when /the search instructional materials page/
       "/search"
+    when /browse materials page for "(.+)"/
+      eresource = ExternalActivity.find_by_name $1
+      "/browse/eresources/#{eresource.id}"
+    when /material preview page for "(.+)"/
+      eresource = ExternalActivity.find_by_name $1
+      slug = eresource.name.parameterize
+      "/resources/#{eresource.id}/#{slug}"
     when /Instructional Materials page for "(.+)"/
       portal_clazz = Portal::Clazz.find_by_name $1
       "/portal/classes/#{portal_clazz.id}/materials"
     when /report of offering "(.+)"/
-      investigation = Investigation.find_by_name($1)
-      offering = Portal::Offering.find_by_runnable_id investigation.id
+      eresource = ExternalActivity.find_by_name($1)
+      offering = Portal::Offering.find_by_runnable_id eresource.id
       "/portal/offerings/#{offering.id}/report"
     when /the Help Page/
       "/help"
-    when /the preview investigation page for the investigation "(.*)"/
-      investigation_id = Investigation.find_by_name($1).id
-      "/browse/investigations/#{investigation_id}"
-    when /the preview activity page for the activity "(.*)"/
-      activity_id = Activity.find_by_name($1).id
-      "/browse/activities/#{activity_id}"
     when /the projects index page/
       "/admin/projects"
     when /the materials collection index page/
@@ -135,6 +121,8 @@ module NavigationHelpers
       "/interactives/#{interactive}/edit"
     when /the signin page/
       "/auth/login"
+    when /the new material page/
+      "/eresources/new"
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

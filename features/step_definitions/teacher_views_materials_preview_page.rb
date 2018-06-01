@@ -56,3 +56,17 @@ When /^(?:|I )should be able to share (investigation|activity) "(.+)"$/ do |mate
         element.should be_visible
     end
 end
+
+
+When(/^I should see the preview button for "(.*?)"$/) do |arg1|
+  selector = "a[href*=\".run_resource_html\"]"
+  element = page.find(selector)
+  element.should be_visible
+end
+
+When(/^I should see the assignment button for "(.*?)"$/) do |arg1|
+  selector = "a[href*=\"javascript:get_Assign_To_Class_\"]"
+  element = page.find(selector)
+  element.should be_visible
+end
+

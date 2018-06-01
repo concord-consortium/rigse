@@ -136,20 +136,6 @@ describe RunnablesHelper do
                                                        asset_path("run.png"))
     end
 
-    it "should render a link for a Page as a JNLP launchable" do
-      page = stub_model(Page, :name => "Fun With Hippos")
-      helper.run_link_for(page).should be_link_like("http://test.host/pages/#{page.id}.jnlp",
-                                                    "run_link rollover",
-                                                    asset_path("run.png"))
-    end
-
-    it "should render a link for an Investigation as a JNLP launchable" do
-      investigation = stub_model(Investigation, :name => "Searching for Stars")
-      helper.run_link_for(investigation).should be_link_like("http://test.host/investigations/#{investigation.id}.jnlp",
-                                                             "run_link rollover",
-                                                             asset_path("run.png"))
-    end
-
     it "should render a link for a Investigation Offering" do
       offering = mock_model(Portal::Offering, :name => "Investigation Offering")
       investigation = stub_model(Investigation)
@@ -161,18 +147,14 @@ describe RunnablesHelper do
                                                              asset_path("run.png"))
     end
 
-    it "should render a link for an Activity as a JNLP launchable" do
+    it "raises an error for legacy runnables" do
+      section = stub_model(Section, :name => "Learning About Taxidermy")
       activity = stub_model(Activity, :name => "Fun in the Garden")
-      helper.run_link_for(activity).should be_link_like("http://test.host/activities/#{activity.id}.jnlp",
-                                                        "run_link rollover",
-                                                        asset_path("run.png"))
+      page = stub_model(Page, :name => "Fun with pages")
+      [section, activity, page].each do |runnable|
+        expect {helper.run_link_for(runnable)}.to raise_error(/Bad runnable component/)
+      end
     end
 
-    it "should render a link for a Section as a JNLP launchable" do
-      section = stub_model(Section, :name => "Learning About Taxidermy")
-      helper.run_link_for(section).should be_link_like("http://test.host/sections/#{section.id}.jnlp",
-                                                       "run_link rollover",
-                                                       asset_path("run.png"))
-    end
   end
 end

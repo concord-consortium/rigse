@@ -5,7 +5,8 @@ end
 Given /"(.+)" has been updated recently/ do |name|
   inv = Investigation.find_by_name(name)
   act = Activity.find_by_name(name)
-  [inv,act].compact.each do |mat|
+  external_act = ExternalActivity.find_by_name(name)
+  [inv,act, external_act].compact.each do |mat|
     mat.touch
     puts "updating #{mat.class.name} #{name}"
   end
@@ -68,46 +69,12 @@ end
 
 
 Then /^the search results should be paginated on the search instructional materials page$/ do
-  #pagination for investigations
-  within(".results_container .materials_container.investigations") do
-    if page.respond_to? :should
-      page.should have_link("Next")
-    else
-      assert page.has_link?("Next")
-    end
-
-    page.should have_content("Previous")
-
-    step 'I follow "Next"'
-    if page.respond_to? :should
-      page.should have_link("Previous")
-    else
-      assert page.has_link?("Previous")
-    end
-
-    page.should have_content("Next")
-  end
-
-  #pagination for activity
-  step 'I am on the search instructional materials page'
-  within(".results_container .materials_container.activities") do
-    if page.respond_to? :should
-      page.should have_link("Next")
-    else
-      assert page.has_link?("Next")
-    end
-
-    page.should have_content("Previous")
-
-    step 'I follow "Next"'
-    if page.respond_to? :should
-      page.should have_link("Previous")
-    else
-      assert page.has_link?("Previous")
-    end
-
-    page.should have_content("Next")
-  end
+  #pagination for any material
+  next_text = "Next"
+  previous_text = "Previous"
+  page.find(:css, ".search_resultscontainer .pagination a", text: next_text)
+  step "I follow \"#{next_text}\""
+  page.find(:css, ".search_resultscontainer .pagination a", text: previous_text)
 end
 
 And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|
@@ -119,6 +86,14 @@ And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do
 end
 
 And /^(?:|I )follow (investigation|activity) link "(.+)" on the search instructional materials page$/ do |material_type, material_name|
+  within(".materials_container.#{material_type.pluralize}") do
+    # for some reason this is not always visible initially, the approach below will cause capybara's waiting
+    # mechanism to kick in waiting for the element to become visible
+    find('a', :text => material_name, :visible => true).click
+  end
+end
+
+And /^(?:|I )follow the (investigation|activity) preview link for "(.+)" on the search instructional materials page$/ do |material_type, material_name|
   within(".materials_container.#{material_type.pluralize}") do
     # for some reason this is not always visible initially, the approach below will cause capybara's waiting
     # mechanism to kick in waiting for the element to become visible

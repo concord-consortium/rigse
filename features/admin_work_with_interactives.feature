@@ -62,10 +62,11 @@ Feature: Admin can work with interactives
       Then I should not see "11" within #primary
       And I should not see "Biology"
 
-    #@javascript @search
-    #Scenario: Admin can see search suggestions
+    # @javascript @search
+    # Scenario: Admin can see search suggestions
     #  Given I am on the search instructional materials page
     #  When I enter search text "Interactive 1" on the search instructional materials page
+    #  And I wait 2 seconds
     #  Then I should see search suggestions for "Interactive 1" on the search instructional materials page
 
     #@javascript @search
@@ -98,8 +99,6 @@ Feature: Admin can work with interactives
       And I press "GO"
       And I wait 2 seconds
       Then I should see "Geometry"
-      And I should see "Triangle is a great subject"
-      And I should see "Triangle is a great material"
       And I should not see "Radioactivity"
       When I enter search text "Radioactivity" on the search instructional materials page
       And I check "Sequence"
@@ -108,8 +107,6 @@ Feature: Admin can work with interactives
       And I press "GO"
       And I wait 2 seconds
       Then I should see "Radioactivity"
-      And I should see "Nuclear Energy is a great subject"
-      And I should not see "Nuclear Energy is a great material"
       And I should not see "Geometry"
       When I enter search text "Interactive" on the search instructional materials page
       And I uncheck "Sequence"
@@ -118,8 +115,6 @@ Feature: Admin can work with interactives
       And I press "GO"
       And I wait 2 seconds
       Then I should see "Interactive"
-      And I should not see "Nuclear Energy is a great subject"
-      And I should not see "Nuclear Energy is a great material"
       And I should not see "Geometry"
 
     #@javascript @search

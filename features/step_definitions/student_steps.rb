@@ -1,3 +1,4 @@
+
 Given /^the following students exist:$/ do |table|
   table.hashes.each do |hash|
     begin
@@ -63,6 +64,10 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   student.clazzes.should include clazz
 end
 
+When /^I reload the page$/ do
+  visit [ current_path, page.driver.request.env['QUERY_STRING'] ].reject(&:blank?).join('?')
+end
+
 When /^(?:|I )run the (?:investigation|activity|external activity)$/ do
   # make sure the current user is a student
   user = User.find_by_login(@cuke_current_username)
@@ -70,10 +75,14 @@ When /^(?:|I )run the (?:investigation|activity|external activity)$/ do
 
   # note this isn't an exact match sometimes the link is Run by Myself, sometimes it is just Run
   # and addtionally if groups are turned on then there will be another link that is Run with Other Students
-  find(".solo.button").click
+  button = find(".solo.button")
+  url = button[:href]
+  button.click()
 end
 
-Then /^I should see the run link for "([^"]*)"$/ do | runnable_name |
+
+
+Then /^I should see the run link for  "([^"]*)"$/ do | runnable_name |
   within(".offering_for_student:contains('#{runnable_name}')") do
     page.should have_selector('.solo.button')
   end
