@@ -119,15 +119,17 @@ describe Search do
     let(:external_seq) { external_base.merge({ :template => private_investigations.first})}
     let(:external_act) { external_base.merge({ :template => private_activities.first})}
 
+    # Activities and Sequence should no longer show up in search results.
     let(:public_investigations) { collection(:investigation, 2, public_opts) }
     let(:private_investigations){ collection(:investigation, 2, private_opts)}
     let(:public_activities)     { collection(:activity, 2, public_opts)      }
     let(:private_activities)    { collection(:activity, 2, private_opts)     }
+
     let(:public_ext_act)        { collection(:external_activity, 2, external_act.merge(public_opts).merge(official))  }
     let(:private_ext_act)       { collection(:external_activity, 2, external_act.merge(private_opts).merge(official)) }
     let(:public_ext_seq)        { collection(:external_activity, 2, external_seq.merge(public_opts).merge(official))  }
     let(:private_ext_seq)       { collection(:external_activity, 2, external_seq.merge(private_opts).merge(official)) }
-    let(:assessment_activities) { collection(:activity, 2, assessment_opts) }
+    let(:assessment_activities) { collection(:external_activity, 2, assessment_opts) }
     let(:search_opts) { {} }
 
     subject do
@@ -141,7 +143,7 @@ describe Search do
 
       describe "searching for materials with tricky names" do
         let(:funny_name)       { "" }
-        let(:funny_activity)   { FactoryGirl.create(:activity, public_opts.merge(:name=>funny_name)) }
+        let(:funny_activity)   { FactoryGirl.create(:external_activity, public_opts.merge(:name=>funny_name)) }
         let(:search_opts)      { {:search_term => search_term} }
         let(:search_term)      { "" }
         let(:materials)        { [funny_activity] }
@@ -258,10 +260,12 @@ describe Search do
 
       describe "searching public items" do
         let(:search_opts) { {:private => false } }
-        it "results should include 4 public activities and 4 public investigations" do
-          subject.results[:all].should have(8).entries
-          subject.results[Search::InvestigationMaterial].should have(4).entries
-          subject.results[Search::ActivityMaterial].should have(4).entries
+        it "results should include 4 public external_activities" do
+          subject.results[:all].should have(4).entries
+          # Sequence externals
+          subject.results[Search::InvestigationMaterial].should have(2).entries
+          # Actvitiy externals
+          subject.results[Search::ActivityMaterial].should have(2).entries
         end
       end
 
@@ -290,18 +294,17 @@ describe Search do
 
       describe "searching all items" do
         let(:search_opts) { {:private => true, :include_templates => true} }
-        it "results should include 8 activities and 8 investigations" do
-          # subject.results[:all].should have(16).entries
-          subject.results[Search::InvestigationMaterial].should have(8).entries
-          subject.results[Search::ActivityMaterial].should have(8).entries
+        it "results should include 4 external activities and 4 external sequences" do
+          subject.results[Search::InvestigationMaterial].should have(4).entries
+          subject.results[Search::ActivityMaterial].should have(4).entries
         end
       end
 
-      describe "searching only public Investigations" do
+      describe "searching only public Sequences" do
         let(:search_opts) { {:private  => false, :material_types => ["Investigation"]} }
         it "results should include 4 investigations" do
-          subject.results[:all].should have(4).entries
-          subject.results[Search::InvestigationMaterial].should have(4).entries
+          subject.results[:all].should have(2).entries
+          subject.results[Search::InvestigationMaterial].should have(2).entries
         end
       end
 
@@ -367,10 +370,10 @@ describe Search do
 
       describe "searching with user_id" do
         let(:my_id)          { 23 }
-        let(:my_activity)    { FactoryGirl.create(:activity, {:publication_status => "private", :user_id => my_id })}
-        let(:someone_elses)  { FactoryGirl.create(:activity, {:publication_status => "private", :user_id => 777   })}
+        let(:my_activity)    { FactoryGirl.create(:external_activity, {:publication_status => "private", :user_id => my_id })}
+        let(:someone_elses)  { FactoryGirl.create(:external_activity, {:publication_status => "private", :user_id => 777   })}
         let(:private_items)  { [my_activity,someone_elses]}
-        let(:public_items)   { collection(:activity, 2, public_opts)}
+        let(:public_items)   { collection(:external_activity, 2, public_opts)}
         let(:search_opts)     {{ :private => false, :user_id => my_id }}
         before(:each) do
           User.stub!(:find => mock_user)
@@ -414,15 +417,15 @@ describe Search do
             let(:cohort2_opts) {{:publication_status=>'published', :cohorts => [cohort2] }}
             let(:both_opts)    {{:publication_status=>'published', :cohorts => [cohort1, cohort2] }}
 
-            let(:blank_sequence)     { collection(:investigation, 1, public_opts) }
-            let(:cohort1_sequences)  { collection(:investigation, 2, cohort1_opts)}
-            let(:cohort2_sequences)  { collection(:investigation, 2, cohort2_opts)}
-            let(:both_sequences)     { collection(:investigation, 1, both_opts)}
+            let(:blank_sequence)     { collection(:external_activity, 1, external_seq.merge( public_opts)) }
+            let(:cohort1_sequences)  { collection(:external_activity, 2, external_seq.merge(cohort1_opts))}
+            let(:cohort2_sequences)  { collection(:external_activity, 2, external_seq.merge(cohort2_opts))}
+            let(:both_sequences)     { collection(:external_activity, 1, external_seq.merge(both_opts))}
 
-            let(:blank_activity)     { collection(:activity, 1, public_opts) }
-            let(:cohort1_activities) { collection(:activity, 2, cohort1_opts)}
-            let(:cohort2_activities) { collection(:activity, 2, cohort2_opts)}
-            let(:both_activity)      { collection(:activity, 1, both_opts)}
+            let(:blank_activity)     { collection(:external_activity, 1, public_opts) }
+            let(:cohort1_activities) { collection(:external_activity, 2, cohort1_opts)}
+            let(:cohort2_activities) { collection(:external_activity, 2, cohort2_opts)}
+            let(:both_activity)      { collection(:external_activity, 1, both_opts)}
 
             let(:blank_external)     { collection(:external_activity, 1, external_base.merge(official).merge(public_opts).merge({:material_type => 'Activity'}) ) }
             let(:cohort1_externals)  { collection(:external_activity, 2, external_base.merge(official).merge(cohort1_opts).merge({:material_type => 'Activity'})) }
