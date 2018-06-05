@@ -45,14 +45,24 @@ describe API::V1::SearchController do
                                         :is_official => true,
                                         :material_type => 'Activity' ) }
 
-  let(:contributed_activity) { Factory.create(:external_activity, 
-                                        :name => "Copy of external_1", 
-                                        :url => "http://concord.org", 
-                                        :publication_status => 'published', 
+
+  let(:external_activity3)   { Factory.create(:external_activity,
+                                        :name => 'a_study_in_lines_and_curves',
+                                        :url => "http://github.com",
+                                        :publication_status =>
+                                        'published',
+                                        :is_official => true,
+                                        :material_type => 'Investigation' ) }
+
+
+  let(:contributed_activity) { Factory.create(:external_activity,
+                                        :name => "Copy of external_1",
+                                        :url => "http://concord.org",
+                                        :publication_status => 'published',
                                         :is_official => false,
                                         :material_type => 'Activity' ) }
 
-  let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]}
+  let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines, external_activity3]}
   let(:official_activities)   { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
   let(:contributed_activities){ [contributed_activity] }
   let(:all_activities)        {  official_activities.concat(contributed_activities) }
@@ -90,15 +100,15 @@ describe API::V1::SearchController do
       end
 
       describe "with no filter parameters" do
-        it "should return search results that show all the materials" do
+        it "should return search results that shows only external activity based materials" do
           assigns[:search].should_not be_nil
           assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
+          assigns[:search].results[Search::InvestigationMaterial].length.should be(1)
           assigns[:search].results[Search::InvestigationMaterial].each do |investigation|
             all_investigations.should include(investigation)
           end
           assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(7)
+          assigns[:search].results[Search::ActivityMaterial].length.should be(3)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             all_activities.should include(activity)
           end
@@ -109,12 +119,12 @@ describe API::V1::SearchController do
         let(:get_params) { {:include_official => 1} }
         it "should show all official study materials" do
           assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
+          assigns[:search].results[Search::InvestigationMaterial].length.should be(1)
           assigns[:search].results[Search::InvestigationMaterial].each do |investigation|
             all_investigations.should include(investigation)
           end
           assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(6)
+          assigns[:search].results[Search::ActivityMaterial].length.should be(2)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             official_activities.should include(activity)
           end
@@ -133,7 +143,7 @@ describe API::V1::SearchController do
 
         it "should return all investigations" do
           assigns[:search].results[Search::InvestigationMaterial].should_not be_nil
-          assigns[:search].results[Search::InvestigationMaterial].length.should be(5)
+          assigns[:search].results[Search::InvestigationMaterial].length.should be(1)
         end
 
         it "should not return any activities" do
@@ -149,7 +159,7 @@ describe API::V1::SearchController do
         end
         it "should return all activities" do
           assigns[:search].results[Search::ActivityMaterial].should_not be_nil
-          assigns[:search].results[Search::ActivityMaterial].length.should be(7)
+          assigns[:search].results[Search::ActivityMaterial].length.should be(3)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             all_activities.should include(activity)
           end
