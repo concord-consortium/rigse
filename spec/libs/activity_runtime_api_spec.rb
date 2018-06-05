@@ -73,6 +73,7 @@ describe ActivityRuntimeAPI do
   let(:page_1_url ) { "http://activity.com/activity/1/pages/5" }
   let(:launch_url)  { "#{url}/1/sessions/"             }
   let(:existing_url){ nil }
+  let(:student_report_enabled){true}
 
   let(:new_hash) do
     {
@@ -81,6 +82,7 @@ describe ActivityRuntimeAPI do
       "abstract"    => abstract,
       "url" => url,
       "launch_url" => launch_url,
+      "student_report_enabled" => student_report_enabled,
       "sections" => [
         {
           "name" => "Cool Activity Section 1",
@@ -254,6 +256,7 @@ describe ActivityRuntimeAPI do
         result.should have_image_question_like "draw a picture"
         result.should have_image_question_like "now explain"
         result.should have_page_like "Cool Activity Page 1", page_1_url
+        result.student_report_enabled.should be_true
       end
 
       it "should cause that parent investigation and activities are recognized as templates" do
@@ -277,6 +280,7 @@ describe ActivityRuntimeAPI do
 
     describe "When there is an existing external activity with the same url" do
       let(:existing_url) { url }  # the url identifies the existing activity
+      let(:student_report_enabled){false}
 
       describe "when updating an external activity" do
         it "should delete the non-mapped embeddables in the existing activity" do
@@ -288,6 +292,13 @@ describe ActivityRuntimeAPI do
           result.template.open_responses.should have(1).question
           result.should have_open_response_like("dislike this activity")
           result.should have_image_question_like("draw a picture")
+        end
+
+        it "should update student_report_enabled if changed" do
+          existing
+          result = ActivityRuntimeAPI.update_activity(new_hash)
+          result.should_not be_nil
+          result.student_report_enabled.should be_false
         end
       end
 

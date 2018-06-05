@@ -43,19 +43,20 @@ class ActivityRuntimeAPI
       investigation = Investigation.create(:name => hash["name"], :user => user)
       activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
-        :name             => hash["name"],
-        :description      => hash["description"],
-        :abstract         => hash["abstract"],
-        :url              => hash["url"],
-        :thumbnail_url    => hash["thumbnail_url"],
-        :launch_url       => hash["launch_url"] || hash["create_url"],
-        :author_url       => hash["author_url"],
-        :print_url        => hash["print_url"],
-        :template         => activity,
-        :publication_status => "published",
-        :user => user,
-        :author_email => hash["author_email"],
-        :is_locked => hash["is_locked"]
+        :name                   => hash["name"],
+        :description            => hash["description"],
+        :abstract               => hash["abstract"],
+        :url                    => hash["url"],
+        :thumbnail_url          => hash["thumbnail_url"],
+        :launch_url             => hash["launch_url"] || hash["create_url"],
+        :author_url             => hash["author_url"],
+        :print_url              => hash["print_url"],
+        :student_report_enabled => hash["student_report_enabled"],
+        :template               => activity,
+        :publication_status     => "published",
+        :user                   => user,
+        :author_email           => hash["author_email"],
+        :is_locked              => hash["is_locked"]
       )
       self.update_external_report(external_activity,hash["external_report_url"])
       # update activity so external_activity.template is correctly initialzed
@@ -92,7 +93,7 @@ class ActivityRuntimeAPI
       end
     end
 
-    ['author_email', 'is_locked', 'print_url', 'author_url'].each do |attribute|
+    ['author_email', 'is_locked', 'print_url', 'author_url', 'student_report_enabled'].each do |attribute|
       external_activity.update_attribute(attribute,hash[attribute])
     end
     self.update_external_report(external_activity,hash["external_report_url"])
