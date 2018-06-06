@@ -5,8 +5,11 @@ class API::V1::ExternalActivitiesController < API::APIController
   def create
     authorize [:api, :v1, :external_activity]
 
-    user, role = check_for_auth_token()
-    return if !user
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message)
+    end
 
     name = params.require(:name)
     url = params.require(:url)
