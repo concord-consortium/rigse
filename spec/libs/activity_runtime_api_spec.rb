@@ -167,7 +167,8 @@ describe ActivityRuntimeAPI do
       "launch_url" => sequence_url,
       "print_url" => sequence_print_url,
       "author_url" => sequence_author_url,
-      "activities" => [act2, act1]
+      "activities" => [act2, act1],
+      "student_report_enabled" => student_report_enabled
     }
   end
 
@@ -453,6 +454,7 @@ describe ActivityRuntimeAPI do
         result.name.should == sequence_name
         result.description.should == sequence_desc
         result.abstract.should == sequence_abstract
+        result.student_report_enabled.should be_true
       end
       it 'should create a new investigation' do
         result.template.should be_a_kind_of(Investigation)
@@ -487,6 +489,8 @@ describe ActivityRuntimeAPI do
 
     context 'when updating an existing sequence' do
       let(:sequence_abstract) { "this is something new"}
+      let(:student_report_enabled){false}
+
       it 'should update the existing investigation details' do
         existing_sequence
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
@@ -495,6 +499,12 @@ describe ActivityRuntimeAPI do
         result.template.abstract.should match /something new/
         result.author_url.should == sequence_author_url
         result.print_url.should == sequence_print_url
+      end
+
+      it "should update student_report_enabled if changed" do
+        existing_sequence
+        result = ActivityRuntimeAPI.update_activity(new_hash)
+        result.activities[1].student_report_enabled.should be_false
       end
 
       it 'should not override properties that are not provided' do
