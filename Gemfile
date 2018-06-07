@@ -203,6 +203,7 @@ group :test, :cucumber do
   gem "capybara-mechanize", "~> 0.3.0"
   gem 'capybara-screenshot'
   gem "connection_pool"
+  gem "json-schema"
 end
 
 group :test, :cucumber, :development do
