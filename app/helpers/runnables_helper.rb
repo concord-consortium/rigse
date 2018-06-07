@@ -52,9 +52,10 @@ module RunnablesHelper
         end
         options[:label] = group_label
         options[:offeringId] = offering.id
-        haml_tag :span, {:id => 'run-with-collaborators-button'}
+        span_id = "run-with-collaborators-button-#{offering.id}"
+        haml_tag :span, {:id => span_id}
         haml_tag :script do
-          haml_concat "PortalPages.renderRunWithCollaborators(#{options.to_json}, 'run-with-collaborators-button');"
+          haml_concat "PortalPages.renderRunWithCollaborators(#{options.to_json}, '#{span_id}');"
         end
       end
     end
@@ -90,7 +91,7 @@ module RunnablesHelper
     end
     return ""
   end
-  
+
   def run_url_for(component, params = {}, format = nil)
     if component.instance_of? Interactive
       return component.url
