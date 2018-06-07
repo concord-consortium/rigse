@@ -37,7 +37,6 @@
 = require 'jquery.placeholder.js'
 = require 'jquery-fileupload/basic'
 = require 'jquery-fileupload/vendor/tmpl'
-= require 'select2'
 = require 'search_materials'
 = require 'search_materials_add_to_collection'
 = require 'search_materials_expand'
