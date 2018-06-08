@@ -142,8 +142,10 @@ class ActivityRuntimeAPI
       investigation = Investigation.create(
         :name => hash["name"], :description => hash['description'],
         :abstract => hash['abstract'], :user => user)
+      all_student_reports_enabled = true
       hash['activities'].each_with_index do |act, index|
         activity_from_hash(act, investigation, user, index)
+        all_student_reports_enabled &&= (act.has_key?(:student_report_enabled) ? act[:student_report_enabled] : true)
       end
       external_activity = ExternalActivity.create(
         :name                   => hash["name"],
@@ -154,7 +156,7 @@ class ActivityRuntimeAPI
         :launch_url             => hash["launch_url"] || hash["create_url"],
         :author_url             => hash["author_url"],
         :print_url              => hash["print_url"],
-        :student_report_enabled => hash["student_report_enabled"],
+        :student_report_enabled => all_student_reports_enabled,
         :template               => investigation,
         :publication_status     => "published",
         :user                   => user,

@@ -504,7 +504,7 @@ describe ActivityRuntimeAPI do
       it "should update student_report_enabled if changed" do
         existing_sequence
         result = ActivityRuntimeAPI.update_activity(new_hash)
-        result.activities[1].student_report_enabled.should be_false
+        result.student_report_enabled.should be_false
       end
 
       it 'should not override properties that are not provided' do
