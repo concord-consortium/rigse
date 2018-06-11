@@ -2,8 +2,11 @@ class API::V1::ClassesController < API::APIController
 
   # GET api/v1/classes/:id
   def show
-    user, role = check_for_auth_token()
-    return if !user
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message)
+    end
 
     if user.anonymous?
       return error('You must be logged in to use this endpoint')
@@ -31,8 +34,11 @@ class API::V1::ClassesController < API::APIController
   # GET api/v1/classes/mine
   # lists the users classes
   def mine
-    user, role = check_for_auth_token()
-    return if !user
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message)
+    end
 
     if user.anonymous?
       return error('You must be logged in to use this endpoint')

@@ -4,8 +4,11 @@ class API::V1::JwtController < API::APIController
   skip_before_filter :verify_authenticity_token
 
   def portal
-    user, role = check_for_auth_token()
-    return if !user
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message)
+    end
 
     if role
       learner = role[:learner]
@@ -34,7 +37,7 @@ class API::V1::JwtController < API::APIController
 
     begin
       render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
-    rescue Exception => e
+    rescue StandardError => e
       return error(e.message, 500)
     end
   end
@@ -43,8 +46,11 @@ class API::V1::JwtController < API::APIController
   # POST api/v1/jwt/firebase as a logged in user, or
   # GET  api/v1/jwt/firebase?firebase_app=abc with a valid bearer token
   def firebase
-    user, role = check_for_auth_token()
-    return if !user
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message)
+    end
 
     if role
       learner = role[:learner]
@@ -95,7 +101,7 @@ class API::V1::JwtController < API::APIController
 
     begin
       render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
-    rescue Exception => e
+    rescue StandardError => e
       return error(e.message, 500)
     end
   end
