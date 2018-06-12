@@ -16,11 +16,7 @@ class Portal::School < ActiveRecord::Base
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
   # has_many :clazzes, :through => :courses, :class_name => "Portal::Clazz"
 
-  has_many :clazzes, :dependent => :destroy, :through => :courses, :class_name => "Portal::Clazz" do
-    def active
-      find(:all) & Portal::Clazz.has_offering
-    end
-  end
+  has_many :clazzes, :dependent => :destroy, :through => :courses, :class_name => "Portal::Clazz"
 
   has_many :members, :class_name => "Portal::SchoolMembership", :foreign_key => "school_id"
 
