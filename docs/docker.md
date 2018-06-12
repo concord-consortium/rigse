@@ -21,25 +21,22 @@ service. The files `config/database.yml`, `config/settings.yml` and
 `config/app_environment_variables.yml` are automatically copied from their `.sample.yml`
 counterparts when you run `docker-compose up` if they do not exist. If they already
 exist, they will not be updated. If they already exist then there is a good chance
-they will not be configured correctly for Docker. If you are not using unison to sync
+they will not be configured correctly for Docker. If you are not using
+the docker-compose-sync overlay to sync
 your local files (see below), you can delete these files and run
 
     docker-compose build app # make sure you have the latest app image
     docker-compose up app    # recreate the app container from this image
 
-If you are using unison then you should delete your unison volume first to be safe. You
+If you are using the docker-compose-sync overlay then you should delete your sync volume first to be safe. You
 can't delete a volume that is still attached to containers, so you also need to delete
-all of the containers using the unison volume (pretty much everything):
+all of the containers using the sync volume (pretty much everything):
 
-    docker-compose down              # stop all containers and remove them
-    docker volume ls                 # list all of the volumes
-    docker volume rm {portal}_unison # remove the unison volume
-    docker-compose build app         # make sure you have the latest app image
-    docker-compose up unison         # start unison container, so you can resync the files
-    # in a new terminal
-    docker/dev/start-unison.sh       # start unison OS X server
-    # in a new terminal
-    docker-compose up                # start rest of services
+    docker-compose down                   # stop all containers and remove them
+    docker volume ls                      # list all of the volumes
+    docker volume rm {portal}_sync-volume # remove the unison volume
+    docker-compose build app              # make sure you have the latest app image
+    docker-compose up                     # start services
 
 Also, when `config/database.yml` is not present yet, `docker-compose up` will copy it
 and run `rake db:setup`. This running of `rake db:setup` will erase any data in the
@@ -69,7 +66,8 @@ environment. These can be found in `docker/dev/`. Currently these overrides supp
 - `docker-compose-external-mysql.yml`: external mysql server
 - `docker-compose-random-ports.yml`: assigning random ports to rails and solr
 - `docker-compose-ssh.yml`: sharing an ssh-agent with the app service so you can do capistrano deploys
-- `docker-compose-unison.yml`: using unison for faster performance on OS X 
+- `docker-compose-sync.yml`: using a 2 volume internal unison for faster performance on OS X, without needing the host to run unison
+- `docker-compose-unison.yml`: using unison for faster performance on OS X
 
 
 There is more on each of these below.
@@ -231,13 +229,13 @@ image above has instructions on doing this.
 ## Running rspec and cucumber tests with docker
 
 
-1. Connect to the running docker instance of your "app" service. 
+1. Connect to the running docker instance of your "app" service.
 > `$ docker-compose exec app bash`
 2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
     * `docker/dev/run-spec.sh`
     * `docker/dev/run-cucumber.sh`
 
-    E.g. 
+    E.g.
     > `$ ./docker/dev/run-rspec.sh`
 
 ## Docker crashing or running very slow
