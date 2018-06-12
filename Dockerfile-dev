@@ -1,13 +1,19 @@
 FROM concordconsortium/docker-rails-base-ruby-2.2.6
 
-ENV APP_HOME /rigse
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
-
 #
 # Install some basic dev tools
 #
 RUN apt-get update && apt-get install -y vim xvfb firefox-esr
+
+#
+# Install wait-for-it to support docker-volume-sync
+WORKDIR /usr/local/bin
+RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
+    chmod +x wait-for-it.sh
+
+ENV APP_HOME /rigse
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
 
 # use a mounted volume so the gems don't need to be rebundled each time
 ENV BUNDLE_PATH /bundle
