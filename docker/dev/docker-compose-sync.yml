@@ -1,0 +1,36 @@
+# This is a docker-compose overlay that uses unison for syncing files between the host
+# and containers.  On OS X it is much faster than simple mounting of local files
+
+# A convient way to overlay this file is to add a `.env` file with the contents:
+#  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-sync.yml
+# if you are making changes to docker-compose.yml or this file it is useful to
+# run `docker-compose config` which shows how the two files get merged together
+version: '3'
+services:
+  app:
+    entrypoint: [ "/bin/bash", "/usr/local/bin/wait-for-it.sh", "sync:5001", "-s", "-t", "60", "--" ]
+    depends_on:
+      - sync
+    volumes:
+      - sync-volume:/rigse
+
+  solr:
+    volumes:
+      - sync-volume:/rigse
+  sync:
+    # the version of unison in this container needs to match the verson on your machine
+    image: concordconsortium/docker-volume-sync
+    environment:
+      # root is used here since the app is running as root so any files it creates
+      # will be owned by root, and then unison should be able to override them
+      UNISON_UID: 0
+      UNISON_GID: 0
+      UNISON_USER: root
+      UNISON_GROUP: root
+      UNISON_DIR: /data
+      UNISON_HOST_DIR: /host_data
+    volumes:
+      - sync-volume:/data
+      - .:/host_data:cached
+volumes:
+  sync-volume:

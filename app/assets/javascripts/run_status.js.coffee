@@ -81,11 +81,6 @@ class RunStatus
 document.observe "dom:loaded", ->
   $$("a.button.run.solo").each (item) ->
     runstatus = new RunStatus(item)
-  # There used to be code like:
-  # $$("a.button.run.in_group").each (item) ->
-  #   (...)
-  # However now run status will be started by AngularJS code that handles
-  # collaboration setup. See: angular/collaboration.js.coffee
 
 # Expose RunStatus to global namespace as OfferingRunStatus.
 window.OfferingRunStatus = RunStatus

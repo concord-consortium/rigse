@@ -121,6 +121,8 @@ To use unison on OS X you need to first need to install it and the OS X fs-monit
 extension:
 
     brew install unison
+    # if you don't have pip installed
+    # brew install python
     pip install MacFSEvents
     pip install watchdog
     curl -o /usr/local/bin/unison-fsmonitor -L https://raw.githubusercontent.com/hnsl/unox/master/src/unox/unox.py

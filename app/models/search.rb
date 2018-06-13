@@ -40,17 +40,11 @@ class Search
   InteractiveMaterial     = "Interactive"
   AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial]
 
-  #
-  # A constant with all searchable models. 
-  #
-  AllSearchableModels       = [ Investigation, 
-                                Activity, 
-                                ExternalActivity, 
-                                Interactive ]
+  AllSearchableModels       = [ ExternalActivity, Interactive]
 
-  DefaultSearchableModels   = [ Investigation, 
-                                Activity, 
-                                ExternalActivity ]
+  DefaultSearchableModels   = [ ExternalActivity ]
+
+
 
   Newest       = 'Newest'
   Oldest       = 'Oldest'

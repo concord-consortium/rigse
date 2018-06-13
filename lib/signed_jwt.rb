@@ -17,7 +17,7 @@ module SignedJWT
     payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
     begin
       JWT.encode payload, self.hmac_secret, self.hmac_algorithm
-    rescue Exception => e
+    rescue StandardError => e
       raise SignedJWT::Error.new(e.message)
     end
   end
@@ -25,7 +25,7 @@ module SignedJWT
   def self.decode_portal_token(token)
     begin
       decoded = JWT.decode token, self.hmac_secret, true, {algorithm: self.hmac_algorithm}
-    rescue Exception => e
+    rescue StandardError => e
       raise SignedJWT::Error.new(e.message)
     end
     {data: decoded[0], header: decoded[1]}
@@ -51,7 +51,7 @@ module SignedJWT
       payload.merge!(claims) { |key, old, new| fail "Duplicate JWT claim key: #{key}" }
       rsa_private = OpenSSL::PKey::RSA.new(app.private_key)
       JWT.encode payload, rsa_private, self.rsa_algorithm
-    rescue Exception => e
+    rescue StandardError => e
       raise SignedJWT::Error.new(e.message)
     end
   end
@@ -64,7 +64,7 @@ module SignedJWT
     begin
       rsa_private = OpenSSL::PKey::RSA.new(app.private_key)
       decoded = JWT.decode token, rsa_private, true, {algorithm: self.rsa_algorithm}
-    rescue Exception => e
+    rescue StandardError => e
       raise SignedJWT::Error.new(e.message)
     end
     {data: decoded[0], header: decoded[1]}
