@@ -32,6 +32,35 @@
 :javascript
   jQuery(document).ready(function() {
     getEnewsStatus();
+
+    jQuery('form.edit_user').submit(function(e) {
+      e.preventDefault();
+      e.returnValue = false;
+
+      var edit_form = jQuery(this);
+      var new_status;
+      if (jQuery('#user_enews_subscription').is(':checked')) {
+        new_status = 'subscribed';
+      } else {
+        new_status = 'unsubscribed';
+      }
+
+      jQuery.ajax({
+        type: 'POST',
+        url: Portal.API_V1.ENEWS_UPDATE,
+        context: edit_form,
+        dataType: 'json',
+        timeout: 2000,
+        data: { status: new_status }
+        }).done(function(data) {
+          //console.log(data)
+        }).fail(function(data) {
+          jQuery('#enews-subscription-details').html('<p style="color: #f00; font-size: 16px;">There was an error updating this account\'s subscription status. Please reload the page to try again.</p>');
+        }).complete(function() {
+          this.off('submit');
+          this.submit();
+        });
+    });
   });
 
   function getEnewsStatus() {
