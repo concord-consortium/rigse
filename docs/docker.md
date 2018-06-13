@@ -129,6 +129,12 @@ time. The sync container is configured to choose the host file in this case. Occ
 the sync container might crash, I haven't seen it yet, but others that are using a
 similar setup have reported this.
 
+If a new version of the sync container is created, then its archive of the changes is
+lost. If you have deleted files on your host while the sync container was stopped and
+this archive is deleted, then the sync container will recreate these files on the host
+based on the files stored in the sync-volume. You will see this happening in log messages.
+There is probably a way to fix this.
+
 ## Setting up a DNS and Proxy to avoid port conflicts
 
 You can easily setup a DNS and Proxy system so you can access all of your docker-compose
