@@ -21,3 +21,51 @@
           = f.text_field :email, :live => false, :class => "aligned", :disabled => @user.is_oauth_user?
           - if @user.is_oauth_user?
             You are logged in as a #{@user.authentications[0].provider} user. This email address cannot be changed.
+        %li
+          %label{:class => "right inline"}
+            eNews
+          %br
+          %div{:id => "enews-subscription-details"}
+            = image_tag("wait16.gif", :style => 'float: left; margin: 5px 3px 0 0;')
+            %span{:style => "color: #777; font-size: 10px;"}
+              Loading email subscription status...
+:javascript
+  jQuery(document).ready(function() {
+    getEnewsStatus();
+  });
+
+  function getEnewsStatus() {
+    jQuery.ajax({
+      url: Portal.API_V1.ENEWS_STATUS,
+      dataType: 'json'
+      }).done(function(data) {
+        console.log(data);
+        var checked = '';
+        if (data.subscribed == 'true') {
+          checked = 'checked';
+        }
+        var checkbox_html = '<input type="checkbox" ' + checked + ' name="user[enews_subscription]" id="user_enews_subscription" live="false" class="aligned" value="1" /> Send me updates by email.';
+        jQuery('#enews-subscription-details').html(checkbox_html);
+      }).fail(function(data){
+        jQuery('#enews-subscription-details').html('<p style="color: #f00; font-size: 16px;">There was an error checking this account\'s subscription status. Please reload the page to try again.</p>');
+      });
+  }
+
+  function setEnewsStatus() {
+    var new_status;
+    if (jQuery('#user_enews_subscription').is(':checked')) {
+      new_status = 'subscribed';
+    } else {
+      new_status = 'unsubscribed';
+    }
+    jQuery.ajax({
+      type: 'POST',
+      url: Portal.API_V1.ENEWS_UPDATE,
+      dataType: 'json',
+      data: { status: new_status }
+      }).done(function(data) {
+        console.log(data)
+      }).fail(function(data) {
+        jQuery('#enews-subscription-details').html('<p style="color: #f00; font-size: 16px;">There was an error updating this account\'s subscription status. Please reload the page to try again.</p>');
+      });
+  }

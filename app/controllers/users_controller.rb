@@ -94,6 +94,13 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       authorize @user
       respond_to do |format|
+        # remove email subscription value from params after retrieving value
+        @mc_status = 'unsubscribed'
+        if params[:user][:enews_subscription] == '1'
+          @mc_status = 'subscribed'
+        end
+        params[:user].delete :enews_subscription
+
         if @user.update_attributes(params[:user])
 
           # This update method is shared with admins using users/edit and users using users/preferences.
@@ -118,6 +125,36 @@ class UsersController < ApplicationController
 
           if @user.portal_teacher && params[:user][:has_cohorts_in_form]
             @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
+          end
+
+          if @user.portal_teacher
+            # @user.update_enews_subscription(params[:id], @mc_status)
+            email = @user.email
+            first_name = @user.first_name
+            last_name = @user.last_name
+
+            @mc_api_key = ENV['MAILCHIMP_API_KEY']
+            @mc_list_id = ENV['MAILCHIMP_API_LISTID']
+            @mc_uri = ENV['MAILCHIMP_API_URI']
+            @mc_data = {
+              'email_address' => "#{email}",
+              'status' => "#{@mc_status}",
+              'merge_fields' => {
+                'FNAME' => "#{first_name}",
+                'LNAME' => "#{last_name}"
+                }
+              }
+            @digest = Digest::MD5.hexdigest("#{email}")
+
+            uri = URI("#{@mc_uri}/#{@mc_list_id}/members/#{@digest}")
+            http = Net::HTTP.new(uri.host, uri.port)
+            http.use_ssl = true
+            req = Net::HTTP::Put.new(uri.path, 'Content-type' => 'application/json')
+            req.basic_auth("user", "#{@mc_api_key}")
+            req.body = @mc_data.to_json
+            response = http.request(req)
+            response_data = JSON.parse(response.body)
+            mc_status = response_data['status']
           end
 
           flash[:notice] = "User: #{@user.name} was successfully updated."
@@ -209,6 +246,7 @@ class UsersController < ApplicationController
     if user.state != "active"
       user.confirm!
       user.make_user_a_member
+
       # assume this type of user just activated someone from somewhere else in the app
       flash[:notice] = "Activation of #{user.name_and_login} complete."
       redirect_to(session[:return_to] || root_path)

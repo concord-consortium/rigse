@@ -10,6 +10,7 @@ class API::V1::UserRegistration
   attribute :password,              String
   attribute :password_confirmation, String
   attribute :email,                 String
+  attribute :email_subscriber,      Boolean, :default => false
   attribute :login,                 String
   attribute :sign_up_path,          String
   attribute :asked_age,             Boolean, :default => false
@@ -47,7 +48,7 @@ class API::V1::UserRegistration
   end
 
   def user_params
-    valid_keys = [:first_name, :last_name, :password, :password_confirmation, :email, :login, :sign_up_path, :asked_age, :have_consent]
+    valid_keys = [:first_name, :last_name, :password, :password_confirmation, :email, :email_subscriber, :login, :sign_up_path, :asked_age, :have_consent]
     self.attributes.select { |k,v| valid_keys.include? k }
   end
 
