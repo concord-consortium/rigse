@@ -585,17 +585,6 @@ module ApplicationHelper
     end
   end
 
-  def menu_for_school(school, options = { :omit_delete => true, :omit_edit => true, :hide_componenent_name => true })
-    capture_haml do
-      haml_tag :div, :class => 'action_menu' do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(school, options)
-          haml_concat "active classes: #{school.clazzes.active.length}"
-        end
-      end
-    end
-  end
-
   def show_menu_for(component, options={})
     is_page_element = (component.respond_to? :embeddable)
     deletable_element = component
