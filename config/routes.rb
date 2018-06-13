@@ -454,6 +454,10 @@ RailsPortal::Application.routes.draw do
             get :login_valid
             get :name_valid
           end
+          member do
+            get :get_enews_subscription
+            post :update_enews_subscription
+          end
         end
         resources :students do
           collection do

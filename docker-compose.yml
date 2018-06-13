@@ -49,12 +49,18 @@ services:
       #
       # Google analytics property ID
       #
-      GOOGLE_ANALYTICS_ACCOUNT: 
+      GOOGLE_ANALYTICS_ACCOUNT:
 
       #
       # Google Optimizer property ID
       #
       GOOGLE_OPTIMIZER_ACCOUNT:
+
+      #
+      # MailChimp API information
+      MAILCHIMP_API_KEY:
+      MAILCHIMP_API_URI:
+      MAILCHIMP_API_LISTID:
 
       #
       # OG tag default values

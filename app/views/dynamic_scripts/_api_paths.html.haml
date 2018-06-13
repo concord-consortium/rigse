@@ -67,3 +67,8 @@
     SEARCH: "#{api_v1_search_search_path}",
     ASSIGN_MATERIAL_TO_CLASS: "#{api_v1_materials_assign_to_class_path}"
   };
+- if current_user.present?
+  - if current_user.portal_teacher
+    :javascript
+      Portal.API_V1['ENEWS_STATUS'] = "#{get_enews_subscription_api_v1_teacher_path(current_user.id)}"
+      Portal.API_V1['ENEWS_UPDATE'] = "#{update_enews_subscription_api_v1_teacher_path(current_user.id)}"
