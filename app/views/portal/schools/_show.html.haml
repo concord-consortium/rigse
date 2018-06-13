@@ -1,6 +1,4 @@
 - display_name = "#{portal_school.name}"
-- if local_assigns[:show_classes]
-  - display_name += " active classes: #{portal_school.clazzes.active.length}"
 - options = { :hide_componenent_name => true, :display_name => display_name }
 = accordion_for(portal_school, show_menu_for(portal_school, options), 'accordion') do
   %div{:id => dom_id_for(portal_school, :item), :class => 'item'}
@@ -11,7 +9,3 @@
         - if portal_school.ncessch
           NCES ID :
           =link_to "#{portal_school.ncessch}","http://nces.ed.gov/ccd/schoolsearch/school_detail.asp?ID=#{portal_school.ncessch}", {target: "blank"}
-        - if local_assigns[:show_classes]
-          = render :partial => 'shared/classes_for_school', :locals => { :portal_clazzes => portal_school.clazzes.active }
-
-

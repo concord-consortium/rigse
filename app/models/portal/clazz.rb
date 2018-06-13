@@ -65,10 +65,6 @@ class Portal::Clazz < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
-
-    def has_offering
-      Portal::Offering.find(:all, :select => 'distinct clazz_id', :include => :clazz).collect {|p| p.clazz}
-    end
   end
 
   def self.find_or_create_by_course_and_section_and_start_date(portal_course,section,start_date)
