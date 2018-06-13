@@ -489,7 +489,6 @@ describe ActivityRuntimeAPI do
 
     context 'when updating an existing sequence' do
       let(:sequence_abstract) { "this is something new"}
-      let(:student_report_enabled){false}
 
       it 'should update the existing investigation details' do
         existing_sequence
@@ -499,12 +498,17 @@ describe ActivityRuntimeAPI do
         result.template.abstract.should match /something new/
         result.author_url.should == sequence_author_url
         result.print_url.should == sequence_print_url
+        result.student_report_enabled.should be_true
       end
 
-      it "should update student_report_enabled if changed" do
-        existing_sequence
-        result = ActivityRuntimeAPI.update_activity(new_hash)
-        result.student_report_enabled.should be_false
+      describe 'student_report_enabled' do
+        let(:student_report_enabled){false}
+
+        it 'if set to false in a activity should update the sequence' do
+          existing_sequence
+          result = ActivityRuntimeAPI.update_sequence(sequence_hash)
+          result.student_report_enabled.should be_false
+        end
       end
 
       it 'should not override properties that are not provided' do

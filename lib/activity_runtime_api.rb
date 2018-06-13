@@ -145,7 +145,8 @@ class ActivityRuntimeAPI
       all_student_reports_enabled = true
       hash['activities'].each_with_index do |act, index|
         activity_from_hash(act, investigation, user, index)
-        all_student_reports_enabled &&= (act.has_key?(:student_report_enabled) ? act[:student_report_enabled] : true)
+        # a sequence has its student_report_enabled set to false if any of its activities have it set to false
+        all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
       end
       external_activity = ExternalActivity.create(
         :name                   => hash["name"],
