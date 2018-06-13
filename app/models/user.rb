@@ -329,6 +329,31 @@ class User < ActiveRecord::Base
 
   def confirm!
     super
+
+    # send MailChimp subscription data
+    if self.email_subscriber
+      @mc_api_key = ENV['MAILCHIMP_API_KEY']
+      @mc_list_id = ENV['MAILCHIMP_API_LISTID']
+      @mc_uri = ENV['MAILCHIMP_API_URI']
+      @mc_data = {
+        'email_address' => "#{self.email}",
+        'status' => "subscribed",
+        'merge_fields' => {
+          'FNAME' => "#{self.first_name}",
+          'LNAME' => "#{self.last_name}"
+          }
+        }
+      @digest = Digest::MD5.hexdigest("#{self.email}")
+
+      uri = URI("#{@mc_uri}/#{@mc_list_id}/members/#{@digest}")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      req = Net::HTTP::Put.new(uri.path, 'Content-type' => 'application/json')
+      req.basic_auth("user", "#{@mc_api_key}")
+      req.body = @mc_data.to_json
+      response = http.request(req)
+    end
+
     self.state = "active"
     save(:validate => true)
     self.make_user_a_member
