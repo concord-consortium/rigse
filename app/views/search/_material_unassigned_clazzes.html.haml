@@ -46,6 +46,12 @@
       %tr
         %td
           = external_activity_name
+          - if @material[0].saves_student_data == false
+            %div{:class => 'student-data-warning'}
+              %strong
+                PLEASE NOTE:
+              %br
+              This resource can be assigned, but student responses will not be saved.
 %br
 #clazz_summary_data
   #scrollable_clazz_summary_data
