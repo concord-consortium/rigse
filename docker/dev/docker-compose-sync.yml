@@ -19,7 +19,7 @@ services:
       - sync-volume:/rigse
   sync:
     # the version of unison in this container needs to match the verson on your machine
-    image: concordconsortium/docker-volume-sync
+    image: concordconsortium/docker-volume-sync:1.1
     environment:
       # root is used here since the app is running as root so any files it creates
       # will be owned by root, and then unison should be able to override them
