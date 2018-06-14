@@ -1,76 +1,37 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-describe Portal::Clazz do
-  describe "finding or creating clazzes based on course, section, and start" do
-    before(:each) do
-      @course = Factory(:portal_course)
-      @start_date = DateTime.parse("2009-01-02")
-      @section_a = "section a"
-      @section_b = "section b"
-      @existing_clazz = Factory(:portal_clazz, {
-        :section => @section_a,
-        :start_time => @start_date,
-        :course => @course,
-      })
-
-    end
-
-    it "given criterea that matches an existing class, it should return a matching clazz" do
-      found_clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(
-        @existing_clazz.course,
-        @existing_clazz.section,
-        @existing_clazz.start_time)
-      
-      found_clazz.id.should_not be_nil
-      found_clazz.id.should eql(@existing_clazz.id)
-      found_clazz.should eql(@existing_clazz)
-      found_clazz.name.should_not be_nil
-    end
-
-    
-    it "when creating a new clazz this way, the name should be default to the course name" do
-      found_clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(@course,@section_b,@start_date)
-      found_clazz.name.should eql(@course.name)
-    end
-       
-    it "given criterea that does not match an existing class, it should return a new clazz" do
-      found_clazz = Portal::Clazz.find_or_create_by_course_and_section_and_start_date(@course,@section_b,@start_date)
-      found_clazz.id.should_not eql(@existing_clazz.id)
-      found_clazz.should_not eql(@existing_clazz)
-    end
-  end
-  
+describe Portal::Clazz do  
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
       @existing_clazz = Factory(:portal_clazz)
       @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1"))
       @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2"))
     end
-    
+
     it "under normal circumstances should say there is no reason admins cannot remove teachers" do
       admin_user = Factory.next(:admin_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       @existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1).should == nil
     end
-    
+
     it "under normal circumstances should say there is no reason authorized teachers cannot remove teachers" do
       @existing_clazz.teachers = [@teacher1, @teacher2]
       @existing_clazz.reason_user_cannot_remove_teacher_from_class(@teacher1.user, @teacher2).should == nil
     end
-    
+
     it "should say it is illegal for an unauthorized user to remove a teacher" do
       random_user = Factory.next(:anonymous_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       @existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1).should == Portal::Clazz::ERROR_UNAUTHORIZED
     end
-    
+
     it "should say it is illegal for a user to remove the last teacher" do
       admin_user = Factory.next(:admin_user)
       @existing_clazz.teachers = [@teacher1]
       @existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1).should == Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER
     end
   end
-  
+
   describe "#changeable?" do
     before(:each) do
       @existing_clazz = Factory.build(:portal_clazz)
@@ -104,30 +65,30 @@ describe Portal::Clazz do
     before(:each) do
       User.destroy_all
       Portal::Teacher.destroy_all
-      
+
       @teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "test_teacher"))
     end
-    
+
     it "should require a school" do
       # params = {
       #   :name => "Test Class",
       #   :class_word => "123456",
       #   :teacher_id => @teacher.id
       # }
-      # 
+      #
       # new_clazz = Portal::Clazz.new(params)
       # new_clazz.valid?.should == false
-      # 
+      #
       # new_clazz = Portal::Clazz.new(params)
       # new_clazz.valid?.should == true
     end
-    
+
     it "should require a non blank class name" do
       @course = Factory(:portal_course)
       @start_date = DateTime.parse("2009-01-02")
       @section_a = "section a"
       @section_b = "section b"
-      
+
       @new_clazz = Factory(:portal_clazz, {
         :section => @section_a,
         :start_time => @start_date,
@@ -135,18 +96,18 @@ describe Portal::Clazz do
         :name => 'name',
         :class_word => 'cw'
       })
-      
+
       @new_clazz.name = ''
       @new_clazz.valid?.should == false
-      
+
     end
-    
+
     it "should require a non blank class word" do
       @course = Factory(:portal_course)
       @start_date = DateTime.parse("2009-01-02")
       @section_a = "section a"
       @section_b = "section b"
-      
+
       @new_clazz = Factory(:portal_clazz, {
         :section => @section_a,
         :start_time => @start_date,
@@ -154,12 +115,12 @@ describe Portal::Clazz do
         :name => 'Name',
         :class_word => 'cw'
       })
-      
+
       @new_clazz.class_word = ''
-      
+
       @new_clazz.valid?.should == false
     end
-    
+
   end
 
   describe ".default_class" do
@@ -175,7 +136,7 @@ describe Portal::Clazz do
       Portal::Clazz.default_class.should == default_clazz
     end
   end
-  
+
   describe "offerings_including_default_class" do
     before(:each) do
       @clazz             = Factory :portal_clazz
@@ -184,19 +145,19 @@ describe Portal::Clazz do
       1.upto(10) do |i|
         @offerings << mock(:offering,
                            :id => i,
-                           :runnable_id => i, 
-                           :runnable_type => 'bogus', 
+                           :runnable_id => i,
+                           :runnable_type => 'bogus',
                            :default => false)
 
         @default_offerings << mock(:offering,
                                    :id => i,
-                                   :runnable_id => i, 
-                                   :runnable_type => 'bogus', 
+                                   :runnable_id => i,
+                                   :runnable_type => 'bogus',
                                    :default => true)
       end
       @clazz.stub!(:active_offerings => @offerings)
     end
-    
+
     describe "when there are no default activities" do
       before(:each) do
         def_offerings = []
@@ -220,7 +181,7 @@ describe Portal::Clazz do
         @clazz.offerings_including_default_class.select{ |i| i.default == true}.size.should == 10
       end
     end
-    
+
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[0...5]
@@ -257,12 +218,12 @@ describe Portal::Clazz do
       end
     end
   end
-  
+
   # def offerings_with_default_classes(user=nil)
   #   return self.offerings_including_default_class unless (user && user.portal_student && self.default_class)
   #   real_offerings = user.portal_student.clazzes.map{ |c| c.active_offerings }.flatten.uniq.compact
   #   default_offerings = self.active_offerings.reject { |o| real_offerings.include?(o) }
-  #   default_offerings 
+  #   default_offerings
   # end
   describe "offerings_with_default_classes" do
     before(:each) do
@@ -307,17 +268,17 @@ describe Portal::Clazz do
 
         # these offerings belong to the default class but have the same runnable as the first 2 student offerings
         3.upto 4 do |i|
-          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i-3, :runnable_id => i-3)          
+          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i-3, :runnable_id => i-3)
         end
         @default_offerings_with_same_runnable_as_a_student_offering = @offerings[3..4]
-                
+
         # these offerings belong only to the default class
         5.upto 8 do |i|
-          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)           
+          @offerings << mock(:offering, :id => i, :runnable_type => 'fake', :runnable => i, :runnable_id => i)
         end
         @default_offerings_with_unique_runnable = @offerings[5..8]
         @default_offerings = @offerings[3..8]
-        
+
         @clazzes = [mock(:clazz, :active_offerings => @student_offerings, :default_class => false),@clazz]
         @student = mock(:student, :clazzes => @clazzes)
         @user = mock(:user, :portal_student => @student)
@@ -351,7 +312,7 @@ describe Portal::Clazz do
       @bob   = mock_model(Portal::Teacher, :name => "bob")
       @joan  = mock_model(Portal::Teacher, :name => "joan")
     end
-    
+
     context "with no teachers" do
       subject do
         @clazz.stub! :teachers => []
@@ -370,7 +331,7 @@ describe Portal::Clazz do
       its(:teachers_listing){should match @joan.name      }
       its(:teachers_listing){should_not match @bob.name }
     end
-    
+
     context "With two teachers" do
       subject do
         @clazz.stub! :teachers => [@bob,@joan]
@@ -383,4 +344,3 @@ describe Portal::Clazz do
   end
 
 end
-
