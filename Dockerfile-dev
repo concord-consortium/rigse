@@ -1,4 +1,4 @@
-FROM concordconsortium/docker-rails-base-ruby-2.2.6
+FROM concordconsortium/docker-rails-base-ruby-2.2.6:1.1
 
 #
 # Install some basic dev tools
