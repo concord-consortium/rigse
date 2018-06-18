@@ -131,7 +131,7 @@ class API::V1::TeachersController < API::APIController
       subscribed = false
     end
 
-    return render :json => {'params_id' => "#{params.require(:id)}", 'id' => "#{teacher_id}", 'status' => "#{status}", 'email_address' => "#{email}", 'subscribed' => "#{subscribed}"}
+    return render :json => {'subscribed' => "#{subscribed}"}
   end
 
   def update_enews_subscription
