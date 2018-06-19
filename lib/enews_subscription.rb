@@ -4,7 +4,7 @@ module EnewsSubscription
   @mc_list_id = ENV['MAILCHIMP_API_LISTID']
   @mc_uri = ENV['MAILCHIMP_API_URI']
 
-  def self.get_enews_subscription(email)
+  def self.get_status(email)
     @mc_data = {
       'email_address' => "#{email}"
       }
@@ -22,7 +22,7 @@ module EnewsSubscription
     return response_data
   end
 
-  def self.update_enews_subscription(email, status, first_name, last_name)
+  def self.set_status(email, status, first_name, last_name)
     @mc_data = {
       'email_address' => "#{email}",
       'status' => "#{status}",
@@ -46,7 +46,3 @@ module EnewsSubscription
   end
 
 end
-
-
-# EnewsSubscription::get_enews_subscription(email)
-# EnewsSubscription::update_enews_subscription(email, status, first_name, last_name)

@@ -332,7 +332,7 @@ class User < ActiveRecord::Base
 
     # send MailChimp subscription data
     if self.email_subscriber
-      enews_response_data = EnewsSubscription::update_enews_subscription(self.email, 'subscribed', self.first_name, self.last_name)
+      enews_response_data = EnewsSubscription::set_status(self.email, 'subscribed', self.first_name, self.last_name)
     end
 
     self.state = "active"

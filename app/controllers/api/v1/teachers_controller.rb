@@ -107,7 +107,7 @@ class API::V1::TeachersController < API::APIController
     teacher_id = params.require(:id)
     email = User.find(teacher_id).email
 
-    enews_response_data = EnewsSubscription::get_enews_subscription(email)
+    enews_response_data = EnewsSubscription::get_status(email)
     enews_status = enews_response_data['status']
 
     if enews_status == 'subscribed'
@@ -127,7 +127,7 @@ class API::V1::TeachersController < API::APIController
     last_name = teacher_account.last_name
     status = params.require(:status)
 
-    enews_response_data = EnewsSubscription::update_enews_subscription(email, status, first_name, last_name)
+    enews_response_data = EnewsSubscription::set_status(email, status, first_name, last_name)
     enews_status = enews_response_data['status']
 
     return render :json => {'subscribed' => "#{enews_status}"}
