@@ -107,25 +107,10 @@ class API::V1::TeachersController < API::APIController
     teacher_id = params.require(:id)
     email = User.find(teacher_id).email
 
-    @mc_api_key = ENV['MAILCHIMP_API_KEY']
-    @mc_list_id = ENV['MAILCHIMP_API_LISTID']
-    @mc_uri = ENV['MAILCHIMP_API_URI']
-    @mc_data = {
-      'email_address' => "#{email}"
-      }
-    @digest = Digest::MD5.hexdigest("#{email}")
+    enews_response_data = EnewsSubscription::get_enews_subscription(email)
+    enews_status = enews_response_data['status']
 
-    uri = URI("#{@mc_uri}/#{@mc_list_id}/members/#{@digest}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    req = Net::HTTP::Get.new(uri.path, 'Content-type' => 'application/json')
-    req.basic_auth("user", "#{@mc_api_key}")
-    req.body = @mc_data.to_json
-    response = http.request(req)
-    response_data = JSON.parse(response.body)
-    status = response_data['status']
-
-    if status == 'subscribed'
+    if enews_status == 'subscribed'
       subscribed = true
     else
       subscribed = false
@@ -142,30 +127,10 @@ class API::V1::TeachersController < API::APIController
     last_name = teacher_account.last_name
     status = params.require(:status)
 
-    @mc_api_key = ENV['MAILCHIMP_API_KEY']
-    @mc_list_id = ENV['MAILCHIMP_API_LISTID']
-    @mc_uri = ENV['MAILCHIMP_API_URI']
-    @mc_data = {
-      'email_address' => "#{email}",
-      'status' => "#{status}",
-      'merge_fields' => {
-        'FNAME' => "#{first_name}",
-        'LNAME' => "#{last_name}"
-        }
-      }
-    @digest = Digest::MD5.hexdigest("#{email}")
+    enews_response_data = EnewsSubscription::update_enews_subscription(email, status, first_name, last_name)
+    enews_status = enews_response_data['status']
 
-    uri = URI("#{@mc_uri}/#{@mc_list_id}/members/#{@digest}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    req = Net::HTTP::Put.new(uri.path, 'Content-type' => 'application/json')
-    req.basic_auth("user", "#{@mc_api_key}")
-    req.body = @mc_data.to_json
-    response = http.request(req)
-    response_data = JSON.parse(response.body)
-    mc_status = response_data['status']
-
-    return render :json => {'subscribed' => "#{mc_status}"}
+    return render :json => {'subscribed' => "#{enews_status}"}
 
   end
 
