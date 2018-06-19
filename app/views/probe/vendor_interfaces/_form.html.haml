@@ -1,9 +1,0 @@
-#vendor_interface
-  %fieldset
-    %legend
-      Selected Probeware Interface: 
-    = link_to vendor_interface.name, interface_user_path(current_visitor), { :id=>"modal"}
-    %p
-      = image_tag(vendor_interface.image, :class => "vi_image", :width => 120 )
-    %p
-      = vendor_interface.description

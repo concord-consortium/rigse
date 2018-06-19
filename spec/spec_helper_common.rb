@@ -33,9 +33,9 @@ require 'capybara/rails'
 require 'webmock/rspec'
 
 # Allow reporting to codeclimate
-WebMock.disable_net_connect!(:allow => 
-                                [   "#{solr_host}:#{solr_port}", 
-                                    "codeclimate.com" ] 
+WebMock.disable_net_connect!(:allow =>
+                                [   "#{solr_host}:#{solr_port}",
+                                    "codeclimate.com" ]
                             )
 
 require 'capybara-screenshot/rspec'
@@ -79,18 +79,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.empty?
-  if Probe::ProbeType.count == 0
-    puts
-    puts "*** Probe configuration models need to be loaded into the test database to run the tests"
-    puts "*** run: rake db:test:prepare"
-    puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
-    puts "Rails.env: #{Rails.env}"
-    puts "Database: #{ActiveRecord::Base.connection.current_database}"
-    puts
-    exit 1
-  end
-else
+if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.present?
   puts
   puts "*** pending migrations need to be applied to run the tests"
   puts "*** run: rake db:test:prepare"
