@@ -1,18 +1,4 @@
 namespace :app do
-  
-  JRUBY = defined?(RUBY_ENGINE) && RUBY_ENGINE == 'jruby'
-
-  def jruby_system_command
-    JRUBY ? "jruby -S" : ""
-  end
-
-  def jruby_run_command
-    JRUBY ? "jruby " : "ruby "
-  end
-
-  def jruby_run_server_command
-    jruby_run_command + (JRUBY ? "-J-server " : "")
-  end
 
   desc "display info about the site admin user"
   task :display_site_admin => :environment do
@@ -20,7 +6,7 @@ namespace :app do
   end
 
   namespace :setup do
-    
+
     # require 'highline/import'
     autoload :Highline, 'highline'
 

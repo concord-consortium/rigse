@@ -7,7 +7,7 @@ Setup
 
 ### Prerequisites
 
-Working git, ruby or jruby, and rubgems, wget
+Working git, ruby, and rubygems, wget
 
 #### Core Extensions
 
@@ -18,11 +18,11 @@ Working git, ruby or jruby, and rubgems, wget
 
 ##### Local development
 
-This example assumes that [rvm](https://rvm.io/) is installed. 
+This example assumes that [rvm](https://rvm.io/) is installed.
 This could be a good idea because we use an older version of ruby. You should install Ruby 2.2.6 first:
 
     rvm install 2.2.6
-    
+
 If you use OS X and you see some errors related to SSL, you might need to use following command instead:
 ```
     rvm install 2.2.6 --with-openssl-dir=`brew --prefix openssl`
@@ -50,7 +50,7 @@ Install Docker and make sure that docker-compose is installed too (it should be 
     git clone git@github.com:concord-consortium/rigse.git portal
     cd portal
     docker-compose up # this will take 15 minutes to download gems
-    
+
 Increase memory available to Docker to 4GiB-5GiB (OSX: Preferences... -> Advanced tab).
 
 Now open your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000). On OS X this might
@@ -84,7 +84,7 @@ Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 't
 If `rails s -p 9000` fails due to mysql2 segmentation fault
 
     gems/mysql2-0.3.21/lib/mysql2/mysql2.bundle: [BUG] Segmentation fault
-    
+
 It usually helps to remove mysql2 and install it again
 
     gem uninstall mysql2
@@ -247,50 +247,7 @@ the test at hand.
 introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-girl)
 * [Factory Girlrdoc](http://rdoc.info/projects/thoughtbot/factory_girl)
 
-### Using Nokogiri with JRuby on Mac OS X
-
-Some of the testing frameworks depend on Nokogiri which is a Ruby html
-and xml parsing gem that uses the C-based libxml2 library.
-
-When Nokogiri runs in JRuby it uses [Ruby
-FFI](http://kenai.com/projects/ruby-ffi) to dynamically load the libxml2
-shared library.
-
-The version of libxml2 included with MacOS X is old and the FFI version
-of Nokogiri prints this warning when it is run with this version of
-libxml installed:
-
-> You're using libxml2 version 2.6.16 which is over 4 years old and
-has plenty of bugs. We suggest that for maximum HTML/XML parsing
-pleasure, you upgrade your version of libxml2 and re-install nokogiri.
-If you like using libxml2 version 2.6.16, but don't like this warning,
-please define the constant
-I_KNOW_I_AM_USING_AN_OLD_AND_BUGGY_VERSION_OF_LIBXML2 before
-requring nokogiri.
-
-If you have a newer version of the libxml2 library installed with
-macports you can set this environmental variable:
-`LD_LIBRARY_PATH=/opt/local/lib` to have nokogiri check there for shared
-libraries first.
-
-See: [libxml2 for Nokogiri in
-JRuby](http://www.practicalguile.com/2009/06/07/libxml2-for-nokogiri-in-jruby/)
-
-> Nokogiri uses Ruby FFI to dynamically load native C code and FFI
-makes use of dlopen to do the actual loading of dynamic libraries. On
-OSX, dlopen searches for files specified by a couple of environment
-variables , and the current working directory. Setting LD_LIBRARY_PATH
-to /opt/local/lib worked for me. There may be differences in the
-environment variables used for dlopen on different platforms, so a look
-at the MAN pages would be a good idea if things don't seem to work.
-
 ### Running the rspec tests
-
-**JRuby invocation note**: use this command prefix to run the rake spec
-tests from JRuby if you have a more recent version of libxml2 installed
-with macports:
-
-> `LD_LIBRARY_PATH=/opt/local/lib jruby -S rake spec ` *options*
 
 **Running all the rspec tests:*
 
@@ -309,10 +266,6 @@ with macports:
     rake spec SPEC=spec/controllers
 
 ### Running the feature tests with cucumber
-
-**JRuby invocation note**: use this command prefix to run the rake spec
-tests from JRuby if you have a more recent version of libxml2 installed
-with macports: `LD_LIBRARY_PATH=/opt/local/lib jruby -S`
 
 **Running all the feature tests:**
     rake cucumber
