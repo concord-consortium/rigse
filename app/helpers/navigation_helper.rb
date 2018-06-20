@@ -32,6 +32,7 @@ module NavigationHelper
 
   def help_link_params
     {
+      id: '/help',
       label: 'Help',
       url: '/help',
       popOut: true,
@@ -42,6 +43,7 @@ module NavigationHelper
 
   def preference_link_params
     {
+      id: '/settings',
       label: 'Settings',
       url: preferences_user_path(current_visitor),
       iconName: 'icon-settings'
@@ -50,6 +52,7 @@ module NavigationHelper
 
   def favorite_link_params
     {
+      id: '/favorites',
       label: 'Favorites',
       url: favorites_user_path(current_visitor),
       iconName: 'icon-favorite'
@@ -58,6 +61,7 @@ module NavigationHelper
 
   def admin_link_params
     {
+      id: '/admin',
       label: 'Admin',
       url: admin_path
     }
@@ -73,9 +77,16 @@ module NavigationHelper
 
   def clazz_links_for_student
     clazzes = current_visitor.portal_student.clazzes
-    clazz_links = []
+    clazz_links = [
+      id: "/classes",
+      label: "Classes",
+      type: NavigationService::SECTION_TYPE
+    ]
     clazzes.each do |clazz|
-      clazz_links << {section: "classes", label: clazz_label(clazz), url: url_for(clazz) }
+      clazz_links << {
+        id: "/classes/#{clazz.id}",
+        label: clazz_label(clazz),
+        url: url_for(clazz) }
     end
     clazz_links
   end
@@ -83,37 +94,48 @@ module NavigationHelper
   def clazz_links_for_teacher
     # TODO Omit inactive classes.
     clazzes = current_visitor.portal_teacher.teacher_clazzes.map { |c| c.clazz }
-    clazz_links = []
+    clazz_links = [
+      {
+        id: "/classes",
+        label: "clazz_label(clazz)",
+        type: NavigationService::SECTION_TYPE
+      }
+    ]
     clazzes.each do |clazz|
-      section_name = "Classes/#{clazz_label(clazz)}"
+      section_id = "/classes/#{clazz.id}"
       clazz_links << {
-        section: section_name,
+        id: section_id,
+        label: "#{clazz_label(clazz)}",
+        type: NavigationService::SECTION_TYPE
+      }
+      clazz_links << {
+        id: "#{section_id}/assignments",
         label: "Assignments",
         url: url_for([:materials, clazz])
       }
       clazz_links << {
-        section: section_name,
+        id: "#{section_id}/roster",
         label: "Student Roster",
         url: url_for([:roster, clazz])
       }
       clazz_links << {
-        section: section_name,
+        id: "#{section_id}/setup",
         label: "Class Setup",
         url: url_for([:edit, clazz])
       }
       clazz_links << {
-        section: section_name,
+        id: "#{section_id}/status",
         label: "Full Status",
         url: url_for([:fullstatus, clazz])
       }
       clazz_links << {
-        section: section_name,
+        id: "#{section_id}/links",
         label: "Links",
         url: url_for([clazz, :bookmarks])
       }
     end
     clazz_links << {
-      section: "Classes",
+      id: "/classes/add",
       label: "Add Class",
       url: new_portal_clazz_path
     }
@@ -141,43 +163,43 @@ module NavigationHelper
     section_name = "Resources"
     [
       {
-        section: section_name,
+        id: '/resources/activities',
         label: 'activities',
         url: '/itsi',
         popOut: false
       },
       {
-        section: section_name,
+        id: '/resources/interactives',
         label: 'interactives',
         url: '/interactives',
         popOut: true
       },
       {
-        section: section_name,
+        id: '/resources/images',
         label: 'images',
         url: '/images',
         popOut: true
       },
       {
-        section: section_name,
+        id: '/resources/guides',
         label: 'Teacher Guides',
         url: 'https://guides.itsi.concord.org/',
         popOut: true
       },
       {
-        section: section_name,
+        id: '/resources/careers',
         label: 'Careersight',
         url: 'https://careersight.concord.org/',
         popOut: true
       },
       {
-        section: section_name,
+        id: '/resources/probes',
         label: 'Probesight',
         url: 'https://probesight.concord.org/',
         popOut: true
       },
       {
-        section: section_name,
+        id: '/resources/schoology',
         label: 'Schoology',
         url: 'https://www.schoology.com/',
         popOut: true
@@ -195,26 +217,26 @@ module NavigationHelper
     service =  NavigationService.new(self, params.merge(_params))
 
     if show_help_link
-      service.add_link help_link_params
+      service.add_item help_link_params
     end
 
-    service.add_link preference_link_params
+    service.add_item preference_link_params
 
     if show_favorites_link
-      service.add_link favorite_link_params
+      service.add_item favorite_link_params
     end
 
     if show_admin_links
-      service.add_link admin_link_params
+      service.add_item admin_link_params
     end
 
     if show_switch_user_link
-      service.add_link switch_user_link
+      service.add_item switch_user_link
     end
 
 
-    clazz_links.each {|clazz_link| service.add_link clazz_link}
-    itsi_links.each { |link| service.add_link link}
+    clazz_links.each {|clazz_link| service.add_item clazz_link}
+    itsi_links.each { |link| service.add_item link}
     return service
   end
 

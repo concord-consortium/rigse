@@ -37,12 +37,11 @@ describe NavigationHelper do
     subject { JSON.pretty_generate(helper.navigation_service(params).to_hash) }
     it "should inlude teacher links" do
       fake_clazzes.each do |clazz|
-        subject.should match %r{"url": "/portal/classes/#{clazz.id}"}
         subject.should match %r{"url": "/portal/classes/#{clazz.id}/materials"}
         subject.should match %r{"url": "/portal/classes/#{clazz.id}/roster"}
         subject.should match %r{"url": "/portal/classes/#{clazz.id}/edit"}
         subject.should match %r{"url": "/portal/classes/#{clazz.id}/fullstatus"}
-        subject.should match %r{"section": "classes/#{clazz.name}"}
+        subject.should match %r{"id": "/classes/#{clazz.id}"}
       end
       subject.should_not match %r{"url": "/admin}
     end
@@ -95,18 +94,21 @@ describe NavigationHelper do
     let(:path) { "/" }
     before(:each) do
       helper.stub_chain(:request, :path).and_return(path)
-      puts path
     end
     let(:fake_visitor) { fake_teacher.user }
     subject { helper.navigation_service() }
     it "should have several links" do
-      subject.links.should have(20).links
+      subject.links.should have(25).links
     end
+    it "should have several sections" do
+      subject.sections.should have(6).sections
+    end
+
     describe "when on the assignment page for the first class" do
       let(:path) { helper.url_for([:materials, clazz]) }
       let(:clazz) { fake_clazzes.first }
       it "should have the correct selected section" do
-        subject.selected_section.should == "classes/#{clazz.name}"
+        subject.selected_section.should == "/classes/#{clazz.id}/assignments"
       end
       it "The selected link should be to the fake first class." do
         subject.links.find { |l| l.selected }.label.should == "Assignments"
