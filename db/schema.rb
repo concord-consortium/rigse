@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180612151521) do
+ActiveRecord::Schema.define(:version => 20180620194214) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -85,6 +85,8 @@ ActiveRecord::Schema.define(:version => 20180612151521) do
     t.text     "href",       :limit => 16777215
     t.datetime "created_at",                     :null => false
     t.datetime "updated_at",                     :null => false
+    t.string   "link_id"
+    t.boolean  "pop_out"
   end
 
   create_table "admin_project_materials", :force => true do |t|
