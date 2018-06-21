@@ -1,22 +1,6 @@
-/ TODO: possible refactoring to make more clazzes specific.
-/ Clazz navigation: top_node could be course, teacher, student ...
-/ locals: top_node == nil || portal_teacher || portal_student
+
 - navigation = navigation_service()
 #clazzes_nav
-  -# #utility-links
-  -#   %p
-  -#     = navigation.greeting
-  -#     %br
-  -#     %strong
-  -#       = "#{navigation.name}!"
-  -#   %ul
-  -#   - navigation.links.each do |link|
-  -#     %li
-  -#       %a{href:link.url, target: link.target}
-  -#         -# - if link_def.iconName
-  -#         %i{:class => link.iconName}
-  -#         &nbsp;
-  -#         = link.label
 
 :javascript
   PortalPages.renderNavigation(Portal.API_V1.getNavigation(), 'clazzes_nav')

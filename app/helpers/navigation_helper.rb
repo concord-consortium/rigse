@@ -2,6 +2,11 @@
 module NavigationHelper
 
   private
+
+  def nav_label(key)
+    return I18n.t key, scope: :Navigation, default: key.gsub(/_/, "").capitalize
+  end
+
   def show_help_link
     return false unless current_settings
     current_settings.help_type == 'external url' || current_settings.help_type == 'help custom html'
@@ -19,6 +24,10 @@ module NavigationHelper
     current_visitor.portal_teacher || false
   end
 
+  def teaches_classes
+    return is_teacher &&  (current_visitor.portal_teacher.clazzes.size > 0)
+  end
+
   def show_admin_links
     current_visitor.has_role?('admin', 'manager','researcher') ||
     current_visitor.is_project_admin? ||
@@ -30,39 +39,78 @@ module NavigationHelper
     @original_user && @original_user != current_visitor
   end
 
+  def getting_started_params
+    if is_teacher && !teaches_classes
+      return {
+        id: '/getting_started',
+        label: nav_label('getting_started'),
+        url: getting_started_path
+      }
+    else
+      false
+    end
+  end
+
+  def recent_update_params
+    if teaches_classes
+      {
+        id: '/recent_updates',
+        label: nav_label('recent_updates'),
+        url: recent_activity_path
+      }
+    else
+      false
+    end
+  end
+
   def help_link_params
-    {
-      id: '/help',
-      label: 'Help',
-      url: '/help',
-      popOut: true,
-      iconName:'icon-search',
-      className: 'help-link'
-    }
+    if show_help_link
+      {
+        id: '/help',
+        label: nav_label('help'),
+        url: '/help',
+        popOut: true,
+        iconName:'icon-search',
+      }
+    else
+      false
+    end
   end
 
   def preference_link_params
-    {
-      id: '/settings',
-      label: 'Settings',
-      url: preferences_user_path(current_visitor),
-      iconName: 'icon-settings'
-    }
+    if current_visitor.anonymous?
+      nil
+    else
+      {
+        id: '/settings',
+        label: nav_label('settings'),
+        url: preferences_user_path(current_visitor),
+        iconName: 'icon-settings',
+        sort: 0,
+        small: true
+      }
+    end
   end
 
   def favorite_link_params
-    {
-      id: '/favorites',
-      label: 'Favorites',
-      url: favorites_user_path(current_visitor),
-      iconName: 'icon-favorite'
-    }
+    if is_teacher
+      {
+        id: '/favorites',
+        label: nav_label('favorites'),
+        url: favorites_user_path(current_visitor),
+        iconName: 'icon-favorite',
+        sort: 1,
+        small: true
+      }
+    else
+      false
+    end
   end
 
   def admin_link_params
     {
       id: '/admin',
-      label: 'Admin',
+      label: nav_label('admin'),
       url: admin_path
     }
   end
@@ -77,14 +125,10 @@ module NavigationHelper
 
   def clazz_links_for_student
     clazzes = current_visitor.portal_student.clazzes
-    clazz_links = [
-      id: "/classes",
-      label: "Classes",
-      type: NavigationService::SECTION_TYPE
-    ]
+    clazz_links = []
     clazzes.each do |clazz|
       clazz_links << {
-        id: "/classes/#{clazz.id}",
+        id: "/#{clazz.id}",
         label: clazz_label(clazz),
         url: url_for(clazz) }
     end
@@ -92,12 +136,12 @@ module NavigationHelper
   end
 
   def clazz_links_for_teacher
-    # TODO Omit inactive classes.
+    # TODO Omit inactive classes?
     clazzes = current_visitor.portal_teacher.teacher_clazzes.map { |c| c.clazz }
     clazz_links = [
       {
         id: "/classes",
-        label: "clazz_label(clazz)",
+        label: nav_label("classes"),
         type: NavigationService::SECTION_TYPE
       }
     ]
@@ -105,39 +149,47 @@ module NavigationHelper
       section_id = "/classes/#{clazz.id}"
       clazz_links << {
         id: section_id,
-        label: "#{clazz_label(clazz)}",
+        label: clazz_label(clazz),
         type: NavigationService::SECTION_TYPE
       }
       clazz_links << {
         id: "#{section_id}/assignments",
-        label: "Assignments",
+        label: nav_label("assignments"),
         url: url_for([:materials, clazz])
       }
       clazz_links << {
         id: "#{section_id}/roster",
-        label: "Student Roster",
+        label: nav_label("student_roster"),
         url: url_for([:roster, clazz])
       }
       clazz_links << {
         id: "#{section_id}/setup",
-        label: "Class Setup",
+        label: nav_label("class_setup"),
         url: url_for([:edit, clazz])
       }
-      clazz_links << {
-        id: "#{section_id}/status",
-        label: "Full Status",
-        url: url_for([:fullstatus, clazz])
-      }
+      # TODO: Delete this one, its not used any more:
+      # clazz_links << {
+      #   id: "#{section_id}/status",
+      #   label: nav_label("full_status"),
+      #   url: url_for([:fullstatus, clazz])
+      # }
       clazz_links << {
         id: "#{section_id}/links",
-        label: "Links",
+        label: nav_label("links"),
         url: url_for([clazz, :bookmarks])
       }
     end
     clazz_links << {
       id: "/classes/add",
       label: "Add Class",
+      divider: true,
       url: new_portal_clazz_path
+    }
+    clazz_links << {
+      id: "/classes/manage",
+      label: "Manage Classes",
+      url: manage_portal_clazzes_url
+      # link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"pie", :id=>"btn_manage_classes"
     }
     clazz_links
   end
@@ -152,59 +204,36 @@ module NavigationHelper
     end
   end
 
+  def project_link(project_link_spec)
+    {
+      id: project_link_spec.link_id || "/resources/#{project_link_spec.name}",
+      label: project_link_spec.name,
+      url: project_link_spec.href,
+      popOut: project_link_spec.pop_out
+    }
+  end
+
+  def project_links
+    links = []
+    if current_visitor.has_role?('admin', 'manager', 'researcher') || current_visitor.portal_teacher
+      links = current_visitor.projects.map { |p| p.links }
+      links.flatten!
+    end
+    links.map! { |l| project_link l }
+    if links.size > 0
+      links.unshift({
+        id: "/resources",
+        label: nav_label('resources'),
+        type: NavigationService::SECTION_TYPE
+      })
+    else
+      []
+    end
+  end
 
   def switch_user_link
     # TODO: Make an API to switch users.
-    {label: "Switch Back", url: "userse/switch" }
-  end
-
-
-  def itsi_links
-    section_name = "Resources"
-    [
-      {
-        id: '/resources/activities',
-        label: 'activities',
-        url: '/itsi',
-        popOut: false
-      },
-      {
-        id: '/resources/interactives',
-        label: 'interactives',
-        url: '/interactives',
-        popOut: true
-      },
-      {
-        id: '/resources/images',
-        label: 'images',
-        url: '/images',
-        popOut: true
-      },
-      {
-        id: '/resources/guides',
-        label: 'Teacher Guides',
-        url: 'https://guides.itsi.concord.org/',
-        popOut: true
-      },
-      {
-        id: '/resources/careers',
-        label: 'Careersight',
-        url: 'https://careersight.concord.org/',
-        popOut: true
-      },
-      {
-        id: '/resources/probes',
-        label: 'Probesight',
-        url: 'https://probesight.concord.org/',
-        popOut: true
-      },
-      {
-        id: '/resources/schoology',
-        label: 'Schoology',
-        url: 'https://www.schoology.com/',
-        popOut: true
-      }
-    ]
+    {label: "Switch Back", url: "/users/switch" }
   end
 
 
@@ -214,17 +243,13 @@ module NavigationHelper
       name: current_visitor.name,
       request_path: request.path,
     }
+
     service =  NavigationService.new(self, params.merge(_params))
 
-    if show_help_link
-      service.add_item help_link_params
-    end
+    service.add_item help_link_params if help_link_params
 
-    service.add_item preference_link_params
-
-    if show_favorites_link
-      service.add_item favorite_link_params
-    end
+    service.add_item getting_started_params if getting_started_params
+    service.add_item recent_update_params if recent_update_params
 
     if show_admin_links
       service.add_item admin_link_params
@@ -234,9 +259,14 @@ module NavigationHelper
       service.add_item switch_user_link
     end
 
-
     clazz_links.each {|clazz_link| service.add_item clazz_link}
-    itsi_links.each { |link| service.add_item link}
+    project_links.each { |link| service.add_item link}
+
+    service.add_item preference_link_params if preference_link_params
+    service.add_item favorite_link_params if favorite_link_params
+    # after all the links have been added
+    # detect which link we are on.
+    service.update_selection()
     return service
   end
 

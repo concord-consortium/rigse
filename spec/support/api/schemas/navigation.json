@@ -12,7 +12,8 @@
         "sort":     { "type": "number"  },
         "selected": { "type": "boolean" },
         "iconName": { "type": "string"  },
-        "className":{ "type": "string"  },
+        "small":    { "type": "boolean" },
+        "divider":  { "type": "boolean" },
         "children": {
           "type": "array",
           "items": {"$ref": "#/definitions/item"}
