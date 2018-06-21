@@ -8,8 +8,6 @@ class NavItem
   attr_accessor :sort
   attr_accessor :selected
   attr_accessor :iconName
-  attr_accessor :className
-  attr_accessor :target
   attr_accessor :children
 
   def defaults
@@ -24,13 +22,25 @@ class NavItem
     attributes.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
+  def merge(nav_item)
+    props = nav_item.to_h
+    props.delete(:children)
+    props.each { |k,v| instance_variable_set("@#{k}", v) }
+  end
+  
   def to_h
-    hash = instance_variables.each_with_object({}) {|var,hash| hash[var.to_s.delete("@").to_sym] = instance_variable_get(var) }
+    hash = instance_variables.each_with_object({}) do |var, hash|
+      if instance_variable_get(var)
+        v = instance_variable_get(var)
+        hash[var.to_s.delete("@").to_sym] = v
+      end
+    end
     if @children
       hash[:children] = @children.map { |c| c.to_h }
     end
     hash
   end
+
 end
 
 class NavigationService
@@ -39,10 +49,6 @@ class NavigationService
   DEFAULT_SORT = 5
   SECTION_TYPE = "SECTION"
   LINK_TYPE = "LINK"
-  SELECTED_LINK_CLASS = "link-selected"
-  SELECTED_SECTION_CLASS = "in-selected-section"
-  NO_ICON_CLASS = "no-icon"
-  POPOUT_CLASS = "pop-out"
   attr_accessor :name
   attr_accessor :greeting
   attr_accessor :selected_section
@@ -106,9 +112,46 @@ class NavigationService
     end
     @sections.delete(id)
     @links.delete(id)
-    self.guess_selection
   end
 
+  def add_link(item)
+    if link = @links.find {|l| l.id == item.id}
+      link.merge(item)
+    else
+      link = item
+      @links.push item
+    end
+    parent = parent_for(link.id)
+    parent_id = parent_id_for(link.id)
+    if !parent
+      parent = add_item({type: SECTION_TYPE, id: parent_id})
+    end
+    unless parent.children.find { |c| c.id == link.id }
+      parent.children.push link
+      parent.children.sort_by! { |a| a.sort ||0}
+    end
+    return link
+  end
+
+  def add_section(item)
+    if section = @sections[item.id]
+      section.merge(item)
+    else
+      section = item
+      section.children ||= []
+      section.label ||= item.id.split("/").last.capitalize
+      @sections[item.id] = item
+    end
+    parent = parent_for(section.id)
+    parent_id = parent_id_for(section.id)
+    if !parent
+      parent = add_item({type: SECTION_TYPE, id: parent_id})
+    end
+    unless parent.children.find { |c| c.id == section.id }
+      parent.children.push section
+    end
+    return section
+  end
   # id: "/",
   # label: ""
   # sort: 1,
@@ -119,30 +162,12 @@ class NavigationService
     unless(item.type)
       item.type = item.url ? LINK_TYPE : SECTION_TYPE
     end
-    parent = parent_for(item.id)
-    parent_id= parent_id_for(item.id)
-    default_section_params = {
-      id: parent_id,
-      label: parent_id,
-      sort: DEFAULT_SORT,
-      type: SECTION_TYPE,
-      children: []
-    }
-    if !parent
-      parent = add_item(default_section_params)
+    case item.type
+    when LINK_TYPE
+      add_link(item)
+    when SECTION_TYPE
+      add_section(item)
     end
-
-    if item.type == SECTION_TYPE
-      item.children ||= []
-      @sections[item.id] = item
-    elsif item.url
-      @links.push item
-    end
-
-    parent.children.push item
-    parent.children.sort_by! { |a| a.sort }
-    self.guess_selection
-    return item
   end
 
   def item_to_hash(item)
@@ -167,7 +192,7 @@ class NavigationService
     }
   end
 
-  def guess_selection
+  def update_selection
     if @request_path == ROOT_PATH
       @selected_section = ROOT_SECTION
     end
@@ -175,16 +200,6 @@ class NavigationService
       if @request_path =~ %r[#{link.url}$]
         link.selected = true
         @selected_section = link.id || ROOT_SECTION
-      end
-    end
-    @links.each do |link|
-      link.target = '_blank' if link.popOut
-      link.className  = ""
-      link.className << " #{SELECTED_LINK_CLASS}" if link.selected
-      link.className << " #{NO_ICON_CLASS}" unless link.iconName
-      link.className << " #{POPOUT_CLASS}" if link.popOut
-      if @selected_section != ROOT_SECTION
-        link.className << " #{SELECTED_SECTION_CLASS}" if link.id == @selected_section
       end
     end
   end
