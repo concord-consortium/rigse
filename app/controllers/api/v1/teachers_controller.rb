@@ -105,8 +105,21 @@ class API::V1::TeachersController < API::APIController
 
   def get_enews_subscription
     teacher_id = params.require(:id)
-    email = User.find(teacher_id).email
+    if current_user.nil?
+      return error(I18n.t('Registration.ErrorNotAllowed'))
+    end
 
+    if current_user.portal_teacher
+      current_teacher_id = current_user.portal_teacher.id
+    else
+      current_teacher_id = ''
+    end
+
+    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
+      return error(I18n.t('Registration.ErrorNotAllowed'))
+    end
+
+    email = current_user.portal_teacher.email
     enews_response_data = EnewsSubscription::get_status(email)
     enews_status = enews_response_data['status']
 
@@ -121,12 +134,26 @@ class API::V1::TeachersController < API::APIController
 
   def update_enews_subscription
     teacher_id = params.require(:id)
-    teacher_account = User.find(teacher_id)
+    teacher_account = Portal::Teacher.find(teacher_id)
+
+    if current_user.nil?
+      return error(I18n.t('Registration.ErrorNotAllowed'))
+    end
+
+    if current_user.portal_teacher
+      current_teacher_id = current_user.portal_teacher.id
+    else
+      current_teacher_id = ''
+    end
+
+    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
+      return error(I18n.t('Registration.ErrorNotAllowed'))
+    end
+
     email = teacher_account.email
     first_name = teacher_account.first_name
     last_name = teacher_account.last_name
     status = params.require(:status)
-
     enews_response_data = EnewsSubscription::set_status(email, status, first_name, last_name)
     enews_status = enews_response_data['status']
 
