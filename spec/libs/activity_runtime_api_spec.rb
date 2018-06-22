@@ -6,6 +6,7 @@ RSpec::Matchers.define :have_multiple_choice_like do |prompt, options = {}|
     activity = thing.respond_to?(:template) ? thing.template : thing
     multiple_choices = activity.multiple_choices
     multiple_choices = multiple_choices.select { |m| m.is_required } if options[:required]
+    multiple_choices = multiple_choices.select { |m| m.is_featured } if options[:featured]
     multiple_choices.map { |m| m.prompt }.detect { |p| p =~ /#{prompt}/i }
   end
 end
@@ -15,6 +16,7 @@ RSpec::Matchers.define :have_open_response_like do |prompt, options = {}|
     activity = thing.respond_to?(:template) ? thing.template : thing
     open_responses = activity.open_responses
     open_responses = open_responses.select { |m| m.is_required } if options[:required]
+    open_responses = open_responses.select { |m| m.is_featured } if options[:featured]
     open_responses.map { |m| m.prompt }.detect{ |p| p =~ /#{prompt}/i }
   end
 end
@@ -24,6 +26,7 @@ RSpec::Matchers.define :have_image_question_like do |prompt, options = {}|
     activity = thing.respond_to?(:template) ? thing.template : thing
     image_questions = activity.image_questions
     image_questions = image_questions.select { |m| m.is_required } if options[:required]
+    image_questions = image_questions.select { |m| m.is_featured } if options[:featured]
     image_questions.map{ |m| m.prompt}.detect{|p| p =~ /#{prompt}/i }
   end
 end
@@ -95,21 +98,24 @@ describe ActivityRuntimeAPI do
                   "type" => "open_response",
                   "id" => "1234568",
                   "prompt" => "Why do you like/dislike this activity?",
-                  "is_required" => true
+                  "is_required" => true,
+                  "is_featured" => true
                 },
                 {
                   "type" => "image_question",
                   "id" => "987654321",
                   "drawing_prompt" => '',
                   "prompt" => "draw a picture of why you love this activity.",
-                  "is_required" => true
+                  "is_required" => true,
+                  "is_featured" => true
                 },
                 {
                   "type" => "image_question",
                   "id" => '5589',
                   "drawing_prompt" => "Really draw a picture",
                   "prompt" => "Now explain the picture you drew",
-                  "is_required" => true
+                  "is_required" => true,
+                  "is_featured" => true
                 },
                 {
                   "type" => "multiple_choice",
@@ -117,7 +123,8 @@ describe ActivityRuntimeAPI do
                   "prompt" => "What color is the sky?",
                   "allow_multiple_selection" => false,
                   "choices" => choice_hash_array,
-                  "is_required" => true
+                  "is_required" => true,
+                  "is_featured" => true
                 }
               ]
             }
@@ -174,7 +181,7 @@ describe ActivityRuntimeAPI do
 
   let(:investigation) do
     Factory.create(:investigation,
-      :user => user
+                   :user => user
     )
   end
 
@@ -308,6 +315,7 @@ describe ActivityRuntimeAPI do
           Factory.create(:open_response,
             :prompt => "the original prompt",  # this will be replaced.
             :is_required => false,             # this will be replaced.
+            :is_featured => false,             # this will be replaced.
             :external_id => "1234568")
         end
 
@@ -316,7 +324,7 @@ describe ActivityRuntimeAPI do
           existing
           result = ActivityRuntimeAPI.update_activity(new_hash)
           result.template.open_responses.first.id.should == original_id
-          result.should have_open_response_like("dislike this activity", required: true)
+          result.should have_open_response_like("dislike this activity", required: true, featured: true)
           result.should_not have_open_response_like("original prompt")
         end
       end
@@ -328,6 +336,7 @@ describe ActivityRuntimeAPI do
             :drawing_prompt => '',
             :prompt => "the original prompt",  # this will be replaced.
             :is_required => false,             # this will be replaced.
+            :is_featured => false,             # this will be replaced.
             :external_id => "987654321")
         end
         it "should update the image_question" do
@@ -336,7 +345,7 @@ describe ActivityRuntimeAPI do
           existing
           result = ActivityRuntimeAPI.publish(new_hash, user)
           result.template.image_questions.first.id.should == original_id
-          result.should have_image_question_like("draw a picture", required: true)
+          result.should have_image_question_like("draw a picture", required: true, featured: true)
           result.should_not have_image_question_like("original prompt")
         end
       end
@@ -363,6 +372,7 @@ describe ActivityRuntimeAPI do
             :prompt => "the original prompt",
             :external_id => "456789",
             :is_required => false,
+            :is_featured => false,
             :choices => choices
           )
         end
@@ -378,8 +388,8 @@ describe ActivityRuntimeAPI do
           @result.template.multiple_choices.first.id.should == @original_id
         end
 
-        it "should have the new prompt and be required" do
-          @result.should have_multiple_choice_like("What color is the sky?", required: true)
+        it "should have the new prompt, be required and featured" do
+          @result.should have_multiple_choice_like("What color is the sky?", required: true, featured: true)
         end
 
         it "should not have the original choices" do

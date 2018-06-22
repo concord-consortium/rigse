@@ -344,6 +344,7 @@ class ActivityRuntimeAPI
     }
     # Use default val provided by DB when nil
     attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    attrs[:is_featured] = or_data["is_featured"] unless or_data["is_featured"].nil?
     existant.update_attributes(attrs)
     return existant
   end
@@ -356,6 +357,7 @@ class ActivityRuntimeAPI
     }
     # Use default values provided by DB when nil
     attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    attrs[:is_featured] = or_data["is_featured"] unless or_data["is_featured"].nil?
     Embeddable::OpenResponse.create(attrs)
   end
 
@@ -366,6 +368,7 @@ class ActivityRuntimeAPI
     }
     # Use default values provided by DB when nil
     attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    attrs[:is_featured] = iq_data["is_featured"] unless iq_data["is_featured"].nil?
     existant.update_attributes(attrs)
     return existant
   end
@@ -379,6 +382,7 @@ class ActivityRuntimeAPI
     }
     # Use default values provided by DB when nil
     attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    attrs[:is_featured] = iq_data["is_featured"] unless iq_data["is_featured"].nil?
     Embeddable::ImageQuestion.create(attrs)
   end
 
@@ -389,6 +393,7 @@ class ActivityRuntimeAPI
     }
     # Use default values provided by DB when nil
     attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    attrs[:is_featured] = mc_data["is_featured"] unless mc_data["is_featured"].nil?
     existant.update_attributes(attrs)
     self.add_choices(existant, mc_data)
     return existant
@@ -403,6 +408,7 @@ class ActivityRuntimeAPI
     }
     # Use default values provided by DB when nil
     attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    attrs[:is_featured] = mc_data["is_featured"] unless mc_data["is_featured"].nil?
     mc = Embeddable::MultipleChoice.create(attrs)
     self.add_choices(mc, mc_data)
     return mc
@@ -439,6 +445,8 @@ class ActivityRuntimeAPI
       width: if_data["native_width"],
       height: if_data["native_height"]
     }
+    # Use default values provided by DB when nil
+    attrs[:is_featured] = if_data["is_featured"] unless if_data["is_featured"].nil?
     existant.update_attributes(attrs)
     return existant
   end
@@ -453,6 +461,8 @@ class ActivityRuntimeAPI
       external_id: if_data["id"].to_s,
       user: user
     }
+    # Use default values provided by DB when nil
+    attrs[:is_featured] = if_data["is_featured"] unless if_data["is_featured"].nil?
     Embeddable::Iframe.create(attrs)
   end
 

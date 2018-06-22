@@ -18,7 +18,7 @@ RSpec::Matchers.define :include_hash do |comp_hash|
 end
 
 describe API::V1::ReportsController do
-  let(:open_response)     { Factory.create(:open_response)}
+  let(:open_response)     { Factory.create(:open_response, is_featured: true, is_required: true)}
   let(:section)           { Factory.create(:section) }
   let(:page)              { Factory.create(:page) }
   let(:activity)          { Factory.create(:activity, runnable_opts)          }
@@ -111,6 +111,8 @@ describe API::V1::ReportsController do
         max_score_should_be 0
         feedback_should_be_disabled
         score_should_be_disabled
+        question.should include({"is_featured" => true})
+        question.should include({"is_required" => true})
         answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}"})
       end
     end
