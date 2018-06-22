@@ -67,9 +67,9 @@ class API::V1::MaterialsBinController < API::APIController
 
   def filtered_materials(materials, user_id = -1)
     materials = materials.where(is_assessment_item: false) unless show_assessment_items
-    materials = materials.reject { |m| m.archived? }
+    materials = materials.where(is_archived: false)
     if current_user.nil? || (current_user.id != user_id.to_i && current_user.does_not_have_role?('admin'))
-      materials = materials.select { |material| material.public? }
+      materials = materials.where(publication_status: 'published')
     end
     materials
   end

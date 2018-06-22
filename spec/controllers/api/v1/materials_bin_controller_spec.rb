@@ -63,6 +63,7 @@ describe API::V1::MaterialsBinController do
   let(:user1) { t = FactoryGirl.create(:teacher); t.user }
   let(:user2) { t = FactoryGirl.create(:teacher); t.user }
   let(:user3) { t = FactoryGirl.create(:teacher); t.user }
+  let(:user4) { t = FactoryGirl.create(:teacher); t.user }
   let (:act1) { FactoryGirl.create(:external_activity, user: user1, publication_status: 'published') }
   let (:user2_public_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'published', is_assessment_item: true) }
   let (:user2_private_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'private') }
@@ -72,11 +73,18 @@ describe API::V1::MaterialsBinController do
   let (:user3_private_activity) { FactoryGirl.create(:external_activity, user: user3, publication_status: 'private') }
   # investigation is considered to be always official
   let (:inv) { FactoryGirl.create(:investigation, user: user3, publication_status: 'published') }
+  # user with an archived and private activity
+  let (:user4_archived_activity) { FactoryGirl.create(:external_activity, user: user4, is_archived: true) }
+  let (:user4_private_activity) { FactoryGirl.create(:external_activity, user: user4, publication_status: 'private') }
+  let (:user4_public_activity) { FactoryGirl.create(:external_activity, user: user4, publication_status: 'published') }
 
   def populate_example_materials
     # Make sure that objects are saved to DB.
     cohort_activity.cohorts = [foo_cohort]
     act1; user2_public_activity; official_activity; cohort_activity; user2_private_activity; inv
+    # the order maters here. in the code we are testing if the filters are applied
+    # after the grouping then this user will not show up
+    user4_archived_activity; user4_private_activity; user4_public_activity
   end
 
   describe 'GET unofficial_materials_authors' do
@@ -88,10 +96,12 @@ describe API::V1::MaterialsBinController do
         get :unofficial_materials_authors
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
-        # Only act1 is public, not assigned to any cohort and not an assessment item.
-        expect(results.length).to eql(1)
+        # Only act1 and user4_public_activity is public, not assigned to any cohort and not an assessment item.
+        expect(results.length).to eql(2)
         expect(results[0]['id']).to eql(user1.id)
         expect(results[0]['name']).to eql(user1.name)
+        expect(results[1]['id']).to eql(user4.id)
+        expect(results[1]['name']).to eql(user4.name)
       end
     end
 
@@ -103,10 +113,11 @@ describe API::V1::MaterialsBinController do
         get :unofficial_materials_authors
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
-        expect(results.length).to eql(3)
+        expect(results.length).to eql(4)
         expect(results.select {|r| r['id'] == user1.id}.length).to eql(1)
         expect(results.select {|r| r['id'] == user2.id}.length).to eql(1)
         expect(results.select {|r| r['id'] == user3.id}.length).to eql(1)
+        expect(results.select {|r| r['id'] == user4.id}.length).to eql(1)
       end
     end
   end
