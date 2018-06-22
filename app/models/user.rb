@@ -62,7 +62,6 @@ class User < ActiveRecord::Base
   scope :suspended, {:conditions => { :state => 'suspended'}}
   scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
   scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
-  scope :email_subscriber, { :conditions => { :state => false } }
   scope :default, { :conditions => { :default_user => true } }
   scope :with_role, lambda { | role_name |
     { :include => :roles, :conditions => ['roles.title = ?',role_name]}
