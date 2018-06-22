@@ -68,7 +68,7 @@
       url: Portal.API_V1.ENEWS_STATUS,
       dataType: 'json'
       }).done(function(data) {
-        console.log(data);
+        //console.log(data);
         var checked = '';
         if (data.subscribed == 'true') {
           checked = 'checked';
@@ -76,6 +76,7 @@
         var checkbox_html = '<input type="checkbox" ' + checked + ' name="user[enews_subscription]" id="user_enews_subscription" live="false" class="aligned" value="1" /> Send me updates by email.';
         jQuery('#enews-subscription-details').html(checkbox_html);
       }).fail(function(data){
+        //console.log(data.responseText);
         jQuery('#enews-subscription-details').html('<p style="color: #f00; font-size: 16px;">There was an error checking this account\'s subscription status. Please reload the page to try again.</p>');
       });
   }
