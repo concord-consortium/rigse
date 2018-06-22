@@ -1,4 +1,4 @@
-FROM concordconsortium/docker-rails-base-ruby-2.2.6
+FROM concordconsortium/docker-rails-base-ruby-2.2.6:1.1
 
 # install nginx
 RUN apt-get update -qq && apt-get install -qq -y nginx
@@ -49,7 +49,7 @@ RUN cp docker/prod/config/settings.yml config/settings.yml
 EXPOSE 80
 
 # this font is used by imagemagick to add attribution to the images in the image library
-# the DejaVu-Sans font is provided by the docker image this one is built on 
+# the DejaVu-Sans font is provided by the docker image this one is built on
 ENV WATERMARK_FONT=DejaVu-Sans
 
 CMD ./docker/prod/run.sh

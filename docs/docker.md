@@ -21,25 +21,22 @@ service. The files `config/database.yml`, `config/settings.yml` and
 `config/app_environment_variables.yml` are automatically copied from their `.sample.yml`
 counterparts when you run `docker-compose up` if they do not exist. If they already
 exist, they will not be updated. If they already exist then there is a good chance
-they will not be configured correctly for Docker. If you are not using unison to sync
+they will not be configured correctly for Docker. If you are not using
+the docker-compose-sync overlay to sync
 your local files (see below), you can delete these files and run
 
     docker-compose build app # make sure you have the latest app image
     docker-compose up app    # recreate the app container from this image
 
-If you are using unison then you should delete your unison volume first to be safe. You
+If you are using the docker-compose-sync overlay then you should delete your sync volume first to be safe. You
 can't delete a volume that is still attached to containers, so you also need to delete
-all of the containers using the unison volume (pretty much everything):
+all of the containers using the sync volume (pretty much everything):
 
-    docker-compose down              # stop all containers and remove them
-    docker volume ls                 # list all of the volumes
-    docker volume rm {portal}_unison # remove the unison volume
-    docker-compose build app         # make sure you have the latest app image
-    docker-compose up unison         # start unison container, so you can resync the files
-    # in a new terminal
-    docker/dev/start-unison.sh       # start unison OS X server
-    # in a new terminal
-    docker-compose up                # start rest of services
+    docker-compose down                   # stop all containers and remove them
+    docker volume ls                      # list all of the volumes
+    docker volume rm {portal}_sync-volume # remove the unison volume
+    docker-compose build app              # make sure you have the latest app image
+    docker-compose up                     # start services
 
 Also, when `config/database.yml` is not present yet, `docker-compose up` will copy it
 and run `rake db:setup`. This running of `rake db:setup` will erase any data in the
@@ -67,10 +64,10 @@ There are several docker-compose overrides you can use to customize your docker-
 environment. These can be found in `docker/dev/`. Currently these overrides support:
 
 - `docker-compose-external-mysql.yml`: external mysql server
-- `docker-compose-random-ports.yml`: assigning random ports to rails and solr
-- `docker-compose-ssh.yml`: sharing an ssh-agent with the app service so you can do capistrano deploys
-- `docker-compose-unison.yml`: using unison for faster performance on OS X 
-
+- `docker-compose-random-ports.yml`: assign random ports to rails and solr
+- `docker-compose-ssh.yml`: share an ssh-agent with the app service so you can do capistrano deploys
+- `docker-compose-sync.yml`: use a 2 volume sync container for faster performance on OS X, without needing the host to run unison
+- `docker-compose-unison.yml`: *deprecated* using unison for faster performance on OS X, requires the host to run unison
 
 There is more on each of these below.
 
@@ -101,8 +98,7 @@ Docker includes support for mounting your host folders inside of containers. Thi
 useful in development so you can make changes with a native editor and then immediately
 these changes are picked up by the container.  When running Docker on a linux host this
 mounting system is very fast. However when running on OS X this mounting system is slow.
-Docker for Mac has improved the speed some, and hopes to improve it more. However, it
-seems there are some fundamental barriers to achieving native file performance. The main
+Docker for Mac has improved the speed some, and hopes to improve it more. The main
 barrier is that the Docker team wants the file mounting to be synchronous. This way if
 a local change is made the container is guaranteed to see it immediately. This means that
 all read operations need to communicate across to OS X to look for changes. This
@@ -110,52 +106,33 @@ performance problem really shows up with Rails which is loading and reloading th
 of files on each request. In the the case of the portal, it can take 5 minutes to load a
 page.
 
-There are several options for speeding this up. Our current favorite is using Unison.
-The basic idea is that the source code is stored in a named docker volume. Docker volumes
-run at near native speeds and can be accessed and watched by multiple containers. A
-separate unison container keeps this volume synced with the local file system. Unison has
-support for watching both the OS X and docker sides so changes are applied nearly
-instantly.
+There are several options for speeding this up. The fastest approach is to use a 2
+volume syncing container that is using unison inside.
+The basic idea is that the source code is synced into a named docker volume.
+Docker volumes run at near native speeds and can be accessed and watched by multiple
+containers. A separate unison container keeps this volume synced with a second volume
+that is mounted to the host file system.
 
-To use unison on OS X you need to first need to install it and the OS X fs-monitor
-extension:
+Next you should enable the sync override by adding this to your `.env` file:
 
-    brew install unison
-    # if you don't have pip installed
-    # brew install python
-    pip install MacFSEvents
-    pip install watchdog
-    curl -o /usr/local/bin/unison-fsmonitor -L https://raw.githubusercontent.com/hnsl/unox/master/src/unox/unox.py
-    chmod +x /usr/local/bin/unison-fsmonitor
-
-Those instructions were taken from here:
-[https://github.com/onnimonni/docker-unison#installing-unison-fsmonitor-on-osx-unox]
-
-Next you should enable the unison override by adding this to your `.env` file:
-
-    COMPOSE_FILE=docker-compose.yml:docker-compose.override.yml:docker/dev/docker-compose-unison.yml
+    COMPOSE_FILE=docker-compose.yml:docker-compose.override.yml:docker/dev/docker-compose-sync.yml
 
 see above for more info about overrides. Note: the line above will continue to use the
 standard Rails and Solr ports. If you want to use random ports see that section below
 and replace `docker-compose.override.yml` in the line above with
 `docker/dev/docker-compose-random-ports.yml`.
 
-Now the first time you startup, follow these steps:
-
-1. stop any running services: if you ran `docker-compose up` hit ctrl-c to stop it. You
-can also run `docker-compose stop` to stop all of the services.
-2. start just the unison service: `docker-compose up unison`
-3. start OS X unison server: `docker/dev/start-unison.sh`. this should take a few seconds
-to copy all of the local files to the docker volume.
-4. start the rest of the services `docker-compose up`
-
-In the future you can simply run:
-
-1. `docker-compose up`
-2. `docker/dev/start-unison.sh`
+Now you can start things up with a simple `docker-compose up`
 
 There can be some file conflicts that come up if both sides modify a file at the same
-time. These will be shown in the output of the start-unison.sh command.
+time. The sync container is configured to choose the host file in this case. Occasionally
+the sync container might crash, I haven't seen it yet, but others that are using a
+similar setup have reported this.
+
+When the sync container first starts up it mirrors the contents of the host
+directory to the named docker volume. Any changes that are only in the named docker
+volume will be lost. This is basically the same as how a docker bind mount works, so
+it shouldn't cause any problems.
 
 ## Setting up a DNS and Proxy to avoid port conflicts
 
@@ -230,15 +207,11 @@ image above has instructions on doing this.
 
 ## Running rspec and cucumber tests with docker
 
-
-1. Connect to the running docker instance of your "app" service. 
+1. Connect to the running docker instance of your "app" service.
 > `$ docker-compose exec app bash`
 2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
     * `docker/dev/run-spec.sh`
     * `docker/dev/run-cucumber.sh`
-
-    E.g. 
-    > `$ ./docker/dev/run-rspec.sh`
 
 ## Docker crashing or running very slow
 
