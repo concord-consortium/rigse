@@ -1,0 +1,20 @@
+-if @form_model.available_sensors.size > 0
+  .filterheader
+    Sensors
+  %span
+    %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(true);"}check all
+  %span{:style => 'color: #479492'}|
+  %span
+    %a{:href => 'javascript: void(0);', :onclick=>"setAllProbesSelected(false);"}clear
+  .noprobesrequired
+
+  .probes_container.webkit_scrollbars
+    .tablecell
+      -# TODO: switch up styles and id to 'sensor'
+      = check_box_tag 'no_sensors', '1', @form_model.no_sensors, :id=>'probe_0', :class=>'probe_items'
+      = label_tag 'probe_0', 'Sensors Not Necessary', :class=>'probes_label'
+    - @form_model.available_sensors.uniq.sort_by { |sensor| sensor.downcase }.each do |sensor|
+      .tablecell
+        - id = "sensor_#{sensor.squish.downcase.tr(" ","_")}"
+        = check_box_tag 'sensors[]', sensor,  @form_model.sensors.include?(sensor),:id => id, :class => 'check-box-left-margin'
+        = label_tag id, sensor
