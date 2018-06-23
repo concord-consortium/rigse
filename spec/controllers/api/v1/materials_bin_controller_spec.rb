@@ -82,8 +82,9 @@ describe API::V1::MaterialsBinController do
     # Make sure that objects are saved to DB.
     cohort_activity.cohorts = [foo_cohort]
     act1; user2_public_activity; official_activity; cohort_activity; user2_private_activity; inv
-    # the order maters here. in the code we are testing if the filters are applied
-    # after the grouping then this user will not show up
+    # the order matters here. in the code we are testing if the filters are applied
+    # after the grouping then only the archived activity will be in the list and this user will not show up
+    # if the code is working correctly then it will find user4_public_activity and the user will show up
     user4_archived_activity; user4_private_activity; user4_public_activity
   end
 
