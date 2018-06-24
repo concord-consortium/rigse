@@ -392,7 +392,6 @@ describe Search do
 
 
       describe "With cohort tags" do
-        # TODO: COHORT FIXME
         let(:teacher_cohorts) {[]}
         let(:teacher)    {
           mock_model(Portal::Teacher, :cohorts => teacher_cohorts)
@@ -639,6 +638,49 @@ describe Search do
         end
       end
     end
+
+    context "with sensor tags" do
+      let(:public_with_temperature_sensor) {
+        FactoryGirl.create(:external_activity, :url => 'http://activities.com',
+          :is_official => true, :publication_status => "published",
+          :sensor_list => ['Temperature']
+        )
+      }
+      let(:public_with_force_sensor) {
+        FactoryGirl.create(:external_activity, :url => 'http://activities.com',
+          :is_official => true, :publication_status => "published",
+          :sensor_list => ['Force']
+        )
+      }
+      let(:public_with_force_and_temperature_sensor) {
+        FactoryGirl.create(:external_activity, :url => 'http://activities.com',
+          :is_official => true, :publication_status => "published",
+          :sensor_list => ['Force', 'Temperature']
+        )
+      }
+      let(:materials) { [public_with_temperature_sensor, public_with_force_sensor,
+        public_with_force_and_temperature_sensor, public_ext_act]}
+      it "the temperature activity is returned" do
+        subject.results[:all].should include(public_with_temperature_sensor)
+      end
+      describe "with the temperature sensor selected" do
+        let(:search_opts)      { {:sensors => ["Temperature"]} }
+        it "only returns activities with a temperature sensor" do
+          subject.results[:all].should have(2).entries
+          subject.results[:all].should include(public_with_temperature_sensor)
+          subject.results[:all].should include(public_with_force_and_temperature_sensor)
+        end
+      end
+      describe "with the 'no sensors' option selected" do
+        let(:search_opts)      { {:no_sensors => true} }
+        it "only returns activities without sensors" do
+          subject.results[:all].should_not include(public_with_temperature_sensor)
+          subject.results[:all].should_not include(public_with_force_sensor)
+          subject.results[:all].should_not include(public_with_force_and_temperature_sensor)
+        end
+      end
+    end
+
     describe "#params" do
       before(:each) do
         User.stub!(:find => mock_user)
@@ -653,7 +695,7 @@ describe Search do
           subject.should include(:investigation_page => 1)
           subject.should include(:material_types => [])
           subject.should include(:per_page => 10)
-          subject.should include(:probe => [])
+          subject.should include(:sensors => [])
           subject.should include(:sort_order => "Newest")
         end
       end
@@ -666,7 +708,7 @@ describe Search do
           :material_types => [Search::InvestigationMaterial, Search::ActivityMaterial],
           :domain_id => ['1','2','4'],
           :user_id => '13',
-          :probe => ['0'],
+          :sensors => ['Temperature'],
           :grade_span => ['k','12'],
           :activity_page => 3,
           :investigation_page => 7
@@ -680,7 +722,7 @@ describe Search do
           subject.should include(:material_types => ["Investigation", "Activity"])
           subject.should include(:per_page => 10)
           subject.should include(:private => true)
-          subject.should include(:probe => ["0"])
+          subject.should include(:sensors => ["Temperature"])
           subject.should include(:sort_order => "Newest")
           subject.should include(:user_id => "13")
         end
