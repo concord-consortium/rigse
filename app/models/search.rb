@@ -358,11 +358,10 @@ class Search
   end
 
   def search_by_sensors(search)
-    if no_sensors
-      search.with(:sensors, nil)
-    elsif sensors.present?
-      # this is a more concise version of way subject areas are doing it
-      search.with(:sensors).any_of(sensors)
+    return if !no_sensors && sensors.blank?
+    search.any_of do |s|
+      s.with(:sensors, nil) if no_sensors
+      s.with(:sensors).any_of(sensors) if sensors.present?
     end
   end
 

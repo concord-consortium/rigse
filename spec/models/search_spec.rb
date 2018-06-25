@@ -679,6 +679,16 @@ describe Search do
           subject.results[:all].should_not include(public_with_force_and_temperature_sensor)
         end
       end
+      describe "with the 'no sensors' option selected and temperature sensor selected" do
+        let(:search_opts)      { {:no_sensors => true, :sensors => ["Temperature"]} }
+        it "returns activities with sensors and with temperature sensors" do
+          subject.results[:all].should_not include(public_with_force_sensor)
+          subject.results[:all].should include(public_with_temperature_sensor)
+          subject.results[:all].should include(public_with_force_and_temperature_sensor)
+          # include takes an set of params so turn the array into params with '*'
+          subject.results[:all].should include(*public_ext_act)
+        end
+      end
     end
 
     describe "#params" do
