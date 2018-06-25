@@ -1,7 +1,5 @@
 class Search::SearchMaterial
 
-  include ProbeTypesHelper
-
   attr_accessor :material
   attr_accessor :parent_material
   attr_accessor :user
@@ -29,9 +27,7 @@ class Search::SearchMaterial
     self.other_data = {
       :grade_span_expectation => nil,
       :grade_span => nil,
-      :domain_name => nil,
-      :probe_types => nil,
-      :required_equipments => nil
+      :domain_name => nil
     }
 
     self.populateMaterialData
@@ -64,9 +60,6 @@ class Search::SearchMaterial
 
     self.activity_list_title = self.title
 
-    self.other_data[:probe_types] = self.probe_types(material)
-    self.other_data[:required_equipments] = self.other_data[:probe_types].map { |p| p.name }.join(", ")
-    
     if material.is_a? ::Investigation
 
       self.url = {:only_path => false, :controller => 'investigations', :action => 'show', :id => self.id}
