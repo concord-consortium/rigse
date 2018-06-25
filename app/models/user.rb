@@ -148,7 +148,6 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :email, :case_sensitive => false
   validates_format_of       :email,    :with => email_regex, :message => bad_email_message
 
-  validates_presence_of     :vendor_interface_id
   validates_presence_of     :password, :on => :update, :if => :updating_password?
   validates_presence_of     :password_confirmation, :on => :create
   validates_presence_of     :password_confirmation, :on => :update, :if => :updating_password?
@@ -298,7 +297,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :sign_up_path, :remember_me,
-                  :vendor_interface_id, :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state, :require_password_reset
+                  :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state, :require_password_reset
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)

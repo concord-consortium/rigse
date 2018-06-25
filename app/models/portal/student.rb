@@ -36,7 +36,7 @@ class Portal::Student < ActiveRecord::Base
     :after_add    => :update_report_permissions,
     :after_remove => :update_report_permissions
 
-  [:name, :first_name, :last_name, :email, :login, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
+  [:name, :first_name, :last_name, :email, :login, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
 
   include Changeable
 

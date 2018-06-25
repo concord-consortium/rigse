@@ -36,7 +36,7 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz"
   has_many :projects, :through => :cohorts, :class_name => "Admin::Project", :uniq => true
 
-  [:first_name, :login, :password, :last_name, :email, :vendor_interface, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
+  [:first_name, :login, :password, :last_name, :email, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
 
   validates_presence_of :user,  :message => "user association not specified"
 

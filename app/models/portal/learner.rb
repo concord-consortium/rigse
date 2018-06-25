@@ -70,8 +70,8 @@ class Portal::Learner < ActiveRecord::Base
   def sessions
     self.bundle_logger.bundle_contents.length
   end
-  
-  [:name, :first_name, :last_name, :email, :vendor_interface].each { |m| delegate m, :to => :student }
+
+  [:name, :first_name, :last_name, :email].each { |m| delegate m, :to => :student }
 
   before_create do |learner|
     learner.create_console_logger

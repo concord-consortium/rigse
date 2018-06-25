@@ -8,7 +8,6 @@
 
 quentin:
   id:                        1
-  vendor_interface_id:       1
   uuid:                      7aef8f84-627b-11de-97fe-001ff3caa767
   login:                     quentin
   first_name:                quentin
@@ -26,7 +25,6 @@ quentin:
 aaron:
   id:                        2
   uuid:                      8ddb615e-627b-11de-97fe-001ff3caa767
-  vendor_interface_id:       1
   login:                     aaron
   first_name:                aaron
   last_name:                 paul
@@ -44,7 +42,6 @@ aaron:
 old_password_holder:
   id:                        3
   uuid:                      95edf87a-627b-11de-97fe-001ff3caa767
-  vendor_interface_id:       1
   login:                     old_password_holder
   first_name:                salty
   last_name:                 dog
