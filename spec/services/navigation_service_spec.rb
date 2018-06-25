@@ -33,6 +33,12 @@ describe NavigationService do
         sort: 1,
         url: "http://scologoy.com"
       },
+      {
+        id: "google",
+        label: "google",
+        sort: 5,
+        url: "http://google.com"
+      },
     ]
   }
   let(:params) {
@@ -53,7 +59,7 @@ describe NavigationService do
       nav_service.sections.should have(4).sections
     end
     it "should have 2 links" do
-      nav_service.links.should have(2).links
+      nav_service.links.should have(3).links
     end
   end
 

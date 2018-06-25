@@ -1,6 +1,6 @@
 - fake_id = 999
 %script#navigationData{type: "application/json"}
-  = navigation_service({"greeting" => "Hola"}).to_json().html_safe
+  = navigation_service().to_json().html_safe
 
 :javascript
   Portal.API_V1 = {

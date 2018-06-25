@@ -93,7 +93,10 @@ class NavigationService
   end
 
   def parent_id_for(id)
-    parent_id = id.split("/")[0...-1].join("/")
+    parent_paths =  id.split("/")
+    if parent_paths.size > 0
+      parent_id = id.split("/")[0...-1].join("/")
+    end
     if(parent_id.blank?)
       parent_id = ROOT_SECTION
     end

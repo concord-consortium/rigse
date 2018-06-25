@@ -233,7 +233,7 @@ module NavigationHelper
 
   def switch_user_link
     # TODO: Make an API to switch users.
-    {label: "Switch Back", url: "/users/switch" }
+    {label: "Switch Back", id: "switch", url: "/users/switch", sort: 2 }
   end
 
 
