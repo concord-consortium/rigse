@@ -6,16 +6,6 @@ source "http://rubygems.org"
 #### COMMON
   gem "mysql2",             '~> 0.3.16', :platforms => [:ruby,:mingw]
 
-  platforms :jruby do
-    gem "activerecord-jdbcmysql-adapter",  "~> 1.1.3"
-    gem "jruby-openssl",                   "~> 0.7.4"
-    gem "ffi-ncurses",                     "~> 0.3.3"
-  end
-
-  platforms :mingw do
-    gem "win32-open3"
-  end
-
   gem "devise",               "~>2.1.0"
   gem 'devise-encryptable'
 
