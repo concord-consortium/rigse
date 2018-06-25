@@ -106,11 +106,5 @@
         = render :partial => "home_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
       %p
         = render :partial => "help_page_item", :locals => { :admin_settings => admin_settings, :f => f }
-      = field_set_tag '<b>Vendor Interfaces</b>' do
-        - Probe::VendorInterface.all.each do |interface|
-          - domid = interface.name.gsub(/\s+/,"_")
-          = check_box_tag "admin_settings[enabled_vendor_interface_ids][]", "#{interface.id}", admin_settings.enabled_vendor_interfaces.include?(interface), :id=>domid
-          %label{:for => domid}= interface.name_with_driver
-          %br
       :javascript
         new Chosen($('admin_settings_enabled_bookmark_types'));

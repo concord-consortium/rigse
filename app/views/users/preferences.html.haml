@@ -13,9 +13,6 @@
             = link_to "Click here", edit_user_security_questions_path(@user)
             to change the security questions you use to reset your password if you forget it.
 
-      #right-col
-        = render :partial => 'shared/vendor_interface', :locals => { :f => form, :vendor_interface => @user.vendor_interface }
-
       %ul.menu_h
         %li
           = submit_tag 'Save'

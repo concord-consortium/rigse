@@ -186,25 +186,6 @@ describe Investigation do
       found.should include(@public_non_gse)
       found.should_not include(*@drafts)
     end
-    it "should search investigations that require probes" do
-      pending "Equivalent spec suite elsewhere"
-      options = {
-        :include_drafts => false,
-        :probe_type => [@probe_type.id]
-      }
-      found = Investigation.search_list(options)
-      assert_equal found.length, 1
-      found.should include(@investigation)
-    end
-    it "should search investigations that does require probes" do
-      pending "Equivalent spec suite elsewhere"
-      options = {
-        :include_drafts => false,
-        :probe_type => ['0']
-      }
-      found = Investigation.search_list(options)
-      found.should_not include(@investigation)
-    end
   end 
 
   describe "with activities" do

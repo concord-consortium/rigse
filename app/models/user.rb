@@ -161,8 +161,6 @@ class User < ActiveRecord::Base
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
   has_one :imported_user, :dependent => :destroy, :class_name => "Import::ImportedUser", :inverse_of => :user
 
-  belongs_to :vendor_interface, :class_name => 'Probe::VendorInterface'
-
   attr_accessor :updating_password
 
   acts_as_replicatable
@@ -295,9 +293,6 @@ class User < ActiveRecord::Base
 
   # default users are a class of users that can be enable
   default_value_for :default_user, false
-
-  # we need a default Probe::VendorInterface, 6 = Vernier Go! IO
-  default_value_for :vendor_interface_id, 14
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation

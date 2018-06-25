@@ -1,0 +1,5 @@
+remove db tables for top level Probe:: models
+
+remove db table for Admin::SettingsVendorInterface
+
+remove vendor interface from Users db tables

@@ -2,11 +2,10 @@ namespace :db do
   namespace :test do
 
     def load_common_data
-      Rake::Task['db:backup:load_probe_configurations'].invoke
       Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
     end
 
-    desc 'after completing db:test:prepare load probe configurations'
+    desc 'after completing standard db:test:prepare load default data'
     task :prepare do
       Rails.env = ENV['RAILS_ENV'] = (ENV['RAILS_ENV'] == 'cucumber' ? 'cucumber' : 'test')
       ActiveRecord::Base.establish_connection Rails.env.to_sym

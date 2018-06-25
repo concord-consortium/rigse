@@ -276,7 +276,7 @@ module Materials
           assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? "javascript:get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}')" : nil,
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
-          sensors: view_context.probe_types(material).map { |p| p.name },
+          sensors: tags['sensors'],
           has_activities: has_activities,
           has_pretest: has_pretest,
           saves_student_data: saves_student_data,
