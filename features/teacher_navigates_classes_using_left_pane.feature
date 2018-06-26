@@ -9,23 +9,23 @@ Feature: Teacher navigates using left pane
     And the database has been seeded
     And I login with username: teacher
 
-
+  @javascript
   Scenario: Teachers can see their class name
     Then I should see "My Class"
 
-
+  @javascript
   Scenario: Teacher visits Student Roster page
     When I follow "My Class"
     And I follow "Student Roster"
     Then I should be on "Student Roster" page for "My Class"
 
-
+  @javascript
   Scenario: Teacher visits Class Setup page
     When I follow "My Class"
     And I follow "Class Setup"
     Then I should be on the class edit page for "My Class"
 
-
+  @javascript
   Scenario: Teacher visits Materials page
     When I follow "My Class"
     And I follow "Assignments"

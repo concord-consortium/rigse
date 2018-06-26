@@ -55,6 +55,7 @@ Feature: The Project administrator disables certain vendor interfaces
       | Texas Instruments| false   |
       | pasco bluetooth  | true    |
 
+  @javascript
   Scenario: The student user can only select configured interfaces
     Given the following students exist:
       | login          | password            |
