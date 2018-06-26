@@ -9,6 +9,7 @@ Feature: Admin can work with materials collections
     And the database has been seeded
     And I am logged in with the username admin
 
+  @javascript
   Scenario: Admin accesses Materials Collections
     When I am on the home page
     And I follow "Admin"

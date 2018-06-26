@@ -20,7 +20,7 @@ Feature: Student should see latest class information
     When I login with username: taylor
     Then I should see "Basic Electronics"
     
-    
+  @javascript
   Scenario: Student should see all the updated information of a class
     When I login with username: taylor
     And I follow "Basic Electronics"
