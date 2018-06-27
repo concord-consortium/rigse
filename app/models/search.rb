@@ -274,21 +274,6 @@ class Search
   #
   def add_custom_search_filters(search); end
 
-  def params
-    params = {}
-    keys = [:user_id, :material_types, :grade_span, :sensors, :private, :sort_order,
-      :per_page, :include_contributed,:include_mine, :investigation_page, :activity_page, :material_properties,
-      :grade_level_groups, :subject_areas, :project_ids ]
-    keys.each do |key|
-      value = self.send key
-      if value
-        params[key] = value
-      end
-    end
-    # TODO: remove coupled controller concerns from this:
-    params.merge({:controller => 'search', :action => 'index'})
-  end
-
   def types(*types)
     type_names = types.map { |t| t.name                           }
     self.results.select    { |r| type_names.include? r.class_name }
@@ -358,7 +343,6 @@ class Search
   end
 
   def search_by_sensors(search)
-    return if !no_sensors && sensors.blank?
     search.any_of do |s|
       s.with(:sensors, nil) if no_sensors
       s.with(:sensors).any_of(sensors) if sensors.present?

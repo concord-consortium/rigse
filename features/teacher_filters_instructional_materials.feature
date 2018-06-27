@@ -41,13 +41,13 @@ Feature: Teacher filters instructional materials
     Given I am on the search instructional materials page
     And I uncheck "Sequence"
     And I check "Math"
-    And I wait 3 seconds
+    And I wait for the search to be ready
     Then I should see "My grade 5 Math Activity"
     And  I should not see "My grade 7 Science Activity"
 
     When I check "Science"
     And I uncheck "Math"
-    And I wait 3 seconds
+    And I wait for the search to be ready
 
     Then I should see "My grade 7 Science Activity"
     And I should not see "My grade 5 Math Activity"
@@ -55,14 +55,14 @@ Feature: Teacher filters instructional materials
     When I uncheck "Math"
     And I uncheck "Science"
     And I check "grade_level_7-8"
-    And I wait 3 seconds
+    And I wait for the search to be ready
 
     Then I should not see "My grade 5 Math Activity"
     And I should see "My grade 7 Science Activity"
 
     When I uncheck "grade_level_7-8"
     And I check "grade_level_5-6"
-    And I wait 3 seconds
+    And I wait for the search to be ready
 
     Then I should see "My grade 5 Math Activity"
     And I should not see "My grade 7 Science Activity"
@@ -104,13 +104,13 @@ Feature: Teacher filters instructional materials
     Given I am on the search instructional materials page
     And I uncheck "Sequence"
     And I check "Temperature"
-    And I wait 3 seconds
+    And I wait for the search to be ready
     Then I should see "My Temperature Sensor Activity"
     And I should not see "My Force Sensor Activity"
     And I should not see "My No Sensor Activity"
 
     When I check "Force"
-    And I wait 3 seconds
+    And I wait for the search to be ready
     Then I should see "My Temperature Sensor Activity"
     And I should see "My Force Sensor Activity"
     And I should not see "My No Sensor Activity"
@@ -118,7 +118,7 @@ Feature: Teacher filters instructional materials
     When I uncheck "Temperature"
     And I uncheck "Force"
     And I check "Sensors Not Necessary"
-    And I wait 3 seconds
+    And I wait for the search to be ready
     Then I should see "My No Sensor Activity"
     And I should not see "My Force Sensor Activity"
     And I should not see "My Temperature Sensor Activity"
