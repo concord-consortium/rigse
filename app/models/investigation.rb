@@ -29,15 +29,6 @@ class Investigation < ActiveRecord::Base
         o.archived?
     end
 
-    # TODO: Support probes via tags
-    integer :probe_type_ids, :multiple => true do |inv|
-      # Note: Activities return nil
-      []
-    end
-    boolean :no_probes do |act|
-      true
-    end
-
     boolean :teacher_only
     integer :offerings_count
     boolean :is_official
