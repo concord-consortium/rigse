@@ -8,8 +8,6 @@ class Search
   attr_accessor :clean_material_types
   attr_accessor :sort_order
   attr_accessor :private
-  attr_accessor :probe
-  attr_accessor :no_probes
   attr_accessor :grade_span
   attr_accessor :domain_id
   attr_accessor :without_teacher_only
@@ -27,11 +25,14 @@ class Search
   attr_accessor :material_properties
   attr_accessor :grade_level_groups
   attr_accessor :subject_areas
+  attr_accessor :no_sensors
+  attr_accessor :sensors
   attr_accessor :project_ids
 
   attr_accessor :available_subject_areas
   attr_accessor :available_grade_level_groups
   attr_accessor :available_projects
+  attr_accessor :available_sensors
 
   attr_accessor :searchable_models
 
@@ -59,8 +60,7 @@ class Search
     Score        => [:score, :desc]
   }
   NoSearchTerm    = nil
-  NoGradeSpan     = NoDomainID = AnyProbeType =[]
-  NoProbeRequired = ["0"]
+  NoGradeSpan     = NoDomainID =[]
 
   def self.grade_level_groups
     { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"], 'Higher Ed' => ["Higher Ed"] }
@@ -121,21 +121,21 @@ class Search
     self.grade_level_groups          = opts[:grade_level_groups] || []
     self.subject_areas               = opts[:subject_areas] || []
     self.project_ids                 = opts[:project_ids] || []
+    self.sensors                     = opts[:sensors] || []
     self.available_subject_areas     = []
     self.available_projects          = []
+    self.available_sensors           = []
     self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0, 'Higher Ed' => 0 }
 
     self.results        = {}
     self.hits           = {}
     self.total_entries  = {}
-    self.no_probes      = false
 
     self.user_id        = opts[:user_id]
     self.user           = User.find(self.user_id)  if self.user_id
     self.engine         = opts[:engine]         || Sunspot
     self.grade_span     = opts[:grade_span]     || NoGradeSpan
-    self.probe          = opts[:probe]          || AnyProbeType
-    self.no_probes      = opts[:no_probes]      || false
+    self.no_sensors     = opts[:no_sensors]     || false
     self.private        = opts[:private]        || false
     self.sort_order     = opts[:sort_order]     || Newest
     self.per_page       = opts[:per_page]       || 10
@@ -151,7 +151,7 @@ class Search
     self.include_templates    = opts[:include_templates]   || false
     self.show_archived     = opts[:show_archived]    || false
 
-    self.fetch_available_grade_subject_areas_projects()
+    self.fetch_available_filter_options()
 
     #
     # Allow subclasses to add their own available search parameters
@@ -167,9 +167,10 @@ class Search
   #
   def fetch_custom_search_params; end
 
-  def fetch_available_grade_subject_areas_projects
+  def fetch_available_filter_options
     results = self.engine.search(self.searchable_models) do |s|
       s.facet :subject_areas
+      s.facet :sensors
       s.facet :grade_levels do
         Search.grade_level_groups.each do |key, value|
           row(key) do
@@ -193,6 +194,10 @@ class Search
       end
     end
     available_projects.uniq!
+    results.facet(:sensors).rows.each do |facet|
+      self.available_sensors << facet.value
+    end
+    available_sensors.uniq!
   end
 
   def search
@@ -215,7 +220,7 @@ class Search
         s.with(:domain_id, self.domain_id) unless self.domain_id.empty?
         s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
 
-        search_by_probes(s)
+        search_by_sensors(s)
         search_by_authorship(s)
         search_by_material_properties(s)
         search_by_grade_levels(s)
@@ -269,21 +274,6 @@ class Search
   #
   def add_custom_search_filters(search); end
 
-  def params
-    params = {}
-    keys = [:user_id, :material_types, :grade_span, :probe, :private, :sort_order,
-      :per_page, :include_contributed,:include_mine, :investigation_page, :activity_page, :material_properties,
-      :grade_level_groups, :subject_areas, :project_ids ]
-    keys.each do |key|
-      value = self.send key
-      if value
-        params[key] = value
-      end
-    end
-    # TODO: remove coupled controller concerns from this:
-    params.merge({:controller => 'search', :action => 'index'})
-  end
-
   def types(*types)
     type_names = types.map { |t| t.name                           }
     self.results.select    { |r| type_names.include? r.class_name }
@@ -303,14 +293,6 @@ class Search
 
   def will_show_contributed
     self.include_contributed
-  end
-
-  def search_by_probes(search)
-    return if !self.no_probes && self.probe.empty? # no sensor filter selected, nothing to do.
-    search.any_of do |c|
-      c.with(:no_probes, true) if self.no_probes
-      c.with(:probe_type_ids, self.probe) unless (self.probe.empty?)
-    end
   end
 
   def search_by_authorship(search)
@@ -360,6 +342,13 @@ class Search
     end
   end
 
+  def search_by_sensors(search)
+    search.any_of do |s|
+      s.with(:sensors, nil) if no_sensors
+      s.with(:sensors).any_of(sensors) if sensors.present?
+    end
+  end
+
   def search_by_projects(search)
     return if project_ids.size < 1
     search.any_of do |s|
@@ -372,8 +361,6 @@ class Search
   def count; self.hits.size; end
   alias_method :size, :count
   alias_method :len, :count
-
-  alias_method :probe_type, :probe
 
   def investigation_checkedstatus; self.material_types.include? ::Investigation ; end
   def activity_checkedstatus; self.material_types.include? ::Activity ; end
