@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180622141733) do
+ActiveRecord::Schema.define(:version => 20180628085711) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -431,6 +431,7 @@ ActiveRecord::Schema.define(:version => 20180622141733) do
     t.datetime "updated_at",                                         :null => false
     t.boolean  "display_in_iframe",               :default => false
     t.boolean  "is_featured",                     :default => false
+    t.boolean  "is_required",                     :default => false
   end
 
   create_table "embeddable_image_questions", :force => true do |t|
