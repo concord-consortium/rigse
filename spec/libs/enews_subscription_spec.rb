@@ -2,19 +2,18 @@ require 'spec_helper'
 
 describe EnewsSubscription do
 
-  # Stub environment variables
-  before(:each) do
-    ENV.stub(:[]).and_return('')
-    ENV.stub(:[]).with("MAILCHIMP_API_KEY").and_return('1234567890')
-    ENV.stub(:[]).with("MAILCHIMP_API_URI").and_return('https://localhost/')
-    ENV.stub(:[]).with("MAILCHIMP_API_LISTID").and_return('abcdefg123')
-  end
-
   # Establish values specific to a particular email subscription service.
-  Enews_API_Key = '07d2723fc46087ed0873ab0b4668c029-us2'
-  Enews_API_URI = 'us2.api.mailchimp.com/3.0/lists'
-  Enews_List_ID = '4ca9f8d47e'
+  Enews_API_Key = '12345'
+  Enews_Domain = 'example.com'
+  Enews_List_ID = 'abcdef'
   Enews_Mimetype = {'Content-Type'=>'application/json'}
+
+  # Stub module configuration
+  before(:each) do
+    stub_const('EnewsSubscription::Enews_api_key', Enews_API_Key)
+    stub_const('EnewsSubscription::Enews_list_id', Enews_List_ID)
+    stub_const('EnewsSubscription::Enews_uri', 'https://' + Enews_Domain)
+  end
 
   # Establish a mock user profile.
   User_First = "Fred"
@@ -22,7 +21,7 @@ describe EnewsSubscription do
   User_EMail = "#{User_First}.#{User_Last}@bedrockgravel.com"
 
   def construct_test_uri
-    'https://user:' + Enews_API_Key + '@' + Enews_API_URI + '/' + Enews_List_ID + '/members/' + Digest::MD5.hexdigest(User_EMail)
+    'https://user:' + Enews_API_Key + '@' + Enews_Domain + '/' + Enews_List_ID + '/members/' + Digest::MD5.hexdigest(User_EMail)
   end
 
   describe "set_status" do
