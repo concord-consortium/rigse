@@ -39,11 +39,11 @@ window.MBMaterialClass = React.createClass
         if @props.assignToSpecificClass
           (input {type: 'checkbox', onChange: @assignToSpecificClass, checked: @state.assigned})
         if data.edit_url?
-          (a {className: 'mb-edit', href: data.edit_url, target: '_blank', title: 'Edit this activity'},
+          (a {className: 'mb-edit', href: data.edit_url,  title: 'Edit this activity'},
             (span {className: 'mb-edit-text'}, 'Edit')
           )
         if data.copy_url?
-          (a {className: 'mb-copy', href: data.copy_url, target: '_blank', title: 'Make your own version of this activity'},
+          (a {className: 'mb-copy', href: data.copy_url,  title: 'Make your own version of this activity'},
             (span {className: 'mb-copy-text'}, 'Copy')
           )
         if @hasDescription()
@@ -51,7 +51,7 @@ window.MBMaterialClass = React.createClass
             (span {className: 'mb-toggle-info-text'}, 'Info')
           )
         if data.preview_url?
-          (a {className: 'mb-run', href: data.preview_url, target: '_blank', title: 'Run this activity in the browser'},
+          (a {className: 'mb-run', href: data.preview_url,  title: 'Run this activity in the browser'},
             (span {className: 'mb-run-text'}, 'Run')
           )
         if not @props.assignToSpecificClass and data.assign_to_class_url?

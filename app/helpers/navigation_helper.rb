@@ -69,7 +69,8 @@ module NavigationHelper
         id: '/help',
         label: nav_label('Help'),
         url: '/help',
-        popOut: true,
+        small: true,
+        sort: -1,
         iconName:'icon-search',
       }
     else

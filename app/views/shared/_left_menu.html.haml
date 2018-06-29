@@ -1,6 +1,5 @@
-
-- navigation = navigation_service()
 #clazzes_nav
 
-:javascript
-  PortalPages.renderNavigation(Portal.API_V1.getNavigation(), 'clazzes_nav')
+- unless @wide_content_layout
+  :javascript
+    PortalPages.renderNavigation(Portal.API_V1.getNavigation(), 'clazzes_nav')
