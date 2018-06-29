@@ -4,7 +4,7 @@ describe EnewsSubscription do
 
   # Stub environment variables
   before(:each) do
-    ENV.stub(:[]).and_return('') 
+    ENV.stub(:[]).and_return('')
     ENV.stub(:[]).with("MAILCHIMP_API_KEY").and_return('1234567890')
     ENV.stub(:[]).with("MAILCHIMP_API_URI").and_return('https://localhost/')
     ENV.stub(:[]).with("MAILCHIMP_API_LISTID").and_return('abcdefg123')
