@@ -2,6 +2,14 @@ require 'spec_helper'
 
 describe EnewsSubscription do
 
+  # Stub environment variables
+  before(:each) do
+    ENV.stub(:[]).and_return('')
+    ENV.stub(:[]).with("MAILCHIMP_API_KEY").and_return('1234567890')
+    ENV.stub(:[]).with("MAILCHIMP_API_URI").and_return('https://localhost/')
+    ENV.stub(:[]).with("MAILCHIMP_API_LISTID").and_return('abcdefg123')
+  end
+
   # Establish values specific to a particular email subscription service.
   Enews_API_Key = '07d2723fc46087ed0873ab0b4668c029-us2'
   Enews_API_URI = 'us2.api.mailchimp.com/3.0/lists'
