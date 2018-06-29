@@ -1,8 +1,8 @@
 module EnewsSubscription
 
-  Enews_api_key = ENV['MAILCHIMP_API_KEY']
-  Enews_list_id = ENV['MAILCHIMP_API_LISTID']
-  Enews_uri = ENV['MAILCHIMP_API_URI']
+  Enews_api_key = ENV['ENEWS_API_KEY']
+  Enews_list_id = ENV['ENEWS_API_LISTID']
+  Enews_uri = ENV['ENEWS_API_URI']
   Enews_mimetype = {'Content-Type'=>'application/json'}
 
   def self.build_uri(email)

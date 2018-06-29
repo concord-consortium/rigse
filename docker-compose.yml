@@ -58,9 +58,9 @@ services:
 
       #
       # MailChimp API information
-      MAILCHIMP_API_KEY:
-      MAILCHIMP_API_URI:
-      MAILCHIMP_API_LISTID:
+      ENEWS_API_KEY:
+      ENEWS_API_URI:
+      ENEWS_API_LISTID:
 
       #
       # OG tag default values
