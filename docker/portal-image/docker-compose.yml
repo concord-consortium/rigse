@@ -18,7 +18,7 @@ services:
       SITE_URL: http://app.rigseprod.docker
       SITE_NAME: Test Portal
       AUTHORING_SITE_URL: https://authoring.staging.concord.org
-      THEME: learn
+      THEME: ${THEME:-learn}
       HELP_EMAIL: help@concord.org
       ADMIN_EMAIL: admin@concord.org
       TOP_LEVEL_CONTAINER_NAME: Sequence
