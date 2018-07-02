@@ -351,7 +351,7 @@ class ActivityRuntimeAPI
     attrs = {
       prompt: or_data["prompt"]
     }.merge(
-      optional_attrs(or_data, "is_required", "is_featured")
+      optional_attrs(or_data, "is_required", "show_in_featured_question_report")
     )
     existant.update_attributes(attrs)
     return existant
@@ -363,7 +363,7 @@ class ActivityRuntimeAPI
       external_id: or_data["id"],
       user: user
     }.merge(
-      optional_attrs(or_data, "is_required", "is_featured")
+      optional_attrs(or_data, "is_required", "show_in_featured_question_report")
     )
     Embeddable::OpenResponse.create(attrs)
   end
@@ -373,7 +373,7 @@ class ActivityRuntimeAPI
       prompt: iq_data["prompt"],
       drawing_prompt: iq_data["drawing_prompt"]
     }.merge(
-      optional_attrs(iq_data, "is_required", "is_featured")
+      optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
     )
     existant.update_attributes(attrs)
     return existant
@@ -386,7 +386,7 @@ class ActivityRuntimeAPI
       :external_id => iq_data["id"],
       :user => user
     }.merge(
-      optional_attrs(iq_data, "is_required", "is_featured")
+      optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
     )
     Embeddable::ImageQuestion.create(attrs)
   end
@@ -396,7 +396,7 @@ class ActivityRuntimeAPI
       prompt: mc_data["prompt"],
       allow_multiple_selection: mc_data["allow_multiple_selection"]
     }.merge(
-      optional_attrs(mc_data, "is_required", "is_featured")
+      optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
     )
     existant.update_attributes(attrs)
     self.add_choices(existant, mc_data)
@@ -410,7 +410,7 @@ class ActivityRuntimeAPI
       allow_multiple_selection: mc_data["allow_multiple_selection"],
       user: user
     }.merge(
-      optional_attrs(mc_data, "is_required", "is_featured")
+      optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
     )
     mc = Embeddable::MultipleChoice.create(attrs)
     self.add_choices(mc, mc_data)
@@ -447,7 +447,7 @@ class ActivityRuntimeAPI
       width: if_data["native_width"],
       height: if_data["native_height"]
     }.merge(
-      optional_attrs(if_data, "is_required", "is_featured", "display_in_iframe")
+      optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
     )
     existant.update_attributes(attrs)
     return existant
@@ -462,7 +462,7 @@ class ActivityRuntimeAPI
       external_id: if_data["id"].to_s,
       user: user
     }.merge(
-      optional_attrs(if_data, "is_required", "is_featured", :display_in_iframe)
+      optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
     )
     Embeddable::Iframe.create(attrs)
   end

@@ -2,7 +2,7 @@ require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelpe
 
 def filter (collection, options = {})
   collection = collection.select { |o| o.is_required } if options[:required]
-  collection = collection.select { |o| o.is_featured } if options[:featured]
+  collection = collection.select { |o| o.show_in_featured_question_report } if options[:featured]
   collection
 end
 
@@ -110,7 +110,7 @@ describe ActivityRuntimeAPI do
                   "id" => "1234568",
                   "prompt" => "Why do you like/dislike this activity?",
                   "is_required" => true,
-                  "is_featured" => true
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "image_question",
@@ -118,7 +118,7 @@ describe ActivityRuntimeAPI do
                   "drawing_prompt" => '',
                   "prompt" => "draw a picture of why you love this activity.",
                   "is_required" => true,
-                  "is_featured" => true
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "image_question",
@@ -126,7 +126,7 @@ describe ActivityRuntimeAPI do
                   "drawing_prompt" => "Really draw a picture",
                   "prompt" => "Now explain the picture you drew",
                   "is_required" => true,
-                  "is_featured" => true
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "multiple_choice",
@@ -135,7 +135,7 @@ describe ActivityRuntimeAPI do
                   "allow_multiple_selection" => false,
                   "choices" => choice_hash_array,
                   "is_required" => true,
-                  "is_featured" => true
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "iframe_interactive",
@@ -146,7 +146,7 @@ describe ActivityRuntimeAPI do
                   "native_width" => 400,
                   "native_height" => 500,
                   "is_required" => true,
-                  "is_featured" => true
+                  "show_in_featured_question_report" => true
                 }
               ]
             }
@@ -340,7 +340,7 @@ describe ActivityRuntimeAPI do
           Factory.create(:open_response,
             :prompt => "the original prompt",  # this will be replaced as the test runs.
             :is_required => false,             # this will be replaced as the test runs.
-            :is_featured => false,             # this will be replaced as the test runs.
+            :show_in_featured_question_report => false, # this will be replaced as the test runs.
             :external_id => "1234568")
         end
 
@@ -360,7 +360,7 @@ describe ActivityRuntimeAPI do
             :drawing_prompt => '',
             :prompt => "the original prompt",  # this will be replaced as the test runs.
             :is_required => false,             # this will be replaced as the test runs.
-            :is_featured => false,             # this will be replaced as the test runs.
+            :show_in_featured_question_report => false, # this will be replaced as the test runs.
             :external_id => "987654321")
         end
         it "should update the image_question" do
@@ -379,7 +379,7 @@ describe ActivityRuntimeAPI do
           Factory.create(:embeddable_iframe,
             :url => "http://original.url",  # this will be replaced as the test runs.
             :is_required => false,          # this will be replaced as the test runs.
-            :is_featured => false,          # this will be replaced as the test runs.
+            :show_in_featured_question_report => false, # this will be replaced as the test runs.
             :external_id => "if_123"
           )
         end
@@ -416,7 +416,7 @@ describe ActivityRuntimeAPI do
             :prompt => "the original prompt",
             :external_id => "456789",
             :is_required => false,
-            :is_featured => false,
+            :show_in_featured_question_report => false,
             :choices => choices
           )
         end
