@@ -253,7 +253,7 @@ class User < ActiveRecord::Base
         user = User.create!(
           login:        login,
           email:        email,
-          email_subscriber:        email_subscriber,
+          email_subscribed:        email_subscribed,
           first_name:   auth.extra.first_name   || auth.info.first_name,
           last_name:    auth.extra.last_name    || auth.info.last_name,
           password: pw,
@@ -303,7 +303,7 @@ class User < ActiveRecord::Base
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :email_subscriber, :first_name, :last_name, :password, :password_confirmation, :sign_up_path, :remember_me,
+  attr_accessible :login, :email, :email_subscribed, :first_name, :last_name, :password, :password_confirmation, :sign_up_path, :remember_me,
                   :vendor_interface_id, :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state, :require_password_reset
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
@@ -330,7 +330,7 @@ class User < ActiveRecord::Base
     super
 
     # send MailChimp subscription data
-    if self.email_subscriber
+    if self.email_subscribed
       enews_response_data = EnewsSubscription::set_status(self.email, 'subscribed', self.first_name, self.last_name)
     end
 
@@ -498,7 +498,7 @@ class User < ActiveRecord::Base
         :first_name            => "Anonymous",
         :last_name             => "User",
         :email                 => "anonymous@concord.org",
-        :email_subscriber      => false,
+        :email_subscribed      => false,
         :password              => "password",
         :password_confirmation => "password"){|u| u.skip_notifications = true}
       anonymous_user.add_role('guest')
