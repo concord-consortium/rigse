@@ -84,6 +84,18 @@ class UsersController < ApplicationController
     redirect_to home_path
   end
 
+  # GET users/<id>/switch_back
+  # Doesn't require posting hidden form fields.
+  def switch_back
+    original_user_id = session[:original_user_id]
+    if original_user_id
+      switch_to = User.find(original_user_id)
+      sign_out self.current_visitor
+      sign_in switch_to
+    end
+    redirect_to home_path
+  end
+
   def update
     if params[:commit] == "Cancel"
 

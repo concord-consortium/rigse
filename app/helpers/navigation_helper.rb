@@ -35,7 +35,6 @@ module NavigationHelper
   end
 
   def show_switch_user_link
-    # TODO: @original_user isn't available to us probably...
     @original_user && @original_user != current_visitor
   end
 
@@ -233,8 +232,12 @@ module NavigationHelper
   end
 
   def switch_user_link
-    # TODO: Make an API to switch users.
-    {label: "Switch Back", id: "switch", url: "/users/switch", sort: 2 }
+    {
+      label: nav_label('switch_back'),
+      id: "switch",
+      url: switch_back_user_path(current_visitor),
+      sort: 2
+    }
   end
 
 
