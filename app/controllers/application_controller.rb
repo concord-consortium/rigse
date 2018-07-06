@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
   end
 
   def configured_search_path
-    if current_settings.custom_search_path.present?
+    if current_settings && current_settings.custom_search_path.present?
       current_settings.custom_search_path
     else
       search_path # config/routes.rb
