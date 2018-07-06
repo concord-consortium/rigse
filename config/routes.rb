@@ -227,6 +227,7 @@ RailsPortal::Application.routes.draw do
         put :unsuspend
         get :interface
         put :switch
+        get :switch_back
         get :favorites
         get :preferences
         put :preferences

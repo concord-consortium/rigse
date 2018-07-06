@@ -160,6 +160,7 @@ en:
     class_setup: Class Setup
     full_status: Full Status
     links: Links
+    switch_back: Switch back
 
 'en-HAS':
   activerecord:
