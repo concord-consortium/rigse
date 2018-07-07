@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180612151521) do
+ActiveRecord::Schema.define(:version => 20180707010957) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -156,17 +156,6 @@ ActiveRecord::Schema.define(:version => 20180612151521) do
     t.string   "custom_search_path",                                 :default => "/search"
     t.string   "teacher_home_path",                                  :default => "/getting_started"
   end
-
-  create_table "admin_settings_vendor_interfaces", :force => true do |t|
-    t.integer  "admin_settings_id"
-    t.integer  "probe_vendor_interface_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-  end
-
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
-  add_index "admin_settings_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
 
   create_table "admin_site_notice_roles", :force => true do |t|
     t.integer  "notice_id"
@@ -1930,95 +1919,6 @@ ActiveRecord::Schema.define(:version => 20180612151521) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "probe_calibrations", :force => true do |t|
-    t.integer  "data_filter_id"
-    t.integer  "probe_type_id"
-    t.boolean  "default_calibration"
-    t.integer  "physical_unit_id"
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.float    "k0"
-    t.float    "k1"
-    t.float    "k2"
-    t.float    "k3"
-    t.string   "uuid"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "user_id"
-  end
-
-  create_table "probe_data_filters", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.string   "otrunk_object_class"
-    t.boolean  "k0_active"
-    t.boolean  "k1_active"
-    t.boolean  "k2_active"
-    t.boolean  "k3_active"
-    t.string   "uuid"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-  end
-
-  create_table "probe_device_configs", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "vendor_interface_id"
-    t.string   "config_string"
-    t.string   "uuid"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
-  add_index "probe_device_configs", ["user_id"], :name => "index_probe_device_configs_on_user_id"
-  add_index "probe_device_configs", ["vendor_interface_id"], :name => "index_probe_device_configs_on_vendor_interface_id"
-
-  create_table "probe_physical_units", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "quantity"
-    t.string   "unit_symbol"
-    t.string   "unit_symbol_text"
-    t.text     "description",      :limit => 16777215
-    t.boolean  "si"
-    t.boolean  "base_unit"
-    t.string   "uuid"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-  end
-
-  create_table "probe_probe_types", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.integer  "ptype"
-    t.float    "step_size"
-    t.integer  "display_precision"
-    t.integer  "port"
-    t.string   "unit"
-    t.float    "min"
-    t.float    "max"
-    t.float    "period"
-    t.string   "uuid"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "probe_probe_types", ["user_id"], :name => "index_probe_probe_types_on_user_id"
-
-  create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.text     "description",            :limit => 16777215
-    t.string   "communication_protocol"
-    t.string   "image"
-    t.string   "uuid"
-    t.integer  "device_id"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
-    t.string   "driver_short_name"
-  end
-
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2464,7 +2364,6 @@ ActiveRecord::Schema.define(:version => 20180612151521) do
     t.string   "uuid",                     :limit => 36
     t.datetime "created_at",                                                     :null => false
     t.datetime "updated_at",                                                     :null => false
-    t.integer  "vendor_interface_id"
     t.boolean  "default_user",                            :default => false
     t.boolean  "site_admin",                              :default => false
     t.string   "external_id"
@@ -2487,6 +2386,5 @@ ActiveRecord::Schema.define(:version => 20180612151521) do
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
   add_index "users", ["id"], :name => "index_users_on_id_and_type"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
-  add_index "users", ["vendor_interface_id"], :name => "index_users_on_vendor_interface_id"
 
 end
