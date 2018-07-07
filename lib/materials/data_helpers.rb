@@ -96,6 +96,7 @@ module Materials
         tags = {}
         tags['subject_areas']   = []
         tags['grade_levels']    = []
+        tags['sensors']    = []
 
         tags.each do |key, value|
             list = material.send(key)
