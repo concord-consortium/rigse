@@ -16,11 +16,11 @@ class API::V1::ReportPolicy < ApplicationPolicy
   end
 
   def class_teacher?
-    record.is_teacher? user
+    user && (record.is_teacher? user)
   end
 
   def is_the_student?
-    record.is_report_for_student? user
+    user && (record.is_report_for_student? user)
   end
 
   def class_teacher_or_admin?
