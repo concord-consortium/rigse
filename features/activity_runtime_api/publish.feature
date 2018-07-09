@@ -329,6 +329,7 @@ Feature: External Activities can support a REST publishing api
     And the external activity should have a external report at "https://reports.concord.org/act"
     And the portal should create an activity with the following attributes:
       | name            | Cool Activity |
+    And the external activity should not have any description set
     And the portal should create a section with the following attributes:
       | name            | Cool Activity Section 1 |
     And the portal should create a page with the following attributes:
