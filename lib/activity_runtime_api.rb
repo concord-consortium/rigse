@@ -139,8 +139,10 @@ class ActivityRuntimeAPI
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
       investigation = Investigation.create(
-        :name => hash["name"], :description => hash['description'],
-        :abstract => hash['abstract'], :user => user)
+        :name => hash["name"],
+        :abstract => hash['abstract'],
+        :user => user
+      )
       all_student_reports_enabled = true
       hash['activities'].each_with_index do |act, index|
         activity_from_hash(act, investigation, user, index)
@@ -149,7 +151,6 @@ class ActivityRuntimeAPI
       end
       external_activity = ExternalActivity.create(
         :name                   => hash["name"],
-        :description            => hash["description"],
         :abstract               => hash["abstract"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
@@ -189,8 +190,8 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, external_activity].each do |act|
-      ['name','description','abstract', 'thumbnail_url'].each do |attribute|
-        act.update_attribute(attribute,hash[attribute])
+      ['name', 'abstract', 'thumbnail_url'].each do |attribute|
+        act.update_attribute(attribute, hash[attribute])
       end
     end
 
@@ -260,7 +261,7 @@ class ActivityRuntimeAPI
   end
 
   def self.activity_from_hash(hash, investigation, user, position = nil)
-    # NOTE: It seems like we don't copy description or thumbnail url.
+    # NOTE: It seems like we don't copy thumbnail url.
     # is this the right behavior for the report template?
     activity = Activity.create({
       :name => hash["name"],
