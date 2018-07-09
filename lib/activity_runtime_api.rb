@@ -44,7 +44,6 @@ class ActivityRuntimeAPI
       activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
         :name                   => hash["name"],
-        :description            => hash["description"],
         :abstract               => hash["abstract"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
@@ -88,8 +87,8 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, activity, external_activity].each do |act|
-      ['name','description', 'thumbnail_url'].each do |attribute|
-        act.update_attribute(attribute,hash[attribute])
+      ['name', 'thumbnail_url'].each do |attribute|
+        act.update_attribute(attribute, hash[attribute])
       end
     end
 
