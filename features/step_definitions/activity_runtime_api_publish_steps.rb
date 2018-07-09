@@ -141,8 +141,9 @@ Then(/^the (.*) should have a external report at "(.*)"$/) do |ignored_param, re
 end
 
 Then(/^the external activity should not have any description set/) do
-  @external_activity.description.should be_nil
-  @external_activity.abstract.should be_nil
+  @external_activity.short_description.should be_nil
+  @external_activity.long_description.should be_nil
+  @external_activity.long_description_for_teachers.should be_nil
 end
 
 Given(/^an external_report with the URL "(.*?)"$/) do | report_url|
