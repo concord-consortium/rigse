@@ -48,7 +48,6 @@ describe NavigationHelper do
     let(:fake_visitor) { fake_teacher.user }
     subject { JSON.pretty_generate(helper.navigation_service(params).to_hash) }
     it "should inlude teacher links" do
-      puts subject
       fake_clazzes.each do |clazz|
         subject.should match %r{"url": "/portal/classes/#{clazz.id}/materials"}
         subject.should match %r{"url": "/portal/classes/#{clazz.id}/roster"}
