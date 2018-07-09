@@ -44,7 +44,6 @@ class ActivityRuntimeAPI
       activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
         :name                   => hash["name"],
-        :abstract               => hash["abstract"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
         :launch_url             => hash["launch_url"] || hash["create_url"],
@@ -140,7 +139,6 @@ class ActivityRuntimeAPI
     Investigation.transaction do
       investigation = Investigation.create(
         :name => hash["name"],
-        :abstract => hash['abstract'],
         :user => user
       )
       all_student_reports_enabled = true
@@ -151,7 +149,6 @@ class ActivityRuntimeAPI
       end
       external_activity = ExternalActivity.create(
         :name                   => hash["name"],
-        :abstract               => hash["abstract"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
         :launch_url             => hash["launch_url"] || hash["create_url"],
@@ -190,7 +187,7 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, external_activity].each do |act|
-      ['name', 'abstract', 'thumbnail_url'].each do |attribute|
+      ['name', 'thumbnail_url'].each do |attribute|
         act.update_attribute(attribute, hash[attribute])
       end
     end
