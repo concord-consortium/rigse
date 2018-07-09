@@ -145,6 +145,9 @@ en:
     ErrorLoggedInAsStudent: |
       You are logged in as a student in another window.
       Please log out, and register again.
+    ErrorNotAllowed: |
+      You are not allowed to perform this function.
+
   Navigation:
     greeting: Hello,
     help: Help
@@ -160,9 +163,6 @@ en:
     class_setup: Class Setup
     full_status: Full Status
     links: Links
-
-    ErrorNotAllowed: |
-      You are not allowed to perform this function.
 'en-HAS':
   activerecord:
     models:
