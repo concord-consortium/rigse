@@ -140,6 +140,11 @@ Then(/^the (.*) should have a external report at "(.*)"$/) do |ignored_param, re
   @external_activity.external_report.url.should == report_url
 end
 
+Then(/^the external activity should not have any description set/) do
+  @external_activity.description.should be_nil
+  @external_activity.abstract.should be_nil
+end
+
 Given(/^an external_report with the URL "(.*?)"$/) do | report_url|
   ExternalReport.create(url:report_url)
 end

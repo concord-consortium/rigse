@@ -81,8 +81,6 @@ describe ActivityRuntimeAPI do
   end
 
   let(:name)        { "Cool Activity"                  }
-  let(:description) { name                             }
-  let(:abstract)    { "abstract"                       }
   let(:url )        { "http://activity.com/activity/1" }
   let(:page_1_url ) { "http://activity.com/activity/1/pages/5" }
   let(:launch_url)  { "#{url}/1/sessions/"             }
@@ -92,11 +90,10 @@ describe ActivityRuntimeAPI do
   let(:new_hash) do
     {
       "name" => name,
-      "description" => description,
-      "abstract"    => abstract,
       "url" => url,
       "launch_url" => launch_url,
       "student_report_enabled" => student_report_enabled,
+      "description" => 'LARA might still send description, but Portal should ignore it',
       "sections" => [
         {
           "name" => "Cool Activity Section 1",
@@ -174,8 +171,6 @@ describe ActivityRuntimeAPI do
   end
 
   let(:sequence_name)       { "Many fun things" }
-  let(:sequence_desc)       { "Several activities together in a sequence" }
-  let(:sequence_abstract)   { abstract }
   let(:sequence_url)        { "http://activity.com/sequence/1" }
   let(:sequence_author_url) { "#{sequence_url}/edit" }
   let(:sequence_print_url)  { "#{sequence_url}/print" }
@@ -190,8 +185,6 @@ describe ActivityRuntimeAPI do
     {
       "type" => "Sequence",
       "name" => sequence_name,
-      "description" => sequence_desc,
-      "abstract" => sequence_abstract,
       "url" => sequence_url,
       "launch_url" => sequence_url,
       "print_url" => sequence_print_url,
@@ -239,7 +232,6 @@ describe ActivityRuntimeAPI do
   let(:exist_stubs) do
     {
       :name        => name,
-      :description => description,
       :url         => existing_url,
       :template    => template
     }
@@ -250,7 +242,6 @@ describe ActivityRuntimeAPI do
   let(:existing_sequence_stubs) do
     {
       :name => sequence_name,
-      :description => sequence_desc,
       :url => sequence_url,
       :template => sequence_template
     }
@@ -289,6 +280,8 @@ describe ActivityRuntimeAPI do
         result.should have_image_question_like "now explain"
         result.should have_iframe_like "http://test.interactive.com"
         result.should have_page_like "Cool Activity Page 1", page_1_url
+        # Portal should ignore description
+        result.description.should be_nil
         result.student_report_enabled.should be_true
       end
 
@@ -332,6 +325,16 @@ describe ActivityRuntimeAPI do
           result = ActivityRuntimeAPI.update_activity(new_hash)
           result.should_not be_nil
           result.student_report_enabled.should be_false
+        end
+
+        it "should ignore description value" do
+          existing
+          portal_description = "description set in Portal"
+          existing.description = portal_description
+          existing.save!
+          result = ActivityRuntimeAPI.update_activity(new_hash)
+          result.should_not be_nil
+          result.description.should == portal_description
         end
       end
 
@@ -506,15 +509,11 @@ describe ActivityRuntimeAPI do
         result.url.should == sequence_url
         result.activities.length.should > 0
         result.name.should == sequence_name
-        result.description.should == sequence_desc
-        result.abstract.should == sequence_abstract
         result.student_report_enabled.should be_true
       end
       it 'should create a new investigation' do
         result.template.should be_a_kind_of(Investigation)
         result.template.is_template.should be_true
-        result.template.description.should == sequence_desc
-        result.template.abstract.should == sequence_abstract
         result.activities.length.should > 0
       end
 
@@ -542,14 +541,14 @@ describe ActivityRuntimeAPI do
     end
 
     context 'when updating an existing sequence' do
-      let(:sequence_abstract) { "this is something new"}
+      let(:sequence_name) { "this is something new"}
 
       it 'should update the existing investigation details' do
         existing_sequence
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
         result.id.should == existing_sequence.id
-        result.abstract.should match /something new/
-        result.template.abstract.should match /something new/
+        result.name.should match /something new/
+        result.template.name.should match /something new/
         result.author_url.should == sequence_author_url
         result.print_url.should == sequence_print_url
         result.student_report_enabled.should be_true
