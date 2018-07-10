@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180702132836) do
+ActiveRecord::Schema.define(:version => 20180703161820) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -446,6 +446,8 @@ ActiveRecord::Schema.define(:version => 20180702132836) do
     t.boolean  "is_required",                                          :default => false, :null => false
     t.boolean  "show_in_featured_question_report",                     :default => true
   end
+
+  add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
 
   create_table "embeddable_multiple_choice_choices", :force => true do |t|
     t.text     "choice",             :limit => 16777215
@@ -2485,6 +2487,7 @@ ActiveRecord::Schema.define(:version => 20180702132836) do
     t.datetime "confirmation_sent_at"
     t.boolean  "require_portal_user_type",                :default => false
     t.string   "sign_up_path"
+    t.boolean  "email_subscribed",                        :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

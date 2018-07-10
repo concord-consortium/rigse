@@ -33,13 +33,6 @@ class ExternalActivity < ActiveRecord::Base
     boolean :is_template do
       false
     end
-    # TODO: Support probes via tags
-    integer :probe_type_ids, :multiple => true do
-      nil
-    end
-    boolean :no_probes do
-      true
-    end
 
     boolean :teacher_only do
       # Useful in Activity and Investigation; stubbed here

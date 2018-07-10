@@ -19,6 +19,10 @@ class SearchInteractives < Search
         super(opts)
     end
 
+    def fetch_available_filter_options
+      # none of the standard Search options are needed for interactives so bypass this
+    end
+
     #
     # Set available search params for Interactives
     #

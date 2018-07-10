@@ -94,6 +94,13 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       authorize @user
       respond_to do |format|
+        # remove email subscription value from params after retrieving value
+        @mc_status = 'unsubscribed'
+        if params[:user][:enews_subscription] == '1'
+          @mc_status = 'subscribed'
+        end
+        params[:user].delete :enews_subscription
+
         if @user.update_attributes(params[:user])
 
           # This update method is shared with admins using users/edit and users using users/preferences.
@@ -209,6 +216,7 @@ class UsersController < ApplicationController
     if user.state != "active"
       user.confirm!
       user.make_user_a_member
+
       # assume this type of user just activated someone from somewhere else in the app
       flash[:notice] = "Activation of #{user.name_and_login} complete."
       redirect_to(session[:return_to] || root_path)

@@ -49,12 +49,18 @@ services:
       #
       # Google analytics property ID
       #
-      GOOGLE_ANALYTICS_ACCOUNT: 
+      GOOGLE_ANALYTICS_ACCOUNT:
 
       #
       # Google Optimizer property ID
       #
       GOOGLE_OPTIMIZER_ACCOUNT:
+
+      #
+      # MailChimp API information
+      ENEWS_API_KEY:
+      ENEWS_API_URI:
+      ENEWS_API_LISTID:
 
       #
       # OG tag default values
@@ -106,6 +112,8 @@ services:
           - portal
       # app service needs to be on default network too so it can connect to mysql and solr
       default:
+    depends_on:
+      - mysql
   solr:
     image: concordconsortium/docker-solr-portal
     # no ports are published, see below for details

@@ -102,7 +102,7 @@ describe API::V1::ReportsController do
 
   describe "GET show" do
     describe "For the offering's teacher" do
-      it 'it should render the report json' do
+      it 'should render the report json' do
         show
         response.status.should eql(200)
         json_path("report_version").should eql "1.1.0"
@@ -114,6 +114,13 @@ describe API::V1::ReportsController do
         question.should include({"show_in_featured_question_report" => true})
         question.should include({"is_required" => true})
         answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}"})
+      end
+    end
+    describe "For an anonymous user" do
+      it "should return 403" do
+        logout_user
+        show
+        response.status.should eql(403)
       end
     end
   end

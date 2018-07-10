@@ -134,7 +134,7 @@ class API::V1::ClassesController < API::APIController
           :last_name => student.user.last_name
         }
       },
-      :offerings => clazz.offerings.map { |offering|
+      :offerings => clazz.teacher_visible_offerings.map { |offering|
         {
           :id => offering.id,
           :name => offering.name,
