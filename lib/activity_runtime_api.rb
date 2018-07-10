@@ -338,12 +338,21 @@ class ActivityRuntimeAPI
     end
   end
 
+  # Use default val provided by DB when given attribute is not provided (nil)
+  def self.optional_attrs (data, *attr_list)
+    attrs = {}
+    attr_list.each do |attr|
+      attrs[attr] = data[attr] unless data[attr].nil?
+    end
+    attrs
+  end
+
   def self.update_open_response(or_data, existant)
     attrs = {
       prompt: or_data["prompt"]
-    }
-    # Use default val provided by DB when nil
-    attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    }.merge(
+      optional_attrs(or_data, "is_required", "show_in_featured_question_report")
+    )
     existant.update_attributes(attrs)
     return existant
   end
@@ -353,9 +362,9 @@ class ActivityRuntimeAPI
       prompt: or_data["prompt"],
       external_id: or_data["id"],
       user: user
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    }.merge(
+      optional_attrs(or_data, "is_required", "show_in_featured_question_report")
+    )
     Embeddable::OpenResponse.create(attrs)
   end
 
@@ -363,9 +372,9 @@ class ActivityRuntimeAPI
     attrs = {
       prompt: iq_data["prompt"],
       drawing_prompt: iq_data["drawing_prompt"]
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    }.merge(
+      optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
+    )
     existant.update_attributes(attrs)
     return existant
   end
@@ -376,9 +385,9 @@ class ActivityRuntimeAPI
       :drawing_prompt => iq_data["drawing_prompt"],
       :external_id => iq_data["id"],
       :user => user
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    }.merge(
+      optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
+    )
     Embeddable::ImageQuestion.create(attrs)
   end
 
@@ -386,9 +395,9 @@ class ActivityRuntimeAPI
     attrs = {
       prompt: mc_data["prompt"],
       allow_multiple_selection: mc_data["allow_multiple_selection"]
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    }.merge(
+      optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
+    )
     existant.update_attributes(attrs)
     self.add_choices(existant, mc_data)
     return existant
@@ -400,9 +409,9 @@ class ActivityRuntimeAPI
       external_id: mc_data["id"],
       allow_multiple_selection: mc_data["allow_multiple_selection"],
       user: user
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    }.merge(
+      optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
+    )
     mc = Embeddable::MultipleChoice.create(attrs)
     self.add_choices(mc, mc_data)
     return mc
@@ -435,10 +444,11 @@ class ActivityRuntimeAPI
     attrs = {
       name: if_data["name"],
       url: if_data["url"],
-      display_in_iframe: if_data["display_in_iframe"],
       width: if_data["native_width"],
       height: if_data["native_height"]
-    }
+    }.merge(
+      optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
+    )
     existant.update_attributes(attrs)
     return existant
   end
@@ -447,12 +457,13 @@ class ActivityRuntimeAPI
     attrs = {
       name: if_data["name"],
       url: if_data["url"],
-      display_in_iframe: if_data["display_in_iframe"],
       width: if_data["native_width"],
       height: if_data["native_height"],
       external_id: if_data["id"].to_s,
       user: user
-    }
+    }.merge(
+      optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
+    )
     Embeddable::Iframe.create(attrs)
   end
 

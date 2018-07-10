@@ -420,28 +420,31 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
 
   create_table "embeddable_iframes", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
     t.string   "description"
     t.integer  "width"
     t.integer  "height"
     t.string   "url"
     t.string   "external_id"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
-    t.boolean  "display_in_iframe",               :default => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.boolean  "display_in_iframe",                              :default => false
+    t.boolean  "is_required",                                    :default => false
+    t.boolean  "show_in_featured_question_report",               :default => true
   end
 
   create_table "embeddable_image_questions", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",           :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
-    t.text     "prompt",         :limit => 16777215
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
+    t.text     "prompt",                           :limit => 16777215
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
     t.string   "external_id"
-    t.text     "drawing_prompt", :limit => 16777215
-    t.boolean  "is_required",                        :default => false, :null => false
+    t.text     "drawing_prompt",                   :limit => 16777215
+    t.boolean  "is_required",                                          :default => false, :null => false
+    t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
   add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
@@ -459,33 +462,35 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
 
   create_table "embeddable_multiple_choices", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",                     :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
-    t.text     "description",              :limit => 16777215
-    t.text     "prompt",                   :limit => 16777215
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
-    t.boolean  "enable_rationale",                             :default => false
-    t.text     "rationale_prompt",         :limit => 16777215
-    t.boolean  "allow_multiple_selection",                     :default => false
+    t.text     "description",                      :limit => 16777215
+    t.text     "prompt",                           :limit => 16777215
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
+    t.boolean  "enable_rationale",                                     :default => false
+    t.text     "rationale_prompt",                 :limit => 16777215
+    t.boolean  "allow_multiple_selection",                             :default => false
     t.string   "external_id"
-    t.boolean  "is_required",                                  :default => false, :null => false
+    t.boolean  "is_required",                                          :default => false, :null => false
+    t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
-    t.text     "description",      :limit => 16777215
-    t.text     "prompt",           :limit => 16777215
+    t.text     "description",                      :limit => 16777215
+    t.text     "prompt",                           :limit => 16777215
     t.string   "default_response"
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
-    t.integer  "rows",                                 :default => 5
-    t.integer  "columns",                              :default => 32
-    t.integer  "font_size",                            :default => 12
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
+    t.integer  "rows",                                                 :default => 5
+    t.integer  "columns",                                              :default => 32
+    t.integer  "font_size",                                            :default => 12
     t.string   "external_id"
-    t.boolean  "is_required",                          :default => false, :null => false
+    t.boolean  "is_required",                                          :default => false, :null => false
+    t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
   create_table "external_activities", :force => true do |t|
