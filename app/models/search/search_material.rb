@@ -9,8 +9,7 @@ class Search::SearchMaterial
   attr_accessor :id
   attr_accessor :model_name
   attr_accessor :title
-  attr_accessor :description
-  attr_accessor :description_for_teacher
+  attr_accessor :long_description_for_current_user
   attr_accessor :assign_btn_text
   attr_accessor :icon_image_url
   attr_accessor :activities
@@ -45,8 +44,7 @@ class Search::SearchMaterial
     self.id = material.id
     self.model_name = material.class.name
     self.title = material.full_title
-    self.description = material.description
-    self.description_for_teacher = material.description_for_teacher
+    self.long_description_for_current_user = material.long_description_for_user(user)
     self.assign_btn_text = (material.is_a? ::ExternalActivity) ? "Assign" : "Assign #{material.display_name}"
     self.icon_image_url = material.icon_image || "search/#{self.model_name.downcase}.gif"
     self.activities = (material.respond_to?(:activities)) ? material.activities : nil
@@ -108,7 +106,7 @@ class Search::SearchMaterial
     meta_tags = page_meta[:meta_tags]
 
     meta_tags[:title] = page_meta[:title]
-    meta_tags[:description] = self.description
+    meta_tags[:description] = self.long_description_for_current_user
     if meta_tags[:description].blank?
       meta_tags[:description] = "Check out this great #{self.model_name.downcase} from the Concord Consortium."
     end

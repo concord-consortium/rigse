@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180703161820) do
+ActiveRecord::Schema.define(:version => 20180711125716) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -449,8 +449,6 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
     t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
-  add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
-
   create_table "embeddable_multiple_choice_choices", :force => true do |t|
     t.text     "choice",             :limit => 16777215
     t.integer  "multiple_choice_id"
@@ -499,44 +497,45 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
     t.integer  "user_id"
     t.string   "uuid"
     t.string   "name"
-    t.text     "description",              :limit => 16777215
-    t.text     "url",                      :limit => 16777215
+    t.text     "archived_description",         :limit => 16777215
+    t.text     "url",                          :limit => 16777215
     t.string   "publication_status"
-    t.datetime "created_at",                                                           :null => false
-    t.datetime "updated_at",                                                           :null => false
-    t.integer  "offerings_count",                              :default => 0
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
+    t.integer  "offerings_count",                                  :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
-    t.boolean  "popup",                                        :default => true
+    t.boolean  "popup",                                            :default => true
     t.boolean  "append_survey_monkey_uid"
     t.integer  "template_id"
     t.string   "template_type"
     t.string   "launch_url"
-    t.boolean  "is_official",                                  :default => false
-    t.boolean  "student_report_enabled",                       :default => true
-    t.text     "description_for_teacher",  :limit => 16777215
+    t.boolean  "is_official",                                      :default => false
+    t.boolean  "student_report_enabled",                           :default => true
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
-    t.boolean  "is_featured",                                  :default => false
-    t.boolean  "has_pretest",                                  :default => false
-    t.text     "abstract",                 :limit => 16777215
-    t.boolean  "allow_collaboration",                          :default => false
+    t.boolean  "is_featured",                                      :default => false
+    t.boolean  "has_pretest",                                      :default => false
+    t.text     "short_description",            :limit => 16777215
+    t.boolean  "allow_collaboration",                              :default => false
     t.string   "author_email"
     t.boolean  "is_locked"
-    t.boolean  "logging",                                      :default => false
-    t.boolean  "is_assessment_item",                           :default => false
+    t.boolean  "logging",                                          :default => false
+    t.boolean  "is_assessment_item",                               :default => false
     t.integer  "external_report_id"
     t.text     "author_url"
     t.text     "print_url"
-    t.boolean  "is_archived",                                  :default => false
+    t.boolean  "is_archived",                                      :default => false
     t.datetime "archive_date"
     t.string   "credits"
     t.string   "license_code"
     t.boolean  "append_auth_token"
-    t.boolean  "enable_sharing",                               :default => true
-    t.string   "material_type",                                :default => "Activity"
+    t.boolean  "enable_sharing",                                   :default => true
+    t.string   "material_type",                                    :default => "Activity"
     t.string   "rubric_url"
-    t.boolean  "saves_student_data",                           :default => true
+    t.boolean  "saves_student_data",                               :default => true
+    t.text     "long_description_for_teacher"
+    t.text     "long_description"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
