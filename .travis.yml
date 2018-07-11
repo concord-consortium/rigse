@@ -16,7 +16,6 @@ env:
   - secure: fBn66dqLiQa0W1eDAV/ZZKgA4K3OogG9WG/9lyd81csj9YGtHnE91YlzHLH25oyMWg53nGYEcUlLnPYFw7mqdFJ48AJ5sMaplIqmBMmb9OnpUpYc1sds3wvi81TmTAT0ColdBtgdSBCjIPTr2AuieBJgR8dqPpT/uXg30meZg/g=
   - secure: ebGYa+ExFODy1+aVIrppCkyuO/z4RLBHQ8oGE7+h4a3Hdzxx4kSvfRt3nIeklMpTBt0M55hpY/MnZxHt1N0fhSkqfjeJrsYaagatBXezPiW34ZZCbS2E/pJ3pYiL2zzZS3hER30oGGNthYXuU3LI8gjLL8NHXvg5dxrHVaQeD1M=
   - ARTIFACTS_BUCKET=cc-travis-artifacts
-
 before_install:
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"

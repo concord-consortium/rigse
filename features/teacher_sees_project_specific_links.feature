@@ -10,6 +10,7 @@ Feature: Teacher can see project specific links
     And the default project links exist using factories
     And I am logged in with the username teacher
 
+  @javascript
   Scenario: Teacher not in project visits homepage
     When I am on getting started page
     Then I should not see a project link labeled "Foo Project Link"

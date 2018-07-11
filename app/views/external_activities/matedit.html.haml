@@ -1,11 +1,10 @@
+-# TODO: We could put this whole thing in a Portal Pages %component
 - @wide_content_layout = true
 #Activity_edit_container
-  .action_menu
-    .action_menu_header_left
-      %h3.menu
-        %span.component_title
-        #{@external_activity.name} Editing
-    .action_menu_header_right
+  .top-menu
+    .left
+      #navigation
+    .right
       = link_to t("matedit.archive"),
         archive_external_activity_path(@external_activity),
         class: "button",
@@ -19,6 +18,9 @@
         :onclick=>"get_edit_resource_popup(#{@external_activity.id}, {use_short_form: true, content_height: 400})",
         :class=>"button"
   -#messgeedit This is edit lara activity page
+  %h3.menu
+    %span.component_title
+    Edit #{@external_activity.name}
   #iframe_container.matedit
     %iframe{:id => "Edit_in_Lara",:src =>"#{@uri}",:width => "1000",:height => "100%"}
 
@@ -58,6 +60,11 @@
         $("#wrapper").css("min-height", null);
         resizeIframe();
         registerListeners();
+
       });
 
     })();
+:javascript
+  var navProps=Portal.API_V1.getNavigation();
+  navProps.overlay=true;
+  PortalPages.renderNavigation(navProps, 'navigation');

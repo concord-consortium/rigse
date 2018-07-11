@@ -1,0 +1,40 @@
+{
+  "definitions": {
+    "item": {
+      "type": "object",
+      "properties": {
+        "id":       { "type": "string"  },
+        "label":    { "type": "string"  },
+        "url":      { "type": "string"  },
+        "type":     { "type": "string"  },
+        "onClick":  { "type": "string"  },
+        "popOut":   { "type": "boolean" },
+        "sort":     { "type": "number"  },
+        "selected": { "type": "boolean" },
+        "iconName": { "type": "string"  },
+        "small":    { "type": "boolean" },
+        "divider":  { "type": "boolean" },
+        "children": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/item"}
+        }
+      },
+      "required": [ "id", "label", "type"]
+    }
+  },
+  "type": "object",
+  "required": [
+    "name",
+    "greeting",
+    "help"
+  ],
+  "properties": {
+    "greeting": {"type": "string"},
+    "name" : { "type" : "string" },
+    "help" : { "$ref": "#/definitions/item" },
+    "links": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/item"}
+    }
+  }
+}

@@ -6,7 +6,8 @@ Feature: External Activities can be run as offerings
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    
+
+  @javascript
   Scenario: External Activity offerings are runnable
     When the external activity "My Activity" is assigned to the class "Class_with_no_assignment"
     And I am logged in with the username student

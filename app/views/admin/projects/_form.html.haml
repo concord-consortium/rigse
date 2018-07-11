@@ -41,6 +41,14 @@
                   %td URL:
                   %td
                     = link_form.text_field :href
+                %tr
+                  %td ID: (eg: '/resources/help'):
+                  %td
+                    = link_form.text_field :link_id
+                %tr
+                  %td Open link in new window:
+                  %td
+                    = link_form.check_box :pop_out
               = link_form.link_to_remove "Remove this link"
           %li
             = f.link_to_add "Add a link", :links
