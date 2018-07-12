@@ -253,7 +253,7 @@ class ExternalActivity < ActiveRecord::Base
   # Otherwise it returns long_description if it is available.
   # The last fallback is an short description.
   def long_description_for_user(user)
-    return long_description_for_teacher if user.portal_teacher && long_description_for_teacher.present?
+    return long_description_for_teacher if user && user.portal_teacher && long_description_for_teacher.present?
     return long_description if long_description.present?
     short_description
   end

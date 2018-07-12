@@ -82,7 +82,7 @@ describe ExternalActivitiesController do
 
   let (:existing) { Factory.create(:external_activity, {
       :name        => name,
-      :description => description,
+      :long_description => description,
       :url         => url,
       :publication_status => 'published',
       :template    => Factory.create(:activity, {
@@ -92,7 +92,7 @@ describe ExternalActivitiesController do
 
   let (:another) { Factory.create(:external_activity, {
       :name        => "#{name} again",
-      :description => "#{description} again",
+      :long_description => "#{description} again",
       :url         => url,
       :publication_status => 'published',
       :is_official => false
@@ -175,7 +175,7 @@ describe ExternalActivitiesController do
 
       let (:existing_sequence) { Factory.create(:external_activity, {
           :name => sequence_name,
-          :description => sequence_desc,
+          :long_description => sequence_desc,
           :url => sequence_url,
           :template => Factory.create(:investigation)
         }) }
