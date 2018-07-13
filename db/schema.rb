@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180703161820) do
+ActiveRecord::Schema.define(:version => 20180713201738) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -158,17 +158,6 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
     t.string   "custom_search_path",                                 :default => "/search"
     t.string   "teacher_home_path",                                  :default => "/getting_started"
   end
-
-  create_table "admin_settings_vendor_interfaces", :force => true do |t|
-    t.integer  "admin_settings_id"
-    t.integer  "probe_vendor_interface_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-  end
-
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
-  add_index "admin_settings_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
 
   create_table "admin_site_notice_roles", :force => true do |t|
     t.integer  "notice_id"
