@@ -10,7 +10,7 @@ Feature: External Activities can support a REST publishing api
         "author_url": "http://activity.com/activity/1/edit",
         "print_url": "http://activity.com/activity/1/print_blank",
         "external_report_url": "https://reports.concord.org/act",
-        "description": "This activity does fun stuff.",
+        "description": "LARA description which should be ignored by Portal",
         "sections": [
           {
             "name": "Cool Activity Section 1",
@@ -106,13 +106,11 @@ Feature: External Activities can support a REST publishing api
       {
         "type": "Sequence",
         "name": "Many fun things",
-        "description": "Several activities together in a sequence",
         "url": "http://activity.com/sequence/1",
         "launch_url": "http://activity.com/sequence/1",
         "author_url": "http://activity.com/sequence/1/edit",
         "print_url": "http://activity.com/sequence/1/print_blank",
         "external_report_url": "https://reports.concord.org/seq",
-        "abstract": "This is the abstract",
         "activities": [
           {
             "type": "Activity",
@@ -121,8 +119,6 @@ Feature: External Activities can support a REST publishing api
             "launch_url": "http://activity.com/activity/1/sessions/",
             "author_url": "http://activity.com/activity/1/edit",
             "print_url": "http://activity.com/activity/1/print_blank",
-            "description": "This activity does fun stuff.",
-            "abstract": "This is the abstract.",
             "sections": [
               {
                 "name": "Cool Activity Section 1",
@@ -167,7 +163,6 @@ Feature: External Activities can support a REST publishing api
             "name": "Cooler Activity",
             "url": "http://activity.com/activity/2",
             "launch_url": "http://activity.com/activity/2/sessions/",
-            "description": "This activity does even more fun stuff.",
             "sections": [
               {
                 "name": "Cooler Activity Section 1",
@@ -215,8 +210,6 @@ Feature: External Activities can support a REST publishing api
       {
         "type": "Sequence",
         "name": "This has a different name",
-        "description": "All we did was change the name. And the description.",
-        "abstract": "The abstract was also changed",
         "url": "http://activity.com/sequence/1",
         "launch_url": "http://activity.com/sequence/1",
         "author_url": "http://activity.com/sequence/1/edit_new",
@@ -230,7 +223,6 @@ Feature: External Activities can support a REST publishing api
             "launch_url": "http://activity.com/activity/1/sessions/",
             "author_url": "http://activity.com/activity/1/edit_new",
             "print_url": "http://activity.com/activity/1/print_blank_new",
-            "description": "This activity does fun stuff.",
             "sections": [
               {
                 "name": "Cool Activity Section 1",
@@ -275,7 +267,6 @@ Feature: External Activities can support a REST publishing api
             "name": "Cooler Activity",
             "url": "http://activity.com/activity/2",
             "launch_url": "http://activity.com/activity/2/sessions/",
-            "description": "This activity does even more fun stuff.",
             "sections": [
               {
                 "name": "Cooler Activity Section 1",
@@ -333,7 +324,7 @@ Feature: External Activities can support a REST publishing api
       | launch_url      | http://activity.com/activity/1/sessions/ |
       | author_url      | http://activity.com/activity/1/edit |
       | print_url       | http://activity.com/activity/1/print_blank |
-      | description     | This activity does fun stuff. |
+    And the external activity should not have any description set
     And the external activity should have a template
     And the external activity should have a external report at "https://reports.concord.org/act"
     And the portal should create an activity with the following attributes:
@@ -363,8 +354,9 @@ Feature: External Activities can support a REST publishing api
       | launch_url      | http://activity.com/activity/1/sessions/ |
       | author_url      | http://activity.com/activity/1/edit_new |
       | print_url       | http://activity.com/activity/1/print_blank_new |
-      | description     | This activity does fun stuff. |
+      | description     | This description is still provided by LARA but it should be ignored! |
     And the external activity should have a external report at "https://reports.concord.org/act/changed"
+    And the external activity should not have any description set
 
   @mechanize
   Scenario: External REST sequence is published the first time
@@ -376,8 +368,6 @@ Feature: External Activities can support a REST publishing api
       | launch_url      | http://activity.com/sequence/1 |
       | author_url      | http://activity.com/sequence/1/edit |
       | print_url       | http://activity.com/sequence/1/print_blank |
-      | description     | Several activities together in a sequence |
-      | abstract        | This is the abstract |
     And the external activity should have a template
     And the external activity should have a external report at "https://reports.concord.org/seq"
     And the portal should create an investigation with the following attributes:

@@ -1,11 +1,16 @@
 require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelper
 
+def filter (collection, options = {})
+  collection = collection.select { |o| o.is_required } if options[:required]
+  collection = collection.select { |o| o.show_in_featured_question_report } if options[:featured]
+  collection
+end
 
 RSpec::Matchers.define :have_multiple_choice_like do |prompt, options = {}|
   match do |thing|
     activity = thing.respond_to?(:template) ? thing.template : thing
     multiple_choices = activity.multiple_choices
-    multiple_choices = multiple_choices.select { |m| m.is_required } if options[:required]
+    multiple_choices = filter multiple_choices, options
     multiple_choices.map { |m| m.prompt }.detect { |p| p =~ /#{prompt}/i }
   end
 end
@@ -14,7 +19,7 @@ RSpec::Matchers.define :have_open_response_like do |prompt, options = {}|
   match do |thing|
     activity = thing.respond_to?(:template) ? thing.template : thing
     open_responses = activity.open_responses
-    open_responses = open_responses.select { |m| m.is_required } if options[:required]
+    open_responses = filter open_responses, options
     open_responses.map { |m| m.prompt }.detect{ |p| p =~ /#{prompt}/i }
   end
 end
@@ -23,10 +28,21 @@ RSpec::Matchers.define :have_image_question_like do |prompt, options = {}|
   match do |thing|
     activity = thing.respond_to?(:template) ? thing.template : thing
     image_questions = activity.image_questions
-    image_questions = image_questions.select { |m| m.is_required } if options[:required]
+    image_questions = filter image_questions, options
     image_questions.map{ |m| m.prompt}.detect{|p| p =~ /#{prompt}/i }
   end
 end
+
+RSpec::Matchers.define :have_iframe_like do |url, options = {}|
+  match do |thing|
+    activity = thing.respond_to?(:template) ? thing.template : thing
+    iframes = activity.iframes
+    iframes = filter iframes, options
+    iframes = iframes.map{ |m| m.url }.detect{ |u| u =~ /#{url}/i }
+    iframes
+  end
+end
+
 
 RSpec::Matchers.define :have_choice_like do |choice|
   match do |thing|
@@ -52,8 +68,6 @@ RSpec::Matchers.define :have_page_like do |name,url|
   end
 end
 
-
-
 describe ActivityRuntimeAPI do
   include SolrSpecHelper
 
@@ -67,8 +81,6 @@ describe ActivityRuntimeAPI do
   end
 
   let(:name)        { "Cool Activity"                  }
-  let(:description) { name                             }
-  let(:abstract)    { "abstract"                       }
   let(:url )        { "http://activity.com/activity/1" }
   let(:page_1_url ) { "http://activity.com/activity/1/pages/5" }
   let(:launch_url)  { "#{url}/1/sessions/"             }
@@ -78,11 +90,10 @@ describe ActivityRuntimeAPI do
   let(:new_hash) do
     {
       "name" => name,
-      "description" => description,
-      "abstract"    => abstract,
       "url" => url,
       "launch_url" => launch_url,
       "student_report_enabled" => student_report_enabled,
+      "description" => 'LARA might still send description, but Portal should ignore it',
       "sections" => [
         {
           "name" => "Cool Activity Section 1",
@@ -95,21 +106,24 @@ describe ActivityRuntimeAPI do
                   "type" => "open_response",
                   "id" => "1234568",
                   "prompt" => "Why do you like/dislike this activity?",
-                  "is_required" => true
+                  "is_required" => true,
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "image_question",
                   "id" => "987654321",
                   "drawing_prompt" => '',
                   "prompt" => "draw a picture of why you love this activity.",
-                  "is_required" => true
+                  "is_required" => true,
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "image_question",
                   "id" => '5589',
                   "drawing_prompt" => "Really draw a picture",
                   "prompt" => "Now explain the picture you drew",
-                  "is_required" => true
+                  "is_required" => true,
+                  "show_in_featured_question_report" => true
                 },
                 {
                   "type" => "multiple_choice",
@@ -117,7 +131,19 @@ describe ActivityRuntimeAPI do
                   "prompt" => "What color is the sky?",
                   "allow_multiple_selection" => false,
                   "choices" => choice_hash_array,
-                  "is_required" => true
+                  "is_required" => true,
+                  "show_in_featured_question_report" => true
+                },
+                {
+                  "type" => "iframe_interactive",
+                  "id" => "if_123",
+                  "name" => "Test interactive",
+                  "url" => "http://test.interactive.com",
+                  "display_in_iframe" => true,
+                  "native_width" => 400,
+                  "native_height" => 500,
+                  "is_required" => true,
+                  "show_in_featured_question_report" => true
                 }
               ]
             }
@@ -145,8 +171,6 @@ describe ActivityRuntimeAPI do
   end
 
   let(:sequence_name)       { "Many fun things" }
-  let(:sequence_desc)       { "Several activities together in a sequence" }
-  let(:sequence_abstract)   { abstract }
   let(:sequence_url)        { "http://activity.com/sequence/1" }
   let(:sequence_author_url) { "#{sequence_url}/edit" }
   let(:sequence_print_url)  { "#{sequence_url}/print" }
@@ -161,8 +185,6 @@ describe ActivityRuntimeAPI do
     {
       "type" => "Sequence",
       "name" => sequence_name,
-      "description" => sequence_desc,
-      "abstract" => sequence_abstract,
       "url" => sequence_url,
       "launch_url" => sequence_url,
       "print_url" => sequence_print_url,
@@ -174,20 +196,22 @@ describe ActivityRuntimeAPI do
 
   let(:investigation) do
     Factory.create(:investigation,
-      :user => user
+                   :user => user
     )
   end
 
   let(:multiple_choice) { Factory.create(:multiple_choice) }
   let(:open_response)   { Factory.create(:open_response)   }
   let(:image_question)  { Factory.create(:image_question)  }
+  let(:iframe)          { Factory.create(:embeddable_iframe)  }
 
   let(:page) do
     Factory.create(:page,
       :page_elements => [
         Factory.create(:page_element, :embeddable => multiple_choice),
         Factory.create(:page_element, :embeddable => open_response),
-        Factory.create(:page_element, :embeddable => image_question)
+        Factory.create(:page_element, :embeddable => image_question),
+        Factory.create(:page_element, :embeddable => iframe)
       ]
     )
   end
@@ -208,7 +232,6 @@ describe ActivityRuntimeAPI do
   let(:exist_stubs) do
     {
       :name        => name,
-      :description => description,
       :url         => existing_url,
       :template    => template
     }
@@ -219,7 +242,6 @@ describe ActivityRuntimeAPI do
   let(:existing_sequence_stubs) do
     {
       :name => sequence_name,
-      :description => sequence_desc,
       :url => sequence_url,
       :template => sequence_template
     }
@@ -256,7 +278,10 @@ describe ActivityRuntimeAPI do
         result.should_not have_choice_like "brown"
         result.should have_image_question_like "draw a picture"
         result.should have_image_question_like "now explain"
+        result.should have_iframe_like "http://test.interactive.com"
         result.should have_page_like "Cool Activity Page 1", page_1_url
+        # Portal should ignore description
+        result.description.should be_nil
         result.student_report_enabled.should be_true
       end
 
@@ -301,13 +326,24 @@ describe ActivityRuntimeAPI do
           result.should_not be_nil
           result.student_report_enabled.should be_false
         end
+
+        it "should ignore description value" do
+          existing
+          portal_description = "description set in Portal"
+          existing.description = portal_description
+          existing.save!
+          result = ActivityRuntimeAPI.update_activity(new_hash)
+          result.should_not be_nil
+          result.description.should == portal_description
+        end
       end
 
       describe "updating an existing open response" do
         let(:open_response) do
           Factory.create(:open_response,
-            :prompt => "the original prompt",  # this will be replaced.
-            :is_required => false,             # this will be replaced.
+            :prompt => "the original prompt",  # this will be replaced as the test runs.
+            :is_required => false,             # this will be replaced as the test runs.
+            :show_in_featured_question_report => false, # this will be replaced as the test runs.
             :external_id => "1234568")
         end
 
@@ -316,18 +352,18 @@ describe ActivityRuntimeAPI do
           existing
           result = ActivityRuntimeAPI.update_activity(new_hash)
           result.template.open_responses.first.id.should == original_id
-          result.should have_open_response_like("dislike this activity", required: true)
+          result.should have_open_response_like("dislike this activity", required: true, featured: true)
           result.should_not have_open_response_like("original prompt")
         end
       end
-
 
       describe "updating an existing image question" do
         let(:image_question) do
           Factory.create(:image_question,
             :drawing_prompt => '',
-            :prompt => "the original prompt",  # this will be replaced.
-            :is_required => false,             # this will be replaced.
+            :prompt => "the original prompt",  # this will be replaced as the test runs.
+            :is_required => false,             # this will be replaced as the test runs.
+            :show_in_featured_question_report => false, # this will be replaced as the test runs.
             :external_id => "987654321")
         end
         it "should update the image_question" do
@@ -336,8 +372,28 @@ describe ActivityRuntimeAPI do
           existing
           result = ActivityRuntimeAPI.publish(new_hash, user)
           result.template.image_questions.first.id.should == original_id
-          result.should have_image_question_like("draw a picture", required: true)
+          result.should have_image_question_like("draw a picture", required: true, featured: true)
           result.should_not have_image_question_like("original prompt")
+        end
+      end
+
+      describe "updating an existing embeddable iframe" do
+        let(:iframe) do
+          Factory.create(:embeddable_iframe,
+            :url => "http://original.url",  # this will be replaced as the test runs.
+            :is_required => false,          # this will be replaced as the test runs.
+            :show_in_featured_question_report => false, # this will be replaced as the test runs.
+            :external_id => "if_123"
+          )
+        end
+        it "should update the iframe" do
+          original_id = iframe.id
+          iframe.external_id.should == "if_123"
+          existing
+          result = ActivityRuntimeAPI.publish(new_hash, user)
+          result.template.iframes.first.id.should == original_id
+          result.should have_iframe_like("http://test.interactive.com", featured: true, required: true)
+          result.should_not have_iframe_like("http://original.url")
         end
       end
 
@@ -363,6 +419,7 @@ describe ActivityRuntimeAPI do
             :prompt => "the original prompt",
             :external_id => "456789",
             :is_required => false,
+            :show_in_featured_question_report => false,
             :choices => choices
           )
         end
@@ -378,8 +435,8 @@ describe ActivityRuntimeAPI do
           @result.template.multiple_choices.first.id.should == @original_id
         end
 
-        it "should have the new prompt and be required" do
-          @result.should have_multiple_choice_like("What color is the sky?", required: true)
+        it "should have the new prompt, be required and featured" do
+          @result.should have_multiple_choice_like("What color is the sky?", required: true, featured: true)
         end
 
         it "should not have the original choices" do
@@ -452,15 +509,11 @@ describe ActivityRuntimeAPI do
         result.url.should == sequence_url
         result.activities.length.should > 0
         result.name.should == sequence_name
-        result.description.should == sequence_desc
-        result.abstract.should == sequence_abstract
         result.student_report_enabled.should be_true
       end
       it 'should create a new investigation' do
         result.template.should be_a_kind_of(Investigation)
         result.template.is_template.should be_true
-        result.template.description.should == sequence_desc
-        result.template.abstract.should == sequence_abstract
         result.activities.length.should > 0
       end
 
@@ -488,14 +541,14 @@ describe ActivityRuntimeAPI do
     end
 
     context 'when updating an existing sequence' do
-      let(:sequence_abstract) { "this is something new"}
+      let(:sequence_name) { "this is something new"}
 
       it 'should update the existing investigation details' do
         existing_sequence
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
         result.id.should == existing_sequence.id
-        result.abstract.should match /something new/
-        result.template.abstract.should match /something new/
+        result.name.should match /something new/
+        result.template.name.should match /something new/
         result.author_url.should == sequence_author_url
         result.print_url.should == sequence_print_url
         result.student_report_enabled.should be_true

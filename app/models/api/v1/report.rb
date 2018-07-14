@@ -1,6 +1,6 @@
 class API::V1::Report
   include RailsPortal::Application.routes.url_helpers
-  REPORT_VERSION = "1.0.3"
+  REPORT_VERSION = "1.1.0"
 
   def initialize(options)
     # offering, protocol, host_with_port, student_ids = nil, activity_id=nil)

@@ -13,7 +13,8 @@ Feature: Admin views districts
     When I am on the districts page
     Then I should see the default district
     And I should see "create District"
-    
+
+  @javascript
   Scenario: admin creates a new district
     When I am on the districts page
     And I follow "create District"

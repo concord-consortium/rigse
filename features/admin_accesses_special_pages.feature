@@ -8,14 +8,14 @@ Feature: Admin can access various admin pages
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
 
-  @enable_gses
+  @enable_gses @javascript
   Scenario: Admin access GSEs
     When I login as an admin
     And I am on the home page
     And I follow "Admin"
     Then I should see "GSEs"
 
-  @disable_gses
+  @disable_gses @javascript
   Scenario: Admin access GSEs
     When I login as an admin
     And I am on the home page

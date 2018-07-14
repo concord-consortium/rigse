@@ -57,6 +57,12 @@ services:
       GOOGLE_OPTIMIZER_ACCOUNT:
 
       #
+      # MailChimp API information
+      ENEWS_API_KEY:
+      ENEWS_API_URI:
+      ENEWS_API_LISTID:
+
+      #
       # OG tag default values
       #
       OG_TITLE:

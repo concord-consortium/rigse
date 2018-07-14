@@ -1,4 +1,7 @@
 - fake_id = 999
+%script#navigationData{type: "application/json"}
+  = navigation_service().to_json().html_safe
+
 :javascript
   Portal.API_V1 = {
     FAKE_ID: "#{fake_id}",
@@ -65,5 +68,16 @@
     MATERIALS_GET_FAVORITE:     "#{api_v1_materials_get_favorites_path}",
 
     SEARCH: "#{api_v1_search_search_path}",
-    ASSIGN_MATERIAL_TO_CLASS: "#{api_v1_materials_assign_to_class_path}"
+    ASSIGN_MATERIAL_TO_CLASS: "#{api_v1_materials_assign_to_class_path}",
+
+    // Navigation
+    // NavigationHelper#get_navigation_json  see app/helpers/navigation_helper.rb
+    getNavigation: function() {
+      return JSON.parse(document.getElementById('navigationData').innerHTML)
+    }
   };
+- if current_user.present?
+  - if current_user.portal_teacher
+    :javascript
+      Portal.API_V1['ENEWS_STATUS'] = "#{get_enews_subscription_api_v1_teacher_path(current_user.portal_teacher.id)}"
+      Portal.API_V1['ENEWS_UPDATE'] = "#{update_enews_subscription_api_v1_teacher_path(current_user.portal_teacher.id)}"

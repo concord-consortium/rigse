@@ -7,12 +7,14 @@ Given /^the default project links exist using factories$/ do
   Factory(:project_link, {
     :project_id => project.id,
     :name => "Foo Project Link",
-    :href => "http://foo.com"
+    :href => "http://foo.com",
+    :link_id => "/resources/foo"
   })
   Factory(:project_link, {
     :project_id => project.id,
     :name => "Bar Project Link",
-    :href => "http://bar.com"
+    :href => "http://bar.com",
+    :link_id => "/resources/bar"
   })
 end
 
