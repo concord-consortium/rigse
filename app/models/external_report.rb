@@ -24,24 +24,39 @@ class ExternalReport < ActiveRecord::Base
       grant.teacher = user.portal_teacher
       grant.save!
     end
-    token = grant.access_token
-    username = user.login
     routes = Rails.application.routes.url_helpers
-    offering_url = CGI.escape(routes.api_v1_offering_url(offering.id, protocol: protocol, host: host))
     class_id = offering.clazz.id
-    class_offerings_url = CGI.escape(routes.api_v1_offerings_url(class_id: class_id, protocol: protocol, host: host))
-    class_url = CGI.escape(routes.api_v1_class_url(class_id, protocol: protocol, host: host))
-    "#{url}?reportType=offering&offering=#{offering_url}&classOfferings=#{class_offerings_url}&class=#{class_url}&token=#{token}&username=#{username}"
+    url_options = {protocol: protocol, host: host}
+    add_query_params(url, {
+      reportType:     'offering',
+      offering:       routes.api_v1_offering_url(offering.id, url_options),
+      classOfferings: routes.api_v1_offerings_url(url_options.merge(class_id: class_id)),
+      class:          routes.api_v1_class_url(class_id, url_options),
+      token:          grant.access_token,
+      username:       user.login
+    })
   end
 
   def url_for_class(class_id, user, protocol, host)
     grant = client.updated_grant_for(user, ReportTokenValidFor)
-    token = grant.access_token
-    username = user.login
     routes = Rails.application.routes.url_helpers
-    class_url = CGI.escape(routes.api_v1_class_url(class_id, protocol: protocol, host: host))
-    class_offerings_url = CGI.escape(routes.api_v1_offerings_url(class_id: class_id, protocol: protocol, host: host))
-    "#{url}?reportType=class&class=#{class_url}&classOfferings=#{class_offerings_url}&token=#{token}&username=#{username}"
+    url_options = {protocol: protocol, host: host}
+    add_query_params(url, {
+      reportType:     'class',
+      class:          routes.api_v1_class_url(class_id, url_options),
+      classOfferings: routes.api_v1_offerings_url(url_options.merge(class_id: class_id)),
+      token:          grant.access_token,
+      username:       user.login
+    })
   end
 
+  private
+  # this returns the url with the new params merged in
+  def add_query_params(url, params)
+    uri = URI.parse(url)
+    query_hash = Rack::Utils.parse_query(uri.query)
+    query_hash.merge!(params)
+    uri.query = query_hash.to_query
+    uri.to_s
+  end
 end
