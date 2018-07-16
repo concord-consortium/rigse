@@ -66,7 +66,6 @@ class User < ActiveRecord::Base
   scope :with_role, lambda { | role_name |
     { :include => :roles, :conditions => ['roles.title = ?',role_name]}
   }
-  has_settings
 
   # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
   # has_many :big_ideas, :class_name => 'RiGse::BigIdea'
@@ -505,16 +504,6 @@ class User < ActiveRecord::Base
     if (school_person)
       return school_person.school
     end
-  end
-
-  def extra_params
-    if self.school
-      params = school.settings_hash
-    end
-    if params
-      return params.merge(self.settings_hash)
-    end
-    return self.settings_hash
   end
 
   # This method gets a bang because it saves the new questions. -- Cantina-CMH 6/17/10
