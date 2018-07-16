@@ -5,7 +5,6 @@ describe RunnablesHelper do
   include RunnablesLinkMatcher
   before :each do
     @anonymous_user = mock_model(User, :roles => ["guest"], :anonymous? => true, :name => "guest")
-    @anonymous_user.stub!(:extra_params).and_return({})
     helper.stub!(:current_visitor).and_return(@anonymous_user)
     helper.stub!(:authenticate_with_http_basic).and_return nil
   end

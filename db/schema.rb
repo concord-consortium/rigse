@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180711125716) do
+ActiveRecord::Schema.define(:version => 20180713201738) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2384,20 +2384,6 @@ ActiveRecord::Schema.define(:version => 20180711125716) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
-  create_table "settings", :force => true do |t|
-    t.integer  "scope_id"
-    t.string   "scope_type"
-    t.string   "name"
-    t.string   "value"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "settings", ["name"], :name => "index_settings_on_name"
-  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
-  add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "standard_documents", :force => true do |t|
     t.string   "uri"

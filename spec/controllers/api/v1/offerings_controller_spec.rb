@@ -1,7 +1,9 @@
 require 'spec_helper'
 include ReportLearnerSpecHelper
 
+
 describe API::V1::OfferingsController do
+
   let(:admin_user)        { Factory.next(:admin_user) }
   let(:manager_user)      { Factory.next(:manager_user) }
   let(:teacher)           { Factory.create(:portal_teacher) }
@@ -122,6 +124,8 @@ describe API::V1::OfferingsController do
         json["clazz"].should eq clazz.name
         json["activity"].should eq runnable.name
         json["report_url"].should eql report_portal_offering_url(id: offering.id, host: 'test.host')
+
+        json["preview_url"].should eql external_activity_url(runnable, {format: runnable.run_format})
         json["students"].length.should eq 2
 
         student1 = json["students"][0]
