@@ -1,6 +1,7 @@
 class API::V1::Offering
   include Rails.application.routes.url_helpers
   include Virtus.model
+  include RunnablesHelper
 
   # Optimize SQL queries based on API::V1::Offering structure.
   INCLUDES_DEF = {
@@ -86,6 +87,7 @@ class API::V1::Offering
   attribute :activity_url, String
   attribute :material_type, String
   attribute :report_url, String
+  attribute :preview_url, String
   attribute :external_report, Hash
   attribute :reportable, Boolean
   attribute :reportable_activities, Array
@@ -103,6 +105,8 @@ class API::V1::Offering
     self.material_type = runnable.material_type
     self.reportable = offering.reportable?
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
+    # this is a helper, it will not work, there is no current_user here
+    self.preview_url = run_url_for(runnable, protocol: protocol, host: host_with_port)
     if runnable.respond_to?(:external_report) && runnable.external_report
       self.external_report =  {
         id: runnable.external_report.id,
