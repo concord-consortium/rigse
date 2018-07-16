@@ -49,27 +49,6 @@ Then /^the installer jnlp should have the CDN hostname "([^"]*)" in the right pl
   Capybara.current_driver = original_driver
 end
 
-Then /^the non installer jnlp codebase should not start with "([^"]*)"$/ do |codebase_start|
-  inv = Factory.create(:investigation)
-  # switch the driver to rack_test so we can inspect the content
-  original_driver = Capybara.current_driver
-  Capybara.current_driver = :rack_test
-
-  visit "/investigations/#{inv.id}.jnlp?skip_installer=true"
-  jnlp_xml = Nokogiri::XML(page.driver.response.body)
-
-  # make sure we really are not using the installer
-  main_class_attr = jnlp_xml.xpath("/jnlp/application-desc/@main-class")
-  main_class_attr.should_not be_nil
-  main_class_attr.text.should == 'net.sf.sail.emf.launch.EMFLauncher2'
-
-  codebase = jnlp_xml.xpath("/jnlp/@codebase")
-  codebase.text.should_not match /^#{codebase_start}.*/
-
-
-  Capybara.current_driver = original_driver
-end
-
 When /^I create new settings with the description "([^"]*)"$/ do |description|
   click_link "create Settings"
   fill_in "admin_settings[description]", :with => description
