@@ -16,7 +16,7 @@ describe ExternalReport do
       expect(subject.scan('?')).to have(1).question_mark
       expect(subject).to include('cool=true')
     end
-    it "should include the correct paramters" do
+    it "should include the correct parameters" do
       uri = URI.parse(subject)
       expect(subject).to include('reportType=offering', 'offering=', 'classOfferings=',
         'class=', 'token=', 'username=')
@@ -37,7 +37,7 @@ describe ExternalReport do
       expect(subject.scan('?')).to have(1).question_mark
       expect(subject).to include('cool=true')
     end
-    it "should include the correct paramters" do
+    it "should include the correct parameters" do
       uri = URI.parse(subject)
       expect(subject).to include('reportType=class', 'classOfferings=',
         'class=', 'token=', 'username=')
