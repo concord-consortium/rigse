@@ -235,7 +235,7 @@ class User < ActiveRecord::Base
         # an email stored.
         #
         if user.portal_student
-          throw "Error: found portal student with persisted email from #{auth.proivder}."
+          raise "Error: found portal student with persisted email from #{auth.provider}."
         end
 
       else
@@ -252,7 +252,6 @@ class User < ActiveRecord::Base
         user = User.create!(
           login:        login,
           email:        email,
-          email_subscribed:        email_subscribed,
           first_name:   auth.extra.first_name   || auth.info.first_name,
           last_name:    auth.extra.last_name    || auth.info.last_name,
           password: pw,

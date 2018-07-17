@@ -404,6 +404,68 @@ describe User do
 
   end
 
+  describe "find_for_omniauth" do
+    it "finds user with matching authentication" do
+      authentication = FactoryGirl.create :authentication
+      user = authentication.user
+      mock_auth = double(provider: authentication.provider, uid: authentication.uid)
+      found_user = User.find_for_omniauth(mock_auth)
+      expect(found_user).to eq user
+    end
+    context "when a user exists with the same email" do
+      let(:user) { FactoryGirl.create :confirmed_user }
+      let(:mock_auth) {
+        double(provider: "fake_provider", uid: "fake_uid",
+          info: double(email: user.email))
+      }
+      before(:each) {
+        # make sure user is created
+        user
+      }
+      it "throws an error if the user is a student" do
+        student = FactoryGirl.create :portal_student, user: user
+        expect {
+          User.find_for_omniauth(mock_auth)
+        }.to raise_error(/persisted email/)
+      end
+      context "when the user isn't a student" do
+        it "creates an authentication if one doesn't exist" do
+          expect(user.authentications).to have(0).items
+          found_user = User.find_for_omniauth(mock_auth)
+          expect(found_user).to eq user
+          new_authentication = found_user.authentications.first
+          expect(new_authentication.provider).to eq(mock_auth.provider)
+          expect(new_authentication.uid).to eq(mock_auth.uid)
+        end
+        it "doesn't create an authentication if one exists" do
+          authentication = FactoryGirl.create :authentication,
+            user: user, provider: mock_auth.provider
+          user.reload
+          found_user = nil
+          expect {
+            found_user = User.find_for_omniauth(mock_auth)
+            user.reload
+          }.to_not change{ user.authentications }
+
+          expect(found_user).to eq user
+        end
+      end
+
+    end
+    context "when a user does not exists with the same email" do
+      let(:mock_auth) {
+        double(provider: "fake_provider", uid: "fake_uid",
+          info: double(email: "fake_email@example.com"),
+          extra: double(first_name: "Fake", last_name: "Name"))
+      }
+      it "creates a new user" do
+        new_user = User.find_for_omniauth(mock_auth)
+        expect(new_user.first_name).to eq("Fake")
+        expect(new_user.last_name).to eq("Name")
+      end
+    end
+
+  end
 
 protected
   def create_user(options = {})
