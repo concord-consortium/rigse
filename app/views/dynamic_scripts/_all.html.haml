@@ -15,6 +15,7 @@
 
   Portal.oauthProviders = #{raw providers.to_json};
   Portal.theme = "#{APP_CONFIG[:theme]}";
+  Portal.enewsSubscriptionEnabled = #{ENV['ENEWS_API_KEY'].present?};
 
 = render :partial => 'dynamic_scripts/api_paths'
 = render :partial => 'dynamic_scripts/current_user'
