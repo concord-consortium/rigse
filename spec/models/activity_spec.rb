@@ -112,15 +112,6 @@ describe Activity do
     let (:public_non_gse_activity) { Factory.create(:activity, :name => "activity for #{public_non_gse.name}" ,:investigation_id => public_non_gse.id) }
     let (:draft_non_gse)           { Factory.create(:investigation, :name => "draft non-gse investigation") } 
     let (:draft_non_gse_activity)  { Factory.create(:activity, :name => "activity for #{draft_non_gse.name}" ,:investigation_id => draft_non_gse.id) }
-
-    #creating probe activities
-    let (:investigation)            { Investigation.find_by_name_and_publication_status('grade 7 physics', 'published') }
-    let (:probe_activity_published) { Factory.create(:activity, :name => 'probe_activity(published)', :publication_status => 'Published') }
-
-    let (:section)      { Factory.create(:section, :activity_id => probe_activity_published.id) }
-    let (:page)         { Factory.create(:page, :section_id => section.id) }
-    let (:open_response) { Factory.create(:open_response)}
-    let (:page_element) { Factory.create(:page_element, :page => page, :embeddable => open_response) }
   end
 
   describe "#is_template method" do

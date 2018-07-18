@@ -29,43 +29,7 @@ describe Admin::Settings do
     end
 
   end
-  describe "a list of enabled vendor interfaces" do
-
-    before(:all) do
-      # Currently all the probe configuration models including vendor_interfaces are loaded
-      # into the test database from fixtures in config/probe_configurations by running:
-      #
-      #   rake db:test:prepare
-      #
-      # See: lib/tasks/db_test_prepare.rake
-      #
-      @all_interfaces = Probe::VendorInterface.find(:all)
-      @num_interfaces = @all_interfaces.length
-    end
-
-    it "should have a sane testing environment" do
-      @all_interfaces.should have(@num_interfaces).things
-    end
-
-    it "should exist" do
-      @new_valid_settings.enabled_vendor_interfaces.should_not be_nil
-    end
-
-    it "should initially have all the existant vendor interfaces" do
-      @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces).things
-      @all_interfaces.each do |interface|
-        @new_valid_settings.enabled_vendor_interfaces.should include(interface)
-      end
-    end
-
-    it "should allow removing vendor interfaces" do
-      interface_to_remove = Probe::VendorInterface.find(:first)
-      @new_valid_settings.save # delete throws an exception if our model doesn't have an id
-      @new_valid_settings.enabled_vendor_interfaces.delete(interface_to_remove)
-      @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces -1).things
-      @new_valid_settings.reload
-      @new_valid_settings.enabled_vendor_interfaces.should have(@num_interfaces -1).things
-    end
+  describe "bookmarks" do
 
     describe "#available_bookmark_types" do
       subject  { @new_valid_settings.available_bookmark_types }

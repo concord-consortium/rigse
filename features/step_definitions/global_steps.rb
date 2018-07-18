@@ -97,6 +97,10 @@ Given /^(?:|I )login as an admin$/ do
   login_as('admin')
 end
 
+Given /^I am an anonymous user$/ do
+  visit('/users/sign_out')
+  ['/home', '/'].should include URI.parse(current_url).path
+end
 
 # the quote in the pattern is to prevent this from matching other rules
 # and hopefully there is no need for quotes in a usernames

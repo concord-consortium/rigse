@@ -42,15 +42,6 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    namespace :probe do
-      resources :vendor_interfaces
-      resources :probe_types
-      resources :physical_units
-      resources :device_configs
-      resources :data_filters
-      resources :calibrations
-    end
-
     namespace :ri_gse do
       resources :assessment_targets
       resources :knowledge_statements
@@ -225,7 +216,6 @@ RailsPortal::Application.routes.draw do
         delete :purge
         put :suspend
         put :unsuspend
-        get :interface
         put :switch
         get :favorites
         get :preferences

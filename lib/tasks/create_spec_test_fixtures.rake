@@ -24,7 +24,6 @@ namespace :app do
 
 quentin:
   id:                        1
-  vendor_interface_id:       1
   uuid:                      7aef8f84-627b-11de-97fe-001ff3caa767
   login:                     quentin
   email:                     quentin@example.com
@@ -40,7 +39,6 @@ quentin:
 aaron:
   id:                        2
   uuid:                      8ddb615e-627b-11de-97fe-001ff3caa767
-  vendor_interface_id:       1
   login:                     aaron
   email:                     aaron@example.com
   salt:                      #{aaron.salt}
@@ -56,7 +54,6 @@ aaron:
 old_password_holder:
   id:                        3
   uuid:                      95edf87a-627b-11de-97fe-001ff3caa767
-  vendor_interface_id:       1
   login:                     old_password_holder
   email:                     salty_dog@example.com
   salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd

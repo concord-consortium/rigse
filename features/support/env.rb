@@ -74,14 +74,6 @@ ActionController::Base.allow_rescue = false
 
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
-# probe_tables = %w{
-#   probe_calibrations
-#   probe_datafilters
-#   probe_device_configs
-#   probe_physical_units
-#   probe_probe_types
-#   probe_vendor_interfaces
-# }
 # rigse_tables = %w{
 #   ri_gse_assessment_targets
 #   ri_gse_big_ideas
@@ -95,7 +87,7 @@ ActionController::Base.allow_rescue = false
 #   ri_gse_assessment_target_unifying_themes
 # }
 begin
-  # DatabaseCleaner.strategy = :truncation, { :except => (probe_tables + rigse_tables) }
+  # DatabaseCleaner.strategy = :truncation, { :except => (rigse_tables) }
   DatabaseCleaner.strategy = :transaction
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
@@ -120,7 +112,7 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :transaction
-# Cucumber::Rails::Database.javascript_strategy = :truncation, { :except => (probe_tables + rigse_tables) }
+# Cucumber::Rails::Database.javascript_strategy = :truncation, { :except => (rigse_tables) }
 
 APP_CONFIG[:theme] = 'xproject' #lots of tests seem to be broken if we try to use another theme
 

@@ -14,7 +14,7 @@ jQuery(function () {
     })
 });
 
-function setAllProbesSelected(allChecked) {
+function setAllSensorsSelected(allChecked) {
     var anythingModified = false;
     $$(".sensor_filter_item").each(function(e) {
         // Convert values to boolean, as checked attribute may be a string like "checked".
