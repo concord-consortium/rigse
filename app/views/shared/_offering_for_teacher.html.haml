@@ -19,7 +19,7 @@
       = accordion_for(offering, menu_for_offering(offering), nil, {:show_hide_text=>show_hide_text}) do
         %div{:id => dom_id_for(offering, :details), :class => 'tiny', :style => 'clear: both;'}
           %span.author= "Author: #{offering.runnable.user.name}"
-          %p= "Description: #{offering.runnable.description}"
+          %p= "Description: #{offering.runnable.short_description}"
           %p= updated_time_text(offering.runnable)
           %p= pluralize(offering.learners.length, "student response")
           = render :partial => 'portal/learners/show', :collection => offering.learners, :as => :portal_learner

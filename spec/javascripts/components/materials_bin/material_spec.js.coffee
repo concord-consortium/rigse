@@ -4,8 +4,8 @@ describe 'MBMaterialClass', ->
   beforeEach ->
     Portal.currentUser = {isTeacher: false, isAdmin: false}
 
-  it 'renders material name and description', ->
-    result = renderStatic MBMaterialClass, material: {name: 'name foobar', description: 'desc barfoo'}
+  it 'renders material name and short description', ->
+    result = renderStatic MBMaterialClass, material: {name: 'name foobar', short_description: 'desc barfoo'}
     expect(result).toEqual jasmine.stringMatching 'name foobar'
     expect(result).toEqual jasmine.stringMatching 'desc barfoo'
 
@@ -14,7 +14,7 @@ describe 'MBMaterialClass', ->
     expect(result).toEqual jasmine.stringMatching 'http://run.activity'
 
   it 'renders description toggle', ->
-    result = renderStatic MBMaterialClass, material: {description: 'foobar'}
+    result = renderStatic MBMaterialClass, material: {short_description: 'foobar'}
     expect(result).toEqual jasmine.stringMatching 'mb-toggle-info-text'
 
   it 'renders assign to class link only if user is a teacher', ->

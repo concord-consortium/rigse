@@ -281,7 +281,9 @@ describe ActivityRuntimeAPI do
         result.should have_iframe_like "http://test.interactive.com"
         result.should have_page_like "Cool Activity Page 1", page_1_url
         # Portal should ignore description
-        result.description.should be_nil
+        result.short_description.should be_nil
+        result.long_description.should be_nil
+        result.long_description_for_teacher.should be_nil
         result.student_report_enabled.should be_true
       end
 
@@ -330,11 +332,15 @@ describe ActivityRuntimeAPI do
         it "should ignore description value" do
           existing
           portal_description = "description set in Portal"
-          existing.description = portal_description
+          existing.short_description = portal_description
+          existing.long_description = portal_description
+          existing.long_description_for_teacher = portal_description
           existing.save!
           result = ActivityRuntimeAPI.update_activity(new_hash)
           result.should_not be_nil
-          result.description.should == portal_description
+          result.short_description.should == portal_description
+          result.long_description.should == portal_description
+          result.long_description_for_teacher.should == portal_description
         end
       end
 

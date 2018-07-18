@@ -7,8 +7,8 @@ class ExternalActivity < ActiveRecord::Base
   searchable do
     text :name
     string :name
-    text :description
-    text :description_for_teacher do
+    text :long_description
+    text :long_description_for_teacher do
       nil
     end
     text :content do
@@ -247,6 +247,15 @@ class ExternalActivity < ActiveRecord::Base
 
   def options_for_external_report
     ExternalReport.all.map { |r| [r.name, r.id] }
+  end
+
+  # If user is a teacher and long_description_for_teacher is available, it returns long_description_for_teacher.
+  # Otherwise it returns long_description if it is available.
+  # The last fallback is an short description.
+  def long_description_for_user(user)
+    return long_description_for_teacher if user && user.portal_teacher && long_description_for_teacher.present?
+    return long_description if long_description.present?
+    short_description
   end
 
   private

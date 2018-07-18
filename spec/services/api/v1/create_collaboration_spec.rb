@@ -131,15 +131,6 @@ describe API::V1::CreateCollaboration do
         end
       end
 
-      describe "when offering is a JNLP activity or sequence" do
-        it "should have #bundle_content set to owner's bundle" do
-          learner = offering.find_or_create_learner(collaboration.owner)
-          expected_bundle = learner.bundle_logger.in_progress_bundle
-          expect(collaboration.bundle_content).not_to be_nil
-          expect(collaboration.bundle_content).to eql(expected_bundle)
-        end
-      end
-
       describe "when offering is an external activity" do
         before do
           offering.runnable = Factory(:external_activity)
@@ -160,14 +151,6 @@ describe API::V1::CreateCollaboration do
         create_collaboration.call
         offering.reload
         expect(offering.learners.map { |l| l.student }).to match_array(students)
-      end
-
-      describe "when offering is a JNLP activity or sequence" do
-        it "should start Dataservice event" do
-          expect(Dataservice::LaunchProcessEvent.count).to eql(0)
-          create_collaboration.call
-          expect(Dataservice::LaunchProcessEvent.count).to eql(1)
-        end
       end
     end
   end

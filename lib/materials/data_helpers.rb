@@ -2,7 +2,8 @@ module Materials
   module DataHelpers
     # This module expects to be included into a controller, so that view_context resolves
     # to something that provides all the various view helpers.
-
+    # Note that this module will be dealing only with ExternalActivity instances. In the past, it used to handle
+    # Activity, Sequence and Interactive types too, but it's not a case anymore.
     private
 
     # The main difference between this sanitization method and one provided by Rails natively is
@@ -59,17 +60,6 @@ module Materials
             name: material.user.name
           }
         end
-
-        # abstract_text is provided by SearchModelInterface and it fallbacks to normal description
-        # if there is no abstract defined. It also truncates description in case of need.
-        # Note that we can't use native #sanitize method provided by Rails, as it doesn't guarantee that
-        # output is a valid HTML. Invalid HTML can totally break React view components.
-        description = material.respond_to?(:description_for_teacher) && current_visitor.portal_teacher && material.description_for_teacher.present? ?
-            safe_sanitize(material.description_for_teacher) : safe_sanitize(material.abstract_text)
-
-        full_description = safe_sanitize(material.description)
-        abstract = material.respond_to?(:abstract) ? safe_sanitize(material.abstract) : ""
-        description_for_teacher = material.respond_to?(:description_for_teacher) ? safe_sanitize(material.description_for_teacher) : ""
 
         #
         # Find favorite data
@@ -240,10 +230,14 @@ module Materials
         mat_data = {
           id: material.id,
           name: material.name,
-          description: description,
-          full_description: full_description,
-          abstract: abstract,
-          description_for_teacher: description_for_teacher,
+          # long_description_for_current_user returns long_description_for_teacher, long_description, or short_description.
+          long_description_for_current_user: safe_sanitize(material.long_description_for_user(current_visitor)),
+          # Raw db attribute, no fallback behavior.
+          long_description: safe_sanitize(material.long_description),
+          # Raw db attribute, no fallback behavior.
+          long_description_for_teacher: safe_sanitize(material.long_description_for_teacher),
+          # Raw db attribute, no fallback behavior.
+          short_description: safe_sanitize(material.short_description),
           class_name: material.class.name,
           class_name_underscored: material.class.name.underscore,
           icon: {

@@ -5,7 +5,8 @@ describe ExternalActivity do
       :user_id => 1,
       :uuid => "value for uuid",
       :name => "value for name",
-      :description => "value for description",
+      :long_description => "value for description",
+      :long_description_for_teacher => "value for description for teachers",
       :publication_status => "value for publication_status",
       :is_official => true,
       :url => "http://www.concord.org/"
@@ -69,27 +70,16 @@ describe ExternalActivity do
     end
   end
 
-  describe "abstract_text" do
-    let(:abstract)    { nil }
-    let(:big_text)    { "-xyzzy" * 255 }
-    let(:description) do
-      "This is the description. Its text is too long to be an abstract really: #{big_text}"
+  describe '#long_description_for_user' do
+    let (:activity) { ExternalActivity.create!(valid_attributes) }
+    let(:teacher_user) { t = FactoryGirl.create(:teacher); t.user }
+    let(:student_user) { s = FactoryGirl.create(:portal_student); s.user }
+
+    it 'should return value of long_description_for_teacher if user is a teacher' do
+      activity.long_description_for_user(teacher_user).should == valid_attributes[:long_description_for_teacher]
     end
-    let(:abstract)    { nil }
-    subject { ExternalActivity.create(:name => 'test', :abstract => abstract, :description => description) }
-    describe "without an abstract" do
-      let(:abstract)         { nil }
-      its(:abstract_text)    { should match /This is the description./ }
-      its(:abstract_text)    { should have_at_most(255).letters }
-    end
-    describe "without an empty abstract" do
-      let(:abstract)         { " " }
-      its(:abstract_text)    { should match /This is the description./ }
-      its(:abstract_text)    { should have_at_most(255).letters }
-    end
-    describe "without a good abstract" do
-      let(:abstract)         { "This is the abstract." }
-      its(:abstract_text)    { should match /This is the abstract./ }
+    it 'should return value of long_description if user is not a teacher' do
+      activity.long_description_for_user(student_user).should == valid_attributes[:long_description]
     end
   end
 
@@ -108,7 +98,7 @@ describe ExternalActivity do
         :user_id => 1,
         :uuid => "value for uuid",
         :name => "value for name",
-        :description => "value for description",
+        :long_description => "value for description",
         :publication_status => "value for publication_status",
         :is_official => true,
         :url => "http://www.concord.org/",

@@ -46,9 +46,9 @@ Feature: Author can filter their own material
       | login    | password | roles |
       | author_1 | secret   | author |
     And the following External Activity exist:
-      | name                | description   | user     | is_official |
-      | external_activity_1 | description 1 | author_1 | true        |
-      | external_activity_2 | description 2 | author_1 | false       |
+      | name                | long_description   | user     | is_official |
+      | external_activity_1 | description 1      | author_1 | true        |
+      | external_activity_2 | description 2      | author_1 | false       |
     And I reindex external activity
     When I am logged in with the username author_1
     And I am on the search instructional materials page
@@ -69,10 +69,10 @@ Feature: Author can filter their own material
       | login    | password | roles |
       | author_1 | secret   | author |
     And the following External Activity exist:
-      | name                | description   | user     | is_official |
-      | external_activity_1 | description 1 | author_1 | true        |
-      | external_activity_2 | description 2 | author_1 | false       |
-      | external_activity_3 | description 3 | author   | true        |
+      | name                | long_description   | user     | is_official |
+      | external_activity_1 | description 1      | author_1 | true        |
+      | external_activity_2 | description 2      | author_1 | false       |
+      | external_activity_3 | description 3      | author   | true        |
     And I reindex external activity
     When I am logged in with the username author_1
     And I am on the search instructional materials page
