@@ -554,6 +554,7 @@ RailsPortal::Application.routes.draw do
     match '/admin' => 'home#admin', :as => :admin
     match '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
     match 'authoring' => 'home#authoring', :as => :authoring
+    match 'authoring_new' => 'home#authoring_new', :as => :authoring_new
     match '/authoring_site_redirect/:id' => 'home#authoring_site_redirect', :as => :authoring_site_redirect
 
     match '/banner' => 'misc#banner', :as => :banner
