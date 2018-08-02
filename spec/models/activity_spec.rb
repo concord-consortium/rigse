@@ -11,10 +11,6 @@ describe Activity do
     activity.valid?
   end
 
-  it 'should respond to #material_type' do
-    activity.material_type.should == 'Activity'
-  end
-
   it "should be destroy'able" do
     activity.destroy
   end

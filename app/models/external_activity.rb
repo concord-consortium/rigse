@@ -103,9 +103,6 @@ class ExternalActivity < ActiveRecord::Base
   include SearchModelInterface
   include Archiveable
 
-  #
-  # Override the material_type method from SearchModelInterface
-  #
   def material_type
     attributes['material_type']
   end

@@ -1,10 +1,12 @@
 class Interactive < ActiveRecord::Base
   include Cohorts
   include Publishable
-  include SearchModelInterface
   include Archiveable
 
   acts_as_taggable_on :model_types
+  acts_as_taggable_on :material_properties
+  acts_as_taggable_on :grade_levels
+  acts_as_taggable_on :subject_areas
 
   attr_accessible :name, :description, :url, :width, :height, :scale, :image_url, :credits, :publication_status, :project_ids, :full_window, :no_snapshots, :save_interactive_state, :external_activity_id
 

@@ -292,18 +292,6 @@ describe ActivityRuntimeAPI do
         result.template.is_template.should be_true
         result.template.investigation.is_template.should be_true
       end
-
-      it "should cause that parent investigation and activities are indexed in SOLR as templates" do
-        result = ActivityRuntimeAPI.publish_activity(new_hash, user)
-        Activity.search {
-          with :name, result.template.name
-          with :is_template, true
-        }.results.size.should == 1
-        Investigation.search {
-          with :name, result.template.investigation.name
-          with :is_template, true
-        }.results.size.should == 1
-      end
     end
 
     describe "When there is an existing external activity with the same url" do
@@ -532,17 +520,6 @@ describe ActivityRuntimeAPI do
       it "should cause that parent investigation and activities are recognized as templates" do
         result.template.is_template.should be_true
         result.template.activities.map { |a| a.is_template.should be_true }
-      end
-
-      it "should cause that parent investigation and activities are indexed in SOLR as templates" do
-        Investigation.search {
-          with :name, result.template.name
-          with :is_template, true
-        }.results.size.should == 1
-        Activity.search {
-          with :name, result.template.activities.map { |a| a.name }
-          with :is_template, true
-        }.results.size.should == 2
       end
     end
 
