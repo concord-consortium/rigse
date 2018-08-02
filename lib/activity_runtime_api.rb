@@ -57,17 +57,7 @@ class ActivityRuntimeAPI
         :is_locked              => hash["is_locked"]
       )
       self.update_external_report(external_activity,hash["external_report_url"])
-      # update activity so external_activity.template is correctly initialzed
-      # otherwise external_activity.template.is_template? won't be true
-      activity.reload
-      # then reindex it manually, so Solr has correct value of :is_template attribute
-      Sunspot.index(activity)
-      # exactly the same applies to invesigation template
-      investigation.reload
-      Sunspot.index(investigation)
-      Sunspot.commit
     end
-
     return external_activity
   end
 
@@ -162,14 +152,6 @@ class ActivityRuntimeAPI
         :is_locked              => hash["is_locked"]
       )
       self.update_external_report(external_activity, hash["external_report_url"])
-      # update investigation so external_activity.template is correctly initialzed
-      # otherwise external_activity.template.is_template? won't be true
-      investigation.reload
-      # then reindex it manually, so Solr has correct value of :is_template attribute
-      Sunspot.index(investigation)
-      # exactly the same applies to activities
-      investigation.activities.each { |a| Sunspot.index(a) }
-      Sunspot.commit
     end
     return external_activity
   end

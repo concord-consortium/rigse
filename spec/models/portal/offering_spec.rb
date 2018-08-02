@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::Offering do
   
   describe "after being created" do
-    let(:runnable) { Factory.create(:investigation) }
+    let(:runnable) { Factory.create(:external_activity) }
     let(:args)     { {runnable: runnable} }
     let(:offering) { Factory.create(:portal_offering, args) }
 
