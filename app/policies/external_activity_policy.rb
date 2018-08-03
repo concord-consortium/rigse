@@ -65,4 +65,8 @@ class ExternalActivityPolicy < ApplicationPolicy
     admin_or_material_admin? || owner?
   end
 
+  def edit_new?
+    admin_or_material_admin? || owner?
+  end
+
 end

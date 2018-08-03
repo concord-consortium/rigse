@@ -116,6 +116,16 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
+#### UI Prototype work, Summer 2018
+
+  # GET /external_activities/1/edit_new
+  def edit_new
+    @external_activity = ExternalActivity.find(params[:id])
+    authorize @external_activity
+  end
+
+#### End UI Prototype work
+
   # subset of editing provided to owners of the activities
   def edit_basic
     @external_activity = ExternalActivity.find(params[:id])

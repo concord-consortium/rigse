@@ -3,19 +3,20 @@
 %h2
   Authoring (UI Prototype, Summer 2018)
 
-%div{:style=> "margin: 1em; padding: 1em;"}
+%div{:style=> "margin: 0em; padding: 0.5em;"}
   = link_to "Create New Sequence", new_external_activity_path, :class => 'button'
-  = link_to "Create New Activity", new_external_activity_path, :class => 'button'
+  = link_to "Create New Activity", new_external_activity_path, :class => 'button', :style => 'float: right;'
 
-%div{:style=> "margin: 1em; padding: 1em;"}
-  %h4= "My Activites"
+%div
+  %h3
+    My Activities
   %table{:style=>"border: 0;"}
     %tbody
     - current_visitor.external_activities.each do |item|
-      %tr
+      %tr{:style=>"padding-left: 2em; padding-right: 0.5em;"}
         %td{:style=>"white-space: nowrap"}= item.name 
-        %td= link_to "Copy", item, :class => 'button'
-        %td= link_to "Edit", item, :class => 'button'
+        %td{:style=>"padding-right: 0.3em;"}= link_to "Copy", item, :class => 'button'
+        %td= link_to "Edit", edit_new_external_activity_path(item), :class => 'button'
         %td= link_to "Delete", item, :class => 'button'
         %td= link_to "Print", item, :class => 'button'
         %td= link_to "Preview", item, :class => 'button'

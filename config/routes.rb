@@ -370,6 +370,7 @@ RailsPortal::Application.routes.draw do
         get :set_private_before_matedit
         get :copy
         get :edit_basic
+        get :edit_new
       end
     end
 

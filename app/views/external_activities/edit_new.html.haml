@@ -1,0 +1,27 @@
+- activityJSON = @external_activity.to_json
+- @wide_content_layout = true
+
+#Activity_edit_container
+  .top-menu
+    .left
+      #navigation
+    .right{:style=> 'padding: 0;'}
+      %div{:style=> 'position: static;'}
+        %h2
+          Editing
+        %h3= @external_activity.name 
+      = link_to "Settings", 'fix me', :class => 'button', :style=> 'margin-right: 3em; float: right;'
+
+
+%div
+  %br
+  #react_container_activity
+
+:javascript
+  let parsedActivityJSON = JSON.parse('#{activityJSON}');
+  PortalPages.renderActivitySettingsEditor(parsedActivityJSON,
+                                           "react_container_activity");
+  var navProps=Portal.API_V1.getNavigation();
+  navProps.overlay=true;
+  PortalPages.renderNavigation(navProps, 'navigation');
+
