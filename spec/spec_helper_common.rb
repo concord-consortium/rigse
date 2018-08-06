@@ -52,6 +52,16 @@ require File.expand_path("../support/authenticated_test_helper", __FILE__)
 include AuthenticatedTestHelper
 include AuthenticatedSystem
 
+module VerifyAndResetHelpers
+  def verify(object)
+    RSpec::Mocks.proxy_for(object).verify
+  end
+
+  def reset(object)
+    RSpec::Mocks.proxy_for(object).reset
+  end
+end
+
 RSpec.configure do |config|
   # == Mock Framework
   #
@@ -73,6 +83,7 @@ RSpec.configure do |config|
   config.include FailsInThemes
   config.include Sprockets::Helpers::RailsHelper
   config.include Devise::TestHelpers, :type => :controller
+  config.include VerifyAndResetHelpers
 
 end
 # Requires supporting ruby files with custom matchers and macros, etc,
