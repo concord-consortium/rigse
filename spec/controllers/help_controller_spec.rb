@@ -25,7 +25,7 @@ describe HelpController do
       @test_settings.custom_help_page_html = '<b>Help page</b>'
       @test_settings.help_type = 'help custom html'
       get :index
-      assert_equal assigns[:help_page_content], '<b>Help page</b>'
+      expect(assigns[:help_page_content]).to eq('<b>Help page</b>')
       assert_template 'index'
     end
   end
@@ -36,7 +36,7 @@ describe HelpController do
           :preview_help_page_from_edit => '<b>help page<b>'
         }
       post :preview_help_page, @post_params
-      assert_equal assigns[:help_page_content], @post_params[:preview_help_page_from_edit]
+      expect(assigns[:help_page_content]).to eq(@post_params[:preview_help_page_from_edit])
       assert_template 'preview_help_page'
     end
     
@@ -72,7 +72,7 @@ describe HelpController do
           :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
       get :preview_help_page, @post_params
-      assert_equal assigns[:help_page_content], '<b>Help page</b>'
+      expect(assigns[:help_page_content]).to eq('<b>Help page</b>')
       assert_template 'preview_help_page'
     end
     

@@ -227,7 +227,7 @@ describe Admin::SiteNoticesController do
       xhr :post, :toggle_notice_display
       toggle_notice_status.reload
       assert_not_nil(toggle_notice_status)
-      assert_equal(toggle_notice_status.collapsed_status, false)
+      expect(toggle_notice_status.collapsed_status).to eq(false)
       response.should be_success
     end
   end

@@ -636,27 +636,27 @@ describe Portal::ClazzesController do
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 5)
+      expect(teacher_clazz.position).to eq(5)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 2)
+      expect(teacher_clazz.position).to eq(2)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active == false)
-      assert_equal(teacher_clazz.position, 3)
+      expect(teacher_clazz.position).to eq(3)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 4)
+      expect(teacher_clazz.position).to eq(4)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
       assert_not_nil(teacher_clazz)
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 1)
+      expect(teacher_clazz.position).to eq(1)
 
     end
   end
@@ -694,17 +694,17 @@ describe Portal::ClazzesController do
       @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
       assert_not_nil(@copy_clazz)
 
-      assert_equal(@copy_clazz.teachers.length, @mock_clazz.teachers.length)
+      expect(@copy_clazz.teachers.length).to eq(@mock_clazz.teachers.length)
       @mock_clazz.teachers.each do |teacher|
         assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
       end
 
-      assert_equal(@copy_clazz.offerings.length, @mock_clazz.offerings.length)
+      expect(@copy_clazz.offerings.length).to eq(@mock_clazz.offerings.length)
       @mock_clazz.offerings.each do |offering|
         assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
       end
 
-      assert_equal(@copy_clazz.students.length, 0)
+      expect(@copy_clazz.students.length).to eq(0)
 
     end
   end
@@ -773,7 +773,7 @@ describe Portal::ClazzesController do
       xhr :post, :sort_offerings, @params
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
-        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+        expect(offering.position ).to eq(@params[:clazz_offerings].index(offering.id) + 1)
       end
 
       # Update offering positions and verify they have been updated
@@ -781,7 +781,7 @@ describe Portal::ClazzesController do
       xhr :post, :sort_offerings, @params
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
-        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+        expect(offering.position ).to eq(@params[:clazz_offerings].index(offering.id) + 1)
       end
     end
   end
@@ -800,7 +800,7 @@ describe Portal::ClazzesController do
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user
       get :fullstatus, @params
-      assert_equal assigns[:portal_clazz], @mock_clazz
+      expect(assigns[:portal_clazz]).to eq(@mock_clazz)
       response.should be_success
       assert_template "fullstatus"
     end
