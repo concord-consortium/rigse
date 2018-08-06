@@ -802,7 +802,7 @@ describe Portal::ClazzesController do
       get :fullstatus, @params
       expect(assigns[:portal_clazz]).to eq(@mock_clazz)
       response.should be_success
-      assert_template "fullstatus"
+      expect(response).to render_template("fullstatus")
     end
   end
 
@@ -828,7 +828,7 @@ describe Portal::ClazzesController do
       }
       xhr :post, :add_new_student_popup, @params
       response.should be_success
-      assert_template :partial => "portal/students/_form"
+      expect(response).to render_template(:partial => "portal/students/_form")
     end
   end
 

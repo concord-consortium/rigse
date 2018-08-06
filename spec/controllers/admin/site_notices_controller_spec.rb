@@ -22,12 +22,12 @@ describe Admin::SiteNoticesController do
   describe "GET new" do
     it"doesn't show notice create page to users with roles other than admin and manager" do
       get :new
-      assert_template "new"
+      expect(response).to render_template("new")
 
       sign_out :user
       sign_in @manager_user
       get :new
-      assert_template "new"
+      expect(response).to render_template("new")
 
       sign_out :user
       sign_in @teacher_user
@@ -113,7 +113,7 @@ describe Admin::SiteNoticesController do
     end
     it"should show edit notice form" do
       get :edit, @params
-      assert_template "edit"
+      expect(response).to render_template("edit")
     end
   end
 

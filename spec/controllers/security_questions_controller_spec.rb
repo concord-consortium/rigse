@@ -79,7 +79,7 @@ describe SecurityQuestionsController do
       put :update, @params_for_update
 
       flash[:error].should include("Wicked bad errors!")
-      assert_template "edit"
+      expect(response).to render_template("edit")
     end
   end
 
