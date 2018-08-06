@@ -117,7 +117,7 @@ describe Portal::OfferingsController do
       sign_in @authorized_teacher_user
       #when teacher has never expanded or collapsed before
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
-      assert_nil(portal_teacher_full_status)
+      expect(portal_teacher_full_status).to be_nil
 
       # after first expand
       xhr :post, :offering_collapsed_status, @params

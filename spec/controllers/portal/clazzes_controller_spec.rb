@@ -388,7 +388,7 @@ describe Portal::ClazzesController do
     end
 
     it "should create a new course in the specified school if this class has a unique name" do
-      assert_nil Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
+      expect(Portal::Course.find_by_name(@post_params[:portal_clazz][:name])).to be_nil
 
       sign_in @authorized_teacher_user
 
@@ -405,7 +405,7 @@ describe Portal::ClazzesController do
       @random_user = Factory.create(:confirmed_user, :login => "random_user")
       sign_in @random_user
 
-      assert_nil @random_user.portal_teacher
+      expect(@random_user.portal_teacher).to be_nil
       current_count = Portal::Teacher.count(:all)
 
       @post_params[:portal_clazz][:teacher_id] = nil

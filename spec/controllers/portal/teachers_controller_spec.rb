@@ -87,7 +87,7 @@ describe Portal::TeachersController do
         expect(Portal::Teacher.count(:all)).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
 
         #expect(flash.now[:error]).not_to be_nil
-        assert_nil flash[:notice]
+        expect(flash[:notice]).to be_nil
         @response.body.should include("must select a school")
         @response.body.should include("Sorry")
       end

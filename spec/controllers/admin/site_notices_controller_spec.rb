@@ -81,20 +81,20 @@ describe Admin::SiteNoticesController do
       @post_params[:notice_html] = ''
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_nil(notice)
+      expect(notice).to be_nil
       flash[:error].should =~ /Notice text is blank/i
 
       @post_params[:notice_html] = ' '
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_nil(notice)
+      expect(notice).to be_nil
       flash[:error].should =~ /Notice text is blank/i
     end
     it("should not create a notice if no role is selected") do
       @post_params[:role] = nil
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_nil(notice)
+      expect(notice).to be_nil
       flash[:error].should =~ /No role is selected/i
     end
   end
@@ -145,20 +145,20 @@ describe Admin::SiteNoticesController do
       @post_params[:notice_html] = ""
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_nil(notice)
+      expect(notice).to be_nil
       flash[:error].should =~ /Notice text is blank/i
 
       @post_params[:notice_html] = "       "
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_nil(notice)
+      expect(notice).to be_nil
       flash[:error].should =~ /Notice text is blank/i
     end
     it("should not create a notice if no role is selected") do
       @post_params[:role] = nil
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_nil(notice)
+      expect(notice).to be_nil
       flash[:error].should =~ /No role is selected/i
     end
   end
@@ -182,9 +182,9 @@ describe Admin::SiteNoticesController do
 
       xhr :post, :remove_notice, @params
       notice = Admin::SiteNotice.find_by_id(@params[:id])
-      assert_nil(notice)
+      expect(notice).to be_nil
       notice_roles = Admin::SiteNoticeRole.find_by_notice_id(@params[:id])
-      assert_nil(notice_roles)
+      expect(notice_roles).to be_nil
       response.should be_success
     end
   end
