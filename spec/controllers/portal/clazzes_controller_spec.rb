@@ -566,7 +566,7 @@ describe Portal::ClazzesController do
       @post_params[:portal_clazz][:name] = ''
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
-      assert_not_equal(@portal_clazz.name , '', 'Class saved with no name.')
+      expect(@portal_clazz.name).not_to eq(''), 'Class saved with no name.'
     end
 
     it "should not save the edited class info if the class word is blank" do
@@ -574,7 +574,7 @@ describe Portal::ClazzesController do
       @post_params[:portal_clazz][:class_word] = ''
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
-      assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
+      expect(@portal_clazz.class_word).not_to eq(''), 'Class saved with blank class word.'
     end
   end
 
