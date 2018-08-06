@@ -1,61 +1,8 @@
 # encoding: UTF-8
 class Investigation < ActiveRecord::Base
   include Cohorts
-  include JnlpLaunchable
   include ResponseTypes
-  include SearchModelInterface
   include Archiveable
-
-  # see https://github.com/sunspot/sunspot/blob/master/README.md
-  searchable do
-    text :name
-    string :name
-    text :description
-    text :description_for_teacher
-    text :content do
-      nil
-    end
-
-    text :owner do |inv|
-      inv.user && inv.user.name
-    end
-    integer :user_id
-
-    boolean :published do |inv|
-      inv.publication_status == 'published'
-    end
-
-    boolean :is_archived do |o|
-        o.archived?
-    end
-
-    boolean :teacher_only
-    integer :offerings_count
-    boolean :is_official
-    boolean :is_template
-    boolean :is_assessment_item
-
-    time    :updated_at
-    time    :created_at
-
-    string  :grade_span
-    integer :domain_id
-    string  :material_type
-    string  :material_properties, :multiple => true do
-      material_property_list
-    end
-    string  :cohort_ids, :multiple => true, :references => Admin::Cohort
-    string  :grade_levels, :multiple => true do
-      grade_level_list
-    end
-
-    string  :subject_areas, :multiple => true do
-      subject_area_list
-    end
-
-    integer :project_ids, :multiple => true, :references => Admin::Project
-
-  end
 
   belongs_to :user
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'

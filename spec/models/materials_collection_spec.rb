@@ -7,9 +7,7 @@ describe MaterialsCollection do
 
   let(:collection) { FactoryGirl.create(:materials_collection) }
   let(:ext_act) { FactoryGirl.create_list(:external_activity, 3) }
-  let(:act) { FactoryGirl.create_list(:activity, 3) }
-  let(:inv) { FactoryGirl.create_list(:investigation, 3) }
-  let(:materials) { ext_act + act + inv }
+  let(:materials) { ext_act }
 
   before(:each) do
     # Assign all materials to collection.
