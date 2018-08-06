@@ -1,0 +1,27 @@
+# This is a docker-compose overlay that connects the portal to LARA via a
+# proxy container. It assumes the proxy container name is "http-proxy"
+# - If you are running dinghy on Mac OS, this is the name the dinghy proxy 
+#   will have if you followed its documentation here:
+#   https://github.com/codekitchen/dinghy-http-proxy#os-x
+#
+# - If you are running dory on linux, you will need to change the default
+#   name of the http proxy container. To do that you will need to tell
+#   dory to generate a config file. Do that with
+#       `dory config-file`
+#   This will write the config file ~/.dory.yml
+#   Change the following config file line in the "nginx_proxy" section from:
+#       container_name: dory_dinghy_http_proxy
+#   to:
+#       container_name: http-proxy
+#
+# LARA host is assumed to be app.lara.docker. If not, you can set LARA_HOST in your environment (e.g. .env file).
+
+version: '3'
+services:
+  app:
+    environment:
+      # import local LARA_HOST env variable
+      LARA_HOST:
+    external_links:
+      # use app.lara.docker as the default value
+      - http-proxy:${LARA_HOST:-app.lara.docker}
