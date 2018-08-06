@@ -41,7 +41,7 @@ class Search
   InteractiveMaterial     = "Interactive"
   AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial]
 
-  AllSearchableModels       = [ ExternalActivity, Interactive]
+  AllSearchableModels       = [ ExternalActivity, Interactive ]
 
   DefaultSearchableModels   = [ ExternalActivity ]
 

@@ -34,24 +34,23 @@ ActiveRecord::Schema.define(:version => 20180713201738) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",                    :limit => 36
+    t.string   "uuid",                   :limit => 36
     t.string   "name"
-    t.text     "description",             :limit => 16777215
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
+    t.text     "description",            :limit => 16777215
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
     t.integer  "position"
     t.integer  "investigation_id"
     t.integer  "original_id"
-    t.boolean  "teacher_only",                                :default => false
+    t.boolean  "teacher_only",                               :default => false
     t.string   "publication_status"
-    t.integer  "offerings_count",                             :default => 0
-    t.boolean  "student_report_enabled",                      :default => true
-    t.boolean  "show_score",                                  :default => false
-    t.text     "description_for_teacher", :limit => 16777215
+    t.integer  "offerings_count",                            :default => 0
+    t.boolean  "student_report_enabled",                     :default => true
+    t.boolean  "show_score",                                 :default => false
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
-    t.boolean  "is_featured",                                 :default => false
-    t.boolean  "is_assessment_item",                          :default => false
+    t.boolean  "is_featured",                                :default => false
+    t.boolean  "is_assessment_item",                         :default => false
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -773,7 +772,6 @@ ActiveRecord::Schema.define(:version => 20180713201738) do
     t.boolean  "student_report_enabled",                        :default => true
     t.boolean  "allow_activity_assignment",                     :default => true
     t.boolean  "show_score",                                    :default => false
-    t.text     "description_for_teacher",   :limit => 16777215
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
     t.boolean  "is_featured",                                   :default => false
