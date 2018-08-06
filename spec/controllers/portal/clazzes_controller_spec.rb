@@ -414,7 +414,7 @@ describe Portal::ClazzesController do
 
       @random_user.reload
 
-      assert_not_nil @random_user.portal_teacher
+      expect(@random_user.portal_teacher).not_to be_nil
       Portal::Teacher.count(:all).should == current_count + 1
     end
 
@@ -588,7 +588,7 @@ describe Portal::ClazzesController do
       }
       post :add_student, post_params
       newStudentInClazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
-      assert_not_nil(newStudentInClazz)
+      expect(newStudentInClazz).not_to be_nil
     end
   end
 
@@ -634,27 +634,27 @@ describe Portal::ClazzesController do
       put :manage_classes, @post_params
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
       expect(teacher_clazz.position).to eq(5)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
       expect(teacher_clazz.position).to eq(2)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active == false)
       expect(teacher_clazz.position).to eq(3)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
       expect(teacher_clazz.position).to eq(4)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
       expect(teacher_clazz.position).to eq(1)
 
@@ -692,16 +692,16 @@ describe Portal::ClazzesController do
       xhr :post, :copy_class, @post_params
 
       @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
-      assert_not_nil(@copy_clazz)
+      expect(@copy_clazz).not_to be_nil
 
       expect(@copy_clazz.teachers.length).to eq(@mock_clazz.teachers.length)
       @mock_clazz.teachers.each do |teacher|
-        assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
+        expect(@copy_clazz.teachers.find_by_id(teacher.id)).not_to be_nil
       end
 
       expect(@copy_clazz.offerings.length).to eq(@mock_clazz.offerings.length)
       @mock_clazz.offerings.each do |offering|
-        assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
+        expect(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id)).not_to be_nil
       end
 
       expect(@copy_clazz.students.length).to eq(0)

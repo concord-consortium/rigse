@@ -69,10 +69,10 @@ describe Admin::SiteNoticesController do
     it("should create a notice with some text and at least one role selected") do
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_not_nil(notice)
+      expect(notice).not_to be_nil
       notice_id = notice.id
       notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(notice_id)
-      assert_not_nil(notice_roles)
+      expect(notice_roles).not_to be_nil
       notice_roles.each do |role|
         assert(@post_params[:role].include?(role.role_id))
       end
@@ -133,10 +133,10 @@ describe Admin::SiteNoticesController do
     it("should create a notice if and only if notice contains a non white space character and at least one role is selected") do
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      assert_not_nil(notice)
+      expect(notice).not_to be_nil
       notice_id = notice.id
       notice_roles = Admin::SiteNoticeUser.find_all_by_notice_id(notice_id)
-      assert_not_nil(notice_roles)
+      expect(notice_roles).not_to be_nil
       notice_roles.each do |role|
         assert(@post_params[:role].include?(role.role_id))
       end
@@ -178,7 +178,7 @@ describe Admin::SiteNoticesController do
 
       # Check the notice exists before checking that it is deleted
       notice = Admin::SiteNotice.find_by_id(@params[:id])
-      assert_not_nil(notice)
+      expect(notice).not_to be_nil
 
       xhr :post, :remove_notice, @params
       notice = Admin::SiteNotice.find_by_id(@params[:id])
@@ -203,7 +203,7 @@ describe Admin::SiteNoticesController do
     it"should dismiss a notice" do
       xhr :post, :dismiss_notice, @params
       dismissed_notice = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(@notice.id, @teacher_user.id)
-      assert_not_nil(dismissed_notice)
+      expect(dismissed_notice).not_to be_nil
       assert(dismissed_notice.notice_dismissed)
       response.should be_success
     end
@@ -220,13 +220,13 @@ describe Admin::SiteNoticesController do
     it"should store collapse time and expand and collapse status" do
       xhr :post, :toggle_notice_display
       toggle_notice_status = Admin::NoticeUserDisplayStatus.find_by_user_id(@teacher_user.id)
-      assert_not_nil(toggle_notice_status)
+      expect(toggle_notice_status).not_to be_nil
       assert(toggle_notice_status.collapsed_status)
       response.should be_success
 
       xhr :post, :toggle_notice_display
       toggle_notice_status.reload
-      assert_not_nil(toggle_notice_status)
+      expect(toggle_notice_status).not_to be_nil
       expect(toggle_notice_status.collapsed_status).to eq(false)
       response.should be_success
     end

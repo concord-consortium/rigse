@@ -122,14 +122,14 @@ describe Portal::OfferingsController do
       # after first expand
       xhr :post, :offering_collapsed_status, @params
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
-      assert_not_nil(portal_teacher_full_status)
+      expect(portal_teacher_full_status).not_to be_nil
       expect(portal_teacher_full_status.offering_collapsed).to eq(false)
       response.body.should be_blank
 
       #when teacher has collapsed and expanded many times before
       xhr :post, :offering_collapsed_status, @params
       portal_teacher_full_status.reload
-      assert_not_nil(portal_teacher_full_status)
+      expect(portal_teacher_full_status).not_to be_nil
       expect(portal_teacher_full_status.offering_collapsed).to eq(true)
       response.body.should be_blank
     end
