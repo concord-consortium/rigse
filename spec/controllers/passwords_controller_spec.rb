@@ -25,7 +25,7 @@ describe PasswordsController do
 
       post :create_by_login, @params
 
-      assert_response :success
+      expect(response).to be_success
       flash[:error].should_not be_nil
     end
 
@@ -34,7 +34,7 @@ describe PasswordsController do
 
       post :create_by_login, @params
 
-      assert_response :success
+      expect(response).to be_success
       flash[:error].should_not be_nil
     end
 
@@ -113,8 +113,7 @@ describe PasswordsController do
         @answers_params[:security_questions][:question2][:id] += 500
 
         post :check_questions, @answers_params
-
-        assert_response :not_found
+        expect(response.status).to eq(404)
       end
     end
   end

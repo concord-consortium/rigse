@@ -23,7 +23,7 @@ describe Admin::SettingsController do
     it "doesn't allow anybody who isn't an admin or manager to access to index" do
       logout_user
       get :index
-      assert_response :redirect
+      expect(response.status).to eq(302)
     end
   end
 
@@ -39,7 +39,7 @@ describe Admin::SettingsController do
       
       get :index
       
-      assert_response :success
+      expect(response).to be_success
       expect(response).to render_template(:partial => "_show_for_managers")
 
       assigns[:admin_settings].size.should be(1)
@@ -99,7 +99,7 @@ describe Admin::SettingsController do
 
       get :edit, :id => "37"
 
-      assert_response :success
+      expect(response).to be_success
       expect(response).to render_template(:partial => "_form_for_managers")
       
       response.body.should have_selector("*[name='admin_settings[home_page_content]']")

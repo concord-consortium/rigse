@@ -114,7 +114,7 @@ describe Admin::ClientsController do
     describe "GET index" do
       it "will render the index" do
         get :index
-        assert_response 200
+        expect(response).to be_success
         response.should render_template("index")
       end
     end
@@ -149,7 +149,7 @@ describe Admin::ClientsController do
       it "renders the new form" do
         get :new
         response.should render_template("new")
-        assert_response 200
+        expect(response).to be_success
       end
     end
 
