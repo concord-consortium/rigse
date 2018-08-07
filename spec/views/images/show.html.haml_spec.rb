@@ -5,17 +5,17 @@ describe "/images/show.html.haml" do
   before(:each) do
     @image = stub_model(Image, :name => "my secret image")
     assigns[:image] = @image
-    @user = mock(
+    @user = double(
       :has_role?       => true,
       :anonymous?      => false
     )
-    view.stub!(:current_visitor).and_return(@user)
+    allow(view).to receive(:current_visitor).and_return(@user)
   end
 
 
   it "should render without error" do
     render
-    rendered.should match /my secret image/
+    expect(rendered).to match /my secret image/
   end
 end
 

@@ -265,32 +265,32 @@ describe ActivityRuntimeAPI do
     describe "When publishing a new external activity" do
       it 'should get nil from update_activity' do
         result = ActivityRuntimeAPI.update_activity(new_hash)
-        result.should be_nil
+        expect(result).to be_nil
       end
 
       it "should create a new activity" do
         result = ActivityRuntimeAPI.publish_activity(new_hash, user)
-        result.should_not be_nil
-        result.should have_multiple_choice_like "What color is the sky"
-        result.should have_choice_like "blue"
-        result.template.should be_a_kind_of(Activity)
-        result.template.is_template.should be_true
-        result.should_not have_choice_like "brown"
-        result.should have_image_question_like "draw a picture"
-        result.should have_image_question_like "now explain"
-        result.should have_iframe_like "http://test.interactive.com"
-        result.should have_page_like "Cool Activity Page 1", page_1_url
+        expect(result).not_to be_nil
+        expect(result).to have_multiple_choice_like "What color is the sky"
+        expect(result).to have_choice_like "blue"
+        expect(result.template).to be_a_kind_of(Activity)
+        expect(result.template.is_template).to be_truthy
+        expect(result).not_to have_choice_like "brown"
+        expect(result).to have_image_question_like "draw a picture"
+        expect(result).to have_image_question_like "now explain"
+        expect(result).to have_iframe_like "http://test.interactive.com"
+        expect(result).to have_page_like "Cool Activity Page 1", page_1_url
         # Portal should ignore description
-        result.short_description.should be_nil
-        result.long_description.should be_nil
-        result.long_description_for_teacher.should be_nil
-        result.student_report_enabled.should be_true
+        expect(result.short_description).to be_nil
+        expect(result.long_description).to be_nil
+        expect(result.long_description_for_teacher).to be_nil
+        expect(result.student_report_enabled).to be_truthy
       end
 
       it "should cause that parent investigation and activities are recognized as templates" do
         result = ActivityRuntimeAPI.publish_activity(new_hash, user)
-        result.template.is_template.should be_true
-        result.template.investigation.is_template.should be_true
+        expect(result.template.is_template).to be_truthy
+        expect(result.template.investigation.is_template).to be_truthy
       end
     end
 
@@ -302,19 +302,19 @@ describe ActivityRuntimeAPI do
         it "should delete the non-mapped embeddables in the existing activity" do
           existing
           result = ActivityRuntimeAPI.update_activity(new_hash)
-          result.should_not be_nil
-          result.id.should == existing.id
-          result.template.multiple_choices.should have(1).question
-          result.template.open_responses.should have(1).question
-          result.should have_open_response_like("dislike this activity")
-          result.should have_image_question_like("draw a picture")
+          expect(result).not_to be_nil
+          expect(result.id).to eq(existing.id)
+          expect(result.template.multiple_choices.size).to eq(1)
+          expect(result.template.open_responses.size).to eq(1)
+          expect(result).to have_open_response_like("dislike this activity")
+          expect(result).to have_image_question_like("draw a picture")
         end
 
         it "should update student_report_enabled if changed" do
           existing
           result = ActivityRuntimeAPI.update_activity(new_hash)
-          result.should_not be_nil
-          result.student_report_enabled.should be_false
+          expect(result).not_to be_nil
+          expect(result.student_report_enabled).to be_falsey
         end
 
         it "should ignore description value" do
@@ -325,10 +325,10 @@ describe ActivityRuntimeAPI do
           existing.long_description_for_teacher = portal_description
           existing.save!
           result = ActivityRuntimeAPI.update_activity(new_hash)
-          result.should_not be_nil
-          result.short_description.should == portal_description
-          result.long_description.should == portal_description
-          result.long_description_for_teacher.should == portal_description
+          expect(result).not_to be_nil
+          expect(result.short_description).to eq(portal_description)
+          expect(result.long_description).to eq(portal_description)
+          expect(result.long_description_for_teacher).to eq(portal_description)
         end
       end
 
@@ -345,9 +345,9 @@ describe ActivityRuntimeAPI do
           original_id = open_response.id
           existing
           result = ActivityRuntimeAPI.update_activity(new_hash)
-          result.template.open_responses.first.id.should == original_id
-          result.should have_open_response_like("dislike this activity", required: true, featured: true)
-          result.should_not have_open_response_like("original prompt")
+          expect(result.template.open_responses.first.id).to eq(original_id)
+          expect(result).to have_open_response_like("dislike this activity", required: true, featured: true)
+          expect(result).not_to have_open_response_like("original prompt")
         end
       end
 
@@ -362,12 +362,12 @@ describe ActivityRuntimeAPI do
         end
         it "should update the image_question" do
           original_id = image_question.id
-          image_question.external_id.should == "987654321"
+          expect(image_question.external_id).to eq("987654321")
           existing
           result = ActivityRuntimeAPI.publish(new_hash, user)
-          result.template.image_questions.first.id.should == original_id
-          result.should have_image_question_like("draw a picture", required: true, featured: true)
-          result.should_not have_image_question_like("original prompt")
+          expect(result.template.image_questions.first.id).to eq(original_id)
+          expect(result).to have_image_question_like("draw a picture", required: true, featured: true)
+          expect(result).not_to have_image_question_like("original prompt")
         end
       end
 
@@ -382,12 +382,12 @@ describe ActivityRuntimeAPI do
         end
         it "should update the iframe" do
           original_id = iframe.id
-          iframe.external_id.should == "if_123"
+          expect(iframe.external_id).to eq("if_123")
           existing
           result = ActivityRuntimeAPI.publish(new_hash, user)
-          result.template.iframes.first.id.should == original_id
-          result.should have_iframe_like("http://test.interactive.com", featured: true, required: true)
-          result.should_not have_iframe_like("http://original.url")
+          expect(result.template.iframes.first.id).to eq(original_id)
+          expect(result).to have_iframe_like("http://test.interactive.com", featured: true, required: true)
+          expect(result).not_to have_iframe_like("http://original.url")
         end
       end
 
@@ -426,22 +426,22 @@ describe ActivityRuntimeAPI do
         end
 
         it "should update the existing question" do
-          @result.template.multiple_choices.first.id.should == @original_id
+          expect(@result.template.multiple_choices.first.id).to eq(@original_id)
         end
 
         it "should have the new prompt, be required and featured" do
-          @result.should have_multiple_choice_like("What color is the sky?", required: true, featured: true)
+          expect(@result).to have_multiple_choice_like("What color is the sky?", required: true, featured: true)
         end
 
         it "should not have the original choices" do
-          @result.should_not have_choice_like("original choice")
-          @result.should_not have_choice_like("this choice should be deleted")
+          expect(@result).not_to have_choice_like("original choice")
+          expect(@result).not_to have_choice_like("this choice should be deleted")
         end
 
         it "should have the new choices" do
-          @result.should have_choice_like("red")
-          @result.should have_choice_like("blue")
-          @result.should have_choice_like("green")
+          expect(@result).to have_choice_like("red")
+          expect(@result).to have_choice_like("blue")
+          expect(@result).to have_choice_like("green")
         end
 
         describe "updating choices that exist" do
@@ -469,21 +469,21 @@ describe ActivityRuntimeAPI do
 
           it "The original choice should be updated" do
             choice.reload
-            choice.choice.should == "the content has changed"
-            choice.id.should == @original_choice_id
+            expect(choice.choice).to eq("the content has changed")
+            expect(choice.id).to eq(@original_choice_id)
           end
 
           it "The other choice should be deleted" do
-            @result.should_not have_choice_like("this choice should be deleted")
+            expect(@result).not_to have_choice_like("this choice should be deleted")
           end
 
           it "should have the new choices" do
             @result.reload
-            @result.should have_choice_like("red")
-            @result.should have_choice_like("blue")
-            @result.should have_choice_like("green")
-            @result.should have_choice_like("the content has changed")
-            @result.should have_choice_id choice.id
+            expect(@result).to have_choice_like("red")
+            expect(@result).to have_choice_like("blue")
+            expect(@result).to have_choice_like("green")
+            expect(@result).to have_choice_like("the content has changed")
+            expect(@result).to have_choice_id choice.id
           end
         end
 
@@ -498,28 +498,28 @@ describe ActivityRuntimeAPI do
       let(:result) { ActivityRuntimeAPI.publish_sequence(sequence_hash, user) }
 
       it 'should create a new external activity' do
-        result.should_not be_nil
-        result.should be_a_kind_of(ExternalActivity)
-        result.url.should == sequence_url
-        result.activities.length.should > 0
-        result.name.should == sequence_name
-        result.student_report_enabled.should be_true
+        expect(result).not_to be_nil
+        expect(result).to be_a_kind_of(ExternalActivity)
+        expect(result.url).to eq(sequence_url)
+        expect(result.activities.length).to be > 0
+        expect(result.name).to eq(sequence_name)
+        expect(result.student_report_enabled).to be_truthy
       end
       it 'should create a new investigation' do
-        result.template.should be_a_kind_of(Investigation)
-        result.template.is_template.should be_true
-        result.activities.length.should > 0
+        expect(result.template).to be_a_kind_of(Investigation)
+        expect(result.template.is_template).to be_truthy
+        expect(result.activities.length).to be > 0
       end
 
       it 'should keep order of activities' do
-        result.activities[0].position.should <= result.activities[1].position
-        result.activities[0].name.should == sequence_hash['activities'][0]['name']
-        result.activities[1].name.should == sequence_hash['activities'][1]['name']
+        expect(result.activities[0].position).to be <= result.activities[1].position
+        expect(result.activities[0].name).to eq(sequence_hash['activities'][0]['name'])
+        expect(result.activities[1].name).to eq(sequence_hash['activities'][1]['name'])
       end
 
       it "should cause that parent investigation and activities are recognized as templates" do
-        result.template.is_template.should be_true
-        result.template.activities.map { |a| a.is_template.should be_true }
+        expect(result.template.is_template).to be_truthy
+        result.template.activities.map { |a| expect(a.is_template).to be_truthy }
       end
     end
 
@@ -529,12 +529,12 @@ describe ActivityRuntimeAPI do
       it 'should update the existing investigation details' do
         existing_sequence
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
-        result.id.should == existing_sequence.id
-        result.name.should match /something new/
-        result.template.name.should match /something new/
-        result.author_url.should == sequence_author_url
-        result.print_url.should == sequence_print_url
-        result.student_report_enabled.should be_true
+        expect(result.id).to eq(existing_sequence.id)
+        expect(result.name).to match /something new/
+        expect(result.template.name).to match /something new/
+        expect(result.author_url).to eq(sequence_author_url)
+        expect(result.print_url).to eq(sequence_print_url)
+        expect(result.student_report_enabled).to be_truthy
       end
 
       describe 'student_report_enabled' do
@@ -543,7 +543,7 @@ describe ActivityRuntimeAPI do
         it 'if set to false in a activity should update the sequence' do
           existing_sequence
           result = ActivityRuntimeAPI.update_sequence(sequence_hash)
-          result.student_report_enabled.should be_false
+          expect(result.student_report_enabled).to be_falsey
         end
       end
 
@@ -551,7 +551,7 @@ describe ActivityRuntimeAPI do
         existing_locked_sequence
         # the sequence_hash does not provide the is_locked proeprty
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
-        result.is_locked.should == true
+        expect(result.is_locked).to eq(true)
       end
 
       it 'should update order of activities' do
@@ -559,9 +559,9 @@ describe ActivityRuntimeAPI do
         # Swap position of activities.
         sequence_hash['activities'][0], sequence_hash['activities'][1] = sequence_hash['activities'][1], sequence_hash['activities'][0]
         result = ActivityRuntimeAPI.update_sequence(sequence_hash)
-        result.activities[0].position.should <= result.activities[1].position
-        result.activities[0].name.should == sequence_hash['activities'][0]['name']
-        result.activities[1].name.should == sequence_hash['activities'][1]['name']
+        expect(result.activities[0].position).to be <= result.activities[1].position
+        expect(result.activities[0].name).to eq(sequence_hash['activities'][0]['name'])
+        expect(result.activities[1].name).to eq(sequence_hash['activities'][1]['name'])
       end
 
       describe 'the report_embeddable_filters' do
@@ -569,15 +569,15 @@ describe ActivityRuntimeAPI do
         let(:offerings)   { [offering] }
         let(:mock_filter) { double()   }
         before(:each) do
-          Investigation.any_instance.stub(:offerings).and_return(offerings)
-          Activity.any_instance.stub(:offerings).and_return(offerings)
-          offering.stub!(:report_embeddable_filter).and_return(mock_filter)
+          allow_any_instance_of(Investigation).to receive(:offerings).and_return(offerings)
+          allow_any_instance_of(Activity).to receive(:offerings).and_return(offerings)
+          allow(offering).to receive(:report_embeddable_filter).and_return(mock_filter)
         end
        it 'should reset the filters' do
           existing_sequence
-          mock_filter.should_receive(:clear)
+          expect(mock_filter).to receive(:clear)
           result = ActivityRuntimeAPI.update_sequence(sequence_hash)
-          existing_sequence.template.offerings.should == offerings
+          expect(existing_sequence.template.offerings).to eq(offerings)
         end
       end
     end

@@ -111,7 +111,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         body = JSON.parse(response.body)
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-        decoded_token[:data]["uid"].should eql uid
+        expect(decoded_token[:data]["uid"]).to eql uid
       end
     end
 
@@ -129,17 +129,17 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-        decoded_token[:data]["uid"].should eql uid
-        decoded_token[:data]["domain"].should eql root_url
-        decoded_token[:data]["externalId"].should eql learner.id
-        decoded_token[:data]["returnUrl"].should_not be_nil
-        decoded_token[:data]["logging"].should eql true
-        decoded_token[:data]["domain_uid"].should eql user.id
-        decoded_token[:data]["class_info_url"].should_not be_nil
-        decoded_token[:data]["claims"]["user_type"].should eq "learner"
-        decoded_token[:data]["claims"]["user_id"].should eq url_for_user
-        decoded_token[:data]["claims"]["class_hash"].should_not be_nil
-        decoded_token[:data]["claims"]["offering_id"].should eq offering.id
+        expect(decoded_token[:data]["uid"]).to eql uid
+        expect(decoded_token[:data]["domain"]).to eql root_url
+        expect(decoded_token[:data]["externalId"]).to eql learner.id
+        expect(decoded_token[:data]["returnUrl"]).not_to be_nil
+        expect(decoded_token[:data]["logging"]).to eql true
+        expect(decoded_token[:data]["domain_uid"]).to eql user.id
+        expect(decoded_token[:data]["class_info_url"]).not_to be_nil
+        expect(decoded_token[:data]["claims"]["user_type"]).to eq "learner"
+        expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+        expect(decoded_token[:data]["claims"]["class_hash"]).not_to be_nil
+        expect(decoded_token[:data]["claims"]["offering_id"]).to eq offering.id
       end
     end
 
@@ -157,11 +157,11 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-        decoded_token[:data]["uid"].should eql uid
-        decoded_token[:data]["domain"].should eql root_url
-        decoded_token[:data]["claims"]["user_type"].should eq "teacher"
-        decoded_token[:data]["claims"]["user_id"].should eq url_for_user
-        decoded_token[:data]["claims"]["class_hash"].should eq nil
+        expect(decoded_token[:data]["uid"]).to eql uid
+        expect(decoded_token[:data]["domain"]).to eql root_url
+        expect(decoded_token[:data]["claims"]["user_type"]).to eq "teacher"
+        expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+        expect(decoded_token[:data]["claims"]["class_hash"]).to eq nil
       end
 
       it "returns a valid JWT with teacher params with a class hash" do
@@ -172,7 +172,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-        decoded_token[:data]["claims"]["class_hash"].should eq clazz.class_hash
+        expect(decoded_token[:data]["claims"]["class_hash"]).to eq clazz.class_hash
       end
     end
   end
@@ -190,7 +190,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       body = JSON.parse(response.body)
       token = body["token"]
       decoded_token = SignedJWT::decode_portal_token(token)
-      decoded_token[:data]["uid"].should eql user.id
+      expect(decoded_token[:data]["uid"]).to eql user.id
     end
   end
 
@@ -207,13 +207,13 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       token = body["token"]
       decoded_token = SignedJWT::decode_portal_token(token)
 
-      decoded_token[:data]["uid"].should eql user.id
-      decoded_token[:data]["domain"].should eql root_url
-      decoded_token[:data]["user_type"].should eq "learner"
-      decoded_token[:data]["user_id"].should_not be_nil
-      decoded_token[:data]["learner_id"].should eq learner.id
-      decoded_token[:data]["class_info_url"].should_not be_nil
-      decoded_token[:data]["offering_id"].should eq offering.id
+      expect(decoded_token[:data]["uid"]).to eql user.id
+      expect(decoded_token[:data]["domain"]).to eql root_url
+      expect(decoded_token[:data]["user_type"]).to eq "learner"
+      expect(decoded_token[:data]["user_id"]).not_to be_nil
+      expect(decoded_token[:data]["learner_id"]).to eq learner.id
+      expect(decoded_token[:data]["class_info_url"]).not_to be_nil
+      expect(decoded_token[:data]["offering_id"]).to eq offering.id
     end
   end
 
@@ -230,11 +230,11 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       token = body["token"]
       decoded_token = SignedJWT::decode_portal_token(token)
 
-      decoded_token[:data]["uid"].should eql user.id
-      decoded_token[:data]["domain"].should eql root_url
-      decoded_token[:data]["user_type"].should eq "teacher"
-      decoded_token[:data]["user_id"].should_not be_nil
-      decoded_token[:data]["teacher_id"].should eq class_teacher.id
+      expect(decoded_token[:data]["uid"]).to eql user.id
+      expect(decoded_token[:data]["domain"]).to eql root_url
+      expect(decoded_token[:data]["user_type"]).to eq "teacher"
+      expect(decoded_token[:data]["user_id"]).not_to be_nil
+      expect(decoded_token[:data]["teacher_id"]).to eq class_teacher.id
     end
   end
 end

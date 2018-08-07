@@ -48,7 +48,7 @@ describe EnewsSubscription do
 
         result = EnewsSubscription.set_status(User_EMail, 'subscribed', User_First, User_Last)
 
-        WebMock.should have_requested(:put, construct_test_uri)
+        expect(WebMock).to have_requested(:put, construct_test_uri)
                .with(:body => subscribed_request_body, :headers => Enews_Mimetype)
                .once
 
@@ -68,7 +68,7 @@ describe EnewsSubscription do
 
         result = EnewsSubscription.set_status(User_EMail, 'unsubscribed', User_First, User_Last)
 
-        WebMock.should have_requested(:put, construct_test_uri)
+        expect(WebMock).to have_requested(:put, construct_test_uri)
                .with(:body => subscribed_request_body, :headers => Enews_Mimetype)
                .once
 
@@ -91,7 +91,7 @@ describe EnewsSubscription do
 
         result = EnewsSubscription.get_status(User_EMail)
 
-        WebMock.should have_requested(:get, construct_test_uri)
+        expect(WebMock).to have_requested(:get, construct_test_uri)
                 .with(:body => {email_address: User_EMail}.to_json,
                       :headers => Enews_Mimetype)
                 .once
@@ -112,7 +112,7 @@ describe EnewsSubscription do
 
         result = EnewsSubscription.get_status(User_EMail)
 
-        WebMock.should have_requested(:get, construct_test_uri)
+        expect(WebMock).to have_requested(:get, construct_test_uri)
                .with(:body => {email_address: User_EMail}.to_json,
                      :headers => Enews_Mimetype)
                .once

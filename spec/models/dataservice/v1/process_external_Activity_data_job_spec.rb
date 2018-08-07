@@ -1,14 +1,14 @@
 require File.expand_path('../../../../spec_helper', __FILE__)
 
 describe Dataservice::V1::ProcessExternalActivityDataJob do
-  let(:template)     { mock({open_responses: [], multiple_choices: [], image_questions: [], iframes: []}) }
-  let(:runnable)     { mock(template: template) }
-  let(:offering)     { mock(runnable: runnable, id: 23) }
-  let(:report_learner) { mock('last_run=' => true, update_fields: true) }
-  let(:learner)      { mock(offering: offering, report_learner: report_learner) }
-  let(:event)        { mock() }
+  let(:template)     { double({open_responses: [], multiple_choices: [], image_questions: [], iframes: []}) }
+  let(:runnable)     { double(template: template) }
+  let(:offering)     { double(runnable: runnable, id: 23) }
+  let(:report_learner) { double('last_run=' => true, update_fields: true) }
+  let(:learner)      { double(offering: offering, report_learner: report_learner) }
+  let(:event)        { double() }
   before(:each) do
-    Portal::Learner.stub!(:find => learner)
+    Portal::Learner.stub(:find => learner)
   end
 
   subject { Dataservice::V1::ProcessExternalActivityDataJob.new(23,json_content, Time.now())}
@@ -23,11 +23,11 @@ describe Dataservice::V1::ProcessExternalActivityDataJob do
       end
 
       it "should build a LearnerProcessingEvent with a nil lara_start" do
-        LearnerProcessingEvent.should_receive(:build_proccesing_event)
+        expect(LearnerProcessingEvent).to receive(:build_proccesing_event)
           .with(learner, nil, an_instance_of(Time), an_instance_of(Time), 0) {
             event
           }
-        event.should_receive(:save)
+        expect(event).to receive(:save)
         subject.perform
       end
     end
@@ -43,11 +43,11 @@ describe Dataservice::V1::ProcessExternalActivityDataJob do
       end
 
       it "the create a LearnerProcessingEvent with lara_start" do
-        LearnerProcessingEvent.should_receive(:build_proccesing_event)
+        expect(LearnerProcessingEvent).to receive(:build_proccesing_event)
           .with(learner, lara_start, an_instance_of(Time), an_instance_of(Time), 0) {
             event
           }
-        event.should_receive(:save)
+        expect(event).to receive(:save)
         subject.perform
       end
     end

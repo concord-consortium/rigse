@@ -5,11 +5,11 @@ describe "rendering application.html.haml" do
   let(:roles) {['first-role']}
 
   before do
-    view.stub(:current_visitor).and_return(fake_visitor)
-    view.stub(:current_user).and_return(fake_visitor)
-    view.stub(:calpicker_includes).and_return('')
-    fake_visitor.stub(:authenticate).and_return(true)
-    fake_visitor.stub(:role_names).and_return(roles)
+    allow(view).to receive(:current_visitor).and_return(fake_visitor)
+    allow(view).to receive(:current_user).and_return(fake_visitor)
+    allow(view).to receive(:calpicker_includes).and_return('')
+    allow(fake_visitor).to receive(:authenticate).and_return(true)
+    allow(fake_visitor).to receive(:role_names).and_return(roles)
   end
 
   it "applies the correct role classes" do
@@ -18,7 +18,7 @@ describe "rendering application.html.haml" do
       :text => "nothing",
       :layout => "layouts/application"
     )
-    rendered.should have_selector("body.first-role-visitor")
+    expect(rendered).to have_selector("body.first-role-visitor")
   end
 end
 

@@ -28,10 +28,10 @@ describe SecurityQuestion do
     it "makes a new set of questions according to provided information" do
       new_questions = SecurityQuestion.make_questions_from_hash_and_user(@hash)
       
-      new_questions.size.should == 3
+      expect(new_questions.size).to eq(3)
       
       @hash.each do |k, v|
-        new_questions.select { |q| q.question == SecurityQuestion::QUESTIONS[v[:question_idx]] && q.answer == v[:answer] }.size.should == 1
+        expect(new_questions.select { |q| q.question == SecurityQuestion::QUESTIONS[v[:question_idx]] && q.answer == v[:answer] }.size).to eq(1)
       end
     end
     
@@ -44,13 +44,13 @@ describe SecurityQuestion do
       
       new_questions = SecurityQuestion.make_questions_from_hash_and_user(@hash, @user)
       
-      new_questions.size.should == 3
+      expect(new_questions.size).to eq(3)
       
-      new_questions.select { |q| q.question == SecurityQuestion::QUESTIONS[@hash[:question0][:question_idx]] && q.answer == @hash[:question0][:answer] }.size.should == 1
-      new_questions.select { |q| q.question == SecurityQuestion::QUESTIONS[@hash[:question1][:question_idx]] && q.answer == @hash[:question1][:answer] }.size.should == 1
+      expect(new_questions.select { |q| q.question == SecurityQuestion::QUESTIONS[@hash[:question0][:question_idx]] && q.answer == @hash[:question0][:answer] }.size).to eq(1)
+      expect(new_questions.select { |q| q.question == SecurityQuestion::QUESTIONS[@hash[:question1][:question_idx]] && q.answer == @hash[:question1][:answer] }.size).to eq(1)
       
       # The question should remain the same, but the answer should be updated with the one received in the hash.
-      new_questions.select { |q| q.question == question.question && q.answer == @hash[:question2][:answer] }.size.should == 1
+      expect(new_questions.select { |q| q.question == question.question && q.answer == @hash[:question2][:answer] }.size).to eq(1)
     end
   end
   
@@ -68,7 +68,7 @@ describe SecurityQuestion do
       
       errors = SecurityQuestion.errors_for_questions_list!(@questions)
       
-      errors.should include(SecurityQuestion::ERROR_DUPLICATE_QUESTIONS)
+      expect(errors).to include(SecurityQuestion::ERROR_DUPLICATE_QUESTIONS)
     end
     
     it "does not accept fewer than three questions" do
@@ -76,7 +76,7 @@ describe SecurityQuestion do
       
       errors = SecurityQuestion.errors_for_questions_list!(@questions)
       
-      errors.should include(SecurityQuestion::ERROR_TOO_FEW_QUESTIONS)
+      expect(errors).to include(SecurityQuestion::ERROR_TOO_FEW_QUESTIONS)
     end
     
     it "does not accept empty answers" do
@@ -84,7 +84,7 @@ describe SecurityQuestion do
       
       errors = SecurityQuestion.errors_for_questions_list!(@questions)
       
-      errors.should include(SecurityQuestion::ERROR_BLANK_ANSWER)
+      expect(errors).to include(SecurityQuestion::ERROR_BLANK_ANSWER)
     end
   end
   

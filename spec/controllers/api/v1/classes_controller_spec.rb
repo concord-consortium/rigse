@@ -22,7 +22,7 @@ describe API::V1::ClassesController do
 
     it "returns a 200 code for a valid class" do
       get :show, id: clazz.id
-      response.status.should eql(200)
+      expect(response.status).to eql(200)
     end
 
     it "returns only non archived offerings" do

@@ -17,12 +17,12 @@ shared_examples_for 'user registration' do
 
       describe "With valid user parameters" do
         subject { test_class.new(good_params) }
-        it { should be_valid }
+        it { is_expected.to be_valid }
       end
       
       describe "Missing some required parameter" do
         let(:bad_params) { Hash[good_params.to_a.sample(4)]}
-        it { should_not be_valid }
+        it { is_expected.not_to be_valid }
       end
 
     end

@@ -18,13 +18,13 @@ describe Portal::LearnerActivityFeedback do
 
   describe "learner_feedback" do
     it "should have an activity_feedback" do
-      learner_feedback.activity_feedback.should == activity_feedback
+      expect(learner_feedback.activity_feedback).to eq(activity_feedback)
     end
   end
 
   describe "the activity feedback" do
     it "should know about this learner feedback" do
-      activity_feedback.learner_activity_feedbacks.should include(learner_feedback)
+      expect(activity_feedback.learner_activity_feedbacks).to include(learner_feedback)
     end
   end
 
@@ -32,7 +32,7 @@ describe Portal::LearnerActivityFeedback do
     it "should return an array including our learner feedback" do
       ours = learner_feedback
       found = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner,activity_feedback)
-      found.should include(ours)
+      expect(found).to include(ours)
     end
   end
 

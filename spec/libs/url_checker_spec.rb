@@ -17,18 +17,18 @@ describe UrlChecker do
 
   it "should validate good image urls" do
       [@small_image_url, @medium_image_url].each do |img|  
-        UrlChecker.valid?(img).should be true
-        UrlChecker.valid?(img).should be true
+        expect(UrlChecker.valid?(img)).to be true
+        expect(UrlChecker.valid?(img)).to be true
       end
   end
   
   it "should not validate good image urls that are too big" do
-    UrlChecker.valid?(@huge_image_url,  :max_size => 99999999).should be false
-    UrlChecker.valid?(@medium_image_url,:max_size =>100000).should be true
+    expect(UrlChecker.valid?(@huge_image_url,  :max_size => 99999999)).to be false
+    expect(UrlChecker.valid?(@medium_image_url,:max_size =>100000)).to be true
   end
   
   it "should not validate bad image urls" do
-    UrlChecker.valid?(@non_existant).should be false
+    expect(UrlChecker.valid?(@non_existant)).to be false
   end
   
 end

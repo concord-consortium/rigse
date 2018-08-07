@@ -28,42 +28,42 @@ describe Portal::School do
   it "can create schools from NCES school data " do
     nces_school = Factory(:portal_nces06_school)
     new_school = Portal::School.find_or_create_by_nces_school(nces_school)
-    new_school.should_not be_nil
-    new_school.should be_real # meaning has a real nces school
+    expect(new_school).not_to be_nil
+    expect(new_school).to be_real # meaning has a real nces school
   end
   
   it "should not allow a teacher to be added more than once" do
     school = Factory(:portal_school)
-    school.members.should be_empty
+    expect(school.members).to be_empty
     teacher = Factory(:portal_teacher)
     school.add_member(teacher)
     school.reload
-    school.members.size.should eql(1)
+    expect(school.members.size).to eql(1)
     school.add_member(teacher)
     
-    school.members.size.should eql(1)
+    expect(school.members.size).to eql(1)
     school.reload
-    school.members.size.should eql(1)
+    expect(school.members.size).to eql(1)
   end
 
   describe "#portal_teachers" do
     it "should be writable" do
       school = Factory(:portal_school)
-      school.members.should be_empty
+      expect(school.members).to be_empty
       teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"))
 
       school.portal_teachers << teacher
 
-      school.members.size.should == 1
-      school.portal_teachers.size.should == 1
+      expect(school.members.size).to eq(1)
+      expect(school.portal_teachers.size).to eq(1)
       school.reload
-      school.members.size.should == 1
-      school.portal_teachers.size.should == 1
+      expect(school.members.size).to eq(1)
+      expect(school.portal_teachers.size).to eq(1)
     end
 
     it "should only return teachers" do
       school = Factory(:portal_school)
-      school.members.should be_empty
+      expect(school.members).to be_empty
       teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [school])
 
       # we actually don't add students to schools anymore but in case we start doing it again
@@ -71,8 +71,8 @@ describe Portal::School do
       Portal::SchoolMembership.create(:school => school, :member => student)
 
       school.reload
-      school.members.size.should == 2
-      school.portal_teachers.size.should == 1
+      expect(school.members.size).to eq(2)
+      expect(school.portal_teachers.size).to eq(1)
     end
   end
   
@@ -91,23 +91,23 @@ describe Portal::School do
     describe "Given an NCES local school id that matches the SEASCH field in an NCES school" do
       it "finds and return the first school that is associated with the NCES school if one exists" do
         found = Portal::School.find_by_state_and_nces_local_id('RI', 39123)
-        found.should_not be_nil
-        found.should eql(@school)
+        expect(found).not_to be_nil
+        expect(found).to eql(@school)
       end
       it "returns nil if there is no matching school" do
         found = Portal::School.find_by_state_and_nces_local_id('MA', 39123)
-        found.should be_nil
+        expect(found).to be_nil
       end
     end
     describe "Given a school name that matches the SEASCH field in an NCES school " do
       it "finds and returns the first school that is associated with the NCES school name." do
         found = Portal::School.find_by_state_and_school_name('RI', "Woonsocket High School")
-        found.should_not be_nil
-        found.should eql(@school)
+        expect(found).not_to be_nil
+        expect(found).to eql(@school)
       end
       it "if there is no matching school, it should return nil" do
         found = Portal::School.find_by_state_and_school_name('RI', "Amherst Regional High School")
-        found.should be_nil
+        expect(found).to be_nil
       end
     end
   end
