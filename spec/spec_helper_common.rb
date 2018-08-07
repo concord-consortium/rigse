@@ -80,6 +80,9 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = Rails.env == 'test'
 
+  config.infer_spec_type_from_file_location!
+  config.expose_current_running_example_as :example
+
   config.include FailsInThemes
   config.include Sprockets::Helpers::RailsHelper
   config.include Devise::TestHelpers, :type => :controller
