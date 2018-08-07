@@ -89,8 +89,6 @@ describe PasswordsController do
       end
 
       it "will allow the user to reset their password if they answer their questions correctly" do
-        @forgetful_user.security_questions.each { |q| expect(q.answer).to receive(:downcase).and_return(q.answer.downcase) }
-
         post :check_questions, @answers_params
 
         password = assigns[:password]
@@ -99,7 +97,6 @@ describe PasswordsController do
       end
 
       it "will reject incorrect answers" do
-        @forgetful_user.security_questions.each { |q| expect(q.answer).to receive(:downcase).and_return(q.answer.downcase) }
         @answers_params[:security_questions][:question2][:answer] = "wrong"
 
         post :check_questions, @answers_params
