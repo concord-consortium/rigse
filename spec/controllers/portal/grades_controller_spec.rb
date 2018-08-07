@@ -3,8 +3,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::GradesController do
 
   def mock_grade(stubs={})
-    # @mock_grade ||= mock_model(Portal::Grade, stubs)
-    allow(@mock_grade).to receive(stubs) unless stubs.empty?
+    stubs.each do |key, value|
+      allow(@mock_grade).to receive(key).and_return(value)
+    end
     @mock_grade
   end
 
