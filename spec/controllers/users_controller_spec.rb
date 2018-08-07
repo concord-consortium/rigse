@@ -123,8 +123,8 @@ describe UsersController do
     
     assert_select "*#clazzes_nav", false
     
-    assert_nil flash[:error]
-    assert_nil flash[:notice]
+    expect(flash[:error]).to be_nil
+    expect(flash[:notice]).to be_nil
   end
   
   

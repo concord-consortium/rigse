@@ -20,15 +20,15 @@ describe Admin::SiteNotice do
       Admin::SiteNoticeRole.destroy_all
       Admin::SiteNotice.destroy_all
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
-      assert_equal(notices_hash[:notice_display_type] , Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice])
-      assert_equal(notices_hash[:notices].length , 0)
+      expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice])
+      expect(notices_hash[:notices].length ).to eq(0)
     end
     it"should show uncollapsed notice container if there are recent notices" do
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
-      assert_equal(notices_hash[:notice_display_type] , Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:new_notices])
+      expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:new_notices])
 
       notice_ids = notices_hash[:notices].map {|n| n.id}
-      assert_equal(notice_ids.length, 3)
+      expect(notice_ids.length).to eq(3)
       assert(notice_ids.include?(@first_notice.id))
       assert(notice_ids.include?(@second_notice.id))
       assert(notice_ids.include?(@third_notice.id))
@@ -36,21 +36,21 @@ describe Admin::SiteNotice do
     it"should not show dismissed notices" do
       Factory.create(:site_notice_user, :notice_id => @first_notice.id,:user_id => @admin_user.id, :notice_dismissed => true)
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
-      assert_equal(notices_hash[:notice_display_type] , Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:new_notices])
+      expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:new_notices])
 
       notice_ids = notices_hash[:notices].map {|n| n.id}
-      assert_equal(notice_ids.length, 2)
-      assert_equal(notice_ids.include?(@first_notice.id), false)
+      expect(notice_ids.length).to eq(2)
+      expect(notice_ids.include?(@first_notice.id)).to eq(false)
       assert(notice_ids.include?(@second_notice.id))
       assert(notice_ids.include?(@third_notice.id))
     end
     it"should show collapsed notice container if there are no recent notices and user had collapsed the notice container" do
       Factory.create(:notice_user_display_status,:user_id => @admin_user.id,:last_collapsed_at_time => DateTime.now + 1.day, :collapsed_status => true)
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
-      assert_equal(notices_hash[:notice_display_type] , Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
+      expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
 
       notice_ids = notices_hash[:notices].map {|n| n.id}
-      assert_equal(notice_ids.length, 3)
+      expect(notice_ids.length).to eq(3)
       assert(notice_ids.include?(@first_notice.id))
       assert(notice_ids.include?(@second_notice.id))
       assert(notice_ids.include?(@third_notice.id))

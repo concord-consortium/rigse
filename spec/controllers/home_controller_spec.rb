@@ -62,7 +62,7 @@ describe HomeController do
         :home_page_preview_content =>"<b>Home page content.</b>",
       }
       post :preview_home_page, @post_params
-      assert_response :success
+      expect(response).to be_success
       response.body.should include(@post_params[:home_page_preview_content])
     end
   end
