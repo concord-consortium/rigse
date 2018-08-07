@@ -26,7 +26,7 @@ describe User do
     it 'starts in pending state' do
       @creating_user.call
       @user.reload
-      assert_equal @user.state, 'pending'
+      expect(@user.state).to eq('pending')
     end
   end
 
@@ -213,16 +213,16 @@ describe User do
 
   it 'registers passive user' do
     user = create_user(:password => nil, :password_confirmation => nil)
-    assert_equal user.state, 'passive'
+    expect(user.state).to eq('passive')
     user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})
     user.save!
     user.reload
-    assert_equal user.state, 'pending'
+    expect(user.state).to eq('pending')
   end
 
   it 'suspends user' do
     users(:quentin).suspend!
-    assert_equal users(:quentin).state, 'suspended'
+    expect(users(:quentin).state).to eq('suspended')
   end
 
   it 'does not authenticate suspended user' do
@@ -234,7 +234,7 @@ describe User do
     users(:quentin).deleted_at.should be_nil
     users(:quentin).delete!
     users(:quentin).deleted_at.should_not be_nil
-    assert_equal users(:quentin).state, 'disabled'
+    expect(users(:quentin).state).to eq('disabled')
   end
 
   describe "being unsuspended" do
@@ -247,13 +247,13 @@ describe User do
 
     it 'reverts to active state' do
       @user.unsuspend!
-      assert_equal @user.state, 'active'
+      expect(@user.state).to eq('active')
     end
 
     it 'reverts to passive state if activation_code and activated_at are nil' do
       User.update_all({:confirmation_token => nil, :confirmed_at => nil})
       @user.reload.unsuspend!
-      assert_equal @user.state, 'passive'
+      expect(@user.state).to eq('passive')
     end
 
     it 'reverts to pending state if activation_code is set and activated_at is nil' do
@@ -265,7 +265,7 @@ describe User do
         user.save!
       end
       @user.reload.unsuspend!
-      assert_equal @user.state, 'pending'
+      expect(@user.state).to eq('pending')
     end
   end
 
