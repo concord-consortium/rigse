@@ -39,7 +39,7 @@ Capybara.default_selector = :css
 Capybara.default_wait_time = 5
 Capybara.server_boot_timeout = 5
 
-include RSpec::Mocks::Methods
+# include RSpec::Mocks::Methods
 
 # so we can use things like dom_id_for
 include ApplicationHelper
