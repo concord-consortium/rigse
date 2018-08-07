@@ -187,12 +187,8 @@ describe Report::Learner do
           report_learner.update_answers()
         end
 
-        describe '#answers' do
-          subject { super().answers }
-
-          it 'has 2 answers' do
-            expect(subject.answers.size).to eq(2)
-          end
+        it 'has 2 answers' do
+          expect(subject.answers.size).to eq(2)
         end
 
         describe "the feedback" do
