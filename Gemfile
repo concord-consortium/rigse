@@ -217,6 +217,7 @@ group :test, :cucumber, :development do
   gem "launchy",           "~> 2.0.5"
   gem "pry"
   gem 'pry-byebug'
+  gem 'simplecov', :require => false
 end
 
 group :assets do
