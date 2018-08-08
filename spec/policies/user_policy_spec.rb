@@ -138,7 +138,7 @@ describe UserPolicy do
       it { should permit(:index)                      }
       it { should_not permit(:make_admin)             }
       it { should permit(:show)                       }
-      it { should_not permit(:confirm)                }
+      it { should permit(:confirm)                }
       it { should_not permit(:reset_password)         }
       it { should_not permit(:preferences)            }
       it { should_not permit(:switch)                 }

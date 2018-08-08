@@ -84,7 +84,7 @@ describe "fails_in_themes" do
         fails_in_themes({ "assessment" => :expected }) do
           true.should be_false
         end
-        ApplicationController.rspec_verify
+        verify ApplicationController
       }.should raise_error(RSpec::Mocks::MockExpectationError)
     end
   end

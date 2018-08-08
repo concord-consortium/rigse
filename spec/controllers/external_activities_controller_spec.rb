@@ -164,7 +164,7 @@ describe ExternalActivitiesController do
           created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
           created.template.sections.should have(1).section
-          created.template.pages.should have(1).page
+          expect(created.template.pages.size).to eq(1)
           created.template.open_responses.should have(1).open_response
           created.template.multiple_choices.should have(1).multiple_choice
         end
@@ -203,7 +203,7 @@ describe ExternalActivitiesController do
           created.id.should   == existing.id
           # See spec/lib/activity_runtime_api_spec.rb for more update tests
           created.template.sections.should have(1).section
-          created.template.pages.should have(1).page
+          expect(created.template.pages.size).to eq(1)
           created.template.open_responses.should have(1).open_response
           created.template.multiple_choices.should have(1).multiple_choice
         end
