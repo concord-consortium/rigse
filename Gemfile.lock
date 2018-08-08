@@ -488,6 +488,10 @@ GEM
       rspec-core (~> 2.99.0)
       rspec-expectations (~> 2.99.0)
       rspec-mocks (~> 2.99.0)
+    rspec-activemodel-mocks (1.0.3)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      rspec-mocks (>= 2.99, < 4.0)
     rspec-collection_matchers (1.1.3)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (2.99.2)
@@ -712,6 +716,7 @@ DEPENDENCIES
   remarkable_activerecord (~> 3.1.13)
   rollbar
   rspec (~> 2.99.0)
+  rspec-activemodel-mocks
   rspec-rails (~> 2.99.0)
   ruby-debug
   ruby-prof
@@ -747,4 +752,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   1.16.2
+   1.16.3

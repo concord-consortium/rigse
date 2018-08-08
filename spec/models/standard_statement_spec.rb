@@ -20,7 +20,7 @@ describe StandardStatement do
       end
       it "should save and load description array" do
         subject2 = StandardStatement.find_by_id(subject.id)
-        subject2.description.size.should eq 2
+        expect(subject2.description.size).to eq 2
       end
     end
 
@@ -47,10 +47,10 @@ describe StandardStatement do
       end
       it "should save and load parent" do
         subject2 = StandardStatement.find_by_id(subject.id)
-        subject2.parents[0][:uri].should eq "http://foo.com/ID123"
-        subject2.parents[0][:notation].should eq "A-1"
-        subject2.parents[1][:uri].should eq "http://foo.com/ID456"
-        subject2.parents[1][:notation].should eq "B-2"
+        expect(subject2.parents[0][:uri]).to eq "http://foo.com/ID123"
+        expect(subject2.parents[0][:notation]).to eq "A-1"
+        expect(subject2.parents[1][:uri]).to eq "http://foo.com/ID456"
+        expect(subject2.parents[1][:notation]).to eq "B-2"
       end
     end
 

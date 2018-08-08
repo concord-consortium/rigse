@@ -6,37 +6,37 @@ describe CommonsLicensePolicy do
   let(:commons_license)   { FactoryGirl.create(:commons_license)                   }
 
   context "for anonymous" do
-    it { should_not permit(:index)   }
-    it { should_not permit(:show)    }
-    it { should_not permit(:new)     }
-    it { should_not permit(:edit)    }
-    it { should_not permit(:create)  }
-    it { should_not permit(:update)  }
-    it { should_not permit(:destroy) }
+    it { is_expected.not_to permit(:index)   }
+    it { is_expected.not_to permit(:show)    }
+    it { is_expected.not_to permit(:new)     }
+    it { is_expected.not_to permit(:edit)    }
+    it { is_expected.not_to permit(:create)  }
+    it { is_expected.not_to permit(:update)  }
+    it { is_expected.not_to permit(:destroy) }
   end
 
   context "for a normal user" do
     let(:active_user) { FactoryGirl.create(:user) }
 
-    it { should_not permit(:index)   }
-    it { should_not permit(:show)    }
-    it { should_not permit(:new)     }
-    it { should_not permit(:edit)    }
-    it { should_not permit(:create)  }
-    it { should_not permit(:update)  }
-    it { should_not permit(:destroy) }
+    it { is_expected.not_to permit(:index)   }
+    it { is_expected.not_to permit(:show)    }
+    it { is_expected.not_to permit(:new)     }
+    it { is_expected.not_to permit(:edit)    }
+    it { is_expected.not_to permit(:create)  }
+    it { is_expected.not_to permit(:update)  }
+    it { is_expected.not_to permit(:destroy) }
   end
 
   context "for an admin" do
     let(:active_user) { Factory.next(:admin_user)   }
 
-    it { should permit(:index)   }
-    it { should permit(:show)    }
-    it { should permit(:new)     }
-    it { should permit(:edit)    }
-    it { should permit(:create)  }
-    it { should permit(:update)  }
-    it { should permit(:destroy) }
+    it { is_expected.to permit(:index)   }
+    it { is_expected.to permit(:show)    }
+    it { is_expected.to permit(:new)     }
+    it { is_expected.to permit(:edit)    }
+    it { is_expected.to permit(:create)  }
+    it { is_expected.to permit(:update)  }
+    it { is_expected.to permit(:destroy) }
   end
 
   context "for a manager" do
@@ -44,13 +44,13 @@ describe CommonsLicensePolicy do
     before(:each) do
       active_user.add_role('manager')
     end
-    it { should permit(:index)   }
-    it { should permit(:show)    }
-    it { should permit(:new)     }
-    it { should permit(:edit)    }
-    it { should permit(:create)  }
-    it { should permit(:update)  }
-    it { should permit(:destroy) }
+    it { is_expected.to permit(:index)   }
+    it { is_expected.to permit(:show)    }
+    it { is_expected.to permit(:new)     }
+    it { is_expected.to permit(:edit)    }
+    it { is_expected.to permit(:create)  }
+    it { is_expected.to permit(:update)  }
+    it { is_expected.to permit(:destroy) }
   end
 
 end

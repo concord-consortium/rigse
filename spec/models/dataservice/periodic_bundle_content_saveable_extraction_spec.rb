@@ -29,8 +29,8 @@ describe Dataservice::PeriodicBundleContent do
     learner.save!
     blogger.reload
     learner.reload
-    blogger.learner.should_not be_nil
-    learner.periodic_bundle_logger.should_not be_nil
+    expect(blogger.learner).not_to be_nil
+    expect(learner.periodic_bundle_logger).not_to be_nil
     @valid_attributes_with_blob[:periodic_bundle_logger_id] = blogger.id
     # create open_response with id = 40
     emb = nil
@@ -67,23 +67,23 @@ describe Dataservice::PeriodicBundleContent do
     bundle_content.save!
     bundle_content.reload
     blogger.reload
-    bundle_content.periodic_bundle_logger_id.should eql(learner.periodic_bundle_logger.id)
-    bundle_content.periodic_bundle_logger.learner.id.should eql(learner.id)
+    expect(bundle_content.periodic_bundle_logger_id).to eql(learner.periodic_bundle_logger.id)
+    expect(bundle_content.periodic_bundle_logger.learner.id).to eql(learner.id)
 
     # 1 open response, 1 multiple choice, 2 image questions
-    learner.open_responses.size.should eql(1)
-    learner.multiple_choices.size.should eql(1)
-    learner.image_questions.size.should eql(2)
+    expect(learner.open_responses.size).to eql(1)
+    expect(learner.multiple_choices.size).to eql(1)
+    expect(learner.image_questions.size).to eql(2)
     learner.open_responses.each do |saveable|
-      saveable.answer.should eql('Jumping jacks with electric sparks')
+      expect(saveable.answer).to eql('Jumping jacks with electric sparks')
     end
     learner.multiple_choices.each do |saveable|
-      saveable.answers.size.should eql(1)
-      saveable.answers[0].answer[0].should include({:answer => 'someChoice', :correct => nil})
+      expect(saveable.answers.size).to eql(1)
+      expect(saveable.answers[0].answer[0]).to include({:answer => 'someChoice', :correct => nil})
     end
     learner.image_questions.each do |saveable|
-      bundle_content.blobs.include?(saveable.answer[:blob]).should be_true
-      saveable.answer[:note].should eql('Add a note describing this entry...')
+      expect(bundle_content.blobs.include?(saveable.answer[:blob])).to be_truthy
+      expect(saveable.answer[:note]).to eql('Add a note describing this entry...')
     end
   end
 

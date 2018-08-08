@@ -48,7 +48,7 @@ describe API::V1::OfferingsController do
     describe "when there is no offering with given ID" do
       it "returns 404" do
         get :show, id: 123
-        response.status.should eq 404
+        expect(response.status).to eq 404
       end
     end
 
@@ -58,7 +58,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         get :show, id: offering.id
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -68,7 +68,7 @@ describe API::V1::OfferingsController do
       end
       it "returns error 403" do
         get :show, :id => offering.id
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -78,9 +78,9 @@ describe API::V1::OfferingsController do
       end
       it "returns 200 and valid JSON response" do
         get :show, :id => offering.id
-        response.status.should eq 200
+        expect(response.status).to eq 200
         json = JSON.parse(response.body)
-        json.should_not eq nil
+        expect(json).not_to eq nil
       end
     end
 
@@ -92,7 +92,7 @@ describe API::V1::OfferingsController do
         end
         it "returns error 403" do
           get :show, :id => offering.id
-          response.status.should eq 403
+          expect(response.status).to eq 403
         end
       end
 
@@ -102,9 +102,9 @@ describe API::V1::OfferingsController do
         end
         it "returns 200 and valid JSON response" do
           get :show, :id => offering.id
-          response.status.should eq 200
+          expect(response.status).to eq 200
           json = JSON.parse(response.body)
-          json.should_not eq nil
+          expect(json).not_to eq nil
         end
       end
     end
@@ -118,31 +118,31 @@ describe API::V1::OfferingsController do
       end
       it "returns an description of the activity and students list with 0 progress" do
         get :show, id: offering.id
-        response.status.should eq 200
+        expect(response.status).to eq 200
         json = JSON.parse(response.body)
         json["id"] = offering.id
-        json["clazz"].should eq clazz.name
-        json["activity"].should eq runnable.name
-        json["report_url"].should eql report_portal_offering_url(id: offering.id, host: 'test.host')
+        expect(json["clazz"]).to eq clazz.name
+        expect(json["activity"]).to eq runnable.name
+        expect(json["report_url"]).to eql report_portal_offering_url(id: offering.id, host: 'test.host')
 
-        json["preview_url"].should eql external_activity_url(runnable, {format: runnable.run_format})
-        json["students"].length.should eq 2
+        expect(json["preview_url"]).to eql external_activity_url(runnable, {format: runnable.run_format})
+        expect(json["students"].length).to eq 2
 
         student1 = json["students"][0]
-        student1["first_name"].should eq student_a.user.first_name
-        student1["last_name"].should eq student_a.user.last_name
-        student1["started_activity"].should eq false
-        student1["last_run"].should eq nil
-        student1["total_progress"].should eq 0
-        student1["detailed_progress"].should eq nil
+        expect(student1["first_name"]).to eq student_a.user.first_name
+        expect(student1["last_name"]).to eq student_a.user.last_name
+        expect(student1["started_activity"]).to eq false
+        expect(student1["last_run"]).to eq nil
+        expect(student1["total_progress"]).to eq 0
+        expect(student1["detailed_progress"]).to eq nil
 
         student2 = json["students"][1]
-        student2["first_name"].should eq student_b.user.first_name
-        student2["last_name"].should eq student_b.user.last_name
-        student2["started_activity"].should eq false
-        student2["last_run"].should eq nil
-        student2["total_progress"].should eq 0
-        student2["detailed_progress"].should eq nil
+        expect(student2["first_name"]).to eq student_b.user.first_name
+        expect(student2["last_name"]).to eq student_b.user.last_name
+        expect(student2["started_activity"]).to eq false
+        expect(student2["last_run"]).to eq nil
+        expect(student2["total_progress"]).to eq 0
+        expect(student2["detailed_progress"]).to eq nil
       end
     end
 
@@ -157,22 +157,22 @@ describe API::V1::OfferingsController do
       end
       it "returns an description of the activity and students list with appropriate progress" do
         get :show, id: offering.id
-        response.status.should eq 200
+        expect(response.status).to eq 200
         json = JSON.parse(response.body)
         student1 = json["students"][0]
-        student1["started_activity"].should eq true
-        student1["last_run"].should_not eq nil
-        student1["total_progress"].should eq 25
-        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
-        student1["detailed_progress"][0]["progress"].should eq 50
-        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
-        student1["detailed_progress"][1]["progress"].should eq 0
+        expect(student1["started_activity"]).to eq true
+        expect(student1["last_run"]).not_to eq nil
+        expect(student1["total_progress"]).to eq 25
+        expect(student1["detailed_progress"][0]["activity_name"]).to eq activity_1.name
+        expect(student1["detailed_progress"][0]["progress"]).to eq 50
+        expect(student1["detailed_progress"][1]["activity_name"]).to eq activity_2.name
+        expect(student1["detailed_progress"][1]["progress"]).to eq 0
 
         student2 = json["students"][1]
-        student2["started_activity"].should eq false
-        student2["last_run"].should eq nil
-        student2["total_progress"].should eq 0
-        student2["detailed_progress"].should eq nil
+        expect(student2["started_activity"]).to eq false
+        expect(student2["last_run"]).to eq nil
+        expect(student2["total_progress"]).to eq 0
+        expect(student2["detailed_progress"]).to eq nil
       end
     end
 
@@ -189,25 +189,25 @@ describe API::V1::OfferingsController do
       end
       it "returns an description of the activity and students list with appropriate progress" do
         get :show, id: offering.id
-        response.status.should eq 200
+        expect(response.status).to eq 200
         json = JSON.parse(response.body)
         student1 = json["students"][0]
-        student1["started_activity"].should eq true
-        student1["last_run"].should_not eq nil
-        student1["total_progress"].should eq 25
-        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
-        student1["detailed_progress"][0]["progress"].should eq 50
-        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
-        student1["detailed_progress"][1]["progress"].should eq 0
+        expect(student1["started_activity"]).to eq true
+        expect(student1["last_run"]).not_to eq nil
+        expect(student1["total_progress"]).to eq 25
+        expect(student1["detailed_progress"][0]["activity_name"]).to eq activity_1.name
+        expect(student1["detailed_progress"][0]["progress"]).to eq 50
+        expect(student1["detailed_progress"][1]["activity_name"]).to eq activity_2.name
+        expect(student1["detailed_progress"][1]["progress"]).to eq 0
 
         student2 = json["students"][1]
-        student2["started_activity"].should eq true
-        student2["last_run"].should_not eq nil
-        student2["total_progress"].should eq 50
-        student2["detailed_progress"][0]["activity_name"].should eq activity_1.name
-        student2["detailed_progress"][0]["progress"].should eq 0
-        student2["detailed_progress"][1]["activity_name"].should eq activity_2.name
-        student2["detailed_progress"][1]["progress"].should eq 100
+        expect(student2["started_activity"]).to eq true
+        expect(student2["last_run"]).not_to eq nil
+        expect(student2["total_progress"]).to eq 50
+        expect(student2["detailed_progress"][0]["activity_name"]).to eq activity_1.name
+        expect(student2["detailed_progress"][0]["progress"]).to eq 0
+        expect(student2["detailed_progress"][1]["activity_name"]).to eq activity_2.name
+        expect(student2["detailed_progress"][1]["progress"]).to eq 100
       end
     end
 
@@ -230,26 +230,26 @@ describe API::V1::OfferingsController do
       end
       it "returns an description of the activity and students list with appropriate progress" do
         get :show, id: offering.id
-        response.status.should eq 200
+        expect(response.status).to eq 200
         json = JSON.parse(response.body)
         student1 = json["students"][0]
-        student1["started_activity"].should eq true
-        student1["last_run"].should_not eq nil
-        student1["total_progress"].should eq 100
-        student1["detailed_progress"][0]["activity_name"].should eq activity_1.name
-        student1["detailed_progress"][0]["progress"].should eq 100
-        student1["detailed_progress"][1]["activity_name"].should eq activity_2.name
-        student1["detailed_progress"][1]["progress"].should eq 100
+        expect(student1["started_activity"]).to eq true
+        expect(student1["last_run"]).not_to eq nil
+        expect(student1["total_progress"]).to eq 100
+        expect(student1["detailed_progress"][0]["activity_name"]).to eq activity_1.name
+        expect(student1["detailed_progress"][0]["progress"]).to eq 100
+        expect(student1["detailed_progress"][1]["activity_name"]).to eq activity_2.name
+        expect(student1["detailed_progress"][1]["progress"]).to eq 100
 
 
         student2 = json["students"][1]
-        student2["started_activity"].should eq true
-        student2["last_run"].should_not eq nil
-        student2["total_progress"].should eq 100
-        student2["detailed_progress"][0]["activity_name"].should eq activity_1.name
-        student2["detailed_progress"][0]["progress"].should eq 100
-        student2["detailed_progress"][1]["activity_name"].should eq activity_2.name
-        student2["detailed_progress"][1]["progress"].should eq 100
+        expect(student2["started_activity"]).to eq true
+        expect(student2["last_run"]).not_to eq nil
+        expect(student2["total_progress"]).to eq 100
+        expect(student2["detailed_progress"][0]["activity_name"]).to eq activity_1.name
+        expect(student2["detailed_progress"][0]["progress"]).to eq 100
+        expect(student2["detailed_progress"][1]["activity_name"]).to eq activity_2.name
+        expect(student2["detailed_progress"][1]["progress"]).to eq 100
       end
     end
 
@@ -263,11 +263,11 @@ describe API::V1::OfferingsController do
       end
       it "returns information about external report" do
         get :show, id: offering.id
-        response.status.should eq 200
+        expect(response.status).to eq 200
         json = JSON.parse(response.body)
-        json["external_report"].should_not eq nil
-        json["external_report"]["url"].should eq portal_external_report_url(id: offering.id, report_id: external_report.id, host: 'test.host')
-        json["external_report"]["launch_text"].should eq external_report.launch_text
+        expect(json["external_report"]).not_to eq nil
+        expect(json["external_report"]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report.id, host: 'test.host')
+        expect(json["external_report"]["launch_text"]).to eq external_report.launch_text
       end
     end
   end
@@ -279,7 +279,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         get :index
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -289,7 +289,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         get :index
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -299,9 +299,9 @@ describe API::V1::OfferingsController do
       end
       it "returns an empty array" do
         get :index
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         json = JSON.parse(response.body)
-        json.should eq []
+        expect(json).to eq []
       end
     end
 
@@ -313,9 +313,9 @@ describe API::V1::OfferingsController do
       end
       it "returns 200 and valid json response" do
         get :index
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         json = JSON.parse(response.body)
-        json.length.should eq 1
+        expect(json.length).to eq 1
       end
     end
 
@@ -342,9 +342,9 @@ describe API::V1::OfferingsController do
           offering_2_json = JSON.parse(response.body)
 
           get :index
-          response.status.should eql(200)
+          expect(response.status).to eql(200)
           json = JSON.parse(response.body)
-          json.should eq [offering_1_json, offering_2_json]
+          expect(json).to eq [offering_1_json, offering_2_json]
         end
 
         describe "when class_id param is provided" do
@@ -354,16 +354,16 @@ describe API::V1::OfferingsController do
               offering_json = JSON.parse(response.body)
 
               get :index, class_id: clazz.id
-              response.status.should eql(200)
+              expect(response.status).to eql(200)
               json = JSON.parse(response.body)
-              json.should eq [offering_json]
+              expect(json).to eq [offering_json]
             end
           end
 
           describe "and teacher is not an owner of given class" do
             it "should return 403 error" do
               get :index, class_id: clazz_b.id
-              response.status.should eql(403)
+              expect(response.status).to eql(403)
             end
           end
         end
@@ -378,16 +378,16 @@ describe API::V1::OfferingsController do
 
 
               get :index, user_id: teacher.user.id
-              response.status.should eql(200)
+              expect(response.status).to eql(200)
               json = JSON.parse(response.body)
-              json.should eq [offering_1_json, offering_2_json]
+              expect(json).to eq [offering_1_json, offering_2_json]
             end
           end
 
           describe "and teacher is not a given user" do
             it "should return 403 error" do
               get :index, class_id: clazz_b.id
-              response.status.should eql(403)
+              expect(response.status).to eql(403)
             end
           end
         end
@@ -409,9 +409,9 @@ describe API::V1::OfferingsController do
           offering_b_json = JSON.parse(response.body)
 
           get :index
-          response.status.should eql(200)
+          expect(response.status).to eql(200)
           json = JSON.parse(response.body)
-          json.should eq [offering_1_json, offering_2_json, offering_b_json]
+          expect(json).to eq [offering_1_json, offering_2_json, offering_b_json]
         end
 
         describe "when class_id param is provided" do
@@ -420,9 +420,9 @@ describe API::V1::OfferingsController do
             offering_json = JSON.parse(response.body)
 
             get :index, class_id: clazz.id
-            response.status.should eql(200)
+            expect(response.status).to eql(200)
             json = JSON.parse(response.body)
-            json.should eq [offering_json]
+            expect(json).to eq [offering_json]
           end
         end
 
@@ -434,9 +434,9 @@ describe API::V1::OfferingsController do
             offering_2_json = JSON.parse(response.body)
 
             get :index, user_id: teacher.user.id
-            response.status.should eql(200)
+            expect(response.status).to eql(200)
             json = JSON.parse(response.body)
-            json.should eq [offering_1_json, offering_2_json]
+            expect(json).to eq [offering_1_json, offering_2_json]
           end
         end
       end
@@ -458,9 +458,9 @@ describe API::V1::OfferingsController do
         show_json = JSON.parse(response.body)
 
         get :index
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         own_json = JSON.parse(response.body)
-        own_json.should eq [ show_json ]
+        expect(own_json).to eq [ show_json ]
       end
     end
   end
@@ -472,7 +472,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         put :update, id: offering.id, active: false
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -482,7 +482,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         put :update, id: offering.id, active: false
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -492,7 +492,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         put :update, id: offering.id, active: false
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -502,7 +502,7 @@ describe API::V1::OfferingsController do
       end
       it "returns 403 error" do
         put :update, id: offering.id, active: false
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -514,15 +514,15 @@ describe API::V1::OfferingsController do
       it "should update basic params of the offering" do
         new_active = !offering.active
         put :update, id: offering.id, active: new_active
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         offering.reload
-        offering.active.should eq new_active
+        expect(offering.active).to eq new_active
 
         new_locked = !offering.locked
         put :update, id: offering.id, locked: new_locked
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         offering.reload
-        offering.locked.should eq new_locked
+        expect(offering.locked).to eq new_locked
       end
 
       describe "when there are multiple offerings" do
@@ -531,22 +531,22 @@ describe API::V1::OfferingsController do
         let(:offering_3) { Factory.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
 
         it "should let user reorder them" do
-          clazz.offerings.should eq [ offering_1, offering_2, offering_3 ]
+          expect(clazz.offerings).to eq [ offering_1, offering_2, offering_3 ]
 
           put :update, id: offering_1.id, position: 1
-          response.status.should eql(200)
+          expect(response.status).to eql(200)
           clazz.reload
-          clazz.offerings.should eq [ offering_2, offering_1, offering_3 ]
+          expect(clazz.offerings).to eq [ offering_2, offering_1, offering_3 ]
 
           put :update, id: offering_2.id, position: 2
-          response.status.should eql(200)
+          expect(response.status).to eql(200)
           clazz.reload
-          clazz.offerings.should eq [ offering_1, offering_3, offering_2 ]
+          expect(clazz.offerings).to eq [ offering_1, offering_3, offering_2 ]
 
           put :update, id: offering_3.id, position: 0
-          response.status.should eql(200)
+          expect(response.status).to eql(200)
           clazz.reload
-          clazz.offerings.should eq [ offering_3, offering_1, offering_2 ]
+          expect(clazz.offerings).to eq [ offering_3, offering_1, offering_2 ]
         end
       end
     end
@@ -580,18 +580,18 @@ describe API::V1::OfferingsController do
 
         get :for_class, id: offering.id
         json = JSON.parse(response.body)
-        json.should eq [offering_1_json, offering_2_json]
+        expect(json).to eq [offering_1_json, offering_2_json]
 
         get :for_class, id: offering_2.id
         json = JSON.parse(response.body)
-        json.should eq [offering_1_json, offering_2_json]
+        expect(json).to eq [offering_1_json, offering_2_json]
 
         get :for_class, id: offering_3.id
         json = JSON.parse(response.body)
-        json.should eq [offering_3_json]
+        expect(json).to eq [offering_3_json]
 
         get :for_class, id: offering_b.id
-        response.status.should eql(403) # Different class, no access!
+        expect(response.status).to eql(403) # Different class, no access!
       end
     end
   end
@@ -620,14 +620,14 @@ describe API::V1::OfferingsController do
 
         get :for_teacher, id: offering.id
         json = JSON.parse(response.body)
-        json.should eq [offering_1_json, offering_2_json]
+        expect(json).to eq [offering_1_json, offering_2_json]
 
         get :for_teacher, id: offering_2.id
         json = JSON.parse(response.body)
-        json.should eq [offering_1_json, offering_2_json]
+        expect(json).to eq [offering_1_json, offering_2_json]
 
         get :for_teacher, id: offering_b.id
-        response.status.should eql(403) # different class, no access!
+        expect(response.status).to eql(403) # different class, no access!
       end
     end
   end

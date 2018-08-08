@@ -63,23 +63,23 @@ describe API::V1::ReportsController do
   end
 
   def feedback_should_be_enabled
-    question.should include({"feedback_enabled" => true})
+    expect(question).to include({"feedback_enabled" => true})
   end
 
   def feedback_should_be_disabled
-    question.should include({"feedback_enabled" => false})
+    expect(question).to include({"feedback_enabled" => false})
   end
 
   def score_should_be_enabled
-    question.should include({"score_enabled" => true})
+    expect(question).to include({"score_enabled" => true})
   end
 
   def score_should_be_disabled
-    question.should include({"score_enabled" => false})
+    expect(question).to include({"score_enabled" => false})
   end
 
   def max_score_should_be(value)
-    question.should include({"max_score" => value})
+    expect(question).to include({"max_score" => value})
   end
 
   before(:each) do
@@ -89,7 +89,7 @@ describe API::V1::ReportsController do
     activity.save
     runnable.template = activity
     runnable.save
-    Portal::Offering.stub!(:find).and_return(offering)
+    allow(Portal::Offering).to receive(:find).and_return(offering)
     sign_in user
     add_answer_for_learner(learner_a, open_response, {"answer" => "testing from #{learner_a.student.user.id}"} )
     add_answer_for_learner(learner_b, open_response, {"answer" => "testing from #{learner_b.student.user.id}"} )
@@ -104,23 +104,23 @@ describe API::V1::ReportsController do
     describe "For the offering's teacher" do
       it 'should render the report json' do
         show
-        response.status.should eql(200)
-        json_path("report_version").should eql "1.1.0"
-        json_path("report.name").should eql "the activity"
-        json_path("class.students").should include_hash({"started_offering"=>true, "name"=>"joe user"})
+        expect(response.status).to eql(200)
+        expect(json_path("report_version")).to eql "1.1.0"
+        expect(json_path("report.name")).to eql "the activity"
+        expect(json_path("class.students")).to include_hash({"started_offering"=>true, "name"=>"joe user"})
         max_score_should_be 0
         feedback_should_be_disabled
         score_should_be_disabled
-        question.should include({"show_in_featured_question_report" => true})
-        question.should include({"is_required" => true})
-        answers.should include_hash({"answer" => "testing from #{learner_a.student.user.id}"})
+        expect(question).to include({"show_in_featured_question_report" => true})
+        expect(question).to include({"is_required" => true})
+        expect(answers).to include_hash({"answer" => "testing from #{learner_a.student.user.id}"})
       end
     end
     describe "For an anonymous user" do
       it "should return 403" do
         logout_user
         show
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
   end
@@ -136,8 +136,8 @@ describe API::V1::ReportsController do
       it "should save the filter settings" do
         update opts
         show
-        response.status.should eql 200
-        json_path("visibility_filter.active").should be_false
+        expect(response.status).to eql 200
+        expect(json_path("visibility_filter.active")).to be_falsey
       end
     end
 
@@ -146,8 +146,8 @@ describe API::V1::ReportsController do
       it "should save the filter settings" do
         update(opts)
         show
-        response.status.should eql(200)
-        json_path("visibility_filter.active").should be_true
+        expect(response.status).to eql(200)
+        expect(json_path("visibility_filter.active")).to be_truthy
       end
     end
   end
@@ -171,11 +171,11 @@ describe API::V1::ReportsController do
       it "should disable feedback for our question" do
         update(opts)
         show
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         md = Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, open_response.id, open_response.class.name)
-        md.enable_text_feedback.should be_false
-        md.enable_score.should be_false
-        md.max_score.should eq 0
+        expect(md.enable_text_feedback).to be_falsey
+        expect(md.enable_score).to be_falsey
+        expect(md.max_score).to eq 0
       end
     end
 
@@ -184,11 +184,11 @@ describe API::V1::ReportsController do
       it "should disable feedback for our question" do
         update(opts)
         show
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         md = Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, open_response.id, open_response.class.name)
-        md.enable_text_feedback.should be_false
-        md.enable_score.should be_true
-        md.max_score.should eq 0
+        expect(md.enable_text_feedback).to be_falsey
+        expect(md.enable_score).to be_truthy
+        expect(md.max_score).to eq 0
       end
     end
 
@@ -197,11 +197,11 @@ describe API::V1::ReportsController do
       it "should disable feedback for our question" do
         update(opts)
         show
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
         md = Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, open_response.id, open_response.class.name)
-        md.enable_text_feedback.should be_false
-        md.enable_score.should be_false
-        md.max_score.should eq 20
+        expect(md.enable_text_feedback).to be_falsey
+        expect(md.enable_score).to be_falsey
+        expect(md.max_score).to eq 20
       end
     end
   end
@@ -229,10 +229,10 @@ describe API::V1::ReportsController do
       it "should make the scoring automatic" do
         update(opts)
         show
-        response.status.should eql(200)
-        found_feedback.score_type.should eql Portal::OfferingActivityFeedback::SCORE_AUTO
-        found_feedback.enable_text_feedback.should be_false
-        found_feedback.max_score.should eq 10
+        expect(response.status).to eql(200)
+        expect(found_feedback.score_type).to eql Portal::OfferingActivityFeedback::SCORE_AUTO
+        expect(found_feedback.enable_text_feedback).to be_falsey
+        expect(found_feedback.max_score).to eq 10
       end
     end
 
@@ -241,8 +241,8 @@ describe API::V1::ReportsController do
       it "should make max score be 20" do
         update(opts)
         show
-        response.status.should eql(200)
-        found_feedback.max_score.should eq 20
+        expect(response.status).to eql(200)
+        expect(found_feedback.max_score).to eq 20
       end
     end
 
@@ -251,8 +251,8 @@ describe API::V1::ReportsController do
       it "should specify to use a rubric" do
         update(opts)
         show
-        response.status.should eql(200)
-        found_feedback.use_rubric.should be_true
+        expect(response.status).to eql(200)
+        expect(found_feedback.use_rubric).to be_truthy
       end
     end
   end
@@ -294,9 +294,9 @@ describe API::V1::ReportsController do
     it "should update the learners feedback" do
       update(opts)
       show
-      response.status.should eql(200)
+      expect(response.status).to eql(200)
       feedback = Portal::LearnerActivityFeedback.open_feedback_for(learner, activity_feedback)
-      feedback.rubric_feedback["C1"]["id"].should eql "R1"
+      expect(feedback.rubric_feedback["C1"]["id"]).to eql "R1"
     end
   end
 end

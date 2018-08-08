@@ -10,61 +10,61 @@ describe "fails_in_themes" do
   end
 
   it "should fail when there's no body" do
-    lambda {
+    expect {
       fails_in_themes
-    }.should raise_error(Exception)
+    }.to raise_error(Exception)
   end
 
   describe "when the example passes" do
     it "should pass when the body passes and we're not running a matching theme" do
       ApplicationController.set_theme("xproject")
       fails_in_themes({ "assessment" => :todo }) do
-        true.should be_true
+        expect(true).to be_truthy
       end
     end
 
     it "should fail when the example passes in the current theme, and the current theme is in :todo mode" do
-      lambda {
+      expect {
         ApplicationController.set_theme("assessment")
         fails_in_themes({ "assessment" => :todo }) do
-          true.should be_true
+          expect(true).to be_truthy
         end
-      }.should raise_error(RSpec::Core::Pending::PendingExampleFixedError)
+      }.to raise_error(RSpec::Core::Pending::PendingExampleFixedError)
     end
 
     it "should fail when the body passes in the current theme, and the current theme is in :expected mode" do
       ApplicationController.set_theme("assessment")
-      lambda {
+      expect {
         fails_in_themes({ "assessment" => :expected }) do
-          true.should be_true
+          expect(true).to be_truthy
         end
-      }.should raise_error(RSpec::Core::Pending::PendingExampleFixedError)
+      }.to raise_error(RSpec::Core::Pending::PendingExampleFixedError)
     end
   end
 
   describe "when the example fails" do
     it "should fail when the body fails and we're not running a matching theme" do
       ApplicationController.set_theme("xproject")
-      lambda {
+      expect {
         fails_in_themes({ "assessment" => :todo }) do
-          true.should be_false
+          expect(true).to be_falsey
         end
-      }.should raise_error(RSpec::Expectations::ExpectationNotMetError)
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
 
     it "should be pending when the body fails in the current theme, and the current theme is set to :todo mode" do
       ApplicationController.set_theme("assessment")
-      lambda {
+      expect {
         fails_in_themes({ "assessment" => :todo }) do
-          true.should be_false
+          expect(true).to be_falsey
         end
-      }.should raise_error(RSpec::Core::Pending::PendingDeclaredInExample)
+      }.to raise_error(RSpec::Core::Pending::PendingDeclaredInExample)
     end
 
     it "should pass when the body fails in the current theme, and the current theme is set to :expected mode" do
       ApplicationController.set_theme("assessment")
       fails_in_themes({ "assessment" => :expected }) do
-        true.should be_false
+        expect(true).to be_falsey
       end
     end
   end
@@ -73,19 +73,19 @@ describe "fails_in_themes" do
     it "should catch mock verifications as test errors, and pass" do
       ApplicationController.set_theme("assessment")
       fails_in_themes({ "assessment" => :expected }) do
-        ApplicationController.should_receive(:foo).once
+        expect(ApplicationController).to receive(:foo).once
       end
     end
 
     it "should not catch mock verifications it does not wrap" do
-      lambda {
+      expect {
         ApplicationController.set_theme("assessment")
-        ApplicationController.should_receive(:foo).once
+        expect(ApplicationController).to receive(:foo).once
         fails_in_themes({ "assessment" => :expected }) do
-          true.should be_false
+          expect(true).to be_falsey
         end
         verify ApplicationController
-      }.should raise_error(RSpec::Mocks::MockExpectationError)
+      }.to raise_error(RSpec::Mocks::MockExpectationError)
     end
   end
 end

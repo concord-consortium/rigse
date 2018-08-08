@@ -33,56 +33,56 @@ describe Investigation do
 
     describe "original investigation should" do
       it "have pages" do
-        @source_investigation.pages.should have_at_least(1).pages
+        expect(@source_investigation.pages.size).to be >= 1
       end
       it "have a name" do
-        @source_investigation.name.should_not be_nil
+        expect(@source_investigation.name).not_to be_nil
       end
 
       it "not be changeable by the new author" do
-        @source_investigation.should_not be_changeable(@new_author)
+        expect(@source_investigation).not_to be_changeable(@new_author)
       end
     end
 
     describe "new investigation should" do
       it "exist" do
-        @dest_investigation.should_not be_nil
+        expect(@dest_investigation).not_to be_nil
       end
 
       it "have a similar name" do
-        @dest_investigation.name.should match(@source_investigation.name)
-        @dest_investigation.name.should match(/copy/i)
+        expect(@dest_investigation.name).to match(@source_investigation.name)
+        expect(@dest_investigation.name).to match(/copy/i)
       end
 
       it "not have the same name" do
-        @dest_investigation.name.should_not == @source_investigation.name
+        expect(@dest_investigation.name).not_to eq(@source_investigation.name)
       end
 
       it "have a unique id" do
-        @dest_investigation.id.should_not be(@source_investigation.id)
+        expect(@dest_investigation.id).not_to be(@source_investigation.id)
       end
 
       it "be changeable by the new author" do
-        @dest_investigation.should be_changeable(@new_author)
-        @dest_investigation.should_not be_changeable(@original_author)
+        expect(@dest_investigation).to be_changeable(@new_author)
+        expect(@dest_investigation).not_to be_changeable(@original_author)
       end
 
       it "have pages which are changable by the new author" do
-        @dest_investigation.pages[0].should_not be_nil
-        @dest_investigation.pages[0].should be_changeable(@new_author)
-        @dest_investigation.pages[0].should_not be_changeable(@original_author)
+        expect(@dest_investigation.pages[0]).not_to be_nil
+        expect(@dest_investigation.pages[0]).to be_changeable(@new_author)
+        expect(@dest_investigation.pages[0]).not_to be_changeable(@original_author)
       end
 
       it "have an open response which is changeable by the new author" do
-        @dest_investigation.pages[0].open_responses[0].should_not be_nil
-        @dest_investigation.pages[0].open_responses[0].should be_changeable(@new_author)
-        @dest_investigation.pages[0].open_responses[0].should_not be_changeable(@original_author)
+        expect(@dest_investigation.pages[0].open_responses[0]).not_to be_nil
+        expect(@dest_investigation.pages[0].open_responses[0]).to be_changeable(@new_author)
+        expect(@dest_investigation.pages[0].open_responses[0]).not_to be_changeable(@original_author)
       end
 
       it "have a page_element which is changeable by the new author" do
-        @dest_investigation.pages.first.page_elements.first.should_not be_nil
-        @dest_investigation.pages.first.page_elements.first.should be_changeable(@new_author)
-        @dest_investigation.pages.first.page_elements.first.should_not be_changeable(@original_author)
+        expect(@dest_investigation.pages.first.page_elements.first).not_to be_nil
+        expect(@dest_investigation.pages.first.page_elements.first).to be_changeable(@new_author)
+        expect(@dest_investigation.pages.first.page_elements.first).not_to be_changeable(@original_author)
       end
 
     end

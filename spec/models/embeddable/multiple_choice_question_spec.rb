@@ -16,21 +16,21 @@ describe Embeddable::MultipleChoice do
 
   describe "a newly created MutipleChoiceQuestion" do    
     it "should have a non-blank propt" do
-      @multichoice.prompt.should_not be_nil
+      expect(@multichoice.prompt).not_to be_nil
     end
     
     it "should have a user" do
-      @multichoice.user.should_not be_nil
-      @multichoice.user.should == @user
+      expect(@multichoice.user).not_to be_nil
+      expect(@multichoice.user).to eq(@user)
     end
     
     it "should belong to a page" do
-      @multichoice.pages.should_not be_nil
-      @multichoice.pages.should include(@page)
+      expect(@multichoice.pages).not_to be_nil
+      expect(@multichoice.pages).to include(@page)
     end
     
     it "should have three initial default answers" do
-      @multichoice.choices.should have(3).answers
+      expect(@multichoice.choices.size).to eq(3)
     end
   end
 
@@ -41,14 +41,14 @@ describe Embeddable::MultipleChoice do
     end
     
     it "should have the new choice" do
-      @multichoice.choices.should include(@choice)
+      expect(@multichoice.choices).to include(@choice)
     end
   
     it "should update its choices when saved" do
       @choice.choice = "fooo"
       @choice.save
       @multichoice.reload
-      @multichoice.choices[3].choice.should == "fooo"
+      expect(@multichoice.choices[3].choice).to eq("fooo")
     end
       
   end
