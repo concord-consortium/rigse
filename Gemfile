@@ -197,6 +197,7 @@ group :test, :cucumber do
   gem "rspec",              "~> 3.0.0"
   gem "rspec-rails",        "~> 3.0.0"
   gem "rspec-activemodel-mocks"
+  gem "rspec-collection_matchers"
   gem "email_spec",         "~> 1.4.0"
   gem "fakeweb",            "~> 1.3", :require => false
   gem "ci_reporter",        "~> 1.7.0"
