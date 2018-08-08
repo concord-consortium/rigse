@@ -53,7 +53,7 @@ describe InteractivesController do
         }
 
         expect(flash[:notice]).to eq("Interactive was successfully created.")
-        assigns(:interactive).publication_status.should be publication_status
+        expect(assigns(:interactive).publication_status).to be publication_status
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
     end
@@ -73,7 +73,7 @@ describe InteractivesController do
           }
         }
         expect(flash[:notice]).to eq("Interactive was successfully created.")
-        assigns(:interactive).publication_status.should == "draft"
+        expect(assigns(:interactive).publication_status).to eq("draft")
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
     end
@@ -99,9 +99,9 @@ describe InteractivesController do
           :subject_areas => ["Physical Science"]
         }
         expect(flash[:notice]).to eq("Interactive was successfully created.")
-        assigns(:interactive).model_type_list.should match_array(["model_type_1"])
-        assigns(:interactive).grade_level_list.should match_array(["1","5"])
-        assigns(:interactive).subject_area_list.should match_array(["Physical Science"])
+        expect(assigns(:interactive).model_type_list).to match_array(["model_type_1"])
+        expect(assigns(:interactive).grade_level_list).to match_array(["1","5"])
+        expect(assigns(:interactive).subject_area_list).to match_array(["Physical Science"])
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
     end
@@ -134,7 +134,7 @@ describe InteractivesController do
       expect(Interactive.count).to eq(existing_interactives)
 
       updated = Interactive.find(test_interactive.id)
-      updated.model_type_list.should match_array(["model_type_2"])
+      expect(updated.model_type_list).to match_array(["model_type_2"])
       expect(flash[:notice]).to eq("Interactive was successfully updated.")
     end
   end
@@ -142,8 +142,8 @@ describe InteractivesController do
   describe "#export_model_library" do 
     it "should export a json file" do
       get :export_model_library
-      response.header["Content-Type"].should == "application/json"
-      response.header["Content-Disposition"].should == "attachment; filename=\"portal_interactives_library.json\""
+      expect(response.header["Content-Type"]).to eq("application/json")
+      expect(response.header["Content-Disposition"]).to eq("attachment; filename=\"portal_interactives_library.json\"")
     end
   end
 

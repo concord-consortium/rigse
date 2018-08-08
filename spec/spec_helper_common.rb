@@ -52,6 +52,16 @@ require File.expand_path("../support/authenticated_test_helper", __FILE__)
 include AuthenticatedTestHelper
 include AuthenticatedSystem
 
+module VerifyAndResetHelpers
+  def verify(object)
+    RSpec::Mocks.proxy_for(object).verify
+  end
+
+  def reset(object)
+    RSpec::Mocks.proxy_for(object).reset
+  end
+end
+
 RSpec.configure do |config|
   # == Mock Framework
   #
@@ -70,10 +80,25 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = Rails.env == 'test'
 
+  config.infer_spec_type_from_file_location!
+  config.expose_current_running_example_as :example
+
   config.include FailsInThemes
   config.include Sprockets::Helpers::RailsHelper
   config.include Devise::TestHelpers, :type => :controller
+  config.include VerifyAndResetHelpers
 
+
+  # rspec-rails 3 will no longer automatically infer an example group's spec type
+  # from the file location. You can explicitly opt-in to the feature using this
+  # config option.
+  # To explicitly tag specs without using automatic inference, set the `:type`
+  # metadata manually:
+  #
+  #     describe ThingsController, :type => :controller do
+  #       # Equivalent to being in spec/controllers
+  #     end
+  config.infer_spec_type_from_file_location!
 end
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

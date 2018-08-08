@@ -6,7 +6,7 @@ describe "home/authoring.html.haml" do
     @external_activities = [mock_model(ExternalActivity, :id => 1, :name => "RP1"),mock_model(ExternalActivity, :id => 2, :name => "RP2")]
     @interactives = [mock_model(Interactive, :id => 1, :name => "interactive1"),mock_model(ExternalActivity, :id => 2, :name => "interactive2")]
     @authoring_sites = [mock_model(Admin::AuthoringSite, :id => 1, :name => "site1", :url => "http://site1.com/"),mock_model(Admin::AuthoringSite, :id => 2, :name => "site2", :url => "http://site2.com/")]
-    @user = mock(
+    @user = double(
       :id => 1,
       :investigations  => @investigations,
       :external_activities => @external_activities,
@@ -14,7 +14,7 @@ describe "home/authoring.html.haml" do
       :has_role?       => true
     )
 
-    view.stub!(:current_visitor).and_return(@user)
+    allow(view).to receive(:current_visitor).and_return(@user)
   end
 
   it "renders without error" do

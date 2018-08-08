@@ -62,8 +62,8 @@ describe Dataservice::BundleContent do
       learner.save!
       blogger.reload
       learner.reload
-      blogger.learner.should_not be_nil
-      learner.bundle_logger.should_not be_nil
+      expect(blogger.learner).not_to be_nil
+      expect(learner.bundle_logger).not_to be_nil
       @valid_attributes_with_blob[:bundle_logger_id] = blogger.id
       # create open_response with id = 40
       emb = nil
@@ -100,24 +100,24 @@ describe Dataservice::BundleContent do
       bundle_content.save!
       bundle_content.reload
       blogger.reload
-      bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
-      bundle_content.bundle_logger.learner.id.should eql(learner.id)
+      expect(bundle_content.bundle_logger_id).to eql(learner.bundle_logger.id)
+      expect(bundle_content.bundle_logger.learner.id).to eql(learner.id)
 
       # 1 open response, 1 multiple choice, 2 image questions
-      learner.open_responses.size.should eql(1)
-      learner.multiple_choices.size.should eql(1)
-      learner.image_questions.size.should eql(2)
+      expect(learner.open_responses.size).to eql(1)
+      expect(learner.multiple_choices.size).to eql(1)
+      expect(learner.image_questions.size).to eql(2)
       learner.open_responses.each do |saveable|
-        saveable.answer.should eql('Jumping jacks with electric sparks')
+        expect(saveable.answer).to eql('Jumping jacks with electric sparks')
       end
       learner.multiple_choices.each do |saveable|
-        saveable.answers.size.should eql(1)
-        saveable.answers[0].answer[0].should include({:answer => 'someChoice', :correct => nil})
-        saveable.answers[0].answer[0].should have_key(:choice_id)
+        expect(saveable.answers.size).to eql(1)
+        expect(saveable.answers[0].answer[0]).to include({:answer => 'someChoice', :correct => nil})
+        expect(saveable.answers[0].answer[0]).to have_key(:choice_id)
       end
       learner.image_questions.each do |saveable|
-        bundle_content.blobs.include?(saveable.answer[:blob]).should be_true
-        saveable.answer[:note].should eql('Add a note describing this entry...')
+        expect(bundle_content.blobs.include?(saveable.answer[:blob])).to be_truthy
+        expect(saveable.answer[:note]).to eql('Add a note describing this entry...')
       end
     end
   end
@@ -191,8 +191,8 @@ describe Dataservice::BundleContent do
       learner.save!
       blogger.reload
       learner.reload
-      blogger.learner.should_not be_nil
-      learner.bundle_logger.should_not be_nil
+      expect(blogger.learner).not_to be_nil
+      expect(learner.bundle_logger).not_to be_nil
       @valid_attributes_with_multiline_snapshot[:bundle_logger_id] = blogger.id
       # create open_response with id = 40
       # create image_question with id = 847
@@ -214,12 +214,12 @@ describe Dataservice::BundleContent do
       bundle_content.save!
       bundle_content.reload
       blogger.reload
-      bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
-      bundle_content.bundle_logger.learner.id.should eql(learner.id)
+      expect(bundle_content.bundle_logger_id).to eql(learner.bundle_logger.id)
+      expect(bundle_content.bundle_logger.learner.id).to eql(learner.id)
 
-      learner.image_questions.size.should eql(1)
+      expect(learner.image_questions.size).to eql(1)
       learner.image_questions.each do |saveable|
-        saveable.answer[:note].should eql('One
+        expect(saveable.answer[:note]).to eql('One
 Word
 Lines
 And
@@ -242,8 +242,8 @@ Long')
       learner.save!
       blogger.reload
       learner.reload
-      blogger.learner.should_not be_nil
-      learner.bundle_logger.should_not be_nil
+      expect(blogger.learner).not_to be_nil
+      expect(learner.bundle_logger).not_to be_nil
       @valid_attributes_with_multiple_select_and_rationale[:bundle_logger_id] = blogger.id
 
       # create multiple_choices with ids = 18145
@@ -289,25 +289,25 @@ Long')
       bundle_content.save!
       bundle_content.reload
       blogger.reload
-      bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
-      bundle_content.bundle_logger.learner.id.should eql(learner.id)
+      expect(bundle_content.bundle_logger_id).to eql(learner.bundle_logger.id)
+      expect(bundle_content.bundle_logger.learner.id).to eql(learner.id)
 
 
-      learner.multiple_choices.size.should eql(4)
+      expect(learner.multiple_choices.size).to eql(4)
       learner.multiple_choices.each do |saveable|
         case saveable.multiple_choice_id
           when 3897
-          saveable.answer[0].should include({:answer => "someChoice 1", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 1", :correct => nil})
         when 3901
           # saveable.answer.should eql("someChoice 13, someChoice 14")
-          saveable.answer[0].should include({:answer => "someChoice 13", :correct => nil})
-          saveable.answer[1].should include({:answer => "someChoice 14", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 13", :correct => nil})
+          expect(saveable.answer[1]).to include({:answer => "someChoice 14", :correct => nil})
         when 3902
-          saveable.answer[0].should include({:answer => "someChoice 18", :rationale => "Soft feels really nice", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 18", :rationale => "Soft feels really nice", :correct => nil})
         when 3903
           # saveable.answer.should eql("someChoice 21, someChoice 26")
-          saveable.answer[0].should include({:answer => "someChoice 21", :rationale => "It's cold", :correct => nil})
-          saveable.answer[1].should include({:answer => "someChoice 26", :rationale => "Are yellow", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 21", :rationale => "It's cold", :correct => nil})
+          expect(saveable.answer[1]).to include({:answer => "someChoice 26", :rationale => "Are yellow", :correct => nil})
         else
           raise "Unexpected multiple choice saveable!"
         end
@@ -325,8 +325,8 @@ Long')
       learner.save!
       blogger.reload
       learner.reload
-      blogger.learner.should_not be_nil
-      learner.bundle_logger.should_not be_nil
+      expect(blogger.learner).not_to be_nil
+      expect(learner.bundle_logger).not_to be_nil
       @valid_attributes_with_multiple_select_and_rationale[:bundle_logger_id] = blogger.id
       @valid_attributes_with_multiple_select_and_rationale_updated[:bundle_logger_id] = blogger.id
 
@@ -373,8 +373,8 @@ Long')
       bundle_content.save!
       bundle_content.reload
       blogger.reload
-      bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
-      bundle_content.bundle_logger.learner.id.should eql(learner.id)
+      expect(bundle_content.bundle_logger_id).to eql(learner.bundle_logger.id)
+      expect(bundle_content.bundle_logger.learner.id).to eql(learner.id)
 
 
       bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiple_select_and_rationale_updated)
@@ -383,29 +383,29 @@ Long')
       bundle_content.save!
       bundle_content.reload
       blogger.reload
-      bundle_content.bundle_logger_id.should eql(learner.bundle_logger.id)
-      bundle_content.bundle_logger.learner.id.should eql(learner.id)
+      expect(bundle_content.bundle_logger_id).to eql(learner.bundle_logger.id)
+      expect(bundle_content.bundle_logger.learner.id).to eql(learner.id)
 
 
-      learner.multiple_choices.size.should eql(4)
+      expect(learner.multiple_choices.size).to eql(4)
       learner.multiple_choices.each do |saveable|
         case saveable.multiple_choice_id
         when 3897
-          saveable.answer[0].should include({:answer => "someChoice 1", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 1", :correct => nil})
         when 3901
           # saveable.answer.should eql("someChoice 13, someChoice 14")
-          saveable.answer[0].should include({:answer => "someChoice 13", :correct => nil})
-          saveable.answer[1].should include({:answer => "someChoice 14", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 13", :correct => nil})
+          expect(saveable.answer[1]).to include({:answer => "someChoice 14", :correct => nil})
         when 3902
-          saveable.answer[0].should include({:answer => "someChoice 18", :rationale => "Soft feels really nice, indeed.", :correct => nil})
+          expect(saveable.answer[0]).to include({:answer => "someChoice 18", :rationale => "Soft feels really nice, indeed.", :correct => nil})
         when 3903
           # saveable.answer.should eql("someChoice 21, someChoice 26")
-          saveable.answer[0].should include({:answer => "someChoice 21", :rationale => "It's cold", :correct => nil})
-          saveable.answer[1].should include({
+          expect(saveable.answer[0]).to include({:answer => "someChoice 21", :rationale => "It's cold", :correct => nil})
+          expect(saveable.answer[1]).to include({
             :answer => "someChoice 22",
             :rationale => "this is a really long answer that wikll keep going and going until the end of the page and keep scrolling",
             :correct => nil})
-          saveable.answer[2].should include({:answer => "someChoice 26", :rationale => "Are yellow", :correct => nil})
+          expect(saveable.answer[2]).to include({:answer => "someChoice 26", :rationale => "Are yellow", :correct => nil})
         else
           raise "Unexpected multiple choice saveable!"
         end

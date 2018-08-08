@@ -36,10 +36,10 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
     FirebaseApp.create!(@valid_attributes)
     token = SignedJWT::create_firebase_token(uid, @valid_app_name)
     decoded_token = SignedJWT::decode_firebase_token(token, @valid_app_name)
-    decoded_token[:data]["uid"].should eql uid
-    decoded_token[:data]["iss"].should eql @valid_client_email
-    decoded_token[:data]["sub"].should eql @valid_client_email
-    decoded_token[:data]["aud"].should eql "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit"
+    expect(decoded_token[:data]["uid"]).to eql uid
+    expect(decoded_token[:data]["iss"]).to eql @valid_client_email
+    expect(decoded_token[:data]["sub"]).to eql @valid_client_email
+    expect(decoded_token[:data]["aud"]).to eql "https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit"
   end
 
   it "should throw an error in a signed JWT when it doesn't exist" do
@@ -51,7 +51,7 @@ nC64AqP02IP2yOxnbxZ1uY2TrdI1VcO3AwcngxSEUMo=
     claims = {foo: "bar"}
     token = SignedJWT::create_firebase_token(uid, @valid_app_name, 3600, claims)
     decoded_token = SignedJWT::decode_firebase_token(token, @valid_app_name)
-    decoded_token[:data]["foo"].should eql "bar"
+    expect(decoded_token[:data]["foo"]).to eql "bar"
   end
 
   it "should throw an error when create a JWT with claims if reserved keys are used" do

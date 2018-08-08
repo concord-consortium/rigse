@@ -15,7 +15,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "fails with valid parameters" do
         post :create, :name => "test", :url => "http://example.com/"
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -26,7 +26,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "fails with valid parameters" do
         post :create, :name => "test", :url => "http://example.com/"
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
 
@@ -37,7 +37,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "succeeds with valid parameters" do
         post :create, :name => "test", :url => "http://example.com/"
-        response.status.should eql(201)
+        expect(response.status).to eql(201)
       end
     end
 
@@ -48,7 +48,7 @@ describe API::V1::ExternalActivitiesController do
 
       it "succeeds with valid parameters" do
         post :create, :name => "test", :url => "http://example.com/"
-        response.status.should eql(201)
+        expect(response.status).to eql(201)
       end
     end
 
@@ -59,22 +59,22 @@ describe API::V1::ExternalActivitiesController do
 
       it "fails with a missing name parameter" do
         post :create, :url => "http://example.com/"
-        response.status.should eql(400)
+        expect(response.status).to eql(400)
       end
 
       it "fails with a missing url parameter" do
         post :create, :url => "http://example.com/"
-        response.status.should eql(400)
+        expect(response.status).to eql(400)
       end
 
       it "fails with an invalid url parameter" do
         post :create, :url => "invalid"
-        response.status.should eql(400)
+        expect(response.status).to eql(400)
       end
 
       it "succeeds with valid minimal parameters" do
         post :create, :name => "test", :url => "http://example.com/"
-        response.status.should eql(201)
+        expect(response.status).to eql(201)
       end
     end
   end

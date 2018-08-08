@@ -11,7 +11,7 @@ describe Dataservice::BundleLogger do
       # also if it is enabled then the factory :full_dataservice_bundle_content needs to be used
       # and finally if the :full_dataservice_bundle_content is used then the bundle_content will have
       # a predefined bundle_logger which then breaks the '<<' assigments below
-      Dataservice::BundleContentObserver.instance.should_receive(:after_save).any_number_of_times
+      allow(Dataservice::BundleContentObserver.instance).to receive(:after_save)
 
       @valid_attributes = {
       
@@ -35,25 +35,25 @@ describe Dataservice::BundleLogger do
         @bad_invalid_xml_content = Factory(:dataservice_bundle_content, :body=>"goo")
       end
       it "should find nothing with no associated content" do
-        @bundle_logger.last_non_empty_bundle_content.should be_nil
+        expect(@bundle_logger.last_non_empty_bundle_content).to be_nil
       end
       it "should find nothing with a null body content" do
         @bundle_logger.bundle_contents << @bad_null_body_content
-        @bundle_logger.last_non_empty_bundle_content.should be_nil
+        expect(@bundle_logger.last_non_empty_bundle_content).to be_nil
       end
       it "should find nothing with invalid xml content" do
         @bundle_logger.bundle_contents << @bad_invalid_xml_content
-        @bundle_logger.last_non_empty_bundle_content.should be_nil
+        expect(@bundle_logger.last_non_empty_bundle_content).to be_nil
       end
       it "should find the first and only content if there is only one valid bundle_conent" do
         @bundle_logger.bundle_contents << @good_bundle_content_1
-        @bundle_logger.last_non_empty_bundle_content.should == @good_bundle_content_1
+        expect(@bundle_logger.last_non_empty_bundle_content).to eq(@good_bundle_content_1)
       end
       it "should find the third content if there are 3 valid bundle_conents" do
         @bundle_logger.bundle_contents << @good_bundle_content_1
         @bundle_logger.bundle_contents << @good_bundle_content_2
         @bundle_logger.bundle_contents << @good_bundle_content_3
-        @bundle_logger.last_non_empty_bundle_content.should == @good_bundle_content_3
+        expect(@bundle_logger.last_non_empty_bundle_content).to eq(@good_bundle_content_3)
       end
 
     end
@@ -77,8 +77,8 @@ describe Dataservice::BundleLogger do
         @logger.bundle_contents << @no_data
         @logger.save
         @logger.reload
-        @logger.bundle_contents.size.should == 4
-        @logger.last_non_empty_bundle_content.should be_nil
+        expect(@logger.bundle_contents.size).to eq(4)
+        expect(@logger.last_non_empty_bundle_content).to be_nil
       end
 
       it "should find the third of three good bundles" do
@@ -87,8 +87,8 @@ describe Dataservice::BundleLogger do
         @logger.bundle_contents << @third
         @logger.save
         @logger.reload
-        @logger.bundle_contents.size.should == 3
-        @logger.last_non_empty_bundle_content.should == @third
+        expect(@logger.bundle_contents.size).to eq(3)
+        expect(@logger.last_non_empty_bundle_content).to eq(@third)
       end
     
       it "should find @second when the third data is bad" do
@@ -97,8 +97,8 @@ describe Dataservice::BundleLogger do
         @logger.bundle_contents << @no_data
         @logger.save
         @logger.reload
-        @logger.bundle_contents.size.should == 3
-        @logger.last_non_empty_bundle_content.should == @second
+        expect(@logger.bundle_contents.size).to eq(3)
+        expect(@logger.last_non_empty_bundle_content).to eq(@second)
       end
 
       it "should find the @second when the first data is bad too" do
@@ -107,8 +107,8 @@ describe Dataservice::BundleLogger do
         @logger.bundle_contents << @no_data
         @logger.save
         @logger.reload
-        @logger.bundle_contents.size.should == 3
-        @logger.last_non_empty_bundle_content.should == @second
+        expect(@logger.bundle_contents.size).to eq(3)
+        expect(@logger.last_non_empty_bundle_content).to eq(@second)
 
       end
 
@@ -127,14 +127,14 @@ describe Dataservice::BundleLogger do
       end
     
       it "should start out with no in_progress_bundle" do
-        @bundle_logger.in_progress_bundle.should be_nil
+        expect(@bundle_logger.in_progress_bundle).to be_nil
       end
 
       describe "start bundle" do
         it "should assign a new in_progress bundle if there is none" do
           @bundle_logger.start_bundle
-          @bundle_logger.in_progress_bundle.should_not be_nil
-          @bundle_logger.in_progress_bundle_id.should_not be_nil
+          expect(@bundle_logger.in_progress_bundle).not_to be_nil
+          expect(@bundle_logger.in_progress_bundle_id).not_to be_nil
         end
       
         it "should create the bundle as the most recent bundle" do
@@ -142,13 +142,13 @@ describe Dataservice::BundleLogger do
           @bundle_logger.bundle_contents << Dataservice::BundleContent.create
           @bundle_logger.bundle_contents << Dataservice::BundleContent.create
           @bundle_logger.start_bundle
-          @bundle_logger.bundle_contents.size.should == 4
-          @bundle_logger.in_progress_bundle.should == @bundle_logger.bundle_contents.last
+          expect(@bundle_logger.bundle_contents.size).to eq(4)
+          expect(@bundle_logger.in_progress_bundle).to eq(@bundle_logger.bundle_contents.last)
         end
 
         it "should create new bundle which is empty and not the last-non-empty bundle" do
           @bundle_logger.start_bundle
-          @bundle_logger.last_non_empty_bundle_content.should_not == @bundle_logger.in_progress_bundle
+          expect(@bundle_logger.last_non_empty_bundle_content).not_to eq(@bundle_logger.in_progress_bundle)
         end
 
         it "should reuse an existing in_progress bundle if there is one" do
@@ -156,7 +156,7 @@ describe Dataservice::BundleLogger do
           @bundle_logger.in_progress_bundle = @new_bundle
           @bundle_logger.save
           @bundle_logger.reload
-          @bundle_logger.in_progress_bundle.should == @new_bundle
+          expect(@bundle_logger.in_progress_bundle).to eq(@new_bundle)
           @bundle_logger.bundle_contents.last == @new_bundle
         end
 
@@ -164,7 +164,7 @@ describe Dataservice::BundleLogger do
           old_size = @bundle_logger.bundle_contents.size
           @bundle_logger.start_bundle
           new_size = @bundle_logger.bundle_contents.size
-          new_size.should be == old_size + 1
+          expect(new_size).to eq(old_size + 1)
         end
       end
 
@@ -173,14 +173,14 @@ describe Dataservice::BundleLogger do
           @bundle_logger.start_bundle
         end
         it "should save! the pending bundle when it ends" do
-          @bundle_logger.in_progress_bundle.should_receive(:save!)
+          expect(@bundle_logger.in_progress_bundle).to receive(:save!)
           @bundle_logger.end_bundle
         end
         it "should not have any new pending bundles after end" do
           @bundle_logger.end_bundle
-          @bundle_logger.in_progress_bundle.should be_nil
+          expect(@bundle_logger.in_progress_bundle).to be_nil
           @bundle_logger.reload
-          @bundle_logger.in_progress_bundle.should be_nil
+          expect(@bundle_logger.in_progress_bundle).to be_nil
         end
       end
     end

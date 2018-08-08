@@ -1,4 +1,4 @@
 ENV["RAILS_ENV"] = 'test'
 
-require 'spec_helper_common'
-require 'spec_helper_pundit'
+require_relative 'spec_helper_common'
+require_relative 'spec_helper_pundit'

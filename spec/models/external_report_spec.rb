@@ -13,7 +13,7 @@ describe ExternalReport do
     subject { external_report.url_for_offering(offering, portal_teacher.user, 'https', 'perfect.host.com') }
 
     it "should handle report urls with parameters" do
-      expect(subject.scan('?')).to have(1).question_mark
+      expect(subject.scan('?').size).to eq(1)
       expect(subject).to include('cool=true')
     end
     it "should include the correct parameters" do
@@ -34,7 +34,7 @@ describe ExternalReport do
     subject { external_report.url_for_class(offering.clazz_id, portal_teacher.user, 'https', 'perfect.host.com') }
 
     it "should handle report urls with parameters" do
-      expect(subject.scan('?')).to have(1).question_mark
+      expect(subject.scan('?').size).to eq(1)
       expect(subject).to include('cool=true')
     end
     it "should include the correct parameters" do

@@ -13,17 +13,17 @@ describe Portal::OfferingActivityFeedback do
     let(:activity_feedback){ Portal::OfferingActivityFeedback.create(feedback_params) }
 
     it "should have an activity" do
-     activity_feedback.activity.should == activity
+     expect(activity_feedback.activity).to eq(activity)
     end
 
     it "should have an offering" do
-      activity_feedback.portal_offering.should == offering
+      expect(activity_feedback.portal_offering).to eq(offering)
     end
 
     it "the defaults" do
-      activity_feedback.enable_text_feedback.should == false
-      activity_feedback.max_score.should == 10
-      activity_feedback.score_type.should == Portal::OfferingActivityFeedback::SCORE_NONE
+      expect(activity_feedback.enable_text_feedback).to eq(false)
+      expect(activity_feedback.max_score).to eq(10)
+      expect(activity_feedback.score_type).to eq(Portal::OfferingActivityFeedback::SCORE_NONE)
     end
 
     describe "#set_feedback_options" do
@@ -38,13 +38,13 @@ describe Portal::OfferingActivityFeedback do
         activity_feedback.set_feedback_options(options)
       end
       it "should have a max score of 12" do
-        activity_feedback.max_score.should == 12
+        expect(activity_feedback.max_score).to eq(12)
       end
       it "should be using manual scoring" do
-        activity_feedback.score_type.should == Portal::OfferingActivityFeedback::SCORE_MANUAL
+        expect(activity_feedback.score_type).to eq(Portal::OfferingActivityFeedback::SCORE_MANUAL)
       end
       it "should be using text feedback" do
-        activity_feedback.enable_text_feedback.should == true
+        expect(activity_feedback.enable_text_feedback).to eq(true)
       end
 
       describe "turning off text feedback" do
@@ -52,8 +52,16 @@ describe Portal::OfferingActivityFeedback do
           activity_feedback.set_feedback_options({enable_text_feedback: false})
         end
         subject { activity_feedback.reload }
-        its(:enable_text_feedback) { should be false }
-        its(:max_score) {should be 12 }
+
+        describe '#enable_text_feedback' do
+          subject { super().enable_text_feedback }
+          it { is_expected.to be false }
+        end
+
+        describe '#max_score' do
+          subject { super().max_score }
+          it {is_expected.to be 12 }
+        end
       end
     end
   end

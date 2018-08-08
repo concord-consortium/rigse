@@ -14,20 +14,20 @@ describe StatusGraphHelper do
   describe ".bar_graph" do
     context "almost complete" do
       let(:percent) { 99.99 } #as in external activities
-      it { should match(/progress/)    }
-      it { should_not match(/complete/) }
+      it { is_expected.to match(/progress/)    }
+      it { is_expected.not_to match(/complete/) }
     end
     context "complete" do
       let(:percent) { 99.993 }
-      it { should match(/progress/) }
-      it { should match(/complete/) }
-      it { should_not match(/activity/) }
+      it { is_expected.to match(/progress/) }
+      it { is_expected.to match(/complete/) }
+      it { is_expected.not_to match(/activity/) }
     end
     context "activity" do
       let(:activity) { true }
-      it { should match(/progress/)    }
-      it { should_not match(/complete/) }
-      it { should match(/activity/) }
+      it { is_expected.to match(/progress/)    }
+      it { is_expected.not_to match(/complete/) }
+      it { is_expected.to match(/activity/) }
     end
   end
 end
