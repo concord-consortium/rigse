@@ -10,18 +10,18 @@
         %h2
           Editing
         %h3= @external_activity.name 
-      = link_to "Settings", 'fix me', :class => 'button', :style=> 'margin-right: 3em; float: right;'
-
-
-%div
-  %br
-  #react_container_activity
+      = link_to "Settings", '#', :class => 'button',
+            :onclick=> 'load_the_editor()',
+            :style=> 'margin-right: 3em; float: right;'
+  %div
+    #react_container_activity
+    %div{:style=> 'margin: 4em; padding: 4em; border: 2px solid green;'}
+      Place holder for the Lara based activity/sequence editor.
 
 :javascript
-  let parsedActivityJSON = JSON.parse('#{activityJSON}');
-  PortalPages.renderActivitySettingsEditor(parsedActivityJSON,
-                                           "react_container_activity");
-  var navProps=Portal.API_V1.getNavigation();
-  navProps.overlay=true;
-  PortalPages.renderNavigation(navProps, 'navigation');
+  function load_the_editor() {
+    var parsedActivityJSON = JSON.parse('#{activityJSON}');
+    PortalPages.renderActivitySettingsEditor(parsedActivityJSON,
+      "react_container_activity");
+  }
 
