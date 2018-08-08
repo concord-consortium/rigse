@@ -192,7 +192,7 @@ group :test, :cucumber do
   gem "cucumber",           "~> 1.3.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
   gem "database_cleaner",   "~> 0.7.2"
-  gem "capybara",           "~> 1.1.2"
+  gem "capybara",           "~> 2.2.0"
   gem "rspec",              "~> 3.0.0"
   gem "rspec-rails",        "~> 3.0.0"
   gem "rspec-activemodel-mocks"
@@ -201,7 +201,7 @@ group :test, :cucumber do
   gem "ci_reporter",        "~> 1.7.0"
   gem "delorean",           "~> 1.1"
   gem "webmock",            "~> 1.11.0", :require => false
-  gem "capybara-mechanize", "~> 0.3.0"
+  gem "capybara-mechanize", "~> 1.0.0"
   gem 'capybara-screenshot'
   gem "connection_pool"
   gem "json-schema"
