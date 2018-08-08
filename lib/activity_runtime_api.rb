@@ -43,6 +43,7 @@ class ActivityRuntimeAPI
       investigation = Investigation.create(:name => hash["name"], :user => user)
       activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
+        :source_type            => hash["source_type"] || "LARA",
         :name                   => hash["name"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
@@ -138,6 +139,7 @@ class ActivityRuntimeAPI
         all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
       end
       external_activity = ExternalActivity.create(
+        :source_type            => hash["source_type"] || "LARA",
         :name                   => hash["name"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],

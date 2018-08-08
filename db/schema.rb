@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180713201738) do
+ActiveRecord::Schema.define(:version => 20180807173720) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -524,6 +524,7 @@ ActiveRecord::Schema.define(:version => 20180713201738) do
     t.boolean  "saves_student_data",                               :default => true
     t.text     "long_description_for_teacher"
     t.text     "long_description"
+    t.string   "source_type"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
