@@ -219,10 +219,6 @@ group :test, :cucumber, :development do
   gem 'pry-byebug'
 end
 
-group :test, :development do
-  gem "jasmine", "~> 2.3.0"
-end
-
 group :assets do
   gem "jquery-fileupload-rails"
 end

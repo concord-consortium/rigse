@@ -308,12 +308,6 @@ GEM
     ice_nine (0.11.0)
     interactive_editor (0.0.10)
       spoon (>= 0.0.1)
-    jasmine (2.3.0)
-      jasmine-core (~> 2.3)
-      phantomjs
-      rack (>= 1.2.1)
-      rake
-    jasmine-core (2.3.4)
     journey (1.0.4)
     jquery-fileupload-rails (0.4.5)
       actionpack (>= 3.1)
@@ -406,7 +400,6 @@ GEM
     pdf-reader (1.1.1)
       Ascii85 (~> 1.0.0)
       ruby-rc4
-    phantomjs (1.9.8.0)
     polyglot (0.3.5)
     posix-spawn (0.3.6)
     power_assert (0.2.2)
@@ -677,7 +670,6 @@ DEPENDENCIES
   httpclient (~> 2.2)
   in_place_editing!
   interactive_editor
-  jasmine (~> 2.3.0)
   jquery-fileupload-rails
   json (~> 1.8.6)
   json-schema
