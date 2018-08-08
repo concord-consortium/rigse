@@ -363,7 +363,6 @@ RailsPortal::Application.routes.draw do
         post :publish
       end
       member do
-        get :duplicate
         get :matedit
         get :archive
         get :unarchive
