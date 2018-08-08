@@ -22,8 +22,8 @@ describe "/external_activities/edit.html.haml" do
   it 'should show the offical checkbox to project admins of the project material' do
     common_projects = [mock_model(Admin::Project, cohorts: [])]
     auth_user = Factory.next(:author_user)
-    auth_user.stub(admin_for_projects: common_projects)
-    ext_act.stub(projects: common_projects)
+    allow(auth_user).to receive_messages(admin_for_projects: common_projects)
+    allow(ext_act).to receive_messages(projects: common_projects)
     allow(view).to receive(:current_user).and_return(auth_user)
     render
     assert_select "input[id=?]", 'external_activity_is_official'

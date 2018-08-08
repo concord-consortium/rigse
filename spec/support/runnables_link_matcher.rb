@@ -7,7 +7,7 @@ module RunnablesLinkMatcher
     match do |actual|
       actual =~ /(.*)#{@href}(.*)#{@css_class}(.*)#{@image}(.*)(#{@link_text}(.*))?/i
     end
-    failure_message_for_should { 'Expected a properly formed link.' }
-    failure_message_for_should_not { 'Expected an improperly formed link.' }
+    failure_message { 'Expected a properly formed link.' }
+    failure_message_when_negated { 'Expected an improperly formed link.' }
   end
 end

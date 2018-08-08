@@ -155,7 +155,7 @@ describe Portal::Clazz do
                                    :runnable_type => 'bogus',
                                    :default => true)
       end
-      @clazz.stub(:active_offerings => @offerings)
+      allow(@clazz).to receive_messages(:active_offerings => @offerings)
     end
 
     describe "when there are no default activities" do
@@ -282,8 +282,8 @@ describe Portal::Clazz do
         @clazzes = [double(:clazz, :active_offerings => @student_offerings, :default_class => false),@clazz]
         @student = double(:student, :clazzes => @clazzes)
         @user = double(:user, :portal_student => @student)
-        @clazz.stub(:default_class => true)
-        @clazz.stub(:active_offerings => @default_offerings)
+        allow(@clazz).to receive_messages(:default_class => true)
+        allow(@clazz).to receive_messages(:active_offerings => @default_offerings)
       end
       it "should not fall back to offerings_including_default_class" do
         expect(@clazz).not_to receive(:offerings_including_default_class)
@@ -315,7 +315,7 @@ describe Portal::Clazz do
 
     context "with no teachers" do
       subject do
-        @clazz.stub :teachers => []
+        allow(@clazz).to receive_messages :teachers => []
         @clazz
       end
 
@@ -332,7 +332,7 @@ describe Portal::Clazz do
 
     context "With one teacher" do
       subject do
-        @clazz.stub :teachers => [@joan]
+        allow(@clazz).to receive_messages :teachers => [@joan]
         @clazz
       end
 
@@ -354,7 +354,7 @@ describe Portal::Clazz do
 
     context "With two teachers" do
       subject do
-        @clazz.stub :teachers => [@bob,@joan]
+        allow(@clazz).to receive_messages :teachers => [@bob,@joan]
         @clazz
       end
 

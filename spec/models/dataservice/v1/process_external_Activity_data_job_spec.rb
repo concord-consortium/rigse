@@ -8,7 +8,7 @@ describe Dataservice::V1::ProcessExternalActivityDataJob do
   let(:learner)      { double(offering: offering, report_learner: report_learner) }
   let(:event)        { double() }
   before(:each) do
-    Portal::Learner.stub(:find => learner)
+    allow(Portal::Learner).to receive_messages(:find => learner)
   end
 
   subject { Dataservice::V1::ProcessExternalActivityDataJob.new(23,json_content, Time.now())}

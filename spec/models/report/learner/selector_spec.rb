@@ -4,7 +4,7 @@ include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_ans
 
 describe Report::Learner::Selector do
 
-  # assign the student permission_form_b to complicate the tests …
+  # assign the student permission_form_b to complicate the tests
   before(:each) {
     learner.student.permission_forms << students_p_forms
   }
