@@ -74,7 +74,7 @@ Then /^the search results should be paginated on the search instructional materi
   previous_text = "Previous"
   page.first(:css, ".search_resultscontainer .pagination a", text: next_text)
   step "I follow \"#{next_text}\""
-  page.find(:css, ".search_resultscontainer .pagination a", text: previous_text)
+  page.first(:css, ".search_resultscontainer .pagination a", text: previous_text)
 end
 
 And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|
