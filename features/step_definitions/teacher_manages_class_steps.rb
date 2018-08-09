@@ -1,7 +1,6 @@
-
 And /^I follow copy class link for the class "(.+)"$/ do|class_name|
-  xpath_for_list_elem = "//tr[contains(.,'#{class_name}')]"
-  within(:xpath, xpath_for_list_elem) do
+  xpath_for_list_elem = first(:xpath, "//tr[contains(.,'#{class_name}')]")
+  within(xpath_for_list_elem) do
     click_link('Copy Class')
   end
 end
