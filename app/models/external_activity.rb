@@ -205,8 +205,8 @@ class ExternalActivity < ActiveRecord::Base
   # Duplicates external activity both locally and on the external authoring system (e.g. LARA).
   # New activity will have a new owner and publication status set to private.
   # Returns a new activity or nil in case of error.
-  def duplicate(new_owner, root_url)
-    clone = ExternalActivity.new(attributes.except('id', 'uuid', 'created_at', 'updated_at'))
+  def duplicate(new_owner, root_url = nil)
+    clone = ExternalActivity.new(attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type'))
     clone.name = "Copy of #{name}"
     clone.user = new_owner
     clone.publication_status = 'private'

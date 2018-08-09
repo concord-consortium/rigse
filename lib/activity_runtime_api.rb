@@ -40,8 +40,6 @@ class ActivityRuntimeAPI
   def self.publish_activity(hash, user)
     external_activity = nil
     Investigation.transaction do
-      investigation = Investigation.create(:name => hash["name"], :user => user)
-      activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
         :source_type            => hash["source_type"] || "LARA",
         :name                   => hash["name"],
@@ -51,15 +49,21 @@ class ActivityRuntimeAPI
         :author_url             => hash["author_url"],
         :print_url              => hash["print_url"],
         :student_report_enabled => hash["student_report_enabled"],
-        :template               => activity,
         :publication_status     => "published",
         :user                   => user,
         :author_email           => hash["author_email"],
         :is_locked              => hash["is_locked"]
       )
+      self.setup_activity_template(external_activity, hash)
       self.update_external_report(external_activity,hash["external_report_url"])
     end
     return external_activity
+  end
+
+  def self.setup_activity_template(external_activity, hash)
+    investigation = Investigation.create(:name => hash["name"], :user => external_activity.user)
+    external_activity.template = activity_from_hash(hash, investigation, external_activity.user)
+    external_activity.save!
   end
 
   def self.find(url)
@@ -71,6 +75,11 @@ class ActivityRuntimeAPI
   def self.update_activity(hash)
     external_activity = self.find(hash["url"])
     return nil unless external_activity
+    # If ExternalActivity already exists, it might not have template correctly set yet.
+    # It happens when ExternalActivity is duplicated.
+    unless external_activity.template
+      self.setup_activity_template(external_activity, hash)
+    end
     activity = external_activity.template
     investigation = activity.investigation
     user = investigation.user
@@ -128,16 +137,6 @@ class ActivityRuntimeAPI
   def self.publish_sequence(hash, user)
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
-      investigation = Investigation.create(
-        :name => hash["name"],
-        :user => user
-      )
-      all_student_reports_enabled = true
-      hash['activities'].each_with_index do |act, index|
-        activity_from_hash(act, investigation, user, index)
-        # a sequence has its student_report_enabled set to false if any of its activities have it set to false
-        all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
-      end
       external_activity = ExternalActivity.create(
         :source_type            => hash["source_type"] || "LARA",
         :name                   => hash["name"],
@@ -146,21 +145,41 @@ class ActivityRuntimeAPI
         :launch_url             => hash["launch_url"] || hash["create_url"],
         :author_url             => hash["author_url"],
         :print_url              => hash["print_url"],
-        :student_report_enabled => all_student_reports_enabled,
-        :template               => investigation,
         :publication_status     => "published",
         :user                   => user,
         :author_email           => hash["author_email"],
         :is_locked              => hash["is_locked"]
       )
+      self.setup_sequence_template(external_activity, hash)
       self.update_external_report(external_activity, hash["external_report_url"])
     end
     return external_activity
   end
 
+  def self.setup_sequence_template(external_activity, hash)
+    investigation = Investigation.create(
+      :name => hash["name"],
+      :user => external_activity.user
+    )
+    all_student_reports_enabled = true
+    hash['activities'].each_with_index do |act, index|
+      activity_from_hash(act, investigation, external_activity.user, index)
+      # a sequence has its student_report_enabled set to false if any of its activities have it set to false
+      all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
+    end
+    external_activity.student_report_enabled = all_student_reports_enabled
+    external_activity.template = investigation
+    external_activity.save!
+  end
+
   def self.update_sequence(hash)
     external_activity = self.find(hash["url"])
     return nil unless external_activity
+    # If ExternalActivity already exists, it might not have template correctly set yet.
+    # It happens when ExternalActivity is duplicated.
+    unless external_activity.template
+      self.setup_sequence_template(external_activity, hash)
+    end
     if external_activity.template.is_a?(Investigation)
       investigation = external_activity.template
     else
