@@ -527,6 +527,7 @@ ActiveRecord::Schema.define(:version => 20180807215058) do
     t.string   "rubric_url"
     t.boolean  "saves_student_data",                               :default => true
     t.text     "long_description"
+    t.string   "source_type"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"

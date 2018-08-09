@@ -33,6 +33,10 @@
           [ Interactive.display_name,   Interactive.name    ] ]
       %br
       = t('authoring.material_type_description')
+    = field_set_tag t('authoring.source_type_label') do
+      = f.select :source_type,
+        [ [ 'none', nil ],
+          [ 'LARA', 'LARA' ] ]
     = field_set_tag 'License' do
       = f.select :license_code, CommonsLicense.for_select, include_blank: 'none'
     = field_set_tag 'URL' do

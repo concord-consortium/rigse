@@ -60,32 +60,6 @@ describe Investigation do
       expect(@investigation).to respond_to(:available_states)
     end
   end
-  
-  describe "should be duplicateable" do
-    before(:each) do
-      @investigation = Investigation.create!(@valid_attributes)
-      @user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
-    end
-    
-    it "should not allow teachers to duplicate" do
-      [:member, :guest].each do |role|
-        @user.roles.destroy_all
-        @user.add_role(role.to_s)
-        
-        expect(@investigation.duplicateable?(@user)).to be_falsey
-      end
-    end
-    
-    it "should allow admins, managers, etc. to duplicate" do
-      [:admin, :manager, :researcher, :author].each do |role|
-        @user.roles.destroy_all
-        @user.add_role(role.to_s)
-        
-        expect(@investigation.duplicateable?(@user)).to be_truthy
-      end
-    end
-  end
-  
 
   describe "search_list (searching for investigations)" do
     before(:all) do
