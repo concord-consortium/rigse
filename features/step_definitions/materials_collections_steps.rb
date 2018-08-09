@@ -23,9 +23,9 @@ Then /^the details for materials collection "([^"]*)" should (not )?be visible/ 
   selector = "#details_materials_collection_#{id}"
 
   if (negative)
-    find(selector).should_not be_visible
+    expect(find(selector)).not_to be_visible
   else
-    find(selector).should be_visible
+    expect(find(selector)).to be_visible
   end
 end
 
@@ -60,7 +60,7 @@ Then /^the previously moved material in the materials collection "([^"]*)" shoul
 
   # FIXME See the drag step above, where it's actually getting put into second position
   item = position == 'first' ? collection.materials_collection_items[1] : collection.materials_collection_items.last
-  item.should eq @last_moved_item
+  expect(item).to eq @last_moved_item
 end
 
 When /^I click remove on the (\d+)(?:st|nd|rd|th) material in the materials collection "([^"]*)"$/ do |position, name|
@@ -78,7 +78,7 @@ Then /^I should only see (\d+) materials in the materials collection "([^"]*)"$/
   expect(collection.materials_collection_items.size).to eq(count.to_i)
 
   with_scope("#materials_materials_collection_#{collection.id}") do
-    page.should have_css('li.material_item', :count => count)
+    expect(page).to have_css('li.material_item', :count => count)
   end
 end
 

@@ -43,7 +43,7 @@ When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do 
   fill_in("search_term", :with => search_text)
   click_button("GO")
   using_wait_time(10) do
-    page.should have_content("matching search term \"#{search_text}\"")
+    expect(page).to have_content("matching search term \"#{search_text}\"")
   end
 end
 

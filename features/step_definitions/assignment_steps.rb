@@ -15,7 +15,7 @@ def polymorphic_assign(assignable_type, assignable_name, clazz_name)
   typeName = assignable_type.gsub(/\s/, "_")
   assignable = typeName.classify.constantize.find_by_name(assignable_name)
   material = makeMaterial(assignable)
-  material.should_not be_nil
+  expect(material).not_to be_nil
   Factory.create(:portal_offering, {
     :runnable => material,
     :clazz => clazz

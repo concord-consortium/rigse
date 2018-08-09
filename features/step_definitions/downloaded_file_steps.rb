@@ -1,22 +1,22 @@
 Then /^the jnlp should not be cached$/ do
   headers = page.driver.response.headers
-  headers.should have_key 'Pragma'
+  expect(headers).to have_key 'Pragma'
   # note: there could be multiple pragmas, I'm not sure how that will be returned and wether this will correclty match it
-  headers['Pragma'].should match "no-cache"
-  headers.should have_key 'Cache-Control'
-  headers['Cache-Control'].should match "max-age=0"
-  headers['Cache-Control'].should match "no-cache"
+  expect(headers['Pragma']).to match "no-cache"
+  expect(headers).to have_key 'Cache-Control'
+  expect(headers['Cache-Control']).to match "max-age=0"
+  expect(headers['Cache-Control']).to match "no-cache"
 end
 
 Then /^a jnlp file is downloaded$/ do
   headers = page.driver.response.headers
-  headers["Content-Type"].should match "application/x-java-jnlp-file"
+  expect(headers["Content-Type"]).to match "application/x-java-jnlp-file"
 
   @jnlp_xml = Nokogiri::XML(page.driver.response.body)
 
   # make sure a main_class attr is set
   main_class_attr = @jnlp_xml.xpath("/jnlp/application-desc/@main-class")
-  main_class_attr.should_not be_nil
+  expect(main_class_attr).not_to be_nil
 
 end
 
@@ -30,7 +30,7 @@ def download_config(session)
   Capybara.session_name = session
   visit config_url
   headers = page.driver.response.headers
-  headers["Content-Type"].should match "application/xml"
+  expect(headers["Content-Type"]).to match "application/xml"
 
   @config_xml = Nokogiri::XML(page.driver.response.body)
 
@@ -48,5 +48,5 @@ Then /^I simulate opening the jnlp a second time$/ do
 end
 
 Then /^I should see an error message in the Java application$/ do
-  @config_otml_url.should match /invalid/
+  expect(@config_otml_url).to match /invalid/
 end

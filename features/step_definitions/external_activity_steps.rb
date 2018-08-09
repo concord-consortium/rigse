@@ -27,5 +27,5 @@ Then /^the learner count for the external activity "([^"]*)" in the class "(.*)"
   clazz = Portal::Clazz.find_by_name(class_name)
   activity = ExternalActivity.find_by_name(ea_name)
   offering = Portal::Offering.find_by_clazz_id_and_runnable_id(clazz.id, activity.id)
-  offering.learners.size.should == learner_count.to_i
+  expect(offering.learners.size).to eq(learner_count.to_i)
 end
