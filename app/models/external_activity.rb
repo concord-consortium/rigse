@@ -235,8 +235,10 @@ class ExternalActivity < ActiveRecord::Base
     clone.subject_area_list = subject_area_list
     clone.sensor_list = sensor_list
     # Copy projects. Limit projects to ones that can be assigned by the new author.
-    allowed_projects = Admin::Project.all.select{ |p| Admin::ProjectPolicy.new(new_owner, p).assign_to_material? }.map(&:id)
-    clone.project_ids = project_ids & allowed_projects
+    allowed_projects = Admin::Project.where(id: project_ids).select { |p|
+      Admin::ProjectPolicy.new(new_owner, p).assign_to_material?
+    }.map(&:id)
+    clone.project_ids = allowed_projects
     clone.save
     # Copy standard statements assigned to this activity.
     material_type = self.class.name.underscore
