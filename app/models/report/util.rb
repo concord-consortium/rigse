@@ -154,7 +154,6 @@ class Report::Util
     old = @saveables - current
     if old.size > 0
       warning = "WARNING: missing #{old.size} removed reportables in report for #{assignable.name}"
-      puts warning
       Rails.logger.info(warning)
       @saveables = current
     end
