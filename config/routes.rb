@@ -32,6 +32,7 @@ RailsPortal::Application.routes.draw do
   match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
 
   post "help/preview_help_page"
+  post "home/preview_about_page"
   post "home/preview_home_page"
 
   constraints :id => /\d+/ do
