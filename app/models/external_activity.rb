@@ -202,11 +202,6 @@ class ExternalActivity < ActiveRecord::Base
   end
   # end methods to mimic Activity
 
-  # needed to mimic Investigation (investigations/list/filter)
-  def duplicateable?(user)
-    false
-  end
-
   # Duplicates external activity both locally and on the external authoring system (e.g. LARA).
   # New activity will have a new owner and publication status set to private.
   # Returns a new activity or nil in case of error.
