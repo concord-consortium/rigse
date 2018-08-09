@@ -169,25 +169,6 @@ describe Image do
       expect(subject.image_size).to eq(0)
     end
   end
-
-  describe "uploaded_by_attribution" do
-    context "when UseUploadedByInAttribution is set to true" do
-      before(:each) do
-        Image::UseUploadedByInAttribution = true
-      end
-      it "should return the users login" do
-        expect(subject.uploaded_by_attribution).to eq("Uploaded by: testuser")
-      end
-    end
-    context "when UseUploadedByInAttribution is set to false" do
-      before(:each) do
-        Image::UseUploadedByInAttribution = false
-      end
-      it "should return an empty string" do
-        expect(subject.uploaded_by_attribution).to be_blank
-      end
-    end
-  end
 end
 
 
