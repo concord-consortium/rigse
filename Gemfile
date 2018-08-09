@@ -18,7 +18,7 @@ source "http://rubygems.org"
   gem "rails",                "~> 3.2.22"
   gem "arrayfields"
   gem 'strong_parameters'
-  gem "httpclient",           "~> 2.2"
+  gem "httpclient"
   gem "httparty"
 
   gem 'rollbar'
