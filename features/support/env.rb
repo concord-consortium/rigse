@@ -113,7 +113,7 @@ Cucumber::Rails::Database.javascript_strategy = :transaction
 
 APP_CONFIG[:theme] = 'xproject' #lots of tests seem to be broken if we try to use another theme
 
-World(RSpec::Rails::Mocks)
+World(RSpec::ActiveModel::Mocks)
 World(RSpec::Mocks::ExampleMethods)
 
 # Make visible for testing
