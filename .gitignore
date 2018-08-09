@@ -105,3 +105,4 @@ config/environments/local-development.rb
 certs
 .env
 *.DS_Store
+coverage

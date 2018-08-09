@@ -26,7 +26,7 @@ describe Report::Learner::Selector do
                               :save_path => "/path/to/save",
                             } )  }
 
-  before (:each) do
+  before(:each) do
     es_response = {
           "hits" => {
             "hits" => [

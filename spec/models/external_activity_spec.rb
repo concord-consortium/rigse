@@ -83,6 +83,149 @@ describe ExternalActivity do
     end
   end
 
+  describe '#duplicate' do
+    let(:project1) { FactoryGirl.create(:project) }
+    let(:project2) { FactoryGirl.create(:project) }
+    let(:user1) { t = FactoryGirl.create(:teacher); t.user }
+    let(:user2) { t = FactoryGirl.create(:teacher); t.user }
+    let(:template) { FactoryGirl.create(:investigation) }
+    let(:activity) { a = ExternalActivity.create(valid_attributes); a.user = user1; a.save; a }
+    # List of attributes that shouldn't match the original activity after duplication is done.
+    let(:unique_attrs) { [ 'id', 'uuid', 'created_at', 'updated_at', 'name', 'user_id', 'publication_status', 'template_id', 'template_type' ] }
+    # Automatically generate all the attributes. This will let us test new automatically things when they are added.
+    let(:attrs) { activity.attributes.except(*unique_attrs).keys }
+    let(:clone) { activity.duplicate(user2) }
+    let(:standard_statement) { FactoryGirl.create(:standard_statement, material_id: activity.id) }
+    let(:cohort) { FactoryGirl.create(:admin_cohort) }
+    let(:host) { "http://some.test.url.com" }
+
+    before(:each) do
+      user1.add_role_for_project('admin', project1)
+      user1.add_role_for_project('admin', project2)
+      # Second user is ad admin only for the project1.
+      user2.add_role_for_project('admin', project1)
+
+      # Randomize all the attributes of the activity.
+      attrs.each_with_index do |attr, idx|
+        activity.send("#{attr}=", case attr
+                                    when 'url' then host + '/activity/1'
+                                    when 'launch_url' then host + '/activity/1'
+                                    else idx
+                                  end
+        )
+      end
+
+      activity.template = template
+      activity.material_property_list = ['material_prop1', 'material_prop2']
+      activity.grade_level_list = ['gradel1', 'gradel2']
+      activity.subject_area_list = ['sa1', 'sa2']
+      activity.sensor_list = ['sensor1', 'sensor2']
+      activity.project_ids = [project1.id, project2.id]
+      activity.set_cohorts_by_id(cohort.id)
+      # This will trigger creation of standard statement.
+      standard_statement
+
+      activity.save!
+    end
+
+    it "should copy basic attributes, sets publication status to private and assign a new user" do
+      expect(clone.publication_status).to eq("private")
+      expect(clone.user).to eq(user2)
+      expect(clone.name).to eq("Copy of " + activity.name)
+      # Automatically check all the attributes.
+      attrs.each do |attr|
+        expect(clone.send(attr)).to eq(activity.send(attr))
+      end
+    end
+
+    it "should copy tags" do
+      expect(clone.material_property_list).to eq(activity.material_property_list)
+      expect(clone.grade_level_list).to eq(activity.grade_level_list)
+      expect(clone.subject_area_list).to eq(activity.subject_area_list)
+      expect(clone.sensor_list).to eq(activity.sensor_list)
+    end
+
+    it "should copy projects that new owner can manage" do
+      expect(clone.project_ids).to eq([ project1.id ])
+    end
+
+    it "should copy standard statements" do
+      ss = StandardStatement.find_all_by_material_type_and_material_id('external_activity', clone.id)
+      expect(ss.count).to eq(1)
+      expect(ss.first.uri).to eq(standard_statement.uri)
+    end
+
+    it "should NOT copy cohorts" do
+      expect(clone.cohorts).to eq([])
+    end
+
+    it "should NOT copy template" do
+      expect(activity.template).to be(template)
+      expect(clone.template_id).to be_nil
+      expect(clone.template_type).to be_nil
+    end
+
+    describe "when external activity is a LARA activity" do
+      let(:secret) { 'secret' }
+      let(:root_url) { 'http://portal.concord.org' }
+      let(:clone) { activity.duplicate(user2, root_url) }
+      let(:lara_response) do
+        {
+          'publication_data' => {
+            'type' => 'Activity',
+            'url' => valid_attributes[:url],
+            'launch_url' => valid_attributes[:url],
+            'thumbnail_url' => 'http://image.com',
+            "sections" => [
+              {
+                "name" => "Activity Section 1",
+                "pages" => [
+                  {
+                    "name" => "Activity Page 1",
+                    "url" => "https://some.url",
+                    "elements" => [
+                      {
+                        "type" => "open_response",
+                        "id" => "1234568",
+                        "prompt" => "Why do you like/dislike this activity?"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      end
+
+      before(:each) do
+        activity.source_type = 'LARA'
+        activity.save
+
+        WebMock.stub_request(:post, activity.url + '/remote_duplicate')
+          .to_return(:status => 200, :body => lara_response.to_json)
+
+        FactoryGirl.create(:client, site_url: host, app_secret: secret)
+      end
+
+      it "it should communicate LARA, request remote duplication and perform publishing" do
+        clone.reload
+        expect(clone.thumbnail_url).to eq(lara_response['publication_data']['thumbnail_url'])
+        expect(clone.template).not_to be_nil
+        expect(WebMock).to have_requested(:post, activity.url + '/remote_duplicate')
+          .with(body: {
+            user_email: user2.email,
+            add_to_portal: root_url
+          }.to_json)
+          .with(headers: {
+            'Authorization' => 'Bearer ' + secret,
+            'Content-Type'=>'application/json'
+          })
+          .once
+      end
+    end
+  end
+
   describe "project support" do
     let (:activity) { FactoryGirl.create(:external_activity) }
     let (:project) { FactoryGirl.create(:project) }
