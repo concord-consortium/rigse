@@ -86,7 +86,7 @@ When /^(?:|I )press "([^"]*)" inside element with selector "([^"]*)"$/ do |butto
 end
 
 When /^(?:|I )follow "([^"]*)"$/ do |link|
-  click_link(link)
+  first(:link, link).click
 end
 
 When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
