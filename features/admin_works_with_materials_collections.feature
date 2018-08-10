@@ -13,10 +13,11 @@ Feature: Admin can work with materials collections
   Scenario: Admin accesses Materials Collections
     When I am on the home page
     And I follow "Admin"
+    And I wait 1 second
     And I follow "Materials Collections"
     Then I should be on the materials collection index page
     And I should see "Displaying all 4 materials collections"
-    And I should see "create Materials Collection"
+    And I should see "Create Materials Collection"
 
   Scenario: Admin creates new Materials Collection
     When I am on the materials collection index page

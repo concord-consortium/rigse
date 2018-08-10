@@ -58,7 +58,7 @@ Feature: Teacher adds a new student
     And I press "Submit"
     And I should see "You have successfully registered John Albert with the username jalbert." within the popup
     And I press "Add Another" within the popup
-    Then I should see "First Name:"
+    Then I should see "FIRST NAME:"
 
   @javascript
   Scenario: With the default class enabled, teachers cannot directly add existing students
