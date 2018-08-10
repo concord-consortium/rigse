@@ -140,7 +140,7 @@ Feature: Student registers to use the portal
     When I login with username: estudent password: password
     Then I should see "Signed in successfully."
     
-    
+  @javascript
   Scenario: Student over 18 registered and doesn't give consent
     Given the default settings has student consent enabled
     And the following classes exist:
