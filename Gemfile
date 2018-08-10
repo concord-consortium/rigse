@@ -183,7 +183,6 @@ group :development do
   gem "rack-mini-profiler"
   gem "bullet"
   gem "lol_dba"
-  gem "transpec"
 end
 
 group :test, :cucumber do
