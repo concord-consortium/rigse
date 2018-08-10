@@ -19,7 +19,7 @@ def login_with_ui_as(username, password)
 
   visit "/users/sign_in"
 
-  within("form[@id='new_user']") do
+  within(find(:xpath, "//form[@id='new_user']")) do
     fill_in("user_login",       :with => username)
     fill_in("user_password",    :with => password)
     click_button("Sign in")
