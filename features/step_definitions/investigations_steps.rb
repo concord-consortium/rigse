@@ -162,8 +162,8 @@ When /^I follow "(.*)" on the (.*) "(.*)" from the class "(.*)"$/ do |button_nam
   })
   
   selector = "#portal__offering_#{offering.id}"
-  with_scope(selector) do
-    click_link(button_name)
+  with_scope(first(:id, selector)) do
+    first(:link, button_name).click
   end
 end
 
