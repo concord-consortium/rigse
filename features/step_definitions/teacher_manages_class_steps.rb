@@ -74,7 +74,7 @@ end
 
 
 And /^"(.+)" should be the last class$/ do |class_name|
-  within(:xpath, '//li[last()]') do
+  within(first(:xpath, '//li[last()]')) do
     has_content?("#{class_name}")
   end
 end

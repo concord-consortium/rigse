@@ -18,6 +18,7 @@ Feature: Teacher manages a class
     And I fill in "Class Word:" with "etrx"
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
+    And I wait 1 seconds
     Then I should see "Copy of Mathematics"
     And "Copy of Mathematics" should be the last on the list with id "sortable"
     And "Copy of Mathematics" should be the last class within left panel for class navigation
