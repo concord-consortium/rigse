@@ -23,7 +23,7 @@ Then /^the details for materials collection "([^"]*)" should (not )?be visible/ 
   selector = "#details_materials_collection_#{id}"
 
   if (negative)
-    expect(find(selector)).not_to be_visible
+    expect(find(selector, visible: false)).not_to be_visible
   else
     expect(find(selector)).to be_visible
   end
@@ -34,7 +34,7 @@ When /^I open the accordion for the materials collection "([^"]*)"$/ do |name|
 
   selector = "#accordion_toggle_materials_collection_#{id}"
   # need to check if the accordion is already open so we don't close it
-  if(!find("#details_materials_collection_#{id}").visible?)
+  if(!find("#details_materials_collection_#{id}", visible: false).visible?)
     find(selector).click
   end
 end
@@ -81,5 +81,3 @@ Then /^I should only see (\d+) materials in the materials collection "([^"]*)"$/
     expect(page).to have_css('li.material_item', :count => count)
   end
 end
-
-
