@@ -194,5 +194,5 @@ Given /^the following researchers exist:$/ do |users_table|
 end
 
 Given /^a mocked remote endpoint url$/ do
-  expect_any_instance_of(Reports::UrlHelpers).to receive(:remote_endpoint_url).and_return('https://portal.concord.org/dataservice/external_activity_data/1')
+  allow_any_instance_of(Reports::UrlHelpers).to receive(:remote_endpoint_url).and_return('https://portal.concord.org/dataservice/external_activity_data/1')
 end
