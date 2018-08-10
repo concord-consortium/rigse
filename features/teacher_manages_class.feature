@@ -123,6 +123,7 @@ Feature: Teacher manages a class
     And I fill in "Class Word:" with ""
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
+    And I wait 1 seconds
     Then I should see "Class word can't be blank"
 
 
@@ -134,5 +135,3 @@ Feature: Teacher manages a class
     And I fill in "Class Description" with "electronics class"
     And I press "Save" within the popup
     Then I should see "Class word has already been taken"
-
-
