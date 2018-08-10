@@ -157,11 +157,7 @@ end
 
 Then /^I should see the sites name$/ do
   site_name = APP_CONFIG[:site_name]
-  if page.respond_to? :should
-    expect(page).to have_content(site_name)
-  else
-    assert page.has_content?(site_name)
-  end
+  expect(page.title).to eq(site_name)
 end
 
 When /^(?:|I )debug$/ do
