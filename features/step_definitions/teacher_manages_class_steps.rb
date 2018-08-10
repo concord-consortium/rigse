@@ -80,7 +80,7 @@ And /^"(.+)" should be the last class$/ do |class_name|
 end
 
 And /^"(.+)" should be the first class$/ do |class_name|
-  within(:xpath, '//li[2]') do
+  within(first(:xpath, '//li[2]')) do
     has_content?("#{class_name}")
   end
 end
