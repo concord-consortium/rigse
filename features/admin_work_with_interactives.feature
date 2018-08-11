@@ -31,29 +31,31 @@ Feature: Admin can work with interactives
     And I should see "Interactive was successfully created."
     And I should see "Run Interactive"
 
-  #@javascript
-  #Scenario: Taging Interactives
-  #  Given the following Admin::tag records exist:
-  #    | scope         | tag      |
-  #    | grade_levels  | gl_K     |
-  #    | subject_areas | sa_Math  |
-  #    | model_types   | mt_Video |
-  #  And I am on the interactives index page
-  #  When I click "create interactive"
-  #  Then I should see "(new) /interactives"
-  #  When I fill in "interactive[name]" with "New Interactive"
-  #  And I fill in "interactive[description]" with "New Description"
-  #  And I fill in "interactive[url]" with "http://www.google.com"
-  #  And under "Grade Levels" I check "gl_K"
-  #  And under "Subject Areas" I check "sa_Math"
-  #  And under "Model Types" I choose "mt_Video"
-  #  And I press "Save"
-  #  Then I should be on the show page for interactive "New Interactive"
-  #  And I should see "Interactive was successfully created."
-  #  And I should see "Run Interactive"
-  #  And I should see "Model type: mt_Video"
-  #  And I should see "Grade Levels: gl_K"
-  #  And I should see "Subject Areas: sa_Math"
+  # This is loading the materials info I think because
+  # related_materials_wrapper seems to be added to to the interactives show page
+  @javascript
+  Scenario: Tagging Interactives
+    Given the following Admin::tag records exist:
+      | scope         | tag      |
+      | grade_levels  | gl_K     |
+      | subject_areas | sa_Math  |
+      | model_types   | mt_Video |
+    And I am on the interactives index page
+    When I click "create interactive"
+    Then I should see "(new) /interactives"
+    When I fill in "interactive[name]" with "New Interactive"
+    And I fill in "interactive[description]" with "New Description"
+    And I fill in "interactive[url]" with "http://www.google.com"
+    And under "Grade Levels" I check "gl_K"
+    And under "Subject Areas" I check "sa_Math"
+    And under "Model Types" I choose "mt_Video"
+    And I press "Save"
+    Then I should be on the show page for interactive "New Interactive"
+    And I should see "Interactive was successfully created."
+    And I should see "Run Interactive"
+    And I should see "Model type: mt_Video"
+    And I should see "Grade Levels: gl_K"
+    And I should see "Subject Areas: sa_Math"
 
     Scenario: Removing tags from Interactives
       Given I am on the edit page of interactive "Interactive 1"
