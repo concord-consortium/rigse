@@ -24,7 +24,6 @@ describe Admin::Settings do
       it "should fail validations" do
         @new_valid_settings.pub_interval = Admin::Settings::MinPubInterval - 1
         expect(@new_valid_settings).not_to be_valid
-        puts @new_valid_settings.errors
       end
     end
 
