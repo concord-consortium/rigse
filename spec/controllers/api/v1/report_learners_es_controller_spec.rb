@@ -100,8 +100,7 @@ describe API::V1::ReportLearnersEsController do
           with(
             headers: {'Content-Type'=>'application/json'},
             body: search_body,
-            times: 1
-          )
+          ).times(1)
       end
       it "directly renders the ES response" do
         get :index
@@ -151,8 +150,7 @@ describe API::V1::ReportLearnersEsController do
           with(
             headers: {'Content-Type'=>'application/json'},
             body: search_body,
-            times: 1
-          )
+          ).times(1)
       end
     end
   end

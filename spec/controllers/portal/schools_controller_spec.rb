@@ -129,7 +129,7 @@ describe Portal::SchoolsController do
       end
   
       it "redirects to the school" do
-        @school.stub(:id => 1)
+        allow(@school).to receive_messages(:id => 1)
         expect(@school).to receive(:update_attributes).and_return(true)
         allow(Portal::School).to receive(:find).and_return(@school)
         put :update, :id => "1"
@@ -140,7 +140,7 @@ describe Portal::SchoolsController do
     describe "with invalid params" do
 
       before(:each) do
-        @school.stub(:id => 1)
+        allow(@school).to receive_messages(:id => 1)
         expect(@school).to receive(:update_attributes).with({'portal_school' => 'params'}).and_return(false)
         allow(Portal::School).to receive(:find).and_return(@school)
       end
@@ -162,7 +162,7 @@ describe Portal::SchoolsController do
     render_views
 
     before(:each) do
-      @school.stub(:id => 1)
+      allow(@school).to receive_messages(:id => 1)
       expect(@school).to receive(:destroy).and_return(true)
       expect(Portal::School).to receive(:find).with("1").and_return(@school)
     end

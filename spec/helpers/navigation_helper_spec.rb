@@ -106,7 +106,7 @@ describe NavigationHelper do
     let(:fake_visitor) { fake_teacher.user }
     subject { helper.navigation_service() }
     before(:each) do
-      helper.stub_chain(:request, :path).and_return(path)
+      allow(helper).to receive_message_chain(:request, :path).and_return(path)
       subject.update_selection()
     end
     describe "when on the assignment page for the first class" do

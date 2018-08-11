@@ -1,7 +1,6 @@
-
 And /^I follow copy class link for the class "(.+)"$/ do|class_name|
-  xpath_for_list_elem = "//tr[contains(.,'#{class_name}')]"
-  within(:xpath, xpath_for_list_elem) do
+  xpath_for_list_elem = first(:xpath, "//tr[contains(.,'#{class_name}')]")
+  within(xpath_for_list_elem) do
     click_link('Copy Class')
   end
 end
@@ -75,13 +74,13 @@ end
 
 
 And /^"(.+)" should be the last class$/ do |class_name|
-  within(:xpath, '//li[last()]') do
+  within(first(:xpath, '//li[last()]')) do
     has_content?("#{class_name}")
   end
 end
 
 And /^"(.+)" should be the first class$/ do |class_name|
-  within(:xpath, '//li[2]') do
+  within(first(:xpath, '//li[2]')) do
     has_content?("#{class_name}")
   end
 end
@@ -99,7 +98,7 @@ Given /^the mixed runnable types class exists$/ do
 end
 
 Then /^I can view a report for materials in the mixed runnable type class$/ do
-  @mixed_runnable_type_clazz.should_not be_nil
+  expect(@mixed_runnable_type_clazz).not_to be_nil
   # start by assuming what tabs are there
 
 
@@ -115,7 +114,7 @@ Then /^I can view a report for materials in the mixed runnable type class$/ do
       click_link("Run Report")
       new_window=page.driver.browser.window_handles.last
       page.within_window new_window do
-        page.should have_content("Report")
+        expect(page).to have_content("Report")
       end
     end
   }

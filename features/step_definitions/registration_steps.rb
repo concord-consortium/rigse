@@ -1,5 +1,5 @@
 Then /^"([^"]*)" fields should have the class selector "([^"]*)"$/ do |error_count, selector|
-  page.should have_css(selector, :count => error_count.to_i)
+  expect(page).to have_css(selector, :count => error_count.to_i)
 end
 
 Given /^there is an unactivated user named "([^"]*)"$/ do |login|
@@ -9,5 +9,5 @@ Given /^there is an unactivated user named "([^"]*)"$/ do |login|
 end
 
 Then /^I see the activation is complete$/ do
-  page.should have_xpath('.//*', :text => /Activation.*complete/)
+  expect(page).to have_xpath('.//*', :text => /Activation.*complete/)
 end

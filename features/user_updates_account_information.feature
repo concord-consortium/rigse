@@ -14,7 +14,7 @@ Feature: User updates account information
     And I am logged in with the username <username>
     And I am on the user preferences page for the user "<username>"
     Then I should see "User Preferences"
-    And I should see "First name"
+    And I should see "FIRST NAME"
     But I should not see the xpath "//input[@id='user_login']"
     And I should not see "Username"
 
@@ -28,6 +28,6 @@ Feature: User updates account information
     When I am logged in with the username student
     And I am on the user preferences page for the user "student"
     Then I should see "User Preferences"
-    And I should see "First name"
+    And I should see "FIRST NAME"
     But I should not see the xpath "//input[@id='user_email']"
     And I should not see "Username"

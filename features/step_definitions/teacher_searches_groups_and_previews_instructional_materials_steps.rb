@@ -43,7 +43,7 @@ When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do 
   fill_in("search_term", :with => search_text)
   click_button("GO")
   using_wait_time(10) do
-    page.should have_content("matching search term \"#{search_text}\"")
+    expect(page).to have_content("matching search term \"#{search_text}\"")
   end
 end
 
@@ -72,13 +72,13 @@ Then /^the search results should be paginated on the search instructional materi
   #pagination for any material
   next_text = "Next"
   previous_text = "Previous"
-  page.find(:css, ".search_resultscontainer .pagination a", text: next_text)
+  page.first(:css, ".search_resultscontainer .pagination a", text: next_text)
   step "I follow \"#{next_text}\""
-  page.find(:css, ".search_resultscontainer .pagination a", text: previous_text)
+  page.first(:css, ".search_resultscontainer .pagination a", text: previous_text)
 end
 
 And /^(?:|I )follow the "(.+)" link for the (investigation|activity) "(.+)"$/ do |link, material_type, material_name|
-  material_item_div = find(:xpath, "//div[@class='materials_container #{material_type.pluralize}']//div[@data-material_name='#{material_name}']")
+  material_item_div = first(:xpath, "//div[@class='materials_container #{material_type.pluralize}']//div[@data-material_name='#{material_name}']")
   within(material_item_div) do
     step_text = "I follow \"#{link}\""
     step step_text
@@ -89,7 +89,7 @@ And /^(?:|I )follow (investigation|activity) link "(.+)" on the search instructi
   within(".materials_container.#{material_type.pluralize}") do
     # for some reason this is not always visible initially, the approach below will cause capybara's waiting
     # mechanism to kick in waiting for the element to become visible
-    find('a', :text => material_name, :visible => true).click
+    first('a', :text => material_name, :visible => true).click
   end
 end
 
