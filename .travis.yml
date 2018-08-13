@@ -62,8 +62,6 @@ jobs:
         matrix: TEST_SUITE=none
       install: skip
       script:
-        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        - chmod +x ./cc-test-reporter
         - aws s3 sync "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER" coverage/
         - ./cc-test-reporter sum-coverage -p 4 coverage/codeclimate.*.json
         - ./cc-test-reporter upload-coverage
