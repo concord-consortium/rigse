@@ -32,7 +32,7 @@ before_script:
   - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then ./bin/rake db:migrate; fi"
   - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then ./bin/rake db:test:prepare; fi"
   - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then RAILS_GROUPS=assets ./bin/rake assets:precompile:all; fi"
-  - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then RAILS_ENV=test ./bin/rake sunspot:solr:start &; fi"
+  - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then RAILS_ENV=test ./bin/rake sunspot:solr:start & fi"
   - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then sleep 10; fi" # give SOLR some time to start and init
 
 after_script:
