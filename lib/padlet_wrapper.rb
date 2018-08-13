@@ -22,8 +22,7 @@ class PadletWrapper
     yaml_config = YAML.load_file(yaml_file_path).symbolize_keys
     OPTS.merge!(yaml_config)
   rescue Exception => e
-    puts "Error: #{e} loading yaml: #{yaml_file_path}"
-    puts "Using defaults (see padlet_wrapper.rb)"
+    Rails.logger.info("Error: #{e} loading yaml: #{yaml_file_path}. Using defaults (see padlet_wrapper.rb)")
   end
 
   def initialize

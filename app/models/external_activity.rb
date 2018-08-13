@@ -202,8 +202,79 @@ class ExternalActivity < ActiveRecord::Base
   end
   # end methods to mimic Activity
 
-  # needed to mimic Investigation (investigations/list/filter)
-  def duplicateable?(user)
+  # Duplicates external activity both locally and on the external authoring system (e.g. LARA).
+  # New activity will have a new owner and publication status set to private.
+  # Returns a new activity or nil in case of error.
+  def duplicate(new_owner, root_url = nil)
+    clone = ExternalActivity.new(attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type'))
+    clone.name = "Copy of #{name}"
+    clone.user = new_owner
+    clone.publication_status = 'private'
+    clone.save
+
+    # This section triggers remote duplication if necessary.
+    # Do it as soon as possible, as it includes communication with external system. In case of failure,
+    # we can cancel this action earlier, before we create bunch of intermediate objects that would need to be
+    # cleaned up too.
+    if source_type === 'LARA'
+      unless clone.duplicate_on_lara(root_url)
+        # If duplication on LARA fails, destroy clone and return nil.
+        clone.destroy
+        return nil
+      end
+    end
+
+    # Copy rest of the activity properties.
+    clone.material_property_list = material_property_list
+    clone.grade_level_list = grade_level_list
+    clone.subject_area_list = subject_area_list
+    clone.sensor_list = sensor_list
+    # Copy projects. Limit projects to ones that can be assigned by the new author.
+    allowed_projects = Admin::Project.where(id: project_ids).select { |p|
+      Admin::ProjectPolicy.new(new_owner, p).assign_to_material?
+    }.map(&:id)
+    clone.project_ids = allowed_projects
+    clone.save
+    # Copy standard statements assigned to this activity.
+    material_type = self.class.name.underscore
+    StandardStatement.find_all_by_material_type_and_material_id(material_type, id).each do |s|
+      s.duplicate_and_assign_to(material_type, clone.id)
+    end
+    # Cohorts are skipped intentionally, since that would mean any copies would show up automatically to cohort teachers.
+
+    clone
+  end
+
+  # Duplicates external activity on LARA and updates URLs to point to the new external copy.
+  # Returns self or nil in case of error.
+  def duplicate_on_lara(root_url)
+    # %host% matcher ensures that site_url can start with protocol and end with optional `/`.
+    client = Client.where("site_url LIKE :ext_act_host", ext_act_host: "%#{URI.parse(url).host}%").first
+    auth_token = 'Bearer %s' % client.app_secret
+    response = HTTParty.post(url + '/remote_duplicate',
+      body: {
+        user_email: user.email,
+        add_to_portal: root_url
+      }.to_json,
+      headers: {
+        'Content-Type' => 'application/json',
+        'Authorization' => auth_token
+      },
+      format: :json)
+
+    if response.code == 200 # successful
+      pub_data = response['publication_data']
+      # First, update URLs so the ActivityRuntimeAPI.publish2 can find correct instance (this one) and update it.
+      self.url = pub_data['url']
+      # launch_url needs to be set manually, as that's the only thing (together with url) that is set only during
+      # initial publishing, but not during republishing. Since activity instance already exists, the call below
+      # will be considered as republishing.
+      self.launch_url = pub_data['launch_url'] || pub_data["create_url"]
+      self.save
+      # Then, publish provided data.
+      return !!ActivityRuntimeAPI.publish2(pub_data, user)
+    end
+    # Return false in case of error.
     false
   end
 

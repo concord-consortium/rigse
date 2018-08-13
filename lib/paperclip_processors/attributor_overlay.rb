@@ -6,12 +6,6 @@ class AttributorOverlay < Paperclip::Processor
     @attach = attachment.instance
     @attribution = @attach.attribution.dup || " "
 
-
-    if (@attach.respond_to? :uploaded_by_attribution)
-      @attribution << "\n" unless @attribution.blank?
-      @attribution << @attach.uploaded_by_attribution
-    end
-
     @current_format = File.extname(@file.path)
     @basename =  File.basename(@file.path, @current_format)
     @source_geometry = Paperclip::Geometry.from_file(@file)

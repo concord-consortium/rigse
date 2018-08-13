@@ -131,14 +131,14 @@ describe UserPolicy do
     end
 
     context "acting on a portal administrator" do
-      before(:all) do
+      let(:user) { a_teacher.user }
+      before(:each) do
         user.add_role("admin")
       end
-      let(:user) { a_teacher.user }
       it { is_expected.to permit(:index)                      }
       it { is_expected.not_to permit(:make_admin)             }
       it { is_expected.to permit(:show)                       }
-      it { is_expected.to permit(:confirm)                }
+      it { is_expected.to permit(:confirm)                    }
       it { is_expected.not_to permit(:reset_password)         }
       it { is_expected.not_to permit(:preferences)            }
       it { is_expected.not_to permit(:switch)                 }

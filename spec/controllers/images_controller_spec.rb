@@ -63,7 +63,7 @@ describe ImagesController do
     describe "with valid params" do
       it "should expose a newly created image as @image" do
         img = mock_image
-        img.stub(:save => true)
+        allow(img).to receive_messages(:save => true)
 
         expect(Image).to receive(:new).with({'these' => 'params', 'user_id' => @logged_in_user.id.to_s}).and_return(img)
         post :create, :image => {:these => 'params'}

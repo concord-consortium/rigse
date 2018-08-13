@@ -66,8 +66,8 @@ describe Report::Learner do
 
   describe "with no bundle_loggers" do
     before(:each) do
-      @learner.stub(:periodic_bundle_logger => nil)
-      @bundle_logger.stub(:last_non_empty_bundle_content => nil)
+      allow(@learner).to receive_messages(:periodic_bundle_logger => nil)
+      allow(@bundle_logger).to receive_messages(:last_non_empty_bundle_content => nil)
     end
 
     it "the last_run time should be nil" do
@@ -87,8 +87,8 @@ describe Report::Learner do
 
   describe "with only old type bundle loggers" do
     before(:each) do
-      @learner.stub(:periodic_bundle_logger => nil)
-      @bundle_content.stub(:updated_at => Time.now)
+      allow(@learner).to receive_messages(:periodic_bundle_logger => nil)
+      allow(@bundle_content).to receive_messages(:updated_at => Time.now)
     end
 
     it "should use the last bundle contents update time" do
@@ -99,9 +99,9 @@ describe Report::Learner do
 
   describe "with only periodic bundle loggers" do
     before(:each) do
-      @learner.stub(:bundle_logger => nil)
-      @periodic_bundle_content.stub(:updated_at => Time.now)
-      @periodic_bundle_logger.stub(:periodic_bundle_contents => [@periodic_bundle_content])
+      allow(@learner).to receive_messages(:bundle_logger => nil)
+      allow(@periodic_bundle_content).to receive_messages(:updated_at => Time.now)
+      allow(@periodic_bundle_logger).to receive_messages(:periodic_bundle_contents => [@periodic_bundle_content])
     end
 
     it "should use the last bundle contents update time" do
@@ -113,10 +113,10 @@ describe Report::Learner do
   describe "with both preiodic and standard loggers" do
     describe "when the periodic logger is the most recent" do
       before(:each) do
-        @bundle_content.stub(:updated_at => Time.now - 2.hours)
-        @bundle_logger.stub(:last_non_empty_bundle_content => @bundle_content)
-        @periodic_bundle_content.stub(:updated_at => Time.now)
-        @periodic_bundle_logger.stub(:periodic_bundle_contents => [@periodic_bundle_content])
+        allow(@bundle_content).to receive_messages(:updated_at => Time.now - 2.hours)
+        allow(@bundle_logger).to receive_messages(:last_non_empty_bundle_content => @bundle_content)
+        allow(@periodic_bundle_content).to receive_messages(:updated_at => Time.now)
+        allow(@periodic_bundle_logger).to receive_messages(:periodic_bundle_contents => [@periodic_bundle_content])
       end
 
       it "should use the periodic update time" do
@@ -126,11 +126,11 @@ describe Report::Learner do
     end
     describe "when the periodic logger is the most recent" do
       before(:each) do
-        @bundle_content.stub(:updated_at => Time.now)
-        @bundle_logger.stub(:last_non_empty_bundle_content => @bundle_content)
+        allow(@bundle_content).to receive_messages(:updated_at => Time.now)
+        allow(@bundle_logger).to receive_messages(:last_non_empty_bundle_content => @bundle_content)
 
-        @periodic_bundle_content.stub(:updated_at => Time.now - 2.hours)
-        @periodic_bundle_logger.stub(:periodic_bundle_contents => [@periodic_bundle_content])
+        allow(@periodic_bundle_content).to receive_messages(:updated_at => Time.now - 2.hours)
+        allow(@periodic_bundle_logger).to receive_messages(:periodic_bundle_contents => [@periodic_bundle_content])
       end
 
       it "should use the bundle update time" do

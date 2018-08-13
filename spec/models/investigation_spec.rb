@@ -4,15 +4,15 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 RSpec::Matchers.define :be_before do |expected|
   match                          { |given| given.position < expected.position }
-  failure_message_for_should     { |given| "expected #{given.inspect} to be before #{expected.inspect}" }
-  failure_message_for_should_not { |given| "expected #{given.inspect} not to be before #{expected.inspect}" }
+  failure_message     { |given| "expected #{given.inspect} to be before #{expected.inspect}" }
+  failure_message_when_negated { |given| "expected #{given.inspect} not to be before #{expected.inspect}" }
   description                    { "be before #{expected.position}" }
 end
 
 RSpec::Matchers.define :be_after do |expected|
   match                          { |given| given.position > expected.position }
-  failure_message_for_should     { |given| "expected #{given.inspect} to be after #{expected.inspect}" }
-  failure_message_for_should_not { |given| "expected #{given.inspect} not to be after #{expected.inspect}" }
+  failure_message     { |given| "expected #{given.inspect} to be after #{expected.inspect}" }
+  failure_message_when_negated { |given| "expected #{given.inspect} not to be after #{expected.inspect}" }
   description                    { "be after #{expected.position}" }
 end
 
@@ -60,32 +60,6 @@ describe Investigation do
       expect(@investigation).to respond_to(:available_states)
     end
   end
-  
-  describe "should be duplicateable" do
-    before(:each) do
-      @investigation = Investigation.create!(@valid_attributes)
-      @user = Factory.create(:user, { :email => "test@test.com", :password => "password", :password_confirmation => "password" })
-    end
-    
-    it "should not allow teachers to duplicate" do
-      [:member, :guest].each do |role|
-        @user.roles.destroy_all
-        @user.add_role(role.to_s)
-        
-        expect(@investigation.duplicateable?(@user)).to be_falsey
-      end
-    end
-    
-    it "should allow admins, managers, etc. to duplicate" do
-      [:admin, :manager, :researcher, :author].each do |role|
-        @user.roles.destroy_all
-        @user.add_role(role.to_s)
-        
-        expect(@investigation.duplicateable?(@user)).to be_truthy
-      end
-    end
-  end
-  
 
   describe "search_list (searching for investigations)" do
     before(:all) do
@@ -282,11 +256,11 @@ describe Investigation do
       @offering = mock_model(Portal::Offering, :can_be_deleted? => false)
       @bad_page_element = mock_model(PageElement, :embeddable => nil)
       @good_page_element = mock_model(PageElement, :embeddable => mock_model(Embeddable::MultipleChoice))
-      @good.stub(:page_elements => [@good_page_element,@good_page_element])
-      @bad.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
-      @bad_with_learners.stub(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
-      @bad_with_learners.stub(:offerings => [@offering])
-      Investigation.stub(:all => [@good,@bad,@bad_with_learners])     
+      allow(@good).to receive_messages(:page_elements => [@good_page_element,@good_page_element])
+      allow(@bad).to receive_messages(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
+      allow(@bad_with_learners).to receive_messages(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
+      allow(@bad_with_learners).to receive_messages(:offerings => [@offering])
+      allow(Investigation).to receive_messages(:all => [@good,@bad,@bad_with_learners])     
     end
 
     describe "broken investigations" do
@@ -356,8 +330,8 @@ describe Investigation do
     let(:activities)           { [activity] }
     subject do
       s = Factory.create(:investigation)
-      s.stub(:external_activities => external_activities)
-      s.stub(:activities => activities)
+      allow(s).to receive_messages(:external_activities => external_activities)
+      allow(s).to receive_messages(:activities => activities)
       s.is_template
     end
     describe "when an investigation has an activity that is a template" do

@@ -4,10 +4,10 @@ end
 
 
 Then /^I should see the the teacher signup form$/ do
-  Then I should see "Teacher Signup Page"
-  And I should see "personal info"
-  And I should see "school"
-  And I should see "login info"
+  Then I is_expected.to see "Teacher Signup Page"
+  And I is_expected.to see "personal info"
+  And I is_expected.to see "school"
+  And I is_expected.to see "login info"
 end
 
 Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,school_name|

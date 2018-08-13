@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'fakeweb'
 
 describe PadletWrapper do
   before do
@@ -35,21 +34,20 @@ describe PadletWrapper do
 
   describe 'when communication with Padlet website works as expected' do
     before do
-      FakeWeb.register_uri(:post, padlet_auth_url,
-        :status => ["201", "Created"]
-      )
-      FakeWeb.register_uri(:post, padlet_wall_url,
-        :status => ["201", "Created"],
-        :content_type => "application/json",
-        :body => make_wall_response.to_json,
-        :content => make_wall_response.to_json
-      )
-      FakeWeb.register_uri(:put, padlet_policy_url,
-        :status => ["200", "OK"],
-        :content_type => "application/json",
-        :body => make_public_response.to_json,
-        :content => make_public_response.to_json
-      )
+      stub_request(:post, padlet_auth_url).
+        to_return(status: 201)
+
+      stub_request(:post, padlet_wall_url).
+        to_return(status: 201,
+          headers: {'Content-Type' => "application/json"},
+          body: make_wall_response.to_json
+          )
+
+      stub_request(:put, padlet_policy_url).
+        to_return(status: 200,
+          headers: {'Content-Type' => "application/json"},
+          body: make_public_response.to_json
+          )
     end
 
     it 'should create new Padlet and provide its URL' do
@@ -59,16 +57,15 @@ describe PadletWrapper do
 
   describe 'when communication with Padlet website is broken (e.g. due to Padlet API change)' do
     before do
-      FakeWeb.register_uri(:post, padlet_auth_url,
-        :status => ["201", "Created"]
-      )
-      FakeWeb.register_uri(:post, padlet_wall_url,
-        :status => ["400", "Bad request"] # !!!
-      )
+      stub_request(:post, padlet_auth_url).
+        to_return(status: 201)
+
+      stub_request(:post, padlet_wall_url).
+        to_return(status: 400)
     end
 
     it 'should raise an error' do
-      expect {  PadletWrapper.new }.to raise_error
+      expect { PadletWrapper.new }.to raise_error
     end
   end
 end

@@ -24,7 +24,7 @@ shared_examples_for 'a saveable' do
         # Stubbing the #answer method since its return is derived from some
         # complex relationships
         #
-        Saveable::MultipleChoiceAnswer.any_instance.stub(
+        allow_any_instance_of(Saveable::MultipleChoiceAnswer).to receive_messages(
             :answer =>
                 [ { :choice_id => 1, :answer => "non-default answer" } ] )
       end

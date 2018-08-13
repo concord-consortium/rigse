@@ -273,23 +273,6 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
-  ##
-  ##
-  ##
-  def duplicate
-    authorize ExternalActivity
-    @original = ExternalActivity.find(params['id'])
-    @external_activity = @original.deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at], :include => [{:teacher_notes => {}}, {:author_notes => {}}]
-    @external_activity.name = "copy of #{@external_activity.name}"
-    @external_activity.user = current_visitor
-    @external_activity.save
-
-    (@external_activity.teacher_notes + @external_activity.author_notes).each {|tn| n.user = current_visitor; n.save }
-
-    flash[:notice] ="Copied #{@original.name}"
-    redirect_to url_for(@external_activity)
-  end
-
   def matedit
     authorize @external_activity
     @uri = ssl_if_we_are(URI.parse("#{@external_activity.url}/edit"))
@@ -329,23 +312,13 @@ class ExternalActivitiesController < ApplicationController
 
   def copy
     authorize ExternalActivity
-    # create a redirect url with a template parameter that LARA can replace with the remotely published activity_id
-    # an intermediate redirect is used to set the publication status to private
-    # We can't do this aways on 'matedit' because that action is used when editing an existing activity
-    url = set_private_before_matedit_external_activity_url(999)
-    redirect_uri = URI.parse(url.sub!('999', ':activity_id'))
-    redirect_uri.query = {
-      :iFrame => true
-    }.to_query
-
-    @uri = URI.parse(@external_activity.url + '/duplicate')
-    @uri.query = {
-      :domain => root_url,
-      :domain_uid => current_visitor.id,
-      :add_to_portal => root_url,
-      :redirect_on_success => redirect_uri.to_s
-    }.to_query
-    redirect_to @uri.to_s
+    clone = @external_activity.duplicate(current_visitor, root_url)
+    if clone
+      redirect_to matedit_external_activity_url(clone.id)
+    else
+      flash[:error] = "Copying failed"
+      redirect_to :back
+    end
   end
 
   private
