@@ -181,7 +181,7 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       if okToCreate && @portal_clazz.save
         # send email notifications about class creation
-        ClazzMailer.clazz_creation_notification(@current_user).deliver
+        Portal::ClazzMailer.clazz_creation_notification(@current_user).deliver
 
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(url_for([:materials, @portal_clazz])) }
