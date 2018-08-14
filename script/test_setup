@@ -1,0 +1,16 @@
+#!/bin/bash
+set -ev
+
+config/database.travis.yml config/database.yml
+cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
+cp config/settings.sample.yml config/settings.yml
+mysql -e 'create database rigse_test;
+mysql -uroot -e 'GRANT ALL ON rigse_test.* TO 'travis'@'localhost';'
+bundle exec spring binstub --all
+./bin/rake db:schema:load
+./bin/rake db:migrate
+./bin/rake db:test:prepare
+RAILS_GROUPS=assets ./bin/rake assets:precompile:all
+RAILS_ENV=test ./bin/rake sunspot:solr:start &
+sleep 10 # give SOLR some time to start and init
+
