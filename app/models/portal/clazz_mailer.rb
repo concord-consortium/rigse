@@ -2,10 +2,13 @@ class Portal::ClazzMailer < Devise::Mailer
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
 
   def clazz_creation_notification(user)
-    cohort_project_id = user.cohorts.first.project_id
-    cohort_admins = Admin::Project.find(cohort_project_id).project_admins
-    subject = "New class created by #{user.name} in #{user.cohorts.first.name}"
-    finish_email(cohort_admins, subject)
+    user.cohorts.each do |uc|
+      if uc.email_notifications_enabled
+        cohort_admins = Admin::Project.find(uc.project_id).project_admins
+        subject = "New class created by #{user.name} in #{uc.name}"
+        finish_email(cohort_admins, subject)
+      end
+    end
   end
 
   protected
