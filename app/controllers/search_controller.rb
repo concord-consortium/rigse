@@ -192,6 +192,8 @@ class SearchController < ApplicationController
             offering.save
           end
           newly_assigned_material_names << offering.name
+          # send email notifications about assignment
+          Portal::ClazzMailer.clazz_assignment_notification(@current_user, portal_clazz, offering.name).deliver
         else
           already_assigned_material_names << portal_offering.name
         end

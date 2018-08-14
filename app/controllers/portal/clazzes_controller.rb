@@ -181,7 +181,7 @@ class Portal::ClazzesController < ApplicationController
     respond_to do |format|
       if okToCreate && @portal_clazz.save
         # send email notifications about class creation
-        Portal::ClazzMailer.clazz_creation_notification(@current_user).deliver
+        Portal::ClazzMailer.clazz_creation_notification(@current_user, @portal_clazz).deliver
 
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(url_for([:materials, @portal_clazz])) }
@@ -305,6 +305,8 @@ class Portal::ClazzesController < ApplicationController
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
             @offering.default_offering = true
             @offering.save
+            # send email notifications about assignment
+            Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
           else
             error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
             @offering.destroy
