@@ -27,19 +27,8 @@ class Admin::Project < ActiveRecord::Base
     self.where("landing_page_slug <> ''").order("name ASC")
   end
 
-  def self.get_project_admins(project_id)
-    # get a list of project admins for specified project
-    project_admin_ids = []
-    project_admins = []
-    project_admin_query = "SELECT user_id FROM admin_project_users WHERE project_id='#{project_id}' AND is_admin='1'"
-    result = ActiveRecord::Base.connection.exec_query(project_admin_query)
-    result.each do |row|
-      project_admin_ids.push(row['user_id'])
-    end
-    project_admin_ids.each do |project_admin_id|
-      project_admins.push(User.find(project_admin_id))
-    end
-    project_admins
+  def project_admins
+    project_users.where(is_admin:true).map { |au| au.user }
   end
 
   has_many :project_materials, dependent: :destroy

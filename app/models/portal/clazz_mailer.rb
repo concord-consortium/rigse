@@ -3,8 +3,7 @@ class Portal::ClazzMailer < Devise::Mailer
 
   def clazz_creation_notification(user)
     cohort_project_id = user.cohorts.first.project_id
-    cohort_admins = Admin::Project.get_project_admins(cohort_project_id)
-
+    cohort_admins = Admin::Project.find(cohort_project_id).project_admins
     subject = "New class created by #{user.name} in #{user.cohorts.first.name}"
     finish_email(cohort_admins, subject)
   end
