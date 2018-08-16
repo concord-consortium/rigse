@@ -24,11 +24,12 @@ class Reports::Detail < Reports::Excel
     @report_learners.sort_by {|l| [l.school_name, l.class_name, l.student_name, l.runnable_name]}
   end
 
-  def setup_sheet_for_runnable(runnable)
-      # Spreadhseet was dying on ":" and  "/" chars. Others?
+  def setup_sheet_for_runnable(runnable, idx)
+      # Spreadsheet was dying on ":" and  "/" chars. Others?
       sheet_name = runnable.name.gsub /[^a-zA-z0-9 ]/,"_"
-      sheet_name = sheet_name[0..30]
-      sheet_name "Unknown" unless sheet_name && sheet_name.size > 0
+      # Add index number, as Spreadsheet is failing when two sheets have the same name.
+      sheet_name = "#{idx + 1}. #{sheet_name[0..30]}"
+      sheet_name "#{idx + 1}. Unknown" unless sheet_name && sheet_name.size > 0
       @runnable_sheet[runnable] = @book.create_worksheet :name => sheet_name
       sheet_defs = @common_columns.clone
       answer_defs = []
@@ -107,8 +108,8 @@ class Reports::Detail < Reports::Excel
     @runnables.sort!{|a,b| a.name <=> b.name}
 
     print "Creating #{@runnables.size} worksheets for report" if @verbose
-    @runnables.each do |runnable|
-      setup_sheet_for_runnable(runnable)
+    @runnables.each_with_index do |runnable, idx|
+      setup_sheet_for_runnable(runnable, idx)
     end # runnables
     puts " done." if @verbose
 
@@ -178,7 +179,7 @@ class Reports::Detail < Reports::Excel
                 answer_value = "";
               end
               # Limit length of the answer to 5000 characters, so we don't break Excel.
-              answer_value = answer_value.truncate(5000)
+              answer_value = answer_value.to_s.truncate(5000)
               case ans[:is_correct]
                 when true then res = ["(correct) #{answer_value}"]
                 when nil then res = [answer_value]
