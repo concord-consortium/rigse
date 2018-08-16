@@ -7,7 +7,7 @@ describe Dataservice::Blob do
   describe "a bare instance" do
     %w|content mimetype file_extension checksum learner_id|.each do |attr|
       it "should have a #{attr} attribute" do
-        subject.attributes.should include attr
+        expect(subject.attributes).to include attr
       end
     end
   end
@@ -15,15 +15,26 @@ describe Dataservice::Blob do
   describe "mimetype" do
     describe "with a mimetype attrbiute value set" do
       let(:attributes)  { {'mimetype' => "application/json"} }
-      its(:mimetype)    {      should == "application/json" }
+
+      describe '#mimetype' do
+        subject { super().mimetype }
+        it {      is_expected.to eq("application/json") }
+      end
     end
     describe "backwards compatibility, guessing mimetype" do
       describe "matching png by content" do
         let(:attributes) { {'content' => ".PNG blah blah"} }
-        its(:mimetype)   { should == "image/png" }
+
+        describe '#mimetype' do
+          subject { super().mimetype }
+          it { is_expected.to eq("image/png") }
+        end
       end
       describe "default guess should be application/octet-stream" do
-        its(:mimetype)   { should == "application/octet-stream"}
+        describe '#mimetype' do
+          subject { super().mimetype }
+          it { is_expected.to eq("application/octet-stream")}
+        end
       end
     end
   end
@@ -31,21 +42,36 @@ describe Dataservice::Blob do
   describe "file_extension" do
     describe "with a file_extension attrbiute value set" do
       let(:attributes)    { {'file_extension' => "gif"} }
-      its(:file_extension)      {      should == "gif" }
+
+      describe '#file_extension' do
+        subject { super().file_extension }
+        it {      is_expected.to eq("gif") }
+      end
     end
     describe "backwards compatibility, guess file_extension" do
       describe "by using mimetype info" do
         describe "guessing file_extension for image/png" do
           let(:attributes)     { {'mimetype' => "image/png"} }
-          its(:file_extension) { should == "png" }
+
+          describe '#file_extension' do
+            subject { super().file_extension }
+            it { is_expected.to eq("png") }
+          end
         end
         describe "guessing file_extension for application/octet-stream" do
           let(:attributes)     { {'mimetype' => "application/octet-stream"} }
-          its(:file_extension) { should == "blob" }
+
+          describe '#file_extension' do
+            subject { super().file_extension }
+            it { is_expected.to eq("blob") }
+          end
         end
       end
       describe "guessing file_extension blindly" do
-        its(:file_extension)  { should == "blob"}
+        describe '#file_extension' do
+          subject { super().file_extension }
+          it { is_expected.to eq("blob")}
+        end
       end
     end
   end
@@ -55,17 +81,17 @@ describe Dataservice::Blob do
 
       it "should render an image tag for jpegs" do
         subject.mimetype = "image/jpg"
-        subject.html_content("path").should match /<img src/
+        expect(subject.html_content("path")).to match /<img src/
       end
 
       it "should render an image tag for gifs" do
         subject.mimetype = "image/gif"
-        subject.html_content("path").should match /<img src/
+        expect(subject.html_content("path")).to match /<img src/
       end
 
       it "should render a div tag for others" do
         subject.mimetype = "application/octet-stream"
-        subject.html_content("path").should match /<div/
+        expect(subject.html_content("path")).to match /<div/
       end
     end
   end
@@ -80,13 +106,17 @@ describe Dataservice::Blob do
 
     describe "without hashable attrbiutes" do
       let(:attributes){}
-      its(:checksum) { should_not be_nil }
+
+      describe '#checksum' do
+        subject { super().checksum }
+        it { is_expected.not_to be_nil }
+      end
     end
 
     it "should change when content changes" do
       first_checksum  = subject.checksum
       subject.content  = "updated content value here"
-      subject.checksum.should_not == first_checksum
+      expect(subject.checksum).not_to eq(first_checksum)
     end
   end
 
@@ -108,9 +138,9 @@ describe Dataservice::Blob do
       describe "when there is good content" do
         let(:status) { 200 }
         it "should update its content with the content" do
-          subject.content.should be_nil
+          expect(subject.content).to be_nil
           subject.load_content_from(url)
-          subject.content.should == url_content
+          expect(subject.content).to eq(url_content)
         end
       end
 
@@ -119,7 +149,7 @@ describe Dataservice::Blob do
         it "should leave the content unchanged" do
           subject.content = "booga booga"
           subject.load_content_from(url)
-          subject.content.should_not == url_content
+          expect(subject.content).not_to eq(url_content)
         end
       end
     end
@@ -128,7 +158,7 @@ describe Dataservice::Blob do
       let(:url) { "" }
       # No need to stub a request either, because none will be made
       it "should not change the content" do
-        subject.content.should_not == url_content
+        expect(subject.content).not_to eq(url_content)
       end
     end
 
@@ -153,25 +183,25 @@ describe Dataservice::Blob do
 
       describe "with new content and new learner" do
         it "should have correct values from loading content" do
-          subject.mimetype.should == mimetype
-          subject.file_extension.should == "png"
-          subject.content.should == url_content
-          subject.id.should_not be_nil
-          subject.should be_valid
+          expect(subject.mimetype).to eq(mimetype)
+          expect(subject.file_extension).to eq("png")
+          expect(subject.content).to eq(url_content)
+          expect(subject.id).not_to be_nil
+          expect(subject).to be_valid
         end
 
         it "should not use an existing instance" do
-          subject.should_not == @existing
-          subject.id.should_not == @existing.id
+          expect(subject).not_to eq(@existing)
+          expect(subject.id).not_to eq(@existing.id)
         end
       end
 
       describe "with existing content and learner" do
         let(:existing_content)    { url_content }
         it "should reuse the existing instance" do
-          subject.should == @existing
-          subject.content.should == existing_content
-          subject.id.should == @existing.id
+          expect(subject).to eq(@existing)
+          expect(subject.content).to eq(existing_content)
+          expect(subject.id).to eq(@existing.id)
         end
       end
 

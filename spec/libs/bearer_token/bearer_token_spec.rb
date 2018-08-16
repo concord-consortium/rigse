@@ -36,7 +36,7 @@ describe BearerToken:BearerTokenAuthenticatable do
   after(:each) { Delorean.back_to_the_present }
   let(:domain_matchers) { "" }
   let(:strategy)        { BearerTokenAuthenticatable::BearerToken.new(nil) }
-  let(:request)         { mock('request') }
+  let(:request)         { double('request') }
   let(:mapping)         { Devise.mappings[:user] }
   let(:expires)         { Time.now + 10.minutes}
   let(:user_token)      { addToken(user, client, expires) }
@@ -63,33 +63,33 @@ describe BearerToken:BearerTokenAuthenticatable do
   )}
   let(:referrer)  { "https://foo.bar.com/some/path.html" }
   before(:each) {
-    request.stub!(:headers).and_return(user_headers)
-    request.stub!(:env).and_return({'HTTP_REFERER' => referrer})
-    request.stub!(:params).and_return(params)
-    strategy.stub!(:mapping).and_return(mapping)
-    strategy.stub!(:request).and_return(request)
+    allow(request).to receive(:headers).and_return(user_headers)
+    allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
+    allow(request).to receive(:params).and_return(params)
+    allow(strategy).to receive(:mapping).and_return(mapping)
+    allow(strategy).to receive(:request).and_return(request)
   }
 
   context 'a user with a short-lived authentication token' do
     let(:expires) { Time.now + 10.minutes}
     it 'should authenticate the user' do
-      strategy.authenticate!.should eql :success
+      expect(strategy.authenticate!).to eql :success
     end
 
     it 'the token should expire 12 minutes into the futre' do
       Delorean.jump(12 * 60) # move 12 minutes into the future
-      strategy.authenticate!.should eql :failure
+      expect(strategy.authenticate!).to eql :failure
     end
     context "from an allowed domain" do
       let(:domain_matchers) { "foo.bar.com" }
       it 'should authenticate the user' do
-        strategy.authenticate!.should eql :success
+        expect(strategy.authenticate!).to eql :success
       end
     end
     context "from a prohibited domain" do
       let(:domain_matchers) { "bar.com" } #no foo
       it 'should not authenticate the user' do
-        strategy.authenticate!.should eql :failure
+        expect(strategy.authenticate!).to eql :failure
       end
     end
   end
@@ -97,7 +97,7 @@ describe BearerToken:BearerTokenAuthenticatable do
   context 'a user with an expired authentication token' do
     let(:expires) { Time.now - 10.minutes}
     it 'should NOT authenticate the user' do
-      strategy.authenticate!.should eql :failure
+      expect(strategy.authenticate!).to eql :failure
     end
   end
 
@@ -107,46 +107,46 @@ describe BearerToken:BearerTokenAuthenticatable do
     context 'when sending the good bearer token' do
       let(:user_token){ good_token }
       it "should authenticate" do
-        strategy.authenticate!.should eql :success
+        expect(strategy.authenticate!).to eql :success
       end
     end
     context 'when sending the expired token' do
       let(:user_token){ expired_token }
       it "authentication should fail" do
-        strategy.authenticate!.should eql :failure
+        expect(strategy.authenticate!).to eql :failure
       end
     end
   end
 
   context 'a learner with a short-lived authentication token' do
     before(:each) {
-      request.stub!(:headers).and_return(learner_headers)
+      allow(request).to receive(:headers).and_return(learner_headers)
     }
 
     let(:expires) { Time.now + 10.minutes}
     it 'should authenticate the learner' do
-      strategy.authenticate!.should eql :success
+      expect(strategy.authenticate!).to eql :success
     end
 
     it 'should be able to get the learner from the token' do
       grant = AccessGrant.find_by_access_token(learner_token)
-      grant.learner.should eql learner
+      expect(grant.learner).to eql learner
     end
   end
 
   context 'a teacher with a short-lived authentication token' do
     before(:each) {
-      request.stub!(:headers).and_return(teacher_headers)
+      allow(request).to receive(:headers).and_return(teacher_headers)
     }
 
     let(:expires) { Time.now + 10.minutes}
     it 'should authenticate the teacher' do
-      strategy.authenticate!.should eql :success
+      expect(strategy.authenticate!).to eql :success
     end
 
     it 'should be able to get the teacher from the token' do
       grant = AccessGrant.find_by_access_token(teacher_token)
-      grant.teacher.should eql class_teacher
+      expect(grant.teacher).to eql class_teacher
     end
   end
 end

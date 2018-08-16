@@ -27,13 +27,6 @@ Feature: Admin configures settings
     When I follow "edit settings"
     Then I should see the button "Save"
 
-  @javascript @pending
-  Scenario: Admin sets jnlp CDN hostname
-    Given The default settings and jnlp resources exist using factories
-    When an admin sets the jnlp CDN hostname to "cdn.example.com"
-    Then the installer jnlp should have the CDN hostname "cdn.example.com" in the right places
-    And the non installer jnlp codebase should not start with "http://cdn.example.com"
-
   @javascript
   Scenario: Admin enables default class
     Given The default settings and jnlp resources exist using factories
@@ -42,7 +35,7 @@ Feature: Admin configures settings
     Then I should see the sites name
     And I should see "Default Class: disabled"
     When I follow "edit settings"
-    Then I should see "Enable Default Class"
+    Then I should see "ENABLE DEFAULT CLASS"
     When I check "Enable Default Class"
     And I save the settings
     Then I should see "Default Class: enabled"
@@ -60,13 +53,13 @@ Feature: Admin configures settings
     And am on the admin settings page
     Then I should see "Grade Levels for Classes: disabled"
     When I follow "edit settings"
-    Then I should see "Enable Grade Levels for Classes"
+    Then I should see "ENABLE GRADE LEVELS FOR CLASSES"
     When I check "Enable Grade Levels for Classes"
     And I save the settings
     Then I should see "Grade Levels for Classes: enabled"
     When I am logged in with the username teacher
     And I am on the clazz create page
-    Then I should see "Grade Levels:"
+    Then I should see "GRADE LEVELS:"
     
   Scenario: Admin creates a new settings
     Given The default settings and jnlp resources exist using factories

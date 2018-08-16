@@ -37,10 +37,7 @@
       = material.display_name
   %br
   .description
-    - if current_visitor.portal_teacher && parent_material.description_for_teacher.present?
-      = sanitize parent_material.description_for_teacher
-    - else
-      = sanitize parent_material.description
+    = sanitize parent_material.long_description_for_current_user
     %div.clazz_count{:id=>"material_clazz_count"}
       %i
         - if(material_count == 0)

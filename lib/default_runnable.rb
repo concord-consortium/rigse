@@ -40,7 +40,6 @@ class DefaultRunnable
         page1, open_response = DefaultRunnable.add_page_to_section(section1, "Find the hottest",
           '<p>Find the hottest thing in the room with the temperature probe.</p>',
           "Student's explore their environment with a tempemerature probe.")
-        temperature_probe = Probe::ProbeType.find_by_name('temperature')
         investigation.deep_set_user(user)
       end
       investigation

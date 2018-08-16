@@ -22,7 +22,7 @@ describe Archiveable do
   describe "A class that doesn't respond to is_archived" do
     describe "archived?" do
       it "should return false" do
-        expect(instance.archived?).to be_false
+        expect(instance.archived?).to be_falsey
       end
     end
     describe "archive!" do
@@ -43,16 +43,16 @@ describe Archiveable do
     describe "archived?" do
       it "should return its own values" do
         instance.is_archived = true
-        expect(instance.archived?).to be_true
+        expect(instance.archived?).to be_truthy
         instance.is_archived = false
-        expect(instance.archived?).to be_false
+        expect(instance.archived?).to be_falsey
       end
     end
     describe "archive!" do
       it "should set the archive status to true" do
         instance.is_archived = false
         instance.archive!
-        expect(instance.archived?).to be_true
+        expect(instance.archived?).to be_truthy
       end
     end
 
@@ -60,7 +60,7 @@ describe Archiveable do
       it "should set the archive status to false" do
         instance.is_archived = true
         instance.unarchive!
-        expect(instance.archived?).to be_false
+        expect(instance.archived?).to be_falsey
       end
     end
   end

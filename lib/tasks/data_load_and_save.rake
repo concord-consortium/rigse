@@ -90,69 +90,10 @@ namespace :db do
                   data[c.name] = fixture[c.name] if fixture[c.name]
                 end
                 ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")}) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")})", 'Fixture Insert'
-              end        
-            rescue 
-              puts "failed to load table #{tbl}" 
-            end 
-          end
-        end
-      end
-    end
-
-    desc "Save the interface/probe configuration data to yaml fixtures in config/probe_configurations." 
-    task :save_probe_configurations => :environment do 
-      dir = ::Rails.root.to_s + '/config/probe_configurations'
-      FileUtils.chdir(dir) do
-        tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
-        tables.each do |tbl|
-          puts "writing #{dir}/#{tbl}.yaml"
-          File.open("#{tbl}.yaml", 'w') do |f| 
-            attributes = tbl.gsub(/^probe_/, "probe/").classify.constantize.find(:all).collect { |m| 
-              attributes = m.attributes
-              attributes.delete('user_id')
-              attributes.delete('created_at')
-              attributes.delete('updated_at')
-              attributes
-            }
-            f.write YAML.dump(attributes)
-          end
-        end
-      end
-    end
-
-    desc "Load just the probe configurations from yaml fixtures in config/probe_configurations." 
-    task :load_probe_configurations => :environment do 
-      dir = ::Rails.root.to_s + '/config/probe_configurations'
-      # Normally these models will be owned by the site_admin but if the site_admin doesn't
-      # exist or we are loading these into the test database set the user_id value to -1
-      user_id = User.site_admin ? User.site_admin.id : -1
-      FileUtils.chdir(dir) do
-        tables = %w{probe_device_configs probe_data_filters probe_vendor_interfaces probe_physical_units probe_calibrations probe_probe_types}
-        tables.each do |tbl|
-          ActiveRecord::Base.transaction do 
-            begin 
-              klass = tbl.gsub(/^probe_/, "probe/").classify.constantize
-              klass.destroy_all
-              klass.reset_column_information
-
-              puts "Loading #{tbl}..." 
-              table_path = "#{tbl}.yaml"
-              YAML.load_file(table_path).each do |fixture|
-                data = {}
-                klass.columns.each do |c|
-                  # filter out missing columns 
-                  data[c.name] = fixture[c.name] if fixture[c.name]
-                  # if there is a field named user_id set it's value to the id for the rites site admin
-                  if c.name == 'user_id'
-                    data[c.name] = user_id
-                  end
-                end
-                ActiveRecord::Base.connection.execute "INSERT INTO #{tbl} (#{data.keys.join(",")},created_at,updated_at) VALUES (#{data.values.collect { |value| ActiveRecord::Base.connection.quote(value) }.join(",")},NOW(),NOW())", 'Fixture Insert'
-              end        
-            rescue StandardError => e
-              puts e
-              puts "failed to load table #{tbl}" 
-            end 
+              end
+            rescue
+              puts "failed to load table #{tbl}"
+            end
           end
         end
       end

@@ -99,8 +99,6 @@ module RunnablesHelper
 
     format ||= component.run_format
 
-    # this is where we pull in extra parameters for the url, like skip_installer
-    params.update(current_visitor.extra_params)
     params[:format] = format
     if component.kind_of?(Portal::Offering)
       # the user id is added to this url to make the url be unique for each user

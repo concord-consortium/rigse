@@ -1,6 +1,4 @@
 class Image < ActiveRecord::Base
-  UseUploadedByInAttribution = false
-
   attr_accessor :is_reprocessing
 
   belongs_to :user
@@ -144,13 +142,4 @@ class Image < ActiveRecord::Base
     end
     size
   end
-
-  # NOTE: user_id and user are nil here. (??)
-  def uploaded_by_attribution
-    if (self.user && UseUploadedByInAttribution)
-      return "Uploaded by: #{self.user.login}"
-    end
-    return ""
-  end
-
 end

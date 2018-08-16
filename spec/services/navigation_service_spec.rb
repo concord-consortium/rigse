@@ -56,29 +56,29 @@ describe NavigationService do
 
   describe "basics" do
     it "should have some sections" do
-      nav_service.sections.should have(4).sections
+      expect(nav_service.sections.size).to eq(4)
     end
     it "should have 2 links" do
-      nav_service.links.should have(3).links
+      expect(nav_service.links.size).to eq(3)
     end
   end
 
   describe "nested structure" do
     describe "schema validation" do
       subject { nav_service.to_json }
-      it { should match_response_schema("navigation")}
+      it { is_expected.to match_response_schema("navigation")}
     end
     describe "values" do
       let(:greeting) { "bonjour" }
       subject { nav_service.to_hash }
-      it { should include(name:  name )}
-      it { should include(greeting: "bonjour") }
-      it { should include(:help) }
-      it { should include(:links) }
-      it { should_not include("xxx") }
+      it { is_expected.to include(name:  name )}
+      it { is_expected.to include(greeting: "bonjour") }
+      it { is_expected.to include(:help) }
+      it { is_expected.to include(:links) }
+      it { is_expected.not_to include("xxx") }
       describe "nested links" do
         it "should have /classes/2/assign link" do
-          subject[:links].first()[:children].first()[:children].first()[:id].should eq("/classes/2/assign")
+          expect(subject[:links].first()[:children].first()[:children].first()[:id]).to eq("/classes/2/assign")
         end
       end
     end
@@ -101,13 +101,13 @@ describe NavigationService do
       describe "with roster using lower sort value" do
         let(:sort) { 0 }
         it "should have /classes/2/assign should appear after /casses/2/roster" do
-          subject[:links].first()[:children].first()[:children].first()[:id].should eq("/classes/2/roster")
+          expect(subject[:links].first()[:children].first()[:children].first()[:id]).to eq("/classes/2/roster")
         end
       end
       describe "with roster using higher sort value" do
         let(:sort) { 7 }
         it "should have /classes/2/assign should appear before /casses/2/roster" do
-          subject[:links].first()[:children].first()[:children].first()[:id].should eq("/classes/2/assign")
+          expect(subject[:links].first()[:children].first()[:children].first()[:id]).to eq("/classes/2/assign")
         end
       end
       describe "supressing items" do
@@ -118,15 +118,15 @@ describe NavigationService do
         describe "supressing a non existant item" do
           let(:supress_path) { "/foo" }
           it "it should still have all sections, such as resources and classes" do
-            gather_item_values(subject[:links], :id).should include("/resources")
-            gather_item_values(subject[:links], :id).should include("/classes")
+            expect(gather_item_values(subject[:links], :id)).to include("/resources")
+            expect(gather_item_values(subject[:links], :id)).to include("/classes")
           end
         end
 
         describe "supressing the resources section" do
           let(:supress_path) { "/resources" }
           it "should no longer have a resources section" do
-            gather_item_values(subject[:links], :id).should_not include("/resources")
+            expect(gather_item_values(subject[:links], :id)).not_to include("/resources")
           end
         end
       end

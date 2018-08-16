@@ -14,39 +14,39 @@ describe Dataservice::BundleLoggersController do
 
   describe "GET index" do
     it "assigns all dataservice_bundle_loggers as @dataservice_bundle_loggers" do
-      Dataservice::BundleLogger.should_receive(:search).with(nil, nil, nil).and_return([mock_bundle_logger])
+      expect(Dataservice::BundleLogger).to receive(:search).with(nil, nil, nil).and_return([mock_bundle_logger])
       login_admin
       get :index
-      assigns[:dataservice_bundle_loggers].should == [mock_bundle_logger]
+      expect(assigns[:dataservice_bundle_loggers]).to eq([mock_bundle_logger])
     end
   end
 
   describe "GET show" do
     it "assigns the requested bundle_logger as @dataservice_bundle_logger" do
       logger = mock_bundle_logger
-      Dataservice::BundleLogger.should_receive(:find).with("37").and_return(logger)
-      logger.should_receive(:in_progress_bundle).twice.and_return(mock_bundle_content)
+      expect(Dataservice::BundleLogger).to receive(:find).with("37").and_return(logger)
+      expect(logger).to receive(:in_progress_bundle).twice.and_return(mock_bundle_content)
       login_admin
       get :show, :id => "37"
-      assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+      expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
     end
   end
 
   describe "GET new" do
     it "assigns a new bundle_logger as @dataservice_bundle_logger" do
-      Dataservice::BundleLogger.should_receive(:new).and_return(mock_bundle_logger)
+      expect(Dataservice::BundleLogger).to receive(:new).and_return(mock_bundle_logger)
       login_admin
       get :new
-      assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+      expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested bundle_logger as @dataservice_bundle_logger" do
-      Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
+      expect(Dataservice::BundleLogger).to receive(:find).with("37").and_return(mock_bundle_logger)
       login_admin
       get :edit, :id => "37"
-      assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+      expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
     end
   end
 
@@ -54,33 +54,33 @@ describe Dataservice::BundleLoggersController do
 
     describe "with valid params" do
       it "assigns a newly created bundle_logger as @dataservice_bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:new).with({'these' => 'params'}).and_return(mock_bundle_logger(:save => true))
+        expect(Dataservice::BundleLogger).to receive(:new).with({'these' => 'params'}).and_return(mock_bundle_logger(:save => true))
         login_admin
         post :create, :dataservice_bundle_logger => {:these => 'params'}
-        assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+        expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
       end
 
       it "redirects to the created bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:new).and_return(mock_bundle_logger(:save => true))
+        expect(Dataservice::BundleLogger).to receive(:new).and_return(mock_bundle_logger(:save => true))
         login_admin
         post :create, :dataservice_bundle_logger => {}
-        response.should redirect_to(dataservice_bundle_logger_url(mock_bundle_logger))
+        expect(response).to redirect_to(dataservice_bundle_logger_url(mock_bundle_logger))
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved bundle_logger as @dataservice_bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:new).with({'these' => 'params'}).and_return(mock_bundle_logger(:save => false))
+        expect(Dataservice::BundleLogger).to receive(:new).with({'these' => 'params'}).and_return(mock_bundle_logger(:save => false))
         login_admin
         post :create, :dataservice_bundle_logger => {:these => 'params'}
-        assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+        expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
       end
 
       it "re-renders the 'new' template" do
-        Dataservice::BundleLogger.should_receive(:new).and_return(mock_bundle_logger(:save => false))
+        expect(Dataservice::BundleLogger).to receive(:new).and_return(mock_bundle_logger(:save => false))
         login_admin
         post :create, :dataservice_bundle_logger => {}
-        response.should render_template('new')
+        expect(response).to render_template('new')
       end
     end
 
@@ -90,47 +90,47 @@ describe Dataservice::BundleLoggersController do
 
     describe "with valid params" do
       it "updates the requested bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
-        mock_bundle_logger.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(Dataservice::BundleLogger).to receive(:find).with("37").and_return(mock_bundle_logger)
+        expect(mock_bundle_logger).to receive(:update_attributes).with({'these' => 'params'})
         login_admin
         put :update, :id => "37", :dataservice_bundle_logger => {:these => 'params'}
       end
 
       it "assigns the requested bundle_logger as @dataservice_bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => true))
+        expect(Dataservice::BundleLogger).to receive(:find).and_return(mock_bundle_logger(:update_attributes => true))
         login_admin
         put :update, :id => "1"
-        assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+        expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
       end
 
       it "redirects to the bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => true))
+        expect(Dataservice::BundleLogger).to receive(:find).and_return(mock_bundle_logger(:update_attributes => true))
         login_admin
         put :update, :id => "1"
-        response.should redirect_to(dataservice_bundle_logger_url(mock_bundle_logger))
+        expect(response).to redirect_to(dataservice_bundle_logger_url(mock_bundle_logger))
       end
     end
 
     describe "with invalid params" do
       it "updates the requested bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
-        mock_bundle_logger.should_receive(:update_attributes).with({'these' => 'params'})
+        expect(Dataservice::BundleLogger).to receive(:find).with("37").and_return(mock_bundle_logger)
+        expect(mock_bundle_logger).to receive(:update_attributes).with({'these' => 'params'})
         login_admin
         put :update, :id => "37", :dataservice_bundle_logger => {:these => 'params'}
       end
 
       it "assigns the bundle_logger as @dataservice_bundle_logger" do
-        Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => false))
+        expect(Dataservice::BundleLogger).to receive(:find).and_return(mock_bundle_logger(:update_attributes => false))
         login_admin
         put :update, :id => "1"
-        assigns[:dataservice_bundle_logger].should equal(mock_bundle_logger)
+        expect(assigns[:dataservice_bundle_logger]).to equal(mock_bundle_logger)
       end
 
       it "re-renders the 'edit' template" do
-        Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:update_attributes => false))
+        expect(Dataservice::BundleLogger).to receive(:find).and_return(mock_bundle_logger(:update_attributes => false))
         login_admin
         put :update, :id => "1"
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
     end
 
@@ -138,17 +138,17 @@ describe Dataservice::BundleLoggersController do
 
   describe "DELETE destroy" do
     it "destroys the requested bundle_logger" do
-      Dataservice::BundleLogger.should_receive(:find).with("37").and_return(mock_bundle_logger)
-      mock_bundle_logger.should_receive(:destroy)
+      expect(Dataservice::BundleLogger).to receive(:find).with("37").and_return(mock_bundle_logger)
+      expect(mock_bundle_logger).to receive(:destroy)
       login_admin
       delete :destroy, :id => "37"
     end
 
     it "redirects to the dataservice_bundle_loggers list" do
-      Dataservice::BundleLogger.should_receive(:find).and_return(mock_bundle_logger(:destroy => true))
+      expect(Dataservice::BundleLogger).to receive(:find).and_return(mock_bundle_logger(:destroy => true))
       login_admin
       delete :destroy, :id => "1"
-      response.should redirect_to(dataservice_bundle_loggers_url)
+      expect(response).to redirect_to(dataservice_bundle_loggers_url)
     end
   end
 

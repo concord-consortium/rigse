@@ -8,35 +8,27 @@ dist: precise
 env:
   matrix:
   - RAILS_ENV=test TEST_SUITE=spec
-  - RAILS_ENV=test TEST_SUITE=jasmine:ci
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_without_javascript
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_javascript
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_search
   global:
-  - secure: fBn66dqLiQa0W1eDAV/ZZKgA4K3OogG9WG/9lyd81csj9YGtHnE91YlzHLH25oyMWg53nGYEcUlLnPYFw7mqdFJ48AJ5sMaplIqmBMmb9OnpUpYc1sds3wvi81TmTAT0ColdBtgdSBCjIPTr2AuieBJgR8dqPpT/uXg30meZg/g=
-  - secure: ebGYa+ExFODy1+aVIrppCkyuO/z4RLBHQ8oGE7+h4a3Hdzxx4kSvfRt3nIeklMpTBt0M55hpY/MnZxHt1N0fhSkqfjeJrsYaagatBXezPiW34ZZCbS2E/pJ3pYiL2zzZS3hER30oGGNthYXuU3LI8gjLL8NHXvg5dxrHVaQeD1M=
   - ARTIFACTS_BUCKET=cc-travis-artifacts
-  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/branch/157698255-addNavigation/library
+  - CC_TEST_REPORTER_ID=555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
 before_install:
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
+  - pip install --user awscli
 
 before_script:
-  - cp config/database.travis.yml config/database.yml
-  - cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
-  - cp config/settings.sample.yml config/settings.yml
-  - mysql -e "create database rigse_test;"
-  - mysql -uroot -e 'GRANT ALL ON rigse_test.* TO 'travis'@'localhost';'
-  - bundle exec spring binstub --all
-  - ./bin/rake db:schema:load
-  - ./bin/rake db:migrate
-  - ./bin/rake db:test:prepare
-  - RAILS_GROUPS=assets ./bin/rake assets:precompile:all
-  - RAILS_ENV=test ./bin/rake sunspot:solr:start &
-  - sleep 10 # give SOLR some time to start and init
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - sh -c "if [ '$TRAVIS_BUILD_STAGE_NAME' = 'Test'  ]; then ./script/travis_test_setup; fi"
 
 after_script:
   - RAILS_ENV=test ./bin/rake sunspot:solr:stop
+  - ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$TEST_SUITE.json"
+  - ls coverage/
+  - aws s3 sync coverage/ "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"
 
 # uncomment this line if your project needs to run something other than `rake`:
 script: ./bin/rake $TEST_SUITE
@@ -51,6 +43,19 @@ addons:
     - ./tmp/capybara
   code_climate:
     repo_token: 555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
+
+jobs:
+  include:
+    - stage: cc-reporter
+      env:
+        matrix: TEST_SUITE=none
+      install: skip
+      script:
+        - aws s3 sync "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER" coverage/
+        - ./cc-test-reporter sum-coverage -p 4 coverage/codeclimate.*.json
+        - ./cc-test-reporter upload-coverage
+      after_script:
+        - aws s3 rm --recursive "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"
 
 # blacklist - these branches aren't feature branches and shouldn't be getting direct commits
 # branches:

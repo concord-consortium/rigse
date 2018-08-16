@@ -5,7 +5,7 @@ describe Dataservice::BlobsHelper do
   #Delete this example and add some real ones or delete this file
   it "is included in the helper object" do
     included_modules = (class << helper; self; end).send :included_modules
-    included_modules.should include(Dataservice::BlobsHelper)
+    expect(included_modules).to include(Dataservice::BlobsHelper)
   end
 
   describe "blob_url_for(answer)" do
@@ -16,7 +16,7 @@ describe Dataservice::BlobsHelper do
       answer = {}
       answer[:blob] = blob
       url = blob_url_for(answer)
-      url.should match %r[dataservice/blobs/10.blob/9db05e66b61d11e08a75000c29231be6]
+      expect(url).to match %r[dataservice/blobs/10.blob/9db05e66b61d11e08a75000c29231be6]
     end
   end
 

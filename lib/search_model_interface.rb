@@ -43,17 +43,4 @@ module SearchModelInterface
   def offerings_by_clazz(clazz_ids)
     offerings.find_all_by_clazz_id(clazz_ids)
   end
-
-  def description_abstract(length=255)
-    if description.blank?
-      ""
-    else
-      description.size > length+6 ? [description[0,length-6],description[-5,5]].join("…") : description
-    end
-  end
-
-  def abstract_text
-    return abstract if respond_to?(:abstract) && abstract.present?
-    description_abstract
-  end
 end

@@ -40,37 +40,30 @@ class ActivityRuntimeAPI
   def self.publish_activity(hash, user)
     external_activity = nil
     Investigation.transaction do
-      investigation = Investigation.create(:name => hash["name"], :user => user)
-      activity = activity_from_hash(hash, investigation, user)
       external_activity = ExternalActivity.create(
+        :source_type            => hash["source_type"] || "LARA",
         :name                   => hash["name"],
-        :description            => hash["description"],
-        :abstract               => hash["abstract"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
         :launch_url             => hash["launch_url"] || hash["create_url"],
         :author_url             => hash["author_url"],
         :print_url              => hash["print_url"],
         :student_report_enabled => hash["student_report_enabled"],
-        :template               => activity,
         :publication_status     => "published",
         :user                   => user,
         :author_email           => hash["author_email"],
         :is_locked              => hash["is_locked"]
       )
+      self.setup_activity_template(external_activity, hash)
       self.update_external_report(external_activity,hash["external_report_url"])
-      # update activity so external_activity.template is correctly initialzed
-      # otherwise external_activity.template.is_template? won't be true
-      activity.reload
-      # then reindex it manually, so Solr has correct value of :is_template attribute
-      Sunspot.index(activity)
-      # exactly the same applies to invesigation template
-      investigation.reload
-      Sunspot.index(investigation)
-      Sunspot.commit
     end
-
     return external_activity
+  end
+
+  def self.setup_activity_template(external_activity, hash)
+    investigation = Investigation.create(:name => hash["name"], :user => external_activity.user)
+    external_activity.template = activity_from_hash(hash, investigation, external_activity.user)
+    external_activity.save!
   end
 
   def self.find(url)
@@ -82,14 +75,19 @@ class ActivityRuntimeAPI
   def self.update_activity(hash)
     external_activity = self.find(hash["url"])
     return nil unless external_activity
+    # If ExternalActivity already exists, it might not have template correctly set yet.
+    # It happens when ExternalActivity is duplicated.
+    unless external_activity.template
+      self.setup_activity_template(external_activity, hash)
+    end
     activity = external_activity.template
     investigation = activity.investigation
     user = investigation.user
 
     # update the simple attributes
     [investigation, activity, external_activity].each do |act|
-      ['name','description', 'thumbnail_url'].each do |attribute|
-        act.update_attribute(attribute,hash[attribute])
+      ['name', 'thumbnail_url'].each do |attribute|
+        act.update_attribute(attribute, hash[attribute])
       end
     end
 
@@ -139,47 +137,49 @@ class ActivityRuntimeAPI
   def self.publish_sequence(hash, user)
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
-      investigation = Investigation.create(
-        :name => hash["name"], :description => hash['description'],
-        :abstract => hash['abstract'], :user => user)
-      all_student_reports_enabled = true
-      hash['activities'].each_with_index do |act, index|
-        activity_from_hash(act, investigation, user, index)
-        # a sequence has its student_report_enabled set to false if any of its activities have it set to false
-        all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
-      end
       external_activity = ExternalActivity.create(
+        :source_type            => hash["source_type"] || "LARA",
         :name                   => hash["name"],
-        :description            => hash["description"],
-        :abstract               => hash["abstract"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
         :launch_url             => hash["launch_url"] || hash["create_url"],
         :author_url             => hash["author_url"],
         :print_url              => hash["print_url"],
-        :student_report_enabled => all_student_reports_enabled,
-        :template               => investigation,
         :publication_status     => "published",
         :user                   => user,
         :author_email           => hash["author_email"],
         :is_locked              => hash["is_locked"]
       )
+      self.setup_sequence_template(external_activity, hash)
       self.update_external_report(external_activity, hash["external_report_url"])
-      # update investigation so external_activity.template is correctly initialzed
-      # otherwise external_activity.template.is_template? won't be true
-      investigation.reload
-      # then reindex it manually, so Solr has correct value of :is_template attribute
-      Sunspot.index(investigation)
-      # exactly the same applies to activities
-      investigation.activities.each { |a| Sunspot.index(a) }
-      Sunspot.commit
     end
     return external_activity
+  end
+
+  def self.setup_sequence_template(external_activity, hash)
+    investigation = Investigation.create(
+      :name => hash["name"],
+      :user => external_activity.user
+    )
+    all_student_reports_enabled = true
+    hash['activities'].each_with_index do |act, index|
+      activity_from_hash(act, investigation, external_activity.user, index)
+      # a sequence has its student_report_enabled set to false if any of its activities have it set to false
+      all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
+    end
+    external_activity.student_report_enabled = all_student_reports_enabled
+    external_activity.template = investigation
+    external_activity.save!
   end
 
   def self.update_sequence(hash)
     external_activity = self.find(hash["url"])
     return nil unless external_activity
+    # If ExternalActivity already exists, it might not have template correctly set yet.
+    # It happens when ExternalActivity is duplicated.
+    unless external_activity.template
+      self.setup_sequence_template(external_activity, hash)
+    end
     if external_activity.template.is_a?(Investigation)
       investigation = external_activity.template
     else
@@ -190,8 +190,8 @@ class ActivityRuntimeAPI
 
     # update the simple attributes
     [investigation, external_activity].each do |act|
-      ['name','description','abstract', 'thumbnail_url'].each do |attribute|
-        act.update_attribute(attribute,hash[attribute])
+      ['name', 'thumbnail_url'].each do |attribute|
+        act.update_attribute(attribute, hash[attribute])
       end
     end
 
@@ -261,7 +261,7 @@ class ActivityRuntimeAPI
   end
 
   def self.activity_from_hash(hash, investigation, user, position = nil)
-    # NOTE: It seems like we don't copy description or thumbnail url.
+    # NOTE: It seems like we don't copy thumbnail url.
     # is this the right behavior for the report template?
     activity = Activity.create({
       :name => hash["name"],
@@ -338,12 +338,21 @@ class ActivityRuntimeAPI
     end
   end
 
+  # Use default val provided by DB when given attribute is not provided (nil)
+  def self.optional_attrs (data, *attr_list)
+    attrs = {}
+    attr_list.each do |attr|
+      attrs[attr] = data[attr] unless data[attr].nil?
+    end
+    attrs
+  end
+
   def self.update_open_response(or_data, existant)
     attrs = {
       prompt: or_data["prompt"]
-    }
-    # Use default val provided by DB when nil
-    attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    }.merge(
+      optional_attrs(or_data, "is_required", "show_in_featured_question_report")
+    )
     existant.update_attributes(attrs)
     return existant
   end
@@ -353,9 +362,9 @@ class ActivityRuntimeAPI
       prompt: or_data["prompt"],
       external_id: or_data["id"],
       user: user
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = or_data["is_required"] unless or_data["is_required"].nil?
+    }.merge(
+      optional_attrs(or_data, "is_required", "show_in_featured_question_report")
+    )
     Embeddable::OpenResponse.create(attrs)
   end
 
@@ -363,9 +372,9 @@ class ActivityRuntimeAPI
     attrs = {
       prompt: iq_data["prompt"],
       drawing_prompt: iq_data["drawing_prompt"]
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    }.merge(
+      optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
+    )
     existant.update_attributes(attrs)
     return existant
   end
@@ -376,9 +385,9 @@ class ActivityRuntimeAPI
       :drawing_prompt => iq_data["drawing_prompt"],
       :external_id => iq_data["id"],
       :user => user
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = iq_data["is_required"] unless iq_data["is_required"].nil?
+    }.merge(
+      optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
+    )
     Embeddable::ImageQuestion.create(attrs)
   end
 
@@ -386,9 +395,9 @@ class ActivityRuntimeAPI
     attrs = {
       prompt: mc_data["prompt"],
       allow_multiple_selection: mc_data["allow_multiple_selection"]
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    }.merge(
+      optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
+    )
     existant.update_attributes(attrs)
     self.add_choices(existant, mc_data)
     return existant
@@ -400,9 +409,9 @@ class ActivityRuntimeAPI
       external_id: mc_data["id"],
       allow_multiple_selection: mc_data["allow_multiple_selection"],
       user: user
-    }
-    # Use default values provided by DB when nil
-    attrs[:is_required] = mc_data["is_required"] unless mc_data["is_required"].nil?
+    }.merge(
+      optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
+    )
     mc = Embeddable::MultipleChoice.create(attrs)
     self.add_choices(mc, mc_data)
     return mc
@@ -435,10 +444,11 @@ class ActivityRuntimeAPI
     attrs = {
       name: if_data["name"],
       url: if_data["url"],
-      display_in_iframe: if_data["display_in_iframe"],
       width: if_data["native_width"],
       height: if_data["native_height"]
-    }
+    }.merge(
+      optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
+    )
     existant.update_attributes(attrs)
     return existant
   end
@@ -447,12 +457,13 @@ class ActivityRuntimeAPI
     attrs = {
       name: if_data["name"],
       url: if_data["url"],
-      display_in_iframe: if_data["display_in_iframe"],
       width: if_data["native_width"],
       height: if_data["native_height"],
       external_id: if_data["id"].to_s,
       user: user
-    }
+    }.merge(
+      optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
+    )
     Embeddable::Iframe.create(attrs)
   end
 

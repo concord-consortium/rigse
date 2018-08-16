@@ -1,7 +1,6 @@
 class Activity < ActiveRecord::Base
   include Cohorts
   include JnlpLaunchable
-  include SearchModelInterface
 
   belongs_to :user
   belongs_to :investigation
@@ -56,61 +55,6 @@ class Activity < ActiveRecord::Base
   include TreeNode
   include Publishable
   include Archiveable
-
-  searchable do
-    text :name
-    string :name
-    text :description
-    text :description_for_teacher
-    text :content do
-      nil
-    end
-
-    text :owner do |act|
-      act.user && act.user.name
-    end
-    integer :user_id
-
-    boolean :published do |act|
-      if act.investigation
-        act.investigation.published?
-      else
-        act.published?
-      end
-    end
-
-    boolean :teacher_only
-
-    integer :offerings_count do |act|
-      total = 0
-      if act.investigation
-        total += act.investigation.offerings_count
-      end
-      total += act.offerings_count
-    end
-    boolean :is_official
-    boolean :is_template
-    boolean :is_assessment_item
-
-    time    :updated_at
-    time    :created_at
-
-    string  :grade_span
-    integer :domain_id
-    string  :material_type
-    string  :material_properties, :multiple => true do
-      material_property_list
-    end
-    string  :cohort_ids, :multiple => true, :references => Admin::Cohort
-    string  :grade_levels, :multiple => true do
-      grade_level_list
-    end
-    string  :subject_areas, :multiple => true do
-      subject_area_list
-    end
-    integer :project_ids, :multiple => true, :references => Admin::Project
-
-  end
 
   send_update_events_to :investigation
   delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true

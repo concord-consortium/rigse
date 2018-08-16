@@ -68,7 +68,7 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "wont allow index, returns error 403" do
         get :index
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
   end
@@ -80,7 +80,7 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "wont allow index, returns error 403" do
         get :index
-        response.status.should eql(403)
+        expect(response.status).to eql(403)
       end
     end
   end
@@ -92,18 +92,19 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "allows index" do
         get :index
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
       end
       it "makes a request to ES with the correct body" do
         get :index
-        assert_requested :post, /report_learners\/_search$/,
-          headers: {'Content-Type'=>'application/json'},
-          body: search_body,
-          times: 1
+        expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
+          with(
+            headers: {'Content-Type'=>'application/json'},
+            body: search_body,
+          ).times(1)
       end
       it "directly renders the ES response" do
         get :index
-        response.body.should eq fake_response
+        expect(response.body).to eq fake_response
       end
     end
   end
@@ -115,7 +116,7 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "allows index" do
         get :index
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
       end
     end
   end
@@ -133,7 +134,7 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "allows index" do
         get :index
-        response.status.should eql(200)
+        expect(response.status).to eql(200)
       end
       it "makes a request to ES with the correct body, restricting permission forms" do
         get :index
@@ -145,10 +146,11 @@ describe API::V1::ReportLearnersEsController do
         restricted_search_body["aggs"]["permission_forms_ids"]["terms"]["include"] =
           [@form1.id]
 
-        assert_requested :post, /report_learners\/_search$/,
-          headers: {'Content-Type'=>'application/json'},
-          body: search_body,
-          times: 1
+        expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
+          with(
+            headers: {'Content-Type'=>'application/json'},
+            body: search_body,
+          ).times(1)
       end
     end
   end

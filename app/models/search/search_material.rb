@@ -1,7 +1,5 @@
 class Search::SearchMaterial
 
-  include ProbeTypesHelper
-
   attr_accessor :material
   attr_accessor :parent_material
   attr_accessor :user
@@ -9,8 +7,7 @@ class Search::SearchMaterial
   attr_accessor :id
   attr_accessor :model_name
   attr_accessor :title
-  attr_accessor :description
-  attr_accessor :description_for_teacher
+  attr_accessor :long_description_for_current_user
   attr_accessor :assign_btn_text
   attr_accessor :icon_image_url
   attr_accessor :activities
@@ -29,9 +26,7 @@ class Search::SearchMaterial
     self.other_data = {
       :grade_span_expectation => nil,
       :grade_span => nil,
-      :domain_name => nil,
-      :probe_types => nil,
-      :required_equipments => nil
+      :domain_name => nil
     }
 
     self.populateMaterialData
@@ -45,8 +40,7 @@ class Search::SearchMaterial
     self.id = material.id
     self.model_name = material.class.name
     self.title = material.full_title
-    self.description = material.description
-    self.description_for_teacher = material.description_for_teacher
+    self.long_description_for_current_user = material.long_description_for_user(user)
     self.assign_btn_text = (material.is_a? ::ExternalActivity) ? "Assign" : "Assign #{material.display_name}"
     self.icon_image_url = material.icon_image || "search/#{self.model_name.downcase}.gif"
     self.activities = (material.respond_to?(:activities)) ? material.activities : nil
@@ -64,9 +58,6 @@ class Search::SearchMaterial
 
     self.activity_list_title = self.title
 
-    self.other_data[:probe_types] = self.probe_types(material)
-    self.other_data[:required_equipments] = self.other_data[:probe_types].map { |p| p.name }.join(", ")
-    
     if material.is_a? ::Investigation
 
       self.url = {:only_path => false, :controller => 'investigations', :action => 'show', :id => self.id}
@@ -108,7 +99,7 @@ class Search::SearchMaterial
     meta_tags = page_meta[:meta_tags]
 
     meta_tags[:title] = page_meta[:title]
-    meta_tags[:description] = self.description
+    meta_tags[:description] = self.long_description_for_current_user
     if meta_tags[:description].blank?
       meta_tags[:description] = "Check out this great #{self.model_name.downcase} from the Concord Consortium."
     end

@@ -62,42 +62,42 @@ describe Admin::ClientsController do
     describe "GET index" do
       it "won't alow the index, redirects to manager home" do
         get :index
-        assert_redirected_to :getting_started
+        expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "DELETE destroy" do
       it "wont allow delete, redirects to manager home" do
         delete :destroy, :id => client_id
-        assert_redirected_to :getting_started
+        expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "GET show" do
       it "wont allow show, redirects to manager home" do
         get :show, :id => client_id
-        assert_redirected_to :getting_started
+        expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "GET edit" do
       it "wont allow edit, redirects to manager home" do
         get :edit, :id => client_id
-        assert_redirected_to :getting_started
+        expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "GET new" do
       it "wont allow new, redirects to manager home" do
         get :new
-        assert_redirected_to :getting_started
+        expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "PUT update" do
       it "wont allow update, redirects to manager home" do
         put :update, :id => client_id, :client => {:params => 'params'}
-        assert_redirected_to :getting_started
+        expect(response).to redirect_to(:getting_started)
       end
     end
   end
@@ -114,51 +114,51 @@ describe Admin::ClientsController do
     describe "GET index" do
       it "will render the index" do
         get :index
-        assert_response 200
-        response.should render_template("index")
+        expect(response).to be_success
+        expect(response).to render_template("index")
       end
     end
 
     describe "DELETE destroy" do
       it "delete, and redirect back to index" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         delete :destroy, :id => client_id
-        assert_redirected_to action: :index
+        expect(response).to redirect_to(action: :index)
       end
     end
 
     describe "GET show" do
       it "redners the show template" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         get :show, :id => client_id
-        assigns[:client].should eq mock_client
-        response.should render_template("show")
+        expect(assigns[:client]).to eq mock_client
+        expect(response).to render_template("show")
       end
     end
 
     describe "GET edit" do
       it "renders the edit template" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         get :edit, :id => client_id
-        assigns[:client].should eq mock_client
-        response.should render_template("edit")
+        expect(assigns[:client]).to eq mock_client
+        expect(response).to render_template("edit")
       end
     end
 
     describe "GET new" do
       it "renders the new form" do
         get :new
-        response.should render_template("new")
-        assert_response 200
+        expect(response).to render_template("new")
+        expect(response).to be_success
       end
     end
 
     describe "PUT update" do
       let(:stubs) {{ update_attributes: true }}
       it "updates the model, redirects to index" do
-        Client.should_receive(:find).and_return(mock_client)
+        expect(Client).to receive(:find).and_return(mock_client)
         put :update, :id => client_id, :client => {:params => 'params'}
-        assert_redirected_to action: :index
+        expect(response).to redirect_to(action: :index)
       end
     end
   end

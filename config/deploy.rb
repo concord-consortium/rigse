@@ -361,12 +361,6 @@ namespace :import do
       "bundle exec rake RAILS_ENV=#{rails_env} portal:setup:import_nces_from_files --trace"
   end
 
-  desc"reload the default probe and vendor_interface configurations."
-  task :reload_probe_configurations, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-      "bundle exec rake RAILS_ENV=#{rails_env} db:backup:load_probe_configurations --trace"
-  end
-
   desc "Restore couchdb from S3"
   task :restore_couchdb_from_backup, :roles => :app do
     sudo "/usr/bin/restore_couchdb.sh"
@@ -454,7 +448,7 @@ namespace :convert do
       "bundle exec rake RAILS_ENV=#{rails_env} app:convert:find_and_delete_invalid_dataservice_bundle_content_objects --trace"
   end
 
-  
+
 
   # Thursday October 8, 2009
 
@@ -516,12 +510,6 @@ namespace :convert do
     run "cd #{deploy_to}/#{current_dir} && bundle exec rake RAILS_ENV=#{rails_env} offerings:set_counts --trace"
   end
 
-  # NP 20110512
-  desc "create an investigation to test all know probe_type / calibration combinations"
-  task :create_probe_testing_investigation, :roles => :app do
-    run "cd #{deploy_to}/#{current_dir} && " +
-        "bundle exec rake RAILS_ENV=#{rails_env} app:setup:create_probe_testing_investigation --trace"
-  end
   # seb: 20110516
   # See commit: District#destroy cascades through dependents
   # https://github.com/concord-consortium/rigse/commit/1c9e26919decfe322e0bca412b4fa41928b7108a

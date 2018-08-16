@@ -32,6 +32,7 @@ RailsPortal::Application.routes.draw do
   match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
 
   post "help/preview_help_page"
+  post "home/preview_about_page"
   post "home/preview_home_page"
 
   constraints :id => /\d+/ do
@@ -40,15 +41,6 @@ RailsPortal::Application.routes.draw do
         resources :measuring_resistances
         resources :measuring_resistance_reports
       end
-    end
-
-    namespace :probe do
-      resources :vendor_interfaces
-      resources :probe_types
-      resources :physical_units
-      resources :device_configs
-      resources :data_filters
-      resources :calibrations
     end
 
     namespace :ri_gse do
@@ -225,7 +217,6 @@ RailsPortal::Application.routes.draw do
         delete :purge
         put :suspend
         put :unsuspend
-        get :interface
         put :switch
         get :switch_back
         get :favorites
@@ -374,7 +365,6 @@ RailsPortal::Application.routes.draw do
         post :publish
       end
       member do
-        get :duplicate
         get :matedit
         get :archive
         get :unarchive

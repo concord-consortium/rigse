@@ -6,7 +6,7 @@ class MaterialsCollection < ActiveRecord::Base
   has_many :materials_collection_items, dependent: :destroy, order: :position
 
   # List all supported material types in this array! It's used by #materials method.
-  MATERIAL_TYPES = [Investigation, Activity, ExternalActivity]
+  MATERIAL_TYPES = [ExternalActivity]
 
   include Changeable
 

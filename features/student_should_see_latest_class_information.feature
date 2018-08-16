@@ -25,7 +25,7 @@ Feature: Student should see latest class information
     When I login with username: taylor
     And I follow "Basic Electronics"
     Then I should see "Class Word: betrx"
-    And I should see "Non Linear Devices"
-    And I should see "Static discipline"
+    And I should see "NON LINEAR DEVICES"
+    And I should see "STATIC DISCIPLINE"
     
     

@@ -45,31 +45,31 @@ describe Portal::ClazzesController do
     @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
 
-    @controller.stub(:before_render) {
-      response.template.stub_chain(:current_settings, :name).and_return("Test Settings")
+    allow(@controller).to receive(:before_render) {
+      allow(response.template).to receive_message_chain(:current_settings, :name).and_return("Test Settings")
     }
     @mock_settings = mock_model(Admin::Settings, :name => "Test Settings")
-    @mock_settings.stub(:enable_grade_levels?).and_return(true)
-    @mock_settings.stub(:allow_default_class).and_return(false)
-    @mock_settings.stub(:use_student_security_questions).and_return(false)
-    @mock_settings.stub!(:require_user_consent?).and_return(false)
-    @mock_settings.stub!(:default_cohort).and_return(nil)
-    Admin::Settings.stub(:default_settings).and_return(@mock_settings)
+    allow(@mock_settings).to receive(:enable_grade_levels?).and_return(true)
+    allow(@mock_settings).to receive(:allow_default_class).and_return(false)
+    allow(@mock_settings).to receive(:use_student_security_questions).and_return(false)
+    allow(@mock_settings).to receive(:require_user_consent?).and_return(false)
+    allow(@mock_settings).to receive(:default_cohort).and_return(nil)
+    allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
   end
 
   describe "GET show" do
     it "assigns the requested class as @portal_clazz" do
       login_admin
       get :show, :id => @mock_clazz.id
-      assigns[:portal_clazz].should == @mock_clazz
+      expect(assigns[:portal_clazz]).to eq(@mock_clazz)
     end
 
     it "doesn't show class to unauthorized teacheruser" do
       sign_in @unauthorized_teacher_user
       get :show, { :id => @mock_clazz.id }
 
-      response.should_not be_success
-      response.should redirect_to("/recent_activity")
+      expect(response).not_to be_success
+      expect(response).to redirect_to("/recent_activity")
     end
 
     it "saves the position of the left pane submenu item for an authorized teacher" do
@@ -79,7 +79,7 @@ describe Portal::ClazzesController do
 
       # All users should see the full class details summary
       @authorized_teacher.reload
-      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['NONE']
+      expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['NONE'])
     end
 
   end # end describe GET show
@@ -92,7 +92,7 @@ describe Portal::ClazzesController do
 
       xml_http_html_request :post, :edit, :id => @mock_clazz.id
 
-      response.should_not be_success
+      expect(response).not_to be_success
     end
 
     it "should not allow me to modify the requested class's school" do
@@ -262,9 +262,9 @@ describe Portal::ClazzesController do
         delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
         if user == :authorized_teacher_user
-          @response.body.should include(home_url)
+          expect(@response.body).to include(home_url)
         else
-          @response.body.should_not include(home_url)
+          expect(@response.body).not_to include(home_url)
         end
       end
     end
@@ -363,15 +363,15 @@ describe Portal::ClazzesController do
       @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
 
       assert @new_clazz
-      @new_clazz.school.should == @mock_school
-      @authorized_teacher.clazzes.should include(@new_clazz)
-      @mock_school.clazzes.should include(@new_clazz)
+      expect(@new_clazz.school).to eq(@mock_school)
+      expect(@authorized_teacher.clazzes).to include(@new_clazz)
+      expect(@mock_school.clazzes).to include(@new_clazz)
     end
 
     it "should attach this class to the appropriate course in the specified school, if one exists" do
       course = Factory.create(:portal_course, :name => @post_params[:portal_clazz][:name], :school => @mock_school)
       assert course
-      course.clazzes.size.should == 0
+      expect(course.clazzes.size).to eq(0)
 
       sign_in @authorized_teacher_user
 
@@ -381,14 +381,14 @@ describe Portal::ClazzesController do
 
       @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
 
-      @new_clazz.course.should == course
-      course.clazzes.size.should == 1
-      course.clazzes.should include(@new_clazz)
-      course.school.clazzes.should include(@new_clazz)
+      expect(@new_clazz.course).to eq(course)
+      expect(course.clazzes.size).to eq(1)
+      expect(course.clazzes).to include(@new_clazz)
+      expect(course.school.clazzes).to include(@new_clazz)
     end
 
     it "should create a new course in the specified school if this class has a unique name" do
-      assert_nil Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
+      expect(Portal::Course.find_by_name(@post_params[:portal_clazz][:name])).to be_nil
 
       sign_in @authorized_teacher_user
 
@@ -398,14 +398,14 @@ describe Portal::ClazzesController do
       course = Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
 
       assert course
-      @mock_school.courses.should include(course)
+      expect(@mock_school.courses).to include(course)
     end
 
     it "should create exactly one teacher object for the current user if the current user does not already have one" do
       @random_user = Factory.create(:confirmed_user, :login => "random_user")
       sign_in @random_user
 
-      assert_nil @random_user.portal_teacher
+      expect(@random_user.portal_teacher).to be_nil
       current_count = Portal::Teacher.count(:all)
 
       @post_params[:portal_clazz][:teacher_id] = nil
@@ -414,8 +414,8 @@ describe Portal::ClazzesController do
 
       @random_user.reload
 
-      assert_not_nil @random_user.portal_teacher
-      Portal::Teacher.count(:all).should == current_count + 1
+      expect(@random_user.portal_teacher).not_to be_nil
+      expect(Portal::Teacher.count(:all)).to eq(current_count + 1)
     end
 
     it "should not let me create a class with no school" do
@@ -428,7 +428,7 @@ describe Portal::ClazzesController do
       post :create, @post_params
 
       assert flash[:error]
-      Portal::Clazz.count(:all).should == current_count
+      expect(Portal::Clazz.count(:all)).to eq(current_count)
     end
 
     it "should assign the specified grade levels to the new class" do
@@ -440,7 +440,7 @@ describe Portal::ClazzesController do
 
       @post_params[:portal_clazz][:grade_levels].each do |name, v|
         grade = Portal::Grade.find_by_name(name.to_s)
-        @new_clazz.grades.should include(grade)
+        expect(@new_clazz.grades).to include(grade)
       end
     end
 
@@ -454,11 +454,11 @@ describe Portal::ClazzesController do
       post :create, @post_params
 
       assert flash[:error]
-      Portal::Clazz.count(:all).should == current_count
+      expect(Portal::Clazz.count(:all)).to eq(current_count)
     end
 
     it "should let me create a class with no grade levels when grade levels are disabled" do
-      @mock_settings.stub(:enable_grade_levels?).and_return(false)
+      allow(@mock_settings).to receive(:enable_grade_levels?).and_return(false)
       @post_params[:portal_clazz].delete(:grade_levels)
 
       sign_in @authorized_teacher_user
@@ -467,7 +467,7 @@ describe Portal::ClazzesController do
 
       post :create, @post_params
 
-      Portal::Clazz.count(:all).should == (current_count + 1)
+      expect(Portal::Clazz.count(:all)).to eq(current_count + 1)
     end
   end
 
@@ -507,14 +507,14 @@ describe Portal::ClazzesController do
     end
 
     it "should let me update a class with no grade levels when grade levels are disabled" do
-      @mock_settings.stub(:enable_grade_levels?).and_return(false)
+      allow(@mock_settings).to receive(:enable_grade_levels?).and_return(false)
       @post_params[:portal_clazz].delete(:grade_levels)
 
       sign_in @authorized_teacher_user
 
       put :update, @post_params
 
-      Portal::Clazz.find(@mock_clazz.id).name.should == 'New Test Class'
+      expect(Portal::Clazz.find(@mock_clazz.id).name).to eq('New Test Class')
     end
   end
 
@@ -566,7 +566,7 @@ describe Portal::ClazzesController do
       @post_params[:portal_clazz][:name] = ''
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
-      assert_not_equal(@portal_clazz.name , '', 'Class saved with no name.')
+      expect(@portal_clazz.name).not_to eq(''), 'Class saved with no name.'
     end
 
     it "should not save the edited class info if the class word is blank" do
@@ -574,7 +574,7 @@ describe Portal::ClazzesController do
       @post_params[:portal_clazz][:class_word] = ''
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
-      assert_not_equal(@portal_clazz.class_word , '', 'Class saved with blank class word.')
+      expect(@portal_clazz.class_word).not_to eq(''), 'Class saved with blank class word.'
     end
   end
 
@@ -588,7 +588,7 @@ describe Portal::ClazzesController do
       }
       post :add_student, post_params
       newStudentInClazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
-      assert_not_nil(newStudentInClazz)
+      expect(newStudentInClazz).not_to be_nil
     end
   end
 
@@ -634,29 +634,29 @@ describe Portal::ClazzesController do
       put :manage_classes, @post_params
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 5)
+      expect(teacher_clazz.position).to eq(5)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 2)
+      expect(teacher_clazz.position).to eq(2)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active == false)
-      assert_equal(teacher_clazz.position, 3)
+      expect(teacher_clazz.position).to eq(3)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 4)
+      expect(teacher_clazz.position).to eq(4)
 
       teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
-      assert_not_nil(teacher_clazz)
+      expect(teacher_clazz).not_to be_nil
       assert(teacher_clazz.active)
-      assert_equal(teacher_clazz.position, 1)
+      expect(teacher_clazz.position).to eq(1)
 
     end
   end
@@ -692,19 +692,19 @@ describe Portal::ClazzesController do
       xhr :post, :copy_class, @post_params
 
       @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
-      assert_not_nil(@copy_clazz)
+      expect(@copy_clazz).not_to be_nil
 
-      assert_equal(@copy_clazz.teachers.length, @mock_clazz.teachers.length)
+      expect(@copy_clazz.teachers.length).to eq(@mock_clazz.teachers.length)
       @mock_clazz.teachers.each do |teacher|
-        assert_not_nil(@copy_clazz.teachers.find_by_id(teacher.id))
+        expect(@copy_clazz.teachers.find_by_id(teacher.id)).not_to be_nil
       end
 
-      assert_equal(@copy_clazz.offerings.length, @mock_clazz.offerings.length)
+      expect(@copy_clazz.offerings.length).to eq(@mock_clazz.offerings.length)
       @mock_clazz.offerings.each do |offering|
-        assert_not_nil(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id))
+        expect(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id)).not_to be_nil
       end
 
-      assert_equal(@copy_clazz.students.length, 0)
+      expect(@copy_clazz.students.length).to eq(0)
 
     end
   end
@@ -720,7 +720,7 @@ describe Portal::ClazzesController do
 
       # All users should see the full class details summary
       @authorized_teacher.reload
-      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP']
+      expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['CLASS_SETUP'])
     end
 
   end
@@ -735,7 +735,7 @@ describe Portal::ClazzesController do
 
       # All users should see the full class details summary
       @authorized_teacher.reload
-      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['MATERIALS']
+      expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
     end
 
   end
@@ -750,7 +750,7 @@ describe Portal::ClazzesController do
 
       # All users should see the full class details summary
       @authorized_teacher.reload
-      @authorized_teacher.left_pane_submenu_item.should == Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER']
+      expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
     end
 
   end
@@ -773,7 +773,7 @@ describe Portal::ClazzesController do
       xhr :post, :sort_offerings, @params
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
-        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+        expect(offering.position ).to eq(@params[:clazz_offerings].index(offering.id) + 1)
       end
 
       # Update offering positions and verify they have been updated
@@ -781,7 +781,7 @@ describe Portal::ClazzesController do
       xhr :post, :sort_offerings, @params
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
-        assert_equal(offering.position , @params[:clazz_offerings].index(offering.id) + 1)
+        expect(offering.position ).to eq(@params[:clazz_offerings].index(offering.id) + 1)
       end
     end
   end
@@ -795,14 +795,14 @@ describe Portal::ClazzesController do
     it "should not allow access for anonymous user" do
       sign_out :user
       get :fullstatus, @params
-      response.should_not be_success
+      expect(response).not_to be_success
     end
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user
       get :fullstatus, @params
-      assert_equal assigns[:portal_clazz], @mock_clazz
-      response.should be_success
-      assert_template "fullstatus"
+      expect(assigns[:portal_clazz]).to eq(@mock_clazz)
+      expect(response).to be_success
+      expect(response).to render_template("fullstatus")
     end
   end
 
@@ -819,7 +819,7 @@ describe Portal::ClazzesController do
       @mock_settings.allow_default_class = true
       @mock_settings.jnlp_cdn_hostname = ''
       @mock_settings.save!
-      Admin::Settings.stub(:default_settings).and_return(@mock_settings)
+      allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
 
       sign_in @authorized_teacher_user
 
@@ -827,8 +827,8 @@ describe Portal::ClazzesController do
         :id => @mock_clazz.id
       }
       xhr :post, :add_new_student_popup, @params
-      response.should be_success
-      assert_template :partial => "portal/students/_form"
+      expect(response).to be_success
+      expect(response).to render_template(:partial => "portal/students/_form")
     end
   end
 

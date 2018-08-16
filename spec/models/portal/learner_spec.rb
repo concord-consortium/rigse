@@ -9,7 +9,7 @@ describe Portal::Learner do
     :update_fields => true,
     # this is needed because of the inverse_of definition in the report_learner associtation
     # I think newer version of mock_model take care of this for you
-    :association => mock(:target= => nil) )
+    :association => double(:target= => nil) )
   }
   let(:attributes)  do
     {
@@ -22,7 +22,7 @@ describe Portal::Learner do
 
   describe "a bare instance" do
     it "should be valid" do
-      subject.should be_valid
+      expect(subject).to be_valid
     end
   end
 
@@ -30,14 +30,14 @@ describe Portal::Learner do
     it "should return lightweight blobs when they already exist" do
       blob = Dataservice::Blob.create(:learner_id => subject.id)
       subject.reload
-      subject.lightweight_blobs.should include(blob)
+      expect(subject.lightweight_blobs).to include(blob)
     end
     it "should return an empty set when no blobs exist" do
-      subject.lightweight_blobs.should be_empty
+      expect(subject.lightweight_blobs).to be_empty
     end
     it "should allow for creating a new blob" do
       subject.lightweight_blobs.create
-      subject.lightweight_blobs.should_not be_empty
+      expect(subject.lightweight_blobs).not_to be_empty
     end
   end
 end

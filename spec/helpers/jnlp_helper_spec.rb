@@ -6,12 +6,12 @@ describe JnlpHelper do
   describe "pub_interval" do
     describe "uses seconds in settings" do
       it "should be 30000 when the settings say 30" do
-        Admin::Settings.stub(:pub_interval).and_return(30)
-        subject.pub_interval.should == 30000
+        allow(Admin::Settings).to receive(:pub_interval).and_return(30)
+        expect(subject.pub_interval).to eq(30000)
       end
       it "should be 10000 when the settings say 10" do
-        Admin::Settings.stub(:pub_interval).and_return(10)
-        subject.pub_interval.should == 10000
+        allow(Admin::Settings).to receive(:pub_interval).and_return(10)
+        expect(subject.pub_interval).to eq(10000)
       end
     end
   end
@@ -21,24 +21,24 @@ describe JnlpHelper do
       before :each do
         @settings = Admin::Settings.new(:pub_interval => 10,
           :use_periodic_bundle_uploading => true)
-        @student = mock()
+        @student = double()
         @user = Factory(:user)
-        @student.stub(:user => @user)
-        pbl   = mock()
-        @learner = mock(:student => @student, :periodic_bundle_logger => pbl)
+        allow(@student).to receive_messages(:user => @user)
+        pbl   = double()
+        @learner = double(:student => @student, :periodic_bundle_logger => pbl)
       end
       it "should include the update interval as a property" do
-        subject.stub(:current_settings => @settings)
-        subject.stub(:current_visitor => @user)
-        subject.stub(:dataservice_periodic_bundle_logger_periodic_bundle_contents_url).and_return("URL")
-        subject.stub(:dataservice_periodic_bundle_logger_session_end_notification_url).and_return("URL")
+        allow(subject).to receive_messages(:current_settings => @settings)
+        allow(subject).to receive_messages(:current_visitor => @user)
+        allow(subject).to receive(:dataservice_periodic_bundle_logger_periodic_bundle_contents_url).and_return("URL")
+        allow(subject).to receive(:dataservice_periodic_bundle_logger_session_end_notification_url).and_return("URL")
         props = subject.system_properties(:learner => @learner)
         found = props.detect do |pair|
           key,value = pair
           key == "otrunk.periodic.uploading.interval"
           value = subject.pub_interval
         end
-        found.should_not be_empty
+        expect(found).not_to be_empty
       end
     end
   end

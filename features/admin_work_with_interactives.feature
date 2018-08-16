@@ -12,10 +12,11 @@ Feature: Admin can work with interactives
   Scenario: Admin accesses Materials Collections
     When I am on the home page
     And I follow "Admin"
+    And I wait 2 seconds
     And I follow "Interactives"
     Then I should be on the interactives index page
     And I should see "Displaying all 15 models"
-    And I should see "create interactive"
+    And I should see "Create Interactive"
     And I should see "Export Interactives"
 
   Scenario: Create Valid Article
@@ -30,8 +31,10 @@ Feature: Admin can work with interactives
     And I should see "Interactive was successfully created."
     And I should see "Run Interactive"
 
+  # This is loading the materials info I think because
+  # related_materials_wrapper seems to be added to to the interactives show page
   @javascript
-  Scenario: Taging Interactives
+  Scenario: Tagging Interactives
     Given the following Admin::tag records exist:
       | scope         | tag      |
       | grade_levels  | gl_K     |
@@ -41,7 +44,7 @@ Feature: Admin can work with interactives
     When I click "create interactive"
     Then I should see "(new) /interactives"
     When I fill in "interactive[name]" with "New Interactive"
-    And I fill in "interactive[description]" with "New Description" 
+    And I fill in "interactive[description]" with "New Description"
     And I fill in "interactive[url]" with "http://www.google.com"
     And under "Grade Levels" I check "gl_K"
     And under "Subject Areas" I check "sa_Math"

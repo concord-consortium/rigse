@@ -29,7 +29,7 @@ Feature: Admin configures help page
     And I should see "http://www.google.com" in the input box of external URL for help page on settings page
     And I am on my home page
     And I follow "Help" within the navigation menu
-    Then the newly opened window should have content "Google"
+    Then the newly opened window should have content "Gmail"
     And I close the newly opened window
 
   @javascript
@@ -48,7 +48,7 @@ Feature: Admin configures help page
     When I fill in "admin_settings[external_url]" with "www.google.com"
     And I press "Preview External Help URL"
     And I wait 2 seconds
-    Then the newly opened window should have content "Google"
+    Then the newly opened window should have content "Gmail"
     And I close the newly opened window
 
   @javascript

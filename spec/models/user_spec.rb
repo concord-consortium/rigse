@@ -14,19 +14,19 @@ describe User do
     end
 
     it 'increments User#count' do
-      @creating_user.should change(User, :count).by(1)
+      expect(@creating_user).to change(User, :count).by(1)
     end
 
     it 'initializes #activation_code' do
       @creating_user.call
       @user.reload
-      @user.confirmation_token.should_not be_nil
+      expect(@user.confirmation_token).not_to be_nil
     end
 
     it 'starts in pending state' do
       @creating_user.call
       @user.reload
-      assert_equal @user.state, 'pending'
+      expect(@user.state).to eq('pending')
     end
   end
 
@@ -35,20 +35,20 @@ describe User do
   #
 
   it 'requires login' do
-    lambda do
+    expect do
       u = create_user(:login => nil)
-      u.errors[:login].should_not be_nil
-    end.should_not change(User, :count)
+      expect(u.errors[:login]).not_to be_nil
+    end.not_to change(User, :count)
   end
 
   describe 'allows legitimate logins:' do
     ['123', '1234567890_234567890_234567890_234567890',
      'hello.-_there@funnychar.com'].each do |login_str|
       it "'#{login_str}'" do
-        lambda do
+        expect do
           u = create_user(:login => login_str)
-          u.errors[:login].should == []
-        end.should change(User, :count).by(1)
+          expect(u.errors[:login]).to eq([])
+        end.to change(User, :count).by(1)
       end
     end
   end
@@ -58,33 +58,33 @@ describe User do
      "Iñtërnâtiônàlizætiøn hasn't happened to ruby 1.8 yet",
      'semicolon;', 'quote"', 'backtick`', 'percent%'].each do |login_str|
       it "'#{login_str}'" do
-        lambda do
+        expect do
           u = create_user(:login => login_str)
-          u.errors[:login].should_not be_nil
-        end.should_not change(User, :count)
+          expect(u.errors[:login]).not_to be_nil
+        end.not_to change(User, :count)
       end
     end
   end
 
   it 'requires password' do
-    lambda do
+    expect do
       u = create_user(:password => nil)
-      u.errors[:password].should_not be_nil
-    end.should_not change(User, :count)
+      expect(u.errors[:password]).not_to be_nil
+    end.not_to change(User, :count)
   end
 
   it 'requires password confirmation' do
-    lambda do
+    expect do
       u = create_user(:password_confirmation => nil)
-      u.errors[:password_confirmation].should_not be_nil
-    end.should_not change(User, :count)
+      expect(u.errors[:password_confirmation]).not_to be_nil
+    end.not_to change(User, :count)
   end
 
   it 'requires email' do
-    lambda do
+    expect do
       u = create_user(:email => nil)
-      u.errors[:email].should_not be_nil
-    end.should_not change(User, :count)
+      expect(u.errors[:email]).not_to be_nil
+    end.not_to change(User, :count)
   end
 
   describe 'allows legitimate emails:' do
@@ -94,10 +94,10 @@ describe User do
      'domain@can.haz.many.sub.doma.in', 'student.name@university.edu'
     ].each do |email_str|
       it "'#{email_str}'" do
-        lambda do
+        expect do
           u = create_user(:email => email_str)
-          u.errors[:email].should == []
-        end.should change(User, :count).by(1)
+          expect(u.errors[:email]).to eq([])
+        end.to change(User, :count).by(1)
       end
     end
   end
@@ -113,10 +113,10 @@ describe User do
      'uucp!addr@gmail.com', 'semicolon;@gmail.com', 'quote"@gmail.com', 'backtick`@gmail.com', 'space @gmail.com', 'bracket<@gmail.com', 'bracket>@gmail.com'
     ].each do |email_str|
       it "'#{email_str}'" do
-        lambda do
+        expect do
           u = create_user(:email => email_str)
-          u.errors[:email].should_not be_nil
-        end.should_not change(User, :count)
+          expect(u.errors[:email]).not_to be_nil
+        end.not_to change(User, :count)
       end
     end
   end
@@ -127,10 +127,10 @@ describe User do
      '1234567890k',
     ].each do |name_str|
       it "'#{name_str}'" do
-        lambda do
+        expect do
           u = create_user(:first_name => name_str)
-          u.errors[:first_name].should == []
-        end.should change(User, :count).by(1)
+          expect(u.errors[:first_name]).to eq([])
+        end.to change(User, :count).by(1)
       end
     end
   end
@@ -138,22 +138,22 @@ describe User do
     ['1234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_234567890_',
      ].each do |name_str|
       it "'#{name_str}'" do
-        lambda do
+        expect do
           u = create_user(:first_name => name_str)
-          u.errors[:first_name].should_not be_nil
-        end.should_not change(User, :count)
+          expect(u.errors[:first_name]).not_to be_nil
+        end.not_to change(User, :count)
       end
     end
   end
 
   it 'resets password' do
     users(:quentin).update_attributes({:password => 'new password', :password_confirmation => 'new password'})
-    User.authenticate('quentin', 'new password').should == users(:quentin)
+    expect(User.authenticate('quentin', 'new password')).to eq(users(:quentin))
   end
 
   it 'does not rehash password' do
     users(:quentin).update_attributes({:login => 'quentin2'})
-    User.authenticate('quentin2', 'monkey').should == users(:quentin)
+    expect(User.authenticate('quentin2', 'monkey')).to eq(users(:quentin))
   end
 
   #
@@ -161,11 +161,11 @@ describe User do
   #
 
   it 'authenticates user' do
-    User.authenticate('quentin', 'monkey').should == users(:quentin)
+    expect(User.authenticate('quentin', 'monkey')).to eq(users(:quentin))
   end
 
   it "doesn't authenticate user with bad password" do
-    User.authenticate('quentin', 'invalid_password').should be_nil
+    expect(User.authenticate('quentin', 'invalid_password')).to be_nil
   end
 
   #
@@ -174,67 +174,67 @@ describe User do
 
   it 'sets remember token' do
     users(:quentin).remember_me!
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_created_at.should_not be_nil
+    expect(users(:quentin).remember_token).not_to be_nil
+    expect(users(:quentin).remember_created_at).not_to be_nil
   end
 
   it 'unsets remember token' do
     users(:quentin).remember_me!
-    users(:quentin).remember_token.should_not be_nil
+    expect(users(:quentin).remember_token).not_to be_nil
     users(:quentin).forget_me
-    users(:quentin).remember_token.should be_nil
+    expect(users(:quentin).remember_token).to be_nil
   end
 
   it 'remembers me for one week' do
     before = 1.week.ago.utc
     users(:quentin).remember_me_for 1.week
     after = 1.week.from_now.utc
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_created_at.should_not be_nil
-    users(:quentin).remember_created_at.between?(before, after).should be_true
+    expect(users(:quentin).remember_token).not_to be_nil
+    expect(users(:quentin).remember_created_at).not_to be_nil
+    expect(users(:quentin).remember_created_at.between?(before, after)).to be_truthy
   end
 
   it 'remembers me until one week' do
     time = 1.week.from_now.utc
     users(:quentin).remember_me_until time
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_created_at.should_not be_nil
-    users(:quentin).remember_created_at.utc.to_s(:db).should == time.to_s(:db)
+    expect(users(:quentin).remember_token).not_to be_nil
+    expect(users(:quentin).remember_created_at).not_to be_nil
+    expect(users(:quentin).remember_created_at.utc.to_s(:db)).to eq(time.to_s(:db))
   end
 
   it 'remembers me default two weeks' do
     before = 2.weeks.ago.utc
     users(:quentin).remember_me!
     after = 2.weeks.from_now.utc
-    users(:quentin).remember_token.should_not be_nil
-    users(:quentin).remember_created_at.should_not be_nil
-    users(:quentin).remember_created_at.between?(before, after).should be_true
+    expect(users(:quentin).remember_token).not_to be_nil
+    expect(users(:quentin).remember_created_at).not_to be_nil
+    expect(users(:quentin).remember_created_at.between?(before, after)).to be_truthy
   end
 
   it 'registers passive user' do
     user = create_user(:password => nil, :password_confirmation => nil)
-    assert_equal user.state, 'passive'
+    expect(user.state).to eq('passive')
     user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})
     user.save!
     user.reload
-    assert_equal user.state, 'pending'
+    expect(user.state).to eq('pending')
   end
 
   it 'suspends user' do
     users(:quentin).suspend!
-    assert_equal users(:quentin).state, 'suspended'
+    expect(users(:quentin).state).to eq('suspended')
   end
 
   it 'does not authenticate suspended user' do
     users(:quentin).suspend!
-    User.authenticate('quentin', 'monkey').should_not == users(:quentin)
+    expect(User.authenticate('quentin', 'monkey')).not_to eq(users(:quentin))
   end
 
   it 'deletes user' do
-    users(:quentin).deleted_at.should be_nil
+    expect(users(:quentin).deleted_at).to be_nil
     users(:quentin).delete!
-    users(:quentin).deleted_at.should_not be_nil
-    assert_equal users(:quentin).state, 'disabled'
+    expect(users(:quentin).deleted_at).not_to be_nil
+    expect(users(:quentin).state).to eq('disabled')
   end
 
   describe "being unsuspended" do
@@ -247,13 +247,13 @@ describe User do
 
     it 'reverts to active state' do
       @user.unsuspend!
-      assert_equal @user.state, 'active'
+      expect(@user.state).to eq('active')
     end
 
     it 'reverts to passive state if activation_code and activated_at are nil' do
       User.update_all({:confirmation_token => nil, :confirmed_at => nil})
       @user.reload.unsuspend!
-      assert_equal @user.state, 'passive'
+      expect(@user.state).to eq('passive')
     end
 
     it 'reverts to pending state if activation_code is set and activated_at is nil' do
@@ -265,7 +265,7 @@ describe User do
         user.save!
       end
       @user.reload.unsuspend!
-      assert_equal @user.state, 'pending'
+      expect(@user.state).to eq('pending')
     end
   end
 
@@ -292,13 +292,13 @@ describe User do
     it "updates security questions" do
       questions = Array.new(3) { |i| SecurityQuestion.new({ :question => "test #{i}", :answer => "test" }) }
 
-      @user.security_questions.should be_empty
+      expect(@user.security_questions).to be_empty
 
       @user.update_security_questions!(questions)
 
-      @user.security_questions.size.should == 3
+      expect(@user.security_questions.size).to eq(3)
       questions.each do |v|
-        @user.security_questions.select { |q| q.question == v.question && q.answer == v.answer }.size.should == 1
+        expect(@user.security_questions.select { |q| q.question == v.question && q.answer == v.answer }.size).to eq(1)
       end
     end
   end
@@ -306,19 +306,19 @@ describe User do
   describe "checking for logins" do
     describe "when available" do
       before(:each) do
-        User.should_receive(:login_exists?).with("hpotter").and_return(false)
+        expect(User).to receive(:login_exists?).with("hpotter").and_return(false)
       end
       it "should return the first initial and last name" do
-        User.suggest_login('Harry','Potter').should == "hpotter"
+        expect(User.suggest_login('Harry','Potter')).to eq("hpotter")
       end
     end
     describe "when not available" do
       it "should append a counter number to the default login" do
-        User.should_receive(:login_exists?).once.with("hpotter").ordered.and_return(true)
-        User.should_receive(:login_exists?).once.with("hpotter1").ordered.and_return(true)
-        User.should_receive(:login_exists?).once.with("hpotter2").ordered.and_return(true)
-        User.should_receive(:login_exists?).once.with("hpotter3").ordered.and_return(false)
-        User.suggest_login('Harry','Potter').should == "hpotter3"
+        expect(User).to receive(:login_exists?).once.with("hpotter").ordered.and_return(true)
+        expect(User).to receive(:login_exists?).once.with("hpotter1").ordered.and_return(true)
+        expect(User).to receive(:login_exists?).once.with("hpotter2").ordered.and_return(true)
+        expect(User).to receive(:login_exists?).once.with("hpotter3").ordered.and_return(false)
+        expect(User.suggest_login('Harry','Potter')).to eq("hpotter3")
       end
     end
   end
@@ -329,7 +329,7 @@ describe User do
     end
     describe "freshly minted user" do
       it "will not require the password to be reset" do
-        @user.require_password_reset.should be_false
+        expect(@user.require_password_reset).to be_falsey
       end
     end
   end
@@ -343,7 +343,7 @@ describe User do
     end
 
     it "should be a project admin for the project now " do
-      user.is_project_admin?(project).should eq true
+      expect(user.is_project_admin?(project)).to eq true
     end
 
     describe "when a user was previously an admin for the project" do
@@ -351,10 +351,10 @@ describe User do
         user.add_role_for_project('admin', project)
       end
       it "should still be an admin of the project " do
-        user.is_project_admin?(project).should eq true
+        expect(user.is_project_admin?(project)).to eq true
       end
       it "should only be admin for one project" do
-        user.admin_for_projects.should have(1).item
+        expect(user.admin_for_projects.size).to eq(1)
       end
     end
   end
@@ -369,17 +369,17 @@ describe User do
       end
       it "the user is no longer an admin for the project" do
         user.remove_role_for_project("admin",project)
-        user.is_project_admin?(project).should eq false
+        expect(user.is_project_admin?(project)).to eq false
       end
     end
 
     describe "when a user wasnt previously an admin for the project" do
       it "the user is still not an admin for the project" do
         user.remove_role_for_project("admin",project)
-        user.is_project_admin?(project).should eq false
+        expect(user.is_project_admin?(project)).to eq false
       end
       it "should only be admin for no projects" do
-        user.admin_for_projects.should have(0).item
+        expect(user.admin_for_projects.size).to eq(0)
       end
     end
   end
@@ -394,16 +394,78 @@ describe User do
     end
 
     it "should be a project admin for the first project now " do
-      user.is_project_admin?(projects.first).should eq true
+      expect(user.is_project_admin?(projects.first)).to eq true
     end
 
     it "should list one admin_project" do
-      user.admin_for_projects.should have(1).item
-      user.admin_for_projects.should include(projects.first)
+      expect(user.admin_for_projects.size).to eq(1)
+      expect(user.admin_for_projects).to include(projects.first)
     end
 
   end
 
+  describe "find_for_omniauth" do
+    it "finds user with matching authentication" do
+      authentication = FactoryGirl.create :authentication
+      user = authentication.user
+      mock_auth = double(provider: authentication.provider, uid: authentication.uid)
+      found_user = User.find_for_omniauth(mock_auth)
+      expect(found_user).to eq user
+    end
+    context "when a user exists with the same email" do
+      let(:user) { FactoryGirl.create :confirmed_user }
+      let(:mock_auth) {
+        double(provider: "fake_provider", uid: "fake_uid",
+          info: double(email: user.email))
+      }
+      before(:each) {
+        # make sure user is created
+        user
+      }
+      it "throws an error if the user is a student" do
+        student = FactoryGirl.create :portal_student, user: user
+        expect {
+          User.find_for_omniauth(mock_auth)
+        }.to raise_error(/persisted email/)
+      end
+      context "when the user isn't a student" do
+        it "creates an authentication if one doesn't exist" do
+          expect(user.authentications.size).to eq(0)
+          found_user = User.find_for_omniauth(mock_auth)
+          expect(found_user).to eq user
+          new_authentication = found_user.authentications.first
+          expect(new_authentication.provider).to eq(mock_auth.provider)
+          expect(new_authentication.uid).to eq(mock_auth.uid)
+        end
+        it "doesn't create an authentication if one exists" do
+          authentication = FactoryGirl.create :authentication,
+            user: user, provider: mock_auth.provider
+          user.reload
+          found_user = nil
+          expect {
+            found_user = User.find_for_omniauth(mock_auth)
+            user.reload
+          }.to_not change{ user.authentications }
+
+          expect(found_user).to eq user
+        end
+      end
+
+    end
+    context "when a user does not exists with the same email" do
+      let(:mock_auth) {
+        double(provider: "fake_provider", uid: "fake_uid",
+          info: double(email: "fake_email@example.com"),
+          extra: double(first_name: "Fake", last_name: "Name"))
+      }
+      it "creates a new user" do
+        new_user = User.find_for_omniauth(mock_auth)
+        expect(new_user.first_name).to eq("Fake")
+        expect(new_user.last_name).to eq("Name")
+      end
+    end
+
+  end
 
 protected
   def create_user(options = {})

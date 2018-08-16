@@ -17,13 +17,15 @@
         %br
         - if @external_activity.user && @external_activity.user.name
           If the credits field is filled in, it will override the default credits of "#{@external_activity.user.name}".
-    = field_set_tag 'Activity Description' do
-      = f.text_area :description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-    = field_set_tag 'Activity Abstract' do
-      = f.text_area :abstract, :cols => 80, :rows => 5, :class => 'mceNoEditor'
-    = field_set_tag 'Activity Description for Teacher' do
-      = t('authoring.description_for_teacher_description')
-      = f.text_area :description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'Short Description' do
+      = t('authoring.short_description_description')
+      = f.text_area :short_description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'Long Description' do
+      = t('authoring.long_description_description')
+      = f.text_area :long_description, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'Long Description for Teacher' do
+      = t('authoring.long_description_for_teachers_description')
+      = f.text_area :long_description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
     = field_set_tag t('authoring.material_type_label') do
       = f.select :material_type,
         [ [ Activity.display_name,      Activity.name       ],
@@ -31,6 +33,10 @@
           [ Interactive.display_name,   Interactive.name    ] ]
       %br
       = t('authoring.material_type_description')
+    = field_set_tag t('authoring.source_type_label') do
+      = f.select :source_type,
+        [ [ 'none', nil ],
+          [ 'LARA', 'LARA' ] ]
     = field_set_tag 'License' do
       = f.select :license_code, CommonsLicense.for_select, include_blank: 'none'
     = field_set_tag 'URL' do

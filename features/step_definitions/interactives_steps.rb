@@ -6,7 +6,7 @@ end
 
 
 When(/^under "(.*?)" I check "(.*?)"$/) do |scope, tag|
-  check(tag)
+  first(:checkbox, tag).set(true)
 end
 
 When(/^under "(.*?)" I choose "(.*?)"$/) do |scope, tag|

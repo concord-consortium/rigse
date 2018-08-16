@@ -4,8 +4,8 @@ describe Portal::TeachersController do
   describe "POST create" do
     it "should complain if the login is the same except for case" do
       school   = Factory.create(:portal_school)
-      selector = mock(:portal_selector, :school => school, :valid? => true)
-      Portal::SchoolSelector.stub!(:new).and_return(selector) 
+      selector = double(:portal_selector, :school => school, :valid? => true)
+      allow(Portal::SchoolSelector).to receive(:new).and_return(selector) 
       Factory.create(:user, :login => "tteacher")
 
       params = {
@@ -21,7 +21,7 @@ describe Portal::TeachersController do
         
       post :create, params
 
-      assigns(:user).should_not be_valid
+      expect(assigns(:user)).not_to be_valid
     end
   end
 
@@ -38,10 +38,10 @@ describe Portal::TeachersController do
       @selector = Portal::SchoolSelector.new({
         :country => Portal::SchoolSelector::USA,
         :state   => 'MA'})
-      @selector.stub!(:valid?).and_return true
+      allow(@selector).to receive(:valid?).and_return true
       @selector.school = @school
       @selector.district = @school.district
-      Portal::SchoolSelector.stub!(:new).and_return(@selector) 
+      allow(Portal::SchoolSelector).to receive(:new).and_return(@selector) 
     end
 
     describe "POST create" do
@@ -62,7 +62,7 @@ describe Portal::TeachersController do
         
         post :create, params
         
-        @response.should redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
+        expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
         
       end
       
@@ -77,18 +77,19 @@ describe Portal::TeachersController do
             :password_confirmation => "password"
           }
         }
-        @selector.stub!(:valid?).and_return false
+        allow(@selector).to receive(:valid?).and_return false
         current_user_count = User.count(:all)
         current_teacher_count = Portal::Teacher.count(:all)
         
         post :create, params
         
-        assert_equal User.count(:all), current_user_count, "TeachersController#create erroneously created a User when given invalid POST data"
-        assert_equal Portal::Teacher.count(:all), current_teacher_count, "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
-        #assert_not_nil flash.now[:error]
-        assert_nil flash[:notice]
-        @response.body.should include("must select a school")
-        @response.body.should include("Sorry")
+        expect(User.count(:all)).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
+        expect(Portal::Teacher.count(:all)).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
+
+        #expect(flash.now[:error]).not_to be_nil
+        expect(flash[:notice]).to be_nil
+        expect(@response.body).to include("must select a school")
+        expect(@response.body).to include("Sorry")
       end
     end
   end  

@@ -4,7 +4,7 @@ describe Report::OfferingStudentStatus do
   context "with a learner" do
     let :learner do
       _learner = Object.new
-      _learner.stub_chain(:report_learner, :last_run).and_return(@run_date)
+      allow(_learner).to receive_message_chain(:report_learner, :last_run).and_return(@run_date)
       _learner
     end
     let(:offering) {nil }
@@ -18,7 +18,10 @@ describe Report::OfferingStudentStatus do
     end
     
     describe "last_run" do
-      its(:last_run){should == @run_date}
+      describe '#last_run' do
+        subject { super().last_run }
+        it {is_expected.to eq(@run_date)}
+      end
     end
 
     describe "complete_percent" do
@@ -26,43 +29,61 @@ describe Report::OfferingStudentStatus do
       context "when the offering isn't reportable" do
         let :offering do
           _offering = Object.new
-          _offering.stub!(:individual_reportable?).and_return(false)
+          allow(_offering).to receive(:individual_reportable?).and_return(false)
           _offering
         end
-        its(:complete_percent){should == 100}
+
+        describe '#complete_percent' do
+          subject { super().complete_percent }
+          it {is_expected.to eq(100)}
+        end
       end
       context "when the offering is reportable" do
         let :offering do
           _offering = Object.new
-          _offering.stub!(:individual_reportable?).and_return(true)
+          allow(_offering).to receive(:individual_reportable?).and_return(true)
           _offering
         end
         context "without a complete_percent in report_learner" do
           let :learner do
             _learner = Object.new
-            _learner.stub_chain(:report_learner,:complete_percent).and_return(nil)
+            allow(_learner).to receive_message_chain(:report_learner,:complete_percent).and_return(nil)
             _learner
           end
-          its(:complete_percent){should == 0}
+
+          describe '#complete_percent' do
+            subject { super().complete_percent }
+            it {is_expected.to eq(0)}
+          end
       
         end
         context "with a 50% complete_percent in report_learner" do
           let :learner do
             _learner = Object.new
-            _learner.stub_chain(:report_learner,:complete_percent).and_return(50)
+            allow(_learner).to receive_message_chain(:report_learner,:complete_percent).and_return(50)
             _learner
           end
-          its(:complete_percent){should == 50}
+
+          describe '#complete_percent' do
+            subject { super().complete_percent }
+            it {is_expected.to eq(50)}
+          end
         end
       end
     end
 
     describe "never_run" do
-      its(:never_run){ should == false }
+      describe '#never_run' do
+        subject { super().never_run }
+        it { is_expected.to eq(false) }
+      end
     end
 
     describe "last_run_string" do
-      its(:last_run_string) { should == "Last run Dec 23, 1970"}
+      describe '#last_run_string' do
+        subject { super().last_run_string }
+        it { is_expected.to eq("Last run Dec 23, 1970")}
+      end
     end
   end
 
@@ -76,15 +97,24 @@ describe Report::OfferingStudentStatus do
     
     # TODO: What kind of behavior do we want without a learner?
     describe "last_run" do
-      its(:last_run){should be_nil}
+      describe '#last_run' do
+        subject { super().last_run }
+        it {is_expected.to be_nil}
+      end
     end
     
     describe "never_run" do
-      its(:never_run){ should == true }
+      describe '#never_run' do
+        subject { super().never_run }
+        it { is_expected.to eq(true) }
+      end
     end
 
     describe "last_run_string" do
-      its(:last_run_string) { should == "not yet started"}
+      describe '#last_run_string' do
+        subject { super().last_run_string }
+        it { is_expected.to eq("not yet started")}
+      end
     end
   end
  

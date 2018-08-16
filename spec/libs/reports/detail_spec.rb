@@ -20,7 +20,7 @@ describe Reports::Detail do
   let(:offering)         { FactoryGirl.create(:portal_offering, runnable: runnable)   }
   let(:learner)          { FactoryGirl.create(:portal_learner, student: student, offering: offering)  }
   let(:report_learner)   { learner.report_learner }
-  let(:url_helpers)      { mock(remote_endpoint_url: "noplace.com") }
+  let(:url_helpers)      { double(remote_endpoint_url: "noplace.com") }
   let(:runnables)        { [ runnable ] }
   let(:report_learners)  { [ report_learner ] }
   let(:opts) do
@@ -33,9 +33,9 @@ describe Reports::Detail do
   let(:report) { Reports::Detail.new(opts) }
   describe '#initialize' do
     it 'asigns values' do
-      report.instance_variable_get(:@runnables).should == runnables
-      report.instance_variable_get(:@report_learners).should == report_learners
-      report.instance_variable_get(:@url_helpers).should == url_helpers
+      expect(report.instance_variable_get(:@runnables)).to eq(runnables)
+      expect(report.instance_variable_get(:@report_learners)).to eq(report_learners)
+      expect(report.instance_variable_get(:@url_helpers)).to eq(url_helpers)
     end
   end
   describe '#run_report' do
@@ -47,7 +47,7 @@ describe Reports::Detail do
 
     before(:each) do
       setupReportables()
-      report_learner.stub(:answers) { answers }
+      allow(report_learner).to receive(:answers) { answers }
     end
 
     describe "with a complete answer" do

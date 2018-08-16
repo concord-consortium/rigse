@@ -24,7 +24,7 @@ shared_examples_for 'a saveable' do
         # Stubbing the #answer method since its return is derived from some
         # complex relationships
         #
-        Saveable::MultipleChoiceAnswer.any_instance.stub(
+        allow_any_instance_of(Saveable::MultipleChoiceAnswer).to receive_messages(
             :answer =>
                 [ { :choice_id => 1, :answer => "non-default answer" } ] )
       end
@@ -53,7 +53,7 @@ shared_examples_for 'a saveable' do
     describe "#needs_review?" do
       subject { saveable.needs_review? }
       describe "with no answers" do
-        it { should be_false }
+        it { is_expected.to be_falsey }
       end
       describe "with an answer" do
         before(:each) do
@@ -61,14 +61,14 @@ shared_examples_for 'a saveable' do
         end
 
         describe "when no feedback has been given" do
-          it { should  be_true }
+          it { is_expected.to  be_truthy }
         end
 
         describe "when the answer has been reviewed" do
           before(:each) do
             review_answer
           end
-          it { should be_false }
+          it { is_expected.to be_falsey }
         end
 
       end
@@ -77,7 +77,7 @@ shared_examples_for 'a saveable' do
     describe "#current_feedback" do
       subject { saveable.current_feedback }
       describe "with no answers" do
-        it { should be_nil }
+        it { is_expected.to be_nil }
       end
       describe "with an answer" do
         before(:each) do
@@ -85,7 +85,7 @@ shared_examples_for 'a saveable' do
         end
 
         describe "when no feedback has been given" do
-          it { should  be_nil }
+          it { is_expected.to  be_nil }
         end
 
         describe "when we give feeback" do
@@ -93,7 +93,7 @@ shared_examples_for 'a saveable' do
           before(:each) do
             add_feedback(feedback)
           end
-          it { should eq feedback }
+          it { is_expected.to eq feedback }
         end
 
       end
@@ -102,7 +102,7 @@ shared_examples_for 'a saveable' do
     describe "#current_score" do
       subject { saveable.current_score }
       describe "with no answers" do
-        it { should be_nil }
+        it { is_expected.to be_nil }
       end
       describe "with an answer" do
         before(:each) do
@@ -110,7 +110,7 @@ shared_examples_for 'a saveable' do
         end
 
         describe "when no score has been given" do
-          it { should  be_nil }
+          it { is_expected.to  be_nil }
         end
 
         describe "when we score the work" do
@@ -118,7 +118,7 @@ shared_examples_for 'a saveable' do
           before(:each) do
             add_score(score)
           end
-          it { should eq score }
+          it { is_expected.to eq score }
         end
 
       end

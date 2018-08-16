@@ -113,8 +113,8 @@ When /^I sort investigations by "([^"]*)"$/ do |sort_str|
 end
 
 When /sort order .*should be "([^"]*)"/ do |sort_str|
-  page.should have_selector('select[name="[sort_order]"]')
-  page.should have_selector("option[value='#{sort_str}'][selected='selected']")
+  expect(page).to have_selector('select[name="[sort_order]"]')
+  expect(page).to have_selector("option[value='#{sort_str}'][selected='selected']")
 end
 
 When /^I drag the investigation "([^"]*)" to "([^"]*)"$/ do |investigation_name, to|
@@ -132,7 +132,7 @@ end
 
 
 Then /^I should not see the "([^"]*)" checkbox in the list filter$/ do |arg1|
-  page.should_not have_selector("input[name='#{arg1}'][type='checkbox']")
+  expect(page).not_to have_selector("input[name='#{arg1}'][type='checkbox']")
 end
 
 When /^I show offerings count on the investigations page$/ do
@@ -162,8 +162,8 @@ When /^I follow "(.*)" on the (.*) "(.*)" from the class "(.*)"$/ do |button_nam
   })
   
   selector = "#portal__offering_#{offering.id}"
-  with_scope(selector) do
-    click_link(button_name)
+  with_scope(first(:id, selector)) do
+    first(:link, button_name).click
   end
 end
 
@@ -218,7 +218,7 @@ Then /^the investigation "([^"]*)" in the class "(.*)" should be active$/ do |in
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
   })
-  offering.should be_active
+  expect(offering).to be_active
 end
 
 
@@ -231,13 +231,13 @@ end
 
 Then /^There should be (\d+) (?:investigations|assignables) displayed$/ do |count|
   within("#offering_list") do
-    page.all(".runnable").size.should == count.to_i
+    expect(page.all(".runnable").size).to eq(count.to_i)
   end
 end
 
 Then /^"([^"]*)" should not be displayed in the (?:investigations|assignables) list$/ do |not_expected|
   within("#offering_list") do 
-    page.should have_no_content(not_expected)
+    expect(page).to have_no_content(not_expected)
   end
 end
 
@@ -245,9 +245,9 @@ Then /^the following should (not )?be displayed in the (?:investigations|assigna
   within('#assignable_list') do
     table.hashes.each do |hash|
       if nomatch == "not "
-        page.should have_no_content(hash[:name])
+        expect(page).to have_no_content(hash[:name])
       else
-        page.should have_content(hash[:name])
+        expect(page).to have_content(hash[:name])
       end
     end
   end
@@ -269,7 +269,7 @@ end
 
 Then /^"([^"]*)" should be displayed in the investigations list$/ do |expected|
   within("#offering_list") do 
-    page.should have_content(expected)
+    expect(page).to have_content(expected)
   end
 end
 
@@ -282,7 +282,7 @@ end
 Then /^every investigation should contain "([^"]*)"$/ do |expected|
   within("#offering_list") do
     page.all(".runnable").each do |piece|
-      piece.should have_content(expected)
+      expect(piece).to have_content(expected)
     end
   end
 end
@@ -309,12 +309,12 @@ end
 
 Then /^the investigation "([^"]*)" should have been created$/ do |inv_name|
   investigation = Investigation.find_by_name inv_name
-  investigation.should be
+  expect(investigation).to be
 end
 
 Then /^the investigation "([^"]*)" should have an offerings count of (\d+)$/ do |inv_name, count|
   investigation = Investigation.find_by_name inv_name
-  investigation.offerings_count.should == count.to_i
+  expect(investigation.offerings_count).to eq(count.to_i)
 end
 
 
@@ -339,12 +339,12 @@ When /^I duplicate the investigation$/ do
   page.execute_script("$('actions_menu').hide()")
 
   # need to verify that the duplication is complete so there are not lingering database interactions
-  page.should have_content('Copied')
+  expect(page).to have_content('Copied')
 end
 
 Then /^I cannot duplicate the investigation$/ do
   show_actions_menu
-  page.should have_no_content('duplicate')
+  expect(page).to have_no_content('duplicate')
 end
 
 When /^(?:|I )create investigations "(.+)" before "(.+)" by date$/ do |investigation_name1, investigation_name2|

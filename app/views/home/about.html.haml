@@ -9,7 +9,10 @@
 .cols
   .col-12
     .padded_content
-      - render :partial => 'project_info'
-      - render :partial => 'tech_info'
-      = content_for :project_info
-      = content_for :tech_info
+      - if custom_content.blank?
+        - render :partial => 'project_info'
+        - render :partial => 'tech_info'
+        = content_for :project_info
+        = content_for :tech_info
+      - else
+        = custom_content.html_safe

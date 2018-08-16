@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180703161820) do
+ActiveRecord::Schema.define(:version => 20180807215058) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -34,24 +34,23 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",                    :limit => 36
+    t.string   "uuid",                   :limit => 36
     t.string   "name"
-    t.text     "description",             :limit => 16777215
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
+    t.text     "description",            :limit => 16777215
+    t.datetime "created_at",                                                    :null => false
+    t.datetime "updated_at",                                                    :null => false
     t.integer  "position"
     t.integer  "investigation_id"
     t.integer  "original_id"
-    t.boolean  "teacher_only",                                :default => false
+    t.boolean  "teacher_only",                               :default => false
     t.string   "publication_status"
-    t.integer  "offerings_count",                             :default => 0
-    t.boolean  "student_report_enabled",                      :default => true
-    t.boolean  "show_score",                                  :default => false
-    t.text     "description_for_teacher", :limit => 16777215
+    t.integer  "offerings_count",                            :default => 0
+    t.boolean  "student_report_enabled",                     :default => true
+    t.boolean  "show_score",                                 :default => false
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
-    t.boolean  "is_featured",                                 :default => false
-    t.boolean  "is_assessment_item",                          :default => false
+    t.boolean  "is_featured",                                :default => false
+    t.boolean  "is_assessment_item",                         :default => false
   end
 
   add_index "activities", ["investigation_id", "position"], :name => "index_activities_on_investigation_id_and_position"
@@ -157,18 +156,8 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
     t.boolean  "wrap_home_page_content",                             :default => true
     t.string   "custom_search_path",                                 :default => "/search"
     t.string   "teacher_home_path",                                  :default => "/getting_started"
+    t.text     "about_page_content",             :limit => 16777215
   end
-
-  create_table "admin_settings_vendor_interfaces", :force => true do |t|
-    t.integer  "admin_settings_id"
-    t.integer  "probe_vendor_interface_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-  end
-
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
-  add_index "admin_settings_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
 
   create_table "admin_site_notice_roles", :force => true do |t|
     t.integer  "notice_id"
@@ -422,28 +411,31 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
 
   create_table "embeddable_iframes", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
     t.string   "description"
     t.integer  "width"
     t.integer  "height"
     t.string   "url"
     t.string   "external_id"
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
-    t.boolean  "display_in_iframe",               :default => false
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.boolean  "display_in_iframe",                              :default => false
+    t.boolean  "is_required",                                    :default => false
+    t.boolean  "show_in_featured_question_report",               :default => true
   end
 
   create_table "embeddable_image_questions", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",           :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
-    t.text     "prompt",         :limit => 16777215
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
+    t.text     "prompt",                           :limit => 16777215
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
     t.string   "external_id"
-    t.text     "drawing_prompt", :limit => 16777215
-    t.boolean  "is_required",                        :default => false, :null => false
+    t.text     "drawing_prompt",                   :limit => 16777215
+    t.boolean  "is_required",                                          :default => false, :null => false
+    t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
   add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
@@ -461,77 +453,81 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
 
   create_table "embeddable_multiple_choices", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",                     :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
-    t.text     "description",              :limit => 16777215
-    t.text     "prompt",                   :limit => 16777215
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
-    t.boolean  "enable_rationale",                             :default => false
-    t.text     "rationale_prompt",         :limit => 16777215
-    t.boolean  "allow_multiple_selection",                     :default => false
+    t.text     "description",                      :limit => 16777215
+    t.text     "prompt",                           :limit => 16777215
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
+    t.boolean  "enable_rationale",                                     :default => false
+    t.text     "rationale_prompt",                 :limit => 16777215
+    t.boolean  "allow_multiple_selection",                             :default => false
     t.string   "external_id"
-    t.boolean  "is_required",                                  :default => false, :null => false
+    t.boolean  "is_required",                                          :default => false, :null => false
+    t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
   create_table "embeddable_open_responses", :force => true do |t|
     t.integer  "user_id"
-    t.string   "uuid",             :limit => 36
+    t.string   "uuid",                             :limit => 36
     t.string   "name"
-    t.text     "description",      :limit => 16777215
-    t.text     "prompt",           :limit => 16777215
+    t.text     "description",                      :limit => 16777215
+    t.text     "prompt",                           :limit => 16777215
     t.string   "default_response"
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
-    t.integer  "rows",                                 :default => 5
-    t.integer  "columns",                              :default => 32
-    t.integer  "font_size",                            :default => 12
+    t.datetime "created_at",                                                              :null => false
+    t.datetime "updated_at",                                                              :null => false
+    t.integer  "rows",                                                 :default => 5
+    t.integer  "columns",                                              :default => 32
+    t.integer  "font_size",                                            :default => 12
     t.string   "external_id"
-    t.boolean  "is_required",                          :default => false, :null => false
+    t.boolean  "is_required",                                          :default => false, :null => false
+    t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
   create_table "external_activities", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid"
     t.string   "name"
-    t.text     "description",              :limit => 16777215
-    t.text     "url",                      :limit => 16777215
+    t.text     "archived_description",         :limit => 16777215
+    t.text     "url",                          :limit => 16777215
     t.string   "publication_status"
-    t.datetime "created_at",                                                           :null => false
-    t.datetime "updated_at",                                                           :null => false
-    t.integer  "offerings_count",                              :default => 0
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
+    t.integer  "offerings_count",                                  :default => 0
     t.string   "save_path"
     t.boolean  "append_learner_id_to_url"
-    t.boolean  "popup",                                        :default => true
+    t.boolean  "popup",                                            :default => true
     t.boolean  "append_survey_monkey_uid"
     t.integer  "template_id"
     t.string   "template_type"
     t.string   "launch_url"
-    t.boolean  "is_official",                                  :default => false
-    t.boolean  "student_report_enabled",                       :default => true
-    t.text     "description_for_teacher",  :limit => 16777215
+    t.boolean  "is_official",                                      :default => false
+    t.boolean  "student_report_enabled",                           :default => true
+    t.text     "long_description_for_teacher", :limit => 16777215
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
-    t.boolean  "is_featured",                                  :default => false
-    t.boolean  "has_pretest",                                  :default => false
-    t.text     "abstract",                 :limit => 16777215
-    t.boolean  "allow_collaboration",                          :default => false
+    t.boolean  "is_featured",                                      :default => false
+    t.boolean  "has_pretest",                                      :default => false
+    t.text     "short_description",            :limit => 16777215
+    t.boolean  "allow_collaboration",                              :default => false
     t.string   "author_email"
     t.boolean  "is_locked"
-    t.boolean  "logging",                                      :default => false
-    t.boolean  "is_assessment_item",                           :default => false
+    t.boolean  "logging",                                          :default => false
+    t.boolean  "is_assessment_item",                               :default => false
     t.integer  "external_report_id"
     t.text     "author_url"
     t.text     "print_url"
-    t.boolean  "is_archived",                                  :default => false
+    t.boolean  "is_archived",                                      :default => false
     t.datetime "archive_date"
     t.string   "credits"
     t.string   "license_code"
     t.boolean  "append_auth_token"
-    t.boolean  "enable_sharing",                               :default => true
-    t.string   "material_type",                                :default => "Activity"
+    t.boolean  "enable_sharing",                                   :default => true
+    t.string   "material_type",                                    :default => "Activity"
     t.string   "rubric_url"
-    t.boolean  "saves_student_data",                           :default => true
+    t.boolean  "saves_student_data",                               :default => true
+    t.text     "long_description"
+    t.string   "source_type"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -780,7 +776,6 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
     t.boolean  "student_report_enabled",                        :default => true
     t.boolean  "allow_activity_assignment",                     :default => true
     t.boolean  "show_score",                                    :default => false
-    t.text     "description_for_teacher",   :limit => 16777215
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
     t.boolean  "is_featured",                                   :default => false
@@ -1932,95 +1927,6 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "probe_calibrations", :force => true do |t|
-    t.integer  "data_filter_id"
-    t.integer  "probe_type_id"
-    t.boolean  "default_calibration"
-    t.integer  "physical_unit_id"
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.float    "k0"
-    t.float    "k1"
-    t.float    "k2"
-    t.float    "k3"
-    t.string   "uuid"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "user_id"
-  end
-
-  create_table "probe_data_filters", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.string   "otrunk_object_class"
-    t.boolean  "k0_active"
-    t.boolean  "k1_active"
-    t.boolean  "k2_active"
-    t.boolean  "k3_active"
-    t.string   "uuid"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-  end
-
-  create_table "probe_device_configs", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "vendor_interface_id"
-    t.string   "config_string"
-    t.string   "uuid"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
-  add_index "probe_device_configs", ["user_id"], :name => "index_probe_device_configs_on_user_id"
-  add_index "probe_device_configs", ["vendor_interface_id"], :name => "index_probe_device_configs_on_vendor_interface_id"
-
-  create_table "probe_physical_units", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "quantity"
-    t.string   "unit_symbol"
-    t.string   "unit_symbol_text"
-    t.text     "description",      :limit => 16777215
-    t.boolean  "si"
-    t.boolean  "base_unit"
-    t.string   "uuid"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-  end
-
-  create_table "probe_probe_types", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.integer  "ptype"
-    t.float    "step_size"
-    t.integer  "display_precision"
-    t.integer  "port"
-    t.string   "unit"
-    t.float    "min"
-    t.float    "max"
-    t.float    "period"
-    t.string   "uuid"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "probe_probe_types", ["user_id"], :name => "index_probe_probe_types_on_user_id"
-
-  create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.text     "description",            :limit => 16777215
-    t.string   "communication_protocol"
-    t.string   "image"
-    t.string   "uuid"
-    t.integer  "device_id"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
-    t.string   "driver_short_name"
-  end
-
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2381,20 +2287,6 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
-  create_table "settings", :force => true do |t|
-    t.integer  "scope_id"
-    t.string   "scope_type"
-    t.string   "name"
-    t.string   "value"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "settings", ["name"], :name => "index_settings_on_name"
-  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
-  add_index "settings", ["value"], :name => "index_settings_on_value"
-
   create_table "standard_documents", :force => true do |t|
     t.string   "uri"
     t.string   "jurisdiction"
@@ -2466,7 +2358,6 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
     t.string   "uuid",                     :limit => 36
     t.datetime "created_at",                                                     :null => false
     t.datetime "updated_at",                                                     :null => false
-    t.integer  "vendor_interface_id"
     t.boolean  "default_user",                            :default => false
     t.boolean  "site_admin",                              :default => false
     t.string   "external_id"
@@ -2490,6 +2381,5 @@ ActiveRecord::Schema.define(:version => 20180703161820) do
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true
   add_index "users", ["id"], :name => "index_users_on_id_and_type"
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
-  add_index "users", ["vendor_interface_id"], :name => "index_users_on_vendor_interface_id"
 
 end

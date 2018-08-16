@@ -647,12 +647,12 @@ module MockData
           default_ext_act = ExternalActivity.create!(act)
           default_ext_act.template = FactoryGirl.create(:activity,
             name: default_ext_act.name,
-            description:default_ext_act.description
+            description: default_ext_act.long_description
           )
           if(sub_activities)
             investigation = FactoryGirl.create(:investigation,
               name: default_ext_act.name,
-              description: default_ext_act.description
+              description: default_ext_act.long_description
             )
             acts = sub_activities.each do |a|
               investigation.activities.create(name: a)

@@ -13,14 +13,14 @@ describe Embeddable::ImageQuestion do
   it "should create a new instance with default values" do
     image_question = Embeddable::ImageQuestion.new
     image_question.save 
-    image_question.should be_valid
-    image_question.prompt.should == @default_prompt
+    expect(image_question).to be_valid
+    expect(image_question.prompt).to eq(@default_prompt)
   end
   
   it "should create a new instance with valid attributes" do
     image_question = Embeddable::ImageQuestion.create(@valid_attributes)
     image_question.save
-    image_question.should be_valid
+    expect(image_question).to be_valid
   end
  
   # it "should not create a new instance without valid attributes" do

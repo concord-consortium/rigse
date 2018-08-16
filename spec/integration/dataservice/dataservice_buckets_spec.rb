@@ -11,7 +11,7 @@ describe "Dataservice Buckets" do
   it 'should deliver empty bucket data when no bucket contents exist' do
     get "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle"
 
-    response.body.should == ""
+    expect(response.body).to eq("")
   end
 
   it 'should deliver the most recent bucket contents when more than one contents exist' do
@@ -21,7 +21,7 @@ describe "Dataservice Buckets" do
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body3")
     get "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle"
 
-    response.body.should == "body3"
+    expect(response.body).to eq("body3")
   end
 
   it 'should deliver bucket contents by logger id' do
@@ -30,7 +30,7 @@ describe "Dataservice Buckets" do
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
     get "/dataservice/bucket_loggers/#{log.id}.bundle"
 
-    response.body.should == "body4"
+    expect(response.body).to eq("body4")
   end
 
   it 'should accept posted bundle contents by logger id' do
@@ -38,14 +38,14 @@ describe "Dataservice Buckets" do
     post "/dataservice/bucket_loggers/#{log.id}/bucket_contents.bundle", "This is some content"
 
     @learner.reload
-    @learner.bucket_logger.most_recent_content.should == "This is some content"
+    expect(@learner.bucket_logger.most_recent_content).to eq("This is some content")
   end
 
   it 'should accept posted bundle contents by learner id' do
     post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is some content"
 
     @learner.reload
-    @learner.bucket_logger.most_recent_content.should == "This is some content"
+    expect(@learner.bucket_logger.most_recent_content).to eq("This is some content")
   end
 
   it 'should accept multiple posted bundle contents by logger id' do
@@ -55,7 +55,7 @@ describe "Dataservice Buckets" do
     post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is totally different content"
 
     @learner.reload
-    @learner.bucket_logger.most_recent_content.should == "This is totally different content"
+    expect(@learner.bucket_logger.most_recent_content).to eq("This is totally different content")
   end
 
   it 'should accept multiple posted items by logger id and return them all' do
@@ -63,7 +63,7 @@ describe "Dataservice Buckets" do
     post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", "This is some content 2"
 
     get "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle"
-    response.body.should == "[This is some content,This is some content 2]"
+    expect(response.body).to eq("[This is some content,This is some content 2]")
   end
 
   ### BucketLoggers with no learners ###
@@ -79,7 +79,7 @@ describe "Dataservice Buckets" do
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body3")
       get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
 
-      response.body.should == "body3"
+      expect(response.body).to eq("body3")
     end
 
     it 'should deliver bucket contents by logger id' do
@@ -88,14 +88,14 @@ describe "Dataservice Buckets" do
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
       get "/dataservice/bucket_loggers/#{log.id}.bundle"
 
-      response.body.should == "body4"
+      expect(response.body).to eq("body4")
     end
 
     it 'should accept posted bundle contents by arbitrary names' do
       post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content"
       get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
 
-      response.body.should == "This is some content"
+      expect(response.body).to eq("This is some content")
     end
 
     it 'should accept multiple posted bundle contents by arbitrary names' do
@@ -105,7 +105,7 @@ describe "Dataservice Buckets" do
       post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is totally different content"
       get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
 
-      response.body.should == "This is totally different content"
+      expect(response.body).to eq("This is totally different content")
     end
 
     it 'should accept multiple posted items by name and return them all' do
@@ -113,7 +113,7 @@ describe "Dataservice Buckets" do
       post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", "This is some content 2"
 
       get "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle"
-      response.body.should == "[This is some content,This is some content 2]"
+      expect(response.body).to eq("[This is some content,This is some content 2]")
     end
   end
 end

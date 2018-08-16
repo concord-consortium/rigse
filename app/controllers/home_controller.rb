@@ -54,6 +54,17 @@ class HomeController < ApplicationController
     render :home, locals: homePage.view_options, layout: homePage.layout
   end
 
+  def preview_about_page
+    @emulate_anonymous_user = true
+    preview_content = params[:about_page_preview_content]
+    aboutPage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
+    @wide_content_layout = true
+    load_notices
+    load_featured_materials
+    response.headers["X-XSS-Protection"] = "0"
+    render :about, locals: aboutPage.view_options, layout: aboutPage.layout
+  end
+
   def readme
     @document = FormattedDoc.new('README.md')
     render :action => "formatted_doc", :layout => "technical_doc"
@@ -70,11 +81,12 @@ class HomeController < ApplicationController
   end
 
   def about
+    aboutPage = AboutPage.new(current_visitor, current_settings)
     @page_title = 'About'
     @open_graph = default_open_graph
     @open_graph[:title] = "About the #{APP_CONFIG[:site_name]}"
 
-    render layout: 'minimal'
+    render locals: aboutPage.view_options, layout: 'minimal'
   end
 
   def collections

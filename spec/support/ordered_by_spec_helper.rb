@@ -25,11 +25,11 @@ RSpec::Matchers.define :be_ordered_by do |attribute|
     result
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     "expected that #{actual.map {|i| i.send attribute}} would be sorted by #{attribute}"
   end
 
-  failure_message_for_should_not do |actual|
+  failure_message_when_negated do |actual|
     "expected that #{actual.map {|i| i.send attribute}} would not be sorted by #{attribute}"
   end
 

@@ -23,8 +23,8 @@ window.MBMaterialClass = React.createClass
     Portal.assignMaterialToCollection @props.material.id, @props.material.class_name
     e.preventDefault()
 
-  hasDescription: ->
-    @props.material.description? && @props.material.description != ''
+  hasShortDescription: ->
+    @props.material.short_description? && @props.material.short_description != ''
 
   archive: ->
     Portal.confirm
@@ -46,7 +46,7 @@ window.MBMaterialClass = React.createClass
           (a {className: 'mb-copy', href: data.copy_url,  title: 'Make your own version of this activity'},
             (span {className: 'mb-copy-text'}, 'Copy')
           )
-        if @hasDescription()
+        if @hasShortDescription()
           (a {className: 'mb-toggle-info', href: '', onClick: @toggleDescription, title: 'View activity description'},
             (span {className: 'mb-toggle-info-text'}, 'Info')
           )
@@ -66,9 +66,9 @@ window.MBMaterialClass = React.createClass
       (span {className: 'mb-material-name'}, data.name)
       if data.archive_url?
         (a {className: 'mb-archive-link', onClick: @archive, title: "archive this" }, "(archive this)")
-      if @hasDescription()
+      if @hasShortDescription()
         (MBMaterialDescription
-          description: data.description
+          description: data.short_description
           visible: @state.descriptionVisible
         )
     )
