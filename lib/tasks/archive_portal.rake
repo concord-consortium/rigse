@@ -50,7 +50,7 @@ namespace :archive_portal do
         runnables = (report_learners.group('concat(report_learners.runnable_type, "_", report_learners.runnable_id)').map{|learner| learner.runnable} or []).compact
         if report_learners.count == 0 || runnables.count == 0
           puts "done, no learners or runnables"
-          return
+          next
         end
         report = Reports::Detail.new(:runnables => runnables, :report_learners => report_learners, :blobs_url => blobs_url, :url_helpers => url_helpers)
         begin
@@ -89,16 +89,20 @@ namespace :archive_portal do
 
     failed_runnables = []
 
-    Report::Learner.group('concat(report_learners.runnable_type, "_", report_learners.runnable_id)').includes(:runnable).find_in_batches(batch_size: 10) do |batch|
-      batch.each do |learner|
-        if learner.runnable
-          puts "processing runnable #{learner.runnable.id}"
-          runnables = [learner.runnable]
-          report_learners = Report::Learner.with_runnables(runnables)
+    [ExternalActivity, Investigation, Activity].each do |type|
+      type.find_in_batches(batch_size: 10) do |batch|
+        batch.each do |runnable|
+          puts "processing runnable #{runnable.class.name}_#{runnable.id}"
+          runnables = [runnable]
+          report_learners = Report::Learner.where(runnable_type: runnable.class.name, runnable_id: runnable.id)
+          if report_learners.count == 0
+            puts "no learners, skipping report generation"
+            next
+          end
           report = Reports::Detail.new(:runnables => runnables, :report_learners => report_learners, :blobs_url => blobs_url, :url_helpers => url_helpers)
           begin
             spreadsheet = report.run_report
-            path = "#{s3_config['data_bucket_prefix']}/runnable_reports/#{learner.runnable_type.downcase}_#{learner.runnable_id}__#{learner.runnable.name.parameterize}.#{spreadsheet.file_extension}"
+            path = "#{s3_config['data_bucket_prefix']}/runnable_reports/#{runnable.class.name.downcase}_#{runnable.id}__#{runnable.name.parameterize}.#{spreadsheet.file_extension}"
             obj = bucket.object(path)
             obj.put(body: spreadsheet.to_data_string)
             puts "done - #{path}"
@@ -106,12 +110,10 @@ namespace :archive_portal do
             puts "failed"
             puts e.message
             puts e.backtrace.join("\n")
-            failed_runnables << "#{learner.runnable_type}_#{learner.runnable_id}"
+            failed_runnables << "#{runnable_type}_#{runnable_id}"
           end
-        else
-          puts "No runnable found for #{learner.runnable_type}_#{learner.runnable_id}"
+          STDOUT.flush
         end
-        STDOUT.flush
       end
     end
     puts "failed runnables: #{failed_runnables}"
