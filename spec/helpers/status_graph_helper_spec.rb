@@ -3,7 +3,7 @@ require 'spec_helper'
 include ApplicationHelper
 include Haml::Helpers
 
-describe StatusGraphHelper do
+describe StatusGraphHelper, type: :helper do
   before :each do
     init_haml_helpers
   end
