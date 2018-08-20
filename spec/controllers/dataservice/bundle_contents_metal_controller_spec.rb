@@ -30,4 +30,5 @@ describe Dataservice::BundleContentsMetalController do
       post :create, id: 37
     end
   end
+
 end

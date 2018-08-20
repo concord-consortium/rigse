@@ -151,5 +151,4 @@ describe Dataservice::BundleLoggersController do
       expect(response).to redirect_to(dataservice_bundle_loggers_url)
     end
   end
-
 end

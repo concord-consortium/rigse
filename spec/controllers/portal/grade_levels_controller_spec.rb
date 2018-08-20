@@ -136,5 +136,4 @@ describe Portal::GradeLevelsController do
       expect(response).to redirect_to(portal_grade_levels_url)
     end
   end
-
 end

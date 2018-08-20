@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TinyMceHelper do
+describe TinyMceHelper, type: :helper do
   include TinyMceHelper
 
   describe "with default settings" do
@@ -37,7 +37,51 @@ describe TinyMceHelper do
 
   end
 
+
+  # TODO: auto-generated
+  describe '#mce_init_string' do
+    it 'works' do
+      result = helper.mce_init_string
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#default_mce_buttons' do
+    it 'works' do
+      result = helper.default_mce_buttons(3)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#mce_theme_buttons' do
+    it 'works' do
+      result = helper.mce_theme_buttons(3)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#mce_buttons' do
+    it 'works' do
+      result = helper.mce_buttons(2)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid_elements' do
+    it 'works' do
+      result = helper.valid_elements
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
-
-
-

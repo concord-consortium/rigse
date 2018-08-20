@@ -21,7 +21,7 @@ describe Saveable::ImageQuestion do
 
   describe "add_external_answer" do
     it "should create new answer with a blob" do
-      blob = Dataservice::Blob.create()
+      blob = Dataservice::Blob.create
       expect(Dataservice::Blob).to receive(:for_learner_and_url).and_return(blob)
       note = "this is the note"
       url  = "http://somelace.com/example.jgp"
@@ -30,5 +30,41 @@ describe Saveable::ImageQuestion do
       expect(subject.answers.first.blob).to eq(blob)
     end
   end
+
+
+
+  # TODO: auto-generated
+  describe '#embeddable' do
+    it 'embeddable' do
+      image_question = described_class.new
+      result = image_question.embeddable
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#submitted_answer' do
+    it 'submitted_answer' do
+      image_question = described_class.new
+      result = image_question.submitted_answer
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_external_answer' do
+    xit 'add_external_answer' do
+      image_question = described_class.new
+      note = double('note')
+      url = 'url'
+      is_final = double('is_final')
+      result = image_question.add_external_answer(note, url, is_final)
+
+      expect(result).not_to be_nil
+    end
+  end
+
 
 end

@@ -175,5 +175,4 @@ describe RiGse::ExpectationStemsController do
     end
 
   end
-
 end

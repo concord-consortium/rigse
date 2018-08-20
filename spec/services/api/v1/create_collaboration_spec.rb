@@ -155,4 +155,46 @@ describe API::V1::CreateCollaboration do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#call' do
+    it 'call' do
+      create_collaboration = described_class.new
+      result = create_collaboration.call
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#owner_valid?' do
+    it 'owner_valid?' do
+      create_collaboration = described_class.new
+      result = create_collaboration.owner_valid?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#students_valid?' do
+    it 'students_valid?' do
+      create_collaboration = described_class.new
+      result = create_collaboration.students_valid?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#offering_valid?' do
+    it 'offering_valid?' do
+      create_collaboration = described_class.new
+      result = create_collaboration.offering_valid?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

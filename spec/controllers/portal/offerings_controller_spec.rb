@@ -185,4 +185,69 @@ describe Portal::OfferingsController do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#update' do
+    it 'PATCH update' do
+      put :update, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#destroy' do
+    it 'DELETE destroy' do
+      delete :destroy, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#activate' do
+    it 'GET activate' do
+      get :activate, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#deactivate' do
+    it 'GET deactivate' do
+      get :deactivate, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#answers' do
+    it 'GET answers' do
+      get :answers, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+
+  # TODO: auto-generated
+  describe '#student_report' do
+    it 'GET student_report' do
+      get :student_report, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#external_report' do
+    it 'GET external_report' do
+      get :external_report, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

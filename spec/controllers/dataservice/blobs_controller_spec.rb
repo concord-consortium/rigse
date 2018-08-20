@@ -123,5 +123,4 @@ describe Dataservice::BlobsController do
       expect(response).to redirect_to(dataservice_blobs_url)
     end
   end
-
 end

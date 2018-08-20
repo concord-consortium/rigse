@@ -258,4 +258,250 @@ describe ExternalActivity do
       expect(activity.lara_activity?).to be false
     end
   end
+ 
+  # TODO: auto-generated
+  describe '.published' do # scope test
+    it 'supports named scope published' do
+      expect(described_class.limit(3).published).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.assigned' do # scope test
+    it 'supports named scope assigned' do
+      expect(described_class.limit(3).assigned).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.not_private' do # scope test
+    it 'supports named scope not_private' do
+      expect(described_class.limit(3).not_private).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.by_user' do # scope test
+    it 'supports named scope by_user' do
+      expect(described_class.limit(3).by_user(Factory.create(:user))).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.ordered_by' do # scope test
+    it 'supports named scope ordered_by' do
+      expect(described_class.limit(3).ordered_by(nil)).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.official' do # scope test
+    it 'supports named scope official' do
+      expect(described_class.limit(3).official).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.contributed' do # scope test
+    it 'supports named scope contributed' do
+      expect(described_class.limit(3).contributed).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.archived' do # scope test
+    it 'supports named scope archived' do
+      expect(described_class.limit(3).archived).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#material_type' do
+    it 'material_type' do
+      external_activity = described_class.new
+      result = external_activity.material_type
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#template=' do
+    xit 'template=' do
+      external_activity = described_class.new
+      t = 't'
+      result = external_activity.template=(t)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#original_template=' do
+    xit 'original_template=' do
+      external_activity = described_class.new
+      t = 't'
+      result = external_activity.original_template=(t)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid_url' do
+    it 'valid_url' do
+      external_activity = described_class.new
+      result = external_activity.valid_url
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#url' do
+    it 'url' do
+      external_activity = described_class.new
+      learner = double('learner')
+      domain = double('domain')
+      result = external_activity.url(learner, domain)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#display_name' do
+    it 'display_name' do
+      external_activity = described_class.new
+      result = external_activity.display_name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#teacher_only' do
+    it 'teacher_only' do
+      external_activity = described_class.new
+      result = external_activity.teacher_only
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#teacher_only?' do
+    it 'teacher_only?' do
+      external_activity = described_class.new
+      result = external_activity.teacher_only?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#parent' do
+    it 'parent' do
+      external_activity = described_class.new
+      result = external_activity.parent
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#duplicate_on_lara' do
+    xit 'duplicate_on_lara' do
+      external_activity = described_class.new
+      root_url = 'root_url'
+      result = external_activity.duplicate_on_lara(root_url)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#activities' do
+    it 'activities' do
+      external_activity = described_class.new
+      result = external_activity.activities
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#left_nav_panel_width' do
+    it 'left_nav_panel_width' do
+      external_activity = described_class.new
+      result = external_activity.left_nav_panel_width
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#print_listing' do
+    it 'print_listing' do
+      external_activity = described_class.new
+      result = external_activity.print_listing
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#run_format' do
+    it 'run_format' do
+      external_activity = described_class.new
+      result = external_activity.run_format
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_launch_url?' do
+    it 'has_launch_url?' do
+      external_activity = described_class.new
+      result = external_activity.has_launch_url?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_activity?' do
+    it 'lara_activity?' do
+      external_activity = described_class.new
+      result = external_activity.lara_activity?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_sequence?' do
+    it 'lara_sequence?' do
+      external_activity = described_class.new
+      result = external_activity.lara_sequence?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_activity_or_sequence?' do
+    it 'lara_activity_or_sequence?' do
+      external_activity = described_class.new
+      result = external_activity.lara_activity_or_sequence?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#options_for_external_report' do
+    it 'options_for_external_report' do
+      external_activity = described_class.new
+      result = external_activity.options_for_external_report
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

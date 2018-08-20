@@ -185,4 +185,86 @@ describe Dataservice::BundleLogger do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#user' do
+    it 'user' do
+      bundle_logger = described_class.new
+      result = bundle_logger.user
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name' do
+    it 'name' do
+      bundle_logger = described_class.new
+      result = bundle_logger.name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#extract_saveables' do
+    it 'extract_saveables' do
+      bundle_logger = described_class.new
+      result = bundle_logger.extract_saveables
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#extract_open_responses' do
+    it 'extract_open_responses' do
+      bundle_logger = described_class.new
+      result = bundle_logger.extract_open_responses
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#extract_multiple_choices' do
+    it 'extract_multiple_choices' do
+      bundle_logger = described_class.new
+      result = bundle_logger.extract_multiple_choices
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#start_bundle' do
+    it 'start_bundle' do
+      bundle_logger = described_class.new
+      result = bundle_logger.start_bundle
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#end_bundle' do
+    it 'end_bundle' do
+      bundle_logger = described_class.new
+      attributes = {}
+      result = bundle_logger.end_bundle(attributes)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

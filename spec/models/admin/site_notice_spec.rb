@@ -56,6 +56,26 @@ describe Admin::SiteNotice do
       assert(notice_ids.include?(@third_notice.id))
     end
   end
+
+
+  # TODO: auto-generated
+  describe '.NOTICE_DISPLAY_TYPES' do
+    it 'NOTICE_DISPLAY_TYPES' do
+      result = described_class.NOTICE_DISPLAY_TYPES
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.get_notices_for_user' do
+    it 'get_notices_for_user' do
+      user = Factory.create(:user)
+      result = described_class.get_notices_for_user(user)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
-
-

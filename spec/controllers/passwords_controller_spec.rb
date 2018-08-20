@@ -137,4 +137,51 @@ describe PasswordsController do
     end
 
   end
+
+  # TODO: auto-generated
+  describe '#login' do
+    it 'GET login' do
+      get :login, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#questions' do
+    it 'GET questions' do
+      get :questions, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#reset' do
+    it 'GET reset' do
+      get :reset, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_users_password' do
+    xit 'GET update_users_password' do
+      get :update_users_password, user_reset_password: { password: 'password' }
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update' do
+    it 'PATCH update' do
+      put :update, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+
 end

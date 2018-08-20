@@ -2,7 +2,7 @@ require 'spec_helper'
 
 include ApplicationHelper
 
-describe TeacherGuideHelper do
+describe TeacherGuideHelper, type: :helper do
   before :each do
     @helper = Object.new.extend TeacherGuideHelper
     @helper.extend ActionView::Helpers::UrlHelper
@@ -50,4 +50,15 @@ describe TeacherGuideHelper do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '#teacher_guide_link' do
+    it 'works' do
+      result = helper.teacher_guide_link('thing')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

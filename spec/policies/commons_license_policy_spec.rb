@@ -53,4 +53,46 @@ describe CommonsLicensePolicy do
     it { is_expected.to permit(:destroy) }
   end
 
+
+  # TODO: auto-generated
+  describe '#index?' do
+    it 'index?' do
+      commons_license_policy = described_class.new(nil, nil)
+      result = commons_license_policy.index?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#show?' do
+    it 'show?' do
+      commons_license_policy = described_class.new(nil, nil)
+      result = commons_license_policy.show?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#new_or_create?' do
+    it 'new_or_create?' do
+      commons_license_policy = described_class.new(nil, nil)
+      result = commons_license_policy.new_or_create?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_edit_or_destroy?' do
+    it 'update_edit_or_destroy?' do
+      commons_license_policy = described_class.new(nil, nil)
+      result = commons_license_policy.update_edit_or_destroy?
+
+      expect(result).to be_nil
+    end
+  end
+
+
 end

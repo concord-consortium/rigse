@@ -33,6 +33,9 @@ describe HomeController do
     allow(@test_settings).to receive(:allow_adhoc_schools).and_return(false)
     allow(@test_settings).to receive(:show_collections_menu).and_return(false)
     allow(@test_settings).to receive(:auto_set_teachers_as_authors).and_return(false)
+    allow(@test_settings).to receive(:home_page_content).and_return('home page')
+    allow(@test_settings).to receive(:about_page_content).and_return('home page')
+    allow(@test_settings).to receive(:enable_member_registration?).and_return(false)
     allow(@test_settings).to receive(:wrap_home_page_content?).and_return(true)
     allow(@test_settings).to receive(:teacher_home_path).and_return(nil)
     allow(controller).to receive(:before_render) {
@@ -145,4 +148,165 @@ describe HomeController do
       expect(response.body).to include("<title>#{activity.name}")
     end
   end
+
+  # TODO: auto-generated
+  describe '#index' do
+    it 'GET index' do
+      get :index
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#getting_started' do
+    it 'GET getting_started' do
+      get :getting_started, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#my_classes' do
+    it 'GET my_classes' do
+      get :my_classes, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#preview_about_page' do
+    it 'GET preview_about_page' do
+      get :preview_about_page, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#readme' do
+    it 'GET readme' do
+      get :readme, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#doc' do
+    it 'GET doc' do
+      get :doc, document: 'document'
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#pick_signup' do
+    it 'GET pick_signup' do
+      get :pick_signup, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#about' do
+    it 'GET about' do
+      get :about, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#collections' do
+    it 'GET collections' do
+      get :collections, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#requirements' do
+    it 'GET requirements' do
+      get :requirements, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#admin' do
+    it 'GET admin' do
+      get :admin, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#authoring' do
+    it 'GET authoring' do
+      get :authoring, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#authoring_site_redirect' do
+    it 'GET authoring_site_redirect' do
+      get :authoring_site_redirect, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name_for_clipboard_data' do
+    it 'GET name_for_clipboard_data' do
+      get :name_for_clipboard_data, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#missing_installer' do
+    it 'GET missing_installer' do
+      get :missing_installer, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#test_exception' do
+    it 'GET test_exception' do
+      expect { get :test_exception }.to raise_error(RuntimeError)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#report' do
+    xit 'GET report' do
+      get :report, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#recent_activity' do
+    it 'GET recent_activity' do
+      get :recent_activity, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
 end

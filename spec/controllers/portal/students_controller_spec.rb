@@ -192,4 +192,96 @@ describe Portal::StudentsController do
       expect(response.status).to eq(200)
     end
   end
+
+  # TODO: auto-generated
+  describe '#status' do
+    it 'GET status' do
+      get :status, id: Factory.create(:portal_student).to_param
+
+      expect(response).to have_http_status(406)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#index' do
+    it 'GET index' do
+      get :index
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#edit' do
+    xit 'GET edit' do
+      get :edit, id: Factory.create(:portal_student).to_param
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update' do
+    xit 'PATCH update' do
+      put :update, id: Factory.create(:portal_student).to_param
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#destroy' do
+    it 'DELETE destroy' do
+      delete :destroy,id: Factory.create(:portal_student).to_param
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#ask_consent' do
+    xit 'GET ask_consent' do
+      get :ask_consent, id: Factory.create(:portal_student).to_param
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_consent' do
+    xit 'GET update_consent' do
+      get :update_consent, id: Factory.create(:portal_student).to_param
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#signup' do
+    it 'GET signup' do
+      get :signup, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#register' do
+    it 'GET register' do
+      get :register, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#confirm' do
+    xit 'GET confirm' do
+      get :confirm, class: { class_word: 'word' }
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+
 end

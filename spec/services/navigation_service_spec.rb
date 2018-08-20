@@ -133,4 +133,27 @@ describe NavigationService do
 
     end
   end
+
+  # TODO: auto-generated
+  describe '#defaults' do
+    xit 'defaults' do
+      props = {}
+      nav_item = described_class.new(props)
+      result = nav_item.defaults
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#merge' do
+    xit 'merge' do
+      props = {}
+      nav_item = described_class.new(props)
+      result = nav_item.merge({})
+
+      expect(result).not_to be_nil
+    end
+  end
+
 end

@@ -131,5 +131,4 @@ describe Admin::TagsController do
       expect(response).to redirect_to(admin_tags_url)
     end
   end
-
 end

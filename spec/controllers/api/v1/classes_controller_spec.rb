@@ -33,4 +33,32 @@ describe API::V1::ClassesController do
       expect(json['offerings'][1]['id']).to eq offering_c.id
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#mine' do
+    it 'GET mine' do
+      get :mine, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#info' do
+    it 'GET info' do
+      get :info, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#log_links' do
+    it 'GET log_links' do
+      get :log_links, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
 end

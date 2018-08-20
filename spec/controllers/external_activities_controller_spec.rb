@@ -279,4 +279,112 @@ describe ExternalActivitiesController do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#preview_index' do
+    it 'GET preview_index' do
+      get :preview_index, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#show' do
+    it 'GET show' do
+      get :show, id: Factory.create(:external_activity).to_param
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#edit' do
+    it 'GET edit' do
+      get :edit, id: Factory.create(:external_activity).to_param
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#create' do
+    it 'POST create' do
+      post :create, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update' do
+    it 'PATCH update' do
+      put :update, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#destroy' do
+    it 'DELETE destroy' do
+      delete :destroy, id: Factory.create(:external_activity).to_param
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#republish' do
+    it 'GET republish' do
+      get :republish, {}, {}
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#matedit' do
+    it 'GET matedit' do
+      get :matedit, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#archive' do
+    it 'GET archive' do
+      get :archive, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#unarchive' do
+    it 'GET unarchive' do
+      get :unarchive, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_private_before_matedit' do
+    it 'GET set_private_before_matedit' do
+      get :set_private_before_matedit, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#copy' do
+    it 'GET copy' do
+      get :copy, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
 end

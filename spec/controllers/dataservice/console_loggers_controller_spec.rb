@@ -149,5 +149,4 @@ describe Dataservice::ConsoleLoggersController do
       expect(response).to redirect_to(dataservice_console_loggers_url)
     end
   end
-
 end

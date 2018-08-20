@@ -187,5 +187,4 @@ describe Portal::SchoolsController do
       assert_select_rjs(:remove)
     end
   end
-
 end

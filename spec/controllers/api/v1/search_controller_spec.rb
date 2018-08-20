@@ -174,5 +174,4 @@ describe API::V1::SearchController do
       end
     end
   end
-
 end

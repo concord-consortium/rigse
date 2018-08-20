@@ -187,4 +187,156 @@ describe UserPolicy do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#index?' do
+    it 'index?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.index?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#limited_edit?' do
+    it 'limited_edit?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.limited_edit?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#limited_update?' do
+    it 'limited_update?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.limited_update?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#edit?' do
+    it 'edit?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.edit?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update?' do
+    it 'update?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.update?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#make_admin?' do
+    it 'make_admin?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.make_admin?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#show?' do
+    it 'show?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.show?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#destroy?' do
+    it 'destroy?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.destroy?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#teacher_page?' do
+    it 'teacher_page?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.teacher_page?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#student_page?' do
+    it 'student_page?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.student_page?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#switch?' do
+    it 'switch?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.switch?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#confirm?' do
+    it 'confirm?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.confirm?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#reset_password?' do
+    xit 'reset_password?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.reset_password?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#preferences?' do
+    it 'preferences?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.preferences?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#favorites?' do
+    it 'favorites?' do
+      user_policy = described_class.new(nil, nil)
+      result = user_policy.favorites?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

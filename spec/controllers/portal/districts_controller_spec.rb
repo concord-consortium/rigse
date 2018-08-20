@@ -151,5 +151,4 @@ describe Portal::DistrictsController do
       expect(response).to redirect_to(portal_districts_url)
     end
   end
-
 end

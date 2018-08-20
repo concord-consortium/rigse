@@ -20,4 +20,15 @@ describe Dataservice::BlobsHelper do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#blob_url_for' do
+    xit 'works' do
+      result = helper.blob_url_for(4)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
