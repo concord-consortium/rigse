@@ -46,9 +46,11 @@ When /^I drag the (\d+)(?:st|nd|rd|th) material in the materials collection "([^
 
   item_selector = "#materials_collection_item_#{@last_moved_item.id} .material_item_handle"
   if end_position == "top"
-    # FIXME This actually drops it into 2nd position...
     dest = "#materials_collection_item_#{items.first.id}"
   else
+    # FIXME This actually drops it into 2nd position...
+    # 2018-08-21 NP: This changed, items used to be inserted after dest,
+    # now they are inserted before dest.
     dest = "#materials_collection_item_#{items.last.id}"
   end
 
@@ -58,8 +60,10 @@ end
 Then /^the previously moved material in the materials collection "([^"]*)" should be (first|last)$/ do |name, position|
   collection = MaterialsCollection.find_by_name(name)
 
-  # FIXME See the drag step above, where it's actually getting put into second position
-  item = position == 'first' ? collection.materials_collection_items[1] : collection.materials_collection_items.last
+  item = position == 'first' ? collection.materials_collection_items.first :
+  # FIXME See the drag step above, where it's actually getting put into second from last position.
+  # 2018-08-21 NP: This changed, items used to be inserted after dest, now they are inserted before dest.
+  collection.materials_collection_items[-2]
   expect(item).to eq @last_moved_item
 end
 

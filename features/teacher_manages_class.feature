@@ -85,9 +85,9 @@ Feature: Teacher manages a class
     And the modal for saving manage classes dissappears
     And I log out
     And I login with username:  teacher_with_no_class
-    Then I should see "Mathematics"
-    And I should see "Biology"
-    And I should see "Geography"
+    Then I should see a class named "Mathematics" in the navigtion
+    And I should see a class named "Biology" in the navigtion
+    And I should see a class named "Geography" in the navigtion
 
 
   @javascript
