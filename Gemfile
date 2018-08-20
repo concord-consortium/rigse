@@ -205,6 +205,7 @@ group :test, :cucumber do
   gem 'capybara-screenshot'
   gem "connection_pool"
   gem "json-schema"
+  gem 'chromedriver-helper'
 end
 
 group :test, :cucumber, :development do
