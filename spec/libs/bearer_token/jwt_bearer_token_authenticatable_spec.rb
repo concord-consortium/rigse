@@ -4,7 +4,7 @@ require 'delorean'
 # needed to generate signed portal tokens
 ENV['JWT_HMAC_SECRET'] = 'foo'
 
-describe BearerToken:JwtBearerTokenAuthenticatable do
+describe JwtBearerTokenAuthenticatable::BearerToken do
   let(:strategy)      { JwtBearerTokenAuthenticatable::BearerToken.new(nil) }
   let(:request)       { double('request') }
   let(:mapping)       { Devise.mappings[:user] }
