@@ -1,5 +1,7 @@
 require 'simplecov'
 SimpleCov.start do
+  merge_timeout 3600
+  
   add_filter '/spec/'
   add_filter '/initializers/'
   add_filter '/features/'
