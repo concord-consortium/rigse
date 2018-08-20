@@ -137,13 +137,6 @@ class ExternalActivity < ActiveRecord::Base
     errors.add(:url, 'must be a valid url') if validated_url.nil?
   end
 
-  scope :like, lambda { |name|
-    name = "%#{name}%"
-    {
-     :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
-    }
-  }
-
   scope :published,
   {
     :conditions =>{:publication_status => "published"}
