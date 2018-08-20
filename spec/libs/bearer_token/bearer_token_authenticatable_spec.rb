@@ -32,7 +32,7 @@ def addTokenForTeacher(user, client, teacher, expires_at)
   grant.access_token
 end
 
-describe BearerToken:BearerTokenAuthenticatable do
+describe BearerTokenAuthenticatable::BearerToken do
   after(:each) { Delorean.back_to_the_present }
   let(:domain_matchers) { "" }
   let(:strategy)        { BearerTokenAuthenticatable::BearerToken.new(nil) }
