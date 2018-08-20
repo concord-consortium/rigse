@@ -125,9 +125,41 @@ describe Portal::Course do
       expect(found.course_number).to equal(@course_with_number.course_number)
       expect(found.school_id).to equal(777)
     end
-    
-    
   end
-  
-  
+
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.find_by_course_number_name_and_school_id' do
+    xit 'find_by_course_number_name_and_school_id' do
+      number = double('number')
+      name = double('name')
+      school_id = double('school_id')
+      result = described_class.find_by_course_number_name_and_school_id(number, name, school_id)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.find_or_create_by_course_number_name_and_school_id' do
+    xit 'find_or_create_by_course_number_name_and_school_id' do
+      number = double('number')
+      name = double('name')
+      school_id = double('school_id')
+      result = described_class.find_or_create_by_course_number_name_and_school_id(number, name, school_id)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
