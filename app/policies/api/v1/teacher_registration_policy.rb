@@ -1,2 +1,2 @@
-class Api::V1::TeacherRegistrationPolicy < ApplicationPolicy
+class API::V1::TeacherRegistrationPolicy < ApplicationPolicy
 end
