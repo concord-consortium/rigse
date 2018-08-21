@@ -8,7 +8,7 @@ require 'webmock/cucumber'
 solr_host = ENV['TEST_SOLR_HOST'] || 'localhost'
 solr_port = ENV['TEST_SOLR_PORT'] || 8981
 
-WebMock.disable_net_connect!(   :allow_localhost => true, 
-                                :allow => [ "#{solr_host}:#{solr_port}",
-                                            "codeclimate.com" ] 
-                            )
+WebMock.disable_net_connect!(allow_localhost: true,
+                             allow: ["#{solr_host}:#{solr_port}",
+                                     'codeclimate.com',
+                                     'host.docker.internal:9515'])
