@@ -10,6 +10,7 @@ describe ExternalActivity do
       :publication_status => "value for publication_status",
       :is_featured => true,
       :is_official => true,
+      :logging => true,
       :url => "http://www.concord.org/"
   } }
 
@@ -92,8 +93,9 @@ describe ExternalActivity do
     let(:template) { FactoryGirl.create(:investigation) }
     let(:activity) { a = ExternalActivity.create(valid_attributes); a.user = user1; a.save; a }
     # List of attributes that shouldn't match the original activity after duplication is done.
-    let(:unique_attrs) do  [ 'id', 'uuid', 'created_at', 'updated_at', 'name', 'user_id', 'publication_status',
-      'template_id', 'template_type', 'is_official', 'is_featured' ]
+    let(:unique_attrs) do
+      [ 'id', 'uuid', 'created_at', 'updated_at', 'name', 'user_id', 'publication_status',
+        'template_id', 'template_type', 'is_official', 'is_featured', 'logging' ]
     end
     # Automatically generate all the attributes. This will let us test new automatically things when they are added.
     let(:attrs) { activity.attributes.except(*unique_attrs).keys }
@@ -135,11 +137,21 @@ describe ExternalActivity do
       expect(clone.publication_status).to eq("private")
       expect(clone.is_official).to eq(false)
       expect(clone.is_featured).to eq(false)
+      expect(clone.logging).to eq(true) # because user is a project admin
       expect(clone.user).to eq(user2)
       expect(clone.name).to eq("Copy of " + activity.name)
       # Automatically check all the attributes.
       attrs.each do |attr|
         expect(clone.send(attr)).to eq(activity.send(attr))
+      end
+    end
+
+    describe "when user is not an admin or project admin" do
+      before(:each) do
+        user2.remove_role_for_project('admin', project1)
+      end
+      it "should NOT copy logging option" do
+        expect(clone.logging).to eq(false)
       end
     end
 
