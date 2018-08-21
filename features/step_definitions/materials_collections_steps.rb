@@ -43,6 +43,7 @@ When /^I drag the (\d+)(?:st|nd|rd|th) material in the materials collection "([^
   collection = MaterialsCollection.find_by_name(name)
   items = collection.materials_collection_items
   @last_moved_item = items[start_position.to_i-1]
+  @last_position = start_position.to_i
 
   item_selector = "#materials_collection_item_#{@last_moved_item.id} .material_item_handle"
   if end_position == "top"
@@ -57,14 +58,17 @@ When /^I drag the (\d+)(?:st|nd|rd|th) material in the materials collection "([^
   page.find(item_selector).drag_to(page.find(dest))
 end
 
-Then /^the previously moved material in the materials collection "([^"]*)" should be (first|last)$/ do |name, position|
+Then /^the previously moved material in the materials collection "([^"]*)" should be (higher|lower)$/ do |name, position|
   collection = MaterialsCollection.find_by_name(name)
+  id = @last_moved_item.id
 
-  item = position == 'first' ? collection.materials_collection_items.first :
-  # FIXME See the drag step above, where it's actually getting put into second from last position.
-  # 2018-08-21 NP: This changed, items used to be inserted after dest, now they are inserted before dest.
-  collection.materials_collection_items[-2]
-  expect(item).to eq @last_moved_item
+  current_location = collection.materials_collection_items.index {|i| i.id == id }
+
+  if position == 'higher'
+    expect(current_location).to be < @last_position
+  else
+    expect(current_location).to be > @last_position
+  end
 end
 
 When /^I click remove on the (\d+)(?:st|nd|rd|th) material in the materials collection "([^"]*)"$/ do |position, name|

@@ -62,10 +62,10 @@ Feature: Admin can work with materials collections
     And I wait 1 second
     And I drag the 3rd material in the materials collection "Collection 3" to the top
     And I wait 1 second
-    Then the previously moved material in the materials collection "Collection 3" should be first
+    Then the previously moved material in the materials collection "Collection 3" should be higher
     When I drag the 2nd material in the materials collection "Collection 3" to the bottom
     And I wait 1 second
-    Then the previously moved material in the materials collection "Collection 3" should be last
+    Then the previously moved material in the materials collection "Collection 3" should be lower
 
   @javascript @search
   Scenario: Admin adds materials to a Materials Collection
