@@ -207,11 +207,15 @@ class ExternalActivity < ActiveRecord::Base
   # Returns a new activity or nil in case of error.
   def duplicate(new_owner, root_url = nil)
     # Copy all the attributes except ones listed here.
-    duplicated_attrs =  attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type', 'is_official', 'is_featured')
+    duplicated_attrs =  attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type',
+      'is_official', 'is_featured', 'logging')
     clone = ExternalActivity.new(duplicated_attrs)
     clone.name = "Copy of #{name}"
     clone.user = new_owner
     clone.publication_status = 'private'
+    admin_or_proj_admin = new_owner.has_role?('admin') || projects.any? { |p| new_owner.is_project_admin?(p) }
+    # Logging is copied only if the new owner is an admin or a project admin for given material.
+    clone.logging = admin_or_proj_admin ? logging : false
     clone.save
 
     # This section triggers remote duplication if necessary.
