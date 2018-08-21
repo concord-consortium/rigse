@@ -22,6 +22,7 @@ require 'cucumber/rspec/doubles'
 require 'rspec/expectations'
 
 require 'capybara-screenshot/cucumber'
+require_relative 'capybara_initializer'
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
@@ -37,6 +38,16 @@ Capybara.default_selector = :css
 # Increase default wait time for asynchronous JavaScript requests from 2 to 5s
 # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
 Capybara.default_max_wait_time = 5
+
+CapybaraInitializer.configure do |config|
+  config.headless = ENV.fetch('HEADLESS', true) != 'false'
+  config.context = ENV['DOCKER'].present? ? :docker : nil
+end
+
+include SolrSpecHelper
+solr_setup
+clean_solar_index
+reindex_all
 
 # so we can use things like dom_id_for
 include ApplicationHelper

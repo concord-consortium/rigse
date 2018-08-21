@@ -50,7 +50,8 @@ require 'webmock/rspec'
 # Allow reporting to codeclimate
 WebMock.disable_net_connect!(:allow =>
                                 [   "#{solr_host}:#{solr_port}",
-                                    "codeclimate.com" ]
+                                    "codeclimate.com",
+                                    'host.docker.internal:9515' ]
                             )
 
 require 'capybara-screenshot/rspec'
