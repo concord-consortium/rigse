@@ -206,7 +206,9 @@ class ExternalActivity < ActiveRecord::Base
   # New activity will have a new owner and publication status set to private.
   # Returns a new activity or nil in case of error.
   def duplicate(new_owner, root_url = nil)
-    clone = ExternalActivity.new(attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type'))
+    # Copy all the attributes except ones listed here.
+    duplicated_attrs =  attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type', 'is_official', 'is_featured')
+    clone = ExternalActivity.new(duplicated_attrs)
     clone.name = "Copy of #{name}"
     clone.user = new_owner
     clone.publication_status = 'private'
