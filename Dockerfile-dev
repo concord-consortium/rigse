@@ -3,7 +3,7 @@ FROM concordconsortium/docker-rails-base-ruby-2.2.6:1.1
 #
 # Install some basic dev tools
 #
-RUN apt-get update && apt-get install -y vim xvfb
+RUN apt-get update && apt-get install -y vim
 #
 #Install Google Chrome for Selenium
 #
