@@ -71,7 +71,7 @@ GIT
 
 GEM
   remote: http://rubygems.org/
-  remote: https://concord:RAILS_LTS_PASWORD@gems.railslts.com/
+  remote: https://gems.railslts.com/
   remote: https://rails-assets.org/
   specs:
     Ascii85 (1.0.1)

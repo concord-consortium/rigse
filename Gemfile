@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
-source "https://#{ENV['RAILS_LTS_USER']}:#{ENV['RAILS_LTS_PASSWORD']}@gems.railslts.com" do
+source "https://gems.railslts.com" do
   gem 'rails', '~> 3.2.22'
   gem 'actionmailer',     :require => false
   gem 'actionpack',       :require => false
