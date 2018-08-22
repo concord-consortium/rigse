@@ -204,7 +204,7 @@ School Year 2006–07](http://nces.ed.gov/ccd/pdf/pau061bgen.pdf)
 
 Feature specs that require javascript are run by Chrome via Selenium. By default Chrome will run in headless mode and there is nothing special you need to do inside of a Docker development environment.
 
-However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by setting an environment variable `HEADLESS=false`. You'll need to install `chromedriver` on your host machine and start it with the command: `chromedriver --whitelisted-ips`. Ensure you have no firewall running on your host machine, or if you do please open port `9515`. Also ensure that chrome is installed on the host machine.
+However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by setting an environment variable `HEADLESS=false`. You'll need to install `chromedriver` on your host machine and start it with the command: `chromedriver --whitelisted-ips`. Ensure you have no firewall running on your host machine, or if you do please open port `9515`. Also ensure that Chrome is installed on the host machine.
 
 #### Factory Girl
 
@@ -253,7 +253,7 @@ on the hudson CI system:**
 
     HEADLESS=false bundle exec rake cucumber features/student_can_not_see_deactivated_offerings.feature
 
-*note: Please see documentation regarding running chrome driver on your host machine above ☝️.*
+*note: Please see documentation regarding running `chromedriver` on your host machine above ☝️.*
 
 ## Understanding the Codebase
 
