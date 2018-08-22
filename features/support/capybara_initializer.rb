@@ -8,7 +8,14 @@ class CapybaraInitializer
   end
 
   def call
-    # Common Capybara configuration
+    # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
+    # order to ease the transition to Capybara we set the default here. If you'd
+    # prefer to use XPath just remove this line and adjust any selectors in your
+    # steps to use the XPath syntax.
+    Capybara.default_selector = :css
+
+    # Increase default wait time for asynchronous JavaScript requests from 2 to 5s
+    # see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
     Capybara.default_max_wait_time = 5
 
     # Add some Capybara config if we are running

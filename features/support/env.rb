@@ -29,16 +29,6 @@ Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
   "screenshot_#{scenario.title.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
 end
 
-# Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
-# order to ease the transition to Capybara we set the default here. If you'd
-# prefer to use XPath just remove this line and adjust any selectors in your
-# steps to use the XPath syntax.
-Capybara.default_selector = :css
-
-# Increase default wait time for asynchronous JavaScript requests from 2 to 5s
-# see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
-Capybara.default_max_wait_time = 5
-
 CapybaraInitializer.configure do |config|
   config.headless = ENV.fetch('HEADLESS', true) != 'false'
   config.context = ENV['DOCKER'].present? ? :docker : nil
