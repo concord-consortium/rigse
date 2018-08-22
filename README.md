@@ -200,40 +200,11 @@ School Year 2006–07](http://nces.ed.gov/ccd/pdf/pau061bgen.pdf)
  * [rspec repo](http://github.com/dchelimsky/rspec)
  * [rspec-rails repo](http://github.com/dchelimsky/rspec-rails)
 
-#### Cucumber
+#### Cucumber / Capybara
 
+Feature specs that require javascript are run by Chrome via Selenium. By default Chrome will run in headless mode and there is nothing special you need to do inside of a Docker development environment.
 
-#### Capybara
-
-You can customize your selenium drivers by editing @ ~/.capybara.rb @
-This file is sourced by @ ./features/support/local_config.rb @
-
-Here is a sample file which checks for an ENV param named @
-SELENIUM_CONFIG @
-
-
-    case ENV
-    when 'saucelabs-ie'
-        Capybara.server_port = ENV.to_i
-        Capybara.app_host = "http://app#{Capybara.server_port}.test.dev.concord.org"
-        selenium_remote :url => "http://ccdev:[aebecf9c-b426-44f8-9726-6eb747a7340e@ondemand.saucelabs.com](mailto:aebecf9c-b426-44f8-9726-6eb747a7340e@ondemand.saucelabs.com):80/wd/hub",
-        :desired_capabilities => Selenium::WebDriver::Remote::Capabilities.internet_explorer
-    when 'ff6'
-        puts " ----- using Firefox 6 profile -----"
-        Selenium::WebDriver::Firefox.path= '/usr/local/bin/firefox6'
-        Capybara.register_driver :selenium do |app|
-            Capybara::Selenium::Driver.new
-        end
-    when 'chrome'
-        puts "----- using Chrome profile -----"
-        Capybara.register_driver :selenium do |app|
-            Capybara::Selenium::Driver.new
-        end
-    else
-        # by default don't customize anything, this ought to keep the current
-        capybara tests running as before
-        #
-    end
+However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by setting an environment variable `HEADLESS=false`. You'll need to install `chromedriver` on your host machine and start it with the command: `chromedriver --whitelisted-ips`. Ensure you have no firewall running on your host machine, or if you do please open port `9515`. Also ensure that chrome is installed on the host machine.
 
 #### Factory Girl
 
@@ -251,32 +222,38 @@ introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-
 
 **Running all the rspec tests:*
 
-    rake spec
+    bundle exec rake spec
 
 **Running a single file:**
 
-    rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb
+    bundle exec rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb
 
 **Running a single directory:**
 
-    rake spec SPEC=spec/routing/dataservice
+    bundle exec rake spec SPEC=spec/routing/dataservice
 
 **Running all the controller tests:**
 
-    rake spec SPEC=spec/controllers
+    bundle exec rake spec SPEC=spec/controllers
 
 ### Running the feature tests with cucumber
 
 **Running all the feature tests:**
-    rake cucumber
+    bundle exec rake cucumber
 
 **Running all the feature tests using the ci_reporter gem that's used
 on the hudson CI system:**
-    rake hudson:cucumber
+    bundle exec rake hudson:cucumber
 
 **Running a single feature:**
-    rake cucumber
-FEATURE=features/student_can_not_see_deactivated_offerings.feature
+
+    bundle exec rake cucumber features/student_can_not_see_deactivated_offerings.feature
+
+**Running a single feature in non-headless mode:**
+
+    HEADLESS=false bundle exec rake cucumber features/student_can_not_see_deactivated_offerings.feature
+
+*note: Please see documentation regarding running chrome driver on your host machine above ☝️.*
 
 ## Understanding the Codebase
 
