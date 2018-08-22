@@ -3,7 +3,7 @@ language: ruby
 rvm:
   - "2.2.6"
 
-dist: precise
+dist: trusty
 
 env:
   matrix:
@@ -37,6 +37,7 @@ cache: bundler
 bundler_args: --binstubs --without development
 
 addons:
+  chrome: stable
   artifacts:
     paths:
     - ./tmp/capybara
