@@ -53,6 +53,16 @@ class ActiveRecord::Base
 end
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
+module MutexLockedQuerying
+  @@semaphore = Mutex.new
+
+  def query(*)
+    @@semaphore.synchronize { super }
+  end
+end
+
+Mysql2::Client.prepend(MutexLockedQuerying)
+
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how 
 # your application behaves in the production environment, where an error page will 
