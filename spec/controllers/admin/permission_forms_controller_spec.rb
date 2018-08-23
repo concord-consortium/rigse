@@ -22,7 +22,7 @@ describe Admin::PermissionFormsController do
   let(:user) { Factory.next(:admin_user) }
   before(:each) { sign_in user }
 
-  describe "GET index" do
+  describe "#index" do
     # It means that we're looking for teachers whose name, last name or *login* is "teacher".
     let(:index_form_params) do
       {
@@ -72,7 +72,7 @@ describe Admin::PermissionFormsController do
     end
   end
 
-  describe "POST create" do
+  describe "#create" do
     describe "with valid params" do
       it "creates a new permission form" do
         expect {
@@ -97,6 +97,15 @@ describe Admin::PermissionFormsController do
       expect {
         get :remove_form, {id: @form1}
       }.to change(Portal::PermissionForm, :count).by(-1)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_forms' do
+    it 'GET update_forms' do
+      get :update_forms, {}, {}
+
+      expect(response).to have_http_status(:redirect)
     end
   end
 end

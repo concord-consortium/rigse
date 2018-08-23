@@ -60,5 +60,4 @@ describe API::V1::PasswordsController do
         end
 
     end
-
 end

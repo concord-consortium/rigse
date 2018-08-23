@@ -169,6 +169,182 @@ describe Image do
       expect(subject.image_size).to eq(0)
     end
   end
+
+  # TODO: auto-generated
+  describe '.published' do # scope test
+    it 'supports named scope published' do
+      expect(described_class.limit(3).published).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.private_status' do # scope test
+    it 'supports named scope private_status' do
+      expect(described_class.limit(3).private_status).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.draft_status' do # scope test
+    it 'supports named scope draft_status' do
+      expect(described_class.limit(3).draft_status).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.by_user' do # scope test
+    it 'supports named scope by_user' do
+      expect(described_class.limit(3).by_user(Factory.create(:user))).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.with_status' do # scope test
+    it 'supports named scope with_status' do
+      expect(described_class.limit(3).with_status).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.not_private' do # scope test
+    it 'supports named scope not_private' do
+      expect(described_class.limit(3).not_private).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.visible_to_user' do # scope test
+    it 'supports named scope visible_to_user' do
+      expect(described_class.limit(3).visible_to_user).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.visible_to_user_with_drafts' do # scope test
+    it 'supports named scope visible_to_user_with_drafts' do
+      expect(described_class.limit(3).visible_to_user_with_drafts).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.no_drafts' do # scope test
+    it 'supports named scope no_drafts' do
+      expect(described_class.limit(3).no_drafts).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.like' do # scope test
+    it 'supports named scope like' do
+      expect(described_class.limit(3).like('x')).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.ordered_by' do # scope test
+    it 'supports named scope ordered_by' do
+      expect(described_class.limit(3).ordered_by(nil)).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.can_be_created_by?' do
+    xit 'can_be_created_by?' do
+      user = Factory.create(:user)
+      result = described_class.can_be_created_by?(user)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.search_list' do
+    it 'search_list' do
+      options = {}
+      result = described_class.search_list(options)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#check_image_presence' do
+    it 'check_image_presence' do
+      image = described_class.new
+      result = image.check_image_presence
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#display_name' do
+    it 'display_name' do
+      image = described_class.new
+      result = image.display_name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#clean_image_filename' do
+    xit 'clean_image_filename' do
+      image = described_class.new
+      result = image.clean_image_filename
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#save_image_dimensions' do
+    it 'save_image_dimensions' do
+      image = described_class.new
+      result = image.save_image_dimensions
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#redo_watermark' do
+    it 'redo_watermark' do
+      image = described_class.new
+      result = image.redo_watermark
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#clear_flags' do
+    it 'clear_flags' do
+      image = described_class.new
+      result = image.clear_flags
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#dimensions' do
+    it 'dimensions' do
+      image = described_class.new
+      result = image.dimensions
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#image_size' do
+    it 'image_size' do
+      image = described_class.new
+      result = image.image_size
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
-
-

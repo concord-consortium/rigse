@@ -2,5 +2,7 @@ s3:
   access_key_id: ''          # s3 access key
   secret_access_key: ''      # s3 secret access key
   region: 'us-east-1'        # s3 region
-  bucket: ''                 # bucket to upload to
-  prefix: 'archive_portal'   # path prefix for blobs
+  images_bucket: 'cc-project-resources'              # bucket for images upload
+  images_bucket_prefix: 'some-portal-archive/images'
+  data_bucket: 'cc-project-archive'                  # bucket for reports upload
+  data_bucket_prefix: 'some-portal-archive/data'

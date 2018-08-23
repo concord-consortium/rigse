@@ -175,5 +175,4 @@ describe RiGse::UnifyingThemesController do
     end
 
   end
-
 end

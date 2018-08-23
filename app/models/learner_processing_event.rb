@@ -85,9 +85,6 @@ class LearnerProcessingEvent < ActiveRecord::Base
     end
   end
 
-  def self.human_max(houts)
-    humanize(max_delay(hours))
-  end
   def self.human_avg(hours)
     humanize(avg_delay(hours))
   end

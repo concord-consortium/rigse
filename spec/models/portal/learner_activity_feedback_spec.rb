@@ -36,4 +36,43 @@ describe Portal::LearnerActivityFeedback do
     end
   end
 
+  # TODO: auto-generated
+  describe '._attribute_ids' do
+    xit '_attribute_ids' do
+      attributes = {}
+      result = described_class._attribute_ids(attributes)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.for_learner_and_activity_feedback' do
+    it 'for_learner_and_activity_feedback' do
+      result = described_class.for_learner_and_activity_feedback(learner, activity_feedback)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.open_feedback_for' do
+    it 'open_feedback_for' do
+      result = described_class.open_feedback_for(learner, activity_feedback)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.update_feedback' do
+    it 'update_feedback' do
+      attributes = {}
+      result = described_class.update_feedback(learner, activity_feedback, attributes)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

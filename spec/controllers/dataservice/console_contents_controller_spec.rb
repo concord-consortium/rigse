@@ -143,5 +143,4 @@ describe Dataservice::ConsoleContentsController do
       expect(response).to redirect_to(dataservice_console_contents_url)
     end
   end
-
 end

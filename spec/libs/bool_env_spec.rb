@@ -16,4 +16,5 @@ describe BoolENV do
       expect(BoolENV["test_var"]).to be false
     end
   end
+
 end

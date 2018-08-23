@@ -136,5 +136,4 @@ describe API::V1::CollaborationsController do
     end
 
   end
-
 end

@@ -24,4 +24,34 @@ describe Portal::StateOrProvince do
     expect(Portal::StateOrProvince.configured).to eq(['MA', 'RI'])
   end
 
+
+
+  # TODO: auto-generated
+  describe '.from_districts' do
+    it 'from_districts' do
+      result = described_class.from_districts
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.state_and_province_abbreviations' do
+    it 'state_and_province_abbreviations' do
+      result = described_class.state_and_province_abbreviations
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.configured' do
+    it 'configured' do
+      result = described_class.configured
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

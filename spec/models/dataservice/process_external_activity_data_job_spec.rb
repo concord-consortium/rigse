@@ -84,4 +84,101 @@ describe Dataservice::ProcessExternalActivityDataJob do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#perform' do
+    it 'perform' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      result = process_external_activity_data_job.perform
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#internal_process_open_response' do
+    xit 'internal_process_open_response' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      data = {}
+      embeddable = Factory.create(:open_response)
+      result = process_external_activity_data_job.internal_process_open_response(data, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#internal_process_multiple_choice' do
+    xit 'internal_process_multiple_choice' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      data = {}
+      embeddable = Factory.create(:open_response)
+      result = process_external_activity_data_job.internal_process_multiple_choice(data, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#internal_process_image_question' do
+    xit 'internal_process_image_question' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      data = double('data')
+      embeddable = Factory.create(:open_response)
+      result = process_external_activity_data_job.internal_process_image_question(data, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#internal_process_external_link' do
+    xit 'internal_process_external_link' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      data = {}
+      embeddable = Factory.create(:open_response)
+      result = process_external_activity_data_job.internal_process_external_link(data, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#internal_process_interactive' do
+    xit 'internal_process_interactive' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      data = double('data')
+      embeddable = Factory.create(:open_response)
+      result = process_external_activity_data_job.internal_process_interactive(data, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#id' do
+    it 'id' do
+      _learner_id = double('_learner_id')
+      _content = double('_content')
+      process_external_activity_data_job = described_class.new(_learner_id, _content)
+      result = process_external_activity_data_job.id
+
+      expect(result).to be_nil
+    end
+  end
+
+
 end

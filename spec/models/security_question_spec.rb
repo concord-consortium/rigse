@@ -94,4 +94,58 @@ describe SecurityQuestion do
   
   describe "form options" do
   end
+
+
+  # TODO: auto-generated
+  describe '#question_idx' do
+    it 'question_idx' do
+      security_question = described_class.new
+      result = security_question.question_idx
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#select_options' do
+    it 'select_options' do
+      security_question = described_class.new
+      result = security_question.select_options
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.fill_array' do
+    it 'fill_array' do
+      questions = []
+      result = described_class.fill_array(questions)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.make_questions_from_hash_and_user' do
+    it 'make_questions_from_hash_and_user' do
+      hash = {}
+      user = Factory.create(:user)
+      result = described_class.make_questions_from_hash_and_user(hash, user)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.errors_for_questions_list!' do
+    it 'errors_for_questions_list!' do
+      questions = []
+      result = described_class.errors_for_questions_list!(questions)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

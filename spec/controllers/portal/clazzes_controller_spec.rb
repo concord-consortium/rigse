@@ -832,4 +832,14 @@ describe Portal::ClazzesController do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#current_clazz' do
+    it 'GET current_clazz' do
+      get :current_clazz, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
 end

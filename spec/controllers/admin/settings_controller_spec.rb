@@ -210,5 +210,4 @@ describe Admin::SettingsController do
       expect(response).to redirect_to(admin_settings_url)
     end
   end
-
 end

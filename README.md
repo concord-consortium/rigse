@@ -721,10 +721,18 @@ should be written for it.
 A set of rake tasks is available under the ```archive_portal``` namespace that enable the portal data to be archived.  These tasks are:
 
 * archive_portal:extract_and_upload_images - extracts the image binary data from the database and uploads it to S3
-* archive_portal:generate_teacher_reports - generates learner details reports for all teachers and places them in /tmp/archive_portal/teacher_reports
-* archive_portal:generate_runnable_reports - generates learner details reports for all runnables and places them in /tmp/archive_portal/runnable_reports
+* archive_portal:generate_teacher_reports - generates learner details reports for all teachers and uploads them to S3
+* archive_portal:generate_runnable_reports - generates learner details reports for all runnables and uploads them to S3
 
-The rake tasks use a config file at /config/archive_portal.yml to specify the S3 bucket parameters to use when extracting images and to use when generating the url to those images in the reports.  A /config/archive_portal.sample.yml file exists to be copied and updated with real values.
+The rake tasks use a config file at /config/archive_portal.yml to specify the S3 bucket parameters to use when extracting images and to use when generating the url to those images in the reports. 
+A /config/archive_portal.sample.yml file exists to be copied and updated with real values.
+
+These tasks will take a long time. Easiest way to run them is to ssh to running server and run them in the background 
+using nohup, e.g.:
+
+`nohup bundle exec rake archive_portal:extract_and_upload_images &`
+
+You can close your ssh session and the task will be still running. Logs will be saved in `nohup.out`.
 
 ## License
 

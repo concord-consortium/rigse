@@ -27,13 +27,13 @@ describe Archiveable do
     end
     describe "archive!" do
       it "should throw an exception" do
-        expect { instance.archive!}.to raise_error
+        expect { instance.archive!}.to raise_error(RuntimeError)
       end
     end
 
     describe "unarchive!" do
       it "should throw an exception" do
-        expect { instance.unarchive!}.to raise_error
+        expect { instance.unarchive!}.to raise_error(RuntimeError)
       end
     end
   end
@@ -64,5 +64,57 @@ describe Archiveable do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#can_archive' do
+    it 'can_archive' do
+      archiveable = WithArchiveFields.new
+      result = archiveable.can_archive
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#attempt_archive' do
+    it 'attempt_archive' do
+      archiveable = WithArchiveFields.new
+      result = archiveable.attempt_archive {}
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#archive!' do
+    it 'archive!' do
+      archiveable = WithArchiveFields.new
+      result = archiveable.archive!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#unarchive!' do
+    it 'unarchive!' do
+      archiveable = WithArchiveFields.new
+      result = archiveable.unarchive!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#archived?' do
+    it 'archived?' do
+      archiveable = WithArchiveFields.new
+      result = archiveable.archived?
+
+      expect(result).to be_nil
+    end
+  end
+
 
 end
