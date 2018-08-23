@@ -140,8 +140,8 @@ en:
           </p>
 
   search:
-    only_mine: Show only materials authored by me
-    only_archived: Show only archived materials
+    only_mine: Materials I authored
+    only_archived: Archived materials
   Registration:
     ErrorLoggedInAsTeacher: |
       You are logged in as a teacher in another window.
