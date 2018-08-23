@@ -68,6 +68,19 @@ width: 300px;
        label {
          text-transform: none;
        }
+
+       &.select-menu {
+         background: transparent;
+         border: none;
+         height: auto;
+         margin-top: -2.5px;
+         padding: 0;
+
+         select {
+           background: #fff;
+           border: solid 1px #999;
+         }
+       }
      }
    }
    .top {

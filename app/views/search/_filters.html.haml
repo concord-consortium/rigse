@@ -10,13 +10,8 @@
     .filter-group.top
       %h2.filterheader
         Sort By
-        .filter-group__options
-          %div
-            = order_check_box(Search::Oldest, "Oldest", @form_model.sort_order)
-          %div
-            = order_check_box(Search::Newest, "Newest", @form_model.sort_order)
-          %div
-            = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
+        .filter-group__options.select-menu
+          = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]]))
 
       - if scientific_domains.size > 0
         .domaincolumn
@@ -36,6 +31,7 @@
             .tablecell
               = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
               = label_tag grade, grade
+
     .filter-group
       = render :partial => "search/subject_areas_filter"
     .filter-group
