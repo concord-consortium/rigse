@@ -35,9 +35,24 @@
     .filter-group
       = render :partial => "search/subject_areas_filter"
     .filter-group
-      = render :partial => "search/grade_levels_filter"
-    .filter-group
       = render :partial => "search/projects_filter"
+    .filter-group
+      %h2.filterheader
+        Material Type
+      .filter-group__options.webkit_scrollbars
+        = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
+        = label_tag 'investigation', t(:investigation).titleize
+        %br
+        = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
+        = label_tag 'activity','Activity'
+        %br
+        = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
+        = label_tag 'interactive', t(:interactive).titleize
+        %br
+    .filter-group
+      = render :partial => "search/sensors_filter"
+    .filter-group
+      = render :partial => "search/grade_levels_filter"
     .filter-group
       %h2.filterheader
         Authorship
@@ -56,19 +71,6 @@
         %br
     .filter-group
       %h2.filterheader
-        Material Type
-      .filter-group__options.webkit_scrollbars
-        = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
-        = label_tag 'investigation', t(:investigation).titleize
-        %br
-        = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
-        = label_tag 'activity','Activity'
-        %br
-        = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
-        = label_tag 'interactive', t(:interactive).titleize
-        %br
-    .filter-group
-      %h2.filterheader
         Material Properties
       .filter-group__options.webkit_scrollbars
         = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
@@ -83,8 +85,6 @@
           %span.tip
             These materials download a file to your computer, and start using Java Web Start.
         %br
-    .filter-group
-      = render :partial => "search/sensors_filter"
 
     - unless current_visitor.anonymous?
       .filter-group
