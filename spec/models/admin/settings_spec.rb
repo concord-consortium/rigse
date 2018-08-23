@@ -116,4 +116,161 @@ describe Admin::Settings do
     end
   end
 
+
+
+  # TODO: auto-generated
+  describe '#init' do
+    it 'init' do
+      settings = described_class.new
+      result = settings.init
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name' do
+    it 'name' do
+      settings = described_class.new
+      result = settings.name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_attributes' do
+    xit 'update_attributes' do
+      settings = described_class.new
+      hashy = double('hashy')
+      result = settings.update_attributes(hashy)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#display_type' do
+    it 'display_type' do
+      settings = described_class.new
+      result = settings.display_type
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.default_settings' do
+    it 'default_settings' do
+      result = described_class.default_settings
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.summary_info' do
+    it 'summary_info' do
+      result = described_class.summary_info
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.pub_interval' do
+    it 'pub_interval' do
+      result = described_class.pub_interval
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.notify_missing_setting' do
+    it 'notify_missing_setting' do
+      symbol = double('symbol')
+      result = described_class.notify_missing_setting(symbol)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.settings_for' do
+    it 'settings_for' do
+      symbol = double('symbol')
+      result = described_class.settings_for(symbol)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.require_activity_descriptions' do
+    it 'require_activity_descriptions' do
+      result = described_class.require_activity_descriptions
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.unique_activity_names' do
+    it 'unique_activity_names' do
+      result = described_class.unique_activity_names
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.teachers_can_author?' do
+    it 'teachers_can_author?' do
+      result = described_class.teachers_can_author?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#default_settings?' do
+    it 'default_settings?' do
+      settings = described_class.new
+      result = settings.default_settings?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#summary_info' do
+    it 'summary_info' do
+      settings = described_class.new
+      result = settings.summary_info
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#available_bookmark_types' do
+    it 'available_bookmark_types' do
+      settings = described_class.new
+      result = settings.available_bookmark_types
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

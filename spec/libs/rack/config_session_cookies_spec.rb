@@ -128,4 +128,5 @@ describe Rack::ConfigSessionCookies do
     @tester.call(env)
     expect(env.hash).to equal(original_hash)
   end
+
 end

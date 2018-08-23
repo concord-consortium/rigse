@@ -104,4 +104,60 @@ describe API::V1::TeachersController do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '#email_available' do
+    it 'GET email_available' do
+      get :email_available, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#login_available' do
+    it 'GET login_available' do
+      get :login_available, {}, {}
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#login_valid' do
+    it 'GET login_valid' do
+      get :login_valid, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name_valid' do
+    it 'GET name_valid' do
+      get :name_valid, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#get_enews_subscription' do
+    it 'GET get_enews_subscription' do
+      get :get_enews_subscription, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_enews_subscription' do
+    it 'GET update_enews_subscription' do
+      get :update_enews_subscription, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+
 end

@@ -36,4 +36,23 @@ describe API::V1::StudentsController do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#create' do
+    it 'POST create' do
+      post :create, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#check_class_word' do
+    it 'GET check_class_word' do
+      get :check_class_word, {}, {}
+
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
+
 end

@@ -9,5 +9,4 @@ describe Embeddable::OpenResponsesController do
       assert_select('text')
     end
   end
-
 end

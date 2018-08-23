@@ -61,4 +61,27 @@ describe API::V1::TeacherRegistration do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#school_id_checker' do
+    it 'school_id_checker' do
+      teacher_registration = described_class.new
+      result = teacher_registration.school_id_checker
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid_except_from_school_id' do
+    it 'valid_except_from_school_id' do
+      teacher_registration = described_class.new
+      result = teacher_registration.valid_except_from_school_id
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

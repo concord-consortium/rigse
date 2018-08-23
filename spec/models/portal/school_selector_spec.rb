@@ -240,4 +240,348 @@ describe Portal::SchoolSelector do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '.country_choices' do
+    it 'country_choices' do
+      result = described_class.country_choices
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#load_previous_attributes' do
+    it 'load_previous_attributes' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.load_previous_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#record_previous_attributes' do
+    it 'record_previous_attributes' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.record_previous_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#attr_changed?' do
+    xit 'attr_changed?' do
+      params = {}
+      school_selector = described_class.new(params)
+      symbol = 'symbol'
+      result = school_selector.attr_changed?(symbol)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#get_attr' do
+    it 'get_attr' do
+      params = {}
+      school_selector = described_class.new(params)
+      attr = 'attr'
+      result = school_selector.get_attr(attr)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_attr' do
+    it 'set_attr' do
+      params = {}
+      school_selector = described_class.new(params)
+      attr = 'attr'
+      val = 'val'
+      result = school_selector.set_attr(attr, val)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#clear_attr' do
+    it 'clear_attr' do
+      params = {}
+      school_selector = described_class.new(params)
+      attr = double('attr')
+      result = school_selector.clear_attr(attr)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#clear_choices' do
+    it 'clear_choices' do
+      params = {}
+      school_selector = described_class.new(params)
+      attr = double('attr')
+      result = school_selector.clear_choices(attr)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#validate' do
+    xit 'validate' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.validate
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#invalid?' do
+    it 'invalid?' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.invalid?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid?' do
+    it 'valid?' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.valid?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#validate_attr' do
+    xit 'validate_attr' do
+      params = {}
+      school_selector = described_class.new(params)
+      symbol = 'Learner'
+      result = school_selector.validate_attr(symbol)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#validate_country' do
+    it 'validate_country' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.validate_country
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#validate_state' do
+    it 'validate_state' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.validate_state
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#validate_district' do
+    it 'validate_district' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.validate_district
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#validate_school' do
+    it 'validate_school' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.validate_school
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#default_state_for' do
+    it 'default_state_for' do
+      params = {}
+      school_selector = described_class.new(params)
+      country = double('country')
+      result = school_selector.default_state_for(country)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#default_district_for' do
+    it 'default_district_for' do
+      params = {}
+      school_selector = described_class.new(params)
+      state_or_country = double('state_or_country')
+      result = school_selector.default_district_for(state_or_country)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_district' do
+    it 'add_district' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.add_district
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_school' do
+    it 'add_school' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.add_school
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_portal_resource' do
+    it 'add_portal_resource' do
+      params = {}
+      school_selector = described_class.new(params)
+      symbol = 'Learner'
+      result = school_selector.add_portal_resource(symbol)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#needs' do
+    it 'needs' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.needs
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#choices' do
+    it 'choices' do
+      params = {}
+      school_selector = described_class.new(params)
+      symbol = double('symbol')
+      result = school_selector.choices(symbol)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#country_choices' do
+    it 'country_choices' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.country_choices
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#state_choices' do
+    it 'state_choices' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.state_choices
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#district_choices' do
+    it 'district_choices' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.district_choices
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#school_choices' do
+    it 'school_choices' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.school_choices
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#select_args' do
+    xit 'select_args' do
+      params = {}
+      school_selector = described_class.new(params)
+      field = 'field'
+      result = school_selector.select_args(field)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#attr_order' do
+    it 'attr_order' do
+      params = {}
+      school_selector = described_class.new(params)
+      result = school_selector.attr_order
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#allow_teacher_creation' do
+    it 'allow_teacher_creation' do
+      params = {}
+      school_selector = described_class.new(params)
+      field = double('field')
+      result = school_selector.allow_teacher_creation(field)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

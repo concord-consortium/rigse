@@ -101,4 +101,64 @@ describe AccessGrant do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '.valid_at' do # scope test
+    it 'supports named scope valid_at' do
+      expect(described_class.limit(3).valid_at(Time.now)).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.prune!' do
+    it 'prune!' do
+      result = described_class.prune!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.authenticate' do
+    it 'authenticate' do
+      code = double('code')
+      application_id = double('application_id')
+      result = described_class.authenticate(code, application_id)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#generate_tokens' do
+    it 'generate_tokens' do
+      access_grant = described_class.new
+      result = access_grant.generate_tokens
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#redirect_uri_for' do
+    xit 'redirect_uri_for' do
+      access_grant = described_class.new
+      redirect_uri = double('redirect_uri')
+      result = access_grant.redirect_uri_for(redirect_uri)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#start_expiry_period!' do
+    it 'start_expiry_period!' do
+      access_grant = described_class.new
+      result = access_grant.start_expiry_period!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

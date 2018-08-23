@@ -142,4 +142,27 @@ describe EnewsSubscription do
     end
 
   end
+
+  # TODO: auto-generated
+  describe '.build_uri' do
+    it 'build_uri' do
+      email = ('email')
+      result = described_class.build_uri(email)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.post_request' do
+    xit 'post_request' do
+      email = ('email')
+      enews_data = ('enews_data')
+      req_type = :put
+      result = described_class.post_request(email, enews_data, req_type)
+
+      expect(result).not_to be_nil
+    end
+  end
+
 end

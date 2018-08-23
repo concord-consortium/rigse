@@ -439,4 +439,372 @@ describe API::V1::Report do
 
   end
 
+
+
+  # TODO: auto-generated
+  describe '#is_teacher?' do
+    xit 'is_teacher?' do
+      options = {}
+      report = described_class.new(options)
+      user = Factory.create(:user)
+      result = report.is_teacher?(user)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_student?' do
+    xit 'is_student?' do
+      options = {}
+      report = described_class.new(options)
+      user = Factory.create(:user)
+      result = report.is_student?(user)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_report_for_student?' do
+    xit 'is_report_for_student?' do
+      options = {}
+      report = described_class.new(options)
+      user = Factory.create(:user)
+      result = report.is_report_for_student?(user)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#to_json' do
+    xit 'to_json' do
+      options = {}
+      report = described_class.new(options)
+      result = report.to_json
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#class_json' do
+    xit 'class_json' do
+      options = {}
+      report = described_class.new(options)
+      result = report.class_json
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#student_json' do
+    xit 'student_json' do
+      options = {}
+      report = described_class.new(options)
+      student = double('student')
+      result = report.student_json(student)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#get_student_answers' do
+    xit 'get_student_answers' do
+      options = {}
+      report = described_class.new(options)
+      result = report.get_student_answers
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#no_answer_for_student_id' do
+    xit 'no_answer_for_student_id' do
+      options = {}
+      report = described_class.new(options)
+      student_id = double('student_id')
+      embeddable_key = double('embeddable_key')
+      result = report.no_answer_for_student_id(student_id, embeddable_key)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#provide_no_answer_entries' do
+    xit 'provide_no_answer_entries' do
+      options = {}
+      report = described_class.new(options)
+      answers = {}
+      students_json = double('students_json')
+      result = report.provide_no_answer_entries(answers, students_json)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#process_multiple_choice_answer' do
+    xit 'process_multiple_choice_answer' do
+      options = {}
+      report = described_class.new(options)
+      hash = double('hash')
+      result = report.process_multiple_choice_answer(hash)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#process_image_question_answer' do
+    xit 'process_image_question_answer' do
+      options = {}
+      report = described_class.new(options)
+      hash = double('hash')
+      result = report.process_image_question_answer(hash)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#report_json' do
+    xit 'report_json' do
+      options = {}
+      report = described_class.new(options)
+      answers = {}
+      result = report.report_json(answers)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#investigation_json' do
+    xit 'investigation_json' do
+      options = {}
+      report = described_class.new(options)
+      investigation = Factory.create(:investigation)
+      answers = {}
+      associations_to_load = double('associations_to_load')
+      result = report.investigation_json(investigation, answers, associations_to_load)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#activity_json' do
+    xit 'activity_json' do
+      options = {}
+      report = described_class.new(options)
+      activity = Activity.new
+      answers = {}
+      associations_to_load = double('associations_to_load')
+      result = report.activity_json(activity, answers, associations_to_load)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#learner_activity_feedback_json' do
+    xit 'learner_activity_feedback_json' do
+      options = {}
+      report = described_class.new(options)
+      learner = double('learner')
+      activity_feedback = double('activity_feedback')
+      result = report.learner_activity_feedback_json(learner, activity_feedback)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#section_json' do
+    xit 'section_json' do
+      options = {}
+      report = described_class.new(options)
+      section = double('section')
+      answers = {}
+      result = report.section_json(section, answers)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#page_json' do
+    xit 'page_json' do
+      options = {}
+      report = described_class.new(options)
+      page = double('page')
+      answers = {}
+      result = report.page_json(page, answers)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#embeddable_json' do
+    xit 'embeddable_json' do
+      options = {}
+      report = described_class.new(options)
+      question_number = double('question_number')
+      embeddable = Factory.create(:open_response)
+      answers = {}
+      result = report.embeddable_json(question_number, embeddable, answers)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#process_multiple_choice' do
+    xit 'process_multiple_choice' do
+      options = {}
+      report = described_class.new(options)
+      hash = double('hash')
+      embeddable = Factory.create(:open_response)
+      result = report.process_multiple_choice(hash, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#process_iframe' do
+    xit 'process_iframe' do
+      options = {}
+      report = described_class.new(options)
+      hash = double('hash')
+      embeddable = Factory.create(:open_response)
+      result = report.process_iframe(hash, embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#no_answers' do
+    xit 'no_answers' do
+      options = {}
+      report = described_class.new(options)
+      embeddable_key = double('embeddable_key')
+      result = report.no_answers(embeddable_key)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#visibility_filter_json' do
+    xit 'visibility_filter_json' do
+      options = {}
+      report = described_class.new(options)
+      filter = double('filter')
+      result = report.visibility_filter_json(filter)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.decode_embeddable' do
+    xit 'decode_embeddable' do
+      embeddable_key = double('embeddable_key')
+      result = described_class.decode_embeddable(embeddable_key)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.embeddable_type' do
+    xit 'embeddable_type' do
+      embeddable_key = double('embeddable_key')
+      result = described_class.embeddable_type(embeddable_key)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.embeddable_key' do
+    xit 'embeddable_key' do
+      embeddable = Factory.create(:open_response)
+      result = described_class.embeddable_key(embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.decode_answer_key' do
+    xit 'decode_answer_key' do
+      answer_key = double('answer_key')
+      result = described_class.decode_answer_key(answer_key)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.encode_answer_key' do
+    xit 'encode_answer_key' do
+      saveable = double('saveable')
+      result = described_class.encode_answer_key(saveable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.update_feedback_settings' do
+    xit 'update_feedback_settings' do
+      offering = Factory.create(:portal_offering)
+      feedback_settings = double('feedback_settings')
+      result = described_class.update_feedback_settings(offering, feedback_settings)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.submit_feedback' do
+    xit 'submit_feedback' do
+      answer_feedback_hash = double('answer_feedback_hash')
+      result = described_class.submit_feedback(answer_feedback_hash)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.update_activity_feedback_settings' do
+    it 'update_activity_feedback_settings' do
+      activity_feedback_hash = {}
+      result = described_class.update_activity_feedback_settings(activity_feedback_hash)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.submit_activity_feedback' do
+    it 'submit_activity_feedback' do
+      activity_feedback_hash = {}
+      result = described_class.submit_activity_feedback(activity_feedback_hash)
+
+      expect(result).to be_nil
+    end
+  end
+
+
 end

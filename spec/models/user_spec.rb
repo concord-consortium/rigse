@@ -478,4 +478,724 @@ protected
     record.save! if record.valid?
     record
   end
+
+  # TODO: auto-generated
+  describe '.all_users' do # scope test
+    it 'supports named scope all_users' do
+      expect(described_class.limit(3).all_users).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.active' do # scope test
+    it 'supports named scope active' do
+      expect(described_class.limit(3).active).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.suspended' do # scope test
+    it 'supports named scope suspended' do
+      expect(described_class.limit(3).suspended).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.no_email' do # scope test
+    it 'supports named scope no_email' do
+      expect(described_class.limit(3).no_email).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.email' do # scope test
+    it 'supports named scope email' do
+      expect(described_class.limit(3).email).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.default' do # scope test
+    it 'supports named scope default' do
+      expect(described_class.limit(3).default).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.with_role' do # scope test
+    it 'supports named scope with_role' do
+      expect(described_class.limit(3).with_role('role_name')).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#apply_omniauth' do
+    xit 'apply_omniauth' do
+      user = described_class.new
+      omniauth = double('omniauth')
+      result = user.apply_omniauth(omniauth)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.find_for_token_authentication' do
+    it 'find_for_token_authentication' do
+      conditions = {}
+      result = described_class.find_for_token_authentication(conditions)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#strip_spaces' do
+    it 'strip_spaces' do
+      user = described_class.new
+      result = user.strip_spaces
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.login_regex' do
+    it 'login_regex' do
+      result = described_class.login_regex
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.name_regex' do
+    it 'name_regex' do
+      result = described_class.name_regex
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.login_exists?' do
+    it 'login_exists?' do
+      login = double('login')
+      result = described_class.login_exists?(login)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.login_does_not_exist?' do
+    it 'login_does_not_exist?' do
+      login = double('login')
+      result = described_class.login_does_not_exist?(login)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.suggest_login' do
+    it 'suggest_login' do
+      first = double('first')
+      last = double('last')
+      result = described_class.suggest_login('first', 'last')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.default_users' do
+    it 'default_users' do
+      result = described_class.default_users
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.suspend_default_users' do
+    it 'suspend_default_users' do
+      result = described_class.suspend_default_users
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.unsuspend_default_users' do
+    it 'unsuspend_default_users' do
+      result = described_class.unsuspend_default_users
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.site_admin' do
+    it 'site_admin' do
+      result = described_class.site_admin
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.find_for_omniauth' do
+    xit 'find_for_omniauth' do
+      auth = double('auth')
+      signed_in_resource = double('signed_in_resource')
+      result = described_class.find_for_omniauth(auth, signed_in_resource)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#removed_investigation' do
+    it 'removed_investigation' do
+      user = described_class.new
+      result = user.removed_investigation
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_investigations?' do
+    it 'has_investigations?' do
+      user = described_class.new
+      result = user.has_investigations?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.authenticate' do
+    it 'authenticate' do
+      login = double('login')
+      password = double('password')
+      result = described_class.authenticate(login, password)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#create_access_token_valid_for' do
+    xit 'create_access_token_valid_for' do
+      user = described_class.new
+      time = 2.days
+      result = user.create_access_token_valid_for(time)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#create_access_token_with_learner_valid_for' do
+    xit 'create_access_token_with_learner_valid_for' do
+      user = described_class.new
+      time = 2.days
+      result = user.create_access_token_with_learner_valid_for(time, Portal::Learner.new)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#active_for_authentication?' do
+    it 'active_for_authentication?' do
+      user = described_class.new
+      result = user.active_for_authentication?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#confirm!' do
+    it 'confirm!' do
+      user = described_class.new
+      result = user.confirm!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#inactive_message' do
+    it 'inactive_message' do
+      user = described_class.new
+      result = user.inactive_message
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_oauth_user?' do
+    it 'is_oauth_user?' do
+      user = described_class.new
+      result = user.is_oauth_user?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name' do
+    it 'name' do
+      user = described_class.new
+      result = user.name
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name_and_login' do
+    it 'name_and_login' do
+      user = described_class.new
+      result = user.name_and_login
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#full_name' do
+    it 'full_name' do
+      user = described_class.new
+      result = user.full_name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_role?' do
+    it 'has_role?' do
+      user = described_class.new
+      result = user.has_role?([1,2])
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#does_not_have_role?' do
+    it 'does_not_have_role?' do
+      user = described_class.new
+      result = user.does_not_have_role?([1,2])
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_role' do
+    it 'add_role' do
+      user = described_class.new
+      result = user.add_role('1')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#remove_role' do
+    it 'remove_role' do
+      user = described_class.new
+      role = double('role')
+      result = user.remove_role(role)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_role_ids' do
+    it 'set_role_ids' do
+      user = described_class.new
+      role_ids = [1,2]
+      result = user.set_role_ids(role_ids)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#role_names' do
+    it 'role_names' do
+      user = described_class.new
+      result = user.role_names
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#make_user_a_member' do
+    it 'make_user_a_member' do
+      user = described_class.new
+      result = user.make_user_a_member
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#anonymous?' do
+    it 'anonymous?' do
+      user = described_class.new
+      result = user.anonymous?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_project_admin?' do
+    it 'is_project_admin?' do
+      user = described_class.new
+      project = Factory.create(:project)
+      result = user.is_project_admin?(project)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_project_researcher?' do
+    it 'is_project_researcher?' do
+      user = described_class.new
+      project = Factory.create(:project)
+      result = user.is_project_researcher?(project)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_project_cohort_member?' do
+    it 'is_project_cohort_member?' do
+      user = described_class.new
+      project = Factory.create(:project)
+      result = user.is_project_cohort_member?(project)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_project_member?' do
+    it 'is_project_member?' do
+      user = described_class.new
+      project = Factory.create(:project)
+      result = user.is_project_member?(project)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_role_for_project' do
+    xit 'add_role_for_project' do
+      user = described_class.new
+      role = double('role')
+      project = Factory.create(:project)
+      result = user.add_role_for_project(role, project)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#remove_role_for_project' do
+    it 'remove_role_for_project' do
+      user = described_class.new
+      role = double('role')
+      project = Factory.create(:project)
+      result = user.remove_role_for_project(role, project)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_role_for_projects' do
+    it 'set_role_for_projects' do
+      user = described_class.new
+      role = double('role')
+      possible_projects = []
+      selected_project_ids = []
+      result = user.set_role_for_projects(role, possible_projects, selected_project_ids)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.anonymous' do
+    it 'anonymous' do
+      reload = double('reload')
+      result = described_class.anonymous(reload)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#school' do
+    it 'school' do
+      user = described_class.new
+      result = user.school
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update_security_questions!' do
+    it 'update_security_questions!' do
+      user = described_class.new
+      new_questions = double('new_questions')
+      result = user.update_security_questions!(new_questions)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#updating_password?' do
+    it 'updating_password?' do
+      user = described_class.new
+      result = user.updating_password?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#only_a_student?' do
+    it 'only_a_student?' do
+      user = described_class.new
+      result = user.only_a_student?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#remember_me_for' do
+    it 'remember_me_for' do
+      user = described_class.new
+      time = 2.days
+      result = user.remember_me_for(time)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#remember_me_until' do
+    it 'remember_me_until' do
+      user = described_class.new
+      time = Time.now
+      result = user.remember_me_until(time)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#forget_me' do
+    it 'forget_me' do
+      user = described_class.new
+      result = user.forget_me
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_passive_users_as_pending' do
+    it 'set_passive_users_as_pending' do
+      user = Factory.create(:user)
+      result = user.set_passive_users_as_pending
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#suspend!' do
+    it 'suspend!' do
+      user = described_class.new
+      result = user.suspend!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#delete!' do
+    it 'delete!' do
+      user = described_class.new
+      result = user.delete!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#unsuspend!' do
+    it 'unsuspend!' do
+      user = described_class.new
+      result = user.unsuspend!
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#user_active?' do
+    it 'user_active?' do
+      user = described_class.new
+      result = user.user_active?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.verified_imported_user?' do
+    it 'verified_imported_user?' do
+      login = 'login'
+      result = described_class.verified_imported_user?(login)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_active_classes?' do
+    it 'has_active_classes?' do
+      user = described_class.new
+      result = user.has_active_classes?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_portal_user_type?' do
+    it 'has_portal_user_type?' do
+      user = described_class.new
+      result = user.has_portal_user_type?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#admin_for_project_cohorts' do
+    it 'admin_for_project_cohorts' do
+      user = described_class.new
+      result = user.admin_for_project_cohorts
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#admin_for_project_teachers' do
+    it 'admin_for_project_teachers' do
+      user = described_class.new
+      result = user.admin_for_project_teachers
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#admin_for_project_students' do
+    it 'admin_for_project_students' do
+      user = described_class.new
+      result = user.admin_for_project_students
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#researcher_for_project_cohorts' do
+    it 'researcher_for_project_cohorts' do
+      user = described_class.new
+      result = user.researcher_for_project_cohorts
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#researcher_for_project_teachers' do
+    it 'researcher_for_project_teachers' do
+      user = described_class.new
+      result = user.researcher_for_project_teachers
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#researcher_for_project_students' do
+    it 'researcher_for_project_students' do
+      user = described_class.new
+      result = user.researcher_for_project_students
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#cohorts' do
+    it 'cohorts' do
+      user = described_class.new
+      result = user.cohorts
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#cohort_projects' do
+    it 'cohort_projects' do
+      user = described_class.new
+      result = user.cohort_projects
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#projects' do
+    it 'projects' do
+      user = described_class.new
+      result = user.projects
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

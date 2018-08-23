@@ -31,24 +31,7 @@ class Dataservice::BundleLogger < ActiveRecord::Base
   
   @@searchable_attributes = %w{updated_at}
   
-  class <<self
-
-    def convert_nulls_in_bundle_content_fields
-      empty_count = 0
-      valid_count = 0
-      Self.find(:all, :conditions => "empty is null").each do |i| 
-        i.empty = "false" 
-        i.save 
-        empty_count = empty_count + 1
-      end
-      Self.find(:all, :conditions => "valid_xml is null").each do |i| 
-        i.xml = "false" 
-        i.save
-        valid_count = valid_count + 1
-      end
-      logger.info("Converted #{empty_count} bundle contents with null empty values")
-      logger.info("Converted #{valid_count} bundle contents with null valid_xml values")
-    end
+  class << self
 
     def searchable_attributes
       @@searchable_attributes
@@ -64,8 +47,6 @@ class Dataservice::BundleLogger < ActiveRecord::Base
   def name
     if learner = self.learner
       user = learner.student.user
-      name = user.name
-      login = user.login
       runnable_name = (learner.offering.runnable ? learner.offering.runnable.name : "invalid offering runnable")
       "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_contents.count} sessions"
     else

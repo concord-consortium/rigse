@@ -62,13 +62,10 @@ describe Portal::Offering do
       # and assignments when we really want to. It blocks all of the dependent destroy definitions
       # from being used
       it "can not be destroyed" do
-       expect(offering.destroy).to be false
-        expect {offering.destroy!}.to raise_exception()
+        expect(offering.destroy).to be false
+        expect {offering.destroy!}.to raise_error(NoMethodError)
       end
-
     end
-
-
   end
   
 end

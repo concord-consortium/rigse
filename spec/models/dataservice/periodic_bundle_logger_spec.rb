@@ -79,4 +79,27 @@ describe Dataservice::PeriodicBundleLogger do
       expect(pb_logger.periodic_bundle_parts.size).to be > 0
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#sail_bundle' do
+    xit 'sail_bundle' do
+      periodic_bundle_logger = described_class.new
+      result = periodic_bundle_logger.sail_bundle
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#otml' do
+    xit 'otml' do
+      periodic_bundle_logger = described_class.new
+      result = periodic_bundle_logger.otml
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

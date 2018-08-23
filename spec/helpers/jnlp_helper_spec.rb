@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe JnlpHelper do
+describe JnlpHelper, type: :helper  do
   subject { Object.new().extend(JnlpHelper) }
 
   describe "pub_interval" do
@@ -42,4 +42,114 @@ describe JnlpHelper do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '#jnlp_icon_url' do
+    it 'works' do
+      result = helper.jnlp_icon_url
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_splash_url' do
+    xit 'works' do
+      result = helper.jnlp_splash_url(Factory.create(:portal_learner))
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#pub_interval' do
+    it 'works' do
+      result = helper.pub_interval
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#system_properties' do
+    xit 'works' do
+      result = helper.system_properties({})
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_headers' do
+    xit 'works' do
+      result = helper.jnlp_headers(runnable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_information' do
+    xit 'works' do
+      result = helper.jnlp_information('<root/>', Factory.create(:full_portal_learner))
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_installer_vendor' do
+    it 'works' do
+      result = helper.jnlp_installer_vendor
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#load_yaml' do
+    xit 'works' do
+      result = helper.load_yaml('filename')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_installer_project' do
+    it 'works' do
+      result = helper.jnlp_installer_project
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_installer_version' do
+    it 'works' do
+      result = helper.jnlp_installer_version
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_installer_old_versions' do
+    it 'works' do
+      result = helper.jnlp_installer_old_versions
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#jnlp_mac_java_config' do
+    xit 'works' do
+      result = helper.jnlp_mac_java_config('<root/>')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

@@ -175,5 +175,4 @@ describe RiGse::KnowledgeStatementsController do
     end
 
   end
-
 end

@@ -30,4 +30,59 @@ describe Embeddable::OpenResponse do
       expect(@orclass.create(:font_size => @orclass::MIN_FONT_SIZE - 1)).not_to be_valid
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#by_offering' do
+    xit 'by_offering' do
+      open_response = described_class.new
+      offering = Factory.create(:portal_offering)
+      result = open_response.by_offering(offering)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#by_learner' do
+    xit 'by_learner' do
+      open_response = described_class.new
+      learner = double('learner')
+      result = open_response.by_learner(learner)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#first_by_learner' do
+    xit 'first_by_learner' do
+      open_response = described_class.new
+      learner = double('learner')
+      result = open_response.first_by_learner(learner)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#investigations' do
+    it 'investigations' do
+      open_response = described_class.new
+      result = open_response.investigations
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

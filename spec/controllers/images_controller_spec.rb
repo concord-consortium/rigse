@@ -167,5 +167,4 @@ describe ImagesController do
     end
 
   end
-
 end

@@ -105,4 +105,116 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:update)                   }
   end
 
+
+  # TODO: auto-generated
+  describe '#preview_index?' do
+    it 'preview_index?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.preview_index?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#publish?' do
+    it 'publish?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.publish?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#republish?' do
+    xit 'republish?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.republish?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#duplicate?' do
+    it 'duplicate?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.duplicate?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#matedit?' do
+    it 'matedit?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.matedit?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_private_before_matedit?' do
+    it 'set_private_before_matedit?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.set_private_before_matedit?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#copy?' do
+    it 'copy?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.copy?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#edit_basic?' do
+    it 'edit_basic?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.edit_basic?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update?' do
+    it 'update?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.update?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#archive?' do
+    it 'archive?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.archive?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#unarchive?' do
+    it 'unarchive?' do
+      external_activity_policy = described_class.new(nil, nil)
+      result = external_activity_policy.unarchive?
+
+      expect(result).to be_nil
+    end
+  end
+
+
 end

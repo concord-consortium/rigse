@@ -2,16 +2,18 @@
 require 'spec_helper'
 
 describe API::V1::MaterialsController do
-  describe 'GET featured' do
+  let(:user) {FactoryGirl.create(:confirmed_user)}
+
+  describe '#featured' do
     before(:each) do
       activity_params = [
-        {is_featured: true, publication_status: 'published'},
-        {is_featured: true, publication_status: 'published'},
-        {is_featured: true},
-        {is_featured: false},
-        {is_featured: true, publication_status: 'published'}
+          {is_featured: true, publication_status: 'published'},
+          {is_featured: true, publication_status: 'published'},
+          {is_featured: true},
+          {is_featured: false},
+          {is_featured: true, publication_status: 'published'}
       ]
-      activity_params.each { |p| FactoryGirl.create(:external_activity, p) }
+      activity_params.each {|p| FactoryGirl.create(:external_activity, p)}
     end
 
     it 'should return list of featured activities' do
@@ -35,8 +37,9 @@ describe API::V1::MaterialsController do
     end
   end
 
-  describe 'GET own' do
-    let(:user) { FactoryGirl.create(:confirmed_user) }
+  describe '#own' do
+    let(:user) {FactoryGirl.create(:confirmed_user)}
+
     before(:each) do
       sign_in user
       @m1 = FactoryGirl.create(:external_activity, user: user)
@@ -45,7 +48,7 @@ describe API::V1::MaterialsController do
       # Materials defined below should NOT be listed:
       e1 = FactoryGirl.create(:external_activity)
       e2 = FactoryGirl.create(:external_activity)
-      FactoryGirl.create(:activity, user: user, external_activities: [e1])      # template
+      FactoryGirl.create(:activity, user: user, external_activities: [e1]) # template
       FactoryGirl.create(:investigation, user: user, external_activities: [e2]) # template
     end
 
@@ -59,4 +62,111 @@ describe API::V1::MaterialsController do
       expect(materials[2]['id']).to eql(@m3.id)
     end
   end
+
+
+  describe 'other actions' do
+    before(:each) do
+      sign_in user
+      @m1 = FactoryGirl.create(:external_activity, user: user)
+      @m2 = FactoryGirl.create(:external_activity, user: user)
+      @m3 = FactoryGirl.create(:external_activity, user: user)
+      # Materials defined below should NOT be listed:
+      e1 = FactoryGirl.create(:external_activity)
+      e2 = FactoryGirl.create(:external_activity)
+      FactoryGirl.create(:activity, user: user, external_activities: [e1]) # template
+      FactoryGirl.create(:investigation, user: user, external_activities: [e2]) # template
+    end
+    
+
+    # TODO: auto-generated
+    describe '#all' do
+      it 'GET all' do
+        get :all
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#remove_favorite' do
+      it 'GET remove_favorite' do
+        get :remove_favorite, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#add_favorite' do
+      it 'GET add_favorite' do
+        get :add_favorite, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#get_favorites' do
+      it 'GET get_favorites' do
+        get :get_favorites, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#show' do
+      it 'GET show' do
+        get :show, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#assign_to_class' do
+      it 'GET assign_to_class' do
+        get :assign_to_class, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#get_materials_standards' do
+      it 'GET get_materials_standards' do
+        get :get_materials_standards, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#add_materials_standard' do
+      it 'GET add_materials_standard' do
+        get :add_materials_standard, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#remove_materials_standard' do
+      it 'GET remove_materials_standard' do
+        get :remove_materials_standard, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#get_standard_statements' do
+      xit 'GET get_standard_statements' do
+        get :get_standard_statements, {}, {}
+
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+  end
+
 end

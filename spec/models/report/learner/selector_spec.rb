@@ -55,4 +55,19 @@ describe Report::Learner::Selector do
       expect(selector.runnables_to_report_on).to include runnable
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#runnables_to_report_on' do
+    it 'runnables_to_report_on' do
+      options = {}
+      current_visitor = User.new
+      selector = described_class.new(options, current_visitor)
+      result = selector.runnables_to_report_on
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
