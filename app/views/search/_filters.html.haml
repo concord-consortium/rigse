@@ -4,22 +4,23 @@
   #filtermask
   %div{:style=>'clear:both'}
   #filters_wrapper.visible
-    .showhidefilters
+    .showhidefilters.top
       %div{:id=>"oExpandCollapseText"}
       = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
-    .filter-group
-      .filterheader
+    .filter-group.top
+      %h2.filterheader
         Sort By
-      %div
-        = order_check_box(Search::Oldest, "Oldest", @form_model.sort_order)
-      %div
-        = order_check_box(Search::Newest, "Newest", @form_model.sort_order)
-      %div
-        = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
+        .filter-group__options
+          %div
+            = order_check_box(Search::Oldest, "Oldest", @form_model.sort_order)
+          %div
+            = order_check_box(Search::Newest, "Newest", @form_model.sort_order)
+          %div
+            = order_check_box(Search::Alphabetical, "Alphabetical", @form_model.sort_order)
 
       - if scientific_domains.size > 0
         .domaincolumn
-          .filterheader
+          %h2.filterheader
             Scientific Domain
           -scientific_domains.each do |domain|
             .tablecell
@@ -28,7 +29,7 @@
             /= check_box_tag :domain_id, domain, true
       - if grades.size > 0
         .gradecolumn
-          .filterheader
+          %h2.filterheader
             Grade
           .tablecell
           -grades.each do |grade|
@@ -42,60 +43,66 @@
     .filter-group
       = render :partial => "search/projects_filter"
     .filter-group
-      .filterheader
+      %h2.filterheader
         Authorship
-      .tablecell
+      .filter-group__options.webkit_scrollbars
         = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
         %label.tooltip
           Official
           %span.tip
             These materials are written by the Concord Consortium.
-      .tablecell
+        %br
         = check_box_tag 'include_contributed', '1', params[:include_contributed], :id => 'include_contributed'
         %label.tooltip
           Authored by Community
           %span.tip
             These materials are written by external contributors.
+        %br
     .filter-group
-      .filterheader
+      %h2.filterheader
         Material Type
-      .tablecell
+      .filter-group__options.webkit_scrollbars
         = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
         = label_tag 'investigation', t(:investigation).titleize
-      .tablecell
+        %br
         = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
         = label_tag 'activity','Activity'
-      .tablecell
+        %br
         = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
         = label_tag 'interactive', t(:interactive).titleize
-      %br
-      .filterheader
+        %br
+    .filter-group
+      %h2.filterheader
         Material Properties
-      .tablecell
+      .filter-group__options.webkit_scrollbars
         = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
         %label.tooltip
           Runs In Browser
           %span.tip
             These materials do not launch a Java webstart application.
-      .tablecell
+        %br
         = check_box_tag 'material_properties[]', SearchModelInterface::RequiresDownload, @form_model.requires_download, :id => 'requires_download'
         %label.tooltip
           Requires Download
           %span.tip
             These materials download a file to your computer, and start using Java Web Start.
+        %br
     .filter-group
       = render :partial => "search/sensors_filter"
+
     - unless current_visitor.anonymous?
       .filter-group
-        %br
-        .authored_by_me
-          = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
-          %label.tooltip.filterheader{:for => "include_mine", :class => 'include_mine'}
-            = t "search.only_mine"
-        .only_show_archived
-          = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
-          %label.tooltip.filterheader{:for => "show archived", :class => 'show_archived'}
-            = t "search.only_archived"
+        %h2.filterheader
+          Show Only
+        .filter-group__options.webkit_scrollbars
+          .authored_by_me
+            = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
+            %label.tooltip{:for => "include_mine", :class => 'include_mine'}
+              = t "search.only_mine"
+          .only_show_archived
+            = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
+            %label.tooltip{:for => "show archived", :class => 'show_archived'}
+              = t "search.only_archived"
 
 = render :partial=>"search/customize_filters"
 
