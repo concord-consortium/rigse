@@ -53,6 +53,8 @@ class ActiveRecord::Base
 end
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
+#The above monkeypatch which causes all threads to share the same database connection sometimes causes thread safety related failures. The below monkeypatch attempts to resolve some of those with a mutex. Specifically we were  getting "Mysql2::Error: This connection is in use by..." errors until implementing this fix. This code (and the shared connection code above) can be removed at Rails 5.1 where these issues were solved in Rails & Capybara directly.
+
 module MutexLockedQuerying
   @@semaphore = Mutex.new
 
@@ -64,8 +66,8 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 # By default, any exception happening in your Rails application will bubble up
-# to Cucumber so that your scenario will fail. This is a different from how 
-# your application behaves in the production environment, where an error page will 
+# to Cucumber so that your scenario will fail. This is a different from how
+# your application behaves in the production environment, where an error page will
 # be rendered instead.
 #
 # Sometimes we want to override this default behaviour and allow Rails to rescue
@@ -87,7 +89,7 @@ ActionController::Base.allow_rescue = false
 #   ri_gse_big_ideas
 #   ri_gse_domains
 #   ri_gse_expectations
-#   ri_gse_expectation_indicators 
+#   ri_gse_expectation_indicators
 #   ri_gse_expectation_stems
 #   ri_gse_grade_span_expectations
 #   ri_gse_knowledge_statements

@@ -6,3 +6,5 @@ services:
     ports:
       - "43447:43447"
 
+# Note about defined port:
+# When running features in non-headless mode the app communicates with chromedriver on the host machine (at port 9515). Then, on the host machine, Chrome needs to make a connection back into the Docker container at the port that the test server is running on. In this case we've chosen port 43447. This port is not used elsewhere so should not have any port conflicts.
