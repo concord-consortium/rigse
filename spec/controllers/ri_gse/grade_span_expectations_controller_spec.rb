@@ -175,5 +175,4 @@ describe RiGse::GradeSpanExpectationsController do
     end
 
   end
-
 end

@@ -49,4 +49,52 @@ describe ExternalReport do
       expect(query_hash['classOfferings']).to start_with('https://')
     end
   end
+
+
+  # TODO: auto-generated
+  describe '#options_for_client' do
+    it 'options_for_client' do
+      external_report = described_class.new
+      result = external_report.options_for_client
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#options_for_report_type' do
+    it 'options_for_report_type' do
+      external_report = described_class.new
+      result = external_report.options_for_report_type
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#url_for_offering' do
+    xit 'url_for_offering' do
+      user = Factory.create(:user)
+      protocol = double('protocol')
+      host = double('host')
+      result = external_report.url_for_offering(offering, user, protocol, host)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#url_for_class' do
+    xit 'url_for_class' do
+      class_id = double('class_id')
+      user = Factory.create(:user)
+      protocol = double('protocol')
+      host = double('host')
+      result = external_report.url_for_class(class_id, user, protocol, host)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

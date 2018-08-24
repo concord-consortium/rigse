@@ -103,4 +103,202 @@ describe Portal::Teacher do
     end
   end
 
+
+
+  # TODO: auto-generated
+  describe '.LEFT_PANE_ITEM' do
+    it 'LEFT_PANE_ITEM' do
+      result = described_class.LEFT_PANE_ITEM
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.save_left_pane_submenu_item' do
+    it 'save_left_pane_submenu_item' do
+      current_visitor = User.new
+      item_value = '1'
+      result = described_class.save_left_pane_submenu_item(current_visitor, item_value)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.can_author?' do
+    it 'can_author?' do
+      result = described_class.can_author?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.update_authoring_roles' do
+    it 'update_authoring_roles' do
+      result = described_class.update_authoring_roles
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#save_left_pane_submenu_item' do
+    xit 'save_left_pane_submenu_item' do
+      teacher = described_class.new
+      item_value = '1'
+      result = teacher.save_left_pane_submenu_item(item_value)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#name' do
+    it 'name' do
+      teacher = described_class.new
+      result = teacher.name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#list_name' do
+    it 'list_name' do
+      teacher = described_class.new
+      result = teacher.list_name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#school_ids' do
+    it 'school_ids' do
+      teacher = described_class.new
+      result = teacher.school_ids
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#school_ids=' do
+    xit 'school_ids=' do
+      teacher = described_class.new
+      ids = [1]
+      result = teacher.school_ids=(ids)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#school_names' do
+    it 'school_names' do
+      teacher = described_class.new
+      result = teacher.school_names
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#children' do
+    it 'children' do
+      teacher = described_class.new
+      result = teacher.children
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#parent' do
+    it 'parent' do
+      teacher = described_class.new
+      result = teacher.parent
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#students' do
+    it 'students' do
+      teacher = described_class.new
+      result = teacher.students
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_clazz?' do
+    it 'has_clazz?' do
+      teacher = described_class.new
+      clazz = nil
+      result = teacher.has_clazz?(clazz)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_clazz' do
+    xit 'add_clazz' do
+      teacher = described_class.new
+      clazz = nil
+      result = teacher.add_clazz(clazz)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#remove_clazz' do
+    xit 'remove_clazz' do
+      teacher = described_class.new
+      clazz = nil
+      result = teacher.remove_clazz(clazz)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#school' do
+    it 'school' do
+      teacher = described_class.new
+      result = teacher.school
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#possibly_add_authoring_role' do
+    it 'possibly_add_authoring_role' do
+      teacher = described_class.new
+      result = teacher.possibly_add_authoring_role
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#my_classes_url' do
+    xit 'my_classes_url' do
+      teacher = described_class.new
+      protocol = double('protocol')
+      host = double('host')
+      result = teacher.my_classes_url(protocol, host)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

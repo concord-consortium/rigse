@@ -69,4 +69,51 @@ describe Client do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '.authenticate' do
+    it 'authenticate' do
+      app_id = double('app_id')
+      app_secret = double('app_secret')
+      result = described_class.authenticate(app_id, app_secret)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid_from_referer?' do
+    it 'valid_from_referer?' do
+      client = described_class.new
+      referer = double('referer')
+      result = client.valid_from_referer?(referer)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#enforce_referrer?' do
+    it 'enforce_referrer?' do
+      client = described_class.new
+      result = client.enforce_referrer?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#updated_grant_for' do
+    xit 'updated_grant_for' do
+      client = described_class.new
+      user = Factory.create(:user)
+      time_to_live = double('time_to_live')
+      result = client.updated_grant_for(user, time_to_live)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

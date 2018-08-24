@@ -53,4 +53,46 @@ describe Dataservice::V1::ProcessExternalActivityDataJob do
     end
 
   end
+
+
+  # TODO: auto-generated
+  describe '#lara_start' do
+    it 'lara_start' do
+      _learner = Portal::Learner.new
+      _content = double('_content')
+      _portal_start = double('_portal_start')
+      process_external_activity_data_job = described_class.new(_learner, _content, _portal_start)
+      result = process_external_activity_data_job.lara_start
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_end' do
+    it 'lara_end' do
+      _learner = Portal::Learner.new
+      _content = double('_content')
+      _portal_start = double('_portal_start')
+      process_external_activity_data_job = described_class.new(_learner, _content, _portal_start)
+      result = process_external_activity_data_job.lara_end
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#perform' do
+    xit 'perform' do
+      _learner = Portal::Learner.new
+      _content = double('_content')
+      _portal_start = double('_portal_start')
+      process_external_activity_data_job = described_class.new(_learner, _content, _portal_start)
+      result = process_external_activity_data_job.perform
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

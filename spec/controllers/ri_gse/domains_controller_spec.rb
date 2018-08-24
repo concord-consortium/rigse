@@ -175,5 +175,4 @@ describe RiGse::DomainsController do
     end
 
   end
-
 end

@@ -175,5 +175,4 @@ describe RiGse::BigIdeasController do
     end
 
   end
-
 end

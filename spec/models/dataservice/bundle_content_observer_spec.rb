@@ -9,4 +9,16 @@ describe Dataservice::BundleContentObserver do
       expect(@bc).to receive(:delayed_process_bundle)
       @obs.after_save(@bc)
   end
+
+
+  # TODO: auto-generated
+  describe '#after_create' do
+    xit 'after_create' do
+      bundle_content_observer = described_class.new
+      bundle_content = double('bundle_content')
+      result = bundle_content_observer.after_create(bundle_content)
+
+      expect(result).not_to be_nil
+    end
+  end
 end

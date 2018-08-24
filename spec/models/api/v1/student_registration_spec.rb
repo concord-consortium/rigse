@@ -66,4 +66,47 @@ describe API::V1::StudentRegistration do
   end
 
 
+
+
+  # TODO: auto-generated
+  describe '#make_login' do
+    it 'make_login' do
+      student_registration = described_class.new
+      result = student_registration.make_login
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#make_email' do
+    it 'make_email' do
+      student_registration = described_class.new
+      result = student_registration.make_email
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#set_defaults' do
+    it 'set_defaults' do
+      student_registration = described_class.new
+      result = student_registration.set_defaults
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid_class_word_checker' do
+    it 'valid_class_word_checker' do
+      student_registration = described_class.new
+      result = student_registration.valid_class_word_checker
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

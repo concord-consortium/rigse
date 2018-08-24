@@ -175,5 +175,4 @@ describe RiGse::ExpectationsController do
     end
 
   end
-
 end

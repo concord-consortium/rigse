@@ -7,7 +7,7 @@ describe API::V1::ExternalActivitiesController do
   let(:manager_user)      { Factory.next(:manager_user)   }
   let(:researcher_user)   { Factory.next(:researcher_user)   }
 
-  describe "create" do
+  describe "#create" do
     context "with a guest" do
       before (:each) do
         logout_user

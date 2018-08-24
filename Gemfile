@@ -25,9 +25,7 @@ source "http://rubygems.org"
   gem 'oj', '~> 2.12.14'
 
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
-  # gem 'capistrano-autoscaling', "0.0.8.3", :path => "../capistrano-autoscaling/"
-  gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
-  # gem 'capistrano-autoscaling', "~> 0.0.9git",  :git => "git://github.com/yyuu/capistrano-autoscaling.git",  :branch => "develop"
+  # gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
   gem 'capistrano-cowboy'
 
   gem "aasm",                 "~> 2.2.1"
@@ -88,8 +86,7 @@ source "http://rubygems.org"
   gem "delayed_job_web"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
-  # to support hosting paperclip attachments on S3, and Load Balancing
-  gem "aws-sdk",              "~> 1.55.0"
+  gem "aws-sdk",              "~> 3"
   gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
   gem "tinymce-rails",        "~>3.5.6"
 

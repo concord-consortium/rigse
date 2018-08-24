@@ -8,7 +8,9 @@ describe ExternalActivity do
       :long_description => "value for description",
       :long_description_for_teacher => "value for description for teachers",
       :publication_status => "value for publication_status",
+      :is_featured => true,
       :is_official => true,
+      :logging => true,
       :url => "http://www.concord.org/"
   } }
 
@@ -91,7 +93,10 @@ describe ExternalActivity do
     let(:template) { FactoryGirl.create(:investigation) }
     let(:activity) { a = ExternalActivity.create(valid_attributes); a.user = user1; a.save; a }
     # List of attributes that shouldn't match the original activity after duplication is done.
-    let(:unique_attrs) { [ 'id', 'uuid', 'created_at', 'updated_at', 'name', 'user_id', 'publication_status', 'template_id', 'template_type' ] }
+    let(:unique_attrs) do
+      [ 'id', 'uuid', 'created_at', 'updated_at', 'name', 'user_id', 'publication_status',
+        'template_id', 'template_type', 'is_official', 'is_featured', 'logging' ]
+    end
     # Automatically generate all the attributes. This will let us test new automatically things when they are added.
     let(:attrs) { activity.attributes.except(*unique_attrs).keys }
     let(:clone) { activity.duplicate(user2) }
@@ -128,13 +133,25 @@ describe ExternalActivity do
       activity.save!
     end
 
-    it "should copy basic attributes, sets publication status to private and assign a new user" do
+    it "should copy basic attributes (except small subset) and assign a new user" do
       expect(clone.publication_status).to eq("private")
+      expect(clone.is_official).to eq(false)
+      expect(clone.is_featured).to eq(false)
+      expect(clone.logging).to eq(true) # because user is a project admin
       expect(clone.user).to eq(user2)
       expect(clone.name).to eq("Copy of " + activity.name)
       # Automatically check all the attributes.
       attrs.each do |attr|
         expect(clone.send(attr)).to eq(activity.send(attr))
+      end
+    end
+
+    describe "when user is not an admin or project admin" do
+      before(:each) do
+        user2.remove_role_for_project('admin', project1)
+      end
+      it "should NOT copy logging option" do
+        expect(clone.logging).to eq(false)
       end
     end
 
@@ -258,4 +275,250 @@ describe ExternalActivity do
       expect(activity.lara_activity?).to be false
     end
   end
+ 
+  # TODO: auto-generated
+  describe '.published' do # scope test
+    it 'supports named scope published' do
+      expect(described_class.limit(3).published).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.assigned' do # scope test
+    it 'supports named scope assigned' do
+      expect(described_class.limit(3).assigned).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.not_private' do # scope test
+    it 'supports named scope not_private' do
+      expect(described_class.limit(3).not_private).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.by_user' do # scope test
+    it 'supports named scope by_user' do
+      expect(described_class.limit(3).by_user(Factory.create(:user))).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.ordered_by' do # scope test
+    it 'supports named scope ordered_by' do
+      expect(described_class.limit(3).ordered_by(nil)).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.official' do # scope test
+    it 'supports named scope official' do
+      expect(described_class.limit(3).official).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.contributed' do # scope test
+    it 'supports named scope contributed' do
+      expect(described_class.limit(3).contributed).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.archived' do # scope test
+    it 'supports named scope archived' do
+      expect(described_class.limit(3).archived).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#material_type' do
+    it 'material_type' do
+      external_activity = described_class.new
+      result = external_activity.material_type
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#template=' do
+    xit 'template=' do
+      external_activity = described_class.new
+      t = 't'
+      result = external_activity.template=(t)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#original_template=' do
+    xit 'original_template=' do
+      external_activity = described_class.new
+      t = 't'
+      result = external_activity.original_template=(t)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#valid_url' do
+    it 'valid_url' do
+      external_activity = described_class.new
+      result = external_activity.valid_url
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#url' do
+    it 'url' do
+      external_activity = described_class.new
+      learner = double('learner')
+      domain = double('domain')
+      result = external_activity.url(learner, domain)
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#display_name' do
+    it 'display_name' do
+      external_activity = described_class.new
+      result = external_activity.display_name
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#teacher_only' do
+    it 'teacher_only' do
+      external_activity = described_class.new
+      result = external_activity.teacher_only
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#teacher_only?' do
+    it 'teacher_only?' do
+      external_activity = described_class.new
+      result = external_activity.teacher_only?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#parent' do
+    it 'parent' do
+      external_activity = described_class.new
+      result = external_activity.parent
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#duplicate_on_lara' do
+    xit 'duplicate_on_lara' do
+      external_activity = described_class.new
+      root_url = 'root_url'
+      result = external_activity.duplicate_on_lara(root_url)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#activities' do
+    it 'activities' do
+      external_activity = described_class.new
+      result = external_activity.activities
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#left_nav_panel_width' do
+    it 'left_nav_panel_width' do
+      external_activity = described_class.new
+      result = external_activity.left_nav_panel_width
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#print_listing' do
+    it 'print_listing' do
+      external_activity = described_class.new
+      result = external_activity.print_listing
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#run_format' do
+    it 'run_format' do
+      external_activity = described_class.new
+      result = external_activity.run_format
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#has_launch_url?' do
+    it 'has_launch_url?' do
+      external_activity = described_class.new
+      result = external_activity.has_launch_url?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_activity?' do
+    it 'lara_activity?' do
+      external_activity = described_class.new
+      result = external_activity.lara_activity?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_sequence?' do
+    it 'lara_sequence?' do
+      external_activity = described_class.new
+      result = external_activity.lara_sequence?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#lara_activity_or_sequence?' do
+    it 'lara_activity_or_sequence?' do
+      external_activity = described_class.new
+      result = external_activity.lara_activity_or_sequence?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#options_for_external_report' do
+    it 'options_for_external_report' do
+      external_activity = described_class.new
+      result = external_activity.options_for_external_report
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

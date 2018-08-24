@@ -14,4 +14,16 @@ describe Portal::GradeLevel do
   it "should create a new instance given valid attributes" do
     Portal::GradeLevel.create!(@valid_attributes)
   end
+
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 include ApplicationHelper
-describe NavigationHelper do
+describe NavigationHelper, type: :helper  do
   let(:name) { "fredrique" }
   let(:itsi_links) do
     [
@@ -151,4 +151,15 @@ describe NavigationHelper do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '#navigation_service' do
+    it 'works' do
+      result = helper.navigation_service(params)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

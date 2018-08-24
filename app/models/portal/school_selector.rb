@@ -107,7 +107,7 @@ class Portal::SchoolSelector
   end
 
   def invalid?
-    return !valid
+    return !valid?
   end
 
   def valid?

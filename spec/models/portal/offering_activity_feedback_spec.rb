@@ -3,14 +3,17 @@ require File.expand_path('../../../spec_helper', __FILE__)
 testClazz = Portal::OfferingActivityFeedback
 
 describe Portal::OfferingActivityFeedback do
+  let(:activity)         { Factory.create(:activity)}
+  let(:offering)         { Factory.create(:portal_offering, args) }
+  let(:runnable)         { Factory.create(:investigation, {activities: activities}) }
+  let(:args)             { {runnable: runnable} }
+  let(:feedback_params)  { {activity: activity, portal_offering: offering} }
+  let(:activity_feedback){ Portal::OfferingActivityFeedback.create(feedback_params) }
+
   describe "Creation" do
-    let(:activity)         { Factory.create(:activity)}
     let(:activities)       { [activity] }
     let(:runnable)         { Factory.create(:investigation, {activities: activities}) }
     let(:args)             { {runnable: runnable} }
-    let(:offering)         { Factory.create(:portal_offering, args) }
-    let(:feedback_params)  { {activity: activity, portal_offering: offering} }
-    let(:activity_feedback){ Portal::OfferingActivityFeedback.create(feedback_params) }
 
     it "should have an activity" do
      expect(activity_feedback.activity).to eq(activity)
@@ -65,4 +68,43 @@ describe Portal::OfferingActivityFeedback do
       end
     end
   end
+
+
+  # TODO: auto-generated
+  describe '.for_offering_and_activity' do
+    xit 'for_offering_and_activity' do
+      result = described_class.for_offering_and_activity(offering, activity)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.create_for_offering_and_activity' do
+    xit 'create_for_offering_and_activity' do
+      result = described_class.create_for_offering_and_activity(offering, activity)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#rubric_url' do
+    xit 'rubric_url' do
+      result =activity_feedback.rubric_url
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#enable_score_feedback' do
+    xit 'enable_score_feedback' do
+      result = activity_feedback.enable_score_feedback
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

@@ -50,4 +50,69 @@ describe LearnerProcessingEvent do
       expect(LearnerProcessingEvent.human_avg(12)).to match "10 minutes 0 seconds"
     end
   end
+
+
+  # TODO: auto-generated
+  describe '.humanize' do
+    it 'humanize' do
+      secs = 15
+      result = described_class.humanize(secs)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.build_proccesing_event' do
+    it 'build_proccesing_event' do
+      learner = Portal::Learner.new
+      lara_start = Time.now
+      lara_end = Time.now
+      portal_start = Time.now
+      answers_length = 1
+      result = described_class.build_proccesing_event(learner, lara_start, lara_end, portal_start, answers_length)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#log_event' do
+    it 'log_event' do
+      learner_processing_event = described_class.new
+      answers_length = 1
+      result = learner_processing_event.log_event(answers_length)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.avg_delay' do
+    it 'avg_delay' do
+      result = described_class.avg_delay
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.max_delay' do
+    it 'max_delay' do
+      result = described_class.max_delay
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.histogram' do
+    it 'histogram' do
+      result = described_class.histogram
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

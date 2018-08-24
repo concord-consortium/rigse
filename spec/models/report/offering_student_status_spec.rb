@@ -117,5 +117,57 @@ describe Report::OfferingStudentStatus do
       end
     end
   end
- 
+
+  # TODO: auto-generated
+  describe '#sub_sections' do
+    xit 'sub_sections' do
+      offering_student_status = described_class.new
+      result = offering_student_status.sub_sections
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#display_report_link?' do
+    it 'display_report_link?' do
+      offering_student_status = described_class.new
+      result = offering_student_status.display_report_link?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#offering_reportable?' do
+    it 'offering_reportable?' do
+      offering_student_status = described_class.new
+      result = offering_student_status.offering_reportable?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#number_correct' do
+    it 'number_correct' do
+      offering_student_status = described_class.new
+      result = offering_student_status.number_correct
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#activity_complete_percent' do
+    it 'activity_complete_percent' do
+      offering_student_status = described_class.new
+      activity = Activity.new
+      result = offering_student_status.activity_complete_percent(activity)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
