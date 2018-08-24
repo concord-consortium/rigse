@@ -792,7 +792,7 @@ GEM
       sass-rails (<= 5.0.1)
       sprockets (< 2.13)
     concurrent-ruby (1.0.5)
-    connection_pool (2.2.0)
+    connection_pool (2.2.2)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.2)
