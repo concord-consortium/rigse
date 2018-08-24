@@ -208,9 +208,9 @@ end
 group :test, :cucumber, :development do
   # this is included in development so the mock data can be loaded into the dev database
   gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
-  gem "guard",              "~> 2.1.1"
+  gem "guard"
   gem "guard-rspec"
-  gem "guard-cucumber",     "~> 1.2.2"
+  gem "guard-cucumber"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
   gem "launchy",           "~> 2.1.0"
   gem "pry"
