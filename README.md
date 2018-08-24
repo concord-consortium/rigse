@@ -247,11 +247,40 @@ on the hudson CI system:**
 
 **Running a single feature:**
 
-    bundle exec rake cucumber features/student_can_not_see_deactivated_offerings.feature
+    bundle exec cucumber features/student_can_not_see_deactivated_offerings.feature
 
 **Running a single feature in non-headless mode:**
 
-    HEADLESS=false bundle exec rake cucumber features/student_can_not_see_deactivated_offerings.feature
+    HEADLESS=false bundle exec cucumber features/student_can_not_see_deactivated_offerings.feature
+
+### Using binding.pry with Cucumber tests
+
+##### Problem:
+Integration tests are difficult to debug without accessing the content in the browser and inspecting the relevant elements. Using debugging tools in the command line or trying to view the problem from a screenshot is not helpful when the problem might be a hidden link or different element type, for example.
+
+##### Solution:
+Using `pry` in non-headless mode in Chrome opens a new Chrome window showing you the state of the page where `pry` has paused the test. You can inspect elements in the page at that point in time to more easily identify the problem.
+
+##### How to use:
+Follow the instructions above to set up and start chromedriver.
+
+For a particular cucumber test where JavaScript is enabled, find the step you want to test:
+
+    And I follow "Admin"
+
+Find the corresponding step definition and insert `binding.pry`:
+
+    When /^(?:|I )follow "([^"]*)"$/ do |link|    
+      binding.pry    
+      first(:link, link).click    
+    end
+
+Make sure chromedriver is running and run the test with HEADLESS=false prepended to the path
+
+    $ HEADLESS=false bundle exec cucumber features/admin_accesses_special_pages.feature
+
+When `pry` is hit, a new Chrome window will pop up where you can inspect element and use the pry in the command line as usual.
+
 
 *note: Please see documentation regarding running `chromedriver` on your host machine above ☝️.*
 
@@ -724,10 +753,10 @@ A set of rake tasks is available under the ```archive_portal``` namespace that e
 * archive_portal:generate_teacher_reports - generates learner details reports for all teachers and uploads them to S3
 * archive_portal:generate_runnable_reports - generates learner details reports for all runnables and uploads them to S3
 
-The rake tasks use a config file at /config/archive_portal.yml to specify the S3 bucket parameters to use when extracting images and to use when generating the url to those images in the reports. 
+The rake tasks use a config file at /config/archive_portal.yml to specify the S3 bucket parameters to use when extracting images and to use when generating the url to those images in the reports.
 A /config/archive_portal.sample.yml file exists to be copied and updated with real values.
 
-These tasks will take a long time. Easiest way to run them is to ssh to running server and run them in the background 
+These tasks will take a long time. Easiest way to run them is to ssh to running server and run them in the background
 using nohup, e.g.:
 
 `nohup bundle exec rake archive_portal:extract_and_upload_images &`
