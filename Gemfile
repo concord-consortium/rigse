@@ -188,7 +188,7 @@ group :test, :cucumber do
   gem "selenium-webdriver"
   gem "cucumber",           "~> 1.3.0"
   gem "cucumber-rails",     "~> 1.3.0", :require => false
-  gem "database_cleaner",   "~> 0.7.2"
+  gem "database_cleaner"
   gem "capybara"
   gem "rspec"
   gem "rspec-rails"
