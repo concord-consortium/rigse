@@ -746,9 +746,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
-    capybara-mechanize (1.0.1)
-      capybara (~> 2.0, >= 2.0.1)
-      mechanize (~> 2.5)
+    capybara-mechanize (1.11.0)
+      capybara (>= 2.4.4, < 4)
+      mechanize (~> 2.7.0)
     capybara-screenshot (1.0.21)
       capybara (>= 1.0, < 4)
       launchy
@@ -1240,7 +1240,7 @@ DEPENDENCIES
   capistrano (~> 2.14.1)
   capistrano-cowboy
   capybara
-  capybara-mechanize (~> 1.0.0)
+  capybara-mechanize
   capybara-screenshot
   cc_portal_remote_auth!
   cc_portal_wordpress_integration!

@@ -198,7 +198,7 @@ group :test, :cucumber do
   gem "ci_reporter"
   gem "delorean"
   gem "webmock",                        :require => false
-  gem "capybara-mechanize", "~> 1.0.0"
+  gem "capybara-mechanize"
   gem 'capybara-screenshot'
   gem "connection_pool"
   gem "json-schema"
