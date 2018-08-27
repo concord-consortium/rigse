@@ -2,17 +2,14 @@
 = javascript_include_tag "share_material"
 .search_materials
   %form{:id => 'material_search_form', :onkeypress => 'return event.keyCode!=13'}
-    %table.search_table{:cellpadding=>0,:cellspacing=>0,:style=>'margin-bottom:0px'}
-      %tr
-        %td
-          .search_label
-            SEARCH
-        %td
-          = text_field_tag :search_term, @form_model.text, :autocomplete => "off", :onkeydown=>'if(goButttondisabled){return false;}showsuggestion(event,this)', :onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)', :id => 'search_term'
-          #search_suggestions
-        %td
-          .go_button.button
-            = submit_tag :GO, :name => '', :id => 'go-button'
+    .search-form
+      .search-form__label
+        SEARCH
+      .search-form__field
+        = text_field_tag :search_term, @form_model.text, :autocomplete => "off", :onkeydown=>'if(goButttondisabled){return false;}showsuggestion(event,this)', :onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)', :id => 'search_term'
+        #search_suggestions
+      .search-form__button.go_button.button
+        = submit_tag :GO, :name => '', :id => 'go-button'
     = render :partial=>"search/filters"
     = hidden_field_tag 'investigation_page', (@form_model.investigation_page rescue 1)
     = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)

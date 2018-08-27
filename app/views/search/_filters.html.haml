@@ -4,14 +4,14 @@
   #filtermask
   %div{:style=>'clear:both'}
   #filters_wrapper.visible
-    .showhidefilters.top
-      %div{:id=>"oExpandCollapseText"}
-      = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
     .filter-group.top
       %h2.filterheader
         Sort By
-        .filter-group__options.select-menu
-          = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]]))
+      .filter-group__options.select-menu
+        = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]]))
+    .showhidefilters.top
+      %div{:id=>"oExpandCollapseText"}
+      = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
 
       - if scientific_domains.size > 0
         .domaincolumn
@@ -32,73 +32,74 @@
               = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
               = label_tag grade, grade
 
-    .filter-group
+    #subject-area-filters.filter-group
       = render :partial => "search/subject_areas_filter"
-    .filter-group
-      = render :partial => "search/projects_filter"
-    .filter-group
-      %h2.filterheader
-        Material Type
-      .filter-group__options.webkit_scrollbars
-        = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
-        = label_tag 'investigation', t(:investigation).titleize
-        %br
-        = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
-        = label_tag 'activity','Activity'
-        %br
-        = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
-        = label_tag 'interactive', t(:interactive).titleize
-        %br
-    .filter-group
-      = render :partial => "search/sensors_filter"
-    .filter-group
+    #grade-level-filters.filter-group
       = render :partial => "search/grade_levels_filter"
-    .filter-group
-      %h2.filterheader
-        Authorship
-      .filter-group__options.webkit_scrollbars
-        = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
-        %label.tooltip
-          Official
-          %span.tip
-            These materials are written by the Concord Consortium.
-        %br
-        = check_box_tag 'include_contributed', '1', params[:include_contributed], :id => 'include_contributed'
-        %label.tooltip
-          Authored by Community
-          %span.tip
-            These materials are written by external contributors.
-        %br
-    .filter-group
-      %h2.filterheader
-        Material Properties
-      .filter-group__options.webkit_scrollbars
-        = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
-        %label.tooltip
-          Runs In Browser
-          %span.tip
-            These materials do not launch a Java webstart application.
-        %br
-        = check_box_tag 'material_properties[]', SearchModelInterface::RequiresDownload, @form_model.requires_download, :id => 'requires_download'
-        %label.tooltip
-          Requires Download
-          %span.tip
-            These materials download a file to your computer, and start using Java Web Start.
-        %br
-
-    - unless current_visitor.anonymous?
-      .filter-group
+    .filter-stack-wrap
+      #material-type-filters.filter-group
         %h2.filterheader
-          Show Only
+          Material Type
         .filter-group__options.webkit_scrollbars
-          .authored_by_me
-            = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
-            %label.tooltip{:for => "include_mine", :class => 'include_mine'}
-              = t "search.only_mine"
-          .only_show_archived
-            = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
-            %label.tooltip{:for => "show archived", :class => 'show_archived'}
-              = t "search.only_archived"
+          = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
+          = label_tag 'investigation', t(:investigation).titleize
+          %br
+          = check_box_tag 'material_types[]', 'Activity',  @form_model.material_types.include?('Activity'),:id=>'Activity'
+          = label_tag 'activity','Activity'
+          %br
+          = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
+          = label_tag 'interactive', t(:interactive).titleize
+          %br
+      #material-properties-filters.filter-group
+        %h2.filterheader
+          Material Properties
+        .filter-group__options.webkit_scrollbars
+          = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
+          %label.tooltip
+            Runs In Browser
+            %span.tip
+              These materials do not launch a Java webstart application.
+          %br
+          = check_box_tag 'material_properties[]', SearchModelInterface::RequiresDownload, @form_model.requires_download, :id => 'requires_download'
+          %label.tooltip
+            Requires Download
+            %span.tip
+              These materials download a file to your computer, and start using Java Web Start.
+          %br
+    #sensor-filters.filter-group
+      = render :partial => "search/sensors_filter"
+    #projects-filters.filter-group.two-col
+      = render :partial => "search/projects_filter"
+    .filter-stack-wrap
+      #authorship-filters.filter-group
+        %h2.filterheader
+          Authorship
+        .filter-group__options.webkit_scrollbars
+          = check_box_tag 'include_official', '1', @form_model.will_show_official, :id => 'include_official'
+          %label.tooltip
+            Official
+            %span.tip
+              These materials are written by the Concord Consortium.
+          %br
+          = check_box_tag 'include_contributed', '1', params[:include_contributed], :id => 'include_contributed'
+          %label.tooltip
+            Authored by Community
+            %span.tip
+              These materials are written by external contributors.
+          %br
+      - unless current_visitor.anonymous?
+        #show-only-filters.filter-group
+          %h2.filterheader
+            Show Only
+          .filter-group__options.webkit_scrollbars
+            .authored_by_me
+              = check_box_tag 'include_mine', '1', params[:include_mine], :id => 'include_mine', :class => 'include_mine'
+              %label.tooltip{:for => "include_mine", :class => 'include_mine'}
+                = t "search.only_mine"
+            .only_show_archived
+              = check_box_tag 'show_archived', '1', params[:show_archived], :id => 'show_archived', :class => 'show_archived'
+              %label.tooltip{:for => "show archived", :class => 'show_archived'}
+                = t "search.only_archived"
 
 = render :partial=>"search/customize_filters"
 
