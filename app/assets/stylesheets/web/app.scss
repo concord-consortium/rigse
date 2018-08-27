@@ -370,7 +370,8 @@ body#tinymce {
 
 #primary {
   display: inline-block;
-  margin: 57px 0 0 125px;
+  margin: 0px 0px 120px 20px;
+
   min-height: 400px;
   overflow: auto;
   padding: 0;
@@ -664,76 +665,6 @@ li.item_selectable {
     list-style: none; } }
 
 /* ------- #secondary ------- */
-
-#secondary {
-  background: #ea6d2f;
-  color: #313131;
-  display: inline-block;
-  font: 100 16px museo-sans, verdana, helvetica, arial, sans-serif;
-  height: auto;
-  margin: 20px 0 50px 0;
-  padding: 0 0 30px;
-  vertical-align: top;
-  a {
-    color: #fff;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    width: 100%; }
-  a:link { background: transparent; }
-  a:visited { background: transparent; }
-  a:hover { color: #313131; }
-  a:active { color: #313131; }
-  a.selected {
-    color: #313131;
-    font-weight: 500;
-  }
-  h2 {
-    color: #555555;
-    font: bold 1.3em Arial, Helvetica, sans-serif !important;
-    margin: 10px 0 10px 20px; }
-  ul {
-    list-style: none;
-    margin: 20px 0 0;
-    padding: 0; }
-  li {
-    color: #ee864e;
-    list-style: none;
-    margin: 20px;
-    padding: 0;
-    li { font-size: 14px; }
-    strong {
-      display: block;
-      font-weight: normal;
-      padding: 5px 20px; } }
-  ul.create {
-    border-top: none; }
-  #utility-links {
-    background: #f5f5f5;
-    padding: 20px;
-    a {
-      color: #ea6d2f;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 0;
-      text-transform: uppercase;
-    }
-    li {
-      margin: 10px 0;
-    }
-    ul.aux-links {
-      border-top: solid 1px #ccc;
-      margin: 20px 0 0;
-      padding-top: 8px;
-      a {
-        font-weight: 100;
-      }
-    }
-  }
-  .secondary-mobile-menu-toggle {
-    display: none;
-  }
-   }
 
 .user-info-box {
   background: white;
@@ -2132,54 +2063,7 @@ span.badge {
       padding-bottom: 30px;
       }
     }
-  #secondary {
-    padding-bottom: 0;
-
-    #utility-links {
-      padding-bottom: 0;
-
-      ul.aux-links {
-        border: none;
-      }
-    }
-
-    .padded_content {
-      display: none;
-      transition: .2s;
-    }
-    .secondary-mobile-menu-toggle {
-      color: #fff;
-      cursor: pointer;
-      display: block;
-      font-weight: 500;
-      padding: 20px;
-      position: relative;
-
-      &:after {
-        content: "\e905";
-        font-family: "icomoon";
-        font-size: 12px;
-        margin: 5px 0 0 10px;
-        position: absolute;
-        right: 20px;
-        transition: .2s;
-      }
-    }
-
-    &.open {
-      .padded_content {
-        display: block;
-        transition: .2s;
-      }
-      .secondary-mobile-menu-toggle {
-
-        &:after {
-          content: "\e906";
-        }
-      }
-    }
-  }
-
+    
   .classdata {
     td {
       display: block;

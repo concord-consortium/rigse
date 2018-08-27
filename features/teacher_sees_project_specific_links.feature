@@ -16,9 +16,10 @@ Feature: Teacher can see project specific links
     Then I should not see a project link labeled "Foo Project Link"
       And I should not see a project link labeled "Bar Project Link"
 
+  @javascript
   Scenario: Teacher in project visits homepage
     Given the "teacher" user is added to the default project
     When I am on getting started page
-    Then I should see a project link labeled "Foo Project Link" linking to "http://foo.com"
-      And I should see a project link labeled "Bar Project Link" linking to "http://bar.com"
+    Then I should see a project link labeled "Foo Project Link" linking to "http://foo.com/"
+      And I should see a project link labeled "Bar Project Link" linking to "http://bar.com/"
 

@@ -35,7 +35,6 @@ module NavigationHelper
   end
 
   def show_switch_user_link
-    # TODO: @original_user isn't available to us probably...
     @original_user && @original_user != current_visitor
   end
 
@@ -112,7 +111,8 @@ module NavigationHelper
     {
       id: '/admin',
       label: nav_label('admin'),
-      url: admin_path
+      url: admin_path,
+      sort: 2
     }
   end
 
@@ -131,7 +131,8 @@ module NavigationHelper
       clazz_links << {
         id: "/#{clazz.id}",
         label: clazz_label(clazz),
-        url: url_for(clazz) }
+        url: url_for(clazz)
+      }
     end
     clazz_links
   end
@@ -143,7 +144,8 @@ module NavigationHelper
       {
         id: "/classes",
         label: nav_label("classes"),
-        type: NavigationService::SECTION_TYPE
+        type: NavigationService::SECTION_TYPE,
+        sort: 4
       }
     ]
     clazzes.each do |clazz|
@@ -184,12 +186,14 @@ module NavigationHelper
       id: "/classes/add",
       label: "Add Class",
       divider: true,
-      url: new_portal_clazz_path
+      url: new_portal_clazz_path,
+      sort: 10
     }
     clazz_links << {
       id: "/classes/manage",
       label: "Manage Classes",
-      url: manage_portal_clazzes_url
+      url: manage_portal_clazzes_url,
+      sort: 11
       # link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"pie", :id=>"btn_manage_classes"
     }
     clazz_links
@@ -210,7 +214,8 @@ module NavigationHelper
       id: project_link_spec.link_id || "/resources/#{project_link_spec.name}",
       label: project_link_spec.name,
       url: project_link_spec.href,
-      popOut: project_link_spec.pop_out
+      popOut: project_link_spec.pop_out,
+      sort: project_link_spec.position
     }
   end
 
@@ -225,7 +230,8 @@ module NavigationHelper
       links.unshift({
         id: "/resources",
         label: nav_label('resources'),
-        type: NavigationService::SECTION_TYPE
+        type: NavigationService::SECTION_TYPE,
+        sort: 5
       })
     else
       []
@@ -233,8 +239,12 @@ module NavigationHelper
   end
 
   def switch_user_link
-    # TODO: Make an API to switch users.
-    {label: "Switch Back", id: "switch", url: "/users/switch", sort: 2 }
+    {
+      label: nav_label('switch_back'),
+      id: "switch",
+      url: switch_back_user_path(current_visitor),
+      sort: 2
+    }
   end
 
 

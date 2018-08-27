@@ -7,7 +7,7 @@ Feature: Teacher can see full status
   Background:
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
-    And I login with username: teacher password: password
+    And I login with username: teacher
     And I am on the full status page for "My Class"
 
 
