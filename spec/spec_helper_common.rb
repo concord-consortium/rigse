@@ -91,4 +91,5 @@ if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_mi
 end
 
 # I don't think this is necessary anymore with the latest factory_girl
-@factories = Dir.glob(File.join(File.dirname(__FILE__), '../factories/*.rb')).each { |f| require(f) }
+FactoryGirl.definition_file_paths = %w(factories)
+FactoryGirl.find_definitions
