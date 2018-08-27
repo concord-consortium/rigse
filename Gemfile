@@ -212,7 +212,7 @@ group :test, :cucumber, :development do
   gem "guard-rspec"
   gem "guard-cucumber"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
-  gem "launchy",           "~> 2.1.0"
+  gem "launchy"
   gem "pry"
   gem 'pry-byebug'
   gem 'simplecov', :require => false
