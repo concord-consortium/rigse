@@ -48,8 +48,6 @@
   }
 }
 
-
-
 .material_type{
   color: #247a7e;
   font-weight:bold;
@@ -58,7 +56,16 @@
  background-color: #f5f5f5;
  font-size: 12px;
  margin-top: 10px;
+ min-height: 20px;
  padding: 5px;
+ position: relative;
+
+ #showhidefilters {
+   position: absolute;
+   text-align: right;
+   top: 5px;
+   right: 10px;
+ }
 
  #filters_wrapper {
    display: flex;
@@ -119,20 +126,17 @@
        }
      }
    }
-   .top {
-     flex: 48.25%;
+   .full-col {
+     flex: 98.25%;
      height: 25px;
      max-height: 25px;
-     max-width: 48.25%;
+     max-width: 98.25%;
      padding: .875%;
 
      .filterheader {
        float: left;
        margin-right: 5px;
      }
-   }
-   .showhidefilters {
-     text-align: right;
    }
  }
 }

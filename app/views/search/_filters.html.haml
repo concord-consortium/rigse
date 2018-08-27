@@ -2,35 +2,33 @@
 -grades=RiGse::GradeSpanExpectation.grade_spans
 #filter_container{:style=>"overflow:hidden;"}
   #filtermask
+  #showhidefilters
+    = link_to('- Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
   %div{:style=>'clear:both'}
   #filters_wrapper.visible
-    .filter-group.top
+    .filter-group.full-col
       %h2.filterheader
         Sort By
       .filter-group__options.select-menu
         = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]]))
-    .showhidefilters.top
-      %div{:id=>"oExpandCollapseText"}
-      = link_to('Hide Filters', 'javascript: void(0);', :id=>"showHideFilters", :onclick => "showHideFilters(this)")
-
-      - if scientific_domains.size > 0
-        .domaincolumn
-          %h2.filterheader
-            Scientific Domain
-          -scientific_domains.each do |domain|
-            .tablecell
-              = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
-              = label_tag domain[0].gsub(/\s+/, ""), domain[0]
-            /= check_box_tag :domain_id, domain, true
-      - if grades.size > 0
-        .gradecolumn
-          %h2.filterheader
-            Grade
+    - if scientific_domains.size > 0
+      .domaincolumn
+        %h2.filterheader
+          Scientific Domain
+        -scientific_domains.each do |domain|
           .tablecell
-          -grades.each do |grade|
-            .tablecell
-              = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
-              = label_tag grade, grade
+            = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
+            = label_tag domain[0].gsub(/\s+/, ""), domain[0]
+          /= check_box_tag :domain_id, domain, true
+    - if grades.size > 0
+      .gradecolumn
+        %h2.filterheader
+          Grade
+        .tablecell
+        -grades.each do |grade|
+          .tablecell
+            = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
+            = label_tag grade, grade
 
     #subject-area-filters.filter-group
       = render :partial => "search/subject_areas_filter"
@@ -39,7 +37,7 @@
     .filter-stack-wrap
       #material-type-filters.filter-group
         %h2.filterheader
-          Material Type
+          Resource Type
         .filter-group__options.webkit_scrollbars
           = check_box_tag 'material_types[]', 'Investigation', @form_model.material_types.include?('Investigation'),:id=>'investigation'
           = label_tag 'investigation', t(:investigation).titleize
@@ -52,7 +50,7 @@
           %br
       #material-properties-filters.filter-group
         %h2.filterheader
-          Material Properties
+          Resource Properties
         .filter-group__options.webkit_scrollbars
           = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
           %label.tooltip

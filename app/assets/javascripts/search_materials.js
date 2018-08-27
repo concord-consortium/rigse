@@ -156,7 +156,6 @@ function showHideFilters(linkElement, animationDuration) {
 
     var filtersWrapper = $('filters_wrapper');
     var linkText = "";
-    var expandCollapseText = "";
 
     var afterFinishCallback = function(){
         animating = false;
@@ -166,20 +165,17 @@ function showHideFilters(linkElement, animationDuration) {
     {
         Effect.BlindUp(filtersWrapper, { duration: animationDuration, afterFinish: afterFinishCallback });
         filtersWrapper.removeClassName('visible');
-        linkText = "Show Filters";
-        expandCollapseText = "+";
+        linkText = "+ Show Filters";
         animating = true;
     }
     else
     {
         Effect.BlindDown(filtersWrapper, { duration: animationDuration, afterFinish: afterFinishCallback });
         filtersWrapper.addClassName('visible');
-        linkText = "Hide Filters";
-        expandCollapseText = "-";
+        linkText = "- Hide Filters";
         animating = true;
     }
 
-    $('oExpandCollapseText').update(expandCollapseText);
     linkElement.update(linkText);
 
     return true;
