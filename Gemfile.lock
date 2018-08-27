@@ -759,7 +759,7 @@ GEM
       nokogiri (~> 1.6)
     chronic (0.10.2)
     chunky_png (1.3.4)
-    ci_reporter (1.7.0)
+    ci_reporter (2.0.0)
       builder (>= 2.1.2)
     cocaine (0.4.2)
     coderay (1.1.2)
@@ -1245,7 +1245,7 @@ DEPENDENCIES
   cc_portal_remote_auth!
   cc_portal_wordpress_integration!
   chromedriver-helper
-  ci_reporter (~> 1.7.0)
+  ci_reporter
   coffee-rails
   compass-blueprint
   compass-rails (~> 2.0.4)

@@ -195,7 +195,7 @@ group :test, :cucumber do
   gem "rspec-activemodel-mocks"
   gem "rspec-collection_matchers"
   gem "email_spec",         "~> 1.4.0"
-  gem "ci_reporter",        "~> 1.7.0"
+  gem "ci_reporter"
   gem "delorean"
   gem "webmock",                        :require => false
   gem "capybara-mechanize", "~> 1.0.0"
