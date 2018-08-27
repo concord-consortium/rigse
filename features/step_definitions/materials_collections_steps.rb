@@ -39,28 +39,32 @@ When /^I open the accordion for the materials collection "([^"]*)"$/ do |name|
   end
 end
 
-When /^I drag the (\d+)(?:st|nd|rd|th) material in the materials collection "([^"]*)" to the (top|bottom)/ do |start_position, name, end_position|
-  collection = MaterialsCollection.find_by_name(name)
-  items = collection.materials_collection_items
-  @last_moved_item = items[start_position.to_i-1]
+def set_sortable_sequence(sortable_container_id, sequence)
+  page.execute_script("Sortable.setSequence(jQuery('##{sortable_container_id}')[0], #{sequence})")
+end
 
-  item_selector = "#materials_collection_item_#{@last_moved_item.id} .material_item_handle"
-  if end_position == "top"
-    # FIXME This actually drops it into 2nd position...
-    dest = "#materials_collection_item_#{items.first.id}"
+When /^I drag the (\d+)(?:st|nd|rd|th) material in the materials collection "([^"]*)" to the (top|bottom)/ do |start_position, name, top_or_bottom|
+  collection = MaterialsCollection.find_by_name(name)
+  ids = collection.materials_collection_items.pluck(:id)
+  zero_based_index_position = start_position.to_i - 1
+  @id_of_item_moved = ids[zero_based_index_position]
+  sortable_container_id = dom_id_for(collection, :materials)
+
+  if top_or_bottom == 'top'
+    set_sortable_sequence(sortable_container_id, ids.unshift(ids.delete_at(zero_based_index_position)))
   else
-    dest = "#materials_collection_item_#{items.last.id}"
+    set_sortable_sequence(sortable_container_id, ids.push(ids.delete_at(zero_based_index_position)))
   end
 
-  page.find(item_selector).drag_to(page.find(dest))
+  # Trigger the onUpdate callback after changing sequence programmatically
+  page.execute_script("Sortable.options(jQuery('##{sortable_container_id}')[0]).onUpdate()")
 end
 
 Then /^the previously moved material in the materials collection "([^"]*)" should be (first|last)$/ do |name, position|
   collection = MaterialsCollection.find_by_name(name)
 
-  # FIXME See the drag step above, where it's actually getting put into second position
-  item = position == 'first' ? collection.materials_collection_items[1] : collection.materials_collection_items.last
-  expect(item).to eq @last_moved_item
+  item = position == 'first' ? collection.materials_collection_items.first : collection.materials_collection_items.last
+  expect(item.id).to eq @id_of_item_moved
 end
 
 When /^I click remove on the (\d+)(?:st|nd|rd|th) material in the materials collection "([^"]*)"$/ do |position, name|
