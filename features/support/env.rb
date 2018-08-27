@@ -10,9 +10,10 @@ ENV['RAILS_ENV'] = 'cucumber'
 require File.expand_path('../../../spec/spec_helper_common.rb', __FILE__)
 
 require 'cucumber/rails'
-
 require 'cucumber/rails/capybara/javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
 require 'cucumber/rails/capybara/select_dates_and_times'
+
+require 'webmock/cucumber'
 
 require 'email_spec'
 require 'email_spec/cucumber'

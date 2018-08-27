@@ -28,10 +28,6 @@ SimpleCov.start do
   add_group 'Lib', 'lib'
 end
 
-
-solr_host = ENV['TEST_SOLR_HOST'] || 'localhost'
-solr_port = ENV['TEST_SOLR_PORT'] || 8981
-
 # Mute FactoryGirl deprecation warnings...
 ActiveSupport::Deprecation.behavior = lambda do |msg, stack|
   unless /FactoryGirl|after_create/ =~ msg
@@ -39,10 +35,9 @@ ActiveSupport::Deprecation.behavior = lambda do |msg, stack|
   end
 end
 
-
 # Allow reporting to codeclimate
-WebMock.disable_net_connect!(:allow =>
-                                [   "#{solr_host}:#{solr_port}",
+WebMock.disable_net_connect!(allow_localhost: true, :allow =>
+                                [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
                                     'host.docker.internal:9515' ]
                             )
