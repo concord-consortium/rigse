@@ -59,6 +59,34 @@ module VerifyAndResetHelpers
   end
 end
 
+CapybaraInitializer.configure do |config|
+  config.headless = ENV.fetch('HEADLESS', true) != 'false'
+  config.context = ENV['DOCKER'].present? ? :docker : nil
+end
+
+# share the db connections between the test thread and the server thread to fix MySQL errors in tests
+class ActiveRecord::Base
+  mattr_accessor :shared_connection
+  @@shared_connection = nil
+
+  def self.connection
+    @@shared_connection || ConnectionPool::Wrapper.new(:size => 1) { retrieve_connection }
+  end
+end
+ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
+
+#The above monkeypatch which causes all threads to share the same database connection sometimes causes thread safety related failures. The below monkeypatch attempts to resolve some of those with a mutex. Specifically we were  getting "Mysql2::Error: This connection is in use by..." errors until implementing this fix. This code (and the shared connection code above) can be removed at Rails 5.1 where these issues were solved in Rails & Capybara directly.
+
+module MutexLockedQuerying
+  @@semaphore = Mutex.new
+
+  def query(*)
+    @@semaphore.synchronize { super }
+  end
+end
+
+Mysql2::Client.prepend(MutexLockedQuerying)
+
 RSpec.configure do |config|
   config.mock_with :rspec
 
