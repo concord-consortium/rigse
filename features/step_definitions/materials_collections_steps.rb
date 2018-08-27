@@ -56,6 +56,8 @@ When /^I drag the (\d+)(?:st|nd|rd|th) material in the materials collection "([^
     set_sortable_sequence(sortable_container_id, ids.push(ids.delete_at(zero_based_index_position)))
   end
 
+  # Trigger the onUpdate callback after changing sequence programmatically
+  page.execute_script("Sortable.options(jQuery('##{sortable_container_id}')[0]).onUpdate()")
 end
 
 Then /^the previously moved material in the materials collection "([^"]*)" should be (first|last)$/ do |name, position|

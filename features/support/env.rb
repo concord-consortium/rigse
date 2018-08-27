@@ -22,21 +22,22 @@ require 'cucumber/rspec/doubles'
 require 'rspec/expectations'
 
 require 'capybara-screenshot/cucumber'
+require_relative 'capybara_initializer'
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
   "screenshot_#{scenario.title.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
 end
 
-# Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
-# order to ease the transition to Capybara we set the default here. If you'd
-# prefer to use XPath just remove this line and adjust any selectors in your
-# steps to use the XPath syntax.
-Capybara.default_selector = :css
+CapybaraInitializer.configure do |config|
+  config.headless = ENV.fetch('HEADLESS', true) != 'false'
+  config.context = ENV['DOCKER'].present? ? :docker : nil
+end
 
-# Increase default wait time for asynchronous JavaScript requests from 2 to 5s
-# see section on Asynchronous JavaScript here: https://github.com/jnicklas/capybara
-Capybara.default_max_wait_time = 5
+include SolrSpecHelper
+solr_setup
+clean_solar_index
+reindex_all
 
 # so we can use things like dom_id_for
 include ApplicationHelper
@@ -52,9 +53,21 @@ class ActiveRecord::Base
 end
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
+#The above monkeypatch which causes all threads to share the same database connection sometimes causes thread safety related failures. The below monkeypatch attempts to resolve some of those with a mutex. Specifically we were  getting "Mysql2::Error: This connection is in use by..." errors until implementing this fix. This code (and the shared connection code above) can be removed at Rails 5.1 where these issues were solved in Rails & Capybara directly.
+
+module MutexLockedQuerying
+  @@semaphore = Mutex.new
+
+  def query(*)
+    @@semaphore.synchronize { super }
+  end
+end
+
+Mysql2::Client.prepend(MutexLockedQuerying)
+
 # By default, any exception happening in your Rails application will bubble up
-# to Cucumber so that your scenario will fail. This is a different from how 
-# your application behaves in the production environment, where an error page will 
+# to Cucumber so that your scenario will fail. This is a different from how
+# your application behaves in the production environment, where an error page will
 # be rendered instead.
 #
 # Sometimes we want to override this default behaviour and allow Rails to rescue
@@ -76,7 +89,7 @@ ActionController::Base.allow_rescue = false
 #   ri_gse_big_ideas
 #   ri_gse_domains
 #   ri_gse_expectations
-#   ri_gse_expectation_indicators 
+#   ri_gse_expectation_indicators
 #   ri_gse_expectation_stems
 #   ri_gse_grade_span_expectations
 #   ri_gse_knowledge_statements

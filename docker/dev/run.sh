@@ -8,6 +8,14 @@ DB_CONFIG=$APP_HOME/config/database.yml
 SETTINGS=$APP_HOME/config/settings.yml
 ENV_VARS=$APP_HOME/config/app_environment_variables.rb
 PIDFILE=$APP_HOME/tmp/pids/server.pid
+HOST_DOMAIN="host.docker.internal"
+
+# check if the docker host is running on mac or windows
+ping -q -c1 $HOST_DOMAIN > /dev/null 2>&1
+if [ $? -ne 0  ]; then
+  HOST_IP=$(ip route | awk 'NR==1 {print $3}')
+  echo "$HOST_IP $HOST_DOMAIN" >> /etc/hosts
+fi
 
 if [ -f $PIDFILE ]; then
   rm $PIDFILE
