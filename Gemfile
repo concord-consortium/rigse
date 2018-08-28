@@ -186,7 +186,7 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "selenium-webdriver"
-  gem "cucumber",           "~> 1.3.0"
+  gem "cucumber",           "~> 2.0"
   gem "cucumber-rails",                 :require => false
   gem "database_cleaner"
   gem "capybara"
