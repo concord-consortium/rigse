@@ -8,6 +8,6 @@ RSpec.feature "Example Feature Spec" do
 
   scenario "When using Chrome, it works", js: true do
     visit "/users"
-    expect(page).to have_text("foobar")
+    expect(page).to have_text("Log in with your Rails Portal (development) account.")
   end
 end
