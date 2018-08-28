@@ -113,6 +113,5 @@ if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_mi
   exit 1
 end
 
-# I don't think this is necessary anymore with the latest factory_girl
 FactoryGirl.definition_file_paths = %w(factories)
 FactoryGirl.find_definitions
