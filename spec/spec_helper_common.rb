@@ -66,14 +66,29 @@ end
 
 # share the db connections between the test thread and the server thread to fix MySQL errors in tests
 class ActiveRecord::Base
-  mattr_accessor :shared_connection
-  @@shared_connection = nil
-
   def self.connection
-    @@shared_connection || ConnectionPool::Wrapper.new(:size => 1) { retrieve_connection }
+    @@shared_connection
+  end
+
+  def self.set_shared_connection
+    @@shared_connection = ConnectionPool::Wrapper.new(:size => 1) { retrieve_connection }
+  end
+
+  def self.with_database(database)
+    previous = current_database_configuration_name
+    establish_connection(database)
+    set_shared_connection
+    yield
+  ensure
+    establish_connection(previous)
+    set_shared_connection
+  end
+
+  def self.current_database_configuration_name
+    configurations.find { |_k, v| v['database'] == connection.current_database }[0]
   end
 end
-ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
+ActiveRecord::Base.set_shared_connection
 
 #The above monkeypatch which causes all threads to share the same database connection sometimes causes thread safety related failures. The below monkeypatch attempts to resolve some of those with a mutex. Specifically we were  getting "Mysql2::Error: This connection is in use by..." errors until implementing this fix. This code (and the shared connection code above) can be removed at Rails 5.1 where these issues were solved in Rails & Capybara directly.
 
@@ -89,6 +104,10 @@ Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
   config.mock_with :rspec
+
+  config.around(:example, type: :feature) do |example|
+    ActiveRecord::Base.with_database('cucumber') { example.run }
+  end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = Rails.env == 'test'
