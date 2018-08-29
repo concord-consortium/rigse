@@ -53,8 +53,19 @@ describe StandardStatement do
         expect(subject2.parents[1][:notation]).to eq "B-2"
       end
     end
+  end
 
 
+  # TODO: auto-generated
+  describe '#duplicate_and_assign_to' do
+    it 'duplicate_and_assign_to' do
+      standard_statement = described_class.new
+      material_type = 'material_type'
+      material_id = 1
+      result = standard_statement.duplicate_and_assign_to(material_type, material_id)
+
+      expect(result).not_to be_nil
+    end
   end
 
 

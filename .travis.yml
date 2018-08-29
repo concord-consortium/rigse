@@ -3,7 +3,7 @@ language: ruby
 rvm:
   - "2.2.6"
 
-dist: precise
+dist: trusty
 
 env:
   matrix:
@@ -14,9 +14,9 @@ env:
   global:
   - ARTIFACTS_BUCKET=cc-travis-artifacts
   - CC_TEST_REPORTER_ID=555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
+  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/library
 before_install:
   - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
   - pip install --user awscli
 
 before_script:
@@ -38,6 +38,7 @@ cache: bundler
 bundler_args: --binstubs --without development
 
 addons:
+  chrome: stable
   artifacts:
     paths:
     - ./tmp/capybara

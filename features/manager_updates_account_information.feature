@@ -23,6 +23,7 @@ Feature: A manager updates account information for another user
       | student  | test1@mailintator.com  |
       | teacher  | test2@mailintator.com  |
 
+  @javascript
   Scenario Outline: Managers can change a users password
     When I am logged in with the username mymanager
     And I am on the user list page

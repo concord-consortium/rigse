@@ -62,4 +62,25 @@ describe MaterialsCollection do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '.searchable_attributes' do
+    it 'searchable_attributes' do
+      result = described_class.searchable_attributes
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#materials' do
+    it 'materials' do
+      materials_collection = described_class.new
+      result = materials_collection.materials([])
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

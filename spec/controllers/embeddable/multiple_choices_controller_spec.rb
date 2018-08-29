@@ -19,4 +19,14 @@ describe Embeddable::MultipleChoicesController do
     end
   end
 
+  # TODO: auto-generated
+  describe '#add_choice' do
+    it 'GET add_choice' do
+      get :add_choice, id: Factory.create(:multiple_choice).to_param
+
+      expect(response).to have_http_status(:not_acceptable)
+    end
+  end
+
+
 end

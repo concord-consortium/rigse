@@ -25,9 +25,7 @@ source "http://rubygems.org"
   gem 'oj', '~> 2.12.14'
 
   gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
-  # gem 'capistrano-autoscaling', "0.0.8.3", :path => "../capistrano-autoscaling/"
-  gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
-  # gem 'capistrano-autoscaling', "~> 0.0.9git",  :git => "git://github.com/yyuu/capistrano-autoscaling.git",  :branch => "develop"
+  # gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
   gem 'capistrano-cowboy'
 
   gem "aasm",                 "~> 2.2.1"
@@ -88,8 +86,7 @@ source "http://rubygems.org"
   gem "delayed_job_web"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
-  # to support hosting paperclip attachments on S3, and Load Balancing
-  gem "aws-sdk",              "~> 1.55.0"
+  gem "aws-sdk",              "~> 3"
   gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
   gem "tinymce-rails",        "~>3.5.6"
 
@@ -188,33 +185,34 @@ end
 group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
-  gem "selenium-webdriver", "~> 2.53.0"
+  gem "selenium-webdriver"
   gem "cucumber",           "~> 1.3.0"
-  gem "cucumber-rails",     "~> 1.3.0", :require => false
-  gem "database_cleaner",   "~> 0.7.2"
+  gem "cucumber-rails",                 :require => false
+  gem "database_cleaner"
   gem "capybara"
   gem "rspec"
   gem "rspec-rails"
   gem "rspec-activemodel-mocks"
   gem "rspec-collection_matchers"
-  gem "email_spec",         "~> 1.4.0"
-  gem "ci_reporter",        "~> 1.7.0"
-  gem "delorean",           "~> 1.1"
+  gem "email_spec"
+  gem "ci_reporter"
+  gem "delorean"
   gem "webmock",                        :require => false
-  gem "capybara-mechanize", "~> 1.0.0"
+  gem "capybara-mechanize"
   gem 'capybara-screenshot'
   gem "connection_pool"
   gem "json-schema"
+  gem 'chromedriver-helper'
 end
 
 group :test, :cucumber, :development do
   # this is included in development so the mock data can be loaded into the dev database
   gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
-  gem "guard",              "~> 2.1.1"
+  gem "guard"
   gem "guard-rspec"
-  gem "guard-cucumber",     "~> 1.2.2"
+  gem "guard-cucumber"
   gem "remarkable_activerecord",  "~> 3.1.13", :require => nil
-  gem "launchy",           "~> 2.1.0"
+  gem "launchy"
   gem "pry"
   gem 'pry-byebug'
   gem 'simplecov', :require => false

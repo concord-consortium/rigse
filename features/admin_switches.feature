@@ -12,12 +12,14 @@ Feature: Admin switches to a different user
   Scenario: Admin switches to student
     And I am logged in with the username admin
     And I switch to "Joe Switchuser" in the user list by searching "Switchuser"
-    Then I should see "Welcome, Joe Switchuser"
+    Then I should see "Welcome,"
+    And I should see "Joe Switchuser"
 
   @javascript
   Scenario: Admin switches back to admin
     And I am logged in with the username admin
     And I switch to "Joe Switchuser" in the user list by searching "Switchuser"
-    Then I should see "Welcome, Joe Switchuser"
-    And I follow "Switch Back"
-    Then I should see "Welcome, joe user"
+    Then I should see "Welcome,"
+    And I should see "Joe Switchuser"
+    And I follow "Switch back"
+    Then I should see "joe user"

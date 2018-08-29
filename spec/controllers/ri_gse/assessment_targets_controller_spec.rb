@@ -175,5 +175,4 @@ describe RiGse::AssessmentTargetsController do
     end
 
   end
-
 end

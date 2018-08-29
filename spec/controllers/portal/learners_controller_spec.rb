@@ -64,4 +64,96 @@ describe Portal::LearnersController do
     end
   end
 
+
+  # TODO: auto-generated
+  describe '#current_clazz' do
+    it 'GET current_clazz' do
+      get :current_clazz, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#handle_jnlp_session' do
+    it 'GET handle_jnlp_session' do
+      get :handle_jnlp_session, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#authorize_show' do
+    it 'GET authorize_show' do
+      get :authorize_show, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#index' do
+    it 'GET index' do
+      get :index, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#bundle_report' do
+    it 'GET bundle_report' do
+      get :bundle_report, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#show' do
+    it 'GET show' do
+      get :show, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#edit' do
+    it 'GET edit' do
+      get :edit, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#create' do
+    it 'POST create' do
+      post :create, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#update' do
+    it 'PATCH update' do
+      put :update, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#destroy' do
+    it 'DELETE destroy' do
+      delete :destroy, {}, {}
+
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
+
 end

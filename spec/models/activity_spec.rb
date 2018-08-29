@@ -205,4 +205,194 @@ describe Activity do
       expect(activity.projects.count).to eql(1)
     end
   end
+
+  # TODO: auto-generated
+  describe '.with_gse' do # scope test
+    # not useable without merge
+    xit 'supports named scope with_gse' do
+      expect(described_class.limit(3).with_gse).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.without_teacher_only' do # scope test
+    it 'supports named scope without_teacher_only' do
+      expect(described_class.limit(3).without_teacher_only).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.domain' do # scope test
+    xit 'supports named scope domain' do
+      # used in conjunction with other
+      expect(described_class.limit(3).domain('1')).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.grade' do # scope test
+    xit 'supports named scope grade' do
+      # used in conjunction with other
+    expect(described_class.limit(3).grade('1')).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.activity_group' do # scope test
+    it 'supports named scope activity_group' do
+      expect(described_class.limit(3).activity_group).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.like' do # scope test
+    it 'supports named scope like' do
+      expect(described_class.limit(3).like('name')).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.investigation' do # scope test
+    it 'supports named scope investigation' do
+      expect(described_class.limit(3).investigation).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.published' do # scope test
+    # not useable without merge
+    xit 'supports named scope published' do
+      expect(described_class.limit(3).published).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.directly_published' do # scope test
+    it 'supports named scope directly_published' do
+      expect(described_class.limit(3).directly_published).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.assigned' do # scope test
+    it 'supports named scope assigned' do
+      expect(described_class.limit(3).assigned).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.ordered_by' do # scope test
+    it 'supports named scope ordered_by' do
+      expect(described_class.limit(3).ordered_by(nil)).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.is_template' do # scope test
+    it 'supports named scope is_template' do
+      expect(described_class.limit(3).is_template('n')).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#student_only' do
+    xit 'student_only' do
+      activity = described_class.new
+      result = activity.student_only
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#parent' do
+    it 'parent' do
+      activity = described_class.new
+      result = activity.parent
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#children' do
+    it 'children' do
+      activity = described_class.new
+      result = activity.children
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#left_nav_panel_width' do
+    it 'left_nav_panel_width' do
+      activity = described_class.new
+      result = activity.left_nav_panel_width
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#deep_xml' do
+    it 'deep_xml' do
+      activity = described_class.new
+      result = activity.deep_xml
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#reportable_elements' do
+    it 'reportable_elements' do
+      activity = described_class.new
+      result = activity.reportable_elements
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#question_number' do
+    it 'question_number' do
+      activity = described_class.new
+      embeddable = Factory.create(:open_response)
+      result = activity.question_number(embeddable)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#print_listing' do
+    it 'print_listing' do
+      activity = described_class.new
+      result = activity.print_listing
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#full_title' do
+    it 'full_title' do
+      activity = described_class.new
+      result = activity.full_title
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_official' do
+    it 'is_official' do
+      activity = described_class.new
+      result = activity.is_official
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_template' do
+    it 'is_template' do
+      activity = described_class.new
+      result = activity.is_template
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

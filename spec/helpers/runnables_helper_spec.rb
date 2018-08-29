@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 include ApplicationHelper
-describe RunnablesHelper do
+describe RunnablesHelper, type: :helper  do
+  let(:component) { User.new }
   include RunnablesLinkMatcher
   before :each do
     @anonymous_user = mock_model(User, :roles => ["guest"], :anonymous? => true, :name => "guest")
@@ -156,4 +157,142 @@ describe RunnablesHelper do
     end
 
   end
+
+  # TODO: auto-generated
+  describe '#use_adhoc_workgroups?' do
+    it 'works' do
+      result = helper.use_adhoc_workgroups?
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#use_jnlps?' do
+    it 'works' do
+      result = helper.use_jnlps?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
+  # TODO: auto-generated
+  describe '#student_run_button_css' do
+    it 'works' do
+      result = helper.student_run_button_css(Factory.create(:portal_offering), [])
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#title_text' do
+    xit 'works' do
+      result = helper.title_text(component, 'verb')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#updated_time_text' do
+    it 'works' do
+      result = helper.updated_time_text('thing')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#run_url_for' do
+    xit 'works' do
+      result = helper.run_url_for(component, {}, 'format')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#run_button_for' do
+    xit 'works' do
+      result = helper.run_button_for(component)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#popup_options_for' do
+    it 'works' do
+      result = helper.popup_options_for(component, {})
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#x_button_for' do
+    xit 'works' do
+      result = helper.x_button_for(component, 'verb', 'image')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#x_link_for' do
+    xit 'works' do
+      result = helper.x_link_for(component, 'verb')
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#preview_button_for' do
+    xit 'works' do
+      result = helper.preview_button_for(Factory.create(:portal_offering), {}, img, run_as)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#teacher_preview_button_for' do
+    xit 'works' do
+      result = helper.teacher_preview_button_for(Factory.create(:portal_offering))
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#preview_link_for' do
+    xit 'works' do
+      result = helper.preview_link_for(Factory.create(:portal_offering))
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#offering_link_for' do
+    xit 'works' do
+      result = helper.offering_link_for(Factory.create(:portal_offering))
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#preview_list_link' do
+    xit 'works' do
+      result = helper.preview_list_link
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

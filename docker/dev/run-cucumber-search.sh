@@ -1,15 +1,4 @@
 #!/bin/bash
-
-#
-# Set up and run Xvfb (X virtual framebuffer)
-# This allows us to run headless X applications in docker. E.g. firefox.
-#
-export XVFB_LOG=/tmp/xvfb.docker.log
-export DISPLAY=:99
-
-pkill Xvfb
-Xvfb $DISPLAY -ac 2>&1 -screen 0 1920x1080x16 >> $XVFB_LOG &
-
 #
 # Run cucumber tests
 #

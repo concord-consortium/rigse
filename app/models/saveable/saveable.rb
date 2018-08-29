@@ -2,7 +2,7 @@ module Saveable::Saveable
 
   # Required methods in classes mixing in `Saveable::Saveable`:
   # * `embeddable`
-  # * `asnwers`
+  # * `answers`
 
   def submitted?
     # Note that we consider regular questions (not required) as submitted when

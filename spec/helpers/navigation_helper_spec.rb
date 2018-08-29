@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 include ApplicationHelper
-describe NavigationHelper do
+describe NavigationHelper, type: :helper  do
   let(:name) { "fredrique" }
   let(:itsi_links) do
     [
-      double(link_id: '/resources/activities', name: 'activities', href: '/itsi', pop_out: false),
-      double(link_id: '/resources/interactives', name: 'interactives', href: '/interactives', pop_out: true),
-      double(link_id: '/resources/images', name: 'images', href: '/images', pop_out: true),
-      double(link_id: '/resources/guides', name: 'Teacher Guides', href: 'https://guides.itsi.concord.org/', pop_out: true),
-      double(link_id: '/resources/careers', name: 'Careersight', href: 'https://careersight.concord.org/', pop_out: true),
-      double(link_id: '/resources/probes', name: 'Probesight', href: 'https://probesight.concord.org/', pop_out: true),
-      double(link_id: '/resources/schoology', name: 'Schoology', href: 'https://www.schoology.com/', pop_out: true)
+      double(position: 1, link_id: '/resources/activities', name: 'activities', href: '/itsi', pop_out: false),
+      double(position: 2, link_id: '/resources/interactives', name: 'interactives', href: '/interactives', pop_out: true),
+      double(position: 3, link_id: '/resources/images', name: 'images', href: '/images', pop_out: true),
+      double(position: 4, link_id: '/resources/guides', name: 'Teacher Guides', href: 'https://guides.itsi.concord.org/', pop_out: true),
+      double(position: 5, link_id: '/resources/careers', name: 'Careersight', href: 'https://careersight.concord.org/', pop_out: true),
+      double(position: 6, link_id: '/resources/probes', name: 'Probesight', href: 'https://probesight.concord.org/', pop_out: true),
+      double(position: 7, link_id: '/resources/schoology', name: 'Schoology', href: 'https://www.schoology.com/', pop_out: true)
     ]
   end
   let(:itsi_project) { double(links: itsi_links)}
@@ -151,4 +151,15 @@ describe NavigationHelper do
       end
     end
   end
+
+  # TODO: auto-generated
+  describe '#navigation_service' do
+    it 'works' do
+      result = helper.navigation_service(params)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end

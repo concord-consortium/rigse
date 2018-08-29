@@ -381,6 +381,254 @@ describe Investigation do
       expect(investigation.projects.count).to eql(1)
     end
   end
+
+  # TODO: auto-generated
+  describe '.assigned' do # scope test
+    it 'supports named scope assigned' do
+      expect(described_class.limit(3).assigned).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.with_gse' do # scope test
+    it 'supports named scope with_gse' do
+      expect(described_class.limit(3).with_gse).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.domain' do # scope test
+    xit 'supports named scope domain' do
+      expect(described_class.limit(3).domain('1')).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.grade' do # scope test
+    xit 'supports named scope grade' do
+      expect(described_class.limit(3).grade(3)).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.like' do # scope test
+    it 'supports named scope like' do
+      expect(described_class.limit(3).like('x')).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.activity_group' do # scope test
+    it 'supports named scope activity_group' do
+      expect(described_class.limit(3).activity_group).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.ordered_by' do # scope test
+    it 'supports named scope ordered_by' do
+      expect(described_class.limit(3).ordered_by(nil)).to all(be_a(described_class))
+    end
+  end
+  # TODO: auto-generated
+  describe '.is_template' do # scope test
+    it 'supports named scope is_template' do
+      expect(described_class.limit(3).is_template(false)).to all(be_a(described_class))
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#student_only' do
+    xit 'student_only' do
+      investigation = described_class.new
+      result = investigation.student_only
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#investigation' do
+    it 'investigation' do
+      investigation = described_class.new
+      result = investigation.investigation
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#add_author_role_to_use' do
+    it 'add_author_role_to_use' do
+      investigation = described_class.new
+      result = investigation.add_author_role_to_use
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#left_nav_panel_width' do
+    it 'left_nav_panel_width' do
+      investigation = described_class.new
+      result = investigation.left_nav_panel_width
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#parent' do
+    it 'parent' do
+      investigation = described_class.new
+      result = investigation.parent
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#children' do
+    it 'children' do
+      investigation = described_class.new
+      result = investigation.children
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#deep_xml' do
+    it 'deep_xml' do
+      investigation = described_class.new
+      result = investigation.deep_xml
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#duplicate' do
+    it 'duplicate' do
+      investigation = described_class.new
+      new_owner = User.new
+      result = investigation.duplicate(new_owner)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#print_listing' do
+    it 'print_listing' do
+      investigation = described_class.new
+      result = investigation.print_listing
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#reportable_elements' do
+    it 'reportable_elements' do
+      investigation = described_class.new
+      result = investigation.reportable_elements
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
+  # TODO: auto-generated
+  describe '#broken?' do
+    it 'broken?' do
+      investigation = described_class.new
+      result = investigation.broken?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#can_be_modified?' do
+    it 'can_be_modified?' do
+      investigation = described_class.new
+      result = investigation.can_be_modified?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#can_be_deleted?' do
+    it 'can_be_deleted?' do
+      investigation = described_class.new
+      result = investigation.can_be_deleted?
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.broken' do
+    it 'broken' do
+      result = described_class.broken
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.broken_report' do
+    it 'broken_report' do
+      result = described_class.broken_report
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '.delete_broken' do
+    it 'delete_broken' do
+      result = described_class.delete_broken
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#full_title' do
+    it 'full_title' do
+      investigation = described_class.new
+      result = investigation.full_title
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#domain_id' do
+    it 'domain_id' do
+      investigation = described_class.new
+      result = investigation.domain_id
+
+      expect(result).to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_official' do
+    it 'is_official' do
+      investigation = described_class.new
+      result = investigation.is_official
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#is_template' do
+    it 'is_template' do
+      investigation = described_class.new
+      result = investigation.is_template
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
 end
-
-

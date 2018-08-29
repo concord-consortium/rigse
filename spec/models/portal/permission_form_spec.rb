@@ -26,4 +26,17 @@ describe Portal::PermissionForm do
     end
 
   end
+
+
+  # TODO: auto-generated
+  describe '#fullname' do
+    it 'fullname' do
+      permission_form = described_class.new
+      result = permission_form.fullname
+
+      expect(result).to be_nil
+    end
+  end
+
+
 end

@@ -4,7 +4,7 @@ class Admin::LearnerDetailsController < ApplicationController
   # GET /learner_details/1.txt
   # GET /learner_details/1.json
   def show
-    authorize Admin::LearnerDetails
+    authorize LearnerDetail
     learner = Portal::Learner.find_by_id_or_key(params[:id_or_key])
     @learner_details = LearnerDetail.new learner
     respond_to do |format|

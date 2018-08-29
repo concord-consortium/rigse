@@ -66,4 +66,35 @@ describe Report::EmbeddableFilter do
     end
   end
 
+  # TODO: auto-generated
+  describe '#embeddable_keys' do
+    xit 'embeddable_keys' do
+      embeddable_filter = described_class.new
+      result = embeddable_filter.embeddable_keys
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  # TODO: auto-generated
+  describe '#embeddable_keys=' do
+    xit 'embeddable_keys=' do
+      embeddable_filter = described_class.new
+      array = [1]
+      result = embeddable_filter.embeddable_keys=(array)
+
+      expect(result).not_to be_nil
+    end
+  end
+
+
+  # TODO: auto-generated
+  describe '#reload' do
+    xit 'reload' do
+      embeddable_filter = described_class.new
+      result = embeddable_filter.reload
+
+      expect(result).not_to be_nil
+    end
+  end
 end

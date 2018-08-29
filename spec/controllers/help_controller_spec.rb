@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HelpController do
+describe HelpController, type: :controller do
   
   before(:each) do
       @admin_user = Factory.next(:admin_user)

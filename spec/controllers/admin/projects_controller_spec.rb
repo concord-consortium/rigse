@@ -27,7 +27,7 @@ describe Admin::ProjectsController do
       login_admin
     end
 
-    describe "GET index" do
+    describe "#index" do
       it "assigns all projects as @projects" do
         project
         get :index, {}
@@ -35,28 +35,28 @@ describe Admin::ProjectsController do
       end
     end
 
-    describe "GET show" do
+    describe "#show" do
       it "assigns the requested project as @project" do
         get :show, {:id => project.to_param}
         expect(assigns(:project)).to eq(project)
       end
     end
 
-    describe "GET new" do
+    describe "#new" do
       it "assigns a new project as @project" do
         get :new, {}
         expect(assigns(:project)).to be_a_new(Admin::Project)
       end
     end
 
-    describe "GET edit" do
+    describe "#edit" do
       it "assigns the requested project as @project" do
         get :edit, {:id => project.to_param}
         expect(assigns(:project)).to eq(project)
       end
     end
 
-    describe "POST create" do
+    describe "#create" do
       describe "with valid params" do
         it "creates a new Admin::Project" do
           expect {
@@ -149,7 +149,7 @@ describe Admin::ProjectsController do
     end
   end
 
-  describe "GET landing page" do
+  describe "#landing page" do
     context "there is a project matching the slug" do
       it "renders landing page template" do
         get :landing_page, {:landing_page_slug => project.landing_page_slug}

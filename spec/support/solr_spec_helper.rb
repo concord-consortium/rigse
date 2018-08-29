@@ -3,6 +3,9 @@ Sunspot.session = Sunspot::Rails::StubSessionProxy.new($original_sunspot_session
 
 module SolrSpecHelper
 
+  SOLR_HOST = ENV.fetch('TEST_SOLR_HOST', 'localhost')
+  SOLR_PORT = ENV.fetch('TEST_SOLR_PORT', 8981)
+
   def clean_solar_index
     Search::AllSearchableModels.each do |model_type|
       model_type.remove_all_from_index!
@@ -16,26 +19,17 @@ module SolrSpecHelper
     end
   end
 
-  def test_solr_server(host, port)
-    open("http://#{host}:#{port}/")
+  def test_solr_server
+    open("http://#{SOLR_HOST}:#{SOLR_PORT}/")
   end
 
   def solr_setup
-
-    solr_host = ENV['TEST_SOLR_HOST'] || 'localhost'
-    solr_port = ENV['TEST_SOLR_PORT'] || 8981
-
     unless $sunspot
-
-      ::WebMock.disable_net_connect!(:allow => 
-                                        [   "#{solr_host}:#{solr_port}", 
-                                            "codeclimate.com" ] )
-
       begin
 
         $sunspot = Sunspot::Rails::Server.new
 
-        test_solr_server(solr_host, solr_port)
+        test_solr_server
 
       rescue Errno::ECONNREFUSED
         puts 'SOLR server is not running. Start it using:'
