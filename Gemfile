@@ -59,7 +59,7 @@ source "http://rubygems.org"
   gem "paperclip",            "~> 3.4.0"
   gem "acts-as-taggable-on",  "~> 2.1.1"
   gem "acts_as_list",         "~> 0.1.6"
-  gem "nokogiri",             "~> 1.7.0"
+  gem "nokogiri",             "~> 1.8.0"
   gem 'rdoc',                 "~> 3.9.4"
   # this customization is so the digests or fingerprints are correctly added to the assets even when
   # they are from a theme.
