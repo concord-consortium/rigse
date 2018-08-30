@@ -523,7 +523,7 @@ RailsPortal::Application.routes.draw do
           post :firebase
         end
 
-        resources :external_activities, :only => [:create]
+        resources :external_activities, :only => [:create, :update]
 
         namespace :service do
           get :solr_initialized

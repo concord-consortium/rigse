@@ -70,6 +70,14 @@
     SEARCH: "#{api_v1_search_search_path}",
     ASSIGN_MATERIAL_TO_CLASS: "#{api_v1_materials_assign_to_class_path}",
 
+    //
+    // External Activities
+    //
+    EXTERNAL_ACTIVITY:          "#{api_v1_external_activity_path(fake_id)}",
+    external_activity: function(id) {
+      return this.EXTERNAL_ACTIVITY.replace(this.FAKE_ID, id);
+    },
+
     // Navigation
     // NavigationHelper#get_navigation_json  see app/helpers/navigation_helper.rb
     getNavigation: function() {

@@ -20,8 +20,7 @@
 
 :javascript
   function load_the_editor() {
-    var parsedActivityJSON = JSON.parse('#{activityJSON}');
-    PortalPages.renderActivitySettingsEditor(parsedActivityJSON,
+    PortalPages.renderActivitySettingsEditor(#{raw activityJSON},
       "react_container_activity");
   }
 

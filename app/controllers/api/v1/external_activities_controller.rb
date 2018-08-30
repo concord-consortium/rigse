@@ -2,6 +2,42 @@ class API::V1::ExternalActivitiesController < API::APIController
 
   skip_before_filter :verify_authenticity_token
 
+  UpdateWhiteList = [
+    :allow_collaboration,
+    :append_auth_token,
+    :append_learner_id_to_url,
+    :append_survey_monkey_uid,
+    :credits,
+    :enable_sharing,
+    :has_pretest,
+    :is_assessment_item,
+    :is_featured,
+    :is_locked,
+    :is_official,
+    :launch_url,
+    :logging,
+    :long_description,
+    :long_description_for_teacher,
+    :material_type,
+    :name,
+    :popup,
+    :publication_status,
+    :rubric_url,
+    :save_path,
+    :saves_student_data,
+    :short_description,
+    :teacher_guide_url,
+    :student_report_enabled,   
+    :thumbnail_url,
+    :url
+  ]
+
+  def update
+    activity = ExternalActivity.find(params[:id])
+    activity.update_attributes!(params.permit(*UpdateWhiteList))
+    render status: 201, json: { }
+  end
+
   def create
     authorize [:api, :v1, :external_activity]
 
