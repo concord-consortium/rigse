@@ -7,7 +7,6 @@
 require 'rubygems'
 
 ENV['RAILS_ENV'] = 'cucumber'
-require File.expand_path('../../../spec/spec_helper_common.rb', __FILE__)
 
 require 'cucumber/rails'
 require 'cucumber/rails/capybara/javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
@@ -29,11 +28,6 @@ Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
   "screenshot_#{scenario.title.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
 end
 
-include SolrSpecHelper
-solr_setup
-clean_solar_index
-reindex_all
-
 # so we can use things like dom_id_for
 include ApplicationHelper
 
@@ -47,3 +41,10 @@ World(RSpec::Mocks::ExampleMethods)
 
 # Make visible for testing
 ApplicationController.send(:public, :logged_in?, :current_visitor)
+
+require File.expand_path('../../../spec/spec_helper_common.rb', __FILE__)
+
+include SolrSpecHelper
+solr_setup
+clean_solar_index
+reindex_all
