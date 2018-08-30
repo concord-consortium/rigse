@@ -68,6 +68,11 @@ class API::V1::ExternalActivitiesController < API::APIController
       end
     end
 
+# TODO: Create should be a much closer parallel to the processing in the
+# update API. The only place they would probably diverge is how the
+# :external_report_url setting, you see above, is extracted from the url
+# as opposed to set directly from a value supplied by the UI.
+
     external_activity = ExternalActivity.create(
       :name               => name,
       :url                => url,
