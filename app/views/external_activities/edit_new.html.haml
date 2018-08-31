@@ -10,17 +10,8 @@
         %h2
           Editing
         %h3= @external_activity.name 
-      = link_to "Settings", '#', :class => 'button',
-            :onclick=> 'load_the_editor()',
-            :style=> 'margin-right: 3em; float: right;'
   %div
     #react_container_activity
-    %div{:style=> 'margin: 4em; padding: 4em; border: 2px solid green;'}
-      Place holder for the Lara based activity/sequence editor.
 
 :javascript
-  function load_the_editor() {
-    PortalPages.renderActivitySettingsEditor(#{raw activityJSON},
-      "react_container_activity");
-  }
-
+  PortalPages.renderActivitySettingsEditor(#{raw activityJSON},"react_container_activity");

@@ -101,11 +101,6 @@ class HomeController < ApplicationController
     @authoring_sites = Admin::AuthoringSite.all
   end
 
-  def authoring_new
-    authorize :home, :authoring?
-    @authoring_sites = Admin::AuthoringSite.all
-  end
-
   def authoring_site_redirect
     authorize :home, :authoring_site_redirect?
     authoring_site = Admin::AuthoringSite.find(params[:id])
