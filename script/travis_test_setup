@@ -12,9 +12,9 @@ bundle exec spring binstub --all
 ./bin/rake db:schema:load
 ./bin/rake db:migrate
 ./bin/rake db:test:prepare
-RAIL_ENV=feature_test ./bin/rake db:schema:load
-RAIL_ENV=feature_test ./bin/rake db:migrate
-RAIL_ENV=feature_test ./bin/rake db:test:prepare
+RAILS_ENV=feature_test ./bin/rake db:schema:load
+RAILS_ENV=feature_test ./bin/rake db:migrate
+RAILS_ENV=feature_test ./bin/rake db:test:prepare
 RAILS_GROUPS=assets ./bin/rake assets:precompile:all
 RAILS_ENV=test ./bin/rake sunspot:solr:start &
 sleep 10 # give SOLR some time to start and init
