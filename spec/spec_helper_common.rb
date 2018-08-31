@@ -106,7 +106,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
-    ActiveRecord::Base.with_database('cucumber') { example.run }
+    ActiveRecord::Base.with_database('feature_test') { example.run }
   end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

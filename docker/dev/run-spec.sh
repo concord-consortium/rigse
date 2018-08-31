@@ -9,10 +9,15 @@
 #
 # Prepare spec tests
 #
+
 export RAILS_ENV=test
 bundle exec rake db:create
 bundle exec rake db:schema:load
 bundle exec rake db:test:prepare
+
+RAILS_ENV=feature_test bundle exec rake db:create
+RAILS_ENV=feature_test bundle exec rake db:schema:load
+RAILS_ENV=feature_test bundle exec rake db:test:prepare
 
 if [ "$1" == "setup" ]; then
     echo 
