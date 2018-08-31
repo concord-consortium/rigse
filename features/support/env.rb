@@ -42,6 +42,11 @@ World(RSpec::Mocks::ExampleMethods)
 # Make visible for testing
 ApplicationController.send(:public, :logged_in?, :current_visitor)
 
+# Note: It is important that this come after cucumber rails db
+# config above. We define our own shared connection strategy here
+# and it is inteded to override a portion of the shared strategy that
+# cucumber rails defines. Incorrect order results in mysql errors.
+# More info: https://github.com/concord-consortium/rigse/pull/559
 require File.expand_path('../../../spec/spec_helper_common.rb', __FILE__)
 
 include SolrSpecHelper
