@@ -13,5 +13,6 @@ cucumber: &cucumber
   encoding: utf8
   adapter: mysql2
   username: travis
-  database: rigse_test
+  database: rigse_features
+feature_test: *cucumber
 production: *development
