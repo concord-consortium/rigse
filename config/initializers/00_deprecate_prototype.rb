@@ -20,14 +20,16 @@ end
 # prototype_rails has its own engine initializer
 # that runs after local/app initializers.
 Rails.application.config.after_initialize do
-  namespaces = [
-    ActionView::Helpers::PrototypeHelper,
-    ActionView::Helpers::ScriptaculousHelper,
-    PrototypeHelper,
-    ActionView::Helpers::JavaScriptHelper
-  ]
-  namespaces.each do |namespace|
-    methods = namespace.public_instance_methods
-    deprecate_methods(namespace, *methods)
+  if ENV.fetch('DEPRECATE_PROTOTYPE', true) != 'false'
+    namespaces = [
+      ActionView::Helpers::PrototypeHelper,
+      ActionView::Helpers::ScriptaculousHelper,
+      PrototypeHelper,
+      ActionView::Helpers::JavaScriptHelper
+    ]
+    namespaces.each do |namespace|
+      methods = namespace.public_instance_methods
+      deprecate_methods(namespace, *methods)
+    end
   end
 end
