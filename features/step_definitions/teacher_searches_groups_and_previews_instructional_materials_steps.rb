@@ -63,7 +63,7 @@ When /^(?:|I )should see search results for "(.+)" on the search instructional m
 end
 
 When /^(?:|I )follow "(.+)" in Sort By on the search instructional materials page$/ do |label_name|
-  find(:xpath, "//label[contains(., '#{label_name}')]").click
+  find(:xpath, "//option[contains(., '#{label_name}')]").click
   step 'I should wait 2 seconds'
 end
 
