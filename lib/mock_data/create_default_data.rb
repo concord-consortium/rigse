@@ -12,9 +12,6 @@ module MockData
 
   DEFAULT_DATA = default_data.recursive_symbolize_keys
 
-  #load all the factories
-  Dir[current_dir + '/../../factories/*.rb'].each {|file| require file }
-
   @default_users = nil
   @default_teachers = nil
   @default_students = nil

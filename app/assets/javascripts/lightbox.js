@@ -171,7 +171,10 @@
         this.handle = lightbox;
         
         Lightbox.add(this);
-        
+        // 2018-08-20 NP: To drop a modal shadow over items such as #navigation
+        // this value must be at least:
+        // 2(content + shadow) + the other component's z-index.
+        lightbox.setZIndex(3);
         lightbox.setContent(config.content);
         if (typeof config.title === "string") {
             lightbox.setHeader(config.title);

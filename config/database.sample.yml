@@ -23,10 +23,12 @@ cucumber: &cucumber
   encoding: utf8
   adapter: mysql2
   username: <%= ENV['DB_USER'] || 'root' %>
-  database: <%= ENV['DB_NAME'] || 'portal_cucumber' %>
+  database: <%= ENV['DB_NAME'] || 'portal_features' %>
   password: <%= ENV['DB_PASSWORD'] || 'root' %>
   host: <%= ENV['DB_HOST'] || '127.0.0.1' %>
   port: <%= ENV['DB_PORT'] || '3306' %>
   pool: 5
+
+feature_test: *cucumber
 
 production: *development

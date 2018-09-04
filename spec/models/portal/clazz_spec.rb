@@ -63,9 +63,6 @@ describe Portal::Clazz do
 
   describe "creating a new class" do
     before(:each) do
-      User.destroy_all
-      Portal::Teacher.destroy_all
-
       @teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "test_teacher"))
     end
 

@@ -14,6 +14,7 @@ env:
   global:
   - ARTIFACTS_BUCKET=cc-travis-artifacts
   - CC_TEST_REPORTER_ID=555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
+  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/library
 before_install:
   - "export DISPLAY=:99.0"
   - pip install --user awscli

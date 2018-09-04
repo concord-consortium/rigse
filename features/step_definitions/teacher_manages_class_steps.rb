@@ -85,6 +85,12 @@ And /^"(.+)" should be the first class$/ do |class_name|
   end
 end
 
+Then /^I should see a class named "([^"]*)" in the navigtion/ do |class_name|
+  bin_name = "Classes"
+  page.find(:xpath,"//*[text()='#{bin_name}']").click
+  expect(page).to have_text class_name
+end
+
 
 And /^there should be no student in "(.+)"$/ do |class_name|
   click_link(class_name)
