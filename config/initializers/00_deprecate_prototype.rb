@@ -24,8 +24,9 @@ Rails.application.config.after_initialize do
     namespaces = [
       ActionView::Helpers::PrototypeHelper,
       ActionView::Helpers::ScriptaculousHelper,
-      PrototypeHelper,
-      ActionView::Helpers::JavaScriptHelper
+      ActionView::Helpers::JavaScriptHelper,
+      ActionView::Helpers::PrototypeHelper::JavaScriptGenerator::GeneratorMethods,
+      PrototypeHelper
     ]
     namespaces.each do |namespace|
       methods = namespace.public_instance_methods
