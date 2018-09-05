@@ -58,7 +58,7 @@ class UserDeleter
   def delete_user_list(user_list=User.find(:all, :conditions => "login like '%rinet_sakai%'"))
     user_list = user_list - self.keep_list
     user_list.each do |user|
-      print "Removing user: #{user.login} #{user.email}::::"
+      Rails.logger.info "Removing user: #{user.login} #{user.email}::::"
       delete_user(user)
       puts "\n"
     end
@@ -67,7 +67,7 @@ class UserDeleter
   def reown_investigations(user)
     user.investigations.each { |i|
       i.deep_set_user(self.default_owner)
-      print "I"
+      Rails.logger.info "I"
     }
   end
   
@@ -82,7 +82,7 @@ class UserDeleter
   def delete_student(user)
     if user.portal_student
       user.portal_student.destroy
-      print "S"
+      Rails.logger.info "S"
     end
   end
   
@@ -91,11 +91,11 @@ class UserDeleter
       if user.portal_teacher.clazzes
         user.portal_teacher.clazzes.each do |clazz|
           clazz.destroy
-          print "C"
+          Rails.logger.info "C"
         end
       end
       user.portal_teacher.destroy
-      print "T"
+      Rails.logger.info "T"
     end
   end
 
