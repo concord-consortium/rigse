@@ -15,7 +15,7 @@ class ParentInvestigation
     i.name = activity.name
     i.user = activity.user
     i.description = activity.description
-    puts "creating investigation #{i.name} : #{i.description}"
+    Rails.logger.info "creating investigation #{i.name} : #{i.description}"
     i.save
     activity.investigation = i
     activity.save
