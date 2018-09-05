@@ -6,7 +6,7 @@ source "http://rubygems.org"
 #### COMMON
   gem "mysql2",             '~> 0.3.16', :platforms => [:ruby,:mingw]
 
-  gem "devise",               "~>2.1.0"
+  gem "devise",               "~> 3.1.0"
   gem 'devise-encryptable'
 
   gem 'omniauth'
@@ -140,12 +140,12 @@ end
 
 # Feature enabling groups
 group :geniverse_wordpress do
-  gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration"
+  gem "cc_portal_wordpress_integration", :git => "git://github.com/concord-consortium/cc_portal_wordpress_integration", :branch => "hint/upgrade/update-dependencies"
   # gem "cc_portal_wordpress_integration", :path => "../cc_portal_wordpress_integration"
 end
 
 group :geniverse_remote_auth do
-  gem "cc_portal_remote_auth", :git => "git://github.com/concord-consortium/cc_portal_remote_auth"
+  gem "cc_portal_remote_auth", :git => "git://github.com/concord-consortium/cc_portal_remote_auth", :branch => "hint/upgrade/upgrade-dependencies"
   # gem "cc_portal_remote_auth", :path => "../cc_portal_remote_auth"
 end
 
