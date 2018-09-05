@@ -25,12 +25,12 @@ class NationalDistrictImporter
     existing_districts    = Portal::District.find(:all, :conditions => {:nces_district_id => nces_district_ids})
     existing_district_ids = existing_districts.map { |d| d.nces_district_id }
 
-    puts "found    : #{nces_districts.size} national districts to import"
-    puts "rejecting: #{existing_district_ids.size} pre-imported districts"
+    Rails.logger.info "found    : #{nces_districts.size} national districts to import"
+    Rails.logger.info "rejecting: #{existing_district_ids.size} pre-imported districts"
 
     nces_districts.reject! { |d| existing_district_ids.include? d.id }
 
-    puts "leaves   : #{nces_districts.size} remaining districts to import"
+    Rails.logger.info "leaves   : #{nces_districts.size} remaining districts to import"
 
     district_values = []
     nces_districts.each_with_index do |nces_district,count|
@@ -40,8 +40,8 @@ class NationalDistrictImporter
       existing_district ||= Portal::District.find(:first,
                                                   :conditions => {:state => nces_district.LSTATE, :name => nces_district.NAME})
       if existing_district
-        puts "district similar already exists:#{existing_district.state} #{existing_district.name} #{existing_district.id}"
-        puts "updating."
+        Rails.logger.info "district similar already exists:#{existing_district.state} #{existing_district.name} #{existing_district.id}"
+        Rails.logger.info "updating."
         existing_district.nces_district = nces_district
         existing_district.leaid = nces_district.LEAID
         existing_district.save
@@ -74,9 +74,9 @@ class NationalDistrictImporter
                                               :select => "id, nces_school_id")
     existing_school_ids = existing_schools.map { |s| s.nces_school_id }
     import_count = nces_schools.size - existing_school_ids.size
-    puts "found    : #{nces_schools.size} national schools to import"
-    puts "found    : #{existing_school_ids.size} pre-imported schools"
-    puts "         : #{import_count} schools will be imported"
+    Rails.logger.info "found    : #{nces_schools.size} national schools to import"
+    Rails.logger.info "found    : #{existing_school_ids.size} pre-imported schools"
+    Rails.logger.info "         : #{import_count} schools will be imported"
 
     school_values = []
     added = 0
@@ -98,8 +98,8 @@ class NationalDistrictImporter
                                               :district_id => district_id,
                                               :name        => nces_school.SCHNAM})
       if existing_school
-        puts "similar school already exists:#{existing_school.state} #{existing_school.name} #{existing_school.id}"
-        puts "updating."
+        Rails.logger.info "similar school already exists:#{existing_school.state} #{existing_school.name} #{existing_school.id}"
+        Rails.logger.info "updating."
         existing_school.nces_school = nces_school
         existing_school.save
       else
