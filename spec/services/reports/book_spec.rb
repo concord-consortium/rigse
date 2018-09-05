@@ -40,11 +40,10 @@ RSpec.describe Reports::Book do
 
   # TODO: auto-generated
   describe '#save' do
-    xit 'save' do
+    it 'save' do
       options = {}
       book = described_class.new(options)
-      filename = 'filename'
-      result = book.save(filename)
+      result = book.save('tmp/filename')
 
       expect(result).not_to be_nil
     end
