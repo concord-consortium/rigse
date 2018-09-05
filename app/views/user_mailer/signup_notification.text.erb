@@ -2,7 +2,7 @@ Welcome, <%= @user.first_name %>!
 
 Thanks for creating an account on the <%= APP_CONFIG[:site_name] %>. To complete your registration, visit the URL below.
 
-<%= confirmation_url(@user, :confirmation_token => @user.confirmation_token) %>
+<%= confirmation_url(@user, :confirmation_token => @token) %>
 
 The Concord Consortium
 25 Love Lane
