@@ -1,7 +1,7 @@
 class UserMailer < Devise::Mailer
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
 
-  def confirmation_instructions(record, opts={})
+  def confirmation_instructions(record, token, opts={})
   end
 
   def signup_notification(user)
