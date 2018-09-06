@@ -1,0 +1,9 @@
+<% if @portal_clazz.nil? %>
+  jQuery('#invalid_word').remove()
+  jQuery('#word_form').prepend("<p id='invalid_word' style='display:none;'>Please enter a valid class word and try again.</p>")
+  jQuery('#invalid_word').slideDown()
+<% else %>
+  jQuery('#invalid_word').remove()
+  jQuery('#word_form').before("<%= j render partial: 'confirmation', locals: {class_word: @class_word, clazz: @portal_clazz, portal_student: Portal::Student.new} %>")
+  jQuery('#confirmation').slideDown()
+<% end %>
