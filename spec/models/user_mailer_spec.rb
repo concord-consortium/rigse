@@ -11,19 +11,9 @@ RSpec.describe UserMailer, type: :mailer do
     it 'confirmation_instructions' do
       user_mailer = described_class
       record = double('record')
+      token = double('token')
       opts = {}
-      result = user_mailer.confirmation_instructions(record, opts)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#signup_notification' do
-    it 'signup_notification' do
-      user_mailer = described_class
-      user = Factory.create(:user)
-      result = user_mailer.signup_notification(user)
+      result = user_mailer.confirmation_instructions(record, token, opts)
 
       expect(result).not_to be_nil
     end
