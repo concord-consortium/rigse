@@ -299,6 +299,7 @@ class Portal::ClazzesController < ApplicationController
       if @offering.position == 0
         @offering.position = @portal_clazz.offerings.length
         @offering.save
+        Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
       end
       if @offering
         if @portal_clazz.default_class == true
@@ -320,6 +321,7 @@ class Portal::ClazzesController < ApplicationController
           end
         else
           @offering.save
+          Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
         end
         @portal_clazz.reload
       end
