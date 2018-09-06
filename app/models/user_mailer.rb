@@ -8,12 +8,6 @@ class UserMailer < Devise::Mailer
     finish_email(@user, 'Please activate your new account')
   end
 
-  def activation(user)
-    @url = APP_CONFIG[:site_url]
-    @user = user
-    finish_email(user, 'Your account has been activated!')
-  end
-
   protected
 
   def finish_email(user, subject)

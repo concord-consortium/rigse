@@ -19,15 +19,4 @@ RSpec.describe UserMailer, type: :mailer do
     end
   end
 
-  # TODO: auto-generated
-  describe '#activation' do
-    it 'activation' do
-      user_mailer = described_class
-      user = Factory.create(:user)
-      result = user_mailer.activation(user)
-
-      expect(result).not_to be_nil
-    end
-  end
-
 end
