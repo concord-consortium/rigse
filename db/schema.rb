@@ -11,11 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(:version => 20180814144731) do
-=======
 ActiveRecord::Schema.define(:version => 20180824170559) do
->>>>>>> master
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
