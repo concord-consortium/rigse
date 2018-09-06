@@ -2,12 +2,10 @@ class UserMailer < Devise::Mailer
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
 
   def confirmation_instructions(record, token, opts={})
-  end
-
-  def signup_notification(user)
-    @url = "#{APP_CONFIG[:site_url]}/activate/#{user.confirmation_token}"
-    @user = user
-    finish_email(user, 'Please activate your new account')
+    @url = "#{APP_CONFIG[:site_url]}/activate/#{token}"
+    @token = token
+    @user = record
+    finish_email(@user, 'Please activate your new account')
   end
 
   def activation(user)
