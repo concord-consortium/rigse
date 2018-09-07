@@ -70,7 +70,7 @@ module NavigationHelper
         url: '/help',
         small: true,
         sort: -1,
-        iconName:'icon-search',
+        iconName:'icon-help',
       }
     else
       false
