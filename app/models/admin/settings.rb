@@ -145,7 +145,7 @@ ut = User.find_by_login('teacher'); us = User.find_by_login('student')
 t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerings.first
 
 HEREDOC
-    puts summary
+    Rails.logger.info summary
     summary
   end
 

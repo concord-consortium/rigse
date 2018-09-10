@@ -77,11 +77,10 @@ describe "A class with the AppSettings module included" do
 
   # TODO: auto-generated
   describe '#save_app_settings' do
-    xit 'save_app_settings' do
+    it 'save_app_settings' do
       app_settings = ClassWithAppSettings.new
       new_app_settings = {}
-      path = double('path')
-      result = app_settings.save_app_settings(new_app_settings, 'path')
+      result = app_settings.save_app_settings(new_app_settings, 'tmp/path')
 
       expect(result).not_to be_nil
     end
