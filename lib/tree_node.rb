@@ -64,7 +64,7 @@ module TreeNode
     set_user = lambda { |thing|
       unless thing.user == new_user
         old_login = thing.user ? thing.user.login : "<nil>"
-        puts "changing ownership of #{thing.name} from #{old_login} to #{new_user.login}" if logging
+        Rails.logger.info "changing ownership of #{thing.name} from #{old_login} to #{new_user.login}" if logging
         thing.user = new_user
         thing.save
       end
@@ -82,7 +82,7 @@ module TreeNode
         thing.teacher_notes.each do |note|
           unless note.user == new_user
             old_login = note.user ? note.user.login : "<nil>"
-            puts "changing ownership of #{note} from #{old_login} to #{new_user.login}" if logging
+            Rails.logger.info "changing ownership of #{note} from #{old_login} to #{new_user.login}" if logging
             note.user = new_user
             note.save
           end
@@ -91,7 +91,7 @@ module TreeNode
       if thing.respond_to? 'author_notes'
         thing.author_notes.each do |note|
           unless note.user == new_user
-            puts "changing ownership of #{note} from #{note.user} to #{new_user}" if logging
+            Rails.logger.info "changing ownership of #{note} from #{note.user} to #{new_user}" if logging
             note.user = new_user
             note.save
           end

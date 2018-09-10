@@ -10,7 +10,7 @@ RSpec.describe NationalDistrictImporter do
       national_district_importer = described_class.new
       count = 1
       interval = 1
-      string = ('string')
+      string = ('')
       result = national_district_importer.tick(count, interval, string)
 
       expect(result).not_to be_nil
