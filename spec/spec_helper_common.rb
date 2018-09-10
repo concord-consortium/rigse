@@ -1,4 +1,3 @@
-require 'simplecov'
 require File.expand_path("../../config/environment", __FILE__)
 require 'factory_girl'
 require 'rspec/rails'
@@ -10,23 +9,6 @@ require 'capybara-screenshot/rspec'
 require 'remarkable_activerecord'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-SimpleCov.start do
-  merge_timeout 3600
-  
-  add_filter '/spec/'
-  add_filter '/initializers/'
-  add_filter '/features/'
-  add_filter '/factories/'
-  add_filter '/config/'
-
-  add_group 'Controllers', 'app/controllers'
-  add_group 'Models', 'app/models'
-  add_group 'Helpers', 'app/helpers'
-  add_group 'Views', 'app/views'
-  add_group 'Policies', 'app/policies'
-  add_group 'Services', 'app/services'
-  add_group 'Lib', 'lib'
-end
 
 # Mute FactoryGirl deprecation warnings...
 ActiveSupport::Deprecation.behavior = lambda do |msg, stack|
