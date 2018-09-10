@@ -12,7 +12,7 @@ class Portal::Bookmark < ActiveRecord::Base
   # Global filtering of scope, based on Admin Project settings. Note that {} block
   # is required so the expression is evaluated lazily and current settings are used.
   default_scope { where(:type => self.enabled_bookmark_types) }
-  default_scope :order => 'position'
+  default_scope { order('position') }
   acts_as_list
 
   def self.available_types

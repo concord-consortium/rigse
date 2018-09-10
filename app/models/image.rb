@@ -22,12 +22,12 @@ class Image < ActiveRecord::Base
 
   validates_presence_of :user_id, :name, :publication_status
 
-  scope :published, :conditions => { :publication_status => 'published' }
-  scope :private_status, :conditions => { :publication_status => 'private' }
-  scope :draft_status, :conditions => { :publication_status => 'draft' }
+  scope :published, -> { where(publication_status: 'published') }
+  scope :private_status, -> { where(publication_status:'private') }
+  scope :draft_status, -> { where(publication_status: 'draft') }
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
   scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
-  scope :not_private, { :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')" }
+  scope :not_private, -> { where("#{self.table_name}.publication_status IN ('published', 'draft')") }
 
   scope :visible_to_user, proc { |u| { :conditions =>
     [ "#{self.table_name}.publication_status = 'published' OR
@@ -38,7 +38,7 @@ class Image < ActiveRecord::Base
     [ "#{self.table_name}.publication_status IN ('published', 'draft') OR
       (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id ]
   }}
-  scope :no_drafts, :conditions => "#{self.table_name}.publication_status NOT IN ('draft')"
+  scope :no_drafts, -> { where("#{self.table_name}.publication_status NOT IN ('draft')") }
 
   scope :like, lambda { |name|
     name = "%#{name}%"

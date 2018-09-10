@@ -34,9 +34,9 @@ module Publishable
         transitions :to => :draft, :from => [:published]
       end
 
-      scope :published,
+      scope :published, ->
       {
-        :conditions =>{:publication_status => "published"}
+        where(:publication_status => "published")
       }
 
       def available_states(who_wants_to_know)

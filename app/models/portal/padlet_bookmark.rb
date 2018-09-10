@@ -1,5 +1,5 @@
 class Portal::PadletBookmark < Portal::Bookmark
-  default_scope :order => 'position'
+  default_scope { order('position') }
 
   def self.create_for_user(user, clazz = nil)
     return false if user.anonymous?

@@ -74,14 +74,14 @@ class Investigation < ActiveRecord::Base
   # for convenience (will not work in find_by_* &etc.)
   delegate :grade_span, :domain, :to => :grade_span_expectation, :allow_nil => true
 
-  scope :assigned, where('investigations.offerings_count > 0')
+  scope :assigned, -> { where('investigations.offerings_count > 0') }
   #
   # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
   # Investigation.with_gse.grade('9-11') == good
   # Investigation.grade('9-11') == bad
   #
-  scope :with_gse, {
-    :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
+  scope :with_gse, -> {
+    joins("left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)")
   }
 
   scope :domain, lambda { |domain_id|
@@ -105,8 +105,8 @@ class Investigation < ActiveRecord::Base
     }
   }
 
-  scope :activity_group, {
-    :group => "#{self.table_name}.id"
+  scope :activity_group, -> {
+    group("#{self.table_name}.id")
   }
 
   scope :ordered_by, lambda { |order| { :order => order } }
