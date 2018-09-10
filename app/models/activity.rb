@@ -92,18 +92,15 @@ class Activity < ActiveRecord::Base
     }
   }
 
-  scope :investigation, ->
-  {
+  scope :investigation, -> {
     joins("left outer JOIN investigations ON investigations.id = activities.investigation_id")
   }
 
-  scope :published, ->
-  {
+  scope :published, -> {
     where('activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)')
   }
 
-  scope :directly_published, ->
-  {
+  scope :directly_published, -> {
     where('activities.publication_status = "published"')
   }
 

@@ -137,17 +137,11 @@ class ExternalActivity < ActiveRecord::Base
     errors.add(:url, 'must be a valid url') if validated_url.nil?
   end
 
-  scope :published, ->
-  {
-    where(publication_status: "published")
-  }
+  scope :published, -> { where(publication_status: "published") }
 
   scope :assigned, -> { where('offerings_count > 0') }
 
-  scope :not_private, ->
-  {
-    where("#{self.table_name}.publication_status IN ('published', 'draft')")
-  }
+  scope :not_private, -> { where("#{self.table_name}.publication_status IN ('published', 'draft')") }
 
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 

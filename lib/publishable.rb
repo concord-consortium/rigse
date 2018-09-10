@@ -34,8 +34,7 @@ module Publishable
         transitions :to => :draft, :from => [:published]
       end
 
-      scope :published, ->
-      {
+      scope :published, -> {
         where(:publication_status => "published")
       }
 
