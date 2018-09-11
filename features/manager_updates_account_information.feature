@@ -36,7 +36,7 @@ Feature: A manager updates account information for another user
     When I log out
     And I login with username: <userlogin> password: <new_password>
     Then I should see "Welcome"
-    And I should see "Settings"
+    And I should see "SETTINGS"
 
     Examples:
       | username      | userlogin | new_password |
