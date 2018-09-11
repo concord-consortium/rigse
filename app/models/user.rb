@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
   self.token_authentication_key = "access_token"
-  default_scope where(User.arel_table[:state].not_in(['disabled']))
+  default_scope { where(User.arel_table[:state].not_in(['disabled'])) }
 
   def apply_omniauth(omniauth)
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
@@ -57,12 +57,12 @@ class User < ActiveRecord::Base
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
-  scope :all_users, { :conditions => {}}
-  scope :active, { :conditions => { :state => 'active' } }
-  scope :suspended, {:conditions => { :state => 'suspended'}}
-  scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
-  scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
-  scope :default, { :conditions => { :default_user => true } }
+  scope :all_users, -> { where(nil) }
+  scope :active, -> { where(state: 'active') }
+  scope :suspended, -> { where(state: 'suspended') }
+  scope :no_email, -> { where("email LIKE '#{NO_EMAIL_STRING}%'") }
+  scope :email, -> { where("email NOT LIKE '#{NO_EMAIL_STRING}%'") }
+  scope :default, -> { where(default_user: true) }
   scope :with_role, lambda { | role_name |
     { :include => :roles, :conditions => ['roles.title = ?',role_name]}
   }

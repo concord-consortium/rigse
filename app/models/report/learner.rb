@@ -11,10 +11,10 @@ class Report::Learner < ActiveRecord::Base
   serialize    :answers, Hash
   belongs_to   :runnable, :polymorphic => true
 
-  scope :after,  lambda         { |date|         {:conditions => ["last_run > ?", date]} }
-  scope :before, lambda         { |date|         {:conditions => ["last_run < ?", date]} }
-  scope :in_schools, lambda     { |school_ids|   {:conditions => {:school_id   => school_ids   }}}
-  scope :in_classes, lambda     { |class_ids|    {:conditions => {:class_id    => class_ids    }}}
+  scope :after,  lambda         { |date|         where("last_run > ?", date)  }
+  scope :before, lambda         { |date|         where("last_run < ?", date) }
+  scope :in_schools, lambda     { |school_ids|   where(:school_id   => school_ids) }
+  scope :in_classes, lambda     { |class_ids|    where(:class_id    => class_ids) }
 
   scope :with_permission_ids, lambda { |ids|
     includes(student: :portal_student_permission_forms)
