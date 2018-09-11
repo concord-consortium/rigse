@@ -89,7 +89,7 @@ class Portal::School < ActiveRecord::Base
     ##
     ## given a NCES school, find or create a portal school for it
     ##
-    def find_or_create_by_nces_school(nces_school)
+    def find_or_create_using_nces_school(nces_school)
       found_instance = find(:first, :conditions=> {:nces_school_id => nces_school.id})
       unless found_instance
         attributes = {
@@ -99,7 +99,7 @@ class Portal::School < ActiveRecord::Base
           :state           => nces_school.MSTATE,
           :ncessch         => nces_school.NCESSCH,
           :zipcode         => nces_school.MZIP,
-          :district        => Portal::District.find_or_create_by_nces_district(nces_school.nces_district)
+          :district        => Portal::District.find_or_create_using_nces_district(nces_school.nces_district)
         }
         found_instance = create!(attributes)
       end

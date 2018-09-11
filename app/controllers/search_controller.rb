@@ -186,7 +186,7 @@ class SearchController < ApplicationController
         portal_clazz_offerings = portal_clazz.offerings
         portal_offering = portal_clazz_offerings.find_by_runnable_id_and_runnable_type(runnable_id,runnable_type)
         if portal_offering.nil?
-          offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(portal_clazz.id,runnable_type,runnable_id)
+          offering = Portal::Offering.where(clazz_id: portal_clazz.id, runnable_type: runnable_type, runnable_id: runnable_id).first_or_create
           if offering.position == 0
             offering.position = portal_clazz.offerings.length
             offering.save
@@ -338,7 +338,7 @@ class SearchController < ApplicationController
         collection_items = collection.materials_collection_items
         item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
         if item.nil?
-          item = MaterialsCollectionItem.find_or_create_by_materials_collection_id_and_material_type_and_material_id(collection.id,runnable_type,runnable_id)
+          item = MaterialsCollectionItem.xfind_or_create_by_materials_collection_id_and_material_type_and_material_id(collection.id,runnable_type,runnable_id)
           if item.position.nil?
             item.position = collection_items.length
             item.save

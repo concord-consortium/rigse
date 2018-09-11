@@ -20,7 +20,7 @@ end
 When /^(?:|I )create interactive "(.+)" before "(.+)" by date$/ do |interactive_name1, interactive_name2|
   created_at = Date.today
   [interactive_name1, interactive_name2].each do |interactive|
-    inv = Interactive.find_or_create_by_name(interactive)
+    inv = Interactive.xfind_or_create_by_name(interactive)
     created_at = created_at - 1
     inv.created_at = created_at
     inv.updated_at = created_at

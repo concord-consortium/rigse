@@ -4,8 +4,7 @@ namespace :api do
 
     # create the user if needed
     password = rand(36**16).to_s(36)
-    api_user = User.find_or_create_by_login(
-      :login                 => "admin_api_user",
+    api_user = User.where(:login => "admin_api_user").first_or_create(
       :first_name            => "Admin API",
       :last_name             => "User",
       :email                 => "admin_api_user@concord.org",
@@ -15,8 +14,7 @@ namespace :api do
     api_user.add_role("admin")
 
     # create the client if needed
-    client = Client.find_or_create_by_name(
-      :name                  => "admin_api_user_client",
+    client = Client.where(:name => "admin_api_user_client").first_or_create(
       :app_id                => "admin_api_user_client",
       :app_secret            => SecureRandom.uuid
     )

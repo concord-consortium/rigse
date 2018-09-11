@@ -57,7 +57,7 @@ class Portal::District < ActiveRecord::Base
     ##
     ## given a NCES district, either find or create a portal_distrcit for it.
     ##
-    def find_or_create_by_nces_district(nces_district)
+    def find_or_create_using_nces_district(nces_district)
       found_instance = find(:first, :conditions=> {:nces_district_id => nces_district.id})
       unless found_instance
         attributes = {
@@ -75,16 +75,16 @@ class Portal::District < ActiveRecord::Base
     end
 
     def default
-      Portal::District.find_or_create_by_name('default')
+      Portal::District.where(name: 'default').first_or_create
     end
 
     def find_by_similar_or_new(attrs,username='automatic process')
-      found = Portal::District.find(:first, :conditions => attrs)
+      found = Portal::District.where(attrs).first
       unless found
         attrs[:description] ||= "created by #{username}"
         found = Portal::District.new(attrs)
       end
-      return found
+      found
     end
 
     def find_by_similar_name_or_new(name,username='automatic process')
@@ -94,7 +94,7 @@ class Portal::District < ActiveRecord::Base
       unless found
         found = Portal::District.new(:name => name, :description => "#{name} created by #{username}")
       end
-      return found
+      found
     end
   end
 

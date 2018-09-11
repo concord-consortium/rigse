@@ -17,11 +17,11 @@ end
 #Table: | activity | section   | page   | multiple_choices |
 Given /^the following activities with multiple choices exist:$/ do |activity_table|
   activity_table.hashes.each do |hash|
-    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    activity = Activity.xfind_or_create_by_name(hash['activity'], :description => hash['activity'])
     activity.user = Factory(:user)
     expect(activity.save).to be_truthy
-    section = Section.find_or_create_by_name(hash['section'])
-    page = Page.find_or_create_by_name(hash['page'])
+    section = Section.xfind_or_create_by_name(hash['section'])
+    page = Page.xfind_or_create_by_name(hash['page'])
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
     mcs.each do |q|
       q.pages << page
@@ -39,7 +39,7 @@ end
 When /^(?:|I )create activities "(.+)" before "(.+)" by date$/ do |activities_name1, activities_name2|
   created_at = Date.today
   ['activities_name1', 'activities_name2'].each do |activity|
-    act = Activity.find_or_create_by_name(activity)
+    act = Activity.xfind_or_create_by_name(activity)
     created_at = created_at - 1
     act.created_at = created_at
     act.updated_at = created_at

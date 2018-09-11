@@ -381,7 +381,7 @@ class User < ActiveRecord::Base
 
   def add_role(role)
     unless has_role?(role)
-      roles << Role.find_or_create_by_title(role)
+      roles << Role.where(title: role).first_or_create
     end
   end
 
@@ -485,8 +485,7 @@ class User < ActiveRecord::Base
     if @@anonymous_user
       @@anonymous_user
     else
-      anonymous_user = User.find_or_create_by_login(
-        :login                 => "anonymous",
+      anonymous_user = User.where(login: "anonymous").first_or_create(
         :first_name            => "Anonymous",
         :last_name             => "User",
         :email                 => "anonymous@concord.org",
@@ -500,8 +499,8 @@ class User < ActiveRecord::Base
 
   def school
     school_person = self.portal_teacher || self.portal_student
-    if (school_person)
-      return school_person.school
+    if school_person
+      school_person.school
     end
   end
 

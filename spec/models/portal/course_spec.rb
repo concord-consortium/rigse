@@ -72,13 +72,13 @@ describe Portal::Course do
 
   describe "We should be able to find or create course using a course number, name and school id" do
     it "We should be able to find a course with the same number,name and school_id" do
-      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(@course_number,"with number",@school.id)
+      found = Portal::Course.find_or_create_using_course_number_name_and_school_id(@course_number,"with number",@school.id)
       expect(found).not_to be_nil
       expect(found.id).to be(@course_with_number.id)
     end
     it "We should be able to find a course with the same number,and give it a new name" do
       new_name = "new name for the course"
-      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(@course_number,new_name,@school.id)
+      found = Portal::Course.find_or_create_using_course_number_name_and_school_id(@course_number,new_name,@school.id)
       expect(found).not_to be_nil
       expect(found.id).to be(@course_with_number.id)
       expect(found.name).to be(new_name)
@@ -86,7 +86,7 @@ describe Portal::Course do
     
     it "We should be able to find a course with no previous course number, but with the same name, and assign the new number" do
       new_course_number="NEW_COURSE_NUMBER"
-      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(new_course_number,"without number",@school.id)
+      found = Portal::Course.find_or_create_using_course_number_name_and_school_id(new_course_number,"without number",@school.id)
       expect(found).not_to be_nil
       expect(found.id).to be(@course_without_number.id)
       expect(found.course_number).to be(new_course_number)
@@ -95,7 +95,7 @@ describe Portal::Course do
     it "We should create a new course with a new name and number schoold_id but differing course_number" do
       new_course_number="NEW_C_NMBR"
       new_course_name = "new course name"
-      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(new_course_number,new_course_name,@school.id)
+      found = Portal::Course.find_or_create_using_course_number_name_and_school_id(new_course_number,new_course_name,@school.id)
       expect(found).not_to be_nil
       expect(found.id).not_to be(@course_without_number.id)
       expect(found.id).not_to be(@course_with_number.id)
@@ -106,7 +106,7 @@ describe Portal::Course do
     it "We should create a new course with a new name and number, even if the name matches an existing name" do
       new_course_number="NEW_C_NMBR"
       existing_name = "with number"
-      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(new_course_number,existing_name,@school.id)
+      found = Portal::Course.find_or_create_using_course_number_name_and_school_id(new_course_number,existing_name,@school.id)
       expect(found).not_to be_nil
       expect(found.id).not_to be(@course_without_number.id)
       expect(found.id).not_to be(@course_with_number.id)
@@ -117,7 +117,7 @@ describe Portal::Course do
     it "We should create a new course witht the SAME name and SAME number, but with a differing school.id" do
       new_course_number="NEW_C_NMBR"
       existing_name = "with number"
-      found = Portal::Course.find_or_create_by_course_number_name_and_school_id(@course_with_number.course_number, @course_with_number.name, 777)
+      found = Portal::Course.find_or_create_using_course_number_name_and_school_id(@course_with_number.course_number, @course_with_number.name, 777)
       expect(found).not_to be_nil
       expect(found.id).not_to equal(@course_without_number.id)
       expect(found.id).not_to equal(@course_with_number.id)
@@ -150,12 +150,12 @@ describe Portal::Course do
   end
 
   # TODO: auto-generated
-  describe '.find_or_create_by_course_number_name_and_school_id' do
-    xit 'find_or_create_by_course_number_name_and_school_id' do
+  describe '.find_or_create_using_course_number_name_and_school_id' do
+    xit 'find_or_create_using_course_number_name_and_school_id' do
       number = double('number')
       name = double('name')
       school_id = double('school_id')
-      result = described_class.find_or_create_by_course_number_name_and_school_id(number, name, school_id)
+      result = described_class.find_or_create_using_course_number_name_and_school_id(number, name, school_id)
 
       expect(result).not_to be_nil
     end

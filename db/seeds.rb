@@ -1,12 +1,12 @@
 def create_district_school
   # Make a district
-  site_district = Portal::District.find_or_create_by_name(APP_CONFIG[:site_district])
+  site_district = Portal::District.where(name: APP_CONFIG[:site_district]).first_or_create
   site_district.description = "This is a virtual district used as a default for Schools, Teachers, Classes and Students that don't belong to any other districts."
   site_district.state = "MA"
   site_district.save!
 
   # Make a school within the district
-  site_school = Portal::School.find_or_create_by_name_and_district_id(APP_CONFIG[:site_school], site_district.id)
+  site_school = Portal::School.where(name: APP_CONFIG[:site_school], district_id: site_district.id).first_or_create
   site_school.description = "This is a virtual school used as a default for Teachers, Classes and Students that don't belong to any other schools."
   site_school.state = "MA"
   site_school.save!
@@ -15,15 +15,15 @@ end
 
 def create_roles
   roles_in_order = [
-    admin_role = Role.find_or_create_by_title('admin'),
-    manager_role = Role.find_or_create_by_title('manager'),
-    researcher_role = Role.find_or_create_by_title('researcher'),
-    author_role = Role.find_or_create_by_title('author'),
-    member_role = Role.find_or_create_by_title('member'),
-    guest_role = Role.find_or_create_by_title('guest')
+    Role.where(title: 'admin').first_or_create,
+    Role.where(title: 'manager').first_or_create,
+    Role.where(title: 'researcher').first_or_create,
+    Role.where(title: 'author').first_or_create,
+    Role.where(title: 'member').first_or_create,
+    Role.where(title: 'guest').first_or_create
   ]
 
-  all_roles = Role.find(:all)
+  all_roles = Role.all
   unused_roles = all_roles - roles_in_order
   if unused_roles.length > 0
     unused_roles.each { |role| role.destroy }
@@ -39,35 +39,35 @@ def create_default_users
   default_admin_user_settings = APP_CONFIG[:default_admin_user]
 
   default_user_list = [
-    admin_user = User.find_or_create_by_login(:login => default_admin_user_settings [:login],
+    admin_user = User.where(:login => default_admin_user_settings [:login]).first_or_create(
       :first_name => default_admin_user_settings[:first_name],
       :last_name =>  default_admin_user_settings[:last_name],
       :email =>      default_admin_user_settings[:email],
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-    manager_user = User.find_or_create_by_login(:login => 'manager',
+    manager_user = User.where(:login => 'manager').first_or_create(
       :first_name => 'Manager', :last_name => 'User',
       :email => 'manager@concord.org',
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-    researcher_user = User.find_or_create_by_login(:login => 'researcher',
+    researcher_user = User.where(:login => 'researcher').first_or_create(
       :first_name => 'Researcher', :last_name => 'User',
       :email => 'researcher@concord.org',
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-    author_user = User.find_or_create_by_login(:login => 'author',
+    author_user = User.where(:login => 'author').first_or_create(
       :first_name => 'Author', :last_name => 'User',
       :email => 'author@concord.org',
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
-    member_user = User.find_or_create_by_login(:login => 'member',
+    member_user = User.where(:login => 'member').first_or_create(
       :first_name => 'Member', :last_name => 'User',
       :email => 'member@concord.org',
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true},
 
     anonymous_user = User.anonymous,
 
-    teacher_user = User.find_or_create_by_login(:login => 'teacher',
+    teacher_user = User.where(:login => 'teacher').first_or_create(
       :first_name => 'Valerie', :last_name => 'Frizzle',
       :email => 'teacher@concord.org',
       :password => "password", :password_confirmation => "password"){|u| u.skip_notifications = true}
@@ -111,7 +111,7 @@ def create_default_users
   # Set the site_admin attribute to true for the site_admin.
   # This will be used more later for performance reasons as
   # we integrate permission_sets into membership models.
-  admin_user.update_attribute(:site_admin, true)
+  admin_user.update_attribute(:site_admin).first_or_create(true)
 
   manager_user.add_role('manager')
   researcher_user.add_role('researcher')
@@ -120,26 +120,26 @@ def create_default_users
   member_user.add_role('member')
   anonymous_user.add_role('guest')
 
-  teacher = Portal::Teacher.find_or_create_by_user_id(:user_id => teacher_user.id)
+  teacher = Portal::Teacher.where(:user_id => teacher_user.id).first_or_create
   site_school = Portal::School.find_by_name(APP_CONFIG[:site_school])
   site_school.portal_teachers << teacher
 end
 
 def create_grades
   grades_in_order = [
-  grade_k  = Portal::Grade.find_or_create_by_name(:name => 'K',  :description => 'kindergarten'),
-  grade_1  = Portal::Grade.find_or_create_by_name(:name => '1',  :description => '1st grade'),
-  grade_2  = Portal::Grade.find_or_create_by_name(:name => '2',  :description => '2nd grade'),
-  grade_3  = Portal::Grade.find_or_create_by_name(:name => '3',  :description => '3rd grade'),
-  grade_4  = Portal::Grade.find_or_create_by_name(:name => '4',  :description => '4th grade'),
-  grade_5  = Portal::Grade.find_or_create_by_name(:name => '5',  :description => '5th grade'),
-  grade_6  = Portal::Grade.find_or_create_by_name(:name => '6',  :description => '6th grade'),
-  grade_7  = Portal::Grade.find_or_create_by_name(:name => '7',  :description => '7th grade'),
-  grade_8  = Portal::Grade.find_or_create_by_name(:name => '8',  :description => '8th grade'),
-  grade_9  = Portal::Grade.find_or_create_by_name(:name => '9',  :description => '9th grade'),
-  grade_10 = Portal::Grade.find_or_create_by_name(:name => '10', :description => '10th grade'),
-  grade_11 = Portal::Grade.find_or_create_by_name(:name => '11', :description => '11th grade'),
-  grade_12 = Portal::Grade.find_or_create_by_name(:name => '12', :description => '12th grade')
+  grade_k  = Portal::Grade.where(:name => 'K').first_or_create( :description => 'kindergarten'),
+  grade_1  = Portal::Grade.where(:name => '1').first_or_create( :description => '1st grade'),
+  grade_2  = Portal::Grade.where(:name => '2').first_or_create( :description => '2nd grade'),
+  grade_3  = Portal::Grade.where(:name => '3').first_or_create( :description => '3rd grade'),
+  grade_4  = Portal::Grade.where(:name => '4').first_or_create( :description => '4th grade'),
+  grade_5  = Portal::Grade.where(:name => '5').first_or_create( :description => '5th grade'),
+  grade_6  = Portal::Grade.where(:name => '6').first_or_create( :description => '6th grade'),
+  grade_7  = Portal::Grade.where(:name => '7').first_or_create( :description => '7th grade'),
+  grade_8  = Portal::Grade.where(:name => '8').first_or_create( :description => '8th grade'),
+  grade_9  = Portal::Grade.where(:name => '9').first_or_create( :description => '9th grade'),
+  grade_10 = Portal::Grade.where(:name => '10').first_or_create(:description => '10th grade'),
+  grade_11 = Portal::Grade.where(:name => '11').first_or_create(:description => '11th grade'),
+  grade_12 = Portal::Grade.where(:name => '12').first_or_create(:description => '12th grade')
   ]
 
   # to make sure the list is ordered correctly in case a new grade level is added
@@ -151,7 +151,7 @@ end
 def create_settings
   settings = Admin::Settings.first
   if settings.nil?
-    settings = Admin::Settings.create(:active => true)
+    Admin::Settings.create(:active => true)
   end
 end
 
