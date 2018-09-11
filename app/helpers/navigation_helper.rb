@@ -70,7 +70,7 @@ module NavigationHelper
         url: '/help',
         small: true,
         sort: -1,
-        iconName:'icon-search',
+        iconName:'icon-help',
       }
     else
       false
@@ -192,7 +192,7 @@ module NavigationHelper
     clazz_links << {
       id: "/classes/manage",
       label: "Manage Classes",
-      url: manage_portal_clazzes_url,
+      url: manage_portal_clazzes_path,
       sort: 11
       # link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"pie", :id=>"btn_manage_classes"
     }
