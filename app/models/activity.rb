@@ -106,7 +106,7 @@ class Activity < ActiveRecord::Base
 
   scope :assigned, -> { where('offerings_count > 0') }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   scope :is_template, ->(v) do
     joins(['LEFT OUTER JOIN investigations ON investigations.id = activities.investigation_id',

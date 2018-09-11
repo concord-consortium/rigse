@@ -109,7 +109,7 @@ class Investigation < ActiveRecord::Base
     group("#{self.table_name}.id")
   }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   scope :is_template, ->(v) do
     joins(['LEFT OUTER JOIN activities ON investigations.id = activities.investigation_id',

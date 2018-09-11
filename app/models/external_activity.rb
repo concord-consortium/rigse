@@ -145,7 +145,7 @@ class ExternalActivity < ActiveRecord::Base
 
   scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   scope :official, -> { where(is_official: true) }
   scope :contributed, -> { where(is_official: false) }

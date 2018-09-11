@@ -45,7 +45,7 @@ class Image < ActiveRecord::Base
     { :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.attribution LIKE ?", name,name] }
   }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   include Changeable
   include Publishable
