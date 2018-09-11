@@ -17,8 +17,6 @@ RailsPortal::Application.routes.draw do
   match '/auth/login' => 'auth#login', :as => :auth_login
   match '/oauth/token' => 'auth#access_token'
 
-  root :to => "home#index"
-
   match "search" => 'search#index', :as => :search
 
   get 'search/index'
@@ -549,7 +547,6 @@ RailsPortal::Application.routes.draw do
     match '/report' => 'home#report', :as => :report
     match '/collections' => 'home#collections', :as => :about
     match '/test_exception' => 'home#test_exception', :as => :test_exception
-    match '/' => 'home#index', :as => :root
     match '/requirements' => 'home#requirements', :as => :requirements
     match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     match '/admin' => 'home#admin', :as => :admin
