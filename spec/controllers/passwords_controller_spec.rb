@@ -15,7 +15,7 @@ describe PasswordsController do
 
       # Stub User.find_by_login because of an rspec-related bug using the dynamic finder
       allow(User).to receive(:find_by_login) do |*login|
-        User.first(:conditions => { :login => login })
+        User.where(login: login).first
       end
 
     end

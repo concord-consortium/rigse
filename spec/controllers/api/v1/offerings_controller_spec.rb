@@ -37,10 +37,10 @@ describe API::V1::OfferingsController do
   end
 
   def add_answer(offering, student, question)
-    learner = Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student.id)
+    learner = Portal::Learner.where(offering_id: offering.id, student_id: student.id ).first_or_create
     add_answer_for_learner(learner, question, {answer: "Some answer"})
-    learner.report_learner.update_answers()
-    learner.report_learner.save
+    learner.report_learner.update_answers
+    learner.report_learner.save!
   end
 
   describe "GET #show (+ basic response structure tests)" do
