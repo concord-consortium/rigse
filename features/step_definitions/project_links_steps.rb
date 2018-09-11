@@ -26,13 +26,15 @@ Given /^the "([^"]*)" user is added to the default project$/ do |username|
 end
 
 Then /^I should see a project link labeled "([^"]*)" linking to "([^"]*)"$/ do |link, href|
-  bin_name = "Resources"
-  page.find(:xpath,"//*[text()='#{bin_name}']").click
   expect(page).to have_link link
   expect(find_link(link)[:href]).to eq href
+end
+
+Then /^I expand the "([^"]*)" section$/ do |section_name|
+  # Note: if the section is already expanded this will fail.
+  page.find(:xpath,"//*[@id='clazzes_nav']//*[text()='#{section_name}'][not(contains(@class,'open'))]").click
 end
 
 Then /^I should not see a project link labeled "([^"]*)"$/ do |link|
   expect(page).to have_no_link link
 end
-
