@@ -34,11 +34,11 @@ source "http://rubygems.org"
 
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem 'axlsx',                "~> 2.0", ">= 2.0.1"
+  gem 'axlsx',                "> 2.5"
 
   # currently (2017-06-13) axlsx requires an older version of rubyzip, hopefully this will
   # shortly be remedied
-  gem 'rubyzip',              "~> 1.0.0"
+  gem 'rubyzip',              "~> 1.2.2"
 
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"

@@ -57,9 +57,6 @@ describe Portal::TeachersController do
           }
         }
         
-        current_user_count = User.count(:all)
-        current_teacher_count = Portal::Teacher.count(:all)
-        
         post :create, params
         
         expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
@@ -78,13 +75,13 @@ describe Portal::TeachersController do
           }
         }
         allow(@selector).to receive(:valid?).and_return false
-        current_user_count = User.count(:all)
-        current_teacher_count = Portal::Teacher.count(:all)
+        current_user_count = User.count
+        current_teacher_count = Portal::Teacher.count
         
         post :create, params
         
-        expect(User.count(:all)).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
-        expect(Portal::Teacher.count(:all)).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
+        expect(User.count).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
+        expect(Portal::Teacher.count).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
 
         #expect(flash.now[:error]).not_to be_nil
         expect(flash[:notice]).to be_nil

@@ -167,8 +167,8 @@ describe ExternalActivity do
     end
 
     it "should copy standard statements" do
-      ss = StandardStatement.find_all_by_material_type_and_material_id('external_activity', clone.id)
-      expect(ss.count).to eq(1)
+      ss = StandardStatement.where(material_type: 'external_activity', material_id: clone.id)
+      expect(ss.count).to equal(1)
       expect(ss.first.uri).to eq(standard_statement.uri)
     end
 

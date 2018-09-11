@@ -53,7 +53,7 @@ describe BearerTokenAuthenticatable::BearerToken do
   let(:runnable_opts)   { {name: 'the activity'}              }
   let(:class_teacher)   { Factory.create(:portal_teacher)     }
   let(:student)         { FactoryGirl.create(:full_portal_student) }
-  let(:learner)         { Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student.id )}
+  let(:learner)         { Portal::Learner.where(offering_id: offering.id, student_id: student.id).first_or_create }
   let(:params)          { {} }
   let(:client)          { Client.create(
          :name       => "test_api_client",
