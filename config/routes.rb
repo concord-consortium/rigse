@@ -543,9 +543,9 @@ RailsPortal::Application.routes.draw do
     match '/my_classes' => 'home#my_classes', :as => :my_classes
     match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
     match '/getting_started' => 'home#getting_started', :as => :getting_started
-    match '/about' => 'home#about', :as => :about
+    match '/about' => 'home#about'
     match '/report' => 'home#report', :as => :report
-    match '/collections' => 'home#collections', :as => :about
+    match '/collections' => 'home#collections'
     match '/test_exception' => 'home#test_exception', :as => :test_exception
     match '/requirements' => 'home#requirements', :as => :requirements
     match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
