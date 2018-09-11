@@ -713,10 +713,11 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    axlsx (2.0.1)
-      htmlentities (~> 4.3.1)
-      nokogiri (>= 1.4.1)
-      rubyzip (~> 1.0.0)
+    axlsx (3.0.0.pre)
+      htmlentities (~> 4.3, >= 4.3.4)
+      mimemagic (~> 0.3)
+      nokogiri (~> 1.8, >= 1.8.2)
+      rubyzip (~> 1.2, >= 1.2.1)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -949,6 +950,7 @@ GEM
       webrobots (>= 0.0.9, < 0.2)
     method_source (0.9.0)
     mime-types (1.25.1)
+    mimemagic (0.3.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
     momentjs-rails (2.17.1)
@@ -1123,7 +1125,7 @@ GEM
     ruby-prof (0.12.1-x86-mingw32)
     ruby-rc4 (0.1.5)
     ruby_dep (1.5.0)
-    rubyzip (1.0.0)
+    rubyzip (1.2.2)
     safe_yaml (1.0.4)
     sanitize (4.0.0)
       crass (~> 1.0.2)
@@ -1243,7 +1245,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   aws-sdk (~> 3)
-  axlsx (~> 2.0, >= 2.0.1)
+  axlsx (> 2.5)
   better_errors (~> 1.1.0)
   bullet
   calpicker!
@@ -1333,7 +1335,7 @@ DEPENDENCIES
   rspec-rails
   ruby-debug
   ruby-prof
-  rubyzip (~> 1.0.0)
+  rubyzip (~> 1.2.2)
   rush!
   sanitize
   sass
