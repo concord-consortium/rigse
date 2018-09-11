@@ -48,7 +48,7 @@ Given /^the following multiple choice questions exists:$/ do |mult_table|
     choices = hash['answers'].split(",")
     choices.map!{|c| c.strip}
     correct = hash['correct_answer']
-    multi = Embeddable::MultipleChoice.xfind_or_create_by_prompt(prompt)
+    multi = Embeddable::MultipleChoice.where(prompt: prompt).first_or_create
     choices.map! { |c| Embeddable::MultipleChoiceChoice.create(
       :choice => c, 
       :multiple_choice => multi, 
@@ -59,7 +59,7 @@ Given /^the following multiple choice questions exists:$/ do |mult_table|
 end
 
 Given /^there is an image question with the prompt "([^"]*)"$/ do |prompt|
-  image_question = Embeddable::ImageQuestion.xfind_or_create_by_prompt(prompt)
+  Embeddable::ImageQuestion.where(prompt: prompt).first_or_create
 end
 
 
