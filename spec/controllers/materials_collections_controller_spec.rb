@@ -156,7 +156,7 @@ describe MaterialsCollectionsController do
       current_order = collection.materials_collection_items.map {|i| i.id }.dup
       shuffled_order = current_order.shuffle
       post :sort_materials, { :id => collection.id, "materials_materials_collection_#{collection.id}" => shuffled_order }
-      new_order = MaterialsCollectionItem.order(:position).find_all_by_materials_collection_id(collection.id).map{|i| i.id}
+      new_order = MaterialsCollectionItem.order(:position).where(materials_collection_id: collection.id).map(&:id)
       expect(response.status).to eq(200)
       expect(new_order).to eq(shuffled_order)
     end

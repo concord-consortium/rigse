@@ -55,13 +55,13 @@ describe Portal::StudentsController do
     it "creates a user and a student when given valid parameters" do
       stub_user_with_params
 
-      current_user_count = User.count(:all)
-      current_student_count = Portal::Student.count(:all)
+      current_user_count = User.count
+      current_student_count = Portal::Student.count
 
       post :create, @params_for_creation
 
-      expect(User.count(:all)).to eq(current_user_count + 1)
-      expect(Portal::Student.count(:all)).to eq(current_student_count + 1)
+      expect(User.count).to eq(current_user_count + 1)
+      expect(Portal::Student.count).to eq(current_student_count + 1)
 
     end
 
@@ -86,25 +86,25 @@ describe Portal::StudentsController do
     it "does not create a user or a student when given incorrect password_confirmation" do
       @params_for_creation[:user][:password_confirmation] = "wrong"
 
-      current_user_count = User.count(:all)
-      current_student_count = Portal::Student.count(:all)
+      current_user_count = User.count
+      current_student_count = Portal::Student.count
 
       post :create, @params_for_creation
 
-      expect(User.count(:all)).to eq(current_user_count)
-      expect(Portal::Student.count(:all)).to eq(current_student_count)
+      expect(User.count).to eq(current_user_count)
+      expect(Portal::Student.count).to eq(current_student_count)
     end
 
     it "does not create a user or a student when given an invalid classword" do
       @params_for_creation[:clazz][:class_word] = "wrong"
 
-      current_user_count = User.count(:all)
-      current_student_count = Portal::Student.count(:all)
+      current_user_count = User.count
+      current_student_count = Portal::Student.count
 
       post :create, @params_for_creation
 
-      expect(User.count(:all)).to eq(current_user_count)
-      expect(Portal::Student.count(:all)).to eq(current_student_count)
+      expect(User.count).to eq(current_user_count)
+      expect(Portal::Student.count).to eq(current_student_count)
     end
 
 
@@ -120,25 +120,25 @@ describe Portal::StudentsController do
         expect(SecurityQuestion).to receive(:errors_for_questions_list!)
         expect(@new_user).to receive(:update_security_questions!)
 
-        current_user_count = User.count(:all)
-        current_student_count = Portal::Student.count(:all)
+        current_user_count = User.count
+        current_student_count = Portal::Student.count
 
         post :create, @params_for_creation
 
-        expect(User.count(:all)).to eq(current_user_count + 1)
-        expect(Portal::Student.count(:all)).to eq(current_student_count + 1)
+        expect(User.count).to eq(current_user_count + 1)
+        expect(Portal::Student.count).to eq(current_student_count + 1)
       end
 
       it "does not create a user or a student when given bad security questions" do
         @params_for_creation[:security_questions][:question2][:answer] = "" # empty answers are not acceptable
 
-        current_user_count = User.count(:all)
-        current_student_count = Portal::Student.count(:all)
+        current_user_count = User.count
+        current_student_count = Portal::Student.count
 
         post :create, @params_for_creation
 
-        expect(User.count(:all)).to eq(current_user_count)
-        expect(Portal::Student.count(:all)).to eq(current_student_count)
+        expect(User.count).to eq(current_user_count)
+        expect(Portal::Student.count).to eq(current_student_count)
       end
 
       it "does not check for security questions when they are not enabled in the settings" do

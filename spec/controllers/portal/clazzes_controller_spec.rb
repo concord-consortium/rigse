@@ -331,9 +331,9 @@ describe Portal::ClazzesController do
     before(:each) do
       # Make sure we have the grade levels we want
       0.upto(12) do |num|
-        grade = Portal::Grade.find_or_create_by_name(num.to_s)
+        grade = Portal::Grade.where(name: num.to_s).first_or_create
         grade.active = true
-        grade.save
+        grade.save!
       end
 
       @post_params = {
@@ -406,7 +406,7 @@ describe Portal::ClazzesController do
       sign_in @random_user
 
       expect(@random_user.portal_teacher).to be_nil
-      current_count = Portal::Teacher.count(:all)
+      current_count = Portal::Teacher.count
 
       @post_params[:portal_clazz][:teacher_id] = nil
 
@@ -415,20 +415,20 @@ describe Portal::ClazzesController do
       @random_user.reload
 
       expect(@random_user.portal_teacher).not_to be_nil
-      expect(Portal::Teacher.count(:all)).to eq(current_count + 1)
+      expect(Portal::Teacher.count).to eq(current_count + 1)
     end
 
     it "should not let me create a class with no school" do
       sign_in @authorized_teacher_user
 
-      current_count = Portal::Clazz.count(:all)
+      current_count = Portal::Clazz.count
 
       @post_params[:portal_clazz][:school] = nil
 
       post :create, @post_params
 
       assert flash[:error]
-      expect(Portal::Clazz.count(:all)).to eq(current_count)
+      expect(Portal::Clazz.count).to eq(current_count)
     end
 
     it "should assign the specified grade levels to the new class" do
@@ -447,14 +447,14 @@ describe Portal::ClazzesController do
     it "should not let me create a class with no grade levels when grade levels are enabled" do
       sign_in @authorized_teacher_user
 
-      current_count = Portal::Clazz.count(:all)
+      current_count = Portal::Clazz.count
 
       @post_params[:portal_clazz][:grade_levels] = nil
 
       post :create, @post_params
 
       assert flash[:error]
-      expect(Portal::Clazz.count(:all)).to eq(current_count)
+      expect(Portal::Clazz.count).to equal(current_count)
     end
 
     it "should let me create a class with no grade levels when grade levels are disabled" do
@@ -463,11 +463,11 @@ describe Portal::ClazzesController do
 
       sign_in @authorized_teacher_user
 
-      current_count = Portal::Clazz.count(:all)
+      current_count = Portal::Clazz.count
 
       post :create, @post_params
 
-      expect(Portal::Clazz.count(:all)).to eq(current_count + 1)
+      expect(Portal::Clazz.count).to equal(current_count + 1)
     end
   end
 
@@ -475,9 +475,9 @@ describe Portal::ClazzesController do
     before(:each) do
       # Make sure we have the grade levels we want
       0.upto(12) do |num|
-        grade = Portal::Grade.find_or_create_by_name(num.to_s)
+        grade = Portal::Grade.where(name: num.to_s).first_or_create
         grade.active = true
-        grade.save
+        grade.save!
       end
 
       @post_params = {
