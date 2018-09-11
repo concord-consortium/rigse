@@ -33,9 +33,9 @@ class Portal::School < ActiveRecord::Base
   # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
   has_many :portal_teachers, :through => :members, :source => 'member', :source_type => "Portal::Teacher"
   alias :teachers :portal_teachers
-  scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
-  scope :virtual, { :conditions => 'nces_school_id is NULL' }  
-  scope :has_teachers, joins(:members).group(:school_id)
+  scope :real,    -> { where('nces_school_id is NOT NULL') }
+  scope :virtual, -> { where('nces_school_id is NULL') }
+  scope :has_teachers, -> { joins(:members).group(:school_id) }
 
   # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
   [:virtual?, :real?].each {|method| delegate method, :to=> :district }

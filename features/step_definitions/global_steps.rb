@@ -71,7 +71,7 @@ def scroll_into_view(selector)
   el.native.send_keys(:null) if el.native.class.to_s.split("::").first == "Selenium"
 end
 
-Given /the following users[(?exist):\s]*$/i do |users_table|
+Given /the following users exist:$/i do |users_table|
   users_table.hashes.each do |hash|
     roles = hash.delete('roles')
     if roles
@@ -113,12 +113,12 @@ Given /^(?:|I )login with username[\s=:,]*(\S+)$/ do |username|
   visit "/"
 end
 
-Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+Given /I login with username[\s=:,]*(\S+)\s+[\s]*password[\s=:,]+(\S+)\s*$/ do |username, password|
   step 'I log out'
   login_with_ui_as(username, password)
 end
 
-Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s* using auth\/login page$/ do |username,password|
+Given /I login with username[\s=:,]*(\S+)\s+[[and]?,\s]*password[\s=:,]+(\S+)\s* using auth\/login page$/ do |username, password|
   step 'I log out'
   login_with_auth_login_page_as(username, password)
 end

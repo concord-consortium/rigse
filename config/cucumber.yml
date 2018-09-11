@@ -2,9 +2,9 @@
 rerun = File.file?('rerun.txt') ? IO.read('rerun.txt') : ""
 rerun_opts = rerun.to_s.strip.empty? ? "--format #{ENV['CUCUMBER_FORMAT'] || 'progress'} features" : "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} #{rerun}"
 std_format = "--format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} "
-std_opts = " --tags ~@wip --tags ~@pending --tags ~@no-seeds -r features"
+std_opts = " --tags 'not @wip' --tags 'not @pending' --tags 'not @no-seeds' -r features"
 %>
 default: <%= std_format %> <%= std_opts %> features
 wip: --tags @wip:3 --wip features
-rerun: <%= rerun_opts %> --format rerun --out rerun.txt --tags ~@wip
+rerun: <%= rerun_opts %> --format rerun --out rerun.txt --tags 'not @wip'
 textmate: --format html <%= std_opts %> features
