@@ -1,3 +1,5 @@
+ENV["RAILS_ENV"] = 'test'
+
 require 'simplecov'
 SimpleCov.start do
   merge_timeout 3600
@@ -16,6 +18,7 @@ SimpleCov.start do
   add_group 'Services', 'app/services'
   add_group 'Lib', 'lib'
 end
+
 require_relative 'spec_helper_common'
 require_relative 'spec_helper_pundit'
 
