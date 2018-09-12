@@ -72,10 +72,13 @@ describe Portal::District do
       expect(described_class.limit(3).real).to all(be_a(described_class))
     end
   end
+  
   # TODO: auto-generated
   describe '.virtual' do # scope test
     it 'supports named scope virtual' do
+      Portal::District.create!(@valid_attributes)
       expect(described_class.limit(3).virtual).to all(be_a(described_class))
+      expect(described_class.limit(3).virtual).to have(1).entry
     end
   end
 

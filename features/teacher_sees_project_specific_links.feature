@@ -20,6 +20,6 @@ Feature: Teacher can see project specific links
   Scenario: Teacher in project visits homepage
     Given the "teacher" user is added to the default project
     When I am on getting started page
+    And I expand the "Resources" section
     Then I should see a project link labeled "Foo Project Link" linking to "http://foo.com/"
-      And I should see a project link labeled "Bar Project Link" linking to "http://bar.com/"
-
+    And I should see a project link labeled "Bar Project Link" linking to "http://bar.com/"

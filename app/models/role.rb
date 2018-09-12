@@ -5,6 +5,6 @@ class Role < ActiveRecord::Base
   acts_as_list
   acts_as_replicatable
 
-  default_scope :order => 'position ASC'
+  default_scope { order('position ASC') }
 
 end

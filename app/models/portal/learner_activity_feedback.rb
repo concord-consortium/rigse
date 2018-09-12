@@ -13,7 +13,7 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
 
   serialize :rubric_feedback, JSON
 
-  default_scope :order => 'created_at DESC'
+  default_scope { order('created_at DESC') }
 
   def self._attribute_ids(*attributes)
     results = []

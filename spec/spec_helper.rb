@@ -1,3 +1,24 @@
+ENV["RAILS_ENV"] = 'test'
+
+require 'simplecov'
+SimpleCov.start do
+  merge_timeout 3600
+
+  add_filter '/spec/'
+  add_filter '/initializers/'
+  add_filter '/features/'
+  add_filter '/factories/'
+  add_filter '/config/'
+
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Models', 'app/models'
+  add_group 'Helpers', 'app/helpers'
+  add_group 'Views', 'app/views'
+  add_group 'Policies', 'app/policies'
+  add_group 'Services', 'app/services'
+  add_group 'Lib', 'lib'
+end
+
 require_relative 'spec_helper_common'
 require_relative 'spec_helper_pundit'
 

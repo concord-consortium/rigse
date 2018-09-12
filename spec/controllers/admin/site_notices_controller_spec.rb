@@ -71,7 +71,7 @@ describe Admin::SiteNoticesController do
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
       notice_id = notice.id
-      notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(notice_id)
+      notice_roles = Admin::SiteNoticeRole.where(notice_id: notice_id)
       expect(notice_roles).not_to be_nil
       notice_roles.each do |role|
         assert(@post_params[:role].include?(role.role_id))
@@ -135,7 +135,7 @@ describe Admin::SiteNoticesController do
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
       notice_id = notice.id
-      notice_roles = Admin::SiteNoticeUser.find_all_by_notice_id(notice_id)
+      notice_roles = Admin::SiteNoticeUser.where(notice_id: notice_id)
       expect(notice_roles).not_to be_nil
       notice_roles.each do |role|
         assert(@post_params[:role].include?(role.role_id))

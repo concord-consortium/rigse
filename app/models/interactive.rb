@@ -101,7 +101,7 @@ class Interactive < ActiveRecord::Base
 
   end
 
-  scope :published, where(publication_status: 'published')
+  scope :published, -> { where(publication_status: 'published') }
 
   def is_official
     true

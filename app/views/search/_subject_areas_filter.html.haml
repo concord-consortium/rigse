@@ -1,8 +1,9 @@
 -if @form_model.available_subject_areas.size > 0
-  .filterheader
+  %h2.filterheader
     Subject Areas
-  - @form_model.available_subject_areas.uniq.sort_by { |sub| sub.downcase }.each do |subject_area|
-    .tablecell
+  .filter-group__options.webkit_scrollbars
+    - @form_model.available_subject_areas.uniq.sort_by { |sub| sub.downcase }.each do |subject_area|
       - id = "subject_area_#{subject_area.squish.downcase.tr(" ","_")}"
       = check_box_tag 'subject_areas[]', subject_area,  @form_model.subject_areas.include?(subject_area),:id => id, :class => 'check-box-left-margin'
       = label_tag id, subject_area
+      %br

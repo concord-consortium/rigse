@@ -34,11 +34,11 @@ source "http://rubygems.org"
 
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem 'axlsx',                "~> 2.0", ">= 2.0.1"
+  gem 'axlsx',                "> 2.5"
 
   # currently (2017-06-13) axlsx requires an older version of rubyzip, hopefully this will
   # shortly be remedied
-  gem 'rubyzip',              "~> 1.0.0"
+  gem 'rubyzip',              "~> 1.2.2"
 
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"
@@ -57,9 +57,9 @@ source "http://rubygems.org"
   gem "redcarpet",            "~> 2.1.1"
   gem "syntax",               "~> 1.0"
   gem "paperclip",            "~> 3.4.0"
-  gem "acts-as-taggable-on",  "~> 2.1.1"
+  gem "acts-as-taggable-on",  "~> 2.4.1"
   gem "acts_as_list",         "~> 0.1.6"
-  gem "nokogiri",             "~> 1.7.0"
+  gem "nokogiri",             "~> 1.8.0"
   gem 'rdoc',                 "~> 3.9.4"
   # this customization is so the digests or fingerprints are correctly added to the assets even when
   # they are from a theme.
@@ -186,7 +186,7 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "selenium-webdriver"
-  gem "cucumber",           "~> 1.3.0"
+  gem "cucumber"
   gem "cucumber-rails",                 :require => false
   gem "database_cleaner"
   gem "capybara"

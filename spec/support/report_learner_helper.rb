@@ -39,10 +39,10 @@ module ReportLearnerSpecHelper
   def add_answer_for_learner(learner, embeddable, answer_hash)
     case embeddable
       when Embeddable::OpenResponse
-        saveable = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id,learner.offering.id, embeddable.id)
+        saveable = Saveable::OpenResponse.where(learner_id: learner.id, offering_id: learner.offering.id, open_response_id: embeddable.id).first_or_create
         saveable.answers.create!(answer_hash)
       when Embeddable::ImageQuestion
-        saveable = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(learner.id, learner.offering.id, embeddable.id)
+        saveable = Saveable::ImageQuestion.where(learner_id: learner.id, offering_id: learner.offering.id, image_question_id: embeddable.id).first_or_create
         saveable.answers.create!(answer_hash)
       # TODO: test mutliple choices and others, that are harder to make...
     end
@@ -50,10 +50,10 @@ module ReportLearnerSpecHelper
 
   # A bit more friendly helper that accepts student and automatically handles learner and report_learner updates.
   def add_answer_for_student(student, offering, question, answer_hash)
-    learner = Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student.id)
+    learner = Portal::Learner.where(offering_id: offering.id, student_id: student.id).first_or_create
     add_answer_for_learner(learner, question, answer_hash)
-    learner.report_learner.update_answers()
+    learner.report_learner.update_answers
     learner.report_learner.last_run = Time.now
-    learner.report_learner.save
+    learner.report_learner.save!
   end
 end

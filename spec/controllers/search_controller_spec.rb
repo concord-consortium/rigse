@@ -91,14 +91,14 @@ describe SearchController do
     let(:investigations_for_all_clazz) do
       inv = Factory.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
       #assign investigations_for_all_clazz to physics class
-      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(physics_clazz.id,'Investigation',inv.id)
+      Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Investigation',runnable_id: inv.id).first_or_create
       inv
     end
 
     let(:activity_for_all_clazz) do
       act = Factory.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
       #assign activity_for_all_clazz to physics class
-      Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(physics_clazz.id,'Activity',act.id)
+      Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Activity', runnable_id: act.id).first_or_create
       act
     end
 
@@ -165,8 +165,8 @@ describe SearchController do
       runnable_id = post_params[:material_id]
       runnable_type = post_params[:material_type].classify
 
-      offering_for_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(clazz.id, runnable_type, runnable_id)
-      offering_for_another_clazz = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(another_clazz.id, runnable_type, runnable_id)
+      offering_for_clazz = Portal::Offering.where(clazz_id: clazz.id, runnable_type: runnable_type, runnable_id: runnable_id)
+      offering_for_another_clazz = Portal::Offering.where(clazz_id: another_clazz.id, runnable_type: runnable_type, runnable_id: runnable_id)
 
       expect(offering_for_clazz.length).to be(1)
       expect(offering_for_clazz.first).to eq(already_assigned_offering)
@@ -189,7 +189,7 @@ describe SearchController do
       runnable_type = post_params[:material_type].classify
       post_params[:clazz_id].each do |clazz_id|
         runnable_ids.each do |runnable_id|
-          offering = Portal::Offering.find_all_by_clazz_id_and_runnable_type_and_runnable_id(clazz_id, runnable_type, runnable_id)
+          offering = Portal::Offering.where(clazz_id: clazz_id, runnable_type: runnable_type, runnable_id: runnable_id)
           expect(offering.length).to be(1)
         end
       end

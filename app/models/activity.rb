@@ -60,12 +60,12 @@ class Activity < ActiveRecord::Base
   delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true
 
   # TODO: Which of these scopes can be removed?
-  scope :with_gse, {
-    :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
+  scope :with_gse, -> {
+    joins("left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)")
   }
 
-  scope :without_teacher_only,{
-    :conditions =>['activities.teacher_only = 0']
+  scope :without_teacher_only, -> {
+    where('activities.teacher_only = 0')
   }
 
   scope :domain, lambda { |domain_id|
@@ -81,8 +81,8 @@ class Activity < ActiveRecord::Base
     }
   }
 
-  scope :activity_group, {
-      :group => "#{self.table_name}.id"
+  scope :activity_group, -> {
+      group("#{self.table_name}.id")
     }
 
   scope :like, lambda { |name|
@@ -92,24 +92,21 @@ class Activity < ActiveRecord::Base
     }
   }
 
-  scope :investigation,
-  {
-    :joins => "left outer JOIN investigations ON investigations.id = activities.investigation_id",
+  scope :investigation, -> {
+    joins("left outer JOIN investigations ON investigations.id = activities.investigation_id")
   }
 
-  scope :published,
-  {
-    :conditions =>['activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)']
+  scope :published, -> {
+    where('activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)')
   }
 
-  scope :directly_published,
-  {
-    :conditions =>['activities.publication_status = "published"']
+  scope :directly_published, -> {
+    where('activities.publication_status = "published"')
   }
 
-  scope :assigned, where('offerings_count > 0')
+  scope :assigned, -> { where('offerings_count > 0') }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   scope :is_template, ->(v) do
     joins(['LEFT OUTER JOIN investigations ON investigations.id = activities.investigation_id',
