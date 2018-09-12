@@ -161,7 +161,7 @@ class Portal::ClazzesController < ApplicationController
     end
 
     if okToCreate
-      # We can't use Course.xfind_or_create_by_course_number_name_and_school_id here, because we don't know what course_number we're looking for
+      # We can't use Course.find_or_create_by_course_number_name_and_school_id here, because we don't know what course_number we're looking for
       course = Portal::Course.find_by_name_and_school_id(@portal_clazz.name, school_id)
       course = Portal::Course.create({
         :name => @portal_clazz.name,
