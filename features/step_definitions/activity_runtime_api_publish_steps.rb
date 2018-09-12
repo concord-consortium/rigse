@@ -55,9 +55,9 @@ Then /^the portal should create a(?:n)? (.*?) with the following attributes:$/ d
   end
   attrs = table.rows_hash
   if (attrs["name"])
-    objs = klass.find_all_by_name(attrs["name"])
+    objs = klass.zfind_fall_by_name(attrs["name"])
   elsif (attrs["prompt"])
-    objs = klass.find_all_by_prompt(attrs["prompt"])
+    objs = klass.zfind_fall_by_prompt(attrs["prompt"])
   else
     objs = []
   end

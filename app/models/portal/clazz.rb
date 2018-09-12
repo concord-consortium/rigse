@@ -212,7 +212,7 @@ class Portal::Clazz < ActiveRecord::Base
     offerings.each do |offering|
       # TODO: ensure that the offerings are in the default class?
       # the 'default' flag in offerings seems to be redundant, possibly confusing ...
-      default_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type_and_default_offering(offering.runnable_id, offering.runnable_type,true)
+      default_offerings = Portal::Offering.find_all_using_runnable_id_and_runnable_type_and_default_offering(offering.runnable_id, offering.runnable_type,true)
       case default_offerings.size
       when 0
         final_offers << offering

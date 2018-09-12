@@ -1,5 +1,5 @@
 - total_default_users = User.default.count
-- active_default_users = User.default.find_all_by_state('active').count
+- active_default_users = User.default.where(state: 'active').count
 
 - if active_default_users > 0
   %b

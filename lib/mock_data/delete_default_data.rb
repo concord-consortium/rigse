@@ -23,7 +23,7 @@ module MockData
   # helper methods
   
   def self.delete_learner_response_data(learner)
-    Saveable::ImageQuestion.find_all_by_learner_id(learner.id).each do |r|
+    Saveable::ImageQuestion.zfind_fall_by_learner_id(learner.id).each do |r|
       r.answers.each do |s|
         s.blob.destroy
         s.destroy

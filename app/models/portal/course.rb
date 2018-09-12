@@ -35,7 +35,7 @@ class Portal::Course < ActiveRecord::Base
     #  returns a course with a matching course number, OR a course with 
     #  no course number, but with a matching name.
     def find_by_course_number_name_and_school_id(number,name,school_id)
-      results = self.find_all_by_course_number_and_school_id(number,school_id)
+      results = self.where(course_number: number, school_id: school_id)
       if results && results.size == 1
         return results[0]
       end
@@ -45,7 +45,7 @@ class Portal::Course < ActiveRecord::Base
       
       # if we made it to here, then there were no matching coures_numbers
       # fall back to find course names that match for that school
-      results = self.find_all_by_name_and_school_id(name,school_id)
+      results = self.where(name: name, school_id: school_id)
       
       # to be viable, the course must have a nil course number, or 
       # or a nil course number

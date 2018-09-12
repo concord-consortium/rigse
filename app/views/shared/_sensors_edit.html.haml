@@ -4,7 +4,7 @@
     .aligned
       = hidden_field_tag :update_sensors, "true"
       %ul.menu_h
-        - Admin::Tag.find_all_by_scope("sensors").each do |admin_tag|
+        - Admin::Tag.where(scope: "sensors").each do |admin_tag|
           %li
             - label_str = "sensors_#{admin_tag.tag.underscore}"
             = label_tag label_str, admin_tag.tag
