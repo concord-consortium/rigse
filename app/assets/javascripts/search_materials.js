@@ -145,44 +145,36 @@ function showsuggestion(event, oelem) {
 
 function showHideFilters(linkElement, animationDuration) {
 
-    if (animationDuration == undefined){
+    if (animationDuration == undefined) {
       animationDuration = 0.5;
     }
 
-    if (animating)
-    {
+    if (animating) {
         return false;
     }
 
     var filtersWrapper = $('filters_wrapper');
-    var linkText = "";
-    var expandCollapseText = "";
+    var linkText = '';
 
     var afterFinishCallback = function(){
         animating = false;
     };
 
-    if (filtersWrapper.hasClassName('visible'))
-    {
-        Effect.BlindUp(filtersWrapper, { duration: animationDuration, afterFinish: afterFinishCallback });
-        filtersWrapper.removeClassName('visible');
-        linkText = "Show Filters";
-        expandCollapseText = "+";
-        animating = true;
+    if (filtersWrapper.hasClassName('visible')) {
+        linkText = '+ Show Filters';
+    } else {
+        linkText = '- Hide Filters';
     }
-    else
-    {
-        Effect.BlindDown(filtersWrapper, { duration: animationDuration, afterFinish: afterFinishCallback });
-        filtersWrapper.addClassName('visible');
-        linkText = "Hide Filters";
-        expandCollapseText = "-";
-        animating = true;
-    }
-
-    $('oExpandCollapseText').update(expandCollapseText);
+    filtersWrapperToggle(filtersWrapper, animationDuration, afterFinishCallback);
     linkElement.update(linkText);
 
     return true;
+}
+
+var filtersWrapperToggle = function(targetElement, animationDuration, afterFinishCallback){
+    Effect.toggle(targetElement, 'blind', { duration: animationDuration, afterFinish: afterFinishCallback });
+    targetElement.toggleClassName('visible');
+    animating = true;
 }
 
 function submitForm() {

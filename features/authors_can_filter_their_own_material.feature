@@ -11,11 +11,11 @@ Feature: Author can filter their own material
   Scenario: Anonymous user cannot see authored by me
     When I log out
     And I go to the search instructional materials page
-    Then I should not see "authored by me"
+    Then I should not see "Resources I authored"
 
   Scenario: Anonymous user cannot see authored by me
     When I am on the search instructional materials page
-    Then I should see "authored by me"
+    Then I should see "Resources I authored"
 
   @javascript @search
   Scenario: Authors can filter External Activity using authored by me
