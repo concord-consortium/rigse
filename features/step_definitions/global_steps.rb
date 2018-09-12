@@ -161,7 +161,7 @@ Then /^I should see the sites name$/ do
 end
 
 When /^(?:|I )debug$/ do
-  debugger
+  binding.pry
   # this 0 is here so the debugger stop in a nice place instead of cucumber code
   0
 end
