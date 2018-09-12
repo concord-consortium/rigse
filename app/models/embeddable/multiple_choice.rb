@@ -10,13 +10,13 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
 
   has_many :saveables, :class_name => "Saveable::MultipleChoice", :foreign_key => :multiple_choice_id do
     def by_offering(offering)
-      find(:all, :conditions => { :offering_id => offering.id })
+      where(:offering_id => offering.id)
     end
     def by_learner(learner)
-      find(:all, :conditions => { :learner_id => learner.id })
+      where(:learner_id => learner.id)
     end
     def first_by_learner(learner)
-      find(:first, :conditions => { :learner_id => learner.id })
+      where(:learner_id => learner.id).first
     end
   end
 

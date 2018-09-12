@@ -8,7 +8,7 @@ class Investigation < ActiveRecord::Base
   belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
   has_many :activities, :order => :position, :dependent => :destroy do
     def student_only
-      find(:all, :conditions => {'teacher_only' => false})
+      where('teacher_only' => false)
     end
   end
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity

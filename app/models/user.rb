@@ -192,7 +192,7 @@ class User < ActiveRecord::Base
     end
 
     def default_users
-      User.find(:all, :conditions => { :default_user => true })
+      User.where(:default_user => true)
     end
 
     def suspend_default_users

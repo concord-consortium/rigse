@@ -230,18 +230,18 @@ class Portal::SchoolSelector
 
   def district_choices
     if @state
-      districts = Portal::District.find(:all, :conditions => {:state => @state })
+      districts = Portal::District.where(:state => @state)
       return districts.sort{ |a,b| a.name <=> b.name}.map { |d| [d.name, d.id] }
     end
     # return [default_district].map { |d| [d.name, d.id] }
-    return []
+    []
   end
 
 
   def school_choices
     if @district && (@district.kind_of? Portal::District)
-      schools = Portal::School.find(:all, :conditions => {:district_id => @district.id })
-      return schools.sort{ |a,b| a.name <=> b.name}.map { |s| [s.name, s.id] }
+      schools = Portal::School.where(:district_id => @district.id)
+      schools.sort{ |a,b| a.name <=> b.name}.map { |s| [s.name, s.id] }
     end
   end
 

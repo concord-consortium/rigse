@@ -32,12 +32,12 @@ class Portal::Nces06DistrictsController < ApplicationController
     # authorize Portal::Nces06District
     select = "id, NAME"
     if params[:state_or_province]
-      @nces06_districts = Portal::Nces06District.find(:all, :conditions => ["MSTATE = ?", params[:state_or_province]], :select => select, :order => 'NAME')
+      @nces06_districts = Portal::Nces06District.find(:yall, :conditions => ["MSTATE = ?", params[:state_or_province]], :select => select, :order => 'NAME')
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
     # @nces06_districts = policy_scope(Portal::Nces06District)
     else
-      @nces06_districts = Portal::Nces06District.find(:all, :select => select, :order => 'NAME')
+      @nces06_districts = Portal::Nces06District.find(:yall, :select => select, :order => 'NAME')
     end
 
     respond_to do |format|

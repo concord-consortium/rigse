@@ -11,7 +11,7 @@ class Admin::ExternalReportsController < ApplicationController
   # GET /admin/reports
   def index
     authorize ExternalReport
-    @reports = ExternalReport.find(:all).paginate(:per_page => 20, :page => params[:page])
+    @reports = ExternalReport.all.paginate(:per_page => 20, :page => params[:page])
   end
 
   # GET /admin/report/1
