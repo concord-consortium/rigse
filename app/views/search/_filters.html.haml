@@ -11,25 +11,6 @@
         Sort By
       .filter-group__options.select-menu
         = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]], "Newest"))
-    - if scientific_domains.size > 0
-      .domaincolumn
-        %h2.filterheader
-          Scientific Domain
-        -scientific_domains.each do |domain|
-          .tablecell
-            = check_box_tag 'domain_id[]',domain[1], (@form_model.domain_id.include?(domain[1].to_s))?true:false, :id=>domain[0].gsub(/\s+/, "")
-            = label_tag domain[0].gsub(/\s+/, ""), domain[0]
-          /= check_box_tag :domain_id, domain, true
-    - if grades.size > 0
-      .gradecolumn
-        %h2.filterheader
-          Grade
-        .tablecell
-        -grades.each do |grade|
-          .tablecell
-            = check_box_tag 'grade_span[]', grade,(@form_model.grade_span.include?(grade.to_s))?true:false,:id=>grade
-            = label_tag grade, grade
-
     #subject-area-filters.filter-group
       = render :partial => "search/subject_areas_filter"
     #grade-level-filters.filter-group
