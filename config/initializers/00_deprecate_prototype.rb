@@ -5,7 +5,7 @@ def deprecate_methods(target_module, *method_names)
   method_names += options.keys
 
   method_names.each do |method_name|
-    next if %i[[] <<].include? method_name
+    next if %i[[] << javascript_tag j escape_javascript javascript_cdata_section].include? method_name
     target_module.alias_method_chain(method_name, :deprecation) do |target, punctuation|
       target_module.module_eval(<<-end_eval, __FILE__, __LINE__ + 1)
         def #{target}_with_deprecation#{punctuation}(*args, &block)
