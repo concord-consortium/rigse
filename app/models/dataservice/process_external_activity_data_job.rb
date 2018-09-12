@@ -89,7 +89,7 @@ class Dataservice::ProcessExternalActivityDataJob
   end
 
   def internal_process_image_question(data,embeddable)
-    saveable_image_question = Saveable::ImageQuestion.xfind_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, embeddable.id)
+    saveable_image_question = Saveable::ImageQuestion.where(learner_id: @learner_id, offering_id: @offering_id, image_question_id: embeddable.id).first_or_create
     saveable_image_question.add_external_answer(data["answer"], data["image_url"], data["is_final"])
   end
 
