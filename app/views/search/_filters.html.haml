@@ -10,7 +10,7 @@
       %h2.filterheader
         Sort By
       .filter-group__options.select-menu
-        = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]]))
+        = select_tag(:sort_order, options_for_select([["Oldest", "Oldest"],["Newest", "Newest"],["Alphabetical", "Alphabetical"]], "Newest"))
     - if scientific_domains.size > 0
       .domaincolumn
         %h2.filterheader
