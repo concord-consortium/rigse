@@ -332,7 +332,7 @@ class API::V1::MaterialsController < API::APIController
       allow = current_visitor.has_role?('admin') || portal_clazz.is_teacher?(current_visitor)
 
       if allow
-        offering = Portal::Offering.xfind_or_create_by_clazz_id_and_runnable_type_and_runnable_id(portal_clazz.id, params[:material_type], params[:material_id])
+        offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(portal_clazz.id, params[:material_type], params[:material_id])
         offering.position = portal_clazz.offerings.length
         offering.active = params[:assign].to_s == "1"
         offering.save

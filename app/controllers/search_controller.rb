@@ -338,7 +338,7 @@ class SearchController < ApplicationController
         collection_items = collection.materials_collection_items
         item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
         if item.nil?
-          item = MaterialsCollectionItem.xfind_or_create_by_materials_collection_id_and_material_type_and_material_id(collection.id,runnable_type,runnable_id)
+          item = MaterialsCollectionItem.find_or_create_by_materials_collection_id_and_material_type_and_material_id(collection.id,runnable_type,runnable_id)
           if item.position.nil?
             item.position = collection_items.length
             item.save
