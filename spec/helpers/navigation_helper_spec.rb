@@ -16,9 +16,13 @@ describe NavigationHelper, type: :helper  do
   end
   let(:itsi_project) { double(links: itsi_links)}
   let(:fake_clazzes) { FactoryGirl.create_list(:portal_clazz, 3)}
-  let(:fake_teacher_clazzes) { fake_clazzes.map { |c| double(clazz: c)}}
-  let(:fake_student) { FactoryGirl.create(:full_portal_student) }
-  let(:fake_teacher) { FactoryGirl.create(:portal_teacher) }
+  let(:fake_inactive_clazz) { FactoryGirl.create(:portal_clazz)}
+  let(:fake_student) { FactoryGirl.create(:full_portal_student, clazzes: fake_clazzes) }
+  let(:fake_teacher) {
+    teacher = FactoryGirl.create(:portal_teacher, clazzes: fake_clazzes)
+    teacher.teacher_clazzes.create(clazz: fake_inactive_clazz, active: false)
+    teacher
+  }
   let(:fake_visitor) { fake_student.user }
   let(:params)       { {greeting: "bonjour"} }
   let(:projects)     { [itsi_project] }
@@ -27,8 +31,19 @@ describe NavigationHelper, type: :helper  do
     allow(helper).to receive(:current_user).and_return(fake_visitor)
     allow(fake_visitor).to receive(:name).and_return(name)
     allow(fake_visitor).to receive(:projects).and_return(projects)
-    allow(fake_teacher).to receive(:teacher_clazzes).and_return(fake_teacher_clazzes)
-    allow(fake_student).to receive(:clazzes).and_return(fake_clazzes)
+  end
+  describe "fakes are setup" do
+    describe "fake_teacher" do
+      it "should have 4 clazzes" do
+        expect(fake_teacher.clazzes.count).to eq(4)
+      end
+      it "should have 4 teacher_clazzes" do
+        expect(fake_teacher.teacher_clazzes.count).to eq(4)
+      end
+      it "should have 3 active teacher_clazzes" do
+        expect(fake_teacher.teacher_clazzes.where(active: true).count).to eq(3)
+      end
+    end
   end
   describe "get_nav_content" do
     describe "schema validation" do

@@ -313,3 +313,7 @@ And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor
   expect(page).to have_css("##{editor_id}", visible: false)
   execute_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
 end
+
+When /^I reload the page$/ do
+  page.evaluate_script 'window.location.reload()'
+end
