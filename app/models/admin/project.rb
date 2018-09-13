@@ -27,6 +27,10 @@ class Admin::Project < ActiveRecord::Base
     self.where("landing_page_slug <> ''").order("name ASC")
   end
 
+  def project_admins
+    project_users.where(is_admin:true).map { |au| au.user }
+  end
+
   has_many :project_materials, dependent: :destroy
   has_many :activities, through: :project_materials, source: :material, source_type: 'Activity'
   has_many :investigations, through: :project_materials, source: :material, source_type: 'Investigation'

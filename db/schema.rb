@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20180824170559) do
   create_table "admin_cohorts", :force => true do |t|
     t.integer "project_id"
     t.string  "name"
+    t.boolean "email_notifications_enabled", :default => false
   end
 
   add_index "admin_cohorts", ["project_id", "name"], :name => "index_admin_cohorts_on_project_id_and_name", :unique => true
