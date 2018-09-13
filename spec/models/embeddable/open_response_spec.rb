@@ -34,10 +34,10 @@ describe Embeddable::OpenResponse do
 
   # TODO: auto-generated
   describe '#by_offering' do
-    xit 'by_offering' do
+    it 'by_offering' do
       open_response = described_class.new
-      offering = Factory.create(:portal_offering)
-      result = open_response.by_offering(offering)
+      offering = FactoryGirl.create(:portal_offering)
+      result = open_response.saveables.by_offering(offering)
 
       expect(result).not_to be_nil
     end
@@ -45,10 +45,10 @@ describe Embeddable::OpenResponse do
 
   # TODO: auto-generated
   describe '#by_learner' do
-    xit 'by_learner' do
+    it 'by_learner' do
       open_response = described_class.new
-      learner = double('learner')
-      result = open_response.by_learner(learner)
+      learner = Portal::Learner.new
+      result = open_response.saveables.by_learner(learner)
 
       expect(result).not_to be_nil
     end
@@ -56,12 +56,12 @@ describe Embeddable::OpenResponse do
 
   # TODO: auto-generated
   describe '#first_by_learner' do
-    xit 'first_by_learner' do
+    it 'first_by_learner' do
       open_response = described_class.new
-      learner = double('learner')
-      result = open_response.first_by_learner(learner)
+      learner = Portal::Learner.new
+      result = open_response.saveables.first_by_learner(learner)
 
-      expect(result).not_to be_nil
+      expect(result).to be_nil
     end
   end
 
