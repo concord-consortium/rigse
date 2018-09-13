@@ -80,7 +80,7 @@ describe Portal::SchoolsController do
       it "assigns a newly created school as @portal_school" do
         expect(@school).to receive(:save).and_return(true)
         allow(Portal::Nces06School).to receive(:find).with('123').and_return(@nces_school)
-        allow(Portal::School).to receive(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
+        allow(Portal::School).to receive(:find_or_create_using_nces_school).with(@nces_school).and_return(@school)
         post :create, :nces_school => {:id => '123'}
         expect(assigns[:portal_school]).to equal(@school)
       end
@@ -88,7 +88,7 @@ describe Portal::SchoolsController do
       it "redirects to the created school" do
         expect(@school).to receive(:save).and_return(true)
         allow(Portal::Nces06School).to receive(:find).with('123').and_return(@nces_school)
-        allow(Portal::School).to receive(:find_or_create_by_nces_school).with(@nces_school).and_return(@school)
+        allow(Portal::School).to receive(:find_or_create_using_nces_school).with(@nces_school).and_return(@school)
         post :create, :nces_school => {:id => '123'}
         expect(response).to redirect_to(portal_school_url(@school))
       end

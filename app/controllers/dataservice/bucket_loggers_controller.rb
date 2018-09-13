@@ -45,12 +45,12 @@ class Dataservice::BucketLoggersController < ApplicationController
     learner = Portal::Learner.find(params[:id]) rescue nil
     raise ActionController::RoutingError.new('Not Found') unless learner
 
-    @dataservice_bucket_logger = Dataservice::BucketLogger.find_or_create_by_learner_id(learner.id)
+    @dataservice_bucket_logger = Dataservice::BucketLogger.where(learner_id: learner.id).first_or_create
     bundle = @dataservice_bucket_logger.most_recent_content
     # FIXME How do we now associate launch process events since bucket_content != session?
     # For now, the in_progress_bundle is still being created, so just use that.
     if ipb = @dataservice_bucket_logger.learner.bundle_logger.in_progress_bundle
-      launch_event = Dataservice::LaunchProcessEvent.create(
+      Dataservice::LaunchProcessEvent.create(
         :event_type => Dataservice::LaunchProcessEvent::TYPES[:bundle_requested],
         :event_details => "Learner session data loaded. Loading activity content...",
         :bundle_content => ipb
@@ -106,7 +106,7 @@ class Dataservice::BucketLoggersController < ApplicationController
     learner = Portal::Learner.find(params[:id]) rescue nil
     raise ActionController::RoutingError.new('Not Found') unless learner
 
-    @dataservice_bucket_logger = Dataservice::BucketLogger.find_or_create_by_learner_id(learner.id)
+    @dataservice_bucket_logger = Dataservice::BucketLogger.where(learner_id: learner.id).first_or_create
     bundle = "[" + @dataservice_bucket_logger.bucket_log_items.map{|li| li.content }.join(",") + "]"
 
     respond_to do |format|

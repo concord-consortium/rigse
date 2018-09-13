@@ -134,7 +134,7 @@ class Portal::ClazzesController < ApplicationController
 
     if okToCreate and Admin::Settings.default_settings.enable_grade_levels?
       grade_levels.each do |name, v|
-        grade = Portal::Grade.find_or_create_by_name(name)
+        grade = Portal::Grade.where(name: name).first_or_create
         @portal_clazz.grades << grade if grade
       end if grade_levels
       if @portal_clazz.grades.empty?
@@ -292,7 +292,7 @@ class Portal::ClazzesController < ApplicationController
     runnable_id = params[:runnable_id]
     unless params[:runnable_type] == 'portal_offering'
       runnable_type = params[:runnable_type].classify
-      @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
+      @offering = Portal::Offering.where(clazz_id: @portal_clazz.id, runnable_type: runnable_type,runnable_id: runnable_id).first_or_create
       if @offering.position == 0
         @offering.position = @portal_clazz.offerings.length
         @offering.save
@@ -674,7 +674,7 @@ class Portal::ClazzesController < ApplicationController
     end
 
     class_to_copy.offerings.each do |offering|
-       new_offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(new_class.id, offering.runnable_type, offering.runnable_id)
+       new_offering = Portal::Offering.where(clazz_id: new_class.id, runnable_type: offering.runnable_type, runnable_id: offering.runnable_id).first_or_create
        new_offering.status = offering.status
        new_offering.active = offering.active
        new_offering.save!

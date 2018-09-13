@@ -170,7 +170,7 @@ class Admin::SiteNoticesController < ApplicationController
 
   def toggle_notice_display
     # no authorization needed ...
-    user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_visitor.id)
+    user_collapsed_notice = Admin::NoticeUserDisplayStatus.where(user_id: current_visitor.id).first_or_create
     status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
 
     user_collapsed_notice.last_collapsed_at_time = DateTime.now
@@ -187,7 +187,7 @@ class Admin::SiteNoticesController < ApplicationController
   def dismiss_notice
     # no authorization needed ...
     notice = Admin::SiteNotice.find(params[:id])
-    user_notice = Admin::SiteNoticeUser.find_or_create_by_notice_id_and_user_id(notice.id , current_visitor.id)
+    user_notice = Admin::SiteNoticeUser.where(notice_id: notice.id, user_id: current_visitor.id).first_or_create
     user_notice.notice_dismissed = true
     user_notice.updated_at = DateTime.now
     user_notice.save!

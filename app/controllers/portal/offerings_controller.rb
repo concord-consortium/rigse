@@ -163,9 +163,8 @@ class Portal::OfferingsController < ApplicationController
       render :nothing => true
       return
     end
-    offering_collapsed = true
     teacher_id = current_visitor.portal_teacher.id
-    portal_teacher_full_status = Portal::TeacherFullStatus.find_or_create_by_offering_id_and_teacher_id(params[:id],teacher_id)
+    portal_teacher_full_status = Portal::TeacherFullStatus.where(offering_id: params[:id],teacher_id: teacher_id).first_or_create
 
     offering_collapsed = (portal_teacher_full_status.offering_collapsed.nil?)? false : !portal_teacher_full_status.offering_collapsed
 
@@ -182,7 +181,7 @@ class Portal::OfferingsController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     student_id = current_visitor.portal_student.id
-    report = DefaultReportService.instance()
+    report = DefaultReportService.instance
     offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
@@ -192,7 +191,7 @@ class Portal::OfferingsController < ApplicationController
     offering_id = params[:id]
     activity_id = params[:activity_id] # Might be null
     authorize Portal::Offering.find(offering_id)
-    report = DefaultReportService.instance()
+    report = DefaultReportService.instance
     offering_api_url = api_v1_report_url(offering_id, {activity_id: activity_id})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url

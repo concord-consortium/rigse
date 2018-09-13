@@ -51,11 +51,11 @@ end
 #Table: | investigation | activity | activity_teacher_only | section   | page   | multiple_choices |
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
-    investigation = Investigation.find_or_create_by_name(hash['investigation'])
+    investigation = Investigation.where(name: hash['investigation']).first_or_create
     investigation.user = Factory(:user)
     investigation.save
     # ITSISU requires descriptions on activities
-    activity = Activity.find_or_create_by_name(hash['activity'], :description => hash['activity'])
+    activity = Activity.where(name: hash['activity']).first_or_create(:description => hash['activity'])
     
     if hash['activity_teacher_only']
       # Create a teacher only activity if specified
@@ -63,8 +63,8 @@ Given /^the following investigations with multiple choices exist:$/ do |investig
       activity.save
     end
     
-    section = Section.find_or_create_by_name(hash['section'])
-    page = Page.find_or_create_by_name(hash['page'])
+    section = Section.where(name: hash['section']).first_or_create
+    page = Page.where(name: hash['page']).first_or_create
     mcs = hash['multiple_choices'].split(",").map{ |q| Embeddable::MultipleChoice.find_by_prompt(q.strip) }
     mcs.each do |q|
       q.pages << page
@@ -350,7 +350,7 @@ end
 When /^(?:|I )create investigations "(.+)" before "(.+)" by date$/ do |investigation_name1, investigation_name2|
   created_at = Date.today
   ['investigation_name1', 'investigation_name2'].each do |investigation|
-    inv = Investigation.find_or_create_by_name(investigation)
+    inv = Investigation.where(name: investigation).first_or_create
     created_at = created_at - 1
     inv.created_at = created_at
     inv.updated_at = created_at

@@ -26,7 +26,7 @@ module SaveableExtraction
 
   def process_open_response(parent_id, answer, is_final = nil)
     if Embeddable::OpenResponse.find_by_id(parent_id)
-      saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(@learner_id, @offering_id, parent_id)
+      saveable_open_response = Saveable::OpenResponse.where(learner_id: @learner_id, offering_id: @offering_id, open_response_id: parent_id).first_or_create
       if saveable_open_response.response_count == 0 ||
          saveable_open_response.answers.last.answer != answer ||
          saveable_open_response.answers.last.is_final != is_final
@@ -85,7 +85,7 @@ module SaveableExtraction
       # User is unselecting a previous selection.
       # Do not associate answers with this question.
       #
-      saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, embeddable_id)
+      saveable = Saveable::MultipleChoice.where(learner_id: @learner_id, offering_id: @offering_id, multiple_choice_id: embeddable_id).first_or_create
       saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => embeddable_id, :is_final => is_final)
       return
     end
@@ -95,7 +95,7 @@ module SaveableExtraction
 
     if multiple_choice && choice
 
-      saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(@learner_id, @offering_id, multiple_choice.id)
+      saveable = Saveable::MultipleChoice.where(learner_id: @learner_id, offering_id: @offering_id, multiple_choice_id: multiple_choice.id).first_or_create
 
       if saveable.answers.empty? || # we don't have any answers yet
          saveable.answers.last.answer.size != choice_ids.size || # the number of selected choices differs
@@ -124,7 +124,7 @@ module SaveableExtraction
     extractor.find_all('OTLabbookEntryChooser') do |chooser|
       parent_id = extractor.get_parent_id(chooser)
       if parent_id && parent_id =~ /image_question_(\d+)/
-        saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, $1)
+        saveable_image_question = Saveable::ImageQuestion.where(learner_id: @learner_id, offering_id: @offering_id, image_question_id: $1).first_or_create
         answer = extractor.get_property_path(chooser, 'embeddedEntries/oTObject').last
         note = extractor.get_property_path(chooser, 'embeddedEntries').last
         note = extractor.get_text_property(note, 'note') if note

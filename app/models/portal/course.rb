@@ -61,9 +61,9 @@ class Portal::Course < ActiveRecord::Base
       return nil # could not find anything
     end
 
-    def find_or_create_by_course_number_name_and_school_id(number,name,school_id)
+    def find_or_create_using_course_number_name_and_school_id(number,name,school_id)
       results = find_by_course_number_name_and_school_id(number,name,school_id)
-      if results 
+      if results
         results.course_number = number;
         results.name = name;
         results.save

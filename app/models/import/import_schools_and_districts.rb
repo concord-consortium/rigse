@@ -25,7 +25,7 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
             nces_district = Portal::Nces06District.find(:first, :conditions => {:LEAID => district[:leaid]})
           end
           if nces_district
-            new_district = Portal::District.find_or_create_by_nces_district(nces_district)
+            new_district = Portal::District.find_or_create_using_nces_district(nces_district)
           else
             district_name = district[:name].titlecase.strip
             district_params = {}
@@ -59,7 +59,7 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
             nces_school = Portal::Nces06School.find(:first, :conditions => {:NCESSCH => school[:ncessch]})
           end
           if nces_school  
-            new_school = Portal::School.find_or_create_by_nces_school(nces_school)
+            new_school = Portal::School.find_or_create_using_nces_school(nces_school)
           else
             school_name = school[:name].titlecase.strip
             school_district = Import::SchoolDistrictMapping.find(:first, :conditions => {:import_district_uuid => school[:district_uuid]})

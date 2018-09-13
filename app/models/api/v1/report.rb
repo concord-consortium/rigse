@@ -245,7 +245,7 @@ class API::V1::Report
   def embeddable_json(question_number, embeddable, answers)
     # Provide as much information about embeddable as we can, but skip some attributes
     # to make results more readable and clean.
-    feedback_data = Portal::OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(@offering.id, embeddable.id, embeddable.class.name)
+    feedback_data = Portal::OfferingEmbeddableMetadata.where(offering_id: @offering.id, embeddable_id: embeddable.id, embeddable_type: embeddable.class.name).first_or_create
     hash = embeddable.attributes.clone.except(*IGNORED_EMBEDDABLE_KEYS)
     key = API::V1::Report.embeddable_key(embeddable)
     hash[:key] = key
@@ -333,7 +333,7 @@ class API::V1::Report
   def self.update_feedback_settings(offering, feedback_settings)
     return false unless feedback_settings.has_key? 'embeddable_key'
     type, id = self.decode_embeddable(feedback_settings['embeddable_key'])
-    meta = Portal:: OfferingEmbeddableMetadata.find_or_create_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, id, type)
+    meta = Portal:: OfferingEmbeddableMetadata.where(offering_id: offering.id, embeddable_id: id, embeddable_type: type).first_or_create
     ['max_score', 'enable_text_feedback', 'enable_score'].each do |key|
       if feedback_settings.has_key?(key)
         meta.update_attribute(key.to_sym, feedback_settings[key])
