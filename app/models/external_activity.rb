@@ -230,7 +230,7 @@ class ExternalActivity < ActiveRecord::Base
     clone.save
     # Copy standard statements assigned to this activity.
     material_type = self.class.name.underscore
-    StandardStatement.find_all_by_material_type_and_material_id(material_type, id).each do |s|
+    StandardStatement.where(material_type: material_type, material_id: id).each do |s|
       s.duplicate_and_assign_to(material_type, clone.id)
     end
     # Cohorts are skipped intentionally, since that would mean any copies would show up automatically to cohort teachers.
