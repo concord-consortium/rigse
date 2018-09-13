@@ -1,7 +1,7 @@
 class MultiteacherClazzes
 
   def self.make_all_multi_teacher
-    clazzes = Portal::Clazz.find(:all)  
+    clazzes = Portal::Clazz.all
     clazzes.each do |clazz|
       make_multi_teacher(clazz)
     end

@@ -19,7 +19,7 @@ class Activity < ActiveRecord::Base
 
   has_many :sections, :order => :position, :dependent => :destroy do
     def student_only
-      find(:all, :conditions => {'teacher_only' => false})
+      where('teacher_only' => false)
     end
   end
   has_many :pages, :through => :sections

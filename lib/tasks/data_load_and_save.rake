@@ -61,7 +61,7 @@ namespace :db do
         interesting_tables.each do |tbl|
           klass = tbl.classify.constantize
           File.open("#{tbl}.yaml", 'w') do |f| 
-            attributes = klass.find(:all).collect { |m| m.attributes }
+            attributes = klass.all.collect { |m| m.attributes }
             f.write YAML.dump(attributes)
           end
         end
@@ -110,7 +110,7 @@ namespace :db do
         tables.each do |tbl|
           puts "writing #{dir}/#{tbl}.yaml"
           File.open("#{tbl}.yaml", 'w') do |f| 
-            attributes = tbl.gsub(/^ri_gse_/, "ri_gse/").classify.constantize.find(:all).collect { |m| m.attributes }
+            attributes = tbl.gsub(/^ri_gse_/, "ri_gse/").classify.constantize.all.collect { |m| m.attributes }
             f.write YAML.dump(attributes)
           end
         end

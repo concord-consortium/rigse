@@ -31,7 +31,7 @@ module Clipboard
     if clipboard_data_type && clipboard_data_type != 'null' && clipboard_data_id
       begin
         clazz = clipboard_data_type.de_clipboardify.classify.constantize
-        obj_array = clazz.find(:all, :conditions => {:id => clipboard_data_id})
+        obj_array = clazz.where(:id => clipboard_data_id)
         results = obj_array.empty? ? nil : obj_array.first
       rescue NameError
         error_message = "unknown object in clipboard #{clipboard_data_type} (id:#{clipboard_data_id})"

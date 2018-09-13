@@ -32,14 +32,14 @@ class Portal::Nces06SchoolsController < ApplicationController
     # authorize Portal::Nces06School
     select = "id, SCHNAM"
     if params[:state_or_province]
-      @nces06_schools = Portal::Nces06School.find(:all, :conditions => ["MSTATE = ?", params[:state_or_province]], :select => select, :order => 'SCHNAM')
+      @nces06_schools = Portal::Nces06School.where("MSTATE = ?", params[:state_or_province]).select(select).order('SCHNAM')
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (found instance)
     # @nces06_schools = policy_scope(Portal::Nces06School)
     elsif params[:nces_district_id]
-      @nces06_schools = Portal::Nces06School.find(:all, :conditions => ["nces_district_id = ?", params[:nces_district_id]], :select => select, :order => 'SCHNAM')
+      @nces06_schools = Portal::Nces06School.where("nces_district_id = ?", params[:nces_district_id]).select(select).order('SCHNAM')
     else
-      @nces06_schools = Portal::Nces06School.find(:all, :select => select, :order => 'SCHNAM')
+      @nces06_schools = Portal::Nces06School.select(select).order('SCHNAM')
     end
     respond_to do |format|
       format.html # index.html.erb

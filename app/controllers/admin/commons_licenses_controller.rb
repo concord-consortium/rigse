@@ -10,7 +10,7 @@ class Admin::CommonsLicensesController < ApplicationController
 
   def index
     authorize CommonsLicense
-    @licenses = CommonsLicense.find(:all).paginate(:per_page => 20, :page => params[:page])
+    @licenses = CommonsLicense.all.paginate(:per_page => 20, :page => params[:page])
   end
 
   def show

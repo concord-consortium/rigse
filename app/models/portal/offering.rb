@@ -29,16 +29,16 @@ class Portal::Offering < ActiveRecord::Base
 
   has_many :open_responses, :dependent => :destroy, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
     def answered
-      find(:all).select { |question| question.answered? }
+      all.select { |question| question.answered? }
     end
   end
 
   has_many :multiple_choices, :dependent => :destroy, :class_name => "Saveable::MultipleChoice", :foreign_key => "offering_id" do
     def answered
-      find(:all).select { |question| question.answered? }
+      all.select { |question| question.answered? }
     end
     def answered_correctly
-      find(:all).select { |question| question.answered? }.select{ |item| item.answered_correctly? }
+      all.select { |question| question.answered? }.select{ |item| item.answered_correctly? }
     end
   end
 
