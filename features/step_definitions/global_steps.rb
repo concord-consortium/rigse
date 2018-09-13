@@ -80,7 +80,7 @@ Given /the following users exist:$/i do |users_table|
       roles =  []
     end
     begin
-      user = Factory(:user, hash)
+      user = FactoryGirl.create(:user, hash)
       roles.each do |role|
         user.add_role(role)
       end

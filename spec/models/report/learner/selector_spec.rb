@@ -20,7 +20,7 @@ describe Report::Learner::Selector do
   let(:selector)            { Report::Learner::Selector.new(selector_opts, current_user )   }
   let(:selector_opts)       { {} }
   let(:students_p_forms)    { [] }
-  let(:runnable)            { Factory(:external_activity, {
+  let(:runnable)            { FactoryGirl.create(:external_activity, {
                               :name      => "Some Activity",
                               :url       => "http://example.com",
                               :save_path => "/path/to/save",

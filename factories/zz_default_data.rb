@@ -4,7 +4,7 @@
 # Anonymous and Admin users...
 # Many factory calls chain other factory calls to create dependant objects.
 # couldn' get that to work for admin_settings though! 
-# ( Factory(:admin_settings) throws an error. )
+# ( FactoryGirl.create(:admin_settings) throws an error. )
 
 
 # The following lines were needed to get cucumber started,

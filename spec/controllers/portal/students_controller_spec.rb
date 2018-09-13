@@ -177,7 +177,7 @@ describe Portal::StudentsController do
   end
 
   describe "GET show" do
-    let(:student) { Factory(:full_portal_student) }
+    let(:student) { FactoryGirl.create(:full_portal_student) }
 
     it "should redirect when current user isn't an admin" do
       get :show, id: student.id

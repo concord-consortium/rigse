@@ -15,7 +15,7 @@ describe Portal::ClazzMailer do
     @teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :first_name => "Cohort", :last_name => "Teacher"))
     @teacher.cohorts << @cohort
 
-    @clazz = Factory(:portal_clazz, :name => "Test Class")
+    @clazz = FactoryGirl.create(:portal_clazz, :name => "Test Class")
 
   end
 

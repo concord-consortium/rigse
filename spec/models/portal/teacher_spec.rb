@@ -2,9 +2,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Teacher do
   before(:each) do
-    @nces_teacher = Factory(:nces_portal_teacher)
-    @virtual_teacher = Factory(:portal_teacher)
-    @virtual_teacher.clazzes << Factory(:portal_clazz)
+    @nces_teacher = FactoryGirl.create(:nces_portal_teacher)
+    @virtual_teacher = FactoryGirl.create(:portal_teacher)
+    @virtual_teacher.clazzes << FactoryGirl.create(:portal_clazz)
   end
   
   it "should support nces teachers" do
@@ -81,7 +81,7 @@ describe Portal::Teacher do
 
   describe '[default cohort support]' do
     let(:settings) { FactoryGirl.create(:admin_settings) }
-    let(:teacher) { Factory(:portal_teacher) }
+    let(:teacher) { FactoryGirl.create(:portal_teacher) }
     before(:each) do
       allow(Admin::Settings).to receive(:default_settings).and_return(settings)
     end

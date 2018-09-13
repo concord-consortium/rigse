@@ -52,7 +52,7 @@ end
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.where(name: hash['investigation']).first_or_create
-    investigation.user = Factory(:user)
+    investigation.user = FactoryGirl.create(:user)
     investigation.save
     # ITSISU requires descriptions on activities
     activity = Activity.where(name: hash['activity']).first_or_create(:description => hash['activity'])
@@ -87,7 +87,7 @@ Given /^the following classes exist:$/ do |table|
       user = User.find_by_login hash['teacher']
       teacher = user.portal_teacher
     else
-      teacher = Factory(:teacher)
+      teacher = FactoryGirl.create(:teacher)
     end
     hash.merge!('teacher' => teacher)
     

@@ -48,8 +48,8 @@ describe API::V1::JwtController, :type => :controller do
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
   let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
   let(:runnable)        { FactoryGirl.create(:activity, runnable_opts)    }
-  let(:offering)        { Factory(:portal_offering, offering_opts)    }
-  let(:clazz)           { Factory(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
+  let(:offering)        { FactoryGirl.create(:portal_offering, offering_opts)    }
+  let(:clazz)           { FactoryGirl.create(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
   let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)   { {name: 'the activity'}              }
   let(:class_teacher)   { FactoryGirl.create(:portal_teacher)     }

@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::OfferingsController do
   describe "Show Jnlp Offering" do
     it "renders a jnlp for an admin" do
-      offering = Factory(:portal_offering)
+      offering = FactoryGirl.create(:portal_offering)
       admin = FactoryGirl.generate :admin_user
       sign_in admin
       get :show, :id => offering.id, :format => :jnlp
@@ -11,15 +11,15 @@ describe Portal::OfferingsController do
     end
 
     it "renders a jnlp for a teacher" do
-      teacher = Factory(:portal_teacher)
-      offering = Factory(:portal_offering, :clazz => teacher.clazzes.first)
+      teacher = FactoryGirl.create(:portal_teacher)
+      offering = FactoryGirl.create(:portal_offering, :clazz => teacher.clazzes.first)
       sign_in teacher.user
       get :show, :id => offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
     end
 
     it "renders a jnlp as a learner" do
-      learner = Factory(:full_portal_learner)
+      learner = FactoryGirl.create(:full_portal_learner)
       sign_in learner.student.user
       get :show, :id => learner.offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
@@ -39,9 +39,9 @@ describe Portal::OfferingsController do
         :url       => "http://example.com",
         :save_path => "/path/to/save",
       }
-      @runnable = Factory(:external_activity, @runnable_opts )
+      @runnable = FactoryGirl.create(:external_activity, @runnable_opts )
       @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
-      @user = Factory(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
+      @user = FactoryGirl.create(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
       allow(controller).to receive(:setup_portal_student).and_return(@learner)

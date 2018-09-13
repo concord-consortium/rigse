@@ -23,8 +23,8 @@ describe API::V1::ReportsController do
   let(:page)              { FactoryGirl.create(:page) }
   let(:activity)          { FactoryGirl.create(:activity, runnable_opts)          }
   let(:runnable)          { FactoryGirl.create(:external_activity, runnable_opts) }
-  let(:offering)          { Factory(:portal_offering, offering_opts)    }
-  let(:clazz)             { Factory(:portal_clazz, teachers: [class_teacher], students:[student_a,student_b]) }
+  let(:offering)          { FactoryGirl.create(:portal_offering, offering_opts)    }
+  let(:clazz)             { FactoryGirl.create(:portal_clazz, teachers: [class_teacher], students:[student_a,student_b]) }
   let(:offering_opts)     { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)     { {name: 'the activity'}              }
   let(:class_teacher)     { FactoryGirl.create(:portal_teacher)     }

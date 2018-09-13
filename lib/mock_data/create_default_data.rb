@@ -800,7 +800,7 @@ module MockData
 
     elsif user_by_login.nil? && user_by_email.nil?
 
-      user = Factory(:user, user_info)
+      user = FactoryGirl.create(:user, user_info)
 
       user.save!
       user.confirm!

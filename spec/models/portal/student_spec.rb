@@ -2,12 +2,12 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Student do
   before(:each) do
-    @student = Factory(:portal_student)
+    @student = FactoryGirl.create(:portal_student)
   end
   
   describe "when a clazz is added to a students list of clazzes" do
     it "the students clazz list increases by one if the student is not already enrolled in that class" do
-      clazz = Factory(:portal_clazz)
+      clazz = FactoryGirl.create(:portal_clazz)
       expect(@student.clazzes).to be_empty
       @student.add_clazz(clazz)
       @student.reload
@@ -17,7 +17,7 @@ describe Portal::Student do
     end
     
     it "the students clazz list should stay the same if the same clazz is added multiple times" do
-      clazz = Factory(:portal_clazz)
+      clazz = FactoryGirl.create(:portal_clazz)
       expect(@student.clazzes).to be_empty
       @student.add_clazz(clazz)
       @student.add_clazz(clazz)

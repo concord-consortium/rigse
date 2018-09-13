@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe API::V1::StudentsController do
-  let(:student) { Factory(:full_portal_student) }
+  let(:student) { FactoryGirl.create(:full_portal_student) }
 
   describe "POST #check_password" do
     let(:params) do

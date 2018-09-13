@@ -669,7 +669,7 @@ describe Portal::ClazzesController do
       @student_clazz.student_id = @authorized_student.id
       @student_clazz.save!
 
-      @investigation = Factory(:investigation)
+      @investigation = FactoryGirl.create(:investigation)
       @investigation.name = 'Fluid Mechanics'
       @investigation.save!
 

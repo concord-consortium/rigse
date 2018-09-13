@@ -22,7 +22,7 @@ describe JnlpHelper, type: :helper  do
         @settings = Admin::Settings.new(:pub_interval => 10,
           :use_periodic_bundle_uploading => true)
         @student = double()
-        @user = Factory(:user)
+        @user = FactoryGirl.create(:user)
         allow(@student).to receive_messages(:user => @user)
         pbl   = double()
         @learner = double(:student => @student, :periodic_bundle_logger => pbl)

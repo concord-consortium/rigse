@@ -13,7 +13,7 @@ end
 Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,school_name|
   school = Portal::School.find_by_name(school_name)
   if (school.nil?) then
-    school = Factory(:portal_school, :name=>school_name)
+    school = FactoryGirl.create(:portal_school, :name=>school_name)
   end
   teachers = teachers.split(",").map { |t| t.strip }
   teachers.map! {|t| User.find_by_login(t)}
@@ -25,13 +25,13 @@ end
 Given /^the following teachers exist:$/ do |users_table|
   users_table.hashes.each do |hash|
     begin
-      user = Factory(:user, hash)
+      user = FactoryGirl.create(:user, hash)
       user.add_role("member")
       user.save!
       user.confirm!
 
 
-      portal_teacher = Factory(:portal_teacher, { :user => user })
+      portal_teacher = FactoryGirl.create(:portal_teacher, { :user => user })
       portal_teacher.save!
 
     rescue ActiveRecord::RecordInvalid

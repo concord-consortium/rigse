@@ -35,7 +35,7 @@ end
 Factory.sequence :admin_user do |n| 
   admin = User.find_by_login('admin') 
   unless admin
-    admin = Factory(:user,
+    admin = FactoryGirl.create(:user,
     {
       :login => 'admin',
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
@@ -56,7 +56,7 @@ end
 Factory.sequence :researcher_user do |n| 
   researcher = User.find_by_login('researcher') 
   unless researcher
-    researcher = Factory(:user,
+    researcher = FactoryGirl.create(:user,
     {
       :login => 'researcher',
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
@@ -77,7 +77,7 @@ end
 Factory.sequence :manager_user do |n| 
   manager = User.find_by_login('manager') 
   unless manager
-    manager = Factory(:user,
+    manager = FactoryGirl.create(:user,
     {
       :login => 'manager',
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
@@ -97,7 +97,7 @@ end
 Factory.sequence :author_user do |n| 
   author = User.find_by_login('author') 
   unless author
-    author = Factory(:user,
+    author = FactoryGirl.create(:user,
     {
       :login => 'author',
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
@@ -119,7 +119,7 @@ Factory.sequence :anonymous_user do |n|
   begin
     anon = User.find_by_login('anonymous')
     unless anon
-      anon = Factory(:user,
+      anon = FactoryGirl.create(:user,
       {
         :login => 'anonymous',
         :first_name => 'anonymous',

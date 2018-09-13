@@ -14,7 +14,7 @@ end
 
 And /^the following offerings exist in the classes:$/ do |offering_list|
     offering_list.hashes.each do |hash|
-      investigation = Factory(:investigation)
+      investigation = FactoryGirl.create(:investigation)
       investigation.name = hash['name']
 
       investigation.save!
@@ -29,7 +29,7 @@ end
 
 Given /^the following default class offerings exist$/ do |offering_list|
     offering_list.hashes.each do |hash|
-      investigation = Factory(:investigation, :publication_status => "published")
+      investigation = FactoryGirl.create(:investigation, :publication_status => "published")
       investigation.name = hash['name']
 
       investigation.save!

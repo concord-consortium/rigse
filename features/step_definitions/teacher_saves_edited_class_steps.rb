@@ -44,7 +44,7 @@ end
 
 And /^the following offerings exist$/ do |offering_table|
     offering_table.hashes.each do |hash|
-      investigation = Factory(:investigation)
+      investigation = FactoryGirl.create(:investigation)
       investigation.name = hash['name']
       investigation.save!
       myclazz = Portal::Clazz.find_by_name('My Class')

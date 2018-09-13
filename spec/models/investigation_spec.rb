@@ -226,15 +226,15 @@ describe Investigation do
 
   describe "finding reportables within an investigation" do
     before(:each) do
-      @investigation = Factory(:investigation)
-      @activity = Factory(:activity)
-      @section = Factory(:section)
-      @page = Factory(:page)
-      @m_choice = Factory(:multiple_choice)
-      @m_choice_b = Factory(:multiple_choice)
-      @sub_page = Factory(:page)
-      @sub_page.page_elements << Factory(:page_element, :embeddable => @m_choice)
-      @page.page_elements << Factory(:page_element, :embeddable => @m_choice_b)
+      @investigation = FactoryGirl.create(:investigation)
+      @activity = FactoryGirl.create(:activity)
+      @section = FactoryGirl.create(:section)
+      @page = FactoryGirl.create(:page)
+      @m_choice = FactoryGirl.create(:multiple_choice)
+      @m_choice_b = FactoryGirl.create(:multiple_choice)
+      @sub_page = FactoryGirl.create(:page)
+      @sub_page.page_elements << FactoryGirl.create(:page_element, :embeddable => @m_choice)
+      @page.page_elements << FactoryGirl.create(:page_element, :embeddable => @m_choice_b)
       @section.pages << @page
       @activity.sections << @section
       @investigation.activities << @activity

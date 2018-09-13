@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::Clazz do  
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
-      @existing_clazz = Factory(:portal_clazz)
+      @existing_clazz = FactoryGirl.create(:portal_clazz)
       @teacher1 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher1"))
       @teacher2 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher2"))
     end
@@ -81,12 +81,12 @@ describe Portal::Clazz do
     end
 
     it "should require a non blank class name" do
-      @course = Factory(:portal_course)
+      @course = FactoryGirl.create(:portal_course)
       @start_date = DateTime.parse("2009-01-02")
       @section_a = "section a"
       @section_b = "section b"
 
-      @new_clazz = Factory(:portal_clazz, {
+      @new_clazz = FactoryGirl.create(:portal_clazz, {
         :section => @section_a,
         :start_time => @start_date,
         :course => @course,
@@ -100,12 +100,12 @@ describe Portal::Clazz do
     end
 
     it "should require a non blank class word" do
-      @course = Factory(:portal_course)
+      @course = FactoryGirl.create(:portal_course)
       @start_date = DateTime.parse("2009-01-02")
       @section_a = "section a"
       @section_b = "section b"
 
-      @new_clazz = Factory(:portal_clazz, {
+      @new_clazz = FactoryGirl.create(:portal_clazz, {
         :section => @section_a,
         :start_time => @start_date,
         :course => @course,
