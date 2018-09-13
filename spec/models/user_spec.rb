@@ -583,7 +583,7 @@ protected
   # TODO: auto-generated
   describe '.login_exists?' do
     it 'login_exists?' do
-      login = double('login')
+      login = 'login'
       result = described_class.login_exists?(login)
 
       expect(result).not_to be_nil

@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
   scope :email, -> { where("email NOT LIKE '#{NO_EMAIL_STRING}%'") }
   scope :default, -> { where(default_user: true) }
   scope :with_role, lambda { | role_name |
-    { :include => :roles, :conditions => ['roles.title = ?',role_name]}
+    where('roles.title = ?',role_name).includes(:roles)
   }
 
   # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
@@ -173,11 +173,11 @@ class User < ActiveRecord::Base
     end
 
     def login_exists?(login)
-      User.count(:conditions => "`login` = '#{login}'") >= 1
+      User.where("`login` = '#{login}'").count >= 1
     end
 
     def login_does_not_exist?(login)
-      User.count(:conditions => "`login` = '#{login}'") == 0
+      User.where("`login` = '#{login}'").count == 0
     end
 
     def suggest_login(first,last)
@@ -300,7 +300,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u1 =  User.find(:first, :conditions => ['login = ? AND state = "active"',login])
+    u1 =  User.fwhere('login = ? AND state = "active"',login).first
     u1 && u1.valid_password?(password) ? u1 : nil
   end
 
