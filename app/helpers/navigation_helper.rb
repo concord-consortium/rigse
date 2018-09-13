@@ -138,8 +138,7 @@ module NavigationHelper
   end
 
   def clazz_links_for_teacher
-    # TODO Omit inactive classes?
-    clazzes = current_visitor.portal_teacher.teacher_clazzes.map { |c| c.clazz }
+    clazzes = current_visitor.portal_teacher.teacher_clazzes.where(active: true).map { |c| c.clazz }
     clazz_links = [
       {
         id: "/classes",

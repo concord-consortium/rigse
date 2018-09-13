@@ -64,10 +64,6 @@ Then /^the student "([^"]*)" should belong to the class "([^"]*)"$/ do |student_
   expect(student.clazzes).to include clazz
 end
 
-When /^I reload the page$/ do
-  visit [ current_path, page.driver.request.env['QUERY_STRING'] ].reject(&:blank?).join('?')
-end
-
 When /^(?:|I )run the (?:investigation|activity|external activity)$/ do
   # make sure the current user is a student
   user = User.find_by_login(@cuke_current_username)
