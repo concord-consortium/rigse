@@ -9,12 +9,12 @@ Given /^the following linked investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
     inv = FactoryGirl.create(:investigation, hash.merge('user' => user))
-      inv.activities << (Factory :activity, { :user => user })
-      inv.activities[0].sections << (Factory :section, {:user => user})
-      inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
-      open_response = (Factory :open_response, {:user => user})
-      open_response.pages << inv.activities[0].sections[0].pages[0]
-      inv.reload
+    inv.activities << FactoryGirl.create(:activity, :user => user)
+    inv.activities[0].sections << FactoryGirl.create(:section, :user => user)
+    inv.activities[0].sections[0].pages << FactoryGirl.create(:page, :user => user)
+    open_response = FactoryGirl.create(:open_response, :user => user)
+    open_response.pages << inv.activities[0].sections[0].pages[0]
+    inv.reload
   end
 end
 

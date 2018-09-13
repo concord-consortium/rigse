@@ -4,7 +4,7 @@ Given /^the following activities exist:$/ do |table|
     user = User.find_by_login user_name
 
     hash['user'] = user
-    Factory :activity, hash
+    FactoryGirl.create(:activity, hash)
   end
 end
 

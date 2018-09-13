@@ -29,8 +29,8 @@ And /^(?:|I )create the following notices:$/ do |table|
 end
 
 Given /^a notice for all roles "(.*)"/ do |notice_html|
-  # use a factory to make a genric notice with this text
-  notice = Factory :site_notice, notice_html: notice_html
+  # use a factory to make a generic notice with this text
+  notice = FactoryGirl.create(:site_notice, notice_html: notice_html)
 
   [:admin,:member,:researcher,:author,:manager].each do |role_name|
     site_notice_role = Admin::SiteNoticeRole.new
@@ -41,8 +41,8 @@ Given /^a notice for all roles "(.*)"/ do |notice_html|
 end
 
 Given /^a notice "(.*)" for roles "(.+)"/ do |notice_html, selected_roles|
-  # use a factory to make a genric notice with this text
-  notice = Factory :site_notice, notice_html: notice_html
+  # use a factory to make a generic notice with this text
+  notice = FactoryGirl.create(:site_notice, notice_html: notice_html)
 
   selected_roles.split(',').each do |role_name|
     site_notice_role = Admin::SiteNoticeRole.new
