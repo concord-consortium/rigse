@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Saveable, type: :model do
 
-  let(:object) { Factory.create(:multiple_choice)}
+  let(:object) { FactoryGirl.create(:multiple_choice)}
   
   # TODO: auto-generated
   describe '#submitted?' do

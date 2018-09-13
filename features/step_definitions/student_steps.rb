@@ -30,7 +30,7 @@ Given /^the student "(.*)" belongs to class "(.*)"$/ do |student_name, class_nam
   student = User.find_by_login(student_name).portal_student
   clazz   = Portal::Clazz.find_by_name(class_name)
 
-  Factory.create :portal_student_clazz, :student => student,
+  FactoryGirl.create :portal_student_clazz, :student => student,
                                         :clazz   => clazz
 end
 

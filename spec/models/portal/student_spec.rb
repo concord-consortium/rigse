@@ -33,7 +33,7 @@ describe Portal::Student do
     
     first_name = "Nametest"
     last_name  = "Testuser"
-    @student.user = Factory.create(:user, {
+    @student.user = FactoryGirl.create(:user, {
       :first_name => first_name,
       :last_name => last_name,
       :login => Portal::Student.generate_user_login(first_name, last_name),

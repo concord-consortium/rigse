@@ -4,12 +4,12 @@ describe Portal::Clazz do
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
       @existing_clazz = Factory(:portal_clazz)
-      @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1"))
-      @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2"))
+      @teacher1 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher1"))
+      @teacher2 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher2"))
     end
 
     it "under normal circumstances should say there is no reason admins cannot remove teachers" do
-      admin_user = Factory.next(:admin_user)
+      admin_user = FactoryGirl.generate(:admin_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1)).to eq(nil)
     end
@@ -20,13 +20,13 @@ describe Portal::Clazz do
     end
 
     it "should say it is illegal for an unauthorized user to remove a teacher" do
-      random_user = Factory.next(:anonymous_user)
+      random_user = FactoryGirl.generate(:anonymous_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1)).to eq(Portal::Clazz::ERROR_UNAUTHORIZED)
     end
 
     it "should say it is illegal for a user to remove the last teacher" do
-      admin_user = Factory.next(:admin_user)
+      admin_user = FactoryGirl.generate(:admin_user)
       @existing_clazz.teachers = [@teacher1]
       expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1)).to eq(Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
     end
@@ -38,32 +38,32 @@ describe Portal::Clazz do
     end
 
     it "is true for admins" do
-      admin_user = Factory.next(:admin_user)
+      admin_user = FactoryGirl.generate(:admin_user)
       expect(@existing_clazz.changeable?(admin_user)).to be_truthy
     end
 
     it "is true for class teacher" do
-      @teacher = Factory.create(:portal_teacher)
+      @teacher = FactoryGirl.create(:portal_teacher)
       @existing_clazz.teachers = [@teacher]
       expect(@existing_clazz.changeable?(@teacher.user)).to be_truthy
     end
 
     it "is true for second class teacher" do
-      @teacher1 = Factory.create(:portal_teacher)
-      @teacher2 = Factory.create(:portal_teacher)
+      @teacher1 = FactoryGirl.create(:portal_teacher)
+      @teacher2 = FactoryGirl.create(:portal_teacher)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       expect(@existing_clazz.changeable?(@teacher2.user)).to be_truthy
     end
 
     it "is false for non class teacher" do
-      @teacher = Factory.create(:portal_teacher)
+      @teacher = FactoryGirl.create(:portal_teacher)
       expect(@existing_clazz.changeable?(@teacher.user)).to be_falsey
     end
   end
 
   describe "creating a new class" do
     before(:each) do
-      @teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "test_teacher"))
+      @teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "test_teacher"))
     end
 
     it "should require a school" do

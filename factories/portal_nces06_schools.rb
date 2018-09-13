@@ -13,7 +13,7 @@ Factory.define :portal_nces06_school, :class => Portal::Nces06School do |f|
   f.MEMBER   607
   f.FTE      49.0
   f.TOTFRL   265
-  f.SCHNAM {Factory.next :nces_school_name}
+  f.SCHNAM {FactoryGirl.generate :nces_school_name}
   f.association :nces_district, :factory => :portal_nces06_district
 end
 

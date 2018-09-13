@@ -195,35 +195,35 @@ describe ActivityRuntimeAPI do
   end
 
   let(:investigation) do
-    Factory.create(:investigation,
+    FactoryGirl.create(:investigation,
                    :user => user
     )
   end
 
-  let(:multiple_choice) { Factory.create(:multiple_choice) }
-  let(:open_response)   { Factory.create(:open_response)   }
-  let(:image_question)  { Factory.create(:image_question)  }
-  let(:iframe)          { Factory.create(:embeddable_iframe)  }
+  let(:multiple_choice) { FactoryGirl.create(:multiple_choice) }
+  let(:open_response)   { FactoryGirl.create(:open_response)   }
+  let(:image_question)  { FactoryGirl.create(:image_question)  }
+  let(:iframe)          { FactoryGirl.create(:embeddable_iframe)  }
 
   let(:page) do
-    Factory.create(:page,
+    FactoryGirl.create(:page,
       :page_elements => [
-        Factory.create(:page_element, :embeddable => multiple_choice),
-        Factory.create(:page_element, :embeddable => open_response),
-        Factory.create(:page_element, :embeddable => image_question),
-        Factory.create(:page_element, :embeddable => iframe)
+        FactoryGirl.create(:page_element, :embeddable => multiple_choice),
+        FactoryGirl.create(:page_element, :embeddable => open_response),
+        FactoryGirl.create(:page_element, :embeddable => image_question),
+        FactoryGirl.create(:page_element, :embeddable => iframe)
       ]
     )
   end
 
   let(:section)do
-    Factory.create(:section,
+    FactoryGirl.create(:section,
       :pages => [page]
     )
   end
 
   let(:template) do
-    Factory.create(:activity,
+    FactoryGirl.create(:activity,
       :investigation => investigation,
       :sections => [section]
     )
@@ -237,7 +237,7 @@ describe ActivityRuntimeAPI do
     }
   end
 
-  let(:sequence_template) { Factory.create(:investigation) }
+  let(:sequence_template) { FactoryGirl.create(:investigation) }
 
   let(:existing_sequence_stubs) do
     {
@@ -247,17 +247,17 @@ describe ActivityRuntimeAPI do
     }
   end
 
-  let(:existing){ Factory.create(:external_activity, exist_stubs) }
+  let(:existing){ FactoryGirl.create(:external_activity, exist_stubs) }
 
-  let(:existing_sequence) { Factory.create(:external_activity, existing_sequence_stubs) }
+  let(:existing_sequence) { FactoryGirl.create(:external_activity, existing_sequence_stubs) }
 
   let(:existing_locked_sequence) {
     locked_sequence_properties = existing_sequence_stubs
     locked_sequence_properties[:is_locked] = true
-    Factory.create(:external_activity, locked_sequence_properties)
+    FactoryGirl.create(:external_activity, locked_sequence_properties)
   }
 
-  let(:user)    { Factory.create(:user) }
+  let(:user)    { FactoryGirl.create(:user) }
 
 
   describe "publish_activity" do
@@ -334,7 +334,7 @@ describe ActivityRuntimeAPI do
 
       describe "updating an existing open response" do
         let(:open_response) do
-          Factory.create(:open_response,
+          FactoryGirl.create(:open_response,
             :prompt => "the original prompt",  # this will be replaced as the test runs.
             :is_required => false,             # this will be replaced as the test runs.
             :show_in_featured_question_report => false, # this will be replaced as the test runs.
@@ -353,7 +353,7 @@ describe ActivityRuntimeAPI do
 
       describe "updating an existing image question" do
         let(:image_question) do
-          Factory.create(:image_question,
+          FactoryGirl.create(:image_question,
             :drawing_prompt => '',
             :prompt => "the original prompt",  # this will be replaced as the test runs.
             :is_required => false,             # this will be replaced as the test runs.
@@ -373,7 +373,7 @@ describe ActivityRuntimeAPI do
 
       describe "updating an existing embeddable iframe" do
         let(:iframe) do
-          Factory.create(:embeddable_iframe,
+          FactoryGirl.create(:embeddable_iframe,
             :url => "http://original.url",  # this will be replaced as the test runs.
             :is_required => false,          # this will be replaced as the test runs.
             :show_in_featured_question_report => false, # this will be replaced as the test runs.
@@ -393,13 +393,13 @@ describe ActivityRuntimeAPI do
 
       describe "updating an existing multiple choice" do
         let(:choice) do
-          Factory.create(:multiple_choice_choice,
+          FactoryGirl.create(:multiple_choice_choice,
             :choice => "this was an original choice",
             :external_id => "232323"
           )
         end
         let(:other_choice) do
-          Factory.create(:multiple_choice_choice,
+          FactoryGirl.create(:multiple_choice_choice,
             :choice => "this choice should be deleted",
             :external_id => "something_not_in_the_hash"
           )
@@ -409,7 +409,7 @@ describe ActivityRuntimeAPI do
         end
 
         let(:multiple_choice) do
-          Factory.create(:multiple_choice,
+          FactoryGirl.create(:multiple_choice,
             :prompt => "the original prompt",
             :external_id => "456789",
             :is_required => false,

@@ -8,7 +8,7 @@ end
 
 describe DataHelpersTestController, type: :controller do
   let(:sensor_names) { ["Temperature", "Light"] }
-  let(:material_a) { Factory.create(:external_activity, sensor_list: sensor_names) }
+  let(:material_a) { FactoryGirl.create(:external_activity, sensor_list: sensor_names) }
   let(:materials)  { [material_a] }
 
   describe "#materials_data" do

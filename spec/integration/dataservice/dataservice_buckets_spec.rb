@@ -3,9 +3,9 @@ require 'spec_helper'
 describe "Dataservice Buckets" do
   before :each do
     # set up a learner
-    student = Factory.create(:portal_student)
-    offering = Factory.create(:portal_offering)
-    @learner = Factory.create(:portal_learner, :student => student, :offering => offering)
+    student = FactoryGirl.create(:portal_student)
+    offering = FactoryGirl.create(:portal_offering)
+    @learner = FactoryGirl.create(:portal_learner, :student => student, :offering => offering)
   end
 
   it 'should deliver empty bucket data when no bucket contents exist' do

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.feature 'Admin configures help page' do
   before do
-    Factory.create(:admin_settings)
+    FactoryGirl.create(:admin_settings)
     login_as('admin')
     visit admin_settings_path
     first(:link, 'edit settings').click

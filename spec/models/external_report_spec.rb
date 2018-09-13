@@ -1,13 +1,13 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe ExternalReport do
-  let(:runnable)        { Factory.create(:external_activity) }
+  let(:runnable)        { FactoryGirl.create(:external_activity) }
   let(:args)            { {runnable: runnable} }
-  let(:offering)        { Factory.create(:portal_offering, args) }
-  let(:external_report) { Factory.create(:external_report,
+  let(:offering)        { FactoryGirl.create(:portal_offering, args) }
+  let(:external_report) { FactoryGirl.create(:external_report,
     url: 'https://example.com?cool=true'
     )}
-  let(:portal_teacher)  { Factory.create(:portal_teacher)}
+  let(:portal_teacher)  { FactoryGirl.create(:portal_teacher)}
 
   describe "#url_for_offering" do
     subject { external_report.url_for_offering(offering, portal_teacher.user, 'https', 'perfect.host.com') }
@@ -74,7 +74,7 @@ describe ExternalReport do
   # TODO: auto-generated
   describe '#url_for_offering' do
     xit 'url_for_offering' do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       protocol = double('protocol')
       host = double('host')
       result = external_report.url_for_offering(offering, user, protocol, host)
@@ -87,7 +87,7 @@ describe ExternalReport do
   describe '#url_for_class' do
     xit 'url_for_class' do
       class_id = double('class_id')
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       protocol = double('protocol')
       host = double('host')
       result = external_report.url_for_class(class_id, user, protocol, host)

@@ -32,7 +32,7 @@ RSpec.describe Reports::Account do
     xit 'process_portal_user' do
       opts = {}
       account = described_class.new(opts)
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       portal_user = double('portal_user')
       user_type = double('user_type')
       sheet = double('sheet')

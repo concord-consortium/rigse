@@ -2,18 +2,18 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::SiteNoticesController do
   before(:each) do
-    @mock_school = Factory.create(:portal_school)
+    @mock_school = FactoryGirl.create(:portal_school)
 
-    @admin_user = Factory.next(:admin_user)
-    @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
+    @admin_user = FactoryGirl.generate(:admin_user)
+    @teacher_user = FactoryGirl.create(:confirmed_user, :login => "teacher_user")
     @teacher_user.add_role('member')
-    @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
-    @manager_user = Factory.next(:manager_user)
-    @researcher_user = Factory.next(:researcher_user)
-    @author_user = Factory.next(:author_user)
-    @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
-    @portal_student = Factory.create(:portal_student, :user => @student_user)
-    @guest_user = Factory.next(:anonymous_user)
+    @teacher = FactoryGirl.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
+    @manager_user = FactoryGirl.generate(:manager_user)
+    @researcher_user = FactoryGirl.generate(:researcher_user)
+    @author_user = FactoryGirl.generate(:author_user)
+    @student_user = FactoryGirl.create(:confirmed_user, :login => "authorized_student")
+    @portal_student = FactoryGirl.create(:portal_student, :user => @student_user)
+    @guest_user = FactoryGirl.generate(:anonymous_user)
 
     @all_role_ids = Role.all.map {|r| r.id}
 
@@ -102,10 +102,10 @@ describe Admin::SiteNoticesController do
 
   describe "GET edit notice form" do
     before(:each) do
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryGirl.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @params = {
         :id => @notice.id
@@ -119,10 +119,10 @@ describe Admin::SiteNoticesController do
 
   describe "Update a notice after saving it" do
     before(:each) do
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryGirl.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @post_params = {
         :notice_html =>"updated text",
@@ -165,10 +165,10 @@ describe Admin::SiteNoticesController do
 
   describe "Delete a Notice" do
     before(:each) do
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryGirl.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @params= {
         :id => @notice.id
@@ -191,10 +191,10 @@ describe Admin::SiteNoticesController do
   describe "Dismiss a notice" do
     before(:each) do
       sign_in @teacher_user
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryGirl.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @params = {
         :id => @notice.id
@@ -211,10 +211,10 @@ describe Admin::SiteNoticesController do
   describe "toggle_notice_display" do
     before(:each) do
       sign_in @teacher_user
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryGirl.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
     end
     it"should store collapse time and expand and collapse status" do

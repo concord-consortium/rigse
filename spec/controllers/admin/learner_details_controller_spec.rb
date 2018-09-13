@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Admin::LearnerDetailsController, type: :controller do
 
-  let(:admin_user)   { Factory.next(:admin_user)     }
+  let(:admin_user)   { FactoryGirl.generate(:admin_user)     }
   before (:each) do
     sign_in admin_user
   end

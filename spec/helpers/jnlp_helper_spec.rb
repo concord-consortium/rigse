@@ -55,7 +55,7 @@ describe JnlpHelper, type: :helper  do
   # TODO: auto-generated
   describe '#jnlp_splash_url' do
     xit 'works' do
-      result = helper.jnlp_splash_url(Factory.create(:portal_learner))
+      result = helper.jnlp_splash_url(FactoryGirl.create(:portal_learner))
 
       expect(result).not_to be_nil
     end
@@ -91,7 +91,7 @@ describe JnlpHelper, type: :helper  do
   # TODO: auto-generated
   describe '#jnlp_information' do
     xit 'works' do
-      result = helper.jnlp_information('<root/>', Factory.create(:full_portal_learner))
+      result = helper.jnlp_information('<root/>', FactoryGirl.create(:full_portal_learner))
 
       expect(result).not_to be_nil
     end

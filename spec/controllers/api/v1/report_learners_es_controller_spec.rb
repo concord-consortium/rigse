@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe API::V1::ReportLearnersEsController do
 
-  let(:admin_user)        { Factory.next(:admin_user)     }
-  let(:simple_user)       { Factory.create(:confirmed_user, :login => "authorized_student") }
-  let(:manager_user)      { Factory.next(:manager_user)   }
+  let(:admin_user)        { FactoryGirl.generate(:admin_user)     }
+  let(:simple_user)       { FactoryGirl.create(:confirmed_user, :login => "authorized_student") }
+  let(:manager_user)      { FactoryGirl.generate(:manager_user)   }
 
   let(:search_body)       { {
                               "size" => 0,
@@ -124,9 +124,9 @@ describe API::V1::ReportLearnersEsController do
   describe "project researcher access" do
 
     before (:each) do
-      @project1 = Factory.create(:project)
-      @form1 = Factory.create(:permission_form, project: @project1)
-      user = Factory.create(:confirmed_user)
+      @project1 = FactoryGirl.create(:project)
+      @form1 = FactoryGirl.create(:permission_form, project: @project1)
+      user = FactoryGirl.create(:confirmed_user)
       user.add_role_for_project('researcher', @project1)
       sign_in user
     end

@@ -191,7 +191,7 @@ describe Image do
   # TODO: auto-generated
   describe '.by_user' do # scope test
     it 'supports named scope by_user' do
-      expect(described_class.limit(3).by_user(Factory.create(:user))).to all(be_a(described_class))
+      expect(described_class.limit(3).by_user(FactoryGirl.create(:user))).to all(be_a(described_class))
     end
   end
   # TODO: auto-generated
@@ -240,7 +240,7 @@ describe Image do
   # TODO: auto-generated
   describe '.can_be_created_by?' do
     xit 'can_be_created_by?' do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = described_class.can_be_created_by?(user)
 
       expect(result).not_to be_nil

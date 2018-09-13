@@ -5,7 +5,7 @@ require 'spec_helper'
 
 RSpec.describe CommonsLicense, type: :model do
 
-  let(:license) { Factory.create(:commons_license) }
+  let(:license) { FactoryGirl.create(:commons_license) }
 
 
   # TODO: auto-generated

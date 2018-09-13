@@ -10,7 +10,7 @@ RSpec.describe Search::SearchMaterial do
   # TODO: auto-generated
   describe '#populateMaterialData' do
     xit 'populateMaterialData' do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       search_material = described_class.new(material, user)
       result = search_material.populateMaterialData
 
@@ -21,7 +21,7 @@ RSpec.describe Search::SearchMaterial do
   # TODO: auto-generated
   describe '#get_page_title_and_meta_tags' do
     xit 'get_page_title_and_meta_tags' do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       search_material = described_class.new(material, user)
       result = search_material.get_page_title_and_meta_tags
 

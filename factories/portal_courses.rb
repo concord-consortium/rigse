@@ -5,7 +5,7 @@ end
 
 Factory.define :portal_course, :class => Portal::Course do |f|
   f.name  "first course"
-  f.course_number {Factory.next(:course_number)}
+  f.course_number {FactoryGirl.generate(:course_number)}
   f.uuid  UUIDTools::UUID.timestamp_create.to_s
   f.association :school, :factory => :portal_school
 end

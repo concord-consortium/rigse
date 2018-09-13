@@ -107,7 +107,7 @@ describe Client do
   describe '#updated_grant_for' do
     xit 'updated_grant_for' do
       client = described_class.new
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       time_to_live = double('time_to_live')
       result = client.updated_grant_for(user, time_to_live)
 

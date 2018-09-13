@@ -3,9 +3,9 @@ Factory.sequence :investigation_name do |n|
 end
 
 Factory.define :investigation do |f|
-  f.name {Factory.next(:investigation_name)}
+  f.name {FactoryGirl.generate(:investigation_name)}
   f.description "fake investigation description"
-  f.user { Factory.next(:author_user) }
+  f.user { FactoryGirl.generate(:author_user) }
 end
 
 Factory.define :investigation_template, parent: :investigation do |f|

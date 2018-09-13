@@ -6,8 +6,8 @@ shared_examples 'projects listing' do
 
   context 'when user is an admin' do
     before(:each) do
-      allow(view).to receive(:current_visitor).and_return(Factory.next(:admin_user))
-      allow(view).to receive(:current_user).and_return(Factory.next(:admin_user))
+      allow(view).to receive(:current_visitor).and_return(FactoryGirl.generate(:admin_user))
+      allow(view).to receive(:current_user).and_return(FactoryGirl.generate(:admin_user))
     end
     it 'should be visible' do
       render
@@ -17,8 +17,8 @@ shared_examples 'projects listing' do
 
   context 'when user is an author' do
     before(:each) do
-      allow(view).to receive(:current_visitor).and_return(Factory.next(:author_user))
-      allow(view).to receive(:current_user).and_return(Factory.next(:author_user))
+      allow(view).to receive(:current_visitor).and_return(FactoryGirl.generate(:author_user))
+      allow(view).to receive(:current_user).and_return(FactoryGirl.generate(:author_user))
     end
     it 'should not be visible' do
       render
