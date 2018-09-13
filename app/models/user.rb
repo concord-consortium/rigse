@@ -300,7 +300,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u1 =  User.fwhere('login = ? AND state = "active"',login).first
+    u1 =  User.where('login = ? AND state = "active"',login).first
     u1 && u1.valid_password?(password) ? u1 : nil
   end
 
