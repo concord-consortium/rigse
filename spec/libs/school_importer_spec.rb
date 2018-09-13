@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.xdescribe SchoolImporter do
+RSpec.describe SchoolImporter do
 
   # TODO: auto-generated
   describe '.run' do
@@ -36,6 +36,7 @@ RSpec.xdescribe SchoolImporter do
   describe '#parse_data' do
     it 'parse_data' do
       school_importer = described_class.new
+      school_importer.import_data = ''
       result = school_importer.parse_data
 
       expect(result).not_to be_nil
@@ -46,17 +47,17 @@ RSpec.xdescribe SchoolImporter do
   describe '#add_csv_row' do
     it 'add_csv_row' do
       school_importer = described_class.new
-      line = double('line')
+      line = ''
       result = school_importer.add_csv_row(line)
 
-      expect(result).not_to be_nil
+      expect(result).to be_nil
     end
   end
 
   # TODO: auto-generated
   describe '#log' do
     it 'log' do
-      school_importer = described_class.new()
+      school_importer = described_class.new
       message = double('message')
       opts = double('opts')
       result = school_importer.log(message, opts)
@@ -68,8 +69,8 @@ RSpec.xdescribe SchoolImporter do
   # TODO: auto-generated
   describe '#district_for' do
     it 'district_for' do
-      school_importer = described_class.new()
-      row = double('row')
+      school_importer = described_class.new
+      row = { district_name: 'district' }
       result = school_importer.district_for(row)
 
       expect(result).not_to be_nil
@@ -79,8 +80,8 @@ RSpec.xdescribe SchoolImporter do
   # TODO: auto-generated
   describe '#school_for' do
     it 'school_for' do
-      school_importer = described_class.new()
-      row = double('row')
+      school_importer = described_class.new
+      row = { school_name: 'school', district_name: 'district' }
       result = school_importer.school_for(row)
 
       expect(result).not_to be_nil
@@ -90,7 +91,7 @@ RSpec.xdescribe SchoolImporter do
   # TODO: auto-generated
   describe '#delete_all_others!' do
     it 'delete_all_others!' do
-      school_importer = described_class.new()
+      school_importer = described_class.new
       result = school_importer.delete_all_others!
 
       expect(result).not_to be_nil
