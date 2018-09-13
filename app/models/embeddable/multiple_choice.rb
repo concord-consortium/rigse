@@ -16,7 +16,7 @@ class Embeddable::MultipleChoice < ActiveRecord::Base
       where(:learner_id => learner.id)
     end
     def first_by_learner(learner)
-      where(:learner_id => learner.id).first
+      by_learner(learner).first
     end
   end
 
