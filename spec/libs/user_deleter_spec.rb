@@ -57,7 +57,7 @@ RSpec.describe UserDeleter do
     it 'delete_student' do
       options = double('options')
       user_deleter = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = user_deleter.delete_student(user)
 
       expect(result).to be_nil
@@ -69,7 +69,7 @@ RSpec.describe UserDeleter do
     it 'delete_clazzes' do
       options = double('options')
       user_deleter = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = user_deleter.delete_clazzes(user)
 
       expect(result).to be_nil

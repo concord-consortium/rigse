@@ -2,18 +2,18 @@ require 'spec_helper'
 
 describe Admin::PermissionFormsController do
   before(:each) do
-    @cohort1 = Factory.create(:admin_cohort)
-    @cohort2 = Factory.create(:admin_cohort)
-    @project1 = Factory.create(:project)
+    @cohort1 = FactoryGirl.create(:admin_cohort)
+    @cohort2 = FactoryGirl.create(:admin_cohort)
+    @project1 = FactoryGirl.create(:project)
     @project1.cohorts << @cohort1
-    @project2 = Factory.create(:project)
+    @project2 = FactoryGirl.create(:project)
     @project2.cohorts << @cohort2
-    @form1 = Factory.create(:permission_form, project: @project1)
-    @form2 = Factory.create(:permission_form, project: @project2)
-    @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1", :first_name => "Teacher", :last_name => "One"))
+    @form1 = FactoryGirl.create(:permission_form, project: @project1)
+    @form2 = FactoryGirl.create(:permission_form, project: @project2)
+    @teacher1 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher1", :first_name => "Teacher", :last_name => "One"))
     @teacher1.cohorts << @cohort1
     @teacher_view1 = Admin::PermissionFormsController::TeacherView.new(@teacher1)
-    @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2", :first_name => "Teacher", :last_name => "Two"))
+    @teacher2 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher2", :first_name => "Teacher", :last_name => "Two"))
     @teacher_view2 = Admin::PermissionFormsController::TeacherView.new(@teacher2)
     @teacher2.cohorts << @cohort2
   end
@@ -43,7 +43,7 @@ describe Admin::PermissionFormsController do
 
     describe "when user is a project admin" do
       let(:user) do
-        user = Factory.create(:confirmed_user)
+        user = FactoryGirl.create(:confirmed_user)
         user.add_role_for_project('admin', @project1)
         user
       end
@@ -58,7 +58,7 @@ describe Admin::PermissionFormsController do
 
     describe "when user is a project researcher" do
       let(:user) do
-        user = Factory.create(:confirmed_user)
+        user = FactoryGirl.create(:confirmed_user)
         user.add_role_for_project('researcher', @project2)
         user
       end

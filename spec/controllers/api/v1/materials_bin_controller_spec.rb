@@ -6,7 +6,7 @@ describe API::V1::MaterialsBinController do
   let(:bar_cohort) { FactoryGirl.create(:admin_cohort, name: 'bar') }
 
   def sign_in_user_in_cohort(cohort)
-    teacher = Factory.create(:portal_teacher)
+    teacher = FactoryGirl.create(:portal_teacher)
     teacher.cohorts = [cohort]
     sign_in teacher.user
   end

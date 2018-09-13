@@ -38,7 +38,7 @@ suppress_warnings {
 # Factory Generators
 #
 def generate_default_settings_and_jnlps_with_factories
-  @admin_settings = Factory.create(:admin_settings)
+  @admin_settings = FactoryGirl.create(:admin_settings)
   generate_default_school_resources_with_factories
 end
 

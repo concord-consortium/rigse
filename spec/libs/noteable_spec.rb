@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Noteable do
 
 
-  let(:noteable) { Factory.create(:activity) }
+  let(:noteable) { FactoryGirl.create(:activity) }
   # TODO: auto-generated
   describe '#teacher_note' do
     it 'teacher_note' do

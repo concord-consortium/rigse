@@ -1,5 +1,5 @@
 Given /^the following external REST activity:$/ do |table|
-  @external_activity = Factory.create(:external_activity, table.rows_hash)
+  @external_activity = FactoryGirl.create(:external_activity, table.rows_hash)
 
   # also create the mirrored activity template
   activity = Activity.create(:name => "#{@external_activity.name} Template")
@@ -28,7 +28,7 @@ Given /^the following external REST activity:$/ do |table|
   page.save
 
   clazz = Portal::Clazz.find_by_name("My Class")
-  offering = Factory.create(:portal_offering, :runnable => @external_activity, :clazz => clazz)
+  offering = FactoryGirl.create(:portal_offering, :runnable => @external_activity, :clazz => clazz)
   @learner = offering.find_or_create_learner(User.find_by_login('student').portal_student)
 end
 

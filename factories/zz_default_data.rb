@@ -14,6 +14,6 @@
 # puts "Loading default data set... "
 # anon =  FactoryGirl.generate :anonymous_user
 # admin = FactoryGirl.generate :admin_user
-# device_config = Factory.create(:device_config)
+# device_config = FactoryGirl.create(:device_config)
 # Admin::Settings.create_or_update_default_settings_from_settings_yml
 # puts "done."

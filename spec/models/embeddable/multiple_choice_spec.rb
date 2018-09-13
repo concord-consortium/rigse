@@ -11,7 +11,7 @@ RSpec.describe Embeddable::MultipleChoice, type: :model do
   describe '#by_offering' do
     xit 'by_offering' do
       multiple_choice = described_class.new
-      offering = Factory.create(:portal_offering)
+      offering = FactoryGirl.create(:portal_offering)
       result = multiple_choice.by_offering(offering)
 
       expect(result).not_to be_nil

@@ -36,7 +36,7 @@ describe Embeddable::OpenResponse do
   describe '#by_offering' do
     xit 'by_offering' do
       open_response = described_class.new
-      offering = Factory.create(:portal_offering)
+      offering = FactoryGirl.create(:portal_offering)
       result = open_response.by_offering(offering)
 
       expect(result).not_to be_nil

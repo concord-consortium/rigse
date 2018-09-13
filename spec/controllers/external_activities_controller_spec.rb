@@ -80,17 +80,17 @@ describe ExternalActivitiesController do
     }
   end
 
-  let (:existing) { Factory.create(:external_activity, {
+  let (:existing) { FactoryGirl.create(:external_activity, {
       :name        => name,
       :long_description => description,
       :url         => url,
       :publication_status => 'published',
-      :template    => Factory.create(:activity, {
-        :investigation => Factory.create(:investigation)
+      :template    => FactoryGirl.create(:activity, {
+        :investigation => FactoryGirl.create(:investigation)
       })
     })}
 
-  let (:another) { Factory.create(:external_activity, {
+  let (:another) { FactoryGirl.create(:external_activity, {
       :name        => "#{name} again",
       :long_description => "#{description} again",
       :url         => url,
@@ -173,11 +173,11 @@ describe ExternalActivitiesController do
 
     context "when version 2 of the API is requested" do
 
-      let (:existing_sequence) { Factory.create(:external_activity, {
+      let (:existing_sequence) { FactoryGirl.create(:external_activity, {
           :name => sequence_name,
           :long_description => sequence_desc,
           :url => sequence_url,
-          :template => Factory.create(:investigation)
+          :template => FactoryGirl.create(:investigation)
         }) }
 
       describe "when there is no existing external_activity" do
@@ -292,7 +292,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: Factory.create(:external_activity).to_param
+      get :show, id: FactoryGirl.create(:external_activity).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -301,7 +301,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, id: Factory.create(:external_activity).to_param
+      get :edit, id: FactoryGirl.create(:external_activity).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -328,7 +328,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: Factory.create(:external_activity).to_param
+      delete :destroy, id: FactoryGirl.create(:external_activity).to_param
 
       expect(response).to have_http_status(:redirect)
     end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe API::V1::ExternalActivitiesController do
 
   let(:admin_user)        { FactoryGirl.generate(:admin_user)     }
-  let(:simple_user)       { Factory.create(:confirmed_user) }
+  let(:simple_user)       { FactoryGirl.create(:confirmed_user) }
   let(:manager_user)      { FactoryGirl.generate(:manager_user)   }
   let(:researcher_user)   { FactoryGirl.generate(:researcher_user)   }
 

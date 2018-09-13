@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "materials_collections/index" do
   before(:each) do
 
-    collection1 = Factory.create(:materials_collection)
-    collection2 = Factory.create(:materials_collection_with_items)
+    collection1 = FactoryGirl.create(:materials_collection)
+    collection2 = FactoryGirl.create(:materials_collection_with_items)
 
     assign(:materials_collections, MaterialsCollection.search(nil, nil, nil))
 

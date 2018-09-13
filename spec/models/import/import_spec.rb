@@ -46,7 +46,7 @@ RSpec.describe Import::Import, type: :model do
   describe '#send_mail' do
     xit 'send_mail' do
       import = described_class.new
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = import.send_mail(user)
 
       expect(result).not_to be_nil

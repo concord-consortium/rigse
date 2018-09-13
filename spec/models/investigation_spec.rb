@@ -167,9 +167,9 @@ describe Investigation do
         :name => "test investigation",
         :description => "new decription"
       } }
-    let (:investigation) { Factory.create(:investigation, inv_attributes) }
-    let (:activity_one)  { Factory.create(:activity) }
-    let (:activity_two)  { Factory.create(:activity) }
+    let (:investigation) { FactoryGirl.create(:investigation, inv_attributes) }
+    let (:activity_one)  { FactoryGirl.create(:activity) }
+    let (:activity_two)  { FactoryGirl.create(:activity) }
 
     # We might want to have one activity in the future. 
     it "should have no activities initially" do
@@ -329,7 +329,7 @@ describe Investigation do
     let(:activity)             { double(:external_activities => activity_externals) }
     let(:activities)           { [activity] }
     subject do
-      s = Factory.create(:investigation)
+      s = FactoryGirl.create(:investigation)
       allow(s).to receive_messages(:external_activities => external_activities)
       allow(s).to receive_messages(:activities => activities)
       s.is_template
@@ -352,12 +352,12 @@ describe Investigation do
 
   describe '#is_template scope' do
     before(:each) do
-      e1 = Factory.create(:external_activity)
-      e2 = Factory.create(:external_activity)
-      a = Factory.create(:activity, external_activities: [e2])
-      @i1 = Factory.create(:investigation)
-      @i2 = Factory.create(:investigation, external_activities: [e1])
-      @i3 = Factory.create(:investigation, activities: [a])
+      e1 = FactoryGirl.create(:external_activity)
+      e2 = FactoryGirl.create(:external_activity)
+      a = FactoryGirl.create(:activity, external_activities: [e2])
+      @i1 = FactoryGirl.create(:investigation)
+      @i2 = FactoryGirl.create(:investigation, external_activities: [e1])
+      @i3 = FactoryGirl.create(:investigation, activities: [a])
     end
 
     it 'should return investigations which are not templates if provided argument is false' do
@@ -373,7 +373,7 @@ describe Investigation do
   end
 
   describe "project support" do
-    let (:investigation) { Factory.create(:investigation) }
+    let (:investigation) { FactoryGirl.create(:investigation) }
     let (:project) { FactoryGirl.create(:project) }
 
     it "can be assigned to a project" do

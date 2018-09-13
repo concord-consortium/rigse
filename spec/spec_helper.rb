@@ -43,5 +43,5 @@ def factory_stubbed
 end
 
 def factory_create
-  Factory.create(subject_class_factory)
+  FactoryGirl.create(subject_class_factory)
 end

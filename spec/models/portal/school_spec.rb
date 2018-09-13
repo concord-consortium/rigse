@@ -50,7 +50,7 @@ describe Portal::School do
     it "should be writable" do
       school = Factory(:portal_school)
       expect(school.members).to be_empty
-      teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"))
+      teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "authorized_teacher"))
 
       school.portal_teachers << teacher
 
@@ -64,10 +64,10 @@ describe Portal::School do
     it "should only return teachers" do
       school = Factory(:portal_school)
       expect(school.members).to be_empty
-      teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "authorized_teacher"), :schools => [school])
+      teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "authorized_teacher"), :schools => [school])
 
       # we actually don't add students to schools anymore but in case we start doing it again
-      student = Factory.create(:portal_student)
+      student = FactoryGirl.create(:portal_student)
       Portal::SchoolMembership.create(:school => school, :member => student)
 
       school.reload

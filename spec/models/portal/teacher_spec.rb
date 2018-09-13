@@ -63,7 +63,7 @@ describe Portal::Teacher do
     describe "when the portal allows teachers to author" do
       it "should add the authoring role to teachers when they are created" do
         allow(Admin::Settings).to receive_messages(:teachers_can_author? => true)
-        teacher = Factory.create(:portal_teacher)
+        teacher = FactoryGirl.create(:portal_teacher)
         teacher.possibly_add_authoring_role
         expect(teacher.user).to have_role('author')
       end
@@ -72,7 +72,7 @@ describe Portal::Teacher do
     describe "when the portal doesn't allow the teacher to author" do
       it "should not add the authoring role to teachers when they are created" do
         allow(Admin::Settings).to receive_messages(:teachers_can_author? => false)
-        teacher = Factory.create(:portal_teacher)
+        teacher = FactoryGirl.create(:portal_teacher)
         teacher.possibly_add_authoring_role
         expect(teacher.user).not_to have_role('author')
       end
@@ -80,7 +80,7 @@ describe Portal::Teacher do
   end
 
   describe '[default cohort support]' do
-    let(:settings) { Factory.create(:admin_settings) }
+    let(:settings) { FactoryGirl.create(:admin_settings) }
     let(:teacher) { Factory(:portal_teacher) }
     before(:each) do
       allow(Admin::Settings).to receive(:default_settings).and_return(settings)
@@ -93,8 +93,8 @@ describe Portal::Teacher do
     end
 
     describe 'when default cohort is specified in portal settings' do
-      let(:cohort) { Factory.create(:admin_cohort) }
-      let(:settings) { Factory.create(:admin_settings, default_cohort: cohort) }
+      let(:cohort) { FactoryGirl.create(:admin_cohort) }
+      let(:settings) { FactoryGirl.create(:admin_settings, default_cohort: cohort) }
 
       it 'is added to the default cohort' do
         expect(teacher.cohorts.length).to eql(1)

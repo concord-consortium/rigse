@@ -867,7 +867,7 @@ protected
   describe '#is_project_admin?' do
     it 'is_project_admin?' do
       user = described_class.new
-      project = Factory.create(:project)
+      project = FactoryGirl.create(:project)
       result = user.is_project_admin?(project)
 
       expect(result).not_to be_nil
@@ -878,7 +878,7 @@ protected
   describe '#is_project_researcher?' do
     it 'is_project_researcher?' do
       user = described_class.new
-      project = Factory.create(:project)
+      project = FactoryGirl.create(:project)
       result = user.is_project_researcher?(project)
 
       expect(result).not_to be_nil
@@ -889,7 +889,7 @@ protected
   describe '#is_project_cohort_member?' do
     it 'is_project_cohort_member?' do
       user = described_class.new
-      project = Factory.create(:project)
+      project = FactoryGirl.create(:project)
       result = user.is_project_cohort_member?(project)
 
       expect(result).not_to be_nil
@@ -900,7 +900,7 @@ protected
   describe '#is_project_member?' do
     it 'is_project_member?' do
       user = described_class.new
-      project = Factory.create(:project)
+      project = FactoryGirl.create(:project)
       result = user.is_project_member?(project)
 
       expect(result).not_to be_nil
@@ -912,7 +912,7 @@ protected
     xit 'add_role_for_project' do
       user = described_class.new
       role = double('role')
-      project = Factory.create(:project)
+      project = FactoryGirl.create(:project)
       result = user.add_role_for_project(role, project)
 
       expect(result).not_to be_nil
@@ -924,7 +924,7 @@ protected
     it 'remove_role_for_project' do
       user = described_class.new
       role = double('role')
-      project = Factory.create(:project)
+      project = FactoryGirl.create(:project)
       result = user.remove_role_for_project(role, project)
 
       expect(result).to be_nil
@@ -1030,7 +1030,7 @@ protected
   # TODO: auto-generated
   describe '#set_passive_users_as_pending' do
     it 'set_passive_users_as_pending' do
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = user.set_passive_users_as_pending
 
       expect(result).not_to be_nil

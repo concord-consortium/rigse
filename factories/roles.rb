@@ -9,7 +9,7 @@
   Factory.sequence "#{role_name}_role".to_sym do |n| 
     role = Role.find_by_title(role_name)
     unless role
-      role = Factory.create(:role, :title => role_name, :position => index)
+      role = FactoryGirl.create(:role, :title => role_name, :position => index)
     end
     role
   end

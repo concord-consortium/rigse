@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe API::V1::AnswerPolicy do
-  let(:context) { OpenStruct.new(user: Factory.create(:user), request: nil, params: [])}
+  let(:context) { OpenStruct.new(user: FactoryGirl.create(:user), request: nil, params: [])}
 
   # TODO: auto-generated
   describe '#student_answers?' do

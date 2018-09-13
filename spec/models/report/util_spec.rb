@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Report::Util do
 
-  let(:offering) { Factory.create(:portal_offering) }
+  let(:offering) { FactoryGirl.create(:portal_offering) }
   let(:learner) { Portal::Learner.new }
 
   # TODO: auto-generated
@@ -57,7 +57,7 @@ RSpec.describe Report::Util do
     xit 'saveable' do
       offering_or_learner = double('offering_or_learner')
       util = described_class.new(offering_or_learner)
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryGirl.create(:open_response)
       result = util.saveable(learner, embeddable)
 
       expect(result).not_to be_nil

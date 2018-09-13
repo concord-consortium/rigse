@@ -4,7 +4,7 @@ describe HelpController, type: :controller do
   
   before(:each) do
       @admin_user = FactoryGirl.generate(:admin_user)
-      @test_settings = Factory.create(:admin_settings, :user => @admin_user, :id=> 1)
+      @test_settings = FactoryGirl.create(:admin_settings, :user => @admin_user, :id=> 1)
       login_admin
       allow(Admin::Settings).to receive(:default_settings).and_return(@test_settings)
   end
