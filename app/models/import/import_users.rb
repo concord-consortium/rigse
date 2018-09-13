@@ -40,9 +40,9 @@ class Import::ImportUsers < Struct.new(:import_id)
             if user[:teacher]
               if user[:school]
                 if user[:school][:url]
-                  user_school_map = Import::UserSchoolMapping.find(:first, :conditions => {:import_school_url => user[:school][:url]})
+                  user_school_map = Import::UserSchoolMapping.find(:first, :wconditions => {:import_school_url => user[:school][:url]})
                   if user_school_map
-                    school = Portal::School.find(:first, :conditions => {:id => user_school_map.school_id})
+                    school = Portal::School.find(:first, :wconditions => {:id => user_school_map.school_id})
                   end
                 end
               end

@@ -54,9 +54,7 @@ class Section < ActiveRecord::Base
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    {
-     :conditions => ["sections.name LIKE ? OR sections.description LIKE ?", name,name]
-    }
+    where("sections.name LIKE ? OR sections.description LIKE ?", name, name)
   }
 
   self.extend SearchableModel

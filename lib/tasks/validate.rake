@@ -22,7 +22,7 @@ def for_each_model_instance(find_conditions = {}, &block)
     begin
       print "Processing #{model.count} #{model.name.pluralize}..."
       count = 0
-      model.find_each(find_conditions) do |instance|
+      model.where(find_conditions).find_each do |instance|
         print("\n%6d: " % count) if count % 2000 == 0
         res = yield(model, instance)
         count += 1
@@ -94,7 +94,7 @@ namespace :app do
       (puts "You must run this rake task in production mode!" and return) unless Rails.env.production?
       load_all_models
 
-      for_each_model_instance(:conditions => 'created_at IS NULL OR updated_at IS NULL') do |klass, instance|
+      for_each_model_instance('created_at IS NULL OR updated_at IS NULL') do |klass, instance|
         instance.updated_at = Time.now if instance.respond_to?(:updated_at) && instance.updated_at.nil?
         instance.created_at = instance.updated_at if instance.respond_to?(:created_at) && instance.created_at.nil?
         instance.save

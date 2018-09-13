@@ -143,7 +143,7 @@ class ExternalActivity < ActiveRecord::Base
 
   scope :not_private, -> { where("#{self.table_name}.publication_status IN ('published', 'draft')") }
 
-  scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
+  scope :by_user, proc { |u| where(:user_id => u.id) }
 
   scope :ordered_by, lambda { |order| order(order) }
 

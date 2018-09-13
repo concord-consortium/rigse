@@ -54,7 +54,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
   def import_activity(activity_json,import_object,imported_activity_url=nil)
     begin
       Timeout.timeout(90) {
-        client = Client.find(:first, :conditions => {:site_url => APP_CONFIG[:authoring_site_url]})
+        client = Client.find(:first, :wconditions => {:site_url => APP_CONFIG[:authoring_site_url]})
         auth_token = 'Bearer %s' % client.app_secret
         response = HTTParty.post(auth_url,
         :body => {
