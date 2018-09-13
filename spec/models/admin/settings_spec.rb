@@ -258,7 +258,10 @@ describe Admin::Settings do
       settings = described_class.new
       result = settings.summary_info
 
-      expect(result).not_to be_nil
+      expect(result).to match(/There are 0 Teachers without Users
+There are 0 Students which no longer have Teachers
+There are 0 Classes which no longer have Teachers
+There are 0 Learners which are no longer associated with Students/)
     end
   end
 
