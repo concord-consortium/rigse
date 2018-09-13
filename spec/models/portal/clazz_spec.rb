@@ -34,7 +34,7 @@ describe Portal::Clazz do
 
   describe "#changeable?" do
     before(:each) do
-      @existing_clazz = Factory.build(:portal_clazz)
+      @existing_clazz = FactoryGirl.build(:portal_clazz)
     end
 
     it "is true for admins" do

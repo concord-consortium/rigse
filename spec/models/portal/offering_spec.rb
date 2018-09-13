@@ -54,7 +54,7 @@ describe Portal::Offering do
     end
 
     describe "an offering with learners" do
-      let(:learner) { Factory.build(:portal_learner) }
+      let(:learner) { FactoryGirl.build(:portal_learner) }
       let(:args)    { {runnable: runnable, learners: [learner]} }
       before(:each) { allow(learner).to receive(:valid?).and_return(true) }
 

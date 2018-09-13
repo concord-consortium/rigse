@@ -458,7 +458,7 @@ describe ApplicationHelper, type: :helper do
   # TODO: auto-generated
   describe '#lara_report_link' do
     it 'works' do
-      result = helper.lara_report_link(Factory.build(:portal_offering))
+      result = helper.lara_report_link(FactoryGirl.build(:portal_offering))
 
       expect(result).to be_nil
     end
@@ -467,7 +467,7 @@ describe ApplicationHelper, type: :helper do
   # TODO: auto-generated
   describe '#menu_for_offering' do
     xit 'works' do
-      result = helper.menu_for_offering(Factory.build(:portal_offering))
+      result = helper.menu_for_offering(FactoryGirl.build(:portal_offering))
 
       expect(result).not_to be_nil
     end
@@ -656,7 +656,7 @@ describe ApplicationHelper, type: :helper do
   # TODO: auto-generated
   describe '#htmlize_teacher_note_body' do
     it 'works' do
-      result = helper.htmlize_teacher_note_body(Factory.build(:teacher_note))
+      result = helper.htmlize_teacher_note_body(FactoryGirl.build(:teacher_note))
 
       expect(result).not_to be_nil
     end
