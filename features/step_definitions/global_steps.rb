@@ -1,7 +1,7 @@
 def find_or_create_offering(runnable,clazz)
     type = runnable.class.to_s
     create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
-    offering = Portal::Offering.find(:first, :conditions=> create_hash)
+    offering = Portal::Offering.where(create_hash).first
     unless offering
       offering = Portal::Offering.create(create_hash)
       offering.save

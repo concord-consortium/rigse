@@ -127,7 +127,7 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    user_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_USER})
+    user_import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_USER).last
     duplicate_users = Import::DuplicateUser.where(:import_id => user_import.id)
     if duplicate_users.length == 0
       flash[:alert] = "No duplicate users found in the import."
@@ -246,7 +246,7 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY})
+    import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY).last
     imports_succeed = import.import_data.select{|item| item['success'] == true}
     import_data = []
     import_data << {
@@ -292,7 +292,7 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    batch_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY})
+    batch_import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY).last
     imports_failed = batch_import.import_data.select{|item| item["success"] == false}.map{|item| item.except("success")}
     if imports_failed
       send_data imports_failed.to_json,

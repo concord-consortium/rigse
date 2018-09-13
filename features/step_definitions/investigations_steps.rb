@@ -20,7 +20,7 @@ end
 
 Given /^the following simple investigations exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
-    user = User.first(:conditions => { :login => hash.delete('user') })
+    user = User.where(:login => hash.delete('user')).first
     hash[:user_id] = user.id
     investigation = Investigation.create(hash)
     activity = Activity.create(hash)
@@ -34,7 +34,7 @@ Given /^the following simple investigations exist:$/ do |investigation_table|
 end
 
 Given /^the author "([^"]*)" created an investigation named "([^"]*)" with text and a open response question$/ do |author, name|
-  user = User.first(:conditions => { :login => author })
+  user = User.where(:login => author).first
   hash = {:user_id => user.id, :name => name}
   investigation = Investigation.create(hash)
   activity = Activity.create(hash)
@@ -142,11 +142,11 @@ end
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   visit "/portal/classes/#{clazz.id}/remove_offering?offering_id=#{offering.id}"
 end
 
@@ -155,11 +155,11 @@ When /^I follow "(.*)" on the (.*) "(.*)" from the class "(.*)"$/ do |button_nam
   the_class = model_name.gsub(/\s/, '_').singularize.classify.constantize
   clazz = Portal::Clazz.find_by_name(class_name)
   obj = the_class.find_by_name(obj_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => obj.class.name,
     :runnable_id => obj.id,
     :clazz_id => clazz.id
-  })
+  ).first
   
   selector = "#portal__offering_#{offering.id}"
   with_scope(first(:id, selector)) do
@@ -170,22 +170,22 @@ end
 When /^a student has performed work on the investigation "([^"]*)" for the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   Factory.create(:full_portal_learner, :offering => offering)
 end
 
 When /^I open the accordion for the offering for investigation "([^"]*)" for the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   selector = "#_toggle_portal__offering_#{offering.id}"
   find(selector).click
 end
@@ -194,11 +194,11 @@ end
 When /^I drag the investigation "([^"]*)" in the class "(.*)" to "([^"]*)"$/ do |investigation_name, class_name, to|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   selector = "#portal__offering_#{offering.id}"
   # NP 2011-09 see support/drag_and_drop.rb
   # TODO: When Selenium issue ( http://bit.ly/q9LHR4 ) closes 
@@ -213,11 +213,11 @@ end
 Then /^the investigation "([^"]*)" in the class "(.*)" should be active$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   expect(offering).to be_active
 end
 

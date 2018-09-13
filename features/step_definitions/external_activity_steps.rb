@@ -1,6 +1,6 @@
 Given /^the following external activit(?:y|ies) exist[s]?:$/ do |activity_table|
   activity_table.hashes.each do |hash|
-    user = User.first(:conditions => { :login => hash.delete('user') })
+    user = User.where(:login => hash.delete('user')).first
     hash[:user_id] = user.id
     activity = Factory :external_activity, hash
     activity.publish
