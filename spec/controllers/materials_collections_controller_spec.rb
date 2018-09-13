@@ -20,7 +20,7 @@ require 'spec_helper'
 
 describe MaterialsCollectionsController do
   before(:each) do
-    @admin_user = Factory.next(:admin_user)
+    @admin_user = FactoryGirl.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
 
     login_admin

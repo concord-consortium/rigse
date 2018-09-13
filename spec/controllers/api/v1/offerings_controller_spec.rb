@@ -4,8 +4,8 @@ include ReportLearnerSpecHelper
 
 describe API::V1::OfferingsController do
 
-  let(:admin_user)        { Factory.next(:admin_user) }
-  let(:manager_user)      { Factory.next(:manager_user) }
+  let(:admin_user)        { FactoryGirl.generate(:admin_user) }
+  let(:manager_user)      { FactoryGirl.generate(:manager_user) }
   let(:teacher)           { Factory.create(:portal_teacher) }
   let(:open_response_1)   { Factory.create(:open_response) }
   let(:open_response_2)   { Factory.create(:open_response) }

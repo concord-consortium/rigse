@@ -28,8 +28,8 @@ describe Portal::ClazzesController do
     @mock_school = Factory.create(:portal_school)
 
     # set up our user types
-    @normal_user = Factory.next(:anonymous_user)
-    @admin_user = Factory.next(:admin_user)
+    @normal_user = FactoryGirl.generate(:anonymous_user)
+    @admin_user = FactoryGirl.generate(:admin_user)
     @authorized_student =         Factory.create(:portal_student, :user => Factory.create(:confirmed_user, :login => "authorized_student"))
     @authorized_teacher =         Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
     @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])

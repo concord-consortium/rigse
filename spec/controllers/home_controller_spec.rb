@@ -60,7 +60,7 @@ describe HomeController do
 
   describe "Post preview_home_page" do
     it "should set variables to preview home page" do
-      anonymous_user = Factory.next(:anonymous_user)
+      anonymous_user = FactoryGirl.generate(:anonymous_user)
       @post_params = {
         :home_page_preview_content =>"<b>Home page content.</b>",
       }

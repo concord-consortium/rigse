@@ -4,16 +4,16 @@ describe Admin::SiteNoticesController do
   before(:each) do
     @mock_school = Factory.create(:portal_school)
 
-    @admin_user = Factory.next(:admin_user)
+    @admin_user = FactoryGirl.generate(:admin_user)
     @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
     @teacher_user.add_role('member')
     @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
-    @manager_user = Factory.next(:manager_user)
-    @researcher_user = Factory.next(:researcher_user)
-    @author_user = Factory.next(:author_user)
+    @manager_user = FactoryGirl.generate(:manager_user)
+    @researcher_user = FactoryGirl.generate(:researcher_user)
+    @author_user = FactoryGirl.generate(:author_user)
     @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
     @portal_student = Factory.create(:portal_student, :user => @student_user)
-    @guest_user = Factory.next(:anonymous_user)
+    @guest_user = FactoryGirl.generate(:anonymous_user)
 
     @all_role_ids = Role.all.map {|r| r.id}
 

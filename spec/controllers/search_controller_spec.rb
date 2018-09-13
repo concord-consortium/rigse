@@ -11,10 +11,10 @@ describe SearchController do
 
   let(:teacher_user)    { Factory.create(:confirmed_user, :login => "teacher_user") }
   let(:teacher)         { Factory.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
-  let(:admin_user)      { Factory.next(:admin_user) }
-  let(:author_user)     { Factory.next(:author_user) }
-  let(:manager_user)    { Factory.next(:manager_user) }
-  let(:researcher_user) { Factory.next(:researcher_user) }
+  let(:admin_user)      { FactoryGirl.generate(:admin_user) }
+  let(:author_user)     { FactoryGirl.generate(:author_user) }
+  let(:manager_user)    { FactoryGirl.generate(:manager_user) }
+  let(:researcher_user) { FactoryGirl.generate(:researcher_user) }
 
   let(:student_user)    { Factory.create(:confirmed_user, :login => "authorized_student") }
   let(:student)         { Factory.create(:portal_student, :user_id => student_user.id) }

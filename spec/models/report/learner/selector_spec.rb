@@ -9,7 +9,7 @@ describe Report::Learner::Selector do
     learner.student.permission_forms << students_p_forms
   }
 
-  let(:current_user)        { Factory.next(:admin_user) }
+  let(:current_user)        { FactoryGirl.generate(:admin_user) }
   let(:project_a)           { FactoryGirl.create(:admin_project, name: "project-a") }
   let(:permission_params_a) { { name: "a", project: project_a } }
   let(:permission_form_a)   { FactoryGirl.create(:permission_form, permission_params_a) }

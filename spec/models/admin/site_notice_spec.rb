@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::SiteNotice do
   describe "Display notices for different users" do
     before(:each) do
-      @admin_user = Factory.next(:admin_user)
+      @admin_user = FactoryGirl.generate(:admin_user)
 
       role = Role.find_by_title('admin')
       @first_notice = Factory.create(:site_notice, :created_by => @admin_user.id)

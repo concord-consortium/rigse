@@ -4,7 +4,7 @@ describe Portal::OfferingsController do
   describe "Show Jnlp Offering" do
     it "renders a jnlp for an admin" do
       offering = Factory(:portal_offering)
-      admin = Factory.next :admin_user
+      admin = FactoryGirl.generate :admin_user
       sign_in admin
       get :show, :id => offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
@@ -74,11 +74,11 @@ describe Portal::OfferingsController do
     before(:each) do
       @mock_school = Factory.create(:portal_school)
 
-      @admin_user = Factory.next(:admin_user)
-      @manager_user = Factory.next(:manager_user)
-      @researcher_user = Factory.next(:researcher_user)
-      @author_user = Factory.next(:author_user)
-      @guest_user = Factory.next(:anonymous_user)
+      @admin_user = FactoryGirl.generate(:admin_user)
+      @manager_user = FactoryGirl.generate(:manager_user)
+      @researcher_user = FactoryGirl.generate(:researcher_user)
+      @author_user = FactoryGirl.generate(:author_user)
+      @guest_user = FactoryGirl.generate(:anonymous_user)
       @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
       @portal_student = Factory.create(:portal_student, :user => @student_user)
       @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
@@ -149,7 +149,7 @@ describe Portal::OfferingsController do
 
     let(:clazz)       { Factory.create :portal_clazz, teachers: [teacher] }
     let(:post_params) { {id: offering.id }      }
-    let(:eacher_user) { Factory.next()          }
+    let(:eacher_user) { FactoryGirl.generate()          }
     let(:teacher)     { Factory.create :teacher }
     let(:teacher_b)   { Factory.create :teacher }
 

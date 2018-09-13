@@ -19,7 +19,7 @@ describe Admin::PermissionFormsController do
   end
 
   # User variable is overwritten by some test cases.
-  let(:user) { Factory.next(:admin_user) }
+  let(:user) { FactoryGirl.generate(:admin_user) }
   before(:each) { sign_in user }
 
   describe "#index" do
