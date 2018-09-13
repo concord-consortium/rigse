@@ -472,7 +472,7 @@ module MockData
         clazz_names.each do |clazz_name|
           map_clazz = default_classes.find{|c| c.name == clazz_name}
           if map_clazz
-            teacher_clazz = Portal::TeacherClazz.find_or_create_by_teacher_id_and_clazz_id(map_teacher.id, map_clazz.id)
+            teacher_clazz = Portal::TeacherClazz.where(teacher_id: map_teacher.id, clazz_id: map_clazz.id).first_or_create
           end
         end
       end
@@ -486,7 +486,7 @@ module MockData
         clazz_names.each do |clazz_name|
           map_clazz = default_classes.find{|c| c.name == clazz_name}
           if map_clazz
-            student_clazz = Portal::StudentClazz.find_or_create_by_student_id_and_clazz_id(map_student.id, map_clazz.id)
+            student_clazz = Portal::StudentClazz.where(student_id: map_student.id, clazz_id: map_clazz.id).first_or_create
           end
         end
       end
@@ -875,11 +875,11 @@ module MockData
       new_answer.multiple_choice = question
       new_answer.save!
 
-      saveable_answer = Saveable::MultipleChoiceAnswer.find_or_create_by_uuid(data[:saveable_multiple_choice_answers_uuid])
+      saveable_answer = Saveable::MultipleChoiceAnswer.where(uuid: data[:saveable_multiple_choice_answers_uuid]).first_or_create
       saveable_answer.multiple_choice = new_answer
       saveable_answer.save!
 
-      saveable_mc_rationale_choice = Saveable::MultipleChoiceRationaleChoice.find_or_create_by_uuid(data[:saveable_multiple_choice_rationale_choices_uuid])
+      saveable_mc_rationale_choice = Saveable::MultipleChoiceRationaleChoice.where(uuid: data[:saveable_multiple_choice_rationale_choices_uuid]).first_or_create
       saveable_mc_rationale_choice.choice = answer
       saveable_mc_rationale_choice.answer = saveable_answer
       saveable_mc_rationale_choice.save!
@@ -913,12 +913,12 @@ module MockData
       new_answer.image_question = question
       new_answer.save!
 
-      blob = Dataservice::Blob.find_or_create_by_uuid[data[:dataservice_blob_uuid]]
+      blob = Dataservice::Blob.where(uuid: data[:dataservice_blob_uuid]).first_or_create
       blob.content = answer_text
       blob.token = answer_text
       blob.save!
 
-      saveable_answer = Saveable::ImageQuestionAnswer.find_or_create_by_uuid(data[:saveable_image_question_answer_uuid])
+      saveable_answer = Saveable::ImageQuestionAnswer.where(uuid: data[:saveable_image_question_answer_uuid]).first_or_create
       saveable_answer.blob = blob
       saveable_answer.save!
 

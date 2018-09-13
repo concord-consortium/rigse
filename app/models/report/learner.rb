@@ -263,7 +263,7 @@ class Report::Learner < ActiveRecord::Base
 
     activities.each do|activity|
       complete_percent = report_util.complete_percent(activity)
-      report_learner_activity = Report::LearnerActivity.find_or_create_by_learner_id_and_activity_id(self.learner.id, activity.id)
+      report_learner_activity = Report::LearnerActivity.where(learner_id: self.learner.id, activity_id: activity.id).first_or_create
       report_learner_activity.complete_percent = complete_percent
       report_learner_activity.save!
     end

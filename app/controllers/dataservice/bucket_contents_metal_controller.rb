@@ -6,12 +6,12 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
 
   def create_by_learner
     learner = Portal::Learner.find(params[:id]) rescue nil
-    bucket_logger = learner ? Dataservice::BucketLogger.find_or_create_by_learner_id(learner.id) : nil
+    bucket_logger = learner ? Dataservice::BucketLogger.where(learner_id: learner.id).first_or_create : nil
     create_with_logger(bucket_logger)
   end
 
   def create_by_name
-    bucket_logger = Dataservice::BucketLogger.find_or_create_by_name(params[:name])
+    bucket_logger = Dataservice::BucketLogger.where(name: params[:name]).first_or_create
     create_with_logger(bucket_logger)
   end
 

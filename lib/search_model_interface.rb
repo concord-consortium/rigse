@@ -41,6 +41,6 @@ module SearchModelInterface
   end
 
   def offerings_by_clazz(clazz_ids)
-    offerings.find_all_by_clazz_id(clazz_ids)
+    offerings.where(id: clazz_ids)
   end
 end

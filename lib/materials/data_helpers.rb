@@ -175,10 +175,9 @@ module Materials
         # Include associated standards
         #
         standard_statements =
-            StandardStatement.find_all_by_material_type_and_material_id(
-                material.class.name.underscore,
-                material.id,
-                :order => "uri ASC")
+            StandardStatement.where(
+                material_type: material.class.name.underscore,
+                material_id: material.id).order("uri ASC")
 
         standard_statements_json = []
 

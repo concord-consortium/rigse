@@ -16,10 +16,10 @@ describe Portal::District do
     expect(Portal::District.create!(@valid_attributes)).to be_virtual
   end
 
-  context '.find_or_create_by_nces_district' do
+  context '.find_or_create_using_nces_district' do
     it "can create districts from NCES district data " do
       nces_district = Factory(:portal_nces06_district)
-      new_district = Portal::District.find_or_create_by_nces_district(nces_district)
+      new_district = Portal::District.find_or_create_using_nces_district(nces_district)
       expect(new_district).not_to be_nil
       expect(new_district).to be_real # meaning has a real nces school
     end

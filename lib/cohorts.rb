@@ -8,7 +8,7 @@ module Cohorts
   end
 
   def set_cohorts_by_id(ids=[])
-    self.cohorts = Admin::Cohort.find_all_by_id(ids)
+    self.cohorts = Admin::Cohort.where(id: ids)
   end
 
   def cohort_fullnames

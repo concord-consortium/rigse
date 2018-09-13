@@ -140,9 +140,9 @@ class Report::Util
     ResponseTypes.saveable_types.each do |type|
       all = []
       if @learners.size == 1
-        all = type.find_all_by_learner_id(@learners[0].id)
+        all = type.where(learner_id: @learners[0].id)
       else
-        all = type.find_all_by_offering_id(@offering.id)
+        all = type.where(offering_id: @offering.id)
       end
       @saveables += all
       @saveables_by_type[type.to_s] = all

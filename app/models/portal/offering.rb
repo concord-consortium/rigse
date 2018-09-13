@@ -159,6 +159,10 @@ class Portal::Offering < ActiveRecord::Base
     end
   end
 
+  def self.find_all_using_runnable_id_and_runnable_type_and_default_offering(id, type, default)
+    where(runnable_id: id, runnable_type: type, default_offering: default)
+  end
+
   def completed_students_count
     student_ids = self.clazz.students.map{|item| item.id}
     learners = self.learners.select{|item| student_ids.include?(item.student_id)}

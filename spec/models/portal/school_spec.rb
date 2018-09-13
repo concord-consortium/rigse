@@ -27,7 +27,7 @@ describe Portal::School do
   
   it "can create schools from NCES school data " do
     nces_school = Factory(:portal_nces06_school)
-    new_school = Portal::School.find_or_create_by_nces_school(nces_school)
+    new_school = Portal::School.find_or_create_using_nces_school(nces_school)
     expect(new_school).not_to be_nil
     expect(new_school).to be_real # meaning has a real nces school
   end

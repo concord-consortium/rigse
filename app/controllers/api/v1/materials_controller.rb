@@ -367,10 +367,7 @@ class API::V1::MaterialsController < API::APIController
     id      = params[:material_id]
 
     statements =
-        StandardStatement.find_all_by_material_type_and_material_id(
-            type,
-            id,
-            :order => "uri ASC")
+        StandardStatement.where(material_type: type, material_id: id).order("uri ASC")
 
     ret = []
 
@@ -581,7 +578,7 @@ class API::V1::MaterialsController < API::APIController
     # See if we can populate is_applied data
     #
     if material_type.present? && material_id.present?
-        statements = StandardStatement.find_all_by_material_type_and_material_id(material_type, material_id)
+        statements = StandardStatement.where(material_type: material_type, material_id: material_id)
 
         statements.each { |s| applied_map[s.uri] = true }
     end
