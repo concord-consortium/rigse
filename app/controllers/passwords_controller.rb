@@ -154,7 +154,6 @@ class PasswordsController < ApplicationController
   def find_password_user
     return current_visitor if params[:reset_code] == "0" && !current_visitor.anonymous?
     begin
-      binding.pry
       @user_find = Password.where('reset_code = ? and expiration_date > ?', params[:reset_code], Time.now).first.user
       return @user_find
     rescue
