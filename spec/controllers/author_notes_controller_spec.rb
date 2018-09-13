@@ -16,7 +16,7 @@ RSpec.describe AuthorNotesController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show, id: 'a' * 36
 
       expect(response).to have_http_status(:ok)
     end
