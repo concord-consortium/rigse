@@ -12,7 +12,7 @@ class Section < ActiveRecord::Base
 
   has_many :pages ,:order => :position, :dependent => :destroy do
     def student_only
-      find(:all, :conditions => {'teacher_only' => false})
+      where('teacher_only' => false)
     end
   end
 

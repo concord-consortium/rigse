@@ -9,10 +9,11 @@ RSpec.describe Embeddable::MultipleChoice, type: :model do
 
   # TODO: auto-generated
   describe '#by_offering' do
-    xit 'by_offering' do
+    it 'by_offering' do
       multiple_choice = described_class.new
       offering = FactoryGirl.create(:portal_offering)
-      result = multiple_choice.by_offering(offering)
+
+      result = multiple_choice.saveables.by_offering(offering)
 
       expect(result).not_to be_nil
     end
@@ -20,10 +21,10 @@ RSpec.describe Embeddable::MultipleChoice, type: :model do
 
   # TODO: auto-generated
   describe '#by_learner' do
-    xit 'by_learner' do
+    it 'by_learner' do
       multiple_choice = described_class.new
-      learner = double('learner')
-      result = multiple_choice.by_learner(learner)
+      learner = Portal::Learner.new
+      result = multiple_choice.saveables.by_learner(learner)
 
       expect(result).not_to be_nil
     end
@@ -31,12 +32,12 @@ RSpec.describe Embeddable::MultipleChoice, type: :model do
 
   # TODO: auto-generated
   describe '#first_by_learner' do
-    xit 'first_by_learner' do
+    it 'first_by_learner' do
       multiple_choice = described_class.new
-      learner = double('learner')
-      result = multiple_choice.first_by_learner(learner)
+      learner = Portal::Learner.new
+      result = multiple_choice.saveables.first_by_learner(learner)
 
-      expect(result).not_to be_nil
+      expect(result).to be_nil
     end
   end
 

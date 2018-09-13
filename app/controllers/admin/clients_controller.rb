@@ -11,7 +11,7 @@ class Admin::ClientsController < ApplicationController
   # GET /admin/clients
   def index
     authorize Client
-    @clients = Client.find(:all).paginate(:per_page => 20, :page => params[:page])
+    @clients = Client.all.paginate(:per_page => 20, :page => params[:page])
   end
 
   # GET /admin/client/1

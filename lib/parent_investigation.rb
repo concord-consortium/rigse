@@ -1,8 +1,7 @@
 class ParentInvestigation
 
   def self.parent_activities()
-    activities = Activity.find(:all)
-    activities.each do |a|
+    Activity.all.each do |a|
       parent_activity(a)
     end
   end

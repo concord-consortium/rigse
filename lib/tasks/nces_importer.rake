@@ -184,14 +184,14 @@ The following codes were calculated from the school's corresponding GSLO and GSH
         school_values = []
         district_values = []
         state_province_str = "#{state}, #{Portal::StateOrProvince::STATES_AND_PROVINCES[state]}"
-        nces_districts = Portal::Nces06District.find(:all, :conditions => { :MSTATE => state }, :select => "id, NAME, LEAID, LZIP, LSTATE")
+        nces_districts = Portal::Nces06District.where(:MSTATE => state).select("id, NAME, LEAID, LZIP, LSTATE")
         if nces_districts.empty?
           puts "\n*** No NCES districts found in state/province: #{state_province_str}"
         else
           puts "\n*** Processing #{nces_districts.length} NCES districts in: #{state_province_str}"
           count = 0
           nces_districts.each do |nces_district|
-            nces_schools = Portal::Nces06School.find(:all, :conditions => { :nces_district_id => nces_district.id }, :select => "LEVEL")
+            nces_schools = Portal::Nces06School.where(:nces_district_id => nces_district.id).select("LEVEL")
             nces_school_levels = nces_schools.collect { |s| s.LEVEL }
             count += 1
             if count % 25 == 0
@@ -208,11 +208,11 @@ The following codes were calculated from the school's corresponding GSLO and GSH
           end
           # portal_districts = Portal::District.import(new_districts, :synchronize => new_districts)
           Portal::District.import(portal_district_field_names, district_values, import_options)
-          portal_districts = Portal::District.find(:all, :conditions => { :state => state }, :select => "id, nces_district_id, state")
+          portal_districts = Portal::District.where(:state => state).select("id, nces_district_id, state")
           puts "\ncreated #{portal_districts.length} districts"
           count = 0
           portal_districts.each do |portal_district|
-            nces_schools = Portal::Nces06School.find(:all, :conditions => { :nces_district_id => portal_district.nces_district_id }, :select => "id, nces_district_id, NCESSCH, LZIP,SCHNAM, LEVEL")
+            nces_schools = Portal::Nces06School.where(:nces_district_id => portal_district.nces_district_id ).select("id, nces_district_id, NCESSCH, LZIP,SCHNAM, LEVEL")
             nces_school_levels = nces_schools.collect { |s| s.LEVEL }
             if count % 10 == 0
               print '.'
@@ -225,7 +225,7 @@ The following codes were calculated from the school's corresponding GSLO and GSH
             end
           end
           Portal::School.import(portal_school_field_names, school_values, import_options)
-          portal_schools = Portal::School.find(:all, :conditions => { :state => state }, :select => "id")
+          portal_schools = Portal::School.where(:state => state).select("id")
           puts "\ncreated #{portal_schools.length} schools"
         end
       end

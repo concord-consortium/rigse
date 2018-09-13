@@ -13,13 +13,12 @@ RSpec.describe Section, type: :model do
     end
   end
 
-  # TODO: auto-generated
   describe '#student_only' do
-    xit 'student_only' do
+    it 'student_only' do
       section = described_class.new
-      result = section.student_only
+      result = section.pages.student_only
 
-      expect(result).not_to be_nil
+      expect(result).to be_empty
     end
   end
 

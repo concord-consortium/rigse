@@ -11,8 +11,9 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    file_data = params[:import][:import].read
     begin
+      file_data = params[:import][:import].read
+
       json_data = JSON.parse file_data, :symbolize_names => true
       if json_data[:districts].nil? || json_data[:schools].nil?
         raise "Invalid JSON"
@@ -38,8 +39,9 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    file_data = params[:import][:import].read
     begin
+      file_data = params[:import][:import].read
+
       json_data = JSON.parse file_data, :symbolize_names => true
       if json_data[:users].nil?
         raise "Invalid JSON"
@@ -126,7 +128,7 @@ class Import::ImportsController < ApplicationController
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
     user_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_USER})
-    duplicate_users = Import::DuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
+    duplicate_users = Import::DuplicateUser.where(:import_id => user_import.id)
     if duplicate_users.length == 0
       flash[:alert] = "No duplicate users found in the import."
       redirect_to :back
