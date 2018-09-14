@@ -6,13 +6,17 @@ Factory.sequence :class_name do |n|
   "sample class #{n}"
 end
 
-Factory.define :portal_clazz, :class => Portal::Clazz do |f|
-  f.class_word {FactoryGirl.generate(:class_word)}
-  f.association :course, :factory => :portal_course
-  f.name {FactoryGirl.generate(:class_name)}
-  f.uuid { UUIDTools::UUID.timestamp_create.to_s }
+FactoryGirl.define do
+  factory :portal_clazz, :class => Portal::Clazz do |f|
+    f.class_word {FactoryGirl.generate(:class_word)}
+    f.association :course, :factory => :portal_course
+    f.name {FactoryGirl.generate(:class_name)}
+    f.uuid {UUIDTools::UUID.timestamp_create.to_s}
+  end
 end
 
-Factory.define :nces_portal_clazz, :parent => :portal_clazz do |f|
-  f.association :course, :factory => :nces_portal_course
+FactoryGirl.define do
+  factory :nces_portal_clazz, :parent => :portal_clazz do |f|
+    f.association :course, :factory => :nces_portal_course
+  end
 end

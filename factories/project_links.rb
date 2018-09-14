@@ -1,2 +1,4 @@
-Factory.define :project_link, class: Admin::ProjectLink do |f|
+FactoryGirl.define do
+  factory :project_link, class: Admin::ProjectLink do |f|
+  end
 end

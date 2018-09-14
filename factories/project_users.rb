@@ -1,2 +1,4 @@
-Factory.define :project_user, class: Admin::ProjectUser do |f|
+FactoryGirl.define do
+  factory :project_user, class: Admin::ProjectUser do |f|
+  end
 end

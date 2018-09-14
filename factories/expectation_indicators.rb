@@ -1,3 +1,5 @@
-Factory.define :expectation_indicator do |f|
+FactoryGirl.define do
+  factory :expectation_indicator do |f|
 
+  end
 end

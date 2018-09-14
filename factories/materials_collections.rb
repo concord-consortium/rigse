@@ -6,7 +6,7 @@ FactoryGirl.define do
   end
 
   factory :materials_collection do
-    name        "Some name"
+    name "Some name"
     description "Some description"
     # association :project, :factory => :admin_project
 

@@ -1,3 +1,5 @@
-Factory.define :password do |f|
+FactoryGirl.define do
+  factory :password do |f|
+  end
 end
 

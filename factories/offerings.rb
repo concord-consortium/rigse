@@ -1,3 +1,5 @@
-Factory.define :offering do |f|
+FactoryGirl.define do
+  factory :offering do |f|
 
+  end
 end

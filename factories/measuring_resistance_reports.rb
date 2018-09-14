@@ -1,3 +1,5 @@
-Factory.define :measuring_resistance_report do |f|
+FactoryGirl.define do
+  factory :measuring_resistance_report do |f|
 
+  end
 end
