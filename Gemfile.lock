@@ -689,6 +689,9 @@ GEM
     aws-sdk-translate (1.2.0)
       aws-sdk-core (~> 3)
       aws-sigv4 (~> 1.0)
+    aws-sdk-v1 (1.67.0)
+      json (~> 1.4)
+      nokogiri (~> 1)
     aws-sdk-waf (1.5.0)
       aws-sdk-core (~> 3)
       aws-sigv4 (~> 1.0)
@@ -1245,6 +1248,7 @@ DEPENDENCIES
   arrayfields
   awesome_print
   aws-sdk (~> 3)
+  aws-sdk-v1
   axlsx (> 2.5)
   better_errors (~> 1.1.0)
   bullet

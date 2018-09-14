@@ -346,5 +346,30 @@ describe Image do
     end
   end
 
+  describe '#image.url' do
+    it 'is the missing image when not initialized' do
+      image = described_class.new
+      result = image.image.url
+      expect(result).to eq("/images/original/missing.png")
+    end
+  end
 
+  describe "when s3 is configured" do
+    # These tests are useful to confirm that the gems are configured correctly to work
+    # with paper clip. There paperclip requires aws-sdk version one
+    before(:each) do
+      Paperclip::Attachment.default_options[:storage] = :s3
+    end
+    after(:each) do
+      Paperclip::Attachment.default_options[:storage] = :filesystem
+    end
+
+    describe '#image.url' do
+      it 'is the missing image when not initialized' do
+        image = described_class.new
+        result = image.image.url
+        expect(result).to eq("/images/original/missing.png")
+      end
+    end
+  end
 end
