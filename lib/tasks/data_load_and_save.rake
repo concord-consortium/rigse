@@ -7,26 +7,26 @@
 require 'fileutils'
 require 'active_record/fixtures'
 
-def username(enviro)
+def db_username(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
-  dbconfig[enviro]["username"]
+  dbconfig.fetch(enviro)["username"]
 end
 
-def password(enviro)
+def db_password(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
-  dbconfig[enviro]["password"]
+  dbconfig.fetch(enviro)["password"]
 end
 
-def database(enviro)
+def db_database(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
-  dbconfig[enviro]["database"]
+  dbconfig.fetch(enviro)["database"]
 end
 
 # something like this will ONLY WORKO ON MYSQL!
 def clone_production
   %w|test development|.each do |enviro|
     puts "trying with environment #{enviro}"
-    %x[ mysqldump --add-drop-table -u #{username(enviro)} -p#{password(enviro)}  #{database(enviro)} | mysql -u #{username('production')} -p#{password('production')} #{database('production')}  ]
+    %x[ mysqldump --add-drop-table -u #{db_usernamex(enviro)} -p#{db_passwordx(enviro)}  #{db_databasex(enviro)} | mysql -u #{username('production')} -p#{password('production')} #{database('production')}  ]
   end
 end
 
