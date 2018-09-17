@@ -1,7 +1,3 @@
-require 'factory_girl'
-FactoryGirl.definition_file_paths = %w(factories)
-FactoryGirl.find_definitions
-
 namespace :app do
   namespace :setup do
 
