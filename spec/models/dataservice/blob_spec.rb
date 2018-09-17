@@ -2,7 +2,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Dataservice::Blob do
   let(:attributes)  { {} }
+  let(:url)              {"http://www.example.com/srpr/logo4w.png" }
   subject           { Dataservice::Blob.create!(attributes) }
+
 
   describe "a bare instance" do
     %w|content mimetype file_extension checksum learner_id|.each do |attr|
@@ -104,7 +106,7 @@ describe Dataservice::Blob do
       }
     end
 
-    describe "without hashable attrbiutes" do
+    describe "without hashable attributes" do
       let(:attributes){}
 
       describe '#checksum' do
@@ -121,13 +123,9 @@ describe Dataservice::Blob do
   end
 
   describe "#load_content_from(url)" do
-    let (:url)         {"www.example.com/srpr/logo4w.png" }
     let (:mimetype)    { 'image/png'}
     let (:url_content) { 'this is the url content'}
-    let (:status)      { 200 }
     let (:learner)     { mock_model(Portal::Learner, :id => '234234') }
-    let (:atributes)   { { :learner => learner }}
-
 
     describe "making web requests" do
       before(:each) do
@@ -166,8 +164,7 @@ describe Dataservice::Blob do
 
   describe "class methods" do
     subject { Dataservice::Blob }
-    describe "#for_learner_and_content" do
-      let(:url)              {"www.example.com/srpr/logo4w.png" }
+    describe ".for_learner_and_content" do
       let(:mimetype)         { 'image/png'}
       let(:url_content)      { 'this is the url content'}
       let(:status)           { 200 }
