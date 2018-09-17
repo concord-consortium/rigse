@@ -907,7 +907,6 @@ GEM
       multi_json (~> 1.0)
       multi_xml
     httpauth (0.2.1)
-    httpclient (2.8.3)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.0)
@@ -1293,7 +1292,6 @@ DEPENDENCIES
   highline
   hirb
   httparty
-  httpclient
   in_place_editing!
   interactive_editor
   jquery-fileupload-rails
