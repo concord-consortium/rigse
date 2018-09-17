@@ -76,7 +76,7 @@ describe Dataservice::Blob do
     end
   end
 
-  describe "html_content" do
+  describe "#html_content" do
     describe "for image mimetypes" do
 
       it "should render an image tag for jpegs" do
@@ -96,7 +96,7 @@ describe Dataservice::Blob do
     end
   end
 
-  describe "compute_checksum" do
+  describe "#compute_checksum" do
     let(:attriutes) do
       {
         :content    => "simple content value here",
@@ -120,7 +120,7 @@ describe Dataservice::Blob do
     end
   end
 
-  describe "load_content_from(url)" do
+  describe "#load_content_from(url)" do
     let (:url)         {"www.example.com/srpr/logo4w.png" }
     let (:mimetype)    { 'image/png'}
     let (:url_content) { 'this is the url content'}
@@ -166,7 +166,7 @@ describe Dataservice::Blob do
 
   describe "class methods" do
     subject { Dataservice::Blob }
-    describe "for_learner_and_content" do
+    describe "#for_learner_and_content" do
       let(:url)              {"www.example.com/srpr/logo4w.png" }
       let(:mimetype)         { 'image/png'}
       let(:url_content)      { 'this is the url content'}
@@ -208,7 +208,6 @@ describe Dataservice::Blob do
     end
   end
 
-
   # TODO: auto-generated
   describe '#create_token' do
     it 'create_token' do
@@ -237,60 +236,4 @@ describe Dataservice::Blob do
       expect(result).not_to be_nil
     end
   end
-
-  # TODO: auto-generated
-  describe '#html_content' do
-    it 'html_content' do
-      blob = described_class.new
-      path_to_self = double('path_to_self')
-      result = blob.html_content(path_to_self)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#content=' do
-    it 'content=' do
-      blob = described_class.new
-      new_content = 'new_content'
-      result = blob.content=(new_content)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#compute_checksum' do
-    it 'compute_checksum' do
-      blob = described_class.new
-      result = blob.compute_checksum
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#load_content_from' do
-    xit 'load_content_from' do
-      blob = described_class.new
-      url = '/url'
-      result = blob.load_content_from(url)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '.for_learner_and_url' do
-    xit 'for_learner_and_url' do
-      learner = double('learner')
-      url = '/url'
-      result = described_class.for_learner_and_url(learner, url)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-
 end
