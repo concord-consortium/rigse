@@ -46,12 +46,12 @@ describe BearerTokenAuthenticatable::BearerToken do
   let(:learner_headers) { {"Authorization" => "Bearer #{learner_token}"} }
   let(:teacher_headers) { {"Authorization" => "Bearer #{teacher_token}"} }
   let(:user)            { FactoryGirl.create(:user) }
-  let(:runnable)        { Factory.create(:activity, runnable_opts)    }
+  let(:runnable)        { FactoryGirl.create(:activity, runnable_opts)    }
   let(:offering)        { Factory(:portal_offering, offering_opts)    }
   let(:clazz)           { Factory(:portal_clazz, teachers: [class_teacher], students:[student]) }
   let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)   { {name: 'the activity'}              }
-  let(:class_teacher)   { Factory.create(:portal_teacher)     }
+  let(:class_teacher)   { FactoryGirl.create(:portal_teacher)     }
   let(:student)         { FactoryGirl.create(:full_portal_student) }
   let(:learner)         { Portal::Learner.where(offering_id: offering.id, student_id: student.id).first_or_create }
   let(:params)          { {} }

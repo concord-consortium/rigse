@@ -38,7 +38,7 @@ suppress_warnings {
 # Factory Generators
 #
 def generate_default_settings_and_jnlps_with_factories
-  @admin_settings = Factory.create(:admin_settings)
+  @admin_settings = FactoryGirl.create(:admin_settings)
   generate_default_school_resources_with_factories
 end
 
@@ -96,25 +96,25 @@ def generate_portal_resources_with_mocks
 end
 
 def login_admin
-  logged_in_user = Factory.next :admin_user
+  logged_in_user = FactoryGirl.generate :admin_user
   sign_in logged_in_user
   logged_in_user
 end
 
 def login_manager
-  logged_in_user = Factory.next :manager_user
+  logged_in_user = FactoryGirl.generate :manager_user
   sign_in logged_in_user
   logged_in_user
 end
 
 def login_researcher
-  logged_in_user = Factory.next :researcher_user
+  logged_in_user = FactoryGirl.generate :researcher_user
   sign_in logged_in_user
   logged_in_user
 end
 
 def login_author
-  logged_in_user = Factory.next :author_user
+  logged_in_user = FactoryGirl.generate :author_user
   sign_in logged_in_user
   logged_in_user
 end

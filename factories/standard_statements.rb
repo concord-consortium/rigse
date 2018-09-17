@@ -3,6 +3,6 @@ Factory.sequence(:standard_statement_uri) do |n|
 end
 
 Factory.define :standard_statement, :class => StandardStatement do |f|
-  f.uri { Factory.next(:standard_statement_uri) }
+  f.uri { FactoryGirl.generate(:standard_statement_uri) }
   f.material_type "external_activity"
 end

@@ -4,7 +4,7 @@ describe Portal::OfferingsController do
   describe "Show Jnlp Offering" do
     it "renders a jnlp for an admin" do
       offering = Factory(:portal_offering)
-      admin = Factory.next :admin_user
+      admin = FactoryGirl.generate :admin_user
       sign_in admin
       get :show, :id => offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
@@ -72,16 +72,16 @@ describe Portal::OfferingsController do
 
   describe "POST offering_collapsed_status" do
     before(:each) do
-      @mock_school = Factory.create(:portal_school)
+      @mock_school = FactoryGirl.create(:portal_school)
 
-      @admin_user = Factory.next(:admin_user)
-      @manager_user = Factory.next(:manager_user)
-      @researcher_user = Factory.next(:researcher_user)
-      @author_user = Factory.next(:author_user)
-      @guest_user = Factory.next(:anonymous_user)
-      @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
-      @portal_student = Factory.create(:portal_student, :user => @student_user)
-      @authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
+      @admin_user = FactoryGirl.generate(:admin_user)
+      @manager_user = FactoryGirl.generate(:manager_user)
+      @researcher_user = FactoryGirl.generate(:researcher_user)
+      @author_user = FactoryGirl.generate(:author_user)
+      @guest_user = FactoryGirl.generate(:anonymous_user)
+      @student_user = FactoryGirl.create(:confirmed_user, :login => "authorized_student")
+      @portal_student = FactoryGirl.create(:portal_student, :user => @student_user)
+      @authorized_teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
       @authorized_teacher_user = @authorized_teacher.user
       @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
       @params = {
@@ -136,22 +136,22 @@ describe Portal::OfferingsController do
   end
 
   describe "GET report" do
-    let(:physics_investigation) { Factory.create(
+    let(:physics_investigation) { FactoryGirl.create(
         :investigation,
         :name => 'physics_inv',
         :publication_status => 'published') }
 
-    let(:offering) { Factory.create(
+    let(:offering) { FactoryGirl.create(
         :portal_offering,
         runnable_id: physics_investigation,
         runnable_type: 'Activity',
         clazz: clazz)}
 
-    let(:clazz)       { Factory.create :portal_clazz, teachers: [teacher] }
+    let(:clazz)       { FactoryGirl.create :portal_clazz, teachers: [teacher] }
     let(:post_params) { {id: offering.id }      }
-    let(:eacher_user) { Factory.next()          }
-    let(:teacher)     { Factory.create :teacher }
-    let(:teacher_b)   { Factory.create :teacher }
+    let(:eacher_user) { FactoryGirl.generate()          }
+    let(:teacher)     { FactoryGirl.create :teacher }
+    let(:teacher_b)   { FactoryGirl.create :teacher }
 
     before(:each) do
       sign_in user

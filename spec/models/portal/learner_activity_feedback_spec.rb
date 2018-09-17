@@ -3,15 +3,15 @@ require File.expand_path('../../../spec_helper', __FILE__)
 testClazz = Portal::LearnerActivityFeedback
 
 describe Portal::LearnerActivityFeedback do
-  let(:activity)            { Factory.create(:activity)}
+  let(:activity)            { FactoryGirl.create(:activity)}
   let(:activities)          { [ activity ] }
-  let(:runnable)            { Factory.create(:investigation, {activities: activities}) }
+  let(:runnable)            { FactoryGirl.create(:investigation, {activities: activities}) }
   let(:args)                { {runnable: runnable} }
-  let(:offering)            { Factory.create(:portal_offering, args) }
+  let(:offering)            { FactoryGirl.create(:portal_offering, args) }
   let(:off_feedback_params) { {activity:activity, portal_offering: offering } }
   let(:activity_feedback)   { Portal::OfferingActivityFeedback.create(off_feedback_params) }
 
-  let(:learner) { Factory.create(:full_portal_learner, {offering:offering}) }
+  let(:learner) { FactoryGirl.create(:full_portal_learner, {offering:offering}) }
 
   let(:feedback_params)  { {portal_learner: learner, activity_feedback: activity_feedback} }
   let(:learner_feedback) { Portal::LearnerActivityFeedback.create(feedback_params)         }

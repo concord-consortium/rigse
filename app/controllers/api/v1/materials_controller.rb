@@ -46,15 +46,15 @@ class API::V1::MaterialsController < API::APIController
   #
   # Validate methods that require material type and id.
   #
-  before_filter :validate_material, 
-                :only => [  :get_materials_standards, 
+  before_filter :validate_material,
+                :only => [  :get_materials_standards,
                             :add_materials_standard,
                             :remove_materials_standard  ]
 
   #
   # Validate methods that require an ASN api key be configured.
   #
-  before_filter :validate_asn_api_key, 
+  before_filter :validate_asn_api_key,
                 :only => [  :get_standard_statements,
                             :add_materials_standard     ]
 
@@ -285,8 +285,8 @@ class API::V1::MaterialsController < API::APIController
 
     type            = params[:material_type]
     id              = params[:id]
-    include_related = params.has_key?(:include_related)     ? 
-                        params[:include_related].to_i       : 
+    include_related = params.has_key?(:include_related)     ?
+                        params[:include_related].to_i       :
                         @@DEFAULT_RELATED_MATERIALS_COUNT
 
     status          = 200
@@ -337,6 +337,9 @@ class API::V1::MaterialsController < API::APIController
         offering.active = params[:assign].to_s == "1"
         offering.save
         prefix = "Updated assignment of"
+
+        # send email notifications about assignment
+        Portal::ClazzMailer.clazz_assignment_notification(@current_user, portal_clazz, offering.name).deliver
       else
         prefix = "You are not allowed to assign/remove"
         status = 403 # unauthorized
@@ -363,13 +366,13 @@ class API::V1::MaterialsController < API::APIController
     type    = params[:material_type]
     id      = params[:material_id]
 
-    statements = 
+    statements =
         StandardStatement.where(material_type: type, material_id: id).order("uri ASC")
 
     ret = []
 
     statements.each do |statement|
-   
+
         ret.push( {
             uri:                statement.uri,
             description:        statement.description,
@@ -384,7 +387,7 @@ class API::V1::MaterialsController < API::APIController
     end
 
     render json: {:statements => ret}, :status => 200
- 
+
   end
 
 
@@ -417,14 +420,14 @@ class API::V1::MaterialsController < API::APIController
                                                                         uri,
                                                                         type,
                                                                         id )
-    if !existing.nil? 
+    if !existing.nil?
       render json: {:message => "Standard #{uri} already exists for material type (#{type}) id (#{id})" },
                     :status => 200
       return
     end
 
     #
-    # Build ASN query to return only the standard matching this 
+    # Build ASN query to return only the standard matching this
     # uri identifier.
     #
     query_string = "identifier:'#{uri}'"
@@ -437,7 +440,7 @@ class API::V1::MaterialsController < API::APIController
 
     hits        = response['hits']['hit']
     statement   = process_asn_response(hits)[0]
-  
+
     #
     # Find all parents. Walk up the tree until is_child_of is equal to
     # the uri of the document itself is_part_of
@@ -463,7 +466,7 @@ class API::V1::MaterialsController < API::APIController
 
         hits    = response['hits']['hit']
         parent  = process_asn_response(hits)[0]
-        
+
         # puts "Parent is #{parent}"
 
         parents.push({
@@ -567,7 +570,7 @@ class API::V1::MaterialsController < API::APIController
     # the specified material.
     #
     if current_visitor.anonymous?
-        render json: {:message => "Access denied to standards API."}, 
+        render json: {:message => "Access denied to standards API."},
                         :status => 403
     end
 
@@ -580,14 +583,14 @@ class API::V1::MaterialsController < API::APIController
         statements.each { |s| applied_map[s.uri] = true }
     end
 
-    # 
+    #
     # Build query string
     #
     query_string = "(and is_part_of:'#{document_id}' type:'Statement'"
 
     #
     # Notation doesn't seem to match wildcards (this is a "literal" field
-    # type, though I thought the documentation says it allows wildcards in 
+    # type, though I thought the documentation says it allows wildcards in
     # literal fields...)
     #
     if statement_notation_q.present?
@@ -630,8 +633,8 @@ class API::V1::MaterialsController < API::APIController
     response = HTTParty.get(@@ASN_SEARCH_BASE_URL, :query => query)
 
     #
-    # Might need to look further into how ASN returns 
-    # error codes. For now return empty results if we can't 
+    # Might need to look further into how ASN returns
+    # error codes. For now return empty results if we can't
     # find the key we need in the returned json.
     #
     if !response.key?("hits")
@@ -647,7 +650,7 @@ class API::V1::MaterialsController < API::APIController
     statements = process_asn_response(hits, applied_map)
 
     render json: {:count => count, :start => start, :statements => statements}, :status => 200
- 
+
   end
 
 
@@ -670,7 +673,7 @@ class API::V1::MaterialsController < API::APIController
     statements = []
 
     for hit in hits
-   
+
         #
         # Document this statement belongs to.
         #
@@ -681,12 +684,12 @@ class API::V1::MaterialsController < API::APIController
         statements.push( {
 
             # Use join() on these arrays. Sometimes a "description" will
-            # contain multiple array elements. 
+            # contain multiple array elements.
             # It also handles empty array.
             uri:                hit["data"]["identifier"][0],
 
             #
-            # Include a "key" to help React clients. 
+            # Include a "key" to help React clients.
             #
             # key:                hit["data"]["identifier"][0],
 
@@ -706,7 +709,7 @@ class API::V1::MaterialsController < API::APIController
     end
 
     statements
- 
+
   end
 
 
@@ -761,8 +764,8 @@ class API::V1::MaterialsController < API::APIController
     begin
         item = get_materials_item id, type
     rescue ActiveRecord::RecordNotFound => rnf
-        render json: {  
-                :message => "Invalid material type (#{type}) or id (#{id})"}, 
+        render json: {
+                :message => "Invalid material type (#{type}) or id (#{id})"},
                 :status => 400
         return
     end
@@ -777,7 +780,7 @@ class API::V1::MaterialsController < API::APIController
     key = ENV['ASN_API_KEY']
 
     if !key
-        render json: {:message => "No ASN API key configured."}, :status => 500 
+        render json: {:message => "No ASN API key configured."}, :status => 500
         return false
     end
 

@@ -86,6 +86,12 @@ source "http://rubygems.org"
   gem "delayed_job_web"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
+  # this is the old version of aws and is needed by our old version of paperclip
+  # we cannot upgrade paperclip until we have rails up to version 4. This uses the AWS
+  # namespace.
+  gem 'aws-sdk-v1'
+  # this is the new version of the aws sdk. It uses the Aws namespace. It is currently used
+  # by a rake task to archive old portals
   gem "aws-sdk",              "~> 3"
   gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
   gem "tinymce-rails",        "~>3.5.6"

@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe Report::UtilLearner do
 
-  let(:learner) { Factory.create(:full_portal_learner) }
-  let(:activity) { Factory.create(:activity) }
+  let(:learner) { FactoryGirl.create(:full_portal_learner) }
+  let(:activity) { FactoryGirl.create(:activity) }
 
   # TODO: auto-generated
   describe '#complete_number' do

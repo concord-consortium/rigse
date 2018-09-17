@@ -11,7 +11,7 @@ RSpec.describe Admin::Project, type: :model do
   describe '#changeable?' do
     it 'changeable?' do
       project = described_class.new
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = project.changeable?(user)
 
       expect(result).not_to be_nil

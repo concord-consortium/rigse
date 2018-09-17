@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Browse::ExternalActivitiesController do
     before(:each) do
-        @author_user = Factory.next(:author_user)
-        @external_activity = Factory.create(:external_activity, :name => 'activity', :url => 'external.activity.org/1', :user => @author_user, :publication_status => 'published')
+        @author_user = FactoryGirl.generate(:author_user)
+        @external_activity = FactoryGirl.create(:external_activity, :name => 'activity', :url => 'external.activity.org/1', :user => @author_user, :publication_status => 'published')
     end
 
     describe "GET show" do

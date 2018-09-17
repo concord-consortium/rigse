@@ -3,5 +3,5 @@ Factory.sequence :interactive_name do |n|
 end
 
 Factory.define :interactive do |f|
-  f.name {Factory.next(:interactive_name)}
+  f.name {FactoryGirl.generate(:interactive_name)}
 end

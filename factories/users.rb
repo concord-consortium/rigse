@@ -14,7 +14,7 @@ end
 ## Factory for user
 ##
 Factory.define :user do |f|
-  f.login    { Factory.next(:login) }
+  f.login    { FactoryGirl.generate(:login) }
   f.first_name  'joe'
   f.last_name  'user' 
   f.email  { |u| "#{u.login}@concord.org"}
@@ -22,7 +22,7 @@ Factory.define :user do |f|
   f.password_confirmation  {|u| u.password}
   f.skip_notifications true
   f.require_password_reset false
-  f.roles  { [ Factory.next(:member_role)] }
+  f.roles  { [ FactoryGirl.generate(:member_role)] }
 end
 
 Factory.define :confirmed_user, :parent => :user do |f|
@@ -41,7 +41,7 @@ Factory.sequence :admin_user do |n|
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
       :first_name => 'admin',
       :site_admin => 1,
-      :roles => [Factory.next(:member_role),Factory.next(:admin_role)]
+      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:admin_role)]
     })
     admin.save!
     admin.confirm!
@@ -62,7 +62,7 @@ Factory.sequence :researcher_user do |n|
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
       :first_name => 'researcher',
       :site_admin => 0,
-      :roles => [Factory.next(:member_role),Factory.next(:researcher_role)]
+      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:researcher_role)]
     })
     researcher.save!
     researcher.confirm!
@@ -83,7 +83,7 @@ Factory.sequence :manager_user do |n|
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
       :first_name => 'manager',
       :site_admin => 1,
-      :roles => [Factory.next(:member_role),Factory.next(:manager_role)]
+      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:manager_role)]
     })
     manager.save!
     manager.confirm!
@@ -103,7 +103,7 @@ Factory.sequence :author_user do |n|
       # :password =>'password',  # all passwords are 'password' (defined in user factory)
       :first_name => 'author',
       :site_admin => 0,
-      :roles => [Factory.next(:member_role),Factory.next(:author_role)]
+      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:author_role)]
     })
     author.save!
     author.confirm!
@@ -123,7 +123,7 @@ Factory.sequence :anonymous_user do |n|
       {
         :login => 'anonymous',
         :first_name => 'anonymous',
-        :roles => [Factory.next(:guest_role)]
+        :roles => [FactoryGirl.generate(:guest_role)]
       })
       anon.save!
       anon.confirm!
@@ -139,4 +139,4 @@ Factory.sequence :anonymous_user do |n|
   end
 end
 
-Factory.next(:anonymous_user)
+FactoryGirl.generate(:anonymous_user)

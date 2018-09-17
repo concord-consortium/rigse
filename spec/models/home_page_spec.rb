@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe HomePage do
-  let(:user) { Factory.create(:user) }
+  let(:user) { FactoryGirl.create(:user) }
 
   # TODO: auto-generated
   describe '#redirect' do

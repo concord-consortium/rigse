@@ -446,7 +446,7 @@ describe API::V1::Report do
     xit 'is_teacher?' do
       options = {}
       report = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = report.is_teacher?(user)
 
       expect(result).not_to be_nil
@@ -458,7 +458,7 @@ describe API::V1::Report do
     xit 'is_student?' do
       options = {}
       report = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = report.is_student?(user)
 
       expect(result).not_to be_nil
@@ -470,7 +470,7 @@ describe API::V1::Report do
     xit 'is_report_for_student?' do
       options = {}
       report = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryGirl.create(:user)
       result = report.is_report_for_student?(user)
 
       expect(result).not_to be_nil
@@ -589,7 +589,7 @@ describe API::V1::Report do
     xit 'investigation_json' do
       options = {}
       report = described_class.new(options)
-      investigation = Factory.create(:investigation)
+      investigation = FactoryGirl.create(:investigation)
       answers = {}
       associations_to_load = double('associations_to_load')
       result = report.investigation_json(investigation, answers, associations_to_load)
@@ -657,7 +657,7 @@ describe API::V1::Report do
       options = {}
       report = described_class.new(options)
       question_number = double('question_number')
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryGirl.create(:open_response)
       answers = {}
       result = report.embeddable_json(question_number, embeddable, answers)
 
@@ -671,7 +671,7 @@ describe API::V1::Report do
       options = {}
       report = described_class.new(options)
       hash = double('hash')
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryGirl.create(:open_response)
       result = report.process_multiple_choice(hash, embeddable)
 
       expect(result).not_to be_nil
@@ -684,7 +684,7 @@ describe API::V1::Report do
       options = {}
       report = described_class.new(options)
       hash = double('hash')
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryGirl.create(:open_response)
       result = report.process_iframe(hash, embeddable)
 
       expect(result).not_to be_nil
@@ -738,7 +738,7 @@ describe API::V1::Report do
   # TODO: auto-generated
   describe '.embeddable_key' do
     xit 'embeddable_key' do
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryGirl.create(:open_response)
       result = described_class.embeddable_key(embeddable)
 
       expect(result).not_to be_nil
@@ -768,7 +768,7 @@ describe API::V1::Report do
   # TODO: auto-generated
   describe '.update_feedback_settings' do
     xit 'update_feedback_settings' do
-      offering = Factory.create(:portal_offering)
+      offering = FactoryGirl.create(:portal_offering)
       feedback_settings = double('feedback_settings')
       result = described_class.update_feedback_settings(offering, feedback_settings)
 

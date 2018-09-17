@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe Report::OfferingStatus do
   
-  let(:offering) { Factory.create(:portal_offering) }
-  let(:requester) { Factory.create(:user) }
+  let(:offering) { FactoryGirl.create(:portal_offering) }
+  let(:requester) { FactoryGirl.create(:user) }
   let(:offering_status) { described_class.new(offering, requester) }
   let(:student) { Portal::Student.new }
 

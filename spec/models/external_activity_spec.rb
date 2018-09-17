@@ -297,7 +297,7 @@ describe ExternalActivity do
   # TODO: auto-generated
   describe '.by_user' do # scope test
     it 'supports named scope by_user' do
-      expect(described_class.limit(3).by_user(Factory.create(:user))).to all(be_a(described_class))
+      expect(described_class.limit(3).by_user(FactoryGirl.create(:user))).to all(be_a(described_class))
     end
   end
   # TODO: auto-generated

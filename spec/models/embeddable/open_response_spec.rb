@@ -37,6 +37,7 @@ describe Embeddable::OpenResponse do
     it 'by_offering' do
       open_response = described_class.new
       offering = FactoryGirl.create(:portal_offering)
+
       result = open_response.saveables.by_offering(offering)
 
       expect(result).not_to be_nil

@@ -7,7 +7,7 @@ RSpec.describe Admin::ExternalReportsController, type: :controller do
   let(:data) {ExternalReport}
   let(:params_key) { :external_report }
   let(:valid_attributes)  { { } }
-  let(:admin_user) {Factory.next(:admin_user)}
+  let(:admin_user) {FactoryGirl.generate(:admin_user)}
   let(:stubs) {{}}
   let(:mock_content) {
     mock_model data, stubs

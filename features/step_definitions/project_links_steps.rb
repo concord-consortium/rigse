@@ -1,5 +1,5 @@
 Given /^the default project links exist using factories$/ do
-  project = Factory.create(:project, name: 'project 1', landing_page_slug: 'project-1')
+  project = FactoryGirl.create(:project, name: 'project 1', landing_page_slug: 'project-1')
   Factory(:admin_cohort, {
     :project_id => project.id,
     :name => 'project 1 cohort'

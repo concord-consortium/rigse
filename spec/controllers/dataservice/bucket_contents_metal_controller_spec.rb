@@ -16,7 +16,7 @@ RSpec.describe Dataservice::BucketContentsMetalController, type: :controller do
   # TODO: auto-generated
   describe '#create_by_learner' do
     xit 'GET create_by_learner' do
-      get :create_by_learner, id: Factory.create(:full_portal_learner).to_param
+      get :create_by_learner, id: FactoryGirl.create(:full_portal_learner).to_param
 
       expect(response).to have_http_status(:not_found)
     end

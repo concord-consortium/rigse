@@ -28,7 +28,7 @@ describe CommonsLicensePolicy do
   end
 
   context "for an admin" do
-    let(:active_user) { Factory.next(:admin_user)   }
+    let(:active_user) { FactoryGirl.generate(:admin_user)   }
 
     it { is_expected.to permit(:index)   }
     it { is_expected.to permit(:show)    }

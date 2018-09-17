@@ -180,6 +180,9 @@ class Portal::ClazzesController < ApplicationController
 
     respond_to do |format|
       if okToCreate && @portal_clazz.save
+        # send email notifications about class creation
+        Portal::ClazzMailer.clazz_creation_notification(@current_user, @portal_clazz).deliver
+
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(url_for([:materials, @portal_clazz])) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
@@ -296,12 +299,15 @@ class Portal::ClazzesController < ApplicationController
       if @offering.position == 0
         @offering.position = @portal_clazz.offerings.length
         @offering.save
+        Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
       end
       if @offering
         if @portal_clazz.default_class == true
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
             @offering.default_offering = true
             @offering.save
+            # send email notifications about assignment
+            Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
           else
             error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
             @offering.destroy
@@ -315,6 +321,7 @@ class Portal::ClazzesController < ApplicationController
           end
         else
           @offering.save
+          Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
         end
         @portal_clazz.reload
       end

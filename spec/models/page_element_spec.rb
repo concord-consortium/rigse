@@ -57,7 +57,7 @@ describe PageElement do
   # TODO: auto-generated
   describe '.by_investigation' do
     it 'by_investigation' do
-      investigation = Factory.create(:investigation)
+      investigation = FactoryGirl.create(:investigation)
       result = described_class.by_investigation(investigation)
 
       expect(result).not_to be_nil

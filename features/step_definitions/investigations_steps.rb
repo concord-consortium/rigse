@@ -1,14 +1,14 @@
 Given /^the following empty investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
-    Factory.create(:investigation, hash.merge('user' => user))
+    FactoryGirl.create(:investigation, hash.merge('user' => user))
   end
 end
 
 Given /^the following linked investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
-    inv = Factory.create(:investigation, hash.merge('user' => user))
+    inv = FactoryGirl.create(:investigation, hash.merge('user' => user))
       inv.activities << (Factory :activity, { :user => user })
       inv.activities[0].sections << (Factory :section, {:user => user})
       inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
@@ -91,7 +91,7 @@ Given /^the following classes exist:$/ do |table|
     end
     hash.merge!('teacher' => teacher)
     
-    Factory.create(:portal_clazz, hash)
+    FactoryGirl.create(:portal_clazz, hash)
   end
 end
 
@@ -175,7 +175,8 @@ When /^a student has performed work on the investigation "([^"]*)" for the class
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
   ).first
-  Factory.create(:full_portal_learner, :offering => offering)
+  
+  FactoryGirl.create(:full_portal_learner, :offering => offering)
 end
 
 When /^I open the accordion for the offering for investigation "([^"]*)" for the class "([^"]*)"$/ do |investigation_name, class_name|
