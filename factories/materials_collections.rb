@@ -6,8 +6,8 @@ FactoryBot.define do
   end
 
   factory :materials_collection do
-    name "Some name"
-    description "Some description"
+    name {"Some name"}
+    description {"Some description"}
     # association :project, :factory => :admin_project
 
     factory :materials_collection_with_items do

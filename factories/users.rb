@@ -8,13 +8,13 @@
 FactoryBot.define do
   factory :user do
     login {"login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"}
-    first_name 'joe'
-    last_name 'user'
-    email { "#{login}@concord.org"}
-    password 'password'
-    password_confirmation { |u| u.password }
-    skip_notifications true
-    require_password_reset false
+    first_name {'joe'}
+    last_name {'user'}
+    email {"#{login}@concord.org"}
+    password {'password'}
+    password_confirmation {|u| u.password}
+    skip_notifications {true}
+    require_password_reset {false}
     roles {[FactoryBot.generate(:member_role)]}
   end
 end
@@ -32,13 +32,13 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:admin_user) do
   admin = User.find_by_login('admin')
   unless admin
     admin = FactoryBot.create(:user,
-                               {
-                                   :login => 'admin',
-                                   # :password =>'password',  # all passwords are 'password' (defined in user factory)
-                                   :first_name => 'admin',
-                                   :site_admin => 1,
-                                   :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:admin_role)]
-                               })
+                              {
+                                  :login => 'admin',
+                                  # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                  :first_name => 'admin',
+                                  :site_admin => 1,
+                                  :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:admin_role)]
+                              })
     admin.save!
     admin.confirm!
     admin.add_role('admin')
@@ -54,13 +54,13 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:researcher_user) do
   researcher = User.find_by_login('researcher')
   unless researcher
     researcher = FactoryBot.create(:user,
-                                    {
-                                        :login => 'researcher',
-                                        # :password =>'password',  # all passwords are 'password' (defined in user factory)
-                                        :first_name => 'researcher',
-                                        :site_admin => 0,
-                                        :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:researcher_role)]
-                                    })
+                                   {
+                                       :login => 'researcher',
+                                       # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                       :first_name => 'researcher',
+                                       :site_admin => 0,
+                                       :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:researcher_role)]
+                                   })
     researcher.save!
     researcher.confirm!
     researcher.add_role('researcher')
@@ -76,13 +76,13 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:manager_user) do
   manager = User.find_by_login('manager')
   unless manager
     manager = FactoryBot.create(:user,
-                                 {
-                                     :login => 'manager',
-                                     # :password =>'password',  # all passwords are 'password' (defined in user factory)
-                                     :first_name => 'manager',
-                                     :site_admin => 1,
-                                     :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:manager_role)]
-                                 })
+                                {
+                                    :login => 'manager',
+                                    # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                    :first_name => 'manager',
+                                    :site_admin => 1,
+                                    :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:manager_role)]
+                                })
     manager.save!
     manager.confirm!
     manager.add_role('manager')
@@ -97,13 +97,13 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:author_user) do
   author = User.find_by_login('author')
   unless author
     author = FactoryBot.create(:user,
-                                {
-                                    :login => 'author',
-                                    # :password =>'password',  # all passwords are 'password' (defined in user factory)
-                                    :first_name => 'author',
-                                    :site_admin => 0,
-                                    :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:author_role)]
-                                })
+                               {
+                                   :login => 'author',
+                                   # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                   :first_name => 'author',
+                                   :site_admin => 0,
+                                   :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:author_role)]
+                               })
     author.save!
     author.confirm!
     author.add_role('author')
@@ -121,11 +121,11 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:anonymous_user) do
     anon = User.find_by_login('anonymous')
     unless anon
       anon = FactoryBot.create(:user,
-                                {
-                                    :login => 'anonymous',
-                                    :first_name => 'anonymous',
-                                    :roles => [FactoryBot.generate(:guest_role)]
-                                })
+                               {
+                                   :login => 'anonymous',
+                                   :first_name => 'anonymous',
+                                   :roles => [FactoryBot.generate(:guest_role)]
+                               })
       anon.save!
       anon.confirm!
       # clear any previous Anonymous user still cached as a class variable in the User class

@@ -5,7 +5,7 @@ end
 
 FactoryBot.define do
   factory :full_portal_learner, :parent => :portal_learner do
-    uuid "test"
+    uuid {"test"}
     association :student, :factory => :full_portal_student
     association :offering, :factory => :portal_offering
 

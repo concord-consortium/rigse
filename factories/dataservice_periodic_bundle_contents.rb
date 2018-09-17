@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :dataservice_periodic_bundle_content, :class => Dataservice::PeriodicBundleContent do |f|
-    f.body "<otrunk id='fake_id'><OTText>Hello World</OTText></otrunk>"
+    f.body {"<otrunk id='fake_id'><OTText>Hello World</OTText></otrunk>"}
   end
 end
 

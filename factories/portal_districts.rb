@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :portal_district, :class => Portal::District do |f|
-    f.name(APP_CONFIG[:site_district] || "Test District")
+    f.name {APP_CONFIG[:site_district] || "Test District"}
   end
 end
 

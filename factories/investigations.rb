@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :investigation do
     name {"test investigation #{UUIDTools::UUID.timestamp_create.to_s}"}
-    description "fake investigation description"
+    description {"fake investigation description"}
     user {FactoryBot.generate(:author_user)}
   end
 end

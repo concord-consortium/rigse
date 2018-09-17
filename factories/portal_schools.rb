@@ -12,7 +12,7 @@
 
 FactoryBot.define do
   factory :portal_school, :class => Portal::School do |f|
-    f.name(APP_CONFIG[:site_school] || "Test School")
+    f.name {APP_CONFIG[:site_school] || "Test School"}
     f.association :district, :factory => :portal_district
     f.grade_levels {|school| [FactoryBot.create(:portal_grade_level)]}
   end
@@ -21,6 +21,6 @@ end
 FactoryBot.define do
   factory :nces_portal_school, :parent => :portal_school do |f|
     f.association :district, :factory => :portal_nces06_district_district
-    f.nces_school {|school| FactoryBot.create(:portal_nces06_school)}
+    f.nces_school {FactoryBot.create(:portal_nces06_school)}
   end
 end
