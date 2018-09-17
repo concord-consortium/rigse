@@ -10,9 +10,9 @@ FactoryGirl.define do
     login {"login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"}
     first_name 'joe'
     last_name 'user'
-    email {|u| "#{u.login}@concord.org"}
+    email { "#{login}@concord.org"}
     password 'password'
-    password_confirmation {|u| u.password}
+    password_confirmation { |u| u.password }
     skip_notifications true
     require_password_reset false
     roles {[FactoryGirl.generate(:member_role)]}
