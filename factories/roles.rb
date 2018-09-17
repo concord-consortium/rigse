@@ -5,21 +5,17 @@
 # FactoryGirl.generate :guest_role
 #
 %w| guest member admin researcher manager author|.each_with_index do |role_name, index|
-  Factory.sequence "#{role_name}_role".to_sym do |n|
-    role = Role.find_by_title(role_name)
-    unless role
-      role = FactoryGirl.create(:role, :title => role_name, :position => index)
-    end
-    role
-  end
+  FactoryGirl.register_sequence(FactoryGirl::Sequence.new(:"#{role_name}_role".to_sym) do
+    Role.find_by_title(role_name) ||
+        FactoryGirl.create(:role, :title => role_name, :position => index)
+  end)
 end
-
 
 ##
 ## The actual factory for roles doesn't actually do anything at the moment.
 ##
 FactoryGirl.define do
-  factory :role do |f|
+  factory :role do
 
   end
 end

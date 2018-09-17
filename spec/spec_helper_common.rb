@@ -1,5 +1,7 @@
 require File.expand_path("../../config/environment", __FILE__)
 require 'factory_girl'
+FactoryGirl.definition_file_paths = %w(factories)
+
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'capybara/rspec'
@@ -9,13 +11,6 @@ require 'capybara-screenshot/rspec'
 require 'remarkable_activerecord'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-
-# Mute FactoryGirl deprecation warnings...
-ActiveSupport::Deprecation.behavior = lambda do |msg, stack|
-  unless /FactoryGirl|after_create/ =~ msg
-    ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(msg,stack) # whichever handlers you want - this is the default
-  end
-end
 
 # Allow reporting to codeclimate
 WebMock.disable_net_connect!(allow_localhost: true, :allow =>
@@ -85,6 +80,12 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+
+  config.before(:suite) do
+    FactoryGirl.find_definitions
+  end
+
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
@@ -115,5 +116,4 @@ if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_mi
   exit 1
 end
 
-FactoryGirl.definition_file_paths = %w(factories)
-FactoryGirl.find_definitions
+

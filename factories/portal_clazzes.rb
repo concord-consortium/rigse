@@ -1,22 +1,14 @@
-Factory.sequence :class_word do |n|
-  "classword_#{UUIDTools::UUID.timestamp_create.to_s}"
-end
-
-Factory.sequence :class_name do |n|
-  "sample class #{n}"
-end
-
 FactoryGirl.define do
-  factory :portal_clazz, :class => Portal::Clazz do |f|
-    f.class_word {FactoryGirl.generate(:class_word)}
-    f.association :course, :factory => :portal_course
-    f.name {FactoryGirl.generate(:class_name)}
-    f.uuid {UUIDTools::UUID.timestamp_create.to_s}
+  factory :portal_clazz, :class => Portal::Clazz do
+    class_word {"classword_#{UUIDTools::UUID.timestamp_create.to_s}"}
+    association :course, :factory => :portal_course
+    sequence(:name) {|n| "sample class #{n}"}
+    uuid {UUIDTools::UUID.timestamp_create.to_s}
   end
 end
 
 FactoryGirl.define do
-  factory :nces_portal_clazz, :parent => :portal_clazz do |f|
-    f.association :course, :factory => :nces_portal_course
+  factory :nces_portal_clazz, :parent => :portal_clazz do
+    association :course, :factory => :nces_portal_course
   end
 end

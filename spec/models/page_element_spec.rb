@@ -3,8 +3,8 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe PageElement do
 
   before(:each) do
-    @page_element = Factory :page_element
-    @user = Factory :user
+    @page_element = FactoryGirl.create(:page_element)
+    @user = FactoryGirl.create(:user)
   end
   
   it "should not be nil" do

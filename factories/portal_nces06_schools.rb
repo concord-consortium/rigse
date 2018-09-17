@@ -1,21 +1,18 @@
-Factory.sequence(:nces_school_name) {|n| "factory generated nces school ##{n}"}
-
 FactoryGirl.define do
-  factory :portal_nces06_school, :class => Portal::Nces06School do |f|
-    f.GSLO "07"
-    f.GSHI "12"
-    f.PHONE "8005551212"
-    f.MSTREE "Drury Lane"
-    f.MCITY "Peekskill"
-    f.MSTATE "NY"
-    f.MZIP "00001"
-    f.LATCOD 45.00
-    f.LONCOD -80.00
-    f.MEMBER 607
-    f.FTE 49.0
-    f.TOTFRL 265
-    f.SCHNAM {FactoryGirl.generate :nces_school_name}
-    f.association :nces_district, :factory => :portal_nces06_district
+  factory :portal_nces06_school, :class => Portal::Nces06School do
+    GSHI "12"
+    PHONE "8005551212"
+    MSTREE "Drury Lane"
+    MCITY "Peekskill"
+    MSTATE "NY"
+    MZIP "00001"
+    LATCOD 45.00
+    LONCOD -80.00
+    MEMBER 607
+    FTE 49.0
+    TOTFRL 265
+    sequence(:SCHNAM) {|n| "factory generated nces school ##{n}"}
+    association :nces_district, :factory => :portal_nces06_district
   end
 end
 

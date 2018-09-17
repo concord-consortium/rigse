@@ -136,7 +136,7 @@ describe Portal::Clazz do
 
   describe "offerings_including_default_class" do
     before(:each) do
-      @clazz             = Factory :portal_clazz
+      @clazz             = FactoryGirl.create(:portal_clazz)
       @offerings         = []
       @default_offerings = []
       1.upto(10) do |i|
@@ -224,7 +224,7 @@ describe Portal::Clazz do
   # end
   describe "offerings_with_default_classes" do
     before(:each) do
-      @clazz = Factory :portal_clazz, :default_class => false
+      @clazz = FactoryGirl.create(:portal_clazz, :default_class => false)
     end
     describe "called without a user" do
       it "should fall back to offerings_including_default_class" do
@@ -305,7 +305,7 @@ describe Portal::Clazz do
 
   describe "formatting methods" do
     before :each do
-      @clazz = Factory :portal_clazz
+      @clazz = FactoryGirl.create(:portal_clazz)
       @bob   = mock_model(Portal::Teacher, :name => "bob")
       @joan  = mock_model(Portal::Teacher, :name => "joan")
     end
