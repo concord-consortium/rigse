@@ -1,5 +1,3 @@
-require 'factory_girl'
-FactoryGirl.definition_file_paths = %w(factories)
 module MockData
 
   current_dir = File.dirname(__FILE__)
@@ -102,7 +100,6 @@ module MockData
 
       puts
       puts "Generated '#{default_district.name}' district"
-      FactoryGirl.find_definitions
     else
       puts
       puts "Skipping district #{default_district.name} as it already exists"

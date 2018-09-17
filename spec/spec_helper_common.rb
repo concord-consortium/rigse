@@ -82,10 +82,6 @@ Mysql2::Client.prepend(MutexLockedQuerying)
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
-  config.before(:suite) do
-    FactoryGirl.find_definitions
-  end
-
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
@@ -115,5 +111,9 @@ if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_mi
   puts
   exit 1
 end
+
+# Prevent Factory definitions from being loaded multiple times
+# But allow access to cucumber specs and db prep
+@defs_loaded ||= FactoryGirl.find_definitions and true
 
 
