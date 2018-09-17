@@ -2,9 +2,8 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
 
   def perform
     if import.import_type == Import::Import::IMPORT_TYPE_ACTIVITY
-      import_object = import_activity(data_json,import)
+      import_activity(data_json,import)
     else
-      import_status = []
       import.total_imports = data_json.size
 
       data_json.each do |activity|
@@ -13,7 +12,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
 
       import.update_attribute(:import_data,data_json)
       data_json.each_with_index do |activity,index|
-        import_object = Import::Import.create!()
+        import_object = Import::Import.create!
         import_object.update_attribute(:import_type, Import::Import::IMPORT_TYPE_ACTIVITY)
         import_object.update_attribute(:user_id, current_visitor_id)
         #get json from other portal
@@ -54,7 +53,7 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
   def import_activity(activity_json,import_object,imported_activity_url=nil)
     begin
       Timeout.timeout(90) {
-        client = Client.find(:first, :wconditions => {:site_url => APP_CONFIG[:authoring_site_url]})
+        client = Client.where(:site_url => APP_CONFIG[:authoring_site_url]).first!
         auth_token = 'Bearer %s' % client.app_secret
         response = HTTParty.post(auth_url,
         :body => {
@@ -98,6 +97,6 @@ class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url
       import_object.update_attribute(:job_finished_at, Time.current)
       import_object.update_attribute(:progress, -1)
     end
-    return import_object
+    import_object
   end
 end
