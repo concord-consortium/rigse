@@ -2,9 +2,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Teacher do
   before(:each) do
-    @nces_teacher = FactoryGirl.create(:nces_portal_teacher)
-    @virtual_teacher = FactoryGirl.create(:portal_teacher)
-    @virtual_teacher.clazzes << FactoryGirl.create(:portal_clazz)
+    @nces_teacher = FactoryBot.create(:nces_portal_teacher)
+    @virtual_teacher = FactoryBot.create(:portal_teacher)
+    @virtual_teacher.clazzes << FactoryBot.create(:portal_clazz)
   end
   
   it "should support nces teachers" do
@@ -63,7 +63,7 @@ describe Portal::Teacher do
     describe "when the portal allows teachers to author" do
       it "should add the authoring role to teachers when they are created" do
         allow(Admin::Settings).to receive_messages(:teachers_can_author? => true)
-        teacher = FactoryGirl.create(:portal_teacher)
+        teacher = FactoryBot.create(:portal_teacher)
         teacher.possibly_add_authoring_role
         expect(teacher.user).to have_role('author')
       end
@@ -72,7 +72,7 @@ describe Portal::Teacher do
     describe "when the portal doesn't allow the teacher to author" do
       it "should not add the authoring role to teachers when they are created" do
         allow(Admin::Settings).to receive_messages(:teachers_can_author? => false)
-        teacher = FactoryGirl.create(:portal_teacher)
+        teacher = FactoryBot.create(:portal_teacher)
         teacher.possibly_add_authoring_role
         expect(teacher.user).not_to have_role('author')
       end
@@ -80,8 +80,8 @@ describe Portal::Teacher do
   end
 
   describe '[default cohort support]' do
-    let(:settings) { FactoryGirl.create(:admin_settings) }
-    let(:teacher) { FactoryGirl.create(:portal_teacher) }
+    let(:settings) { FactoryBot.create(:admin_settings) }
+    let(:teacher) { FactoryBot.create(:portal_teacher) }
     before(:each) do
       allow(Admin::Settings).to receive(:default_settings).and_return(settings)
     end
@@ -93,8 +93,8 @@ describe Portal::Teacher do
     end
 
     describe 'when default cohort is specified in portal settings' do
-      let(:cohort) { FactoryGirl.create(:admin_cohort) }
-      let(:settings) { FactoryGirl.create(:admin_settings, default_cohort: cohort) }
+      let(:cohort) { FactoryBot.create(:admin_cohort) }
+      let(:settings) { FactoryBot.create(:admin_settings, default_cohort: cohort) }
 
       it 'is added to the default cohort' do
         expect(teacher.cohorts.length).to eql(1)

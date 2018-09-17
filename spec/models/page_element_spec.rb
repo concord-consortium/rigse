@@ -3,8 +3,8 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe PageElement do
 
   before(:each) do
-    @page_element = FactoryGirl.create(:page_element)
-    @user = FactoryGirl.create(:user)
+    @page_element = FactoryBot.create(:page_element)
+    @user = FactoryBot.create(:user)
   end
   
   it "should not be nil" do
@@ -57,7 +57,7 @@ describe PageElement do
   # TODO: auto-generated
   describe '.by_investigation' do
     it 'by_investigation' do
-      investigation = FactoryGirl.create(:investigation)
+      investigation = FactoryBot.create(:investigation)
       result = described_class.by_investigation(investigation)
 
       expect(result).not_to be_nil

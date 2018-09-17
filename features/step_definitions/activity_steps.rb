@@ -4,7 +4,7 @@ Given /^the following activities exist:$/ do |table|
     user = User.find_by_login user_name
 
     hash['user'] = user
-    FactoryGirl.create(:activity, hash)
+    FactoryBot.create(:activity, hash)
   end
 end
 
@@ -18,7 +18,7 @@ end
 Given /^the following activities with multiple choices exist:$/ do |activity_table|
   activity_table.hashes.each do |hash|
     activity = Activity.where(name: hash['activity']).first_or_create(:description => hash['activity'])
-    activity.user = FactoryGirl.create(:user)
+    activity.user = FactoryBot.create(:user)
     expect(activity.save).to be_truthy
     section = Section.where(name: hash['section']).first_or_create
     page = Page.where(name: hash['page']).first_or_create
@@ -50,7 +50,7 @@ end
 #Table: | investigation | activity | activity_teacher_only | section   | page   | multiple_choices |
 Given /^a simple activity with a multiple choice exists$/ do
   activity = Activity.create(:name => 'simple activity', :description => 'simple activity')
-  activity.user = FactoryGirl.create(:user)
+  activity.user = FactoryBot.create(:user)
   expect(activity.save).to be_truthy
 
   section = Section.create(:name => 'simple section')
@@ -59,7 +59,7 @@ Given /^a simple activity with a multiple choice exists$/ do
   page = Page.create(:name => 'simple page')
   section.pages << page
 
-  mc = FactoryGirl.create(:multiple_choice)
+  mc = FactoryBot.create(:multiple_choice)
   mc.addChoice("Choice 1")
   mc.addChoice("Choice 2")
   mc.pages << page

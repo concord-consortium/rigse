@@ -20,13 +20,13 @@ require 'spec_helper'
 
 describe MaterialsCollectionsController do
   before(:each) do
-    @admin_user = FactoryGirl.generate(:admin_user)
+    @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
 
     login_admin
   end
 
-  let(:materials_collection) { FactoryGirl.create(:materials_collection) }
+  let(:materials_collection) { FactoryBot.create(:materials_collection) }
   let(:valid_attributes)     { { name: "Some name", description: "Some description" } }
 
   describe "GET index" do
@@ -152,7 +152,7 @@ describe MaterialsCollectionsController do
 
   describe "POST sort_materials" do
     it 'sorts materials appropriately' do
-      collection =  FactoryGirl.create(:materials_collection_with_items)
+      collection =  FactoryBot.create(:materials_collection_with_items)
       current_order = collection.materials_collection_items.map {|i| i.id }.dup
       shuffled_order = current_order.shuffle
       post :sort_materials, { :id => collection.id, "materials_materials_collection_#{collection.id}" => shuffled_order }

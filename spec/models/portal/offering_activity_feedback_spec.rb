@@ -3,16 +3,16 @@ require File.expand_path('../../../spec_helper', __FILE__)
 testClazz = Portal::OfferingActivityFeedback
 
 describe Portal::OfferingActivityFeedback do
-  let(:activity)         { FactoryGirl.create(:activity)}
-  let(:offering)         { FactoryGirl.create(:portal_offering, args) }
-  let(:runnable)         { FactoryGirl.create(:investigation, {activities: activities}) }
+  let(:activity)         { FactoryBot.create(:activity)}
+  let(:offering)         { FactoryBot.create(:portal_offering, args) }
+  let(:runnable)         { FactoryBot.create(:investigation, {activities: activities}) }
   let(:args)             { {runnable: runnable} }
   let(:feedback_params)  { {activity: activity, portal_offering: offering} }
   let(:activity_feedback){ Portal::OfferingActivityFeedback.create(feedback_params) }
 
   describe "Creation" do
     let(:activities)       { [activity] }
-    let(:runnable)         { FactoryGirl.create(:investigation, {activities: activities}) }
+    let(:runnable)         { FactoryBot.create(:investigation, {activities: activities}) }
     let(:args)             { {runnable: runnable} }
 
     it "should have an activity" do

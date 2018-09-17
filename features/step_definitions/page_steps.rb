@@ -4,6 +4,6 @@ Given /^the following page exists:$/ do |page_table|
     user = User.find_by_login user_name
 
     hash['user'] = user
-    FactoryGirl.create(:page, hash)
+    FactoryBot.create(:page, hash)
   end
 end

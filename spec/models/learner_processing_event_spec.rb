@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe LearnerProcessingEvent do
 
-  let(:learner)                  { FactoryGirl.create(:full_portal_learner) }
+  let(:learner)                  { FactoryBot.create(:full_portal_learner) }
   let(:learner_processing_event) { LearnerProcessingEvent.new(learner, processing_time)}
   let(:lara_start)               { 10.minutes.ago }
   let(:lara_end)                 { 5.minutes.ago  }

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :admin_project, :class => Admin::Project do |f|
 
   end

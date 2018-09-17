@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :saveable_image_question, :class => Saveable::ImageQuestion do |f|
     f.association :learner, :factory => :full_portal_learner
     f.association :image_question

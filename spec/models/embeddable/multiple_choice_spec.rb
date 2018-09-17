@@ -11,7 +11,7 @@ RSpec.describe Embeddable::MultipleChoice, type: :model do
   describe '#by_offering' do
     it 'by_offering' do
       multiple_choice = described_class.new
-      offering = FactoryGirl.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
 
       result = multiple_choice.saveables.by_offering(offering)
 

@@ -39,7 +39,7 @@ describe Portal::StudentsController do
       }
 
       @grade_level = Portal::GradeLevel.create({ :name => "9" }) # default grade level
-      @clazz = FactoryGirl.create(:portal_clazz, :class_word => @params_for_creation[:clazz][:class_word])
+      @clazz = FactoryBot.create(:portal_clazz, :class_word => @params_for_creation[:clazz][:class_word])
     end
 
     def stub_user_with_params(user_attributes = nil)
@@ -177,7 +177,7 @@ describe Portal::StudentsController do
   end
 
   describe "GET show" do
-    let(:student) { FactoryGirl.create(:full_portal_student) }
+    let(:student) { FactoryBot.create(:full_portal_student) }
 
     it "should redirect when current user isn't an admin" do
       get :show, id: student.id
@@ -196,7 +196,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
-      get :status, id: FactoryGirl.create(:portal_student).to_param
+      get :status, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(406)
     end
@@ -214,7 +214,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#edit' do
     xit 'GET edit' do
-      get :edit, id: FactoryGirl.create(:portal_student).to_param
+      get :edit, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -223,7 +223,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#update' do
     xit 'PATCH update' do
-      put :update, id: FactoryGirl.create(:portal_student).to_param
+      put :update, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -232,7 +232,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy,id: FactoryGirl.create(:portal_student).to_param
+      delete :destroy,id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -241,7 +241,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#ask_consent' do
     xit 'GET ask_consent' do
-      get :ask_consent, id: FactoryGirl.create(:portal_student).to_param
+      get :ask_consent, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -250,7 +250,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#update_consent' do
     xit 'GET update_consent' do
-      get :update_consent, id: FactoryGirl.create(:portal_student).to_param
+      get :update_consent, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end

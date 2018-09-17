@@ -213,7 +213,7 @@ namespace :db do
         f = nil
         if cols.include?("id")
           f = File.open("#{::Rails.root.to_s}/features/factories/#{table}.rb", "w")
-          f.write "FactoryGirl.define do\n  factory :#{tablename}#{classname} do |f|\n"
+          f.write "FactoryBot.define do\n  factory :#{tablename}#{classname} do |f|\n"
           f.write "  end\nend\n\n"
         else
           if @just_factories
@@ -250,7 +250,7 @@ namespace :db do
         next if @skip_attrs.include?(val[0])
         out_vals << ":#{val[0]} => '#{val[1].to_s.sub(/'/,'\\\'')}'"
       end
-      file.write("FactoryGirl.create(:#{table},{\n  " + out_vals.join(",\n  ") + "\n})\n")
+      file.write("FactoryBot.create(:#{table},{\n  " + out_vals.join(",\n  ") + "\n})\n")
     end
     
     def write_joins(file, table, cols, vals)

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :external_report do |f|
     f.name 'Some external report'
     f.url 'http://external.report.com'

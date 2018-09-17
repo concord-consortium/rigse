@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :materials_collection_item do
     sequence(:position)
     association :material, factory: :external_activity

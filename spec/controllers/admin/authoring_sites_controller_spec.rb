@@ -7,7 +7,7 @@ RSpec.describe Admin::AuthoringSitesController, type: :controller do
   let(:data) {Admin::AuthoringSite}
   let(:params_key) { :admin_authoring_site }
   let(:valid_attributes)  { { } }
-  let(:admin_user) {FactoryGirl.generate(:admin_user)}
+  let(:admin_user) {FactoryBot.generate(:admin_user)}
   let(:stubs) {{}}
   let(:mock_content) {
     mock_model data, stubs

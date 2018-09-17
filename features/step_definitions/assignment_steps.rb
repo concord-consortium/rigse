@@ -16,7 +16,7 @@ def polymorphic_assign(assignable_type, assignable_name, clazz_name)
   assignable = typeName.classify.constantize.find_by_name(assignable_name)
   material = makeMaterial(assignable)
   expect(material).not_to be_nil
-  FactoryGirl.create(:portal_offering, {
+  FactoryBot.create(:portal_offering, {
     :runnable => material,
     :clazz => clazz
   })

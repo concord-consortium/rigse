@@ -7,7 +7,7 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
   let(:data) {CommonsLicense}
   let(:params_key) { :commons_license }
   let(:valid_attributes)  { { name: 'name' } }
-  let(:admin_user) {FactoryGirl.generate(:admin_user)}
+  let(:admin_user) {FactoryBot.generate(:admin_user)}
   let(:stubs) {{}}
   let(:mock_content) {
     mock_model data, stubs

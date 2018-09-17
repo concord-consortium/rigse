@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Report::LearnerController do
 
   def new_learner(learner_stubs)
-    learner = FactoryGirl.create(:full_portal_learner)
+    learner = FactoryBot.create(:full_portal_learner)
     learner_stubs.keys.each do |key|
       allow(learner).to receive(key).and_return(learner_stubs[key])
     end

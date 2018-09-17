@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :rigse_grade_span_expectation, :class => RiGse::GradeSpanExpectation do |f|
     begin
       f.grade_span RiGse::GradeSpanExpectation.default_grade_span

@@ -25,7 +25,7 @@ RSpec.describe Portal::StudentClazzesHelper, type: :helper do
   # TODO: auto-generated
   describe '#student_add_dropdown' do
     xit 'works' do
-      result = helper.student_add_dropdown(FactoryGirl.create(:portal_student))
+      result = helper.student_add_dropdown(FactoryBot.create(:portal_student))
 
       expect(result).not_to be_nil
     end

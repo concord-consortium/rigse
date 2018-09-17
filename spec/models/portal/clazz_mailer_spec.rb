@@ -1,21 +1,21 @@
 require 'spec_helper'
 
 describe Portal::ClazzMailer do
-  let(:projects) { 5.times.map { |i|  FactoryGirl.create(:project, name: "project_#{i}")}  }
+  let(:projects) { 5.times.map { |i|  FactoryBot.create(:project, name: "project_#{i}")}  }
   before(:each) do
 
-    @cohort = FactoryGirl.create(:admin_cohort, {email_notifications_enabled: true})
-    @project = FactoryGirl.create(:project)
+    @cohort = FactoryBot.create(:admin_cohort, {email_notifications_enabled: true})
+    @project = FactoryBot.create(:project)
     @project.cohorts << @cohort
     projects << @project
 
-    @project_admin = FactoryGirl.create(:user, :first_name => "Project", :last_name => "Manager")
+    @project_admin = FactoryBot.create(:user, :first_name => "Project", :last_name => "Manager")
     @project_admin.set_role_for_projects('admin', projects, [@project.id])
 
-    @teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :first_name => "Cohort", :last_name => "Teacher"))
+    @teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :first_name => "Cohort", :last_name => "Teacher"))
     @teacher.cohorts << @cohort
 
-    @clazz = FactoryGirl.create(:portal_clazz, :name => "Test Class")
+    @clazz = FactoryBot.create(:portal_clazz, :name => "Test Class")
 
   end
 

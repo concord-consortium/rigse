@@ -857,7 +857,7 @@ GEM
     exception_notification (2.5.2)
       actionmailer (>= 3.0.4)
     execjs (2.5.2)
-    factory_girl (3.6.2)
+    factory_bot (4.11.1)
       activesupport (>= 3.0.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
@@ -1277,7 +1277,7 @@ DEPENDENCIES
   dynamic_form (~> 1.1.4)
   email_spec
   exception_notification (~> 2.5.2)
-  factory_girl (~> 3.0)
+  factory_bot
   font-awesome-rails
   genigames_connector (= 0.0.4)!
   geniverse_portal_integration!

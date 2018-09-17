@@ -12,23 +12,23 @@
 # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
 
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :teacher, :class => Portal::Teacher do |f|
     f.association :user, :factory => :confirmed_user
     f.clazzes {|clazzes| [clazzes.association(:portal_clazz)]}
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :portal_teacher, :parent => :teacher do |f|
     f.schools {|schools| [schools.association(:portal_school)]}
   end
 end
 
 # a teacher with one class in a real school
-FactoryGirl.define do
+FactoryBot.define do
   factory :nces_portal_teacher, :parent => :portal_teacher do |teacher|
-    teacher.clazzes {[FactoryGirl.create(:nces_portal_clazz)]}
+    teacher.clazzes {[FactoryBot.create(:nces_portal_clazz)]}
   end
 end
 

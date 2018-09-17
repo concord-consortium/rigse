@@ -1,25 +1,25 @@
 module MockData
   # this assumes the default users have been created
   def self.load_mixed_runnable_type_class
-      clazz = FactoryGirl.create(:portal_clazz, :name => "Mixed Runnable Types", :teachers => [default_teacher])
+      clazz = FactoryBot.create(:portal_clazz, :name => "Mixed Runnable Types", :teachers => [default_teacher])
 
       runnables = [
-        FactoryGirl.create(:investigation, :name => "Investigation Sample",
-            :activities => (1 .. 3).map{|number| FactoryGirl.create(:activity, :name => "Activity #{number}")}
+        FactoryBot.create(:investigation, :name => "Investigation Sample",
+            :activities => (1 .. 3).map{|number| FactoryBot.create(:activity, :name => "Activity #{number}")}
           ),
-        FactoryGirl.create(:activity, :name => "Activity Sample",
-            :sections => (1 .. 3).map{|number| FactoryGirl.create(:section, :name => "Section #{number}")}
+        FactoryBot.create(:activity, :name => "Activity Sample",
+            :sections => (1 .. 3).map{|number| FactoryBot.create(:section, :name => "Section #{number}")}
           ),
-        # FactoryGirl.create(:page, :name => "Page Sample"),
-        FactoryGirl.create(:external_activity, :name => "External Activity Sample"),
-        FactoryGirl.create(:external_activity, :name => "External Activity with internal reporting Sample",
-          :template => FactoryGirl.create(:activity, :name => "Backing Activity for External Activity")),
-        FactoryGirl.create(:external_activity, :name => "External Activity with external reporting Sample",
+        # FactoryBot.create(:page, :name => "Page Sample"),
+        FactoryBot.create(:external_activity, :name => "External Activity Sample"),
+        FactoryBot.create(:external_activity, :name => "External Activity with internal reporting Sample",
+          :template => FactoryBot.create(:activity, :name => "Backing Activity for External Activity")),
+        FactoryBot.create(:external_activity, :name => "External Activity with external reporting Sample",
           :url => "/mock_html/test-external-activity.html")
       ]
 
       offerings = runnables.map { |runnable| 
-        FactoryGirl.create(:portal_offering, :clazz => clazz,
+        FactoryBot.create(:portal_offering, :clazz => clazz,
           :runnable => runnable
         )
       }
@@ -27,7 +27,7 @@ module MockData
       # add the default student
       default_student.clazzes << clazz
       offerings.each { |offering| 
-        FactoryGirl.create(:portal_learner, :offering => offering, :student => default_student)
+        FactoryBot.create(:portal_learner, :offering => offering, :student => default_student)
       }
 
       clazz

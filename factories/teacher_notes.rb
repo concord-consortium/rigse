@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :teacher_note do |f|
   end
 end

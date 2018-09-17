@@ -11,14 +11,14 @@ describe Investigation do
   describe "after duplication the" do
 
     def duplicate_investigation
-      @original_author = FactoryGirl.create(:user)
-      @new_author = FactoryGirl.create(:user)
-      @source_investigation = FactoryGirl.create(:investigation, :user => @original_author)
-      @source_investigation.activities << FactoryGirl.create(:activity, :user => @original_author)
-      @source_investigation.activities[0].sections << FactoryGirl.create(:section, :user => @original_author)
-      @source_investigation.activities[0].sections[0].pages << FactoryGirl.create(:page, :user => @original_author)
+      @original_author = FactoryBot.create(:user)
+      @new_author = FactoryBot.create(:user)
+      @source_investigation = FactoryBot.create(:investigation, :user => @original_author)
+      @source_investigation.activities << FactoryBot.create(:activity, :user => @original_author)
+      @source_investigation.activities[0].sections << FactoryBot.create(:section, :user => @original_author)
+      @source_investigation.activities[0].sections[0].pages << FactoryBot.create(:page, :user => @original_author)
 
-      open_response = FactoryGirl.create(:open_response, :user => @original_author)
+      open_response = FactoryBot.create(:open_response, :user => @original_author)
       open_response.pages << @source_investigation.activities[0].sections[0].pages[0]
 
       @source_investigation.reload

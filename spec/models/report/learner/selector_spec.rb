@@ -9,18 +9,18 @@ describe Report::Learner::Selector do
     learner.student.permission_forms << students_p_forms
   }
 
-  let(:current_user)        { FactoryGirl.generate(:admin_user) }
-  let(:project_a)           { FactoryGirl.create(:admin_project, name: "project-a") }
+  let(:current_user)        { FactoryBot.generate(:admin_user) }
+  let(:project_a)           { FactoryBot.create(:admin_project, name: "project-a") }
   let(:permission_params_a) { { name: "a", project: project_a } }
-  let(:permission_form_a)   { FactoryGirl.create(:permission_form, permission_params_a) }
+  let(:permission_form_a)   { FactoryBot.create(:permission_form, permission_params_a) }
   let(:permission_params_b) { { name: "b" } }
-  let(:permission_form_b)   { FactoryGirl.create(:permission_form, permission_params_b) }
-  let(:learner)             { FactoryGirl.create(:full_portal_learner) }
+  let(:permission_form_b)   { FactoryBot.create(:permission_form, permission_params_b) }
+  let(:learner)             { FactoryBot.create(:full_portal_learner) }
   let(:report_learner)      { learner.report_learner                   }
   let(:selector)            { Report::Learner::Selector.new(selector_opts, current_user )   }
   let(:selector_opts)       { {} }
   let(:students_p_forms)    { [] }
-  let(:runnable)            { FactoryGirl.create(:external_activity, {
+  let(:runnable)            { FactoryBot.create(:external_activity, {
                               :name      => "Some Activity",
                               :url       => "http://example.com",
                               :save_path => "/path/to/save",

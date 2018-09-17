@@ -1,7 +1,7 @@
 shared_examples_for 'a saveable' do
 
   let(:model_name) { described_class.name.underscore_module }
-  let(:saveable)   { FactoryGirl.create model_name }
+  let(:saveable)   { FactoryBot.create model_name }
 
   
   describe "belong to an embeddable and" do

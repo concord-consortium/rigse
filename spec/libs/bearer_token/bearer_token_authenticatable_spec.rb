@@ -45,14 +45,14 @@ describe BearerTokenAuthenticatable::BearerToken do
   let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
   let(:learner_headers) { {"Authorization" => "Bearer #{learner_token}"} }
   let(:teacher_headers) { {"Authorization" => "Bearer #{teacher_token}"} }
-  let(:user)            { FactoryGirl.create(:user) }
-  let(:runnable)        { FactoryGirl.create(:activity, runnable_opts)    }
-  let(:offering)        { FactoryGirl.create(:portal_offering, offering_opts)    }
-  let(:clazz)           { FactoryGirl.create(:portal_clazz, teachers: [class_teacher], students:[student]) }
+  let(:user)            { FactoryBot.create(:user) }
+  let(:runnable)        { FactoryBot.create(:activity, runnable_opts)    }
+  let(:offering)        { FactoryBot.create(:portal_offering, offering_opts)    }
+  let(:clazz)           { FactoryBot.create(:portal_clazz, teachers: [class_teacher], students:[student]) }
   let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)   { {name: 'the activity'}              }
-  let(:class_teacher)   { FactoryGirl.create(:portal_teacher)     }
-  let(:student)         { FactoryGirl.create(:full_portal_student) }
+  let(:class_teacher)   { FactoryBot.create(:portal_teacher)     }
+  let(:student)         { FactoryBot.create(:full_portal_student) }
   let(:learner)         { Portal::Learner.where(offering_id: offering.id, student_id: student.id).first_or_create }
   let(:params)          { {} }
   let(:client)          { Client.create(

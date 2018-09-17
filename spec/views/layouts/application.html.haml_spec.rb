@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "rendering application.html.haml" do
-  let(:fake_visitor) { FactoryGirl.create(:user, {id: 101,}) }
+  let(:fake_visitor) { FactoryBot.create(:user, {id: 101,}) }
   let(:roles) {['first-role']}
 
   before do

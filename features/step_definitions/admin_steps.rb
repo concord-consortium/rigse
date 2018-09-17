@@ -28,7 +28,7 @@ When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
 end
 
 Then /^the installer jnlp should have the CDN hostname "([^"]*)" in the right places$/ do |hostname|
-  inv = FactoryGirl.create(:investigation)
+  inv = FactoryBot.create(:investigation)
   # switch the driver to rack_test so we can inspect the content
   original_driver = Capybara.current_driver
   Capybara.current_driver = :rack_test

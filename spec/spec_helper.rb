@@ -35,13 +35,13 @@ def subject_class_factory
 end
 
 def factory
-  FactoryGirl.build(subject_class_factory)
+  FactoryBot.build(subject_class_factory)
 end
 
 def factory_stubbed
-  FactoryGirl.build_stubbed(subject_class_factory)
+  FactoryBot.build_stubbed(subject_class_factory)
 end
 
 def factory_create
-  FactoryGirl.create(subject_class_factory)
+  FactoryBot.create(subject_class_factory)
 end

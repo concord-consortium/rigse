@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :portal_nces06_school, :class => Portal::Nces06School do
     GSHI "12"
     PHONE "8005551212"

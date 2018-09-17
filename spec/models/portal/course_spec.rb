@@ -7,14 +7,14 @@ end
 describe Portal::Course do
   before(:each) do
     @course_number = "COURZ_1"
-    @school = FactoryGirl.create(:portal_school)
-    @course_with_number = FactoryGirl.create(:portal_course,
+    @school = FactoryBot.create(:portal_school)
+    @course_with_number = FactoryBot.create(:portal_course,
     {
       :course_number => @course_number,
       :name=>'with number',
       :school => @school
     })
-    @course_without_number = FactoryGirl.create(:portal_course,
+    @course_without_number = FactoryBot.create(:portal_course,
       {
         :course_number => nil,
         :name=> 'without number',

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :measuring_resistance_report do |f|
 
   end

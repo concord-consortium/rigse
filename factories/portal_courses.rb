@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :portal_course, :class => Portal::Course do |f|
     f.name "first course"
     f.course_number {UUIDTools::UUID.timestamp_create.to_s[0..5]}
@@ -7,7 +7,7 @@ FactoryGirl.define do
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :nces_portal_course, :parent => :portal_course do |f|
     f.association :school, :factory => :nces_portal_school
   end

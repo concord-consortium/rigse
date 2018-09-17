@@ -3,12 +3,12 @@ require 'spec_helper'
 describe "materials_collections/index" do
   before(:each) do
 
-    collection1 = FactoryGirl.create(:materials_collection)
-    collection2 = FactoryGirl.create(:materials_collection_with_items)
+    collection1 = FactoryBot.create(:materials_collection)
+    collection2 = FactoryBot.create(:materials_collection_with_items)
 
     assign(:materials_collections, MaterialsCollection.search(nil, nil, nil))
 
-    @admin_user = FactoryGirl.generate(:admin_user)
+    @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_user).and_return(@admin_user)
   end
 

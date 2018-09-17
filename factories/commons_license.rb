@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :commons_license do |f|
     f.code 'test'
     f.number 1

@@ -26,13 +26,13 @@ describe Dataservice::BundleLogger do
       before(:each) do
 
         @bundle_logger = Dataservice::BundleLogger.create(@valid_attributes)
-        @good_bundle_content_1 = FactoryGirl.create(:dataservice_bundle_content)
-        @good_bundle_content_2 = FactoryGirl.create(:dataservice_bundle_content)
-        @good_bundle_content_3 = FactoryGirl.create(:dataservice_bundle_content)
+        @good_bundle_content_1 = FactoryBot.create(:dataservice_bundle_content)
+        @good_bundle_content_2 = FactoryBot.create(:dataservice_bundle_content)
+        @good_bundle_content_3 = FactoryBot.create(:dataservice_bundle_content)
 
         # these won't succeed with synchronous bundle processing
         @bad_null_body_content = Dataservice::BundleContent.create()
-        @bad_invalid_xml_content = FactoryGirl.create(:dataservice_bundle_content, :body=>"goo")
+        @bad_invalid_xml_content = FactoryBot.create(:dataservice_bundle_content, :body=>"goo")
       end
       it "should find nothing with no associated content" do
         expect(@bundle_logger.last_non_empty_bundle_content).to be_nil
@@ -60,13 +60,13 @@ describe Dataservice::BundleLogger do
 
     describe "last non empty bundle" do
       before(:each) do
-        @first    = FactoryGirl.create(:dataservice_bundle_content)
-        @second   = FactoryGirl.create(:dataservice_bundle_content)
-        @third    = FactoryGirl.create(:dataservice_bundle_content)
-        @badxml   = FactoryGirl.create(:dataservice_bundle_content, :body => "badness (non xml)")
-        @nullbody = FactoryGirl.create(:dataservice_bundle_content, :body => nil)
-        @emptybody= FactoryGirl.create(:dataservice_bundle_content, :body => "")
-        @no_data  = FactoryGirl.create(:dataservice_bundle_content, :body => SailBundleContent::EMPTY_BUNDLE)
+        @first    = FactoryBot.create(:dataservice_bundle_content)
+        @second   = FactoryBot.create(:dataservice_bundle_content)
+        @third    = FactoryBot.create(:dataservice_bundle_content)
+        @badxml   = FactoryBot.create(:dataservice_bundle_content, :body => "badness (non xml)")
+        @nullbody = FactoryBot.create(:dataservice_bundle_content, :body => nil)
+        @emptybody= FactoryBot.create(:dataservice_bundle_content, :body => "")
+        @no_data  = FactoryBot.create(:dataservice_bundle_content, :body => SailBundleContent::EMPTY_BUNDLE)
         @logger = Dataservice::BundleLogger.create
       end
 

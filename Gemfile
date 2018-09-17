@@ -207,7 +207,7 @@ end
 
 group :test, :cucumber, :development do
   # this is included in development so the mock data can be loaded into the dev database
-  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
+  gem "factory_bot"
   gem "guard"
   gem "guard-rspec"
   gem "guard-cucumber"

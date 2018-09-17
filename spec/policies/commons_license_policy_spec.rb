@@ -3,7 +3,7 @@ require 'spec_helper'
 describe CommonsLicensePolicy do
   subject                 { CommonsLicensePolicy.new(active_user, commons_license) }
   let(:active_user)       { nil                                                    }
-  let(:commons_license)   { FactoryGirl.create(:commons_license)                   }
+  let(:commons_license)   { FactoryBot.create(:commons_license)                   }
 
   context "for anonymous" do
     it { is_expected.not_to permit(:index)   }
@@ -16,7 +16,7 @@ describe CommonsLicensePolicy do
   end
 
   context "for a normal user" do
-    let(:active_user) { FactoryGirl.create(:user) }
+    let(:active_user) { FactoryBot.create(:user) }
 
     it { is_expected.not_to permit(:index)   }
     it { is_expected.not_to permit(:show)    }
@@ -28,7 +28,7 @@ describe CommonsLicensePolicy do
   end
 
   context "for an admin" do
-    let(:active_user) { FactoryGirl.generate(:admin_user)   }
+    let(:active_user) { FactoryBot.generate(:admin_user)   }
 
     it { is_expected.to permit(:index)   }
     it { is_expected.to permit(:show)    }
@@ -40,7 +40,7 @@ describe CommonsLicensePolicy do
   end
 
   context "for a manager" do
-    let(:active_user) { FactoryGirl.create(:user) }
+    let(:active_user) { FactoryBot.create(:user) }
     before(:each) do
       active_user.add_role('manager')
     end

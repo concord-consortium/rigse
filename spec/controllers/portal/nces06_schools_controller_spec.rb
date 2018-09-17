@@ -7,7 +7,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#index' do
     before(:each) do
-      @manager_user = FactoryGirl.generate(:manager_user)
+      @manager_user = FactoryBot.generate(:manager_user)
       allow(controller).to receive(:current_visitor).and_return(@manager_user)
 
       login_manager

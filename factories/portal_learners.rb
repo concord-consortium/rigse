@@ -1,9 +1,9 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :portal_learner, :class => Portal::Learner do
   end
 end
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :full_portal_learner, :parent => :portal_learner do
     uuid "test"
     association :student, :factory => :full_portal_student

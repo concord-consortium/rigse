@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe API::V1::TeachersController do
-  let(:school) { FactoryGirl.create(:portal_school) }
+  let(:school) { FactoryBot.create(:portal_school) }
 
   let(:teacher_params) do
     {

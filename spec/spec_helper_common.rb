@@ -1,6 +1,6 @@
 require File.expand_path("../../config/environment", __FILE__)
-require 'factory_girl'
-FactoryGirl.definition_file_paths = %w(factories)
+require 'factory_bot'
+FactoryBot.definition_file_paths = %w(factories)
 
 require 'rspec/rails'
 require 'rspec/mocks'
@@ -80,7 +80,7 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.mock_with :rspec
 
@@ -114,6 +114,6 @@ end
 
 # Prevent Factory definitions from being loaded multiple times
 # But allow access to cucumber specs and db prep
-@defs_loaded ||= FactoryGirl.find_definitions and true
+@defs_loaded ||= FactoryBot.find_definitions and true
 
 
