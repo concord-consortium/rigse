@@ -199,36 +199,49 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy, id: FactoryGirl.create(:portal_offering).to_param
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 
   # TODO: auto-generated
   describe '#activate' do
-    it 'GET activate' do
-      get :activate, {}, {}
+    let(:referrer)  { "https://foo.bar.com/some/path.html" }
 
-      expect(response).to have_http_status(:not_found)
+    xit 'GET activate' do
+      allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
+
+      admin = FactoryGirl.generate :admin_user
+      sign_in admin
+      get :activate, id: FactoryGirl.create(:portal_offering).to_param
+
+      expect(response).to have_http_status(:redirect)
     end
-  end
+  end                           
 
   # TODO: auto-generated
   describe '#deactivate' do
-    it 'GET deactivate' do
-      get :deactivate, {}, {}
+    let(:referrer)  { "https://foo.bar.com/some/path.html" }
 
-      expect(response).to have_http_status(:not_found)
+    xit 'GET deactivate' do
+      allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
+      admin = FactoryGirl.generate :admin_user
+      sign_in admin
+      get :deactivate, id: FactoryGirl.create(:portal_offering).to_param
+
+      expect(response).to have_http_status(:redirect)
     end
   end
 
   # TODO: auto-generated
   describe '#answers' do
     it 'GET answers' do
-      get :answers, {}, {}
+      admin = FactoryGirl.generate :admin_user
+      sign_in admin
+      get :answers, id: FactoryGirl.create(:portal_offering).to_param, questions: []
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 
@@ -236,18 +249,18 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#student_report' do
     it 'GET student_report' do
-      get :student_report, {}, {}
+      get :student_report, id: FactoryGirl.create(:portal_offering).to_param
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 
   # TODO: auto-generated
   describe '#external_report' do
     it 'GET external_report' do
-      get :external_report, {}, {}
+      get :external_report, id: FactoryGirl.create(:portal_offering).to_param
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 end
