@@ -2,30 +2,20 @@ class API::V1::ClassesController < API::APIController
 
   # GET api/v1/classes/:id
   def show
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
+    authorize [:api, :v1, :class]
 
-    if user.anonymous?
-      return error('You must be logged in to use this endpoint')
-    end
-
-    if !user.portal_student && !user.portal_teacher
-      return error('You must be logged in as a student or teacher to use this endpoint')
-    end
+    user, _ = check_for_auth_token(params)
 
     clazz = Portal::Clazz.find_by_id(params[:id])
-    if !clazz
+    unless clazz
       return error('The requested class was not found')
     end
 
     student_in_class = user.portal_student && user.portal_student.has_clazz?(clazz)
     teacher_in_class = !student_in_class || (user.portal_teacher && user.portal_teacher.has_clazz?(clazz))
 
-    if (!student_in_class && !teacher_in_class)
-      return error('You are not a student or teacher of the requested class')
+    unless student_in_class || teacher_in_class
+      raise Pundit::NotAuthorizedError, 'You are not a student or teacher of the requested class'
     end
 
     render_info clazz
@@ -34,20 +24,11 @@ class API::V1::ClassesController < API::APIController
   # GET api/v1/classes/mine
   # lists the users classes
   def mine
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
+    authorize [:api, :v1, :class]
 
-    if user.anonymous?
-      return error('You must be logged in to use this endpoint')
-    end
+    user, _ = check_for_auth_token(params)
 
-    user_with_clazzes = user.portal_student || user.portal_teacher
-    if !user_with_clazzes
-      return error('You must be logged in as a student or teacher to use this endpoint')
-    end
+    user_with_clazzes = user.teacher_or_student
 
     render :json => {
       classes: user_with_clazzes.clazzes.map do |clazz|
@@ -64,7 +45,7 @@ class API::V1::ClassesController < API::APIController
   def info
     class_word = params.require(:class_word)
     clazz = Portal::Clazz.find_by_class_word(class_word)
-    if !clazz
+    unless clazz
       return error('The requested class was not found')
     end
 
@@ -72,11 +53,10 @@ class API::V1::ClassesController < API::APIController
   end
 
   def log_links
-    # allow only admins for now
-    return error('You must be an admin to use this endpoint') unless current_user && current_user.has_role?("admin")
+    authorize [:api, :v1, :class]
 
     clazz = Portal::Clazz.find_by_id(params[:id])
-    if !clazz
+    unless clazz
       return error('The requested class was not found')
     end
 

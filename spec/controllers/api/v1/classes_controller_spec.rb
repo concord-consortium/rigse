@@ -1,22 +1,17 @@
 require 'spec_helper'
 
 describe API::V1::ClassesController do
-  let(:teacher)           { FactoryGirl.create(:portal_teacher) }
-  let(:clazz)             { FactoryGirl.create(:portal_clazz, name: 'test class', teachers: [teacher]) }
-  let(:runnable_a)          { FactoryGirl.create(:external_activity, name: 'Test Sequence') }
-  let(:offering_a)          { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable_a}) }
-  let(:runnable_b)          { FactoryGirl.create(:external_activity, name: 'Archived Test Sequence', is_archived: true) }
-  let(:offering_b)          { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable_b}) }
-  let(:runnable_c)          { FactoryGirl.create(:external_activity, name: 'Test Sequence 2') }
-  let(:offering_c)          { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable_c}) }
+  let(:teacher) {FactoryGirl.create(:portal_teacher)}
+  let(:clazz) {FactoryGirl.create(:portal_clazz, name: 'test class', teachers: [teacher])}
+  let(:runnable_a) {FactoryGirl.create(:external_activity, name: 'Test Sequence')}
+  let!(:offering_a) {FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable_a})}
+  let(:runnable_b) {FactoryGirl.create(:external_activity, name: 'Archived Test Sequence', is_archived: true)}
+  let!(:offering_b) {FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable_b})}
+  let(:runnable_c) {FactoryGirl.create(:external_activity, name: 'Test Sequence 2')}
+  let!(:offering_c) {FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable_c})}
 
   describe "GET #show" do
     before (:each) do
-      # initialize the clazz
-      clazz
-      offering_a
-      offering_b
-      offering_c
       sign_in teacher.user
     end
 
@@ -40,7 +35,7 @@ describe API::V1::ClassesController do
     it 'GET mine' do
       get :mine, {}, {}
 
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
@@ -58,7 +53,7 @@ describe API::V1::ClassesController do
     it 'GET log_links' do
       get :log_links, {}, {}
 
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end
