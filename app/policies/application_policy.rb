@@ -149,6 +149,10 @@ class ApplicationPolicy
     user && record.respond_to?(:user) && record.user == user
   end
 
+  def failed_to_log_in
+    raise Pundit::NotAuthorizedError, 'You must be logged in to use this endpoint'
+  end
+
   # from peer access
 
   def request_is_peer?

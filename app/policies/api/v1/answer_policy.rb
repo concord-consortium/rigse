@@ -1,4 +1,6 @@
 class API::V1::AnswerPolicy < Struct.new(:user, :api_v1_answer)
+  include API::V1::PunditSupport
+
   attr_reader :user, :request, :params, :api_v1_answer
 
   def initialize(context, api_v1_answer)
@@ -11,11 +13,4 @@ class API::V1::AnswerPolicy < Struct.new(:user, :api_v1_answer)
   def student_answers?
     is_admin?
   end
-
-  private
-
-  def is_admin?
-    user && user.has_role?("admin")
-  end
-
 end

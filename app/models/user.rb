@@ -372,7 +372,23 @@ class User < ActiveRecord::Base
   #
   def has_role?(*role_list)
     roles.reload # will always hit the database?
-    (roles.map{ |r| r.title.downcase } & role_list.flatten).length > 0
+    (roles.map {|r| r.title.downcase} & role_list.flatten).length > 0
+  end
+
+  def is_admin?
+    has_role?("admin")
+  end
+
+  def must_be_logged_in
+    if anonymous?
+      raise Pundit::NotAuthorizedError, 'You must be logged in to use this endpoint'
+    end
+  end
+
+  def must_be_admin
+    unless is_admin?
+      raise Pundit::NotAuthorizedError, 'You must be an admin to use this endpoint'
+    end
   end
 
   def does_not_have_role?(*role_list)

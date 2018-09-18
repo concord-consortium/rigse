@@ -1,15 +1,11 @@
 class API::V1::ReportPolicy < ApplicationPolicy
-
+  include API::V1::PunditSupport
 
   def show?
     class_teacher_or_admin? || is_the_student?
   end
 
   private
-
-  def is_admin?
-    user && user.has_role?("admin")
-  end
 
   def clazz
     record.offering.clazz

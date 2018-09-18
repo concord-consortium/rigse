@@ -9,7 +9,10 @@ class API::V1::ExternalActivityPolicy < Struct.new(:user, :api_v1_external_activ
   end
 
   def create?
-    user && (user.is_project_admin? || user.is_project_researcher? || user.has_role?('manager','admin','researcher'))
-  end
+    return false unless user
 
+    user.is_project_admin? ||
+        user.is_project_researcher? ||
+        user.has_role?('manager','admin','researcher')
+  end
 end

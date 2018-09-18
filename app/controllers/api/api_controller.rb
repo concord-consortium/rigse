@@ -24,23 +24,23 @@ class API::APIController < ApplicationController
   end
 
   def show
-    return error("Show not configured for this resource")
+    raise Pundit::NotDefinedError, "Show not configured for this resource"
   end
 
   def create
-    return error("create not configured for this resource")
+    raise Pundit::NotDefinedError, "create not configured for this resource"
   end
 
   def update
-    return error("update not configured for this resource")
+    raise Pundit::NotDefinedError, "update not configured for this resource"
   end
 
   def index
-    return error("index not configured for this resource")
+    raise Pundit::NotDefinedError,  "index not configured for this resource"
   end
 
   def destroy
-    return error("destroy not configured for this resource")
+    raise Pundit::NotDefinedError, "destroy not configured for this resource"
   end
 
   def check_for_auth_token(params)
@@ -53,7 +53,7 @@ class API::APIController < ApplicationController
         if grant.access_token_expires_at >= Time.now
           return [grant.user, {:learner => grant.learner, :teacher => grant.teacher}]
         else
-          raise StandardError, 'AccessGrant has expired'
+          raise Pundit::NotAuthorizedError, 'AccessGrant has expired'
         end
 
       # peer to peer authentication based on app_secret is available if the learner id is passed
@@ -64,14 +64,14 @@ class API::APIController < ApplicationController
           if peer
             return [learner.student.user, {:learner => learner, :teacher => nil}]
           else
-            raise StandardError, "Cannot find requested peer token" # don't leak token value in error
+            raise Pundit::NotAuthorizedError, "Cannot find requested peer token" # don't leak token value in error
           end
         else
-          raise StandardError, "Cannot find learner with id or key of '#{params[:learner_id_or_key]}'"
+          raise Pundit::NotAuthorizedError, "Cannot find learner with id or key of '#{params[:learner_id_or_key]}'"
         end
 
       else
-        raise StandardError, "Cannot find AccessGrant for token '#{token}'"
+        raise Pundit::NotAuthorizedError, "Cannot find AccessGrant for token '#{token}'"
       end
 
     elsif header && header =~ /^Bearer\/JWT (.*)$/i
@@ -88,13 +88,13 @@ class API::APIController < ApplicationController
         }
         return [user, role]
       else
-        raise StandardError, 'User in token not found'
+        raise Pundit::NotAuthorizedError, 'User in token not found'
       end
 
     elsif current_user
       return [current_user, nil]
     else
-      raise StandardError, 'You must be logged in to use this endpoint'
+      raise Pundit::NotAuthorizedError, 'You must be logged in to use this endpoint'
     end
   end
 end

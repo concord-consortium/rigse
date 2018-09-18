@@ -16,11 +16,11 @@ class API::V1::ExternalActivitiesController < API::APIController
 
     begin
       validated_url = URI.parse(url)
-    rescue Exception
+    rescue StandardError
       validated_url = nil
     end
 
-    if !validated_url
+    unless validated_url
       return error("Invalid url", 422)
     end
 

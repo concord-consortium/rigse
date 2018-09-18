@@ -23,7 +23,8 @@ class API::V1::CollaborationPolicy < Struct.new(:user, :api_v1_collaboration)
   private
 
   def is_class_member?
-    return false if !user || !user.portal_student
+    return false unless user && user.portal_student
+
     offering = Portal::Offering.find_by_id(params[:offering_id])
     offering && offering.clazz.students.include?(user.portal_student)
   end
@@ -31,8 +32,7 @@ class API::V1::CollaborationPolicy < Struct.new(:user, :api_v1_collaboration)
   def request_is_peer?
     auth_header = request.headers["Authorization"]
     auth_token = auth_header && auth_header =~ /^Bearer (.*)$/ ? $1 : ""
-    peer_tokens = Client.all.map { |c| c.app_secret }.uniq
+    peer_tokens = Client.all.map { |c| c.app_secret }
     peer_tokens.include?(auth_token)
   end
-
 end
