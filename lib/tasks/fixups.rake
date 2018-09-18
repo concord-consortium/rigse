@@ -314,14 +314,16 @@ namespace :app do
         next if offering.clazz_id == clazz.id
         runnable_id = offering.runnable_id
         runnable_type = offering.runnable_type
-        found   = Portal::Offering.find_all_by_runnable_id_and_runnable_type(runnable_id, runnable_type)
-        found   = found.detect { |o| o.clazz_id == clazz.id }
+        found   = Portal::Offering
+                      .where(runnable_id: runnable_id,
+                             runnable_type: runnable_type)
+                      .detect { |o| o.clazz_id == clazz.id }
         unless found
           found = Portal::Offering.create(:runnable_id => runnable_id, :runnable_type => runnable_type, :clazz => clazz, :default_offering => true)
         end
         offering.learners.each do |learner|
           learner.offering = found
-          learner.save
+          learner.save!
         end
       end
       # We don't need to delete offerings, they are
