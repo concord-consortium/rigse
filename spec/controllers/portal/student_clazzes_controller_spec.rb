@@ -4,7 +4,7 @@ describe Portal::StudentClazzesController do
   render_views
     
   def mock_clazz(stubs={})
-    mock_clazz = FactoryGirl.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
+    mock_clazz = FactoryBot.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
     #mock_clazz.stub!(stubs) unless stubs.empty?
 
     mock_clazz
@@ -12,12 +12,12 @@ describe Portal::StudentClazzesController do
   
   describe "Delete remove a student" do
     before(:each) do
-      @mock_school = FactoryGirl.create(:portal_school)
-      @authorized_teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
-      @authorized_student = FactoryGirl.create(:portal_student, :user =>FactoryGirl.create(:confirmed_user, :login => "authorized_student"))
+      @mock_school = FactoryBot.create(:portal_school)
+      @authorized_teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
+      @authorized_student = FactoryBot.create(:portal_student, :user =>FactoryBot.create(:confirmed_user, :login => "authorized_student"))
       
       @mock_clazz_name = "Random Test Class"
-      @mock_course = FactoryGirl.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
+      @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
       @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
       
       @authorized_student.add_clazz(@mock_clazz)

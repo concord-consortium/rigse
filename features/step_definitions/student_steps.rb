@@ -3,12 +3,12 @@ Given /^the following students exist:$/ do |table|
   table.hashes.each do |hash|
     begin
       clazz = Portal::Clazz.find_by_name(hash.delete('class'))
-      user = Factory(:user, hash)
+      user = FactoryBot.create(:user, hash)
       user.add_role("member")
       user.save!
       user.confirm!
 
-      portal_student = Factory(:full_portal_student, { :user => user })
+      portal_student = FactoryBot.create(:full_portal_student, { :user => user })
       portal_student.save!
       if (clazz)
         portal_student.add_clazz(clazz)
@@ -30,7 +30,7 @@ Given /^the student "(.*)" belongs to class "(.*)"$/ do |student_name, class_nam
   student = User.find_by_login(student_name).portal_student
   clazz   = Portal::Clazz.find_by_name(class_name)
 
-  FactoryGirl.create :portal_student_clazz, :student => student,
+  FactoryBot.create :portal_student_clazz, :student => student,
                                         :clazz   => clazz
 end
 

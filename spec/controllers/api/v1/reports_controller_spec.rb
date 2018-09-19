@@ -18,20 +18,20 @@ RSpec::Matchers.define :include_hash do |comp_hash|
 end
 
 describe API::V1::ReportsController do
-  let(:open_response)     { FactoryGirl.create(:open_response, show_in_featured_question_report: true, is_required: true)}
-  let(:section)           { FactoryGirl.create(:section) }
-  let(:page)              { FactoryGirl.create(:page) }
-  let(:activity)          { FactoryGirl.create(:activity, runnable_opts)          }
-  let(:runnable)          { FactoryGirl.create(:external_activity, runnable_opts) }
-  let(:offering)          { Factory(:portal_offering, offering_opts)    }
-  let(:clazz)             { Factory(:portal_clazz, teachers: [class_teacher], students:[student_a,student_b]) }
+  let(:open_response)     { FactoryBot.create(:open_response, show_in_featured_question_report: true, is_required: true)}
+  let(:section)           { FactoryBot.create(:section) }
+  let(:page)              { FactoryBot.create(:page) }
+  let(:activity)          { FactoryBot.create(:activity, runnable_opts)          }
+  let(:runnable)          { FactoryBot.create(:external_activity, runnable_opts) }
+  let(:offering)          { FactoryBot.create(:portal_offering, offering_opts)    }
+  let(:clazz)             { FactoryBot.create(:portal_clazz, teachers: [class_teacher], students:[student_a,student_b]) }
   let(:offering_opts)     { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)     { {name: 'the activity'}              }
-  let(:class_teacher)     { FactoryGirl.create(:portal_teacher)     }
+  let(:class_teacher)     { FactoryBot.create(:portal_teacher)     }
   let(:learner_a)         { Portal::Learner.where(offering_id: offering.id, student_id: student_a.id).first_or_create}
   let(:learner_b)         { Portal::Learner.where(offering_id: offering.id, student_id: student_b.id).first_or_create}
-  let(:student_a)         { FactoryGirl.create(:full_portal_student) }
-  let(:student_b)         { FactoryGirl.create(:full_portal_student) }
+  let(:student_a)         { FactoryBot.create(:full_portal_student) }
+  let(:student_b)         { FactoryBot.create(:full_portal_student) }
   let(:report_learner_a)  { learner_a.report_learner }
   let(:report_learner_b)  { learner_b.report_learner }
   let(:user)              { class_teacher.user       }

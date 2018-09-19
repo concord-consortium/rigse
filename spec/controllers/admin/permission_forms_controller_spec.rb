@@ -2,24 +2,24 @@ require 'spec_helper'
 
 describe Admin::PermissionFormsController do
   before(:each) do
-    @cohort1 = FactoryGirl.create(:admin_cohort)
-    @cohort2 = FactoryGirl.create(:admin_cohort)
-    @project1 = FactoryGirl.create(:project)
+    @cohort1 = FactoryBot.create(:admin_cohort)
+    @cohort2 = FactoryBot.create(:admin_cohort)
+    @project1 = FactoryBot.create(:project)
     @project1.cohorts << @cohort1
-    @project2 = FactoryGirl.create(:project)
+    @project2 = FactoryBot.create(:project)
     @project2.cohorts << @cohort2
-    @form1 = FactoryGirl.create(:permission_form, project: @project1)
-    @form2 = FactoryGirl.create(:permission_form, project: @project2)
-    @teacher1 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher1", :first_name => "Teacher", :last_name => "One"))
+    @form1 = FactoryBot.create(:permission_form, project: @project1)
+    @form2 = FactoryBot.create(:permission_form, project: @project2)
+    @teacher1 = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher1", :first_name => "Teacher", :last_name => "One"))
     @teacher1.cohorts << @cohort1
     @teacher_view1 = Admin::PermissionFormsController::TeacherView.new(@teacher1)
-    @teacher2 = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher2", :first_name => "Teacher", :last_name => "Two"))
+    @teacher2 = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher2", :first_name => "Teacher", :last_name => "Two"))
     @teacher_view2 = Admin::PermissionFormsController::TeacherView.new(@teacher2)
     @teacher2.cohorts << @cohort2
   end
 
   # User variable is overwritten by some test cases.
-  let(:user) { FactoryGirl.generate(:admin_user) }
+  let(:user) { FactoryBot.generate(:admin_user) }
   before(:each) { sign_in user }
 
   describe "#index" do
@@ -43,7 +43,7 @@ describe Admin::PermissionFormsController do
 
     describe "when user is a project admin" do
       let(:user) do
-        user = FactoryGirl.create(:confirmed_user)
+        user = FactoryBot.create(:confirmed_user)
         user.add_role_for_project('admin', @project1)
         user
       end
@@ -58,7 +58,7 @@ describe Admin::PermissionFormsController do
 
     describe "when user is a project researcher" do
       let(:user) do
-        user = FactoryGirl.create(:confirmed_user)
+        user = FactoryBot.create(:confirmed_user)
         user.add_role_for_project('researcher', @project2)
         user
       end

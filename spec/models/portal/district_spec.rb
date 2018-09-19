@@ -18,7 +18,7 @@ describe Portal::District do
 
   context '.find_or_create_using_nces_district' do
     it "can create districts from NCES district data " do
-      nces_district = Factory(:portal_nces06_district)
+      nces_district = FactoryBot.create(:portal_nces06_district)
       new_district = Portal::District.find_or_create_using_nces_district(nces_district)
       expect(new_district).not_to be_nil
       expect(new_district).to be_real # meaning has a real nces school
@@ -28,12 +28,12 @@ describe Portal::District do
 
   describe "ways to find districts" do
     before(:each) do
-      @woonsocket_district = Factory(:portal_nces06_district, {
+      @woonsocket_district = FactoryBot.create(:portal_nces06_district, {
           :STID => 39,
           :LSTATE => 'RI',
           :NAME => 'Woonsocket',
       })
-      @district = Factory(:portal_district, {
+      @district = FactoryBot.create(:portal_district, {
           :nces_district_id => @woonsocket_district.id,
       })
     end

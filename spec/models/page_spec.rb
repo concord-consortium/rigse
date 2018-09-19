@@ -151,7 +151,7 @@ describe Page do
   describe '#add_embeddable' do
     it 'add_embeddable' do
       page = described_class.new
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       position = 1
       result = page.add_embeddable(embeddable, position)
 

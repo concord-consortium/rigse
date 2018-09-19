@@ -1,3 +1,5 @@
-Factory.define :dataservice_console_logger, :class => Dataservice::ConsoleLogger do |f|
+FactoryBot.define do
+  factory :dataservice_console_logger, :class => Dataservice::ConsoleLogger do |f|
+  end
 end
 

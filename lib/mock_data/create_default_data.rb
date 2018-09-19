@@ -123,7 +123,7 @@ module MockData
         update_count += 1
         print '+'
       else
-        portal_grade = FactoryGirl.create(:portal_grade, grade_info)
+        portal_grade = FactoryBot.create(:portal_grade, grade_info)
 
         create_count += 1
         print '.'
@@ -642,12 +642,12 @@ module MockData
           sub_activities = act.delete(:activities)
           act[:user_id] = user.id
           default_ext_act = ExternalActivity.create!(act)
-          default_ext_act.template = FactoryGirl.create(:activity,
+          default_ext_act.template = FactoryBot.create(:activity,
             name: default_ext_act.name,
             description: default_ext_act.long_description
           )
           if(sub_activities)
-            investigation = FactoryGirl.create(:investigation,
+            investigation = FactoryBot.create(:investigation,
               name: default_ext_act.name,
               description: default_ext_act.long_description
             )
@@ -692,7 +692,7 @@ module MockData
               default_portal_offering.uuid = offering_uuid
               default_portal_offering.save!
             else
-              default_portal_offering = FactoryGirl.create(:portal_offering, { :runnable => study_material,:clazz => clazz})
+              default_portal_offering = FactoryBot.create(:portal_offering, { :runnable => study_material,:clazz => clazz})
               default_portal_offering.runnable_type = assignable[:type]
               default_portal_offering.uuid = offering_uuid
               default_portal_offering.save!
@@ -800,7 +800,7 @@ module MockData
 
     elsif user_by_login.nil? && user_by_email.nil?
 
-      user = Factory(:user, user_info)
+      user = FactoryBot.create(:user, user_info)
 
       user.save!
       user.confirm!
@@ -954,9 +954,9 @@ module MockData
     MaterialsCollection.destroy_all
     DEFAULT_DATA[:materials_collections].each do |key, mc|
       if (mc[:items_count] > 0)
-        FactoryGirl.create(:materials_collection_with_items, items_count: mc[:items_count], name: mc[:name], description: mc[:description])
+        FactoryBot.create(:materials_collection_with_items, items_count: mc[:items_count], name: mc[:name], description: mc[:description])
       else
-        FactoryGirl.create(:materials_collection, name: mc[:name], description: mc[:description])
+        FactoryBot.create(:materials_collection, name: mc[:name], description: mc[:description])
       end
     end
     puts "Generated Materials Collections"
@@ -981,7 +981,7 @@ module MockData
     Interactive.destroy_all
     Admin::Tag.destroy_all
     DEFAULT_DATA[:interactives].each do |key, interactive|
-      new_interactive = FactoryGirl.create(:interactive, name: interactive[:name], description: interactive[:description], url: interactive[:url], image_url: interactive[:image_url], publication_status: interactive[:publication_status])
+      new_interactive = FactoryBot.create(:interactive, name: interactive[:name], description: interactive[:description], url: interactive[:url], image_url: interactive[:image_url], publication_status: interactive[:publication_status])
       user_login = interactive[:user]
       user = @default_users.find{|u| u.login == user_login}
       new_interactive.user_id = user.id

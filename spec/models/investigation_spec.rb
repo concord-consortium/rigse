@@ -167,9 +167,9 @@ describe Investigation do
         :name => "test investigation",
         :description => "new decription"
       } }
-    let (:investigation) { FactoryGirl.create(:investigation, inv_attributes) }
-    let (:activity_one)  { FactoryGirl.create(:activity) }
-    let (:activity_two)  { FactoryGirl.create(:activity) }
+    let (:investigation) { FactoryBot.create(:investigation, inv_attributes) }
+    let (:activity_one)  { FactoryBot.create(:activity) }
+    let (:activity_two)  { FactoryBot.create(:activity) }
 
     # We might want to have one activity in the future. 
     it "should have no activities initially" do
@@ -226,15 +226,15 @@ describe Investigation do
 
   describe "finding reportables within an investigation" do
     before(:each) do
-      @investigation = Factory(:investigation)
-      @activity = Factory(:activity)
-      @section = Factory(:section)
-      @page = Factory(:page)
-      @m_choice = Factory(:multiple_choice)
-      @m_choice_b = Factory(:multiple_choice)
-      @sub_page = Factory(:page)
-      @sub_page.page_elements << Factory(:page_element, :embeddable => @m_choice)
-      @page.page_elements << Factory(:page_element, :embeddable => @m_choice_b)
+      @investigation = FactoryBot.create(:investigation)
+      @activity = FactoryBot.create(:activity)
+      @section = FactoryBot.create(:section)
+      @page = FactoryBot.create(:page)
+      @m_choice = FactoryBot.create(:multiple_choice)
+      @m_choice_b = FactoryBot.create(:multiple_choice)
+      @sub_page = FactoryBot.create(:page)
+      @sub_page.page_elements << FactoryBot.create(:page_element, :embeddable => @m_choice)
+      @page.page_elements << FactoryBot.create(:page_element, :embeddable => @m_choice_b)
       @section.pages << @page
       @activity.sections << @section
       @investigation.activities << @activity
@@ -329,7 +329,7 @@ describe Investigation do
     let(:activity)             { double(:external_activities => activity_externals) }
     let(:activities)           { [activity] }
     subject do
-      s = FactoryGirl.create(:investigation)
+      s = FactoryBot.create(:investigation)
       allow(s).to receive_messages(:external_activities => external_activities)
       allow(s).to receive_messages(:activities => activities)
       s.is_template
@@ -352,12 +352,12 @@ describe Investigation do
 
   describe '#is_template scope' do
     before(:each) do
-      e1 = FactoryGirl.create(:external_activity)
-      e2 = FactoryGirl.create(:external_activity)
-      a = FactoryGirl.create(:activity, external_activities: [e2])
-      @i1 = FactoryGirl.create(:investigation)
-      @i2 = FactoryGirl.create(:investigation, external_activities: [e1])
-      @i3 = FactoryGirl.create(:investigation, activities: [a])
+      e1 = FactoryBot.create(:external_activity)
+      e2 = FactoryBot.create(:external_activity)
+      a = FactoryBot.create(:activity, external_activities: [e2])
+      @i1 = FactoryBot.create(:investigation)
+      @i2 = FactoryBot.create(:investigation, external_activities: [e1])
+      @i3 = FactoryBot.create(:investigation, activities: [a])
     end
 
     it 'should return investigations which are not templates if provided argument is false' do
@@ -373,8 +373,8 @@ describe Investigation do
   end
 
   describe "project support" do
-    let (:investigation) { FactoryGirl.create(:investigation) }
-    let (:project) { FactoryGirl.create(:project) }
+    let (:investigation) { FactoryBot.create(:investigation) }
+    let (:project) { FactoryBot.create(:project) }
 
     it "can be assigned to a project" do
       investigation.projects << project

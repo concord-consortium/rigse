@@ -4,11 +4,11 @@ require 'spec_helper'
 describe API::V1::CreateCollaboration do
   let(:protocol) { 'https://' }
   let(:domain)   { "#{protocol}portal.org/" }
-  let(:student1) { Factory(:full_portal_student) }
-  let(:student2) { Factory(:full_portal_student) }
+  let(:student1) { FactoryBot.create(:full_portal_student) }
+  let(:student2) { FactoryBot.create(:full_portal_student) }
   let(:students) { [student1, student2] }
   let(:offering) do
-    offering = Factory(:portal_offering)
+    offering = FactoryBot.create(:portal_offering)
     clazz = offering.clazz
     clazz.students = [student1, student2]
     clazz.save!
@@ -81,7 +81,7 @@ describe API::V1::CreateCollaboration do
 
     context "when offering is an external activity" do
       before do
-        offering.runnable = Factory(:external_activity)
+        offering.runnable = FactoryBot.create(:external_activity)
         offering.save!
       end
 
@@ -133,7 +133,7 @@ describe API::V1::CreateCollaboration do
 
       describe "when offering is an external activity" do
         before do
-          offering.runnable = Factory(:external_activity)
+          offering.runnable = FactoryBot.create(:external_activity)
           offering.save!
         end
 

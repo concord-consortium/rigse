@@ -4,9 +4,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Embeddable::MultipleChoice do
   before(:each) do
-    @page = Factory(:page)
-    @user = Factory(:user)
-    @multichoice = Factory(:multiple_choice)
+    @page = FactoryBot.create(:page)
+    @user = FactoryBot.create(:user)
+    @multichoice = FactoryBot.create(:multiple_choice)
     @multichoice.pages << @page
     @multichoice.user = @user
     @multichoice.save

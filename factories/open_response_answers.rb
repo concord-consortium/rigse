@@ -1,3 +1,5 @@
-Factory.define :open_response_answer do |f|
+FactoryBot.define do
+  factory :open_response_answer do |f|
 
+  end
 end

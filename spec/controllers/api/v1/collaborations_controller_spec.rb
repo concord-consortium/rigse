@@ -10,10 +10,10 @@ def set_auth_token(auth_token)
 end
 
 describe API::V1::CollaborationsController do
-  let(:student1) { Factory(:full_portal_student) }
-  let(:student2) { Factory(:full_portal_student) }
+  let(:student1) { FactoryBot.create(:full_portal_student) }
+  let(:student2) { FactoryBot.create(:full_portal_student) }
   let(:offering) do
-    offering = Factory(:portal_offering)
+    offering = FactoryBot.create(:portal_offering)
     clazz = offering.clazz
     clazz.students = [student1, student2]
     clazz.save!
@@ -61,7 +61,7 @@ describe API::V1::CollaborationsController do
 
     context "when teacher is signed in" do
       before do
-        teacher = Factory(:portal_teacher)
+        teacher = FactoryBot.create(:portal_teacher)
         sign_in teacher.user
       end
 

@@ -2,7 +2,7 @@ Given /^the following external activit(?:y|ies) exist[s]?:$/ do |activity_table|
   activity_table.hashes.each do |hash|
     user = User.first(:conditions => { :login => hash.delete('user') })
     hash[:user_id] = user.id
-    activity = Factory :external_activity, hash
+    activity = FactoryBot.create(:external_activity, hash)
     activity.publish
     activity.is_official = true
     activity.save

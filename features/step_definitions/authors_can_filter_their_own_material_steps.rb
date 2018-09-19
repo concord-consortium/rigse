@@ -1,7 +1,7 @@
 Given(/^the following Interactive exist:$/) do |interactive_table|
   interactive_table.hashes.each do |hash|
     hash["user"] = User.find_by_login(hash[:user])
-    Factory(:interactive, hash)
+    FactoryBot.create(:interactive, hash)
   end
 end
 
@@ -9,7 +9,7 @@ end
 Given(/^the following External Activity exist:$/) do |external_activity_table|
   external_activity_table.hashes.each do |hash|
     hash["user"] = User.find_by_login(hash[:user])
-    Factory(:external_activity, hash)
+    FactoryBot.create(:external_activity, hash)
   end
 end
 

@@ -10,7 +10,7 @@ shared_examples_for 'an embeddable controller' do
     if self.respond_to?(method_name)
       return self.send(method_name)
     else
-      return FactoryGirl.create(model_name)
+      return FactoryBot.create(model_name)
     end
   end
 

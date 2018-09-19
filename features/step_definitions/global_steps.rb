@@ -80,7 +80,7 @@ Given /the following users exist:$/i do |users_table|
       roles =  []
     end
     begin
-      user = Factory(:user, hash)
+      user = FactoryBot.create(:user, hash)
       roles.each do |role|
         user.add_role(role)
       end
@@ -134,7 +134,7 @@ Given /^there are (\d+) (.+)$/ do |number, model_name|
 
   the_class.destroy_all
   number.to_i.times do |i|
-    FactoryGirl.create(model_name.to_sym)
+    FactoryBot.create(model_name.to_sym)
   end
 end
 

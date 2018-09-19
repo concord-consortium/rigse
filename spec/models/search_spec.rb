@@ -12,7 +12,7 @@ describe Search do
     results = []
     count.times do
       yield opts if block_given?
-      results << FactoryGirl.create(factory.to_sym, opts)
+      results << FactoryBot.create(factory.to_sym, opts)
     end
     results
   end
@@ -143,7 +143,7 @@ describe Search do
 
       describe "searching for materials with tricky names" do
         let(:funny_name)       { "" }
-        let(:funny_activity)   { FactoryGirl.create(:external_activity, public_opts.merge(:name=>funny_name)) }
+        let(:funny_activity)   { FactoryBot.create(:external_activity, public_opts.merge(:name=>funny_name)) }
         let(:search_opts)      { {:search_term => search_term} }
         let(:search_term)      { "" }
         let(:materials)        { [funny_activity] }
@@ -273,8 +273,8 @@ describe Search do
         let(:published_opts)      { external_act.merge({ publication_status: "published" })}
         let(:archived_opts)       { published_opts.merge({is_archived: true })}
         let(:unarchived_opts)     { published_opts.merge({is_archived: false })}
-        let(:archived_activity)   { FactoryGirl.create(:external_activity, archived_opts) }
-        let(:unarchived_activity) { FactoryGirl.create(:external_activity, unarchived_opts) }
+        let(:archived_activity)   { FactoryBot.create(:external_activity, archived_opts) }
+        let(:unarchived_activity) { FactoryBot.create(:external_activity, unarchived_opts) }
         let(:materials) { [archived_activity, unarchived_activity] }
         describe "with default search options" do
           it "results should include not include archived activities" do
@@ -310,7 +310,7 @@ describe Search do
 
       describe "external activities binning by sequence or activity" do
         let(:factory_opts)     {{:publication_status => "published"}     }
-        let(:external_activity){FactoryGirl.create(:external_activity)}
+        let(:external_activity){FactoryBot.create(:external_activity)}
         let(:materials) do
             [
               collection(:investigation, 2, factory_opts),
@@ -320,7 +320,7 @@ describe Search do
           end
 
         describe "when the template type is an Investigation" do
-          let(:external_activity){FactoryGirl.create(:external_activity, external_seq.merge(public_opts).merge(official))}
+          let(:external_activity){FactoryBot.create(:external_activity, external_seq.merge(public_opts).merge(official))}
           it "should be listed in the investigations results" do
             expect(subject.results[Search::InvestigationMaterial]).to include(external_activity)
             expect(subject.results[Search::ActivityMaterial]).not_to include(external_activity)
@@ -331,7 +331,7 @@ describe Search do
         describe "When the template type is an Activity" do
 
           describe "when its an offical activity" do
-            let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts).merge(official))}
+            let(:external_activity){FactoryBot.create(:external_activity, external_act.merge(public_opts).merge(official))}
             it "should be listed in the activity results" do
               expect(subject.results[Search::InvestigationMaterial]).not_to include(external_activity)
               expect(subject.results[Search::ActivityMaterial]).to include(external_activity)
@@ -339,7 +339,7 @@ describe Search do
           end
 
           describe "when its a contributed activity" do
-            let(:external_activity){FactoryGirl.create(:external_activity, external_act.merge(public_opts))}
+            let(:external_activity){FactoryBot.create(:external_activity, external_act.merge(public_opts))}
             describe "when the search doesn't include contributed items" do
               let(:search_opts) { {:include_official => true } }
               it "should not be listed in the results" do
@@ -360,7 +360,7 @@ describe Search do
         end
 
         describe "When there is no template" do
-          let(:external_activity){FactoryGirl.create(:external_activity, external_base.merge(public_opts).merge(official).merge({:material_type => 'Activity'}))}
+          let(:external_activity){FactoryBot.create(:external_activity, external_base.merge(public_opts).merge(official).merge({:material_type => 'Activity'}))}
           it "should be listed in the Activity results" do
             expect(subject.results[Search::InvestigationMaterial]).not_to include(external_activity)
             expect(subject.results[Search::ActivityMaterial]).to include(external_activity)
@@ -370,8 +370,8 @@ describe Search do
 
       describe "searching with user_id" do
         let(:my_id)          { 23 }
-        let(:my_activity)    { FactoryGirl.create(:external_activity, {:publication_status => "private", :user_id => my_id })}
-        let(:someone_elses)  { FactoryGirl.create(:external_activity, {:publication_status => "private", :user_id => 777   })}
+        let(:my_activity)    { FactoryBot.create(:external_activity, {:publication_status => "private", :user_id => my_id })}
+        let(:someone_elses)  { FactoryBot.create(:external_activity, {:publication_status => "private", :user_id => 777   })}
         let(:private_items)  { [my_activity,someone_elses]}
         let(:public_items)   { collection(:external_activity, 2, public_opts)}
         let(:search_opts)     {{ :private => false, :user_id => my_id }}
@@ -409,8 +409,8 @@ describe Search do
         end
         describe "With two defined cohorts"  do
           describe "With activities in every combination of cohorts " do
-            let(:cohort1) { FactoryGirl.create(:admin_cohort, name: 'cohort1') }
-            let(:cohort2) { FactoryGirl.create(:admin_cohort, name: 'cohort2') }
+            let(:cohort1) { FactoryBot.create(:admin_cohort, name: 'cohort1') }
+            let(:cohort2) { FactoryBot.create(:admin_cohort, name: 'cohort2') }
 
             let(:cohort1_opts) {{:publication_status=>'published', :cohorts => [cohort1] }}
             let(:cohort2_opts) {{:publication_status=>'published', :cohorts => [cohort2] }}
@@ -641,19 +641,19 @@ describe Search do
 
     context "with sensor tags" do
       let(:public_with_temperature_sensor) {
-        FactoryGirl.create(:external_activity, :url => 'http://activities.com',
+        FactoryBot.create(:external_activity, :url => 'http://activities.com',
           :is_official => true, :publication_status => "published",
           :sensor_list => ['Temperature']
         )
       }
       let(:public_with_force_sensor) {
-        FactoryGirl.create(:external_activity, :url => 'http://activities.com',
+        FactoryBot.create(:external_activity, :url => 'http://activities.com',
           :is_official => true, :publication_status => "published",
           :sensor_list => ['Force']
         )
       }
       let(:public_with_force_and_temperature_sensor) {
-        FactoryGirl.create(:external_activity, :url => 'http://activities.com',
+        FactoryBot.create(:external_activity, :url => 'http://activities.com',
           :is_official => true, :publication_status => "published",
           :sensor_list => ['Force', 'Temperature']
         )

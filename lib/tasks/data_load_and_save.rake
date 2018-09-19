@@ -7,26 +7,26 @@
 require 'fileutils'
 require 'active_record/fixtures'
 
-def username(enviro)
+def db_username(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
-  dbconfig[enviro]["username"]
+  dbconfig.fetch(enviro)["username"]
 end
 
-def password(enviro)
+def db_password(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
-  dbconfig[enviro]["password"]
+  dbconfig.fetch(enviro)["password"]
 end
 
-def database(enviro)
+def db_database(enviro)
   dbconfig = YAML::load(File.open('config/database.yml'))
-  dbconfig[enviro]["database"]
+  dbconfig.fetch(enviro)["database"]
 end
 
 # something like this will ONLY WORKO ON MYSQL!
 def clone_production
   %w|test development|.each do |enviro|
     puts "trying with environment #{enviro}"
-    %x[ mysqldump --add-drop-table -u #{username(enviro)} -p#{password(enviro)}  #{database(enviro)} | mysql -u #{username('production')} -p#{password('production')} #{database('production')}  ]
+    %x[ mysqldump --add-drop-table -u #{db_usernamex(enviro)} -p#{db_passwordx(enviro)}  #{db_databasex(enviro)} | mysql -u #{username('production')} -p#{password('production')} #{database('production')}  ]
   end
 end
 
@@ -213,8 +213,8 @@ namespace :db do
         f = nil
         if cols.include?("id")
           f = File.open("#{::Rails.root.to_s}/features/factories/#{table}.rb", "w")
-          f.write "Factory.define :#{tablename}#{classname} do |f|\n"
-          f.write "end\n\n"
+          f.write "FactoryBot.define do\n  factory :#{tablename}#{classname} do |f|\n"
+          f.write "  end\nend\n\n"
         else
           if @just_factories
             # no op
@@ -250,7 +250,7 @@ namespace :db do
         next if @skip_attrs.include?(val[0])
         out_vals << ":#{val[0]} => '#{val[1].to_s.sub(/'/,'\\\'')}'"
       end
-      file.write("Factory.create(:#{table},{\n  " + out_vals.join(",\n  ") + "\n})\n")
+      file.write("FactoryBot.create(:#{table},{\n  " + out_vals.join(",\n  ") + "\n})\n")
     end
     
     def write_joins(file, table, cols, vals)

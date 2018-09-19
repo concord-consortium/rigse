@@ -1,3 +1,5 @@
-Factory.define :password do |f|
+FactoryBot.define do
+  factory :password do |f|
+  end
 end
 

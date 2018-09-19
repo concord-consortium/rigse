@@ -9,8 +9,8 @@ describe Portal::School do
       :description => "value for description",
       :uuid => "value for uuid"
     }
-    @school = Factory(:nces_portal_school)
-    @virtual_school = Factory(:portal_school)
+    @school = FactoryBot.create(:nces_portal_school)
+    @virtual_school = FactoryBot.create(:portal_school)
   end
 
   it "should create a new instance given valid attributes" do
@@ -26,16 +26,16 @@ describe Portal::School do
   end
   
   it "can create schools from NCES school data " do
-    nces_school = Factory(:portal_nces06_school)
+    nces_school = FactoryBot.create(:portal_nces06_school)
     new_school = Portal::School.find_or_create_using_nces_school(nces_school)
     expect(new_school).not_to be_nil
     expect(new_school).to be_real # meaning has a real nces school
   end
   
   it "should not allow a teacher to be added more than once" do
-    school = Factory(:portal_school)
+    school = FactoryBot.create(:portal_school)
     expect(school.members).to be_empty
-    teacher = Factory(:portal_teacher)
+    teacher = FactoryBot.create(:portal_teacher)
     school.add_member(teacher)
     school.reload
     expect(school.members.size).to eql(1)
@@ -48,9 +48,9 @@ describe Portal::School do
 
   describe "#portal_teachers" do
     it "should be writable" do
-      school = Factory(:portal_school)
+      school = FactoryBot.create(:portal_school)
       expect(school.members).to be_empty
-      teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "authorized_teacher"))
+      teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "authorized_teacher"))
 
       school.portal_teachers << teacher
 
@@ -62,12 +62,12 @@ describe Portal::School do
     end
 
     it "should only return teachers" do
-      school = Factory(:portal_school)
+      school = FactoryBot.create(:portal_school)
       expect(school.members).to be_empty
-      teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "authorized_teacher"), :schools => [school])
+      teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "authorized_teacher"), :schools => [school])
 
       # we actually don't add students to schools anymore but in case we start doing it again
-      student = FactoryGirl.create(:portal_student)
+      student = FactoryBot.create(:portal_student)
       Portal::SchoolMembership.create(:school => school, :member => student)
 
       school.reload
@@ -78,12 +78,12 @@ describe Portal::School do
   
   describe "ways to find schools" do
     before(:each) do
-      @woonsocket_school = Factory(:portal_nces06_school, {
+      @woonsocket_school = FactoryBot.create(:portal_nces06_school, {
         :SEASCH => 39123,
         :MSTATE => 'RI',
         :SCHNAM => 'Woonsocket High School',
       })
-      @school = Factory(:portal_school,{
+      @school = FactoryBot.create(:portal_school,{
         :nces_school_id => @woonsocket_school.id,
       })
     end
