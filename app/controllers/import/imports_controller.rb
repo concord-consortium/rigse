@@ -22,7 +22,7 @@ class Import::ImportsController < ApplicationController
       redirect_to import_school_district_status_import_imports_path({:message => "Invalid JSON"})
       return
     end
-    import = Import::Import.create!()
+    import = Import::Import.create!
     import.upload_data = file_data
     import.save!
     job = Delayed::Job.enqueue Import::ImportSchoolsAndDistricts.new(import.id)
@@ -50,7 +50,7 @@ class Import::ImportsController < ApplicationController
       redirect_to import_user_status_import_imports_path({:message => "Invalid JSON"})
       return
     end
-    import = Import::Import.create!()
+    import = Import::Import.create!
     import.upload_data = file_data
     import.save!
     job = Delayed::Job.enqueue Import::ImportUsers.new(import.id)
@@ -186,7 +186,7 @@ class Import::ImportsController < ApplicationController
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
     if request.xhr?
-      @import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
+      @import_activity = fetch_import_activity
       render :json => {:progress => @import_activity ? @import_activity.progress : @import_activity}
     end
   end
@@ -200,7 +200,7 @@ class Import::ImportsController < ApplicationController
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
     if request.xhr?
-      import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
+      import_activity = fetch_import_activity
       import_activity.destroy
     end
     render :nothing => true
@@ -315,5 +315,14 @@ class Import::ImportsController < ApplicationController
     auth_uri = URI.parse("#{APP_CONFIG[:authoring_site_url]}/import/import_portal_activity").to_s
     auth_uri.sub!(/\A\/\//,request.protocol)
     auth_uri
+  end
+
+  private
+
+  def fetch_import_activity
+    Import::Import
+        .where(user_id: current_visitor.id,
+               import_type: Import::Import::IMPORT_TYPE_ACTIVITY)
+        .last
   end
 end

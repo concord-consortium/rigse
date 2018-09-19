@@ -79,7 +79,7 @@ class Admin::SiteNoticesController < ApplicationController
     @notice = Admin::SiteNotice.find(params[:id])
     #authorize @notice
     @notice_html = @notice.notice_html
-    @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    fetch_notice_roles
     @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
   end
 
@@ -89,7 +89,7 @@ class Admin::SiteNoticesController < ApplicationController
     @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
     #authorize @notice
-    @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    fetch_notice_roles
 
     @notice_html = params[:notice_html]
 
@@ -135,17 +135,17 @@ class Admin::SiteNoticesController < ApplicationController
 
   def remove_notice
     #delete notice
-    notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    notice_roles = fetch_notice_roles
     notice_roles.each do |notice_role|
       notice_role.destroy
     end
 
-    notice_users = Admin::SiteNoticeUser.find_all_by_notice_id(params[:id])
+    notice_users = Admin::SiteNoticeUser.where(notice_id: params.fetch(:id))
     notice_users.each do |notice_user|
       notice_user.destroy
     end
 
-    notice = Admin::SiteNotice.find(params[:id])
+    notice = Admin::SiteNotice.find(params.fetch(:id))
     #authorize notice, :destroy?
     notice.destroy
 
@@ -205,6 +205,12 @@ class Admin::SiteNoticesController < ApplicationController
       end
       return
     end
+  end
+
+  private
+
+  def fetch_notice_roles
+    @notice_roles = Admin::SiteNoticeRole.where(notice_id: params.fetch(:id))
   end
 
 end
