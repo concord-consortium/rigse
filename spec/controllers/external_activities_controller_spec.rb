@@ -296,6 +296,14 @@ describe ExternalActivitiesController do
 
       expect(response).to have_http_status(:redirect)
     end
+
+    it 'GET show' do
+      FactoryBot.create(:external_activity, uuid: 'a' * 36)
+
+      get :show, id: 'a' * 36
+
+      expect(response).to have_http_status(:redirect)
+    end
   end
 
   # TODO: auto-generated

@@ -190,7 +190,7 @@ namespace :app do
       puts "\nUpdating #{Portal::District.count} Portal::District models with state, leaid, and zipcode data from the Portal::Nces06District models"
       Portal::District.real.find_in_batches(:batch_size => 500) do |portal_districts|
         portal_districts.each do |portal_district|
-          nces_district = Portal::Nces06District.find(:first, :conditions => { :id => portal_district.nces_district_id }, :select => "id, LEAID, LZIP, LSTATE")
+          nces_district = Portal::Nces06District.where(:id => portal_district.nces_district_id).select("id, LEAID, LZIP, LSTATE").first
           portal_district.state   = nces_district.LSTATE
           portal_district.leaid   = nces_district.LEAID
           portal_district.zipcode = nces_district.LZIP
@@ -202,7 +202,7 @@ namespace :app do
       puts "\nUpdating #{Portal::School.count} Portal::School models with state, leaid_schoolnum, and zipcode data from the Portal::Nces06School models"
       Portal::School.real.find_in_batches(:batch_size => 500) do |portal_schools|
         portal_schools.each do |portal_school|
-          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, NCESSCH, MZIP, MSTATE")
+          nces_school = Portal::Nces06School.where(:id => portal_school.nces_school_id).select("id, NCESSCH, MZIP, MSTATE").first
           portal_school.state           = nces_school.MSTATE
           portal_school.ncessch         = nces_school.NCESSCH
           portal_school.zipcode         = nces_school.MZIP
@@ -314,14 +314,16 @@ namespace :app do
         next if offering.clazz_id == clazz.id
         runnable_id = offering.runnable_id
         runnable_type = offering.runnable_type
-        found   = Portal::Offering.find_all_by_runnable_id_and_runnable_type(runnable_id, runnable_type)
-        found   = found.detect { |o| o.clazz_id == clazz.id }
+        found   = Portal::Offering
+                      .where(runnable_id: runnable_id,
+                             runnable_type: runnable_type)
+                      .detect { |o| o.clazz_id == clazz.id }
         unless found
           found = Portal::Offering.create(:runnable_id => runnable_id, :runnable_type => runnable_type, :clazz => clazz, :default_offering => true)
         end
         offering.learners.each do |learner|
           learner.offering = found
-          learner.save
+          learner.save!
         end
       end
       # We don't need to delete offerings, they are

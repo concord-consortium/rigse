@@ -119,7 +119,7 @@ If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and p
         puts "Re-linking existing #{Portal::District.count} Portal::District models with new Portal::Nces06District models"
         Portal::District.real.find_in_batches(:batch_size => 500) do |portal_districts|
           portal_districts.each do |portal_district|
-            nces_district = Portal::Nces06District.find(:first, :conditions => { :LEAID => portal_district.leaid }, :select => "id, LEAID, LZIP, LSTATE")
+            nces_district = Portal::Nces06District.where(:LEAID => portal_district.leaid).select("id, LEAID, LZIP, LSTATE").first
             portal_district.nces_district = nces_district
             portal_district.save!
           end
@@ -131,7 +131,7 @@ If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and p
         puts "\Re-linking existing #{Portal::School.count} Portal::School models with new Portal::Nces06School models"
         Portal::School.real.find_in_batches(:batch_size => 500) do |portal_schools|
           portal_schools.each do |portal_school|
-            nces_school = Portal::Nces06School.find(:first, :conditions => { :NCESSCH => portal_school.ncessch }, :select => "id, NCESSCH, MZIP, MSTATE")
+            nces_school = Portal::Nces06School.where(:NCESSCH => portal_school.ncessch).select("id, NCESSCH, MZIP, MSTATE").first
             portal_school.nces_school     = nces_school
             portal_school.save!
           end

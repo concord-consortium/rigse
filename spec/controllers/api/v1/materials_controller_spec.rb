@@ -126,9 +126,15 @@ describe API::V1::MaterialsController do
     # TODO: auto-generated
     describe '#assign_to_class' do
       it 'GET assign_to_class' do
-        get :assign_to_class, {}, {}
+        admin = FactoryBot.generate :admin_user
+        sign_in admin
+        get :assign_to_class,
+            class_id: FactoryBot.create(:portal_clazz).to_param,
+            assign: '1',
+            material_type: 'ExternalActivity',
+            material_id: @m1.id
 
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:ok)
       end
     end
 

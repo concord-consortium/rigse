@@ -154,7 +154,7 @@ class PasswordsController < ApplicationController
   def find_password_user
     return current_visitor if params[:reset_code] == "0" && !current_visitor.anonymous?
     begin
-      @user_find = Password.find(:first, :conditions => ['reset_code = ? and expiration_date > ?', params[:reset_code], Time.now]).user
+      @user_find = Password.where('reset_code = ? and expiration_date > ?', params[:reset_code], Time.now).first.user
       return @user_find
     rescue
       flash[:notice] = 'The change password URL you visited is either invalid or expired.'

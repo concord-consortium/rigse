@@ -84,25 +84,16 @@ class Investigation < ActiveRecord::Base
     joins("left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)")
   }
 
-  scope :domain, lambda { |domain_id|
-    {
-      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
-    }
-  }
+  scope :domain, lambda { |domain_id| where('ri_gse_knowledge_statements.domain_id in (?)', domain_id) }
 
   scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
-    {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
-    }
+    where('ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","): gs)
   }
-
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    {
-     :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
-    }
+    where("investigations.name LIKE ? OR investigations.description LIKE ?", name,name)
   }
 
   scope :activity_group, -> {

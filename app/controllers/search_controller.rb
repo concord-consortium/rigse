@@ -189,7 +189,7 @@ class SearchController < ApplicationController
           offering = Portal::Offering.where(clazz_id: portal_clazz.id, runnable_type: runnable_type, runnable_id: runnable_id).first_or_create
           if offering.position == 0
             offering.position = portal_clazz.offerings.length
-            offering.save
+            offering.save!
           end
           newly_assigned_material_names << offering.name
           # send email notifications about assignment
@@ -340,10 +340,14 @@ class SearchController < ApplicationController
         collection_items = collection.materials_collection_items
         item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
         if item.nil?
-          item = MaterialsCollectionItem.find_or_create_by_materials_collection_id_and_material_type_and_material_id(collection.id,runnable_type,runnable_id)
+          item = MaterialsCollectionItem
+                     .where(materials_collection_id: collection.id,
+                            material_type: runnable_type,
+                            material_id: runnable_id)
+                     .first_or_create
           if item.position.nil?
             item.position = collection_items.length
-            item.save
+            item.save!
           end
           newly_assigned_material_names << collection.name
         else

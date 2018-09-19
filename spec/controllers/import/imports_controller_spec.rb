@@ -9,6 +9,7 @@ RSpec.describe Import::ImportsController, type: :controller do
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
     
     login_admin
+
   end
 
   # TODO: auto-generated
@@ -82,14 +83,15 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_activity_progress' do
     it 'GET import_activity_progress' do
-      expect { get :import_activity_progress, {}, {} }.to raise_error(ActionController::RoutingError)
+      xhr :get, :import_activity_progress
     end
   end
 
   # TODO: auto-generated
   describe '#activity_clear_job' do
     it 'GET activity_clear_job' do
-      get :activity_clear_job, {}, {}
+      Import::Import.create!(user_id: @admin_user.id, import_type: Import::Import::IMPORT_TYPE_ACTIVITY)
+      xhr :get, :activity_clear_job
 
       expect(response).to have_http_status(:ok)
     end

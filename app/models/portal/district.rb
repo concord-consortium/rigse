@@ -30,10 +30,12 @@ class Portal::District < ActiveRecord::Base
     ##   => "Woonsocket"
     ##
     def find_by_state_and_nces_local_id(state, local_id)
-      nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => local_id, :LSTATE => state},
-        :select => "id, LEAID, STID, NAME, LSTATE")
+      nces_district = Portal::Nces06District
+                          .where(:STID => local_id, :LSTATE => state)
+                          .select("id, LEAID, STID, NAME, LSTATE")
+                          .first
       if nces_district
-        find(:first, :conditions=> {:nces_district_id => nces_district.id})
+        where(:nces_district_id => nces_district.id).first
       end
     end
 
@@ -47,10 +49,10 @@ class Portal::District < ActiveRecord::Base
     ##   => "39"
     ##
     def find_by_state_and_district_name(state, district_name)
-      nces_district = Portal::Nces06District.find(:first, :conditions => {:NAME => district_name.upcase, :LSTATE => state},
-        :select => "id, LEAID, STID, NAME, LSTATE")
+      nces_district = Portal::Nces06District.where(:NAME => district_name.upcase, :LSTATE => state)
+        .select("id, LEAID, STID, NAME, LSTATE").first
       if nces_district
-        find(:first, :conditions=> {:nces_district_id => nces_district.id})
+        where(:nces_district_id => nces_district.id).first
       end
     end
 
@@ -58,7 +60,7 @@ class Portal::District < ActiveRecord::Base
     ## given a NCES district, either find or create a portal_distrcit for it.
     ##
     def find_or_create_using_nces_district(nces_district)
-      found_instance = find(:first, :conditions=> {:nces_district_id => nces_district.id})
+      found_instance = where(:nces_district_id => nces_district.id).first
       unless found_instance
         attributes = {
           :name             => nces_district.NAME,

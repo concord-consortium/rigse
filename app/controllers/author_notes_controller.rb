@@ -5,7 +5,7 @@ class AuthorNotesController < ApplicationController
   def setup_object
     if params[:id]
       if valid_uuid(params[:id])
-        @author_note = AuthorNote.find(:first, :conditions => ['uuid=?',params[:id]])
+        @author_note = AuthorNote.where('uuid=?',params[:id]).first
       else
         @author_note = AuthorNote.find(params[:id])
       end
