@@ -220,9 +220,7 @@ describe SearchController do
 
       offering_for_clazz = Portal::Offering.where(clazz_id: clazz.id, runnable_type: runnable_type, runnable_id: runnable_id)
 
-      expect(offering_for_clazz.length).to be(1)
-      expect(offering_for_clazz.first).to eq(already_assigned_offering)
-      
+      expect(offering_for_clazz.length).to be(0)
     end
   end
 end
