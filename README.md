@@ -206,17 +206,17 @@ Feature specs that require javascript are run by Chrome via Selenium. By default
 
 However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by setting an environment variable `HEADLESS=false`. You'll need to install `chromedriver` on your host machine and start it with the command: `chromedriver --whitelisted-ips`. Ensure you have no firewall running on your host machine, or if you do please open port `9515`. Also ensure that Chrome is installed on the host machine.
 
-#### Factory Girl
+#### Factory Bot
 
-> factory_girl allows you to quickly define prototypes for each of
+> factory_bot allows you to quickly define prototypes for each of
 your models and ask for instances with properties that are important to
 the test at hand.
 
-* [Factory Girl](http://thoughtbot.com/projects/factory_girl)
- * [Factory Girl repo](http://github.com/thoughtbot/factory_girl)
- * [Factory Girl
-introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-girl)
-* [Factory Girlrdoc](http://rdoc.info/projects/thoughtbot/factory_girl)
+* [Factory Bot](http://thoughtbot.com/projects/factory_bot)
+ * [Factory Bot repo](http://github.com/thoughtbot/factory_bot)
+ * [Factory Bot
+introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-bot)
+* [Factory Botrdoc](http://rdoc.info/projects/thoughtbot/factory_bot)
 
 ### Running the rspec tests
 

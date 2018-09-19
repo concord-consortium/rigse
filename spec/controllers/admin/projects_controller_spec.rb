@@ -19,7 +19,7 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe Admin::ProjectsController do
-  let(:project) { FactoryGirl.create(:project, landing_page_slug: 'foo-proj', landing_page_content: '<h1>Foo</h1>') }
+  let(:project) { FactoryBot.create(:project, landing_page_slug: 'foo-proj', landing_page_content: '<h1>Foo</h1>') }
   let(:valid_attributes) { { name: "Some name" } }
 
   describe 'when user is an admin' do

@@ -3,17 +3,17 @@ require 'spec_helper'
 describe Admin::SiteNotice do
   describe "Display notices for different users" do
     before(:each) do
-      @admin_user = FactoryGirl.generate(:admin_user)
+      @admin_user = FactoryBot.generate(:admin_user)
 
       role = Role.find_by_title('admin')
-      @first_notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
-      FactoryGirl.create(:site_notice_role, :notice_id => @first_notice.id,:role_id => role.id)
+      @first_notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
+      FactoryBot.create(:site_notice_role, :notice_id => @first_notice.id,:role_id => role.id)
 
-      @second_notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
-      FactoryGirl.create(:site_notice_role, :notice_id => @second_notice.id,:role_id => role.id)
+      @second_notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
+      FactoryBot.create(:site_notice_role, :notice_id => @second_notice.id,:role_id => role.id)
 
-      @third_notice = FactoryGirl.create(:site_notice, :created_by => @admin_user.id)
-      FactoryGirl.create(:site_notice_role, :notice_id => @third_notice.id,:role_id => role.id)
+      @third_notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
+      FactoryBot.create(:site_notice_role, :notice_id => @third_notice.id,:role_id => role.id)
 
     end
     it"should show no notice if there is no notice" do
@@ -34,7 +34,7 @@ describe Admin::SiteNotice do
       assert(notice_ids.include?(@third_notice.id))
     end
     it"should not show dismissed notices" do
-      FactoryGirl.create(:site_notice_user, :notice_id => @first_notice.id,:user_id => @admin_user.id, :notice_dismissed => true)
+      FactoryBot.create(:site_notice_user, :notice_id => @first_notice.id,:user_id => @admin_user.id, :notice_dismissed => true)
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
       expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:new_notices])
 
@@ -45,7 +45,7 @@ describe Admin::SiteNotice do
       assert(notice_ids.include?(@third_notice.id))
     end
     it"should show collapsed notice container if there are no recent notices and user had collapsed the notice container" do
-      FactoryGirl.create(:notice_user_display_status,:user_id => @admin_user.id,:last_collapsed_at_time => DateTime.now + 1.day, :collapsed_status => true)
+      FactoryBot.create(:notice_user_display_status,:user_id => @admin_user.id,:last_collapsed_at_time => DateTime.now + 1.day, :collapsed_status => true)
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
       expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
 
@@ -70,7 +70,7 @@ describe Admin::SiteNotice do
   # TODO: auto-generated
   describe '.get_notices_for_user' do
     it 'get_notices_for_user' do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       result = described_class.get_notices_for_user(user)
 
       expect(result).not_to be_nil

@@ -1,7 +1,7 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe AccessGrant do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   let(:valid_attributes) do
     {

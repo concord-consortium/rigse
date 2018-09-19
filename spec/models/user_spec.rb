@@ -335,8 +335,8 @@ describe User do
   end
 
   describe "add_role_for_project" do
-    let(:project)     { FactoryGirl.create(:project) }
-    let(:user)        { FactoryGirl.create(:user)    }
+    let(:project)     { FactoryBot.create(:project) }
+    let(:user)        { FactoryBot.create(:user)    }
 
     before(:each) do
       user.add_role_for_project('admin', project)
@@ -360,8 +360,8 @@ describe User do
   end
 
   describe "remove_role_for_project" do
-    let(:project)     { FactoryGirl.create(:project) }
-    let(:user)        { FactoryGirl.create(:user)    }
+    let(:project)     { FactoryBot.create(:project) }
+    let(:user)        { FactoryBot.create(:user)    }
 
     describe "when a user was previously an admin for the project" do
       before(:each) do
@@ -385,8 +385,8 @@ describe User do
   end
 
   describe "set_role_for_projects" do
-    let(:projects)         { 5.times.map { |i|  FactoryGirl.create(:project, name: "project_#{i}")}  }
-    let(:user)             { FactoryGirl.create(:user)    }
+    let(:projects)         { 5.times.map { |i|  FactoryBot.create(:project, name: "project_#{i}")}  }
+    let(:user)             { FactoryBot.create(:user)    }
     let(:selected_projects){ [ projects.first] }
 
     before(:each) do
@@ -406,14 +406,14 @@ describe User do
 
   describe "find_for_omniauth" do
     it "finds user with matching authentication" do
-      authentication = FactoryGirl.create :authentication
+      authentication = FactoryBot.create :authentication
       user = authentication.user
       mock_auth = double(provider: authentication.provider, uid: authentication.uid)
       found_user = User.find_for_omniauth(mock_auth)
       expect(found_user).to eq user
     end
     context "when a user exists with the same email" do
-      let(:user) { FactoryGirl.create :confirmed_user }
+      let(:user) { FactoryBot.create :confirmed_user }
       let(:mock_auth) {
         double(provider: "fake_provider", uid: "fake_uid",
           info: double(email: user.email))
@@ -423,7 +423,7 @@ describe User do
         user
       }
       it "throws an error if the user is a student" do
-        student = FactoryGirl.create :portal_student, user: user
+        student = FactoryBot.create :portal_student, user: user
         expect {
           User.find_for_omniauth(mock_auth)
         }.to raise_error(/persisted email/)
@@ -438,7 +438,7 @@ describe User do
           expect(new_authentication.uid).to eq(mock_auth.uid)
         end
         it "doesn't create an authentication if one exists" do
-          authentication = FactoryGirl.create :authentication,
+          authentication = FactoryBot.create :authentication,
             user: user, provider: mock_auth.provider
           user.reload
           found_user = nil
@@ -867,7 +867,7 @@ protected
   describe '#is_project_admin?' do
     it 'is_project_admin?' do
       user = described_class.new
-      project = FactoryGirl.create(:project)
+      project = FactoryBot.create(:project)
       result = user.is_project_admin?(project)
 
       expect(result).not_to be_nil
@@ -878,7 +878,7 @@ protected
   describe '#is_project_researcher?' do
     it 'is_project_researcher?' do
       user = described_class.new
-      project = FactoryGirl.create(:project)
+      project = FactoryBot.create(:project)
       result = user.is_project_researcher?(project)
 
       expect(result).not_to be_nil
@@ -889,7 +889,7 @@ protected
   describe '#is_project_cohort_member?' do
     it 'is_project_cohort_member?' do
       user = described_class.new
-      project = FactoryGirl.create(:project)
+      project = FactoryBot.create(:project)
       result = user.is_project_cohort_member?(project)
 
       expect(result).not_to be_nil
@@ -900,7 +900,7 @@ protected
   describe '#is_project_member?' do
     it 'is_project_member?' do
       user = described_class.new
-      project = FactoryGirl.create(:project)
+      project = FactoryBot.create(:project)
       result = user.is_project_member?(project)
 
       expect(result).not_to be_nil
@@ -912,7 +912,7 @@ protected
     xit 'add_role_for_project' do
       user = described_class.new
       role = double('role')
-      project = FactoryGirl.create(:project)
+      project = FactoryBot.create(:project)
       result = user.add_role_for_project(role, project)
 
       expect(result).not_to be_nil
@@ -924,7 +924,7 @@ protected
     it 'remove_role_for_project' do
       user = described_class.new
       role = double('role')
-      project = FactoryGirl.create(:project)
+      project = FactoryBot.create(:project)
       result = user.remove_role_for_project(role, project)
 
       expect(result).to be_nil
@@ -1030,7 +1030,7 @@ protected
   # TODO: auto-generated
   describe '#set_passive_users_as_pending' do
     it 'set_passive_users_as_pending' do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       result = user.set_passive_users_as_pending
 
       expect(result).not_to be_nil

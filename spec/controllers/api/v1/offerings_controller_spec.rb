@@ -4,24 +4,24 @@ include ReportLearnerSpecHelper
 
 describe API::V1::OfferingsController do
 
-  let(:admin_user)        { FactoryGirl.generate(:admin_user) }
-  let(:manager_user)      { FactoryGirl.generate(:manager_user) }
-  let(:teacher)           { FactoryGirl.create(:portal_teacher) }
-  let(:open_response_1)   { FactoryGirl.create(:open_response) }
-  let(:open_response_2)   { FactoryGirl.create(:open_response) }
-  let(:open_response_3)   { FactoryGirl.create(:open_response) }
-  let(:open_response_4)   { FactoryGirl.create(:open_response) }
-  let(:activity_1)        { FactoryGirl.create(:activity, name: 'Activity 1') }
-  let(:activity_2)        { FactoryGirl.create(:activity, name: 'Activity 2') }
-  let(:runnable)          { FactoryGirl.create(:external_activity, name: 'Test Sequence') }
-  let(:clazz)             { FactoryGirl.create(:portal_clazz, name: 'test class', teachers: [teacher], students:[student_a, student_b]) }
-  let(:student_a)         { FactoryGirl.create(:full_portal_student) }
-  let(:student_b)         { FactoryGirl.create(:full_portal_student) }
-  let(:offering)          { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+  let(:admin_user)        { FactoryBot.generate(:admin_user) }
+  let(:manager_user)      { FactoryBot.generate(:manager_user) }
+  let(:teacher)           { FactoryBot.create(:portal_teacher) }
+  let(:open_response_1)   { FactoryBot.create(:open_response) }
+  let(:open_response_2)   { FactoryBot.create(:open_response) }
+  let(:open_response_3)   { FactoryBot.create(:open_response) }
+  let(:open_response_4)   { FactoryBot.create(:open_response) }
+  let(:activity_1)        { FactoryBot.create(:activity, name: 'Activity 1') }
+  let(:activity_2)        { FactoryBot.create(:activity, name: 'Activity 2') }
+  let(:runnable)          { FactoryBot.create(:external_activity, name: 'Test Sequence') }
+  let(:clazz)             { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher], students:[student_a, student_b]) }
+  let(:student_a)         { FactoryBot.create(:full_portal_student) }
+  let(:student_b)         { FactoryBot.create(:full_portal_student) }
+  let(:offering)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
 
   def setup_activity(activity, embeddables)
-    section = FactoryGirl.create(:section)
-    page = FactoryGirl.create(:page)
+    section = FactoryBot.create(:section)
+    page = FactoryBot.create(:page)
     embeddables.each { |e| page.add_embeddable(e) }
     section.pages << page
     activity.sections << section
@@ -29,7 +29,7 @@ describe API::V1::OfferingsController do
   end
 
   def setup_runnable(runnable, activities)
-    investigation = FactoryGirl.create(:investigation)
+    investigation = FactoryBot.create(:investigation)
     activities.each { |a| investigation.activities << a }
     investigation.save
     runnable.template = investigation
@@ -87,7 +87,7 @@ describe API::V1::OfferingsController do
     describe "when user is a teacher" do
       describe "when the offering doesn't belong to the teachers class" do
         before(:each) do
-          other_teacher = FactoryGirl.create(:portal_teacher)
+          other_teacher = FactoryBot.create(:portal_teacher)
           sign_in other_teacher.user
         end
         it "returns error 403" do
@@ -254,7 +254,7 @@ describe API::V1::OfferingsController do
     end
 
     describe "when offering has an external report" do
-      let (:external_report) { FactoryGirl.create(:external_report) }
+      let (:external_report) { FactoryBot.create(:external_report) }
 
       before (:each) do
         sign_in teacher.user
@@ -320,12 +320,12 @@ describe API::V1::OfferingsController do
     end
 
     describe "when there are multiple teachers, classes and offerings" do
-      let(:teacher_b)  { FactoryGirl.create(:portal_teacher) }
-      let(:clazz_b)    { FactoryGirl.create(:portal_clazz, teachers: [teacher_b]) }
-      let(:offering_b) { FactoryGirl.create(:portal_offering, {clazz: clazz_b, runnable: runnable}) }
+      let(:teacher_b)  { FactoryBot.create(:portal_teacher) }
+      let(:clazz_b)    { FactoryBot.create(:portal_clazz, teachers: [teacher_b]) }
+      let(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_b, runnable: runnable}) }
 
-      let(:clazz_2)    { FactoryGirl.create(:portal_clazz, teachers: [teacher]) }
-      let(:offering_2) { FactoryGirl.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
+      let(:clazz_2)    { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+      let(:offering_2) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
 
       describe "and teacher is logged in" do
         before (:each) do
@@ -498,7 +498,7 @@ describe API::V1::OfferingsController do
 
     describe "when user is teacher, but does not own the offering" do
       before (:each) do
-        sign_in FactoryGirl.create(:portal_teacher).user
+        sign_in FactoryBot.create(:portal_teacher).user
       end
       it "returns 403 error" do
         put :update, id: offering.id, active: false
@@ -527,8 +527,8 @@ describe API::V1::OfferingsController do
 
       describe "when there are multiple offerings" do
         let(:offering_1) { offering }
-        let(:offering_2) { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
-        let(:offering_3) { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+        let(:offering_2) { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+        let(:offering_3) { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
 
         it "should let user reorder them" do
           expect(clazz.offerings).to eq [ offering_1, offering_2, offering_3 ]
@@ -554,14 +554,14 @@ describe API::V1::OfferingsController do
 
   describe "GET #for_class [DEPRECIATED]" do
     describe "when there are multiple teachers, classes and offerings" do
-      let(:teacher_b)  { FactoryGirl.create(:portal_teacher) }
-      let(:clazz_b)    { FactoryGirl.create(:portal_clazz, teachers: [teacher_b]) }
-      let(:offering_b) { FactoryGirl.create(:portal_offering, {clazz: clazz_b, runnable: runnable}) }
+      let(:teacher_b)  { FactoryBot.create(:portal_teacher) }
+      let(:clazz_b)    { FactoryBot.create(:portal_clazz, teachers: [teacher_b]) }
+      let(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_b, runnable: runnable}) }
 
-      let(:offering_2) { FactoryGirl.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+      let(:offering_2) { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
 
-      let(:clazz_2)    { FactoryGirl.create(:portal_clazz, teachers: [teacher]) }
-      let(:offering_3) { FactoryGirl.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
+      let(:clazz_2)    { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+      let(:offering_3) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
 
       before (:each) do
         sign_in teacher.user
@@ -598,12 +598,12 @@ describe API::V1::OfferingsController do
 
   describe "GET #for_teacher [DEPRECIATED]" do
     describe "when there are multiple teachers, classes and offerings" do
-      let(:teacher_b)  { FactoryGirl.create(:portal_teacher) }
-      let(:clazz_b)    { FactoryGirl.create(:portal_clazz, teachers: [teacher_b]) }
-      let(:offering_b) { FactoryGirl.create(:portal_offering, {clazz: clazz_b, runnable: runnable}) }
+      let(:teacher_b)  { FactoryBot.create(:portal_teacher) }
+      let(:clazz_b)    { FactoryBot.create(:portal_clazz, teachers: [teacher_b]) }
+      let(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_b, runnable: runnable}) }
 
-      let(:clazz_2)    { FactoryGirl.create(:portal_clazz, teachers: [teacher]) }
-      let(:offering_2) { FactoryGirl.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
+      let(:clazz_2)    { FactoryBot.create(:portal_clazz, teachers: [teacher]) }
+      let(:offering_2) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable}) }
 
       before (:each) do
         sign_in teacher.user

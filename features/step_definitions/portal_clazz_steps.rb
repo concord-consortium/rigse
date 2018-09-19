@@ -1,7 +1,7 @@
 Given /^the class "([^"]*)" has the class word "([^"]*)"$/ do |class_name, class_word|
   clazz = Portal::Clazz.find_by_name(class_name)
   clazz.class_word = class_word
-  clazz.grade_levels << Factory(:portal_grade_level)
+  clazz.grade_levels << FactoryBot.create(:portal_grade_level)
   clazz.save
 end
 
@@ -12,7 +12,7 @@ Given /^the default class is created$/ do
 end
 
 Given /^there is an active class named "([^"]*)" with a district$/ do |class_name|
-  offering = Factory(:portal_offering)
+  offering = FactoryBot.create(:portal_offering)
   clazz = offering.clazz
   clazz.name = class_name
   clazz.save
@@ -33,7 +33,7 @@ end
 Then /^the classes "([^"]*)" are in a school named "([^"]*)"$/ do |classes,school_name|
   school = Portal::School.find_by_name(school_name)
   if (school.nil?) then
-    school = Factory(:portal_school, :name=>school_name)
+    school = FactoryBot.create(:portal_school, :name=>school_name)
   end
   classes = classes.split(",").map { |t| t.strip }
   classes.map! {|t| Portal::Clazz.find_by_name(t)}

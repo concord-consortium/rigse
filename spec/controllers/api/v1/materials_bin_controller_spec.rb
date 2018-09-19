@@ -2,18 +2,18 @@
 require 'spec_helper'
 
 describe API::V1::MaterialsBinController do
-  let(:foo_cohort) { FactoryGirl.create(:admin_cohort, name: 'foo') }
-  let(:bar_cohort) { FactoryGirl.create(:admin_cohort, name: 'bar') }
+  let(:foo_cohort) { FactoryBot.create(:admin_cohort, name: 'foo') }
+  let(:bar_cohort) { FactoryBot.create(:admin_cohort, name: 'bar') }
 
   def sign_in_user_in_cohort(cohort)
-    teacher = FactoryGirl.create(:portal_teacher)
+    teacher = FactoryBot.create(:portal_teacher)
     teacher.cohorts = [cohort]
     sign_in teacher.user
   end
 
   describe 'GET collections' do
-    let(:collection) { FactoryGirl.create(:materials_collection) }
-    let(:ext_act) { FactoryGirl.create_list(:external_activity, 9) }
+    let(:collection) { FactoryBot.create(:materials_collection) }
+    let(:ext_act) { FactoryBot.create_list(:external_activity, 9) }
     let(:materials) { ext_act }
     before(:each) do
       # Assign some materials to cohorts and mark the first one as assessment item.
@@ -26,7 +26,7 @@ describe API::V1::MaterialsBinController do
       materials[2].update_attributes!(is_assessment_item: true)
       # Assign all materials to collection.
       materials.each do |m|
-        FactoryGirl.create(:materials_collection_item, material: m, materials_collection: collection)
+        FactoryBot.create(:materials_collection_item, material: m, materials_collection: collection)
       end
     end
 
@@ -58,23 +58,23 @@ describe API::V1::MaterialsBinController do
     end
   end
 
-  let(:user1) { t = FactoryGirl.create(:teacher); t.user }
-  let(:user2) { t = FactoryGirl.create(:teacher); t.user }
-  let(:user3) { t = FactoryGirl.create(:teacher); t.user }
-  let(:user4) { t = FactoryGirl.create(:teacher); t.user }
-  let (:act1) { FactoryGirl.create(:external_activity, user: user1, publication_status: 'published') }
-  let (:user2_public_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'published', is_assessment_item: true) }
-  let (:user2_private_activity) { FactoryGirl.create(:external_activity, user: user2, publication_status: 'private') }
+  let(:user1) { t = FactoryBot.create(:teacher); t.user }
+  let(:user2) { t = FactoryBot.create(:teacher); t.user }
+  let(:user3) { t = FactoryBot.create(:teacher); t.user }
+  let(:user4) { t = FactoryBot.create(:teacher); t.user }
+  let (:act1) { FactoryBot.create(:external_activity, user: user1, publication_status: 'published') }
+  let (:user2_public_activity) { FactoryBot.create(:external_activity, user: user2, publication_status: 'published', is_assessment_item: true) }
+  let (:user2_private_activity) { FactoryBot.create(:external_activity, user: user2, publication_status: 'private') }
   # materials that might not be taken into account:
-  let (:official_activity) { FactoryGirl.create(:external_activity, user: user3, is_official: true, publication_status: 'published') }
-  let (:cohort_activity) { FactoryGirl.create(:external_activity, user: user3, publication_status: 'published') }
-  let (:user3_private_activity) { FactoryGirl.create(:external_activity, user: user3, publication_status: 'private') }
+  let (:official_activity) { FactoryBot.create(:external_activity, user: user3, is_official: true, publication_status: 'published') }
+  let (:cohort_activity) { FactoryBot.create(:external_activity, user: user3, publication_status: 'published') }
+  let (:user3_private_activity) { FactoryBot.create(:external_activity, user: user3, publication_status: 'private') }
   # investigation is considered to be always official
-  let (:inv) { FactoryGirl.create(:investigation, user: user3, publication_status: 'published') }
+  let (:inv) { FactoryBot.create(:investigation, user: user3, publication_status: 'published') }
   # user with an archived and private activity
-  let (:user4_archived_activity) { FactoryGirl.create(:external_activity, user: user4, is_archived: true) }
-  let (:user4_private_activity) { FactoryGirl.create(:external_activity, user: user4, publication_status: 'private') }
-  let (:user4_public_activity) { FactoryGirl.create(:external_activity, user: user4, publication_status: 'published') }
+  let (:user4_archived_activity) { FactoryBot.create(:external_activity, user: user4, is_archived: true) }
+  let (:user4_private_activity) { FactoryBot.create(:external_activity, user: user4, publication_status: 'private') }
+  let (:user4_public_activity) { FactoryBot.create(:external_activity, user: user4, publication_status: 'published') }
 
   def populate_example_materials
     # Make sure that objects are saved to DB.
@@ -168,7 +168,7 @@ describe API::V1::MaterialsBinController do
 
     context 'when an admin is logged in' do
       before(:each) do
-        sign_in FactoryGirl.generate(:admin_user)
+        sign_in FactoryBot.generate(:admin_user)
       end
 
       let (:request_user) { user2 }

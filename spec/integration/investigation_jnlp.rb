@@ -3,7 +3,7 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe "Investigation" do
   it "returns a valid jnlp file" do
     generate_default_settings_and_jnlps_with_factories
-    investigation = Factory(:investigation)
+    investigation = FactoryBot.create(:investigation)
 
     visit investigation_path(:id => investigation.id, :format => :jnlp)
     xml = Nokogiri::XML(page.driver.response.body)

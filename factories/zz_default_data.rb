@@ -4,7 +4,7 @@
 # Anonymous and Admin users...
 # Many factory calls chain other factory calls to create dependant objects.
 # couldn' get that to work for admin_settings though! 
-# ( Factory(:admin_settings) throws an error. )
+# ( FactoryBot.create(:admin_settings) throws an error. )
 
 
 # The following lines were needed to get cucumber started,
@@ -12,8 +12,8 @@
 # (Left here for legacy documentation??)
 #
 # puts "Loading default data set... "
-# anon =  FactoryGirl.generate :anonymous_user
-# admin = FactoryGirl.generate :admin_user
-# device_config = FactoryGirl.create(:device_config)
+# anon =  FactoryBot.generate :anonymous_user
+# admin = FactoryBot.generate :admin_user
+# device_config = FactoryBot.create(:device_config)
 # Admin::Settings.create_or_update_default_settings_from_settings_yml
 # puts "done."

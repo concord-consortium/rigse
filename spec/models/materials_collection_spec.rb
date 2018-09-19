@@ -1,18 +1,18 @@
 require 'spec_helper'
 
 describe MaterialsCollection do
-  let(:foo_cohort) { FactoryGirl.create(:admin_cohort, name: 'foo') }
-  let(:bar_cohort) { FactoryGirl.create(:admin_cohort, name: 'bar') }
-  let(:nonexistent_cohort) { FactoryGirl.create(:admin_cohort, name: 'nonexistent-cohort') }
+  let(:foo_cohort) { FactoryBot.create(:admin_cohort, name: 'foo') }
+  let(:bar_cohort) { FactoryBot.create(:admin_cohort, name: 'bar') }
+  let(:nonexistent_cohort) { FactoryBot.create(:admin_cohort, name: 'nonexistent-cohort') }
 
-  let(:collection) { FactoryGirl.create(:materials_collection) }
-  let(:ext_act) { FactoryGirl.create_list(:external_activity, 3) }
+  let(:collection) { FactoryBot.create(:materials_collection) }
+  let(:ext_act) { FactoryBot.create_list(:external_activity, 3) }
   let(:materials) { ext_act }
 
   before(:each) do
     # Assign all materials to collection.
     materials.each do |m|
-      FactoryGirl.create(:materials_collection_item, material: m, materials_collection: collection)
+      FactoryBot.create(:materials_collection_item, material: m, materials_collection: collection)
     end
   end
 

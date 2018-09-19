@@ -23,7 +23,7 @@ namespace :portal do
     task :load_large_class => :environment do
       require 'mock_data'
 
-      # with an updated FactoryGirl this will be easier
+      # with an updated FactoryBot this will be easier
       Dir.glob(File.join(Rails.root, 'factories/*.rb')).each { |f| require(f) }
       MockData.load_large_class
     end
@@ -32,7 +32,7 @@ namespace :portal do
     task :load_mixed_runnable_type_class => :environment do
       require 'mock_data'
 
-      # with an updated FactoryGirl this will be easier
+      # with an updated FactoryBot this will be easier
       Dir.glob(File.join(Rails.root, 'factories/*.rb')).each { |f| require(f) }
       MockData.load_mixed_runnable_type_class
     end

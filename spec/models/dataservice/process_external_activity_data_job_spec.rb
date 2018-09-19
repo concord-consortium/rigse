@@ -105,7 +105,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
       _content = '1'
       process_external_activity_data_job = described_class.new(_learner_id, _content)
       data = {}
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = process_external_activity_data_job.internal_process_open_response(data, embeddable)
 
       expect(result).not_to be_nil
@@ -119,7 +119,8 @@ describe Dataservice::ProcessExternalActivityDataJob do
       _content = '1'
       process_external_activity_data_job = described_class.new(_learner_id, _content)
       data = { 'answer_ids' => [] }
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
+
       result = process_external_activity_data_job.internal_process_multiple_choice(data, embeddable)
 
       expect(result).to be_nil
@@ -133,7 +134,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
       _content = '1'
       process_external_activity_data_job = described_class.new(_learner_id, _content)
       data = {}
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = process_external_activity_data_job.internal_process_image_question(data, embeddable)
 
       expect(result).not_to be_nil
@@ -146,7 +147,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
       _content = '1'
       process_external_activity_data_job = described_class.new(_learner_id, _content)
       data = {}
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = process_external_activity_data_job.internal_process_external_link(data, embeddable)
 
       expect(result).not_to be_nil
@@ -159,7 +160,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
       _content = '1'
       process_external_activity_data_job = described_class.new(_learner_id, _content)
       data = {}
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = process_external_activity_data_job.internal_process_interactive(data, embeddable)
 
       expect(result).not_to be_nil

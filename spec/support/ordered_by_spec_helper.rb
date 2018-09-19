@@ -41,7 +41,7 @@ end
 def collection_with_rand_mod_time(factory,count=10,opts={})
   count.times do
     Delorean.time_travel_to(rand(Date.parse('2011-01-01')..Date.parse('2012-12-01')))
-    FactoryGirl.create(factory.to_sym, opts)
+    FactoryBot.create(factory.to_sym, opts)
   end
   Delorean.back_to_the_present
 end

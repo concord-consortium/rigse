@@ -1,20 +1,20 @@
 Given /^the following empty investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
-    FactoryGirl.create(:investigation, hash.merge('user' => user))
+    FactoryBot.create(:investigation, hash.merge('user' => user))
   end
 end
 
 Given /^the following linked investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
-    inv = FactoryGirl.create(:investigation, hash.merge('user' => user))
-      inv.activities << (Factory :activity, { :user => user })
-      inv.activities[0].sections << (Factory :section, {:user => user})
-      inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
-      open_response = (Factory :open_response, {:user => user})
-      open_response.pages << inv.activities[0].sections[0].pages[0]
-      inv.reload
+    inv = FactoryBot.create(:investigation, hash.merge('user' => user))
+    inv.activities << FactoryBot.create(:activity, :user => user)
+    inv.activities[0].sections << FactoryBot.create(:section, :user => user)
+    inv.activities[0].sections[0].pages << FactoryBot.create(:page, :user => user)
+    open_response = FactoryBot.create(:open_response, :user => user)
+    open_response.pages << inv.activities[0].sections[0].pages[0]
+    inv.reload
   end
 end
 
@@ -52,7 +52,7 @@ end
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.where(name: hash['investigation']).first_or_create
-    investigation.user = Factory(:user)
+    investigation.user = FactoryBot.create(:user)
     investigation.save
     # ITSISU requires descriptions on activities
     activity = Activity.where(name: hash['activity']).first_or_create(:description => hash['activity'])
@@ -87,11 +87,11 @@ Given /^the following classes exist:$/ do |table|
       user = User.find_by_login hash['teacher']
       teacher = user.portal_teacher
     else
-      teacher = Factory(:teacher)
+      teacher = FactoryBot.create(:teacher)
     end
     hash.merge!('teacher' => teacher)
     
-    FactoryGirl.create(:portal_clazz, hash)
+    FactoryBot.create(:portal_clazz, hash)
   end
 end
 
@@ -176,7 +176,7 @@ When /^a student has performed work on the investigation "([^"]*)" for the class
     :clazz_id => clazz.id
   ).first
   
-  FactoryGirl.create(:full_portal_learner, :offering => offering)
+  FactoryBot.create(:full_portal_learner, :offering => offering)
 end
 
 When /^I open the accordion for the offering for investigation "([^"]*)" for the class "([^"]*)"$/ do |investigation_name, class_name|

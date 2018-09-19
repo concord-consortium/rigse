@@ -12,7 +12,7 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   let(:token)         { SignedJWT.create_portal_token(user, {}, expires_in) }
   let(:decoded_token) { SignedJWT::decode_portal_token(token) }
   let(:headers)       { {"Authorization" => "Bearer/JWT #{token}"} }
-  let(:user)          { FactoryGirl.create(:user) }
+  let(:user)          { FactoryBot.create(:user) }
   let(:params)        { {} }
   before(:each) {
     allow(request).to receive(:headers).and_return(headers)

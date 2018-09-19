@@ -1,3 +1,5 @@
-Factory.define :rigse_expectation_stem, :class => RiGse::ExpectationStem do |f|
+FactoryBot.define do
+  factory :rigse_expectation_stem, :class => RiGse::ExpectationStem do |f|
+  end
 end
 

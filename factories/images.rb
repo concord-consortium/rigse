@@ -1,3 +1,5 @@
-Factory.define :image do |f|
+FactoryBot.define do
+  factory :image do |f|
+  end
 end
 

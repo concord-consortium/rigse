@@ -4,13 +4,13 @@ require 'spec_helper'
 
 RSpec.describe Changeable do
 
-  let(:object) { FactoryGirl.create(:activity) }
+  let(:object) { FactoryBot.create(:activity) }
   
   # TODO: auto-generated
   describe '#changeable?' do
     it 'changeable?' do
       changeable = object
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       result = changeable.changeable?(user)
 
       expect(result).not_to be_nil

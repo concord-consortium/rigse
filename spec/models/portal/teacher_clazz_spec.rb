@@ -7,15 +7,15 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::TeacherClazz do
   describe "testing many to many mapping for teachers <=> clazzes" do
     it "teachers should be able to add clazzes" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
+      teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      clazz = FactoryBot.create(:portal_clazz)
       teacher.add_clazz(clazz)
       teacher.reload
       expect(teacher.clazzes).to include(clazz)
     end
     it "there should be no double enrollment if a teacher adds a class twice" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
+      teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      clazz = FactoryBot.create(:portal_clazz)
       teacher.add_clazz(clazz)
       teacher.add_clazz(clazz)
       teacher.add_clazz(clazz)
@@ -25,9 +25,9 @@ describe Portal::TeacherClazz do
     end
     
     it "clazzes should be alble to have more than one teacher" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      second_teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
+      teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      second_teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      clazz = FactoryBot.create(:portal_clazz)
       teacher.add_clazz(clazz)
       second_teacher.add_clazz(clazz)
       teacher.reload
@@ -40,9 +40,9 @@ describe Portal::TeacherClazz do
     end
     
     it "clazzes which have multiple teachers are owned by both teachers" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      second_teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
+      teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      second_teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      clazz = FactoryBot.create(:portal_clazz)
       teacher.add_clazz(clazz)
       second_teacher.add_clazz(clazz)
       teacher.reload
@@ -56,8 +56,8 @@ describe Portal::TeacherClazz do
     end
     
     it "should remove this teacher from the specified class" do
-      clazz = Factory :portal_clazz
-      teacher = Factory :portal_teacher, {:clazzes => [clazz]}
+      clazz = FactoryBot.create(:portal_clazz)
+      teacher = FactoryBot.create(:portal_teacher, {:clazzes => [clazz]})
       expect(teacher.clazzes).to include(clazz)
       teacher.remove_clazz(clazz)
       teacher.reload
@@ -67,16 +67,16 @@ describe Portal::TeacherClazz do
   
   describe "preserving leagacy one to many mapping for teachers <= clazzes" do
     it "clazz.teacher=@teacher assignment should make @teacher a teacher of clazz" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
+      teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      clazz = FactoryBot.create(:portal_clazz)
       clazz.teacher = teacher
       teacher.reload
       expect(teacher.clazzes).to include(clazz)
     end
     
     it "clazz.teacher=@teacher assignment shouldn't make a duplicate teacher entry" do
-      teacher = Factory :portal_teacher, {:clazzes => []}
-      clazz = Factory :portal_clazz
+      teacher = FactoryBot.create(:portal_teacher, :clazzes => [])
+      clazz = FactoryBot.create(:portal_clazz)
       clazz.teacher = teacher
       clazz.teacher = teacher
       clazz.teacher = teacher
@@ -86,7 +86,7 @@ describe Portal::TeacherClazz do
     end
     
     it "clazz.teacher should return nil if there isn't a teacher" do
-      clazz = Factory :portal_clazz
+      clazz = FactoryBot.create(:portal_clazz)
       expect(clazz.teacher).to be_nil
     end
     

@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Password, type: :model do
-  let(:user) {FactoryGirl.create(:user)}
+  let(:user) {FactoryBot.create(:user)}
   let(:password) {Password.new(user: user)}
 
   describe '#initialize_reset_code_and_expiration' do
