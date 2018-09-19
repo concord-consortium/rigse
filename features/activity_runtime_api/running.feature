@@ -55,7 +55,7 @@ Feature: External Activities can support a REST api
         { "type": "image_question",
           "question_id": "1970",
           "answer": "This is my image question answer",
-          "image_url": "imageshack.com/images/1.png"
+          "image_url": "http://imageshack.com/images/1.png"
         }
       ]
       """
