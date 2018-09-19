@@ -198,20 +198,20 @@ describe SearchController do
 
   describe "POST add_material_to_collections" do
 
-    let(:clazz)         { FactoryGirl.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
-    let(:another_clazz) { FactoryGirl.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:clazz)         { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:another_clazz) { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
 
-    let(:already_assigned_offering) { FactoryGirl.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify) }
-    let(:another_assigned_offering) { FactoryGirl.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation'.classify) }
+    let(:already_assigned_offering) { FactoryBot.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'ExternalActivity'.classify) }
+    let(:another_assigned_offering) { FactoryBot.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'ExternalActivity'.classify) }
 
-    it "should assign only unassigned investigations to the classes" do
+    it "should add materials to a collection" do
       already_assigned_offering
       post_params = {
-          :materials_collection_id => [FactoryGirl.create(:materials_collection).id],
+          :materials_collection_id => [FactoryBot.create(:materials_collection).id],
           :material_id => chemistry_investigation.id,
           :material_type => 'Investigation'
       }
-      admin = FactoryGirl.generate :admin_user
+      admin = FactoryBot.generate :admin_user
       sign_in admin
       xhr :post, :add_material_to_collections, post_params
 
@@ -223,16 +223,6 @@ describe SearchController do
       expect(offering_for_clazz.length).to be(1)
       expect(offering_for_clazz.first).to eq(already_assigned_offering)
       
-    end
-
-    it "should assign activities to the classes" do
-      another_assigned_offering
-      post_params = {
-          :material_id => "#{laws_of_motion_activity.id},#{fluid_mechanics_activity.id}",
-          :material_type => 'Activity'
-      }
-      xhr :post, :add_material_to_collections, post_params
-
     end
   end
 end

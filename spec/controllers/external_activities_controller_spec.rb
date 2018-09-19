@@ -298,7 +298,7 @@ describe ExternalActivitiesController do
     end
 
     it 'GET show' do
-      FactoryGirl.create(:external_activity, uuid: 'a' * 36)
+      FactoryBot.create(:external_activity, uuid: 'a' * 36)
 
       get :show, id: 'a' * 36
 

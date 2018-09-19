@@ -10,7 +10,7 @@ RSpec.describe Import::ImportExternalActivity, type: :model do
   # TODO: auto-generated
   describe '#perform' do
     before do
-      FactoryGirl.create(:client, :site_url => APP_CONFIG[:authoring_site_url])
+      FactoryBot.create(:client, :site_url => APP_CONFIG[:authoring_site_url])
     end
     it 'perform' do
       import_external_activity = described_class.new(import, {}, '/portal_url', 'http://auth_url')

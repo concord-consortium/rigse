@@ -199,7 +199,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryGirl.create(:portal_offering).to_param
+      delete :destroy, id: FactoryBot.create(:portal_offering).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -212,9 +212,9 @@ describe Portal::OfferingsController do
     xit 'GET activate' do
       allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
 
-      admin = FactoryGirl.generate :admin_user
+      admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :activate, id: FactoryGirl.create(:portal_offering).to_param
+      get :activate, id: FactoryBot.create(:portal_offering).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -226,9 +226,9 @@ describe Portal::OfferingsController do
 
     xit 'GET deactivate' do
       allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
-      admin = FactoryGirl.generate :admin_user
+      admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :deactivate, id: FactoryGirl.create(:portal_offering).to_param
+      get :deactivate, id: FactoryBot.create(:portal_offering).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -237,9 +237,9 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#answers' do
     it 'GET answers' do
-      admin = FactoryGirl.generate :admin_user
+      admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :answers, id: FactoryGirl.create(:portal_offering).to_param, questions: []
+      get :answers, id: FactoryBot.create(:portal_offering).to_param, questions: []
 
       expect(response).to have_http_status(:redirect)
     end
@@ -249,7 +249,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#student_report' do
     it 'GET student_report' do
-      get :student_report, id: FactoryGirl.create(:portal_offering).to_param
+      get :student_report, id: FactoryBot.create(:portal_offering).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -258,7 +258,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#external_report' do
     it 'GET external_report' do
-      get :external_report, id: FactoryGirl.create(:portal_offering).to_param
+      get :external_report, id: FactoryBot.create(:portal_offering).to_param
 
       expect(response).to have_http_status(:redirect)
     end
