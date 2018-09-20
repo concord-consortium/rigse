@@ -28,7 +28,7 @@ class API::V1::ClassesController < API::APIController
 
     user, _ = check_for_auth_token(params)
 
-    user_with_clazzes = user.teacher_or_student
+    user_with_clazzes = user.has_portal_user_type?
 
     render :json => {
       classes: user_with_clazzes.clazzes.map do |clazz|

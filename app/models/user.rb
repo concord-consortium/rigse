@@ -514,7 +514,7 @@ class User < ActiveRecord::Base
   end
 
   def school
-    school_person = self.portal_teacher || self.portal_student
+    school_person = has_portal_user_type?
     if school_person
       school_person.school
     end

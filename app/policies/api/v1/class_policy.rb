@@ -15,7 +15,7 @@ class API::V1::ClassPolicy < Struct.new(:user, :api_v1_class)
       failed_to_log_in
     end
 
-    unless user.teacher_or_student
+    unless user.has_portal_user_type?
       raise Pundit::NotAuthorizedError, 'You must be logged in as a student or teacher to use this endpoint'
     end
 
