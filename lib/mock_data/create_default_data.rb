@@ -633,6 +633,7 @@ module MockData
           default_ext_act.user_id = user.id
           default_ext_act.url = act[:url]
           default_ext_act.name = act[:name]
+          default_ext_act.author_email = user.email
           default_ext_act.is_official = true
           default_ext_act.save!
           update_count += 1
@@ -641,6 +642,7 @@ module MockData
           make_template = act.delete(:make_template)
           sub_activities = act.delete(:activities)
           act[:user_id] = user.id
+          act[:author_email] = user.email
           default_ext_act = ExternalActivity.create!(act)
           default_ext_act.template = FactoryBot.create(:activity,
             name: default_ext_act.name,
