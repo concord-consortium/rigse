@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe API::V1::CollaborationPolicy do
 
-  let(:context) { OpenStruct.new(user: FactoryGirl.create(:user), request: nil, params: [])}
+  let(:context) { OpenStruct.new(user: FactoryBot.create(:user), request: nil, params: [])}
   let(:api_v1_collaboration) { '' }
   describe '#create?' do
     it 'create?' do
