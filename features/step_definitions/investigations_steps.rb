@@ -1,26 +1,26 @@
 Given /^the following empty investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
-    FactoryGirl.create(:investigation, hash.merge('user' => user))
+    FactoryBot.create(:investigation, hash.merge('user' => user))
   end
 end
 
 Given /^the following linked investigations exist:$/ do |table|
   table.hashes.each do |hash|
     user = User.find_by_login hash['user']
-    inv = FactoryGirl.create(:investigation, hash.merge('user' => user))
-      inv.activities << (Factory :activity, { :user => user })
-      inv.activities[0].sections << (Factory :section, {:user => user})
-      inv.activities[0].sections[0].pages << (Factory :page, {:user => user})
-      open_response = (Factory :open_response, {:user => user})
-      open_response.pages << inv.activities[0].sections[0].pages[0]
-      inv.reload
+    inv = FactoryBot.create(:investigation, hash.merge('user' => user))
+    inv.activities << FactoryBot.create(:activity, :user => user)
+    inv.activities[0].sections << FactoryBot.create(:section, :user => user)
+    inv.activities[0].sections[0].pages << FactoryBot.create(:page, :user => user)
+    open_response = FactoryBot.create(:open_response, :user => user)
+    open_response.pages << inv.activities[0].sections[0].pages[0]
+    inv.reload
   end
 end
 
 Given /^the following simple investigations exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
-    user = User.first(:conditions => { :login => hash.delete('user') })
+    user = User.where(:login => hash.delete('user')).first
     hash[:user_id] = user.id
     investigation = Investigation.create(hash)
     activity = Activity.create(hash)
@@ -34,7 +34,7 @@ Given /^the following simple investigations exist:$/ do |investigation_table|
 end
 
 Given /^the author "([^"]*)" created an investigation named "([^"]*)" with text and a open response question$/ do |author, name|
-  user = User.first(:conditions => { :login => author })
+  user = User.where(:login => author).first
   hash = {:user_id => user.id, :name => name}
   investigation = Investigation.create(hash)
   activity = Activity.create(hash)
@@ -52,7 +52,7 @@ end
 Given /^the following investigations with multiple choices exist:$/ do |investigation_table|
   investigation_table.hashes.each do |hash|
     investigation = Investigation.where(name: hash['investigation']).first_or_create
-    investigation.user = Factory(:user)
+    investigation.user = FactoryBot.create(:user)
     investigation.save
     # ITSISU requires descriptions on activities
     activity = Activity.where(name: hash['activity']).first_or_create(:description => hash['activity'])
@@ -87,11 +87,11 @@ Given /^the following classes exist:$/ do |table|
       user = User.find_by_login hash['teacher']
       teacher = user.portal_teacher
     else
-      teacher = Factory(:teacher)
+      teacher = FactoryBot.create(:teacher)
     end
     hash.merge!('teacher' => teacher)
     
-    FactoryGirl.create(:portal_clazz, hash)
+    FactoryBot.create(:portal_clazz, hash)
   end
 end
 
@@ -142,11 +142,11 @@ end
 When /^I remove the investigation "([^"]*)" from the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   visit "/portal/classes/#{clazz.id}/remove_offering?offering_id=#{offering.id}"
 end
 
@@ -155,11 +155,11 @@ When /^I follow "(.*)" on the (.*) "(.*)" from the class "(.*)"$/ do |button_nam
   the_class = model_name.gsub(/\s/, '_').singularize.classify.constantize
   clazz = Portal::Clazz.find_by_name(class_name)
   obj = the_class.find_by_name(obj_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => obj.class.name,
     :runnable_id => obj.id,
     :clazz_id => clazz.id
-  })
+  ).first
   
   selector = "#portal__offering_#{offering.id}"
   with_scope(first(:id, selector)) do
@@ -170,22 +170,23 @@ end
 When /^a student has performed work on the investigation "([^"]*)" for the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
-  FactoryGirl.create(:full_portal_learner, :offering => offering)
+  ).first
+  
+  FactoryBot.create(:full_portal_learner, :offering => offering)
 end
 
 When /^I open the accordion for the offering for investigation "([^"]*)" for the class "([^"]*)"$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   selector = "#_toggle_portal__offering_#{offering.id}"
   find(selector).click
 end
@@ -194,11 +195,11 @@ end
 When /^I drag the investigation "([^"]*)" in the class "(.*)" to "([^"]*)"$/ do |investigation_name, class_name, to|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   selector = "#portal__offering_#{offering.id}"
   # NP 2011-09 see support/drag_and_drop.rb
   # TODO: When Selenium issue ( http://bit.ly/q9LHR4 ) closes 
@@ -213,11 +214,11 @@ end
 Then /^the investigation "([^"]*)" in the class "(.*)" should be active$/ do |investigation_name, class_name|
   clazz = Portal::Clazz.find_by_name(class_name)
   investigation = Investigation.find_by_name(investigation_name)
-  offering = Portal::Offering.first(:conditions => {
+  offering = Portal::Offering.where(
     :runnable_type => investigation.class.name,
     :runnable_id => investigation.id,
     :clazz_id => clazz.id
-  })
+  ).first
   expect(offering).to be_active
 end
 

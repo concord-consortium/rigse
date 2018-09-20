@@ -5,35 +5,35 @@ describe SearchController do
 
   def make(let); end
 
-  let(:admin_settings)   { FactoryGirl.create(:admin_settings, :include_external_activities => false) }
+  let(:admin_settings)   { FactoryBot.create(:admin_settings, :include_external_activities => false) }
 
-  let(:mock_school)     { FactoryGirl.create(:portal_school) }
+  let(:mock_school)     { FactoryBot.create(:portal_school) }
 
-  let(:teacher_user)    { FactoryGirl.create(:confirmed_user, :login => "teacher_user") }
-  let(:teacher)         { FactoryGirl.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
-  let(:admin_user)      { FactoryGirl.generate(:admin_user) }
-  let(:author_user)     { FactoryGirl.generate(:author_user) }
-  let(:manager_user)    { FactoryGirl.generate(:manager_user) }
-  let(:researcher_user) { FactoryGirl.generate(:researcher_user) }
+  let(:teacher_user)    { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
+  let(:teacher)         { FactoryBot.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
+  let(:admin_user)      { FactoryBot.generate(:admin_user) }
+  let(:author_user)     { FactoryBot.generate(:author_user) }
+  let(:manager_user)    { FactoryBot.generate(:manager_user) }
+  let(:researcher_user) { FactoryBot.generate(:researcher_user) }
 
-  let(:student_user)    { FactoryGirl.create(:confirmed_user, :login => "authorized_student") }
-  let(:student)         { FactoryGirl.create(:portal_student, :user_id => student_user.id) }
+  let(:student_user)    { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
+  let(:student)         { FactoryBot.create(:portal_student, :user_id => student_user.id) }
 
-  let(:physics_investigation)     { FactoryGirl.create(:investigation, :name => 'physics_inv', :user => author_user, :publication_status => 'published') }
-  let(:chemistry_investigation)   { FactoryGirl.create(:investigation, :name => 'chemistry_inv', :user => author_user, :publication_status => 'published') }
-  let(:biology_investigation)     { FactoryGirl.create(:investigation, :name => 'mathematics_inv', :user => author_user, :publication_status => 'published') }
-  let(:mathematics_investigation) { FactoryGirl.create(:investigation, :name => 'biology_inv', :user => author_user, :publication_status => 'published') }
-  let(:lines)                     { FactoryGirl.create(:investigation, :name => 'lines_inv', :user => author_user, :publication_status => 'published') }
+  let(:physics_investigation)     { FactoryBot.create(:investigation, :name => 'physics_inv', :user => author_user, :publication_status => 'published') }
+  let(:chemistry_investigation)   { FactoryBot.create(:investigation, :name => 'chemistry_inv', :user => author_user, :publication_status => 'published') }
+  let(:biology_investigation)     { FactoryBot.create(:investigation, :name => 'mathematics_inv', :user => author_user, :publication_status => 'published') }
+  let(:mathematics_investigation) { FactoryBot.create(:investigation, :name => 'biology_inv', :user => author_user, :publication_status => 'published') }
+  let(:lines)                     { FactoryBot.create(:investigation, :name => 'lines_inv', :user => author_user, :publication_status => 'published') }
 
-  let(:laws_of_motion_activity)  { FactoryGirl.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => physics_investigation.id, :user => author_user) }
-  let(:fluid_mechanics_activity) { FactoryGirl.create(:activity, :name => 'fluid_mechanics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
-  let(:thermodynamics_activity)  { FactoryGirl.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
-  let(:parallel_lines)           { FactoryGirl.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
+  let(:laws_of_motion_activity)  { FactoryBot.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => physics_investigation.id, :user => author_user) }
+  let(:fluid_mechanics_activity) { FactoryBot.create(:activity, :name => 'fluid_mechanics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
+  let(:thermodynamics_activity)  { FactoryBot.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
+  let(:parallel_lines)           { FactoryBot.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
 
-  let(:external_activity1)   { FactoryGirl.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
-  let(:external_activity2)   { FactoryGirl.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }
+  let(:external_activity1)   { FactoryBot.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
+  let(:external_activity2)   { FactoryBot.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }
 
-  let(:contributed_activity) { FactoryGirl.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
+  let(:contributed_activity) { FactoryBot.create(:external_activity, :name => "Copy of external_1", :url => "http://concord.org", :publication_status => 'published', :is_official => false) }
 
   let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines]}
   let(:official_activities)   { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
@@ -84,19 +84,19 @@ describe SearchController do
 
   describe "Post get_current_material_unassigned_clazzes" do
 
-    let(:physics_clazz)     { FactoryGirl.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher]) }
-    let(:chemistry_clazz)   { FactoryGirl.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher]) }
-    let(:mathematics_clazz) { FactoryGirl.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let(:physics_clazz)     { FactoryBot.create(:portal_clazz, :name => 'Physics Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let(:chemistry_clazz)   { FactoryBot.create(:portal_clazz, :name => 'Chemistry Clazz', :course => @mock_course,:teachers => [teacher]) }
+    let(:mathematics_clazz) { FactoryBot.create(:portal_clazz, :name => 'Mathematics Clazz', :course => @mock_course,:teachers => [teacher]) }
 
     let(:investigations_for_all_clazz) do
-      inv = FactoryGirl.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
+      inv = FactoryBot.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
       #assign investigations_for_all_clazz to physics class
       Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Investigation',runnable_id: inv.id).first_or_create
       inv
     end
 
     let(:activity_for_all_clazz) do
-      act = FactoryGirl.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
+      act = FactoryBot.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
       #assign activity_for_all_clazz to physics class
       Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Activity', runnable_id: act.id).first_or_create
       act
@@ -133,7 +133,7 @@ describe SearchController do
     end
 
     it "should get all the classes to which the activity is not assigned. Material to be assigned is a multiple activity" do
-      another_activity_for_all_clazz = FactoryGirl.create(:activity, :name => 'another_activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
+      another_activity_for_all_clazz = FactoryBot.create(:activity, :name => 'another_activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
       post_params = {
         :material_type => 'Activity',
         :material_id => "#{activity_for_all_clazz.id},#{another_activity_for_all_clazz.id}"
@@ -147,11 +147,11 @@ describe SearchController do
   end
   describe "POST add_material_to_clazzes" do
 
-    let(:clazz)         { FactoryGirl.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
-    let(:another_clazz) { FactoryGirl.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:clazz)         { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:another_clazz) { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
 
-    let(:already_assigned_offering) { FactoryGirl.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify) }
-    let(:another_assigned_offering) { FactoryGirl.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation'.classify) }
+    let(:already_assigned_offering) { FactoryBot.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'Investigation'.classify) }
+    let(:another_assigned_offering) { FactoryBot.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'Investigation'.classify) }
 
     it "should assign only unassigned investigations to the classes" do
       already_assigned_offering
@@ -193,6 +193,34 @@ describe SearchController do
           expect(offering.length).to be(1)
         end
       end
+    end
+  end
+
+  describe "POST add_material_to_collections" do
+
+    let(:clazz)         { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+    let(:another_clazz) { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+
+    let(:already_assigned_offering) { FactoryBot.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> chemistry_investigation.id, :runnable_type => 'ExternalActivity'.classify) }
+    let(:another_assigned_offering) { FactoryBot.create(:portal_offering, :clazz_id=> clazz.id, :runnable_id=> laws_of_motion_activity.id, :runnable_type => 'ExternalActivity'.classify) }
+
+    it "should add materials to a collection" do
+      already_assigned_offering
+      post_params = {
+          :materials_collection_id => [FactoryBot.create(:materials_collection).id],
+          :material_id => chemistry_investigation.id,
+          :material_type => 'Investigation'
+      }
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      xhr :post, :add_material_to_collections, post_params
+
+      runnable_id = post_params[:material_id]
+      runnable_type = post_params[:material_type].classify
+
+      offering_for_clazz = Portal::Offering.where(clazz_id: clazz.id, runnable_type: runnable_type, runnable_id: runnable_id)
+
+      expect(offering_for_clazz.length).to be(0)
     end
   end
 end

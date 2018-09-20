@@ -2,15 +2,15 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe HomeController do
   render_views
 
-  let(:activity) { FactoryGirl.create(      :external_activity,
+  let(:activity) { FactoryBot.create(      :external_activity,
                                         :name => "test activity",
                                         :publication_status => "published") }
 
-  let(:sequence) { FactoryGirl.create(      :external_activity,
+  let(:sequence) { FactoryBot.create(      :external_activity,
                                         :name => "test sequence",
                                         :publication_status => "published") }
 
-  let(:interactive) { FactoryGirl.create(   :interactive,
+  let(:interactive) { FactoryBot.create(   :interactive,
                                         :name => "test interactive",
                                         :publication_status => "published",
                                         :external_activity_id => activity.id ) }
@@ -60,7 +60,7 @@ describe HomeController do
 
   describe "Post preview_home_page" do
     it "should set variables to preview home page" do
-      anonymous_user = FactoryGirl.generate(:anonymous_user)
+      anonymous_user = FactoryBot.generate(:anonymous_user)
       @post_params = {
         :home_page_preview_content =>"<b>Home page content.</b>",
       }

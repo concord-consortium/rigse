@@ -35,10 +35,8 @@ class NationalDistrictImporter
     district_values = []
     nces_districts.each_with_index do |nces_district,count|
       tick count
-      existing_district = Portal::District.find(:first,
-                                                  :conditions => {:leaid=> nces_district.LEAID})
-      existing_district ||= Portal::District.find(:first,
-                                                  :conditions => {:state => nces_district.LSTATE, :name => nces_district.NAME})
+      existing_district = Portal::District.where(:leaid=> nces_district.LEAID).first
+      existing_district ||= Portal::District.where(:state => nces_district.LSTATE, :name => nces_district.NAME).first
       if existing_district
         Rails.logger.info "district similar already exists:#{existing_district.state} #{existing_district.name} #{existing_district.id}"
         Rails.logger.info "updating."
@@ -77,7 +75,7 @@ class NationalDistrictImporter
 
     school_values = []
     added = 0
-    # this seems ineficient, but nces_schools.reject! was also really slow.
+    # this seems inefficient, but nces_schools.reject! was also really slow.
     nces_schools.each_with_index do |nces_school,count|
       tick count
 

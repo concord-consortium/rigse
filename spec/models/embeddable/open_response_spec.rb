@@ -36,7 +36,7 @@ describe Embeddable::OpenResponse do
   describe '#by_offering' do
     it 'by_offering' do
       open_response = described_class.new
-      offering = FactoryGirl.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
 
       result = open_response.saveables.by_offering(offering)
 

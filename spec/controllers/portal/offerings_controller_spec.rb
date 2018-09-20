@@ -3,23 +3,23 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::OfferingsController do
   describe "Show Jnlp Offering" do
     it "renders a jnlp for an admin" do
-      offering = Factory(:portal_offering)
-      admin = FactoryGirl.generate :admin_user
+      offering = FactoryBot.create(:portal_offering)
+      admin = FactoryBot.generate :admin_user
       sign_in admin
       get :show, :id => offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
     end
 
     it "renders a jnlp for a teacher" do
-      teacher = Factory(:portal_teacher)
-      offering = Factory(:portal_offering, :clazz => teacher.clazzes.first)
+      teacher = FactoryBot.create(:portal_teacher)
+      offering = FactoryBot.create(:portal_offering, :clazz => teacher.clazzes.first)
       sign_in teacher.user
       get :show, :id => offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
     end
 
     it "renders a jnlp as a learner" do
-      learner = Factory(:full_portal_learner)
+      learner = FactoryBot.create(:full_portal_learner)
       sign_in learner.student.user
       get :show, :id => learner.offering.id, :format => :jnlp
       expect(response).to render_template('shared/_installer')
@@ -39,9 +39,9 @@ describe Portal::OfferingsController do
         :url       => "http://example.com",
         :save_path => "/path/to/save",
       }
-      @runnable = Factory(:external_activity, @runnable_opts )
+      @runnable = FactoryBot.create(:external_activity, @runnable_opts )
       @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
-      @user = Factory(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
+      @user = FactoryBot.create(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
       allow(controller).to receive(:setup_portal_student).and_return(@learner)
@@ -72,16 +72,16 @@ describe Portal::OfferingsController do
 
   describe "POST offering_collapsed_status" do
     before(:each) do
-      @mock_school = FactoryGirl.create(:portal_school)
+      @mock_school = FactoryBot.create(:portal_school)
 
-      @admin_user = FactoryGirl.generate(:admin_user)
-      @manager_user = FactoryGirl.generate(:manager_user)
-      @researcher_user = FactoryGirl.generate(:researcher_user)
-      @author_user = FactoryGirl.generate(:author_user)
-      @guest_user = FactoryGirl.generate(:anonymous_user)
-      @student_user = FactoryGirl.create(:confirmed_user, :login => "authorized_student")
-      @portal_student = FactoryGirl.create(:portal_student, :user => @student_user)
-      @authorized_teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
+      @admin_user = FactoryBot.generate(:admin_user)
+      @manager_user = FactoryBot.generate(:manager_user)
+      @researcher_user = FactoryBot.generate(:researcher_user)
+      @author_user = FactoryBot.generate(:author_user)
+      @guest_user = FactoryBot.generate(:anonymous_user)
+      @student_user = FactoryBot.create(:confirmed_user, :login => "authorized_student")
+      @portal_student = FactoryBot.create(:portal_student, :user => @student_user)
+      @authorized_teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
       @authorized_teacher_user = @authorized_teacher.user
       @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
       @params = {
@@ -136,22 +136,22 @@ describe Portal::OfferingsController do
   end
 
   describe "GET report" do
-    let(:physics_investigation) { FactoryGirl.create(
+    let(:physics_investigation) { FactoryBot.create(
         :investigation,
         :name => 'physics_inv',
         :publication_status => 'published') }
 
-    let(:offering) { FactoryGirl.create(
+    let(:offering) { FactoryBot.create(
         :portal_offering,
         runnable_id: physics_investigation,
         runnable_type: 'Activity',
         clazz: clazz)}
 
-    let(:clazz)       { FactoryGirl.create :portal_clazz, teachers: [teacher] }
+    let(:clazz)       { FactoryBot.create :portal_clazz, teachers: [teacher] }
     let(:post_params) { {id: offering.id }      }
-    let(:eacher_user) { FactoryGirl.generate()          }
-    let(:teacher)     { FactoryGirl.create :teacher }
-    let(:teacher_b)   { FactoryGirl.create :teacher }
+    let(:eacher_user) { FactoryBot.generate()          }
+    let(:teacher)     { FactoryBot.create :teacher }
+    let(:teacher_b)   { FactoryBot.create :teacher }
 
     before(:each) do
       sign_in user
@@ -199,36 +199,49 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy, id: FactoryBot.create(:portal_offering).to_param
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 
   # TODO: auto-generated
   describe '#activate' do
-    it 'GET activate' do
-      get :activate, {}, {}
+    let(:referrer)  { "https://foo.bar.com/some/path.html" }
 
-      expect(response).to have_http_status(:not_found)
+    xit 'GET activate' do
+      allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
+
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      get :activate, id: FactoryBot.create(:portal_offering).to_param
+
+      expect(response).to have_http_status(:redirect)
     end
-  end
+  end                           
 
   # TODO: auto-generated
   describe '#deactivate' do
-    it 'GET deactivate' do
-      get :deactivate, {}, {}
+    let(:referrer)  { "https://foo.bar.com/some/path.html" }
 
-      expect(response).to have_http_status(:not_found)
+    xit 'GET deactivate' do
+      allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      get :deactivate, id: FactoryBot.create(:portal_offering).to_param
+
+      expect(response).to have_http_status(:redirect)
     end
   end
 
   # TODO: auto-generated
   describe '#answers' do
     it 'GET answers' do
-      get :answers, {}, {}
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      get :answers, id: FactoryBot.create(:portal_offering).to_param, questions: []
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 
@@ -236,18 +249,18 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#student_report' do
     it 'GET student_report' do
-      get :student_report, {}, {}
+      get :student_report, id: FactoryBot.create(:portal_offering).to_param
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 
   # TODO: auto-generated
   describe '#external_report' do
     it 'GET external_report' do
-      get :external_report, {}, {}
+      get :external_report, id: FactoryBot.create(:portal_offering).to_param
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:redirect)
     end
   end
 end

@@ -68,17 +68,11 @@ class Activity < ActiveRecord::Base
     where('activities.teacher_only = 0')
   }
 
-  scope :domain, lambda { |domain_id|
-    {
-      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
-    }
-  }
+  scope :domain, lambda { |domain_id| where('ri_gse_knowledge_statements.domain_id in (?)', domain_id) }
 
   scope :grade, lambda { |gs|
     gs = gs.size > 0 ? gs : "%"
-    {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(",") : gs ]
-    }
+    where('ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(",") : gs )
   }
 
   scope :activity_group, -> {
@@ -87,9 +81,7 @@ class Activity < ActiveRecord::Base
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    {
-     :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
-    }
+    where("#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name, name)
   }
 
   scope :investigation, -> {

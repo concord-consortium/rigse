@@ -1,9 +1,13 @@
-Factory.define :activity do |f|
-  f.association :user
+FactoryBot.define do
+  factory :activity do
+    association :user
+  end
 end
 
-Factory.define :activity_template, parent: :activity do |f|
-  f.after_create do |act|
-    FactoryGirl.create_list(:external_activity, 2, template: act, url: "http://activity.external.com/1/2/3")
+FactoryBot.define do
+  factory :activity_template, parent: :activity do
+    after(:create) do |act|
+      FactoryBot.create_list(:external_activity, 2, template: act, url: "http://activity.external.com/1/2/3")
+    end
   end
 end

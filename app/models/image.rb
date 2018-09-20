@@ -25,24 +25,24 @@ class Image < ActiveRecord::Base
   scope :published, -> { where(publication_status: 'published') }
   scope :private_status, -> { where(publication_status:'private') }
   scope :draft_status, -> { where(publication_status: 'draft') }
-  scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
-  scope :with_status, proc { |s| { :conditions => { :publication_status => s } } }
+  scope :by_user, proc { |u| where(:user_id => u.id) }
+  scope :with_status, proc { |s| where(:publication_status => s ) }
   scope :not_private, -> { where("#{self.table_name}.publication_status IN ('published', 'draft')") }
 
-  scope :visible_to_user, proc { |u| { :conditions =>
-    [ "#{self.table_name}.publication_status = 'published' OR
+  scope :visible_to_user, proc { |u| where(
+    "#{self.table_name}.publication_status = 'published' OR
       (#{self.table_name}.publication_status = 'draft' AND #{self.table_name}.user_id = ?) OR
-      (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id , u.nil? ? u : u.id ]
-  }}
-  scope :visible_to_user_with_drafts, proc { |u| { :conditions =>
-    [ "#{self.table_name}.publication_status IN ('published', 'draft') OR
-      (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id ]
-  }}
+      (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id , u.nil? ? u : u.id )
+  }
+  scope :visible_to_user_with_drafts, proc { |u| where(
+    "#{self.table_name}.publication_status IN ('published', 'draft') OR
+      (#{self.table_name}.publication_status = 'private' AND #{self.table_name}.user_id = ?)", u.nil? ? u : u.id )
+  }
   scope :no_drafts, -> { where("#{self.table_name}.publication_status NOT IN ('draft')") }
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    { :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.attribution LIKE ?", name,name] }
+    where("#{self.table_name}.name LIKE ? OR #{self.table_name}.attribution LIKE ?", name, name)
   }
 
   scope :ordered_by, lambda { |order| order(order) }

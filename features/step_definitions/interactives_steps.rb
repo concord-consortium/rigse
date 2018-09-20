@@ -1,6 +1,6 @@
 Given(/^the following Admin::tag records exist:$/) do |admin_tag_table|
   admin_tag_table.hashes.each do |hash|
-    Factory(:admin_tag, hash)
+    FactoryBot.create(:admin_tag, hash)
   end
 end
 

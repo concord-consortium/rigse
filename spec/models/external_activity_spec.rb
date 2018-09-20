@@ -74,8 +74,8 @@ describe ExternalActivity do
 
   describe '#long_description_for_user' do
     let (:activity) { ExternalActivity.create!(valid_attributes) }
-    let(:teacher_user) { t = FactoryGirl.create(:teacher); t.user }
-    let(:student_user) { s = FactoryGirl.create(:portal_student); s.user }
+    let(:teacher_user) { t = FactoryBot.create(:teacher); t.user }
+    let(:student_user) { s = FactoryBot.create(:portal_student); s.user }
 
     it 'should return value of long_description_for_teacher if user is a teacher' do
       expect(activity.long_description_for_user(teacher_user)).to eq(valid_attributes[:long_description_for_teacher])
@@ -86,11 +86,11 @@ describe ExternalActivity do
   end
 
   describe '#duplicate' do
-    let(:project1) { FactoryGirl.create(:project) }
-    let(:project2) { FactoryGirl.create(:project) }
-    let(:user1) { t = FactoryGirl.create(:teacher); t.user }
-    let(:user2) { t = FactoryGirl.create(:teacher); t.user }
-    let(:template) { FactoryGirl.create(:investigation) }
+    let(:project1) { FactoryBot.create(:project) }
+    let(:project2) { FactoryBot.create(:project) }
+    let(:user1) { t = FactoryBot.create(:teacher); t.user }
+    let(:user2) { t = FactoryBot.create(:teacher); t.user }
+    let(:template) { FactoryBot.create(:investigation) }
     let(:activity) { a = ExternalActivity.create(valid_attributes); a.user = user1; a.save; a }
     # List of attributes that shouldn't match the original activity after duplication is done.
     let(:unique_attrs) do
@@ -100,8 +100,8 @@ describe ExternalActivity do
     # Automatically generate all the attributes. This will let us test new automatically things when they are added.
     let(:attrs) { activity.attributes.except(*unique_attrs).keys }
     let(:clone) { activity.duplicate(user2) }
-    let(:standard_statement) { FactoryGirl.create(:standard_statement, material_id: activity.id) }
-    let(:cohort) { FactoryGirl.create(:admin_cohort) }
+    let(:standard_statement) { FactoryBot.create(:standard_statement, material_id: activity.id) }
+    let(:cohort) { FactoryBot.create(:admin_cohort) }
     let(:host) { "http://some.test.url.com" }
 
     before(:each) do
@@ -222,7 +222,7 @@ describe ExternalActivity do
         WebMock.stub_request(:post, activity.url + '/remote_duplicate')
           .to_return(:status => 200, :body => lara_response.to_json)
 
-        FactoryGirl.create(:client, site_url: host, app_secret: secret)
+        FactoryBot.create(:client, site_url: host, app_secret: secret)
       end
 
       it "it should communicate LARA, request remote duplication and perform publishing" do
@@ -244,8 +244,8 @@ describe ExternalActivity do
   end
 
   describe "project support" do
-    let (:activity) { FactoryGirl.create(:external_activity) }
-    let (:project) { FactoryGirl.create(:project) }
+    let (:activity) { FactoryBot.create(:external_activity) }
+    let (:project) { FactoryBot.create(:project) }
 
     it "can be assigned to a project" do
       activity.projects << project
@@ -297,7 +297,7 @@ describe ExternalActivity do
   # TODO: auto-generated
   describe '.by_user' do # scope test
     it 'supports named scope by_user' do
-      expect(described_class.limit(3).by_user(FactoryGirl.create(:user))).to all(be_a(described_class))
+      expect(described_class.limit(3).by_user(FactoryBot.create(:user))).to all(be_a(described_class))
     end
   end
   # TODO: auto-generated

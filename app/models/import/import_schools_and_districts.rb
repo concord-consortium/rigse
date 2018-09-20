@@ -5,7 +5,7 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
     total_districts_count = content_hash[:districts].size
     total_schools_count = content_hash[:schools].size
     total_imports_count = total_schools_count + total_districts_count
-    us_country = Portal::Country.find(:first, :conditions =>{:two_letter => "US"})
+    us_country = Portal::Country.where(:two_letter => "US").first
     district_index = 0
     batch_size = 500
     total_batches = (total_districts_count/batch_size.to_f).ceil
@@ -22,7 +22,7 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
           district = content_hash[:districts][index]
           nces_district = nil
           if district[:leaid]
-            nces_district = Portal::Nces06District.find(:first, :conditions => {:LEAID => district[:leaid]})
+            nces_district = Portal::Nces06District.where(:LEAID => district[:leaid]).first
           end
           if nces_district
             new_district = Portal::District.find_or_create_using_nces_district(nces_district)
@@ -32,14 +32,14 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
             district_params[:name] = district_name
             district_params[:state] = district[:state] if district[:state] 
             district_params[:leaid] = district[:leaid] if district[:leaid]
-            existing_district = Portal::District.find(:first, :conditions => district_params)
+            existing_district = Portal::District.where(district_params).first
             new_district = existing_district || Portal::District.create(district_params)
             new_district.description = district[:description]
             new_district.zipcode = district[:zipcode]
             new_district.save!
           end
-          new_map = Import::SchoolDistrictMapping.find(:first, :conditions => {:district_id => new_district.id, :import_district_uuid => district[:uuid]})
-          new_map = new_map || Import::SchoolDistrictMapping.create({:district_id => new_district.id, :import_district_uuid => district[:uuid]})
+          new_map = Import::SchoolDistrictMapping.where(:district_id => new_district.id, :import_district_uuid => district[:uuid]).first
+          new_map || Import::SchoolDistrictMapping.create({:district_id => new_district.id, :import_district_uuid => district[:uuid]})
           import.update_attribute(:progress, (index + 1))
           district_index = index + 1
         }
@@ -56,27 +56,27 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
           school = content_hash[:schools][index]
           nces_school= nil
           if school[:ncessch]
-            nces_school = Portal::Nces06School.find(:first, :conditions => {:NCESSCH => school[:ncessch]})
+            nces_school = Portal::Nces06School.where(:NCESSCH => school[:ncessch]).first
           end
           if nces_school  
             new_school = Portal::School.find_or_create_using_nces_school(nces_school)
           else
             school_name = school[:name].titlecase.strip
-            school_district = Import::SchoolDistrictMapping.find(:first, :conditions => {:import_district_uuid => school[:district_uuid]})
+            school_district = Import::SchoolDistrictMapping.where(:import_district_uuid => school[:district_uuid]).first
             school_params = {}
             school_params[:name] = school_name
             school_params[:state] = school[:state] if school[:state]
             school_params[:district_id] = school_district.district_id if school_district
             school_params[:ncessch] = school[:ncessch] if school[:ncessch]
-            existing_school = Portal::School.find(:first ,:conditions => school_params)        
+            existing_school = Portal::School.where(school_params).first
             new_school = existing_school || Portal::School.create(school_params)
             new_school.description = school[:description]
             new_school.zipcode = school[:zipcode]
             new_school.country = us_country unless school[:state] == "XX" || school[:state].nil?
             new_school.save!
           end
-          new_map = Import::UserSchoolMapping.find(:first, :conditions => {:school_id => new_school.id, :import_school_url => school[:school_url]})
-          new_map = new_map || Import::UserSchoolMapping.create({:school_id => new_school.id, :import_school_url => school[:school_url]})
+          new_map = Import::UserSchoolMapping.where(:school_id => new_school.id, :import_school_url => school[:school_url]).first
+          new_map || Import::UserSchoolMapping.create({:school_id => new_school.id, :import_school_url => school[:school_url]})
           import.update_attribute(:progress, (index + district_index + 1))
         }
       end

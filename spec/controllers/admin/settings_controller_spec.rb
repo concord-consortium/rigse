@@ -33,8 +33,8 @@ describe Admin::SettingsController do
     render_views
 
     it "only allows managers to edit the current settings and only shows them the information they can change" do
-      settings = FactoryGirl.create(:admin_settings, :active => true)
-      second_settings = FactoryGirl.create(:admin_settings)
+      settings = FactoryBot.create(:admin_settings, :active => true)
+      second_settings = FactoryBot.create(:admin_settings)
       allow(Admin::Settings).to receive(:default_settings).and_return(settings)
 
       login_manager
@@ -94,7 +94,7 @@ describe Admin::SettingsController do
     render_views
 
     it "renders the _form_for_managers partial" do
-      settings = FactoryGirl.create(:admin_settings)
+      settings = FactoryBot.create(:admin_settings)
       expect(Admin::Settings).to receive(:find).with("37").and_return(settings)
 
       login_manager

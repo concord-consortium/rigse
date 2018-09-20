@@ -80,17 +80,17 @@ describe ExternalActivitiesController do
     }
   end
 
-  let (:existing) { FactoryGirl.create(:external_activity, {
+  let (:existing) { FactoryBot.create(:external_activity, {
       :name        => name,
       :long_description => description,
       :url         => url,
       :publication_status => 'published',
-      :template    => FactoryGirl.create(:activity, {
-        :investigation => FactoryGirl.create(:investigation)
+      :template    => FactoryBot.create(:activity, {
+        :investigation => FactoryBot.create(:investigation)
       })
     })}
 
-  let (:another) { FactoryGirl.create(:external_activity, {
+  let (:another) { FactoryBot.create(:external_activity, {
       :name        => "#{name} again",
       :long_description => "#{description} again",
       :url         => url,
@@ -104,7 +104,7 @@ describe ExternalActivitiesController do
     results = []
     count.times do
       yield opts if block_given?
-      results << FactoryGirl.create(factory.to_sym, opts)
+      results << FactoryBot.create(factory.to_sym, opts)
     end
     results
   end
@@ -173,11 +173,11 @@ describe ExternalActivitiesController do
 
     context "when version 2 of the API is requested" do
 
-      let (:existing_sequence) { FactoryGirl.create(:external_activity, {
+      let (:existing_sequence) { FactoryBot.create(:external_activity, {
           :name => sequence_name,
           :long_description => sequence_desc,
           :url => sequence_url,
-          :template => FactoryGirl.create(:investigation)
+          :template => FactoryBot.create(:investigation)
         }) }
 
       describe "when there is no existing external_activity" do
@@ -292,7 +292,15 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: FactoryGirl.create(:external_activity).to_param
+      get :show, id: FactoryBot.create(:external_activity).to_param
+
+      expect(response).to have_http_status(:redirect)
+    end
+
+    it 'GET show' do
+      FactoryBot.create(:external_activity, uuid: 'a' * 36)
+
+      get :show, id: 'a' * 36
 
       expect(response).to have_http_status(:redirect)
     end
@@ -301,7 +309,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, id: FactoryGirl.create(:external_activity).to_param
+      get :edit, id: FactoryBot.create(:external_activity).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -328,7 +336,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryGirl.create(:external_activity).to_param
+      delete :destroy, id: FactoryBot.create(:external_activity).to_param
 
       expect(response).to have_http_status(:redirect)
     end

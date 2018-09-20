@@ -16,7 +16,7 @@ class TeacherNotesController < ApplicationController
   def setup_object
     if params[:id]
       if valid_uuid(params[:id])
-        @teacher_note = TeacherNote.find(:first, :conditions => ['uuid=?',params[:id]])
+        @teacher_note = TeacherNote.where('uuid=?',params[:id]).first
       else
         @teacher_note = TeacherNote.find(params[:id])
       end

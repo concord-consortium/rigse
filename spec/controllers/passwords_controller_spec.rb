@@ -9,7 +9,7 @@ describe PasswordsController do
 
   describe "Reset password by login" do
     before(:each) do
-      @forgetful_user = FactoryGirl.create(:user, :login => "forgetful_jones", :password => "password", :password_confirmation => "password", :email => "valid@test.com")
+      @forgetful_user = FactoryBot.create(:user, :login => "forgetful_jones", :password => "password", :password_confirmation => "password", :email => "valid@test.com")
 
       @params = { :login => @forgetful_user.login }
 
@@ -30,7 +30,7 @@ describe PasswordsController do
     end
 
     it "will fail gracefully for students without security questions" do
-      @forgetful_user.portal_student = FactoryGirl.create(:portal_student)
+      @forgetful_user.portal_student = FactoryBot.create(:portal_student)
 
       post :create_by_login, @params
 
@@ -51,7 +51,7 @@ describe PasswordsController do
     end
 
     it "will ask security questions for students" do
-      @forgetful_user.portal_student = FactoryGirl.create(:portal_student)
+      @forgetful_user.portal_student = FactoryBot.create(:portal_student)
       Array.new(3) { |i| SecurityQuestion.create({ :question => "test #{i}", :answer => "test" }) }.each { |q| @forgetful_user.security_questions << q }
 
       expect(PasswordMailer).not_to receive(:forgot_password)
@@ -117,7 +117,7 @@ describe PasswordsController do
 
   describe "Reset password by email address" do
     before(:each) do
-      @forgetful_user = FactoryGirl.create(:user, :email => "test@test.com")
+      @forgetful_user = FactoryBot.create(:user, :email => "test@test.com")
 
       @params = {
         :password => {

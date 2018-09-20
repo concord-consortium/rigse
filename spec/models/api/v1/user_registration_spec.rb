@@ -21,7 +21,7 @@ describe API::V1::UserRegistration do
   describe '#set_user' do
     it 'set_user' do
       user_registration = described_class.new
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       result = user_registration.set_user(user)
 
       expect(result).not_to be_nil

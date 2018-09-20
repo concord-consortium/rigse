@@ -82,11 +82,10 @@ class Dataservice::Blob < ActiveRecord::Base
 
   def load_content_from(url)
     return if url.blank?
-    web_client = HTTPClient.new
-    response = web_client.get(url)
-    if HTTP::Status.successful?(response.status)
-      self.mimetype = response.contenttype
-      self.content  = response.content
+    response = HTTParty.get(url)
+    if response.code.equal?(200)
+      self.mimetype = response.content_type
+      self.content  = response.body
     end
   end
 
@@ -94,7 +93,7 @@ class Dataservice::Blob < ActiveRecord::Base
     new_blob = self.new(:lightweight_learner => learner)
     new_blob.load_content_from(url)
     found = self.find_by_checksum(new_blob.checksum)
-    return found if found;
+    return found if found
     new_blob.save!
     return new_blob
   end

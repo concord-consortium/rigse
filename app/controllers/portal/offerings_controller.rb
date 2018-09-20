@@ -221,7 +221,11 @@ class Portal::OfferingsController < ApplicationController
   def create_saveable(embeddable, offering, learner, answer)
     case embeddable
     when Embeddable::OpenResponse
-      saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id, offering.id, embeddable.id)
+      saveable_open_response = Saveable::OpenResponse
+                                   .where(learning_id: learner.id,
+                                          offering_id: offering.id,
+                                          open_response_id: embeddable.id)
+                                   .first_or_create
       if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
         saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
       end
@@ -229,7 +233,11 @@ class Portal::OfferingsController < ApplicationController
       choice = parse_embeddable(answer)
       answer = choice ? choice.choice : ""
       if embeddable && choice
-        saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(learner.id, offering.id, embeddable.id)
+        saveable = Saveable::MultipleChoice
+                       .where(learning_id: learner.id,
+                              offering_id: offering.id,
+                              multiple_choice_id: embeddable.id)
+                       .first_or_create
         if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
           saveable_answer = saveable.answers.create(:bundle_content_id => nil)
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)

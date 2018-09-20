@@ -1,7 +1,7 @@
 def find_or_create_offering(runnable,clazz)
     type = runnable.class.to_s
     create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
-    offering = Portal::Offering.find(:first, :conditions=> create_hash)
+    offering = Portal::Offering.where(create_hash).first
     unless offering
       offering = Portal::Offering.create(create_hash)
       offering.save
@@ -80,7 +80,7 @@ Given /the following users exist:$/i do |users_table|
       roles =  []
     end
     begin
-      user = Factory(:user, hash)
+      user = FactoryBot.create(:user, hash)
       roles.each do |role|
         user.add_role(role)
       end
@@ -134,7 +134,7 @@ Given /^there are (\d+) (.+)$/ do |number, model_name|
 
   the_class.destroy_all
   number.to_i.times do |i|
-    FactoryGirl.create(model_name.to_sym)
+    FactoryBot.create(model_name.to_sym)
   end
 end
 

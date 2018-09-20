@@ -1,3 +1,5 @@
-Factory.define :offering do |f|
+FactoryBot.define do
+  factory :offering do |f|
 
+  end
 end

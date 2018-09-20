@@ -1,3 +1,5 @@
-Factory.define :assessment_target_unifying_theme do |f|
+FactoryBot.define do
+  factory :assessment_target_unifying_theme do |f|
 
+  end
 end

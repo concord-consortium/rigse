@@ -15,11 +15,11 @@ describe NavigationHelper, type: :helper  do
     ]
   end
   let(:itsi_project) { double(links: itsi_links)}
-  let(:fake_clazzes) { FactoryGirl.create_list(:portal_clazz, 3)}
-  let(:fake_inactive_clazz) { FactoryGirl.create(:portal_clazz)}
-  let(:fake_student) { FactoryGirl.create(:full_portal_student, clazzes: fake_clazzes) }
+  let(:fake_clazzes) { FactoryBot.create_list(:portal_clazz, 3)}
+  let(:fake_inactive_clazz) { FactoryBot.create(:portal_clazz)}
+  let(:fake_student) { FactoryBot.create(:full_portal_student, clazzes: fake_clazzes) }
   let(:fake_teacher) {
-    teacher = FactoryGirl.create(:portal_teacher, clazzes: fake_clazzes)
+    teacher = FactoryBot.create(:portal_teacher, clazzes: fake_clazzes)
     teacher.teacher_clazzes.create(clazz: fake_inactive_clazz, active: false)
     teacher
   }

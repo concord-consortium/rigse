@@ -3,10 +3,10 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::TeachersController do
   describe "POST create" do
     it "should complain if the login is the same except for case" do
-      school   = FactoryGirl.create(:portal_school)
+      school   = FactoryBot.create(:portal_school)
       selector = double(:portal_selector, :school => school, :valid? => true)
       allow(Portal::SchoolSelector).to receive(:new).and_return(selector) 
-      FactoryGirl.create(:user, :login => "tteacher")
+      FactoryBot.create(:user, :login => "tteacher")
 
       params = {
         :user => {
@@ -34,7 +34,7 @@ describe Portal::TeachersController do
     end
 
     before(:each) do
-      @school   = FactoryGirl.create(:portal_school)
+      @school   = FactoryBot.create(:portal_school)
       @selector = Portal::SchoolSelector.new({
         :country => Portal::SchoolSelector::USA,
         :state   => 'MA'})
@@ -112,7 +112,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: FactoryGirl.create(:portal_teacher).to_param
+      get :show, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -121,7 +121,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, id: FactoryGirl.create(:portal_teacher).to_param
+      get :edit, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -130,7 +130,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, id: FactoryGirl.create(:portal_teacher).to_param
+      put :update, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -139,7 +139,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryGirl.create(:portal_teacher).to_param
+      delete :destroy, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end

@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe API::V1::MaterialsController do
-  let(:user) {FactoryGirl.create(:confirmed_user)}
+  let(:user) {FactoryBot.create(:confirmed_user)}
 
   describe '#featured' do
     before(:each) do
@@ -13,7 +13,7 @@ describe API::V1::MaterialsController do
           {is_featured: false},
           {is_featured: true, publication_status: 'published'}
       ]
-      activity_params.each {|p| FactoryGirl.create(:external_activity, p)}
+      activity_params.each {|p| FactoryBot.create(:external_activity, p)}
     end
 
     it 'should return list of featured activities' do
@@ -38,18 +38,18 @@ describe API::V1::MaterialsController do
   end
 
   describe '#own' do
-    let(:user) {FactoryGirl.create(:confirmed_user)}
+    let(:user) {FactoryBot.create(:confirmed_user)}
 
     before(:each) do
       sign_in user
-      @m1 = FactoryGirl.create(:external_activity, user: user)
-      @m2 = FactoryGirl.create(:external_activity, user: user)
-      @m3 = FactoryGirl.create(:external_activity, user: user)
+      @m1 = FactoryBot.create(:external_activity, user: user)
+      @m2 = FactoryBot.create(:external_activity, user: user)
+      @m3 = FactoryBot.create(:external_activity, user: user)
       # Materials defined below should NOT be listed:
-      e1 = FactoryGirl.create(:external_activity)
-      e2 = FactoryGirl.create(:external_activity)
-      FactoryGirl.create(:activity, user: user, external_activities: [e1]) # template
-      FactoryGirl.create(:investigation, user: user, external_activities: [e2]) # template
+      e1 = FactoryBot.create(:external_activity)
+      e2 = FactoryBot.create(:external_activity)
+      FactoryBot.create(:activity, user: user, external_activities: [e1]) # template
+      FactoryBot.create(:investigation, user: user, external_activities: [e2]) # template
     end
 
     it 'should return own materials, but filter out all templates' do
@@ -67,14 +67,14 @@ describe API::V1::MaterialsController do
   describe 'other actions' do
     before(:each) do
       sign_in user
-      @m1 = FactoryGirl.create(:external_activity, user: user)
-      @m2 = FactoryGirl.create(:external_activity, user: user)
-      @m3 = FactoryGirl.create(:external_activity, user: user)
+      @m1 = FactoryBot.create(:external_activity, user: user)
+      @m2 = FactoryBot.create(:external_activity, user: user)
+      @m3 = FactoryBot.create(:external_activity, user: user)
       # Materials defined below should NOT be listed:
-      e1 = FactoryGirl.create(:external_activity)
-      e2 = FactoryGirl.create(:external_activity)
-      FactoryGirl.create(:activity, user: user, external_activities: [e1]) # template
-      FactoryGirl.create(:investigation, user: user, external_activities: [e2]) # template
+      e1 = FactoryBot.create(:external_activity)
+      e2 = FactoryBot.create(:external_activity)
+      FactoryBot.create(:activity, user: user, external_activities: [e1]) # template
+      FactoryBot.create(:investigation, user: user, external_activities: [e2]) # template
     end
     
 
@@ -126,9 +126,15 @@ describe API::V1::MaterialsController do
     # TODO: auto-generated
     describe '#assign_to_class' do
       it 'GET assign_to_class' do
-        get :assign_to_class, {}, {}
+        admin = FactoryBot.generate :admin_user
+        sign_in admin
+        get :assign_to_class,
+            class_id: FactoryBot.create(:portal_clazz).to_param,
+            assign: '1',
+            material_type: 'ExternalActivity',
+            material_id: @m1.id
 
-        expect(response).to have_http_status(:bad_request)
+        expect(response).to have_http_status(:ok)
       end
     end
 

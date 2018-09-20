@@ -1,2 +1,4 @@
-Factory.define :client do |f|
+FactoryBot.define do
+  factory :client do |f|
+  end
 end

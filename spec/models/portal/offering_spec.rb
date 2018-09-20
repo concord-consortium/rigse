@@ -3,9 +3,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::Offering do
   
   describe "after being created" do
-    let(:runnable) { FactoryGirl.create(:external_activity) }
+    let(:runnable) { FactoryBot.create(:external_activity) }
     let(:args)     { {runnable: runnable} }
-    let(:offering) { FactoryGirl.create(:portal_offering, args) }
+    let(:offering) { FactoryBot.create(:portal_offering, args) }
 
     it "should be active by default" do
      expect(offering.active).to be_truthy
@@ -54,7 +54,7 @@ describe Portal::Offering do
     end
 
     describe "an offering with learners" do
-      let(:learner) { Factory.build(:portal_learner) }
+      let(:learner) { FactoryBot.build(:portal_learner) }
       let(:args)    { {runnable: runnable, learners: [learner]} }
       before(:each) { allow(learner).to receive(:valid?).and_return(true) }
 

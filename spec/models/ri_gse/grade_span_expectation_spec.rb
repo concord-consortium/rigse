@@ -57,7 +57,7 @@ describe RiGse::GradeSpanExpectation do
   # TODO: auto-generated
   describe '.default' do
     it 'default' do
-      FactoryGirl.create :rigse_grade_span_expectation, grade_span: '9-11'
+      FactoryBot.create :rigse_grade_span_expectation, grade_span: '9-11'
       result = described_class.default
 
       expect(result).not_to be_nil

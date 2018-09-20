@@ -9,7 +9,7 @@ RSpec.describe Report::Offering::Page, type: :model do
   describe '#respondables' do
     xit 'respondables' do
       section_report = []
-      offering = FactoryGirl.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
       page = Page.new
       page = described_class.new(section_report, offering, page)
       klazz = ('klazz')

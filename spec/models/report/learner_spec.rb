@@ -142,7 +142,7 @@ describe Report::Learner do
   end
 
   describe "feedback in reports" do
-    let(:learner)          { FactoryGirl.create(:full_portal_learner) }
+    let(:learner)          { FactoryBot.create(:full_portal_learner) }
     let(:report_learner)   { learner.report_learner }
     let(:offering)         { learner.offering       }
 
@@ -164,9 +164,9 @@ describe Report::Learner do
     # We are stubbing #reportables in the runnable to avoids crazy structure of pages / &etc.
     # TODO: Its a bit hacky, but it should works for now, and be clearer than the alternatives.
     describe "after adding some answers and running update on the report learner" do
-      let(:multiple_choice) { FactoryGirl.create(:multiple_choice) }
-      let(:open_response)   { FactoryGirl.create(:open_response)   }
-      let(:image_question)  { FactoryGirl.create(:image_question)  }
+      let(:multiple_choice) { FactoryBot.create(:multiple_choice) }
+      let(:open_response)   { FactoryBot.create(:open_response)   }
+      let(:image_question)  { FactoryBot.create(:image_question)  }
       let(:embeddables)     { [ multiple_choice, open_response, image_question ] }
       let(:learner_answers) { report_learner }
 
@@ -232,18 +232,18 @@ describe Report::Learner do
   end
 
   describe "with_permission_ids" do
-    let(:permission_form_a) { FactoryGirl.create(:permission_form) }
+    let(:permission_form_a) { FactoryBot.create(:permission_form) }
 
-    let(:permission_form_b) { FactoryGirl.create(:permission_form) }
+    let(:permission_form_b) { FactoryBot.create(:permission_form) }
 
-    let(:offering) { FactoryGirl.create(:portal_offering) }
+    let(:offering) { FactoryBot.create(:portal_offering) }
 
     let(:report_learner_a) do
-      student = FactoryGirl.create(:full_portal_student,
+      student = FactoryBot.create(:full_portal_student,
         permission_forms: [permission_form_a]
       )
 
-      learner = FactoryGirl.create(:portal_learner,
+      learner = FactoryBot.create(:portal_learner,
         offering: offering,
         student: student)
 
@@ -251,11 +251,11 @@ describe Report::Learner do
     end
 
     let(:report_learner_b) do
-      student = FactoryGirl.create(:full_portal_student,
+      student = FactoryBot.create(:full_portal_student,
         permission_forms: [permission_form_b]
       )
 
-      learner = FactoryGirl.create(:portal_learner,
+      learner = FactoryBot.create(:portal_learner,
         offering: offering,
         student: student)
 

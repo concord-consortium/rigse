@@ -59,7 +59,7 @@ RSpec.describe Reports::Detail do
     it 'default_answer_for' do
       opts = {}
       detail = described_class.new(opts)
-      embeddable = FactoryGirl.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = detail.default_answer_for(embeddable)
 
       expect(result).not_to be_nil

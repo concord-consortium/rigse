@@ -14,7 +14,7 @@ describe Portal::ClazzesController do
   render_views
 
   def mock_clazz(stubs={})
-    mock_clazz = FactoryGirl.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
+    mock_clazz = FactoryBot.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
     #mock_clazz.stub!(stubs) unless stubs.empty?
 
     mock_clazz
@@ -25,24 +25,24 @@ describe Portal::ClazzesController do
   end
 
   before(:each) do
-    @mock_school = FactoryGirl.create(:portal_school)
+    @mock_school = FactoryBot.create(:portal_school)
 
     # set up our user types
-    @normal_user = FactoryGirl.generate(:anonymous_user)
-    @admin_user = FactoryGirl.generate(:admin_user)
-    @authorized_student =         FactoryGirl.create(:portal_student, :user => FactoryGirl.create(:confirmed_user, :login => "authorized_student"))
-    @authorized_teacher =         FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
-    @another_authorized_teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])
-    @unauthorized_teacher =       FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
+    @normal_user = FactoryBot.generate(:anonymous_user)
+    @admin_user = FactoryBot.generate(:admin_user)
+    @authorized_student =         FactoryBot.create(:portal_student, :user => FactoryBot.create(:confirmed_user, :login => "authorized_student"))
+    @authorized_teacher =         FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
+    @another_authorized_teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])
+    @unauthorized_teacher =       FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
     # another teacher, to act as an arbitrary third party
-    @random_teacher =             FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
+    @random_teacher =             FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
 
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
 
 
     @mock_clazz_name = "Random Test Class"
-    @mock_course = FactoryGirl.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
+    @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
 
     allow(@controller).to receive(:before_render) {
@@ -311,7 +311,7 @@ describe Portal::ClazzesController do
     #   login_as :authorized_teacher_user
     #
     #   1.upto 10 do |i|
-    #     teacher = FactoryGirl.create(:portal_teacher, :user => FactoryGirl.create(:user, :login => "teacher#{i}"))
+    #     teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher#{i}"))
     #     @logged_in_user.portal_teacher.school.portal_teachers << teacher
     #   end
     #
@@ -369,7 +369,7 @@ describe Portal::ClazzesController do
     end
 
     it "should attach this class to the appropriate course in the specified school, if one exists" do
-      course = FactoryGirl.create(:portal_course, :name => @post_params[:portal_clazz][:name], :school => @mock_school)
+      course = FactoryBot.create(:portal_course, :name => @post_params[:portal_clazz][:name], :school => @mock_school)
       assert course
       expect(course.clazzes.size).to eq(0)
 
@@ -402,7 +402,7 @@ describe Portal::ClazzesController do
     end
 
     it "should create exactly one teacher object for the current user if the current user does not already have one" do
-      @random_user = FactoryGirl.create(:confirmed_user, :login => "random_user")
+      @random_user = FactoryBot.create(:confirmed_user, :login => "random_user")
       sign_in @random_user
 
       expect(@random_user.portal_teacher).to be_nil
@@ -521,7 +521,7 @@ describe Portal::ClazzesController do
   describe "POST add_offering" do
     it "should run without error" do
       login_admin
-      external_activity = FactoryGirl.create(:external_activity)
+      external_activity = FactoryBot.create(:external_activity)
       post_params = runnable_params(external_activity, @mock_clazz)
       post :add_offering, post_params
     end
@@ -530,7 +530,7 @@ describe Portal::ClazzesController do
 
   describe "Post edit class information" do
     before(:each) do
-      external_activity = FactoryGirl.create(:external_activity)
+      external_activity = FactoryBot.create(:external_activity)
       post_params = runnable_params(external_activity, @mock_clazz)
       post :add_offering, post_params
       offers = Array.new
@@ -669,7 +669,7 @@ describe Portal::ClazzesController do
       @student_clazz.student_id = @authorized_student.id
       @student_clazz.save!
 
-      @investigation = Factory(:investigation)
+      @investigation = FactoryBot.create(:investigation)
       @investigation.name = 'Fluid Mechanics'
       @investigation.save!
 
@@ -758,10 +758,10 @@ describe Portal::ClazzesController do
 
   describe "Post teacher sorts class offerings on class summary page" do
     before(:each) do
-      @physics_offering = FactoryGirl.create(:portal_offering)
-      @chemistry_offering = FactoryGirl.create(:portal_offering)
-      @biology_offering = FactoryGirl.create(:portal_offering)
-      @mathematics_offering = FactoryGirl.create(:portal_offering)
+      @physics_offering = FactoryBot.create(:portal_offering)
+      @chemistry_offering = FactoryBot.create(:portal_offering)
+      @biology_offering = FactoryBot.create(:portal_offering)
+      @mathematics_offering = FactoryBot.create(:portal_offering)
       @params = {
         :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
       }

@@ -3,140 +3,142 @@
 ##
 
 ##
-## Emails and Logins will be derived from the login sequence
-##
-
-Factory.sequence(:login) do |n| 
-  "login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"
-end
-
-##
 ## Factory for user
 ##
-Factory.define :user do |f|
-  f.login    { FactoryGirl.generate(:login) }
-  f.first_name  'joe'
-  f.last_name  'user' 
-  f.email  { |u| "#{u.login}@concord.org"}
-  f.password  'password' 
-  f.password_confirmation  {|u| u.password}
-  f.skip_notifications true
-  f.require_password_reset false
-  f.roles  { [ FactoryGirl.generate(:member_role)] }
+FactoryBot.define do
+  factory :user do
+    login {"login_#{UUIDTools::UUID.timestamp_create.to_s[0..20]}"}
+    first_name {'joe'}
+    last_name {'user'}
+    email {"#{login}@concord.org"}
+    password {'password'}
+    password_confirmation {|u| u.password}
+    skip_notifications {true}
+    require_password_reset {false}
+    roles {[FactoryBot.generate(:member_role)]}
+  end
 end
 
-Factory.define :confirmed_user, :parent => :user do |f|
-  f.after_create { |user| user.confirm! }
+FactoryBot.define do
+  factory :confirmed_user, :parent => :user do
+    after(:create) {|user| user.confirm!}
+  end
 end
 
 ##
 ## Singleton Factory Pattern for Admin user.
 ##
-Factory.sequence :admin_user do |n| 
-  admin = User.find_by_login('admin') 
+FactoryBot.register_sequence(FactoryBot::Sequence.new(:admin_user) do
+  admin = User.find_by_login('admin')
   unless admin
-    admin = Factory(:user,
-    {
-      :login => 'admin',
-      # :password =>'password',  # all passwords are 'password' (defined in user factory)
-      :first_name => 'admin',
-      :site_admin => 1,
-      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:admin_role)]
-    })
+    admin = FactoryBot.create(:user,
+                              {
+                                  :login => 'admin',
+                                  # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                  :first_name => 'admin',
+                                  :site_admin => 1,
+                                  :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:admin_role)]
+                              })
     admin.save!
     admin.confirm!
     admin.add_role('admin')
   end
   admin
 end
+)
 
 ##
 ## Singleton Factory Pattern for Researcher user.
 ##
-Factory.sequence :researcher_user do |n| 
-  researcher = User.find_by_login('researcher') 
+FactoryBot.register_sequence(FactoryBot::Sequence.new(:researcher_user) do
+  researcher = User.find_by_login('researcher')
   unless researcher
-    researcher = Factory(:user,
-    {
-      :login => 'researcher',
-      # :password =>'password',  # all passwords are 'password' (defined in user factory)
-      :first_name => 'researcher',
-      :site_admin => 0,
-      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:researcher_role)]
-    })
+    researcher = FactoryBot.create(:user,
+                                   {
+                                       :login => 'researcher',
+                                       # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                       :first_name => 'researcher',
+                                       :site_admin => 0,
+                                       :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:researcher_role)]
+                                   })
     researcher.save!
     researcher.confirm!
     researcher.add_role('researcher')
   end
   researcher
 end
+)
 
 ##
 ## Singleton Factory Pattern for Researcher user.
 ##
-Factory.sequence :manager_user do |n| 
-  manager = User.find_by_login('manager') 
+FactoryBot.register_sequence(FactoryBot::Sequence.new(:manager_user) do
+  manager = User.find_by_login('manager')
   unless manager
-    manager = Factory(:user,
-    {
-      :login => 'manager',
-      # :password =>'password',  # all passwords are 'password' (defined in user factory)
-      :first_name => 'manager',
-      :site_admin => 1,
-      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:manager_role)]
-    })
+    manager = FactoryBot.create(:user,
+                                {
+                                    :login => 'manager',
+                                    # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                    :first_name => 'manager',
+                                    :site_admin => 1,
+                                    :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:manager_role)]
+                                })
     manager.save!
     manager.confirm!
     manager.add_role('manager')
   end
   manager
 end
+)
 ##
 ## Singleton Factory Pattern for Researcher user.
 ##
-Factory.sequence :author_user do |n| 
-  author = User.find_by_login('author') 
+FactoryBot.register_sequence(FactoryBot::Sequence.new(:author_user) do
+  author = User.find_by_login('author')
   unless author
-    author = Factory(:user,
-    {
-      :login => 'author',
-      # :password =>'password',  # all passwords are 'password' (defined in user factory)
-      :first_name => 'author',
-      :site_admin => 0,
-      :roles => [FactoryGirl.generate(:member_role),FactoryGirl.generate(:author_role)]
-    })
+    author = FactoryBot.create(:user,
+                               {
+                                   :login => 'author',
+                                   # :password =>'password',  # all passwords are 'password' (defined in user factory)
+                                   :first_name => 'author',
+                                   :site_admin => 0,
+                                   :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:author_role)]
+                               })
     author.save!
     author.confirm!
     author.add_role('author')
   end
   author
 end
+)
+
 ##
 ## Singleton Factory Pattern for Anonymous user.
 ##
-Factory.sequence :anonymous_user do |n|
+FactoryBot.register_sequence(FactoryBot::Sequence.new(:anonymous_user) do
   anon = nil
   begin
     anon = User.find_by_login('anonymous')
     unless anon
-      anon = Factory(:user,
-      {
-        :login => 'anonymous',
-        :first_name => 'anonymous',
-        :roles => [FactoryGirl.generate(:guest_role)]
-      })
+      anon = FactoryBot.create(:user,
+                               {
+                                   :login => 'anonymous',
+                                   :first_name => 'anonymous',
+                                   :roles => [FactoryBot.generate(:guest_role)]
+                               })
       anon.save!
       anon.confirm!
       # clear any previous Anonymous user still cached as a class variable in the User class
       User.anonymous(true)
       anon.save!
       anon.add_role('guest')
-      
+
     end
     anon
-  rescue
+  rescue StandardError
     nil
   end
 end
+)
 
-FactoryGirl.generate(:anonymous_user)
+FactoryBot.generate(:anonymous_user)

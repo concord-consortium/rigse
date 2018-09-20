@@ -1,3 +1,5 @@
-Factory.define :rigse_knowledge_statement, :class => RiGse::KnowledgeStatement do |f|
+FactoryBot.define do
+  factory :rigse_knowledge_statement, :class => RiGse::KnowledgeStatement do |f|
+  end
 end
 

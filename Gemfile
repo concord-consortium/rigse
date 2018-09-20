@@ -18,7 +18,6 @@ source "http://rubygems.org"
   gem "rails",                "~> 3.2.22"
   gem "arrayfields"
   gem 'strong_parameters'
-  gem "httpclient"
   gem "httparty"
 
   gem 'rollbar'
@@ -213,7 +212,7 @@ end
 
 group :test, :cucumber, :development do
   # this is included in development so the mock data can be loaded into the dev database
-  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
+  gem "factory_bot"
   gem "guard"
   gem "guard-rspec"
   gem "guard-cucumber"

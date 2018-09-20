@@ -10,7 +10,7 @@ describe Portal::SchoolSelector do
     @adhoc = mock_model(Admin::Settings,    {:allow_adhoc_schools => true })
     @no_adhoc = mock_model(Admin::Settings, {:allow_adhoc_schools => false })
     allow(Admin::Settings).to receive(:default_settings).and_return(@adhoc)
-    @district1 = Factory(:portal_district, {:state => "MA", :name => "no district"} )
+    @district1 = FactoryBot.create(:portal_district, {:state => "MA", :name => "no district"} )
   end
   describe "when presented for the first time (no query params)" do
     it "needs a state" do
@@ -37,14 +37,14 @@ describe Portal::SchoolSelector do
 
   describe "when the user has selected the USA as the country" do
     before(:each) do
-      @district2 = Factory(:portal_district, {:state => "MA"} )
-      @district3 = Factory(:portal_district, {:state => "NY"} )
+      @district2 = FactoryBot.create(:portal_district, {:state => "MA"} )
+      @district3 = FactoryBot.create(:portal_district, {:state => "NY"} )
 
-      @school1   = Factory(:portal_school, {:district => @district1})
-      @school2   = Factory(:portal_school, {:district => @district1})
-      @school3   = Factory(:portal_school, {:district => @district2})
+      @school1   = FactoryBot.create(:portal_school, {:district => @district1})
+      @school2   = FactoryBot.create(:portal_school, {:district => @district1})
+      @school3   = FactoryBot.create(:portal_school, {:district => @district2})
 
-      @default_district = Factory(:portal_district,  {:state => nil} )
+      @default_district = FactoryBot.create(:portal_district,  {:state => nil} )
       allow(Portal::District).to receive(:default).and_return(@default_district)
       @selector = new_selector({:country => Portal::SchoolSelector::USA})
     end
@@ -190,8 +190,8 @@ describe Portal::SchoolSelector do
 
   describe "changing values" do
     before(:each) do
-      @me_distict = Factory(:portal_district, :state=>'ME')
-      @me_school  = Factory(:portal_school, :district => @me_distict)
+      @me_distict = FactoryBot.create(:portal_district, :state=>'ME')
+      @me_school  = FactoryBot.create(:portal_school, :district => @me_distict)
       @previous_params = ['United States','ME',@me_distict.id.to_s,@me_school.id.to_s]
       @previous_attr = Base64.encode64(@previous_params.join("|"))
     end
@@ -218,7 +218,7 @@ describe Portal::SchoolSelector do
     end
     describe "changing the district" do
       before(:each) do
-        @changed_district = Factory(:portal_district)
+        @changed_district = FactoryBot.create(:portal_district)
         @params = {
           :country       => 'United States',
           :state         => 'ME',

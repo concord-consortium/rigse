@@ -11,7 +11,7 @@ RSpec.describe Report::Offering::Section, type: :model do
   describe '#respondables' do
     it 'respondables' do
       activity_report = double('activity_report')
-      offering = FactoryGirl.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
       section = Section.new
       section = described_class.new(activity_report, offering, section)
       klazz = ('klazz')
