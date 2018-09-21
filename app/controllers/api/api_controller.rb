@@ -1,5 +1,7 @@
 class API::APIController < ApplicationController
 
+  rescue_from Pundit::NotDefinedError, with: :pundit_user_not_authorized
+
   protected
 
   def pundit_user_not_authorized(exception)
