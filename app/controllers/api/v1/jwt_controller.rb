@@ -7,7 +7,7 @@ class API::V1::JwtController < API::APIController
     begin
       user, role = check_for_auth_token(params)
     rescue StandardError => e
-      return error(e.message)
+      raise Pundit::NotAuthorizedError, e.message
     end
 
     if role
@@ -38,7 +38,7 @@ class API::V1::JwtController < API::APIController
     begin
       render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
     rescue StandardError => e
-      return error(e.message, 500)
+      raise Pundit::NotAuthorizedError, e.message
     end
   end
 
@@ -49,15 +49,17 @@ class API::V1::JwtController < API::APIController
     begin
       user, role = check_for_auth_token(params)
     rescue StandardError => e
-      return error(e.message)
+      raise Pundit::NotAuthorizedError, e.message
+    end
+
+    if params[:firebase_app].blank?
+      raise Pundit::NotAuthorizedError, 'Missing firebase_app parameter'
     end
 
     if role
       learner = role[:learner]
       teacher = role[:teacher]
     end
-
-    return error('Missing firebase_app parameter') if params[:firebase_app].blank?
 
     claims = {}
     if learner
@@ -79,9 +81,9 @@ class API::V1::JwtController < API::APIController
     elsif teacher
       # verify if the optional passed class_hash is valid
       if params[:class_hash].present?
-        class_hashes = teacher.clazzes.map {|c| c.class_hash}
-        if !class_hashes.include? params[:class_hash]
-          return error('Teacher does not have a class with the requested class_hash')
+        class_hashes = teacher.clazzes.map(&:class_hash)
+        unless class_hashes.include? params[:class_hash]
+          raise Pundit::NotAuthorizedError, 'Teacher does not have a class with the requested class_hash'
         end
       end
 
@@ -102,7 +104,7 @@ class API::V1::JwtController < API::APIController
     begin
       render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
     rescue StandardError => e
-      return error(e.message, 500)
+      raise Pundit::NotAuthorizedError, e.message
     end
   end
 

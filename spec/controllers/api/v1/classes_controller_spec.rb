@@ -42,16 +42,16 @@ describe API::V1::ClassesController do
   # TODO: auto-generated
   describe '#info' do
     it 'GET info' do
-      get :info, {}, {}
+      get :info, class_word: FactoryBot.create(:portal_clazz, class_word: 'word').class_word
 
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:ok)
     end
   end
 
   # TODO: auto-generated
   describe '#log_links' do
     it 'GET log_links' do
-      get :log_links, {}, {}
+      get :log_links, id: FactoryBot.create(:portal_clazz).to_param
 
       expect(response).to have_http_status(:forbidden)
     end

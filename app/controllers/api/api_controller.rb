@@ -5,23 +5,11 @@ class API::APIController < ApplicationController
   def pundit_user_not_authorized(exception)
     render status: 403, json: {
       success: false,
-      message: 'Not authorized'
+      message: exception.message
     }
   end
 
   public
-
-  # NOTE: this approach requires you to return from the
-  # method to prevent a double render problem. An easy way to do this:
-  #  return error(...)
-  def error(message, status = 400)
-    render :json =>
-      {
-        :response_type => "ERROR",
-        :message => message
-      },
-      :status => status
-  end
 
   def show
     raise Pundit::NotDefinedError, "Show not configured for this resource"

@@ -9,7 +9,7 @@ class API::V1::SearchController < API::APIController
       render json: {query: request.query_string, results: search_results_data}
     rescue => e
       ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
-      return error('Search unavailable')
+      raise Pundit::NotAuthorizedError, 'Search unavailable'
     end
   end
 

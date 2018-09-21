@@ -6,22 +6,22 @@ class API::V1::ExternalActivitiesController < API::APIController
     authorize [:api, :v1, :external_activity]
 
     begin
-      user, role = check_for_auth_token(params)
+      user, _ = check_for_auth_token(params)
     rescue StandardError => e
-      return error(e.message)
+      raise Pundit::NotAuthorizedError, e.message
     end
 
     name = params.require(:name)
     url = params.require(:url)
 
-    begin
-      validated_url = URI.parse(url)
+    validated_url = begin
+      URI.parse(url)
     rescue StandardError
-      validated_url = nil
+      nil
     end
 
     unless validated_url
-      return error("Invalid url", 422)
+      raise Pundit::NotAuthorizedError, "Invalid url"
     end
 
     external_report_id = 0
@@ -41,8 +41,8 @@ class API::V1::ExternalActivitiesController < API::APIController
       :external_report_id => external_report_id
     )
 
-    if !external_activity.valid?
-      return error("Unable to create external activity", 422)
+    unless external_activity.valid?
+      raise Pundit::NotAuthorizedError, "Unable to create external activity"
     end
 
     render status: 201, json: {edit_url: edit_external_activity_url(external_activity)}

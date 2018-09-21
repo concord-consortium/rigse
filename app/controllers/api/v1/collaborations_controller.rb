@@ -12,7 +12,7 @@ class API::V1::CollaborationsController < API::APIController
     if result
       render status: 201, json: result
     else
-      return error(create_collaboration.errors)
+      raise Pundit::NotAuthorizedError, create_collaboration.errors
     end
   end
 
@@ -34,7 +34,7 @@ class API::V1::CollaborationsController < API::APIController
     if result
       render json: result
     else
-      return error(show_endpoints.errors)
+      raise Pundit::NotAuthorizedError, show_endpoints.errors
     end
   end
 

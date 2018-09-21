@@ -19,7 +19,7 @@ module EnewsSubscription
     else
       # This is to protect from future coding error where the request type is
       # not what we expect. This exception should never occur in production.
-      raise StandardError, "Unexpected request type (:#{req_type.to_s}). Must be :put or :get."
+      raise Pundit::NotDefinedError, "Unexpected request type (:#{req_type.to_s}). Must be :put or :get."
     end
     req.basic_auth("user", Enews_api_key)
     req.body = enews_data.to_json

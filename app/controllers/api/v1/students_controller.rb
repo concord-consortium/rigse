@@ -12,9 +12,9 @@ class API::V1::StudentsController < API::APIController
       # The errors in this case will be passed down to the registration form.
       # The use of class_word is so the error message is shown in the form.
       if current_user.portal_teacher
-        return error(class_word: I18n.t('Registration.ErrorLoggedInAsTeacher'))
+        raise Pundit::NotAuthorizedError, I18n.t('Registration.ErrorLoggedInAsTeacher')
       elsif current_user.portal_student
-        return error(class_word: I18n.t('Registration.ErrorLoggedInAsStudent'));
+        raise Pundit::NotAuthroizedError, I18n.t('Registration.ErrorLoggedInAsStudent')
       else
         registration.set_user current_user
       end
@@ -40,7 +40,7 @@ class API::V1::StudentsController < API::APIController
 
       render :json => attributes
     else
-      return error(registration.errors)
+      raise Pundit::NotAuthorizedError, registration.errors.full_messages.to_sentence
     end
   end
 
@@ -51,7 +51,7 @@ class API::V1::StudentsController < API::APIController
     if found
       render :json => {'message' => 'ok'}
     else
-      return error({'class_word' => 'class word not found'})
+      raise Pundit::NotAuthorizedError, 'class word not found'
     end
   end
 
@@ -61,8 +61,11 @@ class API::V1::StudentsController < API::APIController
     student_id = params.require(:id)
     password   = params.require(:password)
     login      = Portal::Student.find(student_id).user.login
-    return render :json => {'message' => 'ok'} if User.authenticate(login, password)
-    return error({'password' => 'password incorrect'}, 401)
+    if User.authenticate(login, password)
+      return render :json => {'message' => 'ok'}
+    end
+
+    raise Pundit::NotAuthorizedError, 'password incorrect'
   end
 
 end

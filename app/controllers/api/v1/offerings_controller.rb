@@ -10,7 +10,7 @@ class API::V1::OfferingsController < API::APIController
                    .includes(API::V1::Offering::INCLUDES_DEF)
                    .first
     unless offering
-      return error('offering not found', 404)
+      raise Pundit::NotAuthorizedError, 'offering not found'
     end
     authorize offering, :api_show?
     offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port)
@@ -42,7 +42,7 @@ class API::V1::OfferingsController < API::APIController
       user = User.find(params[:user_id])
       if !current_user.has_role?('admin') && current_user != user
         # Only admin can list offerings of other users / teachers.
-        return error('access denied', 403)
+        raise Pundit::NotAuthorizedError, 'access denied'
       end
       if user.portal_teacher
         class_ids.concat(user.portal_teacher.clazz_ids)
@@ -56,7 +56,7 @@ class API::V1::OfferingsController < API::APIController
       clazz = Portal::Clazz.find(params[:class_id])
       if !current_user.has_role?('admin') && !clazz.is_teacher?(current_user)
         # Only admin can list offerings of somebody else's class.
-        return error('access denied', 403)
+        raise Pundit::NotAuthorizedError, 'access denied'
       end
       class_ids.push(params[:class_id])
     end

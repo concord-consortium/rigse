@@ -14,9 +14,9 @@ class API::V1::TeachersController < API::APIController
       # The errors in this case will be passed down to the registration form.
       # The use of school_id is so the error message is shown in the form.
       if current_user.portal_teacher
-        return error(school_id: I18n.t('Registration.ErrorLoggedInAsTeacher'))
+        raise Pundit::NotAuthorizedError, I18n.t('Registration.ErrorLoggedInAsTeacher')
       elsif current_user.portal_student
-        return error(school_id: I18n.t('Registration.ErrorLoggedInAsStudent'))
+        raise Pundit::NotAuthorizedError, I18n.t('Registration.ErrorLoggedInAsStudent')
       else
         teacher_registration.set_user current_user
       end
@@ -27,7 +27,7 @@ class API::V1::TeachersController < API::APIController
       if school_id
         teacher_registration.school_id = school_id
       else
-        return error(school_reg_errors)
+        raise Pundit::NotAuthorizedError, school_reg_errors
       end
     end
 
@@ -53,7 +53,7 @@ class API::V1::TeachersController < API::APIController
 
       render status: 201, json: attributes
     else
-      return error(teacher_registration.errors)
+      raise Pundit::NotAuthorizedError, teacher_registration.errors.full_messages.to_sentence
     end
   end
 
@@ -62,7 +62,7 @@ class API::V1::TeachersController < API::APIController
     if !found
       render :json => {'message' => 'ok'}
     else
-      return error({'email' => 'address taken'})
+      raise Pundit::NotAuthorizedError, 'email address is taken'
     end
   end
 
@@ -71,7 +71,7 @@ class API::V1::TeachersController < API::APIController
     if !found
       render :json => {'message' => 'ok'}
     else
-      return error({'login' => 'username taken'})
+      raise Pundit::NotAuthorizedError, 'username is taken'
     end
   end
 
@@ -84,7 +84,7 @@ class API::V1::TeachersController < API::APIController
     if valid
       login_available
     else
-      return error({'login' => 'username not valid'})
+      raise Pundit::NotAuthorizedError, 'username is not valid'
     end
   end
 
@@ -99,69 +99,59 @@ class API::V1::TeachersController < API::APIController
     if valid
       render :json => {'message' => 'ok'}
     else
-      return error({'name' => 'name not valid'})
+      raise Pundit::NotAuthorizedError, 'name not valid'
     end
   end
 
   def get_enews_subscription
     teacher_id = params.require(:id)
-    if current_user.nil?
-      return error(I18n.t('Registration.ErrorNotAllowed'))
-    end
+    require_logged_in_user
 
-    if current_user.portal_teacher
-      current_teacher_id = current_user.portal_teacher.id
-    else
-      current_teacher_id = ''
-    end
-
-    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
-      return error(I18n.t('Registration.ErrorNotAllowed'))
+    if teacher_id != current_teacher_id.to_s && !current_user.is_admin?
+      raise Pundit::NotAuthorizedError, I18n.t('Registration.ErrorNotAllowed')
     end
 
     email = current_user.portal_teacher.email
-    enews_response_data = EnewsSubscription::get_status(email)
+    enews_response_data = EnewsSubscription.get_status(email)
     enews_status = enews_response_data['status']
 
-    if enews_status == 'subscribed'
-      subscribed = true
-    else
-      subscribed = false
-    end
+    subscribed = enews_status == 'subscribed'
 
-    return render :json => {'subscribed' => "#{subscribed}"}
+    render :json => {'subscribed' => "#{subscribed}"}
   end
 
   def update_enews_subscription
     teacher_id = params.require(:id)
     teacher_account = Portal::Teacher.find(teacher_id)
 
-    if current_user.nil?
-      return error(I18n.t('Registration.ErrorNotAllowed'))
-    end
+    require_logged_in_user
 
-    if current_user.portal_teacher
-      current_teacher_id = current_user.portal_teacher.id
-    else
-      current_teacher_id = ''
-    end
-
-    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
-      return error(I18n.t('Registration.ErrorNotAllowed'))
+    if teacher_id != current_teacher_id.to_s && !current_user.is_admin?
+      raise Pundit::NotAuthorizedError, I18n.t('Registration.ErrorNotAllowed')
     end
 
     email = teacher_account.email
     first_name = teacher_account.first_name
     last_name = teacher_account.last_name
     status = params.require(:status)
-    enews_response_data = EnewsSubscription::set_status(email, status, first_name, last_name)
+    enews_response_data = EnewsSubscription.set_status(email, status, first_name, last_name)
     enews_status = enews_response_data['status']
 
-    return render :json => {'subscribed' => "#{enews_status}"}
-
+    render :json => {'subscribed' => "#{enews_status}"}
   end
 
   private
+
+  def require_logged_in_user
+    unless current_user
+      raise Pundit::NotAuthorizedError, I18n.t('Registration.ErrorNotAllowed')
+    end
+  end
+
+  def current_teacher_id
+    teacher = current_user.portal_teacher
+    teacher ? teacher.id : ''
+  end
 
   def school_params_provided?
     params[:school_name].present? && params[:country_id].present? && params[:zipcode].present?

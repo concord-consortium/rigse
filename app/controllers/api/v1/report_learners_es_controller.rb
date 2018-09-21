@@ -26,7 +26,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     authorize Portal::PermissionForm
 
     if !ENV['ELASTICSEARCH_URL']
-      return error("Elasticsearch endpoint url not set")
+      raise Pundit::NotAuthorizedError, "Elasticsearch endpoint url not set"
     end
 
     esSearchResult = self.class.query_es(params, current_user)

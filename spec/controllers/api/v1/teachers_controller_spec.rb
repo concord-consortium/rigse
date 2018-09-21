@@ -3,6 +3,7 @@ require 'spec_helper'
 
 describe API::V1::TeachersController do
   let(:school) { FactoryBot.create(:portal_school) }
+  let(:teacher_user)    { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
 
   let(:teacher_params) do
     {
@@ -123,39 +124,42 @@ describe API::V1::TeachersController do
     end
   end
 
-  # TODO: auto-generated
   describe '#login_valid' do
     it 'GET login_valid' do
-      get :login_valid, {}, {}
+      get :login_valid, username: 'username'
 
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:ok)
     end
   end
 
   # TODO: auto-generated
   describe '#name_valid' do
     it 'GET name_valid' do
-      get :name_valid, {}, {}
+      get :name_valid, name: 'name'
 
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:ok)
     end
   end
 
   # TODO: auto-generated
   describe '#get_enews_subscription' do
     it 'GET get_enews_subscription' do
-      get :get_enews_subscription, {}, {}
+      sign_in teacher_user
 
-      expect(response).to have_http_status(:bad_request)
+      get :get_enews_subscription, id: FactoryBot.create(:portal_teacher).to_param
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
   # TODO: auto-generated
   describe '#update_enews_subscription' do
     it 'GET update_enews_subscription' do
-      get :update_enews_subscription, {}, {}
+      sign_in teacher_user
 
-      expect(response).to have_http_status(:bad_request)
+      get :update_enews_subscription, id: FactoryBot.create(:portal_teacher).to_param, status: 'subscribed'
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 

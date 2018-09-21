@@ -8,7 +8,7 @@ class API::V1::ClassesController < API::APIController
 
     clazz = Portal::Clazz.find_by_id(params[:id])
     unless clazz
-      return error('The requested class was not found')
+      raise Pundit::NotAuthorizedError, 'The requested class was not found'
     end
 
     student_in_class = user.portal_student && user.portal_student.has_clazz?(clazz)
@@ -46,7 +46,7 @@ class API::V1::ClassesController < API::APIController
     class_word = params.require(:class_word)
     clazz = Portal::Clazz.find_by_class_word(class_word)
     unless clazz
-      return error('The requested class was not found')
+      raise Pundit::NotAuthorizedError, 'The requested class was not found'
     end
 
     render_info clazz
@@ -57,7 +57,7 @@ class API::V1::ClassesController < API::APIController
 
     clazz = Portal::Clazz.find_by_id(params[:id])
     unless clazz
-      return error('The requested class was not found')
+      raise Pundit::NotAuthorizedError, 'The requested class was not found'
     end
 
     base_report_url = ENV["BASE_LOG_REPORT_URL"] || "https://log-puller.herokuapp.com"
