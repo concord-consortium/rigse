@@ -8,8 +8,6 @@ class Search
   attr_accessor :clean_material_types
   attr_accessor :sort_order
   attr_accessor :private
-  attr_accessor :grade_span
-  attr_accessor :domain_id
   attr_accessor :without_teacher_only
   attr_accessor :activity_page
   attr_accessor :investigation_page
@@ -134,7 +132,6 @@ class Search
     self.user_id        = opts[:user_id]
     self.user           = User.find(self.user_id)  if self.user_id
     self.engine         = opts[:engine]         || Sunspot
-    self.grade_span     = opts[:grade_span]     || NoGradeSpan
     self.no_sensors     = opts[:no_sensors]     || false
     self.private        = opts[:private]        || false
     self.sort_order     = opts[:sort_order]     || Newest
@@ -217,8 +214,6 @@ class Search
         end
         s.with(:user_id, self.user_id) if self.include_mine
         s.with(:material_type, type)
-        s.with(:domain_id, self.domain_id) unless self.domain_id.empty?
-        s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
 
         search_by_sensors(s)
         search_by_authorship(s)

@@ -1,0 +1,4 @@
+migrations
+
+remove #domain_id from porta_teacher
+look for grade_span, grade_span_expection, and domain on all the material models

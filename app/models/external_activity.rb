@@ -43,12 +43,6 @@ class ExternalActivity < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :grade_span do
-      nil
-    end
-    integer :domain_id do
-      nil
-    end
     string  :material_type
     string  :material_properties, :multiple => true do
       material_property_list

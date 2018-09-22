@@ -27,7 +27,7 @@ describe Investigation do
   it "should create a new instance given valid attributes" do
     Investigation.create!(@valid_attributes)
   end
-  
+
   it 'has_many for all BASE_EMBEDDABLES' do
     expect(BASE_EMBEDDABLES.length).to be > 0
     @investigation = Investigation.create!(@valid_attributes)
@@ -40,7 +40,7 @@ describe Investigation do
     before(:each) do
       @investigation = Investigation.create!(@valid_attributes)
     end
-    
+
     it "should not be public by default" do
       expect(@investigation.published?).to be(false)
     end
@@ -48,119 +48,18 @@ describe Investigation do
       @investigation.publish!
       expect(@investigation.public?).to be(true)
     end
-    
+
     it "should not be public if unpublished " do
       @investigation.publish!
       expect(@investigation.public?).to be(true)
       @investigation.un_publish!
       expect(@investigation.public?).not_to be(true)
     end
-    
+
     it "should define a method for available_states" do
       expect(@investigation).to respond_to(:available_states)
     end
   end
-
-  describe "search_list (searching for investigations)" do
-    before(:all) do
-      # Fake use of GSE's
-      # TODO: Test search for projects not using GSE's!
-      @enable_gses = APP_CONFIG[:use_gse]
-      APP_CONFIG[:use_gse] = true
-    end
-    after(:all) do
-      # Restore use of GSE's
-      APP_CONFIG[:use_gse] = @enable_gses
-    end
-
-    it "should find all grade 8 phsysics investigations, including drafts" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :grade_span => [@eight],
-        :domain_id  => [@physics.id],
-        :include_drafts => true
-      }
-      found = Investigation.search_list(options)
-      found.each do |inv|
-        expect(inv.domain).to eq(@physics)
-        expect(inv.grade_span).to eq(@eight)
-      end
-    end
-
-  
-    it "should find all grade phsysics investigations, including drafts" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :domain_id  => [@physics.id],
-        :include_drafts => true
-      }
-      found = Investigation.search_list(options)
-      found.each do |inv|
-        expect(inv.domain).to eq(@physics)
-      end
-    end
-
-    it "should find all public and draft investigations" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :include_drafts => true
-      }
-      found = Investigation.search_list(options)
-      expect(found).to include(*@drafts)
-      expect(found).to include(*@published)
-    end
-
-    it "should find all public and draft NON-GSE investigations too" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :include_drafts => true
-      }
-      found = Investigation.search_list(options)
-      expect(found).to include(@public_non_gse)
-      expect(found).to include(@draft_non_gse)
-    end
-    
-    it "should find only published, in grade 8 physics domain" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :grade_span => [@eight],
-        :domain_id  => [@physics.id],
-        :include_drafts => false
-      }
-      found = Investigation.search_list(options)
-      expect(found.size).to eq(1)
-      found.each do |inv|
-        expect(inv).to be_public
-        expect(inv.domain).to eq(@physics)
-        expect(inv.grade_span).to eq(@eight)
-      end
-    end
-
-    it "should find only published in physics domain" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :domain_id  => [@physics.id],
-        :include_drafts => false
-      }
-      found = Investigation.search_list(options)
-      expect(found).not_to include(*@drafts)
-      found.each do |inv|
-        expect(inv).to be_public
-        expect(inv.domain).to eq(@physics)
-      end
-    end
-    
-    it "should find all published investigations" do
-      skip "Equivalent spec suite elsewhere"
-      options = {
-        :include_drafts => false
-      }
-      found = Investigation.search_list(options)
-      expect(found).to include(*@published)
-      expect(found).to include(@public_non_gse)
-      expect(found).not_to include(*@drafts)
-    end
-  end 
 
   describe "with activities" do
     let (:inv_attributes) { {
@@ -171,7 +70,7 @@ describe Investigation do
     let (:activity_one)  { FactoryBot.create(:activity) }
     let (:activity_two)  { FactoryBot.create(:activity) }
 
-    # We might want to have one activity in the future. 
+    # We might want to have one activity in the future.
     it "should have no activities initially" do
       expect(investigation.activities.size).to eq(0)
     end
@@ -204,19 +103,19 @@ describe Investigation do
       investigation.activities << activity_two
       activity_one.insert_at(1)
       activity_two.insert_at(2)
-      
+
       investigation.reload
       expect(investigation.activities).to eql([activity_one, activity_two])
 
       activity_one.move_to_bottom
       investigation.reload
       expect(investigation.activities).to eql([activity_two, activity_one])
-      
+
       # must reload the other activity for updated position.
       activity_two.reload
       expect(activity_two).to be_before(activity_one)
       expect(activity_one).to be_after(activity_two)
-      
+
       # more fragile, but worth checking:
       expect(activity_one.position).to eql 2
       expect(activity_two.position).to eql 1
@@ -260,7 +159,7 @@ describe Investigation do
       allow(@bad).to receive_messages(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
       allow(@bad_with_learners).to receive_messages(:page_elements => [@good_page_element, @bad_page_element, @good_page_element])
       allow(@bad_with_learners).to receive_messages(:offerings => [@offering])
-      allow(Investigation).to receive_messages(:all => [@good,@bad,@bad_with_learners])     
+      allow(Investigation).to receive_messages(:all => [@good,@bad,@bad_with_learners])
     end
 
     describe "broken investigations" do
@@ -273,7 +172,7 @@ describe Investigation do
           expect(@good.broken_parts).to be_empty
         end
       end
-      
+
       describe "broken?" do
         it "investigation with broken parts should be marked as broken" do
           expect(@good).not_to be_broken
@@ -347,7 +246,7 @@ describe Investigation do
         let(:external_activities) {[]}
         it { is_expected.to be_falsey}
       end
-    end  
+    end
   end
 
   describe '#is_template scope' do
@@ -386,24 +285,6 @@ describe Investigation do
   describe '.assigned' do # scope test
     it 'supports named scope assigned' do
       expect(described_class.limit(3).assigned).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.with_gse' do # scope test
-    it 'supports named scope with_gse' do
-      expect(described_class.limit(3).with_gse).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.domain' do # scope test
-    xit 'supports named scope domain' do
-      expect(described_class.limit(3).domain('1')).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.grade' do # scope test
-    xit 'supports named scope grade' do
-      expect(described_class.limit(3).grade(3)).to all(be_a(described_class))
     end
   end
   # TODO: auto-generated

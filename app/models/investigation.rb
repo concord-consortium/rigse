@@ -5,7 +5,6 @@ class Investigation < ActiveRecord::Base
   include Archiveable
 
   belongs_to :user
-  belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
   has_many :activities, :order => :position, :dependent => :destroy do
     def student_only
       where('teacher_only' => false)
@@ -71,25 +70,7 @@ class Investigation < ActiveRecord::Base
 
   include Publishable
 
-  # for convenience (will not work in find_by_* &etc.)
-  delegate :grade_span, :domain, :to => :grade_span_expectation, :allow_nil => true
-
   scope :assigned, -> { where('investigations.offerings_count > 0') }
-  #
-  # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
-  # Investigation.with_gse.grade('9-11') == good
-  # Investigation.grade('9-11') == bad
-  #
-  scope :with_gse, -> {
-    joins("left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)")
-  }
-
-  scope :domain, lambda { |domain_id| where('ri_gse_knowledge_statements.domain_id in (?)', domain_id) }
-
-  scope :grade, lambda { |gs|
-    gs = gs.size > 0 ? gs : "%"
-    where('ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","): gs)
-  }
 
   scope :like, lambda { |name|
     name = "%#{name}%"

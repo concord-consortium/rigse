@@ -19,7 +19,6 @@ production:
   use_adhoc_workgroups: true
   site_school: <%= ENV["SITE_NAME"] %>-school
   site_district: <%= ENV["SITE_NAME"] %>-district
-  use_gse: false
   active_school_levels:
   - '2'
   - '3'

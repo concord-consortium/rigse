@@ -9,9 +9,8 @@ end
 
 add_setting_tag('@lightweight', :use_jnlps, false)
 
-{ gses: :use_gse,
-  adhoc_workgroups: :use_adhoc_workgroups
-  }.each{|tag_name, setting|
+{ adhoc_workgroups: :use_adhoc_workgroups
+}.each{|tag_name, setting|
     add_setting_tag("@enable_#{tag_name}", setting, true)
     add_setting_tag("@disable_#{tag_name}", setting, false)
   }

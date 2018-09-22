@@ -36,8 +36,8 @@ def for_each_model_instance(find_conditions = {}, &block)
 end
 
 def all_active_record_classes
-  model_classes = ActiveRecord::Base.connection.tables.map{|table_name| 
-    if clazz = table_name.classify.safe_constantize 
+  model_classes = ActiveRecord::Base.connection.tables.map{|table_name|
+    if clazz = table_name.classify.safe_constantize
       clazz
     else
       table_name_parts = table_name.split('_')
@@ -46,8 +46,8 @@ def all_active_record_classes
 
       if clazz = "#{module_name.join('_').classify}::#{table_name_parts.join('_').classify}".safe_constantize
         clazz
-      else 
-        module_name << table_name_parts.shift        
+      else
+        module_name << table_name_parts.shift
         "#{module_name.join('_').classify}::#{table_name_parts.join('_').classify}".safe_constantize
       end
     end
@@ -63,9 +63,9 @@ namespace :app do
 
     task :count_invalid_instances => :environment do
       count = 0
-      all_active_record_classes.each{|clazz| 
+      all_active_record_classes.each{|clazz|
         print clazz.name
-        if [Portal::Nces06School, Portal::School, RiGse::AssessmentTargetUnifyingTheme].include? clazz
+        if [Portal::Nces06School, Portal::School].include? clazz
           puts "skipped"
           next
         end

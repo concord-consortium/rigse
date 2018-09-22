@@ -89,10 +89,6 @@ class Portal::TeachersController < ApplicationController
     if params[:grade]
       @portal_grade = Portal::Grade.find(params[:grade][:id])
     end
-    @domain = nil
-    if params[:domain]
-      @domain = RiGse::Domain.find(params[:domain][:id])
-    end
 
     @user = User.new(params[:user])
     @school_selector = Portal::SchoolSelector.new(params)
@@ -103,7 +99,6 @@ class Portal::TeachersController < ApplicationController
     end
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
-      t.domain = @domain
       t.schools << @school_selector.school if @school_selector.valid?
       t.grades << @portal_grade if !@portal_grade.nil?
     end
