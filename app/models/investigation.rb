@@ -246,14 +246,6 @@ class Investigation < ActiveRecord::Base
     return full_title
   end
 
-  def domain_id
-    if self.domain
-      self.domain.id
-    else
-      nil
-    end
-  end
-
   def is_official
     true # FIXME: Not sure if true should be the hardwired value here
   end

@@ -482,16 +482,6 @@ describe Investigation do
   end
 
   # TODO: auto-generated
-  describe '#domain_id' do
-    it 'domain_id' do
-      investigation = described_class.new
-      result = investigation.domain_id
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#is_official' do
     it 'is_official' do
       investigation = described_class.new

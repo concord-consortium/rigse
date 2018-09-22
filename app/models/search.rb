@@ -58,7 +58,6 @@ class Search
     Score        => [:score, :desc]
   }
   NoSearchTerm    = nil
-  NoGradeSpan     = NoDomainID =[]
 
   def self.grade_level_groups
     { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"], 'Higher Ed' => ["Higher Ed"] }
@@ -69,11 +68,6 @@ class Search
     # http://rubular.com/r/ML9V9EMCKh (include apostrophe)
     not_valid_chars = /[-+]+/
     term.gsub(not_valid_chars,' ').strip
-  end
-
-  def self.clean_domain_id(domain_id)
-    return NoDomainID unless domain_id
-    [domain_id].flatten
   end
 
   def user
@@ -110,7 +104,6 @@ class Search
     end
 
     self.text                 = Search.clean_search_terms(opts[:search_term])
-    self.domain_id            = Search.clean_domain_id(opts[:domain_id])
     self.clean_material_types = Search.clean_material_types(opts[:material_types])
     # Keep 'raw' value too, so the view can examine what was actually selected by user.
     # TODO: if we focus on this class more, I think it would be much better to move all the
