@@ -41,19 +41,6 @@ describe Search do
 
     end
 
-    describe "clean_domain_id" do
-      it "returns the defaults when passed nil" do
-        expect(Search.clean_domain_id(nil)).to eq(Search::NoDomainID)
-      end
-      it "wraps bare strings in an array" do
-        expect(Search.clean_domain_id("1")).to eq(["1"])
-      end
-
-      it "leaves arrays alone" do
-        expect(Search.clean_domain_id([1,2,3])).to eq([1,2,3])
-      end
-    end
-
     describe "clean_material_types(types)" do
       subject { Search.clean_material_types(types) }
       let(:types){nil}

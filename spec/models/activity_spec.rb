@@ -76,7 +76,7 @@ describe Activity do
       dra = []
       published.each do |inv|
         published_activity = FactoryBot.create(:activity, :name => "activity for #{inv.name}" ,:investigation_id => inv.id)
-        draft = FactoryBot.create(:investigation, :name => inv.name, :grade_span_expectation => inv.grade_span_expectation)
+        draft = FactoryBot.create(:investigation, :name => inv.name)
         draft.name << " (draft) "
         draft.save
         dra << draft.reload
