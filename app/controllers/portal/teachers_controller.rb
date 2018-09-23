@@ -84,7 +84,7 @@ class Portal::TeachersController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Teacher
 
-    # TODO: Teachers DO NOT HAVE grades or Domains.
+    # TODO: Teachers DO NOT HAVE grades
     @portal_grade = nil
     if params[:grade]
       @portal_grade = Portal::Grade.find(params[:grade][:id])
