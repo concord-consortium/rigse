@@ -1,4 +1,0 @@
-migrations
-
-remove #domain_id from several models
-look for grade_span, grade_span_expection, and domain on all the material models
