@@ -30,7 +30,7 @@ describe ApplicationHelper, type: :helper do
         expect(login_line).to match(/login/i)
         expect(login_line).not_to match(/welcome/i)
         expect(login_line(:guest => "guest")).to match(/welcome\s*guest/i)
-        expect(login_line(:login => "Log In")).to match(/Log In/)                   
+        expect(login_line(:login => "Log In")).to match(/Log In/)
         expect(login_line(:signup => "Sign Up")).to match(/Sign Up/)
       end
     end
@@ -116,16 +116,6 @@ describe ApplicationHelper, type: :helper do
   describe '#display_repo_info' do
     xit 'works' do
       result = helper.display_repo_info
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#short_format_gse_summary' do
-    xit 'works' do
-      gse = RiGse::GradeSpanExpectation.new
-      result = helper.short_format_gse_summary(gse)
 
       expect(result).not_to be_nil
     end
@@ -378,15 +368,6 @@ describe ApplicationHelper, type: :helper do
   describe '#name_for_component' do
     it 'works' do
       result = helper.name_for_component(component)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#name_for_gse' do
-    xit 'works' do
-      result = helper.name_for_gse(RiGse::GradeSpanExpectation)
 
       expect(result).not_to be_nil
     end

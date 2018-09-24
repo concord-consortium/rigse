@@ -30,7 +30,7 @@ describe Activity do
       activity.publish!
       expect(activity.public?).to be(true)
     end
-    
+
     it "should not be public if unpublished " do
       activity.publish!
       expect(activity.public?).to be(true)
@@ -40,41 +40,22 @@ describe Activity do
   end
 
   describe "search_list (searching for activity)" do
-    # Preserving these "let" blocks temporarily in case we need them to set up a structure to test elsewhere - pjm 2013/10/08
-    let (:bio) { FactoryBot.create( :rigse_domain, { :name => "biology" } ) }
     let (:seven) { "7" }
     let (:eight) { "8" }
-
-    let (:bio_ks) { FactoryBot.create( :rigse_knowledge_statement, { :domain => bio } ) }
-    let (:bio_at) { FactoryBot.create( :rigse_assessment_target, { :knowledge_statement => bio_ks } ) }
-
-    let (:physics) { FactoryBot.create( :rigse_domain, { :name => "physics" } ) }
-    let (:physics_ks) { FactoryBot.create( :rigse_knowledge_statement, { :domain => physics } ) }
-    let (:physics_at) { FactoryBot.create( :rigse_assessment_target, { :knowledge_statement => physics_ks }) }
-
-    let (:physics_gse_grade7) { FactoryBot.create( :rigse_grade_span_expectation, { :assessment_target => physics_at, :grade_span => seven } ) }
-    let (:physics_gse_grade8) { FactoryBot.create( :rigse_grade_span_expectation, { :assessment_target => physics_at, :grade_span => eight } ) }
-
-    let (:bio_gse_grade7)     { FactoryBot.create( :rigse_grade_span_expectation, { :assessment_target => bio_at, :grade_span => seven } ) }
-    let (:bio_gse_grade8)     { FactoryBot.create( :rigse_grade_span_expectation, { :assessment_target => bio_at, :grade_span => eight } ) }
 
     let (:invs) do
       [
         {
-          :name                   => "grade 7 physics",
-          :grade_span_expectation => physics_gse_grade7
+          :name                   => "grade 7 physics"
         },
         {
-          :name                   => "grade 8 physics",
-          :grade_span_expectation => physics_gse_grade8
+          :name                   => "grade 8 physics"
         },
         {
-          :name                   => "grade 7 bio",
-          :grade_span_expectation => bio_gse_grade7
+          :name                   => "grade 7 bio"
         },
         {
-          :name                   => "grade 8 bio",
-          :grade_span_expectation => bio_gse_grade8
+          :name                   => "grade 8 bio"
         },
       ]
     end
@@ -95,7 +76,7 @@ describe Activity do
       dra = []
       published.each do |inv|
         published_activity = FactoryBot.create(:activity, :name => "activity for #{inv.name}" ,:investigation_id => inv.id)
-        draft = FactoryBot.create(:investigation, :name => inv.name, :grade_span_expectation => inv.grade_span_expectation)
+        draft = FactoryBot.create(:investigation, :name => inv.name)
         draft.name << " (draft) "
         draft.save
         dra << draft.reload
@@ -207,30 +188,9 @@ describe Activity do
   end
 
   # TODO: auto-generated
-  describe '.with_gse' do # scope test
-    # not useable without merge
-    xit 'supports named scope with_gse' do
-      expect(described_class.limit(3).with_gse).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
   describe '.without_teacher_only' do # scope test
     it 'supports named scope without_teacher_only' do
       expect(described_class.limit(3).without_teacher_only).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.domain' do # scope test
-    xit 'supports named scope domain' do
-      # used in conjunction with other
-      expect(described_class.limit(3).domain('1')).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.grade' do # scope test
-    xit 'supports named scope grade' do
-      # used in conjunction with other
-    expect(described_class.limit(3).grade('1')).to all(be_a(described_class))
     end
   end
   # TODO: auto-generated

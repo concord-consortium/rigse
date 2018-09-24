@@ -274,8 +274,6 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
     @portal_clazz = Portal::Clazz.find(params[:id])
-    @grade_span = session[:grade_span] ||= cookies[:grade_span]
-    @domain_id = session[:domain_id] ||= cookies[:domain_id]
   end
 
   # HACK:

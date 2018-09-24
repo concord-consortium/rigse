@@ -8,8 +8,6 @@ class Search
   attr_accessor :clean_material_types
   attr_accessor :sort_order
   attr_accessor :private
-  attr_accessor :grade_span
-  attr_accessor :domain_id
   attr_accessor :without_teacher_only
   attr_accessor :activity_page
   attr_accessor :investigation_page
@@ -60,7 +58,6 @@ class Search
     Score        => [:score, :desc]
   }
   NoSearchTerm    = nil
-  NoGradeSpan     = NoDomainID =[]
 
   def self.grade_level_groups
     { 'K-2' => ["K","1","2"], '3-4' => ["3","4"], '5-6' => ["5","6"], '7-8' => ["7","8"], '9-12' => ["9","10","11","12"], 'Higher Ed' => ["Higher Ed"] }
@@ -71,11 +68,6 @@ class Search
     # http://rubular.com/r/ML9V9EMCKh (include apostrophe)
     not_valid_chars = /[-+]+/
     term.gsub(not_valid_chars,' ').strip
-  end
-
-  def self.clean_domain_id(domain_id)
-    return NoDomainID unless domain_id
-    [domain_id].flatten
   end
 
   def user
@@ -112,7 +104,6 @@ class Search
     end
 
     self.text                 = Search.clean_search_terms(opts[:search_term])
-    self.domain_id            = Search.clean_domain_id(opts[:domain_id])
     self.clean_material_types = Search.clean_material_types(opts[:material_types])
     # Keep 'raw' value too, so the view can examine what was actually selected by user.
     # TODO: if we focus on this class more, I think it would be much better to move all the
@@ -134,7 +125,6 @@ class Search
     self.user_id        = opts[:user_id]
     self.user           = User.find(self.user_id)  if self.user_id
     self.engine         = opts[:engine]         || Sunspot
-    self.grade_span     = opts[:grade_span]     || NoGradeSpan
     self.no_sensors     = opts[:no_sensors]     || false
     self.private        = opts[:private]        || false
     self.sort_order     = opts[:sort_order]     || Newest
@@ -217,8 +207,6 @@ class Search
         end
         s.with(:user_id, self.user_id) if self.include_mine
         s.with(:material_type, type)
-        s.with(:domain_id, self.domain_id) unless self.domain_id.empty?
-        s.with(:grade_span, self.grade_span) unless self.grade_span.empty?
 
         search_by_sensors(s)
         search_by_authorship(s)

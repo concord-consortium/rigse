@@ -62,13 +62,6 @@ class Interactive < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :grade_span do
-      nil
-    end
-    integer :domain_id do
-      nil
-    end
-
     string  :material_type do
       "Interactive"
     end

@@ -67,15 +67,6 @@ class User < ActiveRecord::Base
     where('roles.title = ?',role_name).includes(:roles)
   }
 
-  # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
-  # has_many :big_ideas, :class_name => 'RiGse::BigIdea'
-  # has_many :domains, :class_name => 'RiGse::Domain'
-  # has_many :expectations, :class_name => 'RiGse::Expectation'
-  # has_many :expectation_stems, :class_name => 'RiGse::ExpectationStem'
-  # has_many :grade_span_expectations, :class_name => 'RiGse::GradeSpanExpectation'
-  # has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement'
-  # has_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme'
-
   attr_accessor :skip_notifications
 
   before_validation :strip_spaces

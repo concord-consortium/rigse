@@ -23,12 +23,6 @@ class Search::SearchMaterial
     self.user = user
     self.parent_material = self
 
-    self.other_data = {
-      :grade_span_expectation => nil,
-      :grade_span => nil,
-      :domain_name => nil
-    }
-
     self.populateMaterialData
   end
 
@@ -61,12 +55,6 @@ class Search::SearchMaterial
     if material.is_a? ::Investigation
 
       self.url = {:only_path => false, :controller => 'investigations', :action => 'show', :id => self.id}
-
-      self.other_data[:grade_span_expectation] = material.grade_span_expectation
-      if self.other_data[:grade_span_expectation]
-        self.other_data[:grade_span] = material.grade_span
-        self.other_data[:domain_name] = material.domain.name
-      end
 
     elsif material.is_a? ::Activity
 
@@ -116,4 +104,3 @@ class Search::SearchMaterial
   end
 
 end
-

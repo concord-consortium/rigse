@@ -57,22 +57,9 @@ class Activity < ActiveRecord::Base
   include Archiveable
 
   send_update_events_to :investigation
-  delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true
-
-  # TODO: Which of these scopes can be removed?
-  scope :with_gse, -> {
-    joins("left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)")
-  }
 
   scope :without_teacher_only, -> {
     where('activities.teacher_only = 0')
-  }
-
-  scope :domain, lambda { |domain_id| where('ri_gse_knowledge_statements.domain_id in (?)', domain_id) }
-
-  scope :grade, lambda { |gs|
-    gs = gs.size > 0 ? gs : "%"
-    where('ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(",") : gs )
   }
 
   scope :activity_group, -> {
@@ -156,7 +143,7 @@ class Activity < ActiveRecord::Base
     )
   end
 
- 
+
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
   def reportable_elements

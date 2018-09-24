@@ -104,10 +104,6 @@ module ApplicationHelper
     end
   end
 
-  def short_format_gse_summary(gse)
-    gse.print_summary_data("<div><strong>%s</strong><ul>%s</ul></div>","<li>%s</li>")
-  end
-
   # Sets the page title and outputs title if container is passed in.
   # eg. <%= title('Hello World', :h2) %> will return the following:
   # <h2>Hello World</h2> as well as setting the page title.
@@ -447,17 +443,6 @@ module ApplicationHelper
       else ''
     end
   end
-
-  def name_for_gse(gse)
-    capture_haml do
-      haml_tag(:ul, :class => 'menu_h') do
-        haml_tag(:li) { haml_concat(link_to('GSE: ' + h(gse.gse_key),  grade_span_expectation_path(gse))) }
-        haml_tag(:li) { haml_concat('Grade span: ' + h(gse.grade_span)) }
-        haml_tag(:li) { haml_concat('Assessment target: ' + h(gse.assessment_target.number)) }
-      end
-    end
-  end
-
 
   def sessions_learner_stat(learner)
     sessions = learner.bundle_logger.bundle_contents.count

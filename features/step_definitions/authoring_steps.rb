@@ -21,26 +21,6 @@ When /^I save the investigation$/ do
   click_button("Save")
 end
 
-Given /a mock gse/ do
-  domain = mock_model(RiGse::Domain,
-    :id => 1,
-    :name => "physics"
-  )
-  gse = mock_model(RiGse::GradeSpanExpectation,
-    :domain => domain,
-    :id => 1,
-    :grade_span => '9-11',
-    :print_summary_data => "summary data",
-    :gse_key => 'PHY-9-11',
-    :expectations => [] # not very ambitious
-  )
-  expect(domain).to receive(:grade_span_expectations).and_return([gse])
-  expect(RiGse::GradeSpanExpectation).to receive(:default).and_return(gse)
-  expect(RiGse::Domain).to receive(:find).and_return([domain])
-  expect(RiGse::Domain).to receive(:find).with(1).and_return(domain)
-end
-
-
 #Table: | prompt | answers | correct_answer |
 Given /^the following multiple choice questions exists:$/ do |mult_table|
   mult_table.hashes.each do |hash|
@@ -50,8 +30,8 @@ Given /^the following multiple choice questions exists:$/ do |mult_table|
     correct = hash['correct_answer']
     multi = Embeddable::MultipleChoice.where(prompt: prompt).first_or_create
     choices.map! { |c| Embeddable::MultipleChoiceChoice.create(
-      :choice => c, 
-      :multiple_choice => multi, 
+      :choice => c,
+      :multiple_choice => multi,
       :is_correct => (c == correct)
     )}
     multi.choices = choices
@@ -69,7 +49,7 @@ When /^I add a "([^"]*)" to the page$/ do |embeddable|
 
   # this first part is what happens in the onmouseover event on the plus icon
   # it is necessary to call first because it positions the menu relative to the plus icon
-  # it also adds listeners to make the menu show up, but we aren't using them since we 
+  # it also adds listeners to make the menu show up, but we aren't using them since we
   # aren't really moving the mouse.
   page.execute_script("dropdown_for('button_add_menu','add_menu')")
 
@@ -100,5 +80,3 @@ When /^I paste the embeddable "([^"]*)"$/ do |embeddable|
   click_link("paste Text: content goes here ...")
   page.execute_script("$('actions_menu').hide()")
 end
-
-

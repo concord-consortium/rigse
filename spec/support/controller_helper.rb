@@ -26,9 +26,9 @@ suppress_warnings {
 #     before_render
 #     super
 #   end
-# 
-#   # any stub information is stored in the @mock_proxy variable of the object being stubbed, 
-#   # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy 
+#
+#   # any stub information is stored in the @mock_proxy variable of the object being stubbed,
+#   # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy
 #   # when rails copies the instance variables from the controller to view.  This copying happens
 #   # sometime during the render method (after before_render)
 #   @@protected_instance_variables = %w(@mock_proxy)
@@ -47,7 +47,6 @@ def generate_default_school_resources_with_factories
   @portal_district = @portal_school.district
   @portal_grade_level = FactoryBot.create(:portal_grade_level)
   @portal_grade = @portal_grade_level.grade
-  @rigse_domain = FactoryBot.create(:rigse_domain)
 end
 
 #

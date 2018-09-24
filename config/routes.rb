@@ -41,27 +41,6 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    namespace :ri_gse do
-      resources :assessment_targets
-      resources :knowledge_statements
-      resources :domains
-      resources :big_ideas
-      resources :unifying_themes
-      resources :expectations
-      resources :expectation_stems
-      resources :grade_span_expectations do
-        collection do
-          get :select
-          post :summary
-          post :select_js
-          put :reparse_gses
-        end
-        member do
-          get :print
-        end
-      end
-    end
-
     namespace :embeddable do
       resources :multiple_choices do
         member do
@@ -373,26 +352,6 @@ RailsPortal::Application.routes.draw do
     end
 
     match '/external_activity/list/filter' => 'external_activities#index', :as => :list_filter_external_activity, :method => :post
-
-    resources :assessment_targets
-    resources :knowledge_statements
-    resources :domains
-    resources :big_ideas
-    resources :unifying_themes
-    resources :expectations
-    resources :expectation_stems
-
-    resources :grade_span_expectations do
-      collection do
-        get :select
-        post :summary
-        post :select_js
-        put :reparse_gses
-      end
-      member do
-        get :print
-      end
-    end
 
     resources :images
     match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
