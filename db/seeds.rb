@@ -76,7 +76,7 @@ def create_default_users
   edit_user_list = default_user_list - [anonymous_user]
 
   edit_user_list.each { |user| display_user(user) }
- 
+
   default_user_list.each do |user|
     user.save!
     user.unsuspend! if user.state == 'suspended'
@@ -111,7 +111,7 @@ def create_default_users
   # Set the site_admin attribute to true for the site_admin.
   # This will be used more later for performance reasons as
   # we integrate permission_sets into membership models.
-  admin_user.update_attribute(:site_admin).first_or_create(true)
+  admin_user.update_attribute(:site_admin, true)
 
   manager_user.add_role('manager')
   researcher_user.add_role('researcher')
@@ -168,4 +168,3 @@ Portal::Country.from_csv_file
 # Populate default Standard Documents
 #
 StandardDocument.create_defaults
-
