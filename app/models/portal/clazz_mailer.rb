@@ -11,14 +11,16 @@ class Portal::ClazzMailer < Devise::Mailer
           @cohort_name = @cohort.name
           cohort_admins = @cohort_project.project_admins
           @clazz_name = clazz.name
-          @user = user
-          @subject = "Portal Update: New class created by #{@user.name}"
+          @teacher_name = user.name
+          @subject = "Portal Update: New class created by #{@teacher_name}"
           cohort_admins.each do |cohort_admin|
             cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
           end
         end
       end
-      finish_email(cohort_admin_emails, @subject)
+      if cohort_admin_emails.any?
+        finish_email(cohort_admin_emails, @subject, @teacher_name)
+      end
     end
   end
 
@@ -33,20 +35,22 @@ class Portal::ClazzMailer < Devise::Mailer
           cohort_admins = @cohort_project.project_admins
           @clazz_name = clazz.name
           @offering_name = offering_name
-          @user = user
-          @subject = "Portal Update: New assignment added by #{@user.name}"
+          @teacher_name = user.name
+          @subject = "Portal Update: New assignment added by #{@teacher_name}"
           cohort_admins.each do |cohort_admin|
             cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
           end
         end
       end
-      finish_email(cohort_admin_emails, @subject)
+      if cohort_admin_emails.any?
+        finish_email(cohort_admin_emails, @subject, @teacher_name)
+      end
     end
   end
 
   protected
 
-  def finish_email(cohort_admin_emails, subject)
+  def finish_email(cohort_admin_emails, subject, teacher_name)
     # Need to set the theme because normally it gets set in a controller before_filter...
     set_theme(APP_CONFIG[:theme]||'default')
     mail(:to => cohort_admin_emails,
