@@ -12,7 +12,7 @@ class Portal::ClazzMailer < Devise::Mailer
           cohort_admins = @cohort_project.project_admins
           @clazz_name = clazz.name
           @user = user
-          @subject = "#{@cohort_project.name} cohort #{@cohort_name} Update: New class created by #{@user.name}"
+          @subject = "Portal Update: New class created by #{@user.name}"
           cohort_admins.each do |cohort_admin|
             cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
           end
@@ -34,7 +34,7 @@ class Portal::ClazzMailer < Devise::Mailer
           @clazz_name = clazz.name
           @offering_name = offering_name
           @user = user
-          @subject = "#{@cohort_project.name} cohort #{@cohort_name} Update: New assignment added by #{@user.name}"
+          @subject = "Portal Update: New assignment added by #{@user.name}"
           cohort_admins.each do |cohort_admin|
             cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
           end
