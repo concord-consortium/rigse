@@ -10,10 +10,8 @@
 <%= render :partial => 'shared/email_banner' %>
 </td></tr>
 <tr><td align="left" style="background:#ffffff;padding:16px;">
-<p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">A new class assignment was added in a cohort you manage.</p>
-<p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Project: <%= @cohort_project.name %><br />
-Cohort: <%= @cohort_name %><br />
-Teacher: <%= @user.name %><br />
+<p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">A new class assignment was added by a teacher in a cohort you manage.</p>
+<p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Teacher: <%= @teacher_name %><br />
 Class: <%= @clazz_name %><br />
 Assignment: <%= @offering_name %></p>
 <p style="font-family:'HelveticaNeue','Helvetica Neue',Helvetica,Verdana,Arial,sans-serif;font-size: 12px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">The Concord Consortium<br />
