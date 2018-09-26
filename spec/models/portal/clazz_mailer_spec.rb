@@ -1,30 +1,30 @@
 require 'spec_helper'
 
 describe Portal::ClazzMailer do
-  let(:project) { FactoryBot.create(:project) }
+  let(:project) { FactoryGirl.create(:project) }
 
   let(:cohort) {
-    FactoryBot.create(:admin_cohort, email_notifications_enabled: true, project: project)
+    FactoryGirl.create(:admin_cohort, email_notifications_enabled: true, project: project)
   }
 
   let(:teacher) {
-    teacher = FactoryBot.create(:portal_teacher)
+    teacher = FactoryGirl.create(:portal_teacher)
     teacher.cohorts << cohort
     teacher
   }
 
   let(:user) {
     if teacher.nil?
-      FactoryBot.create(:user)
+      FactoryGirl.create(:user)
     else
       teacher.user.update_attributes(first_name: "Cohort", last_name: "Teacher")
       teacher.user
     end
   }
 
-  let(:clazz) { FactoryBot.create(:portal_clazz, :name => "Test Class") }
+  let(:clazz) { FactoryGirl.create(:portal_clazz, :name => "Test Class") }
   before(:each) do
-    @project_admin = FactoryBot.create(:user, :first_name => "Project", :last_name => "Manager")
+    @project_admin = FactoryGirl.create(:user, :first_name => "Project", :last_name => "Manager")
     @project_admin.add_role_for_project('admin', project)
   end
 
@@ -38,13 +38,13 @@ describe Portal::ClazzMailer do
       end
     end
     context "when teacher is not in a cohort" do
-      let(:teacher) { FactoryBot.create(:portal_teacher) }
+      let(:teacher) { FactoryGirl.create(:portal_teacher) }
       it "does not send a notification email" do
         expect(subject).to be_a(ActionMailer::Base::NullMail)
       end
     end
     context "when teacher is in a cohort without a project" do
-      let(:cohort) { FactoryBot.create(:admin_cohort, email_notifications_enabled: true) }
+      let(:cohort) { FactoryGirl.create(:admin_cohort, email_notifications_enabled: true) }
       it "does not send a notification email" do
         expect(subject).to be_a(ActionMailer::Base::NullMail)
       end
@@ -63,7 +63,7 @@ describe Portal::ClazzMailer do
     end
     context "when teacher's cohort does not have notifications enabled" do
       let(:cohort) {
-        FactoryBot.create(:admin_cohort, email_notifications_enabled: false, project: project)
+        FactoryGirl.create(:admin_cohort, email_notifications_enabled: false, project: project)
       }
 
       it "does not send a notification email" do
@@ -72,7 +72,7 @@ describe Portal::ClazzMailer do
     end
     context "when teacher's cohort has multiple admins" do
       before(:each) do
-        second_admin = FactoryBot.create(:user, :first_name => "Second", :last_name => "Manager")
+        second_admin = FactoryGirl.create(:user, :first_name => "Second", :last_name => "Manager")
         second_admin.add_role_for_project('admin', project)
       end
       it "sends a notification email to project admins" do
@@ -83,10 +83,10 @@ describe Portal::ClazzMailer do
     end
     context "when teacher is in two cohorts" do
       before(:each) do
-        project2 = FactoryBot.create(:project)
-        cohort2 = FactoryBot.create(:admin_cohort, email_notifications_enabled: true, project: project2)
+        project2 = FactoryGirl.create(:project)
+        cohort2 = FactoryGirl.create(:admin_cohort, email_notifications_enabled: true, project: project2)
         teacher.cohorts << cohort2
-        second_admin = FactoryBot.create(:user, :first_name => "Second", :last_name => "Manager")
+        second_admin = FactoryGirl.create(:user, :first_name => "Second", :last_name => "Manager")
         second_admin.add_role_for_project('admin', project2)
       end
       it "sends a notification email to both project admins" do
