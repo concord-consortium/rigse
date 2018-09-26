@@ -17,9 +17,7 @@ class Portal::ClazzMailer < Devise::Mailer
           end
         end
       end
-      if cohort_admin_emails.any?
-        finish_email(cohort_admin_emails, @subject, @teacher_name)
-      end
+      finish_email(cohort_admin_emails, @subject, @teacher_name)
     end
   end
 
@@ -40,19 +38,19 @@ class Portal::ClazzMailer < Devise::Mailer
           end
         end
       end
-      if cohort_admin_emails.any?
-        finish_email(cohort_admin_emails, @subject, @teacher_name)
-      end
+      finish_email(cohort_admin_emails, @subject, @teacher_name)
     end
   end
 
   protected
 
   def finish_email(cohort_admin_emails, subject, teacher_name)
-    # Need to set the theme because normally it gets set in a controller before_filter...
-    set_theme(APP_CONFIG[:theme]||'default')
-    mail(:to => cohort_admin_emails,
-         :subject => subject,
-         :date => Time.now)
+    if cohort_admin_emails.any?
+      # Need to set the theme because normally it gets set in a controller before_filter...
+      set_theme(APP_CONFIG[:theme]||'default')
+      mail(:to => cohort_admin_emails,
+           :subject => subject,
+           :date => Time.now)
+    end
   end
 end
