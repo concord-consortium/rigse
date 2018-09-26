@@ -1,56 +1,53 @@
-class Portal::ClazzMailer < Devise::Mailer
+class Portal::ClazzMailer < ActionMailer::Base
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
 
   def clazz_creation_notification(user, clazz)
     if user.present?
-      cohort_admin_emails = []
-      user.cohorts.each do |uc|
-        if uc.email_notifications_enabled
-          @cohort = uc
-          @cohort_project = Admin::Project.find(@cohort.project_id)
-          cohort_admins = @cohort_project.project_admins
-          @clazz_name = clazz.name
-          @teacher_name = user.name
-          @subject = "Portal Update: New class created by #{@teacher_name}"
-          cohort_admins.each do |cohort_admin|
-            cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
-          end
-        end
-      end
-      finish_email(cohort_admin_emails, @subject, @teacher_name)
+      @teacher_name = user.name
+      @clazz_name = clazz.name
+      subject = "Portal Update: New class created by #{@teacher_name}"
+      email_cohort_admins(user, subject)
     end
   end
 
   def clazz_assignment_notification(user, clazz, offering_name)
     if user.present?
-      cohort_admin_emails = []
-      user.cohorts.each do |uc|
-        if uc.email_notifications_enabled
-          @cohort = uc
-          @cohort_project = Admin::Project.find(@cohort.project_id)
-          cohort_admins = @cohort_project.project_admins
-          @clazz_name = clazz.name
-          @offering_name = offering_name
-          @teacher_name = user.name
-          @subject = "Portal Update: New assignment added by #{@teacher_name}"
-          cohort_admins.each do |cohort_admin|
-            cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
-          end
-        end
-      end
-      finish_email(cohort_admin_emails, @subject, @teacher_name)
+      @teacher_name = user.name
+      @clazz_name = clazz.name
+      @offering_name = offering_name
+      subject = "Portal Update: New assignment added by #{@teacher_name}"
+      email_cohort_admins(user, subject)
     end
   end
 
   protected
 
-  def finish_email(cohort_admin_emails, subject, teacher_name)
-    if cohort_admin_emails.any?
+  def cohort_admin_emails_to_notify(user)
+    cohort_admin_emails = []
+
+    user.cohorts.each do |cohort|
+      if cohort.email_notifications_enabled
+        cohort_project = cohort.project
+        next if cohort_project.nil?
+        cohort_admins = cohort_project.project_admins
+        cohort_admins.each do |cohort_admin|
+          cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
+        end
+      end
+    end
+
+    cohort_admin_emails
+  end
+
+  def email_cohort_admins(user, subject)
+    emails = cohort_admin_emails_to_notify(user)
+    if emails.any?
       # Need to set the theme because normally it gets set in a controller before_filter...
       set_theme(APP_CONFIG[:theme]||'default')
-      mail(:to => cohort_admin_emails,
+      mail(:to => emails,
            :subject => subject,
            :date => Time.now)
     end
   end
+
 end
