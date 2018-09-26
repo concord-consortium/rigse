@@ -23,7 +23,9 @@ class Reports::Sheet
   # axlsx specific stuff
   def add_to_book(book)
     puts "Adding sheet: #{@name}" if @verbose
-    book.add_worksheet(name: @name) do |x_sheet|
+    # axlsx limits the sheet name to 31 chars
+    shortened_name = @name[0..30]
+    book.add_worksheet(name: shortened_name) do |x_sheet|
       @rows.each do |row|
         puts " Adding row: #{row}" if @verbose
         x_row = x_sheet.add_row
