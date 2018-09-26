@@ -17,7 +17,7 @@ modulejs.define 'components/signup/basic_data_form',
   TextInput = React.createFactory TextInputClass
   RadioInput = React.createFactory RadioInputClass
   FormsyForm = React.createFactory Formsy.Form
-  
+
   nameValidator = (value) ->
       jQuery.get "#{Portal.API_V1.NAME_VALID}?name=#{value}"
 
@@ -38,8 +38,12 @@ modulejs.define 'components/signup/basic_data_form',
       @setState password: model.password
 
     onBasicFormValid: ->
-      @setState canSubmit:  (   @refs.firstName.isValidAsync() &&
-                                @refs.lastName.isValidAsync()       )
+      {anonymous} = @props
+      if anonymous
+        @setState canSubmit:  (   @refs.firstName.isValidAsync() &&
+                                  @refs.lastName.isValidAsync()       )
+      else
+        @setState canSubmit: true
 
     onBasicFormInvalid: ->
       @setState canSubmit: false
