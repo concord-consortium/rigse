@@ -8,7 +8,6 @@ class Portal::ClazzMailer < Devise::Mailer
         if uc.email_notifications_enabled
           @cohort = uc
           @cohort_project = Admin::Project.find(@cohort.project_id)
-          @cohort_name = @cohort.name
           cohort_admins = @cohort_project.project_admins
           @clazz_name = clazz.name
           @teacher_name = user.name
@@ -31,7 +30,6 @@ class Portal::ClazzMailer < Devise::Mailer
         if uc.email_notifications_enabled
           @cohort = uc
           @cohort_project = Admin::Project.find(@cohort.project_id)
-          @cohort_name = @cohort.name
           cohort_admins = @cohort_project.project_admins
           @clazz_name = clazz.name
           @offering_name = offering_name
