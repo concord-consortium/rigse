@@ -23,20 +23,19 @@ class Portal::ClazzMailer < ActionMailer::Base
   protected
 
   def cohort_admin_emails_to_notify(user)
-    cohort_admin_emails = []
+    cohorts = user.cohorts.
+      where(email_notifications_enabled: true).
+      where('project_id is not null')
 
-    user.cohorts.each do |cohort|
-      if cohort.email_notifications_enabled
-        cohort_project = cohort.project
-        next if cohort_project.nil?
-        cohort_admins = cohort_project.project_admins
-        cohort_admins.each do |cohort_admin|
-          cohort_admin_emails.push("#{cohort_admin.name} <#{cohort_admin.email}>")
-        end
-      end
+    cohort_admins = []
+    cohorts.each do |cohort|
+      cohort_project = cohort.project
+      cohort_admins += cohort_project.project_admins
     end
 
-    cohort_admin_emails
+    cohort_admins.map do |cohort_admin|
+      "#{cohort_admin.name} <#{cohort_admin.email}>"
+    end
   end
 
   def email_cohort_admins(user, subject)
