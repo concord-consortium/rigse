@@ -8,9 +8,18 @@ describe Portal::ClazzMailer do
   }
 
   let(:teacher) {
-    teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :first_name => "Cohort", :last_name => "Teacher"))
+    teacher = FactoryBot.create(:portal_teacher)
     teacher.cohorts << cohort
     teacher
+  }
+
+  let(:user) {
+    if teacher.nil?
+      FactoryBot.create(:user)
+    else
+      teacher.user.update_attributes(first_name: "Cohort", last_name: "Teacher")
+      teacher.user
+    end
   }
 
   let(:clazz) { FactoryBot.create(:portal_clazz, :name => "Test Class") }
@@ -20,7 +29,7 @@ describe Portal::ClazzMailer do
   end
 
   describe "clazz_creation_notification" do
-    subject { Portal::ClazzMailer.clazz_creation_notification(teacher, clazz) }
+    subject { Portal::ClazzMailer.clazz_creation_notification(user, clazz) }
 
     context "when teacher is in a cohort" do
       it "sends a notification email to project admins" do
@@ -36,12 +45,17 @@ describe Portal::ClazzMailer do
     end
     context "when teacher is in a cohort without a project" do
       let(:cohort) { FactoryBot.create(:admin_cohort, email_notifications_enabled: true) }
-      let(:teacher) { FactoryBot.create(:portal_teacher) }
       it "does not send a notification email" do
         expect(subject).to be_a(ActionMailer::Base::NullMail)
       end
     end
-    context "when teacher is nil" do
+    context "when user is nil" do
+      let(:user) { nil }
+      it "does not send a notification email" do
+        expect(subject).to be_a(ActionMailer::Base::NullMail)
+      end
+    end
+    context "when user.portal_teacher is nil" do
       let(:teacher) { nil }
       it "does not send a notification email" do
         expect(subject).to be_a(ActionMailer::Base::NullMail)
@@ -84,7 +98,7 @@ describe Portal::ClazzMailer do
   end
 
   describe "clazz_assignment_notification" do
-    subject { Portal::ClazzMailer.clazz_assignment_notification(teacher, clazz, "Activity 1") }
+    subject { Portal::ClazzMailer.clazz_assignment_notification(user, clazz, "Activity 1") }
     context "when a teacher is in a cohort" do
       it "sends a notification email to project admins" do
         expect(subject).to_not be_a(ActionMailer::Base::NullMail)
@@ -92,7 +106,13 @@ describe Portal::ClazzMailer do
       end
     end
 
-    context "when teacher is nil" do
+    context "when user is nil" do
+      let(:user) { nil }
+      it "does not send a notification email" do
+        expect(subject).to be_a(ActionMailer::Base::NullMail)
+      end
+    end
+    context "when user.portal_teacher is nil" do
       let(:teacher) { nil }
       it "does not send a notification email" do
         expect(subject).to be_a(ActionMailer::Base::NullMail)
