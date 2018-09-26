@@ -2,21 +2,21 @@ class Portal::ClazzMailer < ActionMailer::Base
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
 
   def clazz_creation_notification(user, clazz)
-    if user.present?
+    if user.present? && user.portal_teacher.present?
       @teacher_name = user.name
       @clazz_name = clazz.name
       subject = "Portal Update: New class created by #{@teacher_name}"
-      email_cohort_admins(user, subject)
+      email_cohort_admins(user.portal_teacher, subject)
     end
   end
 
   def clazz_assignment_notification(user, clazz, offering_name)
-    if user.present?
+    if user.present? && user.portal_teacher.present?
       @teacher_name = user.name
       @clazz_name = clazz.name
       @offering_name = offering_name
       subject = "Portal Update: New assignment added by #{@teacher_name}"
-      email_cohort_admins(user, subject)
+      email_cohort_admins(user.portal_teacher, subject)
     end
   end
 
