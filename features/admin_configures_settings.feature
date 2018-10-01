@@ -21,7 +21,7 @@ Feature: Admin configures settings
     
   @javascript
   Scenario: Admin edits settings with jnlps
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And I am logged in with the username admin
     And am on the admin settings page
     When I follow "edit settings"
@@ -29,7 +29,7 @@ Feature: Admin configures settings
 
   @javascript
   Scenario: Admin enables default class
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And I am logged in with the username admin
     And am on the admin settings page
     Then I should see the sites name
@@ -42,7 +42,7 @@ Feature: Admin configures settings
     
   @javascript
   Scenario: Admin enables grade levels for classes
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the following teachers exist:
       | login   | password |
       | teacher | teacher  |
@@ -62,7 +62,7 @@ Feature: Admin configures settings
     Then I should see "GRADE LEVELS:"
     
   Scenario: Admin creates a new settings
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And I am logged in with the username admin
     And am on the admin settings page
     When I create new settings with the description "test settings"

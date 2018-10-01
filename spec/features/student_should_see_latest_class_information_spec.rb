@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.feature 'Student should see latest class information' do
   before do
-    generate_default_settings_and_jnlps_with_factories
+    generate_default_settings_with_factories
 
     login_as('teacher')
     clazz = Portal::Clazz.find_by_name('Mathematics')

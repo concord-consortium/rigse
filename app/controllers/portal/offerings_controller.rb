@@ -1,6 +1,4 @@
 class Portal::OfferingsController < ApplicationController
-  include Portal::LearnerJnlpRenderer
-
   protected
 
   def not_authorized_error_message
@@ -73,16 +71,6 @@ class Portal::OfferingsController < ApplicationController
            redirect_to(@offering.runnable.url(learner, root_url))
          end
        }
-
-      format.jnlp {
-        # check if the user is a student in this offering's class
-        if learner = setup_portal_student
-          render_learner_jnlp learner
-        else
-          # The current_visitor is a teacher (or another user acting like a teacher)
-          render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-        end
-      }
     end
   end
 

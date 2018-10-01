@@ -1,5 +1,4 @@
 class Page < ActiveRecord::Base
-  include JnlpLaunchable
   include Clipboard
 
   belongs_to :user

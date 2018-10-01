@@ -5,7 +5,7 @@ Feature: Student must give consent for research study
   the student shouldn't be able to do anything until they have consented or not
 
   Background: portal configured with student consent
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the default settings has student consent enabled
     And the database has been seeded
 

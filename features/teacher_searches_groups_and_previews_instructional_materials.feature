@@ -5,7 +5,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
   In order to find suitable study materials for the class
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And "differential calculus" has been updated recently
     And The materials have been indexed

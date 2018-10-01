@@ -4,7 +4,7 @@ describe Portal::StudentsController do
   render_views
 
   before(:each) do
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
     generate_portal_resources_with_mocks
     allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
     allow(@mock_settings).to receive(:allow_default_class).and_return(true)

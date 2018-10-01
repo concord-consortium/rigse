@@ -206,9 +206,7 @@ RailsPortal::Application.routes.draw do
       end
       resource :security_questions, :only => [:edit, :update]
 
-      # this is added to prevent caching and reuse of jnlp files by other users
-      # this caching or saving of jnlps could still happen, but adding this eliminates
-      # one potential way it could be cached and reused
+      # this is added to prevent reuse of links to run resources
       namespace :portal do
         resources :offerings, :only => [:show]
       end

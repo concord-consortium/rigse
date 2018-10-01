@@ -1,5 +1,4 @@
 class Section < ActiveRecord::Base
-  include JnlpLaunchable
 
   belongs_to :activity
   belongs_to :user

@@ -1,6 +1,5 @@
 class Activity < ActiveRecord::Base
   include Cohorts
-  include JnlpLaunchable
 
   belongs_to :user
   belongs_to :investigation

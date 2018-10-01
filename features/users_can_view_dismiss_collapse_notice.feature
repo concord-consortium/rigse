@@ -5,7 +5,7 @@ Feature: Users can view notices created by project staff
   In order to be notified about updates or important information
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And a notice for all roles "Notice for all users"
     

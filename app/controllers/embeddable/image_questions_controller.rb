@@ -19,9 +19,6 @@ class Embeddable::ImageQuestionsController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.jnlp   { render :partial => 'shared/installer', :locals => { :runnable => @image_question } }
-
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @image_question, :session_id => (params[:session] || request.env["rack.session.options"][:id]) } }
         format.xml    { render :image_question => @image_question }
       end
     end

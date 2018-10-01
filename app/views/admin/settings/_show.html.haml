@@ -151,13 +151,6 @@
                 %b= admin_settings.enabled_bookmark_types.join(', ')
               = content_for "admin_settings_show_#{admin_settings.id || 'new'}"
 
-            = field_set_tag '<b>Jnlp</b>'.html_safe do
-              %p
-                Jnlp URL:
-                = admin_settings.jnlp_url
-              %p
-                Jnlp CDN Hostname:
-                = admin_settings.jnlp_cdn_hostname
             = field_set_tag 'Settings Description' do
               %p= admin_settings.description.html_safe
             - home_page_content = admin_settings.home_page_content

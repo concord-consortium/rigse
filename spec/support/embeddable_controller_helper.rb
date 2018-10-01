@@ -15,7 +15,7 @@ shared_examples_for 'an embeddable controller' do
   end
 
   before(:each) do
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
     @model_class = model_class_lambda.call
     @model_ivar_name = model_ivar_name_lambda.call
     unless instance_variable_defined?("@#{@model_ivar_name}".to_sym)
@@ -56,27 +56,6 @@ shared_examples_for 'an embeddable controller' do
       allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
       xhr :get, :show, :id => "37"
       expect(assigns[@model_ivar_name]).to equal(@model_ivar)
-    end
-
-    describe "with mime type of jnlp" do
-
-      it "renders the requested #{model_ivar_name_lambda.call} as jnlp without error" do
-        allow(@model_class).to receive(:find).with("37").and_return(@model_ivar)
-        get :show, :id => "37", :format => 'jnlp'
-        expect(assigns[@model_ivar_name]).to equal(@model_ivar)
-        expect(response).to render_template("shared/_installer")
-        assert_select('jnlp') do
-          assert_select('information')
-          assert_select('security')
-          assert_select('resources')
-          assert_select('application-desc') do
-            config_url = controller.polymorphic_url(@model_ivar, :format => :config,
-                Rails.application.config.session_options[:key] => @session_options[:id])
-            assert_select('argument', config_url.gsub("&", "&amp;"))
-          end
-        end
-      end
-
     end
 
   end

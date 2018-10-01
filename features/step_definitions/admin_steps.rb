@@ -15,40 +15,6 @@ Given /^member registration is (.+)$/ do |member_registration|
   settings.save
 end
 
-When /^an admin sets the jnlp CDN hostname to "([^"]*)"$/ do |cdn_hostname|
-  admin = User.find_by_login('admin')
-  login_as(admin.login)
-  visit admin_settings_path
-  click_link "edit settings"
-  fill_in "admin_settings[jnlp_cdn_hostname]", :with => cdn_hostname
-  # we turn on the opportunistic installer in order to test the most functionality
-  check "Use JavaClientLauncher"
-  click_button "Save"
-  expect(page).to have_no_button("Save")
-end
-
-Then /^the installer jnlp should have the CDN hostname "([^"]*)" in the right places$/ do |hostname|
-  inv = FactoryBot.create(:investigation)
-  # switch the driver to rack_test so we can inspect the content
-  original_driver = Capybara.current_driver
-  Capybara.current_driver = :rack_test
-  # request some simple jnlp perhaps we need to actually make an investigation to request before we can do this
-  visit "/investigations/#{inv.id}.jnlp"
-  jnlp_xml = Nokogiri::XML(page.driver.response.body)
-  codebase = jnlp_xml.xpath("/jnlp/@codebase")
-  expect(codebase.text).to match %r{^http://#{hostname}.*}
-
-  wrapped_jnlp_attr = jnlp_xml.xpath("/jnlp/resources/property[@name='wrapped_jnlp']/@value")
-  expect(wrapped_jnlp_attr).not_to be_nil
-  expect(wrapped_jnlp_attr.text).not_to match %r{^http://#{hostname}.*}
-
-  mirror_host_attr = jnlp_xml.xpath("/jnlp/resources/property[@name='jnlp2shell.mirror_host']/@value")
-  expect(mirror_host_attr).not_to be_nil
-  expect(mirror_host_attr.text).to eq(hostname)
-
-  Capybara.current_driver = original_driver
-end
-
 When /^I create new settings with the description "([^"]*)"$/ do |description|
   click_link "create Settings"
   fill_in "admin_settings[description]", :with => description
@@ -87,4 +53,4 @@ end
 When /^I save the settings$/ do
   click_button "Save"
   expect(page).to have_no_button("Save")
-end 
+end

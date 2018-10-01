@@ -20,12 +20,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   include Changeable
 
-  include SailBundleContent
-
-  include BlobExtraction
-  include SaveableExtraction
-
-  before_save :process_bundle
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
@@ -44,10 +38,6 @@ class Dataservice::BundleContent < ActiveRecord::Base
 
   def user
     nil
-  end
-
-  def otml
-    self[:otml] || ''
   end
 
   def name
@@ -99,99 +89,9 @@ class Dataservice::BundleContent < ActiveRecord::Base
     return self.body[/localIP="([^"]*)"/, 1]
   end
 
-  def otml_hash
-    otml_text = self.otml
-    return nil if otml_text.nil? || otml_text.empty?
-    # this is only for debugging issues so it is fine to change the hash function
-    Digest::MD5.hexdigest(otml_text)
-  end
-
   def record_bundle_processing
     self.updated_at = Time.now
     self.processed = true
-  end
-
-  def process_bundle
-    # this method shouldn't be called multiple times,
-    # but even if it is, no harm should come
-    # return true if self.processed
-    self.record_bundle_processing
-    self.valid_xml = valid_xml?
-    # see SailBundleContent mixin for valid_xml? and EMPTY_BUNDLE
-    # Calculate self.empty even when the xml is missing or invalid
-    self.empty = self.body.nil? || self.body.empty? || self.body == EMPTY_BUNDLE
-    if self.valid_xml
-      self.otml = extract_otml
-      self.empty = true unless self.otml && self.otml.length > 0
-    end
-    self.process_blobs
-    true # don't stop the callback chain.
-  end
-
-  def extract_otml
-    if body[/ot.learner.data/]
-      otml_b64gzip = body.slice(/<sockEntries value="(.*?)"/, 1)
-      return B64Gzip.unpack(otml_b64gzip)
-      # ::Zlib::GzipReader.new(StringIO.new(B64::B64.decode(otml_b64gzip))).read
-    else
-      nil
-    end
-  end
-
-  def convert_otml_to_body
-    # explicitly flag attributes which will change, especially otml since it has problems auto-detecting it has changed...
-    self.otml_will_change!
-    self.body_will_change!
-    encoded_str = B64Gzip.pack(self.otml)
-    unless self.original_body != nil && self.original_body.length > 0
-      self.original_body_will_change!
-      self.original_body = self.body
-    end
-    self.body = self.body.sub(/sockEntries value=".*?"/, "sockEntries value=\"#{encoded_str}\"")
-  end
-
-  def process_blobs
-    # return true unless self.valid_xml
-    # we want to give other callbacks a chance to run
-    return false unless self.valid_xml
-    ## extract blobs from the otml and convert the changed otml back to bundle format
-    blobs_present = extract_blobs
-    if blobs_present
-      convert_otml_to_body
-      #self.save!
-    end
-    return blobs_present
-    # above would stop other callbacks from happening
-    # return true
-  end
-
-  def bundle_content_return_address
-    return_address = nil
-    if self.bundle_content =~ /sdsReturnAddresses>(.*?)<\/sdsReturnAddresses/m
-      begin
-        return URI.parse($1)
-      rescue
-      end
-    end
-    return nil
-  end
-
-  def otml_empty?
-    !self.otml || self.otml.size <= 17
-  end
-
-  def delayed_process_bundle
-    extract_saveables
-    copy_to_collaborators
-  end
-
-  def extract_saveables
-    raise "BundleContent ##{self.id}: otml is empty!" if otml_empty?
-    extractor = Otrunk::ObjectExtractor.new(self.otml)
-    extract_everything(extractor)
-
-    # Also create/update a Report::Learner object for reporting
-    learner.report_learner.update_fields if learner
   end
 
   def description

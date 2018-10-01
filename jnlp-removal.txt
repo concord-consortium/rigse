@@ -1,0 +1,46 @@
+Need to find references to:  InstallerReportsController
+InstallerReport model
+look for routest pointing at misc#installer_report
+look at LearnerProcessingEvent
+Dataservice::JnlpSession
+view: shared/installer
+look for any 'format.config'
+helper method: otrunk_edit_button_for
+Look out for a 'renew': request.env['rack.session.options'].delete(:renew)
+The runnable has a run_format that can be jnlp
+
+look for format.bundle
+- it is possible that is used somehow by geni* to handle data saving through the blobs
+but I don't think so
+
+search for reference to installer
+
+search for maven references
+
+removed partial: _java_launch_info
+
+APP_CONFIG[:use_jnlps]
+
+JnlpLaunchable
+
+
+Portal::Settings#jnlp_url
+Portal::Settings#jnlp_cdn_hostname
+
+folders to remove:
+public/jnlp/*/*
+config/jnlp_objects/*/*
+config/jnlp_objects/*.yaml
+config/maven_jnlp_object*.yaml
+public/otrunk-examples/
+jnlp_url.properties
+rites.xml
+resources/bitrock_installer/jnlps.conf
+
+Migration:
+drop: Dataservice::JnlpSession
+drop: Dataservice::LaunchProcessEvent
+drop: PeriodicBundleContent
+drop: PeriodicBundleLogger
+drop: PeriodicBundlePart
+drop: InstallerReport

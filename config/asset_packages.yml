@@ -14,7 +14,6 @@ javascripts:
   - accordion
   - item_selectable
   - live_validation
-  - please_wait
   - report_filter
   - pagination
   - workgroup
@@ -54,7 +53,6 @@ stylesheets:
 - has:
   - app
   - accordion
-  - please_wait
   - window/window
   - window/rites
   - window/lightbox
@@ -73,7 +71,6 @@ stylesheets:
 - xproject:
   - app
   - accordion
-  - please_wait
   - window/window
   - window/rites
   - window/lightbox

@@ -303,12 +303,6 @@ module ApplicationHelper
     select nil, :sort_order, sort_options, {:selected => selected, :include_blank => false }
   end
 
-  def otrunk_edit_button_for(component, options={})
-    controller = component.class.name.pluralize.underscore
-    id = component.id
-    link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
-  end
-
   def learner_report_link_for(learner, action='report', link_text='Report ', title=nil)
     return "" unless learner.reportable?
 
@@ -500,14 +494,6 @@ module ApplicationHelper
     capture_haml do
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_activity_options' do
-          if learner.offering.runnable.run_format == :jnlp
-            haml_concat link_to('Run', run_url_for(learner))
-            haml_concat " | "
-            if current_visitor.has_role?("admin")
-              haml_concat learner_report_link_for(learner, 'bundle_report', 'Bundles ')
-              haml_concat " | "
-            end
-          end
           haml_concat learner_report_link_for(learner, 'report', 'Report')
         end
         haml_tag :div, :class => 'action_menu_activity_title' do

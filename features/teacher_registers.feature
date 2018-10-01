@@ -7,7 +7,7 @@ ITSI-SU requires that teachers self-register.
   So that I can use the investigations portal as a teacher
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
 
   @javascript

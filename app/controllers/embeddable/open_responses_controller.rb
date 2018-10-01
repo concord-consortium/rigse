@@ -22,8 +22,6 @@ class Embeddable::OpenResponsesController < ApplicationController
     else
       respond_to do |format|
         format.html # show.html.haml
-        format.jnlp { render :partial => 'shared/installer', :locals => { :runnable => @open_response  } }
-        format.config { render :partial => 'shared/show', :locals => { :runnable => @open_response, :session_id => (params[:session] || request.env["rack.session.options"][:id])  } }
         format.xml  { render :xml => @open_response }
       end
     end

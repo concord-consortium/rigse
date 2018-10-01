@@ -15,7 +15,6 @@ development: &id003
   :theme: has
   :site_name: HAS Investigations
   :site_url: http://has.portal.concord.org
-  :runnables_use: otrunk_jnlp
   :runnable_mime_type:
   :top_level_container_name: investigation
   :site_school: HAS Investigations-school

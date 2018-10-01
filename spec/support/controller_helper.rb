@@ -37,7 +37,7 @@ suppress_warnings {
 #
 # Factory Generators
 #
-def generate_default_settings_and_jnlps_with_factories
+def generate_default_settings_with_factories
   @admin_settings = FactoryBot.create(:admin_settings)
   generate_default_school_resources_with_factories
 end
@@ -59,14 +59,8 @@ class ArrayOfVersionedJars < Array
   end
 end
 
-class ArrayOfVersionedJnlpUrls < Array
-  def find_by_version_str(version_str)
-    find { |i| i.version_str == version_str } || []
-  end
-end
-
-# Generates a mock settings and associated jnlp resources
-def generate_default_settings_and_jnlps_with_mocks
+# Generates a mock settings
+def generate_default_settings_with_mocks
   @mock_settings = mock_model(Admin::Settings,
     :active                         => true,
     :home_page_content              => nil,
@@ -78,7 +72,6 @@ def generate_default_settings_and_jnlps_with_mocks
     :allow_default_class            => false,
     :allow_default_class?           => false,
     :default_cohort                 => nil,
-    :jnlp_cdn_hostname              => '',
     :enabled_bookmark_types         => []
   )
 
