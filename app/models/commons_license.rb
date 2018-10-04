@@ -9,7 +9,7 @@ class CommonsLicense < ActiveRecord::Base
   DeedFormat  =   "http://#{Site}/licenses/%{code}/%{version}/"
   LegalFormat =   "http://#{Site}/licenses/%{code}/%{version}/legalcode"
 
-  default_scope :order => 'number ASC'
+  default_scope { order('number ASC') }
 
   def default_paths
     self.deed  ||= CommonsLicense.deed(self)

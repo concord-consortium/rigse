@@ -3,8 +3,8 @@ require 'spec_helper'
 describe HelpController, type: :controller do
   
   before(:each) do
-      @admin_user = Factory.next(:admin_user)
-      @test_settings = Factory.create(:admin_settings, :user => @admin_user, :id=> 1)
+      @admin_user = FactoryBot.generate(:admin_user)
+      @test_settings = FactoryBot.create(:admin_settings, :user => @admin_user, :id=> 1)
       login_admin
       allow(Admin::Settings).to receive(:default_settings).and_return(@test_settings)
   end

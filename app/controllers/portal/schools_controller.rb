@@ -102,7 +102,7 @@ class Portal::SchoolsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     if params[:nces_school]
       @nces_school = Portal::Nces06School.find(params[:nces_school][:id])
-      @portal_school = Portal::School.find_or_create_by_nces_school(@nces_school) if @nces_school
+      @portal_school = Portal::School.find_or_create_using_nces_school(@nces_school) if @nces_school
     else
       @portal_school = Portal::School.new(params[:portal_school])
     end

@@ -66,6 +66,11 @@
                   %td{ :style => "padding-right: 10px" } Name:
                   %td
                     = cohort_form.text_field :name
+              Enable Teacher Activity Notifications:
+              = cohort_form.check_box :email_notifications_enabled
+              %br
+              <small>(Enable this option to email project admins when a cohort teacher adds classes or assigns resources.)</small>
+              %br
               = cohort_form.link_to_remove "Remove this cohort"
           %li
             = f.link_to_add "Add a cohort", :cohorts

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe API::V1::PasswordsController do
 
-    let(:user1) { Factory.create(   :user,
+    let(:user1) { FactoryBot.create(   :user,
                                     :login => 'testuser',
                                     :email => 'foo@foo.com' ) }
 
@@ -44,7 +44,7 @@ describe API::V1::PasswordsController do
         context "with SSO email" do
             it "returns failure" do
 
-                sso_user = Factory.create(:user,
+                sso_user = FactoryBot.create(:user,
                                     :login => 'ssouser',
                                     :email => 'foo@gmail.com')
 

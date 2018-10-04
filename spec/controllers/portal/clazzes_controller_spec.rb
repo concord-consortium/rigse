@@ -14,7 +14,7 @@ describe Portal::ClazzesController do
   render_views
 
   def mock_clazz(stubs={})
-    mock_clazz = Factory.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
+    mock_clazz = FactoryBot.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
     #mock_clazz.stub!(stubs) unless stubs.empty?
 
     mock_clazz
@@ -25,24 +25,24 @@ describe Portal::ClazzesController do
   end
 
   before(:each) do
-    @mock_school = Factory.create(:portal_school)
+    @mock_school = FactoryBot.create(:portal_school)
 
     # set up our user types
-    @normal_user = Factory.next(:anonymous_user)
-    @admin_user = Factory.next(:admin_user)
-    @authorized_student =         Factory.create(:portal_student, :user => Factory.create(:confirmed_user, :login => "authorized_student"))
-    @authorized_teacher =         Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
-    @another_authorized_teacher = Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])
-    @unauthorized_teacher =       Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
+    @normal_user = FactoryBot.generate(:anonymous_user)
+    @admin_user = FactoryBot.generate(:admin_user)
+    @authorized_student =         FactoryBot.create(:portal_student, :user => FactoryBot.create(:confirmed_user, :login => "authorized_student"))
+    @authorized_teacher =         FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
+    @another_authorized_teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "another_authorized_teacher"), :schools => [@mock_school])
+    @unauthorized_teacher =       FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "unauthorized_teacher"), :schools => [@mock_school])
     # another teacher, to act as an arbitrary third party
-    @random_teacher =             Factory.create(:portal_teacher, :user => Factory.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
+    @random_teacher =             FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "random_teacher"), :schools => [@mock_school])
 
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
 
 
     @mock_clazz_name = "Random Test Class"
-    @mock_course = Factory.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
+    @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
     @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
 
     allow(@controller).to receive(:before_render) {
@@ -311,7 +311,7 @@ describe Portal::ClazzesController do
     #   login_as :authorized_teacher_user
     #
     #   1.upto 10 do |i|
-    #     teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher#{i}"))
+    #     teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher#{i}"))
     #     @logged_in_user.portal_teacher.school.portal_teachers << teacher
     #   end
     #
@@ -331,9 +331,9 @@ describe Portal::ClazzesController do
     before(:each) do
       # Make sure we have the grade levels we want
       0.upto(12) do |num|
-        grade = Portal::Grade.find_or_create_by_name(num.to_s)
+        grade = Portal::Grade.where(name: num.to_s).first_or_create
         grade.active = true
-        grade.save
+        grade.save!
       end
 
       @post_params = {
@@ -369,7 +369,7 @@ describe Portal::ClazzesController do
     end
 
     it "should attach this class to the appropriate course in the specified school, if one exists" do
-      course = Factory.create(:portal_course, :name => @post_params[:portal_clazz][:name], :school => @mock_school)
+      course = FactoryBot.create(:portal_course, :name => @post_params[:portal_clazz][:name], :school => @mock_school)
       assert course
       expect(course.clazzes.size).to eq(0)
 
@@ -402,11 +402,11 @@ describe Portal::ClazzesController do
     end
 
     it "should create exactly one teacher object for the current user if the current user does not already have one" do
-      @random_user = Factory.create(:confirmed_user, :login => "random_user")
+      @random_user = FactoryBot.create(:confirmed_user, :login => "random_user")
       sign_in @random_user
 
       expect(@random_user.portal_teacher).to be_nil
-      current_count = Portal::Teacher.count(:all)
+      current_count = Portal::Teacher.count
 
       @post_params[:portal_clazz][:teacher_id] = nil
 
@@ -415,20 +415,20 @@ describe Portal::ClazzesController do
       @random_user.reload
 
       expect(@random_user.portal_teacher).not_to be_nil
-      expect(Portal::Teacher.count(:all)).to eq(current_count + 1)
+      expect(Portal::Teacher.count).to eq(current_count + 1)
     end
 
     it "should not let me create a class with no school" do
       sign_in @authorized_teacher_user
 
-      current_count = Portal::Clazz.count(:all)
+      current_count = Portal::Clazz.count
 
       @post_params[:portal_clazz][:school] = nil
 
       post :create, @post_params
 
       assert flash[:error]
-      expect(Portal::Clazz.count(:all)).to eq(current_count)
+      expect(Portal::Clazz.count).to eq(current_count)
     end
 
     it "should assign the specified grade levels to the new class" do
@@ -447,14 +447,14 @@ describe Portal::ClazzesController do
     it "should not let me create a class with no grade levels when grade levels are enabled" do
       sign_in @authorized_teacher_user
 
-      current_count = Portal::Clazz.count(:all)
+      current_count = Portal::Clazz.count
 
       @post_params[:portal_clazz][:grade_levels] = nil
 
       post :create, @post_params
 
       assert flash[:error]
-      expect(Portal::Clazz.count(:all)).to eq(current_count)
+      expect(Portal::Clazz.count).to equal(current_count)
     end
 
     it "should let me create a class with no grade levels when grade levels are disabled" do
@@ -463,11 +463,11 @@ describe Portal::ClazzesController do
 
       sign_in @authorized_teacher_user
 
-      current_count = Portal::Clazz.count(:all)
+      current_count = Portal::Clazz.count
 
       post :create, @post_params
 
-      expect(Portal::Clazz.count(:all)).to eq(current_count + 1)
+      expect(Portal::Clazz.count).to equal(current_count + 1)
     end
   end
 
@@ -475,9 +475,9 @@ describe Portal::ClazzesController do
     before(:each) do
       # Make sure we have the grade levels we want
       0.upto(12) do |num|
-        grade = Portal::Grade.find_or_create_by_name(num.to_s)
+        grade = Portal::Grade.where(name: num.to_s).first_or_create
         grade.active = true
-        grade.save
+        grade.save!
       end
 
       @post_params = {
@@ -521,7 +521,7 @@ describe Portal::ClazzesController do
   describe "POST add_offering" do
     it "should run without error" do
       login_admin
-      external_activity = Factory.create(:external_activity)
+      external_activity = FactoryBot.create(:external_activity)
       post_params = runnable_params(external_activity, @mock_clazz)
       post :add_offering, post_params
     end
@@ -530,7 +530,7 @@ describe Portal::ClazzesController do
 
   describe "Post edit class information" do
     before(:each) do
-      external_activity = Factory.create(:external_activity)
+      external_activity = FactoryBot.create(:external_activity)
       post_params = runnable_params(external_activity, @mock_clazz)
       post :add_offering, post_params
       offers = Array.new
@@ -669,7 +669,7 @@ describe Portal::ClazzesController do
       @student_clazz.student_id = @authorized_student.id
       @student_clazz.save!
 
-      @investigation = Factory(:investigation)
+      @investigation = FactoryBot.create(:investigation)
       @investigation.name = 'Fluid Mechanics'
       @investigation.save!
 
@@ -758,10 +758,10 @@ describe Portal::ClazzesController do
 
   describe "Post teacher sorts class offerings on class summary page" do
     before(:each) do
-      @physics_offering = Factory.create(:portal_offering)
-      @chemistry_offering = Factory.create(:portal_offering)
-      @biology_offering = Factory.create(:portal_offering)
-      @mathematics_offering = Factory.create(:portal_offering)
+      @physics_offering = FactoryBot.create(:portal_offering)
+      @chemistry_offering = FactoryBot.create(:portal_offering)
+      @biology_offering = FactoryBot.create(:portal_offering)
+      @mathematics_offering = FactoryBot.create(:portal_offering)
       @params = {
         :clazz_offerings => [@physics_offering.id, @chemistry_offering.id, @biology_offering.id , @mathematics_offering.id]
       }

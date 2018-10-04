@@ -28,7 +28,6 @@ end
 
   gem "arrayfields"
   gem 'strong_parameters'
-  gem "httpclient"
   gem "httparty"
 
   gem 'rollbar'
@@ -44,11 +43,11 @@ end
 
   gem "RedCloth",             "~> 4.2.8"
   gem "uuidtools",            "~> 2.1.2"
-  gem 'axlsx',                "~> 2.0", ">= 2.0.1"
+  gem 'axlsx',                "> 2.5"
 
   # currently (2017-06-13) axlsx requires an older version of rubyzip, hopefully this will
   # shortly be remedied
-  gem 'rubyzip',              "~> 1.0.0"
+  gem 'rubyzip',              "~> 1.2.2"
 
   gem "prawn",                "~> 0.12.0"
   gem 'prawn_rails',          "~> 0.0.6"
@@ -67,9 +66,9 @@ end
   gem "redcarpet",            "~> 2.1.1"
   gem "syntax",               "~> 1.0"
   gem "paperclip",            "~> 3.4.0"
-  gem "acts-as-taggable-on",  "~> 2.1.1"
+  gem "acts-as-taggable-on",  "~> 2.4.1"
   gem "acts_as_list",         "~> 0.1.6"
-  gem "nokogiri",             "~> 1.7.0"
+  gem "nokogiri",             "~> 1.8.0"
   gem 'rdoc',                 "~> 3.9.4"
   # this customization is so the digests or fingerprints are correctly added to the assets even when
   # they are from a theme.
@@ -96,6 +95,12 @@ end
   gem "delayed_job_web"
   gem 'daemons',              "~> 1.1.8"
   gem 'rush',                 :git => 'git://github.com/concord-consortium/rush'
+  # this is the old version of aws and is needed by our old version of paperclip
+  # we cannot upgrade paperclip until we have rails up to version 4. This uses the AWS
+  # namespace.
+  gem 'aws-sdk-v1'
+  # this is the new version of the aws sdk. It uses the Aws namespace. It is currently used
+  # by a rake task to archive old portals
   gem "aws-sdk",              "~> 3"
   gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
   gem "tinymce-rails",        "~>3.5.6"
@@ -196,7 +201,7 @@ group :test, :cucumber do
   gem "spring-commands-cucumber"
   gem "spring-commands-rspec"
   gem "selenium-webdriver"
-  gem "cucumber",           "~> 1.3.0"
+  gem "cucumber"
   gem "cucumber-rails",                 :require => false
   gem "database_cleaner"
   gem "capybara"
@@ -217,7 +222,7 @@ end
 
 group :test, :cucumber, :development do
   # this is included in development so the mock data can be loaded into the dev database
-  gem "factory_girl",       "~> 3.0"  # moving to 4.x or above will require conforming to new syntax
+  gem "factory_bot"
   gem "guard"
   gem "guard-rspec"
   gem "guard-cucumber"

@@ -5,7 +5,7 @@ require 'spec_helper'
 
 RSpec.describe Portal::Bookmark, type: :model do
 
-  let(:user) { Factory.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   # TODO: auto-generated
   describe '.available_types' do

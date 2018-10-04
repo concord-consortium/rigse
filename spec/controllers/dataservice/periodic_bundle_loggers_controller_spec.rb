@@ -7,7 +7,7 @@ RSpec.describe Dataservice::PeriodicBundleLoggersController, type: :controller d
   # TODO: auto-generated
   describe '#show' do
     xit 'GET show' do
-      get :show, id: Factory.create(:periodic_bundle_logger).to_param
+      get :show, id: FactoryBot.create(:periodic_bundle_logger).to_param
 
       expect(response).to have_http_status(:ok)
     end

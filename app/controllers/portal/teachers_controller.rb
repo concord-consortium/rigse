@@ -84,14 +84,10 @@ class Portal::TeachersController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Teacher
 
-    # TODO: Teachers DO NOT HAVE grades or Domains.
+    # TODO: Teachers DO NOT HAVE grades
     @portal_grade = nil
     if params[:grade]
       @portal_grade = Portal::Grade.find(params[:grade][:id])
-    end
-    @domain = nil
-    if params[:domain]
-      @domain = RiGse::Domain.find(params[:domain][:id])
     end
 
     @user = User.new(params[:user])
@@ -103,7 +99,6 @@ class Portal::TeachersController < ApplicationController
     end
     @portal_teacher = Portal::Teacher.new do |t|
       t.user = @user
-      t.domain = @domain
       t.schools << @school_selector.school if @school_selector.valid?
       t.grades << @portal_grade if !@portal_grade.nil?
     end

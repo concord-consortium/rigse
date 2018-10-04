@@ -22,7 +22,7 @@ RSpec.describe UserMailer, type: :mailer do
   describe '#signup_notification' do
     it 'signup_notification' do
       user_mailer = described_class
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = user_mailer.signup_notification(user)
 
       expect(result).not_to be_nil
@@ -33,7 +33,7 @@ RSpec.describe UserMailer, type: :mailer do
   describe '#activation' do
     it 'activation' do
       user_mailer = described_class
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = user_mailer.activation(user)
 
       expect(result).not_to be_nil

@@ -134,7 +134,7 @@ class Portal::ClazzesController < ApplicationController
 
     if okToCreate and Admin::Settings.default_settings.enable_grade_levels?
       grade_levels.each do |name, v|
-        grade = Portal::Grade.find_or_create_by_name(name)
+        grade = Portal::Grade.where(name: name).first_or_create
         @portal_clazz.grades << grade if grade
       end if grade_levels
       if @portal_clazz.grades.empty?
@@ -180,6 +180,9 @@ class Portal::ClazzesController < ApplicationController
 
     respond_to do |format|
       if okToCreate && @portal_clazz.save
+        # send email notifications about class creation
+        Portal::ClazzMailer.clazz_creation_notification(@current_user, @portal_clazz).deliver
+
         flash[:notice] = 'Class was successfully created.'
         format.html { redirect_to(url_for([:materials, @portal_clazz])) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
@@ -271,8 +274,6 @@ class Portal::ClazzesController < ApplicationController
     # authorize Portal::Clazz, :new_or_create?
     # authorize @clazz, :update_edit_or_destroy?
     @portal_clazz = Portal::Clazz.find(params[:id])
-    @grade_span = session[:grade_span] ||= cookies[:grade_span]
-    @domain_id = session[:domain_id] ||= cookies[:domain_id]
   end
 
   # HACK:
@@ -292,16 +293,19 @@ class Portal::ClazzesController < ApplicationController
     runnable_id = params[:runnable_id]
     unless params[:runnable_type] == 'portal_offering'
       runnable_type = params[:runnable_type].classify
-      @offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(@portal_clazz.id,runnable_type,runnable_id)
+      @offering = Portal::Offering.where(clazz_id: @portal_clazz.id, runnable_type: runnable_type,runnable_id: runnable_id).first_or_create
       if @offering.position == 0
         @offering.position = @portal_clazz.offerings.length
         @offering.save
+        Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
       end
       if @offering
         if @portal_clazz.default_class == true
           if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
             @offering.default_offering = true
             @offering.save
+            # send email notifications about assignment
+            Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
           else
             error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
             @offering.destroy
@@ -315,6 +319,7 @@ class Portal::ClazzesController < ApplicationController
           end
         else
           @offering.save
+          Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
         end
         @portal_clazz.reload
       end
@@ -674,7 +679,7 @@ class Portal::ClazzesController < ApplicationController
     end
 
     class_to_copy.offerings.each do |offering|
-       new_offering = Portal::Offering.find_or_create_by_clazz_id_and_runnable_type_and_runnable_id(new_class.id, offering.runnable_type, offering.runnable_id)
+       new_offering = Portal::Offering.where(clazz_id: new_class.id, runnable_type: offering.runnable_type, runnable_id: offering.runnable_id).first_or_create
        new_offering.status = offering.status
        new_offering.active = offering.active
        new_offering.save!

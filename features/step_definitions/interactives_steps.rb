@@ -1,6 +1,6 @@
 Given(/^the following Admin::tag records exist:$/) do |admin_tag_table|
   admin_tag_table.hashes.each do |hash|
-    Factory(:admin_tag, hash)
+    FactoryBot.create(:admin_tag, hash)
   end
 end
 
@@ -20,7 +20,7 @@ end
 When /^(?:|I )create interactive "(.+)" before "(.+)" by date$/ do |interactive_name1, interactive_name2|
   created_at = Date.today
   [interactive_name1, interactive_name2].each do |interactive|
-    inv = Interactive.find_or_create_by_name(interactive)
+    inv = Interactive.where(name: interactive).first_or_create
     created_at = created_at - 1
     inv.created_at = created_at
     inv.updated_at = created_at

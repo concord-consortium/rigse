@@ -19,8 +19,6 @@
     %li= link_to 'Schools', portal_schools_path
     %li= link_to 'Auth Clients', admin_clients_path
     %li= link_to 'External Reports', admin_external_reports_path
-    - if APP_CONFIG[:use_gse]
-      %li= link_to 'GSEs', ri_gse_grade_span_expectations_path
   - if is_admin_or_project_admin
     %li= link_to 'Users', users_path
     %li= link_to 'Projects', admin_projects_path

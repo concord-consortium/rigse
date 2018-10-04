@@ -3,18 +3,18 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::LearnersController do
 
   describe "GET report" do
-    let(:physics_investigation) { Factory.create(
+    let(:physics_investigation) { FactoryBot.create(
         :investigation,
         :name => 'physics_inv',
         :publication_status => 'published') }
 
-    let(:offering) { Factory.create(
+    let(:offering) { FactoryBot.create(
         :portal_offering,
         runnable_id: physics_investigation.id,
         runnable_type: 'Activity',
         clazz: clazz)}
 
-    let(:clazz)       { Factory.create :portal_clazz, teachers: [teacher] }
+    let(:clazz)       { FactoryBot.create :portal_clazz, teachers: [teacher] }
     let(:student_id)  { 7 }
     let(:learner_stubs) {{
         student_id: student_id,
@@ -23,8 +23,8 @@ describe Portal::LearnersController do
     }}
     let(:learner)     { mock_model(Portal::Learner, learner_stubs)}
     let(:post_params) { {id: learner.id }      }
-    let(:teacher)     { Factory.create :teacher }
-    let(:teacher_b)   { Factory.create :teacher }
+    let(:teacher)     { FactoryBot.create :teacher }
+    let(:teacher_b)   { FactoryBot.create :teacher }
 
     before(:each) do
       sign_in user

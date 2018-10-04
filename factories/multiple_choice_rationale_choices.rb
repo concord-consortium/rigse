@@ -1,3 +1,5 @@
-Factory.define :multiple_choice_rationale_choice do |f|
+FactoryBot.define do
+  factory :multiple_choice_rationale_choice do |f|
 
+  end
 end

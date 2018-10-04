@@ -163,9 +163,8 @@ class Portal::OfferingsController < ApplicationController
       render :nothing => true
       return
     end
-    offering_collapsed = true
     teacher_id = current_visitor.portal_teacher.id
-    portal_teacher_full_status = Portal::TeacherFullStatus.find_or_create_by_offering_id_and_teacher_id(params[:id],teacher_id)
+    portal_teacher_full_status = Portal::TeacherFullStatus.where(offering_id: params[:id],teacher_id: teacher_id).first_or_create
 
     offering_collapsed = (portal_teacher_full_status.offering_collapsed.nil?)? false : !portal_teacher_full_status.offering_collapsed
 
@@ -182,7 +181,7 @@ class Portal::OfferingsController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     student_id = current_visitor.portal_student.id
-    report = DefaultReportService.instance()
+    report = DefaultReportService.instance
     offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
@@ -192,7 +191,7 @@ class Portal::OfferingsController < ApplicationController
     offering_id = params[:id]
     activity_id = params[:activity_id] # Might be null
     authorize Portal::Offering.find(offering_id)
-    report = DefaultReportService.instance()
+    report = DefaultReportService.instance
     offering_api_url = api_v1_report_url(offering_id, {activity_id: activity_id})
     next_url = report.url_for(offering_api_url, current_visitor)
     redirect_to next_url
@@ -222,7 +221,11 @@ class Portal::OfferingsController < ApplicationController
   def create_saveable(embeddable, offering, learner, answer)
     case embeddable
     when Embeddable::OpenResponse
-      saveable_open_response = Saveable::OpenResponse.find_or_create_by_learner_id_and_offering_id_and_open_response_id(learner.id, offering.id, embeddable.id)
+      saveable_open_response = Saveable::OpenResponse
+                                   .where(learning_id: learner.id,
+                                          offering_id: offering.id,
+                                          open_response_id: embeddable.id)
+                                   .first_or_create
       if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
         saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
       end
@@ -230,7 +233,11 @@ class Portal::OfferingsController < ApplicationController
       choice = parse_embeddable(answer)
       answer = choice ? choice.choice : ""
       if embeddable && choice
-        saveable = Saveable::MultipleChoice.find_or_create_by_learner_id_and_offering_id_and_multiple_choice_id(learner.id, offering.id, embeddable.id)
+        saveable = Saveable::MultipleChoice
+                       .where(learning_id: learner.id,
+                              offering_id: offering.id,
+                              multiple_choice_id: embeddable.id)
+                       .first_or_create
         if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
           saveable_answer = saveable.answers.create(:bundle_content_id => nil)
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)

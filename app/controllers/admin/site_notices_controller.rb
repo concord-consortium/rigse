@@ -70,7 +70,7 @@ class Admin::SiteNoticesController < ApplicationController
   def index
     #authorize Admin::SiteNotice
     #@all_notices = policy_scope(Admin::SiteNotice).order('updated_at desc')
-    @all_notices = Admin::SiteNotice.find(:all,:order=> 'updated_at desc')
+    @all_notices = Admin::SiteNotice.order('updated_at desc')
   end
 
   def edit
@@ -79,7 +79,7 @@ class Admin::SiteNoticesController < ApplicationController
     @notice = Admin::SiteNotice.find(params[:id])
     #authorize @notice
     @notice_html = @notice.notice_html
-    @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    fetch_notice_roles
     @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
   end
 
@@ -89,7 +89,7 @@ class Admin::SiteNoticesController < ApplicationController
     @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
     #authorize @notice
-    @notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    fetch_notice_roles
 
     @notice_html = params[:notice_html]
 
@@ -135,17 +135,17 @@ class Admin::SiteNoticesController < ApplicationController
 
   def remove_notice
     #delete notice
-    notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(params[:id])
+    notice_roles = fetch_notice_roles
     notice_roles.each do |notice_role|
       notice_role.destroy
     end
 
-    notice_users = Admin::SiteNoticeUser.find_all_by_notice_id(params[:id])
+    notice_users = Admin::SiteNoticeUser.where(notice_id: params.fetch(:id))
     notice_users.each do |notice_user|
       notice_user.destroy
     end
 
-    notice = Admin::SiteNotice.find(params[:id])
+    notice = Admin::SiteNotice.find(params.fetch(:id))
     #authorize notice, :destroy?
     notice.destroy
 
@@ -170,7 +170,7 @@ class Admin::SiteNoticesController < ApplicationController
 
   def toggle_notice_display
     # no authorization needed ...
-    user_collapsed_notice = Admin::NoticeUserDisplayStatus.find_or_create_by_user_id(current_visitor.id)
+    user_collapsed_notice = Admin::NoticeUserDisplayStatus.where(user_id: current_visitor.id).first_or_create
     status_to_be_set = (user_collapsed_notice.collapsed_status.nil? || user_collapsed_notice.collapsed_status == false)? true : false
 
     user_collapsed_notice.last_collapsed_at_time = DateTime.now
@@ -187,7 +187,7 @@ class Admin::SiteNoticesController < ApplicationController
   def dismiss_notice
     # no authorization needed ...
     notice = Admin::SiteNotice.find(params[:id])
-    user_notice = Admin::SiteNoticeUser.find_or_create_by_notice_id_and_user_id(notice.id , current_visitor.id)
+    user_notice = Admin::SiteNoticeUser.where(notice_id: notice.id, user_id: current_visitor.id).first_or_create
     user_notice.notice_dismissed = true
     user_notice.updated_at = DateTime.now
     user_notice.save!
@@ -205,6 +205,12 @@ class Admin::SiteNoticesController < ApplicationController
       end
       return
     end
+  end
+
+  private
+
+  def fetch_notice_roles
+    @notice_roles = Admin::SiteNoticeRole.where(notice_id: params.fetch(:id))
   end
 
 end

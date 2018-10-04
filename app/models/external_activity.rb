@@ -43,12 +43,6 @@ class ExternalActivity < ActiveRecord::Base
     time    :updated_at
     time    :created_at
 
-    string  :grade_span do
-      nil
-    end
-    integer :domain_id do
-      nil
-    end
     string  :material_type
     string  :material_properties, :multiple => true do
       material_property_list
@@ -137,25 +131,19 @@ class ExternalActivity < ActiveRecord::Base
     errors.add(:url, 'must be a valid url') if validated_url.nil?
   end
 
-  scope :published,
-  {
-    :conditions =>{:publication_status => "published"}
-  }
+  scope :published, -> { where(publication_status: "published") }
 
-  scope :assigned, where('offerings_count > 0')
+  scope :assigned, -> { where('offerings_count > 0') }
 
-  scope :not_private,
-  {
-    :conditions => "#{self.table_name}.publication_status IN ('published', 'draft')"
-  }
+  scope :not_private, -> { where("#{self.table_name}.publication_status IN ('published', 'draft')") }
 
-  scope :by_user, proc { |u| { :conditions => {:user_id => u.id} } }
+  scope :by_user, proc { |u| where(:user_id => u.id) }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
-  scope :official, where(:is_official => true)
-  scope :contributed, where(:is_official => false)
-  scope :archived, where(:is_archived => true)
+  scope :official, -> { where(is_official: true) }
+  scope :contributed, -> { where(is_official: false) }
+  scope :archived, -> { where(is_archived: true) }
 
   def url(learner = nil, domain = nil)
     begin
@@ -236,7 +224,7 @@ class ExternalActivity < ActiveRecord::Base
     clone.save
     # Copy standard statements assigned to this activity.
     material_type = self.class.name.underscore
-    StandardStatement.find_all_by_material_type_and_material_id(material_type, id).each do |s|
+    StandardStatement.where(material_type: material_type, material_id: id).each do |s|
       s.duplicate_and_assign_to(material_type, clone.id)
     end
     # Cohorts are skipped intentionally, since that would mean any copies would show up automatically to cohort teachers.

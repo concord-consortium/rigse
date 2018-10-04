@@ -1,5 +1,5 @@
 Given /^the most basic default settings$/ do
-  Factory.create(:admin_settings)
+  FactoryBot.create(:admin_settings)
 end
 
 Given /^the database has been seeded$/ do

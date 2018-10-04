@@ -18,19 +18,19 @@ class Report::UtilLearner
     # the types are split out here instead of using ResponseTypes so we
     # can fetch all the pieces we need in fewer DB reqests
     # the pieces we need are: the answer, parts for answered? and answered_correctly?,
-    @saveables += Saveable::OpenResponse.find_all_by_learner_id(learner.id)
-    @saveables += Saveable::MultipleChoice.find_all_by_learner_id(learner.id)
-    @saveables += Saveable::ImageQuestion.find_all_by_learner_id(learner.id)
-    @saveables += Saveable::ExternalLink.find_all_by_learner_id(learner.id)
-    @saveables += Saveable::Interactive.find_all_by_learner_id(learner.id)
+    @saveables += Saveable::OpenResponse.where(learner_id: learner.id)
+    @saveables += Saveable::MultipleChoice.where(learner_id: learner.id)
+    @saveables += Saveable::ImageQuestion.where(learner_id: learner.id)
+    @saveables += Saveable::ExternalLink.where(learner_id: learner.id)
+    @saveables += Saveable::Interactive.where(learner_id: learner.id)
 
     # ResponseTypes.saveable_types.each do |type|
-    #   all = type.find_all_by_learner_id(learner.id)
+    #   all = type.where(learner_id: learner.id)
     #   @saveables += all
     # end
 
     # If an investigation has changed, and saveable elements have been removed (eek!)
-    # we are checking which saveables have a cooresponding embeddable
+    # we are checking which saveables have a corresponding embeddable
     current =  @saveables.select { |s| @embeddables.include? s.embeddable}
     old = @saveables - current
     if old.size > 0

@@ -11,8 +11,9 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    file_data = params[:import][:import].read
     begin
+      file_data = params[:import][:import].read
+
       json_data = JSON.parse file_data, :symbolize_names => true
       if json_data[:districts].nil? || json_data[:schools].nil?
         raise "Invalid JSON"
@@ -21,7 +22,7 @@ class Import::ImportsController < ApplicationController
       redirect_to import_school_district_status_import_imports_path({:message => "Invalid JSON"})
       return
     end
-    import = Import::Import.create!()
+    import = Import::Import.create!
     import.upload_data = file_data
     import.save!
     job = Delayed::Job.enqueue Import::ImportSchoolsAndDistricts.new(import.id)
@@ -38,8 +39,9 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    file_data = params[:import][:import].read
     begin
+      file_data = params[:import][:import].read
+
       json_data = JSON.parse file_data, :symbolize_names => true
       if json_data[:users].nil?
         raise "Invalid JSON"
@@ -48,7 +50,7 @@ class Import::ImportsController < ApplicationController
       redirect_to import_user_status_import_imports_path({:message => "Invalid JSON"})
       return
     end
-    import = Import::Import.create!()
+    import = Import::Import.create!
     import.upload_data = file_data
     import.save!
     job = Delayed::Job.enqueue Import::ImportUsers.new(import.id)
@@ -125,8 +127,8 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    user_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_USER})
-    duplicate_users = Import::DuplicateUser.find(:all, :conditions => {:import_id => user_import.id})
+    user_import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_USER).last
+    duplicate_users = Import::DuplicateUser.where(:import_id => user_import.id)
     if duplicate_users.length == 0
       flash[:alert] = "No duplicate users found in the import."
       redirect_to :back
@@ -184,7 +186,7 @@ class Import::ImportsController < ApplicationController
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
     if request.xhr?
-      @import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
+      @import_activity = fetch_import_activity
       render :json => {:progress => @import_activity ? @import_activity.progress : @import_activity}
     end
   end
@@ -198,7 +200,7 @@ class Import::ImportsController < ApplicationController
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
     if request.xhr?
-      import_activity = Import::Import.find_all_by_user_id_and_import_type(current_visitor.id,Import::Import::IMPORT_TYPE_ACTIVITY).last
+      import_activity = fetch_import_activity
       import_activity.destroy
     end
     render :nothing => true
@@ -244,7 +246,7 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY})
+    import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY).last
     imports_succeed = import.import_data.select{|item| item['success'] == true}
     import_data = []
     import_data << {
@@ -290,7 +292,7 @@ class Import::ImportsController < ApplicationController
     # authorize @import
     # authorize Import::Import, :new_or_create?
     # authorize @import, :update_edit_or_destroy?
-    batch_import = Import::Import.find(:last, :conditions => {:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY})
+    batch_import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY).last
     imports_failed = batch_import.import_data.select{|item| item["success"] == false}.map{|item| item.except("success")}
     if imports_failed
       send_data imports_failed.to_json,
@@ -313,5 +315,14 @@ class Import::ImportsController < ApplicationController
     auth_uri = URI.parse("#{APP_CONFIG[:authoring_site_url]}/import/import_portal_activity").to_s
     auth_uri.sub!(/\A\/\//,request.protocol)
     auth_uri
+  end
+
+  private
+
+  def fetch_import_activity
+    Import::Import
+        .where(user_id: current_visitor.id,
+               import_type: Import::Import::IMPORT_TYPE_ACTIVITY)
+        .last
   end
 end

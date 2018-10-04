@@ -1,3 +1,5 @@
-Factory.define :expectation_indicator do |f|
+FactoryBot.define do
+  factory :expectation_indicator do |f|
 
+  end
 end

@@ -3,13 +3,13 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::Clazz do  
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
-      @existing_clazz = Factory(:portal_clazz)
-      @teacher1 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher1"))
-      @teacher2 = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "teacher2"))
+      @existing_clazz = FactoryBot.create(:portal_clazz)
+      @teacher1 = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher1"))
+      @teacher2 = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher2"))
     end
 
     it "under normal circumstances should say there is no reason admins cannot remove teachers" do
-      admin_user = Factory.next(:admin_user)
+      admin_user = FactoryBot.generate(:admin_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1)).to eq(nil)
     end
@@ -20,13 +20,13 @@ describe Portal::Clazz do
     end
 
     it "should say it is illegal for an unauthorized user to remove a teacher" do
-      random_user = Factory.next(:anonymous_user)
+      random_user = FactoryBot.generate(:anonymous_user)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(random_user, @teacher1)).to eq(Portal::Clazz::ERROR_UNAUTHORIZED)
     end
 
     it "should say it is illegal for a user to remove the last teacher" do
-      admin_user = Factory.next(:admin_user)
+      admin_user = FactoryBot.generate(:admin_user)
       @existing_clazz.teachers = [@teacher1]
       expect(@existing_clazz.reason_user_cannot_remove_teacher_from_class(admin_user, @teacher1)).to eq(Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
     end
@@ -34,36 +34,36 @@ describe Portal::Clazz do
 
   describe "#changeable?" do
     before(:each) do
-      @existing_clazz = Factory.build(:portal_clazz)
+      @existing_clazz = FactoryBot.build(:portal_clazz)
     end
 
     it "is true for admins" do
-      admin_user = Factory.next(:admin_user)
+      admin_user = FactoryBot.generate(:admin_user)
       expect(@existing_clazz.changeable?(admin_user)).to be_truthy
     end
 
     it "is true for class teacher" do
-      @teacher = Factory.create(:portal_teacher)
+      @teacher = FactoryBot.create(:portal_teacher)
       @existing_clazz.teachers = [@teacher]
       expect(@existing_clazz.changeable?(@teacher.user)).to be_truthy
     end
 
     it "is true for second class teacher" do
-      @teacher1 = Factory.create(:portal_teacher)
-      @teacher2 = Factory.create(:portal_teacher)
+      @teacher1 = FactoryBot.create(:portal_teacher)
+      @teacher2 = FactoryBot.create(:portal_teacher)
       @existing_clazz.teachers = [@teacher1, @teacher2]
       expect(@existing_clazz.changeable?(@teacher2.user)).to be_truthy
     end
 
     it "is false for non class teacher" do
-      @teacher = Factory.create(:portal_teacher)
+      @teacher = FactoryBot.create(:portal_teacher)
       expect(@existing_clazz.changeable?(@teacher.user)).to be_falsey
     end
   end
 
   describe "creating a new class" do
     before(:each) do
-      @teacher = Factory.create(:portal_teacher, :user => Factory.create(:user, :login => "test_teacher"))
+      @teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "test_teacher"))
     end
 
     it "should require a school" do
@@ -81,12 +81,12 @@ describe Portal::Clazz do
     end
 
     it "should require a non blank class name" do
-      @course = Factory(:portal_course)
+      @course = FactoryBot.create(:portal_course)
       @start_date = DateTime.parse("2009-01-02")
       @section_a = "section a"
       @section_b = "section b"
 
-      @new_clazz = Factory(:portal_clazz, {
+      @new_clazz = FactoryBot.create(:portal_clazz, {
         :section => @section_a,
         :start_time => @start_date,
         :course => @course,
@@ -100,12 +100,12 @@ describe Portal::Clazz do
     end
 
     it "should require a non blank class word" do
-      @course = Factory(:portal_course)
+      @course = FactoryBot.create(:portal_course)
       @start_date = DateTime.parse("2009-01-02")
       @section_a = "section a"
       @section_b = "section b"
 
-      @new_clazz = Factory(:portal_clazz, {
+      @new_clazz = FactoryBot.create(:portal_clazz, {
         :section => @section_a,
         :start_time => @start_date,
         :course => @course,
@@ -136,7 +136,7 @@ describe Portal::Clazz do
 
   describe "offerings_including_default_class" do
     before(:each) do
-      @clazz             = Factory :portal_clazz
+      @clazz             = FactoryBot.create(:portal_clazz)
       @offerings         = []
       @default_offerings = []
       1.upto(10) do |i|
@@ -158,7 +158,7 @@ describe Portal::Clazz do
     describe "when there are no default activities" do
       before(:each) do
         def_offerings = []
-        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_using_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, zero default offerings" do
@@ -170,7 +170,7 @@ describe Portal::Clazz do
     describe "when there is 100% overlap with default activities" do
       before(:each) do
         def_offerings = @default_offerings
-        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_using_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 10 default offerings" do
@@ -182,7 +182,7 @@ describe Portal::Clazz do
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[0...5]
-        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_using_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
@@ -194,7 +194,7 @@ describe Portal::Clazz do
     describe "the first half are default activities" do
       before(:each) do
         def_offerings = @default_offerings[5...10]
-        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_using_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
@@ -206,7 +206,7 @@ describe Portal::Clazz do
     describe "every other activity is the default default" do
       before(:each) do
         def_offerings = @default_offerings.select { |i| i.runnable_id % 2 == 0 }
-        allow(Portal::Offering).to receive(:find_all_by_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
+        allow(Portal::Offering).to receive(:find_all_using_runnable_id_and_runnable_type_and_default_offering) { |a,b,c|
           def_offerings.select {|o| o.runnable_id == a}}
       end
       it "should have 10 offerings, 5 default offerings" do
@@ -224,7 +224,7 @@ describe Portal::Clazz do
   # end
   describe "offerings_with_default_classes" do
     before(:each) do
-      @clazz = Factory :portal_clazz, :default_class => false
+      @clazz = FactoryBot.create(:portal_clazz, :default_class => false)
     end
     describe "called without a user" do
       it "should fall back to offerings_including_default_class" do
@@ -305,7 +305,7 @@ describe Portal::Clazz do
 
   describe "formatting methods" do
     before :each do
-      @clazz = Factory :portal_clazz
+      @clazz = FactoryBot.create(:portal_clazz)
       @bob   = mock_model(Portal::Teacher, :name => "bob")
       @joan  = mock_model(Portal::Teacher, :name => "joan")
     end

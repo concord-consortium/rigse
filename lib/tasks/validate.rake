@@ -22,7 +22,7 @@ def for_each_model_instance(find_conditions = {}, &block)
     begin
       print "Processing #{model.count} #{model.name.pluralize}..."
       count = 0
-      model.find_each(find_conditions) do |instance|
+      model.where(find_conditions).find_each do |instance|
         print("\n%6d: " % count) if count % 2000 == 0
         res = yield(model, instance)
         count += 1
@@ -36,8 +36,8 @@ def for_each_model_instance(find_conditions = {}, &block)
 end
 
 def all_active_record_classes
-  model_classes = ActiveRecord::Base.connection.tables.map{|table_name| 
-    if clazz = table_name.classify.safe_constantize 
+  model_classes = ActiveRecord::Base.connection.tables.map{|table_name|
+    if clazz = table_name.classify.safe_constantize
       clazz
     else
       table_name_parts = table_name.split('_')
@@ -46,8 +46,8 @@ def all_active_record_classes
 
       if clazz = "#{module_name.join('_').classify}::#{table_name_parts.join('_').classify}".safe_constantize
         clazz
-      else 
-        module_name << table_name_parts.shift        
+      else
+        module_name << table_name_parts.shift
         "#{module_name.join('_').classify}::#{table_name_parts.join('_').classify}".safe_constantize
       end
     end
@@ -63,9 +63,9 @@ namespace :app do
 
     task :count_invalid_instances => :environment do
       count = 0
-      all_active_record_classes.each{|clazz| 
+      all_active_record_classes.each{|clazz|
         print clazz.name
-        if [Portal::Nces06School, Portal::School, RiGse::AssessmentTargetUnifyingTheme].include? clazz
+        if [Portal::Nces06School, Portal::School].include? clazz
           puts "skipped"
           next
         end
@@ -94,7 +94,7 @@ namespace :app do
       (puts "You must run this rake task in production mode!" and return) unless Rails.env.production?
       load_all_models
 
-      for_each_model_instance(:conditions => 'created_at IS NULL OR updated_at IS NULL') do |klass, instance|
+      for_each_model_instance('created_at IS NULL OR updated_at IS NULL') do |klass, instance|
         instance.updated_at = Time.now if instance.respond_to?(:updated_at) && instance.updated_at.nil?
         instance.created_at = instance.updated_at if instance.respond_to?(:created_at) && instance.created_at.nil?
         instance.save

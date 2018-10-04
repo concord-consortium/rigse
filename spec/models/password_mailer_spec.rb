@@ -19,7 +19,7 @@ RSpec.describe PasswordMailer, type: :mailer do
   describe '#reset_password' do
     it 'reset_password' do
       password_mailer = described_class
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = password_mailer.reset_password(user)
 
       expect(result).not_to be_nil

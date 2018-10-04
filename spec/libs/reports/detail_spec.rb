@@ -15,10 +15,10 @@ describe Reports::Detail do
   let(:class_id)         { 23  }
   let(:runnable_name)    { "fake runnable" }
   let(:embeddables)       { [] }
-  let(:student)          { FactoryGirl.create(:portal_student)  }
-  let(:runnable)         { FactoryGirl.create(:activity, name: runnable_name)  }
-  let(:offering)         { FactoryGirl.create(:portal_offering, runnable: runnable)   }
-  let(:learner)          { FactoryGirl.create(:portal_learner, student: student, offering: offering)  }
+  let(:student)          { FactoryBot.create(:portal_student)  }
+  let(:runnable)         { FactoryBot.create(:activity, name: runnable_name)  }
+  let(:offering)         { FactoryBot.create(:portal_offering, runnable: runnable)   }
+  let(:learner)          { FactoryBot.create(:portal_learner, student: student, offering: offering)  }
   let(:report_learner)   { learner.report_learner }
   let(:url_helpers)      { double(remote_endpoint_url: "noplace.com") }
   let(:runnables)        { [ runnable ] }

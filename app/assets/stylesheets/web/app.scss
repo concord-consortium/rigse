@@ -665,6 +665,12 @@ li.item_selectable {
     list-style: none; } }
 
 /* ------- #secondary ------- */
+#secondary {
+  margin: 20px 0 50px 0;
+  height: auto;
+  display: inline-block;
+  vertical-align: top;
+}
 
 .user-info-box {
   background: white;

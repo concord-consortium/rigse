@@ -39,7 +39,7 @@ describe Portal::StudentsController do
       }
 
       @grade_level = Portal::GradeLevel.create({ :name => "9" }) # default grade level
-      @clazz = Factory.create(:portal_clazz, :class_word => @params_for_creation[:clazz][:class_word])
+      @clazz = FactoryBot.create(:portal_clazz, :class_word => @params_for_creation[:clazz][:class_word])
     end
 
     def stub_user_with_params(user_attributes = nil)
@@ -55,13 +55,13 @@ describe Portal::StudentsController do
     it "creates a user and a student when given valid parameters" do
       stub_user_with_params
 
-      current_user_count = User.count(:all)
-      current_student_count = Portal::Student.count(:all)
+      current_user_count = User.count
+      current_student_count = Portal::Student.count
 
       post :create, @params_for_creation
 
-      expect(User.count(:all)).to eq(current_user_count + 1)
-      expect(Portal::Student.count(:all)).to eq(current_student_count + 1)
+      expect(User.count).to eq(current_user_count + 1)
+      expect(Portal::Student.count).to eq(current_student_count + 1)
 
     end
 
@@ -86,25 +86,25 @@ describe Portal::StudentsController do
     it "does not create a user or a student when given incorrect password_confirmation" do
       @params_for_creation[:user][:password_confirmation] = "wrong"
 
-      current_user_count = User.count(:all)
-      current_student_count = Portal::Student.count(:all)
+      current_user_count = User.count
+      current_student_count = Portal::Student.count
 
       post :create, @params_for_creation
 
-      expect(User.count(:all)).to eq(current_user_count)
-      expect(Portal::Student.count(:all)).to eq(current_student_count)
+      expect(User.count).to eq(current_user_count)
+      expect(Portal::Student.count).to eq(current_student_count)
     end
 
     it "does not create a user or a student when given an invalid classword" do
       @params_for_creation[:clazz][:class_word] = "wrong"
 
-      current_user_count = User.count(:all)
-      current_student_count = Portal::Student.count(:all)
+      current_user_count = User.count
+      current_student_count = Portal::Student.count
 
       post :create, @params_for_creation
 
-      expect(User.count(:all)).to eq(current_user_count)
-      expect(Portal::Student.count(:all)).to eq(current_student_count)
+      expect(User.count).to eq(current_user_count)
+      expect(Portal::Student.count).to eq(current_student_count)
     end
 
 
@@ -120,25 +120,25 @@ describe Portal::StudentsController do
         expect(SecurityQuestion).to receive(:errors_for_questions_list!)
         expect(@new_user).to receive(:update_security_questions!)
 
-        current_user_count = User.count(:all)
-        current_student_count = Portal::Student.count(:all)
+        current_user_count = User.count
+        current_student_count = Portal::Student.count
 
         post :create, @params_for_creation
 
-        expect(User.count(:all)).to eq(current_user_count + 1)
-        expect(Portal::Student.count(:all)).to eq(current_student_count + 1)
+        expect(User.count).to eq(current_user_count + 1)
+        expect(Portal::Student.count).to eq(current_student_count + 1)
       end
 
       it "does not create a user or a student when given bad security questions" do
         @params_for_creation[:security_questions][:question2][:answer] = "" # empty answers are not acceptable
 
-        current_user_count = User.count(:all)
-        current_student_count = Portal::Student.count(:all)
+        current_user_count = User.count
+        current_student_count = Portal::Student.count
 
         post :create, @params_for_creation
 
-        expect(User.count(:all)).to eq(current_user_count)
-        expect(Portal::Student.count(:all)).to eq(current_student_count)
+        expect(User.count).to eq(current_user_count)
+        expect(Portal::Student.count).to eq(current_student_count)
       end
 
       it "does not check for security questions when they are not enabled in the settings" do
@@ -177,7 +177,7 @@ describe Portal::StudentsController do
   end
 
   describe "GET show" do
-    let(:student) { Factory(:full_portal_student) }
+    let(:student) { FactoryBot.create(:full_portal_student) }
 
     it "should redirect when current user isn't an admin" do
       get :show, id: student.id
@@ -196,7 +196,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
-      get :status, id: Factory.create(:portal_student).to_param
+      get :status, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(406)
     end
@@ -214,7 +214,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#edit' do
     xit 'GET edit' do
-      get :edit, id: Factory.create(:portal_student).to_param
+      get :edit, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -223,7 +223,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#update' do
     xit 'PATCH update' do
-      put :update, id: Factory.create(:portal_student).to_param
+      put :update, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -232,7 +232,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy,id: Factory.create(:portal_student).to_param
+      delete :destroy,id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -241,7 +241,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#ask_consent' do
     xit 'GET ask_consent' do
-      get :ask_consent, id: Factory.create(:portal_student).to_param
+      get :ask_consent, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end
@@ -250,7 +250,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#update_consent' do
     xit 'GET update_consent' do
-      get :update_consent, id: Factory.create(:portal_student).to_param
+      get :update_consent, id: FactoryBot.create(:portal_student).to_param
 
       expect(response).to have_http_status(:ok)
     end

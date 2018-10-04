@@ -2,18 +2,18 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Admin::SiteNoticesController do
   before(:each) do
-    @mock_school = Factory.create(:portal_school)
+    @mock_school = FactoryBot.create(:portal_school)
 
-    @admin_user = Factory.next(:admin_user)
-    @teacher_user = Factory.create(:confirmed_user, :login => "teacher_user")
+    @admin_user = FactoryBot.generate(:admin_user)
+    @teacher_user = FactoryBot.create(:confirmed_user, :login => "teacher_user")
     @teacher_user.add_role('member')
-    @teacher = Factory.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
-    @manager_user = Factory.next(:manager_user)
-    @researcher_user = Factory.next(:researcher_user)
-    @author_user = Factory.next(:author_user)
-    @student_user = Factory.create(:confirmed_user, :login => "authorized_student")
-    @portal_student = Factory.create(:portal_student, :user => @student_user)
-    @guest_user = Factory.next(:anonymous_user)
+    @teacher = FactoryBot.create(:portal_teacher, :user => @teacher_user, :schools => [@mock_school])
+    @manager_user = FactoryBot.generate(:manager_user)
+    @researcher_user = FactoryBot.generate(:researcher_user)
+    @author_user = FactoryBot.generate(:author_user)
+    @student_user = FactoryBot.create(:confirmed_user, :login => "authorized_student")
+    @portal_student = FactoryBot.create(:portal_student, :user => @student_user)
+    @guest_user = FactoryBot.generate(:anonymous_user)
 
     @all_role_ids = Role.all.map {|r| r.id}
 
@@ -71,7 +71,7 @@ describe Admin::SiteNoticesController do
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
       notice_id = notice.id
-      notice_roles = Admin::SiteNoticeRole.find_all_by_notice_id(notice_id)
+      notice_roles = Admin::SiteNoticeRole.where(notice_id: notice_id)
       expect(notice_roles).not_to be_nil
       notice_roles.each do |role|
         assert(@post_params[:role].include?(role.role_id))
@@ -102,10 +102,10 @@ describe Admin::SiteNoticesController do
 
   describe "GET edit notice form" do
     before(:each) do
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @params = {
         :id => @notice.id
@@ -119,10 +119,10 @@ describe Admin::SiteNoticesController do
 
   describe "Update a notice after saving it" do
     before(:each) do
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @post_params = {
         :notice_html =>"updated text",
@@ -135,7 +135,7 @@ describe Admin::SiteNoticesController do
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
       notice_id = notice.id
-      notice_roles = Admin::SiteNoticeUser.find_all_by_notice_id(notice_id)
+      notice_roles = Admin::SiteNoticeUser.where(notice_id: notice_id)
       expect(notice_roles).not_to be_nil
       notice_roles.each do |role|
         assert(@post_params[:role].include?(role.role_id))
@@ -165,10 +165,10 @@ describe Admin::SiteNoticesController do
 
   describe "Delete a Notice" do
     before(:each) do
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @params= {
         :id => @notice.id
@@ -191,10 +191,10 @@ describe Admin::SiteNoticesController do
   describe "Dismiss a notice" do
     before(:each) do
       sign_in @teacher_user
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
       @params = {
         :id => @notice.id
@@ -211,10 +211,10 @@ describe Admin::SiteNoticesController do
   describe "toggle_notice_display" do
     before(:each) do
       sign_in @teacher_user
-      @notice = Factory.create(:site_notice, :created_by => @admin_user.id)
+      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
       roles = Role.all
       roles.each do |role|
-        Factory.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
+        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
       end
     end
     it"should store collapse time and expand and collapse status" do

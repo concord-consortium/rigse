@@ -2,10 +2,10 @@
 require 'spec_helper'
 
 describe API::V1::Report do
-  let(:investigation)      { FactoryGirl.create(:investigation) }
-  let(:external_activity)  { FactoryGirl.create(:external_activity, template: investigation) }
+  let(:investigation)      { FactoryBot.create(:investigation) }
+  let(:external_activity)  { FactoryBot.create(:external_activity, template: investigation) }
   let(:runnable)           { investigation }
-  let(:offering)           { FactoryGirl.create(:portal_offering, runnable: runnable) }
+  let(:offering)           { FactoryBot.create(:portal_offering, runnable: runnable) }
 
   describe "class methods" do
     # def self.update_feedback_settings(offering, embeddable, feedback_settings)
@@ -22,7 +22,7 @@ describe API::V1::Report do
         }
       end
 
-      let(:embeddable) { FactoryGirl.create(:open_response) }
+      let(:embeddable) { FactoryBot.create(:open_response) }
       let(:meta_data)  { Portal::OfferingEmbeddableMetadata.find_by_offering_id_and_embeddable_id_and_embeddable_type(offering.id, embeddable.id, embeddable.class.name) }
 
       before(:each) do
@@ -94,8 +94,8 @@ describe API::V1::Report do
       let(:score)                { nil }
       let(:text_feedback)        { nil }
       let(:has_been_reviewed)    { nil }
-      let(:open_response)        { FactoryGirl.create(:open_response) }
-      let(:learner)              { FactoryGirl.create(:full_portal_learner) }
+      let(:open_response)        { FactoryBot.create(:open_response) }
+      let(:learner)              { FactoryBot.create(:full_portal_learner) }
       let(:open_response_answer) { Saveable::OpenResponse.create(open_response: open_response, learner: learner)}
       let(:answer_key)           { API::V1::Report.encode_answer_key(open_response_answer) }
       let(:feedback) do
@@ -164,7 +164,7 @@ describe API::V1::Report do
 
     describe "#page_json" do
       let(:url)    { "http//unlikely.com/foo/bar" }
-      let(:page)   { FactoryGirl.create(:page, url: url, name: "page 1") }
+      let(:page)   { FactoryBot.create(:page, url: url, name: "page 1") }
       let(:report) { API::V1::Report.new(offering: offering)             }
       let(:json)   { report.page_json(page,answers) }
       let(:answers){ [] }
@@ -177,8 +177,8 @@ describe API::V1::Report do
 
     describe "activity level feedback" do
       let(:url)              { "http//unlikely.com/foo/bar" }
-      let(:activity)         { FactoryGirl.create(:activity) }
-      let(:learner)          { FactoryGirl.create(:full_portal_learner, {offering:offering}) }
+      let(:activity)         { FactoryBot.create(:activity) }
+      let(:learner)          { FactoryBot.create(:full_portal_learner, {offering:offering}) }
       let(:student)          { learner.student }
       let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback) }
       let(:activity_feedback){ Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity) }
@@ -446,7 +446,7 @@ describe API::V1::Report do
     xit 'is_teacher?' do
       options = {}
       report = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = report.is_teacher?(user)
 
       expect(result).not_to be_nil
@@ -458,7 +458,7 @@ describe API::V1::Report do
     xit 'is_student?' do
       options = {}
       report = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = report.is_student?(user)
 
       expect(result).not_to be_nil
@@ -470,7 +470,7 @@ describe API::V1::Report do
     xit 'is_report_for_student?' do
       options = {}
       report = described_class.new(options)
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = report.is_report_for_student?(user)
 
       expect(result).not_to be_nil
@@ -589,7 +589,7 @@ describe API::V1::Report do
     xit 'investigation_json' do
       options = {}
       report = described_class.new(options)
-      investigation = Factory.create(:investigation)
+      investigation = FactoryBot.create(:investigation)
       answers = {}
       associations_to_load = double('associations_to_load')
       result = report.investigation_json(investigation, answers, associations_to_load)
@@ -657,7 +657,7 @@ describe API::V1::Report do
       options = {}
       report = described_class.new(options)
       question_number = double('question_number')
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       answers = {}
       result = report.embeddable_json(question_number, embeddable, answers)
 
@@ -671,7 +671,7 @@ describe API::V1::Report do
       options = {}
       report = described_class.new(options)
       hash = double('hash')
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = report.process_multiple_choice(hash, embeddable)
 
       expect(result).not_to be_nil
@@ -684,7 +684,7 @@ describe API::V1::Report do
       options = {}
       report = described_class.new(options)
       hash = double('hash')
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = report.process_iframe(hash, embeddable)
 
       expect(result).not_to be_nil
@@ -738,7 +738,7 @@ describe API::V1::Report do
   # TODO: auto-generated
   describe '.embeddable_key' do
     xit 'embeddable_key' do
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = described_class.embeddable_key(embeddable)
 
       expect(result).not_to be_nil
@@ -768,7 +768,7 @@ describe API::V1::Report do
   # TODO: auto-generated
   describe '.update_feedback_settings' do
     xit 'update_feedback_settings' do
-      offering = Factory.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
       feedback_settings = double('feedback_settings')
       result = described_class.update_feedback_settings(offering, feedback_settings)
 

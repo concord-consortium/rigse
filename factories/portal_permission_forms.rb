@@ -1,3 +1,5 @@
-Factory.define :permission_form, :class => Portal::PermissionForm do |f|
+FactoryBot.define do
+  factory :permission_form, :class => Portal::PermissionForm do |f|
+  end
 end
 

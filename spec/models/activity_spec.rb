@@ -5,7 +5,7 @@ describe Activity do
     :name => "test activity",
     :description => "new decription"
   } }
-  let (:activity) { FactoryGirl.create(:activity, valid_attributes) }
+  let (:activity) { FactoryBot.create(:activity, valid_attributes) }
 
   it "should create a new instance given valid attributes" do
     activity.valid?
@@ -30,7 +30,7 @@ describe Activity do
       activity.publish!
       expect(activity.public?).to be(true)
     end
-    
+
     it "should not be public if unpublished " do
       activity.publish!
       expect(activity.public?).to be(true)
@@ -40,41 +40,22 @@ describe Activity do
   end
 
   describe "search_list (searching for activity)" do
-    # Preserving these "let" blocks temporarily in case we need them to set up a structure to test elsewhere - pjm 2013/10/08
-    let (:bio) { Factory.create( :rigse_domain, { :name => "biology" } ) }
     let (:seven) { "7" }
     let (:eight) { "8" }
-
-    let (:bio_ks) { Factory.create( :rigse_knowledge_statement, { :domain => bio } ) }
-    let (:bio_at) { Factory.create( :rigse_assessment_target, { :knowledge_statement => bio_ks } ) }
-
-    let (:physics) { Factory.create( :rigse_domain, { :name => "physics" } ) }
-    let (:physics_ks) { Factory.create( :rigse_knowledge_statement, { :domain => physics } ) }
-    let (:physics_at) { Factory.create( :rigse_assessment_target, { :knowledge_statement => physics_ks }) }
-
-    let (:physics_gse_grade7) { Factory.create( :rigse_grade_span_expectation, { :assessment_target => physics_at, :grade_span => seven } ) }
-    let (:physics_gse_grade8) { Factory.create( :rigse_grade_span_expectation, { :assessment_target => physics_at, :grade_span => eight } ) }
-
-    let (:bio_gse_grade7)     { Factory.create( :rigse_grade_span_expectation, { :assessment_target => bio_at, :grade_span => seven } ) }
-    let (:bio_gse_grade8)     { Factory.create( :rigse_grade_span_expectation, { :assessment_target => bio_at, :grade_span => eight } ) }
 
     let (:invs) do
       [
         {
-          :name                   => "grade 7 physics",
-          :grade_span_expectation => physics_gse_grade7
+          :name                   => "grade 7 physics"
         },
         {
-          :name                   => "grade 8 physics",
-          :grade_span_expectation => physics_gse_grade8
+          :name                   => "grade 8 physics"
         },
         {
-          :name                   => "grade 7 bio",
-          :grade_span_expectation => bio_gse_grade7
+          :name                   => "grade 7 bio"
         },
         {
-          :name                   => "grade 8 bio",
-          :grade_span_expectation => bio_gse_grade8
+          :name                   => "grade 8 bio"
         },
       ]
     end
@@ -82,7 +63,7 @@ describe Activity do
     let (:published) do
       pub = []
       invs.each do |inv|
-        investigation = Factory.create(:investigation, inv)
+        investigation = FactoryBot.create(:investigation, inv)
         investigation.name << " (published) "
         investigation.publish!
         investigation.save
@@ -94,20 +75,20 @@ describe Activity do
     let (:drafts) do
       dra = []
       published.each do |inv|
-        published_activity = Factory.create(:activity, :name => "activity for #{inv.name}" ,:investigation_id => inv.id)
-        draft = Factory.create(:investigation, :name => inv.name, :grade_span_expectation => inv.grade_span_expectation)
+        published_activity = FactoryBot.create(:activity, :name => "activity for #{inv.name}" ,:investigation_id => inv.id)
+        draft = FactoryBot.create(:investigation, :name => inv.name)
         draft.name << " (draft) "
         draft.save
         dra << draft.reload
-        drafts_activity = Factory.create(:activity, :name => "activity for #{draft.name}" ,:investigation_id => draft.id)
+        drafts_activity = FactoryBot.create(:activity, :name => "activity for #{draft.name}" ,:investigation_id => draft.id)
       end
       dra
     end
 
-    let (:public_non_gse)          { Factory.create(:investigation, :name => "published non-gse investigation", :publication_status => 'Published') }
-    let (:public_non_gse_activity) { Factory.create(:activity, :name => "activity for #{public_non_gse.name}" ,:investigation_id => public_non_gse.id) }
-    let (:draft_non_gse)           { Factory.create(:investigation, :name => "draft non-gse investigation") } 
-    let (:draft_non_gse_activity)  { Factory.create(:activity, :name => "activity for #{draft_non_gse.name}" ,:investigation_id => draft_non_gse.id) }
+    let (:public_non_gse)          { FactoryBot.create(:investigation, :name => "published non-gse investigation", :publication_status => 'Published') }
+    let (:public_non_gse_activity) { FactoryBot.create(:activity, :name => "activity for #{public_non_gse.name}" ,:investigation_id => public_non_gse.id) }
+    let (:draft_non_gse)           { FactoryBot.create(:investigation, :name => "draft non-gse investigation") }
+    let (:draft_non_gse_activity)  { FactoryBot.create(:activity, :name => "activity for #{draft_non_gse.name}" ,:investigation_id => draft_non_gse.id) }
   end
 
   describe "#is_template method" do
@@ -116,7 +97,7 @@ describe Activity do
     let(:investigation)        { nil }
     let(:external_activities)  { [] }
     subject do
-      s = Factory.create(:activity)
+      s = FactoryBot.create(:activity)
       allow(s).to receive_messages(:investigation => investigation)
       allow(s).to receive_messages(:external_activities => external_activities)
       s.is_template
@@ -145,12 +126,12 @@ describe Activity do
 
   describe '#is_template scope' do
     before(:each) do
-      e1 = Factory.create(:external_activity)
-      e2 = Factory.create(:external_activity)
-      i = Factory.create(:investigation, external_activities: [e2])
-      @a1 = Factory.create(:activity)
-      @a2 = Factory.create(:activity, external_activities: [e1])
-      @a3 = Factory.create(:activity, investigation: i)
+      e1 = FactoryBot.create(:external_activity)
+      e2 = FactoryBot.create(:external_activity)
+      i = FactoryBot.create(:investigation, external_activities: [e2])
+      @a1 = FactoryBot.create(:activity)
+      @a2 = FactoryBot.create(:activity, external_activities: [e1])
+      @a3 = FactoryBot.create(:activity, investigation: i)
     end
 
     it 'should return activities which are not templates if provided argument is false' do
@@ -170,9 +151,9 @@ describe Activity do
       allow(activity_with_questions).to receive(:reportable_elements).and_return(elements)
     end
     let(:activity_with_questions) { activity }
-    let(:mc_question)         {Factory.create(:multiple_choice) }
-    let(:or_question)         {Factory.create(:open_response)   }
-    let(:another_or_question) {Factory.create(:open_response)   }
+    let(:mc_question)         {FactoryBot.create(:multiple_choice) }
+    let(:or_question)         {FactoryBot.create(:open_response)   }
+    let(:another_or_question) {FactoryBot.create(:open_response)   }
     let(:elements) {[
       {:activity => activity_with_questions, :embeddable => mc_question},
       {:activity => activity_with_questions, :embeddable => or_question}
@@ -197,8 +178,8 @@ describe Activity do
   end
 
   describe "project support" do
-    let (:activity) { Factory.create(:external_activity) }
-    let (:project) { FactoryGirl.create(:project) }
+    let (:activity) { FactoryBot.create(:external_activity) }
+    let (:project) { FactoryBot.create(:project) }
 
     it "can be assigned to a project" do
       activity.projects << project
@@ -207,30 +188,9 @@ describe Activity do
   end
 
   # TODO: auto-generated
-  describe '.with_gse' do # scope test
-    # not useable without merge
-    xit 'supports named scope with_gse' do
-      expect(described_class.limit(3).with_gse).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
   describe '.without_teacher_only' do # scope test
     it 'supports named scope without_teacher_only' do
       expect(described_class.limit(3).without_teacher_only).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.domain' do # scope test
-    xit 'supports named scope domain' do
-      # used in conjunction with other
-      expect(described_class.limit(3).domain('1')).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.grade' do # scope test
-    xit 'supports named scope grade' do
-      # used in conjunction with other
-    expect(described_class.limit(3).grade('1')).to all(be_a(described_class))
     end
   end
   # TODO: auto-generated
@@ -347,7 +307,7 @@ describe Activity do
   describe '#question_number' do
     it 'question_number' do
       activity = described_class.new
-      embeddable = Factory.create(:open_response)
+      embeddable = FactoryBot.create(:open_response)
       result = activity.question_number(embeddable)
 
       expect(result).not_to be_nil

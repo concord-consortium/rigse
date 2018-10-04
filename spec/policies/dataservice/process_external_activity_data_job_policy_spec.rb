@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Dataservice::ProcessExternalActivityDataJobPolicy do
 
-  let(:context) { OpenStruct.new(request: [], params: {id_or_key: ''}, user: Factory.create(:user) )}
+  let(:context) { OpenStruct.new(request: [], params: {id_or_key: ''}, user: FactoryBot.create(:user) )}
 
   # TODO: auto-generated
   describe '#create?' do

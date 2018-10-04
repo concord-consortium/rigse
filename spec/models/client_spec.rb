@@ -48,7 +48,7 @@ describe Client do
     end
   end
   describe "a client with an access_grant" do
-    let(:user)  { FactoryGirl.create(:user) }
+    let(:user)  { FactoryBot.create(:user) }
     before(:each) do
       user.access_grants.create(client_id: client.id )
       user.reload
@@ -107,7 +107,7 @@ describe Client do
   describe '#updated_grant_for' do
     xit 'updated_grant_for' do
       client = described_class.new
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       time_to_live = double('time_to_live')
       result = client.updated_grant_for(user, time_to_live)
 

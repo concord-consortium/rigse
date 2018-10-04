@@ -3,22 +3,22 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe Investigation do
   before(:each) do
     @valid_attributes = {
-      :name => "test investigation",
-      :description => "new decription"
+        :name => "test investigation",
+        :description => "new decription"
     }
   end
 
   describe "after duplication the" do
 
     def duplicate_investigation
-      @original_author = Factory :user
-      @new_author = Factory :user
-      @source_investigation = Factory :investigation, { :user => @original_author }
-      @source_investigation.activities << (Factory :activity, { :user => @original_author })
-      @source_investigation.activities[0].sections << (Factory :section, {:user => @original_author})
-      @source_investigation.activities[0].sections[0].pages << (Factory :page, {:user => @original_author})
+      @original_author = FactoryBot.create(:user)
+      @new_author = FactoryBot.create(:user)
+      @source_investigation = FactoryBot.create(:investigation, :user => @original_author)
+      @source_investigation.activities << FactoryBot.create(:activity, :user => @original_author)
+      @source_investigation.activities[0].sections << FactoryBot.create(:section, :user => @original_author)
+      @source_investigation.activities[0].sections[0].pages << FactoryBot.create(:page, :user => @original_author)
 
-      open_response = (Factory :open_response, {:user => @original_author})
+      open_response = FactoryBot.create(:open_response, :user => @original_author)
       open_response.pages << @source_investigation.activities[0].sections[0].pages[0]
 
       @source_investigation.reload

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe "browse/external_activities/show" do
-  let (:user) { Factory.create(:user) }
-  let (:ext_act) { Factory.create(:external_activity, :url => 'http://activities.com', :long_description => '<p>desc foo bar</p><script>alert("evil!");</script>', :user => user) }
+  let (:user) { FactoryBot.create(:user) }
+  let (:ext_act) { FactoryBot.create(:external_activity, :url => 'http://activities.com', :long_description => '<p>desc foo bar</p><script>alert("evil!");</script>', :user => user) }
   let (:search_material) { Search::SearchMaterial.new(ext_act, user) }
 
   before(:each) do

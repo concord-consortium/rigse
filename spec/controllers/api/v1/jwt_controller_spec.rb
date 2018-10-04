@@ -42,19 +42,19 @@ describe API::V1::JwtController, :type => :controller do
 
   let(:expires)         { Time.now + 1000000000.minutes}
   let(:user_token)      { addToken(user, client, expires) }
-  let(:user)            { FactoryGirl.create(:user) }
+  let(:user)            { FactoryBot.create(:user) }
   let(:url_for_user)    { "http://test.host/users/#{user.id}" } # can't use url_for(user) helper in specs
   let(:uid)             { Digest::MD5.hexdigest(url_for_user) }
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
   let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
-  let(:runnable)        { Factory.create(:activity, runnable_opts)    }
-  let(:offering)        { Factory(:portal_offering, offering_opts)    }
-  let(:clazz)           { Factory(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
+  let(:runnable)        { FactoryBot.create(:activity, runnable_opts)    }
+  let(:offering)        { FactoryBot.create(:portal_offering, offering_opts)    }
+  let(:clazz)           { FactoryBot.create(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
   let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }
   let(:runnable_opts)   { {name: 'the activity'}              }
-  let(:class_teacher)   { Factory.create(:portal_teacher)     }
-  let(:student)         { FactoryGirl.create(:full_portal_student) }
-  let(:learner)         { Portal::Learner.find_or_create_by_offering_id_and_student_id(offering.id, student.id )}
+  let(:class_teacher)   { FactoryBot.create(:portal_teacher)     }
+  let(:student)         { FactoryBot.create(:full_portal_student) }
+  let(:learner)         { Portal::Learner.where(offering_id: offering.id, student_id: student.id ).first_or_create }
   let(:domain_matchers) { "http://x.y.z" }   # don't know why this is required
   let(:client)          { Client.create(
          :name       => "test_api_client",

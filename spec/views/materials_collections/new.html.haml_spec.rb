@@ -8,7 +8,7 @@ describe "materials_collections/new" do
       :project_id => 1
     ).as_new_record)
 
-    @admin_user = Factory.next(:admin_user)
+    @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_user).and_return(@admin_user)
   end
 

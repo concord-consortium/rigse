@@ -47,9 +47,7 @@ class Page < ActiveRecord::Base
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    {
-     :conditions => ["pages.name LIKE ? OR pages.description LIKE ?", name,name]
-    }
+    where("pages.name LIKE ? OR pages.description LIKE ?", name, name)
   }
 
   include Changeable

@@ -132,10 +132,10 @@ Dataservice::BundleContent: #{Dataservice::BundleContent.count}
 Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
 Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
 
-There are #{Portal::Teacher.find(:all).select {|t| t.user == nil}.size} Teachers without Users
-There are #{Portal::Student.find(:all).select {|s| s.user == nil}.size} Students which no longer have Teachers
-There are #{Portal::Clazz.find(:all).select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
-There are #{Portal::Learner.find(:all).select {|i| i.student == nil}.size} Learners which are no longer associated with Students
+There are #{Portal::Teacher.select {|t| t.user == nil}.size} Teachers without Users
+There are #{Portal::Student.select {|s| s.user == nil}.size} Students which no longer have Teachers
+There are #{Portal::Clazz.select {|i| i.teacher == nil}.size} Classes which no longer have Teachers
+There are #{Portal::Learner.select {|i| i.student == nil}.size} Learners which are no longer associated with Students
 
 If these numbers are large you may want to consider cleaning up the database.
 
@@ -145,13 +145,11 @@ ut = User.find_by_login('teacher'); us = User.find_by_login('student')
 t = ut.portal_teacher; s = us.portal_student; c = t.clazzes.first; o = c.offerings.first
 
 HEREDOC
-    puts summary
+    Rails.logger.info summary
     summary
   end
 
   def available_bookmark_types
     Portal::Bookmark.available_types.map { |t| t.name }
   end
-
-
 end

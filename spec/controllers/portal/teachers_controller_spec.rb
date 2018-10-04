@@ -3,10 +3,10 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::TeachersController do
   describe "POST create" do
     it "should complain if the login is the same except for case" do
-      school   = Factory.create(:portal_school)
+      school   = FactoryBot.create(:portal_school)
       selector = double(:portal_selector, :school => school, :valid? => true)
       allow(Portal::SchoolSelector).to receive(:new).and_return(selector) 
-      Factory.create(:user, :login => "tteacher")
+      FactoryBot.create(:user, :login => "tteacher")
 
       params = {
         :user => {
@@ -34,7 +34,7 @@ describe Portal::TeachersController do
     end
 
     before(:each) do
-      @school   = Factory.create(:portal_school)
+      @school   = FactoryBot.create(:portal_school)
       @selector = Portal::SchoolSelector.new({
         :country => Portal::SchoolSelector::USA,
         :state   => 'MA'})
@@ -57,9 +57,6 @@ describe Portal::TeachersController do
           }
         }
         
-        current_user_count = User.count(:all)
-        current_teacher_count = Portal::Teacher.count(:all)
-        
         post :create, params
         
         expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
@@ -78,13 +75,13 @@ describe Portal::TeachersController do
           }
         }
         allow(@selector).to receive(:valid?).and_return false
-        current_user_count = User.count(:all)
-        current_teacher_count = Portal::Teacher.count(:all)
+        current_user_count = User.count
+        current_teacher_count = Portal::Teacher.count
         
         post :create, params
         
-        expect(User.count(:all)).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
-        expect(Portal::Teacher.count(:all)).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
+        expect(User.count).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
+        expect(Portal::Teacher.count).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
 
         #expect(flash.now[:error]).not_to be_nil
         expect(flash[:notice]).to be_nil
@@ -115,7 +112,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: Factory.create(:portal_teacher).to_param
+      get :show, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -124,7 +121,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, id: Factory.create(:portal_teacher).to_param
+      get :edit, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -133,7 +130,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, id: Factory.create(:portal_teacher).to_param
+      put :update, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end
@@ -142,7 +139,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: Factory.create(:portal_teacher).to_param
+      delete :destroy, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end

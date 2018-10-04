@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Admin::ClientsController do
-  let(:admin_user)   { Factory.next(:admin_user)     }
-  let(:simple_user)  { Factory.next(:confirmed_user) }
-  let(:manager_user) { Factory.next(:manager_user)   }
+  let(:admin_user)   { FactoryBot.generate(:admin_user)     }
+  let(:simple_user)  { FactoryBot.generate(:confirmed_user) }
+  let(:manager_user) { FactoryBot.generate(:manager_user)   }
   let(:client_id)    { 1 }
 
   describe "anonymous' access" do

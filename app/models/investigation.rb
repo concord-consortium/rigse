@@ -5,10 +5,9 @@ class Investigation < ActiveRecord::Base
   include Archiveable
 
   belongs_to :user
-  belongs_to :grade_span_expectation, :class_name => 'RiGse::GradeSpanExpectation'
   has_many :activities, :order => :position, :dependent => :destroy do
     def student_only
-      find(:all, :conditions => {'teacher_only' => false})
+      where('teacher_only' => false)
     end
   end
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
@@ -71,45 +70,18 @@ class Investigation < ActiveRecord::Base
 
   include Publishable
 
-  # for convenience (will not work in find_by_* &etc.)
-  delegate :grade_span, :domain, :to => :grade_span_expectation, :allow_nil => true
-
-  scope :assigned, where('investigations.offerings_count > 0')
-  #
-  # IMPORTANT: Use with_gse if you are also going to use domain and grade params... eg:
-  # Investigation.with_gse.grade('9-11') == good
-  # Investigation.grade('9-11') == bad
-  #
-  scope :with_gse, {
-    :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
-  }
-
-  scope :domain, lambda { |domain_id|
-    {
-      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
-    }
-  }
-
-  scope :grade, lambda { |gs|
-    gs = gs.size > 0 ? gs : "%"
-    {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(","):gs ]
-    }
-  }
-
+  scope :assigned, -> { where('investigations.offerings_count > 0') }
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    {
-     :conditions => ["investigations.name LIKE ? OR investigations.description LIKE ?", name,name]
-    }
+    where("investigations.name LIKE ? OR investigations.description LIKE ?", name,name)
   }
 
-  scope :activity_group, {
-    :group => "#{self.table_name}.id"
+  scope :activity_group, -> {
+    group("#{self.table_name}.id")
   }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   scope :is_template, ->(v) do
     joins(['LEFT OUTER JOIN activities ON investigations.id = activities.investigation_id',
@@ -272,14 +244,6 @@ class Investigation < ActiveRecord::Base
   def full_title
     full_title = self.name
     return full_title
-  end
-
-  def domain_id
-    if self.domain
-      self.domain.id
-    else
-      nil
-    end
   end
 
   def is_official

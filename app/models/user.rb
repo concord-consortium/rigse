@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
   self.token_authentication_key = "access_token"
-  default_scope where(User.arel_table[:state].not_in(['disabled']))
+  default_scope { where(User.arel_table[:state].not_in(['disabled'])) }
 
   def apply_omniauth(omniauth)
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
@@ -57,24 +57,15 @@ class User < ActiveRecord::Base
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
-  scope :all_users, { :conditions => {}}
-  scope :active, { :conditions => { :state => 'active' } }
-  scope :suspended, {:conditions => { :state => 'suspended'}}
-  scope :no_email, { :conditions => "email LIKE '#{NO_EMAIL_STRING}%'" }
-  scope :email, { :conditions => "email NOT LIKE '#{NO_EMAIL_STRING}%'" }
-  scope :default, { :conditions => { :default_user => true } }
+  scope :all_users, -> { where(nil) }
+  scope :active, -> { where(state: 'active') }
+  scope :suspended, -> { where(state: 'suspended') }
+  scope :no_email, -> { where("email LIKE '#{NO_EMAIL_STRING}%'") }
+  scope :email, -> { where("email NOT LIKE '#{NO_EMAIL_STRING}%'") }
+  scope :default, -> { where(default_user: true) }
   scope :with_role, lambda { | role_name |
-    { :include => :roles, :conditions => ['roles.title = ?',role_name]}
+    where('roles.title = ?',role_name).includes(:roles)
   }
-
-  # has_many :assessment_targets, :class_name => 'RiGse::AssessmentTarget'
-  # has_many :big_ideas, :class_name => 'RiGse::BigIdea'
-  # has_many :domains, :class_name => 'RiGse::Domain'
-  # has_many :expectations, :class_name => 'RiGse::Expectation'
-  # has_many :expectation_stems, :class_name => 'RiGse::ExpectationStem'
-  # has_many :grade_span_expectations, :class_name => 'RiGse::GradeSpanExpectation'
-  # has_many :knowledge_statements, :class_name => 'RiGse::KnowledgeStatement'
-  # has_many :unifying_themes, :class_name => 'RiGse::UnifyingTheme'
 
   attr_accessor :skip_notifications
 
@@ -173,11 +164,11 @@ class User < ActiveRecord::Base
     end
 
     def login_exists?(login)
-      User.count(:conditions => "`login` = '#{login}'") >= 1
+      User.where("`login` = '#{login}'").count >= 1
     end
 
     def login_does_not_exist?(login)
-      User.count(:conditions => "`login` = '#{login}'") == 0
+      User.where("`login` = '#{login}'").count == 0
     end
 
     def suggest_login(first,last)
@@ -192,7 +183,7 @@ class User < ActiveRecord::Base
     end
 
     def default_users
-      User.find(:all, :conditions => { :default_user => true })
+      User.where(:default_user => true)
     end
 
     def suspend_default_users
@@ -300,7 +291,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
-    u1 =  User.find(:first, :conditions => ['login = ? AND state = "active"',login])
+    u1 =  User.where('login = ? AND state = "active"',login).first
     u1 && u1.valid_password?(password) ? u1 : nil
   end
 
@@ -381,7 +372,7 @@ class User < ActiveRecord::Base
 
   def add_role(role)
     unless has_role?(role)
-      roles << Role.find_or_create_by_title(role)
+      roles << Role.where(title: role).first_or_create
     end
   end
 
@@ -485,8 +476,7 @@ class User < ActiveRecord::Base
     if @@anonymous_user
       @@anonymous_user
     else
-      anonymous_user = User.find_or_create_by_login(
-        :login                 => "anonymous",
+      anonymous_user = User.where(login: "anonymous").first_or_create(
         :first_name            => "Anonymous",
         :last_name             => "User",
         :email                 => "anonymous@concord.org",
@@ -500,8 +490,8 @@ class User < ActiveRecord::Base
 
   def school
     school_person = self.portal_teacher || self.portal_student
-    if (school_person)
-      return school_person.school
+    if school_person
+      school_person.school
     end
   end
 

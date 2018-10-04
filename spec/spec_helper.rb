@@ -1,3 +1,24 @@
+ENV["RAILS_ENV"] = 'test'
+
+require 'simplecov'
+SimpleCov.start do
+  merge_timeout 3600
+
+  add_filter '/spec/'
+  add_filter '/initializers/'
+  add_filter '/features/'
+  add_filter '/factories/'
+  add_filter '/config/'
+
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Models', 'app/models'
+  add_group 'Helpers', 'app/helpers'
+  add_group 'Views', 'app/views'
+  add_group 'Policies', 'app/policies'
+  add_group 'Services', 'app/services'
+  add_group 'Lib', 'lib'
+end
+
 require_relative 'spec_helper_common'
 require_relative 'spec_helper_pundit'
 
@@ -14,13 +35,13 @@ def subject_class_factory
 end
 
 def factory
-  Factory.build(subject_class_factory)
+  FactoryBot.build(subject_class_factory)
 end
 
 def factory_stubbed
-  Factory.build_stubbed(subject_class_factory)
+  FactoryBot.build_stubbed(subject_class_factory)
 end
 
 def factory_create
-  Factory.create(subject_class_factory)
+  FactoryBot.create(subject_class_factory)
 end

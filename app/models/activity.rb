@@ -19,7 +19,7 @@ class Activity < ActiveRecord::Base
 
   has_many :sections, :order => :position, :dependent => :destroy do
     def student_only
-      find(:all, :conditions => {'teacher_only' => false})
+      where('teacher_only' => false)
     end
   end
   has_many :pages, :through => :sections
@@ -57,59 +57,35 @@ class Activity < ActiveRecord::Base
   include Archiveable
 
   send_update_events_to :investigation
-  delegate :domain_id, :grade_span, :to => :investigation, :allow_nil => true
 
-  # TODO: Which of these scopes can be removed?
-  scope :with_gse, {
-    :joins => "left outer JOIN ri_gse_grade_span_expectations on (ri_gse_grade_span_expectations.id = investigations.grade_span_expectation_id) JOIN ri_gse_assessment_targets ON (ri_gse_assessment_targets.id = ri_gse_grade_span_expectations.assessment_target_id) JOIN ri_gse_knowledge_statements ON (ri_gse_knowledge_statements.id = ri_gse_assessment_targets.knowledge_statement_id)"
+  scope :without_teacher_only, -> {
+    where('activities.teacher_only = 0')
   }
 
-  scope :without_teacher_only,{
-    :conditions =>['activities.teacher_only = 0']
-  }
-
-  scope :domain, lambda { |domain_id|
-    {
-      :conditions => ['ri_gse_knowledge_statements.domain_id in (?)', domain_id]
-    }
-  }
-
-  scope :grade, lambda { |gs|
-    gs = gs.size > 0 ? gs : "%"
-    {
-      :conditions => ['ri_gse_grade_span_expectations.grade_span in (?) OR ri_gse_grade_span_expectations.grade_span LIKE ?', gs, (gs.class==Array)? gs.join(",") : gs ]
-    }
-  }
-
-  scope :activity_group, {
-      :group => "#{self.table_name}.id"
+  scope :activity_group, -> {
+      group("#{self.table_name}.id")
     }
 
   scope :like, lambda { |name|
     name = "%#{name}%"
-    {
-     :conditions => ["#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name,name]
-    }
+    where("#{self.table_name}.name LIKE ? OR #{self.table_name}.description LIKE ?", name, name)
   }
 
-  scope :investigation,
-  {
-    :joins => "left outer JOIN investigations ON investigations.id = activities.investigation_id",
+  scope :investigation, -> {
+    joins("left outer JOIN investigations ON investigations.id = activities.investigation_id")
   }
 
-  scope :published,
-  {
-    :conditions =>['activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)']
+  scope :published, -> {
+    where('activities.publication_status = "published" OR (investigations.publication_status = "published" AND investigations.allow_activity_assignment = 1)')
   }
 
-  scope :directly_published,
-  {
-    :conditions =>['activities.publication_status = "published"']
+  scope :directly_published, -> {
+    where('activities.publication_status = "published"')
   }
 
-  scope :assigned, where('offerings_count > 0')
+  scope :assigned, -> { where('offerings_count > 0') }
 
-  scope :ordered_by, lambda { |order| { :order => order } }
+  scope :ordered_by, lambda { |order| order(order) }
 
   scope :is_template, ->(v) do
     joins(['LEFT OUTER JOIN investigations ON investigations.id = activities.investigation_id',
@@ -167,7 +143,7 @@ class Activity < ActiveRecord::Base
     )
   end
 
- 
+
   # TODO: we have to make this container nuetral,
   # using parent / tree structure (children)
   def reportable_elements

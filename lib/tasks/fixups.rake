@@ -32,7 +32,7 @@ namespace :app do
 
     desc 'Add the author role to all users who have authored an Investigation'
     task :add_author_role_to_authors => :environment do
-      User.find(:all).each do |user|
+      User.all.each do |user|
         if user.has_investigations?
           print '.'
           STDOUT.flush
@@ -44,7 +44,7 @@ namespace :app do
 
     desc 'Remove the author role from users who have not authored an Investigation'
     task :remove_author_role_from_non_authors => :environment do
-      User.find(:all).each do |user|
+      User.all.each do |user|
         unless user.has_investigations?
           print '.'
           STDOUT.flush
@@ -73,7 +73,7 @@ namespace :app do
 
     desc 'ensure investigations have publication_status'
     task :pub_status => :environment do
-      Investigation.find(:all).each do |i|
+      Investigation.all.each do |i|
         if i.publication_status.nil?
           i.update_attribute(:publication_status,'draft')
         end
@@ -106,7 +106,7 @@ namespace :app do
     
     desc "Create bundle and console loggers for learners"
     task :create_bundle_and_console_loggers_for_learners => :environment do
-      Portal::Learner.find(:all).each do |learner|
+      Portal::Learner.all.each do |learner|
         learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
         learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
         learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create! unless learner.periodic_bundle_logger
@@ -190,7 +190,7 @@ namespace :app do
       puts "\nUpdating #{Portal::District.count} Portal::District models with state, leaid, and zipcode data from the Portal::Nces06District models"
       Portal::District.real.find_in_batches(:batch_size => 500) do |portal_districts|
         portal_districts.each do |portal_district|
-          nces_district = Portal::Nces06District.find(:first, :conditions => { :id => portal_district.nces_district_id }, :select => "id, LEAID, LZIP, LSTATE")
+          nces_district = Portal::Nces06District.where(:id => portal_district.nces_district_id).select("id, LEAID, LZIP, LSTATE").first
           portal_district.state   = nces_district.LSTATE
           portal_district.leaid   = nces_district.LEAID
           portal_district.zipcode = nces_district.LZIP
@@ -202,7 +202,7 @@ namespace :app do
       puts "\nUpdating #{Portal::School.count} Portal::School models with state, leaid_schoolnum, and zipcode data from the Portal::Nces06School models"
       Portal::School.real.find_in_batches(:batch_size => 500) do |portal_schools|
         portal_schools.each do |portal_school|
-          nces_school = Portal::Nces06School.find(:first, :conditions => { :id => portal_school.nces_school_id }, :select => "id, NCESSCH, MZIP, MSTATE")
+          nces_school = Portal::Nces06School.where(:id => portal_school.nces_school_id).select("id, NCESSCH, MZIP, MSTATE").first
           portal_school.state           = nces_school.MSTATE
           portal_school.ncessch         = nces_school.NCESSCH
           portal_school.zipcode         = nces_school.MZIP
@@ -220,8 +220,8 @@ namespace :app do
     task :activity_positon_bug_report, [:file_name] => :environment do |t,args|
       args.with_defaults(:file_name => 'position_bug_activity_report.csv')
       file_name = args.file_name
-      suspect_activities = Activity.find(:all, :conditions => "position is null and investigation_id is not null")
-      good_activities =  Activity.find(:all, :conditions => "position is not null and investigation_id is not null")
+      suspect_activities = Activity.where("position is null and investigation_id is not null")
+      good_activities =  Activity.where("position is not null and investigation_id is not null")
       puts "#{suspect_activities.size} without positions & #{good_activities.size} with good positions" 
       bad_hash = suspect_activities.map do |a|
         {
@@ -314,14 +314,16 @@ namespace :app do
         next if offering.clazz_id == clazz.id
         runnable_id = offering.runnable_id
         runnable_type = offering.runnable_type
-        found   = Portal::Offering.find_all_by_runnable_id_and_runnable_type(runnable_id, runnable_type)
-        found   = found.detect { |o| o.clazz_id == clazz.id }
+        found   = Portal::Offering
+                      .where(runnable_id: runnable_id,
+                             runnable_type: runnable_type)
+                      .detect { |o| o.clazz_id == clazz.id }
         unless found
           found = Portal::Offering.create(:runnable_id => runnable_id, :runnable_type => runnable_type, :clazz => clazz, :default_offering => true)
         end
         offering.learners.each do |learner|
           learner.offering = found
-          learner.save
+          learner.save!
         end
       end
       # We don't need to delete offerings, they are

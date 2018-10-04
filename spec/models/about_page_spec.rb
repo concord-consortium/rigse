@@ -9,7 +9,7 @@ RSpec.describe AboutPage, type: :model do
   # TODO: auto-generated
   describe '#content' do
     it 'content' do
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       settings = double('settings')
       preview_content = double('preview_content')
       about_page = described_class.new(user, settings, preview_content)
@@ -22,7 +22,7 @@ RSpec.describe AboutPage, type: :model do
   # TODO: auto-generated
   describe '#view_options' do
     it 'view_options' do
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       settings = double('settings')
       preview_content = double('preview_content')
       about_page = described_class.new(user, settings, preview_content)

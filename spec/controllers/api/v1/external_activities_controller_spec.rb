@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe API::V1::ExternalActivitiesController do
 
-  let(:admin_user)        { Factory.next(:admin_user)     }
-  let(:simple_user)       { Factory.create(:confirmed_user) }
-  let(:manager_user)      { Factory.next(:manager_user)   }
-  let(:researcher_user)   { Factory.next(:researcher_user)   }
+  let(:admin_user)        { FactoryBot.generate(:admin_user)     }
+  let(:simple_user)       { FactoryBot.create(:confirmed_user) }
+  let(:manager_user)      { FactoryBot.generate(:manager_user)   }
+  let(:researcher_user)   { FactoryBot.generate(:researcher_user)   }
 
   describe "#create" do
     context "with a guest" do

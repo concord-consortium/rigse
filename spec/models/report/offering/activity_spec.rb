@@ -11,7 +11,7 @@ RSpec.describe Report::Offering::Activity, type: :model do
   describe '#respondables' do
     it 'respondables' do
       investigation_report = double('investigation_report')
-      offering = Factory.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
       activity = Activity.new
       activity = described_class.new(investigation_report, offering, activity)
       klazz = double('klazz')

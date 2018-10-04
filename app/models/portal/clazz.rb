@@ -55,11 +55,8 @@ class Portal::Clazz < ActiveRecord::Base
     end
 
     def find_or_create_default_class
-      clazz = find :first, :conditions => ['default_class = ?', true || 1]
-      if clazz.blank?
-        clazz = Portal::Clazz.create :name => "Default Class", :default_class => true, :class_word => "default"
-      end
-      clazz
+      where(default_class: true).first ||
+        Portal::Clazz.create(:name => "Default Class", :default_class => true, :class_word => "default")
     end
 
     def searchable_attributes
@@ -212,7 +209,7 @@ class Portal::Clazz < ActiveRecord::Base
     offerings.each do |offering|
       # TODO: ensure that the offerings are in the default class?
       # the 'default' flag in offerings seems to be redundant, possibly confusing ...
-      default_offerings = Portal::Offering.find_all_by_runnable_id_and_runnable_type_and_default_offering(offering.runnable_id, offering.runnable_type,true)
+      default_offerings = Portal::Offering.find_all_using_runnable_id_and_runnable_type_and_default_offering(offering.runnable_id, offering.runnable_type,true)
       case default_offerings.size
       when 0
         final_offers << offering

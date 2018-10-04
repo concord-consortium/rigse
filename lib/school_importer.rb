@@ -87,9 +87,9 @@ class SchoolImporter
       return cached_district
     end
 
-    nces_district = Portal::Nces06District.find(:first, :conditions => ["NAME = ?", "#{district_name.upcase.strip}"]);
+    nces_district = Portal::Nces06District.where("NAME = ?", "#{district_name.upcase.strip}").first
     if nces_district
-      district = Portal::District.find_or_create_by_nces_district(nces_district)
+      district = Portal::District.find_or_create_using_nces_district(nces_district)
     else
       district = Portal::District.find_by_name(district_name)
       if district
@@ -100,7 +100,7 @@ class SchoolImporter
       end
     end
     self.districts[district_name] = district
-    return district
+    district
   end
 
   def school_for(row)
@@ -110,9 +110,12 @@ class SchoolImporter
       log("School Cache hit for #{school_name}")
       return cached_school
     end
-    nces_school = Portal::Nces06School.find(:first, :conditions => ["SCHNAM = ?", "#{school_name.upcase.strip}"], :select => "id, nces_district_id, NCESSCH, SCHNAM")
+    nces_school = Portal::Nces06School
+                      .where("SCHNAM = ?", "#{school_name.upcase.strip}")
+                      .select("id, nces_district_id, NCESSCH, SCHNAM")
+                      .first
     if nces_school
-      school = Portal::School.find_or_create_by_nces_school(nces_school)
+      school = Portal::School.find_or_create_using_nces_school(nces_school)
       log("found NCES school: #{school_name}")
     else
       school = Portal::School.find_by_name(school_name)

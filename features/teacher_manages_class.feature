@@ -46,15 +46,18 @@ Feature: Teacher manages a class
     And "Mathematics" should be the first class within left panel for class navigation
 
 
-  # NP: Not sure why this test broke PP-Navigation 2018-07-09
   @javascript
-  @pending
   Scenario: Teacher deactivates classes
     When I uncheck "Biology"
     And the Manage class list state starts saving
     And the modal for saving manage classes dissappears
+    # this requires a reload to see the changes in the menu
+    # the reloads should be removed from this test if this is fixed
+    Then I should see "Biology" within left panel for class navigation
+    And I reload the page
     Then I should not see "Biology" within left panel for class navigation
     When I uncheck "Geography"
+    And I reload the page
     And I should not see "Geography" within left panel for class navigation
 
 

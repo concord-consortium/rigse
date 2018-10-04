@@ -20,28 +20,26 @@ class NationalDistrictImporter
   end
 
   def load_districts
-    nces_districts        = Portal::Nces06District.find(:all, :select => "id, NAME, LEAID, LZIP, LSTATE")
+    nces_districts        = Portal::Nces06District.select("id, NAME, LEAID, LZIP, LSTATE")
     nces_district_ids     = nces_districts.map { |d| d.id }
-    existing_districts    = Portal::District.find(:all, :conditions => {:nces_district_id => nces_district_ids})
+    existing_districts    = Portal::District.where(:nces_district_id => nces_district_ids)
     existing_district_ids = existing_districts.map { |d| d.nces_district_id }
 
-    puts "found    : #{nces_districts.size} national districts to import"
-    puts "rejecting: #{existing_district_ids.size} pre-imported districts"
+    Rails.logger.info "found    : #{nces_districts.size} national districts to import"
+    Rails.logger.info "rejecting: #{existing_district_ids.size} pre-imported districts"
 
     nces_districts.reject! { |d| existing_district_ids.include? d.id }
 
-    puts "leaves   : #{nces_districts.size} remaining districts to import"
+    Rails.logger.info "leaves   : #{nces_districts.size} remaining districts to import"
 
     district_values = []
     nces_districts.each_with_index do |nces_district,count|
       tick count
-      existing_district = Portal::District.find(:first,
-                                                  :conditions => {:leaid=> nces_district.LEAID})
-      existing_district ||= Portal::District.find(:first,
-                                                  :conditions => {:state => nces_district.LSTATE, :name => nces_district.NAME})
+      existing_district = Portal::District.where(:leaid=> nces_district.LEAID).first
+      existing_district ||= Portal::District.where(:state => nces_district.LSTATE, :name => nces_district.NAME).first
       if existing_district
-        puts "district similar already exists:#{existing_district.state} #{existing_district.name} #{existing_district.id}"
-        puts "updating."
+        Rails.logger.info "district similar already exists:#{existing_district.state} #{existing_district.name} #{existing_district.id}"
+        Rails.logger.info "updating."
         existing_district.nces_district = nces_district
         existing_district.leaid = nces_district.LEAID
         existing_district.save
@@ -61,26 +59,23 @@ class NationalDistrictImporter
 
   def load_schools
     districts_map = {}
-    Portal::District.find(:all, :select => "id, nces_district_id").each do |d|
+    Portal::District.select("id, nces_district_id").each do |d|
       next unless d.nces_district_id
       districts_map[d.nces_district_id] = d.id
     end
-    nces_schools = Portal::Nces06School.find(:all,
-                                             :select => "id, nces_district_id, NCESSCH, LZIP, LEAID, SCHNAM, LSTATE")
+    nces_schools = Portal::Nces06School.select("id, nces_district_id, NCESSCH, LZIP, LEAID, SCHNAM, LSTATE")
     nces_school_ids     = nces_schools.map { |s| s.id }
 
-    existing_schools    = Portal::School.find(:all,
-                                              :conditions => {:nces_school_id => nces_school_ids},
-                                              :select => "id, nces_school_id")
+    existing_schools    = Portal::School.where(:nces_school_id => nces_school_ids).select("id, nces_school_id")
     existing_school_ids = existing_schools.map { |s| s.nces_school_id }
     import_count = nces_schools.size - existing_school_ids.size
-    puts "found    : #{nces_schools.size} national schools to import"
-    puts "found    : #{existing_school_ids.size} pre-imported schools"
-    puts "         : #{import_count} schools will be imported"
+    Rails.logger.info "found    : #{nces_schools.size} national schools to import"
+    Rails.logger.info "found    : #{existing_school_ids.size} pre-imported schools"
+    Rails.logger.info "         : #{import_count} schools will be imported"
 
     school_values = []
     added = 0
-    # this seems ineficient, but nces_schools.reject! was also really slow.
+    # this seems inefficient, but nces_schools.reject! was also really slow.
     nces_schools.each_with_index do |nces_school,count|
       tick count
 
@@ -93,13 +88,11 @@ class NationalDistrictImporter
 
       added = added + 1
       district_id = districts_map[nces_school.nces_district_id]
-      existing_school ||= Portal::School.find(:first,
-                                              :conditions  => {
-                                              :district_id => district_id,
-                                              :name        => nces_school.SCHNAM})
+      existing_school ||= Portal::School.where(:district_id => district_id,
+                                               :name        => nces_school.SCHNAM).first
       if existing_school
-        puts "similar school already exists:#{existing_school.state} #{existing_school.name} #{existing_school.id}"
-        puts "updating."
+        Rails.logger.info "similar school already exists:#{existing_school.state} #{existing_school.name} #{existing_school.id}"
+        Rails.logger.info "updating."
         existing_school.nces_school = nces_school
         existing_school.save
       else

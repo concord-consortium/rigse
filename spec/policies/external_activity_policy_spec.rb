@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ExternalActivityPolicy do
   subject                 { ExternalActivityPolicy.new(active_user, activity)   }
   let(:active_user)       { nil                                                 }
-  let(:activity)          { FactoryGirl.create(:external_activity)              }
+  let(:activity)          { FactoryBot.create(:external_activity)              }
 
   context "for anonymous" do
     it { is_expected.to permit(:preview_index)           }
@@ -21,7 +21,7 @@ describe ExternalActivityPolicy do
 
 
   context "for a normal user" do
-    let(:active_user) { FactoryGirl.create(:user) }
+    let(:active_user) { FactoryBot.create(:user) }
 
     it { is_expected.to permit(:preview_index)            }
     it { is_expected.to permit(:copy)                     }
@@ -38,8 +38,8 @@ describe ExternalActivityPolicy do
 
   context "for the owner" do
     let(:email)      { 'foo@robots.gov' }
-    let(:active_user){ FactoryGirl.create(:user, email: email) }
-    let(:activity)   { FactoryGirl.create(:external_activity, user: active_user, author_email: email)  }
+    let(:active_user){ FactoryBot.create(:user, email: email) }
+    let(:activity)   { FactoryBot.create(:external_activity, user: active_user, author_email: email)  }
     before(:each) do
       active_user.add_role('author')
     end
@@ -59,7 +59,7 @@ describe ExternalActivityPolicy do
   end
 
   context "for an admin" do
-    let(:active_user) { Factory.next(:admin_user)   }
+    let(:active_user) { FactoryBot.generate(:admin_user)   }
 
     it { is_expected.to permit(:preview_index)            }
     it { is_expected.to permit(:copy)                     }
@@ -74,9 +74,9 @@ describe ExternalActivityPolicy do
 
 
   context "for a material admin" do
-    let(:project_a)   { FactoryGirl.create(:project)                                 }
-    let(:active_user) { FactoryGirl.create(:user, admin_for_projects: [project_a])   }
-    let(:activity)    { FactoryGirl.create(:external_activity, projects: [project_a])}
+    let(:project_a)   { FactoryBot.create(:project)                                 }
+    let(:active_user) { FactoryBot.create(:user, admin_for_projects: [project_a])   }
+    let(:activity)    { FactoryBot.create(:external_activity, projects: [project_a])}
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end
@@ -92,8 +92,8 @@ describe ExternalActivityPolicy do
   end
 
   context "for an admin of a project that is not one of the material's projects" do
-    let(:project_a)   { FactoryGirl.create(:project)                                 }
-    let(:active_user) { FactoryGirl.create(:user, admin_for_projects: [project_a])   }
+    let(:project_a)   { FactoryBot.create(:project)                                 }
+    let(:active_user) { FactoryBot.create(:user, admin_for_projects: [project_a])   }
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end

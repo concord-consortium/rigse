@@ -180,7 +180,7 @@ describe RunnablesHelper, type: :helper  do
   # TODO: auto-generated
   describe '#student_run_button_css' do
     it 'works' do
-      result = helper.student_run_button_css(Factory.create(:portal_offering), [])
+      result = helper.student_run_button_css(FactoryBot.create(:portal_offering), [])
 
       expect(result).not_to be_nil
     end
@@ -252,7 +252,7 @@ describe RunnablesHelper, type: :helper  do
   # TODO: auto-generated
   describe '#preview_button_for' do
     xit 'works' do
-      result = helper.preview_button_for(Factory.create(:portal_offering), {}, img, run_as)
+      result = helper.preview_button_for(FactoryBot.create(:portal_offering), {}, img, run_as)
 
       expect(result).not_to be_nil
     end
@@ -261,7 +261,7 @@ describe RunnablesHelper, type: :helper  do
   # TODO: auto-generated
   describe '#teacher_preview_button_for' do
     xit 'works' do
-      result = helper.teacher_preview_button_for(Factory.create(:portal_offering))
+      result = helper.teacher_preview_button_for(FactoryBot.create(:portal_offering))
 
       expect(result).not_to be_nil
     end
@@ -270,7 +270,7 @@ describe RunnablesHelper, type: :helper  do
   # TODO: auto-generated
   describe '#preview_link_for' do
     xit 'works' do
-      result = helper.preview_link_for(Factory.create(:portal_offering))
+      result = helper.preview_link_for(FactoryBot.create(:portal_offering))
 
       expect(result).not_to be_nil
     end
@@ -279,7 +279,7 @@ describe RunnablesHelper, type: :helper  do
   # TODO: auto-generated
   describe '#offering_link_for' do
     xit 'works' do
-      result = helper.offering_link_for(Factory.create(:portal_offering))
+      result = helper.offering_link_for(FactoryBot.create(:portal_offering))
 
       expect(result).not_to be_nil
     end

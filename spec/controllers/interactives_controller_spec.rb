@@ -15,7 +15,7 @@ describe InteractivesController do
   let(:publication_status)  { "published" }
 
   let(:test_interactive) {
-    test_interactive = Factory.create(:interactive,
+    test_interactive = FactoryBot.create(:interactive,
       :name => name,
       :description => description,
       :url => url,

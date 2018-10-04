@@ -3,16 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe TeacherNotesController, type: :controller do
-
-  # TODO: auto-generated
-  describe '#setup_object' do
-    xit 'GET setup_object' do
-      get :setup_object, {}, {}
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
+  
   # TODO: auto-generated
   describe '#show_teacher_note' do
     it 'GET show_teacher_note' do
@@ -34,7 +25,7 @@ RSpec.describe TeacherNotesController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show, id: 'a' * 36
 
       expect(response).to have_http_status(:ok)
     end

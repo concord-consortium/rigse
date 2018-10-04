@@ -12,25 +12,28 @@ class PageElement < ActiveRecord::Base
   end
   
   scope :page_by_investigation, lambda {|investigation|
-    { :select => 'page_elements.*, pages.position as page_position, sections.id as section_id, sections.position as section_position, activities.id as activity_id, activities.position as activity_position',
-      :joins => 'INNER JOIN pages ON page_elements.page_id = pages.id 
+    select('page_elements.*,
+      pages.position as page_position,
+      sections.id as section_id,
+      sections.position as section_position,
+      activities.id as activity_id,
+      activities.position as activity_position')
+      .joins('INNER JOIN pages ON page_elements.page_id = pages.id
       INNER JOIN sections ON pages.section_id = sections.id
-      INNER JOIN activities ON sections.activity_id = activities.id',
-      :conditions => {'activities.investigation_id' => investigation.id },
-      :order => 'activity_position asc, section_position asc, page_position asc, page_elements.position asc'
-    }
+      INNER JOIN activities ON sections.activity_id = activities.id')
+     .where('activities.investigation_id' => investigation.id)
+     .order('activity_position asc, section_position asc, page_position asc, page_elements.position asc')
   }
 
   # to be used with the by_investigation scope only
-  scope :student_only, lambda {
-    { :conditions => {'pages.teacher_only' => false, 'sections.teacher_only' => false, 'activities.teacher_only' => false }
-    }
+  scope :student_only, -> {
+    where('pages.teacher_only' => false)
+        .where('sections.teacher_only' => false)
+        .where('activities.teacher_only' => false)
   }
   
-  scope :by_type, lambda {|types|
-    { :conditions => {'embeddable_type' => types},
-      :order => 'position asc'
-    }
+  scope :by_type, lambda { |types|
+    where('embeddable_type' => types).order('position asc')
   }
 
   include Changeable

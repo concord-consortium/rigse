@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe API::V1::ClassesController do
-  let(:teacher)           { Factory.create(:portal_teacher) }
-  let(:clazz)             { Factory.create(:portal_clazz, name: 'test class', teachers: [teacher]) }
-  let(:runnable_a)          { Factory.create(:external_activity, name: 'Test Sequence') }
-  let(:offering_a)          { Factory.create(:portal_offering, {clazz: clazz, runnable: runnable_a}) }
-  let(:runnable_b)          { Factory.create(:external_activity, name: 'Archived Test Sequence', is_archived: true) }
-  let(:offering_b)          { Factory.create(:portal_offering, {clazz: clazz, runnable: runnable_b}) }
-  let(:runnable_c)          { Factory.create(:external_activity, name: 'Test Sequence 2') }
-  let(:offering_c)          { Factory.create(:portal_offering, {clazz: clazz, runnable: runnable_c}) }
+  let(:teacher)           { FactoryBot.create(:portal_teacher) }
+  let(:clazz)             { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher]) }
+  let(:runnable_a)          { FactoryBot.create(:external_activity, name: 'Test Sequence') }
+  let(:offering_a)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_a}) }
+  let(:runnable_b)          { FactoryBot.create(:external_activity, name: 'Archived Test Sequence', is_archived: true) }
+  let(:offering_b)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_b}) }
+  let(:runnable_c)          { FactoryBot.create(:external_activity, name: 'Test Sequence 2') }
+  let(:offering_c)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_c}) }
 
   describe "GET #show" do
     before (:each) do

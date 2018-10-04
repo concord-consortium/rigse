@@ -22,7 +22,7 @@ describe JnlpHelper, type: :helper  do
         @settings = Admin::Settings.new(:pub_interval => 10,
           :use_periodic_bundle_uploading => true)
         @student = double()
-        @user = Factory(:user)
+        @user = FactoryBot.create(:user)
         allow(@student).to receive_messages(:user => @user)
         pbl   = double()
         @learner = double(:student => @student, :periodic_bundle_logger => pbl)
@@ -55,7 +55,7 @@ describe JnlpHelper, type: :helper  do
   # TODO: auto-generated
   describe '#jnlp_splash_url' do
     xit 'works' do
-      result = helper.jnlp_splash_url(Factory.create(:portal_learner))
+      result = helper.jnlp_splash_url(FactoryBot.create(:portal_learner))
 
       expect(result).not_to be_nil
     end
@@ -91,7 +91,7 @@ describe JnlpHelper, type: :helper  do
   # TODO: auto-generated
   describe '#jnlp_information' do
     xit 'works' do
-      result = helper.jnlp_information('<root/>', Factory.create(:full_portal_learner))
+      result = helper.jnlp_information('<root/>', FactoryBot.create(:full_portal_learner))
 
       expect(result).not_to be_nil
     end

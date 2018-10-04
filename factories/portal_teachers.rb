@@ -1,7 +1,6 @@
 # self.table_name = :portal_teachers
 # 
 # belongs_to :user, :class_name => "User", :foreign_key => "user_id"
-# belongs_to :domain
 # 
 # has_many :offerings, :through => :clazzes
 # 
@@ -12,17 +11,23 @@
 # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
 
 
-Factory.define :teacher, :class => Portal::Teacher do |f|
-  f.association :user, :factory => :confirmed_user
-  f.clazzes { |clazzes| [ clazzes.association(:portal_clazz) ] }
+FactoryBot.define do
+  factory :teacher, :class => Portal::Teacher do |f|
+    f.association :user, :factory => :confirmed_user
+    f.clazzes {|clazzes| [clazzes.association(:portal_clazz)]}
+  end
 end
 
-Factory.define :portal_teacher, :parent => :teacher do |f|
-  f.schools { |schools| [ schools.association(:portal_school)] }
+FactoryBot.define do
+  factory :portal_teacher, :parent => :teacher do |f|
+    f.schools {|schools| [schools.association(:portal_school)]}
+  end
 end
 
 # a teacher with one class in a real school
-Factory.define :nces_portal_teacher, :parent => :portal_teacher do |teacher|
-  teacher.clazzes {[Factory(:nces_portal_clazz)]}
+FactoryBot.define do
+  factory :nces_portal_teacher, :parent => :portal_teacher do |teacher|
+    teacher.clazzes {[FactoryBot.create(:nces_portal_clazz)]}
+  end
 end
 

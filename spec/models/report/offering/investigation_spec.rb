@@ -10,7 +10,7 @@ RSpec.describe Report::Offering::Investigation, type: :model do
   # TODO: auto-generated
   describe '#respondables' do
     it 'respondables' do
-      offering = Factory.create(:portal_offering)
+      offering = FactoryBot.create(:portal_offering)
       investigation = described_class.new(offering)
       klazz = double('klazz')
       result = investigation.respondables(klazz)

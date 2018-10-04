@@ -6,8 +6,8 @@ class Portal::District < ActiveRecord::Base
   has_many :schools, :dependent => :destroy, :class_name => "Portal::School", :foreign_key => "district_id", :order => "name"
   belongs_to :nces_district, :class_name => "Portal::Nces06District", :foreign_key => "nces_district_id"
 
-  scope :real,    { :conditions => 'nces_district_id is NOT NULL', :include => :schools, :order => "name" }
-  scope :virtual, { :conditions => 'nces_district_id is NULL', :include => :schools, :order => "name" }
+  scope :real,    -> { where('nces_district_id is NOT NULL').includes(:schools).order("name") }
+  scope :virtual, -> { where('nces_district_id is NULL').includes(:schools).order("name") }
 
   include Changeable
 
@@ -30,10 +30,12 @@ class Portal::District < ActiveRecord::Base
     ##   => "Woonsocket"
     ##
     def find_by_state_and_nces_local_id(state, local_id)
-      nces_district = Portal::Nces06District.find(:first, :conditions => {:STID => local_id, :LSTATE => state},
-        :select => "id, LEAID, STID, NAME, LSTATE")
+      nces_district = Portal::Nces06District
+                          .where(:STID => local_id, :LSTATE => state)
+                          .select("id, LEAID, STID, NAME, LSTATE")
+                          .first
       if nces_district
-        find(:first, :conditions=> {:nces_district_id => nces_district.id})
+        where(:nces_district_id => nces_district.id).first
       end
     end
 
@@ -47,18 +49,18 @@ class Portal::District < ActiveRecord::Base
     ##   => "39"
     ##
     def find_by_state_and_district_name(state, district_name)
-      nces_district = Portal::Nces06District.find(:first, :conditions => {:NAME => district_name.upcase, :LSTATE => state},
-        :select => "id, LEAID, STID, NAME, LSTATE")
+      nces_district = Portal::Nces06District.where(:NAME => district_name.upcase, :LSTATE => state)
+        .select("id, LEAID, STID, NAME, LSTATE").first
       if nces_district
-        find(:first, :conditions=> {:nces_district_id => nces_district.id})
+        where(:nces_district_id => nces_district.id).first
       end
     end
 
     ##
     ## given a NCES district, either find or create a portal_distrcit for it.
     ##
-    def find_or_create_by_nces_district(nces_district)
-      found_instance = find(:first, :conditions=> {:nces_district_id => nces_district.id})
+    def find_or_create_using_nces_district(nces_district)
+      found_instance = where(:nces_district_id => nces_district.id).first
       unless found_instance
         attributes = {
           :name             => nces_district.NAME,
@@ -75,16 +77,16 @@ class Portal::District < ActiveRecord::Base
     end
 
     def default
-      Portal::District.find_or_create_by_name('default')
+      Portal::District.where(name: 'default').first_or_create
     end
 
     def find_by_similar_or_new(attrs,username='automatic process')
-      found = Portal::District.find(:first, :conditions => attrs)
+      found = Portal::District.where(attrs).first
       unless found
         attrs[:description] ||= "created by #{username}"
         found = Portal::District.new(attrs)
       end
-      return found
+      found
     end
 
     def find_by_similar_name_or_new(name,username='automatic process')
@@ -94,7 +96,7 @@ class Portal::District < ActiveRecord::Base
       unless found
         found = Portal::District.new(:name => name, :description => "#{name} created by #{username}")
       end
-      return found
+      found
     end
   end
 

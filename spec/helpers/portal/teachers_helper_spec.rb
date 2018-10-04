@@ -25,7 +25,7 @@ RSpec.describe Portal::TeachersHelper, type: :helper do
   # TODO: auto-generated
   describe '#teacher_add_dropdown' do
     xit 'works' do
-      result = helper.teacher_add_dropdown(Factory.create(:portal_teacher))
+      result = helper.teacher_add_dropdown(FactoryBot.create(:portal_teacher))
 
       expect(result).not_to be_nil
     end

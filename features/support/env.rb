@@ -5,6 +5,24 @@
 # files.
 
 require 'rubygems'
+require 'simplecov'
+SimpleCov.start do
+  merge_timeout 3600
+
+  add_filter '/spec/'
+  add_filter '/initializers/'
+  add_filter '/features/'
+  add_filter '/factories/'
+  add_filter '/config/'
+
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Models', 'app/models'
+  add_group 'Helpers', 'app/helpers'
+  add_group 'Views', 'app/views'
+  add_group 'Policies', 'app/policies'
+  add_group 'Services', 'app/services'
+  add_group 'Lib', 'lib'
+end
 
 ENV['RAILS_ENV'] = 'cucumber'
 
@@ -25,7 +43,7 @@ require 'capybara-screenshot/cucumber'
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_filename_prefix_formatter(:cucumber) do |scenario|
-  "screenshot_#{scenario.title.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
+  "screenshot_#{scenario.name.gsub(' ', '-').gsub(/^.*\/spec\//,'')}"
 end
 
 # so we can use things like dom_id_for

@@ -37,8 +37,7 @@ namespace :app do
                 :material_properties,
                 :grade_levels,
                 :subject_areas,
-                :sensors ).find_each(
-                    :conditions => "external_activity_id IS NOT NULL") do |ia|
+                :sensors ).where("external_activity_id IS NOT NULL").find_each do |ia|
 
             ea = ExternalActivity.find(ia.external_activity_id)
 

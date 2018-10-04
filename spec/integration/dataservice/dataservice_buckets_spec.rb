@@ -3,9 +3,9 @@ require 'spec_helper'
 describe "Dataservice Buckets" do
   before :each do
     # set up a learner
-    student = Factory.create(:portal_student)
-    offering = Factory.create(:portal_offering)
-    @learner = Factory.create(:portal_learner, :student => student, :offering => offering)
+    student = FactoryBot.create(:portal_student)
+    offering = FactoryBot.create(:portal_offering)
+    @learner = FactoryBot.create(:portal_learner, :student => student, :offering => offering)
   end
 
   it 'should deliver empty bucket data when no bucket contents exist' do
@@ -15,7 +15,7 @@ describe "Dataservice Buckets" do
   end
 
   it 'should deliver the most recent bucket contents when more than one contents exist' do
-    log = Dataservice::BucketLogger.find_or_create_by_learner_id(@learner.id)
+    log = Dataservice::BucketLogger.where(learner_id: @learner.id).first_or_create
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body1")
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body3")
@@ -25,7 +25,7 @@ describe "Dataservice Buckets" do
   end
 
   it 'should deliver bucket contents by logger id' do
-    log = Dataservice::BucketLogger.find_or_create_by_learner_id(@learner.id)
+    log = Dataservice::BucketLogger.where(learner_id: @learner.id).first_or_create
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body1")
     Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
     get "/dataservice/bucket_loggers/#{log.id}.bundle"
@@ -34,7 +34,7 @@ describe "Dataservice Buckets" do
   end
 
   it 'should accept posted bundle contents by logger id' do
-    log = Dataservice::BucketLogger.find_or_create_by_learner_id(@learner.id)
+    log = Dataservice::BucketLogger.where(learner_id: @learner.id).first_or_create
     post "/dataservice/bucket_loggers/#{log.id}/bucket_contents.bundle", "This is some content"
 
     @learner.reload
@@ -73,7 +73,7 @@ describe "Dataservice Buckets" do
     end
 
     it 'should deliver the most recent bucket contents when more than one contents exist' do
-      log = Dataservice::BucketLogger.find_or_create_by_name('myBucket')
+      log = Dataservice::BucketLogger.where(name: 'myBucket').first_or_create
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body1")
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body3")
@@ -83,7 +83,7 @@ describe "Dataservice Buckets" do
     end
 
     it 'should deliver bucket contents by logger id' do
-      log = Dataservice::BucketLogger.find_or_create_by_name('myBucket')
+      log = Dataservice::BucketLogger.where(name: 'myBucket').first_or_create
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body1")
       Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => "body4")
       get "/dataservice/bucket_loggers/#{log.id}.bundle"

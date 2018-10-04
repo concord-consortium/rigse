@@ -23,17 +23,17 @@ class UserDeleter
       manager teacher student anonymous guest admin].split
 
 
-    self.keep_list = User.find(:all, :conditions => ["login in (?)", save_these_logins]);
-    concord_users =  User.find(:all, :conditions => "email like '%concord.org'")
-    no_email_users = User.find(:all, :conditions => "email like 'no-email%'")
+    self.keep_list = User.where("login in (?)", save_these_logins)
+    concord_users =  User.where("email like '%concord.org'")
+    no_email_users = User.where("email like 'no-email%'")
     published_authors = Investigation.published.map { |i| i.user }
 
-    # new_users = User.find(:all, :conditions => "created_at > '#{new_date}'")
+    # new_users = User.where("created_at > '#{new_date}'")
     admin_users =  User.with_role('admin')
     manager_users = User.with_role('manager')
-    report_users = User.find(:all, :conditions => "login like 'report%'")
-    sakai_users =  User.find(:all, :conditions => "login like '%_rinet_sakai'")
-    team_users = User.find(:all, :conditions => "last_name like '%team%'")
+    report_users = User.where("login like 'report%'")
+    sakai_users =  User.where("login like '%_rinet_sakai'")
+    team_users = User.where("last_name like '%team%'")
 
     # build a keep list:
     self.keep_list = self.keep_list + manager_users
@@ -52,13 +52,13 @@ class UserDeleter
   end
   
   def delete_all
-    delete_user_list(User.find(:all))
+    delete_user_list(User.all)
   end
 
-  def delete_user_list(user_list=User.find(:all, :conditions => "login like '%rinet_sakai%'"))
+  def delete_user_list(user_list=User.where("login like '%rinet_sakai%'"))
     user_list = user_list - self.keep_list
     user_list.each do |user|
-      print "Removing user: #{user.login} #{user.email}::::"
+      Rails.logger.info "Removing user: #{user.login} #{user.email}::::"
       delete_user(user)
       puts "\n"
     end
@@ -67,7 +67,7 @@ class UserDeleter
   def reown_investigations(user)
     user.investigations.each { |i|
       i.deep_set_user(self.default_owner)
-      print "I"
+      Rails.logger.info "I"
     }
   end
   
@@ -82,7 +82,7 @@ class UserDeleter
   def delete_student(user)
     if user.portal_student
       user.portal_student.destroy
-      print "S"
+      Rails.logger.info "S"
     end
   end
   
@@ -91,11 +91,11 @@ class UserDeleter
       if user.portal_teacher.clazzes
         user.portal_teacher.clazzes.each do |clazz|
           clazz.destroy
-          print "C"
+          Rails.logger.info "C"
         end
       end
       user.portal_teacher.destroy
-      print "T"
+      Rails.logger.info "T"
     end
   end
 

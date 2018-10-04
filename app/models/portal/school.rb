@@ -33,9 +33,9 @@ class Portal::School < ActiveRecord::Base
   # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
   has_many :portal_teachers, :through => :members, :source => 'member', :source_type => "Portal::Teacher"
   alias :teachers :portal_teachers
-  scope :real,    { :conditions => 'nces_school_id is NOT NULL' }  
-  scope :virtual, { :conditions => 'nces_school_id is NULL' }  
-  scope :has_teachers, joins(:members).group(:school_id)
+  scope :real,    -> { where('nces_school_id is NOT NULL') }
+  scope :virtual, -> { where('nces_school_id is NULL') }
+  scope :has_teachers, -> { joins(:members).group(:school_id) }
 
   # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
   [:virtual?, :real?].each {|method| delegate method, :to=> :district }
@@ -62,10 +62,12 @@ class Portal::School < ActiveRecord::Base
     ##   => "Woonsocket High School"
     ##
     def find_by_state_and_nces_local_id(state, local_id)
-      nces_school = Portal::Nces06School.find(:first, :conditions => {:SEASCH => local_id, :MSTATE => state},
-        :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM")
+      nces_school = Portal::Nces06School
+                        .where(:SEASCH => local_id, :MSTATE => state)
+                        .select("id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM")
+                        .first
       if nces_school
-        find(:first, :conditions=> {:nces_school_id => nces_school.id})
+        where(:nces_school_id => nces_school.id).first
       end
     end
 
@@ -79,18 +81,18 @@ class Portal::School < ActiveRecord::Base
     ##   => "39123"
     ##
     def find_by_state_and_school_name(state, school_name)
-      nces_school = Portal::Nces06School.find(:first, :conditions => {:SCHNAM => school_name.upcase, :MSTATE => state},
-        :select => "id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM")
+      nces_school = Portal::Nces06School.where(:SCHNAM => school_name.upcase, :MSTATE => state)
+        .select("id, nces_district_id, NCESSCH, LEAID, SCHNO, STID, SEASCH, SCHNAM").first
       if nces_school
-        find(:first, :conditions=> {:nces_school_id => nces_school.id})
+        where(:nces_school_id => nces_school.id).first
       end
     end
 
     ##
     ## given a NCES school, find or create a portal school for it
     ##
-    def find_or_create_by_nces_school(nces_school)
-      found_instance = find(:first, :conditions=> {:nces_school_id => nces_school.id})
+    def find_or_create_using_nces_school(nces_school)
+      found_instance = where(:nces_school_id => nces_school.id).first
       unless found_instance
         attributes = {
           :name            => nces_school.capitalized_name,
@@ -99,7 +101,7 @@ class Portal::School < ActiveRecord::Base
           :state           => nces_school.MSTATE,
           :ncessch         => nces_school.NCESSCH,
           :zipcode         => nces_school.MZIP,
-          :district        => Portal::District.find_or_create_by_nces_district(nces_school.nces_district)
+          :district        => Portal::District.find_or_create_using_nces_district(nces_school.nces_district)
         }
         found_instance = create!(attributes)
       end
@@ -107,12 +109,12 @@ class Portal::School < ActiveRecord::Base
     end
 
     def find_by_similar_or_new(attrs,username='automatic process')
-      found = Portal::School.find(:first, :conditions => attrs)
+      found = Portal::School.where(attrs).first
       unless found
         attrs[:description] ||= "created by #{username}"
         found = Portal::School.new(attrs)
       end
-      return found
+      found
     end
 
     def find_by_similar_name_or_new(name,username='automatic process',district=Portal::District.default)
@@ -123,7 +125,7 @@ class Portal::School < ActiveRecord::Base
         found = Portal::School.new(:name => name, :description => "#{name} created by #{username}")
         found.district = district
       end
-      return found
+      found
     end
 
   end

@@ -1,13 +1,13 @@
 shared_examples 'projects listing' do
   let (:project_name) { 'project foo bar test' }
   before(:each) do
-    FactoryGirl.create(:project, name: project_name)
+    FactoryBot.create(:project, name: project_name)
   end
 
   context 'when user is an admin' do
     before(:each) do
-      allow(view).to receive(:current_visitor).and_return(Factory.next(:admin_user))
-      allow(view).to receive(:current_user).and_return(Factory.next(:admin_user))
+      allow(view).to receive(:current_visitor).and_return(FactoryBot.generate(:admin_user))
+      allow(view).to receive(:current_user).and_return(FactoryBot.generate(:admin_user))
     end
     it 'should be visible' do
       render
@@ -17,8 +17,8 @@ shared_examples 'projects listing' do
 
   context 'when user is an author' do
     before(:each) do
-      allow(view).to receive(:current_visitor).and_return(Factory.next(:author_user))
-      allow(view).to receive(:current_user).and_return(Factory.next(:author_user))
+      allow(view).to receive(:current_visitor).and_return(FactoryBot.generate(:author_user))
+      allow(view).to receive(:current_user).and_return(FactoryBot.generate(:author_user))
     end
     it 'should not be visible' do
       render

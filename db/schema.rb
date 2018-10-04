@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20180824170559) do
+ActiveRecord::Schema.define(:version => 20180923020414) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(:version => 20180824170559) do
   create_table "admin_cohorts", :force => true do |t|
     t.integer "project_id"
     t.string  "name"
+    t.boolean "email_notifications_enabled", :default => false
   end
 
   add_index "admin_cohorts", ["project_id", "name"], :name => "index_admin_cohorts_on_project_id_and_name", :unique => true
@@ -770,7 +771,6 @@ ActiveRecord::Schema.define(:version => 20180824170559) do
     t.text     "description",               :limit => 16777215
     t.datetime "created_at",                                                       :null => false
     t.datetime "updated_at",                                                       :null => false
-    t.integer  "grade_span_expectation_id"
     t.boolean  "teacher_only",                                  :default => false
     t.string   "publication_status"
     t.integer  "offerings_count",                               :default => 0
@@ -1921,7 +1921,6 @@ ActiveRecord::Schema.define(:version => 20180824170559) do
     t.integer  "user_id"
     t.datetime "created_at",                                          :null => false
     t.datetime "updated_at",                                          :null => false
-    t.integer  "domain_id"
     t.integer  "offerings_count",                      :default => 0
     t.integer  "left_pane_submenu_item"
   end
@@ -1989,87 +1988,6 @@ ActiveRecord::Schema.define(:version => 20180824170559) do
   add_index "report_learners", ["runnable_id"], :name => "index_report_learners_on_runnable_id"
   add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
   add_index "report_learners", ["student_id"], :name => "index_report_learners_on_student_id"
-
-  create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
-    t.integer "assessment_target_id"
-    t.integer "unifying_theme_id"
-  end
-
-  create_table "ri_gse_assessment_targets", :force => true do |t|
-    t.integer  "knowledge_statement_id"
-    t.integer  "number"
-    t.text     "description",            :limit => 16777215
-    t.string   "grade_span"
-    t.string   "uuid",                   :limit => 36
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
-  end
-
-  create_table "ri_gse_big_ideas", :force => true do |t|
-    t.integer  "unifying_theme_id"
-    t.text     "description",       :limit => 16777215
-    t.string   "uuid",              :limit => 36
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-  end
-
-  create_table "ri_gse_domains", :force => true do |t|
-    t.string   "name"
-    t.string   "key"
-    t.string   "uuid",       :limit => 36
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
-
-  create_table "ri_gse_expectation_indicators", :force => true do |t|
-    t.integer  "expectation_id"
-    t.text     "description",    :limit => 16777215
-    t.string   "ordinal"
-    t.string   "uuid",           :limit => 36
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-  end
-
-  create_table "ri_gse_expectation_stems", :force => true do |t|
-    t.text     "description", :limit => 16777215
-    t.string   "uuid",        :limit => 36
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
-  create_table "ri_gse_expectations", :force => true do |t|
-    t.integer  "expectation_stem_id"
-    t.string   "uuid",                      :limit => 36
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "grade_span_expectation_id"
-  end
-
-  create_table "ri_gse_grade_span_expectations", :force => true do |t|
-    t.integer  "assessment_target_id"
-    t.string   "grade_span"
-    t.string   "uuid",                 :limit => 36
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.string   "gse_key"
-  end
-
-  create_table "ri_gse_knowledge_statements", :force => true do |t|
-    t.integer  "domain_id"
-    t.integer  "number"
-    t.text     "description", :limit => 16777215
-    t.string   "uuid",        :limit => 36
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
-  create_table "ri_gse_unifying_themes", :force => true do |t|
-    t.string   "name"
-    t.string   "key"
-    t.string   "uuid",       :limit => 36
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
 
   create_table "roles", :force => true do |t|
     t.string  "title"

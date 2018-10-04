@@ -1,14 +1,9 @@
 namespace :db do
   namespace :test do
 
-    def load_common_data
-      Rake::Task['db:backup:load_ri_grade_span_expectations'].invoke
-    end
-
     desc 'after completing standard db:test:prepare load default data'
     task :prepare do
       ActiveRecord::Base.establish_connection Rails.env.to_sym
-      load_common_data
 
       if Rails.env == 'cucumber' || Rails.env == 'feature_test'
         require File.expand_path('../../../spec/spec_helper.rb', __FILE__)

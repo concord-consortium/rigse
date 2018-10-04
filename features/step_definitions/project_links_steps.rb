@@ -1,16 +1,16 @@
 Given /^the default project links exist using factories$/ do
-  project = Factory.create(:project, name: 'project 1', landing_page_slug: 'project-1')
-  Factory(:admin_cohort, {
+  project = FactoryBot.create(:project, name: 'project 1', landing_page_slug: 'project-1')
+  FactoryBot.create(:admin_cohort, {
     :project_id => project.id,
     :name => 'project 1 cohort'
   })
-  Factory(:project_link, {
+  FactoryBot.create(:project_link, {
     :project_id => project.id,
     :name => "Foo Project Link",
     :href => "http://foo.com",
     :link_id => "/resources/foo"
   })
-  Factory(:project_link, {
+  FactoryBot.create(:project_link, {
     :project_id => project.id,
     :name => "Bar Project Link",
     :href => "http://bar.com",
@@ -26,13 +26,15 @@ Given /^the "([^"]*)" user is added to the default project$/ do |username|
 end
 
 Then /^I should see a project link labeled "([^"]*)" linking to "([^"]*)"$/ do |link, href|
-  bin_name = "Resources"
-  page.find(:xpath,"//*[text()='#{bin_name}']").click
   expect(page).to have_link link
   expect(find_link(link)[:href]).to eq href
+end
+
+Then /^I expand the "([^"]*)" section$/ do |section_name|
+  # Note: if the section is already expanded this will fail.
+  page.find(:xpath,"//*[@id='clazzes_nav']//*[text()='#{section_name}'][not(contains(@class,'open'))]").click
 end
 
 Then /^I should not see a project link labeled "([^"]*)"$/ do |link|
   expect(page).to have_no_link link
 end
-

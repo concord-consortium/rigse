@@ -182,7 +182,7 @@ end
 Given /^the following researchers exist:$/ do |users_table|
   users_table.hashes.each do |hash|
     begin
-      user = Factory(:user, hash)
+      user = FactoryBot.create(:user, hash)
       user.add_role("member")
       user.add_role("researcher")
       user.save!

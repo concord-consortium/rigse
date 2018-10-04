@@ -4,7 +4,7 @@ describe SecurityQuestionsController do
   render_views
 
   before(:each) do
-    @student = Factory.create(:portal_student, :user => Factory.create(:confirmed_user))
+    @student = FactoryBot.create(:portal_student, :user => FactoryBot.create(:confirmed_user))
     sign_in @student.user
     @test_settings = double("settings",:name=> "Test Settings")
     expect(@test_settings).to receive(:use_student_security_questions).and_return(true)

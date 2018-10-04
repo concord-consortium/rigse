@@ -1,7 +1,7 @@
 Given /^the project "([^"]+)" has slug "([^"]+)" and ITSI bin$/ do |name, slug, page_cont|
   # Replace material collection names with IDs.
   page_cont.gsub!(/Collection \d/) { |name| MaterialsCollection.find_by_name(name).id }
-  Factory.create(:project, name: name, landing_page_slug: slug, landing_page_content: page_cont)
+  FactoryBot.create(:project, name: name, landing_page_slug: slug, landing_page_content: page_cont)
 end
 
 Then /^category "([^"]+)" should be visible$/ do |category_name|
@@ -45,6 +45,6 @@ Then /^I click category "([^"]+)"$/ do |category_name|
 end
 
 Given /^user "([^"]+)" authored unofficial material "([^"]+)"$/ do |user_name, act_name|
-  author = Factory.create(:confirmed_user, first_name: user_name, last_name: 'testuser')
-  Factory.create(:external_activity, name: act_name, is_official: false, user: author, publication_status: 'published')
+  author = FactoryBot.create(:confirmed_user, first_name: user_name, last_name: 'testuser')
+  FactoryBot.create(:external_activity, name: act_name, is_official: false, user: author, publication_status: 'published')
 end

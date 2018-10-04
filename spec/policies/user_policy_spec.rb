@@ -3,7 +3,7 @@ require 'spec_helper'
 describe UserPolicy do
   subject           { UserPolicy.new(active_user, user)    }
   let(:active_user) { nil                                  }
-  let(:user)        { FactoryGirl.create(:user)            }
+  let(:user)        { FactoryBot.create(:user)            }
 
   context "for anonymous" do
     it { is_expected.not_to permit(:limited_edit)           }
@@ -24,7 +24,7 @@ describe UserPolicy do
   end
 
   context "for a normal user" do
-    let(:active_user) { FactoryGirl.create(:user) }
+    let(:active_user) { FactoryBot.create(:user) }
     it { is_expected.not_to permit(:limited_edit)           }
     it { is_expected.not_to permit(:limited_update)         }
     it { is_expected.not_to permit(:index)                  }
@@ -43,7 +43,7 @@ describe UserPolicy do
   end
 
   context "for an admin" do
-    let(:active_user) { Factory.next(:admin_user)   }
+    let(:active_user) { FactoryBot.generate(:admin_user)   }
     it { is_expected.to permit(:limited_edit)               }
     it { is_expected.to permit(:limited_update)             }
     it { is_expected.to permit(:index)                      }
@@ -63,28 +63,28 @@ describe UserPolicy do
   end
 
   context "for a teacher" do
-    let(:clazz)       { FactoryGirl.create(:portal_clazz)   }
-    let(:active_user) { FactoryGirl.create(:portal_teacher, clazzes: [clazz]).user }
+    let(:clazz)       { FactoryBot.create(:portal_clazz)   }
+    let(:active_user) { FactoryBot.create(:portal_teacher, clazzes: [clazz]).user }
 
     context "working with their own student" do
-      let(:user)     { FactoryGirl.create(:full_portal_student, clazzes: [clazz]).user}
+      let(:user)     { FactoryBot.create(:full_portal_student, clazzes: [clazz]).user}
       it { is_expected.to permit(:reset_password)             }
     end
     context "working with some other student" do
-      let(:user)     { FactoryGirl.create(:full_portal_student).user}
+      let(:user)     { FactoryBot.create(:full_portal_student).user}
       it { is_expected.not_to permit(:reset_password)         }
     end
   end
 
   context "for a project admin" do
-    let(:a_teacher)       { FactoryGirl.create(:portal_teacher, cohorts: [cohort_a])            }
-    let(:regular_teacher) { FactoryGirl.create(:portal_teacher)                                 }
-    let(:a_student)       { FactoryGirl.create(:full_portal_student, clazzes: [a_teacher_class])}
-    let(:regular_student) { FactoryGirl.create(:full_portal_student)                            }
-    let(:project_a)       { FactoryGirl.create(:project, cohorts: [cohort_a])                   }
-    let(:active_user)     { FactoryGirl.create(:user, admin_for_projects: [project_a])              }
-    let(:cohort_a)        { FactoryGirl.create(:admin_cohort)                                   }
-    let(:a_teacher_class) { FactoryGirl.create(:portal_clazz, teachers: [a_teacher])            }
+    let(:a_teacher)       { FactoryBot.create(:portal_teacher, cohorts: [cohort_a])            }
+    let(:regular_teacher) { FactoryBot.create(:portal_teacher)                                 }
+    let(:a_student)       { FactoryBot.create(:full_portal_student, clazzes: [a_teacher_class])}
+    let(:regular_student) { FactoryBot.create(:full_portal_student)                            }
+    let(:project_a)       { FactoryBot.create(:project, cohorts: [cohort_a])                   }
+    let(:active_user)     { FactoryBot.create(:user, admin_for_projects: [project_a])              }
+    let(:cohort_a)        { FactoryBot.create(:admin_cohort)                                   }
+    let(:a_teacher_class) { FactoryBot.create(:portal_clazz, teachers: [a_teacher])            }
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end

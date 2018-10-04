@@ -3,7 +3,7 @@
     .aligned
       = hidden_field_tag :update_model_types, "true"
       %ul.menu_h
-        - Admin::Tag.find_all_by_scope("model_types").each do |admin_tag|
+        - Admin::Tag.where(scope: "model_types").each do |admin_tag|
           - if admin_tag.tag
             %li
               - label_str = "model_types_#{admin_tag.tag.underscore}"

@@ -17,8 +17,6 @@ RailsPortal::Application.routes.draw do
   match '/auth/login' => 'auth#login', :as => :auth_login
   match '/oauth/token' => 'auth#access_token'
 
-  root :to => "home#index"
-
   match "search" => 'search#index', :as => :search
 
   get 'search/index'
@@ -40,27 +38,6 @@ RailsPortal::Application.routes.draw do
       namespace :sparks do
         resources :measuring_resistances
         resources :measuring_resistance_reports
-      end
-    end
-
-    namespace :ri_gse do
-      resources :assessment_targets
-      resources :knowledge_statements
-      resources :domains
-      resources :big_ideas
-      resources :unifying_themes
-      resources :expectations
-      resources :expectation_stems
-      resources :grade_span_expectations do
-        collection do
-          get :select
-          post :summary
-          post :select_js
-          put :reparse_gses
-        end
-        member do
-          get :print
-        end
       end
     end
 
@@ -376,26 +353,6 @@ RailsPortal::Application.routes.draw do
 
     match '/external_activity/list/filter' => 'external_activities#index', :as => :list_filter_external_activity, :method => :post
 
-    resources :assessment_targets
-    resources :knowledge_statements
-    resources :domains
-    resources :big_ideas
-    resources :unifying_themes
-    resources :expectations
-    resources :expectation_stems
-
-    resources :grade_span_expectations do
-      collection do
-        get :select
-        post :summary
-        post :select_js
-        put :reparse_gses
-      end
-      member do
-        get :print
-      end
-    end
-
     resources :images
     match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
     match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
@@ -545,11 +502,10 @@ RailsPortal::Application.routes.draw do
     match '/my_classes' => 'home#my_classes', :as => :my_classes
     match '/recent_activity' => 'home#recent_activity', :as => :recent_activity
     match '/getting_started' => 'home#getting_started', :as => :getting_started
-    match '/about' => 'home#about', :as => :about
+    match '/about' => 'home#about'
     match '/report' => 'home#report', :as => :report
-    match '/collections' => 'home#collections', :as => :about
+    match '/collections' => 'home#collections'
     match '/test_exception' => 'home#test_exception', :as => :test_exception
-    match '/' => 'home#index', :as => :root
     match '/requirements' => 'home#requirements', :as => :requirements
     match '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     match '/admin' => 'home#admin', :as => :admin
@@ -561,7 +517,7 @@ RailsPortal::Application.routes.draw do
     match '/time' => 'misc_metal#time', :as => :time
     match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
-    post  '/installer_report' => 'misc#installer_report', :as => :installer_report
+    post  '/installer_report' => 'misc#installer_report', :as => :installer_report_post
 
     match '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 

@@ -7,7 +7,7 @@ RSpec.describe Admin::ClientsController, type: :controller do
   let(:data) {Client}
   let(:params_key) { :client }
   let(:valid_attributes)  { { } }
-  let(:admin_user) {Factory.next(:admin_user)}
+  let(:admin_user) {FactoryBot.generate(:admin_user)}
   let(:stubs) {{}}
   let(:mock_content) {
     mock_model data, stubs

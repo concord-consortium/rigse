@@ -50,7 +50,7 @@ RSpec.describe DefaultReportService do
     it 'url_for' do
       default_report_service = described_class.new
       api_offering_url = double('api_offering_url')
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = default_report_service.url_for(api_offering_url, user)
 
       expect(result).not_to be_nil

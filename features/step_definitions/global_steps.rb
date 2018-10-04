@@ -1,7 +1,7 @@
 def find_or_create_offering(runnable,clazz)
     type = runnable.class.to_s
     create_hash = {:runnable_id => runnable.id, :runnable_type => type, :clazz_id => clazz.id}
-    offering = Portal::Offering.find(:first, :conditions=> create_hash)
+    offering = Portal::Offering.where(create_hash).first
     unless offering
       offering = Portal::Offering.create(create_hash)
       offering.save
@@ -71,7 +71,7 @@ def scroll_into_view(selector)
   el.native.send_keys(:null) if el.native.class.to_s.split("::").first == "Selenium"
 end
 
-Given /the following users[(?exist):\s]*$/i do |users_table|
+Given /the following users exist:$/i do |users_table|
   users_table.hashes.each do |hash|
     roles = hash.delete('roles')
     if roles
@@ -80,7 +80,7 @@ Given /the following users[(?exist):\s]*$/i do |users_table|
       roles =  []
     end
     begin
-      user = Factory(:user, hash)
+      user = FactoryBot.create(:user, hash)
       roles.each do |role|
         user.add_role(role)
       end
@@ -113,12 +113,12 @@ Given /^(?:|I )login with username[\s=:,]*(\S+)$/ do |username|
   visit "/"
 end
 
-Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s*$/ do |username,password|
+Given /I login with username[\s=:,]*(\S+)\s+[\s]*password[\s=:,]+(\S+)\s*$/ do |username, password|
   step 'I log out'
   login_with_ui_as(username, password)
 end
 
-Given /(?:|I )login with username[\s=:,]*(\S+)\s+[(?and),\s]*password[\s=:,]+(\S+)\s* using auth\/login page$/ do |username,password|
+Given /I login with username[\s=:,]*(\S+)\s+[[and]?,\s]*password[\s=:,]+(\S+)\s* using auth\/login page$/ do |username, password|
   step 'I log out'
   login_with_auth_login_page_as(username, password)
 end
@@ -134,7 +134,7 @@ Given /^there are (\d+) (.+)$/ do |number, model_name|
 
   the_class.destroy_all
   number.to_i.times do |i|
-    Factory.create(model_name.to_sym)
+    FactoryBot.create(model_name.to_sym)
   end
 end
 
@@ -161,7 +161,7 @@ Then /^I should see the sites name$/ do
 end
 
 When /^(?:|I )debug$/ do
-  debugger
+  binding.pry
   # this 0 is here so the debugger stop in a nice place instead of cucumber code
   0
 end

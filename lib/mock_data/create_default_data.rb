@@ -123,7 +123,7 @@ module MockData
         update_count += 1
         print '+'
       else
-        portal_grade = Factory.create(:portal_grade, grade_info)
+        portal_grade = FactoryBot.create(:portal_grade, grade_info)
 
         create_count += 1
         print '.'
@@ -472,7 +472,7 @@ module MockData
         clazz_names.each do |clazz_name|
           map_clazz = default_classes.find{|c| c.name == clazz_name}
           if map_clazz
-            teacher_clazz = Portal::TeacherClazz.find_or_create_by_teacher_id_and_clazz_id(map_teacher.id, map_clazz.id)
+            teacher_clazz = Portal::TeacherClazz.where(teacher_id: map_teacher.id, clazz_id: map_clazz.id).first_or_create
           end
         end
       end
@@ -486,7 +486,7 @@ module MockData
         clazz_names.each do |clazz_name|
           map_clazz = default_classes.find{|c| c.name == clazz_name}
           if map_clazz
-            student_clazz = Portal::StudentClazz.find_or_create_by_student_id_and_clazz_id(map_student.id, map_clazz.id)
+            student_clazz = Portal::StudentClazz.where(student_id: map_student.id, clazz_id: map_clazz.id).first_or_create
           end
         end
       end
@@ -633,6 +633,7 @@ module MockData
           default_ext_act.user_id = user.id
           default_ext_act.url = act[:url]
           default_ext_act.name = act[:name]
+          default_ext_act.author_email = user.email
           default_ext_act.is_official = true
           default_ext_act.save!
           update_count += 1
@@ -641,13 +642,14 @@ module MockData
           make_template = act.delete(:make_template)
           sub_activities = act.delete(:activities)
           act[:user_id] = user.id
+          act[:author_email] = user.email
           default_ext_act = ExternalActivity.create!(act)
-          default_ext_act.template = FactoryGirl.create(:activity,
+          default_ext_act.template = FactoryBot.create(:activity,
             name: default_ext_act.name,
             description: default_ext_act.long_description
           )
           if(sub_activities)
-            investigation = FactoryGirl.create(:investigation,
+            investigation = FactoryBot.create(:investigation,
               name: default_ext_act.name,
               description: default_ext_act.long_description
             )
@@ -692,7 +694,7 @@ module MockData
               default_portal_offering.uuid = offering_uuid
               default_portal_offering.save!
             else
-              default_portal_offering = Factory.create(:portal_offering, { :runnable => study_material,:clazz => clazz})
+              default_portal_offering = FactoryBot.create(:portal_offering, { :runnable => study_material,:clazz => clazz})
               default_portal_offering.runnable_type = assignable[:type]
               default_portal_offering.uuid = offering_uuid
               default_portal_offering.save!
@@ -800,7 +802,7 @@ module MockData
 
     elsif user_by_login.nil? && user_by_email.nil?
 
-      user = Factory(:user, user_info)
+      user = FactoryBot.create(:user, user_info)
 
       user.save!
       user.confirm!
@@ -875,11 +877,11 @@ module MockData
       new_answer.multiple_choice = question
       new_answer.save!
 
-      saveable_answer = Saveable::MultipleChoiceAnswer.find_or_create_by_uuid(data[:saveable_multiple_choice_answers_uuid])
+      saveable_answer = Saveable::MultipleChoiceAnswer.where(uuid: data[:saveable_multiple_choice_answers_uuid]).first_or_create
       saveable_answer.multiple_choice = new_answer
       saveable_answer.save!
 
-      saveable_mc_rationale_choice = Saveable::MultipleChoiceRationaleChoice.find_or_create_by_uuid(data[:saveable_multiple_choice_rationale_choices_uuid])
+      saveable_mc_rationale_choice = Saveable::MultipleChoiceRationaleChoice.where(uuid: data[:saveable_multiple_choice_rationale_choices_uuid]).first_or_create
       saveable_mc_rationale_choice.choice = answer
       saveable_mc_rationale_choice.answer = saveable_answer
       saveable_mc_rationale_choice.save!
@@ -913,12 +915,12 @@ module MockData
       new_answer.image_question = question
       new_answer.save!
 
-      blob = Dataservice::Blob.find_or_create_by_uuid[data[:dataservice_blob_uuid]]
+      blob = Dataservice::Blob.where(uuid: data[:dataservice_blob_uuid]).first_or_create
       blob.content = answer_text
       blob.token = answer_text
       blob.save!
 
-      saveable_answer = Saveable::ImageQuestionAnswer.find_or_create_by_uuid(data[:saveable_image_question_answer_uuid])
+      saveable_answer = Saveable::ImageQuestionAnswer.where(uuid: data[:saveable_image_question_answer_uuid]).first_or_create
       saveable_answer.blob = blob
       saveable_answer.save!
 
@@ -954,9 +956,9 @@ module MockData
     MaterialsCollection.destroy_all
     DEFAULT_DATA[:materials_collections].each do |key, mc|
       if (mc[:items_count] > 0)
-        Factory.create(:materials_collection_with_items, items_count: mc[:items_count], name: mc[:name], description: mc[:description])
+        FactoryBot.create(:materials_collection_with_items, items_count: mc[:items_count], name: mc[:name], description: mc[:description])
       else
-        Factory.create(:materials_collection, name: mc[:name], description: mc[:description])
+        FactoryBot.create(:materials_collection, name: mc[:name], description: mc[:description])
       end
     end
     puts "Generated Materials Collections"
@@ -981,7 +983,7 @@ module MockData
     Interactive.destroy_all
     Admin::Tag.destroy_all
     DEFAULT_DATA[:interactives].each do |key, interactive|
-      new_interactive = Factory.create(:interactive, name: interactive[:name], description: interactive[:description], url: interactive[:url], image_url: interactive[:image_url], publication_status: interactive[:publication_status])
+      new_interactive = FactoryBot.create(:interactive, name: interactive[:name], description: interactive[:description], url: interactive[:url], image_url: interactive[:image_url], publication_status: interactive[:publication_status])
       user_login = interactive[:user]
       user = @default_users.find{|u| u.login == user_login}
       new_interactive.user_id = user.id

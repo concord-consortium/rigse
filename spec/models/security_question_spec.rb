@@ -22,7 +22,7 @@ describe SecurityQuestion do
         }
       }
       
-      @user = Factory.create(:user)
+      @user = FactoryBot.create(:user)
     end
     
     it "makes a new set of questions according to provided information" do
@@ -130,7 +130,7 @@ describe SecurityQuestion do
   describe '.make_questions_from_hash_and_user' do
     it 'make_questions_from_hash_and_user' do
       hash = {}
-      user = Factory.create(:user)
+      user = FactoryBot.create(:user)
       result = described_class.make_questions_from_hash_and_user(hash, user)
 
       expect(result).not_to be_nil

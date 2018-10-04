@@ -11,34 +11,11 @@ Feature: Author can filter their own material
   Scenario: Anonymous user cannot see authored by me
     When I log out
     And I go to the search instructional materials page
-    Then I should not see "authored by me"
+    Then I should not see "Resources I authored"
 
   Scenario: Anonymous user cannot see authored by me
     When I am on the search instructional materials page
-    Then I should see "authored by me"
-
-  @javascript @search
-  Scenario: Authors can filter Interactive using authored by me
-    Given the following users exist:
-      | login    | password | roles  |
-      | author_1 | secret   | author |
-      | author_2 | secret   | author |
-    And the following Interactive exist:
-      | name          | description   | user     |
-      | interactive_1 | description 1 | author_1 |
-      | interactive_2 | description 2 | author_2 |
-    And I reindex interactive
-    When I am logged in with the username author_1
-    And I am on the search instructional materials page
-    And I search for my own materials
-    Then I should see "interactive_1"
-    And I should not see "interactive_2"
-    When I am logged in with the username author_2
-    And I am on the search instructional materials page
-    And I search for my own materials
-    Then I should see "interactive_2"
-    And I should not see "interactive_1"
-
+    Then I should see "Resources I authored"
 
   @javascript @search
   Scenario: Authors can filter External Activity using authored by me

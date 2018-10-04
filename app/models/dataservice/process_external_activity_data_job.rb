@@ -78,7 +78,7 @@ class Dataservice::ProcessExternalActivityDataJob
   end
 
   def internal_process_multiple_choice(data, embeddable)
-    choice_ids = data["answer_ids"].map {|aid| choice = embeddable.choices.detect{|ch| ch.external_id == aid }; choice ? choice.id : nil }
+    choice_ids = data.fetch("answer_ids").map {|aid| choice = embeddable.choices.detect{|ch| ch.external_id == aid }; choice ? choice.id : nil }
 
     # Delayed::Worker.logger.debug("*** choice_ids #{choice_ids}")
 
@@ -89,17 +89,26 @@ class Dataservice::ProcessExternalActivityDataJob
   end
 
   def internal_process_image_question(data,embeddable)
-    saveable_image_question = Saveable::ImageQuestion.find_or_create_by_learner_id_and_offering_id_and_image_question_id(@learner_id, @offering_id, embeddable.id)
+    saveable_image_question = Saveable::ImageQuestion.where(learner_id: @learner_id, offering_id: @offering_id, image_question_id: embeddable.id).first_or_create
     saveable_image_question.add_external_answer(data["answer"], data["image_url"], data["is_final"])
   end
 
-  def internal_process_external_link(data,embeddable)
-    saveable_external_link = Saveable::ExternalLink.find_or_create_by_learner_id_and_offering_id_and_embeddable_type_and_embeddable_id(@learner_id, @offering_id, embeddable.class.name, embeddable.id)
+  def internal_process_external_link(data, embeddable)
+    saveable_external_link = Saveable::ExternalLink
+                                 .where(learner_id: @learner_id,
+                                        offering_id: @offering_id,
+                                        embeddable_type: embeddable.class.name,
+                                        embeddable_id: embeddable.id)
+                                 .first_or_create
     saveable_external_link.answers.create(url: data["answer"], is_final: data["is_final"])
   end
 
-  def internal_process_interactive(data,embeddable)
-    saveable_interactive = Saveable::Interactive.find_or_create_by_learner_id_and_offering_id_and_iframe_id(@learner_id, @offering_id, embeddable.id)
+  def internal_process_interactive(data, embeddable)
+    saveable_interactive = Saveable::Interactive
+                               .where(learner_id: @learner_id,
+                                      offering_id: @offering_id,
+                                      iframe_id: embeddable.id)
+                               .first_or_create
     saveable_interactive.answers.create(state: data["answer"], is_final: data["is_final"])
   end
 

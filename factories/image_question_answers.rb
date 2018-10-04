@@ -1,3 +1,4 @@
-Factory.define :image_question_answer do |f|
-
+FactoryBot.define do
+  factory :image_question_answer do |f|
+  end
 end

@@ -1,6 +1,7 @@
-require 'simplecov'
 require File.expand_path("../../config/environment", __FILE__)
-require 'factory_girl'
+require 'factory_bot'
+FactoryBot.definition_file_paths = %w(factories)
+
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'capybara/rspec'
@@ -10,30 +11,6 @@ require 'capybara-screenshot/rspec'
 require 'remarkable_activerecord'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-SimpleCov.start do
-  merge_timeout 3600
-  
-  add_filter '/spec/'
-  add_filter '/initializers/'
-  add_filter '/features/'
-  add_filter '/factories/'
-  add_filter '/config/'
-
-  add_group 'Controllers', 'app/controllers'
-  add_group 'Models', 'app/models'
-  add_group 'Helpers', 'app/helpers'
-  add_group 'Views', 'app/views'
-  add_group 'Policies', 'app/policies'
-  add_group 'Services', 'app/services'
-  add_group 'Lib', 'lib'
-end
-
-# Mute FactoryGirl deprecation warnings...
-ActiveSupport::Deprecation.behavior = lambda do |msg, stack|
-  unless /FactoryGirl|after_create/ =~ msg
-    ActiveSupport::Deprecation::DEFAULT_BEHAVIORS[:stderr].call(msg,stack) # whichever handlers you want - this is the default
-  end
-end
 
 # Allow reporting to codeclimate
 WebMock.disable_net_connect!(allow_localhost: true, :allow =>
@@ -103,6 +80,8 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
+
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
@@ -117,6 +96,7 @@ RSpec.configure do |config|
   config.include Sprockets::Helpers::RailsHelper
   config.include Devise::TestHelpers, :type => :controller
   config.include VerifyAndResetHelpers
+  config.include FeatureHelper
 
   config.infer_spec_type_from_file_location!
 end
@@ -132,5 +112,8 @@ if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_mi
   exit 1
 end
 
-FactoryGirl.definition_file_paths = %w(factories)
-FactoryGirl.find_definitions
+# Prevent Factory definitions from being loaded multiple times
+# But allow access to cucumber specs and db prep
+@defs_loaded ||= FactoryBot.find_definitions and true
+
+

@@ -26,9 +26,9 @@ suppress_warnings {
 #     before_render
 #     super
 #   end
-# 
-#   # any stub information is stored in the @mock_proxy variable of the object being stubbed, 
-#   # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy 
+#
+#   # any stub information is stored in the @mock_proxy variable of the object being stubbed,
+#   # so adding it here prevents the controller @mock_proxy from clobbering the view @mock_proxy
 #   # when rails copies the instance variables from the controller to view.  This copying happens
 #   # sometime during the render method (after before_render)
 #   @@protected_instance_variables = %w(@mock_proxy)
@@ -38,16 +38,15 @@ suppress_warnings {
 # Factory Generators
 #
 def generate_default_settings_and_jnlps_with_factories
-  @admin_settings = Factory.create(:admin_settings)
+  @admin_settings = FactoryBot.create(:admin_settings)
   generate_default_school_resources_with_factories
 end
 
 def generate_default_school_resources_with_factories
-  @portal_school = Factory(:portal_school)
+  @portal_school = FactoryBot.create(:portal_school)
   @portal_district = @portal_school.district
-  @portal_grade_level = Factory(:portal_grade_level)
+  @portal_grade_level = FactoryBot.create(:portal_grade_level)
   @portal_grade = @portal_grade_level.grade
-  @rigse_domain = Factory(:rigse_domain)
 end
 
 #
@@ -96,25 +95,25 @@ def generate_portal_resources_with_mocks
 end
 
 def login_admin
-  logged_in_user = Factory.next :admin_user
+  logged_in_user = FactoryBot.generate :admin_user
   sign_in logged_in_user
   logged_in_user
 end
 
 def login_manager
-  logged_in_user = Factory.next :manager_user
+  logged_in_user = FactoryBot.generate :manager_user
   sign_in logged_in_user
   logged_in_user
 end
 
 def login_researcher
-  logged_in_user = Factory.next :researcher_user
+  logged_in_user = FactoryBot.generate :researcher_user
   sign_in logged_in_user
   logged_in_user
 end
 
 def login_author
-  logged_in_user = Factory.next :author_user
+  logged_in_user = FactoryBot.generate :author_user
   sign_in logged_in_user
   logged_in_user
 end

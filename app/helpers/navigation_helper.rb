@@ -70,7 +70,7 @@ module NavigationHelper
         url: '/help',
         small: true,
         sort: -1,
-        iconName:'icon-search',
+        iconName:'icon-help',
       }
     else
       false
@@ -138,8 +138,7 @@ module NavigationHelper
   end
 
   def clazz_links_for_teacher
-    # TODO Omit inactive classes?
-    clazzes = current_visitor.portal_teacher.teacher_clazzes.map { |c| c.clazz }
+    clazzes = current_visitor.portal_teacher.teacher_clazzes.where(active: true).map { |c| c.clazz }
     clazz_links = [
       {
         id: "/classes",
@@ -192,7 +191,7 @@ module NavigationHelper
     clazz_links << {
       id: "/classes/manage",
       label: "Manage Classes",
-      url: manage_portal_clazzes_url,
+      url: manage_portal_clazzes_path,
       sort: 11
       # link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"pie", :id=>"btn_manage_classes"
     }
