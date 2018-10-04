@@ -1250,15 +1250,9 @@ DEPENDENCIES
   activemodel!
   activerecord!
   activerecord-import (~> 0.2.8)
-<<<<<<< HEAD
   activeresource!
   activesupport!
-  acts-as-taggable-on (~> 2.1.1)
-||||||| merged common ancestors
-  acts-as-taggable-on (~> 2.1.1)
-=======
   acts-as-taggable-on (~> 2.4.1)
->>>>>>> master
   acts_as_list (~> 0.1.6)
   arrayfields
   awesome_print
