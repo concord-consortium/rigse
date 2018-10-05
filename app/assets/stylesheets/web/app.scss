@@ -782,7 +782,37 @@ form {
   padding: 5px;
   ul {
     list-style: none;
-    margin: 0; }
+    margin: 0;
+
+    &.options-list {
+
+      li {
+        margin-bottom: 10px;
+        min-height: 20px;
+
+        input[type="checkbox"] {
+          clear: left;
+          display: block;
+          float: left;
+          width: 4%;
+        }
+        label {
+          display: block;
+          float: left;
+          font-weight: 300;
+          line-height: 1.4;
+          margin: -1px 0 0 -4%;
+          padding: 0 0 0 4%;
+          width: 96%;
+        }
+        &:after {
+          clear: both;
+          content: '';
+          display: block;
+        }
+      }
+    }
+    }
   li {
     margin-bottom: 1.65em; }
   .item {
@@ -809,7 +839,10 @@ form {
     font-weight: 500;
     &.right {
       display: block;
-      text-align: right; } }
+      text-align: right; }
+    &.left {
+      display: block;
+      text-align: left; } }
   select {
     display: inline;
     font-weight: 300;
@@ -2069,7 +2102,7 @@ span.badge {
       padding-bottom: 30px;
       }
     }
-    
+
   .classdata {
     td {
       display: block;
