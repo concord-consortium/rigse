@@ -246,6 +246,7 @@ class User < ActiveRecord::Base
           password_confirmation: pw,
           skip_notifications: true
         )
+        user.confirm!
       end
 
       #
@@ -308,13 +309,17 @@ class User < ActiveRecord::Base
     super && user_active?
   end
 
+  def finish_enews_subscription
+    if self.email_subscribed
+      EnewsSubscription::set_status(self.email, 'subscribed', self.first_name, self.last_name)
+    end
+  end
+
   def confirm!
     super
 
     # send MailChimp subscription data
-    if self.email_subscribed
-      enews_response_data = EnewsSubscription::set_status(self.email, 'subscribed', self.first_name, self.last_name)
-    end
+    finish_enews_subscription
 
     self.state = "active"
     save(:validate => true)

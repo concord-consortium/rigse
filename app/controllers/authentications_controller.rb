@@ -36,7 +36,7 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
         session[:portal_user_id]  = omniauth.info.uid
         session[:portal_domain]   = parts[1]            # What is domain?
                                                         # In this case it
-                                                        # effectively stores 
+                                                        # effectively stores
                                                         # the email....?
       end
 
