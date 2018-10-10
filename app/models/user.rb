@@ -246,7 +246,6 @@ class User < ActiveRecord::Base
           password_confirmation: pw,
           skip_notifications: true
         )
-        user.confirm!
       end
 
       #

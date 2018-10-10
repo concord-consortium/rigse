@@ -33,6 +33,8 @@ class API::V1::StudentsController < API::APIController
         session['omniauth_email'] = nil
       end
 
+      current_user.confirm!
+
       if session[:omniauth_origin]
         attributes["omniauth_origin"]   = session[:omniauth_origin]
         session[:omniauth_origin]       = nil
