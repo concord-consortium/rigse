@@ -44,6 +44,13 @@ describe API::V1::TeachersController do
         expect(response.status).to eq(201)
         expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
       end
+
+      it "creates a new teacher by SSO" do
+        old_teachers_count = Portal::Teacher.count
+        post :create, teacher_params, session: {'omniauth_email' => 'fakename@fakedomain.org'}
+        expect(response.status).to eq(201)
+        expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
+      end
     end
 
     context "without school_id and without new school params" do
