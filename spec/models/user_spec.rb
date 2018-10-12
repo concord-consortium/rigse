@@ -123,7 +123,7 @@ describe User do
 
   describe 'allows legitimate names:' do
     ['Andre The Giant (7\'4", 520 lb.) -- has a posse',
-     'ᛅᛁᛚᛁᚠᚱ', 
+     'ᛅᛁᛚᛁᚠᚱ',
      '1234567890k',
     ].each do |name_str|
       it "'#{name_str}'" do
@@ -471,9 +471,9 @@ protected
   def create_user(options = {})
     record = User.new({ :first_name => "foo",
                         :last_name  => "bar",
-                        :login      => 'quire', 
-                        :email      => 'quire@example.com', 
-                        :password   => 'quire69', 
+                        :login      => 'quire',
+                        :email      => 'quire@example.com',
+                        :password   => 'quire69',
                         :password_confirmation => 'quire69' }.merge(options))
     record.save! if record.valid?
     record
@@ -718,6 +718,18 @@ protected
       result = user.active_for_authentication?
 
       expect(result).to be_nil
+    end
+  end
+
+  describe '#finish_enews_subscription' do
+    it 'finish_enews_subscription' do
+      EnewsSubscription.stub(:set_status).and_return({subscribed: 'subscribed'})
+      user = create_user(
+        :email_subscribed => true
+      )
+      result = user.finish_enews_subscription
+
+      expect(result).to eq({:subscribed=>'subscribed'})
     end
   end
 
