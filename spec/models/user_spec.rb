@@ -723,7 +723,7 @@ protected
 
   describe '#finish_enews_subscription' do
     it 'finish_enews_subscription' do
-      EnewsSubscription.stub(:set_status).and_return({subscribed: 'subscribed'})
+      expect(EnewsSubscription).to receive(:set_status).and_return({subscribed: 'subscribed'})
       user = create_user(
         :email_subscribed => true
       )
