@@ -7,6 +7,7 @@ require File.expand_path('../../lib/bool_env', __FILE__)
 
 module RailsPortal
   class Application < Rails::Application
+    config.rails_lts_options = { default: :compatible }
     # Use RSpec when generating tests, not test_unit
     config.generators do |g|
       g.test_framework :rspec

@@ -71,6 +71,7 @@ GIT
 
 GEM
   remote: http://rubygems.org/
+  remote: https://gems.railslts.com/
   remote: https://rails-assets.org/
   specs:
     Ascii85 (1.0.1)
@@ -81,33 +82,33 @@ GEM
     RedCloth (4.2.9)
     RedCloth (4.2.9-x86-mingw32)
     aasm (2.2.1)
-    actionmailer (3.2.22.5)
-      actionpack (= 3.2.22.5)
+    actionmailer (3.2.22.9)
+      actionpack (= 3.2.22.9)
       mail (~> 2.5.4)
-    actionpack (3.2.22.5)
-      activemodel (= 3.2.22.5)
-      activesupport (= 3.2.22.5)
-      builder (~> 3.0.0)
+    actionpack (3.2.22.9)
+      activemodel (= 3.2.22.9)
+      activesupport (= 3.2.22.9)
+      builder (~> 3.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
       rack (~> 1.4.5)
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
-      sprockets (~> 2.2.1)
-    activemodel (3.2.22.5)
-      activesupport (= 3.2.22.5)
-      builder (~> 3.0.0)
-    activerecord (3.2.22.5)
-      activemodel (= 3.2.22.5)
-      activesupport (= 3.2.22.5)
+      sprockets (= 2.2.3)
+    activemodel (3.2.22.9)
+      activesupport (= 3.2.22.9)
+      builder (~> 3.0)
+    activerecord (3.2.22.9)
+      activemodel (= 3.2.22.9)
+      activesupport (= 3.2.22.9)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
     activerecord-import (0.2.9)
       activerecord (~> 3.0)
-    activeresource (3.2.22.5)
-      activemodel (= 3.2.22.5)
-      activesupport (= 3.2.22.5)
-    activesupport (3.2.22.5)
+    activeresource (3.2.22.9)
+      activemodel (= 3.2.22.9)
+      activesupport (= 3.2.22.9)
+    activesupport (3.2.22.9)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     acts-as-taggable-on (2.4.1)
@@ -731,7 +732,7 @@ GEM
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
-    builder (3.0.4)
+    builder (3.2.3)
     bullet (4.14.0)
       activesupport (>= 3.0.0)
       uniform_notifier (>= 1.6.0)
@@ -1046,20 +1047,23 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rails (3.2.22.5)
-      actionmailer (= 3.2.22.5)
-      actionpack (= 3.2.22.5)
-      activerecord (= 3.2.22.5)
-      activeresource (= 3.2.22.5)
-      activesupport (= 3.2.22.5)
+    rails (3.2.22.9)
+      actionmailer (= 3.2.22.9)
+      actionpack (= 3.2.22.9)
+      activemodel (= 3.2.22.9)
+      activerecord (= 3.2.22.9)
+      activeresource (= 3.2.22.9)
+      activesupport (= 3.2.22.9)
       bundler (~> 1.0)
-      railties (= 3.2.22.5)
+      railslts-version (= 3.2.22.9)
+      railties (= 3.2.22.9)
     rails-assets-react (15.5.4)
     rails-assets-react-day-picker (5.4.1)
       rails-assets-react
-    railties (3.2.22.5)
-      actionpack (= 3.2.22.5)
-      activesupport (= 3.2.22.5)
+    railslts-version (3.2.22.9)
+    railties (3.2.22.9)
+      actionpack (= 3.2.22.9)
+      activesupport (= 3.2.22.9)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -1241,7 +1245,13 @@ PLATFORMS
 DEPENDENCIES
   RedCloth (~> 4.2.8)
   aasm (~> 2.2.1)
+  actionmailer!
+  actionpack!
+  activemodel!
+  activerecord!
   activerecord-import (~> 0.2.8)
+  activeresource!
+  activesupport!
   acts-as-taggable-on (~> 2.4.1)
   acts_as_list (~> 0.1.6)
   arrayfields
@@ -1320,8 +1330,10 @@ DEPENDENCIES
   pundit
   rack-cors
   rack-mini-profiler
-  rails (~> 3.2.22)
+  rails (~> 3.2.22)!
   rails-assets-react-day-picker (~> 5.4.1)!
+  railslts-version!
+  railties!
   rake (~> 0.9.2)
   rb-fchange
   rb-fsevent

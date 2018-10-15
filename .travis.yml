@@ -18,6 +18,7 @@ env:
 before_install:
   - "export DISPLAY=:99.0"
   - pip install --user awscli
+  - bundle config gems.railslts.com $RAILS_LTS_USER:$RAILS_LTS_PASSWORD
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

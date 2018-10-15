@@ -4,6 +4,17 @@ YAML::ENGINE.yamler= "psych" if defined?(YAML::ENGINE)
 source "http://rubygems.org"
 
 #### COMMON
+source "https://gems.railslts.com" do
+  gem 'rails', '~> 3.2.22'
+  gem 'actionmailer',     :require => false
+  gem 'actionpack',       :require => false
+  gem 'activemodel',      :require => false
+  gem 'activerecord',     :require => false
+  gem 'activeresource',   :require => false
+  gem 'activesupport',    :require => false
+  gem 'railties',         :require => false
+  gem 'railslts-version', :require => false
+end
   gem "mysql2",             '~> 0.3.16', :platforms => [:ruby,:mingw]
 
   gem "devise",               "~>2.1.0"
@@ -15,7 +26,6 @@ source "http://rubygems.org"
 
   gem 'test-unit',            '~> 3.0'
 
-  gem "rails",                "~> 3.2.22"
   gem "arrayfields"
   gem 'strong_parameters'
   gem "httparty"
