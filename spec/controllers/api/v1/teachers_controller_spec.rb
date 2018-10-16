@@ -38,6 +38,8 @@ describe API::V1::TeachersController do
 
   describe "POST #create" do
     context "with valid teacher params" do
+      let(:finish_enews_subscription) { double("finish_enews_subscription") }
+
       it "creates a new teacher" do
         old_teachers_count = Portal::Teacher.count
         post :create, teacher_params
@@ -46,6 +48,9 @@ describe API::V1::TeachersController do
       end
 
       it "creates a new teacher by SSO" do
+        user = create(:user)
+        allow(controller).to receive(:current_user) { user }
+        allow(controller).to receive(:finish_enews_subscription)
         old_teachers_count = Portal::Teacher.count
         post :create, teacher_params, {'omniauth_email' => 'teacher@concord.org'}
         expect(response.status).to eq(201)
