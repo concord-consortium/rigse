@@ -6,19 +6,19 @@
   .aligned
     %ul.quiet_list
       %li
-        = f.label :first_name, 'First name', :class => "right inline"
-        = f.text_field :first_name, :live => false, :class => "aligned"
+        = f.label :first_name, 'First name', :class => "left"
+        = f.text_field :first_name, :live => false
       %li
-        = f.label :last_name, 'Last name', :class=>"right inline"
-        = f.text_field :last_name, :live => false, :class => "aligned"
+        = f.label :last_name, 'Last name', :class=>"left"
+        = f.text_field :last_name, :live => false
       - unless current_page?(:controller => 'users', :action => 'preferences')
         %li
-          = f.label :login, 'Login', :class=>"right inline"
-          = f.text_field :login, :live => false, :class => "aligned"
+          = f.label :login, 'Login', :class=>"left"
+          = f.text_field :login, :live => false
       - if current_visitor.portal_student.blank?
         %li
-          = f.label :email, 'Email', :class=>"right inline"
-          = f.text_field :email, :live => false, :class => "aligned", :disabled => @user.is_oauth_user?
+          = f.label :email, 'Email', :class=>"left"
+          = f.text_field :email, :live => false, :disabled => @user.is_oauth_user?
           - if @user.is_oauth_user?
             You are logged in as a #{@user.authentications[0].provider} user. This email address cannot be changed.
         - if ENV['ENEWS_API_KEY'].present?

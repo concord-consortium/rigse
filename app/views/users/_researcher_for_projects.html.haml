@@ -2,8 +2,10 @@
 %fieldset
   %legend
     Researcher for Projects
-  %ul.menu_h
+  %ul.options-list
+    - projects = projects.sort_by &:name
     - projects.each do |p|
       %li
-        = p.name
         = check_box_tag "user[researcher_project_ids][]", p.id, @user.researcher_for_projects.include?(p)
+        %label
+          = p.name

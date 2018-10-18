@@ -2,9 +2,11 @@
 %fieldset
   %legend
     Cohorts
-  %ul.menu_h
+  %ul.options-list
+    - projects = projects.sort_by &:name
     - projects.each do |p|
       - p.cohorts.each_with_index do |c, i|
         %li
-          = c.fullname
           = check_box_tag "user[cohort_ids][]", c.id, @user.portal_teacher.cohorts.include?(c)
+          %label
+            = c.fullname
