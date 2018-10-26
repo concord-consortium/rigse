@@ -4,28 +4,27 @@ require 'spec_helper'
 
 RSpec.describe AuthenticationsController, type: :controller do
 
+  let(:uid_value) { '12345' }
+
   before(:each) do
     @request.env['devise.mapping'] = Devise.mappings[:user]
     @request.env['omniauth.origin'] = double()
-    @uid_value = '12345'
-    @extra_values = double(
-                      username: nil,
-                      first_name: 'Fake',
-                      last_name: 'Fakerson'
-                    )
-    @info_values = double(
-                     email: 'fakename@fakedomain.org',
-                     uid: @uid_value
-                   )
   end
 
   describe '#google' do
     it 'GET google' do
       @request.env['omniauth.auth'] = double(
-        extra: @extra_values,
-        info: @info_values,
+        extra: double(
+          username: nil,
+          first_name: 'Fake',
+          last_name: 'Fakerson'
+        ),
+        info: double(
+          email: 'fakename@fakedomain.org',
+          uid: uid_value
+        ),
         provider: 'google',
-        uid: @uid_value
+        uid: uid_value
       )
       get :google
 
@@ -36,10 +35,18 @@ RSpec.describe AuthenticationsController, type: :controller do
   describe '#schoology' do
     it 'GET schoology' do
       @request.env['omniauth.auth'] = double(
-        extra: @extra_values,
-        info: @info_values,
+        extra: double(
+          username: 'fakename',
+          user_id: uid_value,
+          domain: 'fakedomain.org',
+          first_name: 'Fake',
+          last_name: 'Fakerson'
+        ),
+        info: double(
+          email: 'fakename@fakedomain.org'
+        ),
         provider: 'schoology',
-        uid: @uid_value
+        uid: uid_value
       )
 
       get :schoology
