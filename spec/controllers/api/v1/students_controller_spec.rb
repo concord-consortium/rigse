@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe API::V1::StudentsController do
+RSpec.describe API::V1::StudentsController, type: :controller do
   let(:student) { FactoryBot.create(:full_portal_student) }
 
   describe "POST #check_password" do
