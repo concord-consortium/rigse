@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe API::V1::TeachersController do
+RSpec.describe API::V1::TeachersController, type: :controller do
   let(:school) { FactoryBot.create(:portal_school) }
 
   let(:teacher_params) do
@@ -41,6 +41,22 @@ describe API::V1::TeachersController do
       it "creates a new teacher" do
         old_teachers_count = Portal::Teacher.count
         post :create, teacher_params
+        expect(response.status).to eq(201)
+        expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
+      end
+
+      it "creates a new teacher by SSO" do
+        user = FactoryBot.create(:confirmed_user)
+        user_session_info  = sign_in user
+        expect(controller).to receive(:finish_enews_subscription)
+        old_teachers_count = Portal::Teacher.count
+        # need to add omniauthor_email to the session, but also need to
+        # include the warden authentiction info that comes from sign_in
+        # normally sign_in sets up the default session so it isn't necessary
+        # to pass it through to the post or get call
+        post :create, teacher_params, {
+          'warden.user.user.key'=> user_session_info,
+          'omniauth_email' => 'teacher@concord.org'}
         expect(response.status).to eq(201)
         expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
       end

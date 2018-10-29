@@ -44,6 +44,7 @@ class API::V1::TeachersController < API::APIController
         current_user.email = session['omniauth_email']
         current_user.save!
         session['omniauth_email'] = nil
+        finish_enews_subscription
       end
 
       if session[:omniauth_origin]
