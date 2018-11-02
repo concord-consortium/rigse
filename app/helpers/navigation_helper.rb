@@ -147,12 +147,15 @@ module NavigationHelper
         sort: 4
       }
     ]
+    clazzes = clazzes.sort_by { |clazz| [clazz.name.tr("0-9", "").downcase, clazz.name.tr("^0-9", "").to_i] }
+    clazzes_index = 1
     clazzes.each do |clazz|
       section_id = "/classes/#{clazz.id}"
       clazz_links << {
         id: section_id,
         label: clazz_label(clazz),
-        type: NavigationService::SECTION_TYPE
+        type: NavigationService::SECTION_TYPE,
+        sort: clazzes_index
       }
       clazz_links << {
         id: "#{section_id}/assignments",
@@ -180,19 +183,20 @@ module NavigationHelper
         label: nav_label("links"),
         url: url_for([clazz, :bookmarks])
       }
+      clazzes_index += 1
     end
     clazz_links << {
       id: "/classes/add",
       label: "Add Class",
       divider: true,
       url: new_portal_clazz_path,
-      sort: 10
+      sort: clazzes_index
     }
     clazz_links << {
       id: "/classes/manage",
       label: "Manage Classes",
       url: manage_portal_clazzes_path,
-      sort: 11
+      sort: clazzes_index += 1
       # link_to 'Manage Classes', manage_portal_clazzes_url, :class=>"pie", :id=>"btn_manage_classes"
     }
     clazz_links
@@ -279,6 +283,5 @@ module NavigationHelper
     service.update_selection()
     return service
   end
-
 
 end
