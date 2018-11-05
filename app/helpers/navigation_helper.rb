@@ -147,7 +147,6 @@ module NavigationHelper
         sort: 4
       }
     ]
-    clazzes = clazzes.sort_by { |clazz| [clazz.name.tr("0-9", "").downcase, clazz.name.tr("^0-9", "").to_i] }
     clazzes_index = 1
     clazzes.each do |clazz|
       section_id = "/classes/#{clazz.id}"
