@@ -792,17 +792,17 @@ form {
 
         input[type="checkbox"] {
           clear: left;
-          display: block;
+          display: inline-block;
           float: left;
           width: 4%;
         }
         label {
-          display: block;
+          display: inline-block;
           float: left;
           font-weight: 300;
           line-height: 1.4;
-          margin: -1px 0 0 -4%;
-          padding: 0 0 0 4%;
+          margin: -2px 0 0 0;
+          padding: 0;
           width: 96%;
         }
         &:after {
