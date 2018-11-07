@@ -48,7 +48,6 @@ RSpec.describe API::V1::TeachersController, type: :controller do
       it "creates a new teacher by SSO" do
         user = FactoryBot.create(:confirmed_user)
         user_session_info  = sign_in user
-        expect(controller).to receive(:finish_enews_subscription)
         old_teachers_count = Portal::Teacher.count
         # need to add omniauthor_email to the session, but also need to
         # include the warden authentiction info that comes from sign_in
