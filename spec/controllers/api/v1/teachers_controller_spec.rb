@@ -11,6 +11,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
       login: "teacher_user",
       password: "testingxxy",
       email: "teacher@concord.org",
+      email_subscribed: true,
       school_id: school.id
     }
   end
@@ -49,6 +50,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         user = FactoryBot.create(:confirmed_user)
         user_session_info  = sign_in user
         old_teachers_count = Portal::Teacher.count
+        expect(EnewsSubscription).to receive(:set_status).and_return({subscribed: 'subscribed'})
         # need to add omniauthor_email to the session, but also need to
         # include the warden authentiction info that comes from sign_in
         # normally sign_in sets up the default session so it isn't necessary
@@ -173,6 +175,4 @@ RSpec.describe API::V1::TeachersController, type: :controller do
       expect(response).to have_http_status(:bad_request)
     end
   end
-
-
 end
