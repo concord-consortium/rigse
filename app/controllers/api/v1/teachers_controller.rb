@@ -42,9 +42,9 @@ class API::V1::TeachersController < API::APIController
       #
       if session[:omniauth_email]
         current_user.email = session['omniauth_email']
+        current_user.email_subscribed = params[:email_subscribed]
         current_user.save!
         session['omniauth_email'] = nil
-        current_user.email_subscribed = params[:email_subscribed]
         current_user.finish_enews_subscription
       end
 
