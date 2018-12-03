@@ -5,7 +5,6 @@ class Report::LearnerController < ApplicationController
   before_filter :setup,
       :only => [
       :index,
-      :logs_query,
       :update_learners
     ]
 
@@ -29,8 +28,37 @@ class Report::LearnerController < ApplicationController
 
   def logs_query
     authorize Report::Learner
-    @remote_endpoints = @select_learners.map { |l| l.learner.remote_endpoint_url }
-    render :layout => false
+    learner_selector = Report::Learner::Selector.new(params, current_visitor)
+    # The learners we have selected:
+    select_learners  = learner_selector.learners
+    remote_endpoints = select_learners.select { |l| l.learner.present? }.map { |l| l.learner.remote_endpoint_url }
+    # Use standard template that is based on the old Log Manager query format.
+    query = {
+      filter: [
+        {
+          key: "run_remote_endpoint",
+          list: remote_endpoints,
+          remove: false,
+          filter_type: "string"
+        }
+      ],
+      filter_having_keys: {
+        keys_list: []
+      },
+      measures: [],
+      child_query: {
+        filter: [],
+        add_child_data: true
+      }
+    }
+    # Note that we're not generating JWT. We're only signing generated query JSON, so the log manager can verify
+    # that it's coming from the Portal and it hasn't been modified on the way. Log manager app needs to know
+    # hmac_secret to verify query and signature.
+    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, query.to_json)
+    render json: {
+      json: query,
+      signature: signature
+    }.to_json
   end
 
   def updated_at
@@ -73,41 +101,34 @@ class Report::LearnerController < ApplicationController
       :usage => 'Usage Report',
       :details => 'Details Report',
       :arg_block => 'Arg Block Report',
-      :logs_query => 'Log Manager Query',
       :log_manager => 'Open in Log Manager'
     }
 
     # commit"=>"update learners"
     if params[:commit] =~ /update learners/i
       update_learners
-    elsif params[:commit] == @button_texts[:logs_query]
-      # strip the commit=logs_query param so we don't have an infinite redirect,
-      # but keep a valid commit param so we load the query data
-      redirect_to learner_logs_query_path(request.GET.merge({:commit => true}))
-      return
     end
 
     @no_log_manager = APP_CONFIG[:codap_url].nil? || APP_CONFIG[:log_manager_data_interactive_url].nil?
 
     if params.has_key?(:commit)
       # Selector makes a request to the Elasticsearch API and processes the results
-      @learner_selector = Report::Learner::Selector.new(params, current_visitor)
+      learner_selector = Report::Learner::Selector.new(params, current_visitor)
       # The learners we have selected:
-      @select_learners  = @learner_selector.learners
-      @url_helpers = Reports::UrlHelpers.new(:protocol => request.protocol, :host_with_port => request.host_with_port)
-      hide_names = params[:hide_names] == 'on'
+      @select_learners  = learner_selector.learners
+      url_helpers = Reports::UrlHelpers.new(:protocol => request.protocol, :host_with_port => request.host_with_port)
     end
 
     hide_names = params[:hide_names] == 'on'
 
     if params[:commit] == @button_texts[:usage]
-      runnables =  @learner_selector.runnables_to_report_on
-      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :include_child_usage => params[:include_child_usage], :url_helpers => @url_helpers, :hide_names => hide_names)
+      runnables =  learner_selector.runnables_to_report_on
+      report = Reports::Usage.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :include_child_usage => params[:include_child_usage], :url_helpers => url_helpers, :hide_names => hide_names)
       book = report.run_report
       send_data(book.to_data_string, :type => book.mime_type, :filename => "usage.#{book.file_extension}" )
     elsif params[:commit] == @button_texts[:details]
-      runnables =  @learner_selector.runnables_to_report_on
-      report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :url_helpers => @url_helpers, :hide_names => hide_names)
+      runnables =  learner_selector.runnables_to_report_on
+      report = Reports::Detail.new(:runnables => runnables, :report_learners => @select_learners, :blobs_url => dataservice_blobs_url, :url_helpers => url_helpers, :hide_names => hide_names)
       book = report.run_report
       send_data(book.to_data_string, :type => book.mime_type, :filename => "details.#{book.file_extension}" )
     elsif params[:commit] == @button_texts[:arg_block]
@@ -115,7 +136,6 @@ class Report::LearnerController < ApplicationController
     elsif params[:commit] == @button_texts[:log_manager]
       log_manager
     end
-
   end
 
   def log_manager

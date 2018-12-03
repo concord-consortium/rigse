@@ -1,10 +1,12 @@
-{div, span, h3, form, input, i} = React.DOM
+{div, span, h3, form, input, i, button} = React.DOM
 ReactSelect = React.createFactory Select
 DayP = React.createFactory DayPickerOverlay
 
 title = (str) -> (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g," ")
 
 queryCache = {}
+
+queryFormID = "query-form"
 
 window.FilterReports = React.createClass
 
@@ -230,7 +232,7 @@ window.FilterReports = React.createClass
 
 
   renderForm: ->
-    (form {url: window.location.pathname, method: "get"},
+    (form {url: window.location.pathname, method: "get", id: queryFormID},
       @renderInput 'schools'
       @renderInput 'teachers'
       @renderInput 'runnables'
@@ -244,14 +246,46 @@ window.FilterReports = React.createClass
       @renderButton "Usage Report"
       @renderButton "Details Report"
       @renderButton "Arg Block Report"
-      @renderButton "Log Manager Query"
     )
 
   render: ->
-    (div {style: {height: "100vh"}},
+    (div {},
       (div {},
         (h3 {}, "Your filter matches:")
         @renderTopInfo()
       )
       @renderForm()
     )
+
+
+window.LogReportButton = React.createClass
+  getInitialState: ->
+    {
+      disabled: false
+    }
+
+  render: ->
+    (button {onClick: @handleClick, disabled: @state.disabled}, @props.label)
+
+  handleClick: ->
+    # Get the signed query JSON first.
+    jQuery.ajax(
+      type: "GET",
+      dataType: "json",
+      url: window.location.pathname + "/logs_query?" + jQuery("##{queryFormID}").serialize(),
+      success: (response) =>
+        # Issue POST request to Log app. We can't use GET, as URL could get too long. Generating a fake
+        # form is a way to send non-Ajax POST request and open the target page.
+        jQuery(
+          '<form action="' + @props.url + '" method="POST">' +
+          '<input type="hidden" name="json" value=\'' + JSON.stringify(response.json) + '\'>' +
+          '<input type="hidden" name="signature" value="' + response.signature + '">' +
+          '</form>'
+        ).appendTo('body').submit()
+      error: (jqXHR, textStatus, error) =>
+        window.alert("Logs query generation failed. Please reload the page and try again.")
+        console.error("logs_query request failed")
+        @setState(disabled: false)
+    )
+
+    @setState(disabled: true)
