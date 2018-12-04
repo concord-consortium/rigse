@@ -8,8 +8,10 @@
     %br
     = link_to 'Logout', destroy_user_session_path
 
-= react_component("FilterReports", {})
+#form-container
 
-- ExternalReport.where(report_type: 'logs').each do |report|
-  %div{style: 'display: inline-block; margin: 5px;'}
-    = react_component("LogReportButton", {url: report.url, label: report.launch_text})
+- log_reports = ExternalReport.where(report_type: 'logs').map { |r| {url: "#{r.url}", label: "#{r.launch_text}"} }.to_json
+
+:javascript
+  PortalPages.renderResearcherReportForm({logReports: #{log_reports}}, "form-container")
+
