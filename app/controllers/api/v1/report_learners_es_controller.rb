@@ -33,6 +33,46 @@ class API::V1::ReportLearnersEsController < API::APIController
     render :json => esSearchResult
   end
 
+  # Returns a signed query that can be used by Log Manager. The format is arbitrary and based on the
+  # first version of the CC Log Manager. It's been kept around for the backward compatibility, even though
+  # not all the fields are used at the moment.
+  def logs_query
+    authorize Report::Learner
+    # Note that Report::Learner::Selector is a little helper that actually calls
+    # API::V1::ReportLearnersEsController.query_es.
+    learner_selector = Report::Learner::Selector.new(params, current_visitor)
+    # The learners we have selected:
+    select_learners  = learner_selector.learners
+    remote_endpoints = select_learners.select { |l| l.learner.present? }.map { |l| l.learner.remote_endpoint_url }
+    # Use standard template that is based on the old Log Manager query format.
+    query = {
+      filter: [
+        {
+          key: "run_remote_endpoint",
+          list: remote_endpoints,
+          remove: false,
+          filter_type: "string"
+        }
+      ],
+      filter_having_keys: {
+        keys_list: []
+      },
+      measures: [],
+      child_query: {
+        filter: [],
+        add_child_data: true
+      }
+    }
+    # Note that we're not generating JWT. We're only signing generated query JSON, so the log manager can verify
+    # that it's coming from the Portal and it hasn't been modified on the way. Log manager app needs to know
+    # hmac_secret to verify query and signature.
+    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, query.to_json)
+    render json: {
+      json: query,
+      signature: signature
+    }.to_json
+  end
+
   def self.query_es(options, user)
 
     if user.has_role?('manager','admin','researcher')

@@ -26,41 +26,6 @@ class Report::LearnerController < ApplicationController
     render layout: ENV['RESEARCHER_REPORT_ONLY'] ? "minimal" : "application"
   end
 
-  def logs_query
-    authorize Report::Learner
-    learner_selector = Report::Learner::Selector.new(params, current_visitor)
-    # The learners we have selected:
-    select_learners  = learner_selector.learners
-    remote_endpoints = select_learners.select { |l| l.learner.present? }.map { |l| l.learner.remote_endpoint_url }
-    # Use standard template that is based on the old Log Manager query format.
-    query = {
-      filter: [
-        {
-          key: "run_remote_endpoint",
-          list: remote_endpoints,
-          remove: false,
-          filter_type: "string"
-        }
-      ],
-      filter_having_keys: {
-        keys_list: []
-      },
-      measures: [],
-      child_query: {
-        filter: [],
-        add_child_data: true
-      }
-    }
-    # Note that we're not generating JWT. We're only signing generated query JSON, so the log manager can verify
-    # that it's coming from the Portal and it hasn't been modified on the way. Log manager app needs to know
-    # hmac_secret to verify query and signature.
-    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, query.to_json)
-    render json: {
-      json: query,
-      signature: signature
-    }.to_json
-  end
-
   def updated_at
     # no authorization needed ...
     learner = Report::Learner.find_by_user_id_and_offering_id(current_visitor.id,params[:id])

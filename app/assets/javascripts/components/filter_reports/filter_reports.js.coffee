@@ -272,7 +272,7 @@ window.LogReportButton = React.createClass
     jQuery.ajax(
       type: "GET",
       dataType: "json",
-      url: window.location.pathname + "/logs_query?" + jQuery("##{queryFormID}").serialize(),
+      url: Portal.API_V1.LOGS_QUERY + "?" + jQuery("##{queryFormID}").serialize(),
       success: (response) =>
         # Issue POST request to Log app. We can't use GET, as URL could get too long. Generating a fake
         # form is a way to send non-Ajax POST request and open the target page.
