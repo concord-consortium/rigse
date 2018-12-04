@@ -40,7 +40,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     authorize Report::Learner
     # Note that Report::Learner::Selector is a little helper that actually calls
     # API::V1::ReportLearnersEsController.query_es.
-    learner_selector = Report::Learner::Selector.new(params, current_visitor)
+    learner_selector = Report::Learner::Selector.new(params, current_user)
     # The learners we have selected:
     select_learners  = learner_selector.learners
     remote_endpoints = select_learners.select { |l| l.learner.present? }.map { |l| l.learner.remote_endpoint_url }
