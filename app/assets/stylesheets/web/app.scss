@@ -928,7 +928,19 @@ input {
     border: solid 2px #ea6d2f;
     color: white;
     font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
-    padding: 10px 20px; } }
+    padding: 10px 20px;
+
+    &[disabled] {
+      opacity: 0.5;
+
+      &:hover {
+        background: #ea6d2f;
+        border: solid 2px #ea6d2f;
+        cursor: default;
+      }
+    }
+  }
+}
 
 a.button.secondary, button.secondary, input.button.secondary, input[type='submit'].secondary {
     background: #fff;
