@@ -72,7 +72,6 @@ GIT
 GEM
   remote: http://rubygems.org/
   remote: https://gems.railslts.com/
-  remote: https://rails-assets.org/
   specs:
     Ascii85 (1.0.1)
     POpen4 (0.1.4)
@@ -956,8 +955,6 @@ GEM
     mimemagic (0.3.2)
     mini_mime (1.0.1)
     mini_portile2 (2.3.0)
-    momentjs-rails (2.17.1)
-      railties (>= 3.1)
     multi_json (1.13.1)
     multi_test (0.1.2)
     multi_xml (0.5.1)
@@ -1057,9 +1054,6 @@ GEM
       bundler (~> 1.0)
       railslts-version (= 3.2.22.9)
       railties (= 3.2.22.9)
-    rails-assets-react (15.5.4)
-    rails-assets-react-day-picker (5.4.1)
-      rails-assets-react
     railslts-version (3.2.22.9)
     railties (3.2.22.9)
       actionpack (= 3.2.22.9)
@@ -1077,12 +1071,11 @@ GEM
       ffi (>= 0.5.0, < 2)
     rbx-require-relative (0.0.9)
     rdoc (3.9.5)
-    react-rails (1.7.2)
+    react-rails (2.3.1)
       babel-transpiler (>= 0.7.0)
-      coffee-script-source (~> 1.8)
       connection_pool
       execjs
-      rails (>= 3.2)
+      railties (>= 3.2)
       tilt
     redcarpet (2.1.1)
     ref (1.0.5)
@@ -1310,7 +1303,6 @@ DEPENDENCIES
   jwt
   launchy
   lol_dba
-  momentjs-rails (~> 2.17.1)
   mysql2 (~> 0.3.16)
   nested_form
   net-sftp (~> 2.0)
@@ -1331,7 +1323,6 @@ DEPENDENCIES
   rack-cors
   rack-mini-profiler
   rails (~> 3.2.22)!
-  rails-assets-react-day-picker (~> 5.4.1)!
   railslts-version!
   railties!
   rake (~> 0.9.2)
@@ -1339,7 +1330,7 @@ DEPENDENCIES
   rb-fsevent
   rb-inotify
   rdoc (~> 3.9.4)
-  react-rails (~> 1.7)
+  react-rails (~> 2.3.1)
   redcarpet (~> 2.1.1)
   remarkable_activerecord (~> 3.1.13)
   rollbar
@@ -1382,4 +1373,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   1.16.3
+   1.16.5
