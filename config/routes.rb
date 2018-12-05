@@ -487,7 +487,7 @@ RailsPortal::Application.routes.draw do
 
         resources :report_learners_es, only: [:index] do
           collection do
-            get :logs_query
+            get :external_report_query
           end
         end
       end

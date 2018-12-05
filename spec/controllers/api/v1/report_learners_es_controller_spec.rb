@@ -59,7 +59,7 @@ describe API::V1::ReportLearnersEsController do
     }
   end
 
-  let(:logs_query_search_body) do
+  let(:external_report_query_search_body) do
     {
       "size" => 5000,
       "aggs" => {},
@@ -109,9 +109,9 @@ describe API::V1::ReportLearnersEsController do
         expect(response.status).to eql(403)
       end
     end
-    describe "GET logs_query" do
-      it "wont allow logs_query, returns error 403" do
-        get :logs_query
+    describe "GET external_report_query" do
+      it "wont allow external_report_query, returns error 403" do
+        get :external_report_query
         expect(response.status).to eql(403)
       end
     end
@@ -127,9 +127,9 @@ describe API::V1::ReportLearnersEsController do
         expect(response.status).to eql(403)
       end
     end
-    describe "GET logs_query" do
-      it "wont allow logs_query, returns error 403" do
-        get :logs_query
+    describe "GET external_report_query" do
+      it "wont allow external_report_query, returns error 403" do
+        get :external_report_query
         expect(response.status).to eql(403)
       end
     end
@@ -157,27 +157,26 @@ describe API::V1::ReportLearnersEsController do
         expect(response.body).to eq fake_response
       end
     end
-    describe "GET logs_query" do
+    describe "GET external_report_query" do
       it "allows index" do
-        get :logs_query
+        get :external_report_query
         expect(response.status).to eql(200)
       end
       it "makes a request to ES with the correct body" do
-        get :logs_query
+        get :external_report_query
         expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
           with(
             headers: {'Content-Type'=>'application/json'},
-            body: logs_query_search_body,
+            body: external_report_query_search_body,
           ).times(1)
       end
       it "renders response that includes Log Manager query and signature" do
-        get :logs_query
+        get :external_report_query
         resp = JSON.parse(response.body)
-        filter = resp["json"]["filter"][0]
-        expect(filter["key"]).to eq "run_remote_endpoint"
-        expect(filter["list"].length).to eq 2
-        expect(filter["list"][0]).to eq learner1.remote_endpoint_url
-        expect(filter["list"][1]).to eq learner2.remote_endpoint_url
+        filter = resp["json"]
+        expect(filter["run_remote_endpoints"].length).to eq 2
+        expect(filter["run_remote_endpoints"][0]).to eq learner1.remote_endpoint_url
+        expect(filter["run_remote_endpoints"][1]).to eq learner2.remote_endpoint_url
 
         expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
       end
@@ -194,9 +193,9 @@ describe API::V1::ReportLearnersEsController do
         expect(response.status).to eql(200)
       end
     end
-    describe "GET logs_query" do
-      it "allows logs_query" do
-        get :logs_query
+    describe "GET external_report_query" do
+      it "allows external_report_query" do
+        get :external_report_query
         expect(response.status).to eql(200)
       end
     end
@@ -235,15 +234,15 @@ describe API::V1::ReportLearnersEsController do
       end
     end
 
-    describe "GET logs_query" do
-      it "allows logs_query" do
-        get :logs_query
+    describe "GET external_report_query" do
+      it "allows external_report_query" do
+        get :external_report_query
         expect(response.status).to eql(200)
       end
       it "makes a request to ES with the correct body, restricting permission forms" do
-        get :logs_query
+        get :external_report_query
 
-        restricted_search_body = logs_query_search_body
+        restricted_search_body = external_report_query_search_body
         restricted_search_body["query"]["bool"]["filter"] = [{
           "terms" => {"permission_forms_id" => [@form1.id]}
         }]
