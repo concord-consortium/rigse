@@ -2,7 +2,7 @@ class ExternalReport < ActiveRecord::Base
 
   OfferingReport = 'offering'
   ClassReport = 'class'
-  ResearcherReport = 'researcher_report'
+  ResearcherReport = 'researcher'
   ReportTypes = [OfferingReport, ClassReport, ResearcherReport]
   belongs_to :client
   has_many :external_activities
