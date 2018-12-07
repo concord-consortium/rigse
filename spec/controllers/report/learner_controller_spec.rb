@@ -86,16 +86,6 @@ describe Report::LearnerController do
   end
 
   # TODO: auto-generated
-  describe '#logs_query' do
-    it 'GET logs_query' do
-      get :logs_query, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-
-  # TODO: auto-generated
   describe '#report_only' do
     it 'GET report_only' do
       get :report_only, {}, {}

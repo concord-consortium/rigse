@@ -6,59 +6,97 @@ describe API::V1::ReportLearnersEsController do
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
 
-  let(:search_body)       { {
-                              "size" => 0,
-                              "aggs" => {
-                                "count_students" => {
-                                    "cardinality" => {
-                                        "field" => "student_id"
-                                    }
-                                }, "count_classes" => {
-                                    "cardinality" => {
-                                        "field" => "class_id"
-                                    }
-                                }, "count_teachers" => {
-                                    "cardinality" => {
-                                        "field" => "teachers_map.keyword"
-                                    }
-                                }, "count_runnables" => {
-                                    "cardinality" => {
-                                        "field" => "runnable_id"
-                                    }
-                                }, "schools" => {
-                                    "terms" => {
-                                        "field" => "school_name_and_id.keyword", "size" => 1000
-                                    }
-                                }, "teachers" => {
-                                    "terms" => {
-                                        "field" => "teachers_map.keyword", "size" => 500
-                                    }
-                                }, "runnables" => {
-                                    "terms" => {
-                                        "field" => "runnable_type_id_name.keyword", "size" => 1000
-                                    }
-                                }, "permission_forms" => {
-                                    "terms" => {
-                                        "field" => "permission_forms_map.keyword", "size" => 1000
-                                    }
-                                }, "permission_forms_ids" => {
-                                    "terms" => {
-                                        "field" => "permission_forms_id", "size" => 1000
-                                    }
-                                }
-                              },
-                              "query" => {
-                                "bool" => {
-                                    "filter" => []
-                                }
-                              }
-                          }}
-  let(:fake_response)     { {fake:true}.to_json  }
+  let(:learner1)          { FactoryBot.create(:full_portal_learner) }
+  let(:learner2)          { FactoryBot.create(:full_portal_learner) }
+
+  let(:index_search_body) do
+    {
+      "size" => 0,
+      "aggs" => {
+        "count_students" => {
+          "cardinality" => {
+            "field" => "student_id"
+          }
+        }, "count_classes" => {
+          "cardinality" => {
+            "field" => "class_id"
+          }
+        }, "count_teachers" => {
+          "cardinality" => {
+            "field" => "teachers_map.keyword"
+          }
+        }, "count_runnables" => {
+          "cardinality" => {
+            "field" => "runnable_id"
+          }
+        }, "schools" => {
+          "terms" => {
+            "field" => "school_name_and_id.keyword", "size" => 1000
+          }
+        }, "teachers" => {
+          "terms" => {
+            "field" => "teachers_map.keyword", "size" => 500
+          }
+        }, "runnables" => {
+          "terms" => {
+            "field" => "runnable_type_id_name.keyword", "size" => 1000
+          }
+        }, "permission_forms" => {
+          "terms" => {
+            "field" => "permission_forms_map.keyword", "size" => 1000
+          }
+        }, "permission_forms_ids" => {
+          "terms" => {
+            "field" => "permission_forms_id", "size" => 1000
+          }
+        }
+      },
+      "query" => {
+        "bool" => {
+          "filter" => []
+        }
+      }
+    }
+  end
+
+  let(:external_report_query_search_body) do
+    {
+      "size" => 5000,
+      "aggs" => {},
+      "query" => {
+        "bool" => {
+          "filter" => []
+        }
+      }
+    }
+  end
+
+  let(:fake_response) do
+    # This is very minimal subset of ES response necessary for Report::Learner::Selector to work.
+    {
+      hits: {
+        hits: [
+          {
+            _id: learner1.report_learner.id,
+            _source: {
+              runnable_type_and_id: 'externalactivity_1',
+            }
+          },
+          {
+            _id: learner2.report_learner.id,
+            _source: {
+              runnable_type_and_id: 'externalactivity_2',
+            }
+          }
+        ]
+      }
+    }.to_json
+  end
 
 
   before (:each) do
     WebMock.stub_request(:post, /report_learners\/_search$/).
-      to_return(:status => 200, :body => fake_response, :headers => {})
+      to_return(:status => 200, :body => fake_response, :headers => { "Content-Type" => "application/json" })
   end
 
   describe "anonymous' access" do
@@ -71,6 +109,12 @@ describe API::V1::ReportLearnersEsController do
         expect(response.status).to eql(403)
       end
     end
+    describe "GET external_report_query" do
+      it "wont allow external_report_query, returns error 403" do
+        get :external_report_query
+        expect(response.status).to eql(403)
+      end
+    end
   end
 
   describe "simple user access" do
@@ -80,6 +124,12 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "wont allow index, returns error 403" do
         get :index
+        expect(response.status).to eql(403)
+      end
+    end
+    describe "GET external_report_query" do
+      it "wont allow external_report_query, returns error 403" do
+        get :external_report_query
         expect(response.status).to eql(403)
       end
     end
@@ -99,12 +149,36 @@ describe API::V1::ReportLearnersEsController do
         expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
           with(
             headers: {'Content-Type'=>'application/json'},
-            body: search_body,
+            body: index_search_body,
           ).times(1)
       end
       it "directly renders the ES response" do
         get :index
         expect(response.body).to eq fake_response
+      end
+    end
+    describe "GET external_report_query" do
+      it "allows index" do
+        get :external_report_query
+        expect(response.status).to eql(200)
+      end
+      it "makes a request to ES with the correct body" do
+        get :external_report_query
+        expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
+          with(
+            headers: {'Content-Type'=>'application/json'},
+            body: external_report_query_search_body,
+          ).times(1)
+      end
+      it "renders response that includes Log Manager query and signature" do
+        get :external_report_query
+        resp = JSON.parse(response.body)
+        filter = resp["json"]
+        expect(filter["run_remote_endpoints"].length).to eq 2
+        expect(filter["run_remote_endpoints"][0]).to eq learner1.remote_endpoint_url
+        expect(filter["run_remote_endpoints"][1]).to eq learner2.remote_endpoint_url
+
+        expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
       end
     end
   end
@@ -116,6 +190,12 @@ describe API::V1::ReportLearnersEsController do
     describe "GET index" do
       it "allows index" do
         get :index
+        expect(response.status).to eql(200)
+      end
+    end
+    describe "GET external_report_query" do
+      it "allows external_report_query" do
+        get :external_report_query
         expect(response.status).to eql(200)
       end
     end
@@ -139,7 +219,7 @@ describe API::V1::ReportLearnersEsController do
       it "makes a request to ES with the correct body, restricting permission forms" do
         get :index
 
-        restricted_search_body = search_body
+        restricted_search_body = index_search_body
         restricted_search_body["query"]["bool"]["filter"] = [{
           "terms" => {"permission_forms_id" => [@form1.id]}
         }]
@@ -149,7 +229,28 @@ describe API::V1::ReportLearnersEsController do
         expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
           with(
             headers: {'Content-Type'=>'application/json'},
-            body: search_body,
+            body: restricted_search_body,
+          ).times(1)
+      end
+    end
+
+    describe "GET external_report_query" do
+      it "allows external_report_query" do
+        get :external_report_query
+        expect(response.status).to eql(200)
+      end
+      it "makes a request to ES with the correct body, restricting permission forms" do
+        get :external_report_query
+
+        restricted_search_body = external_report_query_search_body
+        restricted_search_body["query"]["bool"]["filter"] = [{
+          "terms" => {"permission_forms_id" => [@form1.id]}
+        }]
+
+        expect(WebMock).to have_requested(:post, /report_learners\/_search$/).
+          with(
+            headers: {'Content-Type'=>'application/json'},
+            body: restricted_search_body,
           ).times(1)
       end
     end

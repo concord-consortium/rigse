@@ -26,6 +26,10 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
     manager_or_researcher_or_project_researcher?
   end
 
+  def external_report_query?
+    manager_or_researcher_or_project_researcher?
+  end
+
   def update_forms?
     manager_or_researcher_or_project_researcher?
   end
