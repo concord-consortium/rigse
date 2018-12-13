@@ -40,11 +40,15 @@ class API::V1::ReportLearnersEsController < API::APIController
     # API::V1::ReportLearnersEsController.query_es.
     learner_selector = Report::Learner::Selector.new(params, current_user)
     # The learners we have selected:
-    select_learners  = learner_selector.learners
-    remote_endpoints = select_learners.select { |l| l.learner.present? }.map { |l| l.learner.remote_endpoint_url }
+    select_learners  = learner_selector.learners.map(&:learner).compact
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     query = {
-      run_remote_endpoints: remote_endpoints
+      learners: select_learners.map do |l|
+        {
+          run_remote_endpoint: l.remote_endpoint_url,
+          class_id: l.offering && l.offering.clazz_id
+        }
+      end
     }
     # Note that we're not generating JWT. We're only signing generated query JSON, so the log manager can verify
     # that it's coming from the Portal and it hasn't been modified on the way. Log manager app needs to know
