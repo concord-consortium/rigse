@@ -174,9 +174,11 @@ describe API::V1::ReportLearnersEsController do
         get :external_report_query
         resp = JSON.parse(response.body)
         filter = resp["json"]
-        expect(filter["run_remote_endpoints"].length).to eq 2
-        expect(filter["run_remote_endpoints"][0]).to eq learner1.remote_endpoint_url
-        expect(filter["run_remote_endpoints"][1]).to eq learner2.remote_endpoint_url
+        expect(filter["learners"].length).to eq 2
+        expect(filter["learners"][0]["run_remote_endpoint"]).to eq learner1.remote_endpoint_url
+        expect(filter["learners"][0]["class_id"]).to eq learner1.offering.clazz_id
+        expect(filter["learners"][1]["run_remote_endpoint"]).to eq learner2.remote_endpoint_url
+        expect(filter["learners"][1]["class_id"]).to eq learner2.offering.clazz_id
 
         expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
       end
