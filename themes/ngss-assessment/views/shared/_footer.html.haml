@@ -38,7 +38,7 @@
         For technical assistance, contact:
         = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
         \. For all other questions/feedback, contact: For all other questions/feedback contact:
-        = mail_to('contact@nextgenscienceassessment.org', 'contact@nextgenscienceassessment.org', :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
+        = mail_to('info@nextgenscienceassessment.org', 'info@nextgenscienceassessment.org', :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
         %br
         Version:
         = ENV['CC_PORTAL_VERSION']
