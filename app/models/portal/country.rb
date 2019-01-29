@@ -5,7 +5,7 @@ class Portal::Country < ActiveRecord::Base
     has_many :schools, :class_name => "Portal::School"
 
     def self.csv_filemame
-        File.join(Rails.root,"resources/iso_3166_2_countries.csv")
+        File.join(Rails.root,"resources/country-codes_csv.csv")
     end
 
     def self.from_csv_file
@@ -23,18 +23,21 @@ class Portal::Country < ActiveRecord::Base
 
     def self.field_name_map
         {
-            :common_name             => :name,
-            :formal_name             => :formal_name,
-            :capital                 => :capital,
-            :iso_31661_2_letter_code => :two_letter,
-            :iso_31661_3_letter_code => :three_letter,
-            :iso_31661_number        => :iso_id,
-            :iana_country_code_tld   => :tld
+            :cldr_display_name      => :name,
+            :official_name_en       => :formal_name,
+            :capital                => :capital,
+            :iso31661alpha2         => :two_letter,
+            :iso31661alpha3         => :three_letter,
+            :iso31661numeric        => :iso_id,
+            :tld                    => :tld
         }
     end
 
     def self.from_hash(in_hash)
-        existing = self.find_by_tld(in_hash[:tld]) || self.new()
-        existing.update_attributes(in_hash)
+       if in_hash[:name]
+         in_hash[:name] = in_hash[:name].strip.gsub("&","and")
+         existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
+         existing.update_attributes(in_hash)
+       end
     end
 end
