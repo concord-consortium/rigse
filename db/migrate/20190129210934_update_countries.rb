@@ -1,8 +1,8 @@
-require 'csv'
 
-class Portal::Country < ActiveRecord::Base
+class UpdateCountries < ActiveRecord::Migration
+
+  class PortalCountry < ActiveRecord::Base
     self.table_name = :portal_countries
-    has_many :schools, :class_name => "Portal::School"
 
     def self.csv_filemame
         File.join(Rails.root,"resources/country-codes_csv.csv")
@@ -47,4 +47,14 @@ class Portal::Country < ActiveRecord::Base
       name = name.gsub(/^US$/, "United States")
       name
     end
+  end
+
+  def up
+    PortalCountry.from_csv_file
+  end
+
+  def down
+    # Nothing to do.
+  end
+
 end

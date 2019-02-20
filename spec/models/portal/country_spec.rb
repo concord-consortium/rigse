@@ -42,10 +42,9 @@ RSpec.describe Portal::Country, type: :model do
     end
   end
 
-  # TODO: auto-generated
   describe '.from_hash' do
     it 'from_hash' do
-      in_hash = {}
+      in_hash = {:name => "Utopia"}
       result = described_class.from_hash(in_hash)
 
       expect(result).not_to be_nil
