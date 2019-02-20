@@ -1,5 +1,6 @@
 
 class UpdateCountries < ActiveRecord::Migration
+
   class PortalCountry < ActiveRecord::Base
     self.table_name = :portal_countries
 
@@ -35,6 +36,12 @@ class UpdateCountries < ActiveRecord::Migration
     def self.from_hash(in_hash)
        if in_hash[:name]
          in_hash[:name] = in_hash[:name].strip.gsub("&","and")
+         if in_hash[:name] == 'US'
+           in_hash[:friendly_name] = 'United States'
+         end
+         if in_hash[:name] == 'UK'
+           in_hash[:friendly_name] = 'United Kingdom'
+         end
          existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
          existing.update_attributes(in_hash)
        end
@@ -42,11 +49,12 @@ class UpdateCountries < ActiveRecord::Migration
   end
 
   def up
+    add_column :portal_countries, :friendly_name, :string, after: :formal_name
     PortalCountry.from_csv_file
   end
 
   def down
-    # Nothing to do.
+    remove_column :portal_countries, :friendly_name
   end
 
 end

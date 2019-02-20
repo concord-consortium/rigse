@@ -36,6 +36,12 @@ class Portal::Country < ActiveRecord::Base
     def self.from_hash(in_hash)
        if in_hash[:name]
          in_hash[:name] = in_hash[:name].strip.gsub("&","and")
+         if in_hash[:name] == "US"
+           in_hash[:friendly_name] = "United States"
+         end
+         if in_hash[:name] == "UK"
+           in_hash[:friendly_name] = "United Kingdom"
+         end
          existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
          existing.update_attributes(in_hash)
        end
