@@ -4,6 +4,29 @@ class UpdateCountries < ActiveRecord::Migration
   class PortalCountry < ActiveRecord::Base
     self.table_name = :portal_countries
 
+    @country_names_to_update = {
+      'Aland' => 'Åland Islands',
+      'Bahamas, The' => 'Bahamas',
+      'Bosnia and Herzegovina' => 'Bosnia',
+      'Congo, (Congo ? Brazzaville)' => 'Congo - Brazzaville',
+      'Congo, (Congo ? Kinshasa)' => 'Congo - Kinshasa',
+      'Cote d\’Ivoire (Ivory Coast)' => 'Côte d\’Ivoire',
+      'Falkland Islands (Islas Malvinas)' => 'Falkland Islands',
+      'Gambia, The' => 'Gambia',
+      'Heard Island and McDonald Islands' => 'Heard and McDonald Islands',
+      'Korea, North' => 'North Korea',
+      'Korea, South' => 'South Korea',
+      'Myanmar (Burma)' => 'Myanmar',
+      'Saint Lucia' => 'St. Lucia',
+      'Saint Helena' => 'St. Helena',
+      'Saint Kitts and Nevis' => 'St. Kitts and Nevis',
+      'Saint Pierre and Miquelon' => 'St. Pierre and Miquelon',
+      'Saint Vincent and the Grenadines' => 'St. Vincent and the Grenadines',
+      'South Georgia & South Sandwich Islands' => 'South Georgia and South Sandwich Islands',
+      'Svalbard' => 'Svalbard and Jan Mayen',
+      'Timor-Leste (East Timor)' => 'Timor-Leste'
+    }
+
     def self.csv_filemame
         File.join(Rails.root,"resources/country-codes_csv.csv")
     end
@@ -34,33 +57,10 @@ class UpdateCountries < ActiveRecord::Migration
     end
 
     def self.from_hash(in_hash)
-      country_names_to_update = {
-        'Aland' => 'Åland Islands',
-        'Bahamas, The' => 'Bahamas',
-        'Bosnia and Herzegovina' => 'Bosnia',
-        'Congo, (Congo ? Brazzaville)' => 'Congo - Brazzaville',
-        'Congo, (Congo ? Kinshasa)' => 'Congo - Kinshasa',
-        'Cote d\’Ivoire (Ivory Coast)' => 'Côte d\’Ivoire',
-        'Falkland Islands (Islas Malvinas)' => 'Falkland Islands',
-        'Gambia, The' => 'Gambia',
-        'Heard Island and McDonald Islands' => 'Heard and McDonald Islands',
-        'Korea, North' => 'North Korea',
-        'Korea, South' => 'South Korea',
-        'Myanmar (Burma)' => 'Myanmar',
-        'Saint Lucia' => 'St. Lucia',
-        'Saint Helena' => 'St. Helena',
-        'Saint Kitts and Nevis' => 'St. Kitts and Nevis',
-        'Saint Pierre and Miquelon' => 'St. Pierre and Miquelon',
-        'Saint Vincent and the Grenadines' => 'St. Vincent and the Grenadines',
-        'South Georgia & South Sandwich Islands' => 'South Georgia and South Sandwich Islands',
-        'Svalbard' => 'Svalbard and Jan Mayen',
-        'Timor-Leste (East Timor)' => 'Timor-Leste'
-      }
-
       if in_hash[:name]
         in_hash[:name] = adjust_country_name(in_hash[:name])
 
-        country_names_to_update.each_pair do |key, value|
+        @country_names_to_update.each_pair do |key, value|
           if existing = self.where("lower(name) like ?", key.downcase).first
             existing.update_attributes(:name => value)
           end
