@@ -27,6 +27,14 @@ class UpdateCountries < ActiveRecord::Migration
       'Timor-Leste (East Timor)' => 'Timor-Leste'
     }
 
+    def self.fix_existing_names
+      @country_names_to_update.each_pair do |key, value|
+        if existing = self.where("lower(name) like ?", key.downcase).first
+          existing.update_attributes(:name => value)
+        end
+      end
+    end
+
     def self.csv_filemame
         File.join(Rails.root,"resources/country-codes_csv.csv")
     end
@@ -60,12 +68,6 @@ class UpdateCountries < ActiveRecord::Migration
       if in_hash[:name]
         in_hash[:name] = adjust_country_name(in_hash[:name])
 
-        @country_names_to_update.each_pair do |key, value|
-          if existing = self.where("lower(name) like ?", key.downcase).first
-            existing.update_attributes(:name => value)
-          end
-        end
-
         existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
         existing.update_attributes(in_hash)
       end
@@ -80,6 +82,7 @@ class UpdateCountries < ActiveRecord::Migration
   end
 
   def up
+    PortalCountry.fix_existing_names
     PortalCountry.from_csv_file
   end
 
