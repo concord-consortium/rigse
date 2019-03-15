@@ -51,4 +51,13 @@ RSpec.describe Portal::Country, type: :model do
     end
   end
 
+  describe '.adjust_country_name' do
+    it 'adjust_country_name' do
+      name = 'US'
+      name = name.gsub(/^US$/, "United States")
+
+      expect(name).not_to be_nil
+    end
+  end
+
 end

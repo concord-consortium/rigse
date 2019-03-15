@@ -34,11 +34,12 @@ class Portal::Country < ActiveRecord::Base
     end
 
     def self.from_hash(in_hash)
-       if in_hash[:name]
-         in_hash[:name] = adjust_country_name(in_hash[:name])
-         existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
-         existing.update_attributes(in_hash)
-       end
+      if in_hash[:name]
+        in_hash[:name] = adjust_country_name(in_hash[:name])
+
+        existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
+        existing.update_attributes(in_hash)
+      end
     end
 
     def self.adjust_country_name(name)
