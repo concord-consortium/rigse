@@ -21,7 +21,7 @@ class UpdateCountries < ActiveRecord::Migration
       'Saint Helena' => 'St. Helena',
       'Saint Kitts and Nevis' => 'St. Kitts and Nevis',
       'Saint Pierre and Miquelon' => 'St. Pierre and Miquelon',
-      'Saint Vincent and the Grenadines' => 'St. Vincent and the Grenadines',
+      'Saint Vincent and the Grenadines' => 'St. Vincent and Grenadines',
       'South Georgia & South Sandwich Islands' => 'South Georgia and South Sandwich Islands',
       'Svalbard' => 'Svalbard and Jan Mayen',
       'Timor-Leste (East Timor)' => 'Timor-Leste'
