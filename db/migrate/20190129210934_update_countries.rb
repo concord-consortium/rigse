@@ -10,7 +10,7 @@ class UpdateCountries < ActiveRecord::Migration
       'Bosnia and Herzegovina' => 'Bosnia',
       'Congo, (Congo ? Brazzaville)' => 'Congo - Brazzaville',
       'Congo, (Congo ? Kinshasa)' => 'Congo - Kinshasa',
-      'Cote d\’Ivoire (Ivory Coast)' => 'Côte d\’Ivoire',
+      'Cote d’Ivoire (Ivory Coast)' => 'Côte d’Ivoire',
       'Falkland Islands (Islas Malvinas)' => 'Falkland Islands',
       'Gambia, The' => 'Gambia',
       'Heard Island and McDonald Islands' => 'Heard and McDonald Islands',
