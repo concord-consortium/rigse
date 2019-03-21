@@ -58,6 +58,7 @@ class API::V1::Report
     section = clazz.section && clazz.section.length > 0 ? clazz.section : nil
     section = section ? " (#{section})" : ""
     {
+      id: clazz.id,
       name: clazz.name + section,
       students: @students
                     .sort_by { |s| "#{s.last_name} #{s.first_name}".downcase }
