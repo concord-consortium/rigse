@@ -44,6 +44,18 @@ class UsersController < ApplicationController
     @projects = Admin::Project.all_sorted
   end
 
+  # /users/1/destroy
+  def destroy
+    @user = User.find(params[:id])
+    if current_visitor.has_role?("admin")
+      @user.destroy
+      flash[:notice] = "User: #{@user.name} successfully deleted!"
+    else
+      flash[:notice] = "Sorry, but you don't have permission to delete #{@user.name}."
+    end
+    redirect_to users_url
+  end
+
   # GET /users/1/preferences
   def preferences
     @user = User.find(params[:id])
