@@ -59,4 +59,5 @@
 = require 'poll_to_update_student_data_percentages'
 = require 'automatically_closing_popup_link'
 = require 'secondary-menu-toggle'
+= require 'user-admin'
 */
