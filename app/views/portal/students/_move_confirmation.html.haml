@@ -1,18 +1,21 @@
 #move_confirmation{:style=>"display: none;"}
   %p
-    The teacher of the new class is #{clazz.teacher.user.first_name} #{clazz.teacher.user.last_name}. Is this the class you want to move this student to?
+    Are you sure you want to move #{portal_student.name} from #{current_clazz.teacher.user.first_name} #{current_clazz.teacher.user.last_name}'s #{current_clazz.name} to #{clazz.teacher.user.first_name} #{clazz.teacher.user.last_name}'s #{clazz.name}?
+
   - if !potentially_orphaned_assignments.empty?
-    %p
-      %strong
-        WARNING:
-      The following assignments have been completed by the student in their current class, but there are no corresponding assignments in the new class. Moving the student will result in this work being lost.
-    %ul
-      - potentially_orphaned_assignments.each do |poa|
-        %li
-          #{poa}
+    %div{:class => 'warning', :style => 'background: #fc0; margin-bottom: 10px; padding: 10px;'}
+      %p
+        %strong
+          WARNING
+        %br
+        The following assignments have been completed by #{portal_student.name} in #{current_clazz.name}, but there are no corresponding assignments in #{clazz.name}. Moving #{portal_student.name} will result in this work being orphaned and inaccessible to both teacher and student.
+      %ul
+        - potentially_orphaned_assignments.each do |poa|
+          %li
+            #{poa}
   %p
-    Click 'Submit' to complete the process of moving this student to this class.
+    Click 'Confirm' to complete the process.
   = form_for(portal_student, :as => :portal_student, :url => '4/move', :html => {:id => "move_form"}) do |f|
     = hidden_field_tag "clazz[current_class_word]", current_class_word
     = hidden_field_tag "clazz[new_class_word]", new_class_word
-    = f.submit "Submit"
+    = f.submit "Confirm"

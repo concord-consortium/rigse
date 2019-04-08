@@ -436,48 +436,86 @@ class Portal::StudentsController < ApplicationController
   end
 
   def move_confirm
-    # get student
-    @portal_student = Portal::Student.find(params[:id])
     # find current and new classes
     @current_class_word = params[:clazz][:current_class_word]
-    @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
     @new_class_word = params[:clazz][:new_class_word]
+    @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
     @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
-    # get list of new class's offerings
-    @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
-    # get student's learners, and offerings (id and names)
-    @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
-    # find learners from old class that have no corresponding assignments in new class
-    @potentially_orphaned_assignments = []
-    @students_assignments.each { |sa|
-      @match_found = false
-      @new_class_assignments.each { |nca|
-        if sa[:offering_name] == nca[:name]
-          @match_found = true
-        end
-      }
-      if !@match_found
-        @potentially_orphaned_assignments << sa[:offering_name]
-      end
-    }
 
+    # notify if no classes exist with the specified class passwords
     if @current_class.nil? || @new_class.nil?
       render :update do |page|
-        page.remove "invalid_word"
-        page.insert_html :top, "word_form", "<p id='invalid_word' style='display:none;'>Please enter a valid class word and try again.</p>"
+        page.replace "invalid_class", "<p id='invalid_class'></p>"
+        page.replace "invalid_word", "<p id='invalid_word' style='display:none;'>One or more of the class words you entered is invalid. Please try again.</p>"
         page.visual_effect :BlindDown, "invalid_word", :duration => 1
       end
       return
     end
-    render :update do |page|
-      page.remove "invalid_word"
-      page.insert_html :before, "move_form", :partial => "move_confirmation",
-        :locals => {:current_class_word => @current_class_word,
-                    :new_class_word => @new_class_word,
-                    :clazz      => @new_class,
-                    :portal_student => @portal_student,
-                    :potentially_orphaned_assignments => @potentially_orphaned_assignments}
-      page.visual_effect :BlindDown, "move_confirmation", :duration => 1
+
+    # get student
+    @portal_student = Portal::Student.find(params[:id])
+
+    # make sure student isn't already in the new class specified
+    @already_in_class = false
+    @portal_student.clazzes.each do |ec|
+      if ec.class_word == @new_class_word
+        @already_in_class = true
+      end
+    end
+
+    # make sure student is in the current class specified
+    @not_in_current_class = true
+    @portal_student.clazzes.each do |ec|
+      if ec.class_word == @current_class_word
+        @not_in_current_class = false
+      end
+    end
+
+    if @already_in_class
+      render :update do |page|
+        page.replace "invalid_word", "<p id='invalid_word'></p>"
+        page.replace "invalid_class", "<p id='invalid_class' style='display:none;'>The student is already in the class you are trying to move them to. Please check the class words you are using and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_class", :duration => 1
+      end
+      return
+    elsif @not_in_current_class
+      render :update do |page|
+        page.replace "invalid_word", "<p id='invalid_word'></p>"
+        page.replace "invalid_class", "<p id='invalid_class' style='display:none;'>The student is not in the class you are trying to move them from. Please check the class words you are using and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_class", :duration => 1
+      end
+      return
+    else
+      # get list of new class's offerings
+      @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
+      # get student's learners, and offerings (id and names)
+      @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
+      # find learners from old class that have no corresponding assignments in new class
+      @potentially_orphaned_assignments = []
+      @students_assignments.each { |sa|
+        @match_found = false
+        @new_class_assignments.each { |nca|
+          if sa[:offering_name] == nca[:name]
+            @match_found = true
+          end
+        }
+        if !@match_found
+          @potentially_orphaned_assignments << sa[:offering_name]
+        end
+      }
+
+      render :update do |page|
+        page.replace "invalid_word", "<p id='invalid_word'></p>"
+        page.replace "invalid_class", "<p id='invalid_class'></p>"
+        page.insert_html :before, "move_form", :partial => "move_confirmation",
+          :locals => {:current_class_word => @current_class_word,
+                      :current_clazz => @current_class,
+                      :new_class_word => @new_class_word,
+                      :clazz      => @new_class,
+                      :portal_student => @portal_student,
+                      :potentially_orphaned_assignments => @potentially_orphaned_assignments}
+        page.visual_effect :BlindDown, "move_confirmation", :duration => 1
+      end
     end
   end
 
