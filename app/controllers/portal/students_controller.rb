@@ -271,6 +271,36 @@ class Portal::StudentsController < ApplicationController
     end
   end
 
+  def move
+    # get student
+    @portal_student = Portal::Student.find(params[:id])
+    # find current and new classes
+    @current_class_word = params[:clazz][:current_class_word]
+    @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
+    @new_class_word = params[:clazz][:new_class_word]
+    @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
+    # remove student from current class and add to new
+    @portal_student.remove_clazz(@current_class)
+    @portal_student.add_clazz(@new_class)
+    # get list of new class's offerings
+    @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
+    # get student's learners, and offerings (id and names)
+    @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
+    # find matching learners and update offering_id values to match those in new class (what happens to any work on assignments that aren't assigned to new class?)
+    @students_assignments.each { |sa|
+      @new_class_assignments.each { |nca|
+        if sa[:offering_name] == nca[:name]
+          @learner_to_update = Portal::Learner.find(sa[:learner_id])
+          @learner_to_update.update_attribute('offering_id', nca[:id])
+        end
+      }
+    }
+
+    flash[:notice] = 'Successfully moved student to new class.'
+    redirect_to(@portal_student)
+
+  end
+
   # DELETE /portal_students/1
   # DELETE /portal_students/1.xml
   def destroy
@@ -402,6 +432,52 @@ class Portal::StudentsController < ApplicationController
                     :clazz      => @portal_clazz,
                     :portal_student => Portal::Student.new}
       page.visual_effect :BlindDown, "confirmation", :duration => 1
+    end
+  end
+
+  def move_confirm
+    # get student
+    @portal_student = Portal::Student.find(params[:id])
+    # find current and new classes
+    @current_class_word = params[:clazz][:current_class_word]
+    @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
+    @new_class_word = params[:clazz][:new_class_word]
+    @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
+    # get list of new class's offerings
+    @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
+    # get student's learners, and offerings (id and names)
+    @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
+    # find learners from old class that have no corresponding assignments in new class
+    @potentially_orphaned_assignments = []
+    @students_assignments.each { |sa|
+      @match_found = false
+      @new_class_assignments.each { |nca|
+        if sa[:offering_name] == nca[:name]
+          @match_found = true
+        end
+      }
+      if !@match_found
+        @potentially_orphaned_assignments << sa[:offering_name]
+      end
+    }
+
+    if @current_class.nil? || @new_class.nil?
+      render :update do |page|
+        page.remove "invalid_word"
+        page.insert_html :top, "word_form", "<p id='invalid_word' style='display:none;'>Please enter a valid class word and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_word", :duration => 1
+      end
+      return
+    end
+    render :update do |page|
+      page.remove "invalid_word"
+      page.insert_html :before, "move_form", :partial => "move_confirmation",
+        :locals => {:current_class_word => @current_class_word,
+                    :new_class_word => @new_class_word,
+                    :clazz      => @new_class,
+                    :portal_student => @portal_student,
+                    :potentially_orphaned_assignments => @potentially_orphaned_assignments}
+      page.visual_effect :BlindDown, "move_confirmation", :duration => 1
     end
   end
 
