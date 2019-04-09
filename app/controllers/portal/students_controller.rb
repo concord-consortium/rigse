@@ -419,8 +419,8 @@ class Portal::StudentsController < ApplicationController
     if @portal_clazz.nil?
       render :update do |page|
         page.remove "invalid_word"
-        page.insert_html :top, "word_form", "<p id='invalid_word' style='display:none;'>Please enter a valid class word and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_word", :duration => 1
+        page.insert_html :top, "word_form", "<p id='invalid_word' style='background: #f5f5f5; display:none; padding: 10px;'>Please enter a valid class word and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
       end
       return
     end
@@ -446,8 +446,8 @@ class Portal::StudentsController < ApplicationController
     if @current_class.nil? || @new_class.nil?
       render :update do |page|
         page.replace "invalid_class", "<p id='invalid_class'></p>"
-        page.replace "invalid_word", "<p id='invalid_word' style='display:none;'>One or more of the class words you entered is invalid. Please try again.</p>"
-        page.visual_effect :BlindDown, "invalid_word", :duration => 1
+        page.replace "invalid_word", "<p id='invalid_word' style='background: #f5f5f5; display:none; padding: 10px;'>One or more of the class words you entered is invalid. Please try again.</p>"
+        page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
       end
       return
     end
@@ -474,15 +474,15 @@ class Portal::StudentsController < ApplicationController
     if @already_in_class
       render :update do |page|
         page.replace "invalid_word", "<p id='invalid_word'></p>"
-        page.replace "invalid_class", "<p id='invalid_class' style='display:none;'>The student is already in the class you are trying to move them to. Please check the class words you are using and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_class", :duration => 1
+        page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>The student is already in the class you are trying to move them to. Please check the class words you are using and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_class", :duration => 0.25
       end
       return
     elsif @not_in_current_class
       render :update do |page|
         page.replace "invalid_word", "<p id='invalid_word'></p>"
-        page.replace "invalid_class", "<p id='invalid_class' style='display:none;'>The student is not in the class you are trying to move them from. Please check the class words you are using and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_class", :duration => 1
+        page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>The student is not in the class you are trying to move them from. Please check the class words you are using and try again.</p>"
+        page.visual_effect :BlindDown, "invalid_class", :duration => 0.25
       end
       return
     else
@@ -514,7 +514,7 @@ class Portal::StudentsController < ApplicationController
                       :clazz      => @new_class,
                       :portal_student => @portal_student,
                       :potentially_orphaned_assignments => @potentially_orphaned_assignments}
-        page.visual_effect :BlindDown, "move_confirmation", :duration => 1
+        page.visual_effect :BlindDown, "move_confirmation", :duration => 0.25
       end
     end
   end
