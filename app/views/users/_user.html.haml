@@ -24,6 +24,12 @@
           - else
             - if policy(user).limited_edit?
               %li.menu=link_to 'edit', limited_edit_user_path(user)
+          - if policy(user).destroy? && user.id != 1
+            - delete_user_form_id = "delete_user_form_id_#{user.id}"
+            %li.menu=link_to 'Delete', 'javascript: void(0);', :onclick => "confirmUserDelete('#{delete_user_form_id}', '#{user.login}')"
+            = form_for user, :url => user, :html => { :method => :delete, :class=> "hidden", :id=> delete_user_form_id}  do |form|
+              = hidden_field_tag 'user[id]', user.id
+              = hidden_field_tag 'commit', 'Delete'
           - if policy(user).reset_password? && !user.is_oauth_user?
             %li.menu=link_to 'Reset Password', reset_password_user_path(user)
           - if user.state == 'pending' && policy(user).confirm?
