@@ -44,6 +44,15 @@ class UsersController < ApplicationController
     @projects = Admin::Project.all_sorted
   end
 
+  # /users/1/destroy
+  def destroy
+    @user = User.find(params[:id])
+    authorize @user
+    @user.destroy
+    flash[:notice] = "User: #{@user.name} successfully deleted!"
+    redirect_to users_url
+  end
+
   # GET /users/1/preferences
   def preferences
     @user = User.find(params[:id])
