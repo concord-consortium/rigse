@@ -2,6 +2,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'factory_bot'
 FactoryBot.definition_file_paths = %w(factories)
 
+require 'webdrivers'
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'capybara/rspec'
@@ -16,7 +17,8 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 WebMock.disable_net_connect!(allow_localhost: true, :allow =>
                                 [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
-                                    'host.docker.internal:9515' ]
+                                    'host.docker.internal:9515',
+                                    'chromedriver.storage.googleapis.com' ]
                             )
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
