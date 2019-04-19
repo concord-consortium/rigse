@@ -49,17 +49,43 @@ module SearchableModel
     end
 
     # debugger
-    sql_conditions = sql_conditions + '(' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
-    # FIXME - This search should do the following: split the terms based on whitespace, then perform the search
-    # like this.  Given fields a, b, and c, and terms x and y we want to query in this way:
-    # (a like x OR b like x OR c like x) AND (a like y OR b like y OR c like y)
-    # we should also allow the search not to break on whitespace enclosed in quotes... maybe tokenize it?
-    # iterate over the string, look for quote or just start the strings into an array
-    # we could first split then check each part and see if it has a quote or not.  If one has a quote, it needs to be combined with the subsequent one until the other quote is found
-    # do a search to see if we have quoted strings, and then replace the whitespace in the quoted strings with another character, then do the split, then fix the whitespace
-    # or just only allow quotes at start and end
-    # maybe we'll need to add a nested block.
-    searchable_attributes.length.times {sql_parameters << "%#{search}%"}
+    if search
+      # split search into separate terms on white space not contained within a set of double quotes
+      search_terms = search.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
+      # remove any double quotation marks
+      search_terms.each do |st|
+        st.gsub!(/\"/, '')
+      end
+
+      sql_conditions = sql_conditions + '(' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
+
+      # FIXME - This search should do the following: split the terms based on whitespace, then perform the search
+      # like this.  Given fields a, b, and c, and terms x and y we want to query in this way:
+      # (a like x OR b like x OR c like x) AND (a like y OR b like y OR c like y)
+      # we should also allow the search not to break on whitespace enclosed in quotes... maybe tokenize it?
+      # iterate over the string, look for quote or just start the strings into an array
+      # we could first split then check each part and see if it has a quote or not.  If one has a quote, it needs to be combined with the subsequent one until the other quote is found
+      # do a search to see if we have quoted strings, and then replace the whitespace in the quoted strings with another character, then do the split, then fix the whitespace
+      # or just only allow quotes at start and end
+      # maybe we'll need to add a nested block.
+
+      # I think what I've added covers at least most of what's discussed in the above comment and that should be removed now? -- Ethan
+
+      if search_terms.length > 1
+        # skip first item of array since that's covered by first update of sql_conditions string above
+        search_terms.drop(1).each do |st|
+          sql_conditions = sql_conditions + ' and (' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
+        end
+      end
+
+      search_terms.each do |st|
+        searchable_attributes.length.times {sql_parameters << "%#{st}%"}
+      end
+
+    else
+      searchable_attributes.length.times {sql_parameters << "%#{search}%"}
+    end
+
     conditions = [sql_conditions] + sql_parameters
     # this results
     # (user_id = ? or public = '1') and name like ? or description like ?, 1, %%, %%, 2
