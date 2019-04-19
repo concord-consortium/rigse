@@ -49,7 +49,8 @@ module SearchableModel
     end
 
     # debugger
-    if search
+
+    if !search.nil? && !search.empty?
       # split search into separate terms on white space not contained within a set of double quotes
       search_terms = search.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
       # remove any double quotation marks
@@ -69,8 +70,6 @@ module SearchableModel
       # or just only allow quotes at start and end
       # maybe we'll need to add a nested block.
 
-      # I think what I've added covers at least most of what's discussed in the above comment and that should be removed now? -- Ethan
-
       if search_terms.length > 1
         # skip first item of array since that's covered by first update of sql_conditions string above
         search_terms.drop(1).each do |st|
@@ -81,9 +80,6 @@ module SearchableModel
       search_terms.each do |st|
         searchable_attributes.length.times {sql_parameters << "%#{st}%"}
       end
-
-    else
-      searchable_attributes.length.times {sql_parameters << "%#{search}%"}
     end
 
     conditions = [sql_conditions] + sql_parameters
