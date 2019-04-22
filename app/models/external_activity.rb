@@ -15,6 +15,8 @@ class ExternalActivity < ActiveRecord::Base
       nil
     end
 
+    text :keywords
+
     text :owner do |ea|
       ea.credits.present? ? ea.credits : ea.user && ea.user.name
     end
