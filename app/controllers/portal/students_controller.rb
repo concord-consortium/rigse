@@ -440,63 +440,49 @@ class Portal::StudentsController < ApplicationController
     @new_class_word = params[:clazz][:new_class_word]
     @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
     @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
-
-    if @current_class.nil? || @new_class.nil?
-      render :update do |page|
-        page.replace "invalid_class", "<p id='invalid_class'></p>"
-        page.replace "invalid_word", "<p id='invalid_word' style='background: #f5f5f5; display:none; padding: 10px;'>One or more of the class words you entered is invalid. Please try again.</p>"
-        page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
-      end
-      return
-    end
-
     @portal_student = Portal::Student.find(params[:id])
 
-    if @portal_student.has_clazz?(@new_class)
-      render :update do |page|
-        page.replace "invalid_word", "<p id='invalid_word'></p>"
-        page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>The student is already in the class you are trying to move them to. Please check the class words you are using and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_class", :duration => 0.25
-      end
-      return
+    @invalid_error = ''
+    @show_msg = 'move_confirmation'
+    @potentially_orphaned_assignments = []
+
+    if @current_class.nil? || @new_class.nil?
+      @invalid_error = 'One or more of the class words you entered is invalid. Please try again.'
+      @show_msg = 'invalid_word'
+    elsif @portal_student.has_clazz?(@new_class)
+      @invalid_error = 'The student is already in the class you are trying to move them to. Please check the class words you are using and try again.'
+      @show_msg = 'invalid_class'
     elsif !@portal_student.has_clazz?(@current_class)
-      render :update do |page|
-        page.replace "invalid_word", "<p id='invalid_word'></p>"
-        page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>The student is not in the class you are trying to move them from. Please check the class words you are using and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_class", :duration => 0.25
-      end
-      return
+      @invalid_error = 'The student is not in the class you are trying to move them from. Please check the class words you are using and try again.'
+      @show_msg = 'invalid_class'
     else
-      # get list of new class's offerings
       @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
-      # get student's learners, and offerings (id and names)
       @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
       # find learners from old class that have no corresponding assignments in new class
-      @potentially_orphaned_assignments = []
-      @students_assignments.each { |sa|
+      @students_assignments.each do |sa|
         @match_found = false
-        @new_class_assignments.each { |nca|
+        @new_class_assignments.each do |nca|
           if sa[:offering_name] == nca[:name]
             @match_found = true
           end
-        }
+        end
         if !@match_found
           @potentially_orphaned_assignments << sa[:offering_name]
         end
-      }
-
-      render :update do |page|
-        page.replace "invalid_word", "<p id='invalid_word'></p>"
-        page.replace "invalid_class", "<p id='invalid_class'></p>"
-        page.insert_html :before, "move_form", :partial => "move_confirmation",
-          :locals => {:current_class_word => @current_class_word,
-                      :current_clazz => @current_class,
-                      :new_class_word => @new_class_word,
-                      :clazz      => @new_class,
-                      :portal_student => @portal_student,
-                      :potentially_orphaned_assignments => @potentially_orphaned_assignments}
-        page.visual_effect :BlindDown, "move_confirmation", :duration => 0.25
       end
+    end
+
+    render :update do |page|
+      page.replace "invalid_word", "<p id='invalid_word'>" + @invalid_error + "</p>"
+      page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>" + @invalid_error + "</p>"
+      page.insert_html :before, "move_form", :partial => "move_confirmation",
+        :locals => {:current_class_word => @current_class_word,
+                    :current_clazz => @current_class,
+                    :new_class_word => @new_class_word,
+                    :clazz      => @new_class,
+                    :portal_student => @portal_student,
+                    :potentially_orphaned_assignments => @potentially_orphaned_assignments}
+      page.visual_effect :BlindDown, @show_msg, :duration => 0.25
     end
   end
 
