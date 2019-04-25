@@ -38,9 +38,7 @@ module SearchableModel
     # pass in a username to limit the search to the users items
     if (!user.nil?) && (!user.id.nil?)
       if column_names.include? 'user_id'
-        if self == User
-          sql_conditions = ""
-        else
+        if self != User
           # sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
           sql_conditions = "(#{table_name}.user_id = ?) and "
           sql_parameters << user.id
@@ -48,32 +46,13 @@ module SearchableModel
       end
     end
 
-    # debugger
-
     if !search.nil? && !search.empty?
-      # split search into separate terms on white space not contained within a set of double quotes
-      search_terms = search.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
-      # remove any double quotation marks
+      search_terms = get_search_terms(search)
+
       search_terms.each do |st|
-        st.gsub!(/\"/, '')
-      end
-
-      sql_conditions = sql_conditions + '(' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
-
-      # FIXME - This search should do the following: split the terms based on whitespace, then perform the search
-      # like this.  Given fields a, b, and c, and terms x and y we want to query in this way:
-      # (a like x OR b like x OR c like x) AND (a like y OR b like y OR c like y)
-      # we should also allow the search not to break on whitespace enclosed in quotes... maybe tokenize it?
-      # iterate over the string, look for quote or just start the strings into an array
-      # we could first split then check each part and see if it has a quote or not.  If one has a quote, it needs to be combined with the subsequent one until the other quote is found
-      # do a search to see if we have quoted strings, and then replace the whitespace in the quoted strings with another character, then do the split, then fix the whitespace
-      # or just only allow quotes at start and end
-      # maybe we'll need to add a nested block.
-
-      if search_terms.length > 1
-        # skip first item of array since that's covered by first update of sql_conditions string above
-        search_terms.drop(1).each do |st|
-          sql_conditions = sql_conditions + ' and (' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
+        sql_conditions = sql_conditions + ' (' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
+        if !st.equal?(search_terms.last)
+          sql_conditions = sql_conditions + ' and'
         end
       end
 
@@ -89,5 +68,15 @@ module SearchableModel
 
     per_page = self.per_page || 20
     paginate(:per_page => per_page, :page => page, :conditions => conditions, :include => includes)
+  end
+
+  def get_search_terms(search)
+    # split search string on white space not contained within a set of double quotes into an array of search terms
+    search_terms = search.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
+
+    # remove any double quotation marks from search terms
+    search_terms.each do |st|
+      st.gsub!(/\"/, '')
+    end
   end
 end
