@@ -436,13 +436,11 @@ class Portal::StudentsController < ApplicationController
   end
 
   def move_confirm
-    # find current and new classes
     @current_class_word = params[:clazz][:current_class_word]
     @new_class_word = params[:clazz][:new_class_word]
     @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
     @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
 
-    # notify if no classes exist with the specified class passwords
     if @current_class.nil? || @new_class.nil?
       render :update do |page|
         page.replace "invalid_class", "<p id='invalid_class'></p>"
@@ -452,33 +450,16 @@ class Portal::StudentsController < ApplicationController
       return
     end
 
-    # get student
     @portal_student = Portal::Student.find(params[:id])
 
-    # make sure student isn't already in the new class specified
-    @already_in_class = false
-    @portal_student.clazzes.each do |ec|
-      if ec.class_word == @new_class_word
-        @already_in_class = true
-      end
-    end
-
-    # make sure student is in the current class specified
-    @not_in_current_class = true
-    @portal_student.clazzes.each do |ec|
-      if ec.class_word == @current_class_word
-        @not_in_current_class = false
-      end
-    end
-
-    if @already_in_class
+    if @portal_student.has_clazz?(@new_class)
       render :update do |page|
         page.replace "invalid_word", "<p id='invalid_word'></p>"
         page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>The student is already in the class you are trying to move them to. Please check the class words you are using and try again.</p>"
         page.visual_effect :BlindDown, "invalid_class", :duration => 0.25
       end
       return
-    elsif @not_in_current_class
+    elsif !@portal_student.has_clazz?(@current_class)
       render :update do |page|
         page.replace "invalid_word", "<p id='invalid_word'></p>"
         page.replace "invalid_class", "<p id='invalid_class' style='background: #f5f5f5; display:none; padding: 10px;'>The student is not in the class you are trying to move them from. Please check the class words you are using and try again.</p>"
