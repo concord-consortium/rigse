@@ -332,6 +332,7 @@ RailsPortal::Application.routes.draw do
     match '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at, :method => :get
     match '/report/learner/report_only' => 'report/learner#report_only', :as => :learner_report_only, :method => :get
 
+    match '/report/user' => 'report/user#index', :as => :user_report, :method => :get
 
     match '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list, :method => :get
     match '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :method => :post, :version => /v\d+/
@@ -486,6 +487,12 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :report_learners_es, only: [:index] do
+          collection do
+            get :external_report_query
+          end
+        end
+
+        resources :report_users, only: [:index] do
           collection do
             get :external_report_query
           end

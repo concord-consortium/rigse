@@ -93,7 +93,7 @@ class API::V1::Offering
   attribute :reportable_activities, Array
   attribute :students, Array[OfferingStudent]
 
-  def initialize(offering, protocol, host_with_port)
+  def initialize(offering, protocol, host_with_port, current_user)
     runnable = offering.runnable
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
@@ -105,8 +105,7 @@ class API::V1::Offering
     self.material_type = runnable.material_type
     self.reportable = offering.reportable?
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
-    # this is a helper, it will not work, there is no current_user here
-    self.preview_url = run_url_for(runnable, protocol: protocol, host: host_with_port)
+    self.preview_url = run_url_for(runnable, preview_params(current_user, {protocol: protocol, host: host_with_port}))
     if runnable.respond_to?(:external_report) && runnable.external_report
       self.external_report =  {
         id: runnable.external_report.id,
