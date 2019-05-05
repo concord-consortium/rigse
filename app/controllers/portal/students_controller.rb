@@ -272,33 +272,32 @@ class Portal::StudentsController < ApplicationController
   end
 
   def move
-    # get student
     @portal_student = Portal::Student.find(params[:id])
-    # find current and new classes
+
     @current_class_word = params[:clazz][:current_class_word]
     @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
     @new_class_word = params[:clazz][:new_class_word]
     @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
-    # remove student from current class and add to new
+
     @portal_student.remove_clazz(@current_class)
     @portal_student.add_clazz(@new_class)
+
     # get list of new class's offerings
     @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
     # get student's learners, and offerings (id and names)
     @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
     # find matching learners and update offering_id values to match those in new class (what happens to any work on assignments that aren't assigned to new class?)
-    @students_assignments.each { |sa|
-      @new_class_assignments.each { |nca|
+    @students_assignments.each do |sa|
+      @new_class_assignments.each do |nca|
         if sa[:offering_name] == nca[:name]
           @learner_to_update = Portal::Learner.find(sa[:learner_id])
           @learner_to_update.update_attribute('offering_id', nca[:id])
         end
-      }
-    }
+      end
+    end
 
     flash[:notice] = 'Successfully moved student to new class.'
     redirect_to(@portal_student)
-
   end
 
   # DELETE /portal_students/1

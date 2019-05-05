@@ -193,6 +193,26 @@ describe Portal::StudentsController do
     end
   end
 
+  describe "POST move" do
+    before(:each) do
+      @clazz_params = {
+        :current_class_word => "currentclassword",
+        :new_class_word => "newclassword"
+      }
+    end
+
+    let(:student) { FactoryBot.create(:full_portal_student) }
+    let(:clazz_1) { FactoryBot.create(:portal_clazz, :class_word => @clazz_params[:current_class_word]) }
+    let(:clazz_2) { FactoryBot.create(:portal_clazz, :class_word => @clazz_params[:new_class_word]) }
+
+    it 'should flash success notice' do
+      student.add_clazz(clazz_1)
+      student.remove_clazz(clazz_2)
+      post :move, id: student.id, clazz: @clazz_params
+      expect(flash[:notice]).to match(/Successfully moved student to new class./)
+    end
+  end
+
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
