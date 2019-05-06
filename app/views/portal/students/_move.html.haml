@@ -1,6 +1,5 @@
 = remote_form_for(portal_student, :as => :portal_student, :url => { :controller => 'portal/students', :action => "move_confirm/#{@portal_student.id}" }, :html => {:id => "move_form"}) do |f|
-  %p#invalid_word
-  %p#invalid_class
+  %p#invalid
   = field_set_tag 'Class Word' do
     %ul
       %li

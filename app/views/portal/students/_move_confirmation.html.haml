@@ -1,6 +1,7 @@
 #move_confirmation{:style=>"background: #f5f5f5; display: none; padding: 10px;"}
-  %p
-    Are you sure you want to move #{portal_student.name} from #{current_clazz.teacher.user.first_name} #{current_clazz.teacher.user.last_name}'s #{current_clazz.name} to #{clazz.teacher.user.first_name} #{clazz.teacher.user.last_name}'s #{clazz.name}?
+  - if !current_clazz.nil? && !clazz.nil?
+    %p
+      Are you sure you want to move #{portal_student.name} from #{current_clazz.teacher.user.first_name} #{current_clazz.teacher.user.last_name}'s #{current_clazz.name} to #{clazz.teacher.user.first_name} #{clazz.teacher.user.last_name}'s #{clazz.name}?
 
   - if !potentially_orphaned_assignments.empty?
     %div{:class => 'warning', :style => 'background: #fc0; margin-bottom: 10px; padding: 10px;'}
