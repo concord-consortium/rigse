@@ -213,6 +213,42 @@ describe Portal::StudentsController do
     end
   end
 
+  describe "POST move_confirm" do
+    before(:each) do
+      @clazz_params = {
+        :current_class_word => "currentclassword",
+        :new_class_word => "newclassword"
+      }
+      student.add_clazz(clazz_1)
+      student.remove_clazz(clazz_2)
+    end
+
+    let(:teacher)  { FactoryBot.create(:portal_teacher) }
+    let(:student) { FactoryBot.create(:full_portal_student) }
+    let(:clazz_1) { FactoryBot.create(:portal_clazz, teachers: [teacher], :class_word => @clazz_params[:current_class_word]) }
+    let(:clazz_2) { FactoryBot.create(:portal_clazz, teachers: [teacher], :class_word => @clazz_params[:new_class_word]) }
+
+    it 'should ask for confirmation' do
+      post :move_confirm, id: student.id, clazz: @clazz_params
+      expect(response.body).to have_content("Are you sure you want to move")
+    end
+
+    it 'should notify if one or both of the class words are invalid' do
+      post :move_confirm, id: student.id, clazz: {:current_class_word => "wrongclassword1", :new_class_word => "wrongclassword2"}
+      expect(response.body).to have_content("One or more of the class words you entered is invalid.")
+    end
+
+    it 'should notify if the student is already in the class specified to move to' do
+      post :move_confirm, id: student.id, clazz: {:current_class_word => @clazz_params[:current_class_word], :new_class_word => @clazz_params[:current_class_word]}
+      expect(response.body).to have_content("The student is already in the class you are trying to move them to.")
+    end
+
+    it 'should notify if the student is not in the class specified to move from' do
+      post :move_confirm, id: student.id, clazz: {:current_class_word => @clazz_params[:new_class_word], :new_class_word => @clazz_params[:new_class_word]}
+      expect(response.body).to have_content("The student is not in the class you are trying to move them from.")
+    end
+  end
+
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
