@@ -26,6 +26,9 @@
     = field_set_tag 'Long Description for Teacher' do
       = t('authoring.long_description_for_teachers_description')
       = f.text_area :long_description_for_teacher, :cols => 80, :rows => 5, :class => 'mceNoEditor'
+    = field_set_tag 'Keywords' do
+      = t('authoring.keywords')
+      = f.text_area :keywords, :cols => 80, :rows => 3, :class => 'mceNoEditor'
     = field_set_tag t('authoring.material_type_label') do
       = f.select :material_type,
         [ [ Activity.display_name,      Activity.name       ],
