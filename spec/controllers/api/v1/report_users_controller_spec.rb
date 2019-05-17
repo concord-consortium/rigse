@@ -57,17 +57,19 @@ describe API::V1::ReportUsersController do
       @teacher4.cohorts << @cohort1
       @teacher5.cohorts << @cohort2
 
-      @runnable1 = FactoryBot.create(:external_activity)
-      @runnable2 = FactoryBot.create(:external_activity)
-      @runnable3 = FactoryBot.create(:external_activity)
+      @runnable1 = FactoryBot.create(:external_activity, source_type: "LARA")
+      @runnable2 = FactoryBot.create(:external_activity, source_type: "LARA")
+      @runnable3 = FactoryBot.create(:external_activity, source_type: "LARA")
+
+      @offering1 = FactoryBot.create(:portal_offering, {clazz: @teacher1.clazzes[0], runnable: @runnable1})
+      @offering2 = FactoryBot.create(:portal_offering, {clazz: @teacher2.clazzes[0], runnable: @runnable2})
+      @offering3 = FactoryBot.create(:portal_offering, {clazz: @teacher3.clazzes[0], runnable: @runnable3})
 
       sign_in admin_user
     end
     describe "GET index" do
       it "allows index" do
         get :index, {
-          totals: true,
-          remove_cc_teachers: true,
           teachers: "#{@teacher1.id},#{@teacher2.id}",
           runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}",
           cohorts: "#{@cohort1.id},#{@cohort2.id}",
@@ -75,6 +77,33 @@ describe API::V1::ReportUsersController do
           end_date: "03/04/19"
         }
         expect(response.status).to eql(200)
+      end
+      it "gets totals" do
+        get :index, {
+          totals: "true",
+          remove_cc_teachers: true
+        }
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json).to eql({"totals"=>{"cohorts"=>2, "runnables"=>3, "teachers"=>6}})
+      end
+      it "gets all teachers" do
+        get :index, { load_all: "teachers" }
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json["hits"]["teachers"].length).to eql(6)
+      end
+      it "gets all cohorts" do
+        get :index, { load_all: "cohorts" }
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json["hits"]["cohorts"].length).to eql(2)
+      end
+      it "gets all runnables" do
+        get :index, { load_all: "runnables" }
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json["hits"]["runnables"].length).to eql(3)
       end
     end
     describe "GET external_report_query" do
