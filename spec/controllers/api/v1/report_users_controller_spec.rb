@@ -43,35 +43,41 @@ describe API::V1::ReportUsersController do
 
   describe "admin access" do
     before (:each) do
+      @teacher1 = FactoryBot.create(:portal_teacher)
+      @teacher2 = FactoryBot.create(:portal_teacher)
+      @teacher3 = FactoryBot.create(:portal_teacher)
+      @teacher4 = FactoryBot.create(:portal_teacher)
+      @teacher5 = FactoryBot.create(:portal_teacher)
+      @teacher6 = FactoryBot.create(:portal_teacher)
+
+      @cohort1 = FactoryBot.create(:admin_cohort)
+      @cohort2 = FactoryBot.create(:admin_cohort)
+
+      @teacher3.cohorts << @cohort1
+      @teacher4.cohorts << @cohort1
+      @teacher5.cohorts << @cohort2
+
+      @runnable1 = FactoryBot.create(:external_activity)
+      @runnable2 = FactoryBot.create(:external_activity)
+      @runnable3 = FactoryBot.create(:external_activity)
+
       sign_in admin_user
     end
     describe "GET index" do
       it "allows index" do
-        get :index
+        get :index, {
+          totals: true,
+          remove_cc_teachers: true,
+          teachers: "#{@teacher1.id},#{@teacher2.id}",
+          runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}",
+          cohorts: "#{@cohort1.id},#{@cohort2.id}",
+          start_date: "01/02/19",
+          end_date: "03/04/19"
+        }
         expect(response.status).to eql(200)
       end
     end
     describe "GET external_report_query" do
-      before(:each) do
-        @teacher1 = FactoryBot.create(:portal_teacher)
-        @teacher2 = FactoryBot.create(:portal_teacher)
-        @teacher3 = FactoryBot.create(:portal_teacher)
-        @teacher4 = FactoryBot.create(:portal_teacher)
-        @teacher5 = FactoryBot.create(:portal_teacher)
-        @teacher6 = FactoryBot.create(:portal_teacher)
-
-        @cohort1 = FactoryBot.create(:admin_cohort)
-        @cohort2 = FactoryBot.create(:admin_cohort)
-
-        @teacher3.cohorts << @cohort1
-        @teacher4.cohorts << @cohort1
-        @teacher5.cohorts << @cohort2
-
-        @runnable1 = FactoryBot.create(:external_activity)
-        @runnable2 = FactoryBot.create(:external_activity)
-        @runnable3 = FactoryBot.create(:external_activity)
-      end
-
       it "allows index" do
         get :external_report_query
         expect(response.status).to eql(200)
