@@ -1,0 +1,6 @@
+%h1
+  Create Firebase App
+
+= form_for(@firebase_app, url: url_for(controller: 'firebase_apps', action: 'create'), html: {class: "generic-admin-form"}) do |f|
+  = render partial: 'form', locals: { firebase_app: @firebase_app, f: f }
+
