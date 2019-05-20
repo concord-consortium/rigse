@@ -1,0 +1,19 @@
+.item
+  .content
+    - if firebase_app.errors.any?
+      %ul.menu_v.error-explanation
+        %li Firebase app can't be saved, there are errors in form:
+        - firebase_app.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        %li
+          = label_tag "name", "Name:"
+          = f.text_field :name
+        %li
+          = label_tag "client_email", "Client Email:"
+          = f.text_field :client_email
+        %li
+          = label_tag "private_key", "Private Key:"
+          = f.text_area :private_key, class: 'mceNoEditor'
+      = submit_tag

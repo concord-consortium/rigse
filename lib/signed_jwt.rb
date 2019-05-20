@@ -70,6 +70,16 @@ module SignedJWT
     {data: decoded[0], header: decoded[1]}
   end
 
+  def self.is_valid_private_key?(private_key)
+    begin
+      rsa_private = OpenSSL::PKey::RSA.new(private_key)
+      JWT.encode({}, rsa_private, self.rsa_algorithm)
+    rescue StandardError => e
+      return false
+    end
+    return true
+  end
+
   private
 
   def self.hmac_algorithm

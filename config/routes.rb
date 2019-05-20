@@ -303,6 +303,7 @@ RailsPortal::Application.routes.draw do
       delete '/commons_licenses/:code' => 'commons_licenses#destroy', :as => :delete_commons_license
 
       resources :authoring_sites
+      resources :firebase_apps
     end
 
     resources :materials_collections do

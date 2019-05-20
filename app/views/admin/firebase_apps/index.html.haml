@@ -1,0 +1,11 @@
+%h1
+  Firebase Apps
+- if @firebase_apps.length > 0
+  = render partial: 'show', collection: @firebase_apps, as: :admin_firebase_app
+- else
+  %div{:style=>"margin:10px 0"}
+    You have no Firebase apps.
+    %br
+    To create a Firebase app click the "Create Firebase App" button.
+
+= link_to 'Create New Firebase App', new_admin_firebase_app_path, {:class => 'button'}
