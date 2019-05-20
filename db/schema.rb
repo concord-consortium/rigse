@@ -535,6 +535,7 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.boolean  "saves_student_data",                               :default => true
     t.text     "long_description"
     t.string   "source_type"
+    t.text     "keywords"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
