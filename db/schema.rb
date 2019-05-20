@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190129210934) do
+ActiveRecord::Schema.define(:version => 20190515122245) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -63,6 +63,10 @@ ActiveRecord::Schema.define(:version => 20190129210934) do
     t.string  "item_type"
   end
 
+  add_index "admin_cohort_items", ["admin_cohort_id"], :name => "index_admin_cohort_items_on_admin_cohort_id"
+  add_index "admin_cohort_items", ["item_id"], :name => "index_admin_cohort_items_on_item_id"
+  add_index "admin_cohort_items", ["item_type"], :name => "index_admin_cohort_items_on_item_type"
+
   create_table "admin_cohorts", :force => true do |t|
     t.integer "project_id"
     t.string  "name"
@@ -70,6 +74,7 @@ ActiveRecord::Schema.define(:version => 20190129210934) do
   end
 
   add_index "admin_cohorts", ["project_id", "name"], :name => "index_admin_cohorts_on_project_id_and_name", :unique => true
+  add_index "admin_cohorts", ["project_id"], :name => "index_admin_cohorts_on_project_id"
 
   create_table "admin_notice_user_display_statuses", :force => true do |t|
     t.integer  "user_id"
@@ -1800,6 +1805,8 @@ ActiveRecord::Schema.define(:version => 20190129210934) do
   end
 
   add_index "portal_offerings", ["clazz_id"], :name => "index_portal_offerings_on_clazz_id"
+  add_index "portal_offerings", ["runnable_id"], :name => "index_portal_offerings_on_runnable_id"
+  add_index "portal_offerings", ["runnable_type"], :name => "index_portal_offerings_on_runnable_type"
 
   create_table "portal_permission_forms", :force => true do |t|
     t.string   "name"
@@ -1842,6 +1849,7 @@ ActiveRecord::Schema.define(:version => 20190129210934) do
 
   add_index "portal_schools", ["country_id"], :name => "index_portal_schools_on_country_id"
   add_index "portal_schools", ["district_id"], :name => "index_portal_schools_on_district_id"
+  add_index "portal_schools", ["name"], :name => "index_portal_schools_on_name"
   add_index "portal_schools", ["nces_school_id"], :name => "index_portal_schools_on_nces_school_id"
   add_index "portal_schools", ["state"], :name => "index_portal_schools_on_state"
 

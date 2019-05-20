@@ -92,6 +92,14 @@ module RunnablesHelper
     return ""
   end
 
+  def preview_params(user, default_params = {})
+    p = default_params.clone
+    if user && user.portal_teacher
+      p[:logging] = true
+    end
+    p
+  end
+
   def run_url_for(component, params = {}, format = nil)
     if component.instance_of? Interactive
       return component.url

@@ -174,6 +174,8 @@ describe API::V1::ReportLearnersEsController do
         get :external_report_query
         resp = JSON.parse(response.body)
         filter = resp["json"]
+        expect(filter["type"]).to eq "learners"
+        expect(filter["version"]).to eq "1.0"
         expect(filter["learners"].length).to eq 2
         expect(filter["learners"][0]["run_remote_endpoint"]).to eq learner1.remote_endpoint_url
         expect(filter["learners"][0]["class_id"]).to eq learner1.offering.clazz_id

@@ -125,7 +125,7 @@ describe API::V1::OfferingsController do
         expect(json["activity"]).to eq runnable.name
         expect(json["report_url"]).to eql report_portal_offering_url(id: offering.id, host: 'test.host')
 
-        expect(json["preview_url"]).to eql external_activity_url(runnable, {format: runnable.run_format})
+        expect(json["preview_url"]).to eql external_activity_url(runnable, {logging: true, format: runnable.run_format})
         expect(json["students"].length).to eq 2
 
         student1 = json["students"][0]

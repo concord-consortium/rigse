@@ -13,7 +13,7 @@ class API::V1::OfferingsController < API::APIController
       return error('offering not found', 404)
     end
     authorize offering, :api_show?
-    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port)
+    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user)
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 
@@ -68,7 +68,7 @@ class API::V1::OfferingsController < API::APIController
 
     filtered_offerings = offerings.reject { |o| o.archived? }
     filtered_offerings = filtered_offerings.map do |offering|
-      API::V1::Offering.new(offering, request.protocol, request.host_with_port)
+      API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user)
     end
     render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
