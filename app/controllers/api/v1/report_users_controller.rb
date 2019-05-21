@@ -48,7 +48,7 @@ class API::V1::ReportUsersController < API::APIController
     query = {
       type: "users",
       version: "1.0",
-      domain: URI.parse(root_url).host,
+      domain: URI.parse(APP_CONFIG[:site_url]).host,
       users: users,
       runnables: runnables,
       start_date: params[:start_date],
