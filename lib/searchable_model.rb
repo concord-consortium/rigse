@@ -49,12 +49,10 @@ module SearchableModel
     if !search.nil? && !search.empty?
       search_terms = get_search_terms(search)
 
-      search_terms.each do |st|
-        sql_conditions = sql_conditions + ' (' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
-        if !st.equal?(search_terms.last)
-          sql_conditions = sql_conditions + ' and'
-        end
+      new_sql_conditions =  search_terms.map do
+        ' (' + searchable_attributes.collect {|a| "#{table_name}.#{a} like ?"}.join(' or ') + ')'
       end
+      sql_conditions = sql_conditions + new_sql_conditions.join(' and')
 
       search_terms.each do |st|
         searchable_attributes.length.times {sql_parameters << "%#{st}%"}
