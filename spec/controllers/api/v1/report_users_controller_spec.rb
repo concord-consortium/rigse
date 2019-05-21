@@ -107,6 +107,15 @@ describe API::V1::ReportUsersController do
       end
     end
     describe "GET external_report_query" do
+      before(:each) do
+        @old_configuration = APP_CONFIG[:site_url]
+        APP_CONFIG[:site_url] = 'http://example.com'
+      end
+
+      after(:each) do
+        APP_CONFIG[:site_url] = @old_configuration
+      end
+
       it "allows index" do
         get :external_report_query
         expect(response.status).to eql(200)
@@ -123,7 +132,7 @@ describe API::V1::ReportUsersController do
         filter = resp["json"]
         expect(filter["type"]).to eq "users"
         expect(filter["version"]).to eq "1.0"
-        expect(filter["domain"]).to eq "test.host"
+        expect(filter["domain"]).to eq "example.com"
         expect(filter["users"].length).to eq 5
         expect(filter["runnables"].length).to eq 3
         expect(filter["start_date"]).to eq "01/02/19"

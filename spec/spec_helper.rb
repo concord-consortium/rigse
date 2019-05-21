@@ -1,5 +1,8 @@
 ENV["RAILS_ENV"] = 'test'
 
+# needed to generate signed portal tokens
+ENV["JWT_HMAC_SECRET"] = 'foo'
+
 require 'simplecov'
 SimpleCov.start do
   merge_timeout 3600
