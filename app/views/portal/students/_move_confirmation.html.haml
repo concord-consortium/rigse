@@ -16,7 +16,7 @@
             #{poa}
   %p
     Click 'Confirm' to complete the process.
-  = form_for(portal_student, :as => :portal_student, :url => '4/move', :html => {:id => "move_form"}) do |f|
+  = form_for(portal_student, :as => :portal_student, :url => "#{portal_student.id}/move", :html => {:id => "move_form"}) do |f|
     = hidden_field_tag "clazz[current_class_word]", current_class_word
     = hidden_field_tag "clazz[new_class_word]", new_class_word
     = f.submit "Confirm"
