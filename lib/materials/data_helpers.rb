@@ -261,7 +261,7 @@ module Materials
           #
           links: links_for_material(material, skip_lightbox_reloads),
 
-          preview_url: view_context.run_url_for(material, (material.teacher_only? ? {:teacher_mode => true} : {})),
+          preview_url: view_context.run_url_for(material, view_context.preview_params(current_user, material.teacher_only? ? {:teacher_mode => true} : {})),
           edit_url: (material.is_a?(ExternalActivity) && policy(material).matedit?) ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
           unarchive_url: (material.is_a?(ExternalActivity) && policy(material).unarchive?) ? view_context.unarchive_external_activity_url(material) : nil,
           archive_url:   (material.is_a?(ExternalActivity) && policy(material).archive?) ? view_context.archive_external_activity_url(material) : nil,
@@ -342,8 +342,9 @@ module Materials
         end
       end
 
+      preview_params = !current_user.nil? && current_user.portal_teacher ? {logging: true} : {}
       links[:preview] = {
-        url: view_context.run_url_for(material, {}),
+        url: view_context.run_url_for(material, preview_params),
         text: 'Preview',
         target: '_blank'
       }

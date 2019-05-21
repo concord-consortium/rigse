@@ -294,5 +294,31 @@ describe RunnablesHelper, type: :helper  do
     end
   end
 
+  describe '#preview_params' do
+    let(:user) { FactoryBot.create(:user) }
+
+    it 'should work without params'  do
+      result = helper.preview_params(user)
+      expect(result.to_json).to eq("{}")
+    end
+
+    it 'should work with params by cloning them'  do
+      original_params = {foo: "bar"}
+      result = helper.preview_params(user, original_params)
+      expect(result.to_json).to eq('{"foo":"bar"}')
+      expect(result).not_to equal(original_params)
+    end
+
+    describe 'for teachers' do
+      let(:user) { t = FactoryBot.create(:teacher); t.user }
+      it 'should add logging automatically'  do
+        result1 = helper.preview_params(user)
+        expect(result1.to_json).to eq('{"logging":true}')
+
+        result2 = helper.preview_params(user, {foo: "bar"})
+        expect(result2.to_json).to eq('{"foo":"bar","logging":true}')
+      end
+    end
+  end
 
 end

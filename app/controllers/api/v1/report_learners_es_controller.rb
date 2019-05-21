@@ -43,6 +43,8 @@ class API::V1::ReportLearnersEsController < API::APIController
     select_learners  = learner_selector.learners.map(&:learner).compact
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     query = {
+      type: "learners",
+      version: "1.0",
       learners: select_learners.map do |l|
         {
           run_remote_endpoint: l.remote_endpoint_url,

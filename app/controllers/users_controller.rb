@@ -69,7 +69,7 @@ class UsersController < ApplicationController
     authorize @user
   end
 
-   # /users/1/switch
+  # /users/1/switch
   def switch
     @user = User.find(params[:id])
     authorize @user
