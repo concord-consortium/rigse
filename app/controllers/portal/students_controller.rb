@@ -292,6 +292,7 @@ class Portal::StudentsController < ApplicationController
         if sa[:offering_name] == nca[:name]
           @learner_to_update = Portal::Learner.find(sa[:learner_id])
           @learner_to_update.update_attribute('offering_id', nca[:id])
+          @learner_to_update.report_learner.update_fields
         end
       end
     end
