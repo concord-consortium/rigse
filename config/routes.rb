@@ -143,11 +143,21 @@ RailsPortal::Application.routes.draw do
           get :register
           post :register
           post :confirm
+          get :move_confirm
+          post :move_confirm
+          get :move
+          post :move
+          put :move
         end
         member do
           get :ask_consent
           put :update_consent
           get :status
+          get :move_confirm
+          post :move_confirm
+          get :move
+          post :move
+          put :move
         end
       end
 

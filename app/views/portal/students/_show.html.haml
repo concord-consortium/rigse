@@ -11,7 +11,10 @@
   :javascript
     poll_to_update_student_data_percentages(#{ poll_options.to_json })
 
+  - if current_visitor.has_role?('admin')
+    %h3 Move this student to a new class
+    = render :partial => 'portal/students/move', :locals => { :portal_student => portal_student }
+
   %p
     %h3 Enter a new class word to join another class:
     = render :partial => 'portal/students/register', :locals => { :portal_student => portal_student }
-
