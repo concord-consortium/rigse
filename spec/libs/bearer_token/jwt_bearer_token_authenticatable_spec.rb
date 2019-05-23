@@ -1,9 +1,6 @@
 require 'spec_helper'
 require 'delorean'
 
-# needed to generate signed portal tokens
-ENV['JWT_HMAC_SECRET'] = 'foo'
-
 describe JwtBearerTokenAuthenticatable::BearerToken do
   let(:strategy)      { JwtBearerTokenAuthenticatable::BearerToken.new(nil) }
   let(:request)       { double('request') }
