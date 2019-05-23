@@ -166,17 +166,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.text     "about_page_content",             :limit => 16777215
   end
 
-  create_table "admin_settings_vendor_interfaces", :force => true do |t|
-    t.integer  "admin_settings_id"
-    t.integer  "probe_vendor_interface_id"
-    t.datetime "created_at",                :null => false
-    t.datetime "updated_at",                :null => false
-  end
-
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id", "probe_vendor_interface_id"], :name => "adm_proj_interface"
-  add_index "admin_settings_vendor_interfaces", ["admin_settings_id"], :name => "index_admin_project_vendor_interfaces_on_admin_project_id"
-  add_index "admin_settings_vendor_interfaces", ["probe_vendor_interface_id"], :name => "adm_proj_vndr_interfc"
-
   create_table "admin_site_notice_roles", :force => true do |t|
     t.integer  "notice_id"
     t.integer  "role_id"
@@ -427,77 +416,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
 
   add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
-  create_table "embeddable_data_collectors", :force => true do |t|
-    t.string   "name"
-    t.text     "description",                :limit => 16777215
-    t.integer  "probe_type_id"
-    t.integer  "user_id"
-    t.string   "uuid",                       :limit => 36
-    t.string   "title"
-    t.float    "y_axis_min",                                     :default => 0.0
-    t.float    "y_axis_max",                                     :default => 5.0
-    t.float    "x_axis_min"
-    t.float    "x_axis_max"
-    t.string   "x_axis_label",                                   :default => "Time"
-    t.string   "x_axis_units",                                   :default => "s"
-    t.string   "y_axis_label"
-    t.string   "y_axis_units"
-    t.boolean  "multiple_graphable_enabled",                     :default => false
-    t.boolean  "draw_marks",                                     :default => false
-    t.boolean  "connect_points",                                 :default => true
-    t.boolean  "autoscale_enabled",                              :default => false
-    t.boolean  "ruler_enabled",                                  :default => false
-    t.boolean  "show_tare",                                      :default => false
-    t.boolean  "single_value",                                   :default => false
-    t.datetime "created_at",                                                         :null => false
-    t.datetime "updated_at",                                                         :null => false
-    t.integer  "graph_type_id"
-    t.integer  "prediction_graph_id"
-    t.text     "otml_root_content",          :limit => 16777215
-    t.text     "otml_library_content",       :limit => 16777215
-    t.text     "data_store_values",          :limit => 16777215
-    t.integer  "calibration_id"
-    t.boolean  "static"
-    t.boolean  "time_limit_status",                              :default => false
-    t.float    "time_limit_seconds"
-    t.integer  "data_table_id"
-    t.boolean  "is_digital_display",                             :default => false
-    t.integer  "dd_font_size"
-  end
-
-  add_index "embeddable_data_collectors", ["probe_type_id"], :name => "index_embeddable_data_collectors_on_probe_type_id"
-
-  create_table "embeddable_data_tables", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
-    t.string   "name"
-    t.text     "description",       :limit => 16777215
-    t.integer  "column_count"
-    t.integer  "visible_rows"
-    t.text     "column_names",      :limit => 16777215
-    t.text     "column_data",       :limit => 16777215
-    t.datetime "created_at",                                              :null => false
-    t.datetime "updated_at",                                              :null => false
-    t.integer  "data_collector_id"
-    t.integer  "precision",                             :default => 2
-    t.integer  "width",                                 :default => 1200
-    t.boolean  "is_numeric",                            :default => true
-  end
-
-  create_table "embeddable_drawing_tools", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                 :limit => 36
-    t.string   "name"
-    t.text     "description",          :limit => 16777215
-    t.string   "background_image_url"
-    t.string   "stamps"
-    t.boolean  "is_grid_visible"
-    t.integer  "preferred_width"
-    t.integer  "preferred_height"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-  end
-
   create_table "embeddable_iframes", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                             :limit => 36
@@ -529,41 +447,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
 
   add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
 
-  create_table "embeddable_inner_page_pages", :force => true do |t|
-    t.integer  "inner_page_id"
-    t.integer  "page_id"
-    t.integer  "user_id"
-    t.string   "uuid",          :limit => 36
-    t.integer  "position"
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
-  end
-
-  add_index "embeddable_inner_page_pages", ["inner_page_id"], :name => "index_inner_page_pages_on_inner_page_id"
-  add_index "embeddable_inner_page_pages", ["page_id"], :name => "index_inner_page_pages_on_page_id"
-  add_index "embeddable_inner_page_pages", ["position"], :name => "index_inner_page_pages_on_position"
-
-  create_table "embeddable_inner_pages", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",           :limit => 36
-    t.string   "name"
-    t.text     "description",    :limit => 16777215
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.integer  "static_page_id"
-  end
-
-  create_table "embeddable_lab_book_snapshots", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                :limit => 36
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.text     "target_element_type", :limit => 16777215
-    t.integer  "target_element_id"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-  end
-
   create_table "embeddable_multiple_choice_choices", :force => true do |t|
     t.text     "choice",             :limit => 16777215
     t.integer  "multiple_choice_id"
@@ -591,28 +474,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
-  create_table "embeddable_mw_modeler_pages", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
-    t.string   "name"
-    t.text     "description",       :limit => 16777215
-    t.text     "authored_data_url", :limit => 16777215
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-  end
-
-  create_table "embeddable_n_logo_models", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",              :limit => 36
-    t.string   "name"
-    t.text     "description",       :limit => 16777215
-    t.text     "authored_data_url", :limit => 16777215
-    t.integer  "width"
-    t.integer  "height"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-  end
-
   create_table "embeddable_open_responses", :force => true do |t|
     t.integer  "user_id"
     t.string   "uuid",                             :limit => 36
@@ -628,76 +489,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.string   "external_id"
     t.boolean  "is_required",                                          :default => false, :null => false
     t.boolean  "show_in_featured_question_report",                     :default => true
-  end
-
-  create_table "embeddable_raw_otmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",         :limit => 36
-    t.string   "name"
-    t.text     "description",  :limit => 16777215
-    t.text     "otml_content", :limit => 16777215
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
-  end
-
-  create_table "embeddable_smartgraph_range_questions", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                                 :limit => 36
-    t.string   "name"
-    t.text     "description",                          :limit => 16777215
-    t.integer  "data_collector_id"
-    t.integer  "correct_range_min"
-    t.integer  "correct_range_max"
-    t.string   "correct_range_axis"
-    t.integer  "highlight_range_min"
-    t.integer  "highlight_range_max"
-    t.string   "highlight_range_axis"
-    t.text     "prompt",                               :limit => 16777215
-    t.string   "answer_style"
-    t.text     "no_answer_response_text",              :limit => 16777215
-    t.boolean  "no_answer_highlight"
-    t.text     "correct_response_text",                :limit => 16777215
-    t.boolean  "correct_highlight"
-    t.text     "first_wrong_answer_response_text",     :limit => 16777215
-    t.boolean  "first_wrong_highlight"
-    t.text     "second_wrong_answer_response_text",    :limit => 16777215
-    t.boolean  "second_wrong_highlight"
-    t.text     "multiple_wrong_answers_response_text", :limit => 16777215
-    t.boolean  "multiple_wrong_highlight"
-    t.datetime "created_at",                                               :null => false
-    t.datetime "updated_at",                                               :null => false
-  end
-
-  create_table "embeddable_sound_graphers", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",            :limit => 36
-    t.string   "name"
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-    t.string   "max_frequency"
-    t.string   "max_sample_time"
-    t.string   "display_mode"
-  end
-
-  create_table "embeddable_video_players", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.string   "image_url"
-    t.string   "video_url"
-    t.text     "description", :limit => 16777215
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
-  create_table "embeddable_xhtmls", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "uuid",        :limit => 36
-    t.string   "name"
-    t.text     "description", :limit => 16777215
-    t.text     "content",     :limit => 16777215
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
   end
 
   create_table "external_activities", :force => true do |t|
@@ -1051,49 +842,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
   end
 
   add_index "materials_collections", ["project_id"], :name => "index_materials_collections_on_project_id"
-
-  create_table "otml_categories_otrunk_imports", :id => false, :force => true do |t|
-    t.integer "otml_category_id"
-    t.integer "otrunk_import_id"
-  end
-
-  add_index "otml_categories_otrunk_imports", ["otml_category_id", "otrunk_import_id"], :name => "otc_oti", :unique => true
-
-  create_table "otml_files_otrunk_imports", :id => false, :force => true do |t|
-    t.integer "otml_file_id"
-    t.integer "otrunk_import_id"
-  end
-
-  add_index "otml_files_otrunk_imports", ["otml_file_id", "otrunk_import_id"], :name => "otf_oti", :unique => true
-
-  create_table "otml_files_otrunk_view_entries", :id => false, :force => true do |t|
-    t.integer "otml_file_id"
-    t.integer "otrunk_view_entry_id"
-  end
-
-  add_index "otml_files_otrunk_view_entries", ["otml_file_id", "otrunk_view_entry_id"], :name => "otf_otve", :unique => true
-
-  create_table "otrunk_example_otml_categories", :force => true do |t|
-    t.string   "uuid"
-    t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "otrunk_example_otml_categories", ["name"], :name => "index_otrunk_example_otml_categories_on_name", :unique => true
-
-  create_table "otrunk_example_otml_files", :force => true do |t|
-    t.string   "uuid"
-    t.integer  "otml_category_id"
-    t.string   "name"
-    t.string   "path"
-    t.text     "content",          :limit => 16777215
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-  end
-
-  add_index "otrunk_example_otml_files", ["otml_category_id"], :name => "index_otrunk_example_otml_files_on_otml_category_id"
-  add_index "otrunk_example_otml_files", ["path"], :name => "index_otrunk_example_otml_files_on_path", :unique => true
 
   create_table "otrunk_example_otrunk_imports", :force => true do |t|
     t.string   "uuid"
@@ -2188,95 +1936,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "probe_calibrations", :force => true do |t|
-    t.integer  "data_filter_id"
-    t.integer  "probe_type_id"
-    t.boolean  "default_calibration"
-    t.integer  "physical_unit_id"
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.float    "k0"
-    t.float    "k1"
-    t.float    "k2"
-    t.float    "k3"
-    t.string   "uuid"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "user_id"
-  end
-
-  create_table "probe_data_filters", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "description",         :limit => 16777215
-    t.string   "otrunk_object_class"
-    t.boolean  "k0_active"
-    t.boolean  "k1_active"
-    t.boolean  "k2_active"
-    t.boolean  "k3_active"
-    t.string   "uuid"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-  end
-
-  create_table "probe_device_configs", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "vendor_interface_id"
-    t.string   "config_string"
-    t.string   "uuid"
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
-  end
-
-  add_index "probe_device_configs", ["user_id"], :name => "index_probe_device_configs_on_user_id"
-  add_index "probe_device_configs", ["vendor_interface_id"], :name => "index_probe_device_configs_on_vendor_interface_id"
-
-  create_table "probe_physical_units", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "quantity"
-    t.string   "unit_symbol"
-    t.string   "unit_symbol_text"
-    t.text     "description",      :limit => 16777215
-    t.boolean  "si"
-    t.boolean  "base_unit"
-    t.string   "uuid"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-  end
-
-  create_table "probe_probe_types", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.integer  "ptype"
-    t.float    "step_size"
-    t.integer  "display_precision"
-    t.integer  "port"
-    t.string   "unit"
-    t.float    "min"
-    t.float    "max"
-    t.float    "period"
-    t.string   "uuid"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "probe_probe_types", ["user_id"], :name => "index_probe_probe_types_on_user_id"
-
-  create_table "probe_vendor_interfaces", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.text     "description",            :limit => 16777215
-    t.string   "communication_protocol"
-    t.string   "image"
-    t.string   "uuid"
-    t.integer  "device_id"
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
-    t.string   "driver_short_name"
-  end
-
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2338,87 +1997,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
   add_index "report_learners", ["runnable_id"], :name => "index_report_learners_on_runnable_id"
   add_index "report_learners", ["school_id"], :name => "index_report_learners_on_school_id"
   add_index "report_learners", ["student_id"], :name => "index_report_learners_on_student_id"
-
-  create_table "ri_gse_assessment_target_unifying_themes", :id => false, :force => true do |t|
-    t.integer "assessment_target_id"
-    t.integer "unifying_theme_id"
-  end
-
-  create_table "ri_gse_assessment_targets", :force => true do |t|
-    t.integer  "knowledge_statement_id"
-    t.integer  "number"
-    t.text     "description",            :limit => 16777215
-    t.string   "grade_span"
-    t.string   "uuid",                   :limit => 36
-    t.datetime "created_at",                                 :null => false
-    t.datetime "updated_at",                                 :null => false
-  end
-
-  create_table "ri_gse_big_ideas", :force => true do |t|
-    t.integer  "unifying_theme_id"
-    t.text     "description",       :limit => 16777215
-    t.string   "uuid",              :limit => 36
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
-  end
-
-  create_table "ri_gse_domains", :force => true do |t|
-    t.string   "name"
-    t.string   "key"
-    t.string   "uuid",       :limit => 36
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
-
-  create_table "ri_gse_expectation_indicators", :force => true do |t|
-    t.integer  "expectation_id"
-    t.text     "description",    :limit => 16777215
-    t.string   "ordinal"
-    t.string   "uuid",           :limit => 36
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-  end
-
-  create_table "ri_gse_expectation_stems", :force => true do |t|
-    t.text     "description", :limit => 16777215
-    t.string   "uuid",        :limit => 36
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
-  create_table "ri_gse_expectations", :force => true do |t|
-    t.integer  "expectation_stem_id"
-    t.string   "uuid",                      :limit => 36
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
-    t.integer  "grade_span_expectation_id"
-  end
-
-  create_table "ri_gse_grade_span_expectations", :force => true do |t|
-    t.integer  "assessment_target_id"
-    t.string   "grade_span"
-    t.string   "uuid",                 :limit => 36
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
-    t.string   "gse_key"
-  end
-
-  create_table "ri_gse_knowledge_statements", :force => true do |t|
-    t.integer  "domain_id"
-    t.integer  "number"
-    t.text     "description", :limit => 16777215
-    t.string   "uuid",        :limit => 36
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
-  end
-
-  create_table "ri_gse_unifying_themes", :force => true do |t|
-    t.string   "name"
-    t.string   "key"
-    t.string   "uuid",       :limit => 36
-    t.datetime "created_at",               :null => false
-    t.datetime "updated_at",               :null => false
-  end
 
   create_table "roles", :force => true do |t|
     t.string  "title"
@@ -2636,20 +2214,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
-  create_table "settings", :force => true do |t|
-    t.integer  "scope_id"
-    t.string   "scope_type"
-    t.string   "name"
-    t.string   "value"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "settings", ["name"], :name => "index_settings_on_name"
-  add_index "settings", ["scope_id", "scope_type", "name"], :name => "index_settings_on_scope_id_and_scope_type_and_name"
-  add_index "settings", ["scope_type", "scope_id", "name"], :name => "index_settings_on_scope_type_and_scope_id_and_name"
-  add_index "settings", ["value"], :name => "index_settings_on_value"
 
   create_table "standard_documents", :force => true do |t|
     t.string   "uri"
