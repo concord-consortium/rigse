@@ -68,5 +68,35 @@ namespace :app do
       end
       puts " done."
     end
+
+    # NP 2019-05-24: Preparing to move to reporting service.
+    # Part of: https://www.pivotaltracker.com/story/show/165217423
+    # The idea is to update about ~500K learner-runs in LARA to include
+    # `class_hash` values, which we need for FireStore authorization Rules
+    # LINE FORMAT: CLAZZ_ID, CLASS_HASH, LEARNER_ID, LEARNER_KEY
+    desc "export clazz-learner keys to clazz-learners.csv. Import into LARA Runs"
+    task :write_class_and_learner_keys => :environment do
+      filename = ENV["CLASS_EXPORT_FILENAME"] || "clazz-learners.csv"
+      # We want to write out class_id, class_hash,learner_key
+      File.open(filename, 'w') do |outfile|
+        Portal::Clazz.find_in_batches(batch_size: 20) do |batch|
+          batch.each do |clazz|
+            clazz.offerings.each do |offering|
+              offering.learners.each do |learner|
+                begin
+                  id = clazz.id
+                  hash = clazz.class_hash
+                  lid = learner.id
+                  key = learner.secure_key
+                  outfile.write "#{id},#{hash},#{lid},#{key}\n"
+                rescue => e
+                  Rails.logger.error "Failed to add learner #{e}"
+                end
+              end
+            end
+          end
+        end
+      end
+    end
   end
 end
