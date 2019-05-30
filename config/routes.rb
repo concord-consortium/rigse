@@ -198,6 +198,8 @@ RailsPortal::Application.routes.draw do
     match '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
     match '/thanks_for_sign_up/:type/:login' => 'users#registration_successful', :as => :thanks_for_sign_up, :type=>nil,:login=>nil
     match '/portal/user_type_selector/' => 'portal/user_type_selector#index', :as => :portal_user_type_selector
+    match '/portal/teacher_form' => 'portal/teacher_form#index', :as => :portal_teacher_form
+    match '/portal/student_form' => 'portal/student_form#index', :as => :portal_student_form
 
     resources :users do
       member do

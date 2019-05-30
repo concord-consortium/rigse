@@ -236,7 +236,7 @@ class ApplicationController < ActionController::Base
 
   def session_sensitive_path
     path = request.env['PATH_INFO']
-    return path =~ /password|session|sign_in|sign_out|security_questions|consent|help|user_type_selector/i
+    return path =~ /password|session|sign_in|sign_out|security_questions|consent|help|user_type_selector|teacher_form|student_form/i
   end
 
   def check_for_select_portal_user_type
@@ -254,7 +254,17 @@ class ApplicationController < ActionController::Base
         #
         # Otherwise, this is not actually used.
         #
-        redirect_to portal_user_type_selector_path(omniauth_origin: session["omniauth.origin"])
+
+        omniauth_origin = session["omniauth_origin"]
+        omniauth_origin_params = Rack::Utils.parse_query URI(omniauth_origin).query
+
+        if (omniauth_origin_params["userType"] == 'teacher')
+          redirect_to portal_teacher_form_path(omniauth_origin: session["omniauth.origin"])
+        elsif (omniauth_origin_params["userType"] == 'student')
+          redirect_to portal_student_form_path(omniauth_origin: session["omniauth.origin"])
+        else
+          redirect_to portal_user_type_selector_path(omniauth_origin: session["omniauth.origin"])
+        end
 
       end
     end
