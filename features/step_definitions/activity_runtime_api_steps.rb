@@ -60,6 +60,9 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   if /class_info_url of '(.*)'/ =~ query_data["class_info_url"]
     query_data["class_info_url"] = Portal::Clazz.find_by_name($~[1]).class_info_url("http", "www.example.com")
   end
+  if /class_hash of '(.*)'/ =~ query_data["class_hash"]
+    query_data["class_hash"] = Portal::Clazz.find_by_name($~[1]).class_hash
+  end
   stub.with(:query => query_data)
 end
 
