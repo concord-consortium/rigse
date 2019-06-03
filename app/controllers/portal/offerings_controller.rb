@@ -66,7 +66,8 @@ class Portal::OfferingsController < ApplicationController
              :returnUrl => learner.remote_endpoint_url,
              :logging => @offering.clazz.logging || @offering.runnable.logging,
              :domain_uid => current_visitor.id,
-             :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port)
+             :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
+             :class_hash => @offering.clazz.class_hash
            }.to_query
            redirect_to(uri.to_s)
          else

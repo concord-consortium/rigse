@@ -11,6 +11,7 @@ Feature: External Activities can support a REST api
       | logging           | false                        |
       | returnUrl         | site_url/dataservice/external_activity_data/key |
       | class_info_url    | class_info_url of 'My Class' |
+      | class_hash        | class_hash of 'My Class' |
     And "activities.com/activity/1/sessions/" GET responds with
       """
       HTTP/1.1 200 OK

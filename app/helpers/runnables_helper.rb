@@ -112,6 +112,7 @@ module RunnablesHelper
       # the user id is added to this url to make the url be unique for each user
       # this ought to prevent jnlps from being cached and shared by users
       # the user id is not actually used to generate the response or authorize it
+      # route: portal/offerings#show {:id=>/\d+/, :user_id=>/\d+/}
       user_portal_offering_url(current_visitor, component, params)
     else
       unless component.instance_of? ExternalActivity
