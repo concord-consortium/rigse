@@ -79,19 +79,17 @@ namespace :app do
       filename = ENV["CLASS_EXPORT_FILENAME"] || "clazz-learners.csv"
       # We want to write out class_id, class_hash,learner_key
       File.open(filename, 'w') do |outfile|
-        Portal::Clazz.find_in_batches(batch_size: 20) do |batch|
-          batch.each do |clazz|
-            clazz.offerings.each do |offering|
-              offering.learners.each do |learner|
-                begin
-                  id = clazz.id
-                  hash = clazz.class_hash
-                  lid = learner.id
-                  key = learner.secure_key
-                  outfile.write "#{id},#{hash},#{lid},#{key}\n"
-                rescue => e
-                  Rails.logger.error "Failed to add learner #{e}"
-                end
+        Portal::Clazz.find_each(batch_size: 20) do |clazz|
+          clazz.offerings.each do |offering|
+            offering.learners.find_each(batch_size: 50) do |learner|
+              begin
+                id = clazz.id
+                hash = clazz.class_hash
+                lid = learner.id
+                key = learner.secure_key
+                outfile.write "#{id},#{hash},#{lid},#{key}\n"
+              rescue => e
+                Rails.logger.error "Failed to add learner #{e}"
               end
             end
           end
