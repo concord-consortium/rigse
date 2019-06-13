@@ -38,6 +38,9 @@ cache: bundler
 
 bundler_args: --binstubs --without development
 
+services:
+  - mysql
+
 addons:
   chrome: stable
   artifacts:
