@@ -571,6 +571,28 @@ Devise is also setup to use user activation. Users which require
 activation are sent emails
 automatically.
 
+### Single Sign On
+
+The app supports user registration and authentication via third party single sign using OAuth. Using this feature requires setting up OAuth credentials with the third party.
+
+The app currently supports OAuth registration and authentication using Google and Schoology.
+
+To set up single sign on with Google, follow the steps below.
+
+1) Create a new Google app in console.developers.google.com.
+
+2) Create a set of OAuth credentials for the app. For the "Authorized JS origin" value use the valid public domain that resolves to your copy of the app on the web. For the "Authorized redirect URI" value use `https://[your domain]/users/auth/google/callback`.
+
+3) Take the Client ID and Client Secret values created in step two and add them as values for GOOGLE_CLIENT_KEY (Client ID) and GOOGLE_CLIENT_SECRET (Client Secret) in your app's .env file.
+
+4) Restart the app.
+
+#### Testing Single Sign On with Google and a Local Portal
+
+Create a set of OAuth credentials for the app following the steps above, but for the "Authorized JS origin" value use a valid public top level domain that resolves to 127.0.0.1. Google won't accept 127.0.0.1 or a domain like app.portaldocker.local. An easy option is to use `https://lvh.me` which resolves to 127.0.0.1 without requiring any special configuration of your computer.
+
+For the "Authorized redirect URI" value use `https://[your domain]:[your port number]/users/auth/google/callback`. If, for example, you use lvh.me and Docker is serving your portal over port 32789, the value would be `https://lvh.me:32789/users/auth/google/callback`.
+
 ## Uses the Database for Sessions
 
 ### Will Paginate
