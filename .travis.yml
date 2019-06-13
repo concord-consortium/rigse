@@ -39,7 +39,7 @@ cache: bundler
 bundler_args: --binstubs --without development
 
 addons:
-  chrome: stable
+  chrome: beta
   artifacts:
     paths:
     - ./tmp/capybara
