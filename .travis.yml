@@ -3,7 +3,7 @@ language: ruby
 rvm:
   - "2.2.6"
 
-dist: trusty
+dist: xenial
 
 env:
   matrix:
