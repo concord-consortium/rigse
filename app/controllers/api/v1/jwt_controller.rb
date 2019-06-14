@@ -66,7 +66,7 @@ class API::V1::JwtController < API::APIController
         # Firebase auth rules expect all the claims to be in a sub-object named "claims".
         # All the new properties should go there. Other apps can still read them.
         :claims => {
-          :platform_id => URI.parse(root_url).host,
+          :platform_id => root_url,
           :platform_user_id => user.id,
           :user_type => "learner",
           :user_id => url_for(user),
@@ -95,7 +95,7 @@ class API::V1::JwtController < API::APIController
         # Firebase auth rules expect all the claims to be in a sub-object named "claims".
         # All the new properties should go there. Other apps can still read them.
         :claims => {
-          :platform_id => URI.parse(root_url).host,
+          :platform_id => root_url,
           :platform_user_id => user.id,
           :user_type => "teacher",
           :user_id => url_for(user),
