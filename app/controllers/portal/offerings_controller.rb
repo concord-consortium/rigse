@@ -61,13 +61,14 @@ class Portal::OfferingsController < ApplicationController
          if external_activity.launch_url.present?
            uri = URI.parse(external_activity.launch_url)
            uri.query = {
-             :domain => root_url,
              :externalId => learner.id,
              :returnUrl => learner.remote_endpoint_url,
              :logging => @offering.clazz.logging || @offering.runnable.logging,
+             :domain => root_url,
              :domain_uid => current_visitor.id,
              :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
-             :class_hash => @offering.clazz.class_hash
+             :class_hash => @offering.clazz.class_hash,
+             :resource_link_id => @offering.id
            }.to_query
            redirect_to(uri.to_s)
          else
