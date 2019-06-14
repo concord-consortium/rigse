@@ -67,7 +67,9 @@ class Portal::OfferingsController < ApplicationController
              :domain => root_url,
              :domain_uid => current_visitor.id,
              :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
-             :class_hash => @offering.clazz.class_hash,
+             :context_id => @offering.clazz.class_hash,
+             :platform_id => URI.parse(root_url).host,
+             :platform_user_id => current_visitor.id,
              :resource_link_id => @offering.id
            }.to_query
            redirect_to(uri.to_s)
