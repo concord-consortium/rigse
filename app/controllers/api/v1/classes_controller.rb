@@ -122,6 +122,7 @@ class API::V1::ClassesController < API::APIController
       :teachers => clazz.teachers.includes(:user).map { |teacher|
         {
           :id => url_for(teacher.user),
+          :user_id => teacher.user.id,
           :first_name => teacher.user.first_name,
           :last_name => teacher.user.last_name
         }
@@ -129,6 +130,7 @@ class API::V1::ClassesController < API::APIController
       :students => clazz.students.includes(:user).map { |student|
         {
           :id => url_for(student.user),
+          :user_id => student.user.id,
           :email => student.user.email,
           :first_name => student.user.first_name,
           :last_name => student.user.last_name
