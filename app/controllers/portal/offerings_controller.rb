@@ -61,13 +61,19 @@ class Portal::OfferingsController < ApplicationController
          if external_activity.launch_url.present?
            uri = URI.parse(external_activity.launch_url)
            uri.query = {
-             :domain => root_url,
              :externalId => learner.id,
              :returnUrl => learner.remote_endpoint_url,
              :logging => @offering.clazz.logging || @offering.runnable.logging,
+             :domain => root_url,
              :domain_uid => current_visitor.id,
              :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
-             :class_hash => @offering.clazz.class_hash
+             :context_id => @offering.clazz.class_hash,
+             # platform_id and platform_user_id seems like duplicates of domain and domain_uid.
+             # However, LARA uses domain and domain_uid to auth user, removes them from URI and performs redirect.
+             # So, these params won't be available later to setup LARA run.
+             :platform_id => root_url,
+             :platform_user_id => current_visitor.id,
+             :resource_link_id => @offering.id
            }.to_query
            redirect_to(uri.to_s)
          else

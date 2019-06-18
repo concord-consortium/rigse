@@ -63,18 +63,24 @@ class API::V1::JwtController < API::APIController
     if learner
       offering = learner.offering
       claims = {
+        # Firebase auth rules expect all the claims to be in a sub-object named "claims".
+        # All the new properties should go there. Other apps can still read them.
+        :claims => {
+          :platform_id => root_url,
+          :platform_user_id => user.id,
+          :user_type => "learner",
+          :user_id => url_for(user),
+          :class_hash => offering.clazz.class_hash,
+          :offering_id => offering.id
+        },
+        # Depreciated, used by some CC client apps. Do not add more data here, it's better to add that to claims
+        # object above, as then Firebase auth rules can read these properties too.
         :domain => root_url,
         :externalId => learner.id,
         :returnUrl => learner.remote_endpoint_url,
         :logging => offering.clazz.logging || offering.runnable.logging,
         :domain_uid => user.id,
         :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
-        :claims => { # need claims sub-namespace for firebase auth rules
-          :user_type => "learner",
-          :user_id => url_for(user),
-          :class_hash => offering.clazz.class_hash,
-          :offering_id => offering.id
-        }
       }
     elsif teacher
       # verify if the optional passed class_hash is valid
@@ -86,13 +92,19 @@ class API::V1::JwtController < API::APIController
       end
 
       claims = {
-        :domain => root_url,
-        :domain_uid => user.id,
-        :claims => { # need claims sub-namespace for firebase auth rules
+        # Firebase auth rules expect all the claims to be in a sub-object named "claims".
+        # All the new properties should go there. Other apps can still read them.
+        :claims => {
+          :platform_id => root_url,
+          :platform_user_id => user.id,
           :user_type => "teacher",
           :user_id => url_for(user),
           :class_hash => params[:class_hash]
-        }
+        },
+        # Depreciated, used by some CC client apps. Do not add more data here, it's better to add that to claims
+        # object above, as then Firebase auth rules can read these properties too.
+        :domain => root_url,
+        :domain_uid => user.id,
       }
     end
 
