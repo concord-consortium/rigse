@@ -23,4 +23,7 @@
         %li
           Report Type:
           = f.select :report_type, report.options_for_report_type, {}, prompt: 'report type:'
+        %li
+          Allowed for Students:
+          = f.check_box :allowed_for_students
       = submit_tag

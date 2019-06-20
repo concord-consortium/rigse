@@ -1,7 +1,7 @@
 class Portal::OfferingPolicy < ApplicationPolicy
   # Used by API::V1::OfferingsController:
   def api_show?
-    class_teacher_or_admin?
+    class_teacher_or_admin? || class_student?
   end
 
   def api_index?
@@ -72,7 +72,7 @@ class Portal::OfferingPolicy < ApplicationPolicy
   end
 
   def external_report?
-    class_teacher_or_admin?
+    class_teacher_or_admin? || (record.runnable.external_report && record.runnable.external_report.allowed_for_students && class_student?)
   end
 
   def offering_collapsed_status?

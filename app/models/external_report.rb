@@ -6,7 +6,7 @@ class ExternalReport < ActiveRecord::Base
   ReportTypes = [OfferingReport, ClassReport, ResearcherReport]
   belongs_to :client
   has_many :external_activities
-  attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type
+  attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type, :allowed_for_students
 
   ReportTokenValidFor = 2.hours
 
@@ -28,14 +28,25 @@ class ExternalReport < ActiveRecord::Base
     routes = Rails.application.routes.url_helpers
     class_id = offering.clazz.id
     url_options = {protocol: protocol, host: host}
-    add_query_params(url, {
+    params = {
       reportType:     'offering',
       offering:       routes.api_v1_offering_url(offering.id, url_options),
       classOfferings: routes.api_v1_offerings_url(url_options.merge(class_id: class_id)),
       class:          routes.api_v1_class_url(class_id, url_options),
       token:          grant.access_token,
       username:       user.login
-    })
+    }
+
+    if allowed_for_students && user.portal_student
+      params[:studentId] = user.id
+      learner = Portal::Learner.where(offering_id: offering.id, student_id: user.portal_student.id).first
+      if learner
+        grant.learner = learner
+        grant.save!
+      end
+    end
+
+    add_query_params(url, params)
   end
 
   def url_for_class(class_id, user, protocol, host)
