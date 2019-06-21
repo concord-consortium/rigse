@@ -56,4 +56,11 @@
                     =link_to t("StudentProgress.GenerateReport.Done"), student_report_portal_offering_url(offering), target: "_blank"
                   - else
                     =link_to t("StudentProgress.GenerateReport.NotDone"), student_report_portal_offering_url(offering)
+                  %br
+
+              - external_report = offering.runnable.external_report
+              - if external_report.present? && external_report.allowed_for_students
+                %span.lightbox_report_link
+                  = link_to external_report.launch_text, portal_external_report_url(id: offering.id, report_id: external_report.id), target: "_blank"
+
 

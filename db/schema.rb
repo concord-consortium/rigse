@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190515122245) do
+ActiveRecord::Schema.define(:version => 20190620172718) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -445,8 +445,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.boolean  "show_in_featured_question_report",                     :default => true
   end
 
-  add_index "embeddable_image_questions", ["external_id"], :name => "index_embeddable_image_questions_on_external_id"
-
   create_table "embeddable_multiple_choice_choices", :force => true do |t|
     t.text     "choice",             :limit => 16777215
     t.integer  "multiple_choice_id"
@@ -510,7 +508,6 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.string   "launch_url"
     t.boolean  "is_official",                                      :default => false
     t.boolean  "student_report_enabled",                           :default => true
-    t.text     "long_description_for_teacher", :limit => 16777215
     t.string   "teacher_guide_url"
     t.string   "thumbnail_url"
     t.boolean  "is_featured",                                      :default => false
@@ -533,6 +530,7 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.string   "material_type",                                    :default => "Activity"
     t.string   "rubric_url"
     t.boolean  "saves_student_data",                               :default => true
+    t.text     "long_description_for_teacher"
     t.text     "long_description"
     t.string   "source_type"
     t.text     "keywords"
@@ -549,9 +547,10 @@ ActiveRecord::Schema.define(:version => 20190515122245) do
     t.string   "name"
     t.string   "launch_text"
     t.integer  "client_id"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.string   "report_type", :default => "offering"
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
+    t.string   "report_type",          :default => "offering"
+    t.boolean  "allowed_for_students", :default => false
   end
 
   add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"
