@@ -510,15 +510,54 @@ describe ExternalActivity do
     end
   end
 
-  # TODO: auto-generated
-  describe '#options_for_external_report' do
-    it 'options_for_external_report' do
-      external_activity = described_class.new
-      result = external_activity.options_for_external_report
+  describe "external_reports" do
+    let(:activity) { described_class.create(valid_attributes) }
 
-      expect(result).not_to be_nil
+    let(:report_a_props) do
+      {
+        url: "http://a/report.html",
+        name: "a",
+        launch_text: "a"
+      }
+    end
+
+    let(:report_b_props) do
+      {
+        url: "http://b/report.html",
+        name: "b",
+        launch_text: "b"
+      }
+    end
+
+    let(:report_a) { ExternalReport.create(report_a_props) }
+    let(:report_b) { ExternalReport.create(report_b_props) }
+    it "doesn't have an external_report at first" do
+      expect(activity).to be_valid
+      expect(activity.external_reports).to be_empty
+    end
+
+    it "can have multiple external reports" do
+      activity.external_reports.create(report_a_props)
+      activity.external_reports.create(report_b_props)
+      expect(activity.external_reports).to have(2).reports
+    end
+
+    it "will return the first external report when asked for just one" do
+      activity.external_reports.create(report_a_props)
+      activity.external_reports.create(report_b_props)
+      expect(activity.external_report).to eql activity.external_reports.first
+    end
+
+    describe "adding new reports" do
+      it "should not add the same report twice" do
+        activity.add_external_report_by_url(report_a)
+        activity.add_external_report_by_url(report_a)
+        activity.add_external_report_by_url(report_a)
+        activity.reload
+        expect(activity.external_reports).to have(1).report
+      end
+
     end
   end
-
 
 end

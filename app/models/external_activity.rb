@@ -68,7 +68,9 @@ class ExternalActivity < ActiveRecord::Base
   end
 
   belongs_to :user
-  belongs_to :external_report
+
+  has_many :external_activity_reports
+  has_many :external_reports, through: :external_activity_reports
 
   has_many :favorites, as: :favoritable
 
@@ -316,6 +318,13 @@ class ExternalActivity < ActiveRecord::Base
     return long_description_for_teacher if user && user.portal_teacher && long_description_for_teacher.present?
     return long_description if long_description.present?
     short_description
+  end
+
+  # 2019-07-12 NP: Backwards compatibility note
+  # We removed external_report from the table, but support many via
+  # external_activity_reports
+  def external_report
+    return external_reports.first
   end
 
   private
