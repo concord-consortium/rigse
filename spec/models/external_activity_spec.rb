@@ -547,17 +547,6 @@ describe ExternalActivity do
       activity.external_reports.create(report_b_props)
       expect(activity.external_report).to eql activity.external_reports.first
     end
-
-    describe "adding new reports" do
-      it "should not add the same report twice" do
-        activity.add_external_report_by_url(report_a)
-        activity.add_external_report_by_url(report_a)
-        activity.add_external_report_by_url(report_a)
-        activity.reload
-        expect(activity.external_reports).to have(1).report
-      end
-
-    end
   end
 
 end

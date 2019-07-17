@@ -207,6 +207,12 @@ class ExternalActivitiesController < ApplicationController
       @external_activity.save
     end
 
+    if params[:update_external_reports]
+      # set the external reports
+      @external_activity.external_report_ids= (params[:external_reports] || [])
+      @external_activity.save
+    end
+
     if request.xhr?
       if cancel || @external_activity.update_attributes(params[:external_activity])
         render :partial => 'shared/external_activity_header', :locals => { :external_activity => @external_activity }
