@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.feature 'Admin configures help page' do
+RSpec.feature 'Admin configures help page', :WebDriver => true do
   let (:authored_activity) {
     # find activity owned by author
     user = User.where(login: 'author').first

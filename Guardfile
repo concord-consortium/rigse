@@ -17,6 +17,7 @@ guard :rspec,
   spring: true,
   bundler: false,
   cli: "--color --format nested --fail-fast",
+  cmd: "bundle exec rspec --tag ~WebDriver",
   failed_mode: :none,
   all_after_pass: false,
   all_on_start: false    do

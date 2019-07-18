@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.feature 'Admin configures help page' do
+RSpec.feature 'Admin configures help page', :WebDriver => true do
   before do
     FactoryBot.create(:admin_settings)
     login_as('admin')
