@@ -3,10 +3,6 @@ class API::V1::JwtController < API::APIController
   require 'digest/md5'
   skip_before_filter :verify_authenticity_token
 
-  def platform_id
-    root_url.sub(/\/$/, "")
-  end
-
   def portal
     begin
       user, role = check_for_auth_token(params)
@@ -70,7 +66,7 @@ class API::V1::JwtController < API::APIController
         # Firebase auth rules expect all the claims to be in a sub-object named "claims".
         # All the new properties should go there. Other apps can still read them.
         :claims => {
-          :platform_id => platform_id,
+          :platform_id => platform_id, # see `application_controller.rb#platform_id`
           :platform_user_id => user.id,
           :user_type => "learner",
           :user_id => url_for(user),
@@ -99,7 +95,7 @@ class API::V1::JwtController < API::APIController
         # Firebase auth rules expect all the claims to be in a sub-object named "claims".
         # All the new properties should go there. Other apps can still read them.
         :claims => {
-          :platform_id => platform_id,
+          :platform_id => platform_id, # see `application_controller.rb#platform_id`
           :platform_user_id => user.id,
           :user_type => "teacher",
           :user_id => url_for(user),

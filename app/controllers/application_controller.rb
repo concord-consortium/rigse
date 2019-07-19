@@ -362,4 +362,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def platform_id
+    root_url.sub(/\/$/, "")
+  end
 end

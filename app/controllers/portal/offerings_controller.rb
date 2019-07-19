@@ -71,7 +71,7 @@ class Portal::OfferingsController < ApplicationController
              # platform_id and platform_user_id seems like duplicates of domain and domain_uid.
              # However, LARA uses domain and domain_uid to auth user, removes them from URI and performs redirect.
              # So, these params won't be available later to setup LARA run.
-             :platform_id => root_url,
+             :platform_id => platform_id, # see `application_controller.rb#platform_id`
              :platform_user_id => current_visitor.id,
              :resource_link_id => @offering.id
            }.to_query
