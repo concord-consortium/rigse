@@ -1,9 +1,9 @@
 
 namespace :ci do
+  require 'rspec/core/rake_task'
 
   if defined? Cucumber
     require 'cucumber/rake/task'
-
     # previously this also used `--tags ~@dialog ` to skip the dialog tests
     opts = %{--profile default --tags 'not @pending' --format progress}
     Cucumber::Rake::Task.new(:cucumber) do |t|
@@ -20,4 +20,7 @@ namespace :ci do
     end
   end
 
+  RSpec::Core::RakeTask.new(:spec_without_webdriver) do |t|
+    t.rspec_opts = "--tag ~WebDriver"
+  end
 end

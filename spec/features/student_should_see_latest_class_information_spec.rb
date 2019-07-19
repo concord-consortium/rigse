@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.feature 'Student should see latest class information' do
+RSpec.feature 'Student should see latest class information', :WebDriver => true do
   before do
     generate_default_settings_and_jnlps_with_factories
 

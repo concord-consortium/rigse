@@ -8,6 +8,7 @@ dist: trusty
 env:
   matrix:
   - RAILS_ENV=test TEST_SUITE=spec
+  - RAILS_ENV=test TEST_SUITE=ci:spec_without_webdriver
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_without_javascript
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_javascript
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_search
