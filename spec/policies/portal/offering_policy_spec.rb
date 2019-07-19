@@ -190,7 +190,7 @@ RSpec.describe Portal::OfferingPolicy do
       offering_policy = described_class.new(nil, nil)
       result = offering_policy.external_report?
 
-      expect(result).to be_nil
+      expect(result).to be_falsey
     end
   end
 
