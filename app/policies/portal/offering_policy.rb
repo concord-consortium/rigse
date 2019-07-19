@@ -72,8 +72,18 @@ class Portal::OfferingPolicy < ApplicationPolicy
   end
 
   def external_report?
-    class_teacher_or_admin? || (record.runnable.external_report && record.runnable.external_report.allowed_for_students && class_student?)
+    if class_teacher_or_admin?
+      true
+    else
+      class_student? &&
+      record &&
+      record.runnable &&
+      record.runnable.respond_to?(:external_report) &&
+      record.runnable.external_report &&
+      record.runnable.external_report.allowed_for_students
+    end
   end
+
 
   def offering_collapsed_status?
     teacher?
