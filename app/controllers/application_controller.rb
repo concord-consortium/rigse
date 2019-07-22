@@ -363,6 +363,7 @@ class ApplicationController < ActionController::Base
   end
 
   def platform_id
-    root_url.sub(/\/$/, "")
+    # Removes trailing slash from url if present.
+    (APP_CONFIG[:site_url] || "").gsub(/\/$/,"")
   end
 end
