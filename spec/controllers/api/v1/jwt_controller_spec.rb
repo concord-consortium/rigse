@@ -165,7 +165,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         expect(claims.user_type).to eq "teacher"
         expect(claims.user_id).to eq url_for_user
         expect(claims.class_hash).to eq nil
-        expect(claims.platform_id).to eq "http://test.host" # strips trailing "/"
+        expect(claims.platform_id).to eq "http://test.host/"
       end
 
       it "returns a valid JWT with teacher params with a class hash" do
