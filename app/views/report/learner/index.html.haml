@@ -10,8 +10,7 @@
 
 #form-container
 
-- external_reports = ExternalReport.where(report_type: ExternalReport::ResearcherReport).map { |r| {url: "#{r.url}", label: "#{r.launch_text}"} }.to_json
+- external_reports = ExternalReport.where(report_type: ExternalReport::ResearcherLearnerReport).map { |r| {url: "#{r.url}", label: "#{r.launch_text}"} }.to_json
 
 :javascript
   PortalPages.renderLearnerReportForm({externalReports: #{external_reports}}, "form-container")
-
