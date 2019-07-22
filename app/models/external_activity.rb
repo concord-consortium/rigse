@@ -327,10 +327,6 @@ class ExternalActivity < ActiveRecord::Base
     return external_reports.first
   end
 
-  def external_report=(report)
-    self.external_reports=[report]
-  end
-
   private
 
   def append_query(uri, query_str)

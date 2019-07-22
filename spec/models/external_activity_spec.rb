@@ -275,7 +275,7 @@ describe ExternalActivity do
       expect(activity.lara_activity?).to be false
     end
   end
- 
+
   # TODO: auto-generated
   describe '.published' do # scope test
     it 'supports named scope published' do
@@ -548,14 +548,6 @@ describe ExternalActivity do
       expect(activity.external_report).to eql activity.external_reports.first
     end
 
-    describe "legacy code behavior in `external_report=` method" do
-      it "should assign one and only one external_report to the external_activity" do
-        expect(activity).to be_valid
-        expect(activity.external_reports).to be_empty
-        activity.external_report=report_a
-        expect(activity.external_reports).to have(1).report
-      end
-    end
   end
 
 
