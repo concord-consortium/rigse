@@ -48,7 +48,8 @@ class CapybaraInitializer
       # driver_opts can be used to pass options to chromedriver, for example --log-level=DEBUG
       # this approach is deprecated though so you might need to use the newer approach
       # in the future
-      driver_opts: [] }.tap do |a|
+      # driver_opts: [ '--log-level=DEBUG']
+     }.tap do |a|
       a[:url] = 'http://host.docker.internal:9515/' if !headless? && docker?
     end
   end
