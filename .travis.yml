@@ -6,8 +6,8 @@ dist: trusty
 
 env:
   matrix:
-  - RAILS_ENV=test TEST_SUITE=spec
   - RAILS_ENV=test TEST_SUITE=ci:spec_without_webdriver
+  - RAILS_ENV=test TEST_SUITE=ci:spec_with_webdriver
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_without_javascript
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_javascript
   - RAILS_ENV=cucumber TEST_SUITE=ci:cucumber_search
@@ -54,7 +54,7 @@ jobs:
       install: skip
       script:
         - aws s3 sync "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER" coverage/
-        - ./cc-test-reporter sum-coverage -p 4 coverage/codeclimate.*.json
+        - ./cc-test-reporter sum-coverage -p 5 coverage/codeclimate.*.json
         - ./cc-test-reporter upload-coverage
       after_script:
         - aws s3 rm --recursive "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"
