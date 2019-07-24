@@ -20,6 +20,9 @@ namespace :ci do
     end
   end
 
+  RSpec::Core::RakeTask.new(:spec_with_webdriver) do |t|
+    t.rspec_opts = "--tag WebDriver"
+  end
   RSpec::Core::RakeTask.new(:spec_without_webdriver) do |t|
     t.rspec_opts = "--tag ~WebDriver"
   end
