@@ -43,14 +43,26 @@ class CapybaraInitializer
   end
 
   def driver_options
-    { browser: :chrome, desired_capabilities: capabilities }.tap do |a|
+    { browser: :chrome,
+      desired_capabilities: capabilities,
+      # driver_opts can be used to pass options to chromedriver, for example --log-level=DEBUG
+      # this approach is deprecated though so you might need to use the newer approach
+      # in the future
+      # driver_opts: [ '--log-level=DEBUG']
+     }.tap do |a|
       a[:url] = 'http://host.docker.internal:9515/' if !headless? && docker?
     end
   end
 
   def capabilities
     Selenium::WebDriver::Remote::Capabilities.chrome(
-      'chromeOptions' => {
+      # This used to be chromeOptions but when w3c standardized the webdriver interface
+      # they required the switch to goog:chromeOptions
+      # instead of defining this key explicitly it would be better to switch to using the
+      # Selenium::WebDriver::Chrome::Options abstraction.
+      # you can see capybara using it in some of its default drivers
+      # https://github.com/teamcapybara/capybara/blob/c7c22789b7aaf6c1515bf6e68f00bfe074cf8fc1/lib/capybara/registrations/drivers.rb#L27
+      'goog:chromeOptions' => {
         'args' => chrome_options
       }
     )
