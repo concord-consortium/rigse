@@ -55,7 +55,8 @@ class ActivityRuntimeAPI
         :is_locked              => hash["is_locked"]
       )
       self.setup_activity_template(external_activity, hash)
-      self.update_external_report(external_activity,hash["external_report_url"])
+      # 2019-07-12 NP: Lara no longer manages external reports ...
+      # self.update_external_report(external_activity,hash["external_report_url"])
     end
     return external_activity
   end
@@ -94,7 +95,10 @@ class ActivityRuntimeAPI
     ['author_email', 'is_locked', 'print_url', 'author_url', 'student_report_enabled'].each do |attribute|
       external_activity.update_attribute(attribute,hash[attribute])
     end
-    self.update_external_report(external_activity,hash["external_report_url"])
+
+    # 2019-07-12 NP: Lara no longer manages external reports ...
+    # self.update_external_report(external_activity,hash["external_report_url"])
+
     # save the embeddables
     mc_cache = {}
     or_cache = {}
@@ -151,7 +155,8 @@ class ActivityRuntimeAPI
         :is_locked              => hash["is_locked"]
       )
       self.setup_sequence_template(external_activity, hash)
-      self.update_external_report(external_activity, hash["external_report_url"])
+      # 2019-07-12 NP: Lara no longer manages external reports ...
+      # self.update_external_report(external_activity, hash["external_report_url"])
     end
     return external_activity
   end
@@ -199,7 +204,9 @@ class ActivityRuntimeAPI
       external_activity.update_attribute(attribute,hash[attribute]) if hash.has_key?(attribute)
     end
 
-    self.update_external_report(external_activity, hash["external_report_url"])
+    # 2019-07-12 NP: Lara no longer manages external reports ...
+    # self.update_external_report(external_activity, hash["external_report_url"])
+
     # save the embeddables
     mc_cache = {}
     or_cache = {}
@@ -473,14 +480,5 @@ class ActivityRuntimeAPI
     filters.each { |filter| filter.clear }
   end
 
-
-  def self.update_external_report(external_activity, report_url)
-    external_report = nil
-    if report_url
-      external_report = ExternalReport.find_by_url(report_url)
-    end
-    external_activity.external_report = external_report
-    external_activity.save
-  end
 
 end

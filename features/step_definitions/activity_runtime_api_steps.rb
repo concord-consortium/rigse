@@ -62,6 +62,9 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   if /domain_uid of '(.*)'/ =~ query_data["platform_user_id"]
     query_data["platform_user_id"] = User.find_by_login($~[1]).id.to_s
   end
+  if /site_url/ =~ query_data["platform_id"]
+    query_data["platform_id"] = APP_CONFIG[:site_url]
+  end
   if /class_info_url of '(.*)'/ =~ query_data["class_info_url"]
     query_data["class_info_url"] = Portal::Clazz.find_by_name($~[1]).class_info_url("http", "www.example.com")
   end

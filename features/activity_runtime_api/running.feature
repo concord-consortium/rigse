@@ -12,7 +12,7 @@ Feature: External Activities can support a REST api
       | returnUrl         | site_url/dataservice/external_activity_data/key |
       | class_info_url    | class_info_url of 'My Class' |
       | context_id        | class_hash of 'My Class'     |
-      | platform_id       | http://www.example.com/       |
+      | platform_id       | site_url                     |
       | platform_user_id  | domain_uid of 'student'      |
       | resource_link_id  | offering.id                  |
     And "activities.com/activity/1/sessions/" GET responds with

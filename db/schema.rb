@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190620172718) do
+ActiveRecord::Schema.define(:version => 20190711221406) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -518,7 +518,6 @@ ActiveRecord::Schema.define(:version => 20190620172718) do
     t.boolean  "is_locked"
     t.boolean  "logging",                                          :default => false
     t.boolean  "is_assessment_item",                               :default => false
-    t.integer  "external_report_id"
     t.text     "author_url"
     t.text     "print_url"
     t.boolean  "is_archived",                                      :default => false
@@ -541,6 +540,14 @@ ActiveRecord::Schema.define(:version => 20190620172718) do
   add_index "external_activities", ["save_path"], :name => "index_external_activities_on_save_path"
   add_index "external_activities", ["template_id", "template_type"], :name => "index_external_activities_on_template_id_and_template_type"
   add_index "external_activities", ["user_id"], :name => "index_external_activities_on_user_id"
+
+  create_table "external_activity_reports", :id => false, :force => true do |t|
+    t.integer "external_activity_id"
+    t.integer "external_report_id"
+  end
+
+  add_index "external_activity_reports", ["external_activity_id", "external_report_id"], :name => "activity_reports_activity_index"
+  add_index "external_activity_reports", ["external_report_id"], :name => "activity_reports_index"
 
   create_table "external_reports", :force => true do |t|
     t.string   "url"

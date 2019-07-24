@@ -88,10 +88,21 @@ class API::V1::Offering
   attribute :material_type, String
   attribute :report_url, String
   attribute :preview_url, String
+  # 2019-07-16 NP:  TODO: deprecate `external_report` in favor of `external_reports`
   attribute :external_report, Hash
+  attribute :external_reports, Array
   attribute :reportable, Boolean
   attribute :reportable_activities, Array
   attribute :students, Array[OfferingStudent]
+
+  def report_attributes(report, offering, protocol, host_with_port)
+    {
+      id: report.id,
+      name: report.name,
+      url: portal_external_report_url(id: offering.id, report_id: report.id, protocol: protocol, host: host_with_port),
+      launch_text: report.launch_text
+    }
+  end
 
   def initialize(offering, protocol, host_with_port, current_user)
     runnable = offering.runnable
@@ -106,13 +117,15 @@ class API::V1::Offering
     self.reportable = offering.reportable?
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
     self.preview_url = run_url_for(runnable, preview_params(current_user, {protocol: protocol, host: host_with_port}))
+    # 2019-07-16 NP:  TODO: deprecate `external_report` in favor of `external_reports`
     if runnable.respond_to?(:external_report) && runnable.external_report
-      self.external_report =  {
-        id: runnable.external_report.id,
-        name: runnable.external_report.name,
-        url: portal_external_report_url(id: offering.id, report_id: runnable.external_report.id, protocol: protocol, host: host_with_port),
-        launch_text: runnable.external_report.launch_text
-      }
+      self.external_report = report_attributes(runnable.external_report, offering, protocol, host_with_port)
+    end
+    self.external_reports = []
+    if runnable.respond_to?(:external_reports) && runnable.external_reports
+      runnable.external_reports.each do |report|
+        self.external_reports << report_attributes(report, offering, protocol, host_with_port)
+      end
     end
     if offering.reportable?
       # Cache feedback activity objects and pass them to student model.
