@@ -326,7 +326,7 @@ Feature: External Activities can support a REST publishing api
       | print_url       | http://activity.com/activity/1/print_blank |
     And the external activity should not have any description set
     And the external activity should have a template
-    And the external activity should have a external report at "https://reports.concord.org/act"
+    And the external activity should not have an external report
     And the portal should create an activity with the following attributes:
       | name            | Cool Activity |
     And the portal should create a section with the following attributes:
@@ -347,15 +347,13 @@ Feature: External Activities can support a REST publishing api
   Scenario: External REST activity is published the second time
     Given the external runtime published the activity "Fun Stuff" before
     When the external runtime publishes the activity "Fun Stuff" again
-    Then the published activity "Fun Stuff" should be correctly modified by the API
-    And the portal should create an external activity with the following attributes:
+    Then the portal should create an external activity with the following attributes:
       | name            | Cool Activity |
       | url             | http://activity.com/activity/1 |
       | launch_url      | http://activity.com/activity/1/sessions/ |
       | author_url      | http://activity.com/activity/1/edit_new |
       | print_url       | http://activity.com/activity/1/print_blank_new |
-      | description     | This description is still provided by LARA but it should be ignored! |
-    And the external activity should have a external report at "https://reports.concord.org/act/changed"
+    And the external activity should not have an external report
     And the external activity should not have any description set
 
   @mechanize
@@ -369,7 +367,7 @@ Feature: External Activities can support a REST publishing api
       | author_url      | http://activity.com/sequence/1/edit |
       | print_url       | http://activity.com/sequence/1/print_blank |
     And the external activity should have a template
-    And the external activity should have a external report at "https://reports.concord.org/seq"
+    And the external activity should not have an external report
     And the portal should create an investigation with the following attributes:
       | name            | Many fun things |
     And the portal should create an activity with the following attributes:
@@ -391,10 +389,9 @@ Feature: External Activities can support a REST publishing api
   Scenario: External REST sequence is published the second time
     Given the external runtime published the sequence "Many fun things" before
     When the external runtime publishes the sequence "Many fun things" again
-    Then the published activity "Many fun things" should be correctly modified by the API
-    And the portal should create an external activity with the following attributes:
-      | name            | Many fun things |
+    Then the portal should create an external activity with the following attributes:
+      | name            | This has a different name |
       | launch_url      | http://activity.com/sequence/1 |
       | author_url      | http://activity.com/sequence/1/edit_new |
       | print_url       | http://activity.com/sequence/1/print_blank_new |
-    And the external activity should have a external report at "https://reports.concord.org/seq/changed"
+    And the external activity should not have an external report

@@ -24,22 +24,21 @@ class API::V1::ExternalActivitiesController < API::APIController
       return error("Invalid url", 422)
     end
 
-    external_report_id = 0
-    if params[:external_report_url]
-      external_report = ExternalReport.find_by_url(params[:external_report_url])
-      if external_report
-        external_report_id = external_report.id
-      end
-    end
-
     external_activity = ExternalActivity.create(
       :name               => name,
       :url                => url,
       :publication_status => params[:publication_status] || "private",
       :user               => user,
-      :append_auth_token  => params[:append_auth_token] || false,
-      :external_report_id => external_report_id
+      :append_auth_token  => params[:append_auth_token] || false
     )
+
+    if params[:external_report_url]
+      external_report = ExternalReport.find_by_url(params[:external_report_url])
+      if external_report
+        external_activity.external_reports=[external_report]
+        external_activity.save
+      end
+    end
 
     if !external_activity.valid?
       return error("Unable to create external activity", 422)

@@ -258,7 +258,7 @@ describe API::V1::OfferingsController do
 
       before (:each) do
         sign_in teacher.user
-        runnable.external_report = external_report
+        runnable.external_reports = [ external_report ] 
         runnable.save
       end
       it "returns information about external report" do

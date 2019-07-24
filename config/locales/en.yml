@@ -65,7 +65,7 @@ en:
     source_type_label: Source Type
     material_type_description: Users can see the type of material in various places, use this field to change that type
     external_report_label: External Reporting
-    external_report_description: Specify and alternate report link to be shown to teachers in the offering view. Unless you know what you are doing 'none' is recommended.
+    external_report_description: Specify additional report links to be shown to teachers in the offering view. Unless you know what you are doing selecting none is recommended.
     report_client: Report Auth Client
     rubric_url_label: Rubric (URL)
     short_description_description: Shown in search results, student listings, and used as a fallback for long descrption. It is recommended that every activity has this value provided.

@@ -5,7 +5,9 @@ class ExternalReport < ActiveRecord::Base
   ResearcherReport = 'researcher'
   ReportTypes = [OfferingReport, ClassReport, ResearcherReport]
   belongs_to :client
-  has_many :external_activities
+  has_many :external_activity_reports
+  has_many :external_activities, through: :external_activity_reports
+
   attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type, :allowed_for_students
 
   ReportTokenValidFor = 2.hours

@@ -135,9 +135,8 @@ Given /^the external runtime published the (activity|sequence) "([^"]*)" before$
   end
 end
 
-Then(/^the (.*) should have a external report at "(.*)"$/) do |ignored_param, report_url|
-  expect(@external_activity.external_report).not_to be_nil
-  expect(@external_activity.external_report.url).to eq(report_url)
+Then(/^the (.*) should not have an external report$/) do |ignored_param|
+  expect(@external_activity.external_report).to be_nil
 end
 
 Then(/^the external activity should not have any description set/) do
@@ -149,4 +148,3 @@ end
 Given(/^an external_report with the URL "(.*?)"$/) do | report_url|
   ExternalReport.create(url:report_url)
 end
-
