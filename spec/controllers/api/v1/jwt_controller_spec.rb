@@ -144,24 +144,28 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     end
 
     context "when a valid authentication header token is sent with a teacher" do
+      let(:application_url) { "http://test.host/" }
       before(:each) {
         set_auth_token(teacher_token)
         FirebaseApp.create!(firebase_app_attributes)
       }
 
       it "returns a valid JWT with teacher params without a class hash" do
+        allow(APP_CONFIG).to receive(:[]).and_call_original
+        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(application_url)
         post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
-
         body = JSON.parse(response.body)
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-
-        expect(decoded_token[:data]["uid"]).to eql uid
-        expect(decoded_token[:data]["domain"]).to eql root_url
-        expect(decoded_token[:data]["claims"]["user_type"]).to eq "teacher"
-        expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
-        expect(decoded_token[:data]["claims"]["class_hash"]).to eq nil
+        data = OpenStruct.new decoded_token[:data]
+        claims = OpenStruct.new data.claims
+        expect(data.uid).to eql uid
+        expect(data.domain).to eql root_url
+        expect(claims.user_type).to eq "teacher"
+        expect(claims.user_id).to eq url_for_user
+        expect(claims.class_hash).to eq nil
+        expect(claims.platform_id).to eq "http://test.host/"
       end
 
       it "returns a valid JWT with teacher params with a class hash" do

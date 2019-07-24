@@ -68,10 +68,12 @@ class Portal::OfferingsController < ApplicationController
              :domain_uid => current_visitor.id,
              :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
              :context_id => @offering.clazz.class_hash,
-             # platform_id and platform_user_id seems like duplicates of domain and domain_uid.
-             # However, LARA uses domain and domain_uid to auth user, removes them from URI and performs redirect.
-             # So, these params won't be available later to setup LARA run.
-             :platform_id => root_url,
+             # platform_id and platform_user_id are similiar to domain and domain_uid.
+             # However, LARA uses domain and domain_uid to authenticate the user,
+             # while the platform params are moving towards LTI compatible launching
+             # More specifically LARA removes domain and domain_uid from URL,
+             # so it is harder to use the domain params to setup the run in LARA.
+             :platform_id => APP_CONFIG[:site_url],
              :platform_user_id => current_visitor.id,
              :resource_link_id => @offering.id
            }.to_query
