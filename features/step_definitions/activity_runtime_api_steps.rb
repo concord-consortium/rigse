@@ -53,15 +53,23 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   query_data["externalId"] = query_data["externalId"].sub(/999/,"#{@learner.id}")
   query_data["returnUrl"] = query_data["returnUrl"].sub(/site_url/,APP_CONFIG[:site_url])
   query_data["returnUrl"] = query_data["returnUrl"].sub(/key/,"#{@learner.secure_key}")
+  
+  query_data["resource_link_id"] = query_data["resource_link_id"].sub(/offering.id/,@learner.offering.id.to_s)
   # replace domain_uid by user id if it has the pattern "domain_uid of 'login'"
   if /domain_uid of '(.*)'/ =~ query_data["domain_uid"]
     query_data["domain_uid"] = User.find_by_login($~[1]).id.to_s
+  end
+  if /domain_uid of '(.*)'/ =~ query_data["platform_user_id"]
+    query_data["platform_user_id"] = User.find_by_login($~[1]).id.to_s
   end
   if /class_info_url of '(.*)'/ =~ query_data["class_info_url"]
     query_data["class_info_url"] = Portal::Clazz.find_by_name($~[1]).class_info_url("http", "www.example.com")
   end
   if /class_hash of '(.*)'/ =~ query_data["class_hash"]
     query_data["class_hash"] = Portal::Clazz.find_by_name($~[1]).class_hash
+  end
+  if /class_hash of '(.*)'/ =~ query_data["context_id"]
+    query_data["context_id"] = Portal::Clazz.find_by_name($~[1]).class_hash
   end
   stub.with(:query => query_data)
 end
