@@ -12,7 +12,6 @@ class CreateExternalActivitiesReportsTable < ActiveRecord::Migration
     add_index :external_activity_reports,
       :external_report_id,
       name: "activity_reports_index"
-    move_external_reports_to_join_table
   end
 
   def down
