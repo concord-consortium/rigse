@@ -3,7 +3,7 @@
   = field_set_tag t('authoring.external_report_label') do
     .aligned
       = hidden_field_tag :update_external_reports, "true"
-      - ExternalReport.where('report_type !=?', ExternalReport::ResearcherReport).each do | external_report |
+      - ExternalReport.where(report_type: [ExternalReport::OfferingReport, ExternalReport::ClassReport]).each do | external_report |
         %div
           = check_box_tag "external_reports[]", external_report.id, object.external_report_ids.include?(external_report.id), :id => external_report.id
           = label_tag external_report.name, external_report.name

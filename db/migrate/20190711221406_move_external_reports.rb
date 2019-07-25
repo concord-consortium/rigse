@@ -1,20 +1,19 @@
-
-class ExternalReport < ActiveRecord::Base
-end
-
-class ExternalActivityReport < ActiveRecord::Base
-  belongs_to :external_activity
-  belongs_to :external_report
-end
-
-class  ExternalActivity  < ActiveRecord::Base
-  belongs_to :external_report
-  has_many :external_activity_reports
-  has_many :external_reports, through: :external_activity_reports
-end
-
-
 class MoveExternalReports < ActiveRecord::Migration
+
+  class ExternalReport < ActiveRecord::Base
+  end
+
+  class ExternalActivityReport < ActiveRecord::Base
+    belongs_to :external_activity
+    belongs_to :external_report
+  end
+
+  class  ExternalActivity  < ActiveRecord::Base
+    belongs_to :external_report
+    has_many :external_activity_reports
+    has_many :external_reports, through: :external_activity_reports
+  end
+
 
   def up_activity(a)
     if(a.external_report)

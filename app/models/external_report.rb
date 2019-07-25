@@ -2,8 +2,9 @@ class ExternalReport < ActiveRecord::Base
 
   OfferingReport = 'offering'
   ClassReport = 'class'
-  ResearcherReport = 'researcher'
-  ReportTypes = [OfferingReport, ClassReport, ResearcherReport]
+  ResearcherLearnerReport = 'researcher-learner'
+  ResearcherUserReport = 'researcher-user'
+  ReportTypes = [OfferingReport, ClassReport, ResearcherLearnerReport, ResearcherUserReport]
   belongs_to :client
   has_many :external_activity_reports
   has_many :external_activities, through: :external_activity_reports
