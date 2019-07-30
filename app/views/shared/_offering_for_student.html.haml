@@ -50,17 +50,16 @@
                     - else
                       %td.label=activity.name
 
-              %span.lightbox_report_link
-                - if student_status.display_report_link?
+              - if student_status.display_report_link?
+                %span.lightbox_report_link
                   - if percentage > 99
                     =link_to t("StudentProgress.GenerateReport.Done"), student_report_portal_offering_url(offering), target: "_blank"
                   - else
                     =link_to t("StudentProgress.GenerateReport.NotDone"), student_report_portal_offering_url(offering)
-                  %br
+                %br
 
-              - external_report = offering.runnable.external_report
-              - if external_report.present? && external_report.allowed_for_students
+              - external_reports = offering.runnable.external_reports.where(allowed_for_students: true)
+              - external_reports.each do |external_report|
                 %span.lightbox_report_link
                   = link_to external_report.launch_text, portal_external_report_url(id: offering.id, report_id: external_report.id), target: "_blank"
-
-
+                %br
