@@ -78,9 +78,10 @@ class Portal::OfferingPolicy < ApplicationPolicy
       class_student? &&
       record &&
       record.runnable &&
-      record.runnable.respond_to?(:external_report) &&
-      record.runnable.external_report &&
-      record.runnable.external_report.allowed_for_students
+      record.runnable.respond_to?(:external_reports) &&
+      params[:report_id] &&
+      (report = record.runnable.external_reports.find(params[:report_id])) &&
+      report.allowed_for_students
     end
   end
 
