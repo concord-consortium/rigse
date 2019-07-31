@@ -184,13 +184,62 @@ RSpec.describe Portal::OfferingPolicy do
     end
   end
 
-  # TODO: auto-generated
   describe '#external_report?' do
-    it 'external_report?' do
-      offering_policy = described_class.new(nil, nil)
-      result = offering_policy.external_report?
+    let(:report) {
+      FactoryBot.create(:external_report)
+    }
+    let(:context) {
+      double(
+        user: user,
+        original_user: nil,
+        request: nil,
+        params: {
+          report_id: report.id
+          })
+    }
+    let (:offering) {
+      FactoryBot.create(:portal_offering,
+        runnable: FactoryBot.create(:external_activity))
+    }
 
-      expect(result).to be_falsey
+    subject {
+      # make sure the report of the offering is our report
+      offering.runnable.external_reports << report
+      offering_policy = described_class.new(context, offering)
+      offering_policy.external_report?
+    }
+    context 'user is not part of clazz or admin' do
+      it { is_expected.to be_falsey }
+    end
+    context 'user is a teacher of offering clazz' do
+      let(:user) {
+        teacher = FactoryBot.create(:portal_teacher, :clazzes => [offering.clazz])
+        teacher.user
+      }
+      it { is_expected.to be_truthy }
+    end
+    context 'user is a teacher of a different clazz' do
+      let(:user) {
+        clazz = FactoryBot.create(:portal_clazz)
+        teacher = FactoryBot.create(:portal_teacher, :clazzes => [clazz])
+        teacher.user
+      }
+      it { is_expected.to be_falsey }
+    end
+    context 'user is a student in the clazz' do
+      let(:user) {
+        student = FactoryBot.create(:full_portal_student, :clazzes => [offering.clazz])
+        student.user
+      }
+      context 'report is not allowed for students' do
+        it { is_expected.to be_falsey }
+      end
+      context 'report is allowed for students' do
+        let(:report) {
+          FactoryBot.create(:external_report, allowed_for_students: true)
+        }
+        it { is_expected.to be_truthy }
+      end
     end
   end
 
