@@ -293,15 +293,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#alternate_report_link_for' do
-    it 'works' do
-      result = helper.alternate_report_link_for(FactoryBot.create(:portal_offering))
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#activation_toggle_link_for' do
     xit 'works' do
       result = helper.activation_toggle_link_for('activatable', 'action', 'link_text', 'title')
