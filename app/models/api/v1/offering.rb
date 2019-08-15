@@ -87,6 +87,7 @@ class API::V1::Offering
   attribute :activity_url, String
   attribute :material_type, String
   attribute :report_url, String
+  attribute :rubric_url, String
   attribute :preview_url, String
   # 2019-07-16 NP:  TODO: deprecate `external_report` in favor of `external_reports`
   attribute :external_report, Hash
@@ -115,6 +116,7 @@ class API::V1::Offering
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.material_type = runnable.material_type
     self.reportable = offering.reportable?
+    self.rubric_url = runnable.respond_to?(:rubric_url) ? runnable.rubric_url : nil
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
     self.preview_url = run_url_for(runnable, preview_params(current_user, {protocol: protocol, host: host_with_port}))
     # 2019-07-16 NP:  TODO: deprecate `external_report` in favor of `external_reports`
