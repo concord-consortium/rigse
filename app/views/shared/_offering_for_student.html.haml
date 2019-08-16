@@ -59,6 +59,9 @@
                 %br
 
               - external_reports = offering.runnable.external_reports.where(allowed_for_students: true)
+              - if params[:add_external_report]
+                - additional_report = ExternalReport.find_by_id(params[:add_external_report])
+                - external_reports << additional_report if additional_report && additional_report.allowed_for_students
               - external_reports.each do |external_report|
                 %span.lightbox_report_link
                   = link_to external_report.launch_text, portal_external_report_url(id: offering.id, report_id: external_report.id), target: "_blank"
