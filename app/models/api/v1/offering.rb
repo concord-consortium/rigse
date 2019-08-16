@@ -131,9 +131,7 @@ class API::V1::Offering
     end
     if additional_external_report_id
       additional_report = ExternalReport.find_by_id(additional_external_report_id)
-      puts "additional"
       if additional_report
-        puts "additional found"
         self.external_reports << report_attributes(additional_report, offering, protocol, host_with_port)
       end
     end
