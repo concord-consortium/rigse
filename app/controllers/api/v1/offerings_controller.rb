@@ -68,7 +68,7 @@ class API::V1::OfferingsController < API::APIController
 
     filtered_offerings = offerings.reject { |o| o.archived? }
     filtered_offerings = filtered_offerings.map do |offering|
-      API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user)
+      API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report])
     end
     render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
