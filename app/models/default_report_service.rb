@@ -21,7 +21,9 @@ class DefaultReportService
     [
       [DefaultReportDeprecatedApiName, DefaultReportDeprecatedApiKey],
       [DefaultReportName, DefaultReportKey]
-    ] + ExternalReport.where(report_type: "offering").map { |er| [er.name, external_report_key(er)] }
+    ] + ExternalReport
+      .where("(report_type = 'offering' OR report_type = 'deprecated-report') AND allowed_for_students = true")
+      .map { |er| [er.name, external_report_key(er)] }
   end
 
   def self.load_env(varname)
