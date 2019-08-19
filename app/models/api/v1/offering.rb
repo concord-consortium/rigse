@@ -105,7 +105,7 @@ class API::V1::Offering
     }
   end
 
-  def initialize(offering, protocol, host_with_port, current_user)
+  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id)
     runnable = offering.runnable
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
@@ -129,6 +129,13 @@ class API::V1::Offering
         self.external_reports << report_attributes(report, offering, protocol, host_with_port)
       end
     end
+    if additional_external_report_id
+      additional_report = ExternalReport.find_by_id(additional_external_report_id)
+      if additional_report
+        self.external_reports << report_attributes(additional_report, offering, protocol, host_with_port)
+      end
+    end
+
     if offering.reportable?
       # Cache feedback activity objects and pass them to student model.
       activity_feedbacks = {}
