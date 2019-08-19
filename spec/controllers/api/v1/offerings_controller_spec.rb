@@ -258,16 +258,34 @@ describe API::V1::OfferingsController do
 
       before (:each) do
         sign_in teacher.user
-        runnable.external_reports = [ external_report ] 
+        runnable.external_reports = [ external_report ]
         runnable.save
       end
+
       it "returns information about external report" do
         get :show, id: offering.id
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
-        expect(json["external_report"]).not_to eq nil
-        expect(json["external_report"]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report.id, host: 'test.host')
-        expect(json["external_report"]["launch_text"]).to eq external_report.launch_text
+        expect(json["external_reports"][0]).not_to eq nil
+        expect(json["external_reports"][0]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report.id, host: 'test.host')
+        expect(json["external_reports"][0]["launch_text"]).to eq external_report.launch_text
+      end
+    end
+
+    describe "when add_external_report parameter is provided" do
+      let (:external_report) { FactoryBot.create(:external_report) }
+
+      before (:each) do
+        sign_in teacher.user
+      end
+
+      it "adds this report to the external_reports list" do
+        get :show, id: offering.id, add_external_report: external_report.id
+        expect(response.status).to eq 200
+        json = JSON.parse(response.body)
+        expect(json["external_reports"][0]).not_to eq nil
+        expect(json["external_reports"][0]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report.id, host: 'test.host')
+        expect(json["external_reports"][0]["launch_text"]).to eq external_report.launch_text
       end
     end
   end
