@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190725145120) do
+ActiveRecord::Schema.define(:version => 20190819133916) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -135,8 +135,8 @@ ActiveRecord::Schema.define(:version => 20190725145120) do
     t.integer  "user_id"
     t.text     "description",                    :limit => 16777215
     t.string   "uuid",                           :limit => 36
-    t.datetime "created_at",                                                                         :null => false
-    t.datetime "updated_at",                                                                         :null => false
+    t.datetime "created_at",                                                                               :null => false
+    t.datetime "updated_at",                                                                               :null => false
     t.text     "home_page_content",              :limit => 16777215
     t.boolean  "use_student_security_questions",                     :default => false
     t.boolean  "allow_default_class"
@@ -164,6 +164,7 @@ ActiveRecord::Schema.define(:version => 20190725145120) do
     t.string   "custom_search_path",                                 :default => "/search"
     t.string   "teacher_home_path",                                  :default => "/getting_started"
     t.text     "about_page_content",             :limit => 16777215
+    t.string   "default_report_service",                             :default => "default-deprecated-api"
   end
 
   create_table "admin_site_notice_roles", :force => true do |t|

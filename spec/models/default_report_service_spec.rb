@@ -26,10 +26,10 @@ RSpec.describe DefaultReportService do
   end
 
   # TODO: auto-generated
-  describe '#reportViewUrl' do
-    it 'reportViewUrl' do
+  describe '#report_view_url' do
+    it 'report_view_url' do
       default_report_service = described_class.new
-      result = default_report_service.reportViewUrl
+      result = default_report_service.report_view_url
 
       expect(result).not_to be_nil
     end

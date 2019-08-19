@@ -52,6 +52,11 @@
                   = admin_settings.default_cohort ? admin_settings.default_cohort.fullname : 'none'
                 (New teachers will be automatically added to this cohort.)
               %li
+                Default Report Service:
+                %b
+                  = DefaultReportService.new.name
+                (Report service that can be launched by teachers and students using "Report" button.)
+              %li
                 Grade Levels for Classes:
                 %b
                   - if admin_settings.enable_grade_levels?
