@@ -39,6 +39,7 @@ class ExternalReport < ActiveRecord::Base
       # Deprecated, default report service that was provided by Portal. Pretty similar to offering report,
       # but it uses different API (Report API) and different set of launch URL parameters.
       report_url_extra_params = {}
+      # Note that depreciated report expects ID of the Student model (not ID of the User model).
       if additional_params[:student_id]
         report_url_extra_params[:student_ids] = [ additional_params[:student_id] ]
       end
@@ -58,8 +59,9 @@ class ExternalReport < ActiveRecord::Base
         token:          grant.access_token,
         username:       user.login
       }
-      if additional_params[:student_id]
-        params[:studentId] = additional_params[:student_id]
+      # Note that new reports expect ID of the User model (not ID of the Student model).
+      if additional_params[:student_user_id]
+        params[:studentId] = additional_params[:student_user_id]
       end
       if additional_params[:activity_id]
         params[:activityId] = additional_params[:activity_id]

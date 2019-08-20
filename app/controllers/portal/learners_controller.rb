@@ -112,7 +112,9 @@ class Portal::LearnersController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     report = DefaultReportService::default_report_for_offering(offering)
-    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_id: student_id, activity_id: params[:activity_id] })
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port,
+      { student_user_id: portal_learner.student.user_id, student_id: student_id, activity_id: params[:activity_id] }
+    )
     redirect_to next_url
   end
 
