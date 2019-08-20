@@ -27,4 +27,11 @@
           Allowed for Students:
           = f.check_box :allowed_for_students
           %p If the report type is 'offering', then students will see a button to open the report.
+        %li
+          Default report for source type:
+          = f.select :default_report_for_source_type, ExternalActivity::SOURCE_TYPE_OPTIONS
+          %p
+            If the report type is 'offering' or 'deprecated-report', and report is allowed for students, it can be used
+            as a default report for a given activity source type. If another report is already marked as a default one,
+            it will be automatically unselected.
       = submit_tag

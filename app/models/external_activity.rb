@@ -1,6 +1,13 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
 
+  # Possible options for source type attribute. For now it's hardcoded. In the future, we might change
+  # that to entities living in a database, so it's easier to add new source types.
+  SOURCE_TYPE_OPTIONS = [
+    ["none", nil],
+    ["LARA", "LARA"]
+  ]
+
   #
   # see https://github.com/sunspot/sunspot/blob/master/README.md
   #
