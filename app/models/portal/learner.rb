@@ -2,15 +2,15 @@ class Portal::Learner < ActiveRecord::Base
   include Rails.application.routes.url_helpers
 
   self.table_name = :portal_learners
-  
+
   default_scope { order('portal_learners.student_id ASC') }
-  
+
   acts_as_replicatable
-  
+
   belongs_to :student, :class_name => "Portal::Student", :foreign_key => "student_id"
   belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id",
     :inverse_of => :learners
-  
+
   belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
   belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
   has_one    :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger", :foreign_key => "learner_id", :dependent => :destroy
@@ -21,9 +21,9 @@ class Portal::Learner < ActiveRecord::Base
       all.select { |question| question.answered? }
     end
   end
-  
+
   has_many :learner_activities, :dependent => :destroy , :class_name => "Report::LearnerActivity"
-  
+
   has_many :image_questions, :dependent => :destroy, :class_name => "Saveable::ImageQuestion" do
     def answered
       all.select { |question| question.answered? }
@@ -95,14 +95,14 @@ class Portal::Learner < ActiveRecord::Base
     create_bundle_logger
     create_periodic_bundle_logger
   end
-  
+
   # validates_presence_of :console_logger, :message => "console_logger association not specified"
   # validates_presence_of :bundle_logger,  :message => "bundle_logger association not specified"
 
   validates_presence_of :student,  :message => "student association not specified"
   validates_presence_of :offering, :message => "offering association not specified"
 
-  # 
+  #
   # before_save do |learner|
   #   learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
   #   learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
@@ -113,11 +113,11 @@ class Portal::Learner < ActiveRecord::Base
   # pagination default
   cattr_reader :per_page
   @@per_page = 10
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{updated_at}
-  
+
   class <<self
     def searchable_attributes
       @@searchable_attributes
@@ -137,7 +137,7 @@ class Portal::Learner < ActiveRecord::Base
     end
 
   end
-  
+
   # for the view system ...
   def user
     student.user
@@ -150,7 +150,7 @@ class Portal::Learner < ActiveRecord::Base
     # runnable_name = (offering ? offering.runnable.name : "invalid offering runnable")
     # "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
   end
-  
+
   def saveable_count
     runnable = self.offering.runnable
     runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
@@ -159,7 +159,7 @@ class Portal::Learner < ActiveRecord::Base
       count + self.send(saveable_association).length
     end
   end
-  
+
   def saveable_answered
     runnable = self.offering.runnable
     runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
@@ -168,7 +168,7 @@ class Portal::Learner < ActiveRecord::Base
       count + self.send(saveable_association).send(:answered).length
     end
   end
-  
+
   def refresh_saveable_response_objects
     # runnable = self.offering.runnable
     # runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
@@ -190,7 +190,7 @@ class Portal::Learner < ActiveRecord::Base
   end
 
   def reportable?
-    offering.individual_reportable?
+    offering.individual_student_reportable?
   end
 
   def remote_endpoint_path

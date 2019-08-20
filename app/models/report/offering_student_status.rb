@@ -23,7 +23,7 @@ class Report::OfferingStudentStatus
   end
 
   def offering_reportable?
-    (offering && offering.individual_reportable?)
+    (offering && offering.individual_student_reportable?)
   end
 
   # this is redundant with the Report::Learner object, but that object doesn't handle

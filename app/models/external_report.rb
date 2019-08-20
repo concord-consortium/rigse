@@ -10,7 +10,8 @@ class ExternalReport < ActiveRecord::Base
   has_many :external_activity_reports
   has_many :external_activities, through: :external_activity_reports
 
-  attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type, :allowed_for_students, :default_report_for_source_type
+  attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type, :allowed_for_students,
+    :default_report_for_source_type, :individual_student_reportable, :individual_activity_reportable
 
   ReportTokenValidFor = 2.hours
 
@@ -23,7 +24,7 @@ class ExternalReport < ActiveRecord::Base
   end
 
   # Return a the external_report url and the short-lived bearer token for the user.
-  def url_for_offering(offering, user, activity_id, protocol, host)
+  def url_for_offering(offering, user, protocol, host, additional_params = {})
     grant = client.updated_grant_for(user, ReportTokenValidFor)
     if user.portal_teacher
       grant.teacher = user.portal_teacher
@@ -37,8 +38,15 @@ class ExternalReport < ActiveRecord::Base
     if report_type === DeprecatedReport
       # Deprecated, default report service that was provided by Portal. Pretty similar to offering report,
       # but it uses different API (Report API) and different set of launch URL parameters.
+      report_url_extra_params = {}
+      if additional_params[:student_id]
+        report_url_extra_params[:student_ids] = [ additional_params[:student_id] ]
+      end
+      if additional_params[:activity_id]
+        report_url_extra_params[:activity_id] = additional_params[:activity_id]
+      end
       params = {
-        reportUrl: routes.api_v1_report_url(offering.id, url_options.merge({activity_id: activity_id})),
+        reportUrl: routes.api_v1_report_url(offering.id, url_options.merge(report_url_extra_params)),
         token: grant.access_token
       }
     else
@@ -48,9 +56,14 @@ class ExternalReport < ActiveRecord::Base
         classOfferings: routes.api_v1_offerings_url(url_options.merge(class_id: class_id)),
         class:          routes.api_v1_class_url(class_id, url_options),
         token:          grant.access_token,
-        username:       user.login,
-        activity_id:    activity_id
+        username:       user.login
       }
+      if additional_params[:student_id]
+        params[:studentId] = additional_params[:student_id]
+      end
+      if additional_params[:activity_id]
+        params[:activityId] = additional_params[:activity_id]
+      end
     end
 
     if allowed_for_students && user.portal_student

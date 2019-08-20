@@ -146,8 +146,14 @@ class Portal::Offering < ActiveRecord::Base
     has_default_report?
   end
 
-  def individual_reportable?
-    has_default_report?
+  def individual_student_reportable?
+    report = DefaultReportService::default_report_for_offering(self)
+    report && report.individual_student_reportable
+  end
+
+  def individual_activity_reportable?
+    report = DefaultReportService::default_report_for_offering(self)
+    report && report.individual_activity_reportable
   end
 
   def student_report_enabled?

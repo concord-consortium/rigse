@@ -190,9 +190,8 @@ class Portal::OfferingsController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     student_id = current_visitor.portal_student.id
-    report = DefaultReportService.instance
-    offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
-    next_url = report.url_for(offering_api_url, current_visitor)
+    report = DefaultReportService::default_report_for_offering(offering)
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_id: student_id })
     redirect_to next_url
   end
 
@@ -203,7 +202,7 @@ class Portal::OfferingsController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     report = DefaultReportService::default_report_for_offering(offering)
-    next_url = report.url_for_offering(offering, current_visitor, activity_id, request.protocol, request.host_with_port)
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { activity_id: activity_id })
     redirect_to next_url
   end
 
@@ -214,7 +213,7 @@ class Portal::OfferingsController < ApplicationController
     authorize offering
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    next_url = report.url_for_offering(offering, current_visitor, activity_id, request.protocol, request.host_with_port)
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { activity_id: activity_id })
     redirect_to next_url
   end
 

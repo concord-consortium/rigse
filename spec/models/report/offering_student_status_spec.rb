@@ -9,14 +9,14 @@ describe Report::OfferingStudentStatus do
     end
     let(:offering) {nil }
 
-    subject do 
+    subject do
       @run_date = Date.new(1970,12,23)
       status = Report::OfferingStudentStatus.new
       status.learner = learner
       status.offering = offering
       status
     end
-    
+
     describe "last_run" do
       describe '#last_run' do
         subject { super().last_run }
@@ -29,7 +29,7 @@ describe Report::OfferingStudentStatus do
       context "when the offering isn't reportable" do
         let :offering do
           _offering = Object.new
-          allow(_offering).to receive(:individual_reportable?).and_return(false)
+          allow(_offering).to receive(:individual_student_reportable?).and_return(false)
           _offering
         end
 
@@ -41,7 +41,7 @@ describe Report::OfferingStudentStatus do
       context "when the offering is reportable" do
         let :offering do
           _offering = Object.new
-          allow(_offering).to receive(:individual_reportable?).and_return(true)
+          allow(_offering).to receive(:individual_student_reportable?).and_return(true)
           _offering
         end
         context "without a complete_percent in report_learner" do
@@ -55,7 +55,7 @@ describe Report::OfferingStudentStatus do
             subject { super().complete_percent }
             it {is_expected.to eq(0)}
           end
-      
+
         end
         context "with a 50% complete_percent in report_learner" do
           let :learner do
@@ -89,12 +89,12 @@ describe Report::OfferingStudentStatus do
 
 
   context "without a learner" do
-    subject do      
+    subject do
       status = Report::OfferingStudentStatus.new
       status.learner = nil
       status
     end
-    
+
     # TODO: What kind of behavior do we want without a learner?
     describe "last_run" do
       describe '#last_run' do
@@ -102,7 +102,7 @@ describe Report::OfferingStudentStatus do
         it {is_expected.to be_nil}
       end
     end
-    
+
     describe "never_run" do
       describe '#never_run' do
         subject { super().never_run }

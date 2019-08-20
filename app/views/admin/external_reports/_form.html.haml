@@ -34,4 +34,14 @@
             If the report type is 'offering' or 'deprecated-report', and report is allowed for students, it can be used
             as a default report for a given activity source type. If another report is already marked as a default one,
             it will be automatically unselected.
+        %li
+          Report available for individual students:
+          = f.check_box :individual_student_reportable
+          %p
+            When report is used as a default report, Portal might generate links for reports focused on individual students.
+        %li
+          Report available for individual activities:
+          = f.check_box :individual_activity_reportable
+          %p
+            When report is used as a default report, Portal might generate links for reports focused on individual activities.
       = submit_tag
