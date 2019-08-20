@@ -32,8 +32,6 @@ services:
 
       SITE_URL:
       RESEARCHER_REPORT_ONLY:
-      REPORT_VIEW_URL:
-      REPORT_DOMAINS:
 
       #
       # ASN API key

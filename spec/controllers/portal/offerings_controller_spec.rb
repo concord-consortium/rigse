@@ -163,8 +163,6 @@ describe Portal::OfferingsController do
       let(:report_domains) { "concord-consortium.github.io" }
       before(:each) do
         allow(ENV).to receive(:[]).and_return('')
-        allow(ENV).to receive(:[]).with("REPORT_VIEW_URL").and_return(report_url)
-        allow(ENV).to receive(:[]).with("REPORT_DOMAINS").and_return(report_domains)
       end
 
       it "should redirect to the external reporting service as configured by the environment" do
@@ -218,7 +216,7 @@ describe Portal::OfferingsController do
 
       expect(response).to have_http_status(:redirect)
     end
-  end                           
+  end
 
   # TODO: auto-generated
   describe '#deactivate' do
