@@ -191,7 +191,7 @@ class Portal::OfferingsController < ApplicationController
     authorize offering
     student_id = current_visitor.portal_student.id
     report = DefaultReportService::default_report_for_offering(offering)
-    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_user_id: current_visitor.id, student_id: student_id })
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_id: student_id })
     redirect_to next_url
   end
 

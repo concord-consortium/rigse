@@ -59,12 +59,14 @@ class ExternalReport < ActiveRecord::Base
         token:          grant.access_token,
         username:       user.login
       }
-      # Note that new reports expect ID of the User model (not ID of the Student model).
-      if additional_params[:student_user_id]
-        params[:studentId] = additional_params[:student_user_id]
+      if additional_params[:student_id]
+        # New reports expect ID of the User model (not ID of the Student model).
+        params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id
       end
       if additional_params[:activity_id]
-        params[:activityId] = additional_params[:activity_id]
+        # New reports only support activity INDEX (within investigation) instead of the internal activity ID.
+        activity = Activity.find(additional_params[:activity_id])
+        params[:activityIndex] = activity.investigation.activities.index(activity)
       end
     end
 
