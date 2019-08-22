@@ -30,44 +30,12 @@ class ExternalReport < ActiveRecord::Base
       grant.teacher = user.portal_teacher
       grant.save!
     end
-    routes = Rails.application.routes.url_helpers
-    class_id = offering.clazz.id
     url_options = {protocol: protocol, host: host}
 
-
     if report_type === DeprecatedReport
-      # Deprecated, default report service that was provided by Portal. Pretty similar to offering report,
-      # but it uses different API (Report API) and different set of launch URL parameters.
-      report_url_extra_params = {}
-      # Note that depreciated report expects ID of the Student model (not ID of the User model).
-      if additional_params[:student_id]
-        report_url_extra_params[:student_ids] = [ additional_params[:student_id] ]
-      end
-      if additional_params[:activity_id]
-        report_url_extra_params[:activity_id] = additional_params[:activity_id]
-      end
-      params = {
-        reportUrl: routes.api_v1_report_url(offering.id, url_options.merge(report_url_extra_params)),
-        token: grant.access_token
-      }
+      params = deprecated_report_params(offering, grant, url_options, additional_params)
     else
-      params = {
-        reportType:     'offering',
-        offering:       routes.api_v1_offering_url(offering.id, url_options),
-        classOfferings: routes.api_v1_offerings_url(url_options.merge(class_id: class_id)),
-        class:          routes.api_v1_class_url(class_id, url_options),
-        token:          grant.access_token,
-        username:       user.login
-      }
-      if additional_params[:student_id]
-        # New reports expect ID of the User model (not ID of the Student model).
-        params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id
-      end
-      if additional_params[:activity_id]
-        # New reports only support activity INDEX (within investigation) instead of the internal activity ID.
-        activity = Activity.find(additional_params[:activity_id])
-        params[:activityIndex] = activity.investigation.activities.index(activity)
-      end
+      params = offering_report_params(offering, grant, user, url_options, additional_params)
     end
 
     if allowed_for_students && user.portal_student
@@ -80,6 +48,47 @@ class ExternalReport < ActiveRecord::Base
     end
 
     add_query_params(url, params)
+  end
+
+  def deprecated_report_params(offering, grant, url_options, additional_params = {})
+    routes = Rails.application.routes.url_helpers
+    # Deprecated, default report service that was provided by Portal. Pretty similar to offering report,
+    # but it uses different API (Report API) and different set of launch URL parameters.
+    report_url_extra_params = {}
+    # Note that depreciated report expects ID of the Student model (not ID of the User model).
+    if additional_params[:student_id]
+      report_url_extra_params[:student_ids] = [ additional_params[:student_id] ]
+    end
+    if additional_params[:activity_id]
+      report_url_extra_params[:activity_id] = additional_params[:activity_id]
+    end
+    {
+      reportUrl: routes.api_v1_report_url(offering.id, url_options.merge(report_url_extra_params)),
+      token: grant.access_token
+    }
+  end
+
+  def offering_report_params(offering, grant, user, url_options, additional_params = {})
+    routes = Rails.application.routes.url_helpers
+    class_id = offering.clazz.id
+    params = {
+      reportType:     'offering',
+      offering:       routes.api_v1_offering_url(offering.id, url_options),
+      classOfferings: routes.api_v1_offerings_url(url_options.merge(class_id: class_id)),
+      class:          routes.api_v1_class_url(class_id, url_options),
+      token:          grant.access_token,
+      username:       user.login
+    }
+    if additional_params[:student_id]
+      # New reports expect ID of the User model (not ID of the Student model).
+      params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id
+    end
+    if additional_params[:activity_id]
+      # New reports only support activity INDEX (within investigation) instead of the internal activity ID.
+      activity = Activity.find(additional_params[:activity_id])
+      params[:activityIndex] = activity.investigation.activities.index(activity)
+    end
+    params
   end
 
   def url_for_class(class_id, user, protocol, host)
