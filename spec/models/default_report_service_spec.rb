@@ -1,60 +1,42 @@
 # frozen_string_literal: false
 
-require 'spec_helper'
+require "spec_helper"
 
-RSpec.describe DefaultReportService do
-
-
-  # TODO: auto-generated
-  describe '.instance' do
-    it 'instance' do
-      result = described_class.instance
-
-      expect(result).not_to be_nil
-    end
+describe DefaultReportService do
+  let(:external_activity) { FactoryBot.create(:external_activity) }
+  let(:offering) do
+    FactoryBot.create(
+      :portal_offering,
+      runnable_id: external_activity.id,
+      runnable_type: "ExternalActivity"
+    )
   end
 
-  # TODO: auto-generated
-  describe '#load_env' do
-    xit 'load_env' do
-      default_report_service = described_class.new
-      varname = double('varname')
-      result = default_report_service.load_env(varname)
-
-      expect(result).not_to be_nil
-    end
+  before(:each) do
+    # Ensure default report is created
+    @default_report = FactoryBot.create(:default_lara_report)
   end
 
-  # TODO: auto-generated
-  describe '#reportViewUrl' do
-    it 'reportViewUrl' do
-      default_report_service = described_class.new
-      result = default_report_service.reportViewUrl
+  describe "#default_report_for_offering" do
+    describe "when default report is configured correctly and offering source type matches report type" do
+      it "returns default report service" do
+        expect(DefaultReportService.default_report_for_offering(offering)).to eql(@default_report)
+      end
+    end
 
-      expect(result).not_to be_nil
+    describe "when default report attributes are incorrect" do
+      it "returns nil when report is not allowed for students" do
+        @default_report.update_attributes(allowed_for_students: false)
+        expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
+      end
+      it "returns nil when report has wrong type" do
+        @default_report.update_attributes(report_type: "class")
+        expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
+      end
+      it "returns nil when report source type doesn't match runnable source type" do
+        external_activity.update_attributes(source_type: "NOT-LARA")
+        expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
+      end
     end
   end
-
-  # TODO: auto-generated
-  describe '#report_domain_matchers' do
-    it 'report_domain_matchers' do
-      default_report_service = described_class.new
-      result = default_report_service.report_domain_matchers
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#url_for' do
-    it 'url_for' do
-      default_report_service = described_class.new
-      api_offering_url = double('api_offering_url')
-      user = FactoryBot.create(:user)
-      result = default_report_service.url_for(api_offering_url, user)
-
-      expect(result).not_to be_nil
-    end
-  end
-
 end

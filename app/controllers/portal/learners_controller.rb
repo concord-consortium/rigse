@@ -112,6 +112,7 @@ class Portal::LearnersController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     report = DefaultReportService::default_report_for_offering(offering)
+    raise ActionController::RoutingError.new('Default Report Not Found') unless report
     next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port,
       { student_id: student_id, activity_id: params[:activity_id] }
     )

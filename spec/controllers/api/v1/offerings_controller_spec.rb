@@ -115,6 +115,8 @@ describe API::V1::OfferingsController do
         setup_activity(activity_1, [open_response_1, open_response_2])
         setup_activity(activity_2, [open_response_3])
         setup_runnable(runnable, [activity_1, activity_2])
+        # Ensure that default report is available.
+        FactoryBot.create(:default_lara_report)
       end
       it "returns an description of the activity and students list with 0 progress" do
         get :show, id: offering.id
