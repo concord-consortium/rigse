@@ -63,6 +63,4 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
     open  = self.open_feedback_for(learner, activity_feedback)
     open.update_attributes(attributes)
   end
-
-
 end

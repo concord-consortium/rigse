@@ -378,4 +378,29 @@ class API::V1::Report
     Portal::LearnerActivityFeedback.update_feedback(learner_id, activity_feedback_id, activity_feedback_hash.symbolize_keys)
   end
 
+
+  # These actions have been added to support new Firestore-based Portal Report. Data format is a bit different
+  # than it used to be. New Portal Report still has to post activity feedback settings and content, so it can be
+  # displayed in the progress table. Note that progress table only shows activity-level feedback, so question
+  # feedback can be ignored. Once progress table is redone, this code can be removed.
+  def self.update_activity_feedback_settings_v2(offering, activity_feedback_hash)
+    activity_index = activity_feedback_hash.delete('activity_index')
+    template = offering.runnable.template
+    activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
+    activity_feedback = Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id, activity_id: activity.id).first
+    return false unless activity_feedback
+    activity_feedback.set_feedback_options(activity_feedback_hash.symbolize_keys)
+  end
+
+  def self.submit_activity_feedback_v2(offering, activity_feedback_hash)
+    student_user_id = activity_feedback_hash.delete('student_user_id')
+    activity_index = activity_feedback_hash.delete('activity_index')
+    learner = offering.learners.joins(:student).where(portal_students: {user_id: student_user_id}).first
+    template = offering.runnable.template
+    activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
+    activity_feedback = Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id, activity_id: activity.id).first
+    return unless learner && activity_feedback
+    Portal::LearnerActivityFeedback.update_feedback(learner.id, activity_feedback.id, activity_feedback_hash.symbolize_keys)
+  end
+
 end

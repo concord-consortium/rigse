@@ -33,8 +33,8 @@ class API::V1::ReportsController < API::APIController
     if params[:feedback_opts]
       API::V1::Report.update_feedback_settings(offering, params[:feedback_opts])
     end
-    if params[:actvity_feedback_opts]
-      API::V1::Report.update_activity_feedback_settings(params[:actvity_feedback_opts])
+    if params[:actvity_feedback_opts] # actvity -> this typo can't be fixed to keep API backward-compatible
+      API::V1::Report.update_activity_feedback_settings(params[:actvity_feedback_opts]) # actvity -> this typo can't be fixed to keep API backward-compatible
     end
     if params[:feedback]
       API::V1::Report.submit_feedback(params[:feedback])
@@ -42,6 +42,20 @@ class API::V1::ReportsController < API::APIController
     if params[:activity_feedback]
       API::V1::Report.submit_activity_feedback(params[:activity_feedback])
     end
+
+    # These actions have been added to support new Firestore-based Portal Report. Data format is a bit different
+    # than it used to be. New Portal Report still has to post activity feedback settings and content, so it can be
+    # displayed in the progress table. Note that progress table only shows activity-level feedback, so question
+    # feedback can be ignored. Once progress table is redone, this code can be removed.
+    if params[:activity_feedback_opts_v2]
+      # Activity feedback coming from new, firestore-based Portal Report.
+      API::V1::Report.update_activity_feedback_settings_v2(offering, params[:activity_feedback_opts_v2])
+    end
+    if params[:activity_feedback_v2]
+      # Activity feedback coming from new, firestore-based Portal Report.
+      API::V1::Report.submit_activity_feedback_v2(offering, params[:activity_feedback_v2])
+    end
+
     offering.update_attributes!(report_params)
     head :ok
   end
