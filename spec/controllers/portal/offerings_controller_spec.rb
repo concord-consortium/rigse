@@ -136,44 +136,66 @@ describe Portal::OfferingsController do
   end
 
   describe "GET report" do
-    let(:physics_investigation) { FactoryBot.create(
-        :investigation,
-        :name => 'physics_inv',
-        :publication_status => 'published') }
+    let(:external_activity) { FactoryBot.create(:external_activity) }
+    let(:investigation) { FactoryBot.create(:investigation) }
+    let(:activity) { FactoryBot.create(:activity) }
 
     let(:offering) { FactoryBot.create(
         :portal_offering,
-        runnable_id: physics_investigation,
-        runnable_type: 'Activity',
+        runnable_id: external_activity.id,
+        runnable_type: 'ExternalActivity',
         clazz: clazz)}
 
     let(:clazz)       { FactoryBot.create :portal_clazz, teachers: [teacher] }
-    let(:post_params) { {id: offering.id }      }
-    let(:eacher_user) { FactoryBot.generate()          }
+    let(:post_params) { { id: offering.id } }
     let(:teacher)     { FactoryBot.create :teacher }
     let(:teacher_b)   { FactoryBot.create :teacher }
 
     before(:each) do
       sign_in user
+      investigation.activities << activity
+      external_activity.template = investigation
+      external_activity.save!
     end
 
-    describe "When the teacher of the class requests the report" do
-      let(:user)           { teacher.user }
-      let(:report_url)     { "https://concord-consortium.github.io/portal-report/" }
-      let(:report_domains) { "concord-consortium.github.io" }
-      before(:each) do
-        allow(ENV).to receive(:[]).and_return('')
-        allow(ENV).to receive(:[]).with("REPORT_VIEW_URL").and_return(report_url)
-        allow(ENV).to receive(:[]).with("REPORT_DOMAINS").and_return(report_domains)
+    describe "When the teacher of the class requests the default report" do
+      let(:user)        { teacher.user }
+      let(:report_url)  { "https://concord-consortium.github.io/portal-report/" }
+
+      describe "when offering report is used" do
+        before(:each) do
+          # Ensure that default report is available.
+          FactoryBot.create(:default_lara_report, { url: report_url })
+        end
+
+        it "should redirect to the default reporting service" do
+          get :report, post_params
+          expect(response.location).to match(/#{report_url}/)
+        end
+        it "should include an authentication token parameter" do
+          get :report, post_params
+          expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
+        end
+        it "should include an authentication token parameter" do
+          get :report, post_params
+          expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
+        end
+        it "should convert activity_id param into activityIndex" do
+          get :report, { id: offering.id, activity_id: activity.id }
+          expect(response.location).to match(/activityIndex=0/)
+        end
       end
 
-      it "should redirect to the external reporting service as configured by the environment" do
-        get :report, post_params
-        expect(response.location).to match(/#{report_url}/)
-      end
-      it "should include an authentication token parameter" do
-        get :report, post_params
-        expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
+      describe "when deprecated report is used" do
+        before(:each) do
+          # Ensure that default report is available.
+          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
+        end
+
+        it "should pass activity_id param" do
+          get :report, { id: offering.id, activity_id: activity.id }
+          expect(response.location).to match(/activity_id/)
+        end
       end
     end
 
@@ -182,6 +204,51 @@ describe Portal::OfferingsController do
       it "should redirect the user to /recent_activity" do
         get :report, post_params
         expect(response).to redirect_to :recent_activity
+      end
+    end
+  end
+
+  describe '#student_report' do
+    let(:external_activity) { FactoryBot.create(:external_activity) }
+    let(:clazz)       { FactoryBot.create(:portal_clazz) }
+    let(:offering)    { FactoryBot.create(:portal_offering, runnable: external_activity, clazz: clazz)}
+    let(:post_params) { { id: offering.id } }
+    let(:student)     { FactoryBot.create(:full_portal_student) }
+
+    before(:each) do
+      sign_in student.user
+      student.clazzes << clazz
+    end
+
+    describe "When the student requests the default report" do
+      let(:report_url)  { "https://concord-consortium.github.io/portal-report/" }
+
+      describe "when offering report is used" do
+        before(:each) do
+          # Ensure that default report is available.
+          FactoryBot.create(:default_lara_report, { url: report_url })
+        end
+
+        it "should redirect to the default reporting service" do
+          get :student_report, post_params
+          expect(response.location).to match(/#{report_url}/)
+        end
+        it "should provide studentId" do
+          get :student_report, post_params
+          expect(response.location).to include("studentId=#{student.user.id}")
+        end
+      end
+
+      describe "when deprecated report is used" do
+        before(:each) do
+          # Ensure that default report is available.
+          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
+        end
+
+        it "should pass activity_id param" do
+          get :student_report, post_params
+          expect(response.location).to match(/student_ids/)
+        end
       end
     end
   end
@@ -218,7 +285,7 @@ describe Portal::OfferingsController do
 
       expect(response).to have_http_status(:redirect)
     end
-  end                           
+  end
 
   # TODO: auto-generated
   describe '#deactivate' do

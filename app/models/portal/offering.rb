@@ -138,16 +138,22 @@ class Portal::Offering < ActiveRecord::Base
     return [Investigation, Activity, Page].include? klass
   end
 
+  def has_default_report?
+    DefaultReportService::default_report_for_offering(self) != nil
+  end
+
   def reportable?
-    internal_report?
+    has_default_report?
   end
 
-  def individual_reportable?
-    internal_report?
+  def individual_student_reportable?
+    report = DefaultReportService::default_report_for_offering(self)
+    report && report.individual_student_reportable
   end
 
-  def printable_report?
-    internal_report?
+  def individual_activity_reportable?
+    report = DefaultReportService::default_report_for_offering(self)
+    report && report.individual_activity_reportable
   end
 
   def student_report_enabled?

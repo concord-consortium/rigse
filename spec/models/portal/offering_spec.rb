@@ -1,7 +1,7 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Offering do
-  
+
   describe "after being created" do
     let(:runnable) { FactoryBot.create(:external_activity) }
     let(:args)     { {runnable: runnable} }
@@ -11,19 +11,19 @@ describe Portal::Offering do
      expect(offering.active).to be_truthy
      expect(offering.active?).to be_truthy
     end
-    
+
     it "can be deactivated" do
      expect(offering.active?).to be_truthy
      offering.deactivate!
-      
+
      expect(offering.active).to be_falsey
      expect(offering.active?).to be_falsey
     end
-    
+
     it "can be activated" do
      offering.deactivate!
      expect(offering.active?).to be_falsey
-      
+
      offering.activate!
      expect(offering.active?).to be_truthy
     end
@@ -120,15 +120,6 @@ describe Portal::Offering do
       result = offering.saveables
 
       expect(result).to be_empty
-    end
-  end
-
-  describe '#printable_report?' do
-    it 'printable_report?' do
-      offering = described_class.new
-      result = offering.printable_report?
-
-      expect(result).not_to be_nil
     end
   end
 

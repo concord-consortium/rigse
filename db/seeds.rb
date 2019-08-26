@@ -155,11 +155,31 @@ def create_settings
   end
 end
 
+def create_default_lara_report
+  auth_client = Client.where(name: "DEFAULT_REPORT_SERVICE_CLIENT").first_or_create(
+    app_id: "DEFAULT_REPORT_SERVICE_CLIENT",
+    app_secret: SecureRandom.uuid(),
+    domain_matchers: "*.concord.org"
+  )
+
+  ExternalReport.where(name: "DEFAULT_REPORT_SERVICE").first_or_create(
+    url: "http://portal-report.concord.org/branch/master/index.html",
+    launch_text: "Report",
+    client_id: auth_client.id,
+    report_type: "offering",
+    allowed_for_students: true,
+    default_report_for_source_type: "LARA",
+    individual_student_reportable: true,
+    individual_activity_reportable: true
+  )
+end
+
 create_district_school
 create_roles
 create_default_users
 create_grades
 create_settings
+create_default_lara_report
 
 # populate Countries table
 Portal::Country.from_csv_file

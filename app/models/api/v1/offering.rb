@@ -136,9 +136,10 @@ class API::V1::Offering
       end
     end
 
+    # Cache feedback activity objects and pass them to student model.
+    activity_feedbacks = {}
     if offering.reportable?
-      # Cache feedback activity objects and pass them to student model.
-      activity_feedbacks = {}
+      # This section is probably used internally by Portal Pages to render progress bars and feedback info.
       self.reportable_activities = (runnable.respond_to?(:activities) && runnable.activities || [ runnable ]).map do |activity|
         if activity.respond_to?(:template) && activity.template
           # Use template model for reporting purposes when we're dealing with ExternalActivity.
@@ -151,7 +152,7 @@ class API::V1::Offering
             id: activity.id,
             name: activity.name,
             type: activity.class.to_s,
-            activity_report_url: offering.reportable? ? portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port) : nil,
+            activity_report_url: offering.individual_activity_reportable? ? portal_offerings_report_url(offering, activity, protocol: protocol, host: host_with_port) : nil,
             feedback_options: activity_feedback && {
                 score_feedback_enabled: !!activity_feedback.enable_score_feedback,
                 text_feedback_enabled: !!activity_feedback.enable_text_feedback,

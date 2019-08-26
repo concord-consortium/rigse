@@ -52,14 +52,22 @@ class Admin::ExternalReportsController < ApplicationController
   def update
     authorize ExternalReport
     @report = ExternalReport.find(params[:id])
+    new_params = params[:external_report]
+    saved_successfully = @report.update_attributes(new_params)
+    if saved_successfully && new_params[:default_report_for_source_type] != nil
+      # Automatically ensure that only one report is selected as a default one for a given source type.
+      ExternalReport
+        .where('id != ? AND default_report_for_source_type = ?', @report.id, new_params[:default_report_for_source_type])
+        .update_all(default_report_for_source_type: nil)
+    end
     if request.xhr?
-      if @report.update_attributes(params[:external_report])
+      if saved_successfully
         render :partial => 'show', :locals => { :project => @report }
       else
         render :partial => 'remote_form', :locals => { :project => @report }, :status => 400
       end
     else
-      if @report.update_attributes(params[:external_report])
+      if saved_successfully
         flash[:notice]= 'ExternalReport was successfully updated.'
         redirect_to action: :index
       else

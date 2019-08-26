@@ -190,29 +190,32 @@ class Portal::OfferingsController < ApplicationController
     offering = Portal::Offering.find(offering_id)
     authorize offering
     student_id = current_visitor.portal_student.id
-    report = DefaultReportService.instance
-    offering_api_url = api_v1_report_url(offering_id,{student_ids: [student_id]})
-    next_url = report.url_for(offering_api_url, current_visitor)
+    report = DefaultReportService::default_report_for_offering(offering)
+    raise ActionController::RoutingError.new('Default Report Not Found') unless report
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_id: student_id })
     redirect_to next_url
   end
 
+  # This is in fact a default external report.
   def report
     offering_id = params[:id]
     activity_id = params[:activity_id] # Might be null
-    authorize Portal::Offering.find(offering_id)
-    report = DefaultReportService.instance
-    offering_api_url = api_v1_report_url(offering_id, {activity_id: activity_id})
-    next_url = report.url_for(offering_api_url, current_visitor)
+    offering = Portal::Offering.find(offering_id)
+    authorize offering
+    report = DefaultReportService::default_report_for_offering(offering)
+    raise ActionController::RoutingError.new('Default Report Not Found') unless report
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { activity_id: activity_id })
     redirect_to next_url
   end
 
   def external_report
     offering_id = params[:id]
+    activity_id = params[:activity_id] # Might be null
     offering = Portal::Offering.find(offering_id)
     authorize offering
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port)
+    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { activity_id: activity_id })
     redirect_to next_url
   end
 

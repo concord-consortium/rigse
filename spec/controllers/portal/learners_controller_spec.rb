@@ -3,25 +3,17 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Portal::LearnersController do
 
   describe "GET report" do
-    let(:physics_investigation) { FactoryBot.create(
-        :investigation,
-        :name => 'physics_inv',
-        :publication_status => 'published') }
+    let(:external_activity) { FactoryBot.create(:external_activity) }
 
     let(:offering) { FactoryBot.create(
         :portal_offering,
-        runnable_id: physics_investigation.id,
-        runnable_type: 'Activity',
-        clazz: clazz)}
+        runnable_id: external_activity.id,
+        runnable_type: 'ExternalActivity',
+        clazz: clazz
+    )}
 
     let(:clazz)       { FactoryBot.create :portal_clazz, teachers: [teacher] }
-    let(:student_id)  { 7 }
-    let(:learner_stubs) {{
-        student_id: student_id,
-        offering_id: offering.id,
-        offering: offering
-    }}
-    let(:learner)     { mock_model(Portal::Learner, learner_stubs)}
+    let(:learner)     { FactoryBot.create(:full_portal_learner, { offering_id: offering.id }) }
     let(:post_params) { {id: learner.id }      }
     let(:teacher)     { FactoryBot.create :teacher }
     let(:teacher_b)   { FactoryBot.create :teacher }
@@ -34,24 +26,38 @@ describe Portal::LearnersController do
     describe "When the teacher of the class requests the report" do
       let(:user)           { teacher.user }
       let(:report_url)     { "https://concord-consortium.github.io/portal-report/" }
-      let(:report_domains) { "concord-consortium.github.io" }
-      before(:each) do
-        allow(ENV).to receive(:[]).and_return('')
-        allow(ENV).to receive(:[]).with("REPORT_VIEW_URL").and_return(report_url)
-        allow(ENV).to receive(:[]).with("REPORT_DOMAINS").and_return(report_domains)
+
+      describe "when offering report is used" do
+        before(:each) do
+          # Ensure that default report is available.
+          FactoryBot.create(:default_lara_report, { url: report_url })
+        end
+
+        it "should redirect to the external reporting service as configured by the environment" do
+          get :report, post_params
+          expect(response.location).to match(/#{report_url}/)
+        end
+        it "should include an authentication token parameter" do
+          get :report, post_params
+          expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
+        end
+        it "should include the studentId parameter" do
+          get :report, post_params
+          match_data = /studentId=(\d+)/.match response.location
+          expect(match_data).not_to be_nil
+          expect(match_data[1]).to eql(learner.student.user.id.to_s)
+        end
       end
 
-      it "should redirect to the external reporting service as configured by the environment" do
-        get :report, post_params
-        expect(response.location).to match(/#{report_url}/)
-      end
-      it "should include an authentication token parameter" do
-        get :report, post_params
-        expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
-      end
-      it "should include the student_ids parameter" do
-        get :report, post_params
-        expect(response.location).to match(/student_ids/)
+      describe "when depreciated report is used" do
+        before(:each) do
+          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
+        end
+
+        it "should include the student_ids parameter" do
+          get :report, post_params
+          expect(response.location).to match(/student_ids/)
+        end
       end
     end
 
