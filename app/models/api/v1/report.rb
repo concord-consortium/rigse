@@ -387,8 +387,7 @@ class API::V1::Report
     activity_index = options_hash.delete('activity_index')
     template = offering.runnable.template
     activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
-    activity_feedback = Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id, activity_id: activity.id).first
-    return false unless activity_feedback
+    activity_feedback = Portal::OfferingActivityFeedback.find_or_create_for_offering_and_activity(offering, activity)
     activity_feedback.set_feedback_options(options_hash.symbolize_keys)
   end
 
@@ -398,14 +397,19 @@ class API::V1::Report
     learner = offering.learners.joins(:student).where(portal_students: {user_id: student_user_id}).first
     template = offering.runnable.template
     activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
-    activity_feedback = Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id, activity_id: activity.id).first
+    activity_feedback = Portal::OfferingActivityFeedback.for_offering_and_activity(offering, activity)
     return unless learner && activity_feedback
     Portal::LearnerActivityFeedback.update_feedback(learner.id, activity_feedback.id, activity_feedback_hash.symbolize_keys)
   end
 
   def self.update_rubric_v2(offering, options_hash)
     rubric = options_hash.delete('rubric')
-    Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id).each do |activity_feedback|
+    # Rubric should be saved for all the activities for a given offering because Portal currently lets authors
+    # set only one Rubric per offering.
+    template = offering.runnable.template
+    activities = template.is_a?(Investigation) ? template.activities : [ template ]
+    activities.each do |activity|
+      activity_feedback = Portal::OfferingActivityFeedback.find_or_create_for_offering_and_activity(offering, activity)
       activity_feedback.set_feedback_options(rubric: rubric)
     end
   end

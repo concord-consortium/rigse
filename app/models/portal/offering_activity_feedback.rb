@@ -30,6 +30,10 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
     self.create(portal_offering_id: offering.id, activity_id: activity.id)
   end
 
+  def self.find_or_create_for_offering_and_activity(offering, activity)
+    self.for_offering_and_activity(offering, activity) || self.create_for_offering_and_activity(offering, activity)
+  end
+
   def rubric_url
     if portal_offering.runnable.respond_to? :rubric_url
       portal_offering.runnable.rubric_url
