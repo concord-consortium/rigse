@@ -383,13 +383,13 @@ class API::V1::Report
   # than it used to be. New Portal Report still has to post activity feedback settings and content, so it can be
   # displayed in the progress table. Note that progress table only shows activity-level feedback, so question
   # feedback can be ignored. Once progress table is redone, this code can be removed.
-  def self.update_activity_feedback_settings_v2(offering, activity_feedback_hash)
-    activity_index = activity_feedback_hash.delete('activity_index')
+  def self.update_activity_feedback_settings_v2(offering, options_hash)
+    activity_index = options_hash.delete('activity_index')
     template = offering.runnable.template
     activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
     activity_feedback = Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id, activity_id: activity.id).first
     return false unless activity_feedback
-    activity_feedback.set_feedback_options(activity_feedback_hash.symbolize_keys)
+    activity_feedback.set_feedback_options(options_hash.symbolize_keys)
   end
 
   def self.submit_activity_feedback_v2(offering, activity_feedback_hash)
@@ -403,4 +403,10 @@ class API::V1::Report
     Portal::LearnerActivityFeedback.update_feedback(learner.id, activity_feedback.id, activity_feedback_hash.symbolize_keys)
   end
 
+  def self.update_rubric_v2(offering, options_hash)
+    rubric = options_hash.delete('rubric')
+    Portal::OfferingActivityFeedback.where(portal_offering_id: offering.id).each do |activity_feedback|
+      activity_feedback.set_feedback_options(rubric: rubric)
+    end
+  end
 end

@@ -55,6 +55,10 @@ class API::V1::ReportsController < API::APIController
       # Activity feedback coming from new, firestore-based Portal Report.
       API::V1::Report.submit_activity_feedback_v2(offering, params[:activity_feedback_v2])
     end
+    if params[:rubric_v2]
+      # Rubric coming from new, firestore-based Portal Report.
+      API::V1::Report.update_rubric_v2(offering, params[:rubric_v2])
+    end
 
     offering.update_attributes!(report_params)
     head :ok
