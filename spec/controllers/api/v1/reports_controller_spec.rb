@@ -207,27 +207,49 @@ describe API::V1::ReportsController do
   end
 
   describe "enabling feedback options for an activity" do
-    let(:activity_feedback)    { Portal::OfferingActivityFeedback.create() }
+    let(:activity_feedback)    { Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity) }
     let(:activity_feedback_id) { activity_feedback.id }
     let(:found_feedback)       { Portal::OfferingActivityFeedback.find(activity_feedback_id)}
     let(:enable_text_feedback) { false }
     let(:score_type)           { Portal::OfferingActivityFeedback::SCORE_NONE }
     let(:max_score)            { 10 }
     let(:use_rubric)           { false }
-    let(:opts)                 {  { 'actvity_feedback_opts' => feedback_opts } }
-    let(:feedback_opts)        do
+    let(:opts)                 do
       {
-          'activity_feedback_id' => activity_feedback_id,
-          'enable_text_feedback' => enable_text_feedback,
-          'score_type'           => score_type,
-          'max_score'            => max_score,
-          'use_rubric'           => use_rubric
+        actvity_feedback_opts: {
+          activity_feedback_id: activity_feedback_id,
+          enable_text_feedback: enable_text_feedback,
+          score_type: score_type,
+          max_score: max_score,
+          use_rubric: use_rubric
+        }
       }
     end
+    let(:opts_v2)               do
+      {
+        activity_feedback_opts_v2: {
+          enable_text_feedback: enable_text_feedback,
+          score_type: score_type,
+          max_score: max_score,
+          use_rubric: use_rubric,
+          activity_index: 0
+        }
+      }
+    end
+
     describe "switching to automatic scoring from the API" do
       let(:score_type)  { Portal::OfferingActivityFeedback::SCORE_AUTO  }
       it "should make the scoring automatic" do
         update(opts)
+        show
+        expect(response.status).to eql(200)
+        expect(found_feedback.score_type).to eql Portal::OfferingActivityFeedback::SCORE_AUTO
+        expect(found_feedback.enable_text_feedback).to be_falsey
+        expect(found_feedback.max_score).to eq 10
+      end
+      it "should make the scoring automatic (v2)" do
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update(opts_v2)
         show
         expect(response.status).to eql(200)
         expect(found_feedback.score_type).to eql Portal::OfferingActivityFeedback::SCORE_AUTO
@@ -244,12 +266,26 @@ describe API::V1::ReportsController do
         expect(response.status).to eql(200)
         expect(found_feedback.max_score).to eq 20
       end
+      it "should make max score be 20 (v2)" do
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update(opts_v2)
+        show
+        expect(response.status).to eql(200)
+        expect(found_feedback.max_score).to eq 20
+      end
     end
 
     describe "when enabling a rubric" do
       let(:use_rubric)    { true }
       it "should specify to use a rubric" do
         update(opts)
+        show
+        expect(response.status).to eql(200)
+        expect(found_feedback.use_rubric).to be_truthy
+      end
+      it "should specify to use a rubric (v2)" do
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update(opts_v2)
         show
         expect(response.status).to eql(200)
         expect(found_feedback.use_rubric).to be_truthy
@@ -290,6 +326,17 @@ describe API::V1::ReportsController do
         }
       }
     end
+    let(:opts_v2) do
+      {
+        activity_feedback_v2: {
+          score: score,
+          rubric_feedback: rubric_feedback,
+          text_feedback: text_feedback,
+          student_user_id: learner_a.user.id,
+          activity_index: 0
+        }
+      }
+    end
 
     it "should update the learners feedback" do
       update(opts)
@@ -297,6 +344,64 @@ describe API::V1::ReportsController do
       expect(response.status).to eql(200)
       feedback = Portal::LearnerActivityFeedback.open_feedback_for(learner, activity_feedback)
       expect(feedback.rubric_feedback["C1"]["id"]).to eql "R1"
+    end
+
+    it "should update the learners feedback (v2)" do
+      activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+      update(opts_v2)
+      show
+      expect(response.status).to eql(200)
+      feedback = Portal::LearnerActivityFeedback.open_feedback_for(learner, activity_feedback)
+      expect(feedback.rubric_feedback["C1"]["id"]).to eql "R1"
+    end
+  end
+
+  describe "posting a rubric JSON" do
+    let(:rubric_content) { { "test_rubric" => "content" } }
+    let(:opts_v2) do
+      {
+        rubric_v2: {
+          rubric: rubric_content
+        }
+      }
+    end
+
+    describe "when runnable is an activity" do
+      let(:activity_feedback) { Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity) }
+
+      it "should update activity feedback model" do
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update(opts_v2)
+        show
+        expect(response.status).to eql(200)
+        expect(Portal::OfferingActivityFeedback.find(activity_feedback.id).rubric).to eql rubric_content
+      end
+    end
+
+    describe "when runnable is a sequence" do
+      let(:activity_1) { FactoryBot.create(:activity) }
+      let(:activity_2) { FactoryBot.create(:activity) }
+      let(:investigation) { FactoryBot.create(:investigation) }
+      let(:activity_feedback_1) { Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity_1) }
+      let(:activity_feedback_2) { Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity_2) }
+
+      before(:each) do
+        investigation.activities << activity_1
+        investigation.activities << activity_2
+        investigation.save
+        runnable.template = investigation
+        runnable.save
+      end
+
+      it "should update all the activity feedback models" do
+        activity_feedback_1 # ensure that activity_feedback_1 object gets created before we start updating feedback
+        activity_feedback_2 # ensure that activity_feedback_2 object gets created before we start updating feedback
+        update(opts_v2)
+        show
+        expect(response.status).to eql(200)
+        expect(Portal::OfferingActivityFeedback.find(activity_feedback_1.id).rubric).to eql rubric_content
+        expect(Portal::OfferingActivityFeedback.find(activity_feedback_2.id).rubric).to eql rubric_content
+      end
     end
   end
 end
