@@ -2,6 +2,9 @@ class DefaultReportService
   def self.default_report_for_offering(offering)
     return nil unless offering.runnable
     return nil unless offering.runnable.respond_to?(:source_type)
+    # Activities with nil source_type could accidentally match with External Reports
+    # that have default_report_for_source_type = nil.
+    return nil unless offering.runnable.source_type
     source_type = offering.runnable.source_type
     ExternalReport
       .where(

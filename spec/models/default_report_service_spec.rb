@@ -25,6 +25,11 @@ describe DefaultReportService do
     end
 
     describe "when default report attributes are incorrect" do
+      it "returns nil when external activity source type is nil" do
+        external_activity.update_attributes(source_type: nil)
+        @default_report.update_attributes(default_report_for_source_type: nil)
+        expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
+      end
       it "returns nil when report is not allowed for students" do
         @default_report.update_attributes(allowed_for_students: false)
         expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
