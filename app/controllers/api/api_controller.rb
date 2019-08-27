@@ -70,8 +70,22 @@ class API::APIController < ApplicationController
           raise StandardError, "Cannot find learner with id or key of '#{params[:learner_id_or_key]}'"
         end
 
+      # peer to peer authentication based on app_secret is available if the user id is passed
+      elsif params[:user_id]
+        user = User.find_by_id(params[:user_id])
+        if user
+          peer = Client.find_by_app_secret(token)
+          if peer
+            return [user, {:learner => nil, :teacher => nil}]
+          else
+            raise StandardError, "Cannot find requested peer token" # don't leak token value in error
+          end
+        else
+          raise StandardError, "Cannot find user with id of '#{params[:user_id]}'"
+        end
       else
-        raise StandardError, "Cannot find AccessGrant for token '#{token}'"
+        # NOTE: token value was removed from error so we don't leak peer tokens
+        raise StandardError, "Cannot find AccessGrant for requested token"
       end
 
     elsif header && header =~ /^Bearer\/JWT (.*)$/i
