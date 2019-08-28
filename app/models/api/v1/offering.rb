@@ -8,7 +8,7 @@ class API::V1::Offering
       # It's questionable whether :learner_activity_feedbacks should be loaded eagerly. There are multiple instances
       # of learner activity feedback per given learner, but this API is interested only in the most recent one.
       # Eager loading will load all of them, though. Another option would be to remove it and use following query:
-      # Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback).first
+      # Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id).first
       # It loads only one feedback per learner, but will require N separate queries (1 per learner).
       # I feel that eager loading (single SQL query) should be faster anyway, as in most cases there shouldn't
       # be too many separate feedback objects for given learner. A new one is created when teacher first marks feedback
@@ -66,7 +66,7 @@ class API::V1::Offering
     def feedback_json(learner, activity_feedback)
       # Use .find instead of SQL queries to take benefit of eager loading. See notes above whether it's the best idea
       # or not. Another option would be:
-      # learner_feedback = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback).first
+      # learner_feedback = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id).first
       learner_feedback = activity_feedback && activity_feedback.learner_activity_feedbacks.find { |laf| laf.portal_learner_id === learner.id }
       return nil unless learner_feedback
       {

@@ -180,7 +180,7 @@ describe API::V1::Report do
       let(:activity)         { FactoryBot.create(:activity) }
       let(:learner)          { FactoryBot.create(:full_portal_learner, {offering:offering}) }
       let(:student)          { learner.student }
-      let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback) }
+      let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id) }
       let(:activity_feedback){ Portal::OfferingActivityFeedback.create_for_offering_and_activity(offering, activity) }
       let(:feedback_id)      { activity_feedback.id }
       let(:learner_id)       { learner.id }
@@ -224,13 +224,13 @@ describe API::V1::Report do
           # create some old feedback
           Delorean.time_travel_to("1 month ago") do
             Portal::LearnerActivityFeedback.update_feedback(
-              learner,
-              activity_feedback,
+              learner.id,
+              activity_feedback.id,
               { score: 4, text_feedback: text_feedback, has_been_reviewed: false  }
             )
             Portal::LearnerActivityFeedback.update_feedback(
-              learner,
-              activity_feedback,
+              learner.id,
+              activity_feedback.id,
               { score: 5, text_feedback: text_feedback, has_been_reviewed: true }
             )
           end
@@ -249,15 +249,15 @@ describe API::V1::Report do
         describe "adding more feedback" do
           before(:each) do
             Portal::LearnerActivityFeedback.update_feedback(
-              learner,
-              activity_feedback,
+              learner.id,
+              activity_feedback.id,
               { score: 7, text_feedback: text_feedback, has_been_reviewed: true }
             )
           end
 
-          it "should have two feedback records" do
+          it "should just one, most recent feedback record" do
             feedback = json[:activity_feedback].first
-            expect(feedback[:feedbacks].length).to eql(2)
+            expect(feedback[:feedbacks].length).to eql(1)
             expect(feedback[:feedbacks].first).to include({:score => 7})
           end
         end
@@ -388,7 +388,7 @@ describe API::V1::Report do
         end
 
         describe "giving activity level feedback" do
-          let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)}
+          let(:learner_feedback) { Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id)}
           describe 'giving feedback without marking complete' do
             let(:text_feedback)   { "good job" }
             let(:score)           {  10        }
@@ -421,16 +421,17 @@ describe API::V1::Report do
               it { is_expected.to be true }
             end
 
-            it "Should create a subsequent entry in the list of feedbacks on next update." do
+            it "Should update last feedback on next update." do
               expect(learner_feedback.size).to eq(1)
-              a = API::V1::Report.submit_activity_feedback({
+              API::V1::Report.submit_activity_feedback({
                 "score"                => 11,
                 "has_been_reviewed"    => true,
                 "learner_id"           => learner_id,
                 "activity_feedback_id" => feedback_id
               })
-              new_feedback = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)
-              expect(new_feedback.size).to eq(2)
+              new_feedback = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id)
+              expect(new_feedback.size).to eq(1)
+              expect(new_feedback.first.score).to eq(11)
             end
           end
         end
