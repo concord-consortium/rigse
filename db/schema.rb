@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190820130414) do
+ActiveRecord::Schema.define(:version => 20190828133302) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1061,7 +1061,7 @@ ActiveRecord::Schema.define(:version => 20190820130414) do
 
   create_table "portal_learner_activity_feedbacks", :force => true do |t|
     t.text     "text_feedback"
-    t.integer  "score",                :default => 10
+    t.integer  "score",                :default => 0
     t.boolean  "has_been_reviewed",    :default => false
     t.integer  "portal_learner_id"
     t.integer  "activity_feedback_id"
