@@ -37,16 +37,6 @@ describe Portal::LearnerActivityFeedback do
   end
 
   # TODO: auto-generated
-  describe '._attribute_ids' do
-    xit '_attribute_ids' do
-      attributes = {}
-      result = described_class._attribute_ids(attributes)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '.for_learner_and_activity_feedback' do
     it 'for_learner_and_activity_feedback' do
       result = described_class.for_learner_and_activity_feedback(learner, activity_feedback)
