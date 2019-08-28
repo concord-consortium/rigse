@@ -207,11 +207,11 @@ class API::V1::Report
 
   def learner_activity_feedback_json(learner, activity_feedback)
     student = learner.student
-    learner_activity_feedbacks = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner, activity_feedback)
-    return {
-      "student_id": student.id,
-      "learner_id": learner.id,
-      "feedbacks": learner_activity_feedbacks.map do |feedback|
+    learner_activity_feedbacks = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id)
+    {
+      student_id: student.id,
+      learner_id: learner.id,
+      feedbacks: learner_activity_feedbacks.map do |feedback|
         {
           score: feedback.score,
           feedback: feedback.text_feedback,

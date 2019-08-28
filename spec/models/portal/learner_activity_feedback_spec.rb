@@ -31,7 +31,7 @@ describe Portal::LearnerActivityFeedback do
   describe "for_learner_and_activity_feedback" do
     it "should return an array including our learner feedback" do
       ours = learner_feedback
-      found = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner,activity_feedback)
+      found = Portal::LearnerActivityFeedback.for_learner_and_activity_feedback(learner.id, activity_feedback.id)
       expect(found).to include(ours)
     end
   end
@@ -39,7 +39,7 @@ describe Portal::LearnerActivityFeedback do
   # TODO: auto-generated
   describe '.for_learner_and_activity_feedback' do
     it 'for_learner_and_activity_feedback' do
-      result = described_class.for_learner_and_activity_feedback(learner, activity_feedback)
+      result = described_class.for_learner_and_activity_feedback(learner.id, activity_feedback.id)
 
       expect(result).not_to be_nil
     end
@@ -58,7 +58,7 @@ describe Portal::LearnerActivityFeedback do
   describe '.update_feedback' do
     it 'update_feedback' do
       attributes = {}
-      result = described_class.update_feedback(learner, activity_feedback, attributes)
+      result = described_class.update_feedback(learner.id, activity_feedback.id, attributes)
 
       expect(result).not_to be_nil
     end
