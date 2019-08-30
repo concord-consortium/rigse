@@ -106,6 +106,18 @@ class API::V1::JwtController < API::APIController
         :domain => root_url,
         :domain_uid => user.id,
       }
+    else
+      claims = {
+        # Firebase auth rules expect all the claims to be in a sub-object named "claims".
+        # All the new properties should go there. Other apps can still read them.
+        :claims => {
+          :platform_id => APP_CONFIG[:site_url],
+          :platform_user_id => user.id,
+          :user_type => "user",
+          :user_id => url_for(user)
+        }
+      }
+      # since the generic user case was added after domain and domain_uid where deprecated they are not set here
     end
 
     # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string

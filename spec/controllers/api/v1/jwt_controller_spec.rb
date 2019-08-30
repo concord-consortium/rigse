@@ -99,12 +99,15 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
   describe "GET #firebase" do
 
     context "when a valid authentication header token is sent without a learner or teacher" do
+      let(:application_url) { "http://test.host/" }
       before(:each) {
         set_auth_token(user_token)
         FirebaseApp.create!(firebase_app_attributes)
       }
 
       it "returns a valid JWT" do
+        allow(APP_CONFIG).to receive(:[]).and_call_original
+        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(application_url)
         post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
 
@@ -112,6 +115,10 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         token = body["token"]
         decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
         expect(decoded_token[:data]["uid"]).to eql uid
+        expect(decoded_token[:data]["claims"]["platform_id"]).to eq "http://test.host/"
+        expect(decoded_token[:data]["claims"]["platform_user_id"]).to eq user.id
+        expect(decoded_token[:data]["claims"]["user_type"]).to eq "user"
+        expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
       end
     end
 
