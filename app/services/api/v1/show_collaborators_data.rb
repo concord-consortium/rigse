@@ -27,7 +27,13 @@ class API::V1::ShowCollaboratorsData
         # Not sure why this is needed, but currently LARA expects that value for regular activity run.
         learner_id: learner.id,
         # This URL can be used by external activity system to publish back  student answers.
-        endpoint_url: learner.remote_endpoint_url
+        endpoint_url: learner.remote_endpoint_url,
+        # New LTI-like data necessary for LARA to create searchable entities in Firestore.
+        platform_id: APP_CONFIG[:site_url],
+        platform_user_id: s.user.id.to_s,
+        resource_link_id: @collaboration.offering.id,
+        context_id: @collaboration.offering.clazz.class_hash,
+        class_info_url: @collaboration.offering.clazz.class_info_url(self.protocol, self.host_with_port)
       }
     end
   end
