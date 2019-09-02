@@ -140,6 +140,8 @@ end
 
   gem 'jwt'
 
+  gem 'google-cloud-firestore', "~> 1.1.0", :require => false
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
