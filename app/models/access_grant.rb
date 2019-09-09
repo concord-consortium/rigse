@@ -23,13 +23,14 @@ class AccessGrant < ActiveRecord::Base
   end
 
   # Pretty much perform the 1st step of the OAuth2 authorization.
-  def self.get_authorize_redirect_uri(user, client, params)
+  def self.get_authorize_redirect_uri(user, params)
+    client = Client.find_by_app_id(params[:client_id])
     unless client
       raise "Client not found"
     end
     unless SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
       # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      client.get_redirect_uri(params[:redirect_uri], error: "unsupported_response_type")
+      return client.get_redirect_uri(params[:redirect_uri], error: "unsupported_response_type")
     end
 
     AccessGrant.prune!

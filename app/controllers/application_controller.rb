@@ -310,7 +310,7 @@ class ApplicationController < ActionController::Base
     end
 
     if session[:oauth_authorize_params]
-      oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_client], session[:oauth_authorize_params])
+      oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
       # the user has been logged in by another auth provider via a popup window:
       # AutomaticallyClosingPopupLink in that case the other auth provider redirects in the
       # the window, so the auth_redirect session var is set which is then picked up by the
@@ -322,16 +322,14 @@ class ApplicationController < ActionController::Base
         redirect_path = oauth_redirect
       end
       session[:oauth_authorize_params] = nil
-      session[:oauth_client] = nil
     end
-    return redirect_path
+    redirect_path
   end
 
   def after_sign_out_path_for(resource)
     redirect_url = "#{params[:redirect_uri]}?re_login=true&provider=#{params[:provider]}"
     if params[:re_login]
       session[:oauth_authorize_params] = nil
-      session[:oauth_client] = nil
       redirect_url
     else
       root_path

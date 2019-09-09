@@ -9,7 +9,6 @@ class AuthController < ApplicationController
 
   def verify_logged_in
     session.delete :oauth_authorize_params
-    session.delete :oauth_client
 
     if current_user.nil?
         redirect_to auth_login_path
@@ -20,7 +19,11 @@ class AuthController < ApplicationController
   def login
     # Renders a nice login form (views/auth/login.haml).
     # TODO session variables cause weird behaviors try to remove this if possible
-    @app_name = session[:oauth_client] ? session[:oauth_client].name : nil
+    @app_name = nil
+    if session[:oauth_authorize_params]
+      client = Client.find_by_app_id(session[:oauth_authorize_params][:client_id])
+      @app_name = clinet ? client.name : nil
+    end
     @error = flash[:alert]
     @after_sign_in_path = params[:after_sign_in_path]
     # If the user is already signed in and there is is a after_sign_in_path set
@@ -32,8 +35,6 @@ class AuthController < ApplicationController
       query = Rack::Utils.parse_query(redirect_uri.query)
       query["redirecting_after_sign_in"] = '1'
       redirect_uri.query = Rack::Utils.build_query(query)
-      redirect_path = redirect_uri.to_s
-
       redirect_to @after_sign_in_path
     elsif current_user
       #
@@ -48,7 +49,6 @@ class AuthController < ApplicationController
   def oauth_authorize
     if current_user.nil?
         session[:oauth_authorize_params] = params
-        session[:oauth_client] = application
         redirect_to auth_login_path
         return
     end
@@ -56,7 +56,7 @@ class AuthController < ApplicationController
     # If user has to fill sign in form first, we'll instead continue in ApplicationController#after_sign_in_path_for
     # Any changes to this section should be made there too. Preferably, all the changes should be made to
     # AccessGrant#get_authorize_redirect_uri which is used in both places.
-    redirect_to AccessGrant.get_authorize_redirect_uri(current_user, application, params)
+    redirect_to AccessGrant.get_authorize_redirect_uri(current_user, params)
   end
 
   def access_token
@@ -113,11 +113,4 @@ class AuthController < ApplicationController
       format.any { render :json => response.to_json }
     end
   end
-
-  protected
-
-  def application
-    @application ||= Client.find_by_app_id(params[:client_id])
-  end
-
 end
