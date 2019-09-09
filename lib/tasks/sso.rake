@@ -15,7 +15,9 @@ namespace :sso do
         :name       => 'localhost',
         :app_id     => 'localhost',
         :app_secret => 'unsecure local secret',
-        :site_url   => 'http://localhost.com'
+        :site_url   => 'http://localhost.com',
+        :client_type => 'confidential',
+        :redirect_uris => 'http://app.lara.docker/users/auth/cc_portal_localhost/callback'
     )
   end
 

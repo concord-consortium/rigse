@@ -25,6 +25,9 @@
             App Secret:
             = client.app_secret
           %li
+            Client Type:
+            = client.client_type
+          %li
             Site URL:
             = client.site_url
           %li
@@ -33,3 +36,9 @@
               %ul
                 - client.domain_matchers.split(/\s+/).each do |dm|
                   %li= dm
+          %li
+            Allowed redirect URIs:
+            - unless client.redirect_uris.blank?
+              %ul
+                - client.redirect_uris.split(/\s+/).each do |ru|
+                  %li= ru
