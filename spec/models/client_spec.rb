@@ -4,13 +4,15 @@ require 'delorean'
 # Test authentication clients
 describe Client do
   let(:domain_machers) { nil }
+  let(:redirect_uris) { nil }
   let(:client) do
     Client.create(
       app_id: 'testing-client',
       app_secret: 'xyzzy',
       name: 'testing-client',
       site_url: 'http://localhost:8080/',
-      domain_matchers: domain_machers
+      domain_matchers: domain_machers,
+      redirect_uris: redirect_uris
     )
   end
   context "a client that isn't restricted to various domains" do
@@ -66,6 +68,35 @@ describe Client do
       end
       it "should remove the grants from the users" do
         expect(user.access_grants.size).to eq(0)
+      end
+    end
+  end
+
+  describe "#get_redirect_uri" do
+    describe "when provided redirect uri is part of the client's redirect_uris" do
+      let(:redirect_uris) { "http://test.client.com?param1=test" }
+      it "should return a valid redirect uri" do
+        expect(client.get_redirect_uri("http://test.client.com?param1=test", {param2: "123"}, {param3: "321"})).to eq(
+          "http://test.client.com?param1=test&param2=123#param3=321"
+        )
+      end
+    end
+    describe "when client doesn't have redirect_uris specified" do
+      it "should throw an error" do
+        expect { client.get_redirect_uri("https://test.client.com", test_param: "123") }.to raise_error(RuntimeError)
+      end
+    end
+    describe "when redirect_uri has hash params" do
+      let(:redirect_uris) { "https://test.client.com#param=test" }
+      it "should throw an error (they're not allowed according to OAuth2 spec)" do
+        expect { client.get_redirect_uri("https://test.client.com#param=test", test_param: "123") }.to raise_error(RuntimeError)
+      end
+    end
+    describe "when redirect_uri uses HTTP and Portal uses HTTPS" do
+      let(:redirect_uris) { "http://test.client.com?param1=test" }
+      it "should throw an error" do
+        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("https://test.portal.com")
+        expect { client.get_redirect_uri("http://test.client.com?param1=test", test_param: "123") }.to raise_error(RuntimeError)
       end
     end
   end

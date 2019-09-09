@@ -22,7 +22,7 @@ class AuthController < ApplicationController
     @app_name = nil
     if session[:oauth_authorize_params]
       client = Client.find_by_app_id(session[:oauth_authorize_params][:client_id])
-      @app_name = clinet ? client.name : nil
+      @app_name = client ? client.name : nil
     end
     @error = flash[:alert]
     @after_sign_in_path = params[:after_sign_in_path]
