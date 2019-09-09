@@ -1,6 +1,6 @@
 class AuthController < ApplicationController
 
-  before_filter :verify_logged_in, :except => [ :access_token, 
+  before_filter :verify_logged_in, :except => [ :access_token,
                                                 :login,
                                                 :oauth_authorize ]
 
@@ -8,21 +8,19 @@ class AuthController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
-
-    session.delete :sso_callback_params
-    session.delete :sso_application
+    session.delete :oauth_authorize_params
+    session.delete :oauth_client
 
     if current_user.nil?
         redirect_to auth_login_path
     end
-
   end
 
 
   def login
     # Renders a nice login form (views/auth/login.haml).
     # TODO session variables cause weird behaviors try to remove this if possible
-    @app_name = session[:sso_application] ? session[:sso_application].name : nil
+    @app_name = session[:oauth_client] ? session[:oauth_client].name : nil
     @error = flash[:alert]
     @after_sign_in_path = params[:after_sign_in_path]
     # If the user is already signed in and there is is a after_sign_in_path set
@@ -48,17 +46,17 @@ class AuthController < ApplicationController
   end
 
   def oauth_authorize
-
     if current_user.nil?
-        session[:sso_callback_params] = params
-        session[:sso_application]     = application
+        session[:oauth_authorize_params] = params
+        session[:oauth_client] = application
         redirect_to auth_login_path
         return
     end
-
-    AccessGrant.prune!
-    access_grant = current_user.access_grants.create({:client => application, :state => params[:state]}, :without_protection => true)
-    redirect_to access_grant.redirect_uri_for(params[:redirect_uri])
+    # Note that we'll get to this point only if user is currently logged in.
+    # If user has to fill sign in form first, we'll instead continue in ApplicationController#after_sign_in_path_for
+    # Any changes to this section should be made there too. Preferably, all the changes should be made to
+    # AccessGrant#get_authorize_redirect_uri which is used in both places.
+    redirect_to AccessGrant.get_authorize_redirect_uri(current_user, application, params)
   end
 
   def access_token

@@ -159,7 +159,8 @@ def create_default_lara_report
   auth_client = Client.where(name: "DEFAULT_REPORT_SERVICE_CLIENT").first_or_create(
     app_id: "DEFAULT_REPORT_SERVICE_CLIENT",
     app_secret: SecureRandom.uuid(),
-    domain_matchers: "*.concord.org"
+    domain_matchers: "*.concord.org",
+    type: "public"
   )
 
   ExternalReport.where(name: "DEFAULT_REPORT_SERVICE").first_or_create(

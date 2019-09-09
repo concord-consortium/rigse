@@ -86,15 +86,15 @@ describe AccessGrant do
       end
     end
 
-    describe "#redirect_uri_for" do
+    describe "#auth_code_redirect_uri_for" do
       let(:url)      { "http://blarg.com/path" }
       it "should include the token and state" do
-        expect(subject.redirect_uri_for(url)).to match /#{url}\?code=[a-f|0-9]{32}&response_type=code&state=what_is_this_for/
+        expect(subject.auth_code_redirect_uri_for(url)).to match /#{url}\?code=[a-f|0-9]{32}&response_type=code&state=what_is_this_for/
       end
       describe "with qeury string in the url" do
         let(:url)      { "http://blarg.com/path?foo" }
         it "should use ampersands" do
-          expect(subject.redirect_uri_for(url)).to match /path\?foo&code=/
+          expect(subject.auth_code_redirect_uri_for(url)).to match /path\?foo&code=/
         end
       end
 
@@ -140,11 +140,11 @@ describe AccessGrant do
   end
 
   # TODO: auto-generated
-  describe '#redirect_uri_for' do
-    xit 'redirect_uri_for' do
+  describe '#auth_code_redirect_uri_for' do
+    xit 'auth_code_redirect_uri_for' do
       access_grant = described_class.new
       redirect_uri = double('redirect_uri')
-      result = access_grant.redirect_uri_for(redirect_uri)
+      result = access_grant.auth_code_redirect_uri_for(redirect_uri)
 
       expect(result).not_to be_nil
     end

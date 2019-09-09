@@ -1,6 +1,10 @@
 class Client < ActiveRecord::Base
-  attr_accessible :app_id, :app_secret, :name, :site_url, :domain_matchers
+  attr_accessible :app_id, :app_secret, :name, :site_url, :domain_matchers, :client_type, :redirect_uris
   has_many :access_grants, :dependent => :delete_all
+
+  PUBLIC = "public"
+  CONFIDENTIAL = "confidential"
+  TYPES = [PUBLIC, CONFIDENTIAL]
 
   def self.authenticate(app_id, app_secret)
     where(["app_id = ? AND app_secret = ?", app_id, app_secret]).first
@@ -26,6 +30,31 @@ class Client < ActiveRecord::Base
     grant = find_grant_for_user(user) || create_grant_for_user(user)
     grant.update_attribute(:access_token_expires_at, Time.now + time_to_live)
     grant
+  end
+
+  def get_redirect_uri(redirect_uri, query_params = nil, hash_params = nil)
+    unless redirect_uris && redirect_uris.split(" ").include?(redirect_uri)
+      # Wrong redirect URI, we should NOT redirect back to the client.
+      raise "Unauthorized redirect_uri: #{redirect_uri}. Requested query_params: #{query_params}, hash_params: #{hash_params}"
+    end
+    uri = URI.parse(redirect_uri)
+    if uri.fragment
+      # Note that redirect_uri is not allowed to include any fragment / hash params.
+      # Wrong redirect URI, we should NOT redirect back to the client.
+      raise "redirect_uri must not include fragment"
+    end
+    if URI.parse(APP_CONFIG[:site_url]).scheme == "https" && uri.scheme != "https"
+      # Enforce HTTPS when Portal is using HTTPS too.
+      # # Wrong redirect URI, we should NOT redirect back to the client.
+      raise "redirect_uri must use HTTPS protocol"
+    end
+    if query_params
+      redirect_uri += (redirect_uri =~ /\?/ ? "&" : "?") + URI.encode_www_form(query_params)
+    end
+    if hash_params
+      redirect_uri += "#" + URI.encode_www_form(hash_params)
+    end
+    redirect_uri
   end
 
   private
