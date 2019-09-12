@@ -49,12 +49,15 @@ class Client < ActiveRecord::Base
       raise "redirect_uri must use HTTPS protocol"
     end
     if query_params
-      redirect_uri += (redirect_uri =~ /\?/ ? "&" : "?") + URI.encode_www_form(query_params)
+      query = Rack::Utils.parse_query(uri.query)
+      query.merge!(query_params)
+      uri.query = query.to_query
     end
     if hash_params
-      redirect_uri += "#" + URI.encode_www_form(hash_params)
+      # No fragment is allowed (see checks above), so we don't have to handle existing hash params.
+      uri.fragment = URI.encode_www_form(hash_params)
     end
-    redirect_uri
+    uri.to_s
   end
 
   private
