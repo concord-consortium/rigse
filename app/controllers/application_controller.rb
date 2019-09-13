@@ -309,31 +309,27 @@ class ApplicationController < ActionController::Base
       redirect_path = redirect_uri.to_s
     end
 
-    if session[:sso_callback_params]
-      AccessGrant.prune!
-      access_grant = current_user.access_grants.create({:client => session[:sso_application], :state => session[:sso_callback_params][:state]}, :without_protection => true)
-      sso_redirect = access_grant.redirect_uri_for(session[:sso_callback_params][:redirect_uri])
+    if session[:oauth_authorize_params]
+      oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
       # the user has been logged in by another auth provider via a popup window:
       # AutomaticallyClosingPopupLink in that case the other auth provider redirects in the
       # the window, so the auth_redirect session var is set which is then picked up by the
       # misc#auth_after action.
       if session[:auth_popup]
         session[:auth_popup] = nil
-        session[:auth_redirect] = sso_redirect
+        session[:auth_redirect] = oauth_redirect
       else
-        redirect_path = sso_redirect
+        redirect_path = oauth_redirect
       end
-      session[:sso_callback_params] = nil
-      session[:sso_application] = nil
+      session[:oauth_authorize_params] = nil
     end
-    return redirect_path
+    redirect_path
   end
 
   def after_sign_out_path_for(resource)
     redirect_url = "#{params[:redirect_uri]}?re_login=true&provider=#{params[:provider]}"
     if params[:re_login]
-      session[:sso_callback_params] = nil
-      session[:sso_application] = nil
+      session[:oauth_authorize_params] = nil
       redirect_url
     else
       root_path

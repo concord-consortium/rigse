@@ -39,6 +39,12 @@ cache: bundler
 bundler_args: --binstubs --without development
 
 addons:
+  apt:
+    packages:
+    # the version of dpkg is old in this version of ubunutu and the latest build
+    # of chrome now requires the updated dpkg, I'm not sure if the oder of the
+    # addons will always work here.
+    - dpkg
   chrome: stable
   artifacts:
     paths:
