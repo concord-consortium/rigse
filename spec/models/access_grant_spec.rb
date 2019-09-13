@@ -73,7 +73,7 @@ describe AccessGrant do
           client.client_type = Client::CONFIDENTIAL
           client.save!
           expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code", redirect_uri: "http://test.com"})).to eq(
-            "http://test.com?code=#{AccessGrant.last.code}&response_type=code&state"
+            "http://test.com?code=#{AccessGrant.last.code}&response_type=code&state="
           )
         end
         it "should fail if client is not found" do
@@ -148,7 +148,7 @@ describe AccessGrant do
       describe "with qeury string in the url" do
         let(:url) { "http://blarg.com/path?foo" }
         it "should use ampersands" do
-          expect(subject.auth_code_redirect_uri_for(url)).to match /path\?foo&code=/
+          expect(subject.auth_code_redirect_uri_for(url)).to match /path\?code=[A-Za-z0-9]+&foo=/
         end
       end
     end
