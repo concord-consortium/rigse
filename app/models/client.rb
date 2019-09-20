@@ -43,11 +43,17 @@ class Client < ActiveRecord::Base
       # Wrong redirect URI, we should NOT redirect back to the client.
       raise "redirect_uri must not include fragment"
     end
-    if URI.parse(APP_CONFIG[:site_url]).scheme == "https" && uri.scheme != "https"
-      # Enforce HTTPS when Portal is using HTTPS too.
-      # # Wrong redirect URI, we should NOT redirect back to the client.
-      raise "redirect_uri must use HTTPS protocol"
-    end
+
+    # LARA still needs to run in http because of some interactives and activities
+    # that were authored using http.  So we can't enforce https yet.
+    # Uncomment this once LARA is fully moved to https
+    # If this is uncommented then the test in client_spec.rb needs to be uncommented too
+    #
+    # if URI.parse(APP_CONFIG[:site_url]).scheme == "https" && uri.scheme != "https"
+    #   # Enforce HTTPS when Portal is using HTTPS too.
+    #   # # Wrong redirect URI, we should NOT redirect back to the client.
+    #   raise "redirect_uri must use HTTPS protocol"
+    # end
     if query_params
       query = Rack::Utils.parse_query(uri.query)
       query.merge!(query_params)
