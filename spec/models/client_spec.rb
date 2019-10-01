@@ -49,6 +49,12 @@ describe Client do
       expect(client.valid_from_referer?("https://baz.com/index.html")).to be_truthy
     end
   end
+  context "a client that matches wildcard domains" do
+    let(:domain_matches) {".*\.foo\.com" }
+    it "should validate subdomains of foo.com" do
+      expect(client.valid_from_referer?("https://something.foo.com")).to be_truthy
+    end
+  end
   describe "a client with an access_grant" do
     let(:user)  { FactoryBot.create(:user) }
     before(:each) do
@@ -110,17 +116,6 @@ describe Client do
       result = described_class.authenticate(app_id, app_secret)
 
       expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#valid_from_referer?' do
-    it 'valid_from_referer?' do
-      client = described_class.new
-      referer = double('referer')
-      result = client.valid_from_referer?(referer)
-
-      expect(result).not_to be_nil
     end
   end
 
