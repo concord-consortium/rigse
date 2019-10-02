@@ -323,7 +323,7 @@ class ApplicationController < ActionController::Base
           redirect_path = oauth_redirect
         end
       rescue => e
-        # Reset session to avoid getting stack in this handler.
+        # Reset session to avoid getting stuck in this handler.
         # Theoretically session[:oauth_authorize_params] = nil should be enough, but it seems that when
         # an exception is raised, session is not updated correctly and we keep coming back to this handler.
         reset_session
