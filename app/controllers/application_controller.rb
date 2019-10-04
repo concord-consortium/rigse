@@ -291,7 +291,6 @@ class ApplicationController < ActionController::Base
   # so it has access to the parameters that were passed in. This allows us to pass
   # a hidden param :after_sign_in_path to the sign in form.
   def after_sign_in_path_for(resource)
-
     redirect_path = view_context.current_user_home_path
 
     if BoolENV['RESEARCHER_REPORT_ONLY']
@@ -310,18 +309,26 @@ class ApplicationController < ActionController::Base
     end
 
     if session[:oauth_authorize_params]
-      oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
-      # the user has been logged in by another auth provider via a popup window:
-      # AutomaticallyClosingPopupLink in that case the other auth provider redirects in the
-      # the window, so the auth_redirect session var is set which is then picked up by the
-      # misc#auth_after action.
-      if session[:auth_popup]
-        session[:auth_popup] = nil
-        session[:auth_redirect] = oauth_redirect
-      else
-        redirect_path = oauth_redirect
+      begin
+        oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
+        session[:oauth_authorize_params] = nil
+        # the user has been logged in by another auth provider via a popup window:
+        # AutomaticallyClosingPopupLink in that case the other auth provider redirects in the
+        # the window, so the auth_redirect session var is set which is then picked up by the
+        # misc#auth_after action.
+        if session[:auth_popup]
+          session[:auth_popup] = nil
+          session[:auth_redirect] = oauth_redirect
+        else
+          redirect_path = oauth_redirect
+        end
+      rescue => e
+        # Reset session to avoid getting stuck in this handler.
+        # Theoretically session[:oauth_authorize_params] = nil should be enough, but it seems that when
+        # an exception is raised, session is not updated correctly and we keep coming back to this handler.
+        reset_session
+        raise e
       end
-      session[:oauth_authorize_params] = nil
     end
     redirect_path
   end
