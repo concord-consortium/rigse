@@ -112,16 +112,6 @@ class MiscController < ActionController::Base
     send("check_#{params[:provider]}")
   end
 
-  # TODO need to decide if this is necessary anymore. It is part of the code that handles
-  # logging in a Schoology user when the portal is running in an iframe.  If we keep this
-  # code, it needs to be fixed to handle redirecting after login when a logged out user
-  # tries to access a restricted page. The other parts of this code are in:
-  # automatically_closing_popup_link.js and _header_login_box.html.haml
-  def auth_after
-    url = session[:auth_redirect] || root_path
-    redirect_to url
-  end
-
   private
 
   def check_schoology
@@ -143,8 +133,6 @@ class MiscController < ActionController::Base
   # Checks if the current user is the same one as provided.
   # If not, authenticate the user through the provider.
   def generic_check(provider, uid=nil)
-    session[:auth_popup] = true if params[:popup]
-
     if uid
       if current_user == (Authentication.find_by_provider_and_uid(provider, uid).user rescue nil)
         redirect_to(root_path)

@@ -311,16 +311,7 @@ class ApplicationController < ActionController::Base
 
     if session[:oauth_authorize_params]
       oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
-      # the user has been logged in by another auth provider via a popup window:
-      # AutomaticallyClosingPopupLink in that case the other auth provider redirects in the
-      # the window, so the auth_redirect session var is set which is then picked up by the
-      # misc#auth_after action.
-      if session[:auth_popup]
-        session[:auth_popup] = nil
-        session[:auth_redirect] = oauth_redirect
-      else
-        redirect_path = oauth_redirect
-      end
+      redirect_path = oauth_redirect
       session[:oauth_authorize_params] = nil
     end
     redirect_path
