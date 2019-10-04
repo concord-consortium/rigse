@@ -103,11 +103,14 @@ class MiscController < ActionController::Base
     end
   end
 
+  # Per the schoology docs: http://developers.schoology.com/app-platform/allowing-cookies
   def preflight
     session['preflighted'] = '1'
     render layout: 'basic'
   end
 
+  # This is used by schoology. It is the first URL schoology opens when it is embedded as
+  # an iframe in schoology.
   def auth_check
     send("check_#{params[:provider]}")
   end
