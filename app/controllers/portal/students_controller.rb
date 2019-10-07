@@ -286,16 +286,24 @@ class Portal::StudentsController < ApplicationController
     @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
     # get student's learners, and offerings (id and names)
     @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
-    # find matching learners and update offering_id values to match those in new class (what happens to any work on assignments that aren't assigned to new class?)
+    # initialize JSON for report API call
+    @report_json = JSON['{"class_info_url": "' + @new_class.id.to_s + '", "context_id": "' + @new_class.hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + @portal_student.user_id.to_s + '"}']
+    @assignments = []
+    # find matching learners and update offering_id values to match those in new class (work on assignments that aren't assigned to new class becomes orphaned)
     @students_assignments.each do |sa|
       @new_class_assignments.each do |nca|
         if sa[:offering_name] == nca[:name]
           @learner_to_update = Portal::Learner.find(sa[:learner_id])
           @learner_to_update.update_attribute('offering_id', nca[:id])
           @learner_to_update.report_learner.update_fields
+          # add assignment to JSON for report API call
+          @assignments << JSON['{"new_resource_link_id": "' + nca[:id].to_s + '", "old_resource_link_id": "' + sa[:learner_id].to_s + '"}']
         end
       end
     end
+
+    # add learner IDs to JSON for report API
+    @report_json['new_assignments'] = @assignments
 
     flash[:notice] = 'Successfully moved student to new class.'
     redirect_to(@portal_student)
