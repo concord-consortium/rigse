@@ -62,12 +62,4 @@ describe MiscController do
     end
   end
 
-  # TODO: auto-generated
-  describe '#auth_after' do
-    it 'GET auth_after' do
-      get :auth_after, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
 end

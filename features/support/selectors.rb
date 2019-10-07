@@ -32,8 +32,6 @@ module HtmlSelectorsHelpers
       "div.ui-window.lightbox.lightbox_focused"
     when "the navigation menu"
       "div#clazzes_nav"
-    when "header login box"
-      "div.header-login-box"
     when "content box in change password page"
       "div#content"
     # Add more mappings here.

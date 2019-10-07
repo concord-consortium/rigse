@@ -3,8 +3,7 @@
   - name = "#{provider.to_s.underscore}"
   - display_name = "#{provider.to_s.titleize}"
   - directPath = omniauth_authorize_path('user', provider, after_sign_in_path: params[:after_sign_in_path])
-  - authCheckPath = auth_check_path(provider: provider.to_s, popup: 'true')
-  - providers.push({ name: "#{name}", display_name: "#{display_name}", directPath: "#{directPath}", authCheckPath: "#{authCheckPath}" })
+  - providers.push({ name: "#{name}", display_name: "#{display_name}", directPath: "#{directPath}" })
 
 :javascript
   if (typeof Portal === 'undefined') {
