@@ -1,5 +1,7 @@
-# This file will NOT be automatically included if you define COMPOSE_FILE in .env
-# You need to explicity include it in the list COMPOSE_FILE files.
+# Publish the capybara port. This makes it possible to run chrome driver on the host
+
+# To use this you must edit your .env file and change `COMPOSE_FILE` var
+# to include `docker/dev/docker-compose-no-logstash.yml`
 version: '3'
 services:
   app:
@@ -7,4 +9,8 @@ services:
       - "43447:43447"
 
 # Note about defined port:
-# When running features in non-headless mode the app communicates with chromedriver on the host machine (at port 9515). Then, on the host machine, Chrome needs to make a connection back into the Docker container at the port that the test server is running on. In this case we've chosen port 43447. This port is not used elsewhere so should not have any port conflicts.
+# When running features in non-headless mode the app communicates with chromedriver on
+#  the host machine (at port 9515). Then, on the host machine, Chrome needs to make a
+# connection back into the Docker container at the port that the test server is running on.
+# In this case we've chosen port 43447. This port is not used elsewhere so should not
+# have any port conflicts.
