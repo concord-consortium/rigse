@@ -296,9 +296,15 @@ class ApplicationController < ActionController::Base
     if BoolENV['RESEARCHER_REPORT_ONLY']
       # force all users to try to go to the researcher page on a report only portal
       redirect_path = learner_report_path
-    elsif !current_user.portal_student && params[:after_sign_in_path].present?
+    elsif params[:after_sign_in_path].present?
       # users that aren't student can be redirected to other pages after logging in if
       # the after_sign_in_path param is provided
+
+      # CHECKME: I think this was restricted to non students because we didn't want
+      # students to access collection pages. So if they are looking at a collection page
+      # and then sign in, we don't want them to see the collection page again.
+      # Instead of blocking the redirect, it seems better to block the students when they
+      # try to access the collection page.
 
       redirect_uri = URI.parse(params[:after_sign_in_path])
       query = Rack::Utils.parse_query(redirect_uri.query)
@@ -308,26 +314,14 @@ class ApplicationController < ActionController::Base
       redirect_path = redirect_uri.to_s
     end
 
-    if session[:oauth_authorize_params]
-      begin
-        oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
-        session[:oauth_authorize_params] = nil
-        redirect_path = oauth_redirect
-      rescue => e
-        # Reset session to avoid getting stuck in this handler.
-        # Theoretically session[:oauth_authorize_params] = nil should be enough, but it seems that when
-        # an exception is raised, session is not updated correctly and we keep coming back to this handler.
-        reset_session
-        raise e
-      end
-    end
     redirect_path
   end
 
   def after_sign_out_path_for(resource)
     redirect_url = "#{params[:redirect_uri]}?re_login=true&provider=#{params[:provider]}"
     if params[:re_login]
-      session[:oauth_authorize_params] = nil
+      # It looks to me like this code was only used by LARA in some code that was removed
+      # from there: https://github.com/concord-consortium/lara/pull/216
       redirect_url
     else
       root_path

@@ -8,8 +8,6 @@ class AuthController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:access_token]
 
   def verify_logged_in
-    session.delete :oauth_authorize_params
-
     if current_user.nil?
         redirect_to auth_login_path
     end
@@ -19,11 +17,7 @@ class AuthController < ApplicationController
   def login
     # Renders a nice login form (views/auth/login.haml).
     # TODO session variables cause weird behaviors try to remove this if possible
-    @app_name = nil
-    if session[:oauth_authorize_params]
-      client = Client.find_by_app_id(session[:oauth_authorize_params][:client_id])
-      @app_name = client ? client.name : nil
-    end
+    @app_name = params[:app_name]
     @error = flash[:alert]
     @after_sign_in_path = params[:after_sign_in_path]
     # If the user is already signed in and there is is a after_sign_in_path set
@@ -48,14 +42,18 @@ class AuthController < ApplicationController
 
   def oauth_authorize
     if current_user.nil?
-        session[:oauth_authorize_params] = params
-        redirect_to auth_login_path
+        client = Client.find_by_app_id(params[:client_id])
+        app_name = client ? client.name : nil
+
+        # CHECKME: when app_name is nil, what value gets added to the URL
+        redirect_to auth_login_path(after_sign_in_path: request.fullpath, app_name: app_name)
         return
     end
+
     # Note that we'll get to this point only if user is currently logged in.
-    # If user has to fill sign in form first, we'll instead continue in ApplicationController#after_sign_in_path_for
-    # Any changes to this section should be made there too. Preferably, all the changes should be made to
-    # AccessGrant#get_authorize_redirect_uri which is used in both places.
+    # If user is not logged in, we'll redirect back here after first
+    # logging in the user. This redirect happens when in
+    # ApplicationController#after_sign_in_path_for
     redirect_to AccessGrant.get_authorize_redirect_uri(current_user, params)
   end
 
