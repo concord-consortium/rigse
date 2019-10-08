@@ -24,6 +24,12 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
   def pundit_user_not_authorized(exception)
+    # without the no-store Chrome will cache this redirect in some cases
+    # for example if a student tries to access a collection page, and then they
+    # log out and try to access it again. In this case Chrome sends them to the
+    # cached location of "/my-classes"
+    response.headers["Cache-Control"] = 'no-store'
+
     error_message = not_authorized_error_message
     if request.xhr?
       render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
