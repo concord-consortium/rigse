@@ -318,14 +318,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource)
-    redirect_url = "#{params[:redirect_uri]}?re_login=true&provider=#{params[:provider]}"
-    if params[:re_login]
-      # It looks to me like this code was only used by LARA in some code that was removed
-      # from there: https://github.com/concord-consortium/lara/pull/216
-      redirect_url
-    else
-      root_path
-    end
+    root_path
   end
 
   def set_locale
