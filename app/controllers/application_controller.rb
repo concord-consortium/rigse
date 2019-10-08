@@ -27,8 +27,9 @@ class ApplicationController < ActionController::Base
     # without the no-store Chrome will cache this redirect in some cases
     # for example if a student tries to access a collection page, and then they
     # log out and try to access it again. In this case Chrome sends them to the
-    # cached location of "/my-classes"
-    response.headers["Cache-Control"] = 'no-store'
+    # cached location of "/my-classes". By default rails adds 'no-cache' but that isn't
+    # strong enough.
+    response.headers['Cache-Control'] = 'no-store'
 
     error_message = not_authorized_error_message
     if request.xhr?
