@@ -149,11 +149,40 @@ describe Admin::ProjectsController do
     end
   end
 
+  describe 'when user is not logged in' do
+    describe "#index" do
+      it "redirects to the login page" do
+        project
+        get :index, {}
+        expect(response).to have_http_status(:redirect)
+        expect(response.location).to include(auth_login_path)
+      end
+    end
+  end
+
   describe "#landing page" do
     context "there is a project matching the slug" do
       it "renders landing page template" do
         get :landing_page, {:landing_page_slug => project.landing_page_slug}
         expect(response).to render_template("landing_page")
+      end
+
+      context "when the current user is a student" do
+        let (:student_user) {
+          student = FactoryBot.create(:full_portal_student)
+          student.user
+        }
+        before(:each) do
+          sign_in student_user
+        end
+
+        # NOTE: this is going to traverse through pundit to
+        # ApplicationController#pundit_user_not_authorized
+        # which will in turn call back to 'humanize_action', and not_authorized_error_message
+        it "does not allow access, the student is redirected to their home page" do
+          get :landing_page, {:landing_page_slug => project.landing_page_slug}
+          expect(response).to redirect_to(controller.send(:after_sign_in_path_for, student_user))
+        end
       end
     end
 
