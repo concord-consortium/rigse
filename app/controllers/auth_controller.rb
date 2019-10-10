@@ -16,7 +16,6 @@ class AuthController < ApplicationController
 
   def login
     # Renders a nice login form (views/auth/login.haml).
-    # TODO session variables cause weird behaviors try to remove this if possible
     @app_name = params[:app_name]
     @error = flash[:alert]
     @after_sign_in_path = params[:after_sign_in_path]
