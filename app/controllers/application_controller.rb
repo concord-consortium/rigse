@@ -56,7 +56,8 @@ class ApplicationController < ActionController::Base
           # So instead of showing the error message again, we just send the user to the
           # default login page for that user.
           flash[:alert] = error_message if not params[:redirecting_after_sign_in]
-          redirect_to after_sign_in_path_for(current_user)
+
+          redirect_to view_context.current_user_home_path
         end
       else
         flash[:alert] = error_message
@@ -304,14 +305,12 @@ class ApplicationController < ActionController::Base
       # force all users to try to go to the researcher page on a report only portal
       redirect_path = learner_report_path
     elsif params[:after_sign_in_path].present?
-      # users that aren't student can be redirected to other pages after logging in if
-      # the after_sign_in_path param is provided
-
-      # CHECKME: I think this was restricted to non students because we didn't want
-      # students to access collection pages. So if they are looking at a collection page
-      # and then sign in, we don't want them to see the collection page again.
-      # Instead of blocking the redirect, it seems better to block the students when they
-      # try to access the collection page.
+      # the check for to see if the user has permission to view the after_sigin_in_path
+      # page is handled by the controller of this new page.
+      # if the user doesn't have permission to see the new page they will be sent to their
+      # home page. They will also not see a error message because of the
+      # redirecting_after_sign_in parameter that is added here.
+      # See pundit_user_not_authorized for the implementation
 
       redirect_uri = URI.parse(params[:after_sign_in_path])
       query = Rack::Utils.parse_query(redirect_uri.query)
