@@ -102,6 +102,9 @@ services:
       # used to pass context to selenium
       #
       DOCKER: 'true'
+    # open standard in and turn on tty so we can attach to the container and debug it
+    stdin_open: true
+    tty: true
 
     # no ports are published, see below for details
     volumes:
