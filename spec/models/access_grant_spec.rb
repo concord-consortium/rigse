@@ -49,6 +49,7 @@ describe AccessGrant do
         expect(subject.access_token_expires_at).to be_nil
       end
     end
+
     describe "#prune!" do
       it "Should remove items that expired more than a day ago" do
         all_grants = old_grants + newer_grants
@@ -59,57 +60,194 @@ describe AccessGrant do
           expect(exp_time).to be > 1.days.ago
         end
       end
-      describe "get_authorize_redirect_uri" do
-        it "should return redirect_uri with access token when response_type is 'token'" do
-          client.redirect_uris = "http://test.com"
-          client.client_type = Client::PUBLIC
-          client.save!
-          expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "token", redirect_uri: "http://test.com"})).to eq(
-            "http://test.com#access_token=#{AccessGrant.last.access_token}&token_type=bearer&expires_in=#{AccessGrant::ExpireTime.to_s}&state"
-          )
+    end
+
+    describe "#validate_oauth_authorize" do
+      let(:params) { {} }
+      let(:client_attributes) { {} }
+      let(:client) { FactoryBot.create(:client, client_attributes) }
+      subject {
+        AccessGrant.validate_oauth_authorize(params)
+      }
+      context "when response_type is 'token'" do
+        let(:params) { {client_id: client.app_id, response_type: "token", redirect_uri: "http://test.com"} }
+        let(:client_attributes) {
+          {redirect_uris: "http://test.com", client_type: Client::PUBLIC} }
+
+        it { should be_valid }
+      end
+
+      context "when response_type is 'token'" do
+        let(:params) { {client_id: client.app_id, response_type: "code", redirect_uri: "http://test.com"} }
+        let(:client_attributes) {
+          {redirect_uris: "http://test.com", client_type: Client::CONFIDENTIAL} }
+
+        it { should be_valid }
+      end
+
+      context "when client_id is not found" do
+        let(:params) { {client_id: "123"} }
+        it "should raise an error" do
+          expect { subject }.to raise_error(RuntimeError)
         end
-        it "should return redirect_uri with code when response_type is 'code'" do
-          client.redirect_uris = "http://test.com"
-          client.client_type = Client::CONFIDENTIAL
-          client.save!
-          expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code", redirect_uri: "http://test.com"})).to eq(
-            "http://test.com?code=#{AccessGrant.last.code}&response_type=code&state="
-          )
+      end
+
+      context "when response_type is not supported and redirect_uri is not registered" do
+        let(:params) { {client_id: client.app_id, response_type: "foo"} }
+        it "should raise an error" do
+          expect { subject }.to raise_error(RuntimeError)
         end
-        it "should fail if client is not found" do
-          expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: "123"}) }.to raise_error(RuntimeError)
+      end
+
+      context "when response_type is not supported and redirect_uri is registered" do
+        let(:params) { {client_id: client.app_id, response_type: "foo", redirect_uri: "http://test.com" } }
+        let(:client_attributes) {
+          {redirect_uris: "http://test.com"} }
+
+        it { should_not be_valid }
+
+        it "should return an error_redirect" do
+          expect(subject.error_redirect).to eq("http://test.com?error=unsupported_response_type")
         end
-        it "should fail if response_type is not supported and redirect_uri is not registered" do
-          expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "foo"}) }.to raise_error(RuntimeError)
+      end
+
+      mismatched_pairs = [
+        {client_type: Client::CONFIDENTIAL, response_type: "token"},
+        {client_type: Client::PUBLIC,       response_type: "code"}
+      ]
+      mismatched_pairs.each do |pair|
+        context "when response_type is '#{pair[:response_type]} and client_type is '#{pair[:client_type]}''" do
+          let(:redirect_uri_param) { nil }
+          let(:params) { {
+            client_id: client.app_id,
+            response_type: pair[:response_type],
+            redirect_uri: redirect_uri_param } }
+          let(:client_attributes) { {
+            client_type: pair[:client_type],
+            redirect_uris: "http://test.com"} }
+
+          context "when the redirect_uri is not registerd" do
+            it "should raise an error" do
+              expect { subject }.to raise_error(RuntimeError)
+            end
+          end
+          context "when the redirect_uri is registered" do
+            let(:redirect_uri_param) { "http://test.com" }
+
+            it { should_not be_valid }
+
+            it "should return an error_redirect" do
+              expect(subject.error_redirect).to eq("http://test.com?error=unauthorized_client")
+            end
+          end
         end
-        it "should return redirect_uri with error code if response_type is not supported and redirect_uri is registered" do
-          client.redirect_uris = "http://test.com"
-          client.save!
-          expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "foo", redirect_uri: "http://test.com"})).to eq(
-            "http://test.com?error=unsupported_response_type"
-          )
+      end
+    end
+
+    describe "#get_authorize_redirect_uri" do
+      let (:params) { {} }
+      subject { AccessGrant.get_authorize_redirect_uri(user, params) }
+      context "when validation raises an error" do
+        before(:each) {
+          expect(AccessGrant).to receive(:validate_oauth_authorize)
+            .and_raise("Mock Error")
+        }
+        it "should raise an error" do
+          expect { subject }.to raise_error(RuntimeError)
         end
-        it "should fail if response_type is not supported by given client_type and redirect_uri is not registered" do
-          client.client_type = Client::CONFIDENTIAL
-          client.save!
-          expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "token"}) }.to raise_error(RuntimeError)
-          client.client_type = Client::PUBLIC
-          client.save!
-          expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code"}) }.to raise_error(RuntimeError)
+      end
+
+      context "when validation is not valid" do
+         before(:each) {
+           expect(AccessGrant).to receive(:validate_oauth_authorize)
+             .and_return(AccessGrant::ValidationResult.new(false, nil, "http://error.redirect"))
+         }
+         it "returns error redirect" do
+           expect(subject).to eq("http://error.redirect")
+         end
+      end
+
+      context "when validation is valid" do
+        let(:client) { FactoryBot.create(:client, redirect_uris: "http://test.com") }
+        let(:response_type_param) { }
+        let(:params) { {
+            response_type: response_type_param,
+            redirect_uri: "http://test.com"
+          }}
+        before(:each) {
+          expect(AccessGrant).to receive(:validate_oauth_authorize)
+            .and_return(AccessGrant::ValidationResult.new(true, client, nil))
+        }
+
+        it "should prune old access grants" do
+          expect(AccessGrant).to receive(:prune!)
+          # the subject will raise an error because there is no response_type_param
+          expect{ subject }.to raise_error(RuntimeError)
         end
-        it "should return redirect_uri with error code if response_type is not supported by given client_type and redirect_uri is registered" do
-          client.redirect_uris = "http://test.com"
-          client.client_type = Client::CONFIDENTIAL
-          client.save!
-          expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "token", redirect_uri: "http://test.com"})).to eq(
-            "http://test.com?error=unauthorized_client"
-          )
-          client.client_type = Client::PUBLIC
-          client.save!
-          expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code", redirect_uri: "http://test.com"})).to eq(
-            "http://test.com?error=unauthorized_client"
-          )
+        context "when response_type is 'token'" do
+          let(:response_type_param) { "token" }
+          it "should return redirect_uri with access token" do
+            expect(subject).to eq(
+              "http://test.com#access_token=#{AccessGrant.last.access_token}&token_type=bearer&expires_in=#{AccessGrant::ExpireTime.to_s}&state")
+          end
         end
+        context "when response_type is 'code'" do
+          let(:response_type_param) { "code" }
+          it "should return redirect_uri with code" do
+            expect(subject).to eq(
+              "http://test.com?code=#{AccessGrant.last.code}&response_type=code&state=")
+          end
+        end
+      end
+      it "should return redirect_uri with access token when response_type is 'token'" do
+        client.redirect_uris = "http://test.com"
+        client.client_type = Client::PUBLIC
+        client.save!
+        expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "token", redirect_uri: "http://test.com"})).to eq(
+          "http://test.com#access_token=#{AccessGrant.last.access_token}&token_type=bearer&expires_in=#{AccessGrant::ExpireTime.to_s}&state"
+        )
+      end
+      it "should return redirect_uri with code when response_type is 'code'" do
+        client.redirect_uris = "http://test.com"
+        client.client_type = Client::CONFIDENTIAL
+        client.save!
+        expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code", redirect_uri: "http://test.com"})).to eq(
+          "http://test.com?code=#{AccessGrant.last.code}&response_type=code&state="
+        )
+      end
+      it "should fail if client is not found" do
+        expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: "123"}) }.to raise_error(RuntimeError)
+      end
+      it "should fail if response_type is not supported and redirect_uri is not registered" do
+        expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "foo"}) }.to raise_error(RuntimeError)
+      end
+      it "should return redirect_uri with error code if response_type is not supported and redirect_uri is registered" do
+        client.redirect_uris = "http://test.com"
+        client.save!
+        expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "foo", redirect_uri: "http://test.com"})).to eq(
+          "http://test.com?error=unsupported_response_type"
+        )
+      end
+      it "should fail if response_type is not supported by given client_type and redirect_uri is not registered" do
+        client.client_type = Client::CONFIDENTIAL
+        client.save!
+        expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "token"}) }.to raise_error(RuntimeError)
+        client.client_type = Client::PUBLIC
+        client.save!
+        expect { AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code"}) }.to raise_error(RuntimeError)
+      end
+      it "should return redirect_uri with error code if response_type is not supported by given client_type and redirect_uri is registered" do
+        client.redirect_uris = "http://test.com"
+        client.client_type = Client::CONFIDENTIAL
+        client.save!
+        expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "token", redirect_uri: "http://test.com"})).to eq(
+          "http://test.com?error=unauthorized_client"
+        )
+        client.client_type = Client::PUBLIC
+        client.save!
+        expect(AccessGrant.get_authorize_redirect_uri(user, {client_id: client.app_id, response_type: "code", redirect_uri: "http://test.com"})).to eq(
+          "http://test.com?error=unauthorized_client"
+        )
       end
     end
 
@@ -129,6 +267,14 @@ describe AccessGrant do
         end
       end
     end
+
+    # TODO: auto-generated
+    describe '#valid_at' do # scope test
+      it 'supports named scope valid_at' do
+        expect(described_class.limit(3).valid_at(Time.now)).to all(be_a(described_class))
+      end
+    end
+
   end
 
   describe "instance methods" do
@@ -160,54 +306,20 @@ describe AccessGrant do
         expect(subject.implicit_flow_redirect_uri_for(url)).to match /#{url}\#access_token=[a-f|0-9]{32}&token_type=bearer&expires_in=\d+&state=what_is_this_for/
       end
     end
-  end
 
-  # TODO: auto-generated
-  describe '.valid_at' do # scope test
-    it 'supports named scope valid_at' do
-      expect(described_class.limit(3).valid_at(Time.now)).to all(be_a(described_class))
+    # TODO: auto-generated
+    describe '#generate_tokens' do
+      it 'generate_tokens' do
+        access_grant = described_class.new
+        result = access_grant.generate_tokens
+
+        expect(result).not_to be_nil
+      end
     end
+
   end
 
-  # TODO: auto-generated
-  describe '.prune!' do
-    it 'prune!' do
-      result = described_class.prune!
 
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '.authenticate' do
-    it 'authenticate' do
-      code = double('code')
-      application_id = double('application_id')
-      result = described_class.authenticate(code, application_id)
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#generate_tokens' do
-    it 'generate_tokens' do
-      access_grant = described_class.new
-      result = access_grant.generate_tokens
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#start_expiry_period!' do
-    it 'start_expiry_period!' do
-      access_grant = described_class.new
-      result = access_grant.start_expiry_period!
-
-      expect(result).not_to be_nil
-    end
-  end
 
 
 end

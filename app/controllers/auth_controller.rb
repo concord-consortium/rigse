@@ -41,12 +41,17 @@ class AuthController < ApplicationController
 
   def oauth_authorize
     if current_user.nil?
-        client = Client.find_by_app_id(params[:client_id])
-        app_name = client ? client.name : nil
-
-        # CHECKME: when app_name is nil, what value gets added to the URL
-        redirect_to auth_login_path(after_sign_in_path: request.fullpath, app_name: app_name)
+      validation = AccessGrant.validate_oauth_authorize(params)
+      if (!validation.valid)
+        redirect_to validation.error_redirect
         return
+      end
+
+      # if the parameters are valid then the validation will have a client
+      # we send the clients name to the login box so it can display a helpful name
+      app_name = validation.client.name
+      redirect_to auth_login_path(after_sign_in_path: request.fullpath, app_name: app_name)
+      return
     end
 
     # Note that we'll get to this point only if user is currently logged in.
