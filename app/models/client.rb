@@ -32,11 +32,17 @@ class Client < ActiveRecord::Base
     grant
   end
 
-  def get_redirect_uri(redirect_uri, query_params = nil, hash_params = nil)
+  def check_redirect_uri(redirect_uri, extra_error_msg = "")
     unless redirect_uris && redirect_uris.split(" ").include?(redirect_uri)
       # Wrong redirect URI, we should NOT redirect back to the client.
-      raise "Unauthorized redirect_uri: #{redirect_uri}. Requested query_params: #{query_params}, hash_params: #{hash_params}"
+      raise "Unauthorized redirect_uri: #{redirect_uri}. #{extra_error_msg}"
     end
+  end
+
+  def get_redirect_uri(redirect_uri, query_params = nil, hash_params = nil)
+    
+    check_redirect_uri(redirect_uri, "Requested query_params: #{query_params}, hash_params: #{hash_params}")
+
     uri = URI.parse(redirect_uri)
     if uri.fragment
       # Note that redirect_uri is not allowed to include any fragment / hash params.

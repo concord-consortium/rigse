@@ -26,6 +26,18 @@ class AccessGrant < ActiveRecord::Base
     def valid?
       valid
     end
+
+    def error(error_msg, redirect_uri)
+      self.error_redirect = client.get_redirect_uri(redirect_uri, error: error_msg)
+      self.valid = false
+    end
+  end
+
+  def self.matching_response_type(client_type, response_type)
+    # Implicit flow for public clients (e.g. Glossary Authoring).
+    (client_type == Client::PUBLIC && response_type === "token") ||
+    # Auth code flow (two steps) for confidential clients (e.g. LARA).
+    (client_type == Client::CONFIDENTIAL && response_type === "code")
   end
 
   # this will raise an error if:
@@ -33,27 +45,20 @@ class AccessGrant < ActiveRecord::Base
   # - the passed in redirect_uri is not registered with the client
   def self.validate_oauth_authorize(params)
     result = ValidationResult.new(false, nil, nil)
-    result.client = client = Client.find_by_app_id(params[:client_id])
-    unless client
-      raise "Client not found"
-    end
-    unless SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
-      # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      result.error_redirect =
-        client.get_redirect_uri(params[:redirect_uri], error: "unsupported_response_type")
-      return result
-    end
+    # use first! with the bang to raise an exception if it doesn't exist
+    result.client = Client.where(app_id: params[:client_id]).first!
 
-    if client.client_type == Client::PUBLIC && params[:response_type] === "token"
-      # Implicit flow for public clients (e.g. Glossary Authoring).
-      result.valid = true
-    elsif client.client_type == Client::CONFIDENTIAL && params[:response_type] === "code"
-      # Auth code flow (two steps) for confidential clients (e.g. LARA).
-      result.valid = true
-    else
+    # this will raise an error if the redirect_uri is invalid
+    result.client.check_redirect_uri(params[:redirect_uri])
+
+    if ! SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
       # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      result.error_redirect =
-        client.get_redirect_uri(params[:redirect_uri], error: "unauthorized_client")
+      result.error("unsupported_response_type", params[:redirect_uri])
+    elsif ! self.matching_response_type(result.client.client_type, params[:response_type])
+      # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
+      result.error("unauthorized_client", params[:redirect_uri])
+    else
+      result.valid = true
     end
 
     result
