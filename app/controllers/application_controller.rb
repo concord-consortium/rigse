@@ -313,11 +313,17 @@ class ApplicationController < ActionController::Base
       # See pundit_user_not_authorized for the implementation
 
       redirect_uri = URI.parse(params[:after_sign_in_path])
-      query = Rack::Utils.parse_query(redirect_uri.query)
-      # add an extra param to this path, so we don't go in a loop, see pundit_user_not_authorized
-      query["redirecting_after_sign_in"] = '1'
-      redirect_uri.query = Rack::Utils.build_query(query)
-      redirect_path = redirect_uri.to_s
+
+      # Only allow redirecting to paths. If the redirect url has a host do not redirect
+      # this prevents an open redirect. More info about open redirects are here:
+      # https://cwe.mitre.org/data/definitions/601.html
+      if redirect_uri.host.nil?
+        query = Rack::Utils.parse_query(redirect_uri.query)
+        # add an extra param to this path, so we don't go in a loop, see pundit_user_not_authorized
+        query["redirecting_after_sign_in"] = '1'
+        redirect_uri.query = Rack::Utils.build_query(query)
+        redirect_path = redirect_uri.to_s
+      end
     end
 
     redirect_path

@@ -88,7 +88,7 @@ describe AccessGrant do
       context "when client_id is not found" do
         let(:params) { {client_id: "123"} }
         it "should raise an error" do
-          expect { subject }.to raise_error(RuntimeError)
+          expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
         end
       end
 
