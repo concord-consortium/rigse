@@ -28,30 +28,50 @@ RSpec.describe AuthController, type: :controller do
     subject { get :oauth_authorize, params, {} }
 
     context 'without a logged in user' do
-      it 'redirects' do
-        expect(subject).to have_http_status(:redirect)
-      end
-
-      it 'redicts with an after_sign_in_path' do
-        expect(subject.location).to include('after_sign_in_path')
-      end
-
-      # FIXME: this should actually return an error because we want to validate
-      # the client paramters before redirecting
-      context 'when a client_id is not passed' do
-        it 'redirects without a app_name' do
-          expect(subject.location).not_to include('app_name')
+      context 'with invalid parameters' do
+        context 'when the validation raises an error' do
+          before(:each) {
+            expect(AccessGrant).to receive(:validate_oauth_authorize)
+              .and_raise("Mock Error")
+          }
+          it 'raises an error' do
+            expect { subject }.to raise_error(RuntimeError)
+          end
+        end
+        context 'when the validation has an error_redirect' do
+          before(:each) {
+            expect(AccessGrant).to receive(:validate_oauth_authorize)
+              .and_return(AccessGrant::ValidationResult.new(false, nil, "http://error.redirect"))
+          }
+          it 'redirects to the error_redirect' do
+            expect(subject).to redirect_to("http://error.redirect")
+          end
         end
       end
 
-      context 'when a client_id param is passed' do
+      context 'with valid parameters' do
         let (:client) { FactoryBot.create(:client, name: 'Foo', app_id: 'test-client') }
         let (:params) { {client_id: client.app_id} }
+
+        before(:each) {
+          expect(AccessGrant).to receive(:validate_oauth_authorize)
+            .and_return(AccessGrant::ValidationResult.new(true, client, nil))
+        }
+
+        it 'redirects' do
+          expect(subject).to have_http_status(:redirect)
+        end
+
+        it 'redicts with an after_sign_in_path' do
+          expect(subject.location).to include('after_sign_in_path')
+        end
 
         it "redirects with the client's app name" do
           expect(subject.location).to include('app_name=Foo')
         end
+
       end
+
     end
   end
 
