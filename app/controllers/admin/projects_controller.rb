@@ -2,16 +2,26 @@ class Admin::ProjectsController < ApplicationController
 
   protected
 
+  def humanized_action(map={})
+    super({landing_page: 'view'})
+  end
+
   def not_authorized_error_message
-    super({resource_type: 'project'})
+    if action_name == 'landing_page'
+      super({resource_type: 'collection'})
+    else
+      super({resource_type: 'project'})
+    end
   end
 
   public
 
   # GET /:landing_page_slug
-  def landing_page
-    # no authorization needed ...
+  def landing_page    # no authorization needed ...
     @project = Admin::Project.where(landing_page_slug: params[:landing_page_slug]).first!
+
+    # We want to prevent logged in students from viewing landing pages
+    authorize @project
 
     @landing_page_content = @project.landing_page_content
     # Redirect back to project landing page after user signs in.

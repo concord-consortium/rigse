@@ -22,30 +22,87 @@ class AccessGrant < ActiveRecord::Base
     AccessGrant.where("code = ? AND client_id = ?", code, client_id).first
   end
 
+  ValidationResult = Struct.new(:valid, :client, :error_redirect) do
+    def valid?
+      valid
+    end
+
+    def error(error_msg, redirect_uri)
+      self.error_redirect = client.get_redirect_uri(redirect_uri, error: error_msg)
+      self.valid = false
+    end
+  end
+
+  def self.matching_response_type(client_type, response_type)
+    # Implicit flow for public clients (e.g. Glossary Authoring).
+    (client_type == Client::PUBLIC && response_type === "token") ||
+    # Auth code flow (two steps) for confidential clients (e.g. LARA).
+    (client_type == Client::CONFIDENTIAL && response_type === "code")
+  end
+
+  # There are two types of validation errors "hard" and "soft".
+  #
+  # "hard" errors happen when the client is not found or redirect_uri is malformed or
+  #   not registered.
+  #
+  # "soft" errors happen when the redirect_uri is fine. In these cases the user should be
+  #   redirected back to the client with an error url parameter containing the error
+  #   message.
+  #
+  # For a "hard" error validate_oauth_authorize raises an RuntimeError.
+  #   Without additional handling the user will see a 500 error.
+  #
+  # For a "soft" error validate_oauth_authorize returns an object with a obj.valid false,
+  #   and obj.error_redirect a string with the url to redirect to. The caller is
+  #   responsible for checking this return value and redirecting if necessary.
+  def self.validate_oauth_authorize(params)
+    result = ValidationResult.new(false, nil, nil)
+    # use first! with the bang to raise an exception if it doesn't exist
+    result.client = Client.where(app_id: params[:client_id]).first!
+
+    # this will raise an error if the redirect_uri is invalid
+    result.client.check_redirect_uri(params[:redirect_uri])
+
+    if ! SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
+      # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
+      result.error("unsupported_response_type", params[:redirect_uri])
+    elsif ! self.matching_response_type(result.client.client_type, params[:response_type])
+      # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
+      result.error("unauthorized_client", params[:redirect_uri])
+    else
+      result.valid = true
+    end
+
+    result
+  end
+
   # Pretty much perform the 1st step of the OAuth2 authorization.
   def self.get_authorize_redirect_uri(user, params)
-    client = Client.find_by_app_id(params[:client_id])
-    unless client
-      raise "Client not found"
+    # this validation might have already happened before, if the user wasn't logged in
+    # but if the user was already logged in then this will be first time the validation
+    # is done
+    validation = self.validate_oauth_authorize(params)
+
+    if !validation.valid
+      return validation.error_redirect
     end
-    unless SUPPORTED_RESPONSE_TYPES.include?(params[:response_type])
-      # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      return client.get_redirect_uri(params[:redirect_uri], error: "unsupported_response_type")
-    end
+
+    client = validation.client
 
     AccessGrant.prune!
     access_grant = user.access_grants.create({:client => client, :state => params[:state]}, :without_protection => true)
 
-    if client.client_type == Client::PUBLIC && params[:response_type] === "token"
+    # validate_oauth_authorize already checked that this client settings matched the response_type
+    if params[:response_type] === "token"
       # Implicit flow for public clients (e.g. Glossary Authoring).
       access_grant.start_expiry_period!
       access_grant.implicit_flow_redirect_uri_for(params[:redirect_uri])
-    elsif client.client_type == Client::CONFIDENTIAL && params[:response_type] === "code"
+    elsif params[:response_type] === "code"
       # Auth code flow (two steps) for confidential clients (e.g. LARA).
       access_grant.auth_code_redirect_uri_for(params[:redirect_uri])
     else
-      # https://tools.ietf.org/html/rfc6749#section-4.2.2.1
-      client.get_redirect_uri(params[:redirect_uri], error: "unauthorized_client")
+      # we shouldn't be here because validate_oauth_authorize should have handled this case
+      raise "error validating request"
     end
   end
 
