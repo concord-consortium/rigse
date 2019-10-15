@@ -40,9 +40,21 @@ class AccessGrant < ActiveRecord::Base
     (client_type == Client::CONFIDENTIAL && response_type === "code")
   end
 
-  # this will raise an error if:
-  # - the client is not found
-  # - the passed in redirect_uri is not registered with the client
+  # There are two types of validation errors "hard" and "soft".
+  #
+  # "hard" errors happen when the client is not found or redirect_uri is malformed or
+  #   not registered.
+  #
+  # "soft" errors happen when the redirect_uri is fine. In these cases the user should be
+  #   redirected back to the client with an error url parameter containing the error
+  #   message.
+  #
+  # For a "hard" error validate_oauth_authorize raises an RuntimeError.
+  #   Without additional handling the user will see a 500 error.
+  #
+  # For a "soft" error validate_oauth_authorize returns an object with a obj.valid false,
+  #   and obj.error_redirect a string with the url to redirect to. The caller is
+  #   responsible for checking this return value and redirecting if necessary.
   def self.validate_oauth_authorize(params)
     result = ValidationResult.new(false, nil, nil)
     # use first! with the bang to raise an exception if it doesn't exist

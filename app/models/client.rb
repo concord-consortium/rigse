@@ -37,17 +37,12 @@ class Client < ActiveRecord::Base
       # Wrong redirect URI, we should NOT redirect back to the client.
       raise "Unauthorized redirect_uri: #{redirect_uri}. #{extra_error_msg}"
     end
-  end
-
-  def get_redirect_uri(redirect_uri, query_params = nil, hash_params = nil)
-    
-    check_redirect_uri(redirect_uri, "Requested query_params: #{query_params}, hash_params: #{hash_params}")
 
     uri = URI.parse(redirect_uri)
     if uri.fragment
       # Note that redirect_uri is not allowed to include any fragment / hash params.
       # Wrong redirect URI, we should NOT redirect back to the client.
-      raise "redirect_uri must not include fragment"
+      raise "redirect_uri must not include fragment. #{extra_error_msg}"
     end
 
     # LARA still needs to run in http because of some interactives and activities
@@ -58,8 +53,14 @@ class Client < ActiveRecord::Base
     # if URI.parse(APP_CONFIG[:site_url]).scheme == "https" && uri.scheme != "https"
     #   # Enforce HTTPS when Portal is using HTTPS too.
     #   # # Wrong redirect URI, we should NOT redirect back to the client.
-    #   raise "redirect_uri must use HTTPS protocol"
+    #   raise "redirect_uri must use HTTPS protocol. #{extra_error_msg}"
     # end
+  end
+
+  def get_redirect_uri(redirect_uri, query_params = nil, hash_params = nil)
+
+    check_redirect_uri(redirect_uri, "Requested query_params: #{query_params}, hash_params: #{hash_params}")
+
     if query_params
       query = Rack::Utils.parse_query(uri.query)
       query.merge!(query_params)
