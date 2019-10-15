@@ -61,6 +61,7 @@ class Client < ActiveRecord::Base
 
     check_redirect_uri(redirect_uri, "Requested query_params: #{query_params}, hash_params: #{hash_params}")
 
+    uri = URI.parse(redirect_uri)
     if query_params
       query = Rack::Utils.parse_query(uri.query)
       query.merge!(query_params)
