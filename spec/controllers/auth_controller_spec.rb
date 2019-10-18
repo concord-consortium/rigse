@@ -22,12 +22,56 @@ RSpec.describe AuthController, type: :controller do
     end
   end
 
-  # TODO: auto-generated
   describe '#oauth_authorize' do
-    it 'GET oauth_authorize' do
-      get :oauth_authorize, {}, {}
+    let (:params) { {} }
 
-      expect(response).to have_http_status(:redirect)
+    subject { get :oauth_authorize, params, {} }
+
+    context 'without a logged in user' do
+      context 'with invalid parameters' do
+        context 'when the validation raises an error' do
+          before(:each) {
+            expect(AccessGrant).to receive(:validate_oauth_authorize)
+              .and_raise("Mock Error")
+          }
+          it 'raises an error' do
+            expect { subject }.to raise_error(RuntimeError)
+          end
+        end
+        context 'when the validation has an error_redirect' do
+          before(:each) {
+            expect(AccessGrant).to receive(:validate_oauth_authorize)
+              .and_return(AccessGrant::ValidationResult.new(false, nil, "http://error.redirect"))
+          }
+          it 'redirects to the error_redirect' do
+            expect(subject).to redirect_to("http://error.redirect")
+          end
+        end
+      end
+
+      context 'with valid parameters' do
+        let (:client) { FactoryBot.create(:client, name: 'Foo', app_id: 'test-client') }
+        let (:params) { {client_id: client.app_id} }
+
+        before(:each) {
+          expect(AccessGrant).to receive(:validate_oauth_authorize)
+            .and_return(AccessGrant::ValidationResult.new(true, client, nil))
+        }
+
+        it 'redirects' do
+          expect(subject).to have_http_status(:redirect)
+        end
+
+        it 'redicts with an after_sign_in_path' do
+          expect(subject.location).to include('after_sign_in_path')
+        end
+
+        it "redirects with the client's app name" do
+          expect(subject.location).to include('app_name=Foo')
+        end
+
+      end
+
     end
   end
 

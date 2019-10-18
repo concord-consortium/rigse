@@ -24,6 +24,13 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
   def pundit_user_not_authorized(exception)
+    # without the no-store Chrome will cache this redirect in some cases
+    # for example if a student tries to access a collection page, and then they
+    # log out and try to access it again. In this case Chrome sends them to the
+    # cached location of "/my-classes". By default rails adds 'no-cache' but that isn't
+    # strong enough.
+    response.headers['Cache-Control'] = 'no-store'
+
     error_message = not_authorized_error_message
     if request.xhr?
       render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
@@ -49,7 +56,8 @@ class ApplicationController < ActionController::Base
           # So instead of showing the error message again, we just send the user to the
           # default login page for that user.
           flash[:alert] = error_message if not params[:redirecting_after_sign_in]
-          redirect_to after_sign_in_path_for(current_user)
+
+          redirect_to view_context.current_user_home_path
         end
       else
         flash[:alert] = error_message
@@ -296,42 +304,33 @@ class ApplicationController < ActionController::Base
     if BoolENV['RESEARCHER_REPORT_ONLY']
       # force all users to try to go to the researcher page on a report only portal
       redirect_path = learner_report_path
-    elsif !current_user.portal_student && params[:after_sign_in_path].present?
-      # users that aren't student can be redirected to other pages after logging in if
-      # the after_sign_in_path param is provided
+    elsif params[:after_sign_in_path].present?
+      # the check for to see if the user has permission to view the after_sigin_in_path
+      # page is handled by the controller of this new page.
+      # if the user doesn't have permission to see the new page they will be sent to their
+      # home page. They will also not see a error message because of the
+      # redirecting_after_sign_in parameter that is added here.
+      # See pundit_user_not_authorized for the implementation
 
       redirect_uri = URI.parse(params[:after_sign_in_path])
-      query = Rack::Utils.parse_query(redirect_uri.query)
-      # add an extra param to this path, so we don't go in a loop, see pundit_user_not_authorized
-      query["redirecting_after_sign_in"] = '1'
-      redirect_uri.query = Rack::Utils.build_query(query)
-      redirect_path = redirect_uri.to_s
-    end
 
-    if session[:oauth_authorize_params]
-      begin
-        oauth_redirect = AccessGrant.get_authorize_redirect_uri(current_user, session[:oauth_authorize_params])
-        session[:oauth_authorize_params] = nil
-        redirect_path = oauth_redirect
-      rescue => e
-        # Reset session to avoid getting stuck in this handler.
-        # Theoretically session[:oauth_authorize_params] = nil should be enough, but it seems that when
-        # an exception is raised, session is not updated correctly and we keep coming back to this handler.
-        reset_session
-        raise e
+      # Only allow redirecting to paths. If the redirect url has a host do not redirect
+      # this prevents an open redirect. More info about open redirects are here:
+      # https://cwe.mitre.org/data/definitions/601.html
+      if redirect_uri.host.nil?
+        query = Rack::Utils.parse_query(redirect_uri.query)
+        # add an extra param to this path, so we don't go in a loop, see pundit_user_not_authorized
+        query["redirecting_after_sign_in"] = '1'
+        redirect_uri.query = Rack::Utils.build_query(query)
+        redirect_path = redirect_uri.to_s
       end
     end
+
     redirect_path
   end
 
   def after_sign_out_path_for(resource)
-    redirect_url = "#{params[:redirect_uri]}?re_login=true&provider=#{params[:provider]}"
-    if params[:re_login]
-      session[:oauth_authorize_params] = nil
-      redirect_url
-    else
-      root_path
-    end
+    root_path
   end
 
   def set_locale
