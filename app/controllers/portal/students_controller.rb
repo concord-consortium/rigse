@@ -274,11 +274,8 @@ class Portal::StudentsController < ApplicationController
 
   def move
     @portal_student = Portal::Student.find(params[:id])
-
-    @current_class_word = params[:clazz][:current_class_word]
-    @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
-    @new_class_word = params[:clazz][:new_class_word]
-    @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
+    @current_class = Portal::Clazz.find_by_class_word(params[:clazz][:current_class_word])
+    @new_class = Portal::Clazz.find_by_class_word(params[:clazz][:new_class_word])
 
     @portal_student.remove_clazz(@current_class)
     @portal_student.add_clazz(@new_class)
@@ -288,10 +285,9 @@ class Portal::StudentsController < ApplicationController
     @site_domain = URI.parse(APP_CONFIG[:site_url]).host
     @report_json = JSON['{"class_info_url": "' + @new_class.class_info_url(@site_protocol, @site_domain) + '", "context_id": "' + @new_class.class_hash.to_s + '", "current_context_id": "' + @current_class.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + @portal_student.user_id.to_s + '"}']
     @assignments = []
+
     # find matches between student learners and new class's offerings. Update offering_id values to match those in new class (student work on assignments that aren't assigned to new class becomes orphaned)
     @portal_student.learners.each do |sa|
-      puts "testing..."
-      puts sa.inspect
       @new_class.offerings.each do |nca|
         if sa.offering.runnable == nca.runnable
           @learner_to_update = Portal::Learner.find(sa.id)
@@ -305,7 +301,6 @@ class Portal::StudentsController < ApplicationController
 
     # add learner IDs to JSON for report API
     @report_json['assignments'] = @assignments
-    puts @report_json.to_json
 
     # post data to report service, include bearer token in request ENV['REPORT_SERVICE_BEARER_TOKEN']
     req = Net::HTTP::Post.new('/api/move_student_work', {'Authorization' => 'Bearer ' + ENV['REPORT_SERVICE_BEARER_TOKEN'], 'Content-Type' => 'application/json'})
