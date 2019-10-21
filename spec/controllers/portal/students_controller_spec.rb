@@ -195,12 +195,26 @@ describe Portal::StudentsController do
 
   describe "POST move" do
     before(:each) do
+
       @clazz_params = {
         :current_class_word => "currentclassword",
         :new_class_word => "newclassword"
       }
       student.add_clazz(clazz_1)
       student.remove_clazz(clazz_2)
+
+      @report_json = JSON['{"class_info_url": "' + clazz_2.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "context_id": "' + clazz_2.class_hash.to_s + '", "current_context_id": "' + clazz_1.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + student.user_id.to_s + '", "assignments":[]}']
+      stub_request(:post, "https://us-central1-report-service-dev.cloudfunctions.net/api/move_student_work").
+        with(
+          body: @report_json.to_json,
+          headers: {
+         'Accept'=>'*/*',
+         'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+         'Authorization'=>'Bearer devtoken',
+         'Content-Type'=>'application/json',
+         'User-Agent'=>'Ruby'
+          }).
+        to_return(status: 200, body: "Success", headers: {})
     end
 
     let(:student) { FactoryBot.create(:full_portal_student) }
