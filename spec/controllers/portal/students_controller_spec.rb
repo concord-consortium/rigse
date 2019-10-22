@@ -203,6 +203,8 @@ describe Portal::StudentsController do
       student.add_clazz(clazz_1)
       student.remove_clazz(clazz_2)
 
+      allow(ENV).to receive(:[]).with("REPORT_SERVICE_BEARER_TOKEN").and_return('devtoken')
+
       @report_json = JSON['{"class_info_url": "' + clazz_2.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "context_id": "' + clazz_2.class_hash.to_s + '", "current_context_id": "' + clazz_1.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + student.user_id.to_s + '", "assignments":[]}']
       stub_request(:post, "https://us-central1-report-service-dev.cloudfunctions.net/api/move_student_work").
         with(
