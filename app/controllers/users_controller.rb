@@ -180,6 +180,9 @@ class UsersController < ApplicationController
   end
 
   def backdoor
+    if !Rails.env.cucumber? || !Rails.env.test?
+      raise ActionController::RoutingError, 'Not Found'
+    end
     sign_out :user
     user = User.find_by_login!(params[:username])
     sign_in user
