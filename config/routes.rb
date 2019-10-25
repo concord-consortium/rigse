@@ -510,7 +510,7 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    if Rails.env.cucumber? || Rails.env.test?
+    if Rails.env.cucumber? || Rails.env.test? || Rails.env.feature_test?
       match '/login/:username' => 'users#backdoor', :as => :login_backdoor
     end
 
