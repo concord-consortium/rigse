@@ -3,6 +3,15 @@ ENV["RAILS_ENV"] = 'test'
 # needed to generate signed portal tokens
 ENV["JWT_HMAC_SECRET"] = 'foo'
 
+# needed for testing google auth
+ENV['GOOGLE_CLIENT_KEY'] = '1234'
+ENV['GOOGLE_CLIENT_SECRET'] = '1234'
+
+# needed for testing schoology auth
+ENV['SCHOOLOGY_CONSUMER_KEY'] = '1234'
+ENV['SCHOOLOGY_CONSUMER_SECRET'] = '1234'
+
+
 require 'simplecov'
 SimpleCov.start do
   merge_timeout 3600
