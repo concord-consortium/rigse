@@ -214,17 +214,24 @@ Devise.setup do |config|
         env['omniauth.strategy'].options[:client_options][:authorize_url] = "https://#{host}/oauth/authorize"
       end
     end
-    config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'], scope: 'user', strategy_class: 'OmniAuth::Strategies::Schoology', setup: SETUP_PROC
+    config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'],
+      {
+        strategy_class: 'OmniAuth::Strategies::Schoology',
+        scope: 'user',
+        setup: SETUP_PROC
+      }
   end
 
 
   if ENV['GOOGLE_CLIENT_KEY'].present? && ENV['GOOGLE_CLIENT_SECRET'].present?
 
-    config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_KEY'], ENV['GOOGLE_CLIENT_SECRET'],
-    {   :name => "google",
-        :scope => [ 'https://www.googleapis.com/auth/userinfo.profile',
-                    'https://www.googleapis.com/auth/userinfo.email'    ]
-    }
+    config.omniauth 'google', ENV['GOOGLE_CLIENT_KEY'], ENV['GOOGLE_CLIENT_SECRET'],
+      {
+        name: 'google',
+        strategy_class: 'OmniAuth::Strategies::PortalGoogle',
+        scope: [ 'https://www.googleapis.com/auth/userinfo.profile',
+                 'https://www.googleapis.com/auth/userinfo.email'    ]
+      }
 
   end
 

@@ -5,6 +5,12 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
   end
 
   def google
+    if(request.params["state"].present? &&
+       request.params["state"].match(/after_sign_in_path=(.*)/))
+      # in future versions of rack update_param should be used
+      # request.update_param("after_sign_in_path", $1)
+      request.params["after_sign_in_path"] = $1
+    end
     generic_oauth
   end
 
