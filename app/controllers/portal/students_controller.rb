@@ -281,7 +281,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student.add_clazz(@new_class)
 
     # initialize JSON for report API call
-    @report_json = JSON['{"class_info_url": "' + @new_class.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "new_context_id": "' + @new_class.class_hash.to_s + '", "old_context_id": "' + @current_class.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + @portal_student.user_id.to_s + '"}']
+    @report_json = JSON['{"new_class_info_url": "' + @new_class.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "new_context_id": "' + @new_class.class_hash.to_s + '", "old_context_id": "' + @current_class.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + @portal_student.user_id.to_s + '"}']
     @assignments = []
 
     # find matches between student learners and new class's offerings. Update offering_id values to match those in new class (student work on assignments that aren't assigned to new class becomes orphaned)
