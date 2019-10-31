@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe Portal::TeacherPolicy do
 
-  let(:user) { FactoryBot.create(:user) }
-  let(:scope) { Pundit.policy_scope!(user, Portal::Teacher) }
+  let(:user)   { FactoryBot.create(:user) }
+  let(:scope)  { Pundit.policy_scope!(user, Portal::Teacher) }
 
   describe "Scope" do
     before(:each) do
@@ -24,6 +24,36 @@ RSpec.describe Portal::TeacherPolicy do
     context 'normal user' do
       it 'does not allow access to any teachers' do
         expect(scope.to_a.length).to eq 0
+      end
+    end
+
+    context 'teacher' do
+      let(:user){ @teacher1.user }
+      # TBD: Maybe should include co-teachers?
+      it 'should return their own teacher record' do
+        expect(scope.to_a.length).to eq 1
+      end
+      context 'is a project_admin for their cohort' do
+        before(:each) do
+          @project = FactoryBot.create(:project)
+          @project.cohorts << @cohort1
+          user.add_role_for_project('admin', @project)
+        end
+        it 'should return their own teacher record' do
+          # teacher1 (cohort 1) and teacher2 (cohort1)
+          expect(scope.to_a.length).to eq 2
+        end
+      end
+
+      context 'is a project_admin for a different cohort' do
+        before(:each) do
+          @project = FactoryBot.create(:project)
+          @project.cohorts << @cohort2
+          user.add_role_for_project('admin', @project)
+        end
+        it 'should return their own teacher record' do
+          expect(scope.first).to eq @teacher1
+        end
       end
     end
 
