@@ -193,6 +193,25 @@ describe Portal::StudentsController do
     end
   end
 
+  describe "#move_student_work_config" do
+    let(:student) { FactoryBot.create(:full_portal_student) }
+    let(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash') }
+    let(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
+
+    it "should return JSON" do
+      controller.instance_variable_set(:@portal_student, student)
+      controller.instance_variable_set(:@current_class, clazz_1)
+      controller.instance_variable_set(:@new_class, clazz_2)
+      json = controller.move_student_work_config
+      expect(json).to include(
+        new_context_id:"class2hash",
+        old_context_id:"class1hash",
+        assignments:[]
+      )
+
+    end
+  end
+
   describe "POST move" do
     before(:each) do
 
@@ -205,10 +224,10 @@ describe Portal::StudentsController do
 
       allow(ENV).to receive(:[]).with("REPORT_SERVICE_BEARER_TOKEN").and_return('devtoken')
 
-      @report_json = JSON['{"class_info_url": "' + clazz_2.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "new_context_id": "' + clazz_2.class_hash.to_s + '", "old_context_id": "' + clazz_1.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + student.user_id.to_s + '", "assignments":[]}']
+      #@report_json = JSON['{"class_info_url": "' + clazz_2.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "new_context_id": "' + clazz_2.class_hash.to_s + '", "old_context_id": "' + clazz_1.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + student.user_id.to_s + '", "assignments":[]}']
       stub_request(:post, "https://us-central1-report-service-dev.cloudfunctions.net/api/move_student_work").
         with(
-          body: @report_json.to_json,
+          #body: @report_json.to_json,
           headers: {
          'Accept'=>'*/*',
          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
