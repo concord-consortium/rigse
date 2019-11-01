@@ -280,35 +280,48 @@ class Portal::StudentsController < ApplicationController
     @portal_student.remove_clazz(@current_class)
     @portal_student.add_clazz(@new_class)
 
-    # initialize JSON for report API call
-    @report_json = JSON['{"new_class_info_url": "' + @new_class.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "new_context_id": "' + @new_class.class_hash.to_s + '", "old_context_id": "' + @current_class.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + @portal_student.user_id.to_s + '"}']
-    @assignments = []
-
-    # find matches between student learners and new class's offerings. Update offering_id values to match those in new class (student work on assignments that aren't assigned to new class becomes orphaned)
-    @portal_student.learners.each do |sa|
-      @new_class.offerings.each do |nca|
-        if sa.offering.runnable == nca.runnable
-          @learner_to_update = Portal::Learner.find(sa.id)
-          @learner_to_update.update_attribute('offering_id', nca.id)
-          @learner_to_update.report_learner.update_fields # does this still need to be here?
-          # add assignment to JSON for report API call
-          @assignments << JSON['{"new_resource_link_id": "' + nca.id.to_s + '", "old_resource_link_id": "' + sa.offering_id.to_s + '", "tool_id": "' + ENV['TEMP_TOOL_ID'] + '"}']
-        end
-      end
-    end
-
-    # add learner IDs to JSON for report API
-    @report_json['assignments'] = @assignments
-
     # post data to report service, include bearer token in request ENV['REPORT_SERVICE_BEARER_TOKEN']
     req = Net::HTTP::Post.new('/api/move_student_work', {'Authorization' => 'Bearer ' + ENV['REPORT_SERVICE_BEARER_TOKEN'], 'Content-Type' => 'application/json'})
-    req.body = @report_json.to_json
+    req.body = move_student_and_return_config.to_json
     http = Net::HTTP.new('us-central1-report-service-dev.cloudfunctions.net', '443')
     http.use_ssl = true
     http.request(req)
 
     flash[:notice] = 'Successfully moved student to new class.' # + JSON[@report_json]
     redirect_to(@portal_student)
+  end
+
+  def move_student_and_return_config
+    # initialize JSON for report API call
+    report_config = {
+      new_class_info_url: @new_class.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host),
+      new_context_id: @new_class.class_hash.to_s,
+      old_context_id: @current_class.class_hash.to_s,
+      platform_id: APP_CONFIG[:site_url].to_s,
+      platform_user_id: @portal_student.user_id.to_s
+    }
+    assignments = []
+
+    # find matches between student learners and new class's offerings. Update offering_id values to match those in new class (student work on assignments that aren't assigned to new class becomes orphaned)
+    @portal_student.learners.each do |sa|
+      @new_class.offerings.each do |nca|
+        if sa.offering.runnable == nca.runnable
+          learner_to_update = Portal::Learner.find(sa.id)
+          learner_to_update.update_attribute('offering_id', nca.id)
+          learner_to_update.report_learner.update_fields
+          # add assignment to JSON for report API call
+          assignments << {
+            new_resource_link_id: nca.id.to_s,
+            old_resource_link_id: sa.offering_id.to_s,
+            tool_id: ENV['TEMP_TOOL_ID']
+          }
+        end
+      end
+    end
+
+    # add learner IDs to JSON for report API
+    report_config[:assignments] = assignments
+    report_config
   end
 
   # DELETE /portal_students/1
