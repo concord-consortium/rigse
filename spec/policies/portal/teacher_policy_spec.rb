@@ -29,30 +29,34 @@ RSpec.describe Portal::TeacherPolicy do
 
     context 'teacher' do
       let(:user){ @teacher1.user }
-      # TBD: Maybe should include co-teachers?
       it 'should return their own teacher record' do
-        expect(scope.to_a.length).to eq 1
+        # Even a teacher who is not a project admin should
+        # have access to their own teacher record
+        expect(scope.to_a).to include(@teacher1)
       end
-      context 'is a project_admin for their cohort' do
+      context 'is a project_admin for cohorts1' do
         before(:each) do
           @project = FactoryBot.create(:project)
           @project.cohorts << @cohort1
           user.add_role_for_project('admin', @project)
         end
-        it 'should return their own teacher record' do
+        it 'should return teacher2 and teacher1 (both in chort1)' do
           # teacher1 (cohort 1) and teacher2 (cohort1)
+          expect(scope.to_a).to include(@teacher1, @teacher2)
           expect(scope.to_a.length).to eq 2
         end
       end
 
-      context 'is a project_admin for a different cohort' do
+      context 'is a project_admin for a different cohort (chort2)' do
         before(:each) do
           @project = FactoryBot.create(:project)
           @project.cohorts << @cohort2
           user.add_role_for_project('admin', @project)
         end
-        it 'should return their own teacher record' do
-          expect(scope.first).to eq @teacher1
+        it 'should return their own teacher record (in cohort1)' do
+          # There is also a teacher in Cohort2 (not our cohort)
+          expect(scope.to_a).to include(@teacher1, @teacher3)
+          expect(scope.to_a.length).to eq 2
         end
       end
     end
