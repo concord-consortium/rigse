@@ -17,7 +17,18 @@ class UsersController < ApplicationController
 
   def index
     authorize User
-    @users = policy_scope(User).search(params[:search], params[:page], nil).
+
+    if params[:portal_admin].to_s.length > 0
+      filtered_users = policy_scope(User.with_role :admin)
+    elsif params[:project_admin].to_s.length > 0
+      filtered_users = policy_scope(User.with_role :project_admin)
+    elsif params[:project_researcher].to_s.length > 0
+      filtered_users = policy_scope(User.with_role :researcher)
+    else
+      filtered_users = policy_scope(User)
+    end
+
+    @users = filtered_users.search(params[:search], params[:page], nil).
       includes(:imported_user, :portal_teacher, :portal_student,
               :teacher_cohorts, :student_cohorts, :roles)
     respond_to do |format|
