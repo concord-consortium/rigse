@@ -31,7 +31,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
         # Also covers some tricky edge cases.
         # See this bug: https://www.pivotaltracker.com/story/show/169465198
         sql = Portal::TeacherPolicy::teacher_query(user)
-        ids = Portal::Teacher.connection.select_all(sql).map { |i| i['id'] }
+        ids = Portal::Teacher.connection.select_values(sql)
         # Return a new scope selecting those records:
         scope
           .where('portal_teachers.id IN (?)', ids)
