@@ -193,20 +193,25 @@ describe Portal::StudentsController do
     end
   end
 
-  describe "#move_student_work_config" do
+  describe "#move_student_and_return_config" do
     let(:student) { FactoryBot.create(:full_portal_student) }
     let(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash') }
     let(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
+    let(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity') }
+    let(:offering_a) { FactoryBot.create(:portal_offering, {clazz: clazz_1, runnable: runnable_a}) }
+    let(:runnable_b) { FactoryBot.create(:external_activity, name: 'Test Activity') }
+    let(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable_b}) }
+    let(:learner) { FactoryBot.create(:portal_learner, offering: offering_a, student: student) }
 
     it "should return JSON" do
       controller.instance_variable_set(:@portal_student, student)
       controller.instance_variable_set(:@current_class, clazz_1)
       controller.instance_variable_set(:@new_class, clazz_2)
-      json = controller.move_student_work_config
+      json = controller.move_student_and_return_config
       expect(json).to include(
         new_context_id:"class2hash",
         old_context_id:"class1hash",
-        assignments:[]
+        assignments:[{new_resource_link_id: offering_b.id, old_resource_link_id: offering_a.id, tool_id: ENV['TEMP_TOOL_ID']}]
       )
 
     end
