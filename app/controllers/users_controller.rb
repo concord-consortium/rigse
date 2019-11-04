@@ -18,19 +18,31 @@ class UsersController < ApplicationController
   def index
     authorize User
 
+    user_role_ids = []
+
     if params[:portal_admin].to_s.length > 0
-      filtered_users = policy_scope(User.with_role :admin)
-    elsif params[:project_admin].to_s.length > 0
-      filtered_users = policy_scope(User.with_role :project_admin)
-    elsif params[:project_researcher].to_s.length > 0
-      filtered_users = policy_scope(User.with_role :researcher)
-    else
-      filtered_users = policy_scope(User)
+      user_role_ids << '1'
     end
 
-    @users = filtered_users.search(params[:search], params[:page], nil).
+    if params[:project_admin].to_s.length > 0
+      user_role_ids << '2'
+    end
+
+    if params[:project_researcher].to_s.length > 0
+      user_role_ids << '3'
+    end
+
+
+    if user_role_ids.any?
+      user_roles = user_role_ids.map { |rid| "roles_users.role_id='#{rid}'"}.join(" OR ")
+    else
+      user_roles = ''
+    end
+
+    @users = policy_scope(User).search(params[:search], params[:page], nil).
       includes(:imported_user, :portal_teacher, :portal_student,
-              :teacher_cohorts, :student_cohorts, :roles)
+              :teacher_cohorts, :student_cohorts, :roles).
+      where(user_roles)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
