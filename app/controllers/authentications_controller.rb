@@ -5,6 +5,27 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
   end
 
   def google
+    # Check for a speical 'after_sign_in_path' field in the state parameter.
+    # The state parameter might be in the following forms:
+    # - nil
+    # - abcd1234 (random string)
+    # - after_sign_in_path=/somewhere
+    # - abcd1234 after_sign_in_path=/somewhere
+    # There isn't yet a need for multiple fields in the state, so a separator character
+    # between fields hasn't been defined.
+    # There is a space between the state defined by the google provider (random string)
+    # and the after_sign_in_path field.
+    # If more fields need to be added to the state, we'll need a more complex approach.
+    # Currently this regex will bring in everything until the end of the state.
+    # If we need multiple fields in the state we could:
+    # - URL encode the parameter values and separate them by '&'.
+    # - switch to a base64 encoded JSON value. 
+    if(request.params["state"].present? &&
+       request.params["state"].match(/after_sign_in_path=(.*)/))
+      # in future versions of rack update_param should be used
+      # request.update_param("after_sign_in_path", $1)
+      request.params["after_sign_in_path"] = $1
+    end
     generic_oauth
   end
 

@@ -2,6 +2,11 @@
 
 require 'spec_helper'
 
+# NOTE: rspec controller tests do not run rack middleware so none of the omniauth
+# strategy code will be run by these tests.
+
+# The strategy code is tested by the integration/sso_spec.rb
+#
 RSpec.describe AuthenticationsController, type: :controller do
 
   let(:uid_value) { '12345' }
