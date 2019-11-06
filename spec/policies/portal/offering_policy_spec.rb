@@ -9,8 +9,17 @@ RSpec.describe Portal::OfferingPolicy do
 
   describe "Scope" do
     before(:each) do
+      @project1 = FactoryBot.create(:project)
+      @project2 = FactoryBot.create(:project)
+      @project3 = FactoryBot.create(:project)
+
       @cohort1 = FactoryBot.create(:admin_cohort)
       @cohort2 = FactoryBot.create(:admin_cohort)
+      @cohort3 = FactoryBot.create(:admin_cohort)
+
+      @project1.cohorts << @cohort1
+      @project2.cohorts << @cohort2
+      @project3.cohorts << @cohort3
 
       @teacher1 = FactoryBot.create(:portal_teacher)
       @teacher2 = FactoryBot.create(:portal_teacher)
@@ -37,9 +46,7 @@ RSpec.describe Portal::OfferingPolicy do
 
     context 'project researcher' do
       before(:each) do
-        @project = FactoryBot.create(:project)
-        @project.cohorts << @cohort1
-        user.add_role_for_project('researcher', @project)
+        user.add_role_for_project('researcher', @project1)
       end
 
       it 'allows access to project offerings' do
@@ -49,20 +56,30 @@ RSpec.describe Portal::OfferingPolicy do
 
     context 'project admin' do
       before(:each) do
-        @project = FactoryBot.create(:project)
-        @project.cohorts << @cohort2
-        user.add_role_for_project('admin', @project)
+        user.add_role_for_project('admin', @project2)
       end
 
       it 'allows access to project offerings' do
         expect(scope.to_a).to match_array([@offering3])
       end
+
     end
 
     context 'teacher' do
       let(:user) { @teacher1.user }
       it 'allows access to teacher offerings' do
         expect(scope.to_a).to match_array([@offering1])
+      end
+      context 'who is also a project admin' do
+        before(:each) do
+          # project3 is for @cohort3 and has no teachers in it.
+          user.add_role_for_project('admin', @project3)
+        end
+        it 'allows access to teacher offerings' do
+          # We still expect to see the teachers own offering here
+          # Even though they are not an admin for @project1
+          expect(scope.to_a).to match_array([@offering1])
+        end
       end
     end
 
