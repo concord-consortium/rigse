@@ -199,8 +199,7 @@ describe Portal::StudentsController do
     let(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
     let(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity') }
     let(:offering_a) { FactoryBot.create(:portal_offering, {clazz: clazz_1, runnable: runnable_a}) }
-    let(:runnable_b) { FactoryBot.create(:external_activity, name: 'Test Activity') }
-    let(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable_b}) }
+    let(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable_a}) }
     let(:learner) { FactoryBot.create(:portal_learner, offering: offering_a, student: student) }
 
     it "should return JSON" do
