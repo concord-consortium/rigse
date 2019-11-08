@@ -6,11 +6,11 @@
     .action_menu_header_right
       %ul.menu
         %li= toggle_all 'user descriptions'
-    %div{ :style => "clear: both; margin-bottom: 20px;"}
+    %div.search_users_container
       = form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
         = content_tag :label do
           = text_field_tag :search, params[:search], :style => "width: 97%;"
-        %div{ :style => "clear: both; margin-bottom: 10px; width: 100%;" }
+        %div.filters_container
           = content_tag :label do
             = check_box_tag 'project_researcher', 1, params[:project_researcher] == '1' ? true : false
             Project Researcher

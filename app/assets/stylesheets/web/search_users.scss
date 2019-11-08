@@ -1,0 +1,22 @@
+.search_users_container {
+  clear: both;
+  margin-bottom: 20px;
+
+  .filters_container {
+    clear: both;
+    margin: 10px 0;
+    width: 100%;
+
+    label {
+      margin-right: 13px;
+      padding-left: 20px;
+      position: relative;
+
+      input[type="checkbox"] {
+        left: 0;
+        position: absolute;
+        top: 2px;
+      }
+    }
+  }
+}
