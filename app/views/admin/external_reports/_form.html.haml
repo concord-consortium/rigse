@@ -44,4 +44,14 @@
           = f.check_box :individual_activity_reportable
           %p
             When report is used as a default report, Portal might generate links for reports focused on individual activities.
+        %li
+          %label
+            Move Students API URL:
+          %br
+          = f.text_field :move_students_api_url, size: "60"
+        %li
+          %label
+            Move Students API Token:
+          %br
+          = f.text_field :move_students_api_token, size: "60"
       = submit_tag

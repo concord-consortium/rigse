@@ -280,15 +280,23 @@ class Portal::StudentsController < ApplicationController
     portal_student.remove_clazz(current_class)
     portal_student.add_clazz(new_class)
 
-    # post data to report service, include bearer token in request ENV['REPORT_SERVICE_BEARER_TOKEN']
-    req = Net::HTTP::Post.new('/api/move_student_work', {'Authorization' => 'Bearer ' + ENV['REPORT_SERVICE_BEARER_TOKEN'], 'Content-Type' => 'application/json'})
+    # post data to report service, include bearer token in request
     config = portal_student.move_student_and_return_config(new_class, current_class)
-    req.body = config.to_json
-    http = Net::HTTP.new('us-central1-report-service-dev.cloudfunctions.net', '443')
-    http.use_ssl = true
-    http.request(req)
+    ExternalReport.where('move_students_api_url IS NOT NULL').find_each{ |report|
+      auth_token = 'Bearer %s' % report.move_students_api_token
+      response = HTTParty.post(report.move_students_api_url,
+        body: config.to_json,
+        headers: {
+          'Content-Type' => 'application/json',
+          'Authorization' => auth_token
+        },
+        format: :json)
 
-    flash[:notice] = 'Successfully moved student to new class.' # + JSON[@report_json]
+      #FIXME: We should do somethign with the response code -- if response.code == 200 # successful 
+
+    }
+
+    flash[:notice] = 'Successfully moved student to new class.'
     redirect_to(portal_student)
   end
 

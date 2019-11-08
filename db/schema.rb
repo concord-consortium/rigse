@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190909124227) do
+ActiveRecord::Schema.define(:version => 20191108202736) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -563,6 +563,8 @@ ActiveRecord::Schema.define(:version => 20190909124227) do
     t.string   "default_report_for_source_type"
     t.boolean  "individual_student_reportable",  :default => false
     t.boolean  "individual_activity_reportable", :default => false
+    t.text     "move_students_api_url"
+    t.string   "move_students_api_token"
   end
 
   add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"

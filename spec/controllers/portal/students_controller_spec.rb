@@ -203,18 +203,16 @@ describe Portal::StudentsController do
       student.add_clazz(clazz_1)
       student.remove_clazz(clazz_2)
 
-      allow(ENV).to receive(:[]).with("REPORT_SERVICE_BEARER_TOKEN").and_return('devtoken')
+      external_report = FactoryBot.create(:external_report,
+        move_students_api_url: 'http://test.org/api/move_student_work',
+        move_students_api_token: 'abc123'
+      )
 
-      #@report_json = JSON['{"class_info_url": "' + clazz_2.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host) + '", "new_context_id": "' + clazz_2.class_hash.to_s + '", "old_context_id": "' + clazz_1.class_hash.to_s + '", "platform_id": "' + APP_CONFIG[:site_url].to_s + '", "platform_user_id": "' + student.user_id.to_s + '", "assignments":[]}']
-      stub_request(:post, "https://us-central1-report-service-dev.cloudfunctions.net/api/move_student_work").
+      stub_request(:post, "http://test.org/api/move_student_work").
         with(
-          #body: @report_json.to_json,
           headers: {
-         'Accept'=>'*/*',
-         'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-         'Authorization'=>'Bearer devtoken',
-         'Content-Type'=>'application/json',
-         'User-Agent'=>'Ruby'
+           'Authorization'=>'Bearer abc123',
+           'Content-Type'=>'application/json'
           }).
         to_return(status: 200, body: "Success", headers: {})
     end
