@@ -9,49 +9,68 @@
       %ul.menu_v
         /:app_id, :app_secret, :name, :site_url, :domain_matchers
         %li
-          Name:
-          = f.text_field :name
+          %label
+            Name
+          %br
+          = f.text_field :name, style: "width: 95%;"
         %li
-          URL:
-          = f.text_field :url
+          %label
+            URL
+          %br
+          = f.text_field :url, style: "width: 95%;"
         %li
-          Launch Text:
-          = f.text_field :launch_text
+          %label
+            Launch Text
+          %br
+          = f.text_field :launch_text, style: "width: 95%;"
         %li
-          Client:
+          %label
+            Client
+          %br
           = f.select :client_id, report.options_for_client, {}, prompt: 'client:'
         %li
-          Report Type:
+          %label
+            Report Type
+          %br
           = f.select :report_type, report.options_for_report_type, {}, prompt: 'report type:'
         %li
-          Allowed for Students:
-          = f.check_box :allowed_for_students
-          %p If the report type is 'offering', then students will see a button to open the report.
-        %li
-          Default report for source type:
+          %label
+            Default report for source type
+          %br
           = f.select :default_report_for_source_type, ExternalActivity::SOURCE_TYPE_OPTIONS
           %p
             If the report type is 'offering' or 'deprecated-report', and report is allowed for students, it can be used
             as a default report for a given activity source type. If another report is already marked as a default one,
             it will be automatically unselected.
         %li
-          Report available for individual students:
-          = f.check_box :individual_student_reportable
+          %label
+            = f.check_box :allowed_for_students
+            Allowed for Students
+          %br
+          %p If the report type is 'offering', then students will see a button to open the report.
+        %li
+          %label
+            = f.check_box :individual_student_reportable
+            Report available for individual students
+          %br
+
           %p
             When report is used as a default report, Portal might generate links for reports focused on individual students.
         %li
-          Report available for individual activities:
-          = f.check_box :individual_activity_reportable
+          %label
+            = f.check_box :individual_activity_reportable
+            Report available for individual activities
+          %br
           %p
             When report is used as a default report, Portal might generate links for reports focused on individual activities.
         %li
           %label
-            Move Students API URL:
+            Move Students API URL
           %br
-          = f.text_field :move_students_api_url, size: "60"
+          = f.text_field :move_students_api_url, style: "width: 95%;"
         %li
           %label
-            Move Students API Token:
+            Move Students API Token
           %br
-          = f.text_field :move_students_api_token, size: "60"
+          = f.text_field :move_students_api_token, style: "width: 95%;"
       = submit_tag
