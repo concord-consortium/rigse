@@ -185,7 +185,7 @@ class Portal::Student < ActiveRecord::Base
           assignments << {
             new_resource_link_id: nca.id.to_s,
             old_resource_link_id: sa.offering_id.to_s,
-            tool_id: sa.tool_id.to_s
+            tool_id: nca.tool_id.to_s
           }
         end
       end

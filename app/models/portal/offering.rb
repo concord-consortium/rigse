@@ -25,7 +25,7 @@ class Portal::Offering < ActiveRecord::Base
 
   has_many :activity_feedbacks, class_name: "Portal::OfferingActivityFeedback", foreign_key: "portal_offering_id"
 
-  [:name, :short_description, :long_description, :long_description_for_teacher, :icon_image].each { |m| delegate m, :to => :runnable }
+  [:name, :short_description, :long_description, :long_description_for_teacher, :icon_image, :tool_id].each { |m| delegate m, :to => :runnable }
 
   has_many :open_responses, :dependent => :destroy, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
     def answered

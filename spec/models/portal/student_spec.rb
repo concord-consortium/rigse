@@ -156,7 +156,7 @@ describe Portal::Student do
     let!(:student) { FactoryBot.create(:full_portal_student) }
     let!(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash') }
     let!(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
-    let!(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity') }
+    let!(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity', tool_id: 'https://test.org') }
     let!(:offering_a) { FactoryBot.create(:portal_offering, {clazz: clazz_1, runnable: runnable_a}) }
     let!(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable_a}) }
     let!(:learner) { FactoryBot.create(:portal_learner, offering: offering_a, student: student) }
