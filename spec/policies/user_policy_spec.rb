@@ -82,15 +82,51 @@ describe UserPolicy do
     let(:a_student)       { FactoryBot.create(:full_portal_student, clazzes: [a_teacher_class])}
     let(:regular_student) { FactoryBot.create(:full_portal_student)                            }
     let(:project_a)       { FactoryBot.create(:project, cohorts: [cohort_a])                   }
-    let(:active_user)     { FactoryBot.create(:user, admin_for_projects: [project_a])              }
+    let(:active_user)     { FactoryBot.create(:user, admin_for_projects: [project_a])          }
     let(:cohort_a)        { FactoryBot.create(:admin_cohort)                                   }
     let(:a_teacher_class) { FactoryBot.create(:portal_clazz, teachers: [a_teacher])            }
+    let(:a_researcher)    { FactoryBot.create(:user, researcher_for_projects: [project_a])     }
+    let(:a_project_admin) { FactoryBot.create(:user, admin_for_projects: [project_a])          }
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end
 
     it "the active user should be a project admin" do
       expect(active_user.admin_for_projects).to include(project_a)
+    end
+
+    context "acting on a researcher in hir project" do
+      let(:user) { a_researcher }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.not_to permit(:show)                   }
+      it { is_expected.not_to permit(:limited_edit)           }
+      it { is_expected.not_to permit(:limited_update)         }
+      it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.not_to permit(:edit)                   }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.not_to permit(:confirm)                }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:student_page)           }
+      it { is_expected.not_to permit(:teacher_page)           }
+    end
+
+    context "acting on a project admin in hir project" do
+      let(:user) { a_project_admin }
+      it { is_expected.to permit(:index)                      }
+      it { is_expected.not_to permit(:show)                   }
+      it { is_expected.not_to permit(:limited_edit)           }
+      it { is_expected.not_to permit(:limited_update)         }
+      it { is_expected.not_to permit(:update)                 }
+      it { is_expected.not_to permit(:destroy)                }
+      it { is_expected.not_to permit(:edit)                   }
+      it { is_expected.not_to permit(:make_admin)             }
+      it { is_expected.not_to permit(:confirm)                }
+      it { is_expected.not_to permit(:preferences)            }
+      it { is_expected.not_to permit(:reset_password)         }
+      it { is_expected.not_to permit(:student_page)           }
+      it { is_expected.not_to permit(:teacher_page)           }
     end
 
     context "acting on a generic portal teacher" do
