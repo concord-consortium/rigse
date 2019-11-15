@@ -31,6 +31,10 @@ class Admin::Project < ActiveRecord::Base
     project_users.where(is_admin:true).map { |au| au.user }
   end
 
+  def project_researchers
+    project_users.where(is_researcher:true).map { |ru| ru.user }
+  end
+
   has_many :project_materials, dependent: :destroy
   has_many :activities, through: :project_materials, source: :material, source_type: 'Activity'
   has_many :investigations, through: :project_materials, source: :material, source_type: 'Investigation'
