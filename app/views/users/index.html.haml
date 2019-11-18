@@ -9,18 +9,20 @@
     %div.search_users_container
       = form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
         = content_tag :label do
-          = text_field_tag :search, params[:search], :style => "width: 97%;"
+          = text_field_tag :search, params[:search], :placeholder => "Enter a name or email address"
+        %input{ :type => "submit", :value => "Search" }
         %div.filters_container
+          Include Only:
           = content_tag :label do
             = check_box_tag 'project_researcher', 1, params[:project_researcher] == '1' ? true : false
-            Project Researcher
+            Project Researchers
           = content_tag :label do
             = check_box_tag 'project_admin', 1, params[:project_admin] == '1' ? true : false
-            Project Admin
+            Project Admins
           = content_tag :label do
             = check_box_tag 'portal_admin', 1, params[:portal_admin] == '1' ? true : false
-            Portal Admin
-        %input{ :type => "submit", :value => "Search"}
+            Portal Admins
+
     - if @users
       %p= page_entries_info @users
     %p.paginator
