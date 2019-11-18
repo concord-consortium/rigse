@@ -110,6 +110,9 @@ describe UserPolicy do
       it { is_expected.not_to permit(:reset_password)         }
       it { is_expected.not_to permit(:student_page)           }
       it { is_expected.not_to permit(:teacher_page)           }
+      # Documenting current behavior:
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
 
     context "acting on a project admin in hir project" do
@@ -127,6 +130,9 @@ describe UserPolicy do
       it { is_expected.not_to permit(:reset_password)         }
       it { is_expected.not_to permit(:student_page)           }
       it { is_expected.not_to permit(:teacher_page)           }
+      # Documenting current behavior:
+      it { is_expected.to permit(:create)                     }
+      it { is_expected.to permit(:new)                        }
     end
 
     context "acting on a generic portal teacher" do
@@ -373,6 +379,5 @@ describe UserPolicy do
       expect(result).not_to be_nil
     end
   end
-
 
 end
