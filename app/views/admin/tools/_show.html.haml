@@ -1,0 +1,23 @@
+%div{id: dom_id_for(tool), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3= tool.name
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_tool_path(tool)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:tool.id), data: {method: 'delete', confirm: "Delete this tool?"} } delete
+  %div{id: dom_id_for(tool, :item), class: 'item'}
+    %div{id: dom_id_for(tool, :details), class: 'content'}
+      %p
+        %ul.menu_v
+          %li
+            Name:
+            = tool.name
+          %li
+            Source Type:
+            = tool.source_type
+          %li
+            Tool ID:
+            = tool.tool_id
