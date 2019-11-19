@@ -169,7 +169,7 @@ describe Portal::Student do
         platform_user_id:student.user_id.to_s,
         new_class_info_url: /^http.*\/classes\/[0-9]*$/,
         platform_id: /^http.*/,
-        assignments:[{new_resource_link_id: offering_b.id.to_s, old_resource_link_id: offering_a.id.to_s, tool_id: offering_a.tool_id.to_s}]
+        assignments:[{new_resource_link_id: offering_b.id.to_s, old_resource_link_id: offering_a.id.to_s, tool_id: ENV['TEMP_TOOL_ID']}]
       )
 
     end

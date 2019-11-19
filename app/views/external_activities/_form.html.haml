@@ -105,8 +105,6 @@
         Do not allow to copy this activity.
     = field_set_tag 'Save Path' do
       = f.text_field :save_path
-    = field_set_tag 'Tool ID' do
-      = f.text_field :tool_id
     = render :partial => 'shared/is_assessment_item', :locals => { :form => f }
     = render :partial => 'shared/material_properties_edit', :locals => { :object => @external_activity }
   -# Partials below can be available for project admins or owners (separate policy methods).
