@@ -156,7 +156,8 @@ describe Portal::Student do
     let!(:student) { FactoryBot.create(:full_portal_student) }
     let!(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash') }
     let!(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
-    let!(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity', tool_id: 'https://test.org') }
+    let!(:tool) { FactoryBot.create(:tool, tool_id: '123') }
+    let!(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity', tool: tool) }
     let!(:offering_a) { FactoryBot.create(:portal_offering, {clazz: clazz_1, runnable: runnable_a}) }
     let!(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable_a}) }
     let!(:learner) { FactoryBot.create(:portal_learner, offering: offering_a, student: student) }
@@ -169,9 +170,31 @@ describe Portal::Student do
         platform_user_id:student.user_id.to_s,
         new_class_info_url: /^http.*\/classes\/[0-9]*$/,
         platform_id: /^http.*/,
-        assignments:[{new_resource_link_id: offering_b.id.to_s, old_resource_link_id: offering_a.id.to_s, tool_id: ENV['TEMP_TOOL_ID']}]
+        assignments:[{
+          new_resource_link_id: offering_b.id.to_s,
+          old_resource_link_id: offering_a.id.to_s,
+          tool_id: '123'
+        }]
       )
+    end
 
+    context "when the assignment has no tool" do
+      let!(:tool) { nil }
+      it "should return JSON with a tool_id of null" do
+        json = student.move_student_and_return_config(clazz_2, clazz_1)
+        expect(json).to include(
+          new_context_id:"class2hash",
+          old_context_id:"class1hash",
+          platform_user_id:student.user_id.to_s,
+          new_class_info_url: /^http.*\/classes\/[0-9]*$/,
+          platform_id: /^http.*/,
+          assignments:[{
+            new_resource_link_id: offering_b.id.to_s,
+            old_resource_link_id: offering_a.id.to_s,
+            tool_id: nil
+          }]
+        )
+      end
     end
   end
 
