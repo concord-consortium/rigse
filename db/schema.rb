@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20191119185103) do
+ActiveRecord::Schema.define(:version => 20191120015517) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -535,6 +535,7 @@ ActiveRecord::Schema.define(:version => 20191119185103) do
     t.text     "long_description"
     t.string   "source_type"
     t.text     "keywords"
+    t.integer  "tool_id"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"

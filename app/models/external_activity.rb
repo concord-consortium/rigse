@@ -74,6 +74,8 @@ class ExternalActivity < ActiveRecord::Base
 
   end
 
+  belongs_to :tool
+
   belongs_to :user
 
   has_many :external_activity_reports
