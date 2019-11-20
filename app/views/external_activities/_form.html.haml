@@ -36,8 +36,9 @@
           [ Interactive.display_name,   Interactive.name    ] ]
       %br
       = t('authoring.material_type_description')
-    = field_set_tag t('authoring.source_type_label') do
-      = f.select :source_type, ExternalActivity::SOURCE_TYPE_OPTIONS
+    - if ExternalActivity.column_names.include? 'source_type'
+      = field_set_tag t('authoring.source_type_label') do
+        = f.select :source_type, ExternalActivity::SOURCE_TYPE_OPTIONS
     = field_set_tag t('authoring.tool_label') do
       = f.select :tool_id, Tool.options_for_tool, include_blank: 'none'
     = field_set_tag 'License' do

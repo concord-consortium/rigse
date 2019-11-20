@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20191120015517) do
+ActiveRecord::Schema.define(:version => 20191120184500) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -533,7 +533,6 @@ ActiveRecord::Schema.define(:version => 20191120015517) do
     t.boolean  "saves_student_data",                               :default => true
     t.text     "long_description_for_teacher"
     t.text     "long_description"
-    t.string   "source_type"
     t.text     "keywords"
     t.integer  "tool_id"
   end
