@@ -56,15 +56,6 @@ describe UsersController do
       end
     end
 
-    describe "as project admin" do
-      it "lets user view users index page" do
-        login_manager
-
-        get :index
-        expect(response.status).to eq(200)
-      end
-    end
-
     describe "as researcher" do
       it "does not let user view users index page" do
         login_researcher
