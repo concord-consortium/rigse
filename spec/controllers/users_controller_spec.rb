@@ -16,6 +16,36 @@ describe UsersController do
         get :index
         expect(response.status).to eq(200)
       end
+
+      it "lets user search for project researchers" do
+        post_params = {
+          :search => '',
+          :project_researcher => true
+        }
+        login_admin
+        post :index, post_params
+        expect(response.status).to eq(200)
+      end
+
+      it "lets user search for project admins" do
+        post_params = {
+          :search => '',
+          :project_admin => true
+        }
+        login_admin
+        post :index, post_params
+        expect(response.status).to eq(200)
+      end
+
+      it "lets user search for admins" do
+        post_params = {
+          :search => '',
+          :portal_admin => true
+        }
+        login_admin
+        post :index, post_params
+        expect(response.status).to eq(200)
+      end
     end
 
     describe "as manager" do
