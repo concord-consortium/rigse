@@ -13,7 +13,10 @@
         %li
           = label_tag "source_type", "Source Type:"
           = f.text_field :source_type
+          %br
+          Used for the default reports.
         %li
           = label_tag "tool_id", "Tool ID:"
-          = f.text_area :tool_id, class: 'mceNoEditor'
+          = f.text_area :tool_id, class: 'mceNoEditor', rows: 5
+          Used for moving students between classes. It should be a URI.
       = submit_tag
