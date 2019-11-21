@@ -2,12 +2,18 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe UsersController do
   fixtures :users
   fixtures :roles
-  
+
   render_views
-  
+
   before(:each) do
     generate_default_settings_and_jnlps_with_mocks
     logout_user
+  end
+
+  it "lets admin user view users index page" do
+    login_admin
+    get :index
+    expect(response.status).to eq(200)
   end
 
   it 'allows signup' do
@@ -39,7 +45,7 @@ describe UsersController do
       expect(response).to be_success
     end.not_to change(User, :count)
   end
-  
+
   it 'requires password on signup' do
     skip "Broken example"
     expect do
@@ -48,7 +54,7 @@ describe UsersController do
       expect(response).to be_success
     end.not_to change(User, :count)
   end
-  
+
   it 'requires password confirmation on signup' do
     skip "Broken example"
     expect do
@@ -66,7 +72,7 @@ describe UsersController do
       expect(response).to be_success
     end.not_to change(User, :count)
   end
-  
+
   it 'activates user' do
     skip "Broken example"
     expect(User.authenticate('aaron', 'monkey')).to be_nil
@@ -76,58 +82,57 @@ describe UsersController do
     expect(flash[:error ]).to     be_nil
     expect(User.authenticate('aaron', 'monkey')).to eq(users(:aaron))
   end
-  
+
   it 'does not activate user without key' do
     skip "Broken example"
     get :activate
     expect(flash[:notice]).to     be_nil
     expect(flash[:error ]).not_to be_nil
   end
-  
+
   it 'does not activate user with blank key' do
     skip "Broken example"
     get :activate, :activation_code => ''
     expect(flash[:notice]).to     be_nil
     expect(flash[:error ]).not_to be_nil
   end
-  
+
   it 'does not activate user with bogus key' do
     skip "Broken example"
     get :activate, :activation_code => 'i_haxxor_joo'
     expect(flash[:notice]).to     be_nil
     expect(flash[:error ]).not_to be_nil
   end
-  
+
   it 'shows thank you page to teacher on successful registration' do
-    
+
     get :registration_successful, {:type => 'teacher'}
-    
+
     expect(@response).to render_template("users/thanks")
-    
+
     assert_select 'h2', /thanks/i
     assert_select 'p', /activation code/i
-    
+
   end
-  
+
   it 'shows thank you page to the student with login name on successful registration' do
-    
+
     get :registration_successful, {:type => 'student'}
-    
+
     expect(@response).to render_template("portal/students/signup_success")
-    
+
     # should show text "your username is"
     assert_select "p", /username\s+is/i
-    
+
     # should show directions to login:
     assert_select 'p', /login/i
-    
+
     assert_select "*#clazzes_nav", false
-    
+
     expect(flash[:error]).to be_nil
     expect(flash[:notice]).to be_nil
   end
-  
-  
+
   def create_user(options = {})
     post :create, :user => { :login => 'quire', :email => 'quire@example.com',
       :password => 'quire69', :password_confirmation => 'quire69' }.merge(options)
