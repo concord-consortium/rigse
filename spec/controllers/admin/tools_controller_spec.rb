@@ -72,6 +72,17 @@ RSpec.describe Admin::ToolsController, type: :controller do
       delete :destroy, id: mock_content_id
       expect(response).to have_http_status(:redirect)
     end
+
+    it "nullifies the tool_id of external activities" do
+      tool = FactoryBot.create(:tool)
+      external_activity = FactoryBot.create(:external_activity, tool: tool)
+
+      expect(external_activity.tool_id).to_not be_nil
+
+      tool.destroy
+      external_activity.reload
+      expect(external_activity.tool_id).to be_nil
+    end
   end
 
 end
