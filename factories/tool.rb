@@ -3,7 +3,7 @@ FactoryBot.define do
   end
 
   factory :lara_tool, class: Tool do |f|
-    f.source_type 'LARA'
-    f.name 'LARA'
+    f.source_type {"LARA"}
+    f.name {"LARA"}
   end
 end
