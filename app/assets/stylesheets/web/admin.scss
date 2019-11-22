@@ -137,3 +137,17 @@
     text-transform: none;
   }
 }
+
+.admin-links-cols {
+  column-count: 2;
+  margin-bottom: 30px;
+
+  .col {
+    break-inside: avoid-column;
+  }
+  ul {
+    list-style-position: inside;
+    margin-left: 0;
+    overflow:hidden;
+  }
+}
