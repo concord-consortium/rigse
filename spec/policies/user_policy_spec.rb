@@ -43,7 +43,7 @@ describe UserPolicy do
   end
 
   context "for an admin" do
-    let(:active_user) { FactoryBot.generate(:admin_user)   }
+    let(:active_user) { FactoryBot.generate(:admin_user)    }
     it { is_expected.to permit(:limited_edit)               }
     it { is_expected.to permit(:limited_update)             }
     it { is_expected.to permit(:index)                      }
@@ -93,6 +93,11 @@ describe UserPolicy do
 
     it "the active user should be a project admin" do
       expect(active_user.admin_for_projects).to include(project_a)
+    end
+
+    it "the active user should be able to view project admins and researchers in project" do
+      admin_and_researcher_ids = (active_user.admin_for_project_admins + active_user.admin_for_project_researchers).uniq.map {|u| u.id}
+      expect(admin_and_researcher_ids).to_not be_empty
     end
 
     context "acting on a researcher in hir project" do
