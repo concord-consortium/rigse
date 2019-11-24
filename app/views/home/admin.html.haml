@@ -5,9 +5,9 @@
 %h2
   Administration and Reports
 
-%div{:class => 'admin-links-cols'}
+%div{ class: 'admin-links-cols' }
   - if is_admin_or_manager
-    %div{:style => 'break-inside: avoid-column;'}
+    %div{ class: 'admin-links-cols__column' }
       %h3
         Site Admin Links
       %ul
@@ -31,7 +31,7 @@
         %li= link_to 'Tools', admin_tools_path
         %li= link_to 'Users', users_path
 
-    %div{:style => 'break-inside: avoid-column;'}
+    %div{ class: 'admin-links-cols__column' }
       %h3
         Project Admin & Authoring Links
       %ul
