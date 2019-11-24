@@ -107,6 +107,7 @@ describe UserPolicy do
       user_ids = (admin_and_researcher_ids + teachers_and_students_ids).uniq
       scope.where(["(users.id IN (?)) OR (users.id IN (SELECT user_id FROM portal_teachers))", user_ids])
       teacher_user = User.where(id: a_teacher.user_id).first
+      student_user = User.where(id: a_student.user_id).first
       expect(user_ids).to_not be_empty
       expect(scope.to_a).to match_array([active_user, a_project_admin, a_researcher, teacher_user, student_user])
     end
