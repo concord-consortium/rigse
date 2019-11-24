@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20190909124227) do
+ActiveRecord::Schema.define(:version => 20191122221036) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -533,8 +533,8 @@ ActiveRecord::Schema.define(:version => 20190909124227) do
     t.boolean  "saves_student_data",                               :default => true
     t.text     "long_description_for_teacher"
     t.text     "long_description"
-    t.string   "source_type"
     t.text     "keywords"
+    t.integer  "tool_id"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -563,6 +563,8 @@ ActiveRecord::Schema.define(:version => 20190909124227) do
     t.string   "default_report_for_source_type"
     t.boolean  "individual_student_reportable",  :default => false
     t.boolean  "individual_activity_reportable", :default => false
+    t.text     "move_students_api_url"
+    t.string   "move_students_api_token"
   end
 
   add_index "external_reports", ["client_id"], :name => "index_external_reports_on_client_id"
@@ -1947,6 +1949,15 @@ ActiveRecord::Schema.define(:version => 20190909124227) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
+  create_table "recent_collections_pages", :id => false, :force => true do |t|
+    t.integer  "project_id", :null => false
+    t.integer  "teacher_id", :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "recent_collections_pages", ["teacher_id"], :name => "index_recent_collections_pages_on_teacher_id"
+
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2279,6 +2290,12 @@ ActiveRecord::Schema.define(:version => 20190909124227) do
     t.datetime "created_at",                               :null => false
     t.datetime "updated_at",                               :null => false
     t.integer  "user_id"
+  end
+
+  create_table "tools", :force => true do |t|
+    t.string "name"
+    t.string "source_type"
+    t.text   "tool_id"
   end
 
   create_table "users", :force => true do |t|
