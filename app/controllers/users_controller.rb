@@ -17,9 +17,26 @@ class UsersController < ApplicationController
 
   def index
     authorize User
+
+    user_type_conditions = []
+
+    if params[:portal_admin].to_s.length > 0
+      user_type_conditions << 'users.site_admin = true'
+    end
+
+    if params[:project_admin].to_s.length > 0
+      user_type_conditions << 'admin_project_users.is_admin = true'
+    end
+
+    if params[:project_researcher].to_s.length > 0
+      user_type_conditions << 'admin_project_users.is_researcher = true'
+    end
+
+    user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
+
     @users = policy_scope(User).search(params[:search], params[:page], nil).
       includes(:imported_user, :portal_teacher, :portal_student,
-              :teacher_cohorts, :student_cohorts, :roles)
+              :teacher_cohorts, :student_cohorts, :roles, :project_users).where(user_types)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }

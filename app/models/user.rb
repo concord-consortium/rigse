@@ -582,6 +582,14 @@ class User < ActiveRecord::Base
     admin_for_projects.map {|p| p.cohorts}.flatten.uniq
   end
 
+  def admin_for_project_admins
+    admin_for_projects.map {|p| p.project_admins}.flatten.uniq
+  end
+
+  def admin_for_project_researchers
+    admin_for_projects.map {|p| p.project_researchers}.flatten.uniq
+  end
+
   def admin_for_project_teachers
     admin_for_project_cohorts.map {|c| c.teachers}.flatten.uniq
   end

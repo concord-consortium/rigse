@@ -1129,6 +1129,36 @@ protected
     end
   end
 
+  describe '#admin_for_project_admins' do
+    let (:project) { FactoryBot.create(:project) }
+    let (:user) { FactoryBot.create(:user) }
+    let (:project_admin) { FactoryBot.create(:user) }
+    before(:each) do
+      project_admin.add_role_for_project('admin', project)
+    end
+
+    it 'admin_for_project_admins' do
+      result = user.admin_for_project_admins
+
+      expect(result).not_to be_nil
+    end
+  end
+
+  describe '#admin_for_project_researchers' do
+    let (:project) { FactoryBot.create(:project) }
+    let (:user) { FactoryBot.create(:user) }
+    let (:project_researcher) { FactoryBot.create(:user) }
+    before(:each) do
+      project_researcher.add_role_for_project('researcher', project)
+    end
+
+    it 'admin_for_project_researchers' do
+      result = user.admin_for_project_researchers
+
+      expect(result).not_to be_nil
+    end
+  end
+
   # TODO: auto-generated
   describe '#admin_for_project_teachers' do
     it 'admin_for_project_teachers' do
