@@ -37,11 +37,17 @@ class ActivityRuntimeAPI
 
   private
 
+  def self.create_tool(source_type)
+    tool = Tool.where(source_type: source_type).first
+    return tool if tool
+    Tool.create(source_type: source_type, name: source_type)
+  end
+
   def self.publish_activity(hash, user)
     external_activity = nil
     Investigation.transaction do
       external_activity = ExternalActivity.create(
-        :source_type            => hash["source_type"] || "LARA",
+        :tool                   => create_tool(hash["source_type"] || "LARA"),
         :name                   => hash["name"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
@@ -142,7 +148,7 @@ class ActivityRuntimeAPI
     external_activity = nil # Why are we initializing this? For the transaction?
     Investigation.transaction do
       external_activity = ExternalActivity.create(
-        :source_type            => hash["source_type"] || "LARA",
+        :tool                   => create_tool(hash["source_type"] || "LARA"),
         :name                   => hash["name"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],

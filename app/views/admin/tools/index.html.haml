@@ -1,0 +1,11 @@
+%h1
+  Tools
+- if @tools.length > 0
+  = render partial: 'show', collection: @tools, as: :tool
+- else
+  %div{:style=>"margin:10px 0"}
+    You have no tools.
+    %br
+    To create a tool click the "Create Tool" button.
+
+= link_to 'Create New Tool', new_admin_tool_path, {:class => 'button'}

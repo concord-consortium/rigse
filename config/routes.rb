@@ -281,6 +281,7 @@ RailsPortal::Application.routes.draw do
       resources :tags
       resources :projects
       resources :clients
+      resources :tools
       resources :external_reports
       resources :permission_forms do
         member do

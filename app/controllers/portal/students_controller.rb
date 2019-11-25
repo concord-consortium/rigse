@@ -1,3 +1,4 @@
+require 'uri'
 class Portal::StudentsController < ApplicationController
   include RestrictedPortalController
 
@@ -272,33 +273,31 @@ class Portal::StudentsController < ApplicationController
   end
 
   def move
-    @portal_student = Portal::Student.find(params[:id])
+    portal_student = Portal::Student.find(params[:id])
+    current_class = Portal::Clazz.find_by_class_word(params[:clazz][:current_class_word])
+    new_class = Portal::Clazz.find_by_class_word(params[:clazz][:new_class_word])
 
-    @current_class_word = params[:clazz][:current_class_word]
-    @current_class = Portal::Clazz.find_by_class_word(@current_class_word)
-    @new_class_word = params[:clazz][:new_class_word]
-    @new_class = Portal::Clazz.find_by_class_word(@new_class_word)
+    portal_student.remove_clazz(current_class)
+    portal_student.add_clazz(new_class)
 
-    @portal_student.remove_clazz(@current_class)
-    @portal_student.add_clazz(@new_class)
+    # post data to report service, include bearer token in request
+    config = portal_student.move_student_and_return_config(new_class, current_class)
+    ExternalReport.where('move_students_api_url IS NOT NULL').find_each{ |report|
+      auth_token = 'Bearer %s' % report.move_students_api_token
+      response = HTTParty.post(report.move_students_api_url,
+        body: config.to_json,
+        headers: {
+          'Content-Type' => 'application/json',
+          'Authorization' => auth_token
+        },
+        format: :json)
 
-    # get list of new class's offerings
-    @new_class_assignments = @new_class.offerings.map { |o| {name: o.name, id: o.id } }
-    # get student's learners, and offerings (id and names)
-    @students_assignments = @portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
-    # find matching learners and update offering_id values to match those in new class (what happens to any work on assignments that aren't assigned to new class?)
-    @students_assignments.each do |sa|
-      @new_class_assignments.each do |nca|
-        if sa[:offering_name] == nca[:name]
-          @learner_to_update = Portal::Learner.find(sa[:learner_id])
-          @learner_to_update.update_attribute('offering_id', nca[:id])
-          @learner_to_update.report_learner.update_fields
-        end
-      end
-    end
+      #FIXME: We should do somethign with the response code -- if response.code == 200 # successful 
+
+    }
 
     flash[:notice] = 'Successfully moved student to new class.'
-    redirect_to(@portal_student)
+    redirect_to(portal_student)
   end
 
   # DELETE /portal_students/1
@@ -477,18 +476,15 @@ class Portal::StudentsController < ApplicationController
 
   def check_assignments(new_class, portal_student)
     @potentially_orphaned_assignments = []
-    @new_class_assignments = new_class.offerings.map { |o| {name: o.name, id: o.id } }
-    @students_assignments = portal_student.learners.map { |l| {learner_id: l.id, offering_id: l.offering_id, offering_name: l.offering.name}}
     # find learners from old class that have no corresponding assignments in new class
-    @students_assignments.each do |sa|
-      @match_found = false
-      @new_class_assignments.each do |nca|
-        if sa[:offering_name] == nca[:name]
+    @portal_student.learners.each do |sa|
+      @new_class.offerings.each do |nca|
+        if sa.offering.runnable == nca.runnable
           @match_found = true
         end
       end
       if !@match_found
-        @potentially_orphaned_assignments << sa[:offering_name]
+        @potentially_orphaned_assignments << sa.offering.name
       end
     end
     @potentially_orphaned_assignments

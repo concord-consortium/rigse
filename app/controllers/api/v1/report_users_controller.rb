@@ -36,10 +36,11 @@ class API::V1::ReportUsersController < API::APIController
       runnable_ids = params[:runnables].split(',').map(&:to_i)
       runnables = ExternalActivity
                   .where("id IN (?)", runnable_ids)
-                  .select([:id, :url, :name, :source_type])
+                  .select([:id, :url, :name, :tool_id])
+                  .includes(:tool)
                   .map do |r|
                     browse_url = browse_external_activity_url(id: r.id, protocol: request.protocol, host: request.host_with_port)
-                    {id: r.id, url: r.url, browse_url: browse_url, name: r.name, source_type: r.source_type }
+                    {id: r.id, url: r.url, browse_url: browse_url, name: r.name, source_type: r.tool&.source_type }
                   end
     else
       runnables = []
@@ -68,12 +69,15 @@ class API::V1::ReportUsersController < API::APIController
 
     results = {}
 
+    lara_tool_ids = Tool.where(source_type: "LARA").pluck(:id)
+
     scopes = {
       teachers: Pundit.policy_scope(user, Portal::Teacher),
       cohorts: Pundit.policy_scope(user, Admin::Cohort),
       runnables: Pundit.policy_scope(user, Portal::Offering)
                   .joins("INNER JOIN external_activities ON external_activities.id = portal_offerings.runnable_id")
-                  .where("portal_offerings.runnable_type = 'ExternalActivity' AND external_activities.source_type = 'LARA'")
+                  .where("portal_offerings.runnable_type = 'ExternalActivity' " +
+                         "AND external_activities.tool_id IN (?)", lara_tool_ids)
     }
 
     cc_teacher_ids = []
