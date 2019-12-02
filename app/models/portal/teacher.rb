@@ -35,6 +35,9 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz"
   has_many :projects, :through => :cohorts, :class_name => "Admin::Project", :uniq => true
 
+  has_many :recent_collections_pages, :class_name => "RecentCollectionsPages"
+  has_many :projects, :through => :recent_collections_pages, :class_name => "Admin::Project"
+
   [:first_name, :login, :password, :last_name, :email, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
 
   validates_presence_of :user,  :message => "user association not specified"
@@ -157,6 +160,29 @@ class Portal::Teacher < ActiveRecord::Base
 
   def my_classes_url(protocol, host)
     Rails.application.routes.url_helpers.api_v1_classes_mine(protocol: protocol, host: host)
+  end
+
+  def add_recent_collection_page(project_id)
+    recent_project = Admin::Project.where(id: project_id)
+    existing_rcp = self.recent_collections_pages.where(project_id: project_id).first
+    if existing_rcp.present?
+      RecentCollectionsPages.update(existing_rcp.id, updated_at: Time.now.strftime("%Y-%m-%d %H:%M:%S"))
+    else
+      if self.recent_collections_pages.length == 3
+        oldest_rcp = self.recent_collections_pages.order('updated_at ASC').first
+        RecentCollectionsPages.where(id: oldest_rcp.id).first.destroy
+      end
+      self.projects << recent_project
+    end
+  end
+
+  def recent_collection_pages
+    recent_pages = RecentCollectionsPages.where(teacher_id: self.id).order('updated_at DESC')
+    recent_projects = []
+    recent_pages.each do |rp|
+      recent_projects << projects.where(id: rp.project_id).first
+    end
+    recent_projects
   end
 
   private
