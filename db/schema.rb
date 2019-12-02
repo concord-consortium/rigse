@@ -1949,11 +1949,12 @@ ActiveRecord::Schema.define(:version => 20191122221036) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "recent_collections_pages", :id => false, :force => true do |t|
-    t.integer  "project_id", :null => false
-    t.integer  "teacher_id", :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "recent_collections_pages", :force => true do |t|
+    t.string   "uuid",       :limit => 36
+    t.integer  "project_id",               :null => false
+    t.integer  "teacher_id",               :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "recent_collections_pages", ["teacher_id"], :name => "index_recent_collections_pages_on_teacher_id"
