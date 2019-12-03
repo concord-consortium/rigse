@@ -163,6 +163,27 @@ class API::V1::TeachersController < API::APIController
 
   end
 
+  def get_recent_collections_pages
+    teacher_id = params.require(:id)
+    if current_user.nil?
+      return error(I18n.t('Registration.ErrorNotAllowed'))
+    end
+
+    if current_user.portal_teacher
+      current_teacher_id = current_user.portal_teacher.id
+    else
+      current_teacher_id = ''
+    end
+
+    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
+      return error(I18n.t('Registration.ErrorNotAllowed'))
+    end
+
+    recent_collections_pages = current_user.portal_teacher.recent_collection_pages
+
+    return render :json => {'recent_collections_pages' => "#{recent_collections_pages}"}
+  end
+
   private
 
   def school_params_provided?
