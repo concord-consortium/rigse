@@ -31,6 +31,10 @@ class Admin::Project < ActiveRecord::Base
     project_users.where(is_admin:true).map { |au| au.user }
   end
 
+  def project_researchers
+    project_users.where(is_researcher:true).map { |ru| ru.user }
+  end
+
   has_many :recent_collections_pages, :class_name => "RecentCollectionsPages"
   has_many :teachers, :through => :recent_collections_pages, :class_name => "Portal::Teacher"
 

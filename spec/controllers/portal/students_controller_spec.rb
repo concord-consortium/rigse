@@ -195,12 +195,26 @@ describe Portal::StudentsController do
 
   describe "POST move" do
     before(:each) do
+
       @clazz_params = {
         :current_class_word => "currentclassword",
         :new_class_word => "newclassword"
       }
       student.add_clazz(clazz_1)
       student.remove_clazz(clazz_2)
+
+      external_report = FactoryBot.create(:external_report,
+        move_students_api_url: 'http://test.org/api/move_student_work',
+        move_students_api_token: 'abc123'
+      )
+
+      stub_request(:post, "http://test.org/api/move_student_work").
+        with(
+          headers: {
+           'Authorization'=>'Bearer abc123',
+           'Content-Type'=>'application/json'
+          }).
+        to_return(status: 200, body: "Success", headers: {})
     end
 
     let(:student) { FactoryBot.create(:full_portal_student) }

@@ -163,4 +163,37 @@ class Portal::Student < ActiveRecord::Base
     self.clazzes.delete clazz
   end
 
+  def move_student_and_return_config(new_class, current_class)
+    # initialize JSON for report API call
+    report_config = {
+      new_class_info_url: new_class.class_info_url(URI.parse(APP_CONFIG[:site_url]).scheme, URI.parse(APP_CONFIG[:site_url]).host),
+      new_context_id: new_class.class_hash.to_s,
+      old_context_id: current_class.class_hash.to_s,
+      platform_id: APP_CONFIG[:site_url].to_s,
+      platform_user_id: user_id.to_s
+    }
+    assignments = []
+
+    # find matches between student learners and new class's offerings. Update offering_id values to match those in new class (student work on assignments that aren't assigned to new class becomes orphaned)
+    learners.each do |sa|
+      new_class.offerings.each do |nca|
+        if sa.offering.runnable == nca.runnable
+          learner_to_update = Portal::Learner.find(sa.id)
+          learner_to_update.update_attribute('offering_id', nca.id)
+          learner_to_update.report_learner.update_fields
+          # add assignment to JSON for report API call
+          assignments << {
+            new_resource_link_id: nca.id.to_s,
+            old_resource_link_id: sa.offering_id.to_s,
+            tool_id: nca.runnable.tool&.tool_id
+          }
+        end
+      end
+    end
+
+    # add learner IDs to JSON for report API
+    report_config[:assignments] = assignments
+    report_config
+  end
+
 end

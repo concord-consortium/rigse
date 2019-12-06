@@ -4,7 +4,7 @@ describe Portal::Student do
   before(:each) do
     @student = FactoryBot.create(:portal_student)
   end
-  
+
   describe "when a clazz is added to a students list of clazzes" do
     it "the students clazz list increases by one if the student is not already enrolled in that class" do
       clazz = FactoryBot.create(:portal_clazz)
@@ -15,7 +15,7 @@ describe Portal::Student do
       expect(@student.clazzes).to include(clazz)
       expect(@student.clazzes.size).to eq(1)
     end
-    
+
     it "the students clazz list should stay the same if the same clazz is added multiple times" do
       clazz = FactoryBot.create(:portal_clazz)
       expect(@student.clazzes).to be_empty
@@ -27,10 +27,10 @@ describe Portal::Student do
       expect(@student.clazzes.size).to eq(1)
     end
   end
-  
+
   it "should generate a user name by first initial and last name" do
     expect(Portal::Student.generate_user_login("test", "user")).to eq("tuser")
-    
+
     first_name = "Nametest"
     last_name  = "Testuser"
     @student.user = FactoryBot.create(:user, {
@@ -152,5 +152,50 @@ describe Portal::Student do
     end
   end
 
+  describe "#move_student_and_return_config" do
+    let!(:student) { FactoryBot.create(:full_portal_student) }
+    let!(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash') }
+    let!(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
+    let!(:tool) { FactoryBot.create(:tool, tool_id: '123') }
+    let!(:runnable_a) { FactoryBot.create(:external_activity, name: 'Test Activity', tool: tool) }
+    let!(:offering_a) { FactoryBot.create(:portal_offering, {clazz: clazz_1, runnable: runnable_a}) }
+    let!(:offering_b) { FactoryBot.create(:portal_offering, {clazz: clazz_2, runnable: runnable_a}) }
+    let!(:learner) { FactoryBot.create(:portal_learner, offering: offering_a, student: student) }
+
+    it "should return JSON" do
+      json = student.move_student_and_return_config(clazz_2, clazz_1)
+      expect(json).to include(
+        new_context_id:"class2hash",
+        old_context_id:"class1hash",
+        platform_user_id:student.user_id.to_s,
+        new_class_info_url: /^http.*\/classes\/[0-9]*$/,
+        platform_id: /^http.*/,
+        assignments:[{
+          new_resource_link_id: offering_b.id.to_s,
+          old_resource_link_id: offering_a.id.to_s,
+          tool_id: '123'
+        }]
+      )
+    end
+
+    context "when the assignment has no tool" do
+      let!(:tool) { nil }
+      it "should return JSON with a tool_id of null" do
+        json = student.move_student_and_return_config(clazz_2, clazz_1)
+        expect(json).to include(
+          new_context_id:"class2hash",
+          old_context_id:"class1hash",
+          platform_user_id:student.user_id.to_s,
+          new_class_info_url: /^http.*\/classes\/[0-9]*$/,
+          platform_id: /^http.*/,
+          assignments:[{
+            new_resource_link_id: offering_b.id.to_s,
+            old_resource_link_id: offering_a.id.to_s,
+            tool_id: nil
+          }]
+        )
+      end
+    end
+  end
 
 end

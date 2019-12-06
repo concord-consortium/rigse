@@ -1,0 +1,22 @@
+.item
+  .content
+    - if tool.errors.any?
+      %ul.menu_v.error-explanation
+        %li Tool can't be saved, there are errors in form:
+        - tool.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        %li
+          = label_tag "name", "Name:"
+          = f.text_field :name
+        %li
+          = label_tag "source_type", "Source Type:"
+          = f.text_field :source_type
+          %br
+          Used for the default reports.
+        %li
+          = label_tag "tool_id", "Tool ID:"
+          = f.text_area :tool_id, class: 'mceNoEditor', rows: 5
+          Used for moving students between classes. It should be a URI.
+      = submit_tag

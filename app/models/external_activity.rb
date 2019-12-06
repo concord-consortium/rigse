@@ -74,6 +74,8 @@ class ExternalActivity < ActiveRecord::Base
 
   end
 
+  belongs_to :tool
+
   belongs_to :user
 
   has_many :external_activity_reports
@@ -214,7 +216,7 @@ class ExternalActivity < ActiveRecord::Base
     # Do it as soon as possible, as it includes communication with external system. In case of failure,
     # we can cancel this action earlier, before we create bunch of intermediate objects that would need to be
     # cleaned up too.
-    if source_type === 'LARA'
+    if tool&.source_type === 'LARA'
       unless clone.duplicate_on_lara(root_url)
         # If duplication on LARA fails, destroy clone and return nil.
         clone.destroy

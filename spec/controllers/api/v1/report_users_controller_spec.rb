@@ -57,9 +57,9 @@ describe API::V1::ReportUsersController do
       @teacher4.cohorts << @cohort1
       @teacher5.cohorts << @cohort2
 
-      @runnable1 = FactoryBot.create(:external_activity, source_type: "LARA")
-      @runnable2 = FactoryBot.create(:external_activity, source_type: "LARA")
-      @runnable3 = FactoryBot.create(:external_activity, source_type: "LARA")
+      @runnable1 = FactoryBot.create(:external_activity)
+      @runnable2 = FactoryBot.create(:external_activity)
+      @runnable3 = FactoryBot.create(:external_activity)
 
       @offering1 = FactoryBot.create(:portal_offering, {clazz: @teacher1.clazzes[0], runnable: @runnable1})
       @offering2 = FactoryBot.create(:portal_offering, {clazz: @teacher2.clazzes[0], runnable: @runnable2})

@@ -216,7 +216,7 @@ describe ExternalActivity do
       end
 
       before(:each) do
-        activity.source_type = 'LARA'
+        activity.create_tool(source_type: 'LARA')
         activity.save
 
         WebMock.stub_request(:post, activity.url + '/remote_duplicate')

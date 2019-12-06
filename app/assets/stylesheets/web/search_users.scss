@@ -1,0 +1,33 @@
+.search_users_container {
+  clear: both;
+  margin-bottom: 20px;
+
+  form {
+    padding: 0;
+  }
+
+  input[type="text"] {
+    width: 580px;
+  }
+  input[type="submit"] {
+    padding: 13px 22px 10px;
+  }
+
+  .filters_container {
+    clear: both;
+    margin: 10px 0;
+    width: 100%;
+
+    label {
+      margin: 0 5px;
+      padding-left: 20px;
+      position: relative;
+
+      input[type="checkbox"] {
+        left: 0;
+        position: absolute;
+        top: 2px;
+      }
+    }
+  }
+}
