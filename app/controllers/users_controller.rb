@@ -21,7 +21,8 @@ class UsersController < ApplicationController
     user_type_conditions = []
 
     if params[:portal_admin].to_s.length > 0
-      user_type_conditions << 'roles_users.role_id = "1"'
+      admin_role_id = Role.where(title: 'admin').first.id
+      user_type_conditions << "roles_users.role_id = #{admin_role_id}"
     end
 
     if params[:project_admin].to_s.length > 0
