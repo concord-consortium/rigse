@@ -181,7 +181,7 @@ class API::V1::TeachersController < API::APIController
 
     recent_collections_pages = current_user.portal_teacher.recent_collection_pages
 
-    return render :json => {'recent_collections_pages' => "#{recent_collections_pages}"}
+    return render :json => recent_collections_pages.to_json
   end
 
   def update_recent_collections_pages
