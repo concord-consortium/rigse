@@ -165,21 +165,10 @@ class API::V1::TeachersController < API::APIController
 
   def get_recent_collections_pages
     teacher_id = params.require(:id)
-    if current_user.nil?
-      return error(I18n.t('Registration.ErrorNotAllowed'))
-    end
+    teacher = Portal::Teacher.find(teacher_id)
+    authorize teacher
 
-    if current_user.portal_teacher
-      current_teacher_id = current_user.portal_teacher.id
-    else
-      current_teacher_id = ''
-    end
-
-    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
-      return error(I18n.t('Registration.ErrorNotAllowed'))
-    end
-
-    recent_collections_pages = current_user.portal_teacher.recent_collection_pages
+    recent_collections_pages = teacher.recent_collection_pages
 
     return render :json => recent_collections_pages.to_json
   end
@@ -188,21 +177,10 @@ class API::V1::TeachersController < API::APIController
     teacher_id = params.require(:id)
     project_id = params.require(:project_id)
 
-    if current_user.nil?
-      return error(I18n.t('Registration.ErrorNotAllowed'))
-    end
+    teacher = Portal::Teacher.find(teacher_id)
+    authorize teacher
 
-    if current_user.portal_teacher
-      current_teacher_id = current_user.portal_teacher.id
-    else
-      current_teacher_id = ''
-    end
-
-    if teacher_id != current_teacher_id.to_s && !current_user.has_role?('admin')
-      return error(I18n.t('Registration.ErrorNotAllowed'))
-    end
-
-    current_user.portal_teacher.add_recent_collection_page(project_id)
+    teacher.add_recent_collection_page(project_id)
 
     return render :json => {'collections_pages_updated' => "1"}
   end

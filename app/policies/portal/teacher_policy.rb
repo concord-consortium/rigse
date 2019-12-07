@@ -21,7 +21,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
         WHERE user_id = #{user.id}
     "
   end
-  
+
   class Scope < Scope
     def resolve
       if user && user.has_role?('manager','admin','researcher')
@@ -44,6 +44,14 @@ class Portal::TeacherPolicy < ApplicationPolicy
   end
 
   def show?
+    owner? || admin?
+  end
+
+  def get_recent_collections_pages?
+    owner? || admin?
+  end
+
+  def update_recent_collections_pages?
     owner? || admin?
   end
 
