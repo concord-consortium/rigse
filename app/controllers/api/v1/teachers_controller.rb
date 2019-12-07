@@ -173,18 +173,6 @@ class API::V1::TeachersController < API::APIController
     return render :json => recent_collections_pages.to_json
   end
 
-  def update_recent_collections_pages
-    teacher_id = params.require(:id)
-    project_id = params.require(:project_id)
-
-    teacher = Portal::Teacher.find(teacher_id)
-    authorize teacher
-
-    teacher.add_recent_collection_page(project_id)
-
-    return render :json => {'collections_pages_updated' => "1"}
-  end
-
   private
 
   def school_params_provided?
