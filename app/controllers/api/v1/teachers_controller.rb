@@ -168,9 +168,7 @@ class API::V1::TeachersController < API::APIController
     teacher = Portal::Teacher.find(teacher_id)
     authorize teacher
 
-    recent_collections_pages = teacher.recent_collection_pages
-
-    return render :json => recent_collections_pages.to_json
+    return render :json => teacher.recent_projects.to_json
   end
 
   private
