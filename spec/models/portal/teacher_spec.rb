@@ -104,12 +104,13 @@ describe Portal::Teacher do
   end
 
   describe 'add_recent_collection_page' do
-    teacher = FactoryBot.create(:portal_teacher)
-    project1 = FactoryBot.create(:project, name: 'Test Project One')
-    teacher.add_recent_collection_page(project1)
+    before(:each) do
+      project1 = FactoryBot.create(:project, name: 'Test Project One')
+      @virtual_teacher.add_recent_collection_page(project1)
+    end
 
     it 'adds project to the teachers list of recently visited collections pages' do
-      expect(teacher.recent_projects.length).to eql(1)
+      expect(@virtual_teacher.recent_projects.length).to eql(1)
     end
   end
 
