@@ -122,6 +122,33 @@ RSpec.describe API::V1::TeachersController, type: :controller do
     end
   end
 
+  describe '#get_recent_collections_pages' do
+    before(:each) do
+      @teacher = FactoryBot.create(:portal_teacher)
+      @project1 = FactoryBot.create(:project, name: 'Test Project One')
+      @project2 = FactoryBot.create(:project, name: 'Test Project Two')
+      @teacher.add_recent_collection_page(@project1)
+    end
+
+    context 'when a signed in teacher accesses their own recent collections pages' do
+      before(:each) do
+        sign_in @teacher.user
+      end
+
+      it 'GET get_recent_collections_pages' do
+        get :get_recent_collections_pages, :id => @teacher.id
+        expect(response.body).to include(@project1.name)
+      end
+    end
+
+    context 'when an anonymous user tries to access a teacher\'s recent collections pages' do
+      it 'GET get_recent_collections_pages' do
+        get :get_recent_collections_pages, :id => @teacher.id
+        expect(response.body).to include('Not authorized')
+      end
+    end
+  end
+
   # TODO: auto-generated
   describe '#email_available' do
     it 'GET email_available' do
