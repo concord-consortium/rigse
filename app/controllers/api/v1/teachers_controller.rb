@@ -167,8 +167,10 @@ class API::V1::TeachersController < API::APIController
     teacher_id = params.require(:id)
     teacher = Portal::Teacher.find(teacher_id)
     authorize teacher
-
-    return render :json => teacher.recent_projects.to_json
+    recent_collections_pages = teacher.recent_projects.select(
+      "admin_projects.id, name, landing_page_slug, project_card_image_url"
+    ).map(&:attributes)
+    return render :json => recent_collections_pages.to_json
   end
 
   private
