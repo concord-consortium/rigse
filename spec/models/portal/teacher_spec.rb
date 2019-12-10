@@ -105,12 +105,32 @@ describe Portal::Teacher do
 
   describe 'add_recent_collection_page' do
     before(:each) do
-      project1 = FactoryBot.create(:project, name: 'Test Project One')
-      @virtual_teacher.add_recent_collection_page(project1)
+      @project1 = FactoryBot.create(:project, name: 'Test Project One')
+      @project2 = FactoryBot.create(:project, name: 'Test Project Two')
+      @project3 = FactoryBot.create(:project, name: 'Test Project Three')
+      @project4 = FactoryBot.create(:project, name: 'Test Project Four')
+      @virtual_teacher.add_recent_collection_page(@project1)
     end
 
-    it 'adds project to the teachers list of recently visited collections pages' do
-      expect(@virtual_teacher.recent_projects.length).to eql(1)
+    it 'adds an item to the teacher\'s list of recently visited collections pages' do
+      expect(@virtual_teacher.recent_collections_pages.length).to eql(1)
+    end
+
+    it 'changes the updated_at value for an item in the teacher\'s list of recently visited collections pages if the teacher has already visited that project\'s collection page' do
+      @rcp_updated_at = @virtual_teacher.recent_collections_pages[0].updated_at
+      sleep(1.second)
+      @virtual_teacher.add_recent_collection_page(@project1)
+      @virtual_teacher.reload
+      expect(@virtual_teacher.recent_collections_pages.length).to eql(1)
+      expect(@virtual_teacher.recent_collections_pages[0].updated_at).to be > @rcp_updated_at
+    end
+
+    it 'does not add more than three items to the teacher\'s list of recently visited collections pages' do
+      @virtual_teacher.add_recent_collection_page(@project2)
+      @virtual_teacher.add_recent_collection_page(@project3)
+      @virtual_teacher.add_recent_collection_page(@project4)
+      @virtual_teacher.reload
+      expect(@virtual_teacher.recent_collections_pages.length).to eql(3)
     end
   end
 
