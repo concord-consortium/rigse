@@ -89,6 +89,7 @@ class API::V1::Offering
   attribute :report_url, String
   attribute :rubric_url, String
   attribute :preview_url, String
+  attribute :has_teacher_edition, Boolean
   # 2019-07-16 NP:  TODO: deprecate `external_report` in favor of `external_reports`
   attribute :external_report, Hash
   attribute :external_reports, Array
@@ -115,6 +116,7 @@ class API::V1::Offering
     self.activity = offering.name
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.material_type = runnable.material_type
+    self.has_teacher_edition = runnable.has_teacher_edition
     self.reportable = offering.reportable?
     self.rubric_url = runnable.respond_to?(:rubric_url) ? runnable.rubric_url : nil
     self.report_url = offering.reportable? ? report_portal_offering_url(id: offering.id, protocol: protocol, host: host_with_port) : nil
