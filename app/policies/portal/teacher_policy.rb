@@ -51,8 +51,4 @@ class Portal::TeacherPolicy < ApplicationPolicy
     owner? || admin?
   end
 
-  def update_recent_collections_pages?
-    owner? || admin?
-  end
-
 end
