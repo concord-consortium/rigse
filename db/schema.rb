@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20191120184500) do
+ActiveRecord::Schema.define(:version => 20191210033124) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -535,6 +535,7 @@ ActiveRecord::Schema.define(:version => 20191120184500) do
     t.text     "long_description"
     t.text     "keywords"
     t.integer  "tool_id"
+    t.boolean  "has_teacher_edition",                              :default => false
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -1948,6 +1949,15 @@ ActiveRecord::Schema.define(:version => 20191120184500) do
   end
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
+
+  create_table "recent_collections_pages", :force => true do |t|
+    t.integer  "recent_project_id", :null => false
+    t.integer  "teacher_id",        :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "recent_collections_pages", ["teacher_id"], :name => "index_recent_collections_pages_on_teacher_id"
 
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
