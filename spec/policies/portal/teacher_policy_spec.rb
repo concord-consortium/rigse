@@ -67,7 +67,7 @@ RSpec.describe Portal::TeacherPolicy do
           @teacher1.add_recent_collection_page(@project1)
         end
         it 'allow access to own visited collection pages' do
-          @teacher1.recent_projects
+          @teacher1.viewed_projects
           expect(scope.to_a).to include(@teacher1)
         end
         it 'allow updates to own visited collection pages' do

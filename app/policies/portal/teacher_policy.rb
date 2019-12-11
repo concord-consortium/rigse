@@ -47,7 +47,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
     owner? || admin?
   end
 
-  def get_recent_collections_pages?
+  def get_teacher_project_views?
     owner? || admin?
   end
 

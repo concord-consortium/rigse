@@ -416,7 +416,7 @@ RailsPortal::Application.routes.draw do
           member do
             get :get_enews_subscription
             post :update_enews_subscription
-            get :get_recent_collections_pages
+            get :get_teacher_project_views
           end
         end
         resources :students do

@@ -35,8 +35,8 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz"
   has_many :projects, :through => :cohorts, :class_name => "Admin::Project", :uniq => true
 
-  has_many :recent_collections_pages, :class_name => "RecentCollectionsPages"
-  has_many :recent_projects, :through => :recent_collections_pages, :class_name => "Admin::Project"
+  has_many :teacher_project_views, :class_name => "TeacherProjectViews"
+  has_many :viewed_projects, :through => :teacher_project_views, :class_name => "Admin::Project"
 
   [:first_name, :login, :password, :last_name, :email, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
 
@@ -163,15 +163,15 @@ class Portal::Teacher < ActiveRecord::Base
   end
 
   def add_recent_collection_page(project)
-    existing_rcp = self.recent_collections_pages.where(recent_project_id: project.id).first
+    existing_rcp = self.teacher_project_views.where(viewed_projects_id: project.id).first
     if existing_rcp.present?
       existing_rcp.touch
     else
-      if self.recent_collections_pages.length == 3
-        oldest_rcp = self.recent_collections_pages.order('updated_at ASC').first
-        RecentCollectionsPages.where(id: oldest_rcp.id).first.destroy
+      if self.teacher_project_views.length == 3
+        oldest_rcp = self.teacher_project_views.order('updated_at ASC').first
+        TeacherProjectViews.where(id: oldest_rcp.id).first.destroy
       end
-      self.recent_projects << project
+      self.viewed_projects << project
     end
   end
 

@@ -122,7 +122,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
     end
   end
 
-  describe '#get_recent_collections_pages' do
+  describe '#get_teacher_project_views' do
     before(:each) do
       @teacher = FactoryBot.create(:portal_teacher)
       @project1 = FactoryBot.create(:project, name: 'Test Project One')
@@ -135,15 +135,15 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         sign_in @teacher.user
       end
 
-      it 'GET get_recent_collections_pages' do
-        get :get_recent_collections_pages, :id => @teacher.id
+      it 'GET get_teacher_project_views' do
+        get :get_teacher_project_views, :id => @teacher.id
         expect(response.body).to include(@project1.name)
       end
     end
 
     context 'when an anonymous user tries to access a teacher\'s recent collections pages' do
-      it 'GET get_recent_collections_pages' do
-        get :get_recent_collections_pages, :id => @teacher.id
+      it 'GET get_teacher_project_views' do
+        get :get_teacher_project_views, :id => @teacher.id
         expect(response.body).to include('Not authorized')
       end
     end

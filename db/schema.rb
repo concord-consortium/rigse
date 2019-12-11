@@ -1949,15 +1949,6 @@ ActiveRecord::Schema.define(:version => 20191122221036) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "recent_collections_pages", :force => true do |t|
-    t.integer  "recent_project_id", :null => false
-    t.integer  "teacher_id",        :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "recent_collections_pages", ["teacher_id"], :name => "index_recent_collections_pages_on_teacher_id"
-
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2291,6 +2282,15 @@ ActiveRecord::Schema.define(:version => 20191122221036) do
     t.datetime "updated_at",                               :null => false
     t.integer  "user_id"
   end
+
+  create_table "teacher_project_views", :force => true do |t|
+    t.integer  "viewed_projects_id", :null => false
+    t.integer  "teacher_id",         :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  add_index "teacher_project_views", ["teacher_id"], :name => "index_teacher_project_views_on_teacher_id"
 
   create_table "tools", :force => true do |t|
     t.string "name"

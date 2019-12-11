@@ -3,6 +3,6 @@
 require 'spec_helper'
 
 
-RSpec.describe RecentCollectionsPages, type: :model do
+RSpec.describe TeacherProjectViews, type: :model do
 
 end
