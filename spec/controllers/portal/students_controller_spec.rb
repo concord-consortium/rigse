@@ -196,34 +196,74 @@ describe Portal::StudentsController do
   describe "POST move" do
     before(:each) do
 
+      @student = FactoryBot.create(:full_portal_student)
       @clazz_params = {
         :current_class_word => "currentclassword",
         :new_class_word => "newclassword"
       }
-      student.add_clazz(clazz_1)
-      student.remove_clazz(clazz_2)
+      @clazz_1 = FactoryBot.create(:portal_clazz, :class_word => @clazz_params[:current_class_word])
+      @clazz_2 = FactoryBot.create(:portal_clazz, :class_word => @clazz_params[:new_class_word])
 
-      external_report = FactoryBot.create(:external_report,
-        move_students_api_url: 'http://test.org/api/move_student_work',
-        move_students_api_token: 'abc123'
-      )
+      @student.add_clazz(@clazz_1)
+      @student.remove_clazz(@clazz_2)
 
-      stub_request(:post, "http://test.org/api/move_student_work").
-        with(
-          headers: {
-           'Authorization'=>'Bearer abc123',
-           'Content-Type'=>'application/json'
-          }).
-        to_return(status: 200, body: "Success", headers: {})
     end
 
-    let(:student) { FactoryBot.create(:full_portal_student) }
-    let(:clazz_1) { FactoryBot.create(:portal_clazz, :class_word => @clazz_params[:current_class_word]) }
-    let(:clazz_2) { FactoryBot.create(:portal_clazz, :class_word => @clazz_params[:new_class_word]) }
 
-    it 'should flash success notice' do
-      post :move, id: student.id, clazz: @clazz_params
-      expect(flash[:notice]).to match(/Successfully moved student to new class./)
+    context "when an external report is correctly configured to support moving a student" do
+      before(:each) do
+        @external_report = FactoryBot.create(:external_report,
+          move_students_api_url: 'http://test.org/api/move_student_work',
+          move_students_api_token: 'abc123'
+        )
+      end
+
+      it 'should flash success notice' do
+        stub_request(:post, @external_report.move_students_api_url).
+          with(
+            headers: {
+             'Authorization'=>'Bearer ' + @external_report.move_students_api_token,
+             'Content-Type'=>'application/json'
+            }).
+          to_return(status: 200, body: "Success", headers: {})
+
+        post :move, id: @student.id, clazz: @clazz_params
+        expect(flash[:notice]).to match(/Successfully moved student to new class./)
+      end
+    end
+
+    context "when an external report is incorrectly configured to support moving a student" do
+
+      before(:each) do
+
+      end
+
+      it 'should return an error if move_students_api_url value is an empty string' do
+        external_report = FactoryBot.create(:external_report,
+          move_students_api_url: "",
+          move_students_api_token: 'abc123'
+        )
+        expect(HTTParty).not_to receive(:post)
+        post :move, id: @student.id, clazz: @clazz_params
+      end
+
+      it 'should return an error if move_students_api_url value is a space' do
+        external_report = FactoryBot.create(:external_report,
+          move_students_api_url: " ",
+          move_students_api_token: 'abc123'
+        )
+        expect(HTTParty).not_to receive(:post)
+        post :move, id: @student.id, clazz: @clazz_params
+      end
+
+      it 'should return an error if move_students_api_url value is nil' do
+        external_report = FactoryBot.create(:external_report,
+          move_students_api_url: nil,
+          move_students_api_token: 'abc123'
+        )
+        expect(HTTParty).not_to receive(:post)
+        post :move, id: @student.id, clazz: @clazz_params
+      end
     end
   end
 
