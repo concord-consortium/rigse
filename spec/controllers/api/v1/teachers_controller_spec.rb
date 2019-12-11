@@ -127,7 +127,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
       @teacher = FactoryBot.create(:portal_teacher)
       @project1 = FactoryBot.create(:project, name: 'Test Project One')
       @project2 = FactoryBot.create(:project, name: 'Test Project Two')
-      @teacher.add_recent_collection_page(@project1)
+      @teacher.record_project_view(@project1)
     end
 
     context 'when a signed in teacher accesses their own recent collections pages' do

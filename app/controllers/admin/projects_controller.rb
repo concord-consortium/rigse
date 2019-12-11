@@ -39,7 +39,7 @@ class Admin::ProjectsController < ApplicationController
 
     # if portal user is a teacher, update their recently visited collections pages
     if (@portal_teacher.present?)
-      @portal_teacher.add_recent_collection_page(@project)
+      @portal_teacher.record_project_view(@project)
     end
   end
 

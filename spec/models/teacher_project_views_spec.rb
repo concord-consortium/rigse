@@ -3,6 +3,6 @@
 require 'spec_helper'
 
 
-RSpec.describe TeacherProjectViews, type: :model do
+RSpec.describe TeacherProjectView, type: :model do
 
 end

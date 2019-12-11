@@ -35,7 +35,7 @@ class Portal::Teacher < ActiveRecord::Base
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz"
   has_many :projects, :through => :cohorts, :class_name => "Admin::Project", :uniq => true
 
-  has_many :teacher_project_views, :class_name => "TeacherProjectViews"
+  has_many :teacher_project_views, :class_name => "TeacherProjectView"
   has_many :viewed_projects, :through => :teacher_project_views, :class_name => "Admin::Project"
 
   [:first_name, :login, :password, :last_name, :email, :anonymous?, :has_role?].each { |m| delegate m, :to => :user }
@@ -162,13 +162,9 @@ class Portal::Teacher < ActiveRecord::Base
     Rails.application.routes.url_helpers.api_v1_classes_mine(protocol: protocol, host: host)
   end
 
-  def add_recent_collection_page(project)
-    existing_rcp = self.teacher_project_views.where(viewed_projects_id: project.id).first
-    if existing_rcp.present?
-      existing_rcp.touch
-    else
-      self.viewed_projects << project
-    end
+  def record_project_view(project)
+    project_view = self.teacher_project_views.where(viewed_project_id: project.id).first_or_create
+    project_view.touch
   end
 
   private

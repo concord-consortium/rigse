@@ -2284,10 +2284,10 @@ ActiveRecord::Schema.define(:version => 20191122221036) do
   end
 
   create_table "teacher_project_views", :force => true do |t|
-    t.integer  "viewed_projects_id", :null => false
-    t.integer  "teacher_id",         :null => false
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.integer  "viewed_project_id", :null => false
+    t.integer  "teacher_id",        :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   add_index "teacher_project_views", ["teacher_id"], :name => "index_teacher_project_views_on_teacher_id"
