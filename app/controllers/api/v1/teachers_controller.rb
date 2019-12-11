@@ -169,7 +169,7 @@ class API::V1::TeachersController < API::APIController
     authorize teacher
     recent_collections_pages = teacher.viewed_projects.select(
       "admin_projects.id, name, landing_page_slug, project_card_image_url"
-    ).map(&:attributes)
+    ).limit(3).map(&:attributes)
     return render :json => recent_collections_pages.to_json
   end
 

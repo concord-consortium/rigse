@@ -167,10 +167,6 @@ class Portal::Teacher < ActiveRecord::Base
     if existing_rcp.present?
       existing_rcp.touch
     else
-      if self.teacher_project_views.length == 3
-        oldest_rcp = self.teacher_project_views.order('updated_at ASC').first
-        TeacherProjectViews.where(id: oldest_rcp.id).first.destroy
-      end
       self.viewed_projects << project
     end
   end

@@ -124,14 +124,6 @@ describe Portal::Teacher do
       expect(@virtual_teacher.teacher_project_views.length).to eql(1)
       expect(@virtual_teacher.teacher_project_views[0].updated_at).to be > @rcp_updated_at
     end
-
-    it 'does not add more than three items to the teacher\'s list of recently visited collections pages' do
-      @virtual_teacher.add_recent_collection_page(@project2)
-      @virtual_teacher.add_recent_collection_page(@project3)
-      @virtual_teacher.add_recent_collection_page(@project4)
-      @virtual_teacher.reload
-      expect(@virtual_teacher.teacher_project_views.length).to eql(3)
-    end
   end
 
   # TODO: auto-generated
