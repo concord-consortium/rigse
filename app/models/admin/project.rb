@@ -35,9 +35,6 @@ class Admin::Project < ActiveRecord::Base
     project_users.where(is_researcher:true).map { |ru| ru.user }
   end
 
-  has_many :recent_collections_pages, :class_name => "RecentCollectionsPages"
-  has_many :teachers, :through => :recent_collections_pages, :class_name => "Portal::Teacher"
-
   has_many :project_materials, dependent: :destroy
   has_many :activities, through: :project_materials, source: :material, source_type: 'Activity'
   has_many :investigations, through: :project_materials, source: :material, source_type: 'Investigation'
