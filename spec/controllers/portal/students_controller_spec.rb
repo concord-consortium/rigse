@@ -234,10 +234,6 @@ describe Portal::StudentsController do
 
     context "when an external report is incorrectly configured to support moving a student" do
 
-      before(:each) do
-
-      end
-
       it 'should return an error if move_students_api_url value is an empty string' do
         external_report = FactoryBot.create(:external_report,
           move_students_api_url: "",
