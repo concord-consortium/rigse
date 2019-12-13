@@ -103,7 +103,28 @@ describe Portal::Teacher do
     end
   end
 
+  describe 'record_project_view' do
+    before(:each) do
+      @project1 = FactoryBot.create(:project, name: 'Test Project One')
+      @project2 = FactoryBot.create(:project, name: 'Test Project Two')
+      @project3 = FactoryBot.create(:project, name: 'Test Project Three')
+      @project4 = FactoryBot.create(:project, name: 'Test Project Four')
+      @virtual_teacher.record_project_view(@project1)
+    end
 
+    it 'adds an item to the teacher\'s list of recently visited collections pages' do
+      expect(@virtual_teacher.teacher_project_views.length).to eql(1)
+    end
+
+    it 'changes the updated_at value for an item in the teacher\'s list of recently visited collections pages if the teacher has already visited that project\'s collection page' do
+      @rcp_updated_at = @virtual_teacher.teacher_project_views[0].updated_at
+      sleep(1.second)
+      @virtual_teacher.record_project_view(@project1)
+      @virtual_teacher.reload
+      expect(@virtual_teacher.teacher_project_views.length).to eql(1)
+      expect(@virtual_teacher.teacher_project_views[0].updated_at).to be > @rcp_updated_at
+    end
+  end
 
   # TODO: auto-generated
   describe '.LEFT_PANE_ITEM' do

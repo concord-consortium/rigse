@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20191120184500) do
+ActiveRecord::Schema.define(:version => 20191122221036) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2282,6 +2282,15 @@ ActiveRecord::Schema.define(:version => 20191120184500) do
     t.datetime "updated_at",                               :null => false
     t.integer  "user_id"
   end
+
+  create_table "teacher_project_views", :force => true do |t|
+    t.integer  "viewed_project_id", :null => false
+    t.integer  "teacher_id",        :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "teacher_project_views", ["teacher_id"], :name => "index_teacher_project_views_on_teacher_id"
 
   create_table "tools", :force => true do |t|
     t.string "name"

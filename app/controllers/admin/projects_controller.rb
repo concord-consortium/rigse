@@ -36,6 +36,11 @@ class Admin::ProjectsController < ApplicationController
         "https://learn-resources.concord.org/images/stem-resources/stem-resource-finder.jpg"
     }
     render layout: 'minimal'
+
+    # if portal user is a teacher, update their recently visited collections pages
+    if (@portal_teacher.present?)
+      @portal_teacher.record_project_view(@project)
+    end
   end
 
   # GET /admin/projects
