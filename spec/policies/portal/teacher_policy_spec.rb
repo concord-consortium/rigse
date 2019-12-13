@@ -59,6 +59,22 @@ RSpec.describe Portal::TeacherPolicy do
           expect(scope.to_a.length).to eq 2
         end
       end
+
+      context 'has visited a collection page' do
+        before(:each) do
+          @project1 = FactoryBot.create(:project)
+          @project2 = FactoryBot.create(:project)
+          @teacher1.record_project_view(@project1)
+        end
+        it 'allow access to own visited collection pages' do
+          @teacher1.viewed_projects
+          expect(scope.to_a).to include(@teacher1)
+        end
+        it 'allow updates to own visited collection pages' do
+          @teacher1.record_project_view(@project2)
+          expect(scope.to_a).to include(@teacher1)
+        end
+      end
     end
 
     context 'project researcher' do

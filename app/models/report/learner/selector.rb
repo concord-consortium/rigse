@@ -12,7 +12,10 @@ class Report::Learner::Selector
     @learners = []
     @runnable_names = []
 
-    options['show_learners'] = 5000   # get learners, up to this max
+    # include the learners in the results, this flag also disables the aggregrations
+    # by default it includes up to 5000 learners, but this can overridden with the
+    # size_limit parameter
+    options['show_learners'] = options['size_limit'].present? ?  options['size_limit'].to_i : 5000
     esResponse = API::V1::ReportLearnersEsController.query_es(options, current_visitor)
     hits = esResponse['hits']['hits']
 

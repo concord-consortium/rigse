@@ -2293,6 +2293,15 @@ ActiveRecord::Schema.define(:version => 20191210033124) do
     t.integer  "user_id"
   end
 
+  create_table "teacher_project_views", :force => true do |t|
+    t.integer  "viewed_project_id", :null => false
+    t.integer  "teacher_id",        :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "teacher_project_views", ["teacher_id"], :name => "index_teacher_project_views_on_teacher_id"
+
   create_table "tools", :force => true do |t|
     t.string "name"
     t.string "source_type"

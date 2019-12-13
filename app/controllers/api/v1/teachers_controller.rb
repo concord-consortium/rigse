@@ -163,6 +163,16 @@ class API::V1::TeachersController < API::APIController
 
   end
 
+  def get_teacher_project_views
+    teacher_id = params.require(:id)
+    teacher = Portal::Teacher.find(teacher_id)
+    authorize teacher
+    recent_collections_pages = teacher.viewed_projects.select(
+      "admin_projects.id, name, landing_page_slug, project_card_image_url"
+    ).limit(3).map(&:attributes)
+    return render :json => recent_collections_pages.to_json
+  end
+
   private
 
   def school_params_provided?
