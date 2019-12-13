@@ -52,6 +52,13 @@
     = render :partial => 'shared/reports_edit', :locals => { :object => @external_activity }
     = field_set_tag 'Teacher Guide (URL)' do
       = f.text_field :teacher_guide_url, :size => 60
+    - if @external_activity.respond_to?(:has_teacher_edition)
+      = field_set_tag 'Has a teacher edition' do
+        - if current_user.has_role? 'admin','manager','author'
+          = f.check_box :has_teacher_edition
+        - else
+          = f.check_box :has_teacher_edition, :disabled => true
+        This activity has a teacher edition.
     = field_set_tag t('authoring.rubric_url_label') do
       = f.text_field :rubric_url, :size => 60
     = field_set_tag 'Thumbnail image URL (300 x 250 px)' do

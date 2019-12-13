@@ -47,6 +47,12 @@ module Materials
         has_activities = material.respond_to?(:activities) && !material.activities.nil?
         has_pretest = material.respond_to?(:has_pretest) && material.has_pretest
 
+        if material.respond_to?(:has_teacher_edition)
+          has_teacher_edition = material.has_teacher_edition
+        else
+          has_teacher_edition = false
+        end
+
         if material.respond_to?(:saves_student_data)
           saves_student_data = material.saves_student_data
         else
@@ -271,6 +277,7 @@ module Materials
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
           sensors: tags['sensors'],
+          has_teacher_edition: has_teacher_edition,
           has_activities: has_activities,
           has_pretest: has_pretest,
           saves_student_data: saves_student_data,
