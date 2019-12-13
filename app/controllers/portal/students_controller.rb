@@ -282,7 +282,7 @@ class Portal::StudentsController < ApplicationController
 
     # post data to report service, include bearer token in request
     config = portal_student.move_student_and_return_config(new_class, current_class)
-    ExternalReport.where('move_students_api_url IS NOT NULL').find_each{ |report|
+    ExternalReport.where('move_students_api_url LIKE "http%"').find_each{ |report|
       auth_token = 'Bearer %s' % report.move_students_api_token
       response = HTTParty.post(report.move_students_api_url,
         body: config.to_json,
