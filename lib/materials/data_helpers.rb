@@ -267,6 +267,7 @@ module Materials
           #
           links: links_for_material(material, skip_lightbox_reloads),
 
+          external_url: material.is_a?(ExternalActivity) ? material.url : nil,
           preview_url: view_context.run_url_for(material, view_context.preview_params(current_user, material.teacher_only? ? {:teacher_mode => true} : {})),
           edit_url: (material.is_a?(ExternalActivity) && policy(material).matedit?) ? view_context.matedit_external_activity_url(material, iFrame: true) : nil,
           unarchive_url: (material.is_a?(ExternalActivity) && policy(material).unarchive?) ? view_context.unarchive_external_activity_url(material) : nil,
