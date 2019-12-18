@@ -25,6 +25,9 @@ class HelpController < ApplicationController
       return
     end
     @preview_help_settings_id = params[:preview_help_page_from_summary_page] || @preview_help_settings_id
+    if @preview_help_settings_id.blank?
+      raise ActionController::RoutingError.new('Not Found')
+    end
     @preview_help_settings_id = @preview_help_settings_id.to_i
     preview_settings = Admin::Settings.find_by_id(@preview_help_settings_id)
     get_help_page(preview_settings.help_type)
