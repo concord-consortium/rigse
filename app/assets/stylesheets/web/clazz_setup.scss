@@ -1,0 +1,89 @@
+.edit_portal_clazz {
+
+  input, textarea, select {
+    border: solid 2px #0592af;
+    width: 96%;
+  }
+  input[type="checkbox"], input[type="radio"], input[type="submit"] {
+    border: none;
+    width: auto;
+  }
+
+  label.right {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  .class-teachers {
+    padding: 10px 0;
+
+    .note {
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    #div_teacher_list {
+      padding: 10px 0;
+
+      li {
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+
+      .remove {
+        border: solid 2px #ea6d2f;
+        border-radius: 50%;
+        color: #ea6d2f;
+        cursor: pointer;
+        display: inline-block;
+        float: none;
+        font-size: 12px;
+        height: 12px;
+        line-height: 12px;
+        margin: 0 30px 0 0;
+        overflow: hidden;
+        padding: 0 0 1px;
+        position: relative;
+        text-indent: 100%;
+        white-space: nowrap;
+        width: 12px;
+
+        &:after {
+          content: 'x';
+          left: 0;
+          position: absolute;
+          text-indent: 2.75px;
+          top: 0;
+        }
+      }
+    }
+  }
+
+}
+
+.form-submit {
+  text-align: right;
+
+  span.create_button {
+    margin-left: 15px;
+  }
+}
+
+dl.classdata {
+  margin-bottom: 30px;
+
+  dd {
+    display: inline;
+    font-size: 18px;
+
+    &:after {
+      display: block;
+      content: '';
+    }
+  }
+  dt {
+    display: inline;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
