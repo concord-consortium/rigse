@@ -27,19 +27,16 @@ module Portal::TeachersHelper
       select_opts = options_for_select(options, :selected => default_value)
       span_tag = <<-EOF
           #{span_tag}
-          <table><tr>
-          <td style="vertical-align:middle;padding-left:0px">#{select_tag('teacher_id',  select_opts ,:id => 'teacher_id_selector', :style => 'width: 358px;')}</td>
-          <td style="vertical-align:middle">#{button_to_remote("Add", :url => {:controller => 'portal/clazzes', :action=>'add_teacher', :id => clazz}, :with => "'teacher_id='+$('teacher_id_selector').value")}</td>
-          </tr></table>
+          #{select_tag('teacher_id',  select_opts ,:id => 'teacher_id_selector')}
+          #{button_to_remote("Add", :url => {:controller => 'portal/clazzes', :action=>'add_teacher', :id => clazz}, :with => "'teacher_id='+$('teacher_id_selector').value")}
           <div class="note">(Note: Make sure new teacher is registered before trying to add them.)</div>
-          <br>
 
         #{make_chosen('teacher_id_selector')}
       EOF
     else
       span_tag = <<-EOF
           #{span_tag}
-          <div class="note">To share this class with other teachers in your school, have them create an account.</div>
+          <div class="note">To share this class with other teachers in your school, first have them create an account. You will then be able to add them here as additional teachers of your class.</div>
       EOF
     end
     return "#{span_tag}</span>".html_safe

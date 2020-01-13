@@ -4,7 +4,7 @@
     border: solid 2px #0592af;
     width: 96%;
   }
-  input[type="checkbox"], input[type="radio"], input[type="submit"] {
+  input[type="button"], input[type="checkbox"], input[type="radio"], input[type="submit"] {
     border: none;
     width: auto;
   }
@@ -15,11 +15,12 @@
   }
 
   .class-teachers {
-    padding: 10px 0;
+    padding: 0 0 10px;
 
     .note {
       font-size: 13px;
       line-height: 18px;
+      margin-top: 5px;
     }
 
     #div_teacher_list {
