@@ -1,12 +1,35 @@
+.classsetupform tr { vertical-align: top; }
+.classsetupform td { padding-top: 10px; padding-left: 10px; }
+.classsetupform td.title{ width: 60px;}
+.classsetupform table { margin: 0;}
+.classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
+
+.new_portal_clazz a, .edit_portal_clazz a { color: #888; }
+.new_portal_clazz a.button, .edit_portal_clazz a.button { color: #fff; }
+.new_portal_clazz a.button.secondary, .edit_portal_clazz a.button.secondary { color: #ea6d2f; }
+
 .classsetupform, .edit_portal_clazz {
+  margin-bottom: 50px;
+  text-align: left;
+  width: 100%;
 
   input, textarea, select {
     border: solid 2px #0592af;
     width: 96%;
   }
+  input[type='text'], textarea {
+    font-weight: 300;
+    padding: 10px;
+  }
   input[type="button"], input[type="checkbox"], input[type="radio"], input[type="submit"] {
     border: none;
     width: auto;
+  }
+  #sortable li label {
+    cursor: move;
+    height: auto;
+    margin: 0;
+    padding: 3px 0 0;
   }
   select {
     background: image-url('chosen-sprite.png') no-repeat;

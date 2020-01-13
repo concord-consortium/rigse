@@ -1546,31 +1546,6 @@ table.teacher_class_table th, table.teacher_class_table td
   clear : both;
 }
 
-.classsetupform {
-  margin-bottom: 50px;
-  width: 100%;
-  text-align: left;
-  #sortable li label{
-    margin: 0;
-    padding: 3px 0 0;
-    cursor:move ;
-    height:auto;
-    }
-  input[type='text'], textarea {
-    font-weight: 300;
-    padding: 10px;
-    }
-}
-.classsetupform tr { vertical-align: top; }
-.classsetupform td { padding-top: 10px; padding-left: 10px; }
-.classsetupform td.title{ width: 60px;}
-.classsetupform table { margin: 0;}
-.classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
-
-.new_portal_clazz a, .edit_portal_clazz a { color: #888; }
-.new_portal_clazz a.button, .edit_portal_clazz a.button { color: #fff; }
-.new_portal_clazz a.button.secondary, .edit_portal_clazz a.button.secondary { color: #ea6d2f; }
-
 .offerings{text-align:left;margin:0}
 .offerings tr { vertical-align: top; }
 .offerings td { text-align:left; vertical-align:middle;padding:0 }
