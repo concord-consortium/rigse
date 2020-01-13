@@ -1,4 +1,4 @@
-.edit_portal_clazz {
+.classsetupform, .edit_portal_clazz {
 
   input, textarea, select {
     border: solid 2px #0592af;
@@ -7,6 +7,14 @@
   input[type="button"], input[type="checkbox"], input[type="radio"], input[type="submit"] {
     border: none;
     width: auto;
+  }
+  select {
+    background: image-url('chosen-sprite.png') no-repeat;
+    background-position: right -35px top 10px;
+    border-radius: 0;
+    width: 100.5%;
+    -moz-appearance: none;
+    -webkit-appearance: none;
   }
 
   label.right {
