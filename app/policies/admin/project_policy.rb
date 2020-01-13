@@ -18,6 +18,10 @@ class Admin::ProjectPolicy < ApplicationPolicy
     admin_or_project_admin?
   end
 
+  def new_or_create?
+    admin?
+  end
+
   def landing_page?
     # students aren't allowed to visit landing pages
     ! student?
