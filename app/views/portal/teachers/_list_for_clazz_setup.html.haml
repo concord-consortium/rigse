@@ -12,7 +12,7 @@
             - confirm = Portal::Clazz.CONFIRM_REMOVE_TEACHER(portal_teacher.name, portal_clazz.name)
           = remote_link_button "delete.png", :url => {:action=>'remove_teacher', :id => portal_clazz, :teacher_id => portal_teacher.id}, :confirm => confirm, :method => :delete, :title => "Remove #{portal_teacher.name} from #{portal_clazz.name}"
         - else
-          %span{:class => "rollover remove"}
-            remove teacher
+          %span{:class => "rollover"}
+            = image_tag "delete_grey.png", :title => reason
 -else
   %div No teachers assigned to this class
