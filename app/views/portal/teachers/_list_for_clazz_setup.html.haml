@@ -2,7 +2,7 @@
 - if current_teachers.length > 0
   %ul
     - current_teachers.each do |portal_teacher|
-      %li
+      %li{:id => dom_id_for(portal_teacher)}
         = portal_teacher.name
         - reason = portal_clazz.reason_user_cannot_remove_teacher_from_class(current_visitor, portal_teacher)
         - if !reason
