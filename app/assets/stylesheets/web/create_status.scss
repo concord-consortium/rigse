@@ -3,13 +3,11 @@
   display: block;
   margin: 0.25em; // match .run_buttons in app.scss
   .status {
-    font-weight: bold;  
+    font-weight: bold;
     span.wait_image { }
 
     .message {
       display: inline-block;
-      margin-left: 0.5em;
-      width: 150px;
       span.wait_counter {
       }
     }
@@ -17,7 +15,7 @@
       color: #0DAD25;
     }
     .waiting {
-      color: #a3000b;
+      color: #ea6d2f;
     }
   }
 }
