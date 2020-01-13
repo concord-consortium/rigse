@@ -225,7 +225,7 @@ describe Portal::ClazzesController do
 
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
-      assert_select("tr#portal__teacher_#{@random_teacher.id}") do
+      assert_select("li#portal__teacher_#{@random_teacher.id}") do
         assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
       end
     end
@@ -247,9 +247,9 @@ describe Portal::ClazzesController do
 
       delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
 
-      assert_select("tr#portal__teacher_#{@unauthorized_teacher.id}")
-      assert_select("tr#portal__teacher_#{@random_teacher.id}")
-      assert_select("tr#portal__teacher_#{@authorized_teacher.id}", false)
+      assert_select("li#portal__teacher_#{@unauthorized_teacher.id}")
+      assert_select("li#portal__teacher_#{@random_teacher.id}")
+      assert_select("li#portal__teacher_#{@authorized_teacher.id}", false)
     end
 
     [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
