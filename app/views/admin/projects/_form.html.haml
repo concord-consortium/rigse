@@ -12,12 +12,14 @@
         %li
           Name:
           = f.text_field :name
-        %li
-          Public:
-          = f.check_box :public
-        %li
-          Landing page slug:
-          = f.text_field :landing_page_slug
+        - if policy(project).permitted_attributes.include? :public
+          %li
+            Public:
+            = f.check_box :public
+        - if policy(project).permitted_attributes.include? :landing_page_slug
+          %li
+            Landing page slug:
+            = f.text_field :landing_page_slug
         %li
           Landing page content:
           = f.text_area :landing_page_content, class: 'mceNoEditor'

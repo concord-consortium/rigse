@@ -113,4 +113,10 @@ class Admin::ProjectsController < ApplicationController
     redirect_to admin_projects_url
   end
 
+  private
+
+  def project_params
+    params.require(:admin_project).permit(policy(@project).permitted_attributes)
+  end
+
 end

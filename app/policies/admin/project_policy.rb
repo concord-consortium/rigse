@@ -1,4 +1,26 @@
 class Admin::ProjectPolicy < ApplicationPolicy
+  def permitted_attributes
+    if user.has_role?('admin')
+      [
+        :name,
+        :public,
+        :landing_page_slug,
+        :landing_page_content,
+        :project_card_image_url,
+        :project_card_image_description,
+        :links, :cohorts
+      ]
+    else
+      [
+        :name,
+        :landing_page_content,
+        :project_card_image_url,
+        :project_card_image_description,
+        :links,
+        :cohorts
+      ]
+    end
+  end
 
   class Scope < Scope
     def resolve
