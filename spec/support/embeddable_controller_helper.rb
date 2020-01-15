@@ -15,6 +15,7 @@ shared_examples_for 'an embeddable controller' do
   end
 
   before(:each) do
+    @project = FactoryBot.create(:project)
     generate_default_settings_and_jnlps_with_mocks
     @model_class = model_class_lambda.call
     @model_ivar_name = model_ivar_name_lambda.call
