@@ -15,6 +15,6 @@
       %ul.menu
         - if @projects && policy(@projects).create?
           %li= link_to "create #{collection_class.display_name}", :controller => collection_class.name.underscore.pluralize, :action => :new
-        - elsif @clients || @licenses || @reports
+        - elsif !@projects
           %li= link_to "create #{collection_class.display_name}", :controller => collection_class.name.underscore.pluralize, :action => :new
         %li= toggle_all "#{collection_class.display_name} descriptions"
