@@ -62,6 +62,14 @@ GIT
       session
 
 GIT
+  remote: git://github.com/concord-consortium/secure-samesite-cookies
+  revision: 31fb96a6891789e99ea559953119b6b35deb1256
+  tag: v1.0
+  specs:
+    rack-secure_samesite_cookies (0.1.0)
+      rack (>= 1.4.7)
+
+GIT
   remote: git://github.com/concord-consortium/themes_for_rails
   revision: 90ce15e3ba9216b87e4fbafa1f2b867bff09707f
   branch: asset-pipeline-only
@@ -1319,6 +1327,7 @@ DEPENDENCIES
   pundit
   rack-cors
   rack-mini-profiler
+  rack-secure_samesite_cookies!
   rails (~> 3.2.22)!
   railslts-version!
   railties!
