@@ -2,6 +2,6 @@
 
 require 'spec_helper'
 
-RSpec.describe Admin::SettingPolicy do
+RSpec.describe Admin::SettingsPolicy do
 
 end
