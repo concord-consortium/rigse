@@ -10,6 +10,9 @@ class Admin::SettingsPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    admin?
+  end
   def new_or_create?
     admin?
   end
