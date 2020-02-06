@@ -168,7 +168,11 @@ class UsersController < ApplicationController
 
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
-            redirect_to view_context.class_link_for_user
+            if params[:user][:redirect_user_edit_form] == 'users'
+              redirect_to users_path
+            else
+              redirect_to view_context.class_link_for_user
+            end
           end
           format.xml  { head :ok }
         else
