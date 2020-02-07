@@ -18,7 +18,7 @@ end
 And /^I move investigation named "(.+)" to the top of the list$/ do |investigation_name|
   page.execute_script(
                       "
-                      
+
                        var sortableList = document.getElementById('sortable');
                        var arrListChildren = sortableList.getElementsByTagName('li');
                        var offeringToMove;
@@ -30,16 +30,16 @@ And /^I move investigation named "(.+)" to the top of the list$/ do |investigati
                             break;
                           }
                        }
-                       var listFirstChild = arrListChildren[0]; 
+                       var listFirstChild = arrListChildren[0];
                        if(offeringToMove && offeringToMove != listFirstChild)
                        {
                         sortableList.removeChild(offeringToMove);
                         sortableList.insertBefore(offeringToMove,listFirstChild);
                        }
-                       
+
                        "
                      )
- 
+
 end
 
 And /^the following offerings exist$/ do |offering_table|
@@ -57,7 +57,7 @@ And /^the following offerings exist$/ do |offering_table|
 end
 
 When /^(?:I )follow remove image for the teacher name "(.*)"$/ do |teacher_name|
-  step_text = "follow xpath \"//tr[td/b[contains(., '#{teacher_name}')]]/td/a[@class='rollover']\""
+  step_text = "follow xpath \"//li[contains(., '#{teacher_name}')]/a[@class='rollover']\""
   step step_text
 end
 
