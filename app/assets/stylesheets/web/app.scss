@@ -854,7 +854,15 @@ form {
   }
   .menu_v {
     clear: both;
-    margin-left: 10px; } }
+    margin-left: 10px; }
+  .additional-options {
+    border-top: dashed 1px #ccc;
+    margin-top: 10px;
+    padding-top: 10px;
+    label {
+      font-weight: 300;
+    }
+  }}
 
 label {
   text-transform: uppercase;

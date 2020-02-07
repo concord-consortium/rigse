@@ -9,3 +9,8 @@
         = check_box_tag "user[admin_project_ids][]", p.id, @user.admin_for_projects.include?(p)
         %label
           = p.name
+  %div.additional-options
+    = hidden_field(:user, :can_add_teachers_to_cohorts, :value => false)
+    = check_box_tag "user[can_add_teachers_to_cohorts]", 1, policy(@user).add_teachers_to_cohorts?
+    %label
+      User can add teachers to cohorts of projects they administrate
