@@ -7,6 +7,6 @@
     - projects.each do |p|
       - p.cohorts.each_with_index do |c, i|
         %li
-          = check_box_tag "user[cohort_ids][]", c.id, @user.portal_teacher.cohorts.include?(c)
+          = check_box_tag "user[cohort_ids][]", c.id, @user.portal_teacher.cohorts.include?(c), disabled: !policy(@current_user).add_teachers_to_cohorts?
           %label
             = c.fullname
