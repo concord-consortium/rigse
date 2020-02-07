@@ -103,9 +103,10 @@
         .config
           = f.check_box :append_auth_token
           Append a short-lived authentication token
-      .config
-        = f.check_box :is_official
-        Designate this as an "official" Concord activity in lists
+      - if policy(@external_activity).permitted_attributes.include? :is_official
+        .config
+          = f.check_box :is_official
+          Designate this as an "official" Concord activity in lists
       .config
         = f.check_box :logging
         Enable logging on this activity (for activities that support it)
