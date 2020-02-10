@@ -74,7 +74,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def add_teachers_to_cohorts?
-    (can_add_teachers_to_cohorts? || admin_or_manager?)
+    (user.can_add_teachers_to_cohorts? || admin_or_manager?)
   end
 
   def preferences?
@@ -90,10 +90,6 @@ class UserPolicy < ApplicationPolicy
     return false unless record.respond_to? :cohorts
     return false unless user
     (user.admin_for_project_cohorts & record.cohorts).length > 0
-  end
-
-  def can_add_teachers_to_cohorts?
-    return user.can_add_teachers_to_cohorts?
   end
 
   def record_not_admin?
