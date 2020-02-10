@@ -1,6 +1,14 @@
 class ExternalActivityPolicy < ApplicationPolicy
   include MaterialSharedPolicy
 
+  def permitted_attributes
+    if user.has_role?('admin')
+      ExternalActivity.attribute_names.map(&:to_sym)
+    else
+      ExternalActivity.attribute_names.map(&:to_sym) - %i(id is_official)
+    end
+  end
+
   def preview_index?
     true
   end

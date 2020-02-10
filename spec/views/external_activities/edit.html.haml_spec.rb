@@ -19,14 +19,14 @@ describe "/external_activities/edit.html.haml" do
     assert_select "input[id=?]", 'external_activity_is_official', false
   end
 
-  it 'should show the offical checkbox to project admins of the project material' do
+  it 'should not show the offical checkbox to project admins of the project material' do
     common_projects = [mock_model(Admin::Project, cohorts: [])]
     auth_user = FactoryBot.generate(:author_user)
     allow(auth_user).to receive_messages(admin_for_projects: common_projects)
     allow(ext_act).to receive_messages(projects: common_projects)
     allow(view).to receive(:current_user).and_return(auth_user)
     render
-    assert_select "input[id=?]", 'external_activity_is_official'
+    assert_select "input[id=?]", 'external_activity_is_official', false
   end
 
   include_examples 'projects listing'

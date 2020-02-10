@@ -8,7 +8,7 @@ describe "/dataservice/blobs/index.html.haml" do
     allow(view).to receive(:show_menu_for).and_return("show menu")
 
     power_user = stub_model(User, :has_role? => true)
-    allow(view).to receive(:current_visitor).and_return(power_user)
+    allow(view).to receive(:current_user).and_return(power_user)
 
     # the changeable? => true prevents a current_visitor lookup, but will test if editing links correctly wrap the passed block
     collection = WillPaginate::Collection.create(1,10) do |coll|
@@ -16,6 +16,7 @@ describe "/dataservice/blobs/index.html.haml" do
       coll << stub_model(Dataservice::Blob, :id => 2, :token => "8ad04a50ba96463d80407cd119173b86", :content => "2", :changeable? => true)
       coll.total_entries = 2
     end
+
     assign(:dataservice_blobs, collection)
   end
 
