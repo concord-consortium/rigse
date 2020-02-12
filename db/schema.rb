@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20191210033124) do
+ActiveRecord::Schema.define(:version => 20200211000000) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -2107,6 +2107,8 @@ ActiveRecord::Schema.define(:version => 20191210033124) do
     t.datetime "created_at",                                                 :null => false
     t.datetime "updated_at",                                                 :null => false
   end
+
+  add_index "saveable_interactive_states", ["interactive_id", "position"], :name => "inter_id_and_position_index"
 
   create_table "saveable_interactives", :force => true do |t|
     t.integer  "learner_id"
