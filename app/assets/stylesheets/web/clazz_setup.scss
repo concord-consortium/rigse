@@ -23,6 +23,7 @@
 
   input, textarea, select {
     border: solid 2px #0592af;
+    font-family: 'museo-sans', helvetica, verdana, sans-serif;
     width: calc(100% - 24px);
   }
   input[type='text'], textarea {
