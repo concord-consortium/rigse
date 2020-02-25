@@ -50,6 +50,8 @@
       = t('authoring.launch_url_description')
 
     = render :partial => 'shared/reports_edit', :locals => { :object => @external_activity }
+    = field_set_tag 'Teacher Resources (URL)' do
+      = f.text_field :teacher_resources_url, :size => 60
     = field_set_tag 'Teacher Guide (URL)' do
       = f.text_field :teacher_guide_url, :size => 60
     - if @external_activity.respond_to?(:has_teacher_edition)
