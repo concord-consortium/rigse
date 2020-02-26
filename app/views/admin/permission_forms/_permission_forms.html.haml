@@ -28,4 +28,4 @@
                 %span.delete
                   =link_to "✖",
                     remove_form_admin_permission_form_path(perm),
-                    :confirm => "Delete Permission Form?"
+                    :confirm => raw("Delete Permission Form?&#10;&#10;WARNING: All related student permissions will be removed and researchers will no longer be able to view the students' data in reports if you delete this form.")
