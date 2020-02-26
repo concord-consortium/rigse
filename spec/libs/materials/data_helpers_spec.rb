@@ -8,14 +8,38 @@ end
 
 describe DataHelpersTestController, type: :controller do
   let(:sensor_names) { ["Temperature", "Light"] }
-  let(:material_a) { FactoryBot.create(:external_activity, sensor_list: sensor_names, launch_url: 'https://test.org/', is_locked: false) }
+  let(:material_a) {
+    FactoryBot.create(
+      :external_activity,
+      sensor_list: sensor_names,
+      launch_url: 'https://test.org/',
+      print_url: 'https://test.org/print',
+      is_locked: false,
+      teacher_resources_url: 'https://test.org/teacher-resources',
+      teacher_guide_url: 'https://test.org/teacher-guide'
+    )
+  }
   let(:materials)  { [material_a] }
   let(:material_b) { FactoryBot.create(:external_activity, launch_url: '') }
-  let(:material_locked) { FactoryBot.create(:external_activity, launch_url: 'https://test.org/', is_locked: true, author_email: 'author2@concord.org') }
+  let(:material_locked) {
+    FactoryBot.create(
+      :external_activity,
+      launch_url: 'https://test.org/',
+      is_locked: true,
+      author_email: 'author2@concord.org'
+    )
+  }
   let(:admin_user) { FactoryBot.generate(:admin_user) }
   let(:manager_user) { FactoryBot.generate(:manager_user) }
   let(:author_user1) { FactoryBot.generate(:author_user) }
-  let(:author_user2) { FactoryBot.create(:user, :login => 'author2', :password => 'password', :email => 'author2@concord.org') }
+  let(:author_user2) {
+    FactoryBot.create(
+      :user,
+      :login => 'author2',
+      :password => 'password',
+      :email => 'author2@concord.org'
+    ) }
+  let(:teacher_user) { FactoryBot.create(:portal_teacher) }
   let(:guest) { FactoryBot.generate(:anonymous_user) }
 
   describe "#materials_data" do
@@ -81,12 +105,45 @@ describe DataHelpersTestController, type: :controller do
   end
 
   describe "#links_for_material" do
-    it "should return values for browse, preview, and ... links for an external activity" do
+    it "should return values for browse, preview, and print links for an external activity" do
       links = controller.send(:links_for_material, material_a)
       browse = links[:browse]
       preview = links[:preview]
+      print = links[:print_url]
       expect(browse[:url]).not_to be_empty
       expect(preview[:url]).not_to be_empty
+      expect(print[:url]).not_to be_empty
+    end
+
+    it "should return values for edit (portal settings), copy, external edit, external lara edit, and external edit iframe links for an external activity if an admin is logged in" do
+      sign_in admin_user
+      links = controller.send(:links_for_material, material_a)
+      edit = links[:edit]
+      external_edit = links[:external_edit]
+      external_lara_edit = links[:external_lara_edit]
+      external_edit_iframe = links[:external_edit_iframe]
+      expect(edit[:url]).not_to be_empty
+      expect(external_edit[:url]).not_to be_empty
+      expect(external_lara_edit[:url]).not_to be_empty
+      expect(external_edit_iframe[:url]).not_to be_empty
+    end
+
+    it "should return values for teacher resource and teacher guide if a teacher is logged in" do
+      sign_in teacher_user.user
+      links = controller.send(:links_for_material, material_a)
+      teacher_resources = links[:teacher_resources]
+      teacher_guide = links[:teacher_guide]
+      expect(teacher_resources).not_to be_empty
+      expect(teacher_guide).not_to be_empty
+    end
+
+    it "should not return values for teacher resource and teacher guide to guests" do
+      sign_in guest
+      links = controller.send(:links_for_material, material_a)
+      teacher_resources = links[:teacher_resources]
+      teacher_guide = links[:teacher_guide]
+      expect(teacher_resources).to be_nil
+      expect(teacher_guide).to be_nil
     end
   end
 
