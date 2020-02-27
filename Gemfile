@@ -142,7 +142,7 @@ end
 
   gem 'rack-secure_samesite_cookies',
     :git => 'git://github.com/concord-consortium/secure-samesite-cookies',
-    :tag => 'v1.0'
+    :tag => 'v1.0.2'
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
