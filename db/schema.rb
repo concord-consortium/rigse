@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200211000000) do
+ActiveRecord::Schema.define(:version => 20200225193853) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -536,6 +536,7 @@ ActiveRecord::Schema.define(:version => 20200211000000) do
     t.text     "keywords"
     t.integer  "tool_id"
     t.boolean  "has_teacher_edition",                              :default => false
+    t.text     "teacher_resources_url"
   end
 
   add_index "external_activities", ["is_featured", "publication_status"], :name => "featured_public"
@@ -1950,15 +1951,6 @@ ActiveRecord::Schema.define(:version => 20200211000000) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
-  create_table "recent_collections_pages", :force => true do |t|
-    t.integer  "recent_project_id", :null => false
-    t.integer  "teacher_id",        :null => false
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
-  end
-
-  add_index "recent_collections_pages", ["teacher_id"], :name => "index_recent_collections_pages_on_teacher_id"
-
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2311,39 +2303,40 @@ ActiveRecord::Schema.define(:version => 20200211000000) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "login",                    :limit => 40
-    t.string   "first_name",               :limit => 100, :default => ""
-    t.string   "last_name",                :limit => 100, :default => ""
-    t.string   "email",                    :limit => 128, :default => "",        :null => false
-    t.string   "encrypted_password",       :limit => 128, :default => "",        :null => false
-    t.string   "password_salt",                           :default => "",        :null => false
+    t.string   "login",                       :limit => 40
+    t.string   "first_name",                  :limit => 100, :default => ""
+    t.string   "last_name",                   :limit => 100, :default => ""
+    t.string   "email",                       :limit => 128, :default => "",        :null => false
+    t.string   "encrypted_password",          :limit => 128, :default => "",        :null => false
+    t.string   "password_salt",                              :default => "",        :null => false
     t.string   "remember_token"
     t.string   "confirmation_token"
-    t.string   "state",                                   :default => "passive", :null => false
+    t.string   "state",                                      :default => "passive", :null => false
     t.datetime "remember_created_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
-    t.string   "uuid",                     :limit => 36
-    t.datetime "created_at",                                                     :null => false
-    t.datetime "updated_at",                                                     :null => false
-    t.boolean  "default_user",                            :default => false
-    t.boolean  "site_admin",                              :default => false
+    t.string   "uuid",                        :limit => 36
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
+    t.boolean  "default_user",                               :default => false
+    t.boolean  "site_admin",                                 :default => false
     t.string   "external_id"
-    t.boolean  "require_password_reset",                  :default => false
-    t.boolean  "of_consenting_age",                       :default => false
-    t.boolean  "have_consent",                            :default => false
-    t.boolean  "asked_age",                               :default => false
+    t.boolean  "require_password_reset",                     :default => false
+    t.boolean  "of_consenting_age",                          :default => false
+    t.boolean  "have_consent",                               :default => false
+    t.boolean  "asked_age",                                  :default => false
     t.string   "reset_password_token"
-    t.integer  "sign_in_count",                           :default => 0
+    t.integer  "sign_in_count",                              :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "unconfirmed_email"
     t.datetime "confirmation_sent_at"
-    t.boolean  "require_portal_user_type",                :default => false
+    t.boolean  "require_portal_user_type",                   :default => false
     t.string   "sign_up_path"
-    t.boolean  "email_subscribed",                        :default => false
+    t.boolean  "email_subscribed",                           :default => false
+    t.boolean  "can_add_teachers_to_cohorts",                :default => false
   end
 
   add_index "users", ["confirmation_token"], :name => "index_users_on_confirmation_token", :unique => true

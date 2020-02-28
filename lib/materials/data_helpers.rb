@@ -395,6 +395,16 @@ module Materials
         }
       end
 
+      if material.respond_to?(:teacher_resources_url) && !material.teacher_resources_url.blank?
+        if current_visitor.portal_teacher || current_visitor.has_role?('admin','manager')
+          links[:teacher_resources] = {
+            text: "Teacher Resources",
+            target: "_blank",
+            url: material.teacher_resources_url
+          }
+        end
+      end
+
       if material.respond_to?(:teacher_guide_url) && !material.teacher_guide_url.blank?
         if current_visitor.portal_teacher || current_visitor.has_role?('admin','manager')
           links[:teacher_guide] = {
