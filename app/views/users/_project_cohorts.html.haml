@@ -4,9 +4,10 @@
     Cohorts
   %ul.options-list
     - projects = projects.sort_by &:name
-    - projects.each do |p|
-      - p.cohorts.each_with_index do |c, i|
+    - projects.each_with_index do |p, pi|
+      - p.cohorts.each_with_index do |c, ci|
         %li
-          = check_box_tag "user[cohort_ids][]", c.id, @user.portal_teacher.cohorts.include?(c), disabled: !policy(@current_user).add_teachers_to_cohorts?
-          %label
+          - checkbox_id = "project-" + pi.to_s + "-cohort-" + ci.to_s
+          = check_box_tag "user[cohort_ids][]", c.id, @user.portal_teacher.cohorts.include?(c), id: checkbox_id, disabled: !policy(@current_user).add_teachers_to_cohorts?
+          = label_tag checkbox_id do
             = c.fullname

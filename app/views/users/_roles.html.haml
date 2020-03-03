@@ -4,8 +4,9 @@
     Roles
   %ul.options-list
     - roles = roles.sort_by &:title
-    - roles.each do |r|
+    - roles.each_with_index do |r,i|
+      - checkbox_id = "user-role-" + i.to_s
       %li
-        = check_box_tag "user[role_ids][]", r.id, @user.roles.include?(r)
-        %label
+        = check_box_tag "user[role_ids][]", r.id, @user.roles.include?(r), id: checkbox_id
+        = label_tag checkbox_id do
           = r.title.capitalize

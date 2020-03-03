@@ -4,8 +4,9 @@
     Researcher for Projects
   %ul.options-list
     - projects = projects.sort_by &:name
-    - projects.each do |p|
+    - projects.each_with_index do |p, i|
+      - checkbox_id = "project-" + i.to_s + "-researcher"
       %li
-        = check_box_tag "user[researcher_project_ids][]", p.id, @user.researcher_for_projects.include?(p)
-        %label
+        = check_box_tag "user[researcher_project_ids][]", p.id, @user.researcher_for_projects.include?(p), id: checkbox_id
+        = label_tag checkbox_id do
           = p.name
