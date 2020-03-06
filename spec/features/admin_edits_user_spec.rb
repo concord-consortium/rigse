@@ -21,7 +21,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       @teacher2_name = "#{teacher2_user.first_name} #{teacher2_user.last_name}"
       @student_name = "#{student_user.first_name} #{student_user.last_name}"
       @cohort_a_name = "#{project_a.name}: #{cohort_a.name}"
-      login_as('admin')
+      login_with_ui_as('admin', 'password')
       visit users_path
     end
 
@@ -63,7 +63,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       @student_name = "#{student_user.first_name} #{student_user.last_name}"
       @cohort_a_name = "#{project_a.name}: #{cohort_a.name}"
       @cohort_b_name = "#{project_b.name}: #{cohort_b.name}"
-      login_as('project_admin1')
+      login_with_ui_as('project_admin1', 'password')
       visit users_path
     end
 
@@ -139,7 +139,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       @teacher2_name = "#{teacher2_user.first_name} #{teacher2_user.last_name}"
       @student_name = "#{student_user.first_name} #{student_user.last_name}"
       @cohort_name = "#{project_b.name}: #{cohort_b.name}"
-      login_as('project_admin2')
+      login_with_ui_as('project_admin2', 'password')
       visit users_path
     end
 
