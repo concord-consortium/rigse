@@ -244,6 +244,7 @@ module Materials
           long_description_for_teacher: safe_sanitize(material.long_description_for_teacher),
           # Raw db attribute, no fallback behavior.
           short_description: safe_sanitize(material.short_description),
+          material_type: material.material_type,
           class_name: material.class.name,
           class_name_underscored: material.class.name.underscore,
           icon: {
