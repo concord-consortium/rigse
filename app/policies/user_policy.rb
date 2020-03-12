@@ -73,6 +73,10 @@ class UserPolicy < ApplicationPolicy
     (project_admin_for_user? && record_not_admin?) || admin_or_manager? || am_teacher? || its_me?
   end
 
+  def add_teachers_to_cohorts?
+    (user.can_add_teachers_to_cohorts? || admin_or_manager?)
+  end
+
   def preferences?
     admin_or_manager? || its_me?
   end
@@ -87,7 +91,6 @@ class UserPolicy < ApplicationPolicy
     return false unless user
     (user.admin_for_project_cohorts & record.cohorts).length > 0
   end
-
 
   def record_not_admin?
     !record.has_role?("admin")

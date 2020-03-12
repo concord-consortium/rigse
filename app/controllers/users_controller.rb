@@ -162,13 +162,17 @@ class UsersController < ApplicationController
             end
           end
 
-          if @user.portal_teacher && params[:user][:has_cohorts_in_form]
+          if @user.portal_teacher && params[:user][:has_cohorts_in_form] && policy(@current_user).add_teachers_to_cohorts?
             @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
           end
 
           flash[:notice] = "User: #{@user.name} was successfully updated."
           format.html do
-            redirect_to view_context.class_link_for_user
+            if params[:user][:redirect_user_edit_form] == 'users'
+              redirect_to users_path
+            else
+              redirect_to view_context.class_link_for_user
+            end
           end
           format.xml  { head :ok }
         else
@@ -245,7 +249,7 @@ class UsersController < ApplicationController
         if params[:user][:has_projects_in_form]
           @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
         end
-        if @user.portal_teacher && params[:user][:has_cohorts_in_form]
+        if @user.portal_teacher && params[:user][:has_cohorts_in_form] && policy(@current_user).add_teachers_to_cohorts?
           @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
         end
         flash[:notice] = "User: #{@user.name} was successfully updated."
