@@ -12,6 +12,6 @@
           = p.name
   %div.additional-options
     = hidden_field(:user, :can_add_teachers_to_cohorts, :value => false)
-    = check_box_tag "user[can_add_teachers_to_cohorts]", 1, policy(@user).add_teachers_to_cohorts?
-    = label_tag "user_can_add_teachers_to_cohorts" do
-      User can add teachers to cohorts of projects they administrate
+    = check_box_tag "user[can_add_teachers_to_cohorts]", 1, policy(@user).add_teachers_to_cohorts?, id: "user_can_add_teachers_to_cohorts_cb"
+    = label_tag "user_can_add_teachers_to_cohorts_cb" do
+      User can add teachers to cohorts of projects they administer
