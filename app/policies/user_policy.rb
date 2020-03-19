@@ -74,7 +74,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def add_teachers_to_cohorts?
-    record.can_add_teachers_to_cohorts? || !record_not_manager? || !record_not_admin?
+    user.can_add_teachers_to_cohorts? || admin_or_manager?
   end
 
   def preferences?
@@ -94,10 +94,6 @@ class UserPolicy < ApplicationPolicy
 
   def record_not_admin?
     !record.has_role?("admin")
-  end
-
-  def record_not_manager?
-    !record.has_role?("manager")
   end
 
   def its_me?
