@@ -74,7 +74,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def add_teachers_to_cohorts?
-    (user.can_add_teachers_to_cohorts? || admin_or_manager?)
+    user.can_add_teachers_to_cohorts? || admin_or_manager?
   end
 
   def preferences?
