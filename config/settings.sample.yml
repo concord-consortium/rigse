@@ -20,6 +20,11 @@ development: &non_production_settings
     - "3"
     - "4"
   :active_grades: &active_grades
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
     - "6"
     - "7"
     - "8"
@@ -27,6 +32,7 @@ development: &non_production_settings
     - "10"
     - "11"
     - "12"
+    - "Higher Ed"
   :active_grades: *active_grades
   :theme: learn
   :help_email: rails-portal@concord.org
