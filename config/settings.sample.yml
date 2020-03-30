@@ -33,7 +33,6 @@ development: &non_production_settings
     - "11"
     - "12"
     - "Higher Ed"
-  :active_grades: *active_grades
   :theme: learn
   :help_email: rails-portal@concord.org
   :dont_sanitize_xhtml: true
