@@ -30,8 +30,9 @@
     Assign
     %span
       &hellip;
-  %p
-    Select the class(es) you want to assign this resource to below.
+  - if @teacher_active_clazzes_count > 0
+    %p
+      Select the class(es) you want to assign this resource to below.
   - if @material[0].saves_student_data == false
     %p{:class => 'student-data-warning'}
       %strong
@@ -64,12 +65,13 @@
                   %li
                     = clazz.name
       - else
-        .messagetext{:style=>"padding-left:5px"} You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them.
+        .messagetext
+          You don't have any active classes. Once you have created your class(es), you will be able to assign materials to them.
     - if @unassigned_clazzes.length > 0
       = link_to_remote "Save", :condition => 'validateSaveAssignToClass()', :before => 'setSaveAssignToClassInProgress(true)', :complete => "setSaveAssignToClassInProgress(false);", :url => {:action=>'add_material_to_clazzes', :material_id => @material.collect{|a| a.id}.join(','), :material_type => @material[0].class.to_s, :skip_reload => @skip_reload}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
       = link_to "Cancel", "#", :href=>"javascript: void(0);", :onclick=>"close_popup()", :class=>'cancel'
     - else
-      = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button",:style=>"margin-right: 215px;"
+      = link_to "Create a Class", "/portal/classes/new", :href=>"/portal/classes/new",:onclick=>"",:class=>"button",:style=>"margin-right: 215px;"
 %div{:id => "share-col", :class => "assign-share-col"}
   %h2
     %span
