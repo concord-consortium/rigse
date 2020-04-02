@@ -123,6 +123,21 @@ class SearchController < ApplicationController
     return material
   end
 
+  def get_current_material_unassigned_clazzes_anonymous
+    material_type = params[:material_type]
+    material_ids = params[:material_id]
+    material_ids = material_ids.split(',')
+
+    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
+      @material = [find_material(material_type, params[:material_id])]
+    else
+      @material = material_ids.collect{|a| ::Activity.find(a)}
+    end
+
+    @skip_reload = params[:skip_reload] == 'true'
+    render :partial => 'material_unassigned_clazzes_anonymous'
+  end
+
   def get_current_material_unassigned_clazzes
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE

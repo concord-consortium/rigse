@@ -1,0 +1,56 @@
+- if @material.length == 1
+  - material = @material[0]
+  - if material.is_a? ::Investigation
+    - investigation_name = material.name
+    - activity_name = ""
+    - external_activity_name = ""
+    - portal_offerings = nil
+  - elsif material.is_a? ::Activity
+    - investigation_name = ""
+    - external_activity_name = ""
+    - parent_name = (material.parent)? material.parent.name : ""
+    - activity_name = material.name
+    - portal_offerings = []
+    - if material.parent
+      - portal_offerings = Portal::Offering.where(:runnable_id=>material.parent.id,:runnable_type=>"Investigation")
+  - elsif material.is_a? ::ExternalActivity
+    - investigation_name = ""
+    - activity_name = ""
+    - external_activity_name = material.name
+    - portal_offerings = Portal::Offering.where(:runnable_id=>material.id,:runnable_type=>"ExternalActivity")
+- else
+  - investigation_name = ""
+  - parent_name = (@material[0].parent)? @material[0].parent.name : ""
+  - activity_name = @material.collect{|item| item.name}.join('<br/>')
+
+- activity_name = activity_name || ""
+- external_activity_name = external_activity_name || ""
+%div{:id => "assign-col", :class => "assign-share-col"}
+  %h2
+    Assign
+    %span
+      &hellip;
+  %p
+    To assign this resource to classes and track student work on learn.concord.org, log in or register as a teacher.
+  = link_to "Register", "/signup", :href => "/signup", :onclick=>"", :class => "button"
+  = link_to "Log In", "/login", :href=>"/login", :onclick=>"", :class=>'button'
+
+%div{:id => "share-col", :class => "assign-share-col"}
+  %h2
+    %span
+      or
+    Share
+  %p
+    Copy the URL below to assign this resource in your own LMS or to share with colleagues.
+  %form
+    %div
+      %label
+        Shareable URL
+      %br
+      %input{:type => "url", :id => "share-url", :value => material.url}
+      %a{:class => "button", :onclick => "copyToClipboard('#share-url')"}
+        Copy
+  %p{:class => "small"}
+    %strong
+      NOTE:
+    Only use this option if you do not want to track student work on learn.concord.org

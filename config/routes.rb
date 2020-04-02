@@ -20,6 +20,7 @@ RailsPortal::Application.routes.draw do
 
   get 'search/index'
   post '/search/get_current_material_unassigned_clazzes'
+  post '/search/get_current_material_unassigned_clazzes_anonymous'
   post '/search/add_material_to_clazzes'
   post '/search/get_current_material_unassigned_collections'
   post '/search/add_material_to_collections'

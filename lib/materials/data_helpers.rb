@@ -430,6 +430,12 @@ module Materials
             url: "javascript:void(0)",
             onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads})"
         }
+      else
+        links[:assign_material] = {
+            text: "Assign to a Class",
+            url: "javascript:void(0)",
+            onclick: "get_Assign_To_Class_Popup_Anonymous(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads})"
+        }
       end
 
       if current_visitor.has_role?('admin') && material.respond_to?(:materials_collections)
