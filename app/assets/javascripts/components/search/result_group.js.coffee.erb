@@ -58,6 +58,9 @@ window.SearchResultGroupClass = React.createClass
       when 'interactives'
         @materialType = 'Interactive'
         @pageParam = 'interactive_page'
+      when 'projects'
+        @materialType = 'Project'
+        @pageParam = 'project_page'
       else
         throw new Error 'unknown group type'
 

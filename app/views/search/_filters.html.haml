@@ -27,6 +27,9 @@
           = check_box_tag 'material_types[]', 'Interactive',  @form_model.material_types.include?('Interactive'),:id=>'Interactive'
           = label_tag 'interactive', t(:interactive).titleize
           %br
+          = check_box_tag 'material_types[]', 'Project',  @form_model.material_types.include?('Project'),:id=>'Project'
+          = label_tag 'project', t(:project).titleize
+          %br
       #material-properties-filters.filter-group
         %h2.filterheader
           Resource Properties
