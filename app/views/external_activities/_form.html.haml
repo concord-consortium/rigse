@@ -33,7 +33,7 @@
       = f.select :material_type,
         [ [ Activity.display_name,       Activity.name       ],
           [ Investigation.display_name,  Investigation.name  ],
-          [ Admin::Project.display_name, Admin::Project.name ],
+          [ 'Collection', 'Project' ],
           [ Interactive.display_name,    Interactive.name    ] ]
       %br
       = t('authoring.material_type_description')

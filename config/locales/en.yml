@@ -17,11 +17,6 @@ en:
       "portal/clazz": Class
       "portal/nces06_district" : "NCES District"
       "portal/nces06_school" : "NCES School"
-      Project: Collection
-      project:
-        zero: collections
-        one: collection
-        other: collections
       Investigation: Sequence
       investigation:
         zero: sequences
@@ -42,7 +37,6 @@ en:
         zero: models
         one: model
         other: models
-  project: project
   investigation: sequence
   activity: activity
   interactive: model
