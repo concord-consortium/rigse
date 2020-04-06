@@ -20,14 +20,14 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Teacher should be on materials preview page to assign materials
     When I search for "differential calculus" on the search instructional materials page
     And I follow the "Assign to a Class" link for the activity "differential calculus"
-    Then I should see "Select Class(es)"
+    Then I should see "Select the class(es) you want to assign this resource to below."
     And I should be on the search instructional materials page
-    And I should see "Assign Materials to a Class"
+    And I should see "Your Classes"
     When I follow "Cancel" within the lightbox in focus
     And I follow the "Assign to a Class" link for the activity "differential calculus"
-    Then I should see "Select Class(es)"
+    Then I should see "Select the class(es) you want to assign this resource to below."
     And I should be on the search instructional materials page
-    And I should see "Assign Materials to a Class"
+    And I should see "Your Classes"
     When I follow "Cancel" within the lightbox in focus
     And I follow activity link "differential calculus" on the search instructional materials page
     Then I should be on the browse materials page for "differential calculus"
@@ -146,4 +146,3 @@ Feature: Teacher can search instructional materials grouped by material type, so
   Scenario: Search results should be paginated
     When I search for "is a great" on the search instructional materials page
     Then the search results should be paginated on the search instructional materials page
-
