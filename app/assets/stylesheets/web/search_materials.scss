@@ -464,9 +464,9 @@ vertical-align: middle;
 .material_detail{margin:0;padding:0;text-transform: none;width:100%;}
 .material_detail td{font-weight:bold;padding:5px 5px 0px 5px;vertical-align:top;text-align:left;}
 .material_detail td.title{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
-.material_detail td.check_box{width:20px;;padding:7px 0px 0px 5px}
+.material_detail td.check_box{width:20px;padding:7px 0px 0px 5px}
 .material_detail label.clazz_name{text-transform: none;}
-.assign_class_header{font-weight:900;}
+.assign_class_header{font-size: 16px; font-weight:900;}
 .already_assign_class_header{font-size: 16px; font-weight: 700; margin: 10px 0 0;}
 .assigned_material_detail td{font-weight:normal;padding:5px 5px 0px 5px;vertical-align:top;text-align:left}
 .messagetext{font-style:italic}
@@ -663,14 +663,29 @@ label.tooltip {
   overflow: auto;
 }
 
-
+/* Lines 670-680 are questionable and may be temporary. Ideally we would add
+   an ID or class to the assign modal window and apply these styles using that
+   so they only affect the assign modal and not any other windows that may need
+   the borders, but there doesn't appear to be a functioning way to do that. */
 .nw { display: none !important; }
+.lightbox .w {
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+.lightbox .e {
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
 .assign-share-col {
+  box-sizing: border-box;
   float: left;
   max-width: 380px;
   min-height: 400px;
   padding: 20px;
   width: 50%;
+  -webkit-font-smoothing: antialiased;
 
   &#assign-col {
     ul {
@@ -689,24 +704,36 @@ label.tooltip {
   &#share-col {
     background: #f1f1f1;
 
-    .button {
-      display: block;
-      float: left;
-      margin-left: 5px;
-      width: 70px;
-    }
     input#share-url {
       display: block;
       float: left;
       font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
       padding: 5px 10px;
       width: 263px;
     }
-    label { font-weight: 900; }
+    label {
+      font-size: 18px;
+      font-weight: 900;
+    }
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
   }
 
   a.button {
     padding: 13px 15px 12px;
+  }
+  .button {
+    border: none;
+    display: block;
+    float: left;
+    font-size: 16px;
+    font-weight: 500;
+    margin-left: 5px;
+    width: auto;
   }
   form {
     overflow: hidden;
@@ -714,6 +741,8 @@ label.tooltip {
   }
   h2 {
     color: #ea6d2f;
+    font: 900 24px museo-sans, helvetica, verdana, sans-serif;
+    line-height: 30px;
     margin-bottom: 5px;
 
     span {
@@ -730,7 +759,7 @@ label.tooltip {
 
     &.small {
       clear: both;
-      font-size: 80%;
+      font-size: 14px;
       margin-top: 10px;
       line-height: 1.2em;
     }
@@ -738,8 +767,10 @@ label.tooltip {
 
   .cancel {
     color: #777;
+    display: inline-block;
     font-size: 16px;
     margin-left: 10px;
+    padding-top: 8px;
   }
 
   #add_material_form {
