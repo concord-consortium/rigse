@@ -428,13 +428,13 @@ module Materials
         links[:assign_material] = {
             text: "Assign to a Class",
             url: "javascript:void(0)",
-            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads})"
+            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads}, false)"
         }
       else
         links[:assign_material] = {
             text: "Assign to a Class",
             url: "javascript:void(0)",
-            onclick: "get_Assign_To_Class_Popup_Anonymous(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads})"
+            onclick: "get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}',#{skip_lightbox_reloads}, true)"
         }
       end
 

@@ -200,7 +200,8 @@ function close_popup()
 function get_Assign_To_Class_Popup( material_id,
                                     material_type,
                                     lightbox_material_text,
-                                    skip_reload )
+                                    skip_reload,
+                                    anonymous )
 {
     // console.log("[DEBUG] get_Assign_To_Class_Popup skip_reload", skip_reload);
 
@@ -210,41 +211,11 @@ function get_Assign_To_Class_Popup( material_id,
         id:"assignDialog",
         title:""
     };
-    var target_url = "/search/get_current_material_unassigned_clazzes?skip_reload=" + (skip_reload || false);
+    var searchPath = anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';
+    var target_url = "/search/" + searchPath + "?skip_reload=" + (skip_reload || false);
     var options = {
         method: 'post',
-        parameters: {'material_type':material_type,'material_id':material_id},
-        onSuccess: function(transport) {
-            list_lightbox=new Lightbox(lightboxConfig);
-            var text = transport.responseText;
-            text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
-            list_lightbox.handle.setContent("<div id='windowcontent' style='overflow: hidden;'>" + text + "</div>");
-            var contentheight=$('windowcontent').getHeight()/2;
-            var contentoffset=75;
-            list_lightbox.handle.setSize(760,contentheight+contentoffset+20);
-            list_lightbox.handle.center();
-        }
-    };
-    new Ajax.Request(target_url, options);
-}
-
-function get_Assign_To_Class_Popup_Anonymous( material_id,
-                                    material_type,
-                                    lightbox_material_text,
-                                    skip_reload )
-{
-    // console.log("[DEBUG] get_Assign_To_Class_Popup skip_reload", skip_reload);
-
-    lightbox_material_text = lightbox_material_text || "Materials";
-    var lightboxConfig = {
-        content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        id:"assignDialog",
-        title:""
-    };
-    var target_url = "/search/get_current_material_unassigned_clazzes_anonymous?skip_reload=" + (skip_reload || false);
-    var options = {
-        method: 'post',
-        parameters: {'material_type':material_type,'material_id':material_id},
+        parameters: {'material_type': material_type, 'material_id': material_id},
         onSuccess: function(transport) {
             list_lightbox=new Lightbox(lightboxConfig);
             var text = transport.responseText;

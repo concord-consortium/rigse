@@ -123,7 +123,7 @@ class SearchController < ApplicationController
     return material
   end
 
-  def get_current_material_unassigned_clazzes_anonymous
+  def get_current_material_anonymous
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
@@ -135,7 +135,7 @@ class SearchController < ApplicationController
     end
 
     @skip_reload = params[:skip_reload] == 'true'
-    render :partial => 'material_unassigned_clazzes_anonymous'
+    render :partial => 'material_unassigned_clazzes'
   end
 
   def get_current_material_unassigned_clazzes
