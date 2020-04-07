@@ -12,7 +12,7 @@ class Search
   attr_accessor :activity_page
   attr_accessor :investigation_page
   attr_accessor :interactive_page
-  attr_accessor :project_page
+  attr_accessor :collection_page
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :user
@@ -38,8 +38,8 @@ class Search
   InvestigationMaterial   = "Investigation"
   ActivityMaterial        = "Activity"
   InteractiveMaterial     = "Interactive"
-  ProjectMaterial         = "Project"
-  AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial, ProjectMaterial]
+  CollectionMaterial      = "Collection"
+  AllMaterials            = [InvestigationMaterial, ActivityMaterial, InteractiveMaterial, CollectionMaterial]
 
   AllSearchableModels       = [ ExternalActivity, Interactive ]
 
@@ -135,7 +135,7 @@ class Search
     self.activity_page        = opts[:activity_page]       || 1
     self.investigation_page   = opts[:investigation_page]  || 1
     self.interactive_page     = opts[:interactive_page]    || 1
-    self.project_page         = opts[:project_page]        || 1
+    self.collection_page      = opts[:collection_page]     || 1
     self.without_teacher_only = opts[:without_teacher_only]|| true
     self.material_properties  = opts[:material_properties] || []
     self.include_contributed  = opts[:include_contributed] || false
@@ -247,8 +247,8 @@ class Search
           s.paginate(:page => self.investigation_page, :per_page => self.per_page)
         elsif (type == InteractiveMaterial)
           s.paginate(:page => self.interactive_page, :per_page => self.per_page)
-        elsif (type == ProjectMaterial)
-          s.paginate(:page => self.project_page, :per_page => self.per_page)
+        elsif (type == CollectionMaterial)
+          s.paginate(:page => self.collection_page, :per_page => self.per_page)
         end
 
       end
