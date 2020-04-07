@@ -197,25 +197,20 @@ function close_popup()
 
 
 
-function get_Assign_To_Class_Popup( material_id,
-                                    material_type,
-                                    lightbox_material_text,
-                                    skip_reload,
-                                    anonymous )
+function get_Assign_To_Class_Popup(assignPopupConfig)
 {
     // console.log("[DEBUG] get_Assign_To_Class_Popup skip_reload", skip_reload);
-
-    lightbox_material_text = lightbox_material_text || "Materials";
+    lightbox_material_text = assignPopupConfig.lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
         id:"assignDialog",
         title:""
     };
-    var searchPath = anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';
-    var target_url = "/search/" + searchPath + "?skip_reload=" + (skip_reload || false);
+    var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';
+    var target_url = "/search/" + searchPath + "?skip_reload=" + (assignPopupConfig.skip_reload || false);
     var options = {
         method: 'post',
-        parameters: {'material_type': material_type, 'material_id': material_id},
+        parameters: {'material_type': assignPopupConfig.material_type, 'material_id': assignPopupConfig.material_id},
         onSuccess: function(transport) {
             list_lightbox=new Lightbox(lightboxConfig);
             var text = transport.responseText;
@@ -329,7 +324,14 @@ function getDataForAssignToClassPopup(lightbox_material_text)
         getMessagePopup(message);
         return;
     }
-    get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text);
+    var assignPopupConfig = {
+      material_id: material_id,
+      material_type: material_type,
+      lightbox_material_text: lightbox_material_text,
+      skip_reload: true,
+      anonymous: false
+    }
+    get_Assign_To_Class_Popup(assignPopupConfig);
 }
 
 var g_messageModal = null;
@@ -375,13 +377,25 @@ function setPopupHeight()
 
 
 function msgPopupDescriptionText() {
-    //var popupMessage = "Please log in or <a href='javascript:Portal.openSignupModal();'>register</a> as a teacher to assign this material.";
-    //getMessagePopup(popupMessage);
-    get_Assign_To_Class_Popup_Anonymous(id, className, lightbox_material_text)
+    var assignPopupConfig = {
+      material_id: id,
+      material_type: className,
+      lightbox_material_text: lightbox_material_text,
+      skip_reload: true,
+      anonymous: false
+    }
+    get_Assign_To_Class_Popup(assignPopupConfig)
 }
 
 // Export assignMaterialToClass to Portal namespace.
 // `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
-Portal.assignMaterialToClass = function(id, className, lightbox_material_text) {
-    get_Assign_To_Class_Popup(id, className, lightbox_material_text);
+Portal.assignMaterialToClass = function(id, className, lightbox_material_text, skip_reload, anonymous) {
+  var assignPopupConfig = {
+    material_id: id,
+    material_type: className,
+    lightbox_material_text: lightbox_material_text,
+    skip_reload: skip_reload,
+    anonymous: anonymous
+  }
+  get_Assign_To_Class_Popup(assignPopupConfig);
 };
