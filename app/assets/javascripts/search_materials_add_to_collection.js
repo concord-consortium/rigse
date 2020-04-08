@@ -67,7 +67,7 @@ function getDataForAssignToCollectionPopup(lightbox_material_text)
     get_Assign_To_Collection_Popup(material_id,material_type, lightbox_material_text);
 }
 
-// Export assignMaterialToClass to Portal namespace.
+// Export assignMaterialToCollection to Portal namespace.
 // `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
 Portal.assignMaterialToCollection = function(id, className, lightbox_material_text) {
     get_Assign_To_Collection_Popup(id, className, lightbox_material_text);

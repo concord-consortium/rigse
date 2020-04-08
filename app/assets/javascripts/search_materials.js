@@ -314,7 +314,7 @@ function checkActivityToAssign(chk_box)
     return;
 }
 
-function getDataForAssignToClassPopup(lightbox_material_text)
+function getDataForAssignToClassPopup(lightbox_material_text, anonymous)
 {
     var material_id = $("material_id").getValue("");
     var material_type = $("assign_material_type").getValue("");
@@ -329,7 +329,7 @@ function getDataForAssignToClassPopup(lightbox_material_text)
       material_type: material_type,
       lightbox_material_text: lightbox_material_text,
       skip_reload: true,
-      anonymous: false
+      anonymous: anonymous
     }
     get_Assign_To_Class_Popup(assignPopupConfig);
 }
@@ -376,26 +376,20 @@ function setPopupHeight()
 }
 
 
-function msgPopupDescriptionText() {
-    var assignPopupConfig = {
-      material_id: id,
-      material_type: className,
-      lightbox_material_text: lightbox_material_text,
-      skip_reload: true,
-      anonymous: false
-    }
-    get_Assign_To_Class_Popup(assignPopupConfig)
+function msgPopupDescriptionText(assignPopupConfig) {
+  var popupMessage = "Please log-in or <a href='javascript:Portal.openSignupModal();'>register</a> as a teacher to assign this material.";
+  getMessagePopup(popupMessage);
 }
 
 // Export assignMaterialToClass to Portal namespace.
 // `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
-Portal.assignMaterialToClass = function(id, className, lightbox_material_text, skip_reload, anonymous) {
+Portal.assignMaterialToClass = function(id, className, lightbox_material_text) {
   var assignPopupConfig = {
     material_id: id,
     material_type: className,
     lightbox_material_text: lightbox_material_text,
-    skip_reload: skip_reload,
-    anonymous: anonymous
+    skip_reload: true,
+    anonymous: false
   }
   get_Assign_To_Class_Popup(assignPopupConfig);
 };
