@@ -37,7 +37,6 @@ en:
         zero: models
         one: model
         other: models
-  project: collection
   collection: collection
   investigation: sequence
   activity: activity
