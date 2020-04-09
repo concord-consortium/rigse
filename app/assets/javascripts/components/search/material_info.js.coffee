@@ -4,7 +4,6 @@ window.SMaterialInfoClass = React.createClass
   displayName: "SMaterialInfoClass"
   renderLinks: ->
     material = @props.material
-    console.log(material)
     for own key, link of material.links
       link.key = key
 
