@@ -31,6 +31,6 @@ RSpec.feature 'Admin configures help page', :WebDriver => true do
   scenario 'Author can assign the activity to a class', js: true do
     visit matedit_external_activity_path(authored_activity)
     # this will raise an error if it can't be clicked
-    page.find_link("Assign To Class").click
+    page.find_link("Assign or Share").click
   end
 end
