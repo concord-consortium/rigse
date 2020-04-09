@@ -75,7 +75,7 @@ en:
     long_description_for_teachers_description: Variant of Long Description visible only for teachers. Uses Long Description as a fallback.
     keywords: Enter a list of keywords this resource should be associated with in the search engine. Only include words that do not already appear in the short and long descriptions above.
   matedit:
-    assign_to_class: Assign To Class
+    assign_to_class: Assign or Share
     edit_options: Edit Options
     archive: Archive
     unarchive: Unarchive

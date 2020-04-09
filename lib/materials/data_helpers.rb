@@ -431,7 +431,7 @@ module Materials
         assignPopupConfig[:anonymous] = true
       end
       links[:assign_material] = {
-          text: "Assign to a Class",
+          text: "Assign or Share",
           url: "javascript:void(0)",
           onclick: "get_Assign_To_Class_Popup(" + assignPopupConfig.to_json + ")"
       }

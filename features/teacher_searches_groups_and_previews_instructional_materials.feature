@@ -19,12 +19,12 @@ Feature: Teacher can search instructional materials grouped by material type, so
   @javascript @search
   Scenario: Teacher should be on materials preview page to assign materials
     When I search for "differential calculus" on the search instructional materials page
-    And I follow the "Assign to a Class" link for the activity "differential calculus"
+    And I follow the "Assign or Share" link for the activity "differential calculus"
     Then I should see "Select the class(es) you want to assign this resource to below."
     And I should be on the search instructional materials page
     And I should see "Your Classes"
     When I follow "Cancel" within the lightbox in focus
-    And I follow the "Assign to a Class" link for the activity "differential calculus"
+    And I follow the "Assign or Share" link for the activity "differential calculus"
     Then I should see "Select the class(es) you want to assign this resource to below."
     And I should be on the search instructional materials page
     And I should see "Your Classes"

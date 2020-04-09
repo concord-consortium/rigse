@@ -11,7 +11,7 @@
         data: {cc_confirm: t("matedit.archive_confirm")}
       = link_to t("matedit.assign_to_class"),
         "javascript:void(0)",
-        :onclick=>"get_Assign_To_Class_Popup(#{@external_activity.id}, '#{@external_activity.class.to_s}', null, true)",
+        :onclick=>"get_Assign_To_Class_Popup({material_id: #{@external_activity.id}, material_type: '#{@external_activity.class.to_s}', lightbox_material_text: null, skip_reload: true, anonymous: false})",
         :class=>"button"
       = link_to t("matedit.edit_options"),
         "javascript:void(0)",
