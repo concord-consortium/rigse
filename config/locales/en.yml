@@ -37,6 +37,7 @@ en:
         zero: models
         one: model
         other: models
+  collection: collection
   investigation: sequence
   activity: activity
   interactive: model
