@@ -33,8 +33,8 @@
   - if !@teacher_active_clazzes_count
     %p
       To assign this resource to classes and track student work on learn.concord.org, log in or register as a teacher.
-    = link_to "Register", "/signup", :href => "/signup", :onclick=>"PortalPages.openSignupModal(); return false;", :class => "button"
-    = link_to "Log In", "/login", :href=>"/login", :onclick=>"PortalPages.openLoginModal(); return false;", :class=>'button'
+    = link_to "Register", "/signup", :href => "/signup", :onclick=>"PortalPages.renderSignupModal({oauthProviders: [], closeable: true}); close_popup(); return false;", :class => "button"
+    = link_to "Log In", "/login", :href=>"/login", :onclick=>"PortalPages.renderLoginModal(); close_popup(); return false;", :class=>'button'
     = link_to "Cancel", "#", :href=>"javascript: void(0);", :onclick=>"close_popup()", :class=>'cancel'
   - else
     - if @teacher_active_clazzes_count > 0
@@ -91,7 +91,7 @@
         Shareable URL
       %br
       %input{:type => "url", :id => "share-url", :value => material.url}
-      %a{:class => "button", :onclick => "copyToClipboard('#share-url')"}
+      %a{:class => "button", :onclick => "copyToClipboard('#share-url')", :href=>"javascript: void(0);"}
         Copy
   %p{:class => "small"}
     %strong
