@@ -16,8 +16,9 @@ window.SMaterialInfoClass = React.createClass
       links.push material.links.external_edit if material.links.external_edit
     links.push material.links.external_copy     if material.links.external_copy
     links.push material.links.teacher_guide     if material.links.teacher_guide
-    links.push material.links.assign_material   if material.links.assign_material
-    links.push material.links.assign_collection if material.links.assign_collection
+    if material.material_type != 'Collection'
+      links.push material.links.assign_material   if material.links.assign_material
+      links.push material.links.assign_collection if material.links.assign_collection
     links.push material.links.unarchive         if material.links.unarchive
 
     (SMaterialLinks {links: links})
