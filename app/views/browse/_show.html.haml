@@ -59,9 +59,9 @@
         %div{:style=>'float:left;padding:3px'}
           = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"
     %div{:style=>'float:left;padding:3px'}
-      - if current_visitor.portal_teacher
+      - if current_visitor.portal_teacher && !(material.material_type == 'Collection')
         = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}')", :id=>"btn_Assign"
-      - else
+      - elsif !(material.material_type == 'Collection')
         = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"msgPopupDescriptionText()", :id=>"btn_Assign", :class=>"button"
     %div{:style=>'float:left;padding:3px',:class=>"share"}
       %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Share')"}Share &#9660;
