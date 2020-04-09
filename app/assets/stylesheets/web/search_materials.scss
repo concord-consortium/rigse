@@ -663,17 +663,13 @@ label.tooltip {
   overflow: auto;
 }
 
-/* Lines 670-680 are questionable and may be temporary. Ideally we would add
-   an ID or class to the assign modal window and apply these styles using that
-   so they only affect the assign modal and not any other windows that may need
-   the borders, but there doesn't appear to be a functioning way to do that. */
-.nw { display: none !important; }
-.lightbox .w {
+#assign-and-share .nw { display: none !important; }
+#assign-and-share .lightbox .w {
   border-left: none !important;
   border-right: none !important;
   border-bottom: none !important;
 }
-.lightbox .e {
+#assign-and-share .lightbox .e {
   border-left: none !important;
   border-right: none !important;
   border-bottom: none !important;

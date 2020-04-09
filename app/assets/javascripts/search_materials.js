@@ -203,7 +203,7 @@ function get_Assign_To_Class_Popup(assignPopupConfig)
     lightbox_material_text = assignPopupConfig.lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        id:"assignDialog",
+        id:"assign-and-share",
         title:""
     };
     var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';
