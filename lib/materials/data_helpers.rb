@@ -425,16 +425,19 @@ module Materials
       end
 
       assignPopupConfig = { :material_id => material.id, :material_type => material.class.to_s, :lightbox_material_text => t('material').pluralize.capitalize, :skip_reload => skip_lightbox_reloads }
-      if current_visitor.portal_teacher && material.respond_to?(:offerings)
-        assignPopupConfig[:anonymous] = false
-      else
-        assignPopupConfig[:anonymous] = true
+      if !current_visitor.portal_student
+        if current_visitor.portal_teacher && material.respond_to?(:offerings)
+          assignPopupConfig[:anonymous] = false
+        else
+          assignPopupConfig[:anonymous] = true
+        end
+
+        links[:assign_material] = {
+            text: "Assign or Share",
+            url: "javascript:void(0)",
+            onclick: "get_Assign_To_Class_Popup(" + assignPopupConfig.to_json + ")"
+        }
       end
-      links[:assign_material] = {
-          text: "Assign or Share",
-          url: "javascript:void(0)",
-          onclick: "get_Assign_To_Class_Popup(" + assignPopupConfig.to_json + ")"
-      }
 
       if current_visitor.has_role?('admin') && material.respond_to?(:materials_collections)
         links[:assign_collection] = {
