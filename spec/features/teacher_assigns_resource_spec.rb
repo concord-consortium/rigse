@@ -1,6 +1,24 @@
 require 'spec_helper'
 
-RSpec.feature 'Users should be able to see assign button for resources', :WebDriver => true do
+RSpec.feature 'Teachers and anonymous users should be able to see an assign button for resources', :WebDriver => true do
+
+  context "when logged in as a student." do
+    let!(:student_user)            { FactoryBot.create(:confirmed_user,
+                                                       :login => "student_user",
+                                                       :password => "password",
+                                                       :first_name => 'Jonathan',
+                                                       :last_name => 'Ames') }
+    let!(:student) { FactoryBot.create(:portal_student, :user => student_user) }
+
+    before do
+      login_with_ui_as('student_user', 'password')
+    end
+
+    scenario "Student user should not see assign button", :js => true do
+      visit "/browse/eresources/1"
+      expect(page).to_not have_content("Assign")
+    end
+  end
 
   context "when not logged in." do
     scenario 'Anonymous user should see assign button', :js => true do
