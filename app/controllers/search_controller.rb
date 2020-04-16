@@ -107,35 +107,19 @@ class SearchController < ApplicationController
     end
   end
 
-  def find_material(type, id)
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    material = nil
-    if ["Investigation", "Activity", "Page", "ExternalActivity"].include?(type)  # this is for safety
-      material = type.constantize.find(id)
-    end
-
-    return material
-  end
-
   def get_current_material_anonymous
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
 
-    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
-      @material = [find_material(material_type, params[:material_id])]
+    if material_type != "ExternalActivity"
+      @material_type = material_type
+      render :partial => 'unsupported_assignment'
     else
-      @material = material_ids.collect{|a| ::Activity.find(a)}
+      @material = material_ids.collect{|a| ExternalActivity.find(params[:material_id])}
+      @skip_reload = params[:skip_reload] == 'true'
+      render :partial => 'material_unassigned_clazzes'
     end
-
-    @skip_reload = params[:skip_reload] == 'true'
-    render :partial => 'material_unassigned_clazzes'
   end
 
   def get_current_material_unassigned_clazzes
@@ -150,24 +134,23 @@ class SearchController < ApplicationController
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
 
+    if material_type != "ExternalActivity" || material_ids.length != 1
+      @material_type = material_type
+      render :partial => 'unsupported_assignment'
+      return
+    end
+
     teacher_clazzes = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
     teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
 
-    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
-      @material = [find_material(material_type, params[:material_id])]
+    @material = [ExternalActivity.find(params[:material_id])]
 
-      teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
-      assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
+    teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
+    assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
 
-
-      @assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
-      @assigned_clazzes = @assigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
-    else
-      @assigned_clazzes = []
-      assigned_clazz_ids = []
-      @material = material_ids.collect{|a| ::Activity.find(a)}
-    end
+    @assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
+    @assigned_clazzes = @assigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
 
     unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
     @unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
@@ -316,15 +299,16 @@ class SearchController < ApplicationController
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
 
+    if material_type != "ExternalActivity" || material_ids.length != 1
+      @material_type = material_type
+      render :partial => 'unsupported_assignment'
+      return
+    end
+
     @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
 
-    if material_ids.length == 1 #Check if material to be assigned is a single activity or investigation
-      @material = [find_material(material_type, params[:material_id])]
-      @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
-    else
-      @material = material_ids.collect{|a| ::Activity.find(a)}
-      @assigned_collections = []
-    end
+    @material = [ExternalActivity.find(params[:material_id])]
+    @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
 
     @unassigned_collections = @collections - @assigned_collections
 
