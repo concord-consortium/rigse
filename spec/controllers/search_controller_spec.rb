@@ -91,15 +91,22 @@ describe SearchController do
     let(:investigations_for_all_clazz) do
       inv = FactoryBot.create(:investigation, :name => 'investigations_for_all_clazz', :user => author_user, :publication_status => 'published')
       #assign investigations_for_all_clazz to physics class
-      Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Investigation',runnable_id: inv.id).first_or_create
+      Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Investigation', runnable_id: inv.id).first_or_create
       inv
     end
 
     let(:activity_for_all_clazz) do
-      act = FactoryBot.create(:activity, :name => 'activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
+      act = FactoryBot.create(:activity, :name => 'activity_for_all_clazz', :investigation_id => physics_investigation.id, :user => author_user)
       #assign activity_for_all_clazz to physics class
       Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'Activity', runnable_id: act.id).first_or_create
       act
+    end
+
+    let(:external_activity_for_all_clazz) do
+      ext_act = FactoryBot.create(:external_activity, :name => 'external_activity_for_all_clazz', :user => author_user)
+      #assign activity_for_all_clazz to physics class
+      Portal::Offering.where(clazz_id: physics_clazz.id, runnable_type: 'ExternalActivity', runnable_id: ext_act.id).first_or_create
+      ext_act
     end
 
     before(:each) do
@@ -111,37 +118,23 @@ describe SearchController do
 
     it "should get all the classes to which the activity is not assigned. Material to be assigned is a single activity" do
       post_params = {
+        :material_type => 'ExternalActivity',
+        :material_id => external_activity_for_all_clazz.id
+      }
+      xhr :post, :get_current_material_unassigned_clazzes, post_params
+      is_expected.to render_template('_material_unassigned_clazzes')
+      expect(assigns[:material]).to eq [external_activity_for_all_clazz]
+      expect(assigns[:assigned_clazzes]).to eq [physics_clazz]
+      expect(assigns[:unassigned_clazzes]).to eq [chemistry_clazz, mathematics_clazz]
+    end
+
+    it "should throw an error when material to be assigned is not of type ExternalActivity" do
+      post_params = {
         :material_type => 'Activity',
         :material_id => activity_for_all_clazz.id
       }
       xhr :post, :get_current_material_unassigned_clazzes, post_params
-      is_expected.to render_template('_material_unassigned_clazzes')
-      expect(assigns[:material]).to eq [activity_for_all_clazz]
-      expect(assigns[:assigned_clazzes]).to eq [physics_clazz]
-      expect(assigns[:unassigned_clazzes]).to eq [chemistry_clazz, mathematics_clazz]
-    end
-
-    it "should get all the classes to which the investigation is not assigned. Material to be assigned is a single investigation" do
-      post_params = {
-        :material_type => 'Investigation',
-        :material_id => investigations_for_all_clazz.id
-      }
-      xhr :post, :get_current_material_unassigned_clazzes, post_params
-      expect(assigns[:material]).to eq [investigations_for_all_clazz]
-      expect(assigns[:assigned_clazzes]).to eq [physics_clazz]
-      expect(assigns[:unassigned_clazzes]).to eq [chemistry_clazz, mathematics_clazz]
-    end
-
-    it "should get all the classes to which the activity is not assigned. Material to be assigned is a multiple activity" do
-      another_activity_for_all_clazz = FactoryBot.create(:activity, :name => 'another_activity_for_all_clazz' ,:investigation_id => physics_investigation.id, :user => author_user)
-      post_params = {
-        :material_type => 'Activity',
-        :material_id => "#{activity_for_all_clazz.id},#{another_activity_for_all_clazz.id}"
-      }
-      xhr :post, :get_current_material_unassigned_clazzes, post_params
-      expect(assigns[:material]).to eq [activity_for_all_clazz, another_activity_for_all_clazz]
-      expect(assigns[:assigned_clazzes]).to eq []
-      expect(assigns[:unassigned_clazzes]).to eq [physics_clazz, chemistry_clazz, mathematics_clazz]
+      is_expected.to render_template('_unsupported_assignment')
     end
 
   end
