@@ -59,4 +59,5 @@
 = require 'poll_to_update_student_data_percentages'
 = require 'secondary-menu-toggle'
 = require 'user-admin'
+= require 'copy-to-clipboard'
 */

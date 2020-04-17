@@ -25,76 +25,75 @@
 
 - activity_name = activity_name || ""
 - external_activity_name = external_activity_name || ""
-- if investigation_name.length > 0
-  %div
-    %table.material_detail
-      %tr
-        %td
-          = investigation_name
-- if activity_name.length > 0
-  %table.material_detail
-    %tr
-      %td
-        = activity_name.html_safe
-    %tr
-      %td.title Part&nbsp;Of:
-      %td
-        = parent_name
-- if external_activity_name.length > 0
-  %div
-    %table.material_detail
-      %tr
-        %td
-          = external_activity_name
-          - if @material[0].saves_student_data == false
-            %div{:class => 'student-data-warning'}
-              %strong
-                PLEASE NOTE:
-              %br
-              This resource can be assigned, but student responses will not be saved.
-%br
-#clazz_summary_data
-  #scrollable_clazz_summary_data
+%div{:id => "assign-col", :class => "assign-share-col"}
+  %h2
+    Assign
+    %span
+      &hellip;
+  - if !@teacher_active_clazzes_count
+    %p
+      To assign this resource to classes and track student work on learn.concord.org, log in or register as a teacher.
+    = link_to "Register", "/signup", :href => "/signup", :onclick=>"PortalPages.renderSignupModal({oauthProviders: Portal.oauthProviders, closeable: true}); close_popup(); return false;", :class => "button"
+    = link_to "Log In", "/login", :href=>"/login", :onclick=>"PortalPages.renderLoginModal({oauthProviders: Portal.oauthProviders, closeable: true, afterSigninPath: window.location.pathname + '?openAssign=true'}); close_popup(); return false;", :class=>'button'
+    = link_to "Cancel", "#", :href=>"javascript: void(0);", :onclick=>"close_popup()", :class=>'cancel'
+  - else
     - if @teacher_active_clazzes_count > 0
-      - if @unassigned_clazzes.length > 0
-        %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
-        %div.assign_class_header Select Class(es)
-        %form{:id=>"add_material_form"}
-          .unassigned_classes_container.webkit_scrollbars
-            %table.material_detail{:width=>"100%"}
-              - @unassigned_clazzes.each do|clazz|
-                %tr
-                  %td.check_box
-                    = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s,:class =>"unassigned_activity_class"
-
-                  %td
-                    = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
-                    - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
-                      %br
-                      (Already assigned as part of "#{parent_name}")
-      - else
-        .messagetext{:style=>"padding-left:5px"} This material is assigned to all the classes.
-      - if @assigned_clazzes.length > 0
-        %br
-        %br
-        .already_assign_class_header Already assigned to the following class(es)
-        %div{:style=>"padding:5px"}
-          .assigned_classes_container.webkit_scrollbars
-            %table.assigned_material_detail{:width=>"100%"}
-              - @assigned_clazzes.each do|clazz|
-                %tr
-                  %td.assigned_clazzes_material
-                    = clazz.name
-    - else
-      .messagetext{:style=>"padding-left:5px"} You don't have any active classes. Once you have created your class(es) you will be able to assign materials to them.
-  %br
-  %table.classdata
-    %tr
-      %td
-        - if @unassigned_clazzes.length > 0
-          = link_to_remote "Save", :condition => 'validateSaveAssignToClass()', :before => 'setSaveAssignToClassInProgress(true)', :complete => "setSaveAssignToClassInProgress(false);", :url => {:action=>'add_material_to_clazzes', :material_id => @material.collect{|a| a.id}.join(','), :material_type => @material[0].class.to_s, :skip_reload => @skip_reload}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
-          &nbsp;&nbsp;
-          = link_to "Cancel", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()"
+      %p
+        Select the class(es) you want to assign this resource to below.
+    - if @material[0].saves_student_data == false
+      %p{:class => 'student-data-warning'}
+        %strong
+          PLEASE NOTE: This resource can be assigned, but student responses will not be saved.
+    #clazz_summary_data
+      #scrollable_clazz_summary_data
+        - if @teacher_active_clazzes_count > 0
+          - if @unassigned_clazzes.length > 0
+            %div{:id=> "error_message",:style=>"display:none;padding-left: 5px;color:red;font-size:14px"}
+            %div.assign_class_header Your Classes
+            %form{:id=>"add_material_form"}
+              .unassigned_classes_container.webkit_scrollbars
+                %ul
+                  - @unassigned_clazzes.each do|clazz|
+                    %li
+                      = check_box_tag 'clazz_id[]',clazz.id,nil, :id => 'clazz_' + clazz.id.to_s,:class =>"unassigned_activity_class"
+                      = label_tag 'clazz_' + clazz.id.to_s, clazz.name,:class=>"clazz_name"
+                      - if portal_offerings && portal_offerings.find_by_clazz_id(clazz.id)
+                        %br
+                        (Already assigned as part of "#{parent_name}")
+          - else
+            .messagetext{:style=>"padding-left:5px"} This material is assigned to all the classes.
+          - if @assigned_clazzes.length > 0
+            .already_assign_class_header Already assigned to the following class(es)
+            %div
+              .assigned_classes_container.webkit_scrollbars
+                %ul
+                  - @assigned_clazzes.each do|clazz|
+                    %li
+                      = clazz.name
         - else
-          = link_to "OK", "#",:href=>"javascript: void(0);",:onclick=>"close_popup()",:class=>"button",:style=>"margin-right: 215px;"
-  %div{:style=>"clear:both"}
+          .messagetext
+            You don't have any active classes. Once you have created your class(es), you will be able to assign materials to them.
+      - if @unassigned_clazzes.length > 0
+        = link_to_remote "Save", :condition => 'validateSaveAssignToClass()', :before => 'setSaveAssignToClassInProgress(true)', :complete => "setSaveAssignToClassInProgress(false);", :url => {:action=>'add_material_to_clazzes', :material_id => @material.collect{|a| a.id}.join(','), :material_type => @material[0].class.to_s, :skip_reload => @skip_reload}, :with => "$('add_material_form').serialize()",:html=>{:class=>"button"}
+        = link_to "Cancel", "#", :href=>"javascript: void(0);", :onclick=>"close_popup()", :class=>'cancel'
+      - else
+        = link_to "Create a Class", "/portal/classes/new", :href=>"/portal/classes/new",:onclick=>"",:class=>"button",:style=>"margin-right: 215px;"
+%div{:id => "share-col", :class => "assign-share-col"}
+  %h2
+    %span
+      or
+    Share
+  %p
+    Copy the URL below to assign this resource in your own LMS or to share with colleagues.
+  %form
+    %div
+      %label
+        Shareable URL
+      %br
+      %input{:type => "url", :id => "share-url", :value => material.url}
+      %a{:class => "button", :onclick => "copyToClipboard('#share-url')", :href=>"javascript: void(0);"}
+        Copy
+  %p{:class => "small"}
+    %strong
+      NOTE:
+    Only use this option if you do not want to track student work on learn.concord.org

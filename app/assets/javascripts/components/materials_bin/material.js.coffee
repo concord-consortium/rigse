@@ -56,7 +56,7 @@ window.MBMaterialClass = React.createClass
           )
         if not @props.assignToSpecificClass and data.assign_to_class_url?
           (a {className: 'mb-assign-to-class', href: data.assign_to_class_url, onClick: @assignToClass, title: 'Assign this activity to a class'},
-            (span {className: 'mb-assign-to-class-text'}, 'Assign to class')
+            (span {className: 'mb-assign-to-class-text'}, 'Assign or Share')
           )
         if data.assign_to_collection_url?
           (a {className: 'mb-assign-to-collection', href: data.assign_to_collection_url, onClick: @assignToCollection, title: 'Assign this activity to a collection'},

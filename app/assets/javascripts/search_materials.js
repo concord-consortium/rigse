@@ -197,30 +197,28 @@ function close_popup()
 
 
 
-function get_Assign_To_Class_Popup( material_id,
-                                    material_type,
-                                    lightbox_material_text,
-                                    skip_reload )
+function get_Assign_To_Class_Popup(assignPopupConfig)
 {
     // console.log("[DEBUG] get_Assign_To_Class_Popup skip_reload", skip_reload);
-
-    lightbox_material_text = lightbox_material_text || "Materials";
+    lightbox_material_text = assignPopupConfig.lightbox_material_text || "Materials";
     var lightboxConfig = {
         content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        title:"Assign " + lightbox_material_text + " to a Class"
+        id:"assign-and-share",
+        title:""
     };
-    var target_url = "/search/get_current_material_unassigned_clazzes?skip_reload=" + (skip_reload || false);
+    var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';
+    var target_url = "/search/" + searchPath + "?skip_reload=" + (assignPopupConfig.skip_reload || false);
     var options = {
         method: 'post',
-        parameters : {'material_type':material_type,'material_id':material_id},
+        parameters: {'material_type': assignPopupConfig.material_type, 'material_id': assignPopupConfig.material_id},
         onSuccess: function(transport) {
             list_lightbox=new Lightbox(lightboxConfig);
             var text = transport.responseText;
             text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
-            list_lightbox.handle.setContent("<div id='windowcontent' style='padding:10px'>" + text + "</div>");
-            var contentheight=$('windowcontent').getHeight();
-            var contentoffset=40;
-            list_lightbox.handle.setSize(500,contentheight+contentoffset+20);
+            list_lightbox.handle.setContent("<div id='windowcontent' style='overflow: hidden;'>" + text + "</div>");
+            var contentheight=$('windowcontent').getHeight()/2;
+            var contentoffset=75;
+            list_lightbox.handle.setSize(760,contentheight+contentoffset+20);
             list_lightbox.handle.center();
         }
     };
@@ -316,7 +314,7 @@ function checkActivityToAssign(chk_box)
     return;
 }
 
-function getDataForAssignToClassPopup(lightbox_material_text)
+function getDataForAssignToClassPopup(lightbox_material_text, anonymous)
 {
     var material_id = $("material_id").getValue("");
     var material_type = $("assign_material_type").getValue("");
@@ -326,7 +324,14 @@ function getDataForAssignToClassPopup(lightbox_material_text)
         getMessagePopup(message);
         return;
     }
-    get_Assign_To_Class_Popup(material_id,material_type, lightbox_material_text);
+    var assignPopupConfig = {
+      material_id: material_id,
+      material_type: material_type,
+      lightbox_material_text: lightbox_material_text,
+      skip_reload: true,
+      anonymous: anonymous
+    }
+    get_Assign_To_Class_Popup(assignPopupConfig);
 }
 
 var g_messageModal = null;
@@ -371,13 +376,20 @@ function setPopupHeight()
 }
 
 
-function msgPopupDescriptionText() {
-    var popupMessage = "Please log-in or <a href='javascript:Portal.openSignupModal();'>register</a> as a teacher to assign this material.";
-    getMessagePopup(popupMessage);
+function msgPopupDescriptionText(assignPopupConfig) {
+  var popupMessage = "Please log-in or <a href='javascript:Portal.openSignupModal();'>register</a> as a teacher to assign this material.";
+  getMessagePopup(popupMessage);
 }
 
 // Export assignMaterialToClass to Portal namespace.
 // `className` is either: 'ExternalActivity', 'Activity' or 'Investigation'.
 Portal.assignMaterialToClass = function(id, className, lightbox_material_text) {
-    get_Assign_To_Class_Popup(id, className, lightbox_material_text);
+  var assignPopupConfig = {
+    material_id: id,
+    material_type: className,
+    lightbox_material_text: lightbox_material_text,
+    skip_reload: true,
+    anonymous: false
+  }
+  get_Assign_To_Class_Popup(assignPopupConfig);
 };
