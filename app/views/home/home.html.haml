@@ -26,7 +26,7 @@
         };
         PortalPages.renderResourceLightbox({
           toggleLightbox: toggleAutoShowLightbox,
-          savedUrl: '#{root_url}',
+          parentPage: '#{@parent_page}',
           savedTitle: '#{APP_CONFIG[:site_name]}',
           resource: PortalPages.settings.autoShowingLightboxResource
         }, "auto_show_lightbox_resource")
