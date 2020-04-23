@@ -237,10 +237,6 @@ class HomeController < ApplicationController
     # logger.info("INFO loading #{params[:id]}")
 
     external_activity_id = params[:id]
-    @parent_page = params[:parentPage]
-    if !@parent_page.present?
-      @parent_page = root_url
-    end
     @lightbox_resource = ExternalActivity.find_by_id(external_activity_id)
 
     # logger.info("INFO found lightbox_resource #{@lightbox_resource}")
