@@ -18,6 +18,7 @@
   - content_for :after_footer do
     #auto_show_lightbox_resource
     %script{:type=>"text/javascript"}
+      PortalPages.settings.savedTitle = '#{APP_CONFIG[:site_name]}';
       PortalPages.settings.autoShowingLightboxResource = #{raw @lightbox_resource.to_json };
       :plain
         var toggleAutoShowLightbox = function () {
@@ -26,7 +27,7 @@
         };
         PortalPages.renderResourceLightbox({
           toggleLightbox: toggleAutoShowLightbox,
-          savedUrl: '#{root_url}',
+          parentPage: '/',
           savedTitle: '#{APP_CONFIG[:site_name]}',
           resource: PortalPages.settings.autoShowingLightboxResource
         }, "auto_show_lightbox_resource")

@@ -274,7 +274,7 @@ module Materials
           unarchive_url: (material.is_a?(ExternalActivity) && policy(material).unarchive?) ? view_context.unarchive_external_activity_url(material) : nil,
           archive_url:   (material.is_a?(ExternalActivity) && policy(material).archive?) ? view_context.archive_external_activity_url(material) : nil,
           copy_url: external_copyable(material) ? view_context.copy_external_activity_url(material) : nil,
-          assign_to_class_url: current_visitor.portal_teacher && material.respond_to?(:offerings) ? "javascript:get_Assign_To_Class_Popup(#{material.id},'#{material.class.to_s}','#{t('material').pluralize.capitalize}')" : nil,
+          assign_to_class_url: current_visitor.portal_teacher && material.respond_to?(:offerings) ? "javascript:get_Assign_To_Class_Popup({material_id: #{material.id}, material_type: '#{material.class.to_s}', lightbox_material_text: '#{t('material').pluralize.capitalize}', skip_reload: true})" : nil,
           assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? "javascript:get_Assign_To_Collection_Popup(#{material.id},'#{material.class.to_s}')" : nil,
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
@@ -424,7 +424,7 @@ module Materials
         }
       end
 
-      assignPopupConfig = { :material_id => material.id, :material_type => material.class.to_s, :lightbox_material_text => t('material').pluralize.capitalize, :skip_reload => skip_lightbox_reloads }
+      assignPopupConfig = { :material_id => material.id, :material_type => material.class.to_s, :lightbox_material_text => t('material').pluralize.capitalize, :skip_reload => true }
       if !current_visitor.portal_student
         if current_visitor.portal_teacher && material.respond_to?(:offerings)
           assignPopupConfig[:anonymous] = false
