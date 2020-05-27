@@ -71,6 +71,7 @@ class API::V1::SiteNoticesController < API::APIController
     #authorize Admin::SiteNotice
     #@all_notices = policy_scope(Admin::SiteNotice).order('updated_at desc')
     @all_notices = Admin::SiteNotice.order('updated_at desc')
+    render json: @all_notices
   end
 
   def edit
