@@ -510,6 +510,29 @@ RailsPortal::Application.routes.draw do
             get :external_report_query
           end
         end
+
+        resources :site_notices do
+          member do
+            delete :remove_notice
+            post :dismiss_notice
+          end
+
+          collection do
+            post :toggle_notice_display
+          end
+        end
+        namespace :site_notices do
+          get :edit
+          get :index
+          get :get_notices_for_user
+          post :create
+          post :dismiss_notice
+          post :edit
+          post :new
+          post :remove_notice
+          post :toggle_notice_display
+          post :update
+        end
       end
     end
 
