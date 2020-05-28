@@ -14,6 +14,13 @@ class API::V1::SiteNoticesController < API::APIController
 
   public
 
+  def get_notices_for_user
+    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
+    @notice_display_type = notices_hash[:notice_display_type]
+    @notices = notices_hash[:notices]
+    render json: @notices
+  end
+
   def new
     #authorize Admin::SiteNotice
     @action_type = 'Create Notice'
