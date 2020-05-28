@@ -21,7 +21,6 @@ class HomeController < ApplicationController
       when HomePage::MyClasses
         redirect_to :my_classes
       when HomePage::Home
-        load_notices
         load_featured_materials
         render :home, locals: homePage.view_options, layout: homePage.layout
       else
@@ -32,12 +31,10 @@ class HomeController < ApplicationController
 
   def getting_started
     @hide_signup_link = true
-    load_notices
     render :getting_started
   end
 
   def my_classes
-    load_notices
     @portal_student = current_visitor.portal_student
     @hide_signup_link = true
     render :my_classes
@@ -48,7 +45,6 @@ class HomeController < ApplicationController
     preview_content = params[:home_page_preview_content]
     homePage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
     @wide_content_layout = true
-    load_notices
     load_featured_materials
     response.headers["X-XSS-Protection"] = "0"
     render :home, locals: homePage.view_options, layout: homePage.layout
@@ -59,7 +55,6 @@ class HomeController < ApplicationController
     preview_content = params[:about_page_preview_content]
     aboutPage = HomePage.new(User.anonymous, Admin::Settings.default_settings, preview_content)
     @wide_content_layout = true
-    load_notices
     load_featured_materials
     response.headers["X-XSS-Protection"] = "0"
     render :about, locals: aboutPage.view_options, layout: aboutPage.layout
@@ -281,18 +276,11 @@ class HomeController < ApplicationController
     @auto_show_lightbox_resource = true
 
     homePage = HomePage.new(current_visitor, current_settings)
-    load_notices
     load_featured_materials
     render :home, locals: homePage.view_options, layout: homePage.layout, status: @lightbox_resource.nil? ? 404: 200
   end
 
   protected
-
-  def load_notices
-    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
-    @notices = notices_hash[:notices]
-    @notice_display_type = notices_hash[:notice_display_type]
-  end
 
   def load_featured_materials
     @show_featured_materials = true
