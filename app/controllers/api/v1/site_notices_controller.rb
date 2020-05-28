@@ -1,6 +1,6 @@
 class API::V1::SiteNoticesController < API::APIController
 
-  before_filter :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
+  before_filter :admin_or_manager, :except => [:get_notices_for_user, :toggle_notice_display, :dismiss_notice]
 
   # TODO: figure out why rspec is breaking and add authorization back (and remove before_filter)
 
