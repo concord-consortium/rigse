@@ -24,8 +24,6 @@ class API::V1::SiteNoticesController < API::APIController
   def new
     #authorize Admin::SiteNotice
     @action_type = 'Create Notice'
-    @all_roles_selected_by_default = true
-    @notice_role_ids = []
     @notice_html = '<p> </p>' #fix for IE 9
   end
 
@@ -34,19 +32,11 @@ class API::V1::SiteNoticesController < API::APIController
     error = nil
     @action_type = 'Create Notice'
     @notice_html = params[:notice_html] ? params[:notice_html] : ''
-    @notice_role_ids = params[:role] ? params[:role] : []
-    @all_roles_selected_by_default = false
 
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
       @notice_html = '<p> </p>' #fix for IE 9
     end
-
-    if @notice_role_ids.count == 0
-      error = error ? error + "<br>No role is selected</br>" : "" +  "No role is selected"
-    end
-
-    @notice_role_ids.map!{|a| a.to_i }
 
     if error
       flash.now[:error] = error.html_safe
@@ -62,15 +52,6 @@ class API::V1::SiteNoticesController < API::APIController
     site_notice.updated_by = current_visitor.id
     site_notice.save!
 
-    #storing all roles that should see this notice
-
-    @notice_role_ids.each do |role_id|
-      site_notice_role = Admin::SiteNoticeRole.new
-      site_notice_role.notice_id = site_notice.id
-      site_notice_role.role_id = role_id
-      site_notice_role.save!
-    end
-
     redirect_to admin_site_notices_path
   end
 
@@ -83,34 +64,22 @@ class API::V1::SiteNoticesController < API::APIController
 
   def edit
     @action_type = 'Edit Notice'
-    @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
     #authorize @notice
     @notice_html = @notice.notice_html
-    fetch_notice_roles
-    @notice_role_ids = @notice_roles.map{|notice_role| notice_role.role_id}
   end
 
   def update
 
     @action_type = 'Edit Notice'
-    @all_roles_selected_by_default = false
     @notice = Admin::SiteNotice.find(params[:id])
     #authorize @notice
-    fetch_notice_roles
 
     @notice_html = params[:notice_html]
-
-    @notice_role_ids = params[:role].nil? ? [] : params[:role]
-    @notice_role_ids.map! {|nr| nr.to_i}
 
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
       @notice_html = '<p> </p>' #fix for IE 9
-    end
-
-    if @notice_role_ids.count == 0
-      error = error ? error + "<br>No role is selected</br>" : "" +  "No role is selected"
     end
 
     if error
@@ -126,27 +95,12 @@ class API::V1::SiteNoticesController < API::APIController
     site_notice.updated_by = current_visitor.id
     site_notice.save!
 
-    notice_role_ids = @notice_roles.map {|nr| nr.id}
-    Admin::SiteNoticeRole.delete(notice_role_ids)
-
-    #Storing new roles
-    @notice_role_ids.each do |role_id|
-      site_notice_role = Admin::SiteNoticeRole.new
-      site_notice_role.notice_id = @notice.id
-      site_notice_role.role_id = role_id
-      site_notice_role.save!
-    end
-
     redirect_to admin_site_notices_path
   end
 
 
   def remove_notice
     #delete notice
-    notice_roles = fetch_notice_roles
-    notice_roles.each do |notice_role|
-      notice_role.destroy
-    end
 
     notice_users = Admin::SiteNoticeUser.where(notice_id: params.fetch(:id))
     notice_users.each do |notice_user|
@@ -216,9 +170,5 @@ class API::V1::SiteNoticesController < API::APIController
   end
 
   private
-
-  def fetch_notice_roles
-    @notice_roles = Admin::SiteNoticeRole.where(notice_id: params.fetch(:id))
-  end
 
 end

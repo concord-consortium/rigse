@@ -6,11 +6,6 @@ FactoryBot.define do
 end
 
 FactoryBot.define do
-  factory :site_notice_role, class: Admin::SiteNoticeRole do |f|
-  end
-end
-
-FactoryBot.define do
   factory :site_notice_user, class: Admin::SiteNoticeUser do |f|
   end
 end
