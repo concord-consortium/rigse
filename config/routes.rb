@@ -523,8 +523,8 @@ RailsPortal::Application.routes.draw do
         end
         namespace :site_notices do
           get :edit
-          get :index
           get :get_notices_for_user
+          get :index
           post :create
           post :dismiss_notice
           post :edit
