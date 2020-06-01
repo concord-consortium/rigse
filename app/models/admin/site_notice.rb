@@ -21,6 +21,7 @@ class Admin::SiteNotice < ActiveRecord::Base
   def self.get_notices_for_user(user)
     notices_hash = {
       :notices => [],
+      :notice_display => '',
       :notice_display_type => self.NOTICE_DISPLAY_TYPES[:no_notice]
     }
 
@@ -46,6 +47,7 @@ class Admin::SiteNotice < ActiveRecord::Base
     if notice_user_display_status && notice_user_display_status.collapsed_status
       if latest_notice_time < Admin::NoticeUserDisplayStatus.find_by_user_id(user.id).last_collapsed_at_time
         notices_hash[:notice_display_type] = self.NOTICE_DISPLAY_TYPES[:collapsed_notices]
+        notices_hash[:notice_display] = 'collapsed'
       end
     end
 

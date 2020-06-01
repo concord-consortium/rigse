@@ -14,11 +14,105 @@ class API::V1::SiteNoticesController < API::APIController
 
   public
 
+  def index
+    #authorize Admin::SiteNotice
+    #@all_notices = policy_scope(Admin::SiteNotice).order('updated_at desc')
+    @all_notices = Admin::SiteNotice.order('updated_at desc')
+    render json: @all_notices
+  end
+
+  def create
+    #authorize Admin::SiteNotice
+    error = nil
+    @action_type = 'Create Notice'
+    @notice_html = params[:notice_html] ? params[:notice_html] : ''
+
+    unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
+      error = "Notice text is blank"
+      @notice_html = '<p> </p>' #fix for IE 9
+    end
+
+    if error
+      flash.now[:error] = error.html_safe
+      respond_to do |format|
+        format.html { render :action => "new" }
+      end
+      return
+    end
+
+    site_notice = Admin::SiteNotice.new
+    site_notice.notice_html = @notice_html
+    site_notice.created_by = current_visitor.id
+    site_notice.updated_by = current_visitor.id
+    site_notice.save!
+
+    redirect_to admin_site_notices_path
+  end
+
+  def update
+
+    @action_type = 'Edit Notice'
+    @notice = Admin::SiteNotice.find(params[:id])
+    #authorize @notice
+
+    @notice_html = params[:notice_html]
+
+    unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
+      error = "Notice text is blank"
+      @notice_html = '<p> </p>' #fix for IE 9
+    end
+
+    if error
+      flash[:error] = error.html_safe
+      respond_to do |format|
+        format.html { render :action => "edit" }
+      end
+      return
+    end
+
+    site_notice = @notice
+    site_notice.notice_html= @notice_html
+    site_notice.updated_by = current_visitor.id
+    site_notice.save!
+
+    redirect_to admin_site_notices_path
+  end
+
+  def remove_notice
+    #delete notice
+
+    notice_users = Admin::SiteNoticeUser.where(notice_id: params.fetch(:id))
+    notice_users.each do |notice_user|
+      notice_user.destroy
+    end
+
+    notice = Admin::SiteNotice.find(params.fetch(:id))
+    #authorize notice, :destroy?
+    notice.destroy
+
+    if request.xhr?
+      render :update do |page|
+        page << "$('#{params[:id]}').remove();"
+        page << "notices_table = document.getElementById('notice_list')"
+        page << "all_notices = notices_table.getElementsByTagName('tr')"
+        page << "if(all_notices.length == 1)"
+        page << "{"
+        page << "$('notice_list').remove();"
+        page << "$('no_notice_msg').update('You have no notices.<br/>To create a notice click the \"Create New Notice\" button.')"
+        page << "}"
+      end
+      return
+    end
+
+    #redirect_to :action => 'index';
+    #redirect_to admin_site_notices_path
+  end
+
   def get_notices_for_user
     notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
-    @notice_display_type = notices_hash[:notice_display_type]
+    @notice_display = notices_hash[:notice_display]
     @notices = notices_hash[:notices]
-    render json: @notices
+    render json: { notices: @notices, notice_display: @notice_display }
   end
 
   def toggle_notice_display

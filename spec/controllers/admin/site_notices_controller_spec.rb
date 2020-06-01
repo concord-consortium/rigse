@@ -15,8 +15,6 @@ describe Admin::SiteNoticesController do
     @portal_student = FactoryBot.create(:portal_student, :user => @student_user)
     @guest_user = FactoryBot.generate(:anonymous_user)
 
-    @all_role_ids = Role.all.map {|r| r.id}
-
     login_admin
   end
   describe "GET new" do
@@ -61,21 +59,14 @@ describe Admin::SiteNoticesController do
   describe "Post new notice" do
     before(:each) do
       @post_params = {
-        :notice_html =>"notice text should contain at least one non white space characters",
-        :role => @all_role_ids
+        :notice_html =>"notice text should contain at least one non white space characters"
       }
     end
 
-    it("should create a notice with some text and at least one role selected") do
+    it("should create a notice with some text") do
       post :create, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
-      notice_id = notice.id
-      notice_roles = Admin::SiteNoticeRole.where(notice_id: notice_id)
-      expect(notice_roles).not_to be_nil
-      notice_roles.each do |role|
-        assert(@post_params[:role].include?(role.role_id))
-      end
     end
     it("should not create a notice if it is blank") do
       @post_params[:notice_html] = ''
@@ -90,23 +81,12 @@ describe Admin::SiteNoticesController do
       expect(notice).to be_nil
       expect(flash[:error]).to match(/Notice text is blank/i)
     end
-    it("should not create a notice if no role is selected") do
-      @post_params[:role] = nil
-      post :create, @post_params
-      notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      expect(notice).to be_nil
-      expect(flash[:error]).to match(/No role is selected/i)
-    end
   end
 
 
   describe "GET edit notice form" do
     before(:each) do
       @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      roles = Role.all
-      roles.each do |role|
-        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
-      end
       @params = {
         :id => @notice.id
       }
@@ -120,26 +100,10 @@ describe Admin::SiteNoticesController do
   describe "Update a notice after saving it" do
     before(:each) do
       @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      roles = Role.all
-      roles.each do |role|
-        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
-      end
       @post_params = {
         :notice_html =>"updated text",
-        :role => @all_role_ids,
         :id => @notice.id
       }
-    end
-    it("should create a notice if and only if notice contains a non white space character and at least one role is selected") do
-      post :update, @post_params
-      notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      expect(notice).not_to be_nil
-      notice_id = notice.id
-      notice_roles = Admin::SiteNoticeUser.where(notice_id: notice_id)
-      expect(notice_roles).not_to be_nil
-      notice_roles.each do |role|
-        assert(@post_params[:role].include?(role.role_id))
-      end
     end
     it("should not create a notice if notice text is blank") do
       @post_params[:notice_html] = ""
@@ -154,22 +118,11 @@ describe Admin::SiteNoticesController do
       expect(notice).to be_nil
       expect(flash[:error]).to match(/Notice text is blank/i)
     end
-    it("should not create a notice if no role is selected") do
-      @post_params[:role] = nil
-      post :update, @post_params
-      notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
-      expect(notice).to be_nil
-      expect(flash[:error]).to match(/No role is selected/i)
-    end
   end
 
   describe "Delete a Notice" do
     before(:each) do
       @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      roles = Role.all
-      roles.each do |role|
-        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
-      end
       @params= {
         :id => @notice.id
       }
@@ -183,51 +136,6 @@ describe Admin::SiteNoticesController do
       xhr :post, :remove_notice, @params
       notice = Admin::SiteNotice.find_by_id(@params[:id])
       expect(notice).to be_nil
-      notice_roles = Admin::SiteNoticeRole.find_by_notice_id(@params[:id])
-      expect(notice_roles).to be_nil
-      expect(response).to be_success
-    end
-  end
-  describe "Dismiss a notice" do
-    before(:each) do
-      sign_in @teacher_user
-      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      roles = Role.all
-      roles.each do |role|
-        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
-      end
-      @params = {
-        :id => @notice.id
-      }
-    end
-    it"should dismiss a notice" do
-      xhr :post, :dismiss_notice, @params
-      dismissed_notice = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(@notice.id, @teacher_user.id)
-      expect(dismissed_notice).not_to be_nil
-      assert(dismissed_notice.notice_dismissed)
-      expect(response).to be_success
-    end
-  end
-  describe "toggle_notice_display" do
-    before(:each) do
-      sign_in @teacher_user
-      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      roles = Role.all
-      roles.each do |role|
-        FactoryBot.create(:site_notice_role, :notice_id => @notice.id,:role_id => role.id)
-      end
-    end
-    it"should store collapse time and expand and collapse status" do
-      xhr :post, :toggle_notice_display
-      toggle_notice_status = Admin::NoticeUserDisplayStatus.find_by_user_id(@teacher_user.id)
-      expect(toggle_notice_status).not_to be_nil
-      assert(toggle_notice_status.collapsed_status)
-      expect(response).to be_success
-
-      xhr :post, :toggle_notice_display
-      toggle_notice_status.reload
-      expect(toggle_notice_status).not_to be_nil
-      expect(toggle_notice_status.collapsed_status).to eq(false)
       expect(response).to be_success
     end
   end
