@@ -12,6 +12,33 @@ describe API::V1::SiteNoticesController do
     login_admin
   end
 
+  describe "Post new notice" do
+    before(:each) do
+      @post_params = {
+        :notice_html =>"notice text should contain at least one non white space characters"
+      }
+    end
+
+    it("should create a notice with some text") do
+      post :create, @post_params
+      notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
+      expect(notice).not_to be_nil
+    end
+    it("should not create a notice if it is blank") do
+      @post_params[:notice_html] = ''
+      post :create, @post_params
+      notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
+      expect(notice).to be_nil
+      expect(flash[:error]).to match(/Notice text is blank/i)
+
+      @post_params[:notice_html] = ' '
+      post :create, @post_params
+      notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
+      expect(notice).to be_nil
+      expect(flash[:error]).to match(/Notice text is blank/i)
+    end
+  end
+
   describe "Dismiss a notice" do
     before(:each) do
       sign_in @teacher_user
@@ -59,6 +86,26 @@ describe API::V1::SiteNoticesController do
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
+    end
+  end
+
+  describe "Delete a Notice" do
+    before(:each) do
+      @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
+      @params= {
+        :id => @notice.id
+      }
+    end
+    it"should delete a notice" do
+
+      # Check the notice exists before checking that it is deleted
+      notice = Admin::SiteNotice.find_by_id(@params[:id])
+      expect(notice).not_to be_nil
+
+      xhr :post, :remove_notice, @params
+      notice = Admin::SiteNotice.find_by_id(@params[:id])
+      expect(notice).to be_nil
+      expect(response).to be_success
     end
   end
 end
