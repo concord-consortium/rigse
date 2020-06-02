@@ -33,11 +33,7 @@ class API::V1::SiteNoticesController < API::APIController
     end
 
     if error
-      flash.now[:error] = error.html_safe
-      respond_to do |format|
-        format.html { render :action => "new" }
-      end
-      return
+      return error(error)
     end
 
     site_notice = Admin::SiteNotice.new
