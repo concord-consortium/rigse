@@ -290,6 +290,9 @@ RailsPortal::Application.routes.draw do
           get  :remove_form
         end
       end
+      namespace :site_notices do
+        get :new
+      end
       resources :site_notices do
         member do
           delete :remove_notice
@@ -525,6 +528,7 @@ RailsPortal::Application.routes.draw do
           get :edit
           get :get_notices_for_user
           get :index
+          get :new
           post :create
           post :dismiss_notice
           post :edit

@@ -19,7 +19,7 @@ Feature: Admin can add, edit and remove notices
   Scenario: Admin can edit notices
     Given a notice "Notice for admin"
     And am on the site notices index page
-    When I follow "Edit"
+    When I follow "edit"
     And I fill "Edited notice for users" in the tinyMCE editor with id "notice_html"
     And I press "Update Notice"
     And am on the my home page
@@ -40,12 +40,13 @@ Feature: Admin can add, edit and remove notices
     When I create a notice " "
     Then I should see "Notice text is blank"
 
+  @javascript
   Scenario: Admin can cancel notice creation or editing
     Given a notice "Notice for admin"
     When I go to the admin create notice page
     And I follow "Cancel"
     Then I should be on "the site notices index page"
-    When I follow "Edit"
+    When I follow "edit"
     And I follow "Cancel"
     Then I should be on "the site notices index page"
 
@@ -54,6 +55,7 @@ Feature: Admin can add, edit and remove notices
     And I try to go to the admin create notice page
     Then I should be on "the signin page"
 
+  @javascript
   Scenario: Admin is shown a message if there are no notices
     When I am on the site notices index page
     Then I should see "You have no notices."

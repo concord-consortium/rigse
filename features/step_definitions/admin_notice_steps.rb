@@ -1,5 +1,5 @@
 
-When /^(?:|I )create a notice "(.*)"$/ do|notice_html, selected_roles|
+When /^(?:|I )create a notice "(.*)"$/ do|notice_html|
   visit(path_to("the admin create notice page"))
   step "I fill \"#{notice_html}\" in the tinyMCE editor with id \"notice_html\""
   step('I press "Publish Notice"')
