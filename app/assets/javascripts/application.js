@@ -54,7 +54,7 @@
 = require 'classnames'
 = require 'react-input-autosize'
 = require 'react-select'
-= require 'component'
+= require 'jquery.paging'
 = require 'jquery_nested_form'
 = require 'poll_to_update_student_data_percentages'
 = require 'secondary-menu-toggle'
