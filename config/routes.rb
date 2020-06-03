@@ -294,10 +294,6 @@ RailsPortal::Application.routes.draw do
         get :new
       end
       resources :site_notices do
-        member do
-          delete :remove_notice
-          post :dismiss_notice
-        end
 
         collection do
           #get :manage_classes, :path => 'manage'
