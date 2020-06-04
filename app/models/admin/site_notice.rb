@@ -25,8 +25,8 @@ class Admin::SiteNotice < ActiveRecord::Base
       :notice_display_type => self.NOTICE_DISPLAY_TYPES[:no_notice]
     }
 
-    # Notices should not be displayed for students
-    if user.portal_student
+    # Notices should not be displayed for students or anonymous users
+    if user.portal_student || user.anonymous?
       return notices_hash
     end
     all_notices = Array.new

@@ -12,7 +12,7 @@ Feature: Admin can add, edit and remove notices
   @javascript
   Scenario: Admin can add a notice
     When I create a notice "Notice for users"
-    And am on the my home page
+    And am on the getting started page
     Then I should see "Notice for users"
 
   @javascript
@@ -22,7 +22,7 @@ Feature: Admin can add, edit and remove notices
     When I follow "edit"
     And I fill "Edited notice for users" in the tinyMCE editor with id "notice_html"
     And I press "Update Notice"
-    And am on the my home page
+    And am on the getting started page
     Then I should see "Edited notice for users"
 
   @dialog

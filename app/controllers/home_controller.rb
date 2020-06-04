@@ -31,6 +31,9 @@ class HomeController < ApplicationController
 
   def getting_started
     @hide_signup_link = true
+    notices_hash = Admin::SiteNotice.get_notices_for_user(current_visitor)
+    @notices = notices_hash[:notices]
+    @notice_display_type = notices_hash[:notice_display_type]
     render :getting_started
   end
 
