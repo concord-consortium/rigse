@@ -1,13 +1,14 @@
-- if (@notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
-  - notice_display = 'collapsed'
-- if @notice_display_type != Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice]
-  - no_notice = false
-- else
-  - no_notice = true
+- if !current_visitor.anonymous?
+  - if (@notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
+    - notice_display = 'collapsed'
+  - if @notice_display_type != Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice]
+    - no_notice = false
+  - else
+    - no_notice = true
 
-#portal-pages-notices
+  #portal-pages-notices
 
-:javascript
-  jQuery(document).ready(function () {
-    PortalPages.renderShowSiteNotices({dataUrl: Portal.API_V1.GET_NOTICES_FOR_USER, noNotice: #{no_notice}, noticeDisplay: "#{notice_display}"}, 'portal-pages-notices');
-  });
+  :javascript
+    jQuery(document).ready(function () {
+      PortalPages.renderShowSiteNotices({dataUrl: Portal.API_V1.GET_NOTICES_FOR_USER, noNotice: #{no_notice}, noticeDisplay: "#{notice_display}"}, 'portal-pages-notices');
+    });
