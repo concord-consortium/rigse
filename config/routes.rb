@@ -290,17 +290,9 @@ RailsPortal::Application.routes.draw do
           get  :remove_form
         end
       end
-      namespace :site_notices do
-        get :new
-      end
-      resources :site_notices do
 
-        collection do
-          #get :manage_classes, :path => 'manage'
-          post :toggle_notice_display
-          #post :manage_classes_save, :as => 'manage_save'
-        end
-      end
+      resources :site_notices
+
       get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
 
       # can't use resources here as the key is a natural key instead of id and Rails 3 doesn't allow you to specifiy the param name

@@ -33,7 +33,7 @@ class API::V1::SiteNoticesController < API::APIController
     end
 
     if error
-      redirect_to admin_site_notices_new_path, flash: {error: error.html_safe}
+      redirect_to new_admin_site_notice_path, flash: {error: error.html_safe}
       return
     end
 
