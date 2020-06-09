@@ -35,6 +35,18 @@ class API::V1::JwtController < API::APIController
       }
     end
 
+    if (user.has_role? 'admin')
+      claims[:admin] = 1
+    else
+      claims[:admin] = -1
+    end
+    claims[:project_admins] = []
+    user.project_users.each do |p|
+      if(p.is_admin)
+        claims[:project_admins].push(p.project_id)
+      end
+    end
+
     begin
       render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
     rescue StandardError => e
