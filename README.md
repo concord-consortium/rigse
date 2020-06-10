@@ -206,7 +206,7 @@ Feature specs that require javascript are run by Chrome via Selenium. By default
 
 However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by making the following changes:
 
-* set the environment variable `HEADLESS=false` if you are running the tests by using `docker-compose app exec /bin/bash`, then you can set HEADLESS in the shell.
+* set the environment variable `HEADLESS=false` if you are running the tests by using `docker-compose exec app /bin/bash`, then you can set HEADLESS in the shell.
 * expose the capybara port by adding the docker-compose-publish-capybara-port overlay to to your .env file
 * install `chromedriver` on your host machine
 * start it with the command: `chromedriver --whitelisted-ips`

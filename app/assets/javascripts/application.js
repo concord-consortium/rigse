@@ -26,7 +26,6 @@
 = require 'pagination'
 = require 'chosen.proto'
 = require 'pt_event_simulate'
-= require 'site_notices'
 = require 'lightbox'
 = require tinymce
 = require_tree './in_place_rich_editor'

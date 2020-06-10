@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200225193853) do
+ActiveRecord::Schema.define(:version => 20200529161339) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -165,16 +165,6 @@ ActiveRecord::Schema.define(:version => 20200225193853) do
     t.string   "teacher_home_path",                                  :default => "/getting_started"
     t.text     "about_page_content",             :limit => 16777215
   end
-
-  create_table "admin_site_notice_roles", :force => true do |t|
-    t.integer  "notice_id"
-    t.integer  "role_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  add_index "admin_site_notice_roles", ["notice_id"], :name => "index_admin_site_notice_roles_on_notice_id"
-  add_index "admin_site_notice_roles", ["role_id"], :name => "index_admin_site_notice_roles_on_role_id"
 
   create_table "admin_site_notice_users", :force => true do |t|
     t.integer  "notice_id"

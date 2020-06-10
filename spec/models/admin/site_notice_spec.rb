@@ -7,17 +7,13 @@ describe Admin::SiteNotice do
 
       role = Role.find_by_title('admin')
       @first_notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      FactoryBot.create(:site_notice_role, :notice_id => @first_notice.id,:role_id => role.id)
 
       @second_notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      FactoryBot.create(:site_notice_role, :notice_id => @second_notice.id,:role_id => role.id)
 
       @third_notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
-      FactoryBot.create(:site_notice_role, :notice_id => @third_notice.id,:role_id => role.id)
 
     end
     it"should show no notice if there is no notice" do
-      Admin::SiteNoticeRole.destroy_all
       Admin::SiteNotice.destroy_all
       notices_hash = Admin::SiteNotice.get_notices_for_user(@admin_user)
       expect(notices_hash[:notice_display_type] ).to eq(Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice])
