@@ -54,7 +54,7 @@
           // Check if response matches current query (rm '?' character from window.location.search first).
           // If not, it means it's outdated result and it doesn't make sense to render it.
           if (data.query === window.location.search.slice(1)) {
-            Portal.renderSearchResults(data.results, dest);
+            PortalPages.renderSearchResults(data.results, dest);
           }
         }
       });

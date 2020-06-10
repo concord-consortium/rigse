@@ -3,7 +3,7 @@
   - margin = 260
 - else
   - material = interactive
-  - margin = -10 
+  - margin = -10
 
 .spacer{ style: 'height: 50px;' }
 
@@ -30,7 +30,7 @@
                             "Found " + data.related_materials.length +
                             " related material(s)");
 
-            Portal.renderMaterialsList(data.related_materials, 
+            PortalPages.renderMaterialsList(data.related_materials,
                                             '.related_materials_list');
         }
     })
