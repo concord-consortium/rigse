@@ -102,6 +102,11 @@ services:
       # used to pass context to selenium
       #
       DOCKER: 'true'
+
+      #
+      # Enables logging to file in dev and test environments. Disabled by default.
+      #
+      LOG_TO_FILE:
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true

@@ -36,4 +36,9 @@ RailsPortal::Application.configure do
   # Turn this off if localizing
   config.i18n.default_locale = 'en'
   config.i18n.fallbacks = true
+
+  unless ENV["LOG_TO_FILE"]
+    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
+    config.logger = Logger.new(STDOUT)
+  end
 end
