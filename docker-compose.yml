@@ -104,9 +104,9 @@ services:
       DOCKER: 'true'
 
       #
-      # Enables logging to file in dev and test environments. Disabled by default.
+      # Enables logging to stdout instead of file.
       #
-      LOG_TO_FILE:
+      RAILS_STDOUT_LOGGING: true
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
