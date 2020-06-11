@@ -1,4 +1,3 @@
-// src/resolvers/UserResolver.ts
 
 import { Resolver, Query, Mutation, Arg, Args, ObjectType, Field,
          FieldResolver, Root, ArgsType, InputType, ID, Int } from "type-graphql"
@@ -93,7 +92,9 @@ export class AdminProjectUserResolver {
   @Query(() => adminProjectUserListMeta)
   _allAdminProjectUsersMeta(
     @Args() {filter, page, perPage, sortField, sortOrder}:AdminProjectUserQueryArgs) {
-    return {count: 2}
+      const where = filter
+      const count = AdminProjectUser.count({where})
+    return {count: count}
   }
 
   @Query(() => AdminProjectUser)

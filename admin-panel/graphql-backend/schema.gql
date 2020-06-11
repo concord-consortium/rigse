@@ -37,7 +37,7 @@ type adminProjectUserListMeta {
 
 type Mutation {
   deleteAdminProject(id: String): Boolean
-  createAdminProject(landingPageContent: String, projectCardImageUrl: String, projectCardDescription: String, public: Boolean, landingPageSlug: String, name: String): AdminProject
+  createAdminProject(projectCardImageUrl: String, projectCardDescription: String, public: Boolean, landingPageSlug: String, name: String): AdminProject
   updateAdminProject(landingPageContent: String, projectCardImageUrl: String, projectCardDescription: String, public: Boolean, landingPageSlug: String, name: String, id: String): AdminProject
   updateAdminProjectUser(id: ID, isAdmin: Boolean = false, isResearcher: Boolean = false): AdminProjectUser
   createAdminProjectUser(userId: ID, projectId: ID, isAdmin: Boolean = false, isResearcher: Boolean = false): AdminProjectUser
@@ -54,8 +54,8 @@ type Query {
   allAdminProjectUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: AdminProjectUserFilter): [AdminProjectUser]
   _allAdminProjectUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: AdminProjectUserFilter): adminProjectUserListMeta
   AdminProjectUser(id: String): AdminProjectUser
-  allUsers(page: Float = 1, perPage: Float = 10, sortField: String, sortOrder: String): [User]
-  _allUsersMeta(page: Float = 1, perPage: Float = 10, sortField: String, sortOrder: String): userListMeta
+  allUsers(filter: UserFilter, page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC"): [User]
+  _allUsersMeta(filter: UserFilter, page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC"): userListMeta
   User(id: String): User
 }
 
@@ -67,6 +67,13 @@ type User {
   lastName: String
   email: String
   encryptedPassword: String
+}
+
+input UserFilter {
+  id: ID
+  email: String
+  lastName: String
+  firstName: String
 }
 
 type userListMeta {

@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import express, { request, Request } from "express"
+import express from "express"
 import { createConnection } from "typeorm";
 import { ApolloServer  } from "apollo-server-express";
 import { buildSchema, AuthChecker} from "type-graphql";
@@ -8,27 +8,33 @@ import { AdminProjectUserResolver } from "./resolvers/AdminProjectUserResolver"
 import { UserResolver } from "./resolvers/UserResolver"
 import jwt from "express-jwt";
 import { Config } from "./config"
+import { ApolloServerPlugin } from "apollo-server-plugin-base";
+import { GraphQLRequestContext } from "apollo-server-types";
 
 
 interface IPortalClaims {
   project_admins: number[]
   admin: 1|-1
 }
+
+// eslint-disable-next-line
+type AnyForNow = any
+
 interface MyContextType {
-  request: any;
+  request: AnyForNow
   user: IPortalClaims;
 }
 
-const customAuthChecker: AuthChecker<MyContextType> = ({context}, roles) => {
+const customAuthChecker: AuthChecker<MyContextType> = ({context} /*, roles */) => {
   if (context.user.admin === 1) {
     return true
   }
   return false
 }
 
-const loggingPlugin = {
+const loggingPlugin: ApolloServerPlugin = {
   // Fires whenever a GraphQL request is received from a client.
-  requestDidStart(requestContext: any) {
+  requestDidStart(requestContext: GraphQLRequestContext<MyContextType>) {
     console.log('Request started! Query:\n')
     console.dir(requestContext)
   }
@@ -53,6 +59,7 @@ async function main() {
     context: ({ req } ) => {
       const context:MyContextType = {
         request: req,
+        // eslint ignore-next-line
         user: (req as any).user, // `req.user` comes from `express-jwt`
       };
       console.log(context.user)
@@ -60,14 +67,10 @@ async function main() {
     },
   });
 
-    // Mount a jwt or other authentication middleware that is run before the GraphQL execution
+  // Mount a jwt authentication middleware that is run before the GraphQL execution
   app.use(
     path,
-    jwt({
-      secret: Config.jwtSecret ||"",
-      // We need to be able to get the schema without credentials:
-      credentialsRequired: false
-    }),
+    jwt(Config.jwtConfig)
   );
 
 

@@ -3,14 +3,13 @@
 
 // import { Resolver, Query, Mutation, Arg, Args, ObjectType, Field, FieldResolver, Root, ID } from "type-graphql"
 import {
-  ArgsType, ID,
+  ArgsType, InputType, ID,
   Resolver, Query, Mutation, Arg,
-  Args, ObjectType, Field, Authorized, AuthChecker
+  Args, ObjectType, Field, Authorized
 } from "type-graphql"
 
 import { User } from "../entities/Users"
 import { AdminProject } from "../entities/AdminProjects"
-import { request } from "express"
 
 @ArgsType()
 class CreateUser implements Partial<User>{
@@ -30,22 +29,43 @@ class CreateUser implements Partial<User>{
   projectsIds: string[]
 }
 
+@InputType()
+class UserFilter implements Partial<User>{
+  @Field(type => ID)
+  id?: number;
+
+  @Field(type => String)
+  email?: string;
+
+  @Field(type => String)
+  lastName?: string;
+
+  @Field(type => String)
+  firstName?: string;
+}
+
+type UserSortField = "firstName" | "lastName" | "id"
+
+type SortOrder = "ASC" | "DESC"
+
+
 @ArgsType()
 class GenericPaginationAndFilter {
-  // @Field()
-  // filter: any
+  @Field(type => UserFilter)
+  filter?: UserFilter
 
-  @Field({defaultValue: 1})
+  // Important, this is zero-indexed
+  @Field({defaultValue: 0})
   page: number
 
   @Field({defaultValue: 10})
   perPage: number
 
-  @Field()
-  sortField: string
+  @Field({defaultValue: 'id'})
+  sortField: UserSortField
 
-  @Field()
-  sortOrder: "ASC" | "DESC"
+  @Field({defaultValue: "ASC"})
+  sortOrder: SortOrder
 }
 
 
@@ -64,17 +84,17 @@ class userListMeta {
 
 @Resolver(of => User)
 export class UserResolver {
-
   @Authorized()
   @Query(() => [User])
-  allUsers(@Args() {page, perPage, sortField}:GenericPaginationAndFilter) {
-    return User.find(
-      {
-        take: perPage,
-        skip: (page - 1)  * perPage,
-        relations: ["projects"],
-      }
-    )
+  async allUsers(@Args() {filter, page, perPage, sortField, sortOrder}:GenericPaginationAndFilter) {
+    const found = await User.find({
+      order: { [sortField]: sortOrder },
+      where: filter,
+      take: perPage,
+      skip: page * perPage,
+      relations: ["projects"]
+    })
+    return found
   }
 
   @Authorized()

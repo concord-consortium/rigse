@@ -1,10 +1,5 @@
 // src/resolvers/UserResolver.ts
-
-import {
-  Resolver, Query, Mutation, Arg, ObjectType, Field,
-  createParamDecorator
-} from "type-graphql"
-import { validate } from "class-validator"
+import { Resolver, Query, Mutation, Arg, ObjectType, Field } from "type-graphql"
 import { AdminProject } from "../entities/AdminProjects"
 
 @ObjectType()
@@ -13,71 +8,51 @@ class adminProjectListMeta {
   count: number
 }
 
-interface MyContextType {
-  fake: string
-}
-
-
-function UpdateTimeStamp() {
-  return createParamDecorator<MyContextType>((resolver) => Date.now());
-}
-
 @Resolver()
 export class AdminProjectResolver {
-
-  @Query(() => [AdminProject])
-  allAdminProjects() {
+  @Query(type => [AdminProject])
+  allAdminProjects():  Promise<AdminProject[]> {
     return AdminProject.find({
       relations: ["users"]
     })
   }
 
-  @Query(() => adminProjectListMeta)
-  _allAdminProjectsMeta() {
+  @Query(type => adminProjectListMeta)
+  _allAdminProjectsMeta(): adminProjectListMeta{
     return {count: 2}
   }
 
-  @Query(() => AdminProject)
-  AdminProject(@Arg("id") id: string) {
+  @Query(type => AdminProject)
+  AdminProject(@Arg("id") id: string): Promise<AdminProject|undefined> {
     return AdminProject.findOne({
       where: { id },
       relations: ["users"]
     });
   }
 
-  @Mutation(() => Boolean)
-  async deleteAdminProject(@Arg("id") id: string) {
+  @Mutation(type => Boolean)
+  async deleteAdminProject(@Arg("id") id: string): Promise<boolean> {
     const project = await AdminProject.findOne({ where: { id } });
     if (!project) throw new Error("AdminProject not found!");
     await project.remove();
     return true;
   }
 
-  @Mutation(() => AdminProject)
+  @Mutation(type => AdminProject)
   async createAdminProject(
     @Arg("name") name: string,
     @Arg("landingPageSlug") landingPageSlug: string,
     @Arg("public") isPublic: boolean=false,
     @Arg("projectCardDescription") projectCardDescription?: string,
-    @Arg("projectCardImageUrl") projectCardImageUrl?: string,
-    @Arg("landingPageContent") landingPageContent?: string
-  ) {
+    @Arg("projectCardImageUrl") projectCardImageUrl?: string
+  ): Promise<AdminProject> {
     const createdAt = new Date()
     const updatedAt = new Date()
     const params = {
       name, landingPageSlug, projectCardDescription, projectCardImageUrl,
       public: isPublic, createdAt, updatedAt
     }
-    const project = AdminProject.create(params);
-    const errors = await validate(project)
-    if (errors.length === 0) {
-      await project.save();
-      console.dir(project)
-    } else {
-      console.log(errors)
-      console.dir(project)
-      throw new Error("invalid project")
-    }
+    const project = await AdminProject.create(params);
     return project;
   }
 
@@ -90,9 +65,13 @@ export class AdminProjectResolver {
       @Arg("projectCardDescription", {nullable: true}) projectCardDescription?: string,
       @Arg("projectCardImageUrl", {nullable: true}) projectCardImageUrl?: string,
       @Arg("landingPageContent", {nullable: true}) landingPageContent?: string
-    ) {
+    ): Promise<AdminProject> {
       const params = {
-        name, landingPageSlug, projectCardDescription, projectCardImageUrl,
+        name,
+        landingPageSlug,
+        landingPageContent,
+        projectCardDescription,
+        projectCardImageUrl,
         public: isPublic
       }
       const project = await AdminProject.findOne({ where: { id } });
