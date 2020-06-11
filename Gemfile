@@ -128,7 +128,7 @@ end
 
   gem 'useragent'  # detect browser types
 
-  gem 'react-rails', '~> 2.3.1' # React 15.6.2
+  gem 'react-rails', '~> 2.6.1' # React 16.4.1
 
   gem 'nested_form'
   gem 'sanitize'
