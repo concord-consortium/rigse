@@ -68,7 +68,7 @@ Feature: User works with materials bin
             ]
           }
         ];
-        Portal.renderMaterialsBin(MATERIALS, '#bin-view');
+        PortalPages.renderMaterialsBin(MATERIALS, '#bin-view');
       </script>
       """
 

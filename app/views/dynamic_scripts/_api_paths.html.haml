@@ -78,11 +78,22 @@
     EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: "#{external_report_query_api_v1_report_learners_es_path}",
     EXTERNAL_RESEARCHER_REPORT_USER_QUERY: "#{external_report_query_api_v1_report_users_path}",
 
+    //
+    // Site Notices
+    //
+    SITE_NOTICES_INDEX: "#{api_v1_site_notices_index_path}",
+    SITE_NOTICES_NEW: "#{api_v1_site_notices_new_path}",
+    SITE_NOTICES_CREATE: "#{api_v1_site_notices_create_path}",
+    SITE_NOTICES_EDIT: "#{api_v1_site_notices_edit_path}",
+    GET_NOTICES_FOR_USER: "#{api_v1_site_notices_get_notices_for_user_path}",
+    SITE_NOTICES_TOGGLE_DISPLAY: "#{api_v1_site_notices_toggle_notice_display_path}",
+
     // Navigation
     // NavigationHelper#get_navigation_json  see app/helpers/navigation_helper.rb
     getNavigation: function() {
       return JSON.parse(document.getElementById('navigationData').innerHTML)
     }
+
   };
 - if current_user.present?
   - if current_user.portal_teacher
