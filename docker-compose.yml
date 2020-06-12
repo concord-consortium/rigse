@@ -106,7 +106,7 @@ services:
       #
       # Enables logging to stdout instead of file.
       #
-      RAILS_STDOUT_LOGGING: true
+      RAILS_STDOUT_LOGGING: "true"
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
