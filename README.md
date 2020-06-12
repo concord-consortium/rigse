@@ -791,6 +791,10 @@ using nohup, e.g.:
 `nohup bundle exec rake archive_portal:extract_and_upload_images &`
 
 You can close your ssh session and the task will be still running. Logs will be saved in `nohup.out`.
+## New Admin interfaces
+
+As of 2020-06-12 we are in the process of moving some administrative functions to a new technology stack.
+See the [New Admin interface documentation](docs/admin-interface.md)
 
 ## License
 
