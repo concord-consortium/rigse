@@ -49,7 +49,7 @@ RailsPortal::Application.configure do
   config.assets.debug = true
   config.after_initialize do
     Bullet.enable = true
-    # Bullet.bullet_logger = true
+    Bullet.bullet_logger = !BoolENV["RAILS_STDOUT_LOGGING"]
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end
@@ -69,4 +69,9 @@ RailsPortal::Application.configure do
   # end
   localDevPath = File.expand_path((ENV['LOCAL_DEV_ENVIRONMENT_FILE'] || 'local-development.rb'), File.dirname(__FILE__))
   require(localDevPath) if File.file?(localDevPath)
+
+  if BoolENV["RAILS_STDOUT_LOGGING"]
+    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
+    config.logger = Logger.new(STDOUT)
+  end
 end
