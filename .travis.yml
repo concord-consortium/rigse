@@ -18,6 +18,7 @@ env:
   - RAILS_STDOUT_LOGGING=false # TravisCI terminates job if it logs to STDOUT too much
 
 before_install:
+  - cd rails
   - "export DISPLAY=:99.0"
   - pip install --user awscli
   - bundle config gems.railslts.com $RAILS_LTS_USER:$RAILS_LTS_PASSWORD
