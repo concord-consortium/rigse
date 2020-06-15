@@ -18,6 +18,7 @@ env:
   - RAILS_STDOUT_LOGGING=false # TravisCI terminates job if it logs to STDOUT too much
 
 before_install:
+  - cd rails
   - "export DISPLAY=:99.0"
   - pip install --user awscli
   - bundle config gems.railslts.com $RAILS_LTS_USER:$RAILS_LTS_PASSWORD
@@ -39,7 +40,14 @@ after_script:
 # uncomment this line if your project needs to run something other than `rake`:
 script: ./bin/rake $TEST_SUITE
 
-cache: bundler
+# because the bundle in a subfolder the cache config can't use the built in bundler
+# shortcut cache configuration
+# cache: bundler
+cache:
+  directories:
+    - rails/vendor/bundle
+before_cache:
+  bundle clean
 
 bundler_args: --binstubs --without development
 
