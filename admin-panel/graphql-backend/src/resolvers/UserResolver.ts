@@ -9,6 +9,7 @@ import {
 } from "type-graphql"
 
 import { User } from "../entities/Users"
+import { getConnection } from "typeorm";
 import { AdminProject } from "../entities/AdminProjects"
 
 @ArgsType()
@@ -81,26 +82,60 @@ class userListMeta {
   count: number
 }
 
+const fuzzyFetch = async ({filter, page, perPage, sortField, sortOrder}:GenericPaginationAndFilter) => {
+  const table =  'users'
+  const fuzzyFields = ["firstName", "lastName", "email"]
+  const wheres: string[] = []
+  const parameters: {[key:string]: string } = {}
+  const repository = getConnection().getRepository(User)
+  const fuzzyParams = fuzzyFields.forEach( fieldName => {
+    if((filter as any)[fieldName] && (filter as any)[fieldName].length > 0) {
+      wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
+      parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
+    }
+  })
+  return await repository.createQueryBuilder(table)
+    .where(wheres.join( " AND "))
+    .setParameters(parameters)
+    .orderBy(`${table}.${sortField}`, "ASC")
+    .skip(page * perPage)
+    .take(perPage)
+    .getMany();
+}
 
+const fuzzyCount = async ({filter, page, perPage, sortField, sortOrder}:GenericPaginationAndFilter) => {
+  const table =  'users'
+  const fuzzyFields = ["firstName", "lastName", "email"]
+  const wheres: string[] = []
+  const parameters: {[key:string]: string } = {}
+  const repository = getConnection().getRepository(User)
+  const fuzzyParams = fuzzyFields.forEach( fieldName => {
+    if((filter as any)[fieldName] && (filter as any)[fieldName].length > 0) {
+      wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
+      parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
+    }
+  })
+  return await repository.createQueryBuilder(table)
+    .where(wheres.join( " AND "))
+    .setParameters(parameters)
+    .orderBy(`${table}.${sortField}`, "ASC")
+    .skip(page * perPage)
+    .take(perPage)
+    .getCount();
+}
 @Resolver(of => User)
 export class UserResolver {
   @Authorized()
   @Query(() => [User])
-  async allUsers(@Args() {filter, page, perPage, sortField, sortOrder}:GenericPaginationAndFilter) {
-    const found = await User.find({
-      order: { [sortField]: sortOrder },
-      where: filter,
-      take: perPage,
-      skip: page * perPage,
-      relations: ["projects"]
-    })
-    return found
+  async allUsers(@Args() searchParams:GenericPaginationAndFilter) {
+    return await fuzzyFetch(searchParams);
   }
 
   @Authorized()
   @Query(() => userListMeta)
-  _allUsersMeta(@Args() {page, perPage}:GenericPaginationAndFilter){
-    return {count: User.count()}
+  _allUsersMeta(@Args() searchParams:GenericPaginationAndFilter){
+    const count = fuzzyCount(searchParams)
+    return {count}
   }
 
   @Authorized()
