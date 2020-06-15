@@ -48,6 +48,24 @@ URL and also the JWT shared secret for the portal. Copy `./admin-panel/graphql-b
 1. You must also specify the poral URL in query params for the admin-front end eg:
 `http://localhost:3000/?PORTAL_URL=https://app.portal.docker#/login`,
 
+### Using the GraphQL Playground  with JWT Auth headers:
+
+In local development you can experiment with graphQL queries in the GraphQL
+playground running at: http://localhost:4000/graphql --
+but you need to add HTTP Headers in the bottom left hand panel of the interface.
+Just add:
+
+```
+{
+  "Authorization": "Bearer <TOKEN_VALUE>"
+}
+```
+
+where `TOKEN_VALUE` comes from visiting the portal JWT route when logged in as
+an administrator or project admin:
+
+`https://app.portal.docker/api/v1/jwt/portal`
+
 
 ### Importing Mysql Entities:
 
