@@ -2,5 +2,5 @@
 
 :javascript
   jQuery(document).ready(function () {
-    PortalPages.renderSiteNoticesEditForm({dataUrl: Portal.API_V1.SITE_NOTICES_EDIT, notice: #{@notice.to_json}}, 'admin_notice_edit_form');
+    PortalComponents.renderSiteNoticesEditForm({dataUrl: Portal.API_V1.SITE_NOTICES_EDIT, notice: #{@notice.to_json}}, 'admin_notice_edit_form');
   });

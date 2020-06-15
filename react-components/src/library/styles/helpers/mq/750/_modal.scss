@@ -1,0 +1,46 @@
+.signup-default-modal-content, .login-default-modal-content, .forgot-password-default-modal-content {
+  left: 0;
+  margin-left: 0;
+  width: auto;
+  }
+.signup-form .radio-input {
+  margin-bottom: 10px;
+
+  input {
+    -webkit-appearance: radio;
+    }
+  }
+#login-default-modal, #signup-default-modal, #forgot-password-modal, #login-form, #register-form {
+  h2 {
+    font: 100 20px $font-museo;
+    margin-bottom: 10px;
+  }
+  input[type="text"], input[type="password"], .signup-form .select-input .Select-control {
+    font-size: 16px;
+  }
+  .signup-form .zipcode {
+    width: 100%;
+  }
+  .signup-default-modal-content {
+    overflow: visible;
+  }
+  .signup-form {
+    float: none;
+    width: auto;
+    .text-input {
+      margin: 0;
+    }
+  }
+  .name_wrapper {
+    width: 100%;
+  }
+  .submit-button-container {
+    margin: 10px 0 30px;
+  }
+}
+.third-party-login-options {
+  padding-top: 10px;
+}
+.or-separator-text {
+  font-size: 16px;
+}

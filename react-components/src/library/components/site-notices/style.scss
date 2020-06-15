@@ -1,0 +1,162 @@
+/* Admin Site Notices */
+.adminSiteNotices {
+  padding-bottom: 30px;
+
+  .adminSiteNoticesNone {
+    font-style: italic;
+    text-align: center;
+  }
+
+  .adminSiteNoticesList {
+    border-collapse: collapse;
+    border-right: solid 1px #555;
+    border-bottom: solid 1px #555;
+    margin: 0;
+    width: 100%;
+
+    td {
+      border-top: solid 1px #555;
+      border-left: solid 1px #555;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+
+      &.adminSiteNoticesListItemText {
+        width: 70%;
+
+        p {
+          margin: 0;
+        }
+      }
+
+      &.adminSiteNoticesListItemDate {
+        width: 18%;
+      }
+      &.adminSiteNoticesListItemOptions {
+        width: 12%;
+
+        .adminSiteNoticesListItemEdit {
+          display: block;
+          float: left;
+          font-weight: 500;
+          line-height: 1.6;
+          margin-right: 15px;
+        }
+        .adminSiteNoticesListItemDelete {
+          display: block;
+          float: left;
+          font-weight: 700;
+          text-align: center;
+          width: 5%;
+
+          a.rollover {
+            float: none;
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    th {
+      background: #555;
+      border-top: solid 1px #555;
+      border-left: solid 1px #555;
+      color: #fff;
+      font-weight: 100;
+      padding: 10px;
+      text-align: left;
+    }
+
+    tr:nth-child(odd) {
+      background: #eee;
+    }
+
+  }
+
+  .adminSiteNoticesCreate {
+    margin: 30px 0;
+  }
+}
+
+/* Edit/Create Notices */
+.adminSiteNoticesEdit {
+
+  .adminSiteNoticesEditEditor {}
+  .adminSiteNoticesEditBackLink {
+    float: right;
+    margin: 42px 0 30px;
+  }
+  .adminSiteNoticesEditSubmit {
+    float: right;
+    margin: 30px 0;
+    padding-right: 20px;
+    padding-top: 1px;
+  }
+}
+
+/* User Site Notices */
+.siteNotices {
+  border-top: solid 2px #bbb;
+  border-bottom: solid 2px #bbb;
+  margin-bottom: 30px;
+  overflow: hidden;
+  padding: 5px 0 10px;
+
+  .collapsed { display: none; }
+  .siteNoticesHeader {
+    font: 700 18px museo-sans, helvetica, verdana, sans-serif;
+    padding-top: 5px;
+  }
+  .siteNoticesToggle {
+    float: right;
+    font: 700 13px museo-sans, helvetica, verdana, sans-serif;
+    padding-top: 9px;
+    text-transform: uppercase;
+  }
+
+  .siteNoticesListContainer {
+    clear: both;
+    max-height: 125px;
+    overflow: auto;
+
+    .siteNoticesList {
+      padding: 0;
+
+      tr {
+        border-top: solid 1px #bbb;
+
+        &:nth-child(even) {
+          background: #eee;
+        }
+        td {
+          padding: 5px 10px;
+          vertical-align: top;
+
+          &:nth-child(1) {
+            width: 100px;
+          }
+          &:nth-child(3) {
+            width: 20px;
+          }
+
+          p {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .siteNotices {
+    td {
+      clear: both;
+      display: block;
+      width: 100%;
+    }
+  }
+  .adminSiteNoticesListItemText {
+    width: 100%;
+  }
+}

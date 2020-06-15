@@ -1,0 +1,31 @@
+.portal-pages-resource-lightbox-modal {
+  left: 0;
+  margin-left: 0;
+  padding: 40px 20px 20px;
+  top: 75px;
+  width: auto;
+}
+
+.portal-pages-resource-lightbox-modal-content-top .preview-image {
+  height: auto;
+  width: 100%;
+}
+
+.portal-pages-resource-lightbox-related-content {
+  background: #f5f5f5;
+  padding: 20px 20px 0;
+
+  &.cols:not(.no-collapse) {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  h2 {
+    margin: 0 0 20px;
+  }
+}
+
+.portal-pages-finder-result-favorite,
+.portal-pages-resource-lightbox-modal-sharing {
+  display: none;
+}

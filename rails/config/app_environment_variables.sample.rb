@@ -40,13 +40,6 @@ ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbg
 # See http://toolkit.asn.desire2learn.com/documentation/asn-search
 #
 
-# PORTAL_PAGES_LIBRARY_URL
-#
-# Path to portal-pages "library" dir containing
-# portal-pages.js and portal-pages.css
-# E.g. PORTAL_PAGES_LIBRARY_URL=http://localhost:10000
-#
-
 # EXTERNAL_CSS_URL
 #
 # Full path to site-redesign.css

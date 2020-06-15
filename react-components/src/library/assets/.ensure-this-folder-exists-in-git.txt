@@ -1,0 +1,1 @@
+Here to ensure that the assets folder exists in git when there are no assets present

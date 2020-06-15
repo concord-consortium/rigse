@@ -132,15 +132,15 @@ describe HomeController do
     it "should include the required Javascript when a valid activity is used" do
       get :stem_resources, :id => activity.id
       expect(response.body).to include("auto_show_lightbox_resource")
-      expect(response.body).to include("PortalPages.settings.autoShowingLightboxResource = {\"id\":#{activity.id},")
-      expect(response.body).to include("PortalPages.renderResourceLightbox(")
+      expect(response.body).to include("PortalComponents.settings.autoShowingLightboxResource = {\"id\":#{activity.id},")
+      expect(response.body).to include("PortalComponents.renderResourceLightbox(")
     end
 
     it "should include the required Javascript when an unknown activity is used" do
       get :stem_resources, :type => "activity", :id => 999999999999999
       expect(response.body).to include("auto_show_lightbox_resource")
-      expect(response.body).to include("PortalPages.settings.autoShowingLightboxResource = null")
-      expect(response.body).to include("PortalPages.renderResourceLightbox(")
+      expect(response.body).to include("PortalComponents.settings.autoShowingLightboxResource = null")
+      expect(response.body).to include("PortalComponents.renderResourceLightbox(")
     end
 
     it "should set the start of the page title to the resource name" do

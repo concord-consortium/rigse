@@ -14,7 +14,6 @@ env:
   global:
   - ARTIFACTS_BUCKET=cc-travis-artifacts
   - CC_TEST_REPORTER_ID=555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
-  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/library
   - RAILS_STDOUT_LOGGING=false # TravisCI terminates job if it logs to STDOUT too much
 
 before_install:
@@ -77,6 +76,15 @@ jobs:
         - ./cc-test-reporter upload-coverage
       after_script:
         - aws s3 rm --recursive "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"
+    - language: node_js
+      node_js:
+        - 13
+      before_install: cd react-components
+      install: travis_retry npm ci
+      script:
+        - npm run test
+        - npm run build
+      cache: npm
 
 # blacklist - these branches aren't feature branches and shouldn't be getting direct commits
 # branches:

@@ -1,0 +1,110 @@
+{
+  "name": "rigse-react-components",
+  "version": "1.0.0",
+  "description": "Concord Portal React Components",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack-serve",
+    "start:prod": "cross-env NODE_ENV=production webpack-serve",
+    "lint": "standard \"src/**/*.js\"",
+    "lint:fix": "standard --fix \"src/**/*.js\"",
+    "build": "npm run lint && npm run build-library && npm run copy-library",
+    "dev:build": "npm run dev:build-library && npm run copy-library",
+    "build-library": "cross-env NODE_ENV=production webpack",
+    "dev:build-library": "cross-env NODE_ENV=development webpack",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "copy-library": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-components.css ../rails/app/assets/stylesheets/",
+    "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "jQuery",
+      "Portal",
+      "PortalComponents",
+      "DayPickerOverlay",
+      "ga",
+      "OfferingRunStatus"
+    ]
+  },
+  "jest": {
+    "testURL": "http://portal-test.concord.org",
+    "moduleNameMapper": {
+      "\\.(css|less|scss)$": "identity-obj-proxy"
+    },
+    "modulePaths": [
+      "src/library"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/concord-consortium/portal-pages.git"
+  },
+  "author": "Doug Martin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/concord-consortium/portal-pages/issues"
+  },
+  "homepage": "https://github.com/concord-consortium/portal-pages#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-rc.1",
+    "@babel/preset-env": "^7.0.0-rc.1",
+    "@babel/preset-react": "^7.0.0-rc.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.2",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^8.0.0-beta.4",
+    "copy-webpack-plugin": "^4.5.2",
+    "css-loader": "^0.28.11",
+    "enzyme": "^3.4.4",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "file-loader": "^1.1.11",
+    "formsy-react": "^2.0.3",
+    "glob": "^7.1.2",
+    "html-webpack-plugin": "^3.2.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^23.5.0",
+    "jquery": "^3.3.1",
+    "live-server": "^1.2.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "nock": "^10.0.3",
+    "react-select": "^3.1.0",
+    "react-test-renderer": "^16.13.1",
+    "sass-loader": "^7.1.0",
+    "standard": "^12.0.1",
+    "style-loader": "^0.21.0",
+    "url-loader": "^1.1.1",
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0",
+    "webpack-serve": "^2.0.2"
+  },
+  "dependencies": {
+    "@concord-consortium/portal-report": "1.7.0-pre.5",
+    "body-parser": "~1.17.1",
+    "cheerio": "^1.0.0-rc.1",
+    "chokidar": "^1.7.0",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
+    "create-react-class": "^15.6.3",
+    "cross-env": "^5.2.0",
+    "debug": "~2.6.3",
+    "express": "^4.15.3",
+    "faye-websocket": "^0.11.1",
+    "memory-fs": "^0.4.1",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.22.2",
+    "morgan": "~1.9.1",
+    "ncp": "^2.0.0",
+    "node-sass": "^4.14.1",
+    "opn": "^5.0.0",
+    "pug": "~2.0.0-beta11",
+    "rc-tooltip": "^3.7.2",
+    "react": "^16.13.1",
+    "react-day-picker": "^7.4.8",
+    "react-dom": "^16.13.1",
+    "react-sortable-hoc": "^1.11.0",
+    "request": "^2.88.0"
+  }
+}

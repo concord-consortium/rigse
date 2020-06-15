@@ -1,0 +1,226 @@
+/* collections pages */
+
+.portal-pages-collections-page-header {
+  background: transparent;
+  font-size: 20px;
+}
+.portal-pages-collections-page-header h1 {
+  font: 100 54px $font-museo;
+  color: $col-darkgray;
+  margin: 0 0 20px;
+}
+.portal-pages-collections-page-header-info {
+  color: $col-darkgray;
+  font: 300 24px $font-museo-sans;
+  line-height: 36px;
+  margin-bottom: 40px;
+}
+.portal-pages-collections-page-diagonal-spacer {
+  background:#fff;
+  background: linear-gradient(to right bottom, $white 50%, $col-mediumgray 50%);
+  height: 100px;
+}
+.portal-pages-collections-page-list {
+  background-color: $col-mediumgray;
+  margin-top: 20px;
+}
+.portal-pages-collections-page-list-inner {
+  padding: 10px 0 30px 0;
+  min-height: 1000px;
+}
+
+.portal-pages-collections {
+  background-color: $medium-gray;
+  font-size: 16px;
+}
+.portal-pages-collections-inner {
+  padding: 40px 0 30px;
+  width: auto;
+}
+.portal-pages-collections-inner h2 {
+  color: $col-darkgray;
+  font-size: 36px;
+  font-weight: 100;
+  line-height: 36px;
+  margin: 0 20px 40px;
+  strong {
+    font-weight: 900;
+  }
+}
+.portal-pages-collections-info {
+  font-size: 18px;
+  line-height: 30px;
+  margin: 0 20px 30px;
+}
+.portal-pages-collections-info a {
+  color: $orange;
+  font-weight: bold;
+}
+.portal-pages-collections-cards {
+  clear: both;
+  margin-top: 0;
+  overflow: hidden;
+}
+.portal-pages-collections-card {
+  background-color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  height: 500px;
+  margin: 20px;
+  overflow: hidden;
+  vertical-align: top;
+  width: 285px;
+
+  .portal-pages-collections-card-image-preview {
+    height: 235px;
+    overflow: hidden;
+    position: relative;
+    img {
+      bottom: -300px;
+      height: 100%;
+      left: -300px;
+      margin: auto;
+      max-width: 200%;
+      min-width: 100%;
+      pointer-events: none;
+      position: absolute;
+      right: -300px;
+      top: -300px;
+      width: auto;
+    }
+  }
+
+  &:hover {
+    .portal-pages-collections-card-image-preview { display: none; }
+    h3 {
+      background: $col-blue;
+      color: $white;
+      margin: 0;
+      padding: 30px 30px 0;
+    }
+    .portal-pages-collections-card-description {
+      background: $col-blue;
+      color: $white;
+      height: 440px;
+      margin: 0;
+      padding: 30px;
+    }
+  }
+  a {
+    display: block;
+    height: 100%;
+  }
+}
+
+.portal-pages-collections-card-name {
+  color: $col-blue;
+  font: 700 18px $font-museo-sans;
+  line-height: 30px;
+  margin: 30px;
+}
+.portal-pages-collections-card-description {
+  color: $col-darkgray;
+  font: 300 18px $font-museo-sans;
+  line-height: 30px;
+  margin: 30px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.collection-heading {
+  h2 {
+    color: $col-darkgray;
+    font: 700 24px $font-museo-sans;
+    margin-bottom: 0;
+  }
+}
+
+.portal-pages-finder-materials-collection {
+  clear: both;
+  .portal-pages-finder-materials-collection-item {
+    background: transparent !important;
+    .portal-pages-finder-materials-collection-item-info {
+      background: $white;
+      margin-bottom: 30px;
+      margin-left: 1.31579%;
+      margin-right: 0;
+      min-height: 200px;
+      padding: 0 0 100px;
+      position: relative;
+      width: 64.69299%
+    }
+    .portal-pages-finder-materials-collection-item__title {
+      font: 700 18px $font-museo-sans;
+      line-height: 24px;
+      padding: 50px 30px 0;
+      a {
+        color: $col-blue;
+      }
+    }
+    .portal-pages-finder-materials-collection-item__description {
+      color: $col-darkgray;
+      font: 300 15px $font-museo-sans;
+      line-height: 24px;
+      padding: 0 30px 40px;
+    }
+    .portal-pages-finder-materials-collection-item__image {
+      height: 235px;
+      margin-top: 0;
+      max-width: 350px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        border: solid 1px $col-mediumgray;
+        bottom: -300px;
+        height: 100%;
+        left: -300px;
+        margin: auto;
+        max-width: 200%;
+        min-width: 100%;
+        position: absolute;
+        right: -300px;
+        top: -300px;
+        width: auto;
+      }
+      .portal-pages-label {
+        background: $white;
+        bottom: 10px;
+        color: $col-darkgray;
+        font: 500 11px $font-museo-sans;
+        line-height: 1;
+        padding: 10px;
+        position: absolute;
+        right: 10px;
+        text-transform: uppercase;
+      }
+    }
+    .portal-pages-finder-materials-collection-item__links {
+      bottom: 23px;
+      left: 30px;
+      margin: 0;
+      position: absolute;
+      text-align: left;
+      width: auto;
+
+      a {
+        background: $col-white;
+        border: solid 2px $col-orange;
+        color: $col-orange;
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 0 10px 10px 0;
+        padding: 10px 15px;
+        transition: .3s;
+
+        &:hover {
+          background: $col-gold;
+          border: solid 2px $col-gold;
+          color: $col-white;
+        }
+      }
+    }
+  }
+}

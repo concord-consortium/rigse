@@ -9,4 +9,4 @@
 %script{:type=>"text/javascript"}
   var pageHeaderOptions = #{raw options.to_json};
   pageHeaderOptions.oauthProviders = Portal.oauthProviders;
-  PortalPages.renderPageHeader( pageHeaderOptions, "portal-pages-header");
+  PortalComponents.renderPageHeader( pageHeaderOptions, "portal-pages-header");

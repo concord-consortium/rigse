@@ -1,0 +1,56 @@
+$black: #000;
+$dark-gray: #313131;
+$medium-gray: #ebebeb;  /* this was not in the pallete but I picked it up from the collections background */
+$light-gray: #f5f5f5;
+$white: #fff;
+$yellow-gradient-from: #F8D84E;
+$yellow-gradient-to: #F8AB4E;
+$orange: #EA6D2F;
+$gold: #ffc320;
+$green: #2da343;
+$light-blue: #6fc6da;
+$blue: #0592af;
+$dark-blue: #007c88;
+
+// Placeholders
+$col-test: #eee;
+
+// Brand Colors
+$col-blue: #468EEE;
+$col-darkgray: #313131;
+$col-darkgray-15: rgba(49, 49, 49, .15);
+$col-darkgray-25: rgba(49, 49, 49, .25);
+$col-darkgray-50: rgba(49, 49, 49, .5);
+$col-white-50: rgba(255,255,255,.5);
+$col-mediumgray: #ebebeb;
+$col-lightgray: #f5f5f5;
+$col-green: #2da343;
+$col-lightblue: #6fc6da;
+$col-blue: #0592af;
+$col-darkblue: #007c8B;
+$col-orange: #ea6d2f;
+$col-gold: #ffc320;
+$col-white: #ffffff;
+
+// Project accent colors
+$col-accent-1: $col-blue;
+$col-accent-2: $col-lightblue;
+$col-accent-3: $col-green;
+
+// Utility colors
+$col-alert: #ff0000;
+$col-alt: #999;
+$col-background: #fff;
+$col-blockquote: #76888a;
+$col-default: #080D09;
+$col-link: #ea6d2f;
+$col-highlight: #BDD9F2;
+$col-hover: #ffc320;
+$col-input-border: #3F5F73;
+$col-placeholder: $col-darkgray-25;
+$col-test: #bdd9f2;
+
+// Gradients
+$gradient-orange-start: #f8d84e;
+$gradient-orange-end: #f8ab4e;
+$gradient-orange: linear-gradient(to bottom, $gradient-orange-start 0%, $gradient-orange-end 100%);
