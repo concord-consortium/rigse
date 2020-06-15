@@ -43,4 +43,9 @@ RailsPortal::Application.configure do
 
   # Enable add-ons
   config.react.addons = true
+
+  if BoolENV["RAILS_STDOUT_LOGGING"]
+    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
+    config.logger = Logger.new(STDOUT)
+  end
 end

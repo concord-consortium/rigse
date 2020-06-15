@@ -4,7 +4,7 @@ version: '3'
 services:
   app:
     build:
-      context: .
+      context: rails
       dockerfile: Dockerfile-dev
     command: docker/dev/run.sh
     environment:
@@ -102,13 +102,18 @@ services:
       # used to pass context to selenium
       #
       DOCKER: 'true'
+
+      #
+      # Enables logging to stdout instead of file.
+      #
+      RAILS_STDOUT_LOGGING: "true"
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
 
     # no ports are published, see below for details
     volumes:
-      - .:/rigse
+      - ./rails:/rigse
       - bundle:/bundle
     networks:
       # the portal network allows external connections
@@ -123,7 +128,7 @@ services:
     image: concordconsortium/docker-solr-portal
     # no ports are published, see below for details
     volumes:
-      - .:/rigse
+      - ./rails:/rigse
     command: /bin/bash ./start-solr.sh
   mysql:
     image: mysql:5.6
@@ -141,7 +146,7 @@ services:
     # Mount the portal source in the container under /rigse
     #
     volumes:
-      - .:/rigse
+      - ./rails:/rigse
     #
     # Invoke the docker/dev/start-solr-test.sh script allowing us
     # to specify a port and other parameters.
@@ -161,7 +166,7 @@ services:
       - default
   logstash:
     build:
-      context: docker/logstash
+      context: logstash
       dockerfile: Dockerfile
     environment:
       DB_HOST: mysql
@@ -172,7 +177,7 @@ services:
       ES_HOST: elasticsearch
     volumes:
       # override logstash output to use local elastic search
-      - ./docker/logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
+      - ./logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.1
 volumes:

@@ -31,6 +31,6 @@ services:
       UNISON_HOST_DIR: /host_data
     volumes:
       - sync-volume:/data
-      - .:/host_data:cached
+      - ./rails:/host_data:cached
 volumes:
   sync-volume:

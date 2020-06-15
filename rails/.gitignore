@@ -1,36 +1,4 @@
 *~
-.DS_Store
-docs/api
-docs/app
-rerun.txt
-nbproject
-mkmf.log
-*.swp
-*.swo
-*.orig
-docs/gource/*.mp4
-docs/gource/*.webm
-*.tmproj
-.redcar
-.idea
-*.sublime-project
-*.sublime-workspace
-chromedriver.log
-.floo
-.powenv
-solr
-log
-certs
-.env
-*.DS_Store
-
-#
-# Old gitignore
-# The lines below here should be deleted after all developers have updated to
-# this new organization of rails in a subfolder. Keeping this old gitignore
-# makes there be less noise when switching back and forth between branches
-#
-*~
 log/*.log
 tmp/*
 .DS_Store

@@ -12,7 +12,7 @@ version: '3'
 services:
   app:
     volumes:
-      - .:/rigse:delegated
+      - ./rails:/rigse:delegated
   solr:
     volumes:
-      - .:/rigse:delegated
+      - ./rails:/rigse:delegated
