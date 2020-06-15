@@ -36,7 +36,7 @@
 
     jQuery('#material_search_form').on('submit', function(event) {
       event.preventDefault();
-      jQuery(dest).html('Finding materials...');
+      PortalPages.renderSearchMessage('Finding materials...', dest)
 
       // Reset our current page numbers
       jQuery("#investigation_page").val(1);
