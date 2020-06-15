@@ -71,3 +71,22 @@ include SolrSpecHelper
 solr_setup
 clean_solar_index
 reindex_all
+
+# adapted from https://www.testdevlab.com/blog/2018/02/adding-browser-logs-to-your-capybara-cucumber-ui-test-report/
+After do |scenario|
+  if scenario.failed?
+    add_browser_logs(scenario)
+  end
+ end
+
+def add_browser_logs(scenario)
+  time_now = Time.now
+  # Getting current URL
+  current_url = Capybara.current_url.to_s
+  # Gather browser logs
+  logs = page.driver.browser.manage.logs.get(:browser).map {|line| [line.level, line.message]}
+   # Remove warnings and info messages
+  logs.reject! { |line| ['WARNING', 'INFO'].include?(line.first) }
+  logs.any? == true
+  puts "BROWSER ERRORS for \"#{scenario.name}\" (#{current_url}):\n  - " + logs.join("\n  - ")
+end

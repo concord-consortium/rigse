@@ -63,7 +63,11 @@ class CapybaraInitializer
       # you can see capybara using it in some of its default drivers
       # https://github.com/teamcapybara/capybara/blob/c7c22789b7aaf6c1515bf6e68f00bfe074cf8fc1/lib/capybara/registrations/drivers.rb#L27
       'goog:chromeOptions' => {
-        'args' => chrome_options
+        'args' => chrome_options,
+        w3c: false
+      },
+      'goog:loggingPrefs' => {
+        browser: 'ALL'
       }
     )
   end
