@@ -4,9 +4,9 @@ import buildGraphQLProvider, { buildQuery as buildQueryFactory } from 'ra-data-g
 
 // import customizeProvider from './modified-simple'
 import { Admin, Resource } from 'react-admin';
-import { UserEdit, UserList, UserCreate } from './user'
-import { ProjectList, ProjectCreate, ProjectEdit } from './project'
-import { ProjectUserCreate, ProjectUserEdit } from './projectUser'
+import { UserEdit, UserList, UserCreate } from './entities//user'
+import { ProjectList, ProjectCreate, ProjectEdit } from './entities/project'
+import { ProjectUserCreate, ProjectUserEdit } from './entities/projectUser'
 
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';

@@ -58,9 +58,10 @@ export const UserEdit = props => (
           </ReferenceField>
           <BooleanField label="Admin" source="isAdmin" />
           <BooleanField label="Researcher" source="isResearcher" />
-          <EditButton />
-          // Not obvious but redirecting to the empty string returns the user
-          // to the current location
+          <EditButton />{
+            // Not obvious but redirecting to the empty string returns the user
+            // to the current location
+          }
           <DeleteButton redirect="" />
         </Datagrid>
       </ReferenceManyField>
