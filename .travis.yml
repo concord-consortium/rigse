@@ -14,8 +14,7 @@ env:
   global:
   - ARTIFACTS_BUCKET=cc-travis-artifacts
   - CC_TEST_REPORTER_ID=555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
-#   - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/library
-  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/branch/172782876-upgrade-react/library
+  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/library
   - RAILS_STDOUT_LOGGING=false # TravisCI terminates job if it logs to STDOUT too much
 
 before_install:
