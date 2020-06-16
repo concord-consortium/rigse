@@ -16,16 +16,12 @@ const node = {
 }
 const pagingPluginFormat = (method) => node.options.onFormat.call(node, method);
 
-window.ReactDOM = {
-  findDOMNode: () => node
-};
-
 describe('When I try to render search pagination', () => {
-  mockJquery((node) => node)
+  mockJquery(() => node)
 
   it("should render an empty div", () => {
     const info = {}
-    const pagination = Enzyme.shallow(<SPagination info={info} />);
+    const pagination = Enzyme.mount(<SPagination info={info} />);
     expect(pagination.html()).toBe(pack(`
       <div class="pagination"></div>
     `));

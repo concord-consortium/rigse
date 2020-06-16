@@ -1,11 +1,5 @@
 import React from 'react'
-
-// TODO: removed this when real SMaterialsList is converted
-class SMaterialsList extends React.Component {
-  render () {
-    return <div>{this.props.materials}</div>
-  }
-}
+import SMaterialsList from '../search/materials-list'
 
 export default class FeaturedMaterials extends React.Component {
   constructor (props) {
