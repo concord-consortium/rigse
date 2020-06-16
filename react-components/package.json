@@ -8,13 +8,13 @@
     "start:prod": "cross-env NODE_ENV=production webpack-serve",
     "lint": "standard \"src/**/*.js\"",
     "lint:fix": "standard --fix \"src/**/*.js\"",
-    "build": "npm run lint && npm run build-library && npm run copy-library",
-    "dev:build": "npm run dev:build-library && npm run copy-library",
+    "build": "npm run lint && npm run build-library && npm run copy-files",
+    "dev:build": "npm run dev:build-library && npm run copy-files",
     "build-library": "cross-env NODE_ENV=production webpack",
     "dev:build-library": "cross-env NODE_ENV=development webpack",
     "test": "jest",
     "test:watch": "jest --watch",
-    "copy-library": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-components.css ../rails/app/assets/stylesheets/",
+    "copy-files": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-components.css ../rails/app/assets/stylesheets/ && cp ./dist/react-test-globals.js ../rails/app/assets/javascripts/ ",
     "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
   "standard": {

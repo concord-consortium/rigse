@@ -8,7 +8,8 @@ module.exports = {
   // development mode makes webpack-server reload pages faster
   mode: devMode ? 'development' : 'production',
   entry: {
-    'react-components': './src/library/library.js'
+    'react-components': './src/library/library.js',
+    'react-test-globals': './src/react-test-globals.js'
   },
   output: {
     // path: path.resolve(destFolder, './library'),

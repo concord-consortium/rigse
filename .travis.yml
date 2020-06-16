@@ -76,7 +76,8 @@ jobs:
         - ./cc-test-reporter upload-coverage
       after_script:
         - aws s3 rm --recursive "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"
-    - language: node_js
+    - stage: react-components
+      language: node_js
       node_js:
         - 13
       before_install: cd react-components
