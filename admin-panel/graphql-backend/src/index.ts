@@ -59,7 +59,7 @@ async function main() {
 
   const server = new ApolloServer({
     schema,
-    plugins: [loggingPlugin],
+    // plugins: [loggingPlugin],
     context: ({ req } ) => {
       const context:MyContextType = {
         request: req,

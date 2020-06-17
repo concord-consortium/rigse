@@ -55,7 +55,7 @@ type PortalPermissionForm {
   name: String
   url: String
   project: AdminProject
-  projectId: Float
+  projectId: ID
 }
 
 input PortalPermissionFormFilter {

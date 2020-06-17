@@ -18,8 +18,8 @@ class CreatePortalPermissionForm implements Partial<PortalPermissionForm>{
   @Field()
   url: string
 
-  @Field( Type => ID)
-  projectId: number
+  @Field(Type => ID)
+  projectId?: number
 }
 
 @InputType()

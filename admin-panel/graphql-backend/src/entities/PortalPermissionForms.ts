@@ -34,7 +34,7 @@ export class PortalPermissionForm extends BaseEntity  {
   // @Column("int", { name: "project_id", nullable: true })
   // projectId: number | null;
 
-  @Field(type => Number)
+  @Field(() => ID)
   @Column("int", { name: "project_id", nullable: true })
   projectId: number
 }
