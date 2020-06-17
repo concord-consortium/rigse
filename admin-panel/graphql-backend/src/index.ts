@@ -6,6 +6,7 @@ import { buildSchema, AuthChecker} from "type-graphql";
 import { AdminProjectResolver } from "./resolvers/AdminProjectResolver"
 import { AdminProjectUserResolver } from "./resolvers/AdminProjectUserResolver"
 import { UserResolver } from "./resolvers/UserResolver"
+import { PortalPermissionFormResolver } from "./resolvers/PortalPermissionFormResolver"
 import jwt from "express-jwt";
 import { Config } from "./config"
 import { ApolloServerPlugin } from "apollo-server-plugin-base";
@@ -49,7 +50,10 @@ async function main() {
   const schema = await buildSchema({
     nullableByDefault: true,
     emitSchemaFile: true,
-    resolvers: [UserResolver, AdminProjectResolver, AdminProjectUserResolver],
+    resolvers: [
+      UserResolver, AdminProjectResolver, AdminProjectUserResolver,
+      PortalPermissionFormResolver
+    ],
     authChecker: customAuthChecker
   })
 
@@ -62,7 +66,6 @@ async function main() {
         // eslint ignore-next-line
         user: (req as any).user, // `req.user` comes from `express-jwt`
       };
-      console.log(context.user)
       return context;
     },
   });
@@ -80,7 +83,6 @@ async function main() {
   app.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`),
   );
-  console.log("Server has started!")
 }
 
 

@@ -4,7 +4,8 @@ import buildGraphQLProvider, { buildQuery as buildQueryFactory } from 'ra-data-g
 
 // import customizeProvider from './modified-simple'
 import { Admin, Resource } from 'react-admin';
-import { UserEdit, UserList, UserCreate } from './entities//user'
+import { UserEdit, UserList, UserCreate } from './entities/user'
+import { PortalPermissionFormCreate, PortalPermissionFormEdit, PortalPermissionFormList } from './entities/portalPermissionForm'
 import { ProjectList, ProjectCreate, ProjectEdit } from './entities/project'
 import { ProjectUserCreate, ProjectUserEdit } from './entities/projectUser'
 
@@ -72,6 +73,10 @@ class App extends Component {
         <Resource name="User" list={UserList} edit={UserEdit} create={UserCreate} />
         <Resource name="AdminProject" list={ProjectList} edit={ProjectEdit} create={ProjectCreate}/>
         <Resource name="AdminProjectUser" edit={ProjectUserEdit} create={ProjectUserCreate}/>
+        <Resource name="PortalPermissionForm"
+          list={PortalPermissionFormList}
+          edit={PortalPermissionFormEdit}
+          create={PortalPermissionFormCreate}/>
       </Admin>
     );
   }

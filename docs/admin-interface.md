@@ -41,6 +41,7 @@ queries will fail unless you authenticate with the portal first. See "Portal Aut
 
 ### Portal Authentication
 1. Ensure that your portal has an oauth client configured for this app.
+1. the client name should be `admin-panel`, public.
 1. The client should be configured with Redirect URIS matching
 `http://localhost:3000/` and `http://localhost:3000/?PORTAL_URL=https://app.portal.docker`
 1. `./admin-panel/graphql-backend/.env` should include configuration params for portal

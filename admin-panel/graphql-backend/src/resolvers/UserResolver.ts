@@ -46,12 +46,11 @@ class UserFilter implements Partial<User>{
 }
 
 type UserSortField = "firstName" | "lastName" | "id"
-
 type SortOrder = "ASC" | "DESC"
 
 
 @ArgsType()
-class GenericPaginationAndFilter {
+class PaginationAndFilter {
   @Field(type => UserFilter)
   filter?: UserFilter
 
@@ -82,7 +81,7 @@ class userListMeta {
   count: number
 }
 
-const fuzzyFetch = async ({filter, page, perPage, sortField, sortOrder}:GenericPaginationAndFilter) => {
+const buildQuery = async ({filter, page, perPage, sortField, sortOrder}:PaginationAndFilter) => {
   const table =  'users'
   const fuzzyFields = ["firstName", "lastName", "email"]
   const wheres: string[] = []
@@ -100,40 +99,29 @@ const fuzzyFetch = async ({filter, page, perPage, sortField, sortOrder}:GenericP
     .orderBy(`${table}.${sortField}`, "ASC")
     .skip(page * perPage)
     .take(perPage)
-    .getMany();
 }
 
-const fuzzyCount = async ({filter, page, perPage, sortField, sortOrder}:GenericPaginationAndFilter) => {
-  const table =  'users'
-  const fuzzyFields = ["firstName", "lastName", "email"]
-  const wheres: string[] = []
-  const parameters: {[key:string]: string } = {}
-  const repository = getConnection().getRepository(User)
-  const fuzzyParams = fuzzyFields.forEach( fieldName => {
-    if((filter as any)[fieldName] && (filter as any)[fieldName].length > 0) {
-      wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
-      parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
-    }
-  })
-  return await repository.createQueryBuilder(table)
-    .where(wheres.join( " AND "))
-    .setParameters(parameters)
-    .orderBy(`${table}.${sortField}`, "ASC")
-    .skip(page * perPage)
-    .take(perPage)
-    .getCount();
+const fuzzyFetch = async (params: PaginationAndFilter) => {
+  const query =  await buildQuery(params)
+  return query.getMany()
 }
+
+const fuzzyCount = async (params: PaginationAndFilter) => {
+  const query =  await buildQuery(params)
+  return query.getCount()
+}
+
 @Resolver(of => User)
 export class UserResolver {
   @Authorized()
   @Query(() => [User])
-  async allUsers(@Args() searchParams:GenericPaginationAndFilter) {
+  async allUsers(@Args() searchParams:PaginationAndFilter) {
     return await fuzzyFetch(searchParams);
   }
 
   @Authorized()
   @Query(() => userListMeta)
-  _allUsersMeta(@Args() searchParams:GenericPaginationAndFilter){
+  _allUsersMeta(@Args() searchParams:PaginationAndFilter){
     const count = fuzzyCount(searchParams)
     return {count}
   }

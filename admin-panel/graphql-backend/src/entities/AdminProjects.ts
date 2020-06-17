@@ -1,8 +1,10 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn, BaseEntity,
-ManyToMany, JoinTable
+import {
+  Column, Entity, Index, PrimaryGeneratedColumn,
+  BaseEntity, ManyToMany, OneToMany, JoinTable
 } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 import { User } from "./Users"
+import { PortalPermissionForm } from "./PortalPermissionForms"
 @Index("index_admin_projects_on_landing_page_slug", ["landingPageSlug"], {
   unique: true,
 })
@@ -76,4 +78,7 @@ export class AdminProject extends BaseEntity {
       }
   })
   users: User[]
+
+  @OneToMany(type => PortalPermissionForm, permissionForm => permissionForm.project)
+  permissionForms: PortalPermissionForm[];
 }

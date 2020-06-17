@@ -70,7 +70,7 @@ const authProvider = {
           return true
         }
       }
-      return Promise.reject()
+      return Promise.reject("cound't authenticate")
     },
     checkError: (error: ErrorParams) => {
       console.error(`auth error: ${error}`)
