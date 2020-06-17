@@ -64,18 +64,18 @@ addons:
 jobs:
   include:
     # this needs to be a different stage so we can test it in the before before/after install steps
-    # - stage: react-components
-    #   env:
-    #     matrix: TEST_SUITE=ci:react_components
-    #   language: node_js
-    #   node_js:
-    #     - 13
-    #   before_install: cd react-components
-    #   install: travis_retry npm ci
-    #   script:
-    #     - npm run test
-    #     - npm run build
-    #   cache: npm
+    - stage: react-components
+      env:
+        matrix: TEST_SUITE=ci:react_components
+      language: node_js
+      node_js:
+        - 13
+      before_install: cd react-components
+      install: travis_retry npm ci
+      script:
+        - npm run test
+        - npm run build
+      cache: npm
     - stage: cc-reporter
       env:
         matrix: TEST_SUITE=none
