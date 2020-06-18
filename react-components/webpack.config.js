@@ -68,12 +68,9 @@ module.exports = {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
         loader: 'url-loader',
         options: {
-          limit: 10000,
-          // This assumes all assets greater than 10000k,
-          // should go in the assets folder.
-          // In practice this is fine, but it is a bit weird because some assets might
-          // be located outside of the src/library folder
-          outputPath: 'assets'
+          // set limit to a very large number so that all assets are bundled into the css file
+          // TODO: newer webpack versions allow for false to disable the limit
+          limit: 1000000
         }
       }
     ]
