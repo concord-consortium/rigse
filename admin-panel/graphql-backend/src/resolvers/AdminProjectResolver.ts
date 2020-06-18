@@ -1,11 +1,39 @@
 // src/resolvers/UserResolver.ts
-import { Resolver, Query, Mutation, Arg, ObjectType, Field } from "type-graphql"
+import { Resolver, Query, Mutation, Arg, Args, ObjectType, Field, ArgsType, ID} from "type-graphql"
 import { AdminProject } from "../entities/AdminProjects"
+import { updateEntity } from "../helpers/entityResolverHelpers"
 
 @ObjectType()
 class adminProjectListMeta {
   @Field(() => Number)
   count: number
+}
+
+@ArgsType()
+class createAdminProject implements Partial<AdminProject>{
+  @Field()
+  name: string
+
+  @Field()
+  landingPageSlug: string
+
+  @Field()
+  projectCardDescription: string
+
+  @Field()
+  projectCardImageUrl: string
+
+  @Field()
+  landingPageContent: string
+
+  @Field()
+  public: boolean
+}
+
+@ArgsType()
+class updateAdminProject extends createAdminProject{
+  @Field(type => ID)
+  id: number
 }
 
 @Resolver()
@@ -30,54 +58,25 @@ export class AdminProjectResolver {
     });
   }
 
-  @Mutation(type => Boolean)
-  async deleteAdminProject(@Arg("id") id: string): Promise<boolean> {
+  @Mutation(type => AdminProject)
+  async deleteAdminProject(@Arg("id") id: string): Promise<AdminProject> {
     const project = await AdminProject.findOne({ where: { id } });
     if (!project) throw new Error("AdminProject not found!");
     await project.remove();
-    return true;
+    return project;
   }
 
   @Mutation(type => AdminProject)
   async createAdminProject(
-    @Arg("name") name: string,
-    @Arg("landingPageSlug") landingPageSlug: string,
-    @Arg("public") isPublic: boolean=false,
-    @Arg("projectCardDescription") projectCardDescription?: string,
-    @Arg("projectCardImageUrl") projectCardImageUrl?: string
-  ): Promise<AdminProject> {
-    const createdAt = new Date()
-    const updatedAt = new Date()
-    const params = {
-      name, landingPageSlug, projectCardDescription, projectCardImageUrl,
-      public: isPublic, createdAt, updatedAt
-    }
-    const project = await AdminProject.create(params);
-    return project;
+    @Args()
+    params: createAdminProject) {
+    return updateEntity<AdminProject>(AdminProject, params)
   }
 
   @Mutation(() => AdminProject)
   async updateAdminProject(
-      @Arg("id") id: string,
-      @Arg("name") name: string,
-      @Arg("landingPageSlug") landingPageSlug: string,
-      @Arg("public", {nullable: true}) isPublic: boolean=false,
-      @Arg("projectCardDescription", {nullable: true}) projectCardDescription?: string,
-      @Arg("projectCardImageUrl", {nullable: true}) projectCardImageUrl?: string,
-      @Arg("landingPageContent", {nullable: true}) landingPageContent?: string
-    ): Promise<AdminProject> {
-      const params = {
-        name,
-        landingPageSlug,
-        landingPageContent,
-        projectCardDescription,
-        projectCardImageUrl,
-        public: isPublic
-      }
-      const project = await AdminProject.findOne({ where: { id } });
-      if (!project) throw new Error("Project not found!");
-      Object.assign(project, params);
-      await project.save();
-      return project;
+    @Args()
+    params: createAdminProject) {
+    return updateEntity<AdminProject>(AdminProject, params)
   }
 }

@@ -43,6 +43,9 @@ export const PortalPermissionFormCreate = props => (
     <SimpleForm>
       <TextInput source="name" />
       <TextInput source="url" />
+      <ReferenceInput label="Project" source="projectId" reference="AdminProject">
+        <SelectInput optionText="name" />
+      </ReferenceInput>
     </SimpleForm>
   </Create>
 );

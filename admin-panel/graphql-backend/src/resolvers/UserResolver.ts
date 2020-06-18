@@ -11,7 +11,7 @@ import {
 import { User } from "../entities/Users"
 import { getConnection } from "typeorm";
 import { AdminProject } from "../entities/AdminProjects"
-
+import { updateEntity } from "../helpers/entityResolverHelpers"
 @ArgsType()
 class CreateUser implements Partial<User>{
   @Field()
@@ -27,8 +27,15 @@ class CreateUser implements Partial<User>{
   login: string
 
   @Field( Type => [ID])
-  projectsIds: string[]
+  projectsIds: number[]
 }
+
+@ArgsType()
+class UpdateUser extends CreateUser{
+  @Field(type => ID)
+  id: number
+}
+
 
 @InputType()
 class UserFilter implements Partial<User>{
@@ -69,11 +76,6 @@ class PaginationAndFilter {
 }
 
 
-@ArgsType()
-class UpdateUser extends CreateUser{
-  @Field()
-  id: number
-}
 
 @ObjectType()
 class userListMeta {
@@ -133,24 +135,22 @@ export class UserResolver {
   }
 
   @Authorized()
-  @Mutation(() => Boolean)
+  @Mutation(() => User)
   async deleteUser(@Arg("id") id: string) {
     const user = await User.findOne({ where: { id } });
     if (!user) throw new Error("User not found!");
-    await user.remove();
-    return true;
+    user.remove();
+    return user;
   }
 
   @Authorized()
   @Mutation(() => User)
   async createUser(
     @Args()
-    {firstName, lastName, email, projectsIds }: CreateUser)
+    {firstName, lastName, email }: CreateUser)
     {
       const params = {firstName, lastName, email}
-      const user = User.create(params);
-      await user.save();
-      return user;
+      return updateEntity<User>(User, params);
   }
 
   @Authorized()
@@ -159,13 +159,12 @@ export class UserResolver {
     @Args()
     {id, firstName, lastName, email, projectsIds }: UpdateUser)
     {
-      const params = {firstName, lastName, email }
-      const user = await User.findOne({ where: { id } });
-      if (!user) throw new Error("User not found!");
-      Object.assign(user, params);
-      user.projects = await AdminProject.findByIds(projectsIds)
-      await user.save();
-      return user;
+      const params = {id, firstName, lastName, email }
+      const associationCallback = async (user: User) => {
+        user.projects = await AdminProject.findByIds(projectsIds)
+        return user
+      }
+      return updateEntity<User>(User, params, associationCallback);
   }
 
 }

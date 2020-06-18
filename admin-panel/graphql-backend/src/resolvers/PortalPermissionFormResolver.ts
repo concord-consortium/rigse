@@ -8,7 +8,7 @@ import {
 
 import { getConnection } from "typeorm";
 import { PortalPermissionForm } from "../entities/PortalPermissionForms"
-import { AdminProject} from "../entities/AdminProjects"
+import { updateEntity } from "../helpers/entityResolverHelpers"
 
 @ArgsType()
 class CreatePortalPermissionForm implements Partial<PortalPermissionForm>{
@@ -130,39 +130,16 @@ export class PortalPermissionFormResolver {
   @Mutation(() => PortalPermissionForm)
   async createPortalPermissionForm(
     @Args()
-    params: CreatePortalPermissionForm)
-    {
-      const permissionForm = PortalPermissionForm.create(params);
-      await permissionForm.save();
-      return PortalPermissionForm;
+    params: CreatePortalPermissionForm) {
+      return updateEntity<PortalPermissionForm>(PortalPermissionForm, params)
   }
 
   @Authorized()
   @Mutation(() => PortalPermissionForm)
   async updatePortalPermissionForm(
     @Args()
-    params: UpdatePortalPermissionForm)
-    {
-      const {name, url, projectId, id} = params;
-      const updateParams = {name, url, projectId}
-      const permissionForm = await PortalPermissionForm.findOne({ where: { id } });
-      if (!permissionForm) throw new Error("PortalPermissionForm not found!");
-      const timeStamps = {
-        updatedAt: new Date(),
-        createdAt: permissionForm.createdAt || new Date()
-      }
-      Object.assign(permissionForm, updateParams, timeStamps);
-      const project = await AdminProject.findOne({where: {id: projectId}})
-      if(project) {
-        permissionForm.project = project
-      }
-      try {
-        await permissionForm.save();
-      }
-      catch(e) {
-        console.log(e)
-      }
-      return permissionForm;
+    params: UpdatePortalPermissionForm) {
+      return updateEntity<PortalPermissionForm>(PortalPermissionForm, params)
   }
 
 }

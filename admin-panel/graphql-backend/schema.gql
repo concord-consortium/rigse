@@ -36,15 +36,15 @@ type adminProjectUserListMeta {
 }
 
 type Mutation {
-  deleteAdminProject(id: String): Boolean
-  createAdminProject(projectCardImageUrl: String, projectCardDescription: String, public: Boolean, landingPageSlug: String, name: String): AdminProject
-  updateAdminProject(landingPageContent: String, projectCardImageUrl: String, projectCardDescription: String, public: Boolean, landingPageSlug: String, name: String, id: String): AdminProject
+  deleteAdminProject(id: String): AdminProject
+  createAdminProject(name: String, landingPageSlug: String, projectCardDescription: String, projectCardImageUrl: String, landingPageContent: String, public: Boolean): AdminProject
+  updateAdminProject(name: String, landingPageSlug: String, projectCardDescription: String, projectCardImageUrl: String, landingPageContent: String, public: Boolean): AdminProject
   updateAdminProjectUser(id: ID, isAdmin: Boolean = false, isResearcher: Boolean = false): AdminProjectUser
   createAdminProjectUser(userId: ID, projectId: ID, isAdmin: Boolean = false, isResearcher: Boolean = false): AdminProjectUser
   deleteAdminProjectUser(id: String): AdminProjectUser
-  deleteUser(id: String): Boolean
+  deleteUser(id: String): User
   createUser(firstName: String, lastName: String, email: String, login: String, projectsIds: [ID]): User
-  updateUser(firstName: String, lastName: String, email: String, login: String, projectsIds: [ID], id: Float): User
+  updateUser(firstName: String, lastName: String, email: String, login: String, projectsIds: [ID], id: ID): User
   deletePortalPermissionForm(id: String): Boolean
   createPortalPermissionForm(name: String, url: String, projectId: ID): PortalPermissionForm
   updatePortalPermissionForm(name: String, url: String, projectId: ID, id: ID): PortalPermissionForm
