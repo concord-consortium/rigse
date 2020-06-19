@@ -1,4 +1,5 @@
-import { BaseEntity, FindOneOptions, ObjectType } from "typeorm"
+import { BaseEntity, FindOneOptions, ObjectType, getConnection, Table, SelectQueryBuilder } from "typeorm"
+import { ArgsType, InputType, Field} from "type-graphql"
 
 interface IPortalFields {
   id: number;
@@ -60,3 +61,76 @@ export async function updateEntity<T extends PortalEntity>(
     throw(e)
   }
 }
+
+export interface StringFilter {
+  [key: string]: string
+}
+
+export type SortOrder = "ASC" | "DESC"
+
+export interface IPaginationAndFilter {
+  filter?: StringFilter
+  page: number
+  perPage: number
+  sortField: string
+  sortOrder: SortOrder
+}
+
+@ArgsType()
+export class PaginationAndFilter {
+  // Important, this is zero-indexed
+  @Field({defaultValue: 0})
+  page: number
+
+  @Field({defaultValue: 10})
+  perPage: number
+
+  @Field({defaultValue: 'id'})
+  sortField: string
+
+  @Field({defaultValue: "ASC"})
+  sortOrder: SortOrder
+}
+
+async function buildQuery
+  <T extends PortalEntity>(
+  clazz: ObjectType<T>,
+  table: string,
+  {filter, page, perPage, sortField, sortOrder}:IPaginationAndFilter)
+  : Promise<SelectQueryBuilder<T>>{
+  const filterFields = Object.keys(filter || {})
+  const wheres: string[] = []
+  const parameters: {[key:string]: string } = {}
+  const repository = getConnection().getRepository(clazz)
+  filterFields.forEach( fieldName => {
+    if((filter as any)[fieldName] && (filter as any)[fieldName].length > 0) {
+      wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
+      parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
+    }
+  })
+  return await repository.createQueryBuilder(table)
+    .where(wheres.join( " AND "))
+    .setParameters(parameters)
+    .orderBy(`${table}.${sortField}`, sortOrder)
+    .skip(page * perPage)
+    .take(perPage)
+}
+
+export async function fuzzyFetch
+  <T extends PortalEntity>(
+  clazz: ObjectType<T>,
+  table: string,
+  params: PaginationAndFilter): Promise<T[]>{
+    const query =  await buildQuery<T>(clazz, table, params)
+    return query.getMany()
+}
+
+export async function fuzzyCount
+  <T extends PortalEntity>(
+  clazz: ObjectType<T>,
+  table: string,
+  params: PaginationAndFilter): Promise<number>{
+  const query =  await buildQuery<T>(clazz, table, params)
+  return query.getCount()
+}
+
