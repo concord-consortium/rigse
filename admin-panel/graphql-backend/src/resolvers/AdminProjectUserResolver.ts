@@ -2,12 +2,7 @@
 import { Resolver, Query, Mutation, Arg, Args, ObjectType, Field,
          FieldResolver, Root, ArgsType, InputType, ID, Int } from "type-graphql"
 import { AdminProjectUser } from "../entities/AdminProjectUsers"
-
-@ObjectType()
-class adminProjectUserListMeta {
-  @Field(() => Number)
-  count: number
-}
+import { listMeta } from "../helpers/listMeta"
 
 @ArgsType()
 class UpdateAdminProjectUserArgs implements Partial<AdminProjectUser>{
@@ -89,7 +84,7 @@ export class AdminProjectUserResolver {
     return AdminProjectUser.find({where, relations})
   }
 
-  @Query(() => adminProjectUserListMeta)
+  @Query(() => listMeta)
   _allAdminProjectUsersMeta(
     @Args() {filter, page, perPage, sortField, sortOrder}:AdminProjectUserQueryArgs) {
       const where = filter

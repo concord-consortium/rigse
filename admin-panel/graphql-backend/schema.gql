@@ -14,10 +14,6 @@ type AdminProject {
   users: [User]
 }
 
-type adminProjectListMeta {
-  count: Float
-}
-
 type AdminProjectUser {
   id: ID
   projectId: ID
@@ -31,10 +27,6 @@ input AdminProjectUserFilter {
   userId: ID
 }
 
-type adminProjectUserListMeta {
-  count: Float
-}
-
 type listMeta {
   count: Float
 }
@@ -42,7 +34,7 @@ type listMeta {
 type Mutation {
   deleteAdminProject(id: String): AdminProject
   createAdminProject(name: String, landingPageSlug: String, projectCardDescription: String, projectCardImageUrl: String, landingPageContent: String, public: Boolean): AdminProject
-  updateAdminProject(name: String, landingPageSlug: String, projectCardDescription: String, projectCardImageUrl: String, landingPageContent: String, public: Boolean): AdminProject
+  updateAdminProject(name: String, landingPageSlug: String, projectCardDescription: String, projectCardImageUrl: String, landingPageContent: String, public: Boolean, id: ID): AdminProject
   updateAdminProjectUser(id: ID, isAdmin: Boolean = false, isResearcher: Boolean = false): AdminProjectUser
   createAdminProjectUser(userId: ID, projectId: ID, isAdmin: Boolean = false, isResearcher: Boolean = false): AdminProjectUser
   deleteAdminProjectUser(id: String): AdminProjectUser
@@ -54,6 +46,10 @@ type Mutation {
   updatePortalPermissionForm(name: String, url: String, projectId: ID, id: ID): PortalPermissionForm
 }
 
+input PermissionFilter {
+  name: String
+}
+
 type PortalPermissionForm {
   id: ID!
   name: String
@@ -62,26 +58,22 @@ type PortalPermissionForm {
   projectId: ID
 }
 
-input PortalPermissionFormFilter {
+input ProjectFilter {
   name: String
 }
 
-type PortalPermissionFormListMeta {
-  count: Float
-}
-
 type Query {
-  allAdminProjects: [AdminProject]
-  _allAdminProjectsMeta: adminProjectListMeta
+  allAdminProjects(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: ProjectFilter): [AdminProject]
+  _allAdminProjectsMeta(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: ProjectFilter): listMeta
   AdminProject(id: String): AdminProject
   allAdminProjectUsers(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: AdminProjectUserFilter): [AdminProjectUser]
-  _allAdminProjectUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: AdminProjectUserFilter): adminProjectUserListMeta
+  _allAdminProjectUsersMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: AdminProjectUserFilter): listMeta
   AdminProjectUser(id: String): AdminProjectUser
   allUsers(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: UserFilter): [User]
   _allUsersMeta(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: UserFilter): listMeta
   User(id: String): User
-  allPortalPermissionForms(filter: PortalPermissionFormFilter, page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC"): [PortalPermissionForm]
-  _allPortalPermissionFormsMeta(filter: PortalPermissionFormFilter, page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC"): PortalPermissionFormListMeta
+  allPortalPermissionForms(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: PermissionFilter): [PortalPermissionForm]
+  _allPortalPermissionFormsMeta(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: PermissionFilter): listMeta
   PortalPermissionForm(id: String): PortalPermissionForm
 }
 

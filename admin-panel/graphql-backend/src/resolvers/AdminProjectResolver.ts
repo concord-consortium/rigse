@@ -1,13 +1,12 @@
 // src/resolvers/UserResolver.ts
-import { Resolver, Query, Mutation, Arg, Args, ObjectType, Field, ArgsType, ID} from "type-graphql"
+import {
+  Resolver, Query, Mutation, Arg, Args,
+  Field, ArgsType, ID, Authorized, InputType } from "type-graphql"
 import { AdminProject } from "../entities/AdminProjects"
-import { updateEntity } from "../helpers/entityResolverHelpers"
-
-@ObjectType()
-class adminProjectListMeta {
-  @Field(() => Number)
-  count: number
-}
+import {
+  updateEntity, fuzzyFetch,
+  PaginationAndFilter, fuzzyCount } from "../helpers/entityResolverHelpers"
+import { listMeta } from "../helpers/listMeta"
 
 @ArgsType()
 class createAdminProject implements Partial<AdminProject>{
@@ -36,19 +35,33 @@ class updateAdminProject extends createAdminProject{
   id: number
 }
 
+@InputType()
+class ProjectFilter implements Partial<AdminProject>{
+  @Field(type => String)
+  name?: string;
+}
+
+@ArgsType()
+class ProjectSearch extends PaginationAndFilter {
+  @Field(type => ProjectFilter)
+  filter?: ProjectFilter
+}
+
 @Resolver()
 export class AdminProjectResolver {
-  @Query(type => [AdminProject])
-  allAdminProjects():  Promise<AdminProject[]> {
-    return AdminProject.find({
-      relations: ["users"]
-    })
+  @Authorized()
+  @Query(() => [AdminProject])
+  async allAdminProjects(@Args() searchParams:ProjectSearch) {
+    return await fuzzyFetch<AdminProject>(AdminProject, 'adminProject', searchParams);
   }
 
-  @Query(type => adminProjectListMeta)
-  _allAdminProjectsMeta(): adminProjectListMeta{
-    return {count: 2}
+  @Authorized()
+  @Query(() => listMeta)
+  async _allAdminProjectsMeta(@Args() searchParams:ProjectSearch){
+    const count = await fuzzyCount<AdminProject>(AdminProject, 'adminProject', searchParams);
+    return {count}
   }
+
 
   @Query(type => AdminProject)
   AdminProject(@Arg("id") id: string): Promise<AdminProject|undefined> {
@@ -76,7 +89,7 @@ export class AdminProjectResolver {
   @Mutation(() => AdminProject)
   async updateAdminProject(
     @Args()
-    params: createAdminProject) {
+    params: updateAdminProject) {
     return updateEntity<AdminProject>(AdminProject, params)
   }
 }

@@ -108,12 +108,13 @@ async function buildQuery
       parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
     }
   })
-  return await repository.createQueryBuilder(table)
+  const query =  await repository.createQueryBuilder(table)
     .where(wheres.join( " AND "))
     .setParameters(parameters)
     .orderBy(`${table}.${sortField}`, sortOrder)
     .skip(page * perPage)
     .take(perPage)
+  return query
 }
 
 export async function fuzzyFetch
@@ -122,7 +123,8 @@ export async function fuzzyFetch
   table: string,
   params: PaginationAndFilter): Promise<T[]>{
     const query =  await buildQuery<T>(clazz, table, params)
-    return query.getMany()
+    const results = await query.getMany()
+    return results
 }
 
 export async function fuzzyCount
@@ -131,6 +133,7 @@ export async function fuzzyCount
   table: string,
   params: PaginationAndFilter): Promise<number>{
   const query =  await buildQuery<T>(clazz, table, params)
-  return query.getCount()
+  const count =  await query.getCount()
+  return count
 }
 

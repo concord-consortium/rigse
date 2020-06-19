@@ -3,14 +3,14 @@
 
 // import { Resolver, Query, Mutation, Arg, Args, ObjectType, Field, FieldResolver, Root, ID } from "type-graphql"
 import {
-  ArgsType, InputType, ID,
-  Resolver, Query, Mutation, Arg,
-  Args, ObjectType, Field, Authorized
-} from "type-graphql"
-
+  ArgsType, InputType, ID, Resolver, Query, Mutation, Arg,
+  Args, Field, Authorized } from "type-graphql"
 import { User } from "../entities/Users"
 import { AdminProject } from "../entities/AdminProjects"
-import { updateEntity, fuzzyCount, fuzzyFetch, PaginationAndFilter, StringFilter } from "../helpers/entityResolverHelpers"
+import { updateEntity, fuzzyCount,
+  fuzzyFetch, PaginationAndFilter} from "../helpers/entityResolverHelpers"
+import { listMeta } from "../helpers/listMeta"
+
 @ArgsType()
 class CreateUser implements Partial<User>{
   @Field()
@@ -54,11 +54,6 @@ class UserPaginationAndFilter extends PaginationAndFilter {
   filter?: UserFilter
 }
 
-@ObjectType()
-class listMeta {
-  @Field(() => Number)
-  count: number
-}
 
 @Resolver(of => User)
 export class UserResolver {

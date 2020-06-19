@@ -5,10 +5,10 @@ import {
   Resolver, Query, Mutation, Arg,
   Args, ObjectType, Field, Authorized
 } from "type-graphql"
-
-import { getConnection } from "typeorm";
+import { listMeta } from "../helpers/listMeta"
 import { PortalPermissionForm } from "../entities/PortalPermissionForms"
-import { updateEntity } from "../helpers/entityResolverHelpers"
+import { updateEntity, PaginationAndFilter, fuzzyFetch, fuzzyCount } from "../helpers/entityResolverHelpers"
+import { PortalSchoolMemberships } from "../entities/unused/PortalSchoolMemberships";
 
 @ArgsType()
 class CreatePortalPermissionForm implements Partial<PortalPermissionForm>{
@@ -23,34 +23,16 @@ class CreatePortalPermissionForm implements Partial<PortalPermissionForm>{
 }
 
 @InputType()
-class PortalPermissionFormFilter implements Partial<PortalPermissionForm>{
+class PermissionFilter implements Partial<PortalPermissionForm>{
   @Field(type => String)
   name?: string;
 }
 
-type PortalPermissionFormSortField = "name"
-type SortOrder = "ASC" | "DESC"
-
-
 @ArgsType()
-class PaginationAndFilter {
-  @Field(type => PortalPermissionFormFilter)
-  filter?: PortalPermissionFormFilter
-
-  // Important, this is zero-indexed
-  @Field({defaultValue: 0})
-  page: number
-
-  @Field({defaultValue: 10})
-  perPage: number
-
-  @Field({defaultValue: 'id'})
-  sortField: PortalPermissionFormSortField
-
-  @Field({defaultValue: "ASC"})
-  sortOrder: SortOrder
+class PermissionSearch extends PaginationAndFilter {
+  @Field(type => PermissionFilter)
+  filter?: PermissionFilter
 }
-
 
 @ArgsType()
 class UpdatePortalPermissionForm extends CreatePortalPermissionForm{
@@ -58,54 +40,18 @@ class UpdatePortalPermissionForm extends CreatePortalPermissionForm{
   id: number
 }
 
-@ObjectType()
-class PortalPermissionFormListMeta {
-  @Field(() => Number)
-  count: number
-}
-
-const buildQuery = async ({filter, page, perPage, sortField, sortOrder}:PaginationAndFilter) => {
-  const table =  'portal_permission_forms'
-  const fuzzyFields = ["name"]
-  const wheres: string[] = []
-  const parameters: {[key:string]: string } = {}
-  const repository = getConnection().getRepository(PortalPermissionForm)
-  const fuzzyParams = fuzzyFields.forEach( fieldName => {
-    if((filter as any)[fieldName] && (filter as any)[fieldName].length > 0) {
-      wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
-      parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
-    }
-  })
-  return await repository.createQueryBuilder(table)
-    .where(wheres.join( " AND "))
-    .setParameters(parameters)
-    .orderBy(`${table}.${sortField}`, "ASC")
-    .skip(page * perPage)
-    .take(perPage)
-}
-
-const fuzzyFetch = async (params: PaginationAndFilter) => {
-  const query =  await buildQuery(params)
-  return query.getMany()
-}
-
-const fuzzyCount = async (params: PaginationAndFilter) => {
-  const query =  await buildQuery(params)
-  return query.getCount()
-}
-
 @Resolver(of => PortalPermissionForm)
 export class PortalPermissionFormResolver {
   @Authorized()
   @Query(() => [PortalPermissionForm])
-  async allPortalPermissionForms(@Args() searchParams:PaginationAndFilter) {
-    return await fuzzyFetch(searchParams);
+  async allPortalPermissionForms(@Args() searchParams:PermissionSearch) {
+    return await fuzzyFetch<PortalPermissionForm>(PortalPermissionForm, 'portalPermissionForm', searchParams);
   }
 
   @Authorized()
-  @Query(() => PortalPermissionFormListMeta)
-  _allPortalPermissionFormsMeta(@Args() searchParams:PaginationAndFilter){
-    const count = fuzzyCount(searchParams)
+  @Query(() => listMeta)
+  async _allPortalPermissionFormsMeta(@Args() searchParams:PermissionSearch){
+    const count =  await fuzzyCount<PortalPermissionForm>(PortalPermissionForm, 'portalPermissionForm', searchParams);
     return {count}
   }
 
