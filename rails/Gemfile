@@ -128,8 +128,6 @@ end
 
   gem 'useragent'  # detect browser types
 
-  gem 'react-rails', '~> 2.6.1' # React 16.9.0
-
   gem 'nested_form'
   gem 'sanitize'
 
@@ -143,6 +141,9 @@ end
   gem 'rack-secure_samesite_cookies',
     :git => 'git://github.com/concord-consortium/secure-samesite-cookies',
     :tag => 'v1.0.2'
+
+  # was sub-dependency of react-rails, needed in test setup code
+  gem 'connection_pool'
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets

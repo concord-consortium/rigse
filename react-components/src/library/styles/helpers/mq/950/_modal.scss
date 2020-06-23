@@ -1,0 +1,50 @@
+.portal-pages-modal .portal-pages-close {
+  top: 0;
+  }
+.signup-default-modal-content, .login-default-modal-content, .forgot-password-default-modal-content {
+  margin-left: -290px;
+  padding: 20px;
+  top: 50px;
+
+  footer {
+    display: none;
+    }
+  }
+
+#login-default-modal, #signup-default-modal, #forgot-password-modal, #login-form, #register-form {
+  dd {
+    margin: 0 0 20px;
+    &.two-col {
+      clear: both;
+      float: none;
+      margin: 0 0 20px;
+      input[type="text"] {
+        width: 100%;
+      }
+    }
+    &.multi-col {
+      clear: both;
+      float: none;
+      margin-top: 0;
+      margin-right: 0;
+      input {
+        margin-right: 0;
+        width: 100%;
+      }
+    }
+  }
+  dt {
+    display: block;
+    font-size: 15px;
+    margin: 0 0 10px;
+    &.two-col {
+      clear: both;
+      float: none;
+    }
+    &.multi-col {
+      clear: both;
+      float: none;
+      margin-right: 0;
+    }
+  }
+}

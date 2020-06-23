@@ -1,0 +1,267 @@
+.theme-ngss-assessment {
+  .center {
+    text-align: center;
+
+    button {
+      display: block;
+      font-size: 2em;
+      margin: 0 auto;
+    }
+  }
+
+  .portal-pages-umbrella { display: none; }
+  .portal-pages-header-contain {
+    height: 165px !important;
+    margin-bottom: 0 !important;
+    }
+  .logo-contain { margin-top: 55px; }
+  .concord-logo {
+    background-image: url(https://ngss-assessment-resources.concord.org/ngsa-logo.png);
+    background-size: 100%;
+    height: 53px;
+    width: 300px;
+    }
+  .portal-pages-hero {
+    background: url(https://ngss-assessment-resources.concord.org/students.jpg) no-repeat;
+    background-size: cover;
+    height: 500px;
+    margin-bottom: 40px;
+    position: relative;
+    transform: scaleX(-1);
+
+    &:after {
+      background: #0b314c;
+      content: '';
+      display: block;
+      height: 500px;
+      left: 0;
+      opacity: .6;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+      }
+
+    .portal-pages-hero__text-container {
+      height: 500px;
+      position: relative;
+      transform: scaleX(-1);
+      width: 100%;
+      z-index: 5;
+      }
+
+    .portal-pages-hero__text {
+      color: #fff;
+      overflow: hidden;
+      position: absolute;
+      text-align: left;
+      top: 50%;
+      transform: translateY(-50%);
+
+      h1 {
+        color: #fff;
+        font-family: museo;
+        font-size: 54px;
+        font-weight: 900;
+        line-height: 60px;
+        margin: 0 0 30px;
+        }
+
+      p {
+        font-family: museo-sans;
+        font-size: 24px;
+        font-weight: 300;
+        line-height: 30px;
+        margin: 0 0 40px;
+        }
+      }
+    }
+  .portal-pages-brand-banner-bg {
+    background: #0a1731;
+    bottom: 0;
+    height: 200px;
+    left: 0;
+    opacity: .8;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+
+    &.fixed-header {
+      height: 100px;
+      position: fixed;
+      top: 0;
+      }
+    }
+  .portal-pages-brand-logo-container {
+    bottom: 0;
+    height: 200px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 5;
+
+    div {
+      height: 200px;
+      position: relative;
+      }
+
+    h1.portal-pages-brand-logo {
+      background: url(https://ngss-assessment-resources.concord.org/ngsa-logo.png) no-repeat;
+      background-size: 450px 80px;
+      bottom: 60px;
+      height: 80px;
+      overflow: hidden;
+      position: absolute;
+      text-indent: 500px;
+      white-space: nowrap;
+      width: 450px;
+      }
+
+    &.fixed-header {
+      height: 100px;
+      position: fixed;
+      top: 0;
+
+      div {
+        height: 100px;
+      }
+
+      h1.portal-pages-brand-logo {
+        background-size: 225px 40px;
+        bottom: 30px;
+        height: 40px;
+        width: 225px;
+        }
+      }
+    }
+
+  .portal-pages-footer {
+    background: #f5f5f5;
+    font-size: 15px;
+    line-height: 24px;
+    margin-top: 0;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    position: relative;
+    text-align: center;
+    z-index: 5;
+    }
+  .portal-pages-collections { background: #fff; font-size: 18px; }
+
+  /*----- COLLECTIONS CONTAINERS -----*/
+  .skew { margin: 0; }
+
+  .portal-pages-finder-materials-collection .portal-pages-finder-materials-collection-item .portal-pages-finder-materials-collection-item__image img {
+    background: #fff;
+    padding: 12% 20%;
+    width: 100%;
+  }
+
+  h3.collapsible-toggle {
+    color: #0592af;
+    border-bottom: solid 5px rgba(49, 49, 49, 0.15);
+    display: block;
+    font-family: museo-sans,verdana,helvetica,sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 36px;
+    margin-bottom: 0;
+    padding: 30px 45px 30px 0;
+    position: relative; }
+
+  .collapsible-toggle:after {
+    background: #0592af;
+    border-radius: 50%;
+    color: #fff;
+    content: '+';
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    height: 17px;
+    line-height: 1;
+    margin: -10px 0 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    text-indent: 0;
+    top: 50%;
+    width: 17px;
+  }
+
+  h3.collapsible-toggle:hover {
+    color: #999;
+  }
+  h3.collapsible-toggle:hover:after {
+    background: #999;
+  }
+
+  .collapsible-toggle.open {
+    border-bottom: none;
+  }
+
+  .collapsible-toggle.open:after {
+    animation: spin-toggle-open 0.5s normal forwards;
+    }
+
+  @keyframes spin-toggle-open {
+    100% {
+      transform: rotate(45deg);
+      }
+  }
+
+  .portal-pages-resource-lightbox-modal-content { padding-bottom: 30px; }
+  .portal-pages-resource-lightbox-modal-sharing { display: none; }
+
+  /*----- MEDIA QUERIES -----*/
+  @media screen and (max-width: 1200px) {
+    .portal-pages-hero {
+      .portal-pages-hero__text-container {
+        width: auto;
+      }
+      .portal-pages-hero__text {
+        width: auto;
+      }
+    }
+  }
+  @media screen and (max-width: 950px) {
+    body {
+
+      &[data-mobile-nav="open"] {
+        .portal-pages-main-nav-contain {
+          top: 110px !important;
+        }
+      }
+    }
+    .mobile-nav-contain { margin-top: 40px !important; }
+    .portal-pages-hero {
+      .portal-pages-hero__text {
+        width: auto;
+      }
+    }
+    .cols {
+      &:not(.no-collapse) {
+
+        *[class*='col-'], *[class^=' col-'], .cols {
+          width: 93% !important;
+          margin-left: 3.5% !important;
+          margin-right: 3.5% !important;
+          &[class*='col-'] { /* for pesky ultra-specific cascades */
+            width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+        }
+      }
+
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .logo-contain { margin: 20px 0 !important; }
+    .portal-pages-hero {
+      .portal-pages-hero__text {
+        padding:15px;
+      }
+    }
+  }
+}

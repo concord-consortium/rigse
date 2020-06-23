@@ -1,0 +1,49 @@
+.material_list {
+
+  .material_list_item {
+
+    .material_icon {
+      border: none;
+      float: none;
+      height: auto;
+      max-height: 300px;
+      min-height: 200px;
+      width: auto;
+    }
+
+    tr {
+      display: inline-block;
+      width: 50%;
+
+      div {
+        float: none !important;
+      }
+      a.button {
+        display: inline-block;
+        font-weight: normal;
+        padding: 10px 0;
+        text-align: center;
+        width: 100%;
+      }
+
+      &:nth-child(1) {
+        float: right;
+      }
+      &:nth-child(3), &:nth-child(4) {
+        width: 100%;
+      }
+    }
+
+    span.material_meta_data {
+
+      span {
+        display: block;
+        margin: 0 0 3px;
+      }
+    }
+
+    .material_body {
+      margin-left: 0;
+    }
+  }
+}

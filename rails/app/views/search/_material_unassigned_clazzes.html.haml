@@ -39,8 +39,8 @@
   - if !@teacher_active_clazzes_count
     %p
       To assign this resource to classes and track student work on learn.concord.org, log in or register as a teacher.
-    = link_to "Register", "/signup", :href => "/signup", :onclick=>"PortalPages.renderSignupModal({oauthProviders: Portal.oauthProviders, closeable: true}); close_popup(); return false;", :class => "button"
-    = link_to "Log In", "/login", :href=>"/login", :onclick=>"PortalPages.renderLoginModal({oauthProviders: Portal.oauthProviders, closeable: true, afterSigninPath: window.constructAssignPath()}); close_popup(); return false;", :class=>'button'
+    = link_to "Register", "/signup", :href => "/signup", :onclick=>"PortalComponents.renderSignupModal({oauthProviders: Portal.oauthProviders, closeable: true}); close_popup(); return false;", :class => "button"
+    = link_to "Log In", "/login", :href=>"/login", :onclick=>"PortalComponents.renderLoginModal({oauthProviders: Portal.oauthProviders, closeable: true, afterSigninPath: window.constructAssignPath()}); close_popup(); return false;", :class=>'button'
     = link_to "Cancel", "#", :href=>"javascript: void(0);", :onclick=>"close_popup()", :class=>'cancel'
   - else
     - if @teacher_active_clazzes_count > 0

@@ -24,6 +24,11 @@ certs
 .env
 *.DS_Store
 
+react-components/dist
+react-components/coverage
+react-components/node_modules
+react-components/stats.json
+
 #
 # Old gitignore
 # The lines below here should be deleted after all developers have updated to

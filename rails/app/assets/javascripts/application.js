@@ -47,8 +47,6 @@
 = require 'wait_message'
 = require 'external_activities/matedit'
 = require 'iframeable-link'
-= require 'react'
-= require 'react_ujs'
 = require 'classnames'
 = require 'jquery.paging'
 = require 'jquery_nested_form'
@@ -56,4 +54,5 @@
 = require 'secondary-menu-toggle'
 = require 'user-admin'
 = require 'copy-to-clipboard'
+= require 'react-components'
 */

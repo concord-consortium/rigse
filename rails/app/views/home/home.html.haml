@@ -18,16 +18,16 @@
   - content_for :after_footer do
     #auto_show_lightbox_resource
     %script{:type=>"text/javascript"}
-      PortalPages.settings.savedTitle = '#{APP_CONFIG[:site_name]}';
-      PortalPages.settings.autoShowingLightboxResource = #{raw @lightbox_resource.to_json };
+      PortalComponents.settings.savedTitle = '#{APP_CONFIG[:site_name]}';
+      PortalComponents.settings.autoShowingLightboxResource = #{raw @lightbox_resource.to_json };
       :plain
         var toggleAutoShowLightbox = function () {
           ReactDOM.unmountComponentAtNode(document.getElementById('auto_show_lightbox_resource'));
-          delete PortalPages.settings.autoShowingLightboxResource;
+          delete PortalComponents.settings.autoShowingLightboxResource;
         };
-        PortalPages.renderResourceLightbox({
+        PortalComponents.renderResourceLightbox({
           toggleLightbox: toggleAutoShowLightbox,
           parentPage: '/',
           savedTitle: '#{APP_CONFIG[:site_name]}',
-          resource: PortalPages.settings.autoShowingLightboxResource
+          resource: PortalComponents.settings.autoShowingLightboxResource
         }, "auto_show_lightbox_resource")

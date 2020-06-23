@@ -1,0 +1,55 @@
+/* ----- Special Link Styles ----- */
+
+.special-link {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 500;
+  -webkit-font-smoothing: auto;
+  position: relative;
+
+  &::after {
+    content: "\e911";
+    font-family: "icomoon";
+    font-size: 15px;
+    margin: 1px 0 0px 6px;
+    position: absolute;
+    transition: margin .2s;
+  }
+
+  &:hover {
+    &::after {
+      margin: 1px 0 0 10px;
+    }
+  }
+
+  &.medium {
+    font-weight: 300;
+    &::after {
+      content: "\e901";
+      font-size: 30px;
+      margin-left: 15px;
+    }
+  }
+
+  &.large {
+    font-weight: 300;
+    &::after {
+      content: "\e901";
+      font-size: 40px;
+      margin-left: 15px;
+    }
+  }
+
+  &.down {
+    &::after {
+      transform: rotate(90deg);
+    }
+  }
+
+  &.up {
+    &::after {
+      transform: rotate(-90deg);
+    }
+  }
+
+}

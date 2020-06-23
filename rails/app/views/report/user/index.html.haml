@@ -14,5 +14,5 @@
 - portal_token = SignedJWT::create_portal_token(current_user, {domain: root_url})
 
 :javascript
-  PortalPages.renderUserReportForm({externalReports: #{external_reports}, portalToken
+  PortalComponents.renderUserReportForm({externalReports: #{external_reports}, portalToken
   : "#{portal_token}"}, "form-container")

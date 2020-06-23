@@ -1,0 +1,18 @@
+.signup-form .radio-input {
+
+    &.stacked {
+      display: block;
+      height: auto;
+
+      .title.inline {
+        display: block;
+        width: 100%;
+        }
+
+      label {
+        display: block;
+        margin: 20px 0;
+        width: 100%;
+        }
+      }
+  }

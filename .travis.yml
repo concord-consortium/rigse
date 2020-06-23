@@ -14,7 +14,6 @@ env:
   global:
   - ARTIFACTS_BUCKET=cc-travis-artifacts
   - CC_TEST_REPORTER_ID=555af44da071264ef9c30bc5d16bcaceee2b8c2e40cccdbc74fc2b7db9839a92
-  - PORTAL_PAGES_LIBRARY_URL=https://portal-pages.concord.org/library
   - RAILS_STDOUT_LOGGING=false # TravisCI terminates job if it logs to STDOUT too much
 
 before_install:
@@ -29,13 +28,10 @@ before_script:
   # Travis changed the capitialization of TRAVIS_BUILD_STAGE_NAME the value used to be
   # capitalized, but recently it is lowercase. The ,, below changes it to always be
   # lowercase. So even if travis changes it again it should still work.
-  - sh -c "if [ '${TRAVIS_BUILD_STAGE_NAME,,}' = 'test'  ]; then ./script/travis_test_setup; fi"
+  - sh -c "if [ '${TRAVIS_BUILD_STAGE_NAME,,}' = 'test'  ]; then ./script/travis_before_script; fi"
 
 after_script:
-  - RAILS_ENV=test ./bin/rake sunspot:solr:stop
-  - ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$TEST_SUITE.json"
-  - ls coverage/
-  - aws s3 sync coverage/ "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"
+  - sh -c "if [ '${TRAVIS_BUILD_STAGE_NAME,,}' = 'test'  ]; then ./script/travis_after_script; fi"
 
 # uncomment this line if your project needs to run something other than `rake`:
 script: ./bin/rake $TEST_SUITE
@@ -67,6 +63,19 @@ addons:
 
 jobs:
   include:
+    # this needs to be a different stage so we can test it in the before before/after install steps
+    - stage: react-components
+      env:
+        matrix: TEST_SUITE=ci:react_components
+      language: node_js
+      node_js:
+        - 13
+      before_install: cd react-components
+      install: travis_retry npm ci
+      script:
+        - npm run test
+        - npm run build
+      cache: npm
     - stage: cc-reporter
       env:
         matrix: TEST_SUITE=none

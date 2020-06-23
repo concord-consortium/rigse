@@ -1,0 +1,18 @@
+// Set of common classes that could be used by various components. It should style only very generic components
+// that are used across various pages, e.g. buttons, links, and so on.
+// This file should be imported by React components only. Classes are meant to be used as CSS modules.
+// So far, it's used by components/recent-activity and components/assignments.
+
+@import '../../shared/styles/variables/_variables.scss';
+
+.smallButton, .smallButton:hover, .smallButton:visited {
+  border-radius: 0;
+  background: $col-orange;
+  color: $white;
+  border: 2px solid $col-orange;
+  font-weight: 500;
+  display: inline-block;
+  font-size: 13px;
+  padding: 4px 8px;
+  margin: 10px 10px 0 0;
+}
