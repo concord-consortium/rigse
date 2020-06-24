@@ -158,6 +158,16 @@ describe API::V1::ReportLearnersEsController do
       end
     end
     describe "GET external_report_query" do
+      let(:url_for_user) { "http://test.host/users/#{admin_user.id}" } # can't use url_for(user) helper in specs
+      let(:activity1)    { FactoryBot.create(:external_activity, :url => "https://example.com/1") }
+
+      before(:all) do
+        ENV['REPORT_SERVICE_SOURCE'] = "test-source"
+      end
+      after(:all) do
+        ENV.delete('REPORT_SERVICE_SOURCE')
+      end
+
       it "allows index" do
         get :external_report_query
         expect(response.status).to eql(200)
@@ -171,16 +181,25 @@ describe API::V1::ReportLearnersEsController do
           ).times(1)
       end
       it "renders response that includes Log Manager query and signature" do
+        # change first learner's offering from an investigation to an external activity to ensure the url is emitted
+        learner1.offering.runnable = activity1
+        learner1.offering.save!
+
         get :external_report_query
         resp = JSON.parse(response.body)
         filter = resp["json"]
         expect(filter["type"]).to eq "learners"
-        expect(filter["version"]).to eq "1.0"
+        expect(filter["version"]).to eq "1.1"
         expect(filter["learners"].length).to eq 2
         expect(filter["learners"][0]["run_remote_endpoint"]).to eq learner1.remote_endpoint_url
         expect(filter["learners"][0]["class_id"]).to eq learner1.offering.clazz_id
+        expect(filter["learners"][0]["runnable_url"]).to eq activity1.url # not nil because it is an external activity
         expect(filter["learners"][1]["run_remote_endpoint"]).to eq learner2.remote_endpoint_url
         expect(filter["learners"][1]["class_id"]).to eq learner2.offering.clazz_id
+        expect(filter["learners"][1]["runnable_url"]).to eq nil  # nil because it is in investigation
+        expect(filter["user"]["id"]).to eq url_for_user
+        expect(filter["user"]["email"]).to eq admin_user.email
+        expect(filter["reportServiceSource"]).to eq "test-source"
 
         expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
       end
