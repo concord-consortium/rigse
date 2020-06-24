@@ -9,11 +9,11 @@
   var has_cookie = function(toggle_element)         { return (readCookie(id_for_toggle(toggle_element)) == "true");    }
   var set_cookie = function(toggle_element)         { createCookie(id_for_toggle(toggle_element),'true'); }
   var remove_cookie = function(toggle_element)      { eraseCookie(id_for_toggle(toggle_element)); }
-  var is_on = function(toggle_element) { return toggle_element.hasClassName(open_class); }
-  var is_a_toggle = function(elm) { return (elm.hasClassName(open_class) || elm.hasClassName(closed_class)) ; }
-  var is_show_hide = function(elm) { return (elm.hasClassName(show_hide_class)); }
-  
-  var turn_on = function(toggle_element,duration) { 
+  var is_on = function(toggle_element) { return toggle_element.hasClassName && toggle_element.hasClassName(open_class); }
+  var is_a_toggle = function(elm) { return elm.hasClassName && (elm.hasClassName(open_class) || elm.hasClassName(closed_class)) ; }
+  var is_show_hide = function(elm) { return (elm.hasClassName && elm.hasClassName(show_hide_class)); }
+
+  var turn_on = function(toggle_element,duration) {
     toggle_element.addClassName(open_class);
     toggle_element.removeClassName(closed_class);
     var show_hider = $(toggle_element).down("." + show_hide_class);
@@ -21,7 +21,7 @@
       show_hider.update(show_hider.innerHTML.replace('Show','Hide'));
       show_hider.update(show_hider.innerHTML.replace('show','Hide'));
     }
-    Effect.BlindDown(element_for_toggle(toggle_element),{ duration: duration });  
+    Effect.BlindDown(element_for_toggle(toggle_element),{ duration: duration });
   }
 
   var turn_off = function(toggle_element,duration) {
@@ -34,7 +34,7 @@
     }
     Effect.BlindUp(element_for_toggle(toggle_element),{ duration: duration });
   }
-  
+
   var toggle = function(event) {
     var toggle_element = event.element();
     if (is_show_hide(toggle_element)) {

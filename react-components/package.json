@@ -14,7 +14,7 @@
     "dev:build-library": "cross-env NODE_ENV=development webpack",
     "test": "jest",
     "test:watch": "jest --watch",
-    "copy-files": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-components.css ../rails/app/assets/stylesheets/ && cp ./dist/react-test-globals.js ../rails/app/assets/javascripts/ ",
+    "copy-files": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-test-globals.js ../rails/app/assets/javascripts/",
     "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
   "standard": {
