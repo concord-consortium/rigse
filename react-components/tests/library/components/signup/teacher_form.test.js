@@ -4,6 +4,7 @@ import Enzyme from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import TeacherForm from 'components/signup/teacher_form'
 import { pack } from "../../helpers/pack"
+import { mockJquery } from "../../helpers/mock-jquery"
 
 Enzyme.configure({adapter: new Adapter()})
 
@@ -17,7 +18,18 @@ global.Portal = {
   }
 }
 
+const mockedJQuery = {
+  get: () => ({
+    done: () => [
+      {id: 1, name: "United States"},
+      {id: 2, name: "Mexico"}
+    ]
+  })
+}
+
 describe('When I try to render signup user type selector', () => {
+
+  mockJquery(mockedJQuery)
 
   it("should render", () => {
     const teacherForm = Enzyme.mount(<TeacherForm />);
