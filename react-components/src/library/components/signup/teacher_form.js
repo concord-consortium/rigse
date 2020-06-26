@@ -70,6 +70,13 @@ export default class TeacherForm extends React.Component {
   submit (data, resetForm, invalidateForm) {
     const { basicData, onRegistration } = this.props
     const params = jQuery.extend({}, basicData, data)
+    // the updated react-select element uses {label, value} as the value so pull the value (id) from it
+    if (params.country_id && params.country_id.value) {
+      params.country_id = params.country_id.value
+    }
+    if (params.school_id && params.school_id.value) {
+      params.school_id = params.school_id.value
+    }
     this.setState({
       canSubmit: false
     })
@@ -85,7 +92,7 @@ export default class TeacherForm extends React.Component {
   }
 
   onChange (currentValues) {
-    const countryId = currentValues.country_id
+    const countryId = currentValues.country_id?.value
     const zipcode = currentValues.zipcode
     const { currentZipcode, registerNewSchool } = this.state
     const zipcodeValid = this.refs.zipcode && this.refs.zipcode.isValidValue(zipcode)
@@ -97,17 +104,12 @@ export default class TeacherForm extends React.Component {
     })
   }
 
-  getCountries (input, callback) {
+  getCountries (callback) {
     getCountries().done(data => {
-      callback(null, {
-        options: data.map(function (country) {
-          return {
-            label: country.name,
-            value: country.id
-          }
-        }),
-        complete: true
-      })
+      callback(data.map(country => ({
+        label: country.name,
+        value: country.id
+      })))
     })
   }
 

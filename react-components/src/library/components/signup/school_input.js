@@ -14,6 +14,8 @@ class SchoolInput extends React.Component {
       options: []
     }
     this.changeValue = this.changeValue.bind(this)
+    this.setOptions = this.setOptions.bind(this)
+    this.newSchoolLink = this.newSchoolLink.bind(this)
   }
 
   componentDidMount () {
@@ -33,7 +35,21 @@ class SchoolInput extends React.Component {
   }
 
   changeValue (option) {
-    this.props.setValue(option && option.value)
+    this.props.setValue(option)
+  }
+
+  setOptions (country, zipcode) {
+    getSchools(country, zipcode).done((data) => {
+      const options = data.map(school => ({ label: school.name, value: school.id }))
+      options.push({
+        label: this.newSchoolLink(),
+        disabled: true
+      })
+      this.setState({
+        options: options,
+        isLoading: false
+      })
+    })
   }
 
   updateOptions () {
@@ -47,19 +63,7 @@ class SchoolInput extends React.Component {
     this.setState({
       isLoading: true
     })
-    this.timeoutID = window.setTimeout(() => {
-      getSchools(country, zipcode).done(function (data) {
-        const options = data.map(school => ({ label: school.name, value: school.id }))
-        options.push({
-          label: this.newSchoolLink(),
-          disabled: true
-        })
-        this.setState({
-          options: options,
-          isLoading: false
-        })
-      })
-    }, TIMEOUT)
+    this.timeoutID = window.setTimeout(() => this.setOptions(country, zipcode), TIMEOUT)
   }
 
   render () {
