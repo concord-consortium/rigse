@@ -219,8 +219,7 @@ export default class LearnerReportForm extends React.Component {
         <Select
           name={name}
           options={options}
-          multi
-          joinValues
+          isMulti
           placeholder={placeholder}
           isLoading={isLoading}
           value={this.state[name]}

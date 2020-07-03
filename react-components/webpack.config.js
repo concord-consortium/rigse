@@ -7,6 +7,7 @@ const devMode = process.env.NODE_ENV !== 'production'
 module.exports = {
   // development mode makes webpack-server reload pages faster
   mode: devMode ? 'development' : 'production',
+  devtool: devMode ? 'inline-source-map' : false,
   entry: {
     'react-components': './src/library/library.js',
     'react-test-globals': './src/react-test-globals.js'
