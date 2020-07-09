@@ -446,9 +446,11 @@ var ResourceLightbox = Component({
     let settingsIcon = links.edit ? <a className='settings' href={links.edit.url}>settings</a> : null
 
     const icons = [printIcon, copyIcon, editIcon, settingsIcon]
+    let iconIndex = 0
     const iconsListItems = icons.map((icon) => {
-      return icon !== null ? <li>{icon}</li> : null
-    }
+        iconIndex++
+        return icon !== null ? <li key={'utility-icon-' + iconIndex}>{icon}</li> : null
+      }
     )
 
     if (printIcon || copyIcon || editIcon || settingsIcon) {
