@@ -31,6 +31,7 @@ import FeaturedMaterials from './components/featured-materials/featured-material
 import SearchResults from './components/search/results'
 import SMaterialsList from './components/search/materials-list'
 import MaterialsBin from './components/materials-bin/materials-bin'
+import openAssignToClassModal from './components/assign-to-class/assign-to-class'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -163,6 +164,9 @@ window.PortalComponents = {
   },
   renderForgotPasswordModal: function (properties) {
     signupFunctions.openForgotPasswordModal(properties)
+  },
+  renderAssignToClassModal: function (properties) {
+    openAssignToClassModal(properties)
   },
 
   //

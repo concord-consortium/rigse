@@ -16,3 +16,17 @@
   padding: 4px 8px;
   margin: 10px 10px 0 0;
 }
+
+.alertBox {
+  background: #fff;
+  height: auto;
+  margin: 0 auto;
+  max-height: 600px;
+  min-height: 250px;
+  padding: 20px;
+  width: 375px;
+
+  button {
+    margin: 0 auto;
+  }
+}
