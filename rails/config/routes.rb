@@ -438,6 +438,8 @@ RailsPortal::Application.routes.draw do
           get   :own
           get   :featured
           post  :assign_to_class
+          post  :unassigned_clazzes
+          post  :show
           get   :all
           post  :add_favorite
           post  :remove_favorite
