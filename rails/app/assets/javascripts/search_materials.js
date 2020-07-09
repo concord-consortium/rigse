@@ -331,7 +331,7 @@ function getDataForAssignToClassPopup(lightbox_material_text, anonymous)
       skip_reload: true,
       anonymous: anonymous
     }
-    get_Assign_To_Class_Popup(assignPopupConfig);
+    PortalComponents.renderAssignToClassModal(assignPopupConfig);
 }
 
 var g_messageModal = null;
@@ -391,5 +391,5 @@ Portal.assignMaterialToClass = function(id, className, lightbox_material_text) {
     skip_reload: true,
     anonymous: false
   }
-  get_Assign_To_Class_Popup(assignPopupConfig);
+  PortalComponents.renderAssignToClassModal(assignPopupConfig);
 };
