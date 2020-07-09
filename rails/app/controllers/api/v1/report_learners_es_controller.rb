@@ -39,25 +39,22 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     # Note that Report::Learner::Selector is a little helper that actually calls
     # API::V1::ReportLearnersEsController.query_es.
-    learner_selector = Report::Learner::Selector.new(params, current_user)
-    # The learners we have selected:
-    select_learners  = learner_selector.learners.map(&:learner).compact
+    learner_selector = Report::Learner::Selector.new(params, current_user, {:include_runnable_and_learner => true})
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     query = {
       type: "learners",
       version: "1.1",
-      learners: select_learners.map do |l|
+      learners: learner_selector.learners.map do |l|
         {
-          run_remote_endpoint: l.remote_endpoint_url,
-          class_id: l.offering && l.offering.clazz_id,
-          runnable_url: l.offering && l.offering.runnable_type == "ExternalActivity" ? l.offering.runnable.url : nil
+          run_remote_endpoint: l.learner ? l.learner.remote_endpoint_url : nil,
+          class_id: l.class_id,
+          runnable_url: l.runnable && l.runnable.respond_to?(:url) ? l.runnable.url : nil
         }
       end,
       user: {
         id: url_for(current_user),
         email: current_user.email
-      },
-      reportServiceSource: ENV['REPORT_SERVICE_SOURCE']
+      }
     }
     # Note that we're not generating JWT. We're only signing generated query JSON, so the external report can verify
     # that it's coming from the Portal and it hasn't been modified on the way. The external report app needs to know

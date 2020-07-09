@@ -8,20 +8,21 @@ class Report::Learner::Selector
                 :learners
 
 
-  def initialize(options, current_visitor)
+  def initialize(params, current_visitor, options={})
     @learners = []
     @runnable_names = []
+    include_runnable_and_learner = options.has_key?(:include_runnable_and_learner) && options[:include_runnable_and_learner]
 
     # include the learners in the results, this flag also disables the aggregrations
     # by default it includes up to 5000 learners, but this can overridden with the
     # size_limit parameter
-    options['show_learners'] = options['size_limit'].present? ?  options['size_limit'].to_i : 5000
-    esResponse = API::V1::ReportLearnersEsController.query_es(options, current_visitor)
+    params['show_learners'] = params['size_limit'].present? ? params['size_limit'].to_i : 5000
+    esResponse = API::V1::ReportLearnersEsController.query_es(params, current_visitor)
     hits = esResponse['hits']['hits']
 
     if hits && hits.size > 0
       ids = hits.map { |h| h['_id'] }
-      @learners = Report::Learner.find(ids)
+      @learners = include_runnable_and_learner ? Report::Learner.includes(:runnable, :learner).find(ids) : Report::Learner.find(ids)
       @runnable_names = hits.map { |h| h['_source']['runnable_type_and_id'] }
       @runnable_names = @runnable_names.uniq
     end
