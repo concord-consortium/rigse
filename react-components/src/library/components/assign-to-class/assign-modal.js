@@ -1,5 +1,5 @@
 import React from 'react'
-import AlertBox from '../../helpers/alert-box'
+import ConfirmDialog from '../../helpers/confirm-dialog'
 
 import css from './style.scss'
 
@@ -42,15 +42,13 @@ export default class AssignModal extends React.Component {
           if (response.error) {
             message = response.error
           }
-          console.log(message)
-          this.setState({ errorMessage: 'There was an error. Please try again.'})
+          this.setState({ errorMessage: 'There was an error: ' + message + '. Please try again.' })
         }
       })
     }
   }
 
   copyToClipboard () {
-    const textCopiedAlertClass = css.textCopiedAlert
     const textItemId = '#' + css.shareUrl
     const temp = jQuery('<input>')
     jQuery('body').append(temp)
@@ -70,7 +68,7 @@ export default class AssignModal extends React.Component {
     const assignedClassIds = this.state.assignedClassIds
 
     if (assignedClassIds && assignedClassIds.length < 1) {
-      this.setState({ errorMessage: 'Select at least one class to assign this resource.'})
+      this.setState({ errorMessage: 'Select at least one class to assign this resource.' })
     } else {
       for (let classId of assignedClassIds) {
         let params = {
@@ -80,6 +78,7 @@ export default class AssignModal extends React.Component {
           material_type: this.props.material_type,
           authenticity_token: authToken
         }
+        this.setState({ resourceAssigned: true })
         jQuery.post(Portal.API_V1.ASSIGN_MATERIAL_TO_CLASS, params)
           .done(response => {
             this.setState({ resourceAssigned: true })
@@ -212,17 +211,14 @@ export default class AssignModal extends React.Component {
   }
 
   render () {
-    const modalContainerSelector = '#' + css.assignModal
     if (this.state.resourceAssigned) {
-      jQuery(modalContainerSelector).addClass(css.assignComplete)
-      const alertMessage = <p><strong>{this.props.resourceTitle}</strong> was assigned to the selected class(es) successfully.</p>
+      const alertMessage = <p>The {this.props.resourceType} <strong>{this.props.resourceTitle}</strong> was assigned to the selected class(es) successfully.</p>
       return (
-        <div>
-          <AlertBox alertMessage={alertMessage} buttonText='OK' callbackFunc={this.props.closeFunc} />
-        </div>
+        <ConfirmDialog open onConfirm={this.props.closeFunc}>
+          {alertMessage}
+        </ConfirmDialog>
       )
     } else {
-      jQuery(modalContainerSelector).removeClass(css.assignComplete)
       return (
         <div className={css.assignModalContent}>
           <div className={css.assignShareCol} id={css.assignCol}>

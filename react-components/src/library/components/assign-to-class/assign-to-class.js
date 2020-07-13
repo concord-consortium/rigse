@@ -28,7 +28,6 @@ const openModal = (type, properties = {}, closeFunc) => {
 }
 
 export default function openAssignToClassModal (properties) {
-  console.log(properties)
   const materialTypes = {
     ExternalActivity: 'external_activity',
     Interactive: 'interactive'
@@ -43,6 +42,7 @@ export default function openAssignToClassModal (properties) {
   jQuery.post(Portal.API_V1.MATERIAL_SHOW, data).done(response => {
     properties.resourceTitle = response.name
     properties.previewUrl = response.preview_url
+    properties.resourceType = response.material_type.toLowerCase()
     openModal(AssignModal, properties, Modal.hideModal)
   })
     .fail(function (err) {
