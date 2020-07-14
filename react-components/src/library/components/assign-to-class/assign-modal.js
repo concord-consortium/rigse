@@ -25,7 +25,7 @@ export default class AssignModal extends React.Component {
   }
 
   componentDidMount () {
-    if (window.Portal && !window.Portal.currentUser.isAnonymous) {
+    if (!Portal.currentUser.isAnonymous) {
       const data = {
         material_id: this.props.material_id,
         material_type: this.props.material_type
@@ -38,11 +38,7 @@ export default class AssignModal extends React.Component {
       }).fail(function (err) {
         if (err && err.responseText) {
           const response = jQuery.parseJSON(err.responseText)
-          let message = response.message
-          if (response.error) {
-            message = response.error
-          }
-          this.setState({ errorMessage: 'There was an error: ' + message + '. Please try again.' })
+          this.setState({ errorMessage: 'There was an error: ' + response.message + '. Please try again.' })
         }
       })
     }
@@ -67,7 +63,7 @@ export default class AssignModal extends React.Component {
     const authToken = jQuery('meta[name="csrf-token"]').attr('content')
     const assignedClassIds = this.state.assignedClassIds
 
-    if (assignedClassIds && assignedClassIds.length < 1) {
+    if (assignedClassIds.length < 1) {
       this.setState({ errorMessage: 'Select at least one class to assign this resource.' })
     } else {
       for (let classId of assignedClassIds) {
@@ -78,7 +74,6 @@ export default class AssignModal extends React.Component {
           material_type: this.props.material_type,
           authenticity_token: authToken
         }
-        this.setState({ resourceAssigned: true })
         jQuery.post(Portal.API_V1.ASSIGN_MATERIAL_TO_CLASS, params)
           .done(response => {
             this.setState({ resourceAssigned: true })
@@ -86,16 +81,7 @@ export default class AssignModal extends React.Component {
           .fail(function (err) {
             if (err && err.responseText) {
               const response = jQuery.parseJSON(err.responseText)
-              let message = response.message
-              if (response.error) {
-                message = response.error
-              }
-              console.log(message)
-              //
-              // TODO use some kind of styled modal dialog here.....
-              //
-              // jQuery('.input-error').text('Error: ' + message)
-              // jQuery('.input-error').css('color', '#ea6d2f').fadeOut(200).fadeIn(200).fadeOut(200).fadeIn(200)
+              this.setState({ errorMessage: 'There was an error: ' + response.message + '. Please try again.' })
             }
           })
       }
@@ -188,6 +174,7 @@ export default class AssignModal extends React.Component {
 
   contentForTeacher () {
     const errorMessageClass = this.state.errorMessage ? css.errorMessage + ' ' + css.visible : css.errorMessage
+    const hasNoClasses = this.state.classes.unassigned_classes.length === 0 && this.state.classes.assigned_classes.length === 0
     return (
       <div>
         <p>Select the class(es) you want to assign this resource to below.</p>
@@ -199,45 +186,51 @@ export default class AssignModal extends React.Component {
             <div className={css.assignClassHeader}>
               Your Classes
             </div>
-            {this.state.classesLoaded && this.state.classes === {} ? this.noClasses() : null}
-            {this.state.classesLoaded && this.state.classes.unassigned_classes.length > 0 ? this.unassignedClassesForm() : null}
-            {this.state.classesLoaded && this.state.classes.assigned_classes.length > 0 ? this.assignedClassesList() : null}
+            {hasNoClasses ? this.noClasses() : null}
+            {this.state.classes.unassigned_classes.length > 0 ? this.unassignedClassesForm() : null}
+            {this.state.classes.assigned_classes.length > 0 ? this.assignedClassesList() : null}
           </div>
-          <a className={css.button + ' button'} href='#' onClick={this.assignMaterial}>Save</a>
+          {hasNoClasses || this.state.classes.unassigned_classes.length < 1 ? <a className={css.button + ' button'} href='/portal/classes/new'>Create a Class</a> : <a className={css.button + ' button'} href='#' onClick={this.assignMaterial}>Save</a>}
           <a className={css.cancel} href='#' onClick={this.props.closeFunc}>Cancel</a>
         </div>
       </div>
     )
   }
 
+  resourceAssigned () {
+    const alertMessage = <p>The {this.props.resourceType} <strong>{this.props.resourceTitle}</strong> is assigned to the selected class(es) successfully.</p>
+    return (
+      <ConfirmDialog open onConfirm={this.props.closeFunc}>
+        {alertMessage}
+      </ConfirmDialog>
+    )
+  }
+
   render () {
     if (this.state.resourceAssigned) {
-      const alertMessage = <p>The {this.props.resourceType} <strong>{this.props.resourceTitle}</strong> was assigned to the selected class(es) successfully.</p>
       return (
-        <ConfirmDialog open onConfirm={this.props.closeFunc}>
-          {alertMessage}
-        </ConfirmDialog>
-      )
-    } else {
-      return (
-        <div className={css.assignModalContent}>
-          <div className={css.assignShareCol} id={css.assignCol}>
-            <h2>Assign<span>…</span></h2>
-            { window.Portal && window.Portal.currentUser.isAnonymous ? this.contentForAnonymous() : this.contentForTeacher() }
-          </div>
-          <div className={css.assignShareCol} id={css.shareCol}>
-            <h2><span>or</span> Share</h2>
-            <p>Copy the URL below to assign this resource in your own LMS or to share with colleagues.</p>
-            <form>
-              { this.state.copyButtonClicked ? <div className={css.textCopiedAlert}><span>Copied to clipboard!</span></div> : null }
-              <label>Shareable URL</label><br />
-              <input id={css.shareUrl} type='url' defaultValue={this.props.previewUrl} />
-              <a className={css.button + ' button'} href='#' onClick={this.copyToClipboard}>Copy</a>
-            </form>
-            <p className={css.small}><strong>NOTE:</strong> Only use this option if you do not want to track student work on learn.concord.org</p>
-          </div>
-        </div>
+        this.resourceAssigned()
       )
     }
+
+    return (
+      <div className={css.assignModalContent}>
+        <div className={css.assignShareCol} id={css.assignCol}>
+          <h2>Assign<span>…</span></h2>
+          { Portal.currentUser.isAnonymous ? this.contentForAnonymous() : this.contentForTeacher() }
+        </div>
+        <div className={css.assignShareCol} id={css.shareCol}>
+          <h2><span>or</span> Share</h2>
+          <p>Copy the URL below to assign this resource in your own LMS or to share with colleagues.</p>
+          <form>
+            { this.state.copyButtonClicked ? <div className={css.textCopiedAlert}><span>Copied to clipboard!</span></div> : null }
+            <label>Shareable URL</label><br />
+            <input id={css.shareUrl} type='url' defaultValue={this.props.previewUrl} />
+            <a className={css.button + ' button'} href='#' onClick={this.copyToClipboard}>Copy</a>
+          </form>
+          <p className={css.small}><strong>NOTE:</strong> Only use this option if you do not want to track student work on learn.concord.org</p>
+        </div>
+      </div>
+    )
   }
 }

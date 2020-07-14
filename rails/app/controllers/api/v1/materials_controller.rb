@@ -358,20 +358,12 @@ class API::V1::MaterialsController < API::APIController
   end
 
   def unassigned_clazzes
-    material_type = params[:material_type]
-    material_id = params[:material_id]
 
-    if material_type != "ExternalActivity"
-      @material_type = material_type
-      # render :partial => 'unsupported_assignment'
-      return
-    end
+    @material = [ExternalActivity.find(params[:material_id])]
 
     teacher_clazzes = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
     teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
-
-    @material = [ExternalActivity.find(params[:material_id])]
 
     teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
     assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
@@ -383,22 +375,13 @@ class API::V1::MaterialsController < API::APIController
     @unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
     @unassigned_clazzes = @unassigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
 
-    @teacher_active_clazzes_count = (teacher_clazzes)? teacher_clazzes.length : 0
-
-    @skip_reload = params[:skip_reload] == 'true'
-
     @assigned_clazzes_json = @assigned_clazzes.map do |clazz|
-        next {
-          :id => clazz.id,
-          :name => clazz.name
-        }
-      end
+      next { :id => clazz.id, :name => clazz.name }
+    end
+
     @unassigned_clazzes_json = @unassigned_clazzes.map do |clazz|
-        next {
-          :id => clazz.id,
-          :name => clazz.name,
-        }
-      end
+      next { :id => clazz.id, :name => clazz.name }
+    end
 
     render :json =>
       {

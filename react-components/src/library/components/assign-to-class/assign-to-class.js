@@ -48,11 +48,7 @@ export default function openAssignToClassModal (properties) {
     .fail(function (err) {
       if (err && err.responseText) {
         const response = jQuery.parseJSON(err.responseText)
-        let message = response.message
-        if (response.error) {
-          message = response.error
-        }
-        console.log(message)
+        console.log(response.message)
       }
     })
 }

@@ -448,8 +448,7 @@ var ResourceLightbox = Component({
     const icons = [printIcon, copyIcon, editIcon, settingsIcon]
     let iconIndex = 0
     const iconsListItems = icons.map((icon) => {
-      iconIndex++
-      return icon !== null ? <li key={'utility-icon-' + iconIndex}>{icon}</li> : null
+      return icon !== null ? <li key={'utility-icon-' + iconIndex++}>{icon}</li> : null
     })
 
     if (printIcon || copyIcon || editIcon || settingsIcon) {

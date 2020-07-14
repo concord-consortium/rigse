@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-RSpec.feature 'Teachers and anonymous users should be able to see an assign button for resources', :WebDriver => true do
+RSpec.feature 'Teachers and anonymous users should be able to see an assign button for resources.', :WebDriver => true do
 
-  context "when logged in as a student." do
+  context "When logged in as a student," do
     let!(:student_user)            { FactoryBot.create(:confirmed_user,
                                                        :login => "student_user",
                                                        :password => "password",
@@ -14,19 +14,19 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
       login_with_ui_as('student_user', 'password')
     end
 
-    scenario "Student user should not see assign button", :js => true do
+    scenario "student user should not see assign button", :js => true do
       visit "/browse/eresources/1"
       expect(page).to_not have_content("Assign")
     end
   end
 
-  context "when not logged in." do
-    scenario 'Anonymous user should see assign button', :js => true do
+  context "When not logged in," do
+    scenario 'anonymous user should see assign button', :js => true do
       visit "/browse/eresources/1"
       expect(page).to have_content("Assign")
     end
 
-    scenario 'Anonymous user should be able to click assign button and see assign dialog modal.', :js => true do
+    scenario 'anonymous user should be able to click assign button and see assign dialog modal.', :js => true do
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do
@@ -34,33 +34,33 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
       end
     end
 
-    scenario "Anonymous user can click register button in assign dialog modal.", :js => true do
+    scenario "anonymous user can click register button in assign dialog modal.", :js => true do
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do
-        within("#assign-col") do
+        within('div[id^="assignCol"]') do
           click_on("Register")
         end
         expect(page).to have_css("div#signup-default-modal")
       end
     end
 
-    scenario "Anonymous user can click login button in assign dialog modal.", :js => true do
+    scenario "anonymous user can click login button in assign dialog modal.", :js => true do
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do
-        within("#assign-col") do
+        within('div[id^="assignCol"]') do
           click_on("Log In")
         end
         expect(page).to have_css("div#login-default-modal")
       end
     end
 
-    scenario "Anonymous user can click copy button in assign dialog modal.", :js => true do
+    scenario "anonymous user can click copy button in assign dialog modal.", :js => true do
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do
-        within("#share-col") do
+        within('div[id^="shareCol"]') do
           click_on("Copy")
           expect(page).to have_content("Copied to clipboard!")
         end
@@ -69,7 +69,7 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
 
   end
 
-  context "when logged in as a teacher who has not set up classes yet." do
+  context "When logged in as a teacher who has not set up classes yet," do
     let!(:teacher_user)            { FactoryBot.create(:confirmed_user,
                                                        :login => "teacher_user",
                                                        :password => "password",
@@ -81,12 +81,12 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
       login_with_ui_as('teacher_user', 'password')
     end
 
-    scenario 'Teacher user should see assign button', :js => true do
+    scenario 'teacher user should see assign button', :js => true do
       visit "/browse/eresources/1"
       expect(page).to have_content("Assign")
     end
 
-    scenario 'Teacher user should be able to click assign button and see assign dialog modal, but will not see a list of classes.', :js => true do
+    scenario 'teacher user should be able to click assign button and see assign dialog modal, but will not see a list of classes.', :js => true do
       # first, archive sample class
       visit "/portal/classes/manage"
       first("input[type='checkbox']").click
@@ -95,16 +95,15 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
       using_wait_time(1) do
         expect(page).to_not have_content("Register")
         expect(page).to_not have_content("Log In")
-        expect(page).to_not have_content("Select the class(es) you want to assign this resource to below.")
         expect(page).to have_content("You don't have any active classes.")
       end
     end
 
-    scenario "Teacher user can click copy button in assign dialog modal.", :js => true do
+    scenario "teacher user can click copy button in assign dialog modal.", :js => true do
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do
-        within("#share-col") do
+        within('div[id^="shareCol"]') do
           click_on("Copy")
           expect(page).to have_content("Copied to clipboard!")
         end
@@ -112,24 +111,24 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
     end
   end
 
-  context "when logged in as a teacher who has set up classes already." do
+  context "When logged in as a teacher who has set up classes already," do
     before do
       login_with_ui_as('teacher', 'password')
     end
 
-    scenario 'Teacher user should see assign button', :js => true do
+    scenario 'teacher user should see assign button', :js => true do
       visit "/browse/eresources/1"
       expect(page).to have_content("Assign")
     end
 
-    scenario 'Teacher user should be able to click assign button, see assign dialog modal, and assign resource to a class.', :js => true do
-      visit "/browse/eresources/1"
+    scenario 'teacher user should be able to click assign button, see assign dialog modal, and assign resource to a class.', :js => true do
+      visit "/browse/eresources/2"
       click_on "Assign"
       using_wait_time(1) do
         expect(page).to_not have_content("Register")
         expect(page).to_not have_content("Log In")
         expect(page).to have_content("Select the class(es) you want to assign this resource to below.")
-        within("#assign-col") do
+        within('div[id^="assignCol"]') do
           first(".unassigned_activity_class").click
           click_on "Save"
         end
@@ -137,11 +136,11 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
       end
     end
 
-    scenario "Teacher user can click copy button in assign dialog modal.", :js => true do
+    scenario "teacher user can click copy button in assign dialog modal.", :js => true do
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do
-        within("#share-col") do
+        within('div[id^="shareCol"]') do
           click_on("Copy")
           expect(page).to have_content("Copied to clipboard!")
         end
