@@ -13,6 +13,7 @@ class TextInput extends React.Component {
     }
 
     this.onChange = this.onChange.bind(this)
+    this.inputRef = React.createRef()
   }
 
   // With the change from React 15 mixins for Formsy to React 16 HOCs the async validation needed
@@ -71,12 +72,21 @@ class TextInput extends React.Component {
   }
 
   onChange (event) {
+    const cursor = event.target.selectionStart
     let newVal = event.currentTarget.value
     this.setState({ _asyncValidationPassed: true }, () => {
       const delay = this.props.isValidValue(newVal) ? 0 : TIMEOUT
 
       this.setState({
         inputVal: newVal
+      }, () => {
+        // Reset the cursor in case the user was not appending text.
+        // NOTE: while unintuitive the selectionEnd is set to the selectionStart to collapse the cursor.
+        // This works for both unselected text and multiple character selections.
+        // More info here: https://stackoverflow.com/a/54811848
+        if (this.inputRef.current != null) {
+          this.inputRef.current.selectionEnd = cursor
+        }
       })
 
       if (this.timeoutID) {
@@ -114,6 +124,7 @@ class TextInput extends React.Component {
     return (
       <div className={className}>
         <input
+          ref={this.inputRef}
           type={type}
           onChange={this.onChange}
           value={this.state.inputVal}
