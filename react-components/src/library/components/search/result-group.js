@@ -9,6 +9,7 @@ export default class SearchResultGroup extends React.Component {
     super(props)
     this.state = Object.assign({ loading: false }, this.props)
     this.onPaginationSelect = this.onPaginationSelect.bind(this)
+    this.updateState = this.updateState.bind(this)
   }
 
   onPaginationSelect (page) {
@@ -36,7 +37,7 @@ export default class SearchResultGroup extends React.Component {
   }
 
   updateState (groupData) {
-    this.replaceState({ group: groupData.results[0] })
+    this.setState({ group: groupData.results[0] })
   }
 
   renderLoading () {
