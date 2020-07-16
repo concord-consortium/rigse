@@ -37,7 +37,7 @@ export default class SearchResultGroup extends React.Component {
   }
 
   updateState (groupData) {
-    this.setState({ group: groupData.results[0] })
+    this.setState({ loading: false, group: groupData.results[0] })
   }
 
   renderLoading () {
