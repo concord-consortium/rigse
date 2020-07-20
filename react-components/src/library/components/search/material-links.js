@@ -51,7 +51,9 @@ export class SGenericLink extends React.Component {
     }
 
     // React 16 shows a warning when using javascript:void(0) so replace it with the equivalent
-    const url = link.url === 'javascript:void(0)' ? '#' : link.url
+    // Use #! instead of # so the page doesn't scroll to the top on click. This should
+    // eventually be handled using preventDefault or by changing the anchor links to buttons.
+    const url = link.url === 'javascript:void(0)' ? '#!' : link.url
 
     return (
       <a

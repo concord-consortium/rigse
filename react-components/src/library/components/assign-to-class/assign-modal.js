@@ -89,44 +89,52 @@ export default class AssignModal extends React.Component {
   }
 
   noClasses () {
-    return (
-      <p className='messagetext'>
-        You don't have any active classes. Once you have created your class(es), you will be able to assign materials to them.
-      </p>
-    )
+    const hasNoClasses = this.state.classes.unassigned_classes.length === 0 &&
+                         this.state.classes.assigned_classes.length === 0
+    if (hasNoClasses) {
+      return (
+        <p className='messagetext'>
+          You don't have any active classes. Once you have created your class(es), you will be able to assign materials to them.
+        </p>
+      )
+    }
   }
 
   assignedClassesList () {
     const assignedClasses = this.state.classes.assigned_classes
-    return (
-      <div>
-        <div className={css.alreadyAssignedClassHeader}>Already assigned to the following class(es)</div>
+    if (assignedClasses.length > 0) {
+      return (
         <div>
-          <div className={css.classListContainer + ' webkit_scrollbars'}>
-            <ul>
-              {
-                assignedClasses.map(ac => <li key={ac.id}>{ac.name}</li>)
-              }
-            </ul>
+          <div className={css.alreadyAssignedClassHeader}>Already assigned to the following class(es)</div>
+          <div>
+            <div className={css.classListContainer + ' webkit_scrollbars'}>
+              <ul>
+                {
+                  assignedClasses.map(ac => <li key={ac.id}>{ac.name}</li>)
+                }
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    )
+      )
+    }
   }
 
   unassignedClassesForm () {
     const unassignedClasses = this.state.classes.unassigned_classes
-    return (
-      <form id={css.addMaterialForm}>
-        <div className={css.classListContainer + ' webkit_scrollbars'}>
-          <ul>
-            {
-              unassignedClasses.map(uac => <li key={uac.id}><input className='unassigned_activity_class' id={'clazz_' + uac.id} name='clazz_id[]' type='checkbox' value={uac.id} onChange={this.updateClassList} /><label className='clazz_name' htmlFor={'clazz_' + uac.id}>{ uac.name }</label></li>)
-            }
-          </ul>
-        </div>
-      </form>
-    )
+    if (unassignedClasses.length > 0) {
+      return (
+        <form id={css.addMaterialForm}>
+          <div className={css.classListContainer + ' webkit_scrollbars'}>
+            <ul>
+              {
+                unassignedClasses.map(uac => <li key={uac.id}><input className='unassigned_activity_class' id={'clazz_' + uac.id} name='clazz_id[]' type='checkbox' value={uac.id} onChange={this.updateClassList} /><label className='clazz_name' htmlFor={'clazz_' + uac.id}>{ uac.name }</label></li>)
+              }
+            </ul>
+          </div>
+        </form>
+      )
+    }
   }
 
   updateClassList (event) {
@@ -161,20 +169,35 @@ export default class AssignModal extends React.Component {
     })
   }
 
+  saveButton () {
+    if (this.state.classes.unassigned_classes.length < 1) {
+      return (
+        <a className={css.button + ' button'} href='/portal/classes/new'>
+          Create a Class
+        </a>
+      )
+    } else {
+      return (
+        <a className={css.button + ' button'} href='#' onClick={this.assignMaterial}>
+          Save
+        </a>
+      )
+    }
+  }
+
   contentForAnonymous () {
     return (
       <div>
         <p>To assign this resource to classes and track student work on learn.concord.org, log in or register as a teacher.</p>
         <a className={css.button + ' button'} href='/signup' onClick={this.handleRegisterClick}>Register</a>
         <a className={css.button + ' button'} href='/login' onClick={this.handleLoginClick}>Log In</a>
-        <a className={css.cancel} href='#' onClick={this.props.closeFunc}>Cancel</a>
+        <button className={css.cancel} onClick={this.props.closeFunc}>Cancel</button>
       </div>
     )
   }
 
   contentForTeacher () {
     const errorMessageClass = this.state.errorMessage ? css.errorMessage + ' ' + css.visible : css.errorMessage
-    const hasNoClasses = this.state.classes.unassigned_classes.length === 0 && this.state.classes.assigned_classes.length === 0
     return (
       <div>
         <p>Select the class(es) you want to assign this resource to below.</p>
@@ -186,12 +209,12 @@ export default class AssignModal extends React.Component {
             <div className={css.assignClassHeader}>
               Your Classes
             </div>
-            {hasNoClasses ? this.noClasses() : null}
-            {this.state.classes.unassigned_classes.length > 0 ? this.unassignedClassesForm() : null}
-            {this.state.classes.assigned_classes.length > 0 ? this.assignedClassesList() : null}
+            {this.noClasses()}
+            {this.unassignedClassesForm()}
+            {this.assignedClassesList()}
           </div>
-          {hasNoClasses || this.state.classes.unassigned_classes.length < 1 ? <a className={css.button + ' button'} href='/portal/classes/new'>Create a Class</a> : <a className={css.button + ' button'} href='#' onClick={this.assignMaterial}>Save</a>}
-          <a className={css.cancel} href='#' onClick={this.props.closeFunc}>Cancel</a>
+          {this.saveButton()}
+          <button className={css.cancel} onClick={this.props.closeFunc}>Cancel</button>
         </div>
       </div>
     )
@@ -217,7 +240,7 @@ export default class AssignModal extends React.Component {
       <div className={css.assignModalContent}>
         <div className={css.assignShareCol} id={css.assignCol}>
           <h2>Assign<span>…</span></h2>
-          { Portal.currentUser.isAnonymous ? this.contentForAnonymous() : this.contentForTeacher() }
+          {Portal.currentUser.isAnonymous ? this.contentForAnonymous() : this.contentForTeacher()}
         </div>
         <div className={css.assignShareCol} id={css.shareCol}>
           <h2><span>or</span> Share</h2>
@@ -226,7 +249,7 @@ export default class AssignModal extends React.Component {
             { this.state.copyButtonClicked ? <div className={css.textCopiedAlert}><span>Copied to clipboard!</span></div> : null }
             <label>Shareable URL</label><br />
             <input id={css.shareUrl} type='url' defaultValue={this.props.previewUrl} />
-            <a className={css.button + ' button'} href='#' onClick={this.copyToClipboard}>Copy</a>
+            <button className={css.button + ' button'} onClick={this.copyToClipboard}>Copy</button>
           </form>
           <p className={css.small}><strong>NOTE:</strong> Only use this option if you do not want to track student work on learn.concord.org</p>
         </div>

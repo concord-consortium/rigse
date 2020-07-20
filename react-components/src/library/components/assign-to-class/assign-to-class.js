@@ -39,12 +39,13 @@ export default function openAssignToClassModal (properties) {
     material_type: materialType,
     include_related: '0'
   }
-  jQuery.post(Portal.API_V1.MATERIAL_SHOW, data).done(response => {
-    properties.resourceTitle = response.name
-    properties.previewUrl = response.preview_url
-    properties.resourceType = response.material_type.toLowerCase()
-    openModal(AssignModal, properties, Modal.hideModal)
-  })
+  jQuery.post(Portal.API_V1.MATERIAL_SHOW, data)
+    .done(response => {
+      properties.resourceTitle = response.name
+      properties.previewUrl = response.preview_url
+      properties.resourceType = response.material_type.toLowerCase()
+      openModal(AssignModal, properties, Modal.hideModal)
+    })
     .fail(function (err) {
       if (err && err.responseText) {
         const response = jQuery.parseJSON(err.responseText)

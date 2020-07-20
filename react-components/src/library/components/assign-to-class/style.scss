@@ -90,8 +90,11 @@
         font-weight: 900;
       }
       .button {
+        background: #ea6d2f;
+        color: #fff;
         margin-right: 0;
         margin-left: 10px;
+        padding: 12px 15px;
       }
     }
 
@@ -142,11 +145,15 @@
     }
 
     .cancel {
+      background: transparent;
+      border: none;
       color: #777;
       display: inline-block;
       font-size: 16px;
+      font-weight: 300;
       margin-left: 5px;
-      padding-top: 8px;
+      outline: none;
+      padding: 13px 0 0 0;
     }
 
     #addMaterialForm {
