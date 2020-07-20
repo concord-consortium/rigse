@@ -30,6 +30,8 @@ module HtmlSelectorsHelpers
       "div#students_listing"
     when "the lightbox in focus"
       "div.ui-window.lightbox.lightbox_focused"
+    when "the modal"
+      "div.portal-pages-modal"
     when "the navigation menu"
       "div#clazzes_nav"
     when "content box in change password page"
