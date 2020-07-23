@@ -1,5 +1,4 @@
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const destFolder = path.resolve(__dirname, 'dist')
 const devMode = process.env.NODE_ENV !== 'production'
@@ -7,6 +6,7 @@ const devMode = process.env.NODE_ENV !== 'production'
 module.exports = {
   // development mode makes webpack-server reload pages faster
   mode: devMode ? 'development' : 'production',
+  devtool: devMode ? 'inline-source-map' : false,
   entry: {
     'react-components': './src/library/library.js',
     'react-test-globals': './src/react-test-globals.js'
@@ -34,7 +34,7 @@ module.exports = {
         test: [/node_modules[\\/].*\.(css|scss)$/, /library.scss$/],
         use: [
           {
-            loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader
+            loader: 'style-loader',
           },
           {
             loader: 'css-loader'
@@ -49,7 +49,7 @@ module.exports = {
         exclude: [/node_modules/, /library.scss$/],
         use: [
           {
-            loader: devMode ? 'style-loader' : MiniCssExtractPlugin.loader
+            loader: 'style-loader'
           },
           {
             loader: 'css-loader',
@@ -75,17 +75,6 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new MiniCssExtractPlugin(
-      {
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
-        filename: '[name].css',
-        // TODO figure out what this does
-        chunkFilename: '[id].css'
-      }
-    )
-  ],
   externals: {
     'jquery': 'jQuery',
   }

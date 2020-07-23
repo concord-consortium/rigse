@@ -36,24 +36,28 @@ class API::V1::ReportLearnersEsController < API::APIController
   # Returns a signed query that can be used by the external researcher report.
   def external_report_query
     authorize Portal::PermissionForm
+
     # Note that Report::Learner::Selector is a little helper that actually calls
     # API::V1::ReportLearnersEsController.query_es.
-    learner_selector = Report::Learner::Selector.new(params, current_user)
-    # The learners we have selected:
-    select_learners  = learner_selector.learners.map(&:learner).compact
+    learner_selector = Report::Learner::Selector.new(params, current_user, {:include_runnable_and_learner => true})
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     query = {
       type: "learners",
-      version: "1.0",
-      learners: select_learners.map do |l|
+      version: "1.1",
+      learners: learner_selector.learners.map do |l|
         {
-          run_remote_endpoint: l.remote_endpoint_url,
-          class_id: l.offering && l.offering.clazz_id
+          run_remote_endpoint: l.learner ? l.learner.remote_endpoint_url : nil,
+          class_id: l.class_id,
+          runnable_url: l.runnable && l.runnable.respond_to?(:url) ? l.runnable.url : nil
         }
-      end
+      end,
+      user: {
+        id: url_for(current_user),
+        email: current_user.email
+      }
     }
-    # Note that we're not generating JWT. We're only signing generated query JSON, so the log manager can verify
-    # that it's coming from the Portal and it hasn't been modified on the way. Log manager app needs to know
+    # Note that we're not generating JWT. We're only signing generated query JSON, so the external report can verify
+    # that it's coming from the Portal and it hasn't been modified on the way. The external report app needs to know
     # hmac_secret to verify query and signature.
     signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, query.to_json)
     render json: {

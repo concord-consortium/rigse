@@ -107,6 +107,12 @@ services:
       # Enables logging to stdout instead of file.
       #
       RAILS_STDOUT_LOGGING: "true"
+
+      #
+      # Source for report service lookups
+      #
+      REPORT_SERVICE_SOURCE: "app_lara_docker"
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
