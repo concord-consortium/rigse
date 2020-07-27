@@ -23,36 +23,33 @@ Documentation is split up into three parts:
 At the moment running the admin panel interface is a manual process:
 
 ### Setup
+
+1. install certificates into `~/.dignhy/certs`
+  1.  `mkcert -cert-file graphql.portal.docker.crt -key-file graphql.portal.docker.key graphql.portal.docker`
+  1.  `mkcert -cert-file admin.portal.docker.crt -key-file admin.portal.docker.key admin.portal.docker`
 1. Run docker, and start the Portal using `./docker-compose up`.
-1. `cd` to `<PortalRoot>/admin-panel/graphql-backend`
-2. Copy `./sample-ormconfig.json` to `./orgmconfig.json`
-3. Modify `./ormconfig.json` to use the database and credentials used in Portal.
-4. run `npm install`
-5. run `npm run start`
-6. The GraphQL playground running at http://localhost:4000/graphql
+6. The GraphQL playground should now be running at `https://graphql.portal.docker/graphql`
 6. You should be able to read the schema at the above playground URL but specific
 queries will fail unless you authenticate with the portal first. See "Portal Authentication" section below.
-7. you should see the Admin interface running at http://localhost:3000/
-5. next, cd into `./admin-panel/react-admin-interface` directory
-5. run `npm install`
-6. run `npm run start`
-7. Your react-admin interface should open a webpage to http://localhost:4000/
+7. you should see the Admin interface running at https://admin.portal.docker/
 8. You should see a button to authenticate with the portal.
 
 ### Portal Authentication
 1. Ensure that your portal has an oauth client configured for this app.
 1. the client name should be `admin-panel`, public.
 1. The client should be configured with Redirect URIS matching
-`http://localhost:3000/` and `http://localhost:3000/?PORTAL_URL=https://app.portal.docker`
-1. `./admin-panel/graphql-backend/.env` should include configuration params for portal
-URL and also the JWT shared secret for the portal. Copy `./admin-panel/graphql-backend/.env-sampl` to get started.
-1. You must also specify the poral URL in query params for the admin-front end eg:
-`http://localhost:3000/?PORTAL_URL=https://app.portal.docker#/login`,
+`https://admin.portal.docker/` and `https://admin.portal.docker/?PORTAL_URL=https://app.portal.docker`
+1. Most of the configuration is done through environment variables, managed by
+1. docker-compose. For the react-admin interface environment variable names must
+1. start with `REACT_APP` so they get passed down to build process and packaged
+1. for client delivery. To learn more about that, see the
+[create-react-app documentation for custom enviroments](https://create-react-app.dev/docs/adding-custom-environment-variables)
+
 
 ### Using the GraphQL Playground  with JWT Auth headers:
 
 In local development you can experiment with graphQL queries in the GraphQL
-playground running at: http://localhost:4000/graphql --
+playground running at: https://graphql.portal.docker/graphql --
 but you need to add HTTP Headers in the bottom left hand panel of the interface.
 Just add:
 
@@ -73,7 +70,7 @@ an administrator or project admin:
 This has already been done, and you shouldn't need to do it again.
 If the database schema has been substantially modified, you can import
 the TypeORM entities by running this: `MYSQLPASSWORD=xyzzy npm run import`.
-NOTE: You will need review these change by hand, and re-add TypeGraphQL annotations
+NOTE: You will need review these changes by hand, and re-add TypeGraphQL annotations
 to any modified entities before checking them back in to git.
 
 ### Tips and Tools:

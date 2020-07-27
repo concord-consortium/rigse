@@ -13,11 +13,11 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-
+import { Config } from './config'
 import MyLoginPage  from './myLoginPage'
 import {authProvider, currentJwt} from './portalAuthProvider.ts'
 
-const uri = 'http://localhost:4000/graphql';
+const uri = `https://${Config.GraphQlHost}/graphql`;
 const httpLink = createHttpLink({uri});
 const customBuildQuery = introspectionResults => {
   console.info("ra-data-graphql introspectionResults:\n%O", introspectionResults);
