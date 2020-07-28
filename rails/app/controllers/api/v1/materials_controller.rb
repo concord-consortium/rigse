@@ -357,6 +357,38 @@ class API::V1::MaterialsController < API::APIController
     render json: {:message => message}, :status => status
   end
 
+  def unassigned_clazzes
+
+    @material = [ExternalActivity.find(params[:material_id])]
+
+    teacher_clazzes = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
+    teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
+    teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
+
+    teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)
+    assigned_clazz_ids = teacher_offerings.map{|item| item.clazz_id}
+
+    @assigned_clazzes = Portal::Clazz.where(:id=>assigned_clazz_ids)
+    @assigned_clazzes = @assigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
+
+    unassigned_teacher_clazzes = teacher_clazzes.select{|item| assigned_clazz_ids.index(item.clazz_id).nil?}
+    @unassigned_clazzes = Portal::Clazz.where(:id=>unassigned_teacher_clazzes.map{|item| item.clazz_id})
+    @unassigned_clazzes = @unassigned_clazzes.sort{|a,b| teacher_clazz_ids.index(a.id) <=> teacher_clazz_ids.index(b.id)}
+
+    @assigned_clazzes_json = @assigned_clazzes.map do |clazz|
+      next { :id => clazz.id, :name => clazz.name }
+    end
+
+    @unassigned_clazzes_json = @unassigned_clazzes.map do |clazz|
+      next { :id => clazz.id, :name => clazz.name }
+    end
+
+    render :json =>
+      {
+        assigned_classes: @assigned_clazzes_json,
+        unassigned_classes: @unassigned_clazzes_json
+      }
+  end
 
   #
   # Get the standards associated with a material

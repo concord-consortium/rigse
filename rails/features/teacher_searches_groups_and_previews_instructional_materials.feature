@@ -23,12 +23,8 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should see "Select the class(es) you want to assign this resource to below."
     And I should be on the search instructional materials page
     And I should see "Your Classes"
-    When I follow "Cancel" within the lightbox in focus
-    And I follow the "Assign or Share" link for the activity "differential calculus"
-    Then I should see "Select the class(es) you want to assign this resource to below."
-    And I should be on the search instructional materials page
-    And I should see "Your Classes"
-    When I follow "Cancel" within the lightbox in focus
+    When I press "Cancel" within the modal
+    And I wait 2 seconds
     And I follow activity link "differential calculus" on the search instructional materials page
     Then I should be on the browse materials page for "differential calculus"
     And I should see "differential calculus"
