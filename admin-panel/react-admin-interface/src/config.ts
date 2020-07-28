@@ -7,7 +7,7 @@ const params = queryString.parse(window.location.search);
 const GraphQlHost = process.env.REACT_APP_GRAPHQL_HOST
 
 // Note your Portal connection must use https:
-const PortalUrl = params.REACT_APP_PORTAL_URL || defaultPortal
+const PortalUrl = params.PORTAL_URL || defaultPortal
 
 const OauthClientName = params.OATUH_CLIENT_NAME
   ? (params.OATUH_CLIENT_NAME as string)
