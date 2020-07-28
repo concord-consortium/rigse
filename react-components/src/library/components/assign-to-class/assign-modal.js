@@ -44,7 +44,8 @@ export default class AssignModal extends React.Component {
     }
   }
 
-  copyToClipboard () {
+  copyToClipboard (e) {
+    e.preventDefault()
     const textItemId = '#' + css.shareUrl
     const temp = jQuery('<input>')
     jQuery('body').append(temp)
@@ -137,10 +138,10 @@ export default class AssignModal extends React.Component {
     }
   }
 
-  updateClassList (event) {
+  updateClassList (e) {
     let assignedClassIds = this.state.assignedClassIds
-    let classId = event.target.value
-    if (event.target.checked) {
+    let classId = e.target.value
+    if (e.target.checked) {
       assignedClassIds.push(classId)
     } else {
       let index = assignedClassIds.indexOf(classId)

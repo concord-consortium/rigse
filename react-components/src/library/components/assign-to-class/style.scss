@@ -92,9 +92,10 @@
       .button {
         background: #ea6d2f;
         color: #fff;
+        line-height: 1.7;
         margin-right: 0;
         margin-left: 10px;
-        padding: 12px 15px;
+        padding: 7px 15px;
       }
     }
 
@@ -151,9 +152,10 @@
       display: inline-block;
       font-size: 16px;
       font-weight: 300;
+      line-height: 1.7;
       margin-left: 5px;
       outline: none;
-      padding: 13px 0 0 0;
+      padding: 7px 0 0 0;
     }
 
     #addMaterialForm {
@@ -190,4 +192,19 @@
   60% { opacity: 1; }
   75% { opacity: 0; }
   90% { opacity: 1; }
+}
+
+@media screen and (max-width: 745px) {
+  #assignModal {
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+
+    .assignShareCol {
+      float: none;
+      max-width: 100%;
+      min-height: 275px;
+      width: 100%;
+    }
+  }
 }
