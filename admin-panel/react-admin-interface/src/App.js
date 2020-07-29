@@ -69,11 +69,30 @@ class App extends Component {
     }
 
     return (
-      <Admin dataProvider={dataProvider} authProvider={authProvider} loginPage={MyLoginPage}>
-        <Resource name="User" list={UserList} edit={UserEdit} create={UserCreate} />
-        <Resource name="AdminProject" list={ProjectList} edit={ProjectEdit} create={ProjectCreate}/>
-        <Resource name="AdminProjectUser" edit={ProjectUserEdit} create={ProjectUserCreate}/>
-        <Resource name="PortalPermissionForm"
+      <Admin
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+        loginPage={MyLoginPage}>
+
+        <Resource
+          name="User"
+          list={UserList}
+          edit={UserEdit}
+          create={UserCreate} />
+
+        <Resource
+          name="AdminProject"
+          list={ProjectList}
+          edit={ProjectEdit}
+          create={ProjectCreate}/>
+
+        <Resource
+          name="AdminProjectUser"
+          edit={ProjectUserEdit}
+          create={ProjectUserCreate}/>
+
+        <Resource
+          name="PortalPermissionForm"
           list={PortalPermissionFormList}
           edit={PortalPermissionFormEdit}
           create={PortalPermissionFormCreate}/>

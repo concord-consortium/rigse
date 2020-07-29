@@ -1,10 +1,10 @@
 import React from "react"
 import {
   Edit, Create, SimpleForm, TextInput,
-  Datagrid, List, TextField, EmailField,
-  ReferenceArrayField, ChipField, SingleFieldList,
+  Datagrid, List, TextField, EmailField, ChipField,
   ReferenceManyField, ReferenceField, BooleanField,
-  EditButton, DeleteButton, Button, Link, Filter
+  EditButton, DeleteButton, Button, Link, Filter,
+  SingleFieldList
 } from "react-admin"
 
 const UserFilter = (props) => (
@@ -22,11 +22,13 @@ export const UserList = props => (
       <TextField source="login" />
       <TextField source="firstName" />
       <TextField source="lastName" />
-      <ReferenceArrayField label="projects" reference="AdminProject" source="projectsIds">
+      <ReferenceManyField label="Projects" reference="AdminProjectUser" target="userId">
         <SingleFieldList>
-          <ChipField source="name" />
+          <ReferenceField label="Project" source="projectId" reference="AdminProject">
+             <ChipField source="name" />
+          </ReferenceField>
         </SingleFieldList>
-      </ReferenceArrayField>
+      </ReferenceManyField>
       <EmailField source="email" />
     </Datagrid>
   </List>

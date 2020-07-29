@@ -60,6 +60,7 @@ type PortalPermissionForm {
 
 input ProjectFilter {
   name: String
+  ids: [ID]
 }
 
 type Query {

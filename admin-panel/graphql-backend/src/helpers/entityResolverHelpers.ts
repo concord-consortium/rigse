@@ -63,7 +63,7 @@ export async function updateEntity<T extends PortalEntity>(
 }
 
 export interface StringFilter {
-  [key: string]: string
+  [key: string]: string | string[]
 }
 
 export type SortOrder = "ASC" | "DESC"
@@ -103,10 +103,20 @@ async function buildQuery
   const parameters: {[key:string]: string } = {}
   const repository = getConnection().getRepository(clazz)
   filterFields.forEach( fieldName => {
-    if((filter as any)[fieldName] && (filter as any)[fieldName].length > 0) {
-      wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
-      parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
+    // For now special case the 'ids' field in the filter for association lookup
+    // we could do something generic with any array fieldName later....
+    if(fieldName === 'ids') {
+      if(filter && filter.ids.length > 0) {
+        wheres.push(`${table}.id in (:ID_LIST)`)
+        parameters['ID_LIST'] = (filter.ids as string[]).join(',');
+      }
+    } else {
+      if((filter as any)[fieldName].length > 0) {
+        wheres.push(`${table}.${fieldName} LIKE :${fieldName}Param`)
+        parameters[`${fieldName}Param`] = `%${(filter as any)[fieldName]}%`
+      }
     }
+
   })
   const query =  await repository.createQueryBuilder(table)
     .where(wheres.join( " AND "))

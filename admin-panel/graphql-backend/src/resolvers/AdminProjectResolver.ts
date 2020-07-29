@@ -38,7 +38,9 @@ class updateAdminProject extends createAdminProject{
 @InputType()
 class ProjectFilter implements Partial<AdminProject>{
   @Field(type => String)
-  name?: string;
+  name?: string
+  @Field(type => [ID])
+  ids?: number[];
 }
 
 @ArgsType()
