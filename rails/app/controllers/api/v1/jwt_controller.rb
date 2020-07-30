@@ -3,6 +3,22 @@ class API::V1::JwtController < API::APIController
   require 'digest/md5'
   skip_before_filter :verify_authenticity_token
 
+  private
+  def add_admin_claims(user, claims)
+    if (user.has_role? 'admin')
+      claims[:admin] = 1
+    else
+      claims[:admin] = -1
+    end
+    claims[:project_admins] = []
+    user.project_users.each do |p|
+      if(p.is_admin)
+        claims[:project_admins].push(p.project_id)
+      end
+    end
+  end
+
+  public
   def portal
     begin
       user, role = check_for_auth_token(params)
@@ -34,18 +50,7 @@ class API::V1::JwtController < API::APIController
         :teacher_id => teacher.id
       }
     end
-
-    if (user.has_role? 'admin')
-      claims[:admin] = 1
-    else
-      claims[:admin] = -1
-    end
-    claims[:project_admins] = []
-    user.project_users.each do |p|
-      if(p.is_admin)
-        claims[:project_admins].push(p.project_id)
-      end
-    end
+    add_admin_claims(user,claims)
 
     begin
       render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
