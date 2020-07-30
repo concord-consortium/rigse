@@ -21,6 +21,7 @@ chromedriver.log
 solr
 log
 certs
+pems
 .env
 *.DS_Store
 

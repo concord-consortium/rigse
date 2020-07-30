@@ -1,0 +1,35 @@
+{
+  "name": "admin-ql",
+  "version": "1.0.0",
+  "description": "experiments in using graphql for an admin interface for the portal",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon -w src --ext ts --exec ts-node src/index.ts",
+    "import": "typeorm-model-generator -h 127.0.0.1 -d portal_development -u root -x $MYSQLPASSWORD -e mysql -o ./src/auto-portal-models"
+  },
+  "author": "The Concord Consortium",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.14.1",
+    "apollo-server-express": "^2.14.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.3",
+    "graphql": "14",
+    "jest": "^26.0.1",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^4.2.0",
+    "type-graphql": "^0.17.6",
+    "typeorm": "^0.2.25"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/express-jwt": "0.0.42",
+    "@types/graphql": "14",
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2",
+    "typeorm-model-generator": "^0.4.2",
+    "typescript": "^3.9.3"
+  }
+}

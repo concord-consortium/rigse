@@ -246,6 +246,50 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       expect(decoded_token[:data]["user_type"]).to eq "teacher"
       expect(decoded_token[:data]["user_id"]).not_to be_nil
       expect(decoded_token[:data]["teacher_id"]).to eq class_teacher.id
+      expect(decoded_token[:data]["admin"]).to eq -1
     end
   end
+
+  context "when a valid authentication header token is sent with an admin" do
+    let(:user)            { FactoryBot.create(:user) }
+    before(:each) {
+      user.add_role("admin")
+      set_auth_token(teacher_token)
+    }
+
+    it "returns a valid JWT with an admin flag set" do
+      post :portal, {}, :format => :json
+      expect(response.status).to eq(201)
+
+      body = JSON.parse(response.body)
+      token = body["token"]
+      decoded_token = SignedJWT::decode_portal_token(token)
+
+      expect(decoded_token[:data]["admin"]).to eql 1
+      expect(decoded_token[:data]["project_admins"]).to eql []
+    end
+  end
+
+  context "when a valid authentication header token is sent by project admin" do
+    let(:user)            { FactoryBot.create(:user) }
+    let(:project)         { FactoryBot.create(:project)}
+    before(:each) {
+      user.project_users.create({project_id: project.id, is_admin: true})
+      set_auth_token(teacher_token)
+    }
+
+    it "returns a valid JWT with an admin flag set" do
+      post :portal, {}, :format => :json
+      expect(response.status).to eq(201)
+
+      body = JSON.parse(response.body)
+      token = body["token"]
+      decoded_token = SignedJWT::decode_portal_token(token)
+
+      expect(decoded_token[:data]["admin"]).to eql -1
+      expect(decoded_token[:data]["project_admins"]).to eql [project.id]
+    end
+  end
+
+
 end

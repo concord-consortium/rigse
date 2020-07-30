@@ -1,0 +1,14 @@
+{
+  "type": "mysql",
+  "host": "127.0.0.1",
+  "port": 3306,
+  "username": "XXXXXX",
+  "password": "XXXXXX",
+  "database": "portal_development",
+  "entities": ["./src/entities/*.ts"],
+  "migrationsTableName": "custom_migration_table",
+  "migrations": ["migration/*.js"],
+  "cli": {
+      "migrationsDir": "migration"
+  }
+}

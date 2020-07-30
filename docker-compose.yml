@@ -139,7 +139,7 @@ services:
   mysql:
     image: mysql:5.6
     environment:
-      MYSQL_ROOT_PASSWORD: xyzzy
+      MYSQL_ROOT_PASSWORD:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     volumes:
       # use a named volume here so the database is preserved after a down and up
@@ -186,6 +186,40 @@ services:
       - ./logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.1
+  graphql:
+    build:
+      context: ./admin-panel/graphql-backend
+      dockerfile: Dockerfile
+    command: npm run start
+    environment:
+      MYSQL_ROOT_PASSWORD:
+      MYSQL_USER:
+      JWT_HMAC_SECRET:
+      DB_HOST: mysql
+      PORTAL_JWT_URL: https://app.portal.docker/api/v1/jwt/portal
+      PORTAL_URL: https://app.portal.docker
+      OATUH_CLIENT_NAME: admin-panel
+    volumes:
+      - ./admin-panel/graphql-backend:/graphql
+    # open standard in and turn on tty so we can attach to the container and debug it
+    stdin_open: true
+    tty: true
+  admin:
+    build:
+      context: ./admin-panel/react-admin-interface
+      dockerfile: Dockerfile
+    command: npm run start
+    environment:
+      REACT_APP_GRAPHQL_HOST: graphql.portal.docker
+      REACT_APP_JWT_HMAC_SECRET: ${JWT_HMAC_SECRET}
+      REACT_APP_PORTAL_JWT_URL: https://app.portal.docker/api/v1/jwt/portal
+      REACT_APP_PORTAL_URL: https://app.portal.docker
+      REACT_APP_OATUH_CLIENT_NAME: admin-panel
+    volumes:
+      - ./admin-panel/react-admin-interface:/admin-interface
+    # open standard in and turn on tty so we can attach to the container and debug it
+    stdin_open: true
+    tty: true
 volumes:
   bundle:
   mysql:
