@@ -8,6 +8,7 @@ import { UserEdit, UserList, UserCreate } from './entities/user'
 import { PortalPermissionFormCreate, PortalPermissionFormEdit, PortalPermissionFormList } from './entities/portalPermissionForm'
 import { ProjectList, ProjectCreate, ProjectEdit } from './entities/project'
 import { ProjectUserCreate, ProjectUserEdit } from './entities/projectUser'
+import { PortalStudentList } from './entities/portalStudent'
 
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
@@ -95,7 +96,13 @@ class App extends Component {
           name="PortalPermissionForm"
           list={PortalPermissionFormList}
           edit={PortalPermissionFormEdit}
-          create={PortalPermissionFormCreate}/>
+          create={PortalPermissionFormCreate}
+        />
+
+        <Resource
+          name="PortalStudent"
+          list={PortalStudentList}
+        />
       </Admin>
     );
   }

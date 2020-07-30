@@ -44,6 +44,12 @@ type Mutation {
   deletePortalPermissionForm(id: String): Boolean
   createPortalPermissionForm(name: String, url: String, projectId: ID): PortalPermissionForm
   updatePortalPermissionForm(name: String, url: String, projectId: ID, id: ID): PortalPermissionForm
+  updatePortalStudentPermissionForm(id: ID, signed: Boolean = false): PortalStudentPermissionForm
+  createPortalStudentPermissionForm(portalStudentId: ID, portalPermissionFormId: ID, signed: Boolean = false): PortalStudentPermissionForm
+  deletePortalStudentPermissionForm(id: String): PortalStudentPermissionForm
+  deletePortalStudent(id: String): PortalStudent
+  createPortalStudent(userId: [ID]): PortalStudent
+  updatePortalStudent(userId: [ID], id: ID): PortalStudent
 }
 
 input PermissionFilter {
@@ -56,6 +62,28 @@ type PortalPermissionForm {
   url: String
   project: AdminProject
   projectId: ID
+}
+
+type PortalStudent {
+  id: ID!
+  userId: ID
+  user: User
+  gradeLevelId: ID
+}
+
+input PortalStudentFilter {
+  id: ID
+  userId: ID
+}
+
+type PortalStudentPermissionForm {
+  permissionForm: PortalPermissionForm
+  student: PortalStudent
+}
+
+input PortalStudentPermissionFormFilter {
+  studentId: ID
+  portalPermissionFormId: ID
 }
 
 input ProjectFilter {
@@ -76,6 +104,12 @@ type Query {
   allPortalPermissionForms(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: PermissionFilter): [PortalPermissionForm]
   _allPortalPermissionFormsMeta(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: PermissionFilter): listMeta
   PortalPermissionForm(id: String): PortalPermissionForm
+  allPortalStudentPermissionForms(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PortalStudentPermissionFormFilter): [PortalStudentPermissionForm]
+  _allPortalStudentPermissionFormsMeta(page: Int, perPage: Int, sortField: String, sortOrder: String, filter: PortalStudentPermissionFormFilter): listMeta
+  PortalStudentPermissionForm(id: String): PortalStudentPermissionForm
+  allPortalStudents(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: PortalStudentFilter): [PortalStudent]
+  _allPortalStudentsMeta(page: Float = 0, perPage: Float = 10, sortField: String = "id", sortOrder: String = "ASC", filter: PortalStudentFilter): listMeta
+  PortalStudent(id: String): PortalStudent
 }
 
 type User {
@@ -89,6 +123,7 @@ type User {
 }
 
 input UserFilter {
+  ids: [ID]
   email: String
   lastName: String
   firstName: String

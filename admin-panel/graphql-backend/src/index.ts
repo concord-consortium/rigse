@@ -7,6 +7,8 @@ import { AdminProjectResolver } from "./resolvers/AdminProjectResolver"
 import { AdminProjectUserResolver } from "./resolvers/AdminProjectUserResolver"
 import { UserResolver } from "./resolvers/UserResolver"
 import { PortalPermissionFormResolver } from "./resolvers/PortalPermissionFormResolver"
+import { PortalStudentPermissionFormResolver } from "./resolvers/PortalStudentPermissionFormResolver"
+import { PortalStudentResolver } from "./resolvers/PortalStudentResolver"
 import jwt from "express-jwt";
 import { Config } from "./config"
 import { ApolloServerPlugin } from "apollo-server-plugin-base";
@@ -52,7 +54,7 @@ async function main() {
     emitSchemaFile: true,
     resolvers: [
       UserResolver, AdminProjectResolver, AdminProjectUserResolver,
-      PortalPermissionFormResolver
+      PortalPermissionFormResolver, PortalStudentPermissionFormResolver, PortalStudentResolver
     ],
     authChecker: customAuthChecker
   })

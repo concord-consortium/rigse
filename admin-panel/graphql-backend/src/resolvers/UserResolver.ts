@@ -38,6 +38,9 @@ class UpdateUser extends CreateUser{
 
 @InputType()
 class UserFilter implements Partial<User>{
+  @Field(type => [ID])
+  ids?: number[];
+
   @Field(type => String)
   email?: string;
 

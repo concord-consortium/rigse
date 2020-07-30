@@ -1,4 +1,5 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, Index, BaseEntity,
+  PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
 import { PortalPermissionForm } from "./PortalPermissionForms"
 import { PortalStudent } from "./PortalStudents"
@@ -10,7 +11,8 @@ import { PortalStudent } from "./PortalStudents"
   {}
 )
 @Entity("portal_student_permission_forms", { schema: "portal_development" })
-export class PortalStudentPermissionForms {
+@ObjectType()
+export class PortalStudentPermissionForm extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "int", name: "id" })
   id: number;
 

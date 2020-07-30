@@ -100,7 +100,7 @@ async function buildQuery
   : Promise<SelectQueryBuilder<T>>{
   const filterFields = Object.keys(filter || {})
   const wheres: string[] = []
-  const parameters: {[key:string]: string } = {}
+  const parameters: {[key:string]: string | number | string[] | number[] } = {}
   const repository = getConnection().getRepository(clazz)
   filterFields.forEach( fieldName => {
     // For now special case the 'ids' field in the filter for association lookup
@@ -108,7 +108,7 @@ async function buildQuery
     if(fieldName === 'ids') {
       if(filter && filter.ids.length > 0) {
         wheres.push(`${table}.id in (:ID_LIST)`)
-        parameters['ID_LIST'] = (filter.ids as string[]).join(',');
+        parameters['ID_LIST'] = filter.ids
       }
     } else {
       if((filter as any)[fieldName].length > 0) {
