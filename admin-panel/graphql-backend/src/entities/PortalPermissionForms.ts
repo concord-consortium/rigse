@@ -1,7 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntity } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn, BaseEntity } from "typeorm";
 import { ObjectType, Field, ID} from "type-graphql";
 import { AdminProject } from "./AdminProjects"
-
+import { PortalStudentPermissionForm } from "./PortalStudentPermissionForms"
 @ObjectType()
 @Entity("portal_permission_forms", { schema: "portal_development" })
 export class PortalPermissionForm extends BaseEntity  {
@@ -31,8 +31,11 @@ export class PortalPermissionForm extends BaseEntity  {
   // for every JoinColumn https://github.com/typeorm/typeorm/blob/master/docs/naming-strategy.md
   @JoinColumn({name: 'project_id'})
   project: AdminProject;
-  // @Column("int", { name: "project_id", nullable: true })
-  // projectId: number | null;
+
+  @Field(() => [PortalStudentPermissionForm])
+  @OneToMany(type => PortalStudentPermissionForm, (form: PortalStudentPermissionForm) => form.portalPermissionForm, {eager: true})
+  portalStudentPermissionForms: PortalStudentPermissionForm[];
+
 
   @Field(() => ID)
   @Column("int", { name: "project_id", nullable: true })

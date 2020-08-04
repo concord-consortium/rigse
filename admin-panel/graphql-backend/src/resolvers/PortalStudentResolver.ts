@@ -5,6 +5,7 @@
 import {
   ArgsType, InputType, ID, Resolver, Query, Mutation, Arg,
   Args, Field, Authorized } from "type-graphql"
+import { In } from "typeorm"
 import { PortalStudent } from "../entities/PortalStudents"
 import { AdminProject } from "../entities/AdminProjects"
 import { User } from "../entities/Users"
@@ -30,6 +31,9 @@ class PortalStudentFilter implements Partial<PortalStudent>{
   @Field(type => ID)
   id?: number;
 
+  @Field(type => [ID])
+  ids?: number[];
+
   @Field(type => ID)
   userId?:  number;
 }
@@ -46,7 +50,20 @@ export class PortalStudentResolver {
   @Authorized()
   @Query(() => [PortalStudent])
   async allPortalStudents(@Args() searchParams:PortalStudentPaginationAndFilter) {
-    return await fuzzyFetch<PortalStudent>(PortalStudent, 'PortalStudent', searchParams);
+    const {filter} = searchParams
+    const relations = ["user"];
+    let where = {}
+    let findParams: {ids?:any, where:any, relations:string[]} = {where, relations}
+    if(filter && filter.userId) {
+      where = { userId: filter.userId }
+    }
+    if(filter && filter.id) {
+      where = { id: filter.id }
+    }
+    if(filter && filter.ids) {
+      findParams.ids = In(filter.ids)
+    }
+    return PortalStudent.find({where, relations})
   }
 
   @Authorized()

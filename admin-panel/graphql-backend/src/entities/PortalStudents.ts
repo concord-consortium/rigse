@@ -3,6 +3,7 @@ import { ObjectType, Field, ID } from "type-graphql";
 import { User } from "./Users"
 @Index("index_portal_students_on_user_id", ["userId"], {})
 @Entity("portal_students", { schema: "portal_development" })
+
 @ObjectType()
 export class PortalStudent extends BaseEntity {
   @Field(() => ID, {nullable: false})
@@ -14,7 +15,7 @@ export class PortalStudent extends BaseEntity {
   userId: number | null;
 
   @Field(() => User)
-  @ManyToOne(type => User, {eager: true})
+  @ManyToOne(type => User)
   @JoinColumn({name: "user_id"})
   user?: User
 
@@ -28,4 +29,11 @@ export class PortalStudent extends BaseEntity {
   @Column("datetime", { name: "updated_at" })
   updatedAt: Date;
 
+  @Field(() => String)
+  get name(): string {
+    if(this.user) {
+      return `${this.user.firstName} ${this.user.lastName}`
+    }
+    return "error"
+  }
 }

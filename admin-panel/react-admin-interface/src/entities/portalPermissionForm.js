@@ -3,7 +3,9 @@ import {
   Edit, Create, SimpleForm, TextInput,
   Datagrid, List, TextField,
   ReferenceField,  Filter,
-  ReferenceInput, SelectInput
+  ReferenceInput, SelectInput,
+  ReferenceManyField, Button, Link,
+  EditButton, BooleanField, DeleteButton
 } from "react-admin"
 
 const PermissionFilter = (props) => (
@@ -25,6 +27,16 @@ export const PortalPermissionFormList = props => (
   </List>
 )
 
+const AddNewStudentButton = ({ record }) => (
+  <Button
+    component={Link}
+    to={{
+      pathname: "/PortalStudentPermissionForm/create",
+      search: `?portalPermissionFormId=${record.id}`,
+    }}
+    label="Add Student"
+  />
+);
 
 export const PortalPermissionFormEdit = props => (
   <Edit {...props}>
@@ -34,6 +46,27 @@ export const PortalPermissionFormEdit = props => (
       <ReferenceInput label="Project" source="projectId" reference="AdminProject">
         <SelectInput optionText="name" />
       </ReferenceInput>
+
+      <ReferenceManyField
+        label="forms"
+        reference="PortalStudentPermissionForm"
+        target="portalPermissionFormId"
+        >
+        <Datagrid>
+          <ReferenceField label="student" source="portalStudentId" reference="PortalStudent">
+            <ReferenceField source="userId" reference="User">
+              <TextField source="firstName" />
+            </ReferenceField>
+          </ReferenceField>
+          <BooleanField label="Signed" source="signed" />
+          <EditButton />{
+            // Not obvious but redirecting to the empty string returns the user
+            // to the current location
+          }
+          <DeleteButton redirect="" />
+        </Datagrid>
+      </ReferenceManyField>
+      <AddNewStudentButton {...props} />
     </SimpleForm>
   </Edit>
 );

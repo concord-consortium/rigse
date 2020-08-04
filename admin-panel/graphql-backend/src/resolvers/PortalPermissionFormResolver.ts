@@ -24,6 +24,12 @@ class CreatePortalPermissionForm implements Partial<PortalPermissionForm>{
 
 @InputType()
 class PermissionFilter implements Partial<PortalPermissionForm>{
+  @Field(type => ID)
+  id?: number;
+
+  @Field(type => [ID])
+  ids?: number[];
+
   @Field(type => String)
   name?: string;
 }

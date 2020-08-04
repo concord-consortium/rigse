@@ -53,6 +53,8 @@ type Mutation {
 }
 
 input PermissionFilter {
+  id: ID
+  ids: [ID]
   name: String
 }
 
@@ -61,6 +63,7 @@ type PortalPermissionForm {
   name: String
   url: String
   project: AdminProject
+  portalStudentPermissionForms: [PortalStudentPermissionForm]
   projectId: ID
 }
 
@@ -69,19 +72,27 @@ type PortalStudent {
   userId: ID
   user: User
   gradeLevelId: ID
+  name: String
 }
 
 input PortalStudentFilter {
   id: ID
+  ids: [ID]
   userId: ID
 }
 
 type PortalStudentPermissionForm {
-  permissionForm: PortalPermissionForm
+  id: ID!
+  signed: Boolean
+  portalStudentId: ID
+  portalPermissionFormId: ID
   student: PortalStudent
+  portalPermissionForm: PortalPermissionForm
 }
 
 input PortalStudentPermissionFormFilter {
+  ids: [ID]
+  id: ID
   studentId: ID
   portalPermissionFormId: ID
 }

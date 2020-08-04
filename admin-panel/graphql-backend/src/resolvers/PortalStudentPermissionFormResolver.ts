@@ -42,6 +42,12 @@ class CreatePortalStudentPermissionFormArgs implements Partial<PortalStudentPerm
 
 @InputType()
 class PortalStudentPermissionFormFilter {
+  @Field(type => [ID])
+  ids?: number[];
+
+  @Field(type => ID)
+  id?: string;
+
   @Field(type => ID)
   studentId?: string;
 
@@ -61,23 +67,13 @@ export class PortalStudentPermissionFormResolver {
   @Query(() => [PortalStudentPermissionForm])
   allPortalStudentPermissionForms(
     @Args() {filter, page, perPage, sortField, sortOrder}:PortalStudentPermissionFormQueryArgs) {
-    // FIXME: Including the project relation here is kind of inefficient
-    // hopefully typeorm uses n+1 optimization, but it still means extra objects
-    // are being loaded when all we care about might just be the id
-    // ideally we could inject the ids into the response without loading the full relation
-    // And even better we would look to see if just the id was requested and then
-    // avoid the full request for the project. More generally this would mean
-    // looking at the shape of the requested data to determine
-    // how much of the tree we want to include in the result
-
-    const relations = ["project"];
     let where = {}
     if(filter && filter.portalPermissionFormId) {
       // It seems typeORM automatically converts the string userId to
       // the expected integer
       where = { portalPermissionFormId: filter.portalPermissionFormId }
     }
-    return PortalStudentPermissionForm.find({where, relations})
+    return PortalStudentPermissionForm.find({where})
   }
 
   @Query(() => listMeta)
@@ -113,7 +109,7 @@ export class PortalStudentPermissionFormResolver {
     // there might be a way to configure it that way.  If that is the case we
     // wouldn't need to include the project every time. For this model is probably
     // is a big problem, but this will probably be a pattern we need to establish
-    const projectUser = await PortalStudentPermissionForm.findOne({ where: { id }, relations: ["project"] });
+    const projectUser = await PortalStudentPermissionForm.findOne({ where: { id }});
     if (!projectUser) throw new Error("ProjectUser not found!");
     Object.assign(projectUser, params);
     await projectUser.save();
