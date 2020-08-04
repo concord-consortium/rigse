@@ -92,28 +92,16 @@ export class PortalStudentPermissionFormResolver {
     });
   }
 
-  // To keep the api simple we don't allow modification of the projectId or userId
-  // a user will need to delete the item and make a new one
 
-  // TODO only allow project admins to:
-  //  - edit ProjectUsers that have a project they are an admin of
   @Mutation(() => PortalStudentPermissionForm)
   async updatePortalStudentPermissionForm(
   @Args() args: UpdatePortalStudentPermissionFormArgs) {
     const {id, ...params} = args;
-    // NOTE: the relations: ["project"] is added so the returned projectUser
-    // has a project field, otherwise typegraphql sends down a project: null
-    // field. It does have a projectId: [id] field which is correct, but the
-    // project: null is confusing
-    // It'd be better if this field was not sent down if it was null or undefined
-    // there might be a way to configure it that way.  If that is the case we
-    // wouldn't need to include the project every time. For this model is probably
-    // is a big problem, but this will probably be a pattern we need to establish
-    const projectUser = await PortalStudentPermissionForm.findOne({ where: { id }});
-    if (!projectUser) throw new Error("ProjectUser not found!");
-    Object.assign(projectUser, params);
-    await projectUser.save();
-    return projectUser;
+    const studentPermissionForm = await PortalStudentPermissionForm.findOne({ where: { id }});
+    if (!studentPermissionForm) throw new Error("ProjectUser not found!");
+    Object.assign(studentPermissionForm, params);
+    await studentPermissionForm.save();
+    return studentPermissionForm;
   }
 
   @Mutation(() => PortalStudentPermissionForm)
@@ -121,19 +109,21 @@ export class PortalStudentPermissionFormResolver {
   @Args() args: CreatePortalStudentPermissionFormArgs) {
     const createdAt = new Date()
     const updatedAt = new Date()
-    // const params = {userId: parseInt(userId), projectId: parseInt(projectId),
     const params = {...args, createdAt, updatedAt};
-    const projectUser = PortalStudentPermissionForm.create(params);
-    await projectUser.save();
-    return projectUser;
+    const studentPermissionForm = PortalStudentPermissionForm.create(params);
+    await studentPermissionForm.save();
+    return studentPermissionForm;
   }
 
   @Mutation(() => PortalStudentPermissionForm)
   async deletePortalStudentPermissionForm(@Arg("id") id: string) {
-    const projectUser = await PortalStudentPermissionForm.findOne({ where: { id } });
-    if (!projectUser) throw new Error("PortalStudentPermissionForm not found!");
-    await projectUser.remove();
-    return projectUser;
+    const studentPermissionForm = await PortalStudentPermissionForm.findOne({ where: { id } });
+    // For reasons I don't understand, we need to send a complete object back
+    // GraphQL was failing when we sent back a studentPermissionForm without an id...
+    const deletedProxy = Object.assign({}, studentPermissionForm)
+    if (!studentPermissionForm) throw new Error("PortalStudentPermissionForm not found!");
+    await studentPermissionForm.remove();
+    return deletedProxy;
   }
 
 }

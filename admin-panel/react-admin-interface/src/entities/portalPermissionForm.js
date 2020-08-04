@@ -54,9 +54,7 @@ export const PortalPermissionFormEdit = props => (
         >
         <Datagrid>
           <ReferenceField label="student" source="portalStudentId" reference="PortalStudent">
-            <ReferenceField source="userId" reference="User">
-              <TextField source="firstName" />
-            </ReferenceField>
+            <TextField source="name" />
           </ReferenceField>
           <BooleanField label="Signed" source="signed" />
           <EditButton />{
