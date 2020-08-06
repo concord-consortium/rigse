@@ -12,7 +12,20 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 ## Steps Todo:
 * Rails 4 upgrade
     * Using the [guide](https://bit.ly/2XyACpP) start trying steps and generating issues
+      * Fix some deprecation warnings:
+        * Convert `:condition` model options in `has_many` relatiosn to lambda style `-> {where(key: value)}`
+          * `user.rb`
+          * `bundle_logger.rb` (this is old and almost certainly unused)
+          * `clazz.rb`
+          * `school_membership.rb`
+          * `student_clazz.rb`
+      * Notice deprecation warnings in `prototype_helper`
+        * ActiveSupport::BasicObject →  ActiveSupport::ProxyObject
+        * html-scanner →  to action_view `require "action_view/vendor/html-scanner"`
       * PATCH: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#http-patch
+        * in `rails/app/views/users/_user.html.haml` find `= form_for user, :url => switch_user_path(user), :html => { :method => :put … ` because this method specifies the method `put` there is no reason to change put method in routes.rb
+        * in `/Users/npaessel/lab/cc/portal/rails/app/views/admin/commons_licenses/edit.html.haml` we must update the route
+        to be a patch route.
       * Gemfile: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#upgrading-from-rails-3-2-to-rails-4-0-gemfile
       * Active Record: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#upgrading-from-rails-3-2-to-rails-4-0-active-record
       * Active Resource: https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#active-resource
@@ -62,6 +75,8 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * Resolved rspec startup issues with gem dependencies
       * compass was expecting an older version of sass, had to update both
       * unpinned `tinymce-rails` and did `bundle update tinymce-rails`
+    * Fix some noisy low-hanging fruit deprecations:
+      * Added 'rails-observers' to Gemfile
 
 ## How to update the Base Docker image
 
