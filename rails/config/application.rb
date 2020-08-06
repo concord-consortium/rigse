@@ -88,7 +88,8 @@ module RailsPortal
     config.time_zone = 'UTC'
 
     # Set the default location for page caching
-    config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
+    # UPGRADE_TODO: add actionpack-page_caching gem to replicate in rails 4
+    # config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
 
     # Use SQL instead of Active Record's schema dumper when creating the test database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
