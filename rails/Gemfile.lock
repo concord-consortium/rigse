@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/concord-consortium/calpicker
-  revision: 741498eef4b3b4fef9bca179aa1474514f930759
-  specs:
-    calpicker (0.0.1)
-      prototype-rails
-      rails (~> 3.2.0)
-
-GIT
   remote: git://github.com/concord-consortium/cc_portal_remote_auth
   revision: a4b3828845a999823148c475e61086580bfb2063
   specs:
@@ -1250,7 +1242,6 @@ DEPENDENCIES
   axlsx (> 2.5)
   better_errors (~> 1.1.0)
   bullet
-  calpicker!
   capistrano (~> 2.14.1)
   capistrano-cowboy
   capybara
