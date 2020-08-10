@@ -41,4 +41,9 @@ RailsPortal::Application.configure do
     # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
     config.logger = Logger.new(STDOUT)
   end
+  # Specify developer chosen logging level. See docker-compose.yml and .env
+  # Using to something other than (0) debug makes test output more readable.
+  if (log_level = ENV['LOG_LEVEL'])
+    config.logger.level = log_level
+  end
 end
