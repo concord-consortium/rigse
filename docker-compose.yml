@@ -90,6 +90,10 @@ services:
       ROLLBAR_CLIENT_ACCESS_TOKEN:
 
       #
+      # Devise secret key 64 hex-encoded bytes
+      # generate one using eg: hexdump -n 64 -v -e ' 64/1 "%02X" "\n"' /dev/urandom
+      DEVISE_SECRET_KEY:
+      #
       # Set JWT HMAC secret
       #
       JWT_HMAC_SECRET:

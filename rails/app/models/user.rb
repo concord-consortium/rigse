@@ -623,6 +623,12 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def send_on_create_confirmation_instructions
+    return if skip_notifications
+    super
+  end
+
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token
