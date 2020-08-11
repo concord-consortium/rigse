@@ -10,7 +10,7 @@ RSpec.describe UserMailer, type: :mailer do
   describe '#confirmation_instructions' do
     it 'confirmation_instructions' do
       user_mailer = described_class
-      record = Factory.create(:user)
+      record = FactoryBot.create(:user)
       token = double('token')
       opts = {}
       result = user_mailer.confirmation_instructions(record, token, opts)
