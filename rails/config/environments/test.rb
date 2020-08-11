@@ -47,7 +47,7 @@ RailsPortal::Application.configure do
   end
   # Specify developer chosen logging level. See docker-compose.yml and .env
   # Using to something other than (0) debug makes test output more readable.
-  if (log_level = ENV['LOG_LEVEL'])
+  if (log_level = ENV['TEST_LOG_LEVEL'])
     config.logger.level = log_level
   end
 end

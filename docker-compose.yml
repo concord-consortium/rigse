@@ -108,10 +108,11 @@ services:
       #
       RAILS_STDOUT_LOGGING: "${RAILS_STDOUT_LOGGING:-true}"
 
-      # Configure rails logging level. Override this in .env
+      # Configure rails logging levels. Override this in .env
       # Rails logging levels:
       # DEBUG | INFO | WARN | ERROR | FATAL | UNKNOWN
-      LOG_LEVEL: "${LOG_LEVEL:-DEBUG}"
+      DEV_LOG_LEVEL: "${DEV_LOG_LEVEL:-DEBUG}"
+      TEST_LOG_LEVEL: "${TEST_LOG_LEVEL:-WARN}"
 
       #
       # Source for report service lookups
