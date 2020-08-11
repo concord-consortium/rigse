@@ -81,6 +81,7 @@ class API::V1::Offering
   attribute :id, Integer
   attribute :teacher, String
   attribute :clazz, String
+  attribute :clazz_hash, String
   attribute :clazz_id, Integer
   attribute :clazz_info_url, String
   attribute :activity, String
@@ -111,6 +112,7 @@ class API::V1::Offering
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
     self.clazz = offering.clazz.name
+    self.clazz_hash = offering.clazz.class_hash
     self.clazz_id = offering.clazz.id
     self.clazz_info_url = offering.clazz.class_info_url(protocol, host_with_port)
     self.activity = offering.name
