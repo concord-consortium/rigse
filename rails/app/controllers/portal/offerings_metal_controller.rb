@@ -31,7 +31,7 @@ class Portal::OfferingsMetalController < ActionController::Metal
 
   def logged_in_user
     return nil unless warden_session = session['warden.user.user.key']
-    return nil unless warden_id_array = warden_session[1]
+    return nil unless warden_id_array = warden_session[0]
     User.find(warden_id_array[0])
   end
 end
