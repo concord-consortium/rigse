@@ -159,8 +159,6 @@ module RailsPortal
       settings_form.js
       jquery/jquery.js
       pie/PIE.js
-      calpicker/calendar_date_select.js
-      calpicker/silver.css
       web/search_materials.css
       readme.css
       print.css

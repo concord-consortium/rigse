@@ -21,8 +21,6 @@
     / add the external css if defined
     = render :partial => "layouts/external_css"
 
-    = calpicker_includes "silver"
-
     / shouldn't probably do this here, do it on domloaded elsewhere..:
     = javascript_tag mce_init_string
     - if protect_against_forgery?

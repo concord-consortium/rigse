@@ -7,7 +7,6 @@ describe "rendering application.html.haml" do
   before do
     allow(view).to receive(:current_visitor).and_return(fake_visitor)
     allow(view).to receive(:current_user).and_return(fake_visitor)
-    allow(view).to receive(:calpicker_includes).and_return('')
     allow(fake_visitor).to receive(:authenticate).and_return(true)
     allow(fake_visitor).to receive(:role_names).and_return(roles)
   end
