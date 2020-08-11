@@ -33,10 +33,6 @@ end
   gem 'rollbar'
   gem 'oj', '~> 2.12.14'
 
-  gem "capistrano",           "~> 2.14.1" #      :require => "capistrano"
-  # gem 'capistrano-autoscaling', "0.0.8.5", :git => "git://github.com/concord-consortium/capistrano-autoscaling",  :branch => "concord"
-  gem 'capistrano-cowboy'
-
   gem "aasm",                 "~> 2.2.1"
   gem "will_paginate",        "~> 3.0.0"
   gem "haml",                 "~> 4.0"
