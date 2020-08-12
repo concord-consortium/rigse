@@ -45,6 +45,9 @@ RailsPortal::Application.configure do
   # DEBUG | INFO | WARN | ERROR | FATAL | UNKNOWN
   log_level = ENV.fetch('TEST_LOG_LEVEL', 'WARN')
   if log_level.present?
-    config.logger.level = log_level
+    config.log_level = log_level
+    if config.logger.present?
+      config.logger.level = log_level
+    end
   end
 end
