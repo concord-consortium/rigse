@@ -40,13 +40,6 @@ GIT
     in_place_editing (1.2.0)
 
 GIT
-  remote: git://github.com/concord-consortium/prototype_legacy_helper.git
-  revision: 39efacca4fd172555a04a33c1ae52a307019d1d4
-  specs:
-    prototype-rails (3.2.1)
-      rails
-
-GIT
   remote: git://github.com/concord-consortium/rush
   revision: 10d9715697d7cc5ce069c32093289b809dea8bd3
   specs:
@@ -1292,7 +1285,6 @@ DEPENDENCIES
   paperclip (~> 3.4.0)
   prawn (~> 0.12.0)
   prawn_rails (~> 0.0.6)
-  prototype-rails!
   pry
   pry-byebug
   pundit
