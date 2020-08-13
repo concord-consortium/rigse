@@ -231,16 +231,23 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * solution: remove this
 * app/views/external_activities/_basic_form.html.haml
   * type: remote_form_for
-  * usage: SCOTT?
-  * solution: remove if scott says its ok
+  * usage:
+    * edit it portal-setting (https://learn.staging.concord.org/eresources/1215/edit)
+    * edit in material-edit ( https://learn.staging.concord.org/eresources/1215/matedit?iFrame=true )
+  * solution: Simplify the forms (most likely in the material-edit lightbox editing view)
 * app/views/external_activities/_runnable_list.html.haml
   * type:  draggable_element
-  * usage: SCOTT  (I can't see this anywehere, unused?)
-  * solution: remove if scott says its ok
+  * usage:
+    * images_controller.rb
+    * teacher page portal/teacher/1
+    * old class view page portal/classes/1
+  * solution:
+    * remove the teacher page (we need to retain the ability to change school)
+    * remove the old class view page (portal/classes/1)
 * app/views/external_activities/_show.html.haml
   * type: sortable_element
-  * usage: SCOTT  (I can't see this anywehere, unused?)
-  * solution: remove if scott says its ok
+  * usage: not used.
+  * solution: remove
 * app/views/external_activities/create.js.rjs
   * usage: I dont think this is used. The external activity form uses normal forms
   * solution: remove
@@ -249,7 +256,8 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * solution: remove
 * app/views/external_activities/index.html.haml
   * type: observe_form
-  * solution: just use regular form submission
+  * usage: old and broken index page:/external_activities
+  * solution: remove
 * app/views/embeddable/open_responses/_remote_form.html.haml
 * app/views/embeddable/open_responses/destroy.js.rjs
 * app/views/embeddable/multiple_choices/_remote_form.html.haml
@@ -265,11 +273,69 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * app/views/dataservice/console_loggers/_remote_form.html.haml
 * app/views/author_notes/_remote_form.html.ham
 * app/views/author_notes/_show.html.haml
+* app/controllers/teacher_notes_controller.rb
   * for all the above:
+    * solution: remove
+* app/controllers/search_controller.rb
+  * type replace_html, page <<
+  * usage: Search controller isn't used, replaced by API version
   * solution: remove
+* app/controllers/students_controller.rb (create / confirm)
+  * type: replace_html, replace, page <<, visual_effect, remove &etc.
+  * usage:
+    * used in
+      * class roster functions
+    * solutions:
+      * (note that student registration is handld by the api controllers)
+      * simplify roster pages ( portal/classes/136/roster )
+      * convert roster to react component
+* app/controllers/portal/clazzes_controller.rb add_offering
+* app/controllers/portal/clazzes_controller.rb remove_offering
+  * type: insert_html, page <<
+  * usage:
+    * _list_for_class.html.haml  ( used by portal/classes/xxx -- can delete)
+    * _edit_offerings.html.haml
+  * slution: remove
+* app/controllers/portal/clazzes_controller.rb add_student
+  * type: replace_html, page <<
+  * usage:
+    * student roster pages (portal/classes/107/roster) by way of:
+    * student_clazzes_helper.rb student_add_dropdown
+  * solution:
+    * update student roster page (portal/classes/107/roster)
+    * https://www.pivotaltracker.com/story/show/174324301
+* app/controllers/portal/clazzes_controller.rb add_teacher
+  * type: replace_html, page <<, visual_effect
+  * usage:
+    * teachers_helper.rb teacher_add_dropdown
+    * _list_for_clazz.html.haml
+  * solution:
+    * delete _list_for_clazz.html.haml
+    * update teacher_add_dropdown on class setup page (portal/classes/107/edit)
+    * https://www.pivotaltracker.com/story/show/174318198
+* app/controllers/portal/clazzes_controller.rb remove_teacher
+  * type: replace_html, page <<, replace
+  * usage:
+    * class setup page portal/classes/107/edit
+    * _list_for_clazz_setup.html.haml
+    * _table_for_clazz.html.haml
+  * solution:
+    * update the teacher listing for class setup page (portal/classes/107/edit)
+    * https://www.pivotaltracker.com/story/show/174318198
+* app/controllers/portal/clazzes_controller.rb manage_classes
+  * type:
+  * usage:
+    * manage class page: portal/classes/manage
+  * solution:
+    * update manage class page: portal/classes/manage
+    * https://www.pivotaltracker.com/story/show/174325159
+* app/controllers/portal/clazzes_controller.rb add_offering
+
 
 ## Start by looking at older audit done by hint media:
 
+## Misc notes:
+* remove teacher page (porta/teachers/##/show), but we need a way to set the teachers school
 
 ### Test failures when we remove the prototype-legacy-helper gem:
 
