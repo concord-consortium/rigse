@@ -108,9 +108,14 @@ services:
       DOCKER: 'true'
 
       #
-      # Enables logging to stdout instead of file.
+      # Enables logging to stdout instead of file. Override this in .env
       #
-      RAILS_STDOUT_LOGGING: "true"
+      RAILS_STDOUT_LOGGING: "${RAILS_STDOUT_LOGGING:-true}"
+
+      # Logging levels. Override this in .env
+      # DEBUG | INFO | WARN | ERROR | FATAL | UNKNOWN
+      TEST_LOG_LEVEL: "${TEST_LOG_LEVEL:-WARN}"
+      DEV_LOG_LEVEL: "${DEV_LOG_LEVEL:-DEBUG}"
 
       #
       # Source for report service lookups
