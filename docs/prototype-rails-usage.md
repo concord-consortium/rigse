@@ -150,92 +150,92 @@ ruby prototype-rails-usage.rb > ../../docs/prototype-rails-usage.md
 | 116 | teacher_notes/_show.html.haml:7                              | link_to_function              | `.tiny= link_to_function ('close',"$('note').hide();")`                                                                                                                                                                                                                                                                                                                                                                                                     |
 | 117 | users/index.html.haml:8                                      | toggle_all                    | `%li= toggle_all 'user descriptions'`                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
-## Summary of views
+## Summary of views using prototype-rails
 
-|    | file                                                      | number of refs to helpers |
-| -- | --------------------------------------------------------- | ------------------------- |
-| 1  | admin/clients/_remote_form.html.haml                      | 1                         |
-| 2  | admin/commons_licenses/_remote_form.html.haml             | 1                         |
-| 3  | admin/external_reports/_remote_form.html.haml             | 1                         |
-| 4  | admin/projects/_remote_form.html.haml                     | 1                         |
-| 5  | admin/projects/_show.html.haml                            | 2                         |
-| 6  | admin/settings/_remote_form.html.haml                     | 1                         |
-| 7  | admin/settings/_show.html.haml                            | 2                         |
-| 8  | admin/settings/_show_for_managers.html.haml               | 2                         |
-| 9  | admin/tags/_remote_form.html.haml                         | 1                         |
-| 10 | admin/tags/_show.html.haml                                | 2                         |
-| 11 | author_notes/_remote_form.html.haml                       | 2                         |
-| 12 | author_notes/_show.html.haml                              | 1                         |
-| 13 | dataservice/blobs/_remote_form.html.haml                  | 1                         |
-| 14 | dataservice/blobs/_show.html.haml                         | 2                         |
-| 15 | dataservice/bundle_contents/_remote_form.html.haml        | 1                         |
-| 16 | dataservice/bundle_loggers/_remote_form.html.haml         | 1                         |
-| 17 | dataservice/bundle_loggers/_show.html.haml                | 1                         |
-| 18 | dataservice/console_contents/_remote_form.html.haml       | 1                         |
-| 19 | dataservice/console_loggers/_remote_form.html.haml        | 1                         |
-| 20 | dataservice/console_loggers/_show.html.haml               | 1                         |
-| 21 | embeddable/image_questions/_remote_form.html.haml         | 1                         |
-| 22 | embeddable/image_questions/_show.html.haml                | 1                         |
-| 23 | embeddable/multiple_choices/_edit_choice.html.haml        | 1                         |
-| 24 | embeddable/multiple_choices/_remote_form.html.haml        | 2                         |
-| 25 | embeddable/multiple_choices/_show.html.haml               | 1                         |
-| 26 | embeddable/open_responses/_remote_form.html.haml          | 1                         |
-| 27 | embeddable/open_responses/_show.html.haml                 | 1                         |
-| 28 | external_activities/_basic_form.html.haml                 | 1                         |
-| 29 | external_activities/_remote_form.html.haml                | 1                         |
-| 30 | external_activities/_runnable_list.html.haml              | 1                         |
-| 31 | external_activities/_show.html.haml                       | 1                         |
-| 32 | external_activities/create.js.rjs                         | 2                         |
-| 33 | external_activities/index.html.haml                       | 1                         |
-| 34 | images/index.html.haml                                    | 1                         |
-| 35 | interactives/index.html.haml                              | 1                         |
-| 36 | materials_collections/_materials_in_collection.html.haml  | 2                         |
-| 37 | materials_collections/_remote_form.html.haml              | 1                         |
-| 38 | materials_collections/_show.html.haml                     | 2                         |
-| 39 | portal/bookmarks/_show.html.haml                          | 1                         |
-| 40 | portal/bookmarks/generic_bookmark/_button.html.haml       | 1                         |
-| 41 | portal/bookmarks/padlet_bookmark/_button.html.haml        | 1                         |
-| 42 | portal/clazzes/_form_student_roster.html.haml             | 1                         |
-| 43 | portal/clazzes/_remote_form.html.haml                     | 1                         |
-| 44 | portal/clazzes/_remote_form_student_roster.html.haml      | 1                         |
-| 45 | portal/clazzes/edit_offerings.html.haml                   | 2                         |
-| 46 | portal/districts/_remote_form.html.haml                   | 1                         |
-| 47 | portal/districts/_show.html.haml                          | 2                         |
-| 48 | portal/grade_levels/_remote_form.html.haml                | 1                         |
-| 49 | portal/grade_levels/_show.html.haml                       | 2                         |
-| 50 | portal/grades/_remote_form.html.haml                      | 1                         |
-| 51 | portal/grades/_show.html.haml                             | 2                         |
-| 52 | portal/learners/_remote_form.html.haml                    | 1                         |
-| 53 | portal/offerings/_list_for_clazz.html.haml                | 4                         |
-| 54 | portal/schools/_remote_form.html.haml                     | 1                         |
-| 55 | portal/schools/_show.html.haml                            | 2                         |
-| 56 | portal/student_clazzes/destroy.js.rjs                     | 2                         |
-| 57 | portal/students/_add_edit_list_for_clazz.html.haml        | 1                         |
-| 58 | portal/students/_current_student_list_for_clazz.html.haml | 1                         |
-| 59 | portal/students/_list_for_clazz.html.haml                 | 1                         |
-| 60 | portal/students/_move.html.haml                           | 1                         |
-| 61 | portal/students/_register.html.haml                       | 1                         |
-| 62 | portal/students/_table_for_clazz.html.haml                | 1                         |
-| 63 | portal/teachers/_list_for_clazz.html.haml                 | 1                         |
-| 64 | portal/teachers/_list_for_clazz_setup.html.haml           | 1                         |
-| 65 | portal/teachers/_table_for_clazz.html.haml                | 1                         |
-| 66 | portal/teachers/_table_for_clazz_setup.html.haml          | 1                         |
-| 67 | search/_material_unassigned_clazzes.html.haml             | 1                         |
-| 68 | search/_material_unassigned_collections.html.haml         | 1                         |
-| 69 | shared/_accordion_nav.html.haml                           | 2                         |
-| 70 | shared/_activity_header.haml                              | 3                         |
-| 71 | shared/_activity_trail.html.haml                          | 1                         |
-| 72 | shared/_collection_menu.html.haml                         | 1                         |
-| 73 | shared/_embeddable_container.html.haml                    | 2                         |
-| 74 | shared/_external_activity_header.html.haml                | 1                         |
-| 75 | shared/_general_accordion_nav.html.haml                   | 2                         |
-| 76 | shared/_notes_menu.html.haml                              | 4                         |
-| 77 | shared/_offering_for_teacher.html.haml                    | 1                         |
-| 78 | shared/_page_header.html.haml                             | 4                         |
-| 79 | shared/_runnable.html.haml                                | 1                         |
-| 80 | shared/_runnables_listing.html.haml                       | 1                         |
-| 81 | shared/_section_header.html.haml                          | 3                         |
-| 82 | teacher_notes/_remote_form.html.haml                      | 2                         |
-| 83 | teacher_notes/_show.html.haml                             | 1                         |
-| 84 | users/index.html.haml                                     | 1                         |
+|    | file                                                      | References | Solution                                | Rational         | Story |
+| -- | --------------------------------------------------------- | ---------- | --------------------------------------- | ---------------- | ----- |
+| 1  | admin/clients/_remote_form.html.haml                      |            |                                         |                  |       |
+| 2  | admin/commons_licenses/_remote_form.html.haml             |            |                                         |                  |       |
+| 3  | admin/external_reports/_remote_form.html.haml             |            |                                         |                  |       |
+| 4  | admin/projects/_remote_form.html.haml                     |            |                                         |                  |       |
+| 5  | admin/projects/_show.html.haml                            |            |                                         |                  |       |
+| 6  | admin/settings/_remote_form.html.haml                     |            |                                         |                  |       |
+| 7  | admin/settings/_show.html.haml                            |            |                                         |                  |       |
+| 8  | admin/settings/_show_for_managers.html.haml               |            |                                         |                  |       |
+| 9  | admin/tags/_remote_form.html.haml                         |            |                                         |                  |       |
+| 10 | admin/tags/_show.html.haml                                |            |                                         |                  |       |
+| 11 | author_notes/_remote_form.html.haml                       |            |                                         |                  |       |
+| 12 | author_notes/_show.html.haml                              |            |                                         |                  |       |
+| 13 | dataservice/blobs/_remote_form.html.haml                  |            |                                         |                  |       |
+| 14 | dataservice/blobs/_show.html.haml                         |            |                                         |                  |       |
+| 15 | dataservice/bundle_contents/_remote_form.html.haml        |            |                                         |                  |       |
+| 16 | dataservice/bundle_loggers/_remote_form.html.haml         |            |                                         |                  |       |
+| 17 | dataservice/bundle_loggers/_show.html.haml                |            |                                         |                  |       |
+| 18 | dataservice/console_contents/_remote_form.html.haml       |            |                                         |                  |       |
+| 19 | dataservice/console_loggers/_remote_form.html.haml        |            |                                         |                  |       |
+| 20 | dataservice/console_loggers/_show.html.haml               |            |                                         |                  |       |
+| 21 | embeddable/image_questions/_remote_form.html.haml         |            | remove all embeddable/image_questions/  | no longer needed |       |
+| 22 | embeddable/image_questions/_show.html.haml                |            | remove all embeddable/image_questions/  | no longer needed |       |
+| 23 | embeddable/multiple_choices/_edit_choice.html.haml        |            | remove all embeddable/multiple_choices/ | no longer needed |       |
+| 24 | embeddable/multiple_choices/_remote_form.html.haml        |            | remove all embeddable/multiple_choices/ | no longer needed |       |
+| 25 | embeddable/multiple_choices/_show.html.haml               |            | remove all embeddable/multiple_choices/ | no longer needed |       |
+| 26 | embeddable/open_responses/_remote_form.html.haml          |            | remove all embeddable/open_responses/   | no longer needed |       |
+| 27 | embeddable/open_responses/_show.html.haml                 |            | remove all embeddable/open_responses/   | no longer needed |       |
+| 28 | external_activities/_basic_form.html.haml                 |            |                                         |                  |       |
+| 29 | external_activities/_remote_form.html.haml                |            |                                         |                  |       |
+| 30 | external_activities/_runnable_list.html.haml              |            |                                         |                  |       |
+| 31 | external_activities/_show.html.haml                       |            |                                         |                  |       |
+| 32 | external_activities/create.js.rjs                         |            |                                         |                  |       |
+| 33 | external_activities/index.html.haml                       |            |                                         |                  |       |
+| 34 | images/index.html.haml                                    |            |                                         |                  |       |
+| 35 | interactives/index.html.haml                              |            |                                         |                  |       |
+| 36 | materials_collections/_materials_in_collection.html.haml  |            |                                         |                  |       |
+| 37 | materials_collections/_remote_form.html.haml              |            |                                         |                  |       |
+| 38 | materials_collections/_show.html.haml                     |            |                                         |                  |       |
+| 39 | portal/bookmarks/_show.html.haml                          |            |                                         |                  |       |
+| 40 | portal/bookmarks/generic_bookmark/_button.html.haml       |            |                                         |                  |       |
+| 41 | portal/bookmarks/padlet_bookmark/_button.html.haml        |            |                                         |                  |       |
+| 42 | portal/clazzes/_form_student_roster.html.haml             |            |                                         |                  |       |
+| 43 | portal/clazzes/_remote_form.html.haml                     |            |                                         |                  |       |
+| 44 | portal/clazzes/_remote_form_student_roster.html.haml      |            |                                         |                  |       |
+| 45 | portal/clazzes/edit_offerings.html.haml                   |            |                                         |                  |       |
+| 46 | portal/districts/_remote_form.html.haml                   |            |                                         |                  |       |
+| 47 | portal/districts/_show.html.haml                          |            |                                         |                  |       |
+| 48 | portal/grade_levels/_remote_form.html.haml                |            |                                         |                  |       |
+| 49 | portal/grade_levels/_show.html.haml                       |            |                                         |                  |       |
+| 50 | portal/grades/_remote_form.html.haml                      |            |                                         |                  |       |
+| 51 | portal/grades/_show.html.haml                             |            |                                         |                  |       |
+| 52 | portal/learners/_remote_form.html.haml                    |            |                                         |                  |       |
+| 53 | portal/offerings/_list_for_clazz.html.haml                |            |                                         |                  |       |
+| 54 | portal/schools/_remote_form.html.haml                     |            |                                         |                  |       |
+| 55 | portal/schools/_show.html.haml                            |            |                                         |                  |       |
+| 56 | portal/student_clazzes/destroy.js.rjs                     |            |                                         |                  |       |
+| 57 | portal/students/_add_edit_list_for_clazz.html.haml        |            |                                         |                  |       |
+| 58 | portal/students/_current_student_list_for_clazz.html.haml |            |                                         |                  |       |
+| 59 | portal/students/_list_for_clazz.html.haml                 |            |                                         |                  |       |
+| 60 | portal/students/_move.html.haml                           |            |                                         |                  |       |
+| 61 | portal/students/_register.html.haml                       |            |                                         |                  |       |
+| 62 | portal/students/_table_for_clazz.html.haml                |            |                                         |                  |       |
+| 63 | portal/teachers/_list_for_clazz.html.haml                 |            |                                         |                  |       |
+| 64 | portal/teachers/_list_for_clazz_setup.html.haml           |            |                                         |                  |       |
+| 65 | portal/teachers/_table_for_clazz.html.haml                |            |                                         |                  |       |
+| 66 | portal/teachers/_table_for_clazz_setup.html.haml          |            |                                         |                  |       |
+| 67 | search/_material_unassigned_clazzes.html.haml             |            |                                         |                  |       |
+| 68 | search/_material_unassigned_collections.html.haml         |            |                                         |                  |       |
+| 69 | shared/_accordion_nav.html.haml                           |            |                                         |                  |       |
+| 70 | shared/_activity_header.haml                              |            |                                         |                  |       |
+| 71 | shared/_activity_trail.html.haml                          |            |                                         |                  |       |
+| 72 | shared/_collection_menu.html.haml                         |            |                                         |                  |       |
+| 73 | shared/_embeddable_container.html.haml                    |            |                                         |                  |       |
+| 74 | shared/_external_activity_header.html.haml                |            |                                         |                  |       |
+| 75 | shared/_general_accordion_nav.html.haml                   |            |                                         |                  |       |
+| 76 | shared/_notes_menu.html.haml                              |            |                                         |                  |       |
+| 77 | shared/_offering_for_teacher.html.haml                    |            |                                         |                  |       |
+| 78 | shared/_page_header.html.haml                             |            |                                         |                  |       |
+| 79 | shared/_runnable.html.haml                                |            |                                         |                  |       |
+| 80 | shared/_runnables_listing.html.haml                       |            |                                         |                  |       |
+| 81 | shared/_section_header.html.haml                          |            | remove                                  | no references    |       |
+| 82 | teacher_notes/_remote_form.html.haml                      |            |                                         |                  |       |
+| 83 | teacher_notes/_show.html.haml                             |            |                                         |                  |       |
+| 84 | users/index.html.haml                                     |            |                                         |                  |       |
 
