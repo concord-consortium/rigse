@@ -14,7 +14,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * lib/clipboard.rb:84 ✅
   * type: link_to_remote
   * solution: remove
-* api/site_notices_controller.rb *️⃣✅
+* api/site_notices_controller.rb ✅
   * References are not yet found automatically
   * type: page <<
   * solution:
@@ -25,13 +25,13 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * usage:
     * _edit_choice.html.haml apps/views/embeddable/ …
     * _materials_in_collection.html.haml (❌this was a difference reference as far as I can tell)
-* helpers/js_helper.rb safe_js *️⃣✅
-  * References are not yet found automatically
+* helpers/js_helper.rb safe_js ✅
   * type: page <<
   * solution:
-    * remove embeddable partials
-    * update external_activities views
-    * simplify admin pages
+    * remove embeddable partials ️️ℹ️️️
+    * update external_activities views ️ℹ️
+    * simplify admin pages ℹ️
+    * ℹ️need to check that these solutions are in the right files
   * usage:
     * various view/embeddables/destroy.js.rjs (MC, open response, image Q ....)
     * views/external_activities/create.js.rjs
@@ -332,6 +332,71 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * update manage class page: portal/classes/manage
     * https://www.pivotaltracker.com/story/show/174325159
 * app/controllers/portal/clazzes_controller.rb add_offering
+
+## Views that use prototype-rails
+- views/admin/clients/index.html.haml
+- views/admin/commons_licenses/index.html.haml
+- views/admin/external_reports/index.html.haml
+- views/admin/projects/index.html.haml
+- views/admin/settings/index.html.haml
+- views/admin/tags/index.html.haml
+- views/author_notes/_remote_form.html.haml
+- views/author_notes/_show.html.haml
+- views/external_activities/_basic_form.html.haml
+- views/external_activities/_remote_form.html.haml
+- views/external_activities/_runnable_list.html.haml
+- views/external_activities/_show.html.haml
+- views/external_activities/create.js.rjs
+- views/external_activities/index.html.haml
+- views/home/my_classes.html.haml
+- views/images/index.html.haml
+- views/installer_reports/index.html.haml
+- views/interactives/index.html.haml
+- views/layouts/application.html.haml
+- views/materials_collections/index.html.haml
+- views/portal/bookmarks/_show.html.haml
+- views/portal/bookmarks/generic_bookmark/_button.html.haml
+- views/portal/bookmarks/index.html.haml
+- views/portal/bookmarks/padlet_bookmark/_button.html.haml
+- views/portal/clazzes/_form.html.haml
+- views/portal/clazzes/_form_student_roster.html.haml
+- views/portal/clazzes/_remote_form.html.haml
+- views/portal/clazzes/_remote_form_student_roster.html.haml
+- views/portal/clazzes/class_list.html.haml
+- views/portal/clazzes/edit.html.haml
+- views/portal/clazzes/edit_offerings.html.haml
+- views/portal/clazzes/new.html.haml
+- views/portal/clazzes/roster.html.haml
+- views/portal/clazzes/show.html.haml
+- views/portal/districts/index.html.haml
+- views/portal/grade_levels/index.html.haml
+- views/portal/grades/index.html.haml
+- views/portal/learners/_remote_form.html.haml
+- views/portal/learners/bundle_report.html.haml
+- views/portal/learners/index.html.haml
+- views/portal/offerings/_list_for_clazz.html.haml
+- views/portal/offerings/_show.html.haml
+- views/portal/offerings/show.html.haml
+- views/portal/schools/index.html.haml
+- views/portal/student_clazzes/destroy.js.rjs
+- views/portal/students/_add_edit_list_for_clazz.html.haml
+- views/portal/students/_current_student_list_for_clazz.html.haml
+- views/portal/students/_list_for_clazz.html.haml
+- views/portal/students/_move.html.haml
+- views/portal/students/_register.html.haml
+- views/portal/students/_show.html.haml
+- views/portal/students/_table_for_clazz.html.haml
+- views/portal/students/register.html.haml
+- views/portal/students/show.html.haml
+- views/portal/teachers/_list_for_clazz.html.haml
+- views/portal/teachers/_list_for_clazz_setup.html.haml
+- views/portal/teachers/_table_for_clazz.html.haml
+- views/portal/teachers/_table_for_clazz_setup.html.haml
+- views/search/_material_unassigned_clazzes.html.haml
+- views/search/_material_unassigned_collections.html.haml
+- views/teacher_notes/_remote_form.html.haml
+- views/teacher_notes/_show.html.haml
+- views/users/index.html.haml
 
 
 ## Start by looking at older audit done by hint media:

@@ -48,18 +48,15 @@ controllers/admin/tags_controller.rb#update:
   solution:
   rational:
   story:
-controllers/api/v1/site_notices_controller.rb#remove_notice
-  manual: true
+controllers/api/v1/site_notices_controller.rb#dismiss_notice:
   solution: replace render :update
   rational: response ignored by react component
   story:
-controllers/api/v1/site_notices_controller.rb#toggle_notice_display
-  manual: true
+controllers/api/v1/site_notices_controller.rb#remove_notice:
   solution: replace render :update
   rational: response ignored by react component
   story:
-controllers/api/v1/site_notices_controller.rb#dismiss_notice
-  manual: true
+controllers/api/v1/site_notices_controller.rb#toggle_notice_display:
   solution: replace render :update
   rational: response ignored by react component
   story:
@@ -139,6 +136,10 @@ controllers/images_controller.rb#create:
   solution:
   rational:
   story:
+controllers/materials_collections_controller.rb#destroy:
+  solution:
+  rational:
+  story:
 controllers/materials_collections_controller.rb#edit:
   solution:
   rational:
@@ -152,6 +153,10 @@ controllers/portal/bookmarks_controller.rb#add:
   rational:
   story:
 controllers/portal/bookmarks_controller.rb#add_padlet:
+  solution:
+  rational:
+  story:
+controllers/portal/bookmarks_controller.rb#delete:
   solution:
   rational:
   story:
@@ -223,6 +228,14 @@ controllers/portal/students_controller.rb#move_confirm:
   solution:
   rational:
   story:
+controllers/search_controller.rb#add_material_to_clazzes:
+  solution:
+  rational:
+  story:
+controllers/search_controller.rb#add_material_to_collections:
+  solution:
+  rational:
+  story:
 controllers/search_controller.rb#get_current_material_anonymous:
   solution:
   rational:
@@ -232,6 +245,10 @@ controllers/search_controller.rb#get_current_material_unassigned_clazzes:
   rational:
   story:
 controllers/search_controller.rb#get_current_material_unassigned_collections:
+  solution:
+  rational:
+  story:
+controllers/search_controller.rb#get_search_suggestions:
   solution:
   rational:
   story:
@@ -276,10 +293,9 @@ helpers/js_helper.rb#remove_link:
   rational: only used by multiple_choices view
   story:
 helpers/js_helper.rb#safe_js:
-  manual: true
   solution: remove when no longer used
-  rational: this is used by several different *.js.rjs files once those are
-    removed this function can be too
+  rational: this is used by several different *.js.rjs files once those are removed
+    this function can be too
   story:
 helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
   solution:
@@ -453,6 +469,10 @@ views/embeddable/image_questions/_show.html.haml:
   solution: remove all embeddable/image_questions/
   rational: no longer needed
   story:
+views/embeddable/image_questions/destroy.js.rjs:
+  solution:
+  rational:
+  story:
 views/embeddable/image_questions/index.html.haml:
   solution:
   rational:
@@ -477,6 +497,10 @@ views/embeddable/multiple_choices/_show.html.haml:
   solution: remove all embeddable/multiple_choices/
   rational: no longer needed
   story:
+views/embeddable/multiple_choices/destroy.js.rjs:
+  solution:
+  rational:
+  story:
 views/embeddable/multiple_choices/edit.html.haml:
   solution:
   rational:
@@ -500,6 +524,10 @@ views/embeddable/open_responses/_remote_form.html.haml:
 views/embeddable/open_responses/_show.html.haml:
   solution: remove all embeddable/open_responses/
   rational: no longer needed
+  story:
+views/embeddable/open_responses/destroy.js.rjs:
+  solution:
+  rational:
   story:
 views/embeddable/open_responses/edit.html.haml:
   solution:
@@ -617,6 +645,10 @@ views/portal/clazzes/class_list.html.haml:
   solution:
   rational:
   story:
+views/portal/clazzes/destroy.js.rjs:
+  solution:
+  rational:
+  story:
 views/portal/clazzes/edit.html.haml:
   solution:
   rational:
@@ -642,6 +674,10 @@ views/portal/districts/_remote_form.html.haml:
   rational:
   story:
 views/portal/districts/_show.html.haml:
+  solution:
+  rational:
+  story:
+views/portal/districts/destroy.js.rjs:
   solution:
   rational:
   story:
@@ -714,6 +750,10 @@ views/portal/schools/_remote_form.html.haml:
   rational:
   story:
 views/portal/schools/_show.html.haml:
+  solution:
+  rational:
+  story:
+views/portal/schools/destroy.js.rjs:
   solution:
   rational:
   story:
