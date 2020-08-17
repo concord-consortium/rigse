@@ -11,20 +11,22 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * TODO: Should we add risk / effort to each item on this list?
 
 ### Specific Uses:
-* lib/clipboard.rb:84
+* lib/clipboard.rb:84 ✅
   * type: link_to_remote
   * solution: remove
-* api/site_notices_controller.rb
+* api/site_notices_controller.rb *️⃣✅
+  * References are not yet found automatically
   * type: page <<
   * solution:
     * Remove use in controller. Response is ignored by react component.
-* helpers/js_helper.rb remove_link
+* helpers/js_helper.rb remove_link ✅
   * type: link_to_function
   * solution: remove, simplify admin pages (_materials_in_colleciton)
   * usage:
     * _edit_choice.html.haml apps/views/embeddable/ …
-    * _materials_in_colleciton.html.haml ()
-* helpers/js_helper.rb safe_js
+    * _materials_in_collection.html.haml (❌this was a difference reference as far as I can tell)
+* helpers/js_helper.rb safe_js *️⃣✅
+  * References are not yet found automatically
   * type: page <<
   * solution:
     * remove embeddable partials
@@ -266,13 +268,13 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * app/views/embeddable/multiple_choices/destroy.js.rjs
 * app/views/embeddable/image_questions/_remote_form.html.haml
 * app/views/embeddable/image_questions/destroy.js.rjs
-* app/views/dataservice/blobs/_remote_form.html.haml
-* app/views/dataservice/bundle_contents/_remote_form.html.haml
-* app/views/dataservice/bundle_loggers/_remote_form.html.haml
-* app/views/dataservice/console_contents/_remote_form.html.haml
-* app/views/dataservice/console_loggers/_remote_form.html.haml
-* app/views/author_notes/_remote_form.html.ham
-* app/views/author_notes/_show.html.haml
+* app/views/dataservice/blobs/_remote_form.html.haml ✅
+* app/views/dataservice/bundle_contents/_remote_form.html.haml ✅
+* app/views/dataservice/bundle_loggers/_remote_form.html.haml ✅
+* app/views/dataservice/console_contents/_remote_form.html.haml ✅
+* app/views/dataservice/console_loggers/_remote_form.html.haml ✅
+* app/views/author_notes/_remote_form.html.ham  ✅
+* app/views/author_notes/_show.html.haml  ✅
 * app/controllers/teacher_notes_controller.rb
   * for all the above:
     * solution: remove
