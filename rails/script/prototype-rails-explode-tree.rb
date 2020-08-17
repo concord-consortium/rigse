@@ -3,16 +3,22 @@ require 'yaml'
 reference_tree_yaml = File.read('../../docs/prototype-rails-references.yaml')
 @reference_tree = YAML.load(reference_tree_yaml)
 
+solutions_file_name = '../../docs/prototype-rails-solutions.yaml'
+solutions_yaml = File.read(solutions_file_name)
+@solutions = YAML.load(solutions_yaml)
+
 exploded_file_name = '../../docs/prototype-rails-exploded-references.yaml'
 exploded = []
 
 @current_path = []
 
-def explode(block_name)
+def explode(block_name, top_level=false)
   block = @reference_tree[block_name]
   if(block["callers"])
     if(@current_path.include?(block_name))
-      "circular: #{block_name}"
+      "#{block_name} (circular)"
+    elsif(!top_level and @solutions[block_name] and @solutions[block_name]["solution"])
+      "#{block_name} (solved)"
     else
       @current_path.push(block_name)
       caller_names = block["callers"].map{|caller| caller["name"]}
@@ -25,7 +31,11 @@ def explode(block_name)
       return_value
     end
   else
-    block_name
+    if(@solutions[block_name] and @solutions[block_name]["solution"])
+      "#{block_name} (solved)"
+    else
+      block_name
+    end
   end
 end
 
@@ -33,7 +43,7 @@ end
 @reference_tree.each do |name, block|
   next if(name.start_with?("BASE/"))
   # add the basic callers
-  exploded << explode(name)
+  exploded << explode(name, true)
   if(@current_path.length > 0)
     abort("current_path wasn't completely popped on: #{name}")
   end

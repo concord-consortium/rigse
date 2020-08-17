@@ -39,7 +39,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * views/portal/districts/destroy.js.rjs
     * views/portal/schoools/destroy.js.rjs
     * views/portal/student_clazzes/destroy.js.rjs
-* student_clazzes_helper.rb student_add_dropdown
+* student_clazzes_helper.rb student_add_dropdown ✅
   * type: button_to_remote
   * solutions:
     * re-write page using react
@@ -51,7 +51,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * portal/student_clazzes/destroy.js.rjs
     * _add_edit_list_for_clazz.html.haml
     * _list_for_clazz.html.haml
-* portal/teachers_helper.rb teacher_add_dropdown
+* portal/teachers_helper.rb teacher_add_dropdown ✅
   * type: button_to_remote
   * solution:
      * re-write pages using react
@@ -60,7 +60,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * app/controllers/protal/clazzes_controller.rb add_teacher
     * app/controllers/protal/clazzes_controller.rb _teacher
     * app/views/partials/_table_for_clazzz_setup.html.haml
-* helpers/application_helper.rb wrap_edit_link_around_content
+* helpers/application_helper.rb wrap_edit_link_around_content ✅
   * type: AJAX_OPTIONS
   * solutions:
     * remove embeddables
@@ -80,7 +80,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * views/portal/grade_levelss/_show.html.haml
     * views/portal/schools/_show.html.haml
     * specs
-* helpers/application_helper.rb toggle_all
+* helpers/application_helper.rb toggle_all ✅
   * type: link_to_function
   * solutions:
     * remove -- only used to hide / show item deets in collection
@@ -92,25 +92,13 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * views/shared/_page_header.haml
     * views/shared/_section_header.haml
     * views/users/_index
-* helpers/application_helper.rb toggle_all
-  * type: link_to_function
-  * solutions:
-    * remove -- only used to hide / show item deets in collection
-    * modify the method to do nothing (even hide label)
-  * usage:
-    * views/interactives/index.html.haml
-    * views/shared/_activity_header.haml
-    * views/shared/_collection_menu.html.haml
-    * views/shared/_page_header.haml
-    * views/shared/_section_header.haml
-    * views/users/_index
-* helpers/application_helper.rb toggle_more
+* helpers/application_helper.rb toggle_more ✅
   * type: link_to_function, visual_effect, replace_html
   * solutions:
     * remove this method isn't used except in spec test.
   * usage:
     * rails/spec/helpers/application_helper_spec.rb
-* helpers/application_helper.rb remote_link_button
+* helpers/application_helper.rb remote_link_button ✅
   * type: link_to_remote
   * solutions:
     * simplify admin pages
@@ -124,25 +112,24 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * teachers _table_for_clazz.html.haml
     * shared _notes_menu.html.haml
     * clipboard.rb
-* helpers/application_helper.rb function_link_button
+* helpers/application_helper.rb function_link_button ✅
   * type: link_to_function
   * solutions:
     * can delete this and its test
   * usage:
     * application_helper_spec.rb
-* app/views/teacher_notes
+* app/views/teacher_notes ✅
   * type: AJAX_OPTIONS, visual_effect, link_to_function
   * usage: not used really
   * solutions: remove teacher_notes completely
-* app/views/shared/_accordion_nav.html.haml &
-* app/views/shared/_activity_trail.html.haml &
-* app/views/shared/_general_accordion_nav.html.haml &
-* app/views/shared/_page_header.html.haml &
-* app/views/shared/_page_header.html.haml &
+* app/views/shared/_accordion_nav.html.haml & ✅
+* app/views/shared/_activity_trail.html.haml & ✅
+* app/views/shared/_general_accordion_nav.html.haml & ✅
+* app/views/shared/_page_header.html.haml & ✅
 * app/views/shared/_offering_for_teacher.html.haml &
 * app/views/shared/_runnable.html.haml &
 * app/views/shared/_runnables_listing.html.haml &
-  * for all othe above:
+  * for all of the above:
     * type: various
     * solution: remove all of these views
 * app/views/search/_material_unassigned_clazzes.html.haml
@@ -203,14 +190,11 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * app/views/portal/districts/_remote_form.html.ham
   * usage: used by admin interface
   * solution: simplify admin interface
-* app/views/portal/clazzes/edit_offerings.html.haml
+* app/views/portal/clazzes/edit_offerings.html.haml ✅
   * usage: no longer used by class views. React components are used
   * solution:  remove
 * app/views/portal/clazzes/destroy.js.rjs
   * usage: no longer used. We don't delete classes any more ?
-  * solution: remove
-* app/views/portal/clazzes/edit_offerings.html.haml
-  * usage: no longer used. We use react for class assignments now
   * solution: remove
 * app/views/portal/bookmarks/_show.html.haml
 * app/views/portal/bookmarks/generic_bookmark/_button.html.haml
@@ -332,72 +316,6 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * update manage class page: portal/classes/manage
     * https://www.pivotaltracker.com/story/show/174325159
 * app/controllers/portal/clazzes_controller.rb add_offering
-
-## Views that use prototype-rails
-- views/admin/clients/index.html.haml
-- views/admin/commons_licenses/index.html.haml
-- views/admin/external_reports/index.html.haml
-- views/admin/projects/index.html.haml
-- views/admin/settings/index.html.haml
-- views/admin/tags/index.html.haml
-- views/author_notes/_remote_form.html.haml
-- views/author_notes/_show.html.haml
-- views/external_activities/_basic_form.html.haml
-- views/external_activities/_remote_form.html.haml
-- views/external_activities/_runnable_list.html.haml
-- views/external_activities/_show.html.haml
-- views/external_activities/create.js.rjs
-- views/external_activities/index.html.haml
-- views/home/my_classes.html.haml
-- views/images/index.html.haml
-- views/installer_reports/index.html.haml
-- views/interactives/index.html.haml
-- views/layouts/application.html.haml
-- views/materials_collections/index.html.haml
-- views/portal/bookmarks/_show.html.haml
-- views/portal/bookmarks/generic_bookmark/_button.html.haml
-- views/portal/bookmarks/index.html.haml
-- views/portal/bookmarks/padlet_bookmark/_button.html.haml
-- views/portal/clazzes/_form.html.haml
-- views/portal/clazzes/_form_student_roster.html.haml
-- views/portal/clazzes/_remote_form.html.haml
-- views/portal/clazzes/_remote_form_student_roster.html.haml
-- views/portal/clazzes/class_list.html.haml
-- views/portal/clazzes/edit.html.haml
-- views/portal/clazzes/edit_offerings.html.haml
-- views/portal/clazzes/new.html.haml
-- views/portal/clazzes/roster.html.haml
-- views/portal/clazzes/show.html.haml
-- views/portal/districts/index.html.haml
-- views/portal/grade_levels/index.html.haml
-- views/portal/grades/index.html.haml
-- views/portal/learners/_remote_form.html.haml
-- views/portal/learners/bundle_report.html.haml
-- views/portal/learners/index.html.haml
-- views/portal/offerings/_list_for_clazz.html.haml
-- views/portal/offerings/_show.html.haml
-- views/portal/offerings/show.html.haml
-- views/portal/schools/index.html.haml
-- views/portal/student_clazzes/destroy.js.rjs
-- views/portal/students/_add_edit_list_for_clazz.html.haml
-- views/portal/students/_current_student_list_for_clazz.html.haml
-- views/portal/students/_list_for_clazz.html.haml
-- views/portal/students/_move.html.haml
-- views/portal/students/_register.html.haml
-- views/portal/students/_show.html.haml
-- views/portal/students/_table_for_clazz.html.haml
-- views/portal/students/register.html.haml
-- views/portal/students/show.html.haml
-- views/portal/teachers/_list_for_clazz.html.haml
-- views/portal/teachers/_list_for_clazz_setup.html.haml
-- views/portal/teachers/_table_for_clazz.html.haml
-- views/portal/teachers/_table_for_clazz_setup.html.haml
-- views/search/_material_unassigned_clazzes.html.haml
-- views/search/_material_unassigned_collections.html.haml
-- views/teacher_notes/_remote_form.html.haml
-- views/teacher_notes/_show.html.haml
-- views/users/index.html.haml
-
 
 ## Start by looking at older audit done by hint media:
 
