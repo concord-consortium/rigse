@@ -221,6 +221,10 @@ sorted_known_blocks = known_blocks.sort.to_h
 puts "Found Block Names:"
 puts sorted_known_blocks.keys.to_yaml
 
+output_file = "../../docs/prototype-rails-references.yaml"
+puts "Writing: #{output_file}"
 
-puts "Found Block Details:"
-puts sorted_known_blocks.to_yaml
+File.open(output_file, 'w') do |f|
+  f.write "# This was generated using: cd rails/script; ruby reference-tree.rb\n"
+  f.write sorted_known_blocks.to_yaml
+end

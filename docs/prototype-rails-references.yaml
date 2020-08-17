@@ -1,3 +1,4 @@
+# This was generated using: cd rails/script; ruby reference-tree.rb
 ---
 BASE/button_to_remote:
   callers:
@@ -635,6 +636,13 @@ helpers/js_helper.rb#remove_link:
     line: "= remove_link(form)"
   calls:
   - BASE/link_to_function
+helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
+  callers:
+  - name: views/portal/bookmarks/index.html.haml
+    line: "- render_add_bookmark_buttons"
+  calls:
+  - views/portal/bookmarks/generic_bookmark/_button.html.haml
+  - views/portal/bookmarks/padlet_bookmark/_button.html.haml
 helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
   callers:
   - name: views/portal/clazzes/_form_student_roster.html.haml
@@ -1121,12 +1129,19 @@ views/portal/bookmarks/_show.html.haml:
   calls:
   - BASE/link_to_remote
 views/portal/bookmarks/generic_bookmark/_button.html.haml:
+  callers:
+  - name: helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
+    line: '# :partial => "portal/bookmarks/generic_bookmark/button"'
   calls:
   - BASE/button_to_remote
 views/portal/bookmarks/index.html.haml:
   calls:
   - views/portal/bookmarks/_show.html.haml
+  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
 views/portal/bookmarks/padlet_bookmark/_button.html.haml:
+  callers:
+  - name: helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
+    line: '# :partial => "portal/bookmarks/padlet_bookmark/button"'
   calls:
   - BASE/button_to_remote
 views/portal/clazzes/_form.html.haml:
