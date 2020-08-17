@@ -1,0 +1,940 @@
+# This was generated using: cd rails/script; ruby prototype-rails-explode-tree.rb
+---
+- controllers/admin/clients_controller.rb#edit
+- controllers/admin/clients_controller.rb#update
+- controllers/admin/commons_licenses_controller.rb#edit
+- controllers/admin/commons_licenses_controller.rb#update
+- controllers/admin/external_reports_controller.rb#edit
+- controllers/admin/external_reports_controller.rb#update
+- controllers/admin/projects_controller.rb#edit
+- controllers/admin/projects_controller.rb#update
+- controllers/admin/settings_controller.rb#edit
+- controllers/admin/settings_controller.rb#update
+- controllers/admin/tags_controller.rb#edit
+- controllers/admin/tags_controller.rb#update
+- controllers/api/v1/site_notices_controller.rb#dismiss_notice
+- controllers/api/v1/site_notices_controller.rb#remove_notice
+- controllers/api/v1/site_notices_controller.rb#toggle_notice_display
+- controllers/author_notes_controller.rb#edit
+- controllers/author_notes_controller.rb#show_author_note
+- controllers/embeddable/image_questions_controller.rb#edit
+- controllers/embeddable/image_questions_controller.rb#new
+- controllers/embeddable/image_questions_controller.rb#show
+- controllers/embeddable/image_questions_controller.rb#update
+- controllers/embeddable/multiple_choices_controller.rb#add_choice
+- controllers/embeddable/multiple_choices_controller.rb#edit
+- controllers/embeddable/multiple_choices_controller.rb#new
+- controllers/embeddable/multiple_choices_controller.rb#show
+- controllers/embeddable/multiple_choices_controller.rb#update
+- controllers/embeddable/open_responses_controller.rb#edit
+- controllers/embeddable/open_responses_controller.rb#new
+- controllers/embeddable/open_responses_controller.rb#show
+- controllers/embeddable/open_responses_controller.rb#update
+- controllers/external_activities_controller.rb#edit_basic
+- controllers/external_activities_controller.rb#index
+- controllers/external_activities_controller.rb#update
+- controllers/images_controller.rb#create
+- controllers/materials_collections_controller.rb#destroy
+- controllers/materials_collections_controller.rb#edit
+- controllers/materials_collections_controller.rb#update
+- controllers/portal/bookmarks_controller.rb#add
+- controllers/portal/bookmarks_controller.rb#add_padlet
+- controllers/portal/bookmarks_controller.rb#delete
+- controllers/portal/clazzes_controller.rb#add_new_student_popup
+- controllers/portal/clazzes_controller.rb#add_offering
+- controllers/portal/clazzes_controller.rb#add_student
+- controllers/portal/clazzes_controller.rb#add_teacher
+- controllers/portal/clazzes_controller.rb#edit
+- controllers/portal/clazzes_controller.rb#remove_offering
+- controllers/portal/clazzes_controller.rb#remove_teacher
+- controllers/portal/clazzes_controller.rb#roster
+- controllers/portal/districts_controller.rb#edit
+- controllers/portal/districts_controller.rb#update
+- controllers/portal/schools_controller.rb#create
+- controllers/portal/schools_controller.rb#edit
+- controllers/portal/schools_controller.rb#show
+- controllers/portal/schools_controller.rb#update
+- controllers/portal/students_controller.rb#confirm
+- controllers/portal/students_controller.rb#create
+- controllers/portal/students_controller.rb#move_confirm
+- controllers/search_controller.rb#add_material_to_clazzes
+- controllers/search_controller.rb#add_material_to_collections
+- controllers/search_controller.rb#get_current_material_anonymous
+- controllers/search_controller.rb#get_current_material_unassigned_clazzes
+- controllers/search_controller.rb#get_current_material_unassigned_collections
+- controllers/search_controller.rb#get_search_suggestions
+- controllers/teacher_notes_controller.rb#show_teacher_note
+- helpers/application_helper.rb#delete_button_for:
+  - views/shared/_activity_header.haml
+  - views/shared/_activity_header.haml
+  - views/shared/_external_activity_header.html.haml:
+    - controllers/external_activities_controller.rb#update
+  - views/shared/_page_header.html.haml
+  - views/shared/_page_header.html.haml
+  - views/shared/_section_header.html.haml
+  - views/shared/_section_header.html.haml
+  - helpers/application_helper.rb#show_menu_for:
+    - views/admin/projects/_show.html.haml:
+      - views/admin/projects/index.html.haml
+      - views/admin/projects/show.html.haml
+      - controllers/admin/projects_controller.rb#update
+    - views/admin/settings/_show.html.haml:
+      - views/admin/settings/index.html.haml
+      - views/admin/settings/show.html.haml
+      - controllers/admin/settings_controller.rb#update
+    - views/admin/settings/_show_for_managers.html.haml:
+      - views/admin/settings/_show.html.haml:
+        - views/admin/settings/index.html.haml
+        - views/admin/settings/show.html.haml
+        - controllers/admin/settings_controller.rb#update
+    - views/admin/tags/_show.html.haml:
+      - views/admin/tags/index.html.haml
+      - views/admin/tags/show.html.haml
+      - controllers/admin/tags_controller.rb#update
+    - views/dataservice/blobs/_show.html.haml:
+      - views/dataservice/blobs/index.html.haml
+      - views/dataservice/blobs/show.html.haml
+    - views/dataservice/bundle_loggers/_show.html.haml:
+      - views/dataservice/bundle_loggers/index.html.haml
+      - views/dataservice/bundle_loggers/show.html.haml
+      - views/portal/learners/bundle_report.html.haml
+    - views/dataservice/console_loggers/_show.html.haml:
+      - views/dataservice/console_loggers/index.html.haml
+      - views/dataservice/console_loggers/show.html.haml
+      - views/portal/learners/bundle_report.html.haml
+    - views/materials_collections/_show.html.haml:
+      - views/materials_collections/_list_show.html.haml:
+        - views/materials_collections/index.html.haml
+        - views/materials_collections/show.html.haml
+      - controllers/materials_collections_controller.rb#update
+    - views/portal/districts/_show.html.haml:
+      - views/portal/districts/index.html.haml
+      - views/portal/districts/show.html.haml
+      - controllers/portal/districts_controller.rb#update
+    - views/portal/grade_levels/_show.html.haml:
+      - views/portal/grade_levels/index.html.haml
+      - views/portal/grade_levels/show.html.haml
+    - views/portal/grades/_show.html.haml:
+      - views/portal/grades/index.html.haml
+      - views/portal/grades/show.html.haml
+    - views/portal/schools/_show.html.haml:
+      - views/portal/districts/_show.html.haml:
+        - views/portal/districts/index.html.haml
+        - views/portal/districts/show.html.haml
+        - controllers/portal/districts_controller.rb#update
+      - views/portal/schools/index.html.haml
+      - views/portal/schools/show.html.haml
+      - controllers/portal/schools_controller.rb#create
+      - controllers/portal/schools_controller.rb#update
+    - views/shared/_embeddable_container.html.haml:
+      - views/embeddable/image_questions/index.html.haml
+      - views/embeddable/multiple_choices/index.html.haml
+      - views/embeddable/multiple_choices/show.html.haml
+      - views/embeddable/open_responses/index.html.haml
+      - views/embeddable/open_responses/show.html.haml
+    - views/shared/_embeddable_container.html.haml:
+      - views/embeddable/image_questions/index.html.haml
+      - views/embeddable/multiple_choices/index.html.haml
+      - views/embeddable/multiple_choices/show.html.haml
+      - views/embeddable/open_responses/index.html.haml
+      - views/embeddable/open_responses/show.html.haml
+- helpers/application_helper.rb#edit_button_for:
+  - helpers/application_helper.rb#show_menu_for:
+    - views/admin/projects/_show.html.haml:
+      - views/admin/projects/index.html.haml
+      - views/admin/projects/show.html.haml
+      - controllers/admin/projects_controller.rb#update
+    - views/admin/settings/_show.html.haml:
+      - views/admin/settings/index.html.haml
+      - views/admin/settings/show.html.haml
+      - controllers/admin/settings_controller.rb#update
+    - views/admin/settings/_show_for_managers.html.haml:
+      - views/admin/settings/_show.html.haml:
+        - views/admin/settings/index.html.haml
+        - views/admin/settings/show.html.haml
+        - controllers/admin/settings_controller.rb#update
+    - views/admin/tags/_show.html.haml:
+      - views/admin/tags/index.html.haml
+      - views/admin/tags/show.html.haml
+      - controllers/admin/tags_controller.rb#update
+    - views/dataservice/blobs/_show.html.haml:
+      - views/dataservice/blobs/index.html.haml
+      - views/dataservice/blobs/show.html.haml
+    - views/dataservice/bundle_loggers/_show.html.haml:
+      - views/dataservice/bundle_loggers/index.html.haml
+      - views/dataservice/bundle_loggers/show.html.haml
+      - views/portal/learners/bundle_report.html.haml
+    - views/dataservice/console_loggers/_show.html.haml:
+      - views/dataservice/console_loggers/index.html.haml
+      - views/dataservice/console_loggers/show.html.haml
+      - views/portal/learners/bundle_report.html.haml
+    - views/materials_collections/_show.html.haml:
+      - views/materials_collections/_list_show.html.haml:
+        - views/materials_collections/index.html.haml
+        - views/materials_collections/show.html.haml
+      - controllers/materials_collections_controller.rb#update
+    - views/portal/districts/_show.html.haml:
+      - views/portal/districts/index.html.haml
+      - views/portal/districts/show.html.haml
+      - controllers/portal/districts_controller.rb#update
+    - views/portal/grade_levels/_show.html.haml:
+      - views/portal/grade_levels/index.html.haml
+      - views/portal/grade_levels/show.html.haml
+    - views/portal/grades/_show.html.haml:
+      - views/portal/grades/index.html.haml
+      - views/portal/grades/show.html.haml
+    - views/portal/schools/_show.html.haml:
+      - views/portal/districts/_show.html.haml:
+        - views/portal/districts/index.html.haml
+        - views/portal/districts/show.html.haml
+        - controllers/portal/districts_controller.rb#update
+      - views/portal/schools/index.html.haml
+      - views/portal/schools/show.html.haml
+      - controllers/portal/schools_controller.rb#create
+      - controllers/portal/schools_controller.rb#update
+    - views/shared/_embeddable_container.html.haml:
+      - views/embeddable/image_questions/index.html.haml
+      - views/embeddable/multiple_choices/index.html.haml
+      - views/embeddable/multiple_choices/show.html.haml
+      - views/embeddable/open_responses/index.html.haml
+      - views/embeddable/open_responses/show.html.haml
+    - views/shared/_embeddable_container.html.haml:
+      - views/embeddable/image_questions/index.html.haml
+      - views/embeddable/multiple_choices/index.html.haml
+      - views/embeddable/multiple_choices/show.html.haml
+      - views/embeddable/open_responses/index.html.haml
+      - views/embeddable/open_responses/show.html.haml
+- helpers/application_helper.rb#function_link_button
+- helpers/application_helper.rb#remote_link_button:
+  - views/materials_collections/_materials_in_collection.html.haml:
+    - views/materials_collections/_show.html.haml:
+      - views/materials_collections/_list_show.html.haml:
+        - views/materials_collections/index.html.haml
+        - views/materials_collections/show.html.haml
+      - controllers/materials_collections_controller.rb#update
+  - views/portal/students/_current_student_list_for_clazz.html.haml:
+    - views/portal/student_clazzes/destroy.js.rjs
+    - views/portal/students/_add_edit_list_for_clazz.html.haml:
+      - controllers/portal/clazzes_controller.rb#add_new_student_popup
+    - controllers/portal/clazzes_controller.rb#add_student
+  - views/portal/teachers/_list_for_clazz_setup.html.haml:
+    - views/portal/teachers/_table_for_clazz_setup.html.haml:
+      - views/portal/clazzes/_form.html.haml:
+        - views/portal/clazzes/_remote_form.html.haml:
+          - controllers/portal/clazzes_controller.rb#edit
+        - views/portal/clazzes/edit.html.haml
+        - views/portal/clazzes/new.html.haml
+    - controllers/portal/clazzes_controller.rb#add_teacher
+    - controllers/portal/clazzes_controller.rb#remove_teacher
+  - views/portal/teachers/_table_for_clazz.html.haml:
+    - views/portal/teachers/_list_for_clazz.html.haml
+    - controllers/portal/clazzes_controller.rb#add_teacher
+    - controllers/portal/clazzes_controller.rb#remove_teacher
+  - views/shared/_notes_menu.html.haml:
+    - views/shared/_activity_header.haml
+    - views/shared/_page_header.html.haml
+    - views/shared/_section_header.html.haml
+  - views/shared/_notes_menu.html.haml:
+    - views/shared/_activity_header.haml
+    - views/shared/_page_header.html.haml
+    - views/shared/_section_header.html.haml
+  - views/shared/_notes_menu.html.haml:
+    - views/shared/_activity_header.haml
+    - views/shared/_page_header.html.haml
+    - views/shared/_section_header.html.haml
+  - views/shared/_notes_menu.html.haml:
+    - views/shared/_activity_header.haml
+    - views/shared/_page_header.html.haml
+    - views/shared/_section_header.html.haml
+  - helpers/application_helper.rb#edit_button_for:
+    - helpers/application_helper.rb#show_menu_for:
+      - views/admin/projects/_show.html.haml:
+        - views/admin/projects/index.html.haml
+        - views/admin/projects/show.html.haml
+        - controllers/admin/projects_controller.rb#update
+      - views/admin/settings/_show.html.haml:
+        - views/admin/settings/index.html.haml
+        - views/admin/settings/show.html.haml
+        - controllers/admin/settings_controller.rb#update
+      - views/admin/settings/_show_for_managers.html.haml:
+        - views/admin/settings/_show.html.haml:
+          - views/admin/settings/index.html.haml
+          - views/admin/settings/show.html.haml
+          - controllers/admin/settings_controller.rb#update
+      - views/admin/tags/_show.html.haml:
+        - views/admin/tags/index.html.haml
+        - views/admin/tags/show.html.haml
+        - controllers/admin/tags_controller.rb#update
+      - views/dataservice/blobs/_show.html.haml:
+        - views/dataservice/blobs/index.html.haml
+        - views/dataservice/blobs/show.html.haml
+      - views/dataservice/bundle_loggers/_show.html.haml:
+        - views/dataservice/bundle_loggers/index.html.haml
+        - views/dataservice/bundle_loggers/show.html.haml
+        - views/portal/learners/bundle_report.html.haml
+      - views/dataservice/console_loggers/_show.html.haml:
+        - views/dataservice/console_loggers/index.html.haml
+        - views/dataservice/console_loggers/show.html.haml
+        - views/portal/learners/bundle_report.html.haml
+      - views/materials_collections/_show.html.haml:
+        - views/materials_collections/_list_show.html.haml:
+          - views/materials_collections/index.html.haml
+          - views/materials_collections/show.html.haml
+        - controllers/materials_collections_controller.rb#update
+      - views/portal/districts/_show.html.haml:
+        - views/portal/districts/index.html.haml
+        - views/portal/districts/show.html.haml
+        - controllers/portal/districts_controller.rb#update
+      - views/portal/grade_levels/_show.html.haml:
+        - views/portal/grade_levels/index.html.haml
+        - views/portal/grade_levels/show.html.haml
+      - views/portal/grades/_show.html.haml:
+        - views/portal/grades/index.html.haml
+        - views/portal/grades/show.html.haml
+      - views/portal/schools/_show.html.haml:
+        - views/portal/districts/_show.html.haml:
+          - views/portal/districts/index.html.haml
+          - views/portal/districts/show.html.haml
+          - controllers/portal/districts_controller.rb#update
+        - views/portal/schools/index.html.haml
+        - views/portal/schools/show.html.haml
+        - controllers/portal/schools_controller.rb#create
+        - controllers/portal/schools_controller.rb#update
+      - views/shared/_embeddable_container.html.haml:
+        - views/embeddable/image_questions/index.html.haml
+        - views/embeddable/multiple_choices/index.html.haml
+        - views/embeddable/multiple_choices/show.html.haml
+        - views/embeddable/open_responses/index.html.haml
+        - views/embeddable/open_responses/show.html.haml
+      - views/shared/_embeddable_container.html.haml:
+        - views/embeddable/image_questions/index.html.haml
+        - views/embeddable/multiple_choices/index.html.haml
+        - views/embeddable/multiple_choices/show.html.haml
+        - views/embeddable/open_responses/index.html.haml
+        - views/embeddable/open_responses/show.html.haml
+  - helpers/application_helper.rb#delete_button_for:
+    - views/shared/_activity_header.haml
+    - views/shared/_activity_header.haml
+    - views/shared/_external_activity_header.html.haml:
+      - controllers/external_activities_controller.rb#update
+    - views/shared/_page_header.html.haml
+    - views/shared/_page_header.html.haml
+    - views/shared/_section_header.html.haml
+    - views/shared/_section_header.html.haml
+    - helpers/application_helper.rb#show_menu_for:
+      - views/admin/projects/_show.html.haml:
+        - views/admin/projects/index.html.haml
+        - views/admin/projects/show.html.haml
+        - controllers/admin/projects_controller.rb#update
+      - views/admin/settings/_show.html.haml:
+        - views/admin/settings/index.html.haml
+        - views/admin/settings/show.html.haml
+        - controllers/admin/settings_controller.rb#update
+      - views/admin/settings/_show_for_managers.html.haml:
+        - views/admin/settings/_show.html.haml:
+          - views/admin/settings/index.html.haml
+          - views/admin/settings/show.html.haml
+          - controllers/admin/settings_controller.rb#update
+      - views/admin/tags/_show.html.haml:
+        - views/admin/tags/index.html.haml
+        - views/admin/tags/show.html.haml
+        - controllers/admin/tags_controller.rb#update
+      - views/dataservice/blobs/_show.html.haml:
+        - views/dataservice/blobs/index.html.haml
+        - views/dataservice/blobs/show.html.haml
+      - views/dataservice/bundle_loggers/_show.html.haml:
+        - views/dataservice/bundle_loggers/index.html.haml
+        - views/dataservice/bundle_loggers/show.html.haml
+        - views/portal/learners/bundle_report.html.haml
+      - views/dataservice/console_loggers/_show.html.haml:
+        - views/dataservice/console_loggers/index.html.haml
+        - views/dataservice/console_loggers/show.html.haml
+        - views/portal/learners/bundle_report.html.haml
+      - views/materials_collections/_show.html.haml:
+        - views/materials_collections/_list_show.html.haml:
+          - views/materials_collections/index.html.haml
+          - views/materials_collections/show.html.haml
+        - controllers/materials_collections_controller.rb#update
+      - views/portal/districts/_show.html.haml:
+        - views/portal/districts/index.html.haml
+        - views/portal/districts/show.html.haml
+        - controllers/portal/districts_controller.rb#update
+      - views/portal/grade_levels/_show.html.haml:
+        - views/portal/grade_levels/index.html.haml
+        - views/portal/grade_levels/show.html.haml
+      - views/portal/grades/_show.html.haml:
+        - views/portal/grades/index.html.haml
+        - views/portal/grades/show.html.haml
+      - views/portal/schools/_show.html.haml:
+        - views/portal/districts/_show.html.haml:
+          - views/portal/districts/index.html.haml
+          - views/portal/districts/show.html.haml
+          - controllers/portal/districts_controller.rb#update
+        - views/portal/schools/index.html.haml
+        - views/portal/schools/show.html.haml
+        - controllers/portal/schools_controller.rb#create
+        - controllers/portal/schools_controller.rb#update
+      - views/shared/_embeddable_container.html.haml:
+        - views/embeddable/image_questions/index.html.haml
+        - views/embeddable/multiple_choices/index.html.haml
+        - views/embeddable/multiple_choices/show.html.haml
+        - views/embeddable/open_responses/index.html.haml
+        - views/embeddable/open_responses/show.html.haml
+      - views/shared/_embeddable_container.html.haml:
+        - views/embeddable/image_questions/index.html.haml
+        - views/embeddable/multiple_choices/index.html.haml
+        - views/embeddable/multiple_choices/show.html.haml
+        - views/embeddable/open_responses/index.html.haml
+        - views/embeddable/open_responses/show.html.haml
+  - lib/clipboard.rb#paste_link_for:
+    - views/shared/_activity_header.haml
+    - views/shared/_external_activity_header.html.haml:
+      - controllers/external_activities_controller.rb#update
+    - views/shared/_page_header.html.haml
+    - views/shared/_paste_link.html.haml
+    - views/shared/_section_header.html.haml
+- helpers/application_helper.rb#show_menu_for:
+  - views/admin/projects/_show.html.haml:
+    - views/admin/projects/index.html.haml
+    - views/admin/projects/show.html.haml
+    - controllers/admin/projects_controller.rb#update
+  - views/admin/settings/_show.html.haml:
+    - views/admin/settings/index.html.haml
+    - views/admin/settings/show.html.haml
+    - controllers/admin/settings_controller.rb#update
+  - views/admin/settings/_show_for_managers.html.haml:
+    - views/admin/settings/_show.html.haml:
+      - views/admin/settings/index.html.haml
+      - views/admin/settings/show.html.haml
+      - controllers/admin/settings_controller.rb#update
+  - views/admin/tags/_show.html.haml:
+    - views/admin/tags/index.html.haml
+    - views/admin/tags/show.html.haml
+    - controllers/admin/tags_controller.rb#update
+  - views/dataservice/blobs/_show.html.haml:
+    - views/dataservice/blobs/index.html.haml
+    - views/dataservice/blobs/show.html.haml
+  - views/dataservice/bundle_loggers/_show.html.haml:
+    - views/dataservice/bundle_loggers/index.html.haml
+    - views/dataservice/bundle_loggers/show.html.haml
+    - views/portal/learners/bundle_report.html.haml
+  - views/dataservice/console_loggers/_show.html.haml:
+    - views/dataservice/console_loggers/index.html.haml
+    - views/dataservice/console_loggers/show.html.haml
+    - views/portal/learners/bundle_report.html.haml
+  - views/materials_collections/_show.html.haml:
+    - views/materials_collections/_list_show.html.haml:
+      - views/materials_collections/index.html.haml
+      - views/materials_collections/show.html.haml
+    - controllers/materials_collections_controller.rb#update
+  - views/portal/districts/_show.html.haml:
+    - views/portal/districts/index.html.haml
+    - views/portal/districts/show.html.haml
+    - controllers/portal/districts_controller.rb#update
+  - views/portal/grade_levels/_show.html.haml:
+    - views/portal/grade_levels/index.html.haml
+    - views/portal/grade_levels/show.html.haml
+  - views/portal/grades/_show.html.haml:
+    - views/portal/grades/index.html.haml
+    - views/portal/grades/show.html.haml
+  - views/portal/schools/_show.html.haml:
+    - views/portal/districts/_show.html.haml:
+      - views/portal/districts/index.html.haml
+      - views/portal/districts/show.html.haml
+      - controllers/portal/districts_controller.rb#update
+    - views/portal/schools/index.html.haml
+    - views/portal/schools/show.html.haml
+    - controllers/portal/schools_controller.rb#create
+    - controllers/portal/schools_controller.rb#update
+  - views/shared/_embeddable_container.html.haml:
+    - views/embeddable/image_questions/index.html.haml
+    - views/embeddable/multiple_choices/index.html.haml
+    - views/embeddable/multiple_choices/show.html.haml
+    - views/embeddable/open_responses/index.html.haml
+    - views/embeddable/open_responses/show.html.haml
+  - views/shared/_embeddable_container.html.haml:
+    - views/embeddable/image_questions/index.html.haml
+    - views/embeddable/multiple_choices/index.html.haml
+    - views/embeddable/multiple_choices/show.html.haml
+    - views/embeddable/open_responses/index.html.haml
+    - views/embeddable/open_responses/show.html.haml
+- helpers/application_helper.rb#toggle_all:
+  - views/interactives/index.html.haml
+  - views/shared/_activity_header.haml
+  - views/shared/_collection_menu.html.haml:
+    - views/admin/clients/index.html.haml
+    - views/admin/commons_licenses/index.html.haml
+    - views/admin/external_reports/index.html.haml
+    - views/admin/projects/index.html.haml
+    - views/admin/settings/index.html.haml
+    - views/admin/tags/index.html.haml
+    - views/dataservice/blobs/index.html.haml
+    - views/dataservice/bundle_contents/index.html.haml
+    - views/dataservice/bundle_loggers/index.html.haml
+    - views/dataservice/console_contents/index.html.haml
+    - views/dataservice/console_loggers/index.html.haml
+    - views/embeddable/image_questions/index.html.haml
+    - views/embeddable/multiple_choices/index.html.haml
+    - views/embeddable/open_responses/index.html.haml
+    - views/installer_reports/index.html.haml
+    - views/materials_collections/index.html.haml
+    - views/portal/districts/index.html.haml
+    - views/portal/grade_levels/index.html.haml
+    - views/portal/grades/index.html.haml
+    - views/portal/learners/index.html.haml
+    - views/portal/schools/index.html.haml
+  - views/shared/_page_header.html.haml
+  - views/shared/_section_header.html.haml
+  - views/users/index.html.haml
+- helpers/application_helper.rb#toggle_more
+- helpers/application_helper.rb#wrap_edit_link_around_content:
+  - views/admin/projects/_show.html.haml:
+    - views/admin/projects/index.html.haml
+    - views/admin/projects/show.html.haml
+    - controllers/admin/projects_controller.rb#update
+  - views/admin/settings/_show.html.haml:
+    - views/admin/settings/index.html.haml
+    - views/admin/settings/show.html.haml
+    - controllers/admin/settings_controller.rb#update
+  - views/admin/settings/_show_for_managers.html.haml:
+    - views/admin/settings/_show.html.haml:
+      - views/admin/settings/index.html.haml
+      - views/admin/settings/show.html.haml
+      - controllers/admin/settings_controller.rb#update
+  - views/admin/tags/_show.html.haml:
+    - views/admin/tags/index.html.haml
+    - views/admin/tags/show.html.haml
+    - controllers/admin/tags_controller.rb#update
+  - views/dataservice/blobs/_show.html.haml:
+    - views/dataservice/blobs/index.html.haml
+    - views/dataservice/blobs/show.html.haml
+  - views/embeddable/image_questions/_show.html.haml:
+    - views/embeddable/image_questions/show.html.haml
+    - controllers/embeddable/image_questions_controller.rb#show
+    - controllers/embeddable/image_questions_controller.rb#update
+  - views/embeddable/multiple_choices/_show.html.haml:
+    - controllers/embeddable/multiple_choices_controller.rb#show
+    - controllers/embeddable/multiple_choices_controller.rb#update
+  - views/embeddable/open_responses/_show.html.haml:
+    - controllers/embeddable/open_responses_controller.rb#show
+    - controllers/embeddable/open_responses_controller.rb#update
+  - views/materials_collections/_show.html.haml:
+    - views/materials_collections/_list_show.html.haml:
+      - views/materials_collections/index.html.haml
+      - views/materials_collections/show.html.haml
+    - controllers/materials_collections_controller.rb#update
+  - views/portal/districts/_show.html.haml:
+    - views/portal/districts/index.html.haml
+    - views/portal/districts/show.html.haml
+    - controllers/portal/districts_controller.rb#update
+  - views/portal/grade_levels/_show.html.haml:
+    - views/portal/grade_levels/index.html.haml
+    - views/portal/grade_levels/show.html.haml
+  - views/portal/grades/_show.html.haml:
+    - views/portal/grades/index.html.haml
+    - views/portal/grades/show.html.haml
+  - views/portal/schools/_show.html.haml:
+    - views/portal/districts/_show.html.haml:
+      - views/portal/districts/index.html.haml
+      - views/portal/districts/show.html.haml
+      - controllers/portal/districts_controller.rb#update
+    - views/portal/schools/index.html.haml
+    - views/portal/schools/show.html.haml
+    - controllers/portal/schools_controller.rb#create
+    - controllers/portal/schools_controller.rb#update
+- helpers/js_helper.rb#remove_link:
+  - views/embeddable/multiple_choices/_edit_choice.html.haml:
+    - views/embeddable/multiple_choices/_new_choice.html.haml:
+      - controllers/embeddable/multiple_choices_controller.rb#add_choice
+    - views/embeddable/multiple_choices/_remote_form.html.haml:
+      - views/embeddable/multiple_choices/edit.html.haml
+      - views/embeddable/multiple_choices/new.html.haml
+      - controllers/embeddable/multiple_choices_controller.rb#new
+      - controllers/embeddable/multiple_choices_controller.rb#edit
+- helpers/js_helper.rb#safe_js:
+  - views/embeddable/image_questions/destroy.js.rjs
+  - views/embeddable/multiple_choices/destroy.js.rjs
+  - views/embeddable/open_responses/destroy.js.rjs
+  - views/external_activities/create.js.rjs
+  - views/external_activities/create.js.rjs
+  - views/portal/clazzes/destroy.js.rjs
+  - views/portal/clazzes/destroy.js.rjs
+  - views/portal/districts/destroy.js.rjs
+  - views/portal/schools/destroy.js.rjs
+  - views/portal/student_clazzes/destroy.js.rjs
+- helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
+  - views/portal/bookmarks/index.html.haml
+- helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
+  - views/portal/clazzes/_form_student_roster.html.haml:
+    - views/portal/clazzes/_remote_form_student_roster.html.haml:
+      - controllers/portal/clazzes_controller.rb#roster
+    - views/portal/clazzes/roster.html.haml
+  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/students/_add_edit_list_for_clazz.html.haml:
+    - controllers/portal/clazzes_controller.rb#add_new_student_popup
+  - views/portal/students/_list_for_clazz.html.haml
+  - controllers/portal/clazzes_controller.rb#add_student
+  - controllers/portal/students_controller.rb#create
+- helpers/portal/teachers_helper.rb#teacher_add_dropdown:
+  - views/portal/teachers/_table_for_clazz_setup.html.haml:
+    - views/portal/clazzes/_form.html.haml:
+      - views/portal/clazzes/_remote_form.html.haml:
+        - controllers/portal/clazzes_controller.rb#edit
+      - views/portal/clazzes/edit.html.haml
+      - views/portal/clazzes/new.html.haml
+  - controllers/portal/clazzes_controller.rb#add_teacher
+  - controllers/portal/clazzes_controller.rb#remove_teacher
+- lib/clipboard.rb#paste_link_for:
+  - views/shared/_activity_header.haml
+  - views/shared/_external_activity_header.html.haml:
+    - controllers/external_activities_controller.rb#update
+  - views/shared/_page_header.html.haml
+  - views/shared/_paste_link.html.haml
+  - views/shared/_section_header.html.haml
+- views/admin/clients/_remote_form.html.haml:
+  - controllers/admin/clients_controller.rb#edit
+  - controllers/admin/clients_controller.rb#update
+- views/admin/clients/index.html.haml
+- views/admin/commons_licenses/_remote_form.html.haml:
+  - controllers/admin/commons_licenses_controller.rb#edit
+  - controllers/admin/commons_licenses_controller.rb#update
+- views/admin/commons_licenses/index.html.haml
+- views/admin/external_reports/_remote_form.html.haml:
+  - controllers/admin/external_reports_controller.rb#edit
+  - controllers/admin/external_reports_controller.rb#update
+- views/admin/external_reports/index.html.haml
+- views/admin/projects/_remote_form.html.haml:
+  - controllers/admin/projects_controller.rb#edit
+  - controllers/admin/projects_controller.rb#update
+- views/admin/projects/_show.html.haml:
+  - views/admin/projects/index.html.haml
+  - views/admin/projects/show.html.haml
+  - controllers/admin/projects_controller.rb#update
+- views/admin/projects/index.html.haml
+- views/admin/projects/show.html.haml
+- views/admin/settings/_remote_form.html.haml:
+  - controllers/admin/settings_controller.rb#edit
+- views/admin/settings/_show.html.haml:
+  - views/admin/settings/index.html.haml
+  - views/admin/settings/show.html.haml
+  - controllers/admin/settings_controller.rb#update
+- views/admin/settings/_show_for_managers.html.haml:
+  - views/admin/settings/_show.html.haml:
+    - views/admin/settings/index.html.haml
+    - views/admin/settings/show.html.haml
+    - controllers/admin/settings_controller.rb#update
+- views/admin/settings/index.html.haml
+- views/admin/settings/show.html.haml
+- views/admin/tags/_remote_form.html.haml:
+  - controllers/admin/tags_controller.rb#edit
+- views/admin/tags/_show.html.haml:
+  - views/admin/tags/index.html.haml
+  - views/admin/tags/show.html.haml
+  - controllers/admin/tags_controller.rb#update
+- views/admin/tags/index.html.haml
+- views/admin/tags/show.html.haml
+- views/author_notes/_remote_form.html.haml:
+  - controllers/author_notes_controller.rb#show_author_note
+- views/author_notes/_show.html.haml:
+  - controllers/author_notes_controller.rb#show_author_note
+- views/dataservice/blobs/_remote_form.html.haml
+- views/dataservice/blobs/_show.html.haml:
+  - views/dataservice/blobs/index.html.haml
+  - views/dataservice/blobs/show.html.haml
+- views/dataservice/blobs/index.html.haml
+- views/dataservice/blobs/show.html.haml
+- views/dataservice/bundle_contents/_remote_form.html.haml
+- views/dataservice/bundle_contents/index.html.haml
+- views/dataservice/bundle_loggers/_remote_form.html.haml
+- views/dataservice/bundle_loggers/_show.html.haml:
+  - views/dataservice/bundle_loggers/index.html.haml
+  - views/dataservice/bundle_loggers/show.html.haml
+  - views/portal/learners/bundle_report.html.haml
+- views/dataservice/bundle_loggers/index.html.haml
+- views/dataservice/bundle_loggers/show.html.haml
+- views/dataservice/console_contents/_remote_form.html.haml
+- views/dataservice/console_contents/index.html.haml
+- views/dataservice/console_loggers/_remote_form.html.haml
+- views/dataservice/console_loggers/_show.html.haml:
+  - views/dataservice/console_loggers/index.html.haml
+  - views/dataservice/console_loggers/show.html.haml
+  - views/portal/learners/bundle_report.html.haml
+- views/dataservice/console_loggers/index.html.haml
+- views/dataservice/console_loggers/show.html.haml
+- views/embeddable/image_questions/_remote_form.html.haml:
+  - controllers/embeddable/image_questions_controller.rb#new
+  - controllers/embeddable/image_questions_controller.rb#edit
+- views/embeddable/image_questions/_show.html.haml:
+  - views/embeddable/image_questions/show.html.haml
+  - controllers/embeddable/image_questions_controller.rb#show
+  - controllers/embeddable/image_questions_controller.rb#update
+- views/embeddable/image_questions/destroy.js.rjs
+- views/embeddable/image_questions/index.html.haml
+- views/embeddable/image_questions/show.html.haml
+- views/embeddable/multiple_choices/_edit_choice.html.haml:
+  - views/embeddable/multiple_choices/_new_choice.html.haml:
+    - controllers/embeddable/multiple_choices_controller.rb#add_choice
+  - views/embeddable/multiple_choices/_remote_form.html.haml:
+    - views/embeddable/multiple_choices/edit.html.haml
+    - views/embeddable/multiple_choices/new.html.haml
+    - controllers/embeddable/multiple_choices_controller.rb#new
+    - controllers/embeddable/multiple_choices_controller.rb#edit
+- views/embeddable/multiple_choices/_new_choice.html.haml:
+  - controllers/embeddable/multiple_choices_controller.rb#add_choice
+- views/embeddable/multiple_choices/_remote_form.html.haml:
+  - views/embeddable/multiple_choices/edit.html.haml
+  - views/embeddable/multiple_choices/new.html.haml
+  - controllers/embeddable/multiple_choices_controller.rb#new
+  - controllers/embeddable/multiple_choices_controller.rb#edit
+- views/embeddable/multiple_choices/_show.html.haml:
+  - controllers/embeddable/multiple_choices_controller.rb#show
+  - controllers/embeddable/multiple_choices_controller.rb#update
+- views/embeddable/multiple_choices/destroy.js.rjs
+- views/embeddable/multiple_choices/edit.html.haml
+- views/embeddable/multiple_choices/index.html.haml
+- views/embeddable/multiple_choices/new.html.haml
+- views/embeddable/multiple_choices/show.html.haml
+- views/embeddable/open_responses/_remote_form.html.haml:
+  - views/embeddable/open_responses/edit.html.haml
+  - controllers/embeddable/open_responses_controller.rb#new
+  - controllers/embeddable/open_responses_controller.rb#edit
+- views/embeddable/open_responses/_show.html.haml:
+  - controllers/embeddable/open_responses_controller.rb#show
+  - controllers/embeddable/open_responses_controller.rb#update
+- views/embeddable/open_responses/destroy.js.rjs
+- views/embeddable/open_responses/edit.html.haml
+- views/embeddable/open_responses/index.html.haml
+- views/embeddable/open_responses/show.html.haml
+- views/external_activities/_basic_form.html.haml:
+  - controllers/external_activities_controller.rb#edit_basic
+- views/external_activities/_remote_form.html.haml
+- views/external_activities/_runnable_list.html.haml:
+  - views/external_activities/index.html.haml
+  - controllers/external_activities_controller.rb#index
+- views/external_activities/_show.html.haml
+- views/external_activities/create.js.rjs
+- views/external_activities/index.html.haml
+- views/home/my_classes.html.haml
+- views/images/index.html.haml
+- views/installer_reports/index.html.haml
+- views/interactives/index.html.haml
+- views/layouts/application.html.haml
+- views/materials_collections/_list_show.html.haml:
+  - views/materials_collections/index.html.haml
+  - views/materials_collections/show.html.haml
+- views/materials_collections/_materials_in_collection.html.haml:
+  - views/materials_collections/_show.html.haml:
+    - views/materials_collections/_list_show.html.haml:
+      - views/materials_collections/index.html.haml
+      - views/materials_collections/show.html.haml
+    - controllers/materials_collections_controller.rb#update
+- views/materials_collections/_remote_form.html.haml:
+  - controllers/materials_collections_controller.rb#edit
+- views/materials_collections/_show.html.haml:
+  - views/materials_collections/_list_show.html.haml:
+    - views/materials_collections/index.html.haml
+    - views/materials_collections/show.html.haml
+  - controllers/materials_collections_controller.rb#update
+- views/materials_collections/index.html.haml
+- views/materials_collections/show.html.haml
+- views/portal/bookmarks/_show.html.haml:
+  - views/portal/bookmarks/index.html.haml
+  - controllers/portal/bookmarks_controller.rb#add_padlet
+  - controllers/portal/bookmarks_controller.rb#add
+- views/portal/bookmarks/generic_bookmark/_button.html.haml:
+  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
+    - views/portal/bookmarks/index.html.haml
+- views/portal/bookmarks/index.html.haml
+- views/portal/bookmarks/padlet_bookmark/_button.html.haml:
+  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
+    - views/portal/bookmarks/index.html.haml
+- views/portal/clazzes/_form.html.haml:
+  - views/portal/clazzes/_remote_form.html.haml:
+    - controllers/portal/clazzes_controller.rb#edit
+  - views/portal/clazzes/edit.html.haml
+  - views/portal/clazzes/new.html.haml
+- views/portal/clazzes/_form_student_roster.html.haml:
+  - views/portal/clazzes/_remote_form_student_roster.html.haml:
+    - controllers/portal/clazzes_controller.rb#roster
+  - views/portal/clazzes/roster.html.haml
+- views/portal/clazzes/_remote_form.html.haml:
+  - controllers/portal/clazzes_controller.rb#edit
+- views/portal/clazzes/_remote_form_student_roster.html.haml:
+  - controllers/portal/clazzes_controller.rb#roster
+- views/portal/clazzes/class_list.html.haml
+- views/portal/clazzes/destroy.js.rjs
+- views/portal/clazzes/edit.html.haml
+- views/portal/clazzes/edit_offerings.html.haml
+- views/portal/clazzes/new.html.haml
+- views/portal/clazzes/roster.html.haml
+- views/portal/clazzes/show.html.haml
+- views/portal/districts/_remote_form.html.haml:
+  - controllers/portal/districts_controller.rb#edit
+- views/portal/districts/_show.html.haml:
+  - views/portal/districts/index.html.haml
+  - views/portal/districts/show.html.haml
+  - controllers/portal/districts_controller.rb#update
+- views/portal/districts/destroy.js.rjs
+- views/portal/districts/index.html.haml
+- views/portal/districts/show.html.haml
+- views/portal/grade_levels/_remote_form.html.haml
+- views/portal/grade_levels/_show.html.haml:
+  - views/portal/grade_levels/index.html.haml
+  - views/portal/grade_levels/show.html.haml
+- views/portal/grade_levels/index.html.haml
+- views/portal/grade_levels/show.html.haml
+- views/portal/grades/_remote_form.html.haml
+- views/portal/grades/_show.html.haml:
+  - views/portal/grades/index.html.haml
+  - views/portal/grades/show.html.haml
+- views/portal/grades/index.html.haml
+- views/portal/grades/show.html.haml
+- views/portal/learners/_remote_form.html.haml
+- views/portal/learners/bundle_report.html.haml
+- views/portal/learners/index.html.haml
+- views/portal/offerings/_list_for_clazz.html.haml
+- views/portal/offerings/_show.html.haml:
+  - views/portal/offerings/show.html.haml
+- views/portal/offerings/show.html.haml
+- views/portal/schools/_remote_form.html.haml:
+  - controllers/portal/schools_controller.rb#show
+  - controllers/portal/schools_controller.rb#edit
+- views/portal/schools/_show.html.haml:
+  - views/portal/districts/_show.html.haml:
+    - views/portal/districts/index.html.haml
+    - views/portal/districts/show.html.haml
+    - controllers/portal/districts_controller.rb#update
+  - views/portal/schools/index.html.haml
+  - views/portal/schools/show.html.haml
+  - controllers/portal/schools_controller.rb#create
+  - controllers/portal/schools_controller.rb#update
+- views/portal/schools/destroy.js.rjs
+- views/portal/schools/index.html.haml
+- views/portal/schools/show.html.haml
+- views/portal/student_clazzes/destroy.js.rjs
+- views/portal/students/_add_edit_list_for_clazz.html.haml:
+  - controllers/portal/clazzes_controller.rb#add_new_student_popup
+- views/portal/students/_current_student_list_for_clazz.html.haml:
+  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/students/_add_edit_list_for_clazz.html.haml:
+    - controllers/portal/clazzes_controller.rb#add_new_student_popup
+  - controllers/portal/clazzes_controller.rb#add_student
+- views/portal/students/_list_for_clazz.html.haml
+- views/portal/students/_move.html.haml:
+  - views/portal/students/_show.html.haml:
+    - views/home/my_classes.html.haml
+    - views/portal/students/show.html.haml
+- views/portal/students/_register.html.haml:
+  - views/portal/students/_show.html.haml:
+    - views/home/my_classes.html.haml
+    - views/portal/students/show.html.haml
+  - views/portal/students/register.html.haml
+- views/portal/students/_show.html.haml:
+  - views/home/my_classes.html.haml
+  - views/portal/students/show.html.haml
+- views/portal/students/_table_for_clazz.html.haml:
+  - views/portal/clazzes/_form_student_roster.html.haml:
+    - views/portal/clazzes/_remote_form_student_roster.html.haml:
+      - controllers/portal/clazzes_controller.rb#roster
+    - views/portal/clazzes/roster.html.haml
+  - views/portal/clazzes/class_list.html.haml
+  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/students/_list_for_clazz.html.haml
+  - controllers/portal/clazzes_controller.rb#add_student
+  - controllers/portal/students_controller.rb#create
+- views/portal/students/register.html.haml
+- views/portal/students/show.html.haml
+- views/portal/teachers/_list_for_clazz.html.haml
+- views/portal/teachers/_list_for_clazz_setup.html.haml:
+  - views/portal/teachers/_table_for_clazz_setup.html.haml:
+    - views/portal/clazzes/_form.html.haml:
+      - views/portal/clazzes/_remote_form.html.haml:
+        - controllers/portal/clazzes_controller.rb#edit
+      - views/portal/clazzes/edit.html.haml
+      - views/portal/clazzes/new.html.haml
+  - controllers/portal/clazzes_controller.rb#add_teacher
+  - controllers/portal/clazzes_controller.rb#remove_teacher
+- views/portal/teachers/_table_for_clazz.html.haml:
+  - views/portal/teachers/_list_for_clazz.html.haml
+  - controllers/portal/clazzes_controller.rb#add_teacher
+  - controllers/portal/clazzes_controller.rb#remove_teacher
+- views/portal/teachers/_table_for_clazz_setup.html.haml:
+  - views/portal/clazzes/_form.html.haml:
+    - views/portal/clazzes/_remote_form.html.haml:
+      - controllers/portal/clazzes_controller.rb#edit
+    - views/portal/clazzes/edit.html.haml
+    - views/portal/clazzes/new.html.haml
+- views/search/_material_unassigned_clazzes.html.haml:
+  - controllers/search_controller.rb#get_current_material_anonymous
+  - controllers/search_controller.rb#get_current_material_unassigned_clazzes
+- views/search/_material_unassigned_collections.html.haml:
+  - controllers/search_controller.rb#get_current_material_unassigned_collections
+- views/shared/_accordion_nav.html.haml:
+  - views/layouts/application.html.haml
+- views/shared/_activity_header.haml
+- views/shared/_activity_trail.html.haml
+- views/shared/_classes_for_school.haml
+- views/shared/_collection_menu.html.haml:
+  - views/admin/clients/index.html.haml
+  - views/admin/commons_licenses/index.html.haml
+  - views/admin/external_reports/index.html.haml
+  - views/admin/projects/index.html.haml
+  - views/admin/settings/index.html.haml
+  - views/admin/tags/index.html.haml
+  - views/dataservice/blobs/index.html.haml
+  - views/dataservice/bundle_contents/index.html.haml
+  - views/dataservice/bundle_loggers/index.html.haml
+  - views/dataservice/console_contents/index.html.haml
+  - views/dataservice/console_loggers/index.html.haml
+  - views/embeddable/image_questions/index.html.haml
+  - views/embeddable/multiple_choices/index.html.haml
+  - views/embeddable/open_responses/index.html.haml
+  - views/installer_reports/index.html.haml
+  - views/materials_collections/index.html.haml
+  - views/portal/districts/index.html.haml
+  - views/portal/grade_levels/index.html.haml
+  - views/portal/grades/index.html.haml
+  - views/portal/learners/index.html.haml
+  - views/portal/schools/index.html.haml
+- views/shared/_embeddable_container.html.haml:
+  - views/embeddable/image_questions/index.html.haml
+  - views/embeddable/multiple_choices/index.html.haml
+  - views/embeddable/multiple_choices/show.html.haml
+  - views/embeddable/open_responses/index.html.haml
+  - views/embeddable/open_responses/show.html.haml
+- views/shared/_external_activity_header.html.haml:
+  - controllers/external_activities_controller.rb#update
+- views/shared/_general_accordion_nav.html.haml:
+  - views/layouts/application.html.haml
+  - views/layouts/application.html.haml
+  - views/layouts/application.html.haml
+- views/shared/_notes_menu.html.haml:
+  - views/shared/_activity_header.haml
+  - views/shared/_page_header.html.haml
+  - views/shared/_section_header.html.haml
+- views/shared/_offering_for_teacher.html.haml:
+  - views/portal/clazzes/edit_offerings.html.haml
+  - views/portal/clazzes/show.html.haml
+  - views/portal/offerings/_list_for_clazz.html.haml
+  - views/portal/offerings/_show.html.haml:
+    - views/portal/offerings/show.html.haml
+  - views/shared/_classes_for_school.haml
+  - controllers/portal/clazzes_controller.rb#add_offering
+- views/shared/_page_header.html.haml
+- views/shared/_paste_link.html.haml
+- views/shared/_runnable.html.haml:
+  - controllers/portal/clazzes_controller.rb#remove_offering
+- views/shared/_runnable_list.html.haml:
+  - views/portal/clazzes/edit_offerings.html.haml
+  - views/portal/offerings/_list_for_clazz.html.haml
+- views/shared/_runnables_listing.html.haml:
+  - views/shared/_runnable_list.html.haml:
+    - views/portal/clazzes/edit_offerings.html.haml
+    - views/portal/offerings/_list_for_clazz.html.haml
+- views/shared/_section_header.html.haml
+- views/teacher_notes/_remote_form.html.haml:
+  - controllers/teacher_notes_controller.rb#show_teacher_note
+- views/teacher_notes/_show.html.haml:
+  - controllers/teacher_notes_controller.rb#show_teacher_note
+- views/users/index.html.haml
