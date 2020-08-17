@@ -1,0 +1,846 @@
+# This was generated using: cd rails/script; ruby prototype-railsupdate-solutions.rb
+---
+controllers/admin/clients_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/clients_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/commons_licenses_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/commons_licenses_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/external_reports_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/external_reports_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/projects_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/projects_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/settings_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/settings_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/tags_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/admin/tags_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/author_notes_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/author_notes_controller.rb#show_author_note:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/image_questions_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/image_questions_controller.rb#new:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/image_questions_controller.rb#show:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/image_questions_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/multiple_choices_controller.rb#add_choice:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/multiple_choices_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/multiple_choices_controller.rb#new:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/multiple_choices_controller.rb#show:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/multiple_choices_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/open_responses_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/open_responses_controller.rb#new:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/open_responses_controller.rb#show:
+  solution: 
+  rational: 
+  story: 
+controllers/embeddable/open_responses_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/external_activities_controller.rb#edit_basic:
+  solution: 
+  rational: 
+  story: 
+controllers/external_activities_controller.rb#index:
+  solution: 
+  rational: 
+  story: 
+controllers/external_activities_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/images_controller.rb#create:
+  solution: 
+  rational: 
+  story: 
+controllers/materials_collections_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/materials_collections_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/bookmarks_controller.rb#add:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/bookmarks_controller.rb#add_padlet:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#add_new_student_popup:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#add_offering:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#add_student:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#add_teacher:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#remove_offering:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#remove_teacher:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/clazzes_controller.rb#roster:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/districts_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/districts_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/schools_controller.rb#create:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/schools_controller.rb#edit:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/schools_controller.rb#show:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/schools_controller.rb#update:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/students_controller.rb#confirm:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/students_controller.rb#create:
+  solution: 
+  rational: 
+  story: 
+controllers/portal/students_controller.rb#move_confirm:
+  solution: 
+  rational: 
+  story: 
+controllers/search_controller.rb#get_current_material_anonymous:
+  solution: 
+  rational: 
+  story: 
+controllers/search_controller.rb#get_current_material_unassigned_clazzes:
+  solution: 
+  rational: 
+  story: 
+controllers/search_controller.rb#get_current_material_unassigned_collections:
+  solution: 
+  rational: 
+  story: 
+controllers/teacher_notes_controller.rb#show_teacher_note:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#delete_button_for:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#edit_button_for:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#function_link_button:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#remote_link_button:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#show_menu_for:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#toggle_all:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#toggle_more:
+  solution: 
+  rational: 
+  story: 
+helpers/application_helper.rb#wrap_edit_link_around_content:
+  solution: 
+  rational: 
+  story: 
+helpers/js_helper.rb#remove_link:
+  solution: 
+  rational: 
+  story: 
+helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
+  solution: 
+  rational: 
+  story: 
+helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
+  solution: 
+  rational: 
+  story: 
+helpers/portal/teachers_helper.rb#teacher_add_dropdown:
+  solution: 
+  rational: 
+  story: 
+lib/clipboard.rb#paste_link_for:
+  solution: 
+  rational: 
+  story: 
+views/admin/clients/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/clients/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/commons_licenses/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/commons_licenses/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/external_reports/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/external_reports/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/projects/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/projects/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/projects/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/projects/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/settings/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/settings/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/settings/_show_for_managers.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/settings/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/settings/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/tags/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/tags/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/tags/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/admin/tags/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/author_notes/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/author_notes/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/blobs/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/blobs/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/blobs/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/blobs/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/bundle_contents/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/bundle_contents/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/bundle_loggers/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/bundle_loggers/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/bundle_loggers/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/bundle_loggers/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/console_contents/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/console_contents/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/console_loggers/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/console_loggers/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/console_loggers/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/dataservice/console_loggers/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/image_questions/_remote_form.html.haml:
+  solution: remove all embeddable/image_questions/
+  rational: no longer needed
+  story: 
+views/embeddable/image_questions/_show.html.haml:
+  solution: remove all embeddable/image_questions/
+  rational: no longer needed
+  story: 
+views/embeddable/image_questions/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/image_questions/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/multiple_choices/_edit_choice.html.haml:
+  solution: remove all embeddable/multiple_choices/
+  rational: no longer needed
+  story: 
+views/embeddable/multiple_choices/_new_choice.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/multiple_choices/_remote_form.html.haml:
+  solution: remove all embeddable/multiple_choices/
+  rational: no longer needed
+  story: 
+views/embeddable/multiple_choices/_show.html.haml:
+  solution: remove all embeddable/multiple_choices/
+  rational: no longer needed
+  story: 
+views/embeddable/multiple_choices/edit.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/multiple_choices/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/multiple_choices/new.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/multiple_choices/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/open_responses/_remote_form.html.haml:
+  solution: remove all embeddable/open_responses/
+  rational: no longer needed
+  story: 
+views/embeddable/open_responses/_show.html.haml:
+  solution: remove all embeddable/open_responses/
+  rational: no longer needed
+  story: 
+views/embeddable/open_responses/edit.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/open_responses/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/embeddable/open_responses/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/external_activities/_basic_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/external_activities/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/external_activities/_runnable_list.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/external_activities/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/external_activities/create.js.rjs:
+  solution: 
+  rational: 
+  story: 
+views/external_activities/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/home/my_classes.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/images/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/installer_reports/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/interactives/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/layouts/application.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/materials_collections/_list_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/materials_collections/_materials_in_collection.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/materials_collections/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/materials_collections/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/materials_collections/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/materials_collections/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/bookmarks/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/bookmarks/generic_bookmark/_button.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/bookmarks/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/bookmarks/padlet_bookmark/_button.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/_form_student_roster.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/_remote_form_student_roster.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/class_list.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/edit.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/edit_offerings.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/new.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/roster.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/clazzes/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/districts/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/districts/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/districts/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/districts/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grade_levels/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grade_levels/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grade_levels/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grade_levels/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grades/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grades/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grades/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/grades/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/learners/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/learners/bundle_report.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/learners/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/offerings/_list_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/offerings/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/offerings/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/schools/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/schools/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/schools/index.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/schools/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/student_clazzes/destroy.js.rjs:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_add_edit_list_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_current_student_list_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_list_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_move.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_register.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/_table_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/register.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/students/show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/teachers/_list_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/teachers/_list_for_clazz_setup.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/teachers/_table_for_clazz.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/portal/teachers/_table_for_clazz_setup.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/search/_material_unassigned_clazzes.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/search/_material_unassigned_collections.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_accordion_nav.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_activity_header.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_activity_trail.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_classes_for_school.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_collection_menu.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_embeddable_container.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_external_activity_header.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_general_accordion_nav.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_notes_menu.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_offering_for_teacher.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_page_header.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_paste_link.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_runnable.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_runnable_list.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_runnables_listing.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/shared/_section_header.html.haml:
+  solution: remove
+  rational: no references
+  story: 
+views/teacher_notes/_remote_form.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/teacher_notes/_show.html.haml:
+  solution: 
+  rational: 
+  story: 
+views/users/index.html.haml:
+  solution: 
+  rational: 
+  story: 
