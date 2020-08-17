@@ -115,6 +115,30 @@ BASE/observe_form:
     line: = observe_form 'image_search_form', :url => list_filter_image_url(:index=>"yes"),:before
       => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency
       => 1, :update => {:success => 'offering_list'}
+BASE/page <<:
+  callers:
+  - name: views/external_activities/create.js.rjs
+    line: page << "document.dialog.close()"
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: page << "if ($('students_listing')){"
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: page << "}"
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: '#page << "if ($(''add_students_listing'')){"'
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: '#page << "}"'
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: page << "if ($('oClassStudentCount')){"
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: page << "}"
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: page << "if ($('student_add_dropdown')){"
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: page << "}"
+  - name: helpers/js_helper.rb#safe_js
+    line: page << "if ($('#{dom_id}')) {"
+  - name: helpers/js_helper.rb#safe_js
+    line: page << "}"
 BASE/remote_form_for:
   callers:
   - name: views/admin/clients/_remote_form.html.haml
@@ -208,6 +232,68 @@ BASE/remote_function:
   - name: helpers/application_helper.rb#wrap_edit_link_around_content
     line: js_function = remote_function(:url => url, :update => update, :method =>
       method, :complete => complete, :success => success)
+BASE/render :update:
+  callers:
+  - name: controllers/api/v1/site_notices_controller.rb#remove_notice
+    line: render :update do |page|
+  - name: controllers/api/v1/site_notices_controller.rb#toggle_notice_display
+    line: render :update do |page|
+  - name: controllers/api/v1/site_notices_controller.rb#dismiss_notice
+    line: render :update do |page|
+  - name: controllers/author_notes_controller.rb#show_author_note
+    line: render :update do |page|
+  - name: controllers/author_notes_controller.rb#show_author_note
+    line: render :update do |page|
+  - name: controllers/author_notes_controller.rb#edit
+    line: format.js   { render :update do |page|
+  - name: controllers/images_controller.rb#create
+    line: render :update do |page|
+  - name: controllers/images_controller.rb#create
+    line: render :update do |page|
+  - name: controllers/materials_collections_controller.rb#destroy
+    line: render :update do |page|
+  - name: controllers/portal/bookmarks_controller.rb#add_padlet
+    line: render :update do |page|
+  - name: controllers/portal/bookmarks_controller.rb#add
+    line: render :update do |page|
+  - name: controllers/portal/bookmarks_controller.rb#delete
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#add_offering
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#add_offering
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#remove_offering
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#remove_offering
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#add_student
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#add_student
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#add_teacher
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#add_teacher
+    line: render :update do |page|
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: render :update do|page|
+  - name: controllers/portal/students_controller.rb#create
+    line: render :update do |page|
+  - name: controllers/portal/students_controller.rb#confirm
+    line: render :update do |page|
+  - name: controllers/portal/students_controller.rb#confirm
+    line: render :update do |page|
+  - name: controllers/portal/students_controller.rb#move_confirm
+    line: render :update do |page|
+  - name: controllers/search_controller.rb#get_search_suggestions
+    line: render :update do |page|
+  - name: controllers/search_controller.rb#add_material_to_clazzes
+    line: render :update do |page|
+  - name: controllers/search_controller.rb#add_material_to_collections
+    line: render :update do |page|
+  - name: controllers/teacher_notes_controller.rb#show_teacher_note
+    line: render :update do |page|
+  - name: controllers/teacher_notes_controller.rb#show_teacher_note
+    line: render :update do |page|
 BASE/sortable_element:
   callers:
   - name: views/external_activities/_show.html.haml
@@ -307,13 +393,25 @@ controllers/admin/tags_controller.rb#edit:
 controllers/admin/tags_controller.rb#update:
   calls:
   - views/admin/tags/_show.html.haml
+controllers/api/v1/site_notices_controller.rb#dismiss_notice:
+  calls:
+  - BASE/render :update
+controllers/api/v1/site_notices_controller.rb#remove_notice:
+  calls:
+  - BASE/render :update
+controllers/api/v1/site_notices_controller.rb#toggle_notice_display:
+  calls:
+  - BASE/render :update
 controllers/author_notes_controller.rb#edit:
   calls:
   - BASE/visual_effect
+  - BASE/render :update
 controllers/author_notes_controller.rb#show_author_note:
   calls:
   - BASE/visual_effect
   - BASE/visual_effect
+  - BASE/render :update
+  - BASE/render :update
   - views/author_notes/_remote_form.html.haml
   - views/author_notes/_show.html.haml
 controllers/embeddable/image_questions_controller.rb#edit:
@@ -367,6 +465,11 @@ controllers/external_activities_controller.rb#update:
 controllers/images_controller.rb#create:
   calls:
   - BASE/visual_effect
+  - BASE/render :update
+  - BASE/render :update
+controllers/materials_collections_controller.rb#destroy:
+  calls:
+  - BASE/render :update
 controllers/materials_collections_controller.rb#edit:
   calls:
   - views/materials_collections/_remote_form.html.haml
@@ -375,24 +478,35 @@ controllers/materials_collections_controller.rb#update:
   - views/materials_collections/_show.html.haml
 controllers/portal/bookmarks_controller.rb#add:
   calls:
+  - BASE/render :update
   - views/portal/bookmarks/_show.html.haml
 controllers/portal/bookmarks_controller.rb#add_padlet:
   calls:
+  - BASE/render :update
   - views/portal/bookmarks/_show.html.haml
+controllers/portal/bookmarks_controller.rb#delete:
+  calls:
+  - BASE/render :update
 controllers/portal/clazzes_controller.rb#add_new_student_popup:
   calls:
   - views/portal/students/_add_edit_list_for_clazz.html.haml
 controllers/portal/clazzes_controller.rb#add_offering:
   calls:
+  - BASE/render :update
+  - BASE/render :update
   - views/shared/_offering_for_teacher.html.haml
 controllers/portal/clazzes_controller.rb#add_student:
   calls:
+  - BASE/render :update
+  - BASE/render :update
   - views/portal/students/_table_for_clazz.html.haml
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
   - views/portal/students/_current_student_list_for_clazz.html.haml
 controllers/portal/clazzes_controller.rb#add_teacher:
   calls:
   - BASE/visual_effect
+  - BASE/render :update
+  - BASE/render :update
   - helpers/portal/teachers_helper.rb#teacher_add_dropdown
   - views/portal/teachers/_list_for_clazz_setup.html.haml
   - views/portal/teachers/_table_for_clazz.html.haml
@@ -401,9 +515,12 @@ controllers/portal/clazzes_controller.rb#edit:
   - views/portal/clazzes/_remote_form.html.haml
 controllers/portal/clazzes_controller.rb#remove_offering:
   calls:
+  - BASE/render :update
+  - BASE/render :update
   - views/shared/_runnable.html.haml
 controllers/portal/clazzes_controller.rb#remove_teacher:
   calls:
+  - BASE/render :update
   - helpers/portal/teachers_helper.rb#teacher_add_dropdown
   - views/portal/teachers/_list_for_clazz_setup.html.haml
   - views/portal/teachers/_table_for_clazz.html.haml
@@ -432,13 +549,23 @@ controllers/portal/students_controller.rb#confirm:
   calls:
   - BASE/visual_effect
   - BASE/visual_effect
+  - BASE/render :update
+  - BASE/render :update
 controllers/portal/students_controller.rb#create:
   calls:
+  - BASE/render :update
   - views/portal/students/_table_for_clazz.html.haml
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
 controllers/portal/students_controller.rb#move_confirm:
   calls:
   - BASE/visual_effect
+  - BASE/render :update
+controllers/search_controller.rb#add_material_to_clazzes:
+  calls:
+  - BASE/render :update
+controllers/search_controller.rb#add_material_to_collections:
+  calls:
+  - BASE/render :update
 controllers/search_controller.rb#get_current_material_anonymous:
   calls:
   - views/search/_material_unassigned_clazzes.html.haml
@@ -448,10 +575,15 @@ controllers/search_controller.rb#get_current_material_unassigned_clazzes:
 controllers/search_controller.rb#get_current_material_unassigned_collections:
   calls:
   - views/search/_material_unassigned_collections.html.haml
+controllers/search_controller.rb#get_search_suggestions:
+  calls:
+  - BASE/render :update
 controllers/teacher_notes_controller.rb#show_teacher_note:
   calls:
   - BASE/visual_effect
   - BASE/visual_effect
+  - BASE/render :update
+  - BASE/render :update
   - views/teacher_notes/_remote_form.html.haml
   - views/teacher_notes/_show.html.haml
 helpers/application_helper.rb#delete_button_for:
@@ -636,6 +768,31 @@ helpers/js_helper.rb#remove_link:
     line: "= remove_link(form)"
   calls:
   - BASE/link_to_function
+helpers/js_helper.rb#safe_js:
+  callers:
+  - name: views/embeddable/image_questions/destroy.js.rjs
+    line: safe_js(page,dom_id) do
+  - name: views/embeddable/multiple_choices/destroy.js.rjs
+    line: safe_js(page,dom_id) do
+  - name: views/embeddable/open_responses/destroy.js.rjs
+    line: safe_js(page,dom_id) do
+  - name: views/external_activities/create.js.rjs
+    line: safe_js(page,'section_external_activities_list') do
+  - name: views/external_activities/create.js.rjs
+    line: safe_js(page,'page_tabs') do
+  - name: views/portal/clazzes/destroy.js.rjs
+    line: safe_js(page,container_dom_id) do
+  - name: views/portal/clazzes/destroy.js.rjs
+    line: safe_js(page,item_dom_id) do
+  - name: views/portal/districts/destroy.js.rjs
+    line: safe_js(page,dom_id) do
+  - name: views/portal/schools/destroy.js.rjs
+    line: safe_js(page,dom_id) do
+  - name: views/portal/student_clazzes/destroy.js.rjs
+    line: safe_js(page,@dom_id) do
+  calls:
+  - BASE/page <<
+  - BASE/page <<
 helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
   callers:
   - name: views/portal/bookmarks/index.html.haml
@@ -931,6 +1088,9 @@ views/embeddable/image_questions/_show.html.haml:
       }
   calls:
   - helpers/application_helper.rb#wrap_edit_link_around_content
+views/embeddable/image_questions/destroy.js.rjs:
+  calls:
+  - helpers/js_helper.rb#safe_js
 views/embeddable/image_questions/index.html.haml:
   calls:
   - views/shared/_collection_menu.html.haml
@@ -981,6 +1141,9 @@ views/embeddable/multiple_choices/_show.html.haml:
       }
   calls:
   - helpers/application_helper.rb#wrap_edit_link_around_content
+views/embeddable/multiple_choices/destroy.js.rjs:
+  calls:
+  - helpers/js_helper.rb#safe_js
 views/embeddable/multiple_choices/edit.html.haml:
   calls:
   - views/embeddable/multiple_choices/_remote_form.html.haml
@@ -1017,6 +1180,9 @@ views/embeddable/open_responses/_show.html.haml:
       }
   calls:
   - helpers/application_helper.rb#wrap_edit_link_around_content
+views/embeddable/open_responses/destroy.js.rjs:
+  calls:
+  - helpers/js_helper.rb#safe_js
 views/embeddable/open_responses/edit.html.haml:
   calls:
   - views/embeddable/open_responses/_remote_form.html.haml
@@ -1052,6 +1218,9 @@ views/external_activities/create.js.rjs:
   calls:
   - BASE/visual_effect
   - BASE/visual_effect
+  - BASE/page <<
+  - helpers/js_helper.rb#safe_js
+  - helpers/js_helper.rb#safe_js
 views/external_activities/index.html.haml:
   calls:
   - BASE/observe_form
@@ -1187,6 +1356,10 @@ views/portal/clazzes/_remote_form_student_roster.html.haml:
 views/portal/clazzes/class_list.html.haml:
   calls:
   - views/portal/students/_table_for_clazz.html.haml
+views/portal/clazzes/destroy.js.rjs:
+  calls:
+  - helpers/js_helper.rb#safe_js
+  - helpers/js_helper.rb#safe_js
 views/portal/clazzes/edit.html.haml:
   calls:
   - views/portal/clazzes/_form.html.haml
@@ -1226,6 +1399,9 @@ views/portal/districts/_show.html.haml:
   - helpers/application_helper.rb#wrap_edit_link_around_content
   - views/portal/schools/_show.html.haml
   - helpers/application_helper.rb#show_menu_for
+views/portal/districts/destroy.js.rjs:
+  calls:
+  - helpers/js_helper.rb#safe_js
 views/portal/districts/index.html.haml:
   calls:
   - views/portal/districts/_show.html.haml
@@ -1330,6 +1506,9 @@ views/portal/schools/_show.html.haml:
   calls:
   - helpers/application_helper.rb#wrap_edit_link_around_content
   - helpers/application_helper.rb#show_menu_for
+views/portal/schools/destroy.js.rjs:
+  calls:
+  - helpers/js_helper.rb#safe_js
 views/portal/schools/index.html.haml:
   calls:
   - views/portal/schools/_show.html.haml
@@ -1339,7 +1518,16 @@ views/portal/schools/show.html.haml:
   - views/portal/schools/_show.html.haml
 views/portal/student_clazzes/destroy.js.rjs:
   calls:
+  - BASE/page <<
+  - BASE/page <<
+  - BASE/page <<
+  - BASE/page <<
+  - BASE/page <<
+  - BASE/page <<
+  - BASE/page <<
+  - BASE/page <<
   - views/portal/students/_table_for_clazz.html.haml
+  - helpers/js_helper.rb#safe_js
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
   - views/portal/students/_current_student_list_for_clazz.html.haml

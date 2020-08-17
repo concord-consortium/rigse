@@ -49,6 +49,8 @@ blocks_to_process = {
   "BASE/draggable_element" => {},
   "BASE/observe_form" => {},
   "BASE/remote_function" => {},
+  "BASE/render :update" => {},
+  "BASE/page <<" => {},
 }
 
 def find_call_to_block(block_name, file_name, line)
@@ -56,8 +58,13 @@ def find_call_to_block(block_name, file_name, line)
 
   if(block_name.start_with?("BASE/"))
     method = block_name.slice(/BASE\/(.*)/, 1)
+    if (method == "page <<")
+      # special case 'page <<' to cut down on references
+      # in a controller in practice there is a render :update match if there is a page <<
+      return false if file_name.start_with?("controllers/")
+    end
     # don't match the method if it is preceded by a _ or "
-    line.match(/(?<![_"])#{method}(?![_"])/)
+    line.match(/(?<![_"])#{Regexp.escape(method)}(?![_"])/)
   elsif(block_name.start_with?("views/"))
     block_file_name = block_name.split('/')[-1]
     # FIXME: skip the run_html for now since we don't handle formats yet
