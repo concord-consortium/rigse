@@ -76,7 +76,7 @@ class Portal::SchoolsController < ApplicationController
 
     if @portal_school.save
       flash[:notice] = 'Portal::School was successfully created.'
-      redirect_to action: :index
+      redirect_to @portal_school
     else
       render :action => 'new'
     end
