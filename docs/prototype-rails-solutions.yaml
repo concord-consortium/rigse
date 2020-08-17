@@ -49,14 +49,17 @@ controllers/admin/tags_controller.rb#update:
   rational:
   story:
 controllers/api/v1/site_notices_controller.rb#remove_notice
+  manual: true
   solution: replace render :update
   rational: response ignored by react component
   story:
 controllers/api/v1/site_notices_controller.rb#toggle_notice_display
+  manual: true
   solution: replace render :update
   rational: response ignored by react component
   story:
 controllers/api/v1/site_notices_controller.rb#dismiss_notice
+  manual: true
   solution: replace render :update
   rational: response ignored by react component
   story:
