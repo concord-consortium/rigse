@@ -15,6 +15,9 @@
   %div{:id => dom_id_for(portal_school, :item), :class => 'item'}
     %div{:id => dom_id_for(portal_school, :details), :class => 'content'}
       %p.school_description= h(portal_school.description)
+      %p.zipcode
+        Zipcode:
+        = h(portal_school.zipcode)
       - if portal_school.ncessch
         NCES ID :
         =link_to "#{portal_school.ncessch}","http://nces.ed.gov/ccd/schoolsearch/school_detail.asp?ID=#{portal_school.ncessch}", {target: "blank"}
