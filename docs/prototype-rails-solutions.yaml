@@ -185,13 +185,18 @@ controllers/portal/clazzes_controller.rb#add_offering:
   rational: clean up old class views and controllers
   story: https://www.pivotaltracker.com/story/show/174366664
 controllers/portal/clazzes_controller.rb#add_student:
-  solution:
+  solution: update student roster page
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/clazzes_controller.rb#add_teacher:
   solution:
   rational:
   story:
+controllers/portal/clazzes_controller.rb#class_list:
+  manual: true
+  solution: remove
+  rational: not used anymore
+  story: https://www.pivotaltracker.com/story/show/174366664
 controllers/portal/clazzes_controller.rb#edit:
   solution:
   rational:
@@ -205,9 +210,9 @@ controllers/portal/clazzes_controller.rb#remove_teacher:
   rational:
   story:
 controllers/portal/clazzes_controller.rb#roster:
-  solution:
-  rational:
-  story:
+  solution: move to react-components (and maybe api controller)
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/districts_controller.rb#edit:
   solution:
   rational:
@@ -233,13 +238,13 @@ controllers/portal/schools_controller.rb#update:
   rational:
   story: https://www.pivotaltracker.com/story/show/174361480
 controllers/portal/students_controller.rb#confirm:
-  solution:
-  rational:
-  story:
+  solution: simplify or move to react-components
+  rational: used by students
+  story: https://www.pivotaltracker.com/story/show/174371038
 controllers/portal/students_controller.rb#create:
-  solution:
-  rational:
-  story:
+  solution: simplify roster or move to react-components
+  rational: teachers use this
+  story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/students_controller.rb#move_confirm:
   solution:
   rational:
@@ -278,9 +283,9 @@ controllers/search_controller.rb#get_search_suggestions:
   rational:
   story:
 controllers/teacher_notes_controller.rb#show_teacher_note:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174365885
 helpers/application_helper.rb#delete_button_for:
   solution:
   rational:
@@ -654,21 +659,25 @@ views/portal/clazzes/_form.html.haml:
   rational:
   story:
 views/portal/clazzes/_form_student_roster.html.haml:
-  solution:
-  rational:
-  story:
+  solution: move to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/clazzes/_remote_form.html.haml:
   solution:
   rational:
   story:
 views/portal/clazzes/_remote_form_student_roster.html.haml:
-  solution:
-  rational:
-  story:
+  solution: move to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/clazzes/class_list.html.haml:
-  solution:
-  rational:
-  story:
+  manual_callers:
+  - name: views/portal/students/_list_for_clazz.html.haml
+    line: "... class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'"
+  notes: this is a printable roster page with remove student, and change password links
+  solution: remove
+  rational: not reachable from current links, the current roster page already has its own print button
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/clazzes/destroy.js.rjs:
   solution:
   rational:
@@ -686,9 +695,9 @@ views/portal/clazzes/new.html.haml:
   rational:
   story:
 views/portal/clazzes/roster.html.haml:
-  solution:
-  rational:
-  story:
+  solution: move to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/clazzes/show.html.haml:
   solution: remove
   rational: this is the old class page
@@ -790,13 +799,24 @@ views/portal/schools/show.html.haml:
   rational:
   story: https://www.pivotaltracker.com/story/show/174361480
 views/portal/student_clazzes/destroy.js.rjs:
-  solution:
-  rational:
-  story:
+  manual_callers:
+  - name: views/portal/students/_table_for_clazz.html.haml
+    line: ":url => portal_clazz_student_clazz_url(roster_row.clazz, roster_row.portal_student_clazz),"
+    notes: this uses a delete action with link_to_remote
+  solution: convert to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/_add_edit_list_for_clazz.html.haml:
   solution:
   rational:
   story:
+views/portal/students/_confirmation.html.haml:
+  manual: true
+  manual_callers:
+  - name: controllers/portal/students_controller.rb#confirm
+    line: 'page.insert_html :before, "word_form", :partial => "confirmation",'
+  solution: simplify or move to react-components
+  story: https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/_current_student_list_for_clazz.html.haml:
   solution:
   rational:
@@ -818,9 +838,9 @@ views/portal/students/_show.html.haml:
   rational:
   story:
 views/portal/students/_table_for_clazz.html.haml:
-  solution:
-  rational:
-  story:
+  solution: convert to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/register.html.haml:
   solution:
   rational:

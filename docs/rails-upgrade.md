@@ -137,12 +137,12 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * for all of the above:
     * type: various
     * solution: Can probably remove these, they should be react components
-* app/views/portal/student_clazzes/destroy.js.rjs
+* app/views/portal/student_clazzes/destroy.js.rjs ✅
   * type: replace_html, replace, remove, page <<
   * usage: class roster page
   * solutions:
     * move class roster functions to new react components
-* app/views/portal/offerings/_list_for_clazz.html.haml
+* app/views/portal/offerings/_list_for_clazz.html.haml ✅
   * type: drop_receiving_element
   * usage: none
   * solutions: remove this unused view
@@ -244,14 +244,13 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * type: observe_form
   * usage: old and broken index page:/external_activities
   * solution: remove
-* app/views/embeddable/open_responses/_remote_form.html.haml
-* app/views/embeddable/open_responses/destroy.js.rjs
-* app/views/embeddable/multiple_choices/_remote_form.html.haml
-* app/views/embeddable/multiple_choices/_remote_form.html.haml
-* app/views/embeddable/multiple_choices/add_choice.js.rjs
-* app/views/embeddable/multiple_choices/destroy.js.rjs
-* app/views/embeddable/image_questions/_remote_form.html.haml
-* app/views/embeddable/image_questions/destroy.js.rjs
+* app/views/embeddable/open_responses/_remote_form.html.haml ✅
+* app/views/embeddable/open_responses/destroy.js.rjs ✅
+* app/views/embeddable/multiple_choices/_remote_form.html.haml ✅
+* app/views/embeddable/multiple_choices/add_choice.js.rjs ✅
+* app/views/embeddable/multiple_choices/destroy.js.rjs ✅
+* app/views/embeddable/image_questions/_remote_form.html.haml ✅
+* app/views/embeddable/image_questions/destroy.js.rjs ✅
 * app/views/dataservice/blobs/_remote_form.html.haml ✅
 * app/views/dataservice/bundle_contents/_remote_form.html.haml ✅
 * app/views/dataservice/bundle_loggers/_remote_form.html.haml ✅
@@ -259,14 +258,14 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * app/views/dataservice/console_loggers/_remote_form.html.haml ✅
 * app/views/author_notes/_remote_form.html.ham  ✅
 * app/views/author_notes/_show.html.haml  ✅
-* app/controllers/teacher_notes_controller.rb
+* app/controllers/teacher_notes_controller.rb ✅
   * for all the above:
     * solution: remove
 * app/controllers/search_controller.rb
   * type replace_html, page <<
   * usage: Search controller isn't used, replaced by API version
   * solution: remove
-* app/controllers/students_controller.rb (create / confirm)
+* app/controllers/students_controller.rb (create ✅ / confirm ✅)
   * type: replace_html, replace, page <<, visual_effect, remove &etc.
   * usage:
     * used in
@@ -282,7 +281,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * _list_for_class.html.haml  ( used by portal/classes/xxx -- can delete)
     * _edit_offerings.html.haml
   * slution: remove
-* app/controllers/portal/clazzes_controller.rb add_student
+* app/controllers/portal/clazzes_controller.rb add_student ✅
   * type: replace_html, page <<
   * usage:
     * student roster pages (portal/classes/107/roster) by way of:

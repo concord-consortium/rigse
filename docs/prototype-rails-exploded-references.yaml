@@ -42,20 +42,20 @@
 - controllers/portal/bookmarks_controller.rb#delete
 - controllers/portal/clazzes_controller.rb#add_new_student_popup
 - controllers/portal/clazzes_controller.rb#add_offering (solved)
-- controllers/portal/clazzes_controller.rb#add_student
+- controllers/portal/clazzes_controller.rb#add_student (solved)
 - controllers/portal/clazzes_controller.rb#add_teacher
 - controllers/portal/clazzes_controller.rb#edit
 - controllers/portal/clazzes_controller.rb#remove_offering (solved)
 - controllers/portal/clazzes_controller.rb#remove_teacher
-- controllers/portal/clazzes_controller.rb#roster
+- controllers/portal/clazzes_controller.rb#roster (solved)
 - controllers/portal/districts_controller.rb#edit
 - controllers/portal/districts_controller.rb#update
 - controllers/portal/schools_controller.rb#create (solved)
 - controllers/portal/schools_controller.rb#edit (solved)
 - controllers/portal/schools_controller.rb#show (solved)
 - controllers/portal/schools_controller.rb#update (solved)
-- controllers/portal/students_controller.rb#confirm
-- controllers/portal/students_controller.rb#create
+- controllers/portal/students_controller.rb#confirm (solved)
+- controllers/portal/students_controller.rb#create (solved)
 - controllers/portal/students_controller.rb#move_confirm
 - controllers/search_controller.rb#add_material_to_clazzes
 - controllers/search_controller.rb#add_material_to_collections
@@ -181,10 +181,10 @@
         - views/materials_collections/show.html.haml
       - controllers/materials_collections_controller.rb#update
   - views/portal/students/_current_student_list_for_clazz.html.haml:
-    - views/portal/student_clazzes/destroy.js.rjs
+    - views/portal/student_clazzes/destroy.js.rjs (solved)
     - views/portal/students/_add_edit_list_for_clazz.html.haml:
       - controllers/portal/clazzes_controller.rb#add_new_student_popup
-    - controllers/portal/clazzes_controller.rb#add_student
+    - controllers/portal/clazzes_controller.rb#add_student (solved)
   - views/portal/teachers/_list_for_clazz_setup.html.haml:
     - views/portal/teachers/_table_for_clazz_setup.html.haml:
       - views/portal/clazzes/_form.html.haml:
@@ -451,21 +451,18 @@
   - views/portal/clazzes/destroy.js.rjs
   - views/portal/districts/destroy.js.rjs
   - views/portal/schools/destroy.js.rjs (solved)
-  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/student_clazzes/destroy.js.rjs (solved)
 - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
   - views/portal/bookmarks/index.html.haml
 - helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
-  - views/portal/clazzes/_form_student_roster.html.haml:
-    - views/portal/clazzes/_remote_form_student_roster.html.haml:
-      - controllers/portal/clazzes_controller.rb#roster
-    - views/portal/clazzes/roster.html.haml
-  - views/portal/student_clazzes/destroy.js.rjs
-  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/clazzes/_form_student_roster.html.haml (solved)
+  - views/portal/student_clazzes/destroy.js.rjs (solved)
+  - views/portal/student_clazzes/destroy.js.rjs (solved)
   - views/portal/students/_add_edit_list_for_clazz.html.haml:
     - controllers/portal/clazzes_controller.rb#add_new_student_popup
   - views/portal/students/_list_for_clazz.html.haml (solved)
-  - controllers/portal/clazzes_controller.rb#add_student
-  - controllers/portal/students_controller.rb#create
+  - controllers/portal/clazzes_controller.rb#add_student (solved)
+  - controllers/portal/students_controller.rb#create (solved)
 - helpers/portal/teachers_helper.rb#teacher_add_dropdown:
   - views/portal/teachers/_table_for_clazz_setup.html.haml:
     - views/portal/clazzes/_form.html.haml:
@@ -640,19 +637,18 @@
   - views/portal/clazzes/edit.html.haml
   - views/portal/clazzes/new.html.haml
 - views/portal/clazzes/_form_student_roster.html.haml:
-  - views/portal/clazzes/_remote_form_student_roster.html.haml:
-    - controllers/portal/clazzes_controller.rb#roster
-  - views/portal/clazzes/roster.html.haml
+  - views/portal/clazzes/_remote_form_student_roster.html.haml (solved)
+  - views/portal/clazzes/roster.html.haml (solved)
 - views/portal/clazzes/_remote_form.html.haml:
   - controllers/portal/clazzes_controller.rb#edit
 - views/portal/clazzes/_remote_form_student_roster.html.haml:
-  - controllers/portal/clazzes_controller.rb#roster
-- views/portal/clazzes/class_list.html.haml
+  - controllers/portal/clazzes_controller.rb#roster (solved)
+- views/portal/clazzes/class_list.html.haml (solved)
 - views/portal/clazzes/destroy.js.rjs
 - views/portal/clazzes/edit.html.haml
 - views/portal/clazzes/edit_offerings.html.haml (solved)
 - views/portal/clazzes/new.html.haml
-- views/portal/clazzes/roster.html.haml
+- views/portal/clazzes/roster.html.haml (solved)
 - views/portal/clazzes/show.html.haml (solved)
 - views/portal/districts/_remote_form.html.haml:
   - controllers/portal/districts_controller.rb#edit
@@ -697,14 +693,14 @@
 - views/portal/schools/destroy.js.rjs (solved)
 - views/portal/schools/index.html.haml (solved)
 - views/portal/schools/show.html.haml (solved)
-- views/portal/student_clazzes/destroy.js.rjs
+- views/portal/student_clazzes/destroy.js.rjs (solved)
 - views/portal/students/_add_edit_list_for_clazz.html.haml:
   - controllers/portal/clazzes_controller.rb#add_new_student_popup
 - views/portal/students/_current_student_list_for_clazz.html.haml:
-  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/student_clazzes/destroy.js.rjs (solved)
   - views/portal/students/_add_edit_list_for_clazz.html.haml:
     - controllers/portal/clazzes_controller.rb#add_new_student_popup
-  - controllers/portal/clazzes_controller.rb#add_student
+  - controllers/portal/clazzes_controller.rb#add_student (solved)
 - views/portal/students/_list_for_clazz.html.haml (solved)
 - views/portal/students/_move.html.haml:
   - views/portal/students/_show.html.haml:
@@ -719,15 +715,12 @@
   - views/home/my_classes.html.haml
   - views/portal/students/show.html.haml
 - views/portal/students/_table_for_clazz.html.haml:
-  - views/portal/clazzes/_form_student_roster.html.haml:
-    - views/portal/clazzes/_remote_form_student_roster.html.haml:
-      - controllers/portal/clazzes_controller.rb#roster
-    - views/portal/clazzes/roster.html.haml
-  - views/portal/clazzes/class_list.html.haml
-  - views/portal/student_clazzes/destroy.js.rjs
+  - views/portal/clazzes/_form_student_roster.html.haml (solved)
+  - views/portal/clazzes/class_list.html.haml (solved)
+  - views/portal/student_clazzes/destroy.js.rjs (solved)
   - views/portal/students/_list_for_clazz.html.haml (solved)
-  - controllers/portal/clazzes_controller.rb#add_student
-  - controllers/portal/students_controller.rb#create
+  - controllers/portal/clazzes_controller.rb#add_student (solved)
+  - controllers/portal/students_controller.rb#create (solved)
 - views/portal/students/register.html.haml
 - views/portal/students/show.html.haml
 - views/portal/teachers/_list_for_clazz.html.haml (solved)
