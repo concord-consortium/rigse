@@ -1,5 +1,16 @@
 # This was generated using: cd rails/script; ruby prototype-railsupdate-solutions.rb
 ---
+assets/javascripts/search_materials.js#get_Assign_To_Class_Popup:
+  manual: true
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174370119
+assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup:
+  manual: true
+  solution:
+  - convert to react-components like get_Assign_To_Class_Popup has been
+  - find more simple UI since this is only used by Admins
+  story: https://www.pivotaltracker.com/story/show/174370395
 controllers/admin/clients_controller.rb#edit:
   solution:
   rational:
@@ -165,9 +176,14 @@ controllers/portal/clazzes_controller.rb#add_new_student_popup:
   rational:
   story:
 controllers/portal/clazzes_controller.rb#add_offering:
-  solution:
-  rational:
-  story:
+  manual_callers:
+  - name: views/portal/offerings/_list_for_clazz.html.haml
+    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'},..."
+  - name: views/portal/clazzes/edit_offerings.html.haml
+    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'},..."
+  solution: remove
+  rational: clean up old class views and controllers
+  story: https://www.pivotaltracker.com/story/show/174366664
 controllers/portal/clazzes_controller.rb#add_student:
   solution:
   rational:
@@ -181,9 +197,9 @@ controllers/portal/clazzes_controller.rb#edit:
   rational:
   story:
 controllers/portal/clazzes_controller.rb#remove_offering:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: this isn't used anymore, it isn't possible to remove an offering
+  story: https://www.pivotaltracker.com/story/show/174366664
 controllers/portal/clazzes_controller.rb#remove_teacher:
   solution:
   rational:
@@ -201,21 +217,21 @@ controllers/portal/districts_controller.rb#update:
   rational:
   story:
 controllers/portal/schools_controller.rb#create:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 controllers/portal/schools_controller.rb#edit:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 controllers/portal/schools_controller.rb#show:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 controllers/portal/schools_controller.rb#update:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 controllers/portal/students_controller.rb#confirm:
   solution:
   rational:
@@ -237,17 +253,26 @@ controllers/search_controller.rb#add_material_to_collections:
   rational:
   story:
 controllers/search_controller.rb#get_current_material_anonymous:
-  solution:
-  rational:
-  story:
+  manual_callers:
+  - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
+    line: "var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';"
+  solution: remove
+  rational: replaced by api controller
+  story: https://www.pivotaltracker.com/story/show/174370119
 controllers/search_controller.rb#get_current_material_unassigned_clazzes:
-  solution:
-  rational:
-  story:
+  manual_callers:
+  - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
+    line: "var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';"
+  solution: remove
+  rational: replaced by api controller
+  story: https://www.pivotaltracker.com/story/show/174370119
 controllers/search_controller.rb#get_current_material_unassigned_collections:
+  manual_callers:
+  - name: assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup
+    line: 'var target_url = "/search/get_current_material_unassigned_collections?skip_reload=" + (skip_reload || false);'
   solution:
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174370395
 controllers/search_controller.rb#get_search_suggestions:
   solution:
   rational:
@@ -609,9 +634,9 @@ views/materials_collections/show.html.haml:
   rational:
   story:
 views/portal/bookmarks/_show.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: only used by old class page
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/bookmarks/generic_bookmark/_button.html.haml:
   solution:
   rational:
@@ -735,7 +760,7 @@ views/portal/learners/index.html.haml:
 views/portal/offerings/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
-  story: https://www.pivotaltracker.com/story/show/174353979
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/offerings/_show.html.haml:
   solution:
   rational:
@@ -745,25 +770,25 @@ views/portal/offerings/show.html.haml:
   rational:
   story:
 views/portal/schools/_remote_form.html.haml:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 views/portal/schools/_show.html.haml:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 views/portal/schools/destroy.js.rjs:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 views/portal/schools/index.html.haml:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 views/portal/schools/show.html.haml:
-  solution:
+  solution: simplify form and index pages
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174361480
 views/portal/student_clazzes/destroy.js.rjs:
   solution:
   rational:
@@ -779,7 +804,7 @@ views/portal/students/_current_student_list_for_clazz.html.haml:
 views/portal/students/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
-  story: https://www.pivotaltracker.com/story/show/174353979
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/students/_move.html.haml:
   solution:
   rational:
@@ -807,7 +832,7 @@ views/portal/students/show.html.haml:
 views/portal/teachers/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
-  story: https://www.pivotaltracker.com/story/show/174353979
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/teachers/_list_for_clazz_setup.html.haml:
   solution:
   rational:
@@ -821,13 +846,13 @@ views/portal/teachers/_table_for_clazz_setup.html.haml:
   rational:
   story:
 views/search/_material_unassigned_clazzes.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: code has been moved to react-components and uses api
+  story: https://www.pivotaltracker.com/story/show/174370119
 views/search/_material_unassigned_collections.html.haml:
-  solution:
-  rational:
-  story:
+  solution: convert to react-components, or simplify
+  rational: used by portal admins
+  story: https://www.pivotaltracker.com/story/show/174370395
 views/shared/_accordion_nav.html.haml:
   solution: remove
   rational: unused (reference in application.html.haml is commented out)
@@ -865,9 +890,9 @@ views/shared/_notes_menu.html.haml:
   rational:
   story:
 views/shared/_offering_for_teacher.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: cleanup old class views and controllers
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/shared/_page_header.html.haml:
   solution: remove
   rational: dead
@@ -877,17 +902,17 @@ views/shared/_paste_link.html.haml:
   rational: dead
   story: https://www.pivotaltracker.com/story/show/174353979
 views/shared/_runnable.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: only used by remove_offering which isn't used anymore
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/shared/_runnable_list.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: only used by old class page partials and dead code
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/shared/_runnables_listing.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: only used by old class page partials and dead code
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/shared/_section_header.html.haml:
   solution: remove
   rational: dead

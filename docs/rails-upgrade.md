@@ -126,15 +126,15 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * app/views/shared/_activity_trail.html.haml & ✅
 * app/views/shared/_general_accordion_nav.html.haml & ✅
 * app/views/shared/_page_header.html.haml & ✅
-* app/views/shared/_offering_for_teacher.html.haml &
-* app/views/shared/_runnable.html.haml &
-* app/views/shared/_runnables_listing.html.haml &
+* app/views/shared/_offering_for_teacher.html.haml & ✅
+* app/views/shared/_runnable.html.haml & ✅
+* app/views/shared/_runnables_listing.html.haml & ✅
   * for all of the above:
     * type: various
     * solution: remove all of these views
-* app/views/search/_material_unassigned_clazzes.html.haml
-* app/views/search/_material_unassigned_collections.html.haml
-  * for all othe above:
+* app/views/search/_material_unassigned_clazzes.html.haml ✅
+* app/views/search/_material_unassigned_collections.html.haml ✅
+  * for all of the above:
     * type: various
     * solution: Can probably remove these, they should be react components
 * app/views/portal/student_clazzes/destroy.js.rjs
