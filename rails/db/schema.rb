@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200529161339) do
+ActiveRecord::Schema.define(:version => 20200818192751) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -744,15 +744,6 @@ ActiveRecord::Schema.define(:version => 20200529161339) do
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
     t.text     "import_data",     :limit => 2147483647
-  end
-
-  create_table "installer_reports", :force => true do |t|
-    t.text     "body",            :limit => 16777215
-    t.string   "remote_ip"
-    t.boolean  "success"
-    t.datetime "created_at",                          :null => false
-    t.datetime "updated_at",                          :null => false
-    t.integer  "jnlp_session_id"
   end
 
   create_table "interactives", :force => true do |t|

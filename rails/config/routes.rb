@@ -360,8 +360,6 @@ RailsPortal::Application.routes.draw do
     match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
     match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
 
-    resources :installer_reports
-
     resources :images
 
     resources :interactives do
@@ -558,7 +556,6 @@ RailsPortal::Application.routes.draw do
     match '/time' => 'misc_metal#time', :as => :time
     match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
-    post  '/installer_report' => 'misc#installer_report', :as => :installer_report_post
 
     match '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
