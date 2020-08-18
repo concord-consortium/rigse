@@ -84,7 +84,7 @@ describe Portal::SchoolsController do
         post :create, :nces_school => {:id => '123'}
         expect(assigns[:portal_school]).to equal(@school)
       end
-  
+
       it "redirects to the created school" do
         expect(@school).to receive(:save).and_return(true)
         allow(Portal::Nces06School).to receive(:find).with('123').and_return(@nces_school)
@@ -93,7 +93,7 @@ describe Portal::SchoolsController do
         expect(response).to redirect_to(portal_school_url(@school))
       end
     end
-  
+
     describe "with invalid portal_school params" do
       it "assigns a newly created but unsaved school as @portal_school" do
         expect(@school).to receive(:save).and_return(true)
@@ -133,7 +133,7 @@ describe Portal::SchoolsController do
         expect(@school).to receive(:update_attributes).and_return(true)
         allow(Portal::School).to receive(:find).and_return(@school)
         put :update, :id => "1"
-        expect(response).to redirect_to(portal_school_url(@school))
+        expect(response).to redirect_to(portal_schools_url)
       end
     end
   
@@ -176,15 +176,5 @@ describe Portal::SchoolsController do
       expect(response).to redirect_to(portal_schools_url)
     end
 
-    it "renders the rjs template" do
-      xhr :post, :destroy, :id => "1"
-      expect(response).to render_template('destroy')
-      assert_select_rjs
-    end
-
-    it "the rjs response should remove a dom elemet" do
-      xhr :post, :destroy, :id => "1"
-      assert_select_rjs(:remove)
-    end
   end
 end
