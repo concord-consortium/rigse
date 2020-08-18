@@ -61,8 +61,8 @@
 - controllers/search_controller.rb#add_material_to_collections (solved)
 - controllers/search_controller.rb#get_current_material_anonymous (solved)
 - controllers/search_controller.rb#get_current_material_unassigned_clazzes (solved)
-- controllers/search_controller.rb#get_current_material_unassigned_collections
-- controllers/search_controller.rb#get_search_suggestions
+- controllers/search_controller.rb#get_current_material_unassigned_collections (solved)
+- controllers/search_controller.rb#get_search_suggestions (solved)
 - controllers/teacher_notes_controller.rb#show_teacher_note (solved)
 - helpers/application_helper.rb#delete_button_for:
   - views/shared/_activity_header.haml (solved)
@@ -343,8 +343,8 @@
 - views/portal/learners/index.html.haml (solved)
 - views/portal/offerings/_list_for_clazz.html.haml (solved)
 - views/portal/offerings/_show.html.haml:
-  - views/portal/offerings/show.html.haml
-- views/portal/offerings/show.html.haml
+  - views/portal/offerings/show.html.haml (solved)
+- views/portal/offerings/show.html.haml (solved)
 - views/portal/schools/_remote_form.html.haml:
   - controllers/portal/schools_controller.rb#show (solved)
   - controllers/portal/schools_controller.rb#edit (solved)
@@ -397,7 +397,7 @@
   - controllers/search_controller.rb#get_current_material_anonymous (solved)
   - controllers/search_controller.rb#get_current_material_unassigned_clazzes (solved)
 - views/search/_material_unassigned_collections.html.haml:
-  - controllers/search_controller.rb#get_current_material_unassigned_collections
+  - controllers/search_controller.rb#get_current_material_unassigned_collections (solved)
 - views/shared/_accordion_nav.html.haml:
   - views/layouts/application.html.haml (solved)
 - views/shared/_activity_header.haml (solved)
@@ -445,8 +445,7 @@
   - views/portal/clazzes/edit_offerings.html.haml (solved)
   - views/portal/clazzes/show.html.haml (solved)
   - views/portal/offerings/_list_for_clazz.html.haml (solved)
-  - views/portal/offerings/_show.html.haml:
-    - views/portal/offerings/show.html.haml
+  - views/portal/offerings/_show.html.haml (solved)
   - views/shared/_classes_for_school.haml (solved)
   - controllers/portal/clazzes_controller.rb#add_offering (solved)
 - views/shared/_page_header.html.haml (solved)
