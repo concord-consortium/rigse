@@ -255,13 +255,13 @@ controllers/portal/students_controller.rb#move_confirm:
   rational:
   story: https://www.pivotaltracker.com/story/show/174381113
 controllers/search_controller.rb#add_material_to_clazzes:
-  solution:
+  solution: clean up old assignment UI
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174370119
 controllers/search_controller.rb#add_material_to_collections:
-  solution:
+  solution: remove prototype-rails from add to collections flow
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174370395
 controllers/search_controller.rb#get_current_material_anonymous:
   manual_callers:
   - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
@@ -280,7 +280,7 @@ controllers/search_controller.rb#get_current_material_unassigned_collections:
   manual_callers:
   - name: assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup
     line: 'var target_url = "/search/get_current_material_unassigned_collections?skip_reload=" + (skip_reload || false);'
-  solution:
+  solution: remove prototype-rails from add to collections flow
   rational:
   story: https://www.pivotaltracker.com/story/show/174370395
 controllers/search_controller.rb#get_search_suggestions:

@@ -57,8 +57,8 @@
 - controllers/portal/students_controller.rb#confirm (solved)
 - controllers/portal/students_controller.rb#create (solved)
 - controllers/portal/students_controller.rb#move_confirm (solved)
-- controllers/search_controller.rb#add_material_to_clazzes
-- controllers/search_controller.rb#add_material_to_collections
+- controllers/search_controller.rb#add_material_to_clazzes (solved)
+- controllers/search_controller.rb#add_material_to_collections (solved)
 - controllers/search_controller.rb#get_current_material_anonymous (solved)
 - controllers/search_controller.rb#get_current_material_unassigned_clazzes (solved)
 - controllers/search_controller.rb#get_current_material_unassigned_collections
