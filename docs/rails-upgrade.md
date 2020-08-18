@@ -28,9 +28,9 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
 * helpers/js_helper.rb safe_js ✅
   * type: page <<
   * solution:
-    * remove embeddable partials ️️ℹ️️️
+    * remove embeddable partials ️️✅
     * update external_activities views ️ℹ️
-    * simplify admin pages ℹ️
+    * simplify admin pages ✅
     * ℹ️need to check that these solutions are in the right files
   * usage:
     * various view/embeddables/destroy.js.rjs (MC, open response, image Q ....)
@@ -86,12 +86,12 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * remove -- only used to hide / show item deets in collection
     * modify the method to do nothing (even hide label)
   * usage:
-    * views/interactives/index.html.haml
+    * views/interactives/index.html.haml ✅
     * views/shared/_activity_header.haml
     * views/shared/_collection_menu.html.haml
     * views/shared/_page_header.haml
     * views/shared/_section_header.haml
-    * views/users/_index
+    * views/users/_index ✅
 * helpers/application_helper.rb toggle_more ✅
   * type: link_to_function, visual_effect, replace_html
   * solutions:
@@ -146,82 +146,87 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * type: drop_receiving_element
   * usage: none
   * solutions: remove this unused view
-* app/views/portal/grade_levels/_remote_form.html.haml
+* app/views/portal/grade_levels/_remote_form.html.haml ✅
   * type: remote_form_for
   * usage: unknown
   * solution: TBD: where is this used?
-* app/views/portal/grades/_remote_form.html.haml
+* app/views/portal/grades/_remote_form.html.haml ✅
   * type: remote_form_for
   * usage: unknown
   * solution: TBD: where is this used?
-* app/views/portal/learners/_remote_form.html.haml
+* app/views/portal/learners/_remote_form.html.haml ✅
   * type: remote_form_for
   * usage: unknown
   * solution: remove?
-* app/views/portal/school_selector/update.rjs
+* app/views/portal/school_selector/update.rjs ℹ️
   * type: repalce_html
   * usage: unused -- handled by react-components now
   * Solution: remove
-* app/views/portal/teachers/_list_for_clazz.html.haml
+  * ℹ️ there is also a partial, and view "model", for this it is used by the teachers controller and school_selector_controller
+* app/views/portal/teachers/_list_for_clazz.html.haml ✅
   * type: link_to_remote
   * usage: used by classes/xx/edit (class setup)
   * solution: Make new class setup react components or reload page
-* app/views/portal/schools/_remote_form.html.haml
+* app/views/portal/schools/_remote_form.html.haml ✅
   * type: remote_form_for
    * usage: used by admin interface
    * solutions:
     * simplify admin interface
-* app/views/portal/schools/destroy.js.rjs
+* app/views/portal/schools/destroy.js.rjs ✅
    * type: page.remove
    * usage: used by admin interface
    * solutions:
     * simplify admin interface
-* app/views/portal/students/_register.html.haml
+* app/views/portal/students/_register.html.haml ✅
   * type: remote_form_for
-  * usage: should not be used any more replaced by react
+  * ~usage: should not be used any more replaced by react~
+  * this is currently used by students when they join a new class
     * solution: remove
-* app/views/portal/students/_table_for_clazz.html.haml
+* app/views/portal/students/_table_for_clazz.html.haml ✅
   * type: link_to_remote
   * usage: used in class roster
     * solutions:
       * move to student roster react component
       * reload full page after clicking delete
       * link to student editing form instead of in-place edits
-* app/views/portal/districts/_remote_form.html.ham
+* app/views/portal/districts/_remote_form.html.ham ✅
   * usage: used by admin interface
   * solution: simplify admin interface
 * app/views/portal/clazzes/edit_offerings.html.haml ✅
   * usage: no longer used by class views. React components are used
   * solution:  remove
-* app/views/portal/clazzes/destroy.js.rjs
+* app/views/portal/clazzes/destroy.js.rjs ✅
   * usage: no longer used. We don't delete classes any more ?
   * solution: remove
-* app/views/portal/bookmarks/_show.html.haml
-* app/views/portal/bookmarks/generic_bookmark/_button.html.haml
-* app/views/portal/bookmarks/padlet_bookmark/_button.html.haml
-  * for alld of the above bookmark items:
+* app/views/portal/bookmarks/_show.html.haml ✅
+* app/views/portal/bookmarks/generic_bookmark/_button.html.haml ✅
+* app/views/portal/bookmarks/padlet_bookmark/_button.html.haml ✅
+  * for all of the above bookmark items:
   * usage: these seem to still be used, and still use RJS
   * solutions:
     * Use simple page reload pattern and CRUD routes.
     * Create a react component.
 * app/views/materials_collections/_materials_in_collection.html.haml
-* app/views/materials_collections/_remote_form.html.haml
-  * usage: I believe these are handled by react components now.
-  * solution: remove
-* app/views/images/destroy.rjs
-* app/views/images/index.html.haml
+* app/views/materials_collections/_remote_form.html.haml ✅
+  * ~usage: I believe these are handled by react components now.~
+  * usage: this is used by admins to manage collections
+  * ~solution: remove~
+  * solution: simplify or reactify
+* app/views/images/destroy.rjs ✅
+* app/views/images/index.html.haml ✅
   * usage: It doesn't look like this page is used anymore: https://learn.staging.concord.org/images
   * solution: delete these, possibly replace with simple CRUD routes
-* app/views/home/_notice.html.haml
+* app/views/home/_notice.html.haml ❌
   * usage: notices use react-components
-  * solution: remove this
-* app/views/external_activities/_basic_form.html.haml
+  * ~solution: remove this~
+  * solution: this partial doesn't seem to use any prototype-rails and it is what is rendering the react-components component for the notices so it should stay
+* app/views/external_activities/_basic_form.html.haml ✅
   * type: remote_form_for
   * usage:
     * edit it portal-setting (https://learn.staging.concord.org/eresources/1215/edit)
     * edit in material-edit ( https://learn.staging.concord.org/eresources/1215/matedit?iFrame=true )
   * solution: Simplify the forms (most likely in the material-edit lightbox editing view)
-* app/views/external_activities/_runnable_list.html.haml
+* app/views/external_activities/_runnable_list.html.haml ✅
   * type:  draggable_element
   * usage:
     * images_controller.rb
@@ -230,17 +235,17 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * solution:
     * remove the teacher page (we need to retain the ability to change school)
     * remove the old class view page (portal/classes/1)
-* app/views/external_activities/_show.html.haml
+* app/views/external_activities/_show.html.haml ✅
   * type: sortable_element
   * usage: not used.
   * solution: remove
-* app/views/external_activities/create.js.rjs
+* app/views/external_activities/create.js.rjs ✅
   * usage: I dont think this is used. The external activity form uses normal forms
   * solution: remove
-* app/views/external_activities/destroy.js.rjs
+* app/views/external_activities/destroy.js.rjs ✅
   * usage: I dont think this is used. The external activity form uses normal forms
   * solution: remove
-* app/views/external_activities/index.html.haml
+* app/views/external_activities/index.html.haml ✅
   * type: observe_form
   * usage: old and broken index page:/external_activities
   * solution: remove

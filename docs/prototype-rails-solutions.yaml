@@ -132,17 +132,22 @@ controllers/embeddable/open_responses_controller.rb#update:
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
 controllers/external_activities_controller.rb#edit_basic:
-  solution:
+  solution: reactify or simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374781
 controllers/external_activities_controller.rb#index:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
 controllers/external_activities_controller.rb#update:
-  solution:
+  solution: remove rendering of external_activity_header
+  notes: when the edit options button is clicked the basic_edit
+    form is shown. When it is saved, an XHR update request
+    is sent. This seems to throw an error after saving the
+    data. It seems like this exernal_activity_header content
+    is not used anywhere.
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
 controllers/images_controller.rb#create:
   solution: simplify
   rational:
@@ -160,17 +165,17 @@ controllers/materials_collections_controller.rb#update:
   rational:
   story: https://www.pivotaltracker.com/story/show/174373337
 controllers/portal/bookmarks_controller.rb#add:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 controllers/portal/bookmarks_controller.rb#add_padlet:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 controllers/portal/bookmarks_controller.rb#delete:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 controllers/portal/clazzes_controller.rb#add_new_student_popup:
   solution:
   rational:
@@ -189,26 +194,26 @@ controllers/portal/clazzes_controller.rb#add_student:
   rational:
   story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/clazzes_controller.rb#add_teacher:
-  solution:
+  solution: convert to react class setup
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 controllers/portal/clazzes_controller.rb#class_list:
   manual: true
   solution: remove
   rational: not used anymore
   story: https://www.pivotaltracker.com/story/show/174366664
 controllers/portal/clazzes_controller.rb#edit:
-  solution:
+  solution: convert to react class setup
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 controllers/portal/clazzes_controller.rb#remove_offering:
   solution: remove
   rational: this isn't used anymore, it isn't possible to remove an offering
   story: https://www.pivotaltracker.com/story/show/174366664
 controllers/portal/clazzes_controller.rb#remove_teacher:
-  solution:
+  solution: convert to react class setup
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 controllers/portal/clazzes_controller.rb#roster:
   solution: move to react-components (and maybe api controller)
   rational: used by teachers
@@ -327,9 +332,9 @@ helpers/js_helper.rb#safe_js:
   rational: all code using it will be removed or replaced
   story: https://www.pivotaltracker.com/story/show/174365484
 helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
   solution: re-write Student Roster page using react, or convert to do a full page refresh
   rational: teacher facing
@@ -576,45 +581,54 @@ views/embeddable/open_responses/show.html.haml:
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
 views/external_activities/_basic_form.html.haml:
-  solution:
+  solution: reactify, or simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374781
 views/external_activities/_remote_form.html.haml:
-  solution:
-  rational:
-  story:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174374664
 views/external_activities/_runnable_list.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
 views/external_activities/_show.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
 views/external_activities/create.js.rjs:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/external_activities/destroy.js.rjs:
+  manual: true
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
 views/external_activities/index.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
 views/home/my_classes.html.haml:
   solution:
   rational:
   story:
+views/images/destroy.rjs:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373929
 views/images/index.html.haml:
   solution: simplify
   rational:
   story: https://www.pivotaltracker.com/story/show/174373929
 views/installer_reports/index.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374528
 views/interactives/index.html.haml:
-  solution:
+  solution: remove toggle_all usage
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374504
 views/layouts/application.html.haml:
   solution:
   rational:
@@ -644,33 +658,33 @@ views/materials_collections/show.html.haml:
   rational:
   story: https://www.pivotaltracker.com/story/show/174373337
 views/portal/bookmarks/_show.html.haml:
-  solution: remove
-  rational: only used by old class page
-  story: https://www.pivotaltracker.com/story/show/174366664
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
 views/portal/bookmarks/generic_bookmark/_button.html.haml:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 views/portal/bookmarks/index.html.haml:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 views/portal/bookmarks/padlet_bookmark/_button.html.haml:
-  solution:
+  solution: simplify or reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374264
 views/portal/clazzes/_form.html.haml:
-  solution:
+  solution: reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/clazzes/_form_student_roster.html.haml:
   solution: move to react-components
   rational: used by teachers
   story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/clazzes/_remote_form.html.haml:
-  solution:
+  solution: reactify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/clazzes/_remote_form_student_roster.html.haml:
   solution: move to react-components
   rational: used by teachers
@@ -684,21 +698,21 @@ views/portal/clazzes/class_list.html.haml:
   rational: not reachable from current links, the current roster page already has its own print button
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/clazzes/destroy.js.rjs:
-  solution:
+  solution: remove - clean up old class views
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/clazzes/edit.html.haml:
-  solution:
+  solution: convert to react
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/clazzes/edit_offerings.html.haml:
   solution: remove
   rational: seems dead /portal/classes/1/edit_offerings returns an error
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/clazzes/new.html.haml:
-  solution:
+  solution: convert to react
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/clazzes/roster.html.haml:
   solution: move to react-components
   rational: used by teachers
@@ -760,17 +774,17 @@ views/portal/grades/show.html.haml:
   rational:
   story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/learners/_remote_form.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374611
 views/portal/learners/bundle_report.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174354182
 views/portal/learners/index.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374611
 views/portal/offerings/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
@@ -780,6 +794,13 @@ views/portal/offerings/_show.html.haml:
   rational:
   story:
 views/portal/offerings/show.html.haml:
+  solution:
+  rational:
+  story:
+views/portal/school_selector/update.rjs:
+  manual: true
+  notes: there are several other files around the school selector
+    it isn't clear which ones are used and which ones aren't
   solution:
   rational:
   story:
@@ -835,9 +856,9 @@ views/portal/students/_move.html.haml:
   rational:
   story:
 views/portal/students/_register.html.haml:
-  solution:
+  solution: update student join class UI
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/_show.html.haml:
   solution:
   rational:
@@ -859,17 +880,17 @@ views/portal/teachers/_list_for_clazz.html.haml:
   rational: dead
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/teachers/_list_for_clazz_setup.html.haml:
-  solution:
+  solution: reactify class setup
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/teachers/_table_for_clazz.html.haml:
-  solution:
+  solution: reactify class setup
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/teachers/_table_for_clazz_setup.html.haml:
-  solution:
+  solution: reactify class setup
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/search/_material_unassigned_clazzes.html.haml:
   solution: remove
   rational: code has been moved to react-components and uses api
@@ -895,17 +916,18 @@ views/shared/_classes_for_school.haml:
   rational: dead
   story: https://www.pivotaltracker.com/story/show/174353979
 views/shared/_collection_menu.html.haml:
-  solution:
+  solution: remove at the end
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174365484
 views/shared/_embeddable_container.html.haml:
-  solution:
+  solution: remove embeddable views and controllers
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174347881
 views/shared/_external_activity_header.html.haml:
-  solution:
+  solution: remove, only used by external_activity#update action
+    and that action doesn't succeed anyhow
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374664
 views/shared/_general_accordion_nav.html.haml:
   solution: remove
   rational: not needed anymore, this is used to edit investigations, activities, and schools
@@ -951,6 +973,6 @@ views/teacher_notes/_show.html.haml:
   rational: teacher notes are not used
   story: https://www.pivotaltracker.com/story/show/174365885
 views/users/index.html.haml:
-  solution:
+  solution: remove toggle_all
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174374504

@@ -30,23 +30,23 @@
 - controllers/embeddable/open_responses_controller.rb#new (solved)
 - controllers/embeddable/open_responses_controller.rb#show (solved)
 - controllers/embeddable/open_responses_controller.rb#update (solved)
-- controllers/external_activities_controller.rb#edit_basic
-- controllers/external_activities_controller.rb#index
-- controllers/external_activities_controller.rb#update
-- controllers/images_controller.rb#create
+- controllers/external_activities_controller.rb#edit_basic (solved)
+- controllers/external_activities_controller.rb#index (solved)
+- controllers/external_activities_controller.rb#update (solved)
+- controllers/images_controller.rb#create (solved)
 - controllers/materials_collections_controller.rb#destroy (solved)
 - controllers/materials_collections_controller.rb#edit (solved)
 - controllers/materials_collections_controller.rb#update (solved)
-- controllers/portal/bookmarks_controller.rb#add
-- controllers/portal/bookmarks_controller.rb#add_padlet
-- controllers/portal/bookmarks_controller.rb#delete
+- controllers/portal/bookmarks_controller.rb#add (solved)
+- controllers/portal/bookmarks_controller.rb#add_padlet (solved)
+- controllers/portal/bookmarks_controller.rb#delete (solved)
 - controllers/portal/clazzes_controller.rb#add_new_student_popup
 - controllers/portal/clazzes_controller.rb#add_offering (solved)
 - controllers/portal/clazzes_controller.rb#add_student (solved)
-- controllers/portal/clazzes_controller.rb#add_teacher
-- controllers/portal/clazzes_controller.rb#edit
+- controllers/portal/clazzes_controller.rb#add_teacher (solved)
+- controllers/portal/clazzes_controller.rb#edit (solved)
 - controllers/portal/clazzes_controller.rb#remove_offering (solved)
-- controllers/portal/clazzes_controller.rb#remove_teacher
+- controllers/portal/clazzes_controller.rb#remove_teacher (solved)
 - controllers/portal/clazzes_controller.rb#roster (solved)
 - controllers/portal/districts_controller.rb#edit (solved)
 - controllers/portal/districts_controller.rb#update (solved)
@@ -67,8 +67,7 @@
 - helpers/application_helper.rb#delete_button_for:
   - views/shared/_activity_header.haml (solved)
   - views/shared/_activity_header.haml (solved)
-  - views/shared/_external_activity_header.html.haml:
-    - controllers/external_activities_controller.rb#update
+  - views/shared/_external_activity_header.html.haml (solved)
   - views/shared/_page_header.html.haml (solved)
   - views/shared/_page_header.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
@@ -83,25 +82,11 @@
     - views/dataservice/console_loggers/_show.html.haml (solved)
     - views/materials_collections/_show.html.haml (solved)
     - views/portal/districts/_show.html.haml (solved)
-    - views/portal/grade_levels/_show.html.haml:
-      - views/portal/grade_levels/index.html.haml
-      - views/portal/grade_levels/show.html.haml
-    - views/portal/grades/_show.html.haml:
-      - views/portal/grades/index.html.haml
-      - views/portal/grades/show.html.haml
+    - views/portal/grade_levels/_show.html.haml (solved)
+    - views/portal/grades/_show.html.haml (solved)
     - views/portal/schools/_show.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml:
-      - views/embeddable/image_questions/index.html.haml (solved)
-      - views/embeddable/multiple_choices/index.html.haml (solved)
-      - views/embeddable/multiple_choices/show.html.haml (solved)
-      - views/embeddable/open_responses/index.html.haml (solved)
-      - views/embeddable/open_responses/show.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml:
-      - views/embeddable/image_questions/index.html.haml (solved)
-      - views/embeddable/multiple_choices/index.html.haml (solved)
-      - views/embeddable/multiple_choices/show.html.haml (solved)
-      - views/embeddable/open_responses/index.html.haml (solved)
-      - views/embeddable/open_responses/show.html.haml (solved)
+    - views/shared/_embeddable_container.html.haml (solved)
+    - views/shared/_embeddable_container.html.haml (solved)
 - helpers/application_helper.rb#edit_button_for:
   - helpers/application_helper.rb#show_menu_for:
     - views/admin/projects/_show.html.haml (solved)
@@ -113,25 +98,11 @@
     - views/dataservice/console_loggers/_show.html.haml (solved)
     - views/materials_collections/_show.html.haml (solved)
     - views/portal/districts/_show.html.haml (solved)
-    - views/portal/grade_levels/_show.html.haml:
-      - views/portal/grade_levels/index.html.haml
-      - views/portal/grade_levels/show.html.haml
-    - views/portal/grades/_show.html.haml:
-      - views/portal/grades/index.html.haml
-      - views/portal/grades/show.html.haml
+    - views/portal/grade_levels/_show.html.haml (solved)
+    - views/portal/grades/_show.html.haml (solved)
     - views/portal/schools/_show.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml:
-      - views/embeddable/image_questions/index.html.haml (solved)
-      - views/embeddable/multiple_choices/index.html.haml (solved)
-      - views/embeddable/multiple_choices/show.html.haml (solved)
-      - views/embeddable/open_responses/index.html.haml (solved)
-      - views/embeddable/open_responses/show.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml:
-      - views/embeddable/image_questions/index.html.haml (solved)
-      - views/embeddable/multiple_choices/index.html.haml (solved)
-      - views/embeddable/multiple_choices/show.html.haml (solved)
-      - views/embeddable/open_responses/index.html.haml (solved)
-      - views/embeddable/open_responses/show.html.haml (solved)
+    - views/shared/_embeddable_container.html.haml (solved)
+    - views/shared/_embeddable_container.html.haml (solved)
 - helpers/application_helper.rb#function_link_button (solved)
 - helpers/application_helper.rb#remote_link_button:
   - views/materials_collections/_materials_in_collection.html.haml (solved)
@@ -140,19 +111,8 @@
     - views/portal/students/_add_edit_list_for_clazz.html.haml:
       - controllers/portal/clazzes_controller.rb#add_new_student_popup
     - controllers/portal/clazzes_controller.rb#add_student (solved)
-  - views/portal/teachers/_list_for_clazz_setup.html.haml:
-    - views/portal/teachers/_table_for_clazz_setup.html.haml:
-      - views/portal/clazzes/_form.html.haml:
-        - views/portal/clazzes/_remote_form.html.haml:
-          - controllers/portal/clazzes_controller.rb#edit
-        - views/portal/clazzes/edit.html.haml
-        - views/portal/clazzes/new.html.haml
-    - controllers/portal/clazzes_controller.rb#add_teacher
-    - controllers/portal/clazzes_controller.rb#remove_teacher
-  - views/portal/teachers/_table_for_clazz.html.haml:
-    - views/portal/teachers/_list_for_clazz.html.haml (solved)
-    - controllers/portal/clazzes_controller.rb#add_teacher
-    - controllers/portal/clazzes_controller.rb#remove_teacher
+  - views/portal/teachers/_list_for_clazz_setup.html.haml (solved)
+  - views/portal/teachers/_table_for_clazz.html.haml (solved)
   - views/shared/_notes_menu.html.haml:
     - views/shared/_activity_header.haml (solved)
     - views/shared/_page_header.html.haml (solved)
@@ -180,30 +140,15 @@
       - views/dataservice/console_loggers/_show.html.haml (solved)
       - views/materials_collections/_show.html.haml (solved)
       - views/portal/districts/_show.html.haml (solved)
-      - views/portal/grade_levels/_show.html.haml:
-        - views/portal/grade_levels/index.html.haml
-        - views/portal/grade_levels/show.html.haml
-      - views/portal/grades/_show.html.haml:
-        - views/portal/grades/index.html.haml
-        - views/portal/grades/show.html.haml
+      - views/portal/grade_levels/_show.html.haml (solved)
+      - views/portal/grades/_show.html.haml (solved)
       - views/portal/schools/_show.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml:
-        - views/embeddable/image_questions/index.html.haml (solved)
-        - views/embeddable/multiple_choices/index.html.haml (solved)
-        - views/embeddable/multiple_choices/show.html.haml (solved)
-        - views/embeddable/open_responses/index.html.haml (solved)
-        - views/embeddable/open_responses/show.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml:
-        - views/embeddable/image_questions/index.html.haml (solved)
-        - views/embeddable/multiple_choices/index.html.haml (solved)
-        - views/embeddable/multiple_choices/show.html.haml (solved)
-        - views/embeddable/open_responses/index.html.haml (solved)
-        - views/embeddable/open_responses/show.html.haml (solved)
+      - views/shared/_embeddable_container.html.haml (solved)
+      - views/shared/_embeddable_container.html.haml (solved)
   - helpers/application_helper.rb#delete_button_for:
     - views/shared/_activity_header.haml (solved)
     - views/shared/_activity_header.haml (solved)
-    - views/shared/_external_activity_header.html.haml:
-      - controllers/external_activities_controller.rb#update
+    - views/shared/_external_activity_header.html.haml (solved)
     - views/shared/_page_header.html.haml (solved)
     - views/shared/_page_header.html.haml (solved)
     - views/shared/_section_header.html.haml (solved)
@@ -218,25 +163,11 @@
       - views/dataservice/console_loggers/_show.html.haml (solved)
       - views/materials_collections/_show.html.haml (solved)
       - views/portal/districts/_show.html.haml (solved)
-      - views/portal/grade_levels/_show.html.haml:
-        - views/portal/grade_levels/index.html.haml
-        - views/portal/grade_levels/show.html.haml
-      - views/portal/grades/_show.html.haml:
-        - views/portal/grades/index.html.haml
-        - views/portal/grades/show.html.haml
+      - views/portal/grade_levels/_show.html.haml (solved)
+      - views/portal/grades/_show.html.haml (solved)
       - views/portal/schools/_show.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml:
-        - views/embeddable/image_questions/index.html.haml (solved)
-        - views/embeddable/multiple_choices/index.html.haml (solved)
-        - views/embeddable/multiple_choices/show.html.haml (solved)
-        - views/embeddable/open_responses/index.html.haml (solved)
-        - views/embeddable/open_responses/show.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml:
-        - views/embeddable/image_questions/index.html.haml (solved)
-        - views/embeddable/multiple_choices/index.html.haml (solved)
-        - views/embeddable/multiple_choices/show.html.haml (solved)
-        - views/embeddable/open_responses/index.html.haml (solved)
-        - views/embeddable/open_responses/show.html.haml (solved)
+      - views/shared/_embeddable_container.html.haml (solved)
+      - views/shared/_embeddable_container.html.haml (solved)
   - lib/clipboard.rb#paste_link_for (solved)
 - helpers/application_helper.rb#show_menu_for:
   - views/admin/projects/_show.html.haml (solved)
@@ -248,53 +179,18 @@
   - views/dataservice/console_loggers/_show.html.haml (solved)
   - views/materials_collections/_show.html.haml (solved)
   - views/portal/districts/_show.html.haml (solved)
-  - views/portal/grade_levels/_show.html.haml:
-    - views/portal/grade_levels/index.html.haml
-    - views/portal/grade_levels/show.html.haml
-  - views/portal/grades/_show.html.haml:
-    - views/portal/grades/index.html.haml
-    - views/portal/grades/show.html.haml
+  - views/portal/grade_levels/_show.html.haml (solved)
+  - views/portal/grades/_show.html.haml (solved)
   - views/portal/schools/_show.html.haml (solved)
-  - views/shared/_embeddable_container.html.haml:
-    - views/embeddable/image_questions/index.html.haml (solved)
-    - views/embeddable/multiple_choices/index.html.haml (solved)
-    - views/embeddable/multiple_choices/show.html.haml (solved)
-    - views/embeddable/open_responses/index.html.haml (solved)
-    - views/embeddable/open_responses/show.html.haml (solved)
-  - views/shared/_embeddable_container.html.haml:
-    - views/embeddable/image_questions/index.html.haml (solved)
-    - views/embeddable/multiple_choices/index.html.haml (solved)
-    - views/embeddable/multiple_choices/show.html.haml (solved)
-    - views/embeddable/open_responses/index.html.haml (solved)
-    - views/embeddable/open_responses/show.html.haml (solved)
+  - views/shared/_embeddable_container.html.haml (solved)
+  - views/shared/_embeddable_container.html.haml (solved)
 - helpers/application_helper.rb#toggle_all:
-  - views/interactives/index.html.haml
+  - views/interactives/index.html.haml (solved)
   - views/shared/_activity_header.haml (solved)
-  - views/shared/_collection_menu.html.haml:
-    - views/admin/clients/index.html.haml (solved)
-    - views/admin/commons_licenses/index.html.haml (solved)
-    - views/admin/external_reports/index.html.haml (solved)
-    - views/admin/projects/index.html.haml (solved)
-    - views/admin/settings/index.html.haml (solved)
-    - views/admin/tags/index.html.haml (solved)
-    - views/dataservice/blobs/index.html.haml (solved)
-    - views/dataservice/bundle_contents/index.html.haml (solved)
-    - views/dataservice/bundle_loggers/index.html.haml (solved)
-    - views/dataservice/console_contents/index.html.haml (solved)
-    - views/dataservice/console_loggers/index.html.haml (solved)
-    - views/embeddable/image_questions/index.html.haml (solved)
-    - views/embeddable/multiple_choices/index.html.haml (solved)
-    - views/embeddable/open_responses/index.html.haml (solved)
-    - views/installer_reports/index.html.haml
-    - views/materials_collections/index.html.haml (solved)
-    - views/portal/districts/index.html.haml (solved)
-    - views/portal/grade_levels/index.html.haml
-    - views/portal/grades/index.html.haml
-    - views/portal/learners/index.html.haml
-    - views/portal/schools/index.html.haml (solved)
+  - views/shared/_collection_menu.html.haml (solved)
   - views/shared/_page_header.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
-  - views/users/index.html.haml
+  - views/users/index.html.haml (solved)
 - helpers/application_helper.rb#toggle_more (solved)
 - helpers/application_helper.rb#wrap_edit_link_around_content:
   - views/admin/projects/_show.html.haml (solved)
@@ -307,12 +203,8 @@
   - views/embeddable/open_responses/_show.html.haml (solved)
   - views/materials_collections/_show.html.haml (solved)
   - views/portal/districts/_show.html.haml (solved)
-  - views/portal/grade_levels/_show.html.haml:
-    - views/portal/grade_levels/index.html.haml
-    - views/portal/grade_levels/show.html.haml
-  - views/portal/grades/_show.html.haml:
-    - views/portal/grades/index.html.haml
-    - views/portal/grades/show.html.haml
+  - views/portal/grade_levels/_show.html.haml (solved)
+  - views/portal/grades/_show.html.haml (solved)
   - views/portal/schools/_show.html.haml (solved)
 - helpers/js_helper.rb#remove_link:
   - views/embeddable/multiple_choices/_edit_choice.html.haml (solved)
@@ -320,15 +212,15 @@
   - views/embeddable/image_questions/destroy.js.rjs (solved)
   - views/embeddable/multiple_choices/destroy.js.rjs (solved)
   - views/embeddable/open_responses/destroy.js.rjs (solved)
-  - views/external_activities/create.js.rjs
-  - views/external_activities/create.js.rjs
-  - views/portal/clazzes/destroy.js.rjs
-  - views/portal/clazzes/destroy.js.rjs
+  - views/external_activities/create.js.rjs (solved)
+  - views/external_activities/create.js.rjs (solved)
+  - views/portal/clazzes/destroy.js.rjs (solved)
+  - views/portal/clazzes/destroy.js.rjs (solved)
   - views/portal/districts/destroy.js.rjs (solved)
   - views/portal/schools/destroy.js.rjs (solved)
   - views/portal/student_clazzes/destroy.js.rjs (solved)
 - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
-  - views/portal/bookmarks/index.html.haml
+  - views/portal/bookmarks/index.html.haml (solved)
 - helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
   - views/portal/clazzes/_form_student_roster.html.haml (solved)
   - views/portal/student_clazzes/destroy.js.rjs (solved)
@@ -339,18 +231,12 @@
   - controllers/portal/clazzes_controller.rb#add_student (solved)
   - controllers/portal/students_controller.rb#create (solved)
 - helpers/portal/teachers_helper.rb#teacher_add_dropdown:
-  - views/portal/teachers/_table_for_clazz_setup.html.haml:
-    - views/portal/clazzes/_form.html.haml:
-      - views/portal/clazzes/_remote_form.html.haml:
-        - controllers/portal/clazzes_controller.rb#edit
-      - views/portal/clazzes/edit.html.haml
-      - views/portal/clazzes/new.html.haml
-  - controllers/portal/clazzes_controller.rb#add_teacher
-  - controllers/portal/clazzes_controller.rb#remove_teacher
+  - views/portal/teachers/_table_for_clazz_setup.html.haml (solved)
+  - controllers/portal/clazzes_controller.rb#add_teacher (solved)
+  - controllers/portal/clazzes_controller.rb#remove_teacher (solved)
 - lib/clipboard.rb#paste_link_for:
   - views/shared/_activity_header.haml (solved)
-  - views/shared/_external_activity_header.html.haml:
-    - controllers/external_activities_controller.rb#update
+  - views/shared/_external_activity_header.html.haml (solved)
   - views/shared/_page_header.html.haml (solved)
   - views/shared/_paste_link.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
@@ -409,7 +295,7 @@
 - views/dataservice/bundle_loggers/_show.html.haml:
   - views/dataservice/bundle_loggers/index.html.haml (solved)
   - views/dataservice/bundle_loggers/show.html.haml (solved)
-  - views/portal/learners/bundle_report.html.haml
+  - views/portal/learners/bundle_report.html.haml (solved)
 - views/dataservice/bundle_loggers/index.html.haml (solved)
 - views/dataservice/bundle_loggers/show.html.haml (solved)
 - views/dataservice/console_contents/_remote_form.html.haml (solved)
@@ -418,7 +304,7 @@
 - views/dataservice/console_loggers/_show.html.haml:
   - views/dataservice/console_loggers/index.html.haml (solved)
   - views/dataservice/console_loggers/show.html.haml (solved)
-  - views/portal/learners/bundle_report.html.haml
+  - views/portal/learners/bundle_report.html.haml (solved)
 - views/dataservice/console_loggers/index.html.haml (solved)
 - views/dataservice/console_loggers/show.html.haml (solved)
 - views/embeddable/image_questions/_remote_form.html.haml:
@@ -461,18 +347,18 @@
 - views/embeddable/open_responses/index.html.haml (solved)
 - views/embeddable/open_responses/show.html.haml (solved)
 - views/external_activities/_basic_form.html.haml:
-  - controllers/external_activities_controller.rb#edit_basic
-- views/external_activities/_remote_form.html.haml
+  - controllers/external_activities_controller.rb#edit_basic (solved)
+- views/external_activities/_remote_form.html.haml (solved)
 - views/external_activities/_runnable_list.html.haml:
-  - views/external_activities/index.html.haml
-  - controllers/external_activities_controller.rb#index
-- views/external_activities/_show.html.haml
-- views/external_activities/create.js.rjs
-- views/external_activities/index.html.haml
+  - views/external_activities/index.html.haml (solved)
+  - controllers/external_activities_controller.rb#index (solved)
+- views/external_activities/_show.html.haml (solved)
+- views/external_activities/create.js.rjs (solved)
+- views/external_activities/index.html.haml (solved)
 - views/home/my_classes.html.haml
-- views/images/index.html.haml
-- views/installer_reports/index.html.haml
-- views/interactives/index.html.haml
+- views/images/index.html.haml (solved)
+- views/installer_reports/index.html.haml (solved)
+- views/interactives/index.html.haml (solved)
 - views/layouts/application.html.haml
 - views/materials_collections/_list_show.html.haml:
   - views/materials_collections/index.html.haml (solved)
@@ -487,33 +373,30 @@
 - views/materials_collections/index.html.haml (solved)
 - views/materials_collections/show.html.haml (solved)
 - views/portal/bookmarks/_show.html.haml:
-  - views/portal/bookmarks/index.html.haml
-  - controllers/portal/bookmarks_controller.rb#add_padlet
-  - controllers/portal/bookmarks_controller.rb#add
+  - views/portal/bookmarks/index.html.haml (solved)
+  - controllers/portal/bookmarks_controller.rb#add_padlet (solved)
+  - controllers/portal/bookmarks_controller.rb#add (solved)
 - views/portal/bookmarks/generic_bookmark/_button.html.haml:
-  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
-    - views/portal/bookmarks/index.html.haml
-- views/portal/bookmarks/index.html.haml
+  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons (solved)
+- views/portal/bookmarks/index.html.haml (solved)
 - views/portal/bookmarks/padlet_bookmark/_button.html.haml:
-  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
-    - views/portal/bookmarks/index.html.haml
+  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons (solved)
 - views/portal/clazzes/_form.html.haml:
-  - views/portal/clazzes/_remote_form.html.haml:
-    - controllers/portal/clazzes_controller.rb#edit
-  - views/portal/clazzes/edit.html.haml
-  - views/portal/clazzes/new.html.haml
+  - views/portal/clazzes/_remote_form.html.haml (solved)
+  - views/portal/clazzes/edit.html.haml (solved)
+  - views/portal/clazzes/new.html.haml (solved)
 - views/portal/clazzes/_form_student_roster.html.haml:
   - views/portal/clazzes/_remote_form_student_roster.html.haml (solved)
   - views/portal/clazzes/roster.html.haml (solved)
 - views/portal/clazzes/_remote_form.html.haml:
-  - controllers/portal/clazzes_controller.rb#edit
+  - controllers/portal/clazzes_controller.rb#edit (solved)
 - views/portal/clazzes/_remote_form_student_roster.html.haml:
   - controllers/portal/clazzes_controller.rb#roster (solved)
 - views/portal/clazzes/class_list.html.haml (solved)
-- views/portal/clazzes/destroy.js.rjs
-- views/portal/clazzes/edit.html.haml
+- views/portal/clazzes/destroy.js.rjs (solved)
+- views/portal/clazzes/edit.html.haml (solved)
 - views/portal/clazzes/edit_offerings.html.haml (solved)
-- views/portal/clazzes/new.html.haml
+- views/portal/clazzes/new.html.haml (solved)
 - views/portal/clazzes/roster.html.haml (solved)
 - views/portal/clazzes/show.html.haml (solved)
 - views/portal/districts/_remote_form.html.haml:
@@ -525,21 +408,21 @@
 - views/portal/districts/destroy.js.rjs (solved)
 - views/portal/districts/index.html.haml (solved)
 - views/portal/districts/show.html.haml (solved)
-- views/portal/grade_levels/_remote_form.html.haml
+- views/portal/grade_levels/_remote_form.html.haml (solved)
 - views/portal/grade_levels/_show.html.haml:
-  - views/portal/grade_levels/index.html.haml
-  - views/portal/grade_levels/show.html.haml
-- views/portal/grade_levels/index.html.haml
-- views/portal/grade_levels/show.html.haml
-- views/portal/grades/_remote_form.html.haml
+  - views/portal/grade_levels/index.html.haml (solved)
+  - views/portal/grade_levels/show.html.haml (solved)
+- views/portal/grade_levels/index.html.haml (solved)
+- views/portal/grade_levels/show.html.haml (solved)
+- views/portal/grades/_remote_form.html.haml (solved)
 - views/portal/grades/_show.html.haml:
-  - views/portal/grades/index.html.haml
-  - views/portal/grades/show.html.haml
-- views/portal/grades/index.html.haml
-- views/portal/grades/show.html.haml
-- views/portal/learners/_remote_form.html.haml
-- views/portal/learners/bundle_report.html.haml
-- views/portal/learners/index.html.haml
+  - views/portal/grades/index.html.haml (solved)
+  - views/portal/grades/show.html.haml (solved)
+- views/portal/grades/index.html.haml (solved)
+- views/portal/grades/show.html.haml (solved)
+- views/portal/learners/_remote_form.html.haml (solved)
+- views/portal/learners/bundle_report.html.haml (solved)
+- views/portal/learners/index.html.haml (solved)
 - views/portal/offerings/_list_for_clazz.html.haml (solved)
 - views/portal/offerings/_show.html.haml:
   - views/portal/offerings/show.html.haml
@@ -588,24 +471,15 @@
 - views/portal/students/show.html.haml
 - views/portal/teachers/_list_for_clazz.html.haml (solved)
 - views/portal/teachers/_list_for_clazz_setup.html.haml:
-  - views/portal/teachers/_table_for_clazz_setup.html.haml:
-    - views/portal/clazzes/_form.html.haml:
-      - views/portal/clazzes/_remote_form.html.haml:
-        - controllers/portal/clazzes_controller.rb#edit
-      - views/portal/clazzes/edit.html.haml
-      - views/portal/clazzes/new.html.haml
-  - controllers/portal/clazzes_controller.rb#add_teacher
-  - controllers/portal/clazzes_controller.rb#remove_teacher
+  - views/portal/teachers/_table_for_clazz_setup.html.haml (solved)
+  - controllers/portal/clazzes_controller.rb#add_teacher (solved)
+  - controllers/portal/clazzes_controller.rb#remove_teacher (solved)
 - views/portal/teachers/_table_for_clazz.html.haml:
   - views/portal/teachers/_list_for_clazz.html.haml (solved)
-  - controllers/portal/clazzes_controller.rb#add_teacher
-  - controllers/portal/clazzes_controller.rb#remove_teacher
+  - controllers/portal/clazzes_controller.rb#add_teacher (solved)
+  - controllers/portal/clazzes_controller.rb#remove_teacher (solved)
 - views/portal/teachers/_table_for_clazz_setup.html.haml:
-  - views/portal/clazzes/_form.html.haml:
-    - views/portal/clazzes/_remote_form.html.haml:
-      - controllers/portal/clazzes_controller.rb#edit
-    - views/portal/clazzes/edit.html.haml
-    - views/portal/clazzes/new.html.haml
+  - views/portal/clazzes/_form.html.haml (solved)
 - views/search/_material_unassigned_clazzes.html.haml:
   - controllers/search_controller.rb#get_current_material_anonymous (solved)
   - controllers/search_controller.rb#get_current_material_unassigned_clazzes (solved)
@@ -631,12 +505,12 @@
   - views/embeddable/image_questions/index.html.haml (solved)
   - views/embeddable/multiple_choices/index.html.haml (solved)
   - views/embeddable/open_responses/index.html.haml (solved)
-  - views/installer_reports/index.html.haml
+  - views/installer_reports/index.html.haml (solved)
   - views/materials_collections/index.html.haml (solved)
   - views/portal/districts/index.html.haml (solved)
-  - views/portal/grade_levels/index.html.haml
-  - views/portal/grades/index.html.haml
-  - views/portal/learners/index.html.haml
+  - views/portal/grade_levels/index.html.haml (solved)
+  - views/portal/grades/index.html.haml (solved)
+  - views/portal/learners/index.html.haml (solved)
   - views/portal/schools/index.html.haml (solved)
 - views/shared/_embeddable_container.html.haml:
   - views/embeddable/image_questions/index.html.haml (solved)
@@ -645,7 +519,7 @@
   - views/embeddable/open_responses/index.html.haml (solved)
   - views/embeddable/open_responses/show.html.haml (solved)
 - views/shared/_external_activity_header.html.haml:
-  - controllers/external_activities_controller.rb#update
+  - controllers/external_activities_controller.rb#update (solved)
 - views/shared/_general_accordion_nav.html.haml:
   - views/layouts/application.html.haml
   - views/layouts/application.html.haml
@@ -676,4 +550,4 @@
   - controllers/teacher_notes_controller.rb#show_teacher_note (solved)
 - views/teacher_notes/_show.html.haml:
   - controllers/teacher_notes_controller.rb#show_teacher_note (solved)
-- views/users/index.html.haml
+- views/users/index.html.haml (solved)
