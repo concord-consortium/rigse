@@ -251,9 +251,9 @@ controllers/portal/students_controller.rb#create:
   rational: teachers use this
   story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/students_controller.rb#move_confirm:
-  solution:
+  solution: update move students UI
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174381113
 controllers/search_controller.rb#add_material_to_clazzes:
   solution:
   rational:
@@ -610,9 +610,11 @@ views/external_activities/index.html.haml:
   rational:
   story: https://www.pivotaltracker.com/story/show/174374664
 views/home/my_classes.html.haml:
-  solution:
+  solution: update student moving class, update student join a class
   rational:
   story:
+  - https://www.pivotaltracker.com/story/show/174381113
+  - https://www.pivotaltracker.com/story/show/174371038
 views/images/destroy.rjs:
   solution: simplify
   rational:
@@ -630,9 +632,9 @@ views/interactives/index.html.haml:
   rational:
   story: https://www.pivotaltracker.com/story/show/174374504
 views/layouts/application.html.haml:
-  solution:
+  solution: clean up left menu
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174366238
 views/materials_collections/_list_show.html.haml:
   solution: simplify
   rational:
@@ -852,29 +854,33 @@ views/portal/students/_list_for_clazz.html.haml:
   rational: dead
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/students/_move.html.haml:
-  solution:
+  solution: update move student UI
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174381113
 views/portal/students/_register.html.haml:
   solution: update student join class UI
   rational:
   story: https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/_show.html.haml:
-  solution:
+  solution: update student moving class, update student join a class
   rational:
   story:
+  - https://www.pivotaltracker.com/story/show/174381113
+  - https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/_table_for_clazz.html.haml:
   solution: convert to react-components
   rational: used by teachers
   story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/register.html.haml:
-  solution:
+  solution: update student join class UI
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/show.html.haml:
-  solution:
+  solution: update student moving class, update student join a class
   rational:
   story:
+  - https://www.pivotaltracker.com/story/show/174381113
+  - https://www.pivotaltracker.com/story/show/174371038
 views/portal/teachers/_list_for_clazz.html.haml:
   solution: remove
   rational: dead

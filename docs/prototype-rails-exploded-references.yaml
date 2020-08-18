@@ -56,7 +56,7 @@
 - controllers/portal/schools_controller.rb#update (solved)
 - controllers/portal/students_controller.rb#confirm (solved)
 - controllers/portal/students_controller.rb#create (solved)
-- controllers/portal/students_controller.rb#move_confirm
+- controllers/portal/students_controller.rb#move_confirm (solved)
 - controllers/search_controller.rb#add_material_to_clazzes
 - controllers/search_controller.rb#add_material_to_collections
 - controllers/search_controller.rb#get_current_material_anonymous (solved)
@@ -273,11 +273,11 @@
 - views/external_activities/_show.html.haml (solved)
 - views/external_activities/create.js.rjs (solved)
 - views/external_activities/index.html.haml (solved)
-- views/home/my_classes.html.haml
+- views/home/my_classes.html.haml (solved)
 - views/images/index.html.haml (solved)
 - views/installer_reports/index.html.haml (solved)
 - views/interactives/index.html.haml (solved)
-- views/layouts/application.html.haml
+- views/layouts/application.html.haml (solved)
 - views/materials_collections/_list_show.html.haml:
   - views/materials_collections/index.html.haml (solved)
   - views/materials_collections/show.html.haml (solved)
@@ -366,17 +366,13 @@
   - controllers/portal/clazzes_controller.rb#add_student (solved)
 - views/portal/students/_list_for_clazz.html.haml (solved)
 - views/portal/students/_move.html.haml:
-  - views/portal/students/_show.html.haml:
-    - views/home/my_classes.html.haml
-    - views/portal/students/show.html.haml
+  - views/portal/students/_show.html.haml (solved)
 - views/portal/students/_register.html.haml:
-  - views/portal/students/_show.html.haml:
-    - views/home/my_classes.html.haml
-    - views/portal/students/show.html.haml
-  - views/portal/students/register.html.haml
+  - views/portal/students/_show.html.haml (solved)
+  - views/portal/students/register.html.haml (solved)
 - views/portal/students/_show.html.haml:
-  - views/home/my_classes.html.haml
-  - views/portal/students/show.html.haml
+  - views/home/my_classes.html.haml (solved)
+  - views/portal/students/show.html.haml (solved)
 - views/portal/students/_table_for_clazz.html.haml:
   - views/portal/clazzes/_form_student_roster.html.haml (solved)
   - views/portal/clazzes/class_list.html.haml (solved)
@@ -384,8 +380,8 @@
   - views/portal/students/_list_for_clazz.html.haml (solved)
   - controllers/portal/clazzes_controller.rb#add_student (solved)
   - controllers/portal/students_controller.rb#create (solved)
-- views/portal/students/register.html.haml
-- views/portal/students/show.html.haml
+- views/portal/students/register.html.haml (solved)
+- views/portal/students/show.html.haml (solved)
 - views/portal/teachers/_list_for_clazz.html.haml (solved)
 - views/portal/teachers/_list_for_clazz_setup.html.haml:
   - views/portal/teachers/_table_for_clazz_setup.html.haml (solved)
@@ -403,7 +399,7 @@
 - views/search/_material_unassigned_collections.html.haml:
   - controllers/search_controller.rb#get_current_material_unassigned_collections
 - views/shared/_accordion_nav.html.haml:
-  - views/layouts/application.html.haml
+  - views/layouts/application.html.haml (solved)
 - views/shared/_activity_header.haml (solved)
 - views/shared/_activity_trail.html.haml (solved)
 - views/shared/_classes_for_school.haml (solved)
@@ -438,9 +434,9 @@
 - views/shared/_external_activity_header.html.haml:
   - controllers/external_activities_controller.rb#update (solved)
 - views/shared/_general_accordion_nav.html.haml:
-  - views/layouts/application.html.haml
-  - views/layouts/application.html.haml
-  - views/layouts/application.html.haml
+  - views/layouts/application.html.haml (solved)
+  - views/layouts/application.html.haml (solved)
+  - views/layouts/application.html.haml (solved)
 - views/shared/_notes_menu.html.haml:
   - views/shared/_activity_header.haml (solved)
   - views/shared/_page_header.html.haml (solved)
