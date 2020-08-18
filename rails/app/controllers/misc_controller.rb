@@ -22,14 +22,6 @@ class MiscController < ActionController::Base
     send_file(asset.pathname.to_s, {:type => 'image/png', :disposition => 'inline'} )
   end
 
-  def installer_report
-    body = request.body.read
-    remote_ip = request.env['HTTP_X_FORWARDED_FOR'] || request.remote_ip
-    success = !!(body =~ /Succeeded! Saved and loaded jar./)
-    report = InstallerReport.create(:body => body, :remote_ip => remote_ip, :success => success,
-      :jnlp_session_id => params[:jnlp_session_id])
-    render :xml => "<created/>", :status => :created
-  end
 
   def learner_proc_stats
     render json: LearnerProcessingEvent.histogram(12), :callback => params['callback']
