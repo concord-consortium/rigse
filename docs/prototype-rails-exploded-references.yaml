@@ -40,7 +40,7 @@
 - controllers/portal/bookmarks_controller.rb#add (solved)
 - controllers/portal/bookmarks_controller.rb#add_padlet (solved)
 - controllers/portal/bookmarks_controller.rb#delete (solved)
-- controllers/portal/clazzes_controller.rb#add_new_student_popup
+- controllers/portal/clazzes_controller.rb#add_new_student_popup (solved)
 - controllers/portal/clazzes_controller.rb#add_offering (solved)
 - controllers/portal/clazzes_controller.rb#add_student (solved)
 - controllers/portal/clazzes_controller.rb#add_teacher (solved)
@@ -72,102 +72,21 @@
   - views/shared/_page_header.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
-  - helpers/application_helper.rb#show_menu_for:
-    - views/admin/projects/_show.html.haml (solved)
-    - views/admin/settings/_show.html.haml (solved)
-    - views/admin/settings/_show_for_managers.html.haml (solved)
-    - views/admin/tags/_show.html.haml (solved)
-    - views/dataservice/blobs/_show.html.haml (solved)
-    - views/dataservice/bundle_loggers/_show.html.haml (solved)
-    - views/dataservice/console_loggers/_show.html.haml (solved)
-    - views/materials_collections/_show.html.haml (solved)
-    - views/portal/districts/_show.html.haml (solved)
-    - views/portal/grade_levels/_show.html.haml (solved)
-    - views/portal/grades/_show.html.haml (solved)
-    - views/portal/schools/_show.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml (solved)
+  - helpers/application_helper.rb#show_menu_for (solved)
 - helpers/application_helper.rb#edit_button_for:
-  - helpers/application_helper.rb#show_menu_for:
-    - views/admin/projects/_show.html.haml (solved)
-    - views/admin/settings/_show.html.haml (solved)
-    - views/admin/settings/_show_for_managers.html.haml (solved)
-    - views/admin/tags/_show.html.haml (solved)
-    - views/dataservice/blobs/_show.html.haml (solved)
-    - views/dataservice/bundle_loggers/_show.html.haml (solved)
-    - views/dataservice/console_loggers/_show.html.haml (solved)
-    - views/materials_collections/_show.html.haml (solved)
-    - views/portal/districts/_show.html.haml (solved)
-    - views/portal/grade_levels/_show.html.haml (solved)
-    - views/portal/grades/_show.html.haml (solved)
-    - views/portal/schools/_show.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml (solved)
-    - views/shared/_embeddable_container.html.haml (solved)
+  - helpers/application_helper.rb#show_menu_for (solved)
 - helpers/application_helper.rb#function_link_button (solved)
 - helpers/application_helper.rb#remote_link_button:
   - views/materials_collections/_materials_in_collection.html.haml (solved)
-  - views/portal/students/_current_student_list_for_clazz.html.haml:
-    - views/portal/student_clazzes/destroy.js.rjs (solved)
-    - views/portal/students/_add_edit_list_for_clazz.html.haml:
-      - controllers/portal/clazzes_controller.rb#add_new_student_popup
-    - controllers/portal/clazzes_controller.rb#add_student (solved)
+  - views/portal/students/_current_student_list_for_clazz.html.haml (solved)
   - views/portal/teachers/_list_for_clazz_setup.html.haml (solved)
   - views/portal/teachers/_table_for_clazz.html.haml (solved)
-  - views/shared/_notes_menu.html.haml:
-    - views/shared/_activity_header.haml (solved)
-    - views/shared/_page_header.html.haml (solved)
-    - views/shared/_section_header.html.haml (solved)
-  - views/shared/_notes_menu.html.haml:
-    - views/shared/_activity_header.haml (solved)
-    - views/shared/_page_header.html.haml (solved)
-    - views/shared/_section_header.html.haml (solved)
-  - views/shared/_notes_menu.html.haml:
-    - views/shared/_activity_header.haml (solved)
-    - views/shared/_page_header.html.haml (solved)
-    - views/shared/_section_header.html.haml (solved)
-  - views/shared/_notes_menu.html.haml:
-    - views/shared/_activity_header.haml (solved)
-    - views/shared/_page_header.html.haml (solved)
-    - views/shared/_section_header.html.haml (solved)
-  - helpers/application_helper.rb#edit_button_for:
-    - helpers/application_helper.rb#show_menu_for:
-      - views/admin/projects/_show.html.haml (solved)
-      - views/admin/settings/_show.html.haml (solved)
-      - views/admin/settings/_show_for_managers.html.haml (solved)
-      - views/admin/tags/_show.html.haml (solved)
-      - views/dataservice/blobs/_show.html.haml (solved)
-      - views/dataservice/bundle_loggers/_show.html.haml (solved)
-      - views/dataservice/console_loggers/_show.html.haml (solved)
-      - views/materials_collections/_show.html.haml (solved)
-      - views/portal/districts/_show.html.haml (solved)
-      - views/portal/grade_levels/_show.html.haml (solved)
-      - views/portal/grades/_show.html.haml (solved)
-      - views/portal/schools/_show.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml (solved)
-  - helpers/application_helper.rb#delete_button_for:
-    - views/shared/_activity_header.haml (solved)
-    - views/shared/_activity_header.haml (solved)
-    - views/shared/_external_activity_header.html.haml (solved)
-    - views/shared/_page_header.html.haml (solved)
-    - views/shared/_page_header.html.haml (solved)
-    - views/shared/_section_header.html.haml (solved)
-    - views/shared/_section_header.html.haml (solved)
-    - helpers/application_helper.rb#show_menu_for:
-      - views/admin/projects/_show.html.haml (solved)
-      - views/admin/settings/_show.html.haml (solved)
-      - views/admin/settings/_show_for_managers.html.haml (solved)
-      - views/admin/tags/_show.html.haml (solved)
-      - views/dataservice/blobs/_show.html.haml (solved)
-      - views/dataservice/bundle_loggers/_show.html.haml (solved)
-      - views/dataservice/console_loggers/_show.html.haml (solved)
-      - views/materials_collections/_show.html.haml (solved)
-      - views/portal/districts/_show.html.haml (solved)
-      - views/portal/grade_levels/_show.html.haml (solved)
-      - views/portal/grades/_show.html.haml (solved)
-      - views/portal/schools/_show.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml (solved)
-      - views/shared/_embeddable_container.html.haml (solved)
+  - views/shared/_notes_menu.html.haml (solved)
+  - views/shared/_notes_menu.html.haml (solved)
+  - views/shared/_notes_menu.html.haml (solved)
+  - views/shared/_notes_menu.html.haml (solved)
+  - helpers/application_helper.rb#edit_button_for (solved)
+  - helpers/application_helper.rb#delete_button_for (solved)
   - lib/clipboard.rb#paste_link_for (solved)
 - helpers/application_helper.rb#show_menu_for:
   - views/admin/projects/_show.html.haml (solved)
@@ -225,8 +144,7 @@
   - views/portal/clazzes/_form_student_roster.html.haml (solved)
   - views/portal/student_clazzes/destroy.js.rjs (solved)
   - views/portal/student_clazzes/destroy.js.rjs (solved)
-  - views/portal/students/_add_edit_list_for_clazz.html.haml:
-    - controllers/portal/clazzes_controller.rb#add_new_student_popup
+  - views/portal/students/_add_edit_list_for_clazz.html.haml (solved)
   - views/portal/students/_list_for_clazz.html.haml (solved)
   - controllers/portal/clazzes_controller.rb#add_student (solved)
   - controllers/portal/students_controller.rb#create (solved)
@@ -441,11 +359,10 @@
 - views/portal/schools/show.html.haml (solved)
 - views/portal/student_clazzes/destroy.js.rjs (solved)
 - views/portal/students/_add_edit_list_for_clazz.html.haml:
-  - controllers/portal/clazzes_controller.rb#add_new_student_popup
+  - controllers/portal/clazzes_controller.rb#add_new_student_popup (solved)
 - views/portal/students/_current_student_list_for_clazz.html.haml:
   - views/portal/student_clazzes/destroy.js.rjs (solved)
-  - views/portal/students/_add_edit_list_for_clazz.html.haml:
-    - controllers/portal/clazzes_controller.rb#add_new_student_popup
+  - views/portal/students/_add_edit_list_for_clazz.html.haml (solved)
   - controllers/portal/clazzes_controller.rb#add_student (solved)
 - views/portal/students/_list_for_clazz.html.haml (solved)
 - views/portal/students/_move.html.haml:

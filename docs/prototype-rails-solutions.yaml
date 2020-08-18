@@ -177,9 +177,9 @@ controllers/portal/bookmarks_controller.rb#delete:
   rational:
   story: https://www.pivotaltracker.com/story/show/174374264
 controllers/portal/clazzes_controller.rb#add_new_student_popup:
-  solution:
+  solution: reactify student roster
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/clazzes_controller.rb#add_offering:
   manual_callers:
   - name: views/portal/offerings/_list_for_clazz.html.haml
@@ -292,13 +292,13 @@ controllers/teacher_notes_controller.rb#show_teacher_note:
   rational:
   story: https://www.pivotaltracker.com/story/show/174365885
 helpers/application_helper.rb#delete_button_for:
-  solution:
+  solution: remove after rest of work is done
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174365484
 helpers/application_helper.rb#edit_button_for:
-  solution:
+  solution: remove after rest of work is done
   rational:
-  story:
+  story: remove after rest of work is done
 helpers/application_helper.rb#function_link_button:
   solution: remove
   rational: dead
@@ -308,9 +308,9 @@ helpers/application_helper.rb#remote_link_button:
   rational: all code using it will be removed or replaced
   story: https://www.pivotaltracker.com/story/show/174365484
 helpers/application_helper.rb#show_menu_for:
-  solution:
+  solution: remove after rest of work is done
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174365484
 helpers/application_helper.rb#toggle_all:
   solution: remove
   rational: all code using it will be removed or replaced
@@ -833,9 +833,9 @@ views/portal/student_clazzes/destroy.js.rjs:
   rational: used by teachers
   story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/_add_edit_list_for_clazz.html.haml:
-  solution:
+  solution: reactify student roster
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/_confirmation.html.haml:
   manual: true
   manual_callers:
@@ -844,9 +844,9 @@ views/portal/students/_confirmation.html.haml:
   solution: simplify or move to react-components
   story: https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/_current_student_list_for_clazz.html.haml:
-  solution:
+  solution: reactify student roster
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
@@ -933,9 +933,9 @@ views/shared/_general_accordion_nav.html.haml:
   rational: not needed anymore, this is used to edit investigations, activities, and schools
   story: https://www.pivotaltracker.com/story/show/174366238
 views/shared/_notes_menu.html.haml:
-  solution:
+  solution: remove only used by dead code
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174353979
 views/shared/_offering_for_teacher.html.haml:
   solution: remove
   rational: cleanup old class views and controllers
