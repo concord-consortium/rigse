@@ -1,17 +1,17 @@
 # This was generated using: cd rails/script; ruby prototype-rails-explode-tree.rb
 ---
-- controllers/admin/clients_controller.rb#edit
-- controllers/admin/clients_controller.rb#update
-- controllers/admin/commons_licenses_controller.rb#edit
-- controllers/admin/commons_licenses_controller.rb#update
-- controllers/admin/external_reports_controller.rb#edit
-- controllers/admin/external_reports_controller.rb#update
-- controllers/admin/projects_controller.rb#edit
-- controllers/admin/projects_controller.rb#update
-- controllers/admin/settings_controller.rb#edit
-- controllers/admin/settings_controller.rb#update
-- controllers/admin/tags_controller.rb#edit
-- controllers/admin/tags_controller.rb#update
+- controllers/admin/clients_controller.rb#edit (solved)
+- controllers/admin/clients_controller.rb#update (solved)
+- controllers/admin/commons_licenses_controller.rb#edit (solved)
+- controllers/admin/commons_licenses_controller.rb#update (solved)
+- controllers/admin/external_reports_controller.rb#edit (solved)
+- controllers/admin/external_reports_controller.rb#update (solved)
+- controllers/admin/projects_controller.rb#edit (solved)
+- controllers/admin/projects_controller.rb#update (solved)
+- controllers/admin/settings_controller.rb#edit (solved)
+- controllers/admin/settings_controller.rb#update (solved)
+- controllers/admin/tags_controller.rb#edit (solved)
+- controllers/admin/tags_controller.rb#update (solved)
 - controllers/api/v1/site_notices_controller.rb#dismiss_notice (solved)
 - controllers/api/v1/site_notices_controller.rb#remove_notice (solved)
 - controllers/api/v1/site_notices_controller.rb#toggle_notice_display (solved)
@@ -34,9 +34,9 @@
 - controllers/external_activities_controller.rb#index
 - controllers/external_activities_controller.rb#update
 - controllers/images_controller.rb#create
-- controllers/materials_collections_controller.rb#destroy
-- controllers/materials_collections_controller.rb#edit
-- controllers/materials_collections_controller.rb#update
+- controllers/materials_collections_controller.rb#destroy (solved)
+- controllers/materials_collections_controller.rb#edit (solved)
+- controllers/materials_collections_controller.rb#update (solved)
 - controllers/portal/bookmarks_controller.rb#add
 - controllers/portal/bookmarks_controller.rb#add_padlet
 - controllers/portal/bookmarks_controller.rb#delete
@@ -48,8 +48,8 @@
 - controllers/portal/clazzes_controller.rb#remove_offering (solved)
 - controllers/portal/clazzes_controller.rb#remove_teacher
 - controllers/portal/clazzes_controller.rb#roster (solved)
-- controllers/portal/districts_controller.rb#edit
-- controllers/portal/districts_controller.rb#update
+- controllers/portal/districts_controller.rb#edit (solved)
+- controllers/portal/districts_controller.rb#update (solved)
 - controllers/portal/schools_controller.rb#create (solved)
 - controllers/portal/schools_controller.rb#edit (solved)
 - controllers/portal/schools_controller.rb#show (solved)
@@ -63,7 +63,7 @@
 - controllers/search_controller.rb#get_current_material_unassigned_clazzes (solved)
 - controllers/search_controller.rb#get_current_material_unassigned_collections
 - controllers/search_controller.rb#get_search_suggestions
-- controllers/teacher_notes_controller.rb#show_teacher_note
+- controllers/teacher_notes_controller.rb#show_teacher_note (solved)
 - helpers/application_helper.rb#delete_button_for:
   - views/shared/_activity_header.haml (solved)
   - views/shared/_activity_header.haml (solved)
@@ -74,35 +74,15 @@
   - views/shared/_section_header.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
   - helpers/application_helper.rb#show_menu_for:
-    - views/admin/projects/_show.html.haml:
-      - views/admin/projects/index.html.haml
-      - views/admin/projects/show.html.haml
-      - controllers/admin/projects_controller.rb#update
-    - views/admin/settings/_show.html.haml:
-      - views/admin/settings/index.html.haml
-      - views/admin/settings/show.html.haml
-      - controllers/admin/settings_controller.rb#update
-    - views/admin/settings/_show_for_managers.html.haml:
-      - views/admin/settings/_show.html.haml:
-        - views/admin/settings/index.html.haml
-        - views/admin/settings/show.html.haml
-        - controllers/admin/settings_controller.rb#update
-    - views/admin/tags/_show.html.haml:
-      - views/admin/tags/index.html.haml
-      - views/admin/tags/show.html.haml
-      - controllers/admin/tags_controller.rb#update
+    - views/admin/projects/_show.html.haml (solved)
+    - views/admin/settings/_show.html.haml (solved)
+    - views/admin/settings/_show_for_managers.html.haml (solved)
+    - views/admin/tags/_show.html.haml (solved)
     - views/dataservice/blobs/_show.html.haml (solved)
     - views/dataservice/bundle_loggers/_show.html.haml (solved)
     - views/dataservice/console_loggers/_show.html.haml (solved)
-    - views/materials_collections/_show.html.haml:
-      - views/materials_collections/_list_show.html.haml:
-        - views/materials_collections/index.html.haml
-        - views/materials_collections/show.html.haml
-      - controllers/materials_collections_controller.rb#update
-    - views/portal/districts/_show.html.haml:
-      - views/portal/districts/index.html.haml
-      - views/portal/districts/show.html.haml
-      - controllers/portal/districts_controller.rb#update
+    - views/materials_collections/_show.html.haml (solved)
+    - views/portal/districts/_show.html.haml (solved)
     - views/portal/grade_levels/_show.html.haml:
       - views/portal/grade_levels/index.html.haml
       - views/portal/grade_levels/show.html.haml
@@ -124,35 +104,15 @@
       - views/embeddable/open_responses/show.html.haml (solved)
 - helpers/application_helper.rb#edit_button_for:
   - helpers/application_helper.rb#show_menu_for:
-    - views/admin/projects/_show.html.haml:
-      - views/admin/projects/index.html.haml
-      - views/admin/projects/show.html.haml
-      - controllers/admin/projects_controller.rb#update
-    - views/admin/settings/_show.html.haml:
-      - views/admin/settings/index.html.haml
-      - views/admin/settings/show.html.haml
-      - controllers/admin/settings_controller.rb#update
-    - views/admin/settings/_show_for_managers.html.haml:
-      - views/admin/settings/_show.html.haml:
-        - views/admin/settings/index.html.haml
-        - views/admin/settings/show.html.haml
-        - controllers/admin/settings_controller.rb#update
-    - views/admin/tags/_show.html.haml:
-      - views/admin/tags/index.html.haml
-      - views/admin/tags/show.html.haml
-      - controllers/admin/tags_controller.rb#update
+    - views/admin/projects/_show.html.haml (solved)
+    - views/admin/settings/_show.html.haml (solved)
+    - views/admin/settings/_show_for_managers.html.haml (solved)
+    - views/admin/tags/_show.html.haml (solved)
     - views/dataservice/blobs/_show.html.haml (solved)
     - views/dataservice/bundle_loggers/_show.html.haml (solved)
     - views/dataservice/console_loggers/_show.html.haml (solved)
-    - views/materials_collections/_show.html.haml:
-      - views/materials_collections/_list_show.html.haml:
-        - views/materials_collections/index.html.haml
-        - views/materials_collections/show.html.haml
-      - controllers/materials_collections_controller.rb#update
-    - views/portal/districts/_show.html.haml:
-      - views/portal/districts/index.html.haml
-      - views/portal/districts/show.html.haml
-      - controllers/portal/districts_controller.rb#update
+    - views/materials_collections/_show.html.haml (solved)
+    - views/portal/districts/_show.html.haml (solved)
     - views/portal/grade_levels/_show.html.haml:
       - views/portal/grade_levels/index.html.haml
       - views/portal/grade_levels/show.html.haml
@@ -174,12 +134,7 @@
       - views/embeddable/open_responses/show.html.haml (solved)
 - helpers/application_helper.rb#function_link_button (solved)
 - helpers/application_helper.rb#remote_link_button:
-  - views/materials_collections/_materials_in_collection.html.haml:
-    - views/materials_collections/_show.html.haml:
-      - views/materials_collections/_list_show.html.haml:
-        - views/materials_collections/index.html.haml
-        - views/materials_collections/show.html.haml
-      - controllers/materials_collections_controller.rb#update
+  - views/materials_collections/_materials_in_collection.html.haml (solved)
   - views/portal/students/_current_student_list_for_clazz.html.haml:
     - views/portal/student_clazzes/destroy.js.rjs (solved)
     - views/portal/students/_add_edit_list_for_clazz.html.haml:
@@ -216,35 +171,15 @@
     - views/shared/_section_header.html.haml (solved)
   - helpers/application_helper.rb#edit_button_for:
     - helpers/application_helper.rb#show_menu_for:
-      - views/admin/projects/_show.html.haml:
-        - views/admin/projects/index.html.haml
-        - views/admin/projects/show.html.haml
-        - controllers/admin/projects_controller.rb#update
-      - views/admin/settings/_show.html.haml:
-        - views/admin/settings/index.html.haml
-        - views/admin/settings/show.html.haml
-        - controllers/admin/settings_controller.rb#update
-      - views/admin/settings/_show_for_managers.html.haml:
-        - views/admin/settings/_show.html.haml:
-          - views/admin/settings/index.html.haml
-          - views/admin/settings/show.html.haml
-          - controllers/admin/settings_controller.rb#update
-      - views/admin/tags/_show.html.haml:
-        - views/admin/tags/index.html.haml
-        - views/admin/tags/show.html.haml
-        - controllers/admin/tags_controller.rb#update
+      - views/admin/projects/_show.html.haml (solved)
+      - views/admin/settings/_show.html.haml (solved)
+      - views/admin/settings/_show_for_managers.html.haml (solved)
+      - views/admin/tags/_show.html.haml (solved)
       - views/dataservice/blobs/_show.html.haml (solved)
       - views/dataservice/bundle_loggers/_show.html.haml (solved)
       - views/dataservice/console_loggers/_show.html.haml (solved)
-      - views/materials_collections/_show.html.haml:
-        - views/materials_collections/_list_show.html.haml:
-          - views/materials_collections/index.html.haml
-          - views/materials_collections/show.html.haml
-        - controllers/materials_collections_controller.rb#update
-      - views/portal/districts/_show.html.haml:
-        - views/portal/districts/index.html.haml
-        - views/portal/districts/show.html.haml
-        - controllers/portal/districts_controller.rb#update
+      - views/materials_collections/_show.html.haml (solved)
+      - views/portal/districts/_show.html.haml (solved)
       - views/portal/grade_levels/_show.html.haml:
         - views/portal/grade_levels/index.html.haml
         - views/portal/grade_levels/show.html.haml
@@ -274,35 +209,15 @@
     - views/shared/_section_header.html.haml (solved)
     - views/shared/_section_header.html.haml (solved)
     - helpers/application_helper.rb#show_menu_for:
-      - views/admin/projects/_show.html.haml:
-        - views/admin/projects/index.html.haml
-        - views/admin/projects/show.html.haml
-        - controllers/admin/projects_controller.rb#update
-      - views/admin/settings/_show.html.haml:
-        - views/admin/settings/index.html.haml
-        - views/admin/settings/show.html.haml
-        - controllers/admin/settings_controller.rb#update
-      - views/admin/settings/_show_for_managers.html.haml:
-        - views/admin/settings/_show.html.haml:
-          - views/admin/settings/index.html.haml
-          - views/admin/settings/show.html.haml
-          - controllers/admin/settings_controller.rb#update
-      - views/admin/tags/_show.html.haml:
-        - views/admin/tags/index.html.haml
-        - views/admin/tags/show.html.haml
-        - controllers/admin/tags_controller.rb#update
+      - views/admin/projects/_show.html.haml (solved)
+      - views/admin/settings/_show.html.haml (solved)
+      - views/admin/settings/_show_for_managers.html.haml (solved)
+      - views/admin/tags/_show.html.haml (solved)
       - views/dataservice/blobs/_show.html.haml (solved)
       - views/dataservice/bundle_loggers/_show.html.haml (solved)
       - views/dataservice/console_loggers/_show.html.haml (solved)
-      - views/materials_collections/_show.html.haml:
-        - views/materials_collections/_list_show.html.haml:
-          - views/materials_collections/index.html.haml
-          - views/materials_collections/show.html.haml
-        - controllers/materials_collections_controller.rb#update
-      - views/portal/districts/_show.html.haml:
-        - views/portal/districts/index.html.haml
-        - views/portal/districts/show.html.haml
-        - controllers/portal/districts_controller.rb#update
+      - views/materials_collections/_show.html.haml (solved)
+      - views/portal/districts/_show.html.haml (solved)
       - views/portal/grade_levels/_show.html.haml:
         - views/portal/grade_levels/index.html.haml
         - views/portal/grade_levels/show.html.haml
@@ -324,35 +239,15 @@
         - views/embeddable/open_responses/show.html.haml (solved)
   - lib/clipboard.rb#paste_link_for (solved)
 - helpers/application_helper.rb#show_menu_for:
-  - views/admin/projects/_show.html.haml:
-    - views/admin/projects/index.html.haml
-    - views/admin/projects/show.html.haml
-    - controllers/admin/projects_controller.rb#update
-  - views/admin/settings/_show.html.haml:
-    - views/admin/settings/index.html.haml
-    - views/admin/settings/show.html.haml
-    - controllers/admin/settings_controller.rb#update
-  - views/admin/settings/_show_for_managers.html.haml:
-    - views/admin/settings/_show.html.haml:
-      - views/admin/settings/index.html.haml
-      - views/admin/settings/show.html.haml
-      - controllers/admin/settings_controller.rb#update
-  - views/admin/tags/_show.html.haml:
-    - views/admin/tags/index.html.haml
-    - views/admin/tags/show.html.haml
-    - controllers/admin/tags_controller.rb#update
+  - views/admin/projects/_show.html.haml (solved)
+  - views/admin/settings/_show.html.haml (solved)
+  - views/admin/settings/_show_for_managers.html.haml (solved)
+  - views/admin/tags/_show.html.haml (solved)
   - views/dataservice/blobs/_show.html.haml (solved)
   - views/dataservice/bundle_loggers/_show.html.haml (solved)
   - views/dataservice/console_loggers/_show.html.haml (solved)
-  - views/materials_collections/_show.html.haml:
-    - views/materials_collections/_list_show.html.haml:
-      - views/materials_collections/index.html.haml
-      - views/materials_collections/show.html.haml
-    - controllers/materials_collections_controller.rb#update
-  - views/portal/districts/_show.html.haml:
-    - views/portal/districts/index.html.haml
-    - views/portal/districts/show.html.haml
-    - controllers/portal/districts_controller.rb#update
+  - views/materials_collections/_show.html.haml (solved)
+  - views/portal/districts/_show.html.haml (solved)
   - views/portal/grade_levels/_show.html.haml:
     - views/portal/grade_levels/index.html.haml
     - views/portal/grade_levels/show.html.haml
@@ -376,12 +271,12 @@
   - views/interactives/index.html.haml
   - views/shared/_activity_header.haml (solved)
   - views/shared/_collection_menu.html.haml:
-    - views/admin/clients/index.html.haml
-    - views/admin/commons_licenses/index.html.haml
-    - views/admin/external_reports/index.html.haml
-    - views/admin/projects/index.html.haml
-    - views/admin/settings/index.html.haml
-    - views/admin/tags/index.html.haml
+    - views/admin/clients/index.html.haml (solved)
+    - views/admin/commons_licenses/index.html.haml (solved)
+    - views/admin/external_reports/index.html.haml (solved)
+    - views/admin/projects/index.html.haml (solved)
+    - views/admin/settings/index.html.haml (solved)
+    - views/admin/tags/index.html.haml (solved)
     - views/dataservice/blobs/index.html.haml (solved)
     - views/dataservice/bundle_contents/index.html.haml (solved)
     - views/dataservice/bundle_loggers/index.html.haml (solved)
@@ -391,8 +286,8 @@
     - views/embeddable/multiple_choices/index.html.haml (solved)
     - views/embeddable/open_responses/index.html.haml (solved)
     - views/installer_reports/index.html.haml
-    - views/materials_collections/index.html.haml
-    - views/portal/districts/index.html.haml
+    - views/materials_collections/index.html.haml (solved)
+    - views/portal/districts/index.html.haml (solved)
     - views/portal/grade_levels/index.html.haml
     - views/portal/grades/index.html.haml
     - views/portal/learners/index.html.haml
@@ -402,36 +297,16 @@
   - views/users/index.html.haml
 - helpers/application_helper.rb#toggle_more (solved)
 - helpers/application_helper.rb#wrap_edit_link_around_content:
-  - views/admin/projects/_show.html.haml:
-    - views/admin/projects/index.html.haml
-    - views/admin/projects/show.html.haml
-    - controllers/admin/projects_controller.rb#update
-  - views/admin/settings/_show.html.haml:
-    - views/admin/settings/index.html.haml
-    - views/admin/settings/show.html.haml
-    - controllers/admin/settings_controller.rb#update
-  - views/admin/settings/_show_for_managers.html.haml:
-    - views/admin/settings/_show.html.haml:
-      - views/admin/settings/index.html.haml
-      - views/admin/settings/show.html.haml
-      - controllers/admin/settings_controller.rb#update
-  - views/admin/tags/_show.html.haml:
-    - views/admin/tags/index.html.haml
-    - views/admin/tags/show.html.haml
-    - controllers/admin/tags_controller.rb#update
+  - views/admin/projects/_show.html.haml (solved)
+  - views/admin/settings/_show.html.haml (solved)
+  - views/admin/settings/_show_for_managers.html.haml (solved)
+  - views/admin/tags/_show.html.haml (solved)
   - views/dataservice/blobs/_show.html.haml (solved)
   - views/embeddable/image_questions/_show.html.haml (solved)
   - views/embeddable/multiple_choices/_show.html.haml (solved)
   - views/embeddable/open_responses/_show.html.haml (solved)
-  - views/materials_collections/_show.html.haml:
-    - views/materials_collections/_list_show.html.haml:
-      - views/materials_collections/index.html.haml
-      - views/materials_collections/show.html.haml
-    - controllers/materials_collections_controller.rb#update
-  - views/portal/districts/_show.html.haml:
-    - views/portal/districts/index.html.haml
-    - views/portal/districts/show.html.haml
-    - controllers/portal/districts_controller.rb#update
+  - views/materials_collections/_show.html.haml (solved)
+  - views/portal/districts/_show.html.haml (solved)
   - views/portal/grade_levels/_show.html.haml:
     - views/portal/grade_levels/index.html.haml
     - views/portal/grade_levels/show.html.haml
@@ -449,7 +324,7 @@
   - views/external_activities/create.js.rjs
   - views/portal/clazzes/destroy.js.rjs
   - views/portal/clazzes/destroy.js.rjs
-  - views/portal/districts/destroy.js.rjs
+  - views/portal/districts/destroy.js.rjs (solved)
   - views/portal/schools/destroy.js.rjs (solved)
   - views/portal/student_clazzes/destroy.js.rjs (solved)
 - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
@@ -480,47 +355,44 @@
   - views/shared/_paste_link.html.haml (solved)
   - views/shared/_section_header.html.haml (solved)
 - views/admin/clients/_remote_form.html.haml:
-  - controllers/admin/clients_controller.rb#edit
-  - controllers/admin/clients_controller.rb#update
-- views/admin/clients/index.html.haml
+  - controllers/admin/clients_controller.rb#edit (solved)
+  - controllers/admin/clients_controller.rb#update (solved)
+- views/admin/clients/index.html.haml (solved)
 - views/admin/commons_licenses/_remote_form.html.haml:
-  - controllers/admin/commons_licenses_controller.rb#edit
-  - controllers/admin/commons_licenses_controller.rb#update
-- views/admin/commons_licenses/index.html.haml
+  - controllers/admin/commons_licenses_controller.rb#edit (solved)
+  - controllers/admin/commons_licenses_controller.rb#update (solved)
+- views/admin/commons_licenses/index.html.haml (solved)
 - views/admin/external_reports/_remote_form.html.haml:
-  - controllers/admin/external_reports_controller.rb#edit
-  - controllers/admin/external_reports_controller.rb#update
-- views/admin/external_reports/index.html.haml
+  - controllers/admin/external_reports_controller.rb#edit (solved)
+  - controllers/admin/external_reports_controller.rb#update (solved)
+- views/admin/external_reports/index.html.haml (solved)
 - views/admin/projects/_remote_form.html.haml:
-  - controllers/admin/projects_controller.rb#edit
-  - controllers/admin/projects_controller.rb#update
+  - controllers/admin/projects_controller.rb#edit (solved)
+  - controllers/admin/projects_controller.rb#update (solved)
 - views/admin/projects/_show.html.haml:
-  - views/admin/projects/index.html.haml
-  - views/admin/projects/show.html.haml
-  - controllers/admin/projects_controller.rb#update
-- views/admin/projects/index.html.haml
-- views/admin/projects/show.html.haml
+  - views/admin/projects/index.html.haml (solved)
+  - views/admin/projects/show.html.haml (solved)
+  - controllers/admin/projects_controller.rb#update (solved)
+- views/admin/projects/index.html.haml (solved)
+- views/admin/projects/show.html.haml (solved)
 - views/admin/settings/_remote_form.html.haml:
-  - controllers/admin/settings_controller.rb#edit
+  - controllers/admin/settings_controller.rb#edit (solved)
 - views/admin/settings/_show.html.haml:
-  - views/admin/settings/index.html.haml
-  - views/admin/settings/show.html.haml
-  - controllers/admin/settings_controller.rb#update
+  - views/admin/settings/index.html.haml (solved)
+  - views/admin/settings/show.html.haml (solved)
+  - controllers/admin/settings_controller.rb#update (solved)
 - views/admin/settings/_show_for_managers.html.haml:
-  - views/admin/settings/_show.html.haml:
-    - views/admin/settings/index.html.haml
-    - views/admin/settings/show.html.haml
-    - controllers/admin/settings_controller.rb#update
-- views/admin/settings/index.html.haml
-- views/admin/settings/show.html.haml
+  - views/admin/settings/_show.html.haml (solved)
+- views/admin/settings/index.html.haml (solved)
+- views/admin/settings/show.html.haml (solved)
 - views/admin/tags/_remote_form.html.haml:
-  - controllers/admin/tags_controller.rb#edit
+  - controllers/admin/tags_controller.rb#edit (solved)
 - views/admin/tags/_show.html.haml:
-  - views/admin/tags/index.html.haml
-  - views/admin/tags/show.html.haml
-  - controllers/admin/tags_controller.rb#update
-- views/admin/tags/index.html.haml
-- views/admin/tags/show.html.haml
+  - views/admin/tags/index.html.haml (solved)
+  - views/admin/tags/show.html.haml (solved)
+  - controllers/admin/tags_controller.rb#update (solved)
+- views/admin/tags/index.html.haml (solved)
+- views/admin/tags/show.html.haml (solved)
 - views/author_notes/_remote_form.html.haml:
   - controllers/author_notes_controller.rb#show_author_note (solved)
 - views/author_notes/_show.html.haml:
@@ -603,23 +475,17 @@
 - views/interactives/index.html.haml
 - views/layouts/application.html.haml
 - views/materials_collections/_list_show.html.haml:
-  - views/materials_collections/index.html.haml
-  - views/materials_collections/show.html.haml
+  - views/materials_collections/index.html.haml (solved)
+  - views/materials_collections/show.html.haml (solved)
 - views/materials_collections/_materials_in_collection.html.haml:
-  - views/materials_collections/_show.html.haml:
-    - views/materials_collections/_list_show.html.haml:
-      - views/materials_collections/index.html.haml
-      - views/materials_collections/show.html.haml
-    - controllers/materials_collections_controller.rb#update
+  - views/materials_collections/_show.html.haml (solved)
 - views/materials_collections/_remote_form.html.haml:
-  - controllers/materials_collections_controller.rb#edit
+  - controllers/materials_collections_controller.rb#edit (solved)
 - views/materials_collections/_show.html.haml:
-  - views/materials_collections/_list_show.html.haml:
-    - views/materials_collections/index.html.haml
-    - views/materials_collections/show.html.haml
-  - controllers/materials_collections_controller.rb#update
-- views/materials_collections/index.html.haml
-- views/materials_collections/show.html.haml
+  - views/materials_collections/_list_show.html.haml (solved)
+  - controllers/materials_collections_controller.rb#update (solved)
+- views/materials_collections/index.html.haml (solved)
+- views/materials_collections/show.html.haml (solved)
 - views/portal/bookmarks/_show.html.haml:
   - views/portal/bookmarks/index.html.haml
   - controllers/portal/bookmarks_controller.rb#add_padlet
@@ -651,14 +517,14 @@
 - views/portal/clazzes/roster.html.haml (solved)
 - views/portal/clazzes/show.html.haml (solved)
 - views/portal/districts/_remote_form.html.haml:
-  - controllers/portal/districts_controller.rb#edit
+  - controllers/portal/districts_controller.rb#edit (solved)
 - views/portal/districts/_show.html.haml:
-  - views/portal/districts/index.html.haml
-  - views/portal/districts/show.html.haml
-  - controllers/portal/districts_controller.rb#update
-- views/portal/districts/destroy.js.rjs
-- views/portal/districts/index.html.haml
-- views/portal/districts/show.html.haml
+  - views/portal/districts/index.html.haml (solved)
+  - views/portal/districts/show.html.haml (solved)
+  - controllers/portal/districts_controller.rb#update (solved)
+- views/portal/districts/destroy.js.rjs (solved)
+- views/portal/districts/index.html.haml (solved)
+- views/portal/districts/show.html.haml (solved)
 - views/portal/grade_levels/_remote_form.html.haml
 - views/portal/grade_levels/_show.html.haml:
   - views/portal/grade_levels/index.html.haml
@@ -682,10 +548,7 @@
   - controllers/portal/schools_controller.rb#show (solved)
   - controllers/portal/schools_controller.rb#edit (solved)
 - views/portal/schools/_show.html.haml:
-  - views/portal/districts/_show.html.haml:
-    - views/portal/districts/index.html.haml
-    - views/portal/districts/show.html.haml
-    - controllers/portal/districts_controller.rb#update
+  - views/portal/districts/_show.html.haml (solved)
   - views/portal/schools/index.html.haml (solved)
   - views/portal/schools/show.html.haml (solved)
   - controllers/portal/schools_controller.rb#create (solved)
@@ -754,12 +617,12 @@
 - views/shared/_activity_trail.html.haml (solved)
 - views/shared/_classes_for_school.haml (solved)
 - views/shared/_collection_menu.html.haml:
-  - views/admin/clients/index.html.haml
-  - views/admin/commons_licenses/index.html.haml
-  - views/admin/external_reports/index.html.haml
-  - views/admin/projects/index.html.haml
-  - views/admin/settings/index.html.haml
-  - views/admin/tags/index.html.haml
+  - views/admin/clients/index.html.haml (solved)
+  - views/admin/commons_licenses/index.html.haml (solved)
+  - views/admin/external_reports/index.html.haml (solved)
+  - views/admin/projects/index.html.haml (solved)
+  - views/admin/settings/index.html.haml (solved)
+  - views/admin/tags/index.html.haml (solved)
   - views/dataservice/blobs/index.html.haml (solved)
   - views/dataservice/bundle_contents/index.html.haml (solved)
   - views/dataservice/bundle_loggers/index.html.haml (solved)
@@ -769,8 +632,8 @@
   - views/embeddable/multiple_choices/index.html.haml (solved)
   - views/embeddable/open_responses/index.html.haml (solved)
   - views/installer_reports/index.html.haml
-  - views/materials_collections/index.html.haml
-  - views/portal/districts/index.html.haml
+  - views/materials_collections/index.html.haml (solved)
+  - views/portal/districts/index.html.haml (solved)
   - views/portal/grade_levels/index.html.haml
   - views/portal/grades/index.html.haml
   - views/portal/learners/index.html.haml
@@ -810,7 +673,7 @@
   - views/shared/_runnable_list.html.haml (solved)
 - views/shared/_section_header.html.haml (solved)
 - views/teacher_notes/_remote_form.html.haml:
-  - controllers/teacher_notes_controller.rb#show_teacher_note
+  - controllers/teacher_notes_controller.rb#show_teacher_note (solved)
 - views/teacher_notes/_show.html.haml:
-  - controllers/teacher_notes_controller.rb#show_teacher_note
+  - controllers/teacher_notes_controller.rb#show_teacher_note (solved)
 - views/users/index.html.haml

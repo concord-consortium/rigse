@@ -12,53 +12,53 @@ assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collectio
   - find more simple UI since this is only used by Admins
   story: https://www.pivotaltracker.com/story/show/174370395
 controllers/admin/clients_controller.rb#edit:
-  solution:
+  solution: simplify auth clients form
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373021
 controllers/admin/clients_controller.rb#update:
-  solution:
+  solution: simplify auth clients form
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373021
 controllers/admin/commons_licenses_controller.rb#edit:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373050
 controllers/admin/commons_licenses_controller.rb#update:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373050
 controllers/admin/external_reports_controller.rb#edit:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373092
 controllers/admin/external_reports_controller.rb#update:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373092
 controllers/admin/projects_controller.rb#edit:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373123
 controllers/admin/projects_controller.rb#update:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373123
 controllers/admin/settings_controller.rb#edit:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 controllers/admin/settings_controller.rb#update:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 controllers/admin/tags_controller.rb#edit:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373215
 controllers/admin/tags_controller.rb#update:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373215
 controllers/api/v1/site_notices_controller.rb#dismiss_notice:
   solution: replace render :update
   rational: response ignored by react component
@@ -144,21 +144,21 @@ controllers/external_activities_controller.rb#update:
   rational:
   story:
 controllers/images_controller.rb#create:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373929
 controllers/materials_collections_controller.rb#destroy:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 controllers/materials_collections_controller.rb#edit:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 controllers/materials_collections_controller.rb#update:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 controllers/portal/bookmarks_controller.rb#add:
   solution:
   rational:
@@ -214,13 +214,13 @@ controllers/portal/clazzes_controller.rb#roster:
   rational: used by teachers
   story: https://www.pivotaltracker.com/story/show/174324301
 controllers/portal/districts_controller.rb#edit:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 controllers/portal/districts_controller.rb#update:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 controllers/portal/schools_controller.rb#create:
   solution: simplify form and index pages
   rational:
@@ -343,81 +343,81 @@ lib/clipboard.rb#paste_link_for:
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174365484
 views/admin/clients/_remote_form.html.haml:
-  solution:
+  solution: simplify clients form
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373021
 views/admin/clients/index.html.haml:
-  solution:
+  solution: simplify clients from
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373021
 views/admin/commons_licenses/_remote_form.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373050
 views/admin/commons_licenses/index.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373050
 views/admin/external_reports/_remote_form.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373092
 views/admin/external_reports/index.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373092
 views/admin/projects/_remote_form.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373123
 views/admin/projects/_show.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373123
 views/admin/projects/index.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373123
 views/admin/projects/show.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373123
 views/admin/settings/_remote_form.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 views/admin/settings/_show.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 views/admin/settings/_show_for_managers.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 views/admin/settings/index.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 views/admin/settings/show.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373193
 views/admin/tags/_remote_form.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373215
 views/admin/tags/_show.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373215
 views/admin/tags/index.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373215
 views/admin/tags/show.html.haml:
-  solution:
+  solution: simplfy
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373215
 views/author_notes/_remote_form.html.haml:
   solution: remove
   rational: not used
@@ -510,6 +510,11 @@ views/embeddable/image_questions/show.html.haml:
   solution: remove
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/add_choice.js.rjs:
+  manual: true
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
 views/embeddable/multiple_choices/_edit_choice.html.haml:
   solution: remove
   rational: not used
@@ -599,9 +604,9 @@ views/home/my_classes.html.haml:
   rational:
   story:
 views/images/index.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373929
 views/installer_reports/index.html.haml:
   solution:
   rational:
@@ -615,29 +620,29 @@ views/layouts/application.html.haml:
   rational:
   story:
 views/materials_collections/_list_show.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 views/materials_collections/_materials_in_collection.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 views/materials_collections/_remote_form.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 views/materials_collections/_show.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 views/materials_collections/index.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 views/materials_collections/show.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373337
 views/portal/bookmarks/_show.html.haml:
   solution: remove
   rational: only used by old class page
@@ -703,57 +708,57 @@ views/portal/clazzes/show.html.haml:
   rational: this is the old class page
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/districts/_remote_form.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 views/portal/districts/_show.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 views/portal/districts/destroy.js.rjs:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 views/portal/districts/index.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 views/portal/districts/show.html.haml:
-  solution:
+  solution: simplify
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373420
 views/portal/grade_levels/_remote_form.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grade_levels/_show.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grade_levels/index.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grade_levels/show.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grades/_remote_form.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grades/_show.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grades/index.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/grades/show.html.haml:
-  solution:
+  solution: remove
   rational:
-  story:
+  story: https://www.pivotaltracker.com/story/show/174373749
 views/portal/learners/_remote_form.html.haml:
   solution:
   rational:
