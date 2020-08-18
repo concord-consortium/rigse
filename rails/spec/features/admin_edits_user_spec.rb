@@ -69,7 +69,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
 
     scenario 'Project admin can view users page.', js: true do
       expect(current_path).to eq '/users'
-      expect(page.body).to match(%r{#{'Show/Hide User Descriptions'}}i)
+      expect(page.body).to match(%r{Displaying all\s+\d*\s+User}i)
     end
 
     scenario 'Project admin cannot see students in user list before adding a teacher with students to a cohort.', js: true do
@@ -145,7 +145,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
 
     scenario 'Project admin can view users page.', js: true do
       expect(current_path).to eq '/users'
-      expect(page.body).to match(%r{#{'Show/Hide User Descriptions'}}i)
+      expect(page.body).to match(%r{Displaying all\s+\d*\s+User}i)
     end
 
     scenario 'Project admin cannot see students of teachers who are not in a project cohort.', js: true do
