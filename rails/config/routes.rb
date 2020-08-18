@@ -360,8 +360,6 @@ RailsPortal::Application.routes.draw do
     match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
     match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
 
-    resources :installer_reports
-
     resources :images
 
     resources :interactives do
