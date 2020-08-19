@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe Admin::TagsController do
-
   before(:each) do
     login_admin
   end
@@ -120,13 +119,15 @@ describe Admin::TagsController do
 
   describe "DELETE destroy" do
     it "destroys the requested tags" do
-      expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
+      expect(Admin::Tag).to receive(:find).with("37")
+        .and_return(mock_tags(name:'tag'))
       expect(mock_tags).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the admin_tags list" do
-      allow(Admin::Tag).to receive(:find).and_return(mock_tags(:destroy => true))
+      allow(Admin::Tag).to receive(:find)
+        .and_return(mock_tags(destroy: true, name:'tag'))
       delete :destroy, :id => "1"
       expect(response).to redirect_to(admin_tags_url)
     end
