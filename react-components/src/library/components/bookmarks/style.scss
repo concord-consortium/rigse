@@ -1,0 +1,21 @@
+.editBookmarksTable {
+  width: 100%;
+}
+
+.editBookmarkName {
+  width: 100%;
+  padding: 0 5px;
+
+  input {
+    width: 98%;
+    padding: 3px 5px;
+  }
+}
+
+.editBookmarkButtons {
+  display: flex;
+
+  button {
+    margin: 0 0 0 5px;
+  }
+}

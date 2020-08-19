@@ -7,8 +7,9 @@
     - unless bookmarks_enabled
       Bookmarks support is disabled for this project.
     - else
-      - render_add_bookmark_buttons
-      #bookmarks_box
-        - @bookmarks.each do |bookmark|
-          = render :partial => 'show', :locals => {:bookmark => bookmark}
-      %p.wait-message
+      #edit-bookmarks
+      :javascript
+        PortalComponents.renderEditBookmarks({
+          jwt: #{@jwt.to_json},
+          bookmarks: #{@bookmarks.to_json}
+        }, 'edit-bookmarks');

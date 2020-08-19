@@ -17,6 +17,7 @@ class API::APIController < ApplicationController
   def error(message, status = 400)
     render :json =>
       {
+        :success => false,
         :response_type => "ERROR",
         :message => message
       },
@@ -115,4 +116,13 @@ class API::APIController < ApplicationController
       raise StandardError, 'You must be logged in to use this endpoint'
     end
   end
+
+  def get_jwt(params)
+    header = request.headers["Authorization"]
+    if header && header =~ /^Bearer\/JWT (.*)$/i
+      portal_token = $1
+      return SignedJWT::decode_portal_token(portal_token)
+    end
+  end
+
 end
