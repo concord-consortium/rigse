@@ -4,8 +4,6 @@ BASE/button_to_remote:
   callers:
   - name: views/portal/bookmarks/generic_bookmark/_button.html.haml
     line: "= button_to_remote('Create Bookmark', { |"
-  - name: views/portal/bookmarks/padlet_bookmark/_button.html.haml
-    line: "= button_to_remote('Create Padlet', { |"
   - name: helpers/portal/student_clazzes_helper.rb#student_add_dropdown
     line: <td>#{button_to_remote("Add", :url => {:controller => 'portal/clazzes',
       :action=>'add_student', :id => clazz}, :with => "'student_id='+$('student_id_selector').value")}</td>
@@ -111,10 +109,6 @@ BASE/observe_form:
     line: = observe_form 'external_activity_search_form', :url => list_filter_external_activity_url(:index=>"yes"),:before
       => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency
       => 1, :update => {:success => 'offering_list'}
-  - name: views/images/index.html.haml
-    line: = observe_form 'image_search_form', :url => list_filter_image_url(:index=>"yes"),:before
-      => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency
-      => 1, :update => {:success => 'offering_list'}
 BASE/page <<:
   callers:
   - name: views/external_activities/create.js.rjs
@@ -213,9 +207,6 @@ BASE/remote_form_for:
   - name: views/portal/learners/_remote_form.html.haml
     line: "= remote_form_for(portal_learner, :update => dom_id_for(portal_learner))
       do |f|"
-  - name: views/portal/schools/_remote_form.html.haml
-    line: "= remote_form_for(portal_school, :update => dom_id_for(portal_school, 'accordion'))
-      do |f|"
   - name: views/portal/students/_move.html.haml
     line: = remote_form_for(portal_student, :as => :portal_student, :url => { :controller
       => 'portal/students', :action => "move_confirm/#{@portal_student.id}" }, :html
@@ -246,13 +237,7 @@ BASE/render :update:
     line: render :update do |page|
   - name: controllers/author_notes_controller.rb#edit
     line: format.js   { render :update do |page|
-  - name: controllers/images_controller.rb#create
-    line: render :update do |page|
-  - name: controllers/images_controller.rb#create
-    line: render :update do |page|
   - name: controllers/materials_collections_controller.rb#destroy
-    line: render :update do |page|
-  - name: controllers/portal/bookmarks_controller.rb#add_padlet
     line: render :update do |page|
   - name: controllers/portal/bookmarks_controller.rb#add
     line: render :update do |page|
@@ -294,6 +279,36 @@ BASE/render :update:
     line: render :update do |page|
   - name: controllers/teacher_notes_controller.rb#show_teacher_note
     line: render :update do |page|
+BASE/render(:update:
+  callers:
+  - name: controllers/portal/clazzes_controller.rb#add_teacher
+    line: (render(:update) { |page| page << "$('flash').update('Class not found')"
+      } and return) unless @portal_clazz
+  - name: controllers/portal/clazzes_controller.rb#add_teacher
+    line: (render(:update) { |page| page << "$('flash').update('#{Portal::Clazz::ERROR_UNAUTHORIZED}')"
+      } and return) unless current_visitor && @portal_clazz.changeable?(current_visitor)
+  - name: controllers/portal/clazzes_controller.rb#add_teacher
+    line: (render(:update) { |page| page << "$('flash').update('Teacher not found')"
+      } and return) unless @teacher
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: (render(:update) { |page| page << "$('flash').update('Class not found')"
+      } and return) unless @portal_clazz
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: (render(:update) { |page| page << "$('flash').update('Teacher not found')"
+      } and return) unless @teacher
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: render(:update) { |page| page << "$('flash').update('#{reason}')" }
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: render(:update) { |page| page.redirect_to home_url }
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: "#render(:update) { |page| page.replace_html 'teachers_listing', :partial
+      => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
+      }"
+  - name: controllers/portal/clazzes_controller.rb#remove_teacher
+    line: render(:update) { |page| page << "$('flash').update('There was an error
+      while processing your request.')" }
+  - name: controllers/portal/clazzes_controller.rb#manage_classes
+    line: render(:update) { |page|
 BASE/sortable_element:
   callers:
   - name: views/external_activities/_show.html.haml
@@ -342,8 +357,6 @@ BASE/visual_effect:
     line: page.visual_effect :toggle_blind, 'note'
   - name: controllers/author_notes_controller.rb#edit
     line: page.visual_effect :highlite, 'note'
-  - name: controllers/images_controller.rb#create
-    line: page.visual_effect :highlight, "image_#{@image.id}"
   - name: controllers/portal/clazzes_controller.rb#add_teacher
     line: "#page.visual_effect :highlight, 'teachers_listing'"
   - name: controllers/portal/students_controller.rb#confirm
@@ -462,11 +475,6 @@ controllers/external_activities_controller.rb#index:
 controllers/external_activities_controller.rb#update:
   calls:
   - views/shared/_external_activity_header.html.haml
-controllers/images_controller.rb#create:
-  calls:
-  - BASE/visual_effect
-  - BASE/render :update
-  - BASE/render :update
 controllers/materials_collections_controller.rb#destroy:
   calls:
   - BASE/render :update
@@ -477,10 +485,6 @@ controllers/materials_collections_controller.rb#update:
   calls:
   - views/materials_collections/_show.html.haml
 controllers/portal/bookmarks_controller.rb#add:
-  calls:
-  - BASE/render :update
-  - views/portal/bookmarks/_show.html.haml
-controllers/portal/bookmarks_controller.rb#add_padlet:
   calls:
   - BASE/render :update
   - views/portal/bookmarks/_show.html.haml
@@ -507,12 +511,18 @@ controllers/portal/clazzes_controller.rb#add_teacher:
   - BASE/visual_effect
   - BASE/render :update
   - BASE/render :update
+  - BASE/render(:update
+  - BASE/render(:update
+  - BASE/render(:update
   - helpers/portal/teachers_helper.rb#teacher_add_dropdown
   - views/portal/teachers/_list_for_clazz_setup.html.haml
   - views/portal/teachers/_table_for_clazz.html.haml
 controllers/portal/clazzes_controller.rb#edit:
   calls:
   - views/portal/clazzes/_remote_form.html.haml
+controllers/portal/clazzes_controller.rb#manage_classes:
+  calls:
+  - BASE/render(:update
 controllers/portal/clazzes_controller.rb#remove_offering:
   calls:
   - BASE/render :update
@@ -521,6 +531,12 @@ controllers/portal/clazzes_controller.rb#remove_offering:
 controllers/portal/clazzes_controller.rb#remove_teacher:
   calls:
   - BASE/render :update
+  - BASE/render(:update
+  - BASE/render(:update
+  - BASE/render(:update
+  - BASE/render(:update
+  - BASE/render(:update
+  - BASE/render(:update
   - helpers/portal/teachers_helper.rb#teacher_add_dropdown
   - views/portal/teachers/_list_for_clazz_setup.html.haml
   - views/portal/teachers/_table_for_clazz.html.haml
@@ -533,18 +549,6 @@ controllers/portal/districts_controller.rb#edit:
 controllers/portal/districts_controller.rb#update:
   calls:
   - views/portal/districts/_show.html.haml
-controllers/portal/schools_controller.rb#create:
-  calls:
-  - views/portal/schools/_show.html.haml
-controllers/portal/schools_controller.rb#edit:
-  calls:
-  - views/portal/schools/_remote_form.html.haml
-controllers/portal/schools_controller.rb#show:
-  calls:
-  - views/portal/schools/_remote_form.html.haml
-controllers/portal/schools_controller.rb#update:
-  calls:
-  - views/portal/schools/_show.html.haml
 controllers/portal/students_controller.rb#confirm:
   calls:
   - BASE/visual_effect
@@ -688,9 +692,6 @@ helpers/application_helper.rb#show_menu_for:
     line: "= show_menu_for(portal_grade_level, options)"
   - name: views/portal/grades/_show.html.haml
     line: "= show_menu_for(portal_grade, options)"
-  - name: views/portal/schools/_show.html.haml
-    line: "= accordion_for(portal_school, show_menu_for(portal_school, options), 'accordion')
-      do"
   - name: views/shared/_embeddable_container.html.haml
     line: '= show_menu_for(page_element, options) rescue "<div>Unsupported component
       type: #{component.class.name}</div>".html_safe'
@@ -702,18 +703,12 @@ helpers/application_helper.rb#show_menu_for:
   - helpers/application_helper.rb#delete_button_for
 helpers/application_helper.rb#toggle_all:
   callers:
-  - name: views/interactives/index.html.haml
-    line: "%li= toggle_all 'interactive descriptions'"
   - name: views/shared/_activity_header.haml
     line: "%li= toggle_all('sections')"
-  - name: views/shared/_collection_menu.html.haml
-    line: '%li= toggle_all "#{collection_class.display_name} descriptions"'
   - name: views/shared/_page_header.html.haml
     line: "%li= toggle_all('elements')"
   - name: views/shared/_section_header.html.haml
     line: "%li= toggle_all('pages')"
-  - name: views/users/index.html.haml
-    line: "%li= toggle_all 'user descriptions'"
   calls:
   - BASE/link_to_function
 helpers/application_helper.rb#toggle_more:
@@ -757,9 +752,6 @@ helpers/application_helper.rb#wrap_edit_link_around_content:
   - name: views/portal/grades/_show.html.haml
     line: "= wrap_edit_link_around_content(portal_grade, options={:complete => mce_init_string})
       do"
-  - name: views/portal/schools/_show.html.haml
-    line: "= wrap_edit_link_around_content(portal_school, options={:complete => mce_init_string})
-      do"
   calls:
   - BASE/remote_function
 helpers/js_helper.rb#remove_link:
@@ -786,8 +778,6 @@ helpers/js_helper.rb#safe_js:
     line: safe_js(page,item_dom_id) do
   - name: views/portal/districts/destroy.js.rjs
     line: safe_js(page,dom_id) do
-  - name: views/portal/schools/destroy.js.rjs
-    line: safe_js(page,dom_id) do
   - name: views/portal/student_clazzes/destroy.js.rjs
     line: safe_js(page,@dom_id) do
   calls:
@@ -799,7 +789,6 @@ helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
     line: "- render_add_bookmark_buttons"
   calls:
   - views/portal/bookmarks/generic_bookmark/_button.html.haml
-  - views/portal/bookmarks/padlet_bookmark/_button.html.haml
 helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
   callers:
   - name: views/portal/clazzes/_form_student_roster.html.haml
@@ -856,9 +845,6 @@ views/admin/clients/_remote_form.html.haml:
       => 400
   calls:
   - BASE/remote_form_for
-views/admin/clients/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
 views/admin/commons_licenses/_remote_form.html.haml:
   callers:
   - name: controllers/admin/commons_licenses_controller.rb#edit
@@ -868,9 +854,6 @@ views/admin/commons_licenses/_remote_form.html.haml:
       => 400
   calls:
   - BASE/remote_form_for
-views/admin/commons_licenses/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
 views/admin/external_reports/_remote_form.html.haml:
   callers:
   - name: controllers/admin/external_reports_controller.rb#edit
@@ -880,9 +863,6 @@ views/admin/external_reports/_remote_form.html.haml:
       => 400
   calls:
   - BASE/remote_form_for
-views/admin/external_reports/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
 views/admin/projects/_remote_form.html.haml:
   callers:
   - name: controllers/admin/projects_controller.rb#edit
@@ -906,7 +886,6 @@ views/admin/projects/_show.html.haml:
 views/admin/projects/index.html.haml:
   calls:
   - views/admin/projects/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/admin/projects/show.html.haml:
   calls:
   - views/admin/projects/_show.html.haml
@@ -942,7 +921,6 @@ views/admin/settings/_show_for_managers.html.haml:
 views/admin/settings/index.html.haml:
   calls:
   - views/admin/settings/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/admin/settings/show.html.haml:
   calls:
   - views/admin/settings/_show.html.haml
@@ -967,7 +945,6 @@ views/admin/tags/_show.html.haml:
 views/admin/tags/index.html.haml:
   calls:
   - views/admin/tags/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/admin/tags/show.html.haml:
   calls:
   - views/admin/tags/_show.html.haml
@@ -1003,16 +980,12 @@ views/dataservice/blobs/_show.html.haml:
 views/dataservice/blobs/index.html.haml:
   calls:
   - views/dataservice/blobs/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/dataservice/blobs/show.html.haml:
   calls:
   - views/dataservice/blobs/_show.html.haml
 views/dataservice/bundle_contents/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
-views/dataservice/bundle_contents/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
 views/dataservice/bundle_loggers/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
@@ -1031,7 +1004,6 @@ views/dataservice/bundle_loggers/_show.html.haml:
   - helpers/application_helper.rb#show_menu_for
 views/dataservice/bundle_loggers/index.html.haml:
   calls:
-  - views/shared/_collection_menu.html.haml
   - views/dataservice/bundle_loggers/_show.html.haml
 views/dataservice/bundle_loggers/show.html.haml:
   calls:
@@ -1039,9 +1011,6 @@ views/dataservice/bundle_loggers/show.html.haml:
 views/dataservice/console_contents/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
-views/dataservice/console_contents/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
 views/dataservice/console_loggers/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
@@ -1060,7 +1029,6 @@ views/dataservice/console_loggers/_show.html.haml:
   - helpers/application_helper.rb#show_menu_for
 views/dataservice/console_loggers/index.html.haml:
   calls:
-  - views/shared/_collection_menu.html.haml
   - views/dataservice/console_loggers/_show.html.haml
 views/dataservice/console_loggers/show.html.haml:
   calls:
@@ -1093,7 +1061,6 @@ views/embeddable/image_questions/destroy.js.rjs:
   - helpers/js_helper.rb#safe_js
 views/embeddable/image_questions/index.html.haml:
   calls:
-  - views/shared/_collection_menu.html.haml
   - views/shared/_embeddable_container.html.haml
 views/embeddable/image_questions/show.html.haml:
   calls:
@@ -1149,7 +1116,6 @@ views/embeddable/multiple_choices/edit.html.haml:
   - views/embeddable/multiple_choices/_remote_form.html.haml
 views/embeddable/multiple_choices/index.html.haml:
   calls:
-  - views/shared/_collection_menu.html.haml
   - views/shared/_embeddable_container.html.haml
 views/embeddable/multiple_choices/new.html.haml:
   calls:
@@ -1188,7 +1154,6 @@ views/embeddable/open_responses/edit.html.haml:
   - views/embeddable/open_responses/_remote_form.html.haml
 views/embeddable/open_responses/index.html.haml:
   calls:
-  - views/shared/_collection_menu.html.haml
   - views/shared/_embeddable_container.html.haml
 views/embeddable/open_responses/show.html.haml:
   calls:
@@ -1228,19 +1193,9 @@ views/external_activities/index.html.haml:
 views/home/my_classes.html.haml:
   calls:
   - views/portal/students/_show.html.haml
-views/images/index.html.haml:
-  calls:
-  - BASE/observe_form
-views/installer_reports/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
-views/interactives/index.html.haml:
-  calls:
-  - helpers/application_helper.rb#toggle_all
 views/layouts/application.html.haml:
   calls:
   - views/shared/_accordion_nav.html.haml
-  - views/shared/_general_accordion_nav.html.haml
   - views/shared/_general_accordion_nav.html.haml
   - views/shared/_general_accordion_nav.html.haml
 views/materials_collections/_list_show.html.haml:
@@ -1282,7 +1237,6 @@ views/materials_collections/_show.html.haml:
   - helpers/application_helper.rb#show_menu_for
 views/materials_collections/index.html.haml:
   calls:
-  - views/shared/_collection_menu.html.haml
   - views/materials_collections/_list_show.html.haml
 views/materials_collections/show.html.haml:
   calls:
@@ -1291,8 +1245,6 @@ views/portal/bookmarks/_show.html.haml:
   callers:
   - name: views/portal/bookmarks/index.html.haml
     line: "= render :partial => 'show', :locals => {:bookmark => bookmark}"
-  - name: controllers/portal/bookmarks_controller.rb#add_padlet
-    line: ':partial => "portal/bookmarks/show",'
   - name: controllers/portal/bookmarks_controller.rb#add
     line: ':partial => "portal/bookmarks/show",'
   calls:
@@ -1307,12 +1259,6 @@ views/portal/bookmarks/index.html.haml:
   calls:
   - views/portal/bookmarks/_show.html.haml
   - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
-views/portal/bookmarks/padlet_bookmark/_button.html.haml:
-  callers:
-  - name: helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
-    line: '# :partial => "portal/bookmarks/padlet_bookmark/button"'
-  calls:
-  - BASE/button_to_remote
 views/portal/clazzes/_form.html.haml:
   callers:
   - name: views/portal/clazzes/_remote_form.html.haml
@@ -1397,7 +1343,6 @@ views/portal/districts/_show.html.haml:
       }
   calls:
   - helpers/application_helper.rb#wrap_edit_link_around_content
-  - views/portal/schools/_show.html.haml
   - helpers/application_helper.rb#show_menu_for
 views/portal/districts/destroy.js.rjs:
   calls:
@@ -1405,7 +1350,6 @@ views/portal/districts/destroy.js.rjs:
 views/portal/districts/index.html.haml:
   calls:
   - views/portal/districts/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/portal/districts/show.html.haml:
   calls:
   - views/portal/districts/_show.html.haml
@@ -1426,7 +1370,6 @@ views/portal/grade_levels/_show.html.haml:
 views/portal/grade_levels/index.html.haml:
   calls:
   - views/portal/grade_levels/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/portal/grade_levels/show.html.haml:
   calls:
   - views/portal/grade_levels/_show.html.haml
@@ -1446,7 +1389,6 @@ views/portal/grades/_show.html.haml:
 views/portal/grades/index.html.haml:
   calls:
   - views/portal/grades/_show.html.haml
-  - views/shared/_collection_menu.html.haml
 views/portal/grades/show.html.haml:
   calls:
   - views/portal/grades/_show.html.haml
@@ -1457,9 +1399,6 @@ views/portal/learners/bundle_report.html.haml:
   calls:
   - views/dataservice/bundle_loggers/_show.html.haml
   - views/dataservice/console_loggers/_show.html.haml
-views/portal/learners/index.html.haml:
-  calls:
-  - views/shared/_collection_menu.html.haml
 views/portal/offerings/_list_for_clazz.html.haml:
   calls:
   - BASE/drop_receiving_element
@@ -1477,45 +1416,6 @@ views/portal/offerings/_show.html.haml:
 views/portal/offerings/show.html.haml:
   calls:
   - views/portal/offerings/_show.html.haml
-views/portal/schools/_remote_form.html.haml:
-  callers:
-  - name: controllers/portal/schools_controller.rb#show
-    line: render :partial => 'remote_form', :locals => { :portal_school => @portal_school,
-      :is_edit => true }
-  - name: controllers/portal/schools_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :portal_school => @portal_school,
-      :is_edit => true }
-  calls:
-  - BASE/remote_form_for
-views/portal/schools/_show.html.haml:
-  callers:
-  - name: views/portal/districts/_show.html.haml
-    line: "= render :partial => 'portal/schools/show', :collection => portal_district.schools,
-      :as => :portal_school"
-  - name: views/portal/schools/index.html.haml
-    line: "= render :partial => 'show', :collection => @portal_schools, :as => :portal_school"
-  - name: views/portal/schools/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :portal_school => @portal_school
-      }"
-  - name: controllers/portal/schools_controller.rb#create
-    line: render :partial => 'show', :locals => { :portal_school => @portal_school
-      }
-  - name: controllers/portal/schools_controller.rb#update
-    line: render :partial => 'show', :locals => { :portal_school => @portal_school
-      }
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/portal/schools/destroy.js.rjs:
-  calls:
-  - helpers/js_helper.rb#safe_js
-views/portal/schools/index.html.haml:
-  calls:
-  - views/portal/schools/_show.html.haml
-  - views/shared/_collection_menu.html.haml
-views/portal/schools/show.html.haml:
-  calls:
-  - views/portal/schools/_show.html.haml
 views/portal/student_clazzes/destroy.js.rjs:
   calls:
   - BASE/page <<
@@ -1686,78 +1586,6 @@ views/shared/_activity_trail.html.haml:
 views/shared/_classes_for_school.haml:
   calls:
   - views/shared/_offering_for_teacher.html.haml
-views/shared/_collection_menu.html.haml:
-  callers:
-  - name: views/admin/clients/index.html.haml
-    line: "= render partial: 'shared/collection_menu', locals: { collection: @clients,
-      collection_class: Client }"
-  - name: views/admin/commons_licenses/index.html.haml
-    line: "= render partial: 'shared/collection_menu', locals: { collection: @licenses,
-      collection_class: CommonsLicense }"
-  - name: views/admin/external_reports/index.html.haml
-    line: "= render partial: 'shared/collection_menu', locals: { collection: @reports,
-      collection_class: ExternalReport }"
-  - name: views/admin/projects/index.html.haml
-    line: "= render partial: 'shared/collection_menu', locals: { collection: @projects,
-      collection_class: Admin::Project }"
-  - name: views/admin/settings/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @admin_settings, :collection_class => Admin::Settings }"
-  - name: views/admin/tags/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @admin_tags, :collection_class => Admin::Tag }"
-  - name: views/dataservice/blobs/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @dataservice_blobs, :collection_class => Dataservice::Blob }"
-  - name: views/dataservice/bundle_contents/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @dataservice_bundle_contents, :collection_class => Dataservice::BundleContent
-      }"
-  - name: views/dataservice/bundle_loggers/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @dataservice_bundle_loggers, :collection_class => Dataservice::BundleLogger
-      }"
-  - name: views/dataservice/console_contents/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @dataservice_console_contents, :collection_class => Dataservice::ConsoleContent
-      }"
-  - name: views/dataservice/console_loggers/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @dataservice_console_loggers, :collection_class => Dataservice::ConsoleLogger
-      }"
-  - name: views/embeddable/image_questions/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @image_questions, :collection_class =>Embeddable::ImageQuestion}"
-  - name: views/embeddable/multiple_choices/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @multiple_choices, :collection_class => Embeddable::MultipleChoice }"
-  - name: views/embeddable/open_responses/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @open_responses, :collection_class => Embeddable::OpenResponse }"
-  - name: views/installer_reports/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @installer_reports, :collection_class => InstallerReport }"
-  - name: views/materials_collections/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @materials_collections, :collection_class => MaterialsCollection, :extra_collection_search_fields
-      => extra_search_fields }"
-  - name: views/portal/districts/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @portal_districts, :collection_class => Portal::District }"
-  - name: views/portal/grade_levels/index.html.haml
-    line: "/ = render :partial => 'shared/collection_menu', :locals => { :collection
-      => @portal_grade_levels, :collection_class => Portal::GradeLevel }"
-  - name: views/portal/grades/index.html.haml
-    line: "/ = render :partial => 'shared/collection_menu', :locals => { :collection
-      => @portal_grades, :collection_class => Portal::Grade }"
-  - name: views/portal/learners/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @portal_learners, :collection_class => Portal::Learner }"
-  - name: views/portal/schools/index.html.haml
-    line: "= render :partial => 'shared/collection_menu', :locals => { :collection
-      => @portal_schools, :collection_class => Portal::School }"
-  calls:
-  - helpers/application_helper.rb#toggle_all
 views/shared/_embeddable_container.html.haml:
   callers:
   - name: views/embeddable/image_questions/index.html.haml
@@ -1794,9 +1622,6 @@ views/shared/_general_accordion_nav.html.haml:
   - name: views/layouts/application.html.haml
     line: "= render :partial => 'shared/general_accordion_nav', :locals => {:top_node
       => @activity, :selects => [@activity,@section,@page]}"
-  - name: views/layouts/application.html.haml
-    line: "= render :partial => 'shared/general_accordion_nav', :locals => {:top_node
-      => @portal_school, :selects => [@school,@teacher,@portal_clazz,@portal_student]}"
   calls:
   - BASE/sortable_element
   - BASE/sortable_element
@@ -1892,6 +1717,3 @@ views/teacher_notes/_show.html.haml:
       { :teacher_note => @teacher_note  }
   calls:
   - BASE/link_to_function
-views/users/index.html.haml:
-  calls:
-  - helpers/application_helper.rb#toggle_all

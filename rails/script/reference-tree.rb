@@ -50,6 +50,7 @@ blocks_to_process = {
   "BASE/observe_form" => {},
   "BASE/remote_function" => {},
   "BASE/render :update" => {},
+  "BASE/render(:update" => {},
   "BASE/page <<" => {},
 }
 
