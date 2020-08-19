@@ -86,7 +86,6 @@ RailsPortal::Application.routes.draw do
         resources :bookmarks, only: [:index] do
           collection do
             post 'add'
-            post 'add_padlet'
           end
         end
 

@@ -16,7 +16,7 @@ class Portal::Bookmark < ActiveRecord::Base
   acts_as_list
 
   def self.available_types
-    [Portal::PadletBookmark, Portal::GenericBookmark]
+    [Portal::GenericBookmark]
   end
 
   def self.for_project
