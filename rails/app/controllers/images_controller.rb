@@ -27,15 +27,8 @@ class ImagesController < ApplicationController
       :per_page => 36,
       :page => params[:page]
     })
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (found instance)
-    # @images = policy_scope(Image)
     @paginated_objects = @images
-
-    if request.xhr?
-      render :partial => 'runnable_list', :locals => { :images => @images, :paginated_objects => @images }
-      return
-    end
+    # this will render index.html.haml by default
   end
 
   # GET /images/1
@@ -59,11 +52,7 @@ class ImagesController < ApplicationController
   def new
     authorize Image
     @image = Image.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @image }
-    end
+    # renders new.html.haml
   end
 
   # GET /images/1/edit
@@ -72,52 +61,29 @@ class ImagesController < ApplicationController
   end
 
   # POST /images
-  # POST /images.xml
   def create
     authorize Image
     params[:image][:user_id] = current_visitor.id.to_s
     @image = Image.new(params[:image])
 
-    respond_to do |format|
-      if @image.save
-        flash[:notice] = 'Image was successfully created.'
-        format.html { redirect_to(@image) }
-        format.xml  { render :xml => @image, :status => :created, :location => @image }
-        format.js do
-          responds_to_parent do
-            render :update do |page|
-              page.insert_html :bottom, "images", :partial => 'images/list_item', :object => @image
-              page.visual_effect :highlight, "image_#{@image.id}"
-            end
-          end
-        end
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }
-        format.js do
-          responds_to_parent do
-            render :update do |page|
-                # update the page with an error message
-            end
-          end
-        end
-      end
+    if @image.save
+      flash[:notice] = 'Image was successfully created.'
+      redirect_to @image
+    else
+      flash[:error] = 'There was a problem with your submission. Check what you entered and try again.'
+      render action: 'new'
     end
   end
 
   # PUT /images/1
-  # PUT /images/1.xml
   def update
     authorize @image
-    respond_to do |format|
-      if update_image_attributes
-        flash[:notice] = 'Image was successfully updated.'
-        format.html { redirect_to(@image) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @image.errors, :status => :unprocessable_entity }
-      end
+    if update_image_attributes
+      flash[:notice] = 'Image was successfully updated.'
+      redirect_to @image
+    else
+      flash[:error] = 'There was a problem with your submission. Check what you entered and try again.'
+      render action: 'edit'
     end
   end
 
