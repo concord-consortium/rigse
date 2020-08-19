@@ -18,15 +18,6 @@ RSpec.describe Portal::BookmarksController, type: :controller do
   end
 
   # TODO: auto-generated
-  describe '#add_padlet' do
-    it 'GET add_padlet' do
-      get :add_padlet, {}, {}
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#add' do
     it 'GET add' do
       get :add, {}, {}

@@ -8,10 +8,6 @@ class Portal::GenericBookmarkPolicy < ApplicationPolicy
         is_class_owner
     end
 
-    def add_padlet?
-        is_class_owner
-    end
-
     def is_class_owner
         user && record && record.clazz && record.clazz.is_teacher?(user)
     end

@@ -17,18 +17,6 @@ class Portal::BookmarksController < ApplicationController
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])
   end
 
-  def add_padlet
-    mark = Portal::PadletBookmark.create_for_user(current_visitor, get_current_clazz)
-    authorize mark
-
-    render :update do |page|
-      page.insert_html :bottom,
-        "bookmarks_box",
-        :partial => "portal/bookmarks/show",
-        :locals => {:bookmark => mark, :new_bookmark_id => mark.id}
-    end
-  end
-
   def add
     props = params['portal_generic_bookmark'] || {
       name: 'My bookmark',
@@ -61,9 +49,6 @@ class Portal::BookmarksController < ApplicationController
       mark.destroy
       render :update do |page|
         page.remove dom_id
-        if Portal::PadletBookmark.user_can_make? current_visitor
-          page.show "padlet_form"
-        end
       end
     end
   end

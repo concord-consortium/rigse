@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200818192751) do
+ActiveRecord::Schema.define(:version => 20200819164746) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
