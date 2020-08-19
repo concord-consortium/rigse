@@ -1,0 +1,1000 @@
+# This was generated using: cd rails/script; ruby prototype-railsupdate-solutions.rb
+---
+assets/javascripts/search_materials.js#get_Assign_To_Class_Popup:
+  manual: true
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174370119
+assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup:
+  manual: true
+  solution:
+  - convert to react-components like get_Assign_To_Class_Popup has been
+  - find more simple UI since this is only used by Admins
+  story: https://www.pivotaltracker.com/story/show/174370395
+controllers/admin/clients_controller.rb#edit:
+  solution: simplify auth clients form
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373021
+controllers/admin/clients_controller.rb#update:
+  solution: simplify auth clients form
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373021
+controllers/admin/commons_licenses_controller.rb#edit:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373050
+controllers/admin/commons_licenses_controller.rb#update:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373050
+controllers/admin/external_reports_controller.rb#edit:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373092
+controllers/admin/external_reports_controller.rb#update:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373092
+controllers/admin/projects_controller.rb#edit:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373123
+controllers/admin/projects_controller.rb#update:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373123
+controllers/admin/settings_controller.rb#edit:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+controllers/admin/settings_controller.rb#update:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+controllers/admin/tags_controller.rb#edit:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373215
+controllers/admin/tags_controller.rb#update:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373215
+controllers/api/v1/site_notices_controller.rb#dismiss_notice:
+  solution: replace render :update
+  rational: response ignored by react component
+  story: https://www.pivotaltracker.com/story/show/174367430
+controllers/api/v1/site_notices_controller.rb#remove_notice:
+  solution: replace render :update
+  rational: response ignored by react component
+  story: https://www.pivotaltracker.com/story/show/174367430
+controllers/api/v1/site_notices_controller.rb#toggle_notice_display:
+  solution: replace render :update
+  rational: response ignored by react component
+  story: https://www.pivotaltracker.com/story/show/174367430
+controllers/author_notes_controller.rb#edit:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174367289
+controllers/author_notes_controller.rb#show_author_note:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174367289
+controllers/embeddable/image_questions_controller.rb#edit:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/image_questions_controller.rb#new:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/image_questions_controller.rb#show:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/image_questions_controller.rb#update:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/multiple_choices_controller.rb#add_choice:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/multiple_choices_controller.rb#edit:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/multiple_choices_controller.rb#new:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/multiple_choices_controller.rb#show:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/multiple_choices_controller.rb#update:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/open_responses_controller.rb#edit:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/open_responses_controller.rb#new:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/open_responses_controller.rb#show:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/embeddable/open_responses_controller.rb#update:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+controllers/external_activities_controller.rb#edit_basic:
+  solution: reactify or simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374781
+controllers/external_activities_controller.rb#index:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+controllers/external_activities_controller.rb#update:
+  solution: remove rendering of external_activity_header
+  notes: when the edit options button is clicked the basic_edit
+    form is shown. When it is saved, an XHR update request
+    is sent. This seems to throw an error after saving the
+    data. It seems like this exernal_activity_header content
+    is not used anywhere.
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+controllers/images_controller.rb#create:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373929
+controllers/materials_collections_controller.rb#destroy:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+controllers/materials_collections_controller.rb#edit:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+controllers/materials_collections_controller.rb#update:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+controllers/portal/bookmarks_controller.rb#add:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+controllers/portal/bookmarks_controller.rb#add_padlet:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+controllers/portal/bookmarks_controller.rb#delete:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+controllers/portal/clazzes_controller.rb#add_new_student_popup:
+  solution: reactify student roster
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174324301
+controllers/portal/clazzes_controller.rb#add_offering:
+  manual_callers:
+  - name: views/portal/offerings/_list_for_clazz.html.haml
+    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'},..."
+  - name: views/portal/clazzes/edit_offerings.html.haml
+    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'},..."
+  solution: remove
+  rational: clean up old class views and controllers
+  story: https://www.pivotaltracker.com/story/show/174366664
+controllers/portal/clazzes_controller.rb#add_student:
+  solution: update student roster page
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174324301
+controllers/portal/clazzes_controller.rb#add_teacher:
+  solution: convert to react class setup
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+controllers/portal/clazzes_controller.rb#class_list:
+  manual: true
+  solution: remove
+  rational: not used anymore
+  story: https://www.pivotaltracker.com/story/show/174366664
+controllers/portal/clazzes_controller.rb#edit:
+  solution: convert to react class setup
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+controllers/portal/clazzes_controller.rb#remove_offering:
+  solution: remove
+  rational: this isn't used anymore, it isn't possible to remove an offering
+  story: https://www.pivotaltracker.com/story/show/174366664
+controllers/portal/clazzes_controller.rb#remove_teacher:
+  solution: convert to react class setup
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+controllers/portal/clazzes_controller.rb#roster:
+  solution: move to react-components (and maybe api controller)
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
+controllers/portal/districts_controller.rb#edit:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+controllers/portal/districts_controller.rb#update:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+controllers/portal/offerings_controller.rb#show:
+  manual: true
+  solution: remove format.html
+  story: https://www.pivotaltracker.com/story/show/174366664
+controllers/portal/schools_controller.rb#create:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+controllers/portal/schools_controller.rb#edit:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+controllers/portal/schools_controller.rb#show:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+controllers/portal/schools_controller.rb#update:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+controllers/portal/students_controller.rb#confirm:
+  solution: simplify or move to react-components
+  rational: used by students
+  story: https://www.pivotaltracker.com/story/show/174371038
+controllers/portal/students_controller.rb#create:
+  solution: simplify roster or move to react-components
+  rational: teachers use this
+  story: https://www.pivotaltracker.com/story/show/174324301
+controllers/portal/students_controller.rb#move_confirm:
+  solution: update move students UI
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174381113
+controllers/search_controller.rb#add_material_to_clazzes:
+  solution: clean up old assignment UI
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174370119
+controllers/search_controller.rb#add_material_to_collections:
+  solution: remove prototype-rails from add to collections flow
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174370395
+controllers/search_controller.rb#get_current_material_anonymous:
+  manual_callers:
+  - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
+    line: "var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';"
+  solution: remove
+  rational: replaced by api controller
+  story: https://www.pivotaltracker.com/story/show/174370119
+controllers/search_controller.rb#get_current_material_unassigned_clazzes:
+  manual_callers:
+  - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
+    line: "var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';"
+  solution: remove
+  rational: replaced by api controller
+  story: https://www.pivotaltracker.com/story/show/174370119
+controllers/search_controller.rb#get_current_material_unassigned_collections:
+  manual_callers:
+  - name: assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup
+    line: 'var target_url = "/search/get_current_material_unassigned_collections?skip_reload=" + (skip_reload || false);'
+  solution: remove prototype-rails from add to collections flow
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174370395
+controllers/search_controller.rb#get_search_suggestions:
+  solution: switch to react or jquery
+  notes: this is only on the advanced search
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174381940
+controllers/teacher_notes_controller.rb#show_teacher_note:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174365885
+helpers/application_helper.rb#delete_button_for:
+  solution: remove after rest of work is done
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174365484
+helpers/application_helper.rb#edit_button_for:
+  solution: remove after rest of work is done
+  rational:
+  story: remove after rest of work is done
+helpers/application_helper.rb#function_link_button:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+helpers/application_helper.rb#remote_link_button:
+  solution: remove
+  rational: all code using it will be removed or replaced
+  story: https://www.pivotaltracker.com/story/show/174365484
+helpers/application_helper.rb#show_menu_for:
+  solution: remove after rest of work is done
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174365484
+helpers/application_helper.rb#toggle_all:
+  solution: remove
+  rational: all code using it will be removed or replaced
+  story: https://www.pivotaltracker.com/story/show/174365484
+helpers/application_helper.rb#toggle_more:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+helpers/application_helper.rb#wrap_edit_link_around_content:
+  solution: remove
+  rational: all code using it will be removed or replaced
+  story: https://www.pivotaltracker.com/story/show/174365484
+helpers/js_helper.rb#remove_link:
+  solution: remove
+  rational: only used by multiple_choices view
+  story: https://www.pivotaltracker.com/story/show/174347881
+helpers/js_helper.rb#safe_js:
+  solution: remove
+  rational: all code using it will be removed or replaced
+  story: https://www.pivotaltracker.com/story/show/174365484
+helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
+  solution: re-write Student Roster page using react, or convert to do a full page refresh
+  rational: teacher facing
+  story: https://www.pivotaltracker.com/story/show/174324301
+helpers/portal/teachers_helper.rb#teacher_add_dropdown:
+  solution: re-write Class Setup page using react, or convert to do a full page refresh
+  rational: teacher facing
+  story: https://www.pivotaltracker.com/story/show/174318198
+lib/clipboard.rb#paste_link_for:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174365484
+views/admin/clients/_remote_form.html.haml:
+  solution: simplify clients form
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373021
+views/admin/clients/index.html.haml:
+  solution: simplify clients from
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373021
+views/admin/commons_licenses/_remote_form.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373050
+views/admin/commons_licenses/index.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373050
+views/admin/external_reports/_remote_form.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373092
+views/admin/external_reports/index.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373092
+views/admin/projects/_remote_form.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373123
+views/admin/projects/_show.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373123
+views/admin/projects/index.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373123
+views/admin/projects/show.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373123
+views/admin/settings/_remote_form.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+views/admin/settings/_show.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+views/admin/settings/_show_for_managers.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+views/admin/settings/index.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+views/admin/settings/show.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373193
+views/admin/tags/_remote_form.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373215
+views/admin/tags/_show.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373215
+views/admin/tags/index.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373215
+views/admin/tags/show.html.haml:
+  solution: simplfy
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373215
+views/author_notes/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174367289
+views/author_notes/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174367289
+views/dataservice/blobs/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/blobs/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/blobs/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/blobs/show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/bundle_contents/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/bundle_contents/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/bundle_loggers/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/bundle_loggers/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/bundle_loggers/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/bundle_loggers/show.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/console_contents/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/console_contents/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/console_loggers/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/console_loggers/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/console_loggers/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/dataservice/console_loggers/show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/embeddable/image_questions/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/image_questions/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/image_questions/destroy.js.rjs:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/image_questions/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/image_questions/show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/add_choice.js.rjs:
+  manual: true
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/_edit_choice.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/_new_choice.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/destroy.js.rjs:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/edit.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/new.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/open_responses/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/open_responses/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/open_responses/destroy.js.rjs:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/open_responses/edit.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/open_responses/index.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/open_responses/show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/external_activities/_basic_form.html.haml:
+  solution: reactify, or simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374781
+views/external_activities/_remote_form.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/external_activities/_runnable_list.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/external_activities/_show.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/external_activities/create.js.rjs:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/external_activities/destroy.js.rjs:
+  manual: true
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/external_activities/index.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/home/my_classes.html.haml:
+  solution: update student moving class, update student join a class
+  rational:
+  story:
+  - https://www.pivotaltracker.com/story/show/174381113
+  - https://www.pivotaltracker.com/story/show/174371038
+views/images/destroy.rjs:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373929
+views/images/index.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373929
+views/installer_reports/index.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374528
+views/interactives/index.html.haml:
+  solution: remove toggle_all usage
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374504
+views/layouts/application.html.haml:
+  solution: clean up left menu
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174366238
+views/materials_collections/_list_show.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+views/materials_collections/_materials_in_collection.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+views/materials_collections/_remote_form.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+views/materials_collections/_show.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+views/materials_collections/index.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+views/materials_collections/show.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373337
+views/portal/bookmarks/_show.html.haml:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+views/portal/bookmarks/generic_bookmark/_button.html.haml:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+views/portal/bookmarks/index.html.haml:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+views/portal/bookmarks/padlet_bookmark/_button.html.haml:
+  solution: simplify or reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374264
+views/portal/clazzes/_form.html.haml:
+  solution: reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/portal/clazzes/_form_student_roster.html.haml:
+  solution: move to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/clazzes/_remote_form.html.haml:
+  solution: reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/portal/clazzes/_remote_form_student_roster.html.haml:
+  solution: move to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/clazzes/class_list.html.haml:
+  manual_callers:
+  - name: views/portal/students/_list_for_clazz.html.haml
+    line: "... class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'"
+  notes: this is a printable roster page with remove student, and change password links
+  solution: remove
+  rational: not reachable from current links, the current roster page already has its own print button
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/clazzes/destroy.js.rjs:
+  solution: remove - clean up old class views
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/clazzes/edit.html.haml:
+  solution: convert to react
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/portal/clazzes/edit_offerings.html.haml:
+  solution: remove
+  rational: seems dead /portal/classes/1/edit_offerings returns an error
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/clazzes/new.html.haml:
+  solution: convert to react
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/portal/clazzes/roster.html.haml:
+  solution: move to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/clazzes/show.html.haml:
+  solution: remove
+  rational: this is the old class page
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/districts/_remote_form.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+views/portal/districts/_show.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+views/portal/districts/destroy.js.rjs:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+views/portal/districts/index.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+views/portal/districts/show.html.haml:
+  solution: simplify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373420
+views/portal/grade_levels/_remote_form.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grade_levels/_show.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grade_levels/index.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grade_levels/show.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grades/_remote_form.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grades/_show.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grades/index.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/grades/show.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174373749
+views/portal/learners/_remote_form.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374611
+views/portal/learners/bundle_report.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174354182
+views/portal/learners/index.html.haml:
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374611
+views/portal/offerings/_list_for_clazz.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/offerings/_show.html.haml:
+  solution: remove
+  rational: not used anymore
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/offerings/show.html.haml:
+  solution: remove
+  notes: should remove format.html from offerings_controller.rb#show
+  rational: not used anymore
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/school_selector/update.rjs:
+  manual: true
+  manual_callers:
+  - name: views/shared/_school_selector.html.haml
+    line: 'var url = "#{school_selector_update_path}";'
+  solution: remove
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174388646
+views/portal/schools/_remote_form.html.haml:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+views/portal/schools/_show.html.haml:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+views/portal/schools/destroy.js.rjs:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+views/portal/schools/index.html.haml:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+views/portal/schools/show.html.haml:
+  solution: simplify form and index pages
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174361480
+views/portal/student_clazzes/destroy.js.rjs:
+  manual_callers:
+  - name: views/portal/students/_table_for_clazz.html.haml
+    line: ":url => portal_clazz_student_clazz_url(roster_row.clazz, roster_row.portal_student_clazz),"
+    notes: this uses a delete action with link_to_remote
+  solution: convert to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/students/_add_edit_list_for_clazz.html.haml:
+  solution: reactify student roster
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/students/_confirmation.html.haml:
+  manual: true
+  manual_callers:
+  - name: controllers/portal/students_controller.rb#confirm
+    line: 'page.insert_html :before, "word_form", :partial => "confirmation",'
+  solution: simplify or move to react-components
+  story: https://www.pivotaltracker.com/story/show/174371038
+views/portal/students/_current_student_list_for_clazz.html.haml:
+  solution: reactify student roster
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/students/_list_for_clazz.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/students/_move.html.haml:
+  solution: update move student UI
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174381113
+views/portal/students/_register.html.haml:
+  solution: update student join class UI
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174371038
+views/portal/students/_show.html.haml:
+  solution: update student moving class, update student join a class
+  rational:
+  story:
+  - https://www.pivotaltracker.com/story/show/174381113
+  - https://www.pivotaltracker.com/story/show/174371038
+views/portal/students/_table_for_clazz.html.haml:
+  solution: convert to react-components
+  rational: used by teachers
+  story: https://www.pivotaltracker.com/story/show/174324301
+views/portal/students/register.html.haml:
+  solution: update student join class UI
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174371038
+views/portal/students/show.html.haml:
+  solution: update student moving class, update student join a class
+  rational:
+  story:
+  - https://www.pivotaltracker.com/story/show/174381113
+  - https://www.pivotaltracker.com/story/show/174371038
+views/portal/teachers/_list_for_clazz.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/portal/teachers/_list_for_clazz_setup.html.haml:
+  solution: reactify class setup
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/portal/teachers/_table_for_clazz.html.haml:
+  solution: reactify class setup
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/portal/teachers/_table_for_clazz_setup.html.haml:
+  solution: reactify class setup
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174318198
+views/search/_material_unassigned_clazzes.html.haml:
+  solution: remove
+  rational: code has been moved to react-components and uses api
+  story: https://www.pivotaltracker.com/story/show/174370119
+views/search/_material_unassigned_collections.html.haml:
+  solution: convert to react-components, or simplify
+  rational: used by portal admins
+  story: https://www.pivotaltracker.com/story/show/174370395
+views/shared/_accordion_nav.html.haml:
+  solution: remove
+  rational: unused (reference in application.html.haml is commented out)
+  story: https://www.pivotaltracker.com/story/show/174366238
+views/shared/_activity_header.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/shared/_activity_trail.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/shared/_classes_for_school.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/shared/_collection_menu.html.haml:
+  solution: remove at the end
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174365484
+views/shared/_embeddable_container.html.haml:
+  solution: remove embeddable views and controllers
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/shared/_external_activity_header.html.haml:
+  solution: remove, only used by external_activity#update action
+    and that action doesn't succeed anyhow
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374664
+views/shared/_general_accordion_nav.html.haml:
+  solution: remove
+  rational: not needed anymore, this is used to edit investigations, activities, and schools
+  story: https://www.pivotaltracker.com/story/show/174366238
+views/shared/_notes_menu.html.haml:
+  solution: remove only used by dead code
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/shared/_offering_for_teacher.html.haml:
+  solution: remove
+  rational: cleanup old class views and controllers
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/shared/_page_header.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/shared/_paste_link.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/shared/_runnable.html.haml:
+  solution: remove
+  rational: only used by remove_offering which isn't used anymore
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/shared/_runnable_list.html.haml:
+  solution: remove
+  rational: only used by old class page partials and dead code
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/shared/_runnables_listing.html.haml:
+  solution: remove
+  rational: only used by old class page partials and dead code
+  story: https://www.pivotaltracker.com/story/show/174366664
+views/shared/_school_selector.html.haml:
+  manual: true
+  manual_callers:
+  - name: controllers/portal/school_selector_controller.rb#update
+    line:
+  - name: views/portal/teachers/_form.html.haml
+    line: "= render :partial => 'shared/school_selector',"
+  solution: remove
+  story: https://www.pivotaltracker.com/story/show/174388646
+views/shared/_section_header.html.haml:
+  solution: remove
+  rational: dead
+  story: https://www.pivotaltracker.com/story/show/174353979
+views/teacher_notes/_remote_form.html.haml:
+  solution: remove
+  rational: teacher notes are not used
+  story: https://www.pivotaltracker.com/story/show/174365885
+views/teacher_notes/_show.html.haml:
+  solution: remove
+  rational: teacher notes are not used
+  story: https://www.pivotaltracker.com/story/show/174365885
+views/users/index.html.haml:
+  solution: remove toggle_all
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174374504

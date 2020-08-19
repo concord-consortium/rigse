@@ -16,6 +16,10 @@ module Portal::BookmarksHelper
   end
 
   def render_add_bookmark_buttons
+    # this comment is here to help us track references
+    # Based on configuration this can call:
+    # :partial => "portal/bookmarks/padlet_bookmark/button"
+    # :partial => "portal/bookmarks/generic_bookmark/button"
     each_available_claz do |claz, type|
       haml_tag '.add_bookmark_button' do
         haml_concat(render(:partial => "portal/bookmarks/#{type}/button"))
