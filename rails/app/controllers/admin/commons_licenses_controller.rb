@@ -26,9 +26,6 @@ class Admin::CommonsLicensesController < ApplicationController
   def edit
     authorize CommonsLicense
     @license = CommonsLicense.find(params[:code])
-    if request.xhr?
-      render :partial => 'remote_form', :locals => { :license => @license }
-    end
   end
 
   def create
@@ -46,19 +43,11 @@ class Admin::CommonsLicensesController < ApplicationController
   def update
     authorize CommonsLicense
     @license = CommonsLicense.find(params[:code])
-    if request.xhr?
-      if @license.update_attributes(params[:commons_license])
-        render :partial => 'show', :locals => { :license => @license }
-      else
-        render :partial => 'remote_form', :locals => { :license => @license }, :status => 400
-      end
+    if @license.update_attributes(params[:commons_license])
+      flash[:notice]= 'License was successfully updated.'
+      redirect_to action: :index
     else
-      if @license.update_attributes(params[:commons_license])
-        flash[:notice]= 'License was successfully updated.'
-        redirect_to action: :index
-      else
-        render :action => 'edit'
-      end
+      render :action => 'edit'
     end
   end
 
