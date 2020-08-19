@@ -206,6 +206,10 @@ controllers/portal/clazzes_controller.rb#edit:
   solution: convert to react class setup
   rational:
   story: https://www.pivotaltracker.com/story/show/174318198
+controllers/portal/clazzes_controller.rb#manage_classes:
+  solution: reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174325159
 controllers/portal/clazzes_controller.rb#remove_offering:
   solution: remove
   rational: this isn't used anymore, it isn't possible to remove an offering
