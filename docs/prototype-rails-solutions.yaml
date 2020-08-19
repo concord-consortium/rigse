@@ -891,7 +891,7 @@ views/portal/students/show.html.haml:
 views/portal/teachers/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
-  story: https://www.pivotaltracker.com/story/show/174366664
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/teachers/_list_for_clazz_setup.html.haml:
   solution: reactify class setup
   rational:
