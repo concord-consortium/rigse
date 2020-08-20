@@ -1,78 +1,21 @@
 import React from 'react'
+import { arrayMove } from 'react-sortable-hoc'
+
+import SortableBookmarks from './sortable-bookmarks'
 import css from './style.scss'
 
-class BookmarkRow extends React.Component {
-  constructor (props) {
-    super(props)
-    const { bookmark } = props
-
-    // we keep the editing state in two places so that it can be enabled when a new bookmark is created
-    bookmark.editing = !!bookmark.editing
-    this.state = {
-      editing: bookmark.editing
-    }
-
-    this.nameRef = React.createRef()
-    this.urlRef = React.createRef()
-  }
-
-  render () {
-    const { bookmark } = this.props
-    const { editing } = this.state
-
-    const handleDelete = () => this.props.handleDelete(bookmark)
-
-    const handleVisibilityToggle = () => this.props.handleVisibilityToggle(bookmark)
-
-    const handleToggleEdit = () => {
-      bookmark.editing = !bookmark.editing
-      this.setState({ editing: bookmark.editing })
-    }
-
-    const handleSave = () => {
-      const name = this.nameRef.current.value.trim()
-      const url = this.urlRef.current.value.trim()
-      if ((name.length > 0) && (url.length > 0)) {
-        this.props.handleUpdate(bookmark, { name, url })
-        handleToggleEdit()
-      } else {
-        window.alert('Please enter both a name and an url')
-      }
-    }
-
-    if (editing) {
-      return (
-        <tr>
-          <td className={css.editBookmarkName} colspan='2'>
-            <input type='text' ref={this.nameRef} defaultValue={bookmark.name} placeholder='Name' />
-            <input type='text' ref={this.urlRef} defaultValue={bookmark.url} placeholder='URL' />
-          </td>
-          <td className={css.editBookmarkButtons}>
-            <button onClick={handleSave}>Save</button>
-            <button onClick={handleToggleEdit}>Cancel</button>
-          </td>
-        </tr>
-      )
-    } else {
-      const link = <a href={bookmark.url} target='_blank' rel='noopener'>{bookmark.name}</a>
-      return (
-        <tr>
-          <td>☰</td>
-          <td className={css.editBookmarkName}>
-            {bookmark.is_visible ? link : <strike>{link}</strike>}
-          </td>
-          <td className={css.editBookmarkButtons}>
-            <button onClick={handleToggleEdit}>Edit</button>
-            <button onClick={handleVisibilityToggle}>{bookmark.is_visible ? 'Hide' : 'Show'}</button>
-            <button onClick={handleDelete}>Delete</button>
-          </td>
-        </tr>
-      )
+const shouldCancelSorting = e => {
+  // Only HTML elements with selected classes can be used to reorder offerings.
+  const classList = e.target.classList
+  for (const cl of [ css.sortIcon, css.editBookmarkName ]) {
+    if (classList.contains(cl)) {
+      return false
     }
   }
+  return true
 }
 
-export default class EditBookmarks extends React.Component {
+export class EditBookmarks extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -83,6 +26,7 @@ export default class EditBookmarks extends React.Component {
     this.handleUpdate = this.handleUpdate.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleVisibilityToggle = this.handleVisibilityToggle.bind(this)
+    this.handleSortEnd = this.handleSortEnd.bind(this)
   }
 
   sortBookmarks (bookmarks) {
@@ -161,8 +105,6 @@ export default class EditBookmarks extends React.Component {
     }
   }
 
-  // TODO: handle sorting
-
   fetch (action, bookmark, body) {
     const basePath = '/api/v1/bookmarks'
 
@@ -196,33 +138,31 @@ export default class EditBookmarks extends React.Component {
       })
   }
 
-  renderBookmarks () {
-    const { bookmarks } = this.state
-    if (bookmarks.length === 0) {
-      return null
-    }
+  handleSortEnd ({ oldIndex, newIndex }) {
+    let { bookmarks } = this.state
+    bookmarks = arrayMove(bookmarks, oldIndex, newIndex)
+    this.setState({ bookmarks })
 
-    return (
-      <table className={css.editBookmarksTable}>
-        <tbody>
-          {bookmarks.map((bookmark) => (
-            <BookmarkRow
-              key={bookmark.id}
-              bookmark={bookmark}
-              handleUpdate={this.handleUpdate}
-              handleDelete={this.handleDelete}
-              handleVisibilityToggle={this.handleVisibilityToggle}
-            />
-          ))}
-        </tbody>
-      </table>
-    )
+    const ids = bookmarks.map(bookmark => bookmark.id)
+    this.fetch('sort', null, { ids: JSON.stringify(ids) })
+      .catch(err => {
+        this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) })
+        this.showError(err, 'Unable to save link sort order!')
+      })
   }
 
   render () {
     return (
       <>
-        {this.renderBookmarks()}
+        <SortableBookmarks
+          bookmarks={this.state.bookmarks}
+          handleUpdate={this.handleUpdate}
+          handleDelete={this.handleDelete}
+          handleVisibilityToggle={this.handleVisibilityToggle}
+          shouldCancelStart={shouldCancelSorting}
+          onSortEnd={this.handleSortEnd}
+          distance={3}
+        />
         <div>
           <button onClick={this.handleCreate}>Create Link</button>
         </div>
@@ -231,15 +171,4 @@ export default class EditBookmarks extends React.Component {
   }
 }
 
-/*
-sort_api_v1_bookmarks POST     /api/v1/bookmarks/sort(.:format)                                                    api/v1/bookmarks#sort {:id=>/\d+/, :format=>:json}
-api_v1_bookmarks POST     /api/v1/bookmarks(.:format)                                                         api/v1/bookmarks#create {:id=>/\d+/, :format=>:json}
-api_v1_bookmark PUT      /api/v1/bookmarks/:id(.:format)                                                     api/v1/bookmarks#update {:id=>/\d+/, :format=>:json}
-DELETE   /api/v1/bookmarks/:id(.:format)                                                     api/v1/bookmarks#destroy {:id=>/\d+/, :format=>:json}
-
-  basePath: "https://app.rigse.docker/portal/classes/5/bookmarks",
-bookmarks: [
-  {"id":1,"is_visible":true,"name":"My bookmark","position":1,"url":"http://concord.org"},
-  {"clazz_id":5,"created_at":"2020-08-19T15:28:26Z","id":2,"is_visible":true,"name":"My bookmark","position":2,"updated_at":"2020-08-19T15:28:26Z","url":"http://concord.org","user_id":8},
-  {"clazz_id":5,"created_at":"2020-08-19T15:29:31Z","id":3,"is_visible":true,"name":"My bookmark","position":3,"updated_at":"2020-08-19T15:29:31Z","url":"http://concord.org","user_id":8}]
-*/
+export default EditBookmarks
