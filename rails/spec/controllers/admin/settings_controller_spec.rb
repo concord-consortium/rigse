@@ -77,9 +77,9 @@ describe Admin::SettingsController do
       expect(assigns[:admin_settings]).to equal(mock_settings)
     end
 
-    it "uses default content if home_page_content is empty" do
+    it "no longer uses default content if home_page_content is empty" do
       allow(mock_settings).to receive(:home_page_content).and_return(nil)
-      expect(mock_settings).to receive(:home_page_content=)
+      expect(mock_settings).not_to receive(:home_page_content=)
       get :edit, :id => "37"
     end
 

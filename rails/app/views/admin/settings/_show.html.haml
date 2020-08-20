@@ -1,14 +1,6 @@
 - if @additional_partials && @additional_partials.length > 0
   - @additional_partials.each do |p|
     = render :partial => p, :locals => { :admin_settings => admin_settings }
-%script
-  helpLink = $('help')
-  - if admin_settings.help_type == 'no help'
-    helpLink.parentNode.style.display = "none"
-  - else
-    helpLink.href = "javascript: void(0)"
-    helpLink.onclick = function(){window.open('/help/index','help_page','height = 700 width = 800')}
-    helpLink.parentNode.style.display = ""
 - if @manager_role
   = render :partial => 'show_for_managers', :locals => { :admin_settings => admin_settings }
 - else
@@ -18,7 +10,7 @@
       %h3= link_to admin_settings.name, admin_settings
     .action_menu_header_right
       %ul.menu
-        %li= link_to 'edit', edit_admin_setting_path(admin_settings)
+        %li= link_to 'edit settings', url_for(action: :edit, id:admin_settings.id)
         - if !admin_settings.active
           %li= link_to 'delete', url_for(action: :destroy, id:admin_settings.id), data: {method: 'delete', confirm: "Delete these settings?"}
 
@@ -164,11 +156,11 @@
         - case admin_settings.help_type
         - when 'external url'
           - external_url = admin_settings.external_url
-          %input{:type=>"button", :value=>"Preview External Help URL" ,:onclick =>"window.open('#{external_url}','HelpPage','height = 700 width = 800, resizable = yes, scrollbars = yes')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+          %a{:href=> external_url, target: "_blank", class: "button", style:"margin-top: 10px; font-size: 13px"}
+            preview help
         - when 'help custom html'
-          - settings_id = admin_settings.id
-          - settings_id =  settings_id.to_s
-          %input{:type=>"button", :value=>"Preview Custom Help Page" ,:onclick =>"openPreviewHelpPage(false,'',false,'#{settings_id}')" ,:class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
+          %a{href:"/help", target:"_blank", class: "button", style:"margin-top: 10px; font-size: 13px"}
+            preview help
         - when 'no help'
           %br
           %b

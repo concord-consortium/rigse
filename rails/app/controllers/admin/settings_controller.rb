@@ -6,13 +6,6 @@ class Admin::SettingsController < ApplicationController
   # before_filter :setup_object, :except => [:index]
   # before_filter :render_scope, :only => [:show]
 
-  # editing / modifying / deleting require editable-ness
-  # before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
-  # before_filter :can_create, :only => [:new, :create,:duplicate]
-  #
-  # in_place_edit_for :activity, :name
-  # in_place_edit_for :activity, :description
-
   protected
 
   def admin_only
@@ -30,7 +23,6 @@ class Admin::SettingsController < ApplicationController
       raise Pundit::NotAuthorizedError
     end
   end
-
 
   public
 
@@ -82,14 +74,6 @@ class Admin::SettingsController < ApplicationController
   # GET /admin/settings/1/edit
   def edit
     @admin_settings = Admin::Settings.find(params[:id])
-    # NP: 2020-08-19 TODO: This is not working nut it doesn't seem critical
-    # Pull in the current theme default home page content, if it isn't set in the settings.
-    if @admin_settings.home_page_content.nil? || @admin_settings.home_page_content.empty?
-      render_to_string :partial => "home/project_info"
-
-      @admin_settings.home_page_content = view_context.instance_variable_get(:@content_for_project_info)
-      view_context.instance_variable_set(:@content_for_project_info, nil)
-    end
     # renders edit.html.haml
   end
 
