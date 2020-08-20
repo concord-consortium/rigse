@@ -6,7 +6,7 @@ version: '2.1'
 services:
   app:
     build:
-      context: ../..
+      context: ../../rails
       dockerfile: Dockerfile
 
     environment:
