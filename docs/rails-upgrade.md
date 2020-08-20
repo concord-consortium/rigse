@@ -279,8 +279,8 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
       * (note that student registration is handld by the api controllers)
       * simplify roster pages ( portal/classes/136/roster )
       * convert roster to react component
-* app/controllers/portal/clazzes_controller.rb add_offering
-* app/controllers/portal/clazzes_controller.rb remove_offering
+* app/controllers/portal/clazzes_controller.rb add_offering ✅
+* app/controllers/portal/clazzes_controller.rb remove_offering ✅
   * type: insert_html, page <<
   * usage:
     * _list_for_class.html.haml  ( used by portal/classes/xxx -- can delete)
@@ -294,7 +294,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * solution:
     * update student roster page (portal/classes/107/roster)
     * https://www.pivotaltracker.com/story/show/174324301
-* app/controllers/portal/clazzes_controller.rb add_teacher
+* app/controllers/portal/clazzes_controller.rb add_teacher ✅
   * type: replace_html, page <<, visual_effect
   * usage:
     * teachers_helper.rb teacher_add_dropdown
@@ -303,7 +303,7 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
     * delete _list_for_clazz.html.haml
     * update teacher_add_dropdown on class setup page (portal/classes/107/edit)
     * https://www.pivotaltracker.com/story/show/174318198
-* app/controllers/portal/clazzes_controller.rb remove_teacher
+* app/controllers/portal/clazzes_controller.rb remove_teacher ✅
   * type: replace_html, page <<, replace
   * usage:
     * class setup page portal/classes/107/edit
@@ -312,14 +312,15 @@ This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to
   * solution:
     * update the teacher listing for class setup page (portal/classes/107/edit)
     * https://www.pivotaltracker.com/story/show/174318198
-* app/controllers/portal/clazzes_controller.rb manage_classes
+* app/controllers/portal/clazzes_controller.rb manage_classes ✅
   * type:
+  * note
   * usage:
     * manage class page: portal/classes/manage
   * solution:
     * update manage class page: portal/classes/manage
     * https://www.pivotaltracker.com/story/show/174325159
-* app/controllers/portal/clazzes_controller.rb add_offering
+* app/controllers/portal/clazzes_controller.rb add_offering ✅
 
 ## Start by looking at older audit done by hint media:
 

@@ -141,11 +141,10 @@ controllers/external_activities_controller.rb#index:
   story: https://www.pivotaltracker.com/story/show/174374664
 controllers/external_activities_controller.rb#update:
   solution: remove rendering of external_activity_header
-  notes: when the edit options button is clicked the basic_edit
-    form is shown. When it is saved, an XHR update request
-    is sent. This seems to throw an error after saving the
-    data. It seems like this exernal_activity_header content
-    is not used anywhere.
+  notes: when the edit options button is clicked the basic_edit form is shown. When
+    it is saved, an XHR update request is sent. This seems to throw an error after
+    saving the data. It seems like this exernal_activity_header content is not used
+    anywhere.
   rational:
   story: https://www.pivotaltracker.com/story/show/174374664
 controllers/images_controller.rb#create:
@@ -183,9 +182,11 @@ controllers/portal/clazzes_controller.rb#add_new_student_popup:
 controllers/portal/clazzes_controller.rb#add_offering:
   manual_callers:
   - name: views/portal/offerings/_list_for_clazz.html.haml
-    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'},..."
+    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected',
+      :accept => 'runnable', :url=> {:action=>'add_offering'},..."
   - name: views/portal/clazzes/edit_offerings.html.haml
-    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected', :accept => 'runnable', :url=> {:action=>'add_offering'},..."
+    line: "= drop_receiving_element 'clazz_offerings', :hoverclass=> 'drop_target_selected',
+      :accept => 'runnable', :url=> {:action=>'add_offering'},..."
   solution: remove
   rational: clean up old class views and controllers
   story: https://www.pivotaltracker.com/story/show/174366664
@@ -206,6 +207,10 @@ controllers/portal/clazzes_controller.rb#edit:
   solution: convert to react class setup
   rational:
   story: https://www.pivotaltracker.com/story/show/174318198
+controllers/portal/clazzes_controller.rb#manage_classes:
+  solution: reactify
+  rational:
+  story: https://www.pivotaltracker.com/story/show/174325159
 controllers/portal/clazzes_controller.rb#remove_offering:
   solution: remove
   rational: this isn't used anymore, it isn't possible to remove an offering
@@ -269,21 +274,24 @@ controllers/search_controller.rb#add_material_to_collections:
 controllers/search_controller.rb#get_current_material_anonymous:
   manual_callers:
   - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
-    line: "var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';"
+    line: 'var searchPath = assignPopupConfig.anonymous ? ''get_current_material_anonymous''
+      : ''get_current_material_unassigned_clazzes'';'
   solution: remove
   rational: replaced by api controller
   story: https://www.pivotaltracker.com/story/show/174370119
 controllers/search_controller.rb#get_current_material_unassigned_clazzes:
   manual_callers:
   - name: assets/javascripts/search_materials.js#get_Assign_To_Class_Popup
-    line: "var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';"
+    line: 'var searchPath = assignPopupConfig.anonymous ? ''get_current_material_anonymous''
+      : ''get_current_material_unassigned_clazzes'';'
   solution: remove
   rational: replaced by api controller
   story: https://www.pivotaltracker.com/story/show/174370119
 controllers/search_controller.rb#get_current_material_unassigned_collections:
   manual_callers:
   - name: assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup
-    line: 'var target_url = "/search/get_current_material_unassigned_collections?skip_reload=" + (skip_reload || false);'
+    line: var target_url = "/search/get_current_material_unassigned_collections?skip_reload="
+      + (skip_reload || false);
   solution: remove prototype-rails from add to collections flow
   rational:
   story: https://www.pivotaltracker.com/story/show/174370395
@@ -341,7 +349,8 @@ helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
   rational:
   story: https://www.pivotaltracker.com/story/show/174374264
 helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
-  solution: re-write Student Roster page using react, or convert to do a full page refresh
+  solution: re-write Student Roster page using react, or convert to do a full page
+    refresh
   rational: teacher facing
   story: https://www.pivotaltracker.com/story/show/174324301
 helpers/portal/teachers_helper.rb#teacher_add_dropdown:
@@ -520,11 +529,6 @@ views/embeddable/image_questions/show.html.haml:
   solution: remove
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
-views/embeddable/multiple_choices/add_choice.js.rjs:
-  manual: true
-  solution: remove
-  rational: not used
-  story: https://www.pivotaltracker.com/story/show/174347881
 views/embeddable/multiple_choices/_edit_choice.html.haml:
   solution: remove
   rational: not used
@@ -538,6 +542,11 @@ views/embeddable/multiple_choices/_remote_form.html.haml:
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
 views/embeddable/multiple_choices/_show.html.haml:
+  solution: remove
+  rational: not used
+  story: https://www.pivotaltracker.com/story/show/174347881
+views/embeddable/multiple_choices/add_choice.js.rjs:
+  manual: true
   solution: remove
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
@@ -699,10 +708,13 @@ views/portal/clazzes/_remote_form_student_roster.html.haml:
 views/portal/clazzes/class_list.html.haml:
   manual_callers:
   - name: views/portal/students/_list_for_clazz.html.haml
-    line: "... class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'"
-  notes: this is a printable roster page with remove student, and change password links
+    line: "... class_list_portal_clazz_url(portal_clazz), :onClick => 'autoPrintNextTime();
+      window.open(this.href); return false;'"
+  notes: this is a printable roster page with remove student, and change password
+    links
   solution: remove
-  rational: not reachable from current links, the current roster page already has its own print button
+  rational: not reachable from current links, the current roster page already has
+    its own print button
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/clazzes/destroy.js.rjs:
   solution: remove - clean up old class views
@@ -809,7 +821,7 @@ views/portal/school_selector/update.rjs:
   manual: true
   manual_callers:
   - name: views/shared/_school_selector.html.haml
-    line: 'var url = "#{school_selector_update_path}";'
+    line: var url = "#{school_selector_update_path}";
   solution: remove
   rational:
   story: https://www.pivotaltracker.com/story/show/174388646
@@ -849,7 +861,7 @@ views/portal/students/_confirmation.html.haml:
   manual: true
   manual_callers:
   - name: controllers/portal/students_controller.rb#confirm
-    line: 'page.insert_html :before, "word_form", :partial => "confirmation",'
+    line: page.insert_html :before, "word_form", :partial => "confirmation",
   solution: simplify or move to react-components
   story: https://www.pivotaltracker.com/story/show/174371038
 views/portal/students/_current_student_list_for_clazz.html.haml:
@@ -891,7 +903,7 @@ views/portal/students/show.html.haml:
 views/portal/teachers/_list_for_clazz.html.haml:
   solution: remove
   rational: dead
-  story: https://www.pivotaltracker.com/story/show/174366664
+  story: https://www.pivotaltracker.com/story/show/174318198
 views/portal/teachers/_list_for_clazz_setup.html.haml:
   solution: reactify class setup
   rational:
@@ -937,13 +949,14 @@ views/shared/_embeddable_container.html.haml:
   rational:
   story: https://www.pivotaltracker.com/story/show/174347881
 views/shared/_external_activity_header.html.haml:
-  solution: remove, only used by external_activity#update action
-    and that action doesn't succeed anyhow
+  solution: remove, only used by external_activity#update action and that action doesn't
+    succeed anyhow
   rational:
   story: https://www.pivotaltracker.com/story/show/174374664
 views/shared/_general_accordion_nav.html.haml:
   solution: remove
-  rational: not needed anymore, this is used to edit investigations, activities, and schools
+  rational: not needed anymore, this is used to edit investigations, activities, and
+    schools
   story: https://www.pivotaltracker.com/story/show/174366238
 views/shared/_notes_menu.html.haml:
   solution: remove only used by dead code
