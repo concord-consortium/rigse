@@ -84,7 +84,7 @@ class Admin::SettingsController < ApplicationController
       flash[:notice] = 'Admin::Settings was successfully created.'
       redirect_to @admin_settings
     else
-      redirect_to new_admin_setting_url
+      render action: 'new'
     end
   end
 
