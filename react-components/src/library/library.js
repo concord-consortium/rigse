@@ -32,6 +32,7 @@ import SearchResults from './components/search/results'
 import SMaterialsList from './components/search/materials-list'
 import MaterialsBin from './components/materials-bin/materials-bin'
 import openAssignToClassModal from './components/assign-to-class/assign-to-class'
+import PortalClassSetupForm from './components/portal-classes/setup-form'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -231,6 +232,10 @@ window.PortalComponents = {
     const matches = queryString.match(/assign_to_class=(\d+)/)
     const assignToSpecificClass = matches ? matches[1] : null
     ReactDOM.render(React.createElement(MaterialsBin, { materials: definition, assignToSpecificClass }), jQuery(selectorOrElement)[0])
-  }
+  },
 
+  PortalClassSetupForm: PortalClassSetupForm,
+  renderPortalClassSetupForm: function (options, id) {
+    render(React.createElement(PortalClassSetupForm, options), id)
+  }
 }

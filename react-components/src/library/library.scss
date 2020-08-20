@@ -993,4 +993,12 @@ label.inline { display: inline-block !important; }
   top: 45px !important;
 }
 
+#teacher_add_dropdown {
+  display: flex;
+}
+#teacher_id_selector {
+  flex-grow: 2;
+  margin-right: 5px;
+}
+
 @import './styles/_media_queries.scss';

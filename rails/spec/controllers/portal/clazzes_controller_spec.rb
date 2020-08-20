@@ -134,198 +134,7 @@ describe Portal::ClazzesController do
 
 
     end
-
-    [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-      if user == :unauthorized_teacher_user
-        does_this = "does not populate the list of available teachers for ADD functionality if current user is unauthorized"
-      else
-        does_this = "populates the list of available teachers for ADD functionality if current user is a #{user}"
-      end
-      it does_this do
-        sign_in_symbol user
-
-        xml_http_html_request :post, :edit, :id => @mock_clazz.id
-
-        if user == :unauthorized_teacher_user
-          assert_select("select#teacher_id_selector", false,
-            "Unauthorized users should not see the 'add teacher' link")
-        else
-          assert_select("select#teacher_id_selector")
-        end
-      end
-    end
   end
-
-  describe "POST add_teacher" do
-    [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-      it "will add the selected teacher to the given class if the current user is authorized" do
-        # @id
-        # @teacher_id
-        sign_in_symbol user
-
-        post :add_teacher, { :id => @mock_clazz.id, :teacher_id => @unauthorized_teacher.id }
-
-        @mock_clazz.reload
-
-        if user == :unauthorized_teacher_user
-          # Unauthorized users cannot add teachers, and will receive an error message
-          assert !@mock_clazz.teachers.include?(@unauthorized_teacher)
-          assert @response.body.include?(Portal::Clazz::ERROR_UNAUTHORIZED)
-        else
-          # Authorized users can add teachers
-          assert @mock_clazz.teachers.include?(@unauthorized_teacher)
-        end
-      end
-    end
-  end
-
-  describe "DELETE remove_teacher" do
-    [:admin_user, :authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-      it "will remove the selected teacher from the given class if the current user is authorized" do
-        # @id
-        # @teacher_id
-        sign_in_symbol user
-
-        teachers = [@authorized_teacher, @random_teacher] # Any teachers except for @unauthorized_teacher will work here
-        @mock_clazz.teachers = teachers
-
-        delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => teachers.first.id }
-
-        @mock_clazz.reload
-
-        if user == :unauthorized_teacher_user
-          # Unauthorized users cannot remove teachers, and will receive an error message
-          assert @mock_clazz.teachers.include?(teachers.first)
-          assert @response.body.include?(Portal::Clazz::ERROR_UNAUTHORIZED)
-        else
-          # Authorized users can remove teachers
-          assert !@mock_clazz.teachers.include?(teachers.first)
-        end
-      end
-    end
-
-    it "will not let me remove the last teacher from the given class" do
-      login_admin
-      #remove one teacher
-      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @another_authorized_teacher.id }
-
-      #remove last teacher
-      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
-
-      @mock_clazz.reload
-
-      assert @mock_clazz.teachers.include?(@authorized_teacher)
-      assert @response.body.include?(Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
-    end
-
-    it "will disable the remaining delete button if there is only one remaining teacher after this operation" do
-      login_admin
-      teachers = [@authorized_teacher, @random_teacher]
-      @mock_clazz.teachers = teachers
-
-      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
-
-      assert_select("li#portal__teacher_#{@random_teacher.id}") do
-        assert_select("img[src*='delete_grey.png'][title=?]", Portal::Clazz::ERROR_REMOVE_TEACHER_LAST_TEACHER)
-      end
-    end
-
-    # REMOVED -- we now redraw the entire teacher listing each time a teacher is removed, in case the delete permissions change between operations.
-    # it "will remove a teacher listing with JavaScript if there is more than one remaining teacher after this operation" do
-    #   teachers = [@authorized_teacher, @unauthorized_teacher, @random_teacher]
-    #   @mock_clazz.teachers = teachers
-    #
-    #   delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
-    #
-    #   without_tag("tr") # All teacher listings are in table rows; we shouldn't be actually rendering any HTML content here.
-    # end
-
-    it "will re-render the teacher listing when a teacher is removed" do
-      login_admin
-      teachers = [@authorized_teacher, @unauthorized_teacher, @random_teacher]
-      @mock_clazz.teachers = teachers
-
-      delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
-
-      assert_select("li#portal__teacher_#{@unauthorized_teacher.id}")
-      assert_select("li#portal__teacher_#{@random_teacher.id}")
-      assert_select("li#portal__teacher_#{@authorized_teacher.id}", false)
-    end
-
-    [:authorized_teacher_user, :unauthorized_teacher_user].each do |user|
-      it "will redirect the user to their home page if they remove themselves from a class" do
-        sign_in_symbol user
-
-        teachers = [@authorized_teacher, @unauthorized_teacher]
-        @mock_clazz.teachers = teachers
-
-        delete :remove_teacher, { :id => @mock_clazz.id, :teacher_id => @authorized_teacher.id }
-
-        if user == :authorized_teacher_user
-          expect(@response.body).to include(home_url)
-        else
-          expect(@response.body).not_to include(home_url)
-        end
-      end
-    end
-  end
-
-  describe "GET new" do
-    it "should show a list of the current teacher's schools to which to assign this class" do
-      sign_in @authorized_teacher_user
-
-      get :new
-
-      assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
-        @authorized_teacher_user.portal_teacher.schools.each do |school|
-          assert_select("option[value='#{school.id}']", :text => school.name)
-        end
-      end
-    end
-
-    it "should show a check box for each possible site grade level" do
-      sign_in @authorized_teacher_user
-
-      get :new
-
-      APP_CONFIG[:active_grades].each do |name|
-        assert_select("input[type='checkbox'][name=?]", "portal_clazz[grade_levels][#{name}]")
-      end
-    end
-
-    [:admin_user, :authorized_teacher_user].each do |user|
-      it "should populate the schools list with the settings default school if the current user does not belong to any schools" do
-        sign_in_symbol user
-
-        get :new
-
-        assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]") do
-          assert_select("option", :count => 1)
-          assert_select("option", :text => APP_CONFIG[:site_school])
-        end
-      end
-    end
-
-    # REMOVED -- teachers must create the class before being able to add teachers.
-    # it "populates the list of available teachers for ADD functionality" do
-    #   login_as :authorized_teacher_user
-    #
-    #   1.upto 10 do |i|
-    #     teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:user, :login => "teacher#{i}"))
-    #     @logged_in_user.portal_teacher.school.portal_teachers << teacher
-    #   end
-    #
-    #   get :new
-    #
-    #   assert_select("select#teacher_id_selector[name=teacher_id]") do |elem|
-    #     without_tag("option[value=?]", @logged_in_user.portal_teacher.id) # cannot add teachers who are already assigned to this class
-    #
-    #     @logged_in_user.portal_teacher.school.portal_teachers.reject { |t| t.id == @logged_in_user.portal_teacher.id }.each do |t|
-    #       assert_select("option[value=?]", t.id)
-    #     end
-    #   end
-    # end
-  end # end describe "GET new"
 
   describe "POST create" do
     before(:each) do
@@ -480,6 +289,9 @@ describe Portal::ClazzesController do
         grade.save!
       end
 
+      @teacher2 = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "teacher_2"), :schools => [@mock_school])
+      @teacher3 = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "teacher_3"), :schools => [@mock_school])
+
       @post_params = {
         :id => @mock_clazz.id,
         :portal_clazz => {
@@ -491,7 +303,12 @@ describe Portal::ClazzesController do
             :"6" => "1",
             :"7" => "1",
             :"9" => "1"
-          }
+          },
+          :current_teachers => [
+            @authorized_teacher.id,
+            @teacher2.id,
+            @teacher3.id,
+          ].join(",")
         }
       }
     end
@@ -515,6 +332,17 @@ describe Portal::ClazzesController do
       put :update, @post_params
 
       expect(Portal::Clazz.find(@mock_clazz.id).name).to eq('New Test Class')
+    end
+
+    it "should let me change the teachers" do
+      expect(Portal::Clazz.find(@mock_clazz.id).teachers).to eq([
+        @authorized_teacher, @another_authorized_teacher
+      ])
+      sign_in @authorized_teacher_user
+      put :update, @post_params
+      expect(Portal::Clazz.find(@mock_clazz.id).teachers).to eq([
+        @authorized_teacher, @teacher2, @teacher3
+      ])
     end
   end
 
@@ -557,9 +385,6 @@ describe Portal::ClazzesController do
         }
 
     end
-
-
-
 
     it "should not save the edited class info if the class name is blank" do
       login_admin
