@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 213
+Blocks not fixed      : 179
 
 ## Story 174370119
 
@@ -28,32 +28,32 @@ https://www.pivotaltracker.com/story/show/174370395
 ## Story 174373021
 
 https://www.pivotaltracker.com/story/show/174373021
-|   | Fixed | Block                                          | Calls                  | Num Callers |
-| - | ----- | ---------------------------------------------- | ---------------------- | ----------- |
-| 1 |       | controllers/admin/clients_controller.rb#edit   | _remote_form.html.haml |             |
-| 2 |       | controllers/admin/clients_controller.rb#update | _remote_form.html.haml |             |
-| 3 |       | views/admin/clients/_remote_form.html.haml     | remote_form_for        | 2           |
-| 4 | Y     | views/admin/clients/index.html.haml            |                        |             |
+|   | Fixed | Block                                          | Calls | Num Callers |
+| - | ----- | ---------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/clients_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/clients_controller.rb#update |       |             |
+| 3 | Y     | views/admin/clients/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/clients/index.html.haml            |       |             |
 
 ## Story 174373050
 
 https://www.pivotaltracker.com/story/show/174373050
-|   | Fixed | Block                                                   | Calls                  | Num Callers |
-| - | ----- | ------------------------------------------------------- | ---------------------- | ----------- |
-| 1 |       | controllers/admin/commons_licenses_controller.rb#edit   | _remote_form.html.haml |             |
-| 2 |       | controllers/admin/commons_licenses_controller.rb#update | _remote_form.html.haml |             |
-| 3 |       | views/admin/commons_licenses/_remote_form.html.haml     | remote_form_for        | 2           |
-| 4 | Y     | views/admin/commons_licenses/index.html.haml            |                        |             |
+|   | Fixed | Block                                                   | Calls | Num Callers |
+| - | ----- | ------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/commons_licenses_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/commons_licenses_controller.rb#update |       |             |
+| 3 | Y     | views/admin/commons_licenses/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/commons_licenses/index.html.haml            |       |             |
 
 ## Story 174373092
 
 https://www.pivotaltracker.com/story/show/174373092
-|   | Fixed | Block                                                   | Calls                  | Num Callers |
-| - | ----- | ------------------------------------------------------- | ---------------------- | ----------- |
-| 1 |       | controllers/admin/external_reports_controller.rb#edit   | _remote_form.html.haml |             |
-| 2 |       | controllers/admin/external_reports_controller.rb#update | _remote_form.html.haml |             |
-| 3 |       | views/admin/external_reports/_remote_form.html.haml     | remote_form_for        | 2           |
-| 4 | Y     | views/admin/external_reports/index.html.haml            |                        |             |
+|   | Fixed | Block                                                   | Calls | Num Callers |
+| - | ----- | ------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/external_reports_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/external_reports_controller.rb#update |       |             |
+| 3 | Y     | views/admin/external_reports/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/external_reports/index.html.haml            |       |             |
 
 ## Story 174373123
 
@@ -83,14 +83,14 @@ https://www.pivotaltracker.com/story/show/174373193
 ## Story 174373215
 
 https://www.pivotaltracker.com/story/show/174373215
-|   | Fixed | Block                                       | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | controllers/admin/tags_controller.rb#edit   | _remote_form.html.haml                                                                   |             |
-| 2 |       | controllers/admin/tags_controller.rb#update | _show.html.haml                                                                          |             |
-| 3 |       | views/admin/tags/_remote_form.html.haml     | remote_form_for                                                                          | 1           |
-| 4 |       | views/admin/tags/_show.html.haml            | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 3           |
-| 5 |       | views/admin/tags/index.html.haml            | _show.html.haml                                                                          |             |
-| 6 |       | views/admin/tags/show.html.haml             | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                       | Calls | Num Callers |
+| - | ----- | ------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/tags_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/tags_controller.rb#update |       |             |
+| 3 | Y     | views/admin/tags/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/tags/_show.html.haml            |       |             |
+| 5 | Y     | views/admin/tags/index.html.haml            |       |             |
+| 6 | Y     | views/admin/tags/show.html.haml             |       |             |
 
 ## Story 174367430
 
@@ -257,20 +257,20 @@ https://www.pivotaltracker.com/story/show/174366664
 ## Story 174318198
 
 https://www.pivotaltracker.com/story/show/174318198
-|    | Fixed | Block                                                   | Calls                                                                                                                                                                                                                | Num Callers |
-| -- | ----- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1  |       | controllers/portal/clazzes_controller.rb#add_teacher    | visual_effect, render :update, render :update, render(:update, render(:update, render(:update, teachers_helper.rb#teacher_add_dropdown, _list_for_clazz_setup.html.haml, _table_for_clazz.html.haml                  |             |
-| 2  |       | controllers/portal/clazzes_controller.rb#edit           | _remote_form.html.haml                                                                                                                                                                                               |             |
-| 3  |       | controllers/portal/clazzes_controller.rb#remove_teacher | render :update, render(:update, render(:update, render(:update, render(:update, render(:update, render(:update, teachers_helper.rb#teacher_add_dropdown, _list_for_clazz_setup.html.haml, _table_for_clazz.html.haml |             |
-| 4  |       | helpers/portal/teachers_helper.rb#teacher_add_dropdown  | button_to_remote                                                                                                                                                                                                     | 3           |
-| 5  |       | views/portal/clazzes/_form.html.haml                    | _table_for_clazz_setup.html.haml                                                                                                                                                                                     | 3           |
-| 6  |       | views/portal/clazzes/_remote_form.html.haml             | remote_form_for, _form.html.haml                                                                                                                                                                                     | 1           |
-| 7  |       | views/portal/clazzes/edit.html.haml                     | _form.html.haml                                                                                                                                                                                                      |             |
-| 8  |       | views/portal/clazzes/new.html.haml                      | _form.html.haml                                                                                                                                                                                                      |             |
-| 9  |       | views/portal/teachers/_list_for_clazz.html.haml         | link_to_remote, _table_for_clazz.html.haml                                                                                                                                                                           |             |
-| 10 |       | views/portal/teachers/_list_for_clazz_setup.html.haml   | application_helper.rb#remote_link_button                                                                                                                                                                             | 3           |
-| 11 |       | views/portal/teachers/_table_for_clazz.html.haml        | application_helper.rb#remote_link_button                                                                                                                                                                             | 3           |
-| 12 |       | views/portal/teachers/_table_for_clazz_setup.html.haml  | teachers_helper.rb#teacher_add_dropdown, _list_for_clazz_setup.html.haml                                                                                                                                             | 1           |
+|    | Fixed | Block                                                   | Calls | Num Callers |
+| -- | ----- | ------------------------------------------------------- | ----- | ----------- |
+| 1  | Y     | controllers/portal/clazzes_controller.rb#add_teacher    |       |             |
+| 2  | Y     | controllers/portal/clazzes_controller.rb#edit           |       |             |
+| 3  | Y     | controllers/portal/clazzes_controller.rb#remove_teacher |       |             |
+| 4  | Y     | helpers/portal/teachers_helper.rb#teacher_add_dropdown  |       |             |
+| 5  | Y     | views/portal/clazzes/_form.html.haml                    |       |             |
+| 6  | Y     | views/portal/clazzes/_remote_form.html.haml             |       |             |
+| 7  | Y     | views/portal/clazzes/edit.html.haml                     |       |             |
+| 8  | Y     | views/portal/clazzes/new.html.haml                      |       |             |
+| 9  | Y     | views/portal/teachers/_list_for_clazz.html.haml         |       |             |
+| 10 | Y     | views/portal/teachers/_list_for_clazz_setup.html.haml   |       |             |
+| 11 | Y     | views/portal/teachers/_table_for_clazz.html.haml        |       |             |
+| 12 | Y     | views/portal/teachers/_table_for_clazz_setup.html.haml  |       |             |
 
 ## Story 174325159
 
@@ -282,15 +282,15 @@ https://www.pivotaltracker.com/story/show/174325159
 ## Story 174373420
 
 https://www.pivotaltracker.com/story/show/174373420
-|   | Fixed | Block                                             | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | controllers/portal/districts_controller.rb#edit   | _remote_form.html.haml                                                                   |             |
-| 2 |       | controllers/portal/districts_controller.rb#update | _show.html.haml                                                                          |             |
-| 3 |       | views/portal/districts/_remote_form.html.haml     | remote_form_for                                                                          | 1           |
-| 4 |       | views/portal/districts/_show.html.haml            | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 3           |
-| 5 |       | views/portal/districts/destroy.js.rjs             | js_helper.rb#safe_js                                                                     |             |
-| 6 |       | views/portal/districts/index.html.haml            | _show.html.haml                                                                          |             |
-| 7 |       | views/portal/districts/show.html.haml             | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                             | Calls | Num Callers |
+| - | ----- | ------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/portal/districts_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/portal/districts_controller.rb#update |       |             |
+| 3 | Y     | views/portal/districts/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/portal/districts/_show.html.haml            |       |             |
+| 5 | Y     | views/portal/districts/destroy.js.rjs             |       |             |
+| 6 | Y     | views/portal/districts/index.html.haml            |       |             |
+| 7 | Y     | views/portal/districts/show.html.haml             |       |             |
 
 ## Story 174361480
 
@@ -353,11 +353,11 @@ https://www.pivotaltracker.com/story/show/174365484
 |   | Fixed | Block                                                       | Calls                                                                          | Num Callers |
 | - | ----- | ----------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
 | 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 8           |
-| 2 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 11          |
-| 3 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 13          |
+| 2 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 9           |
+| 3 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 11          |
 | 4 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               | 3           |
-| 5 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 12          |
-| 6 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               | 9           |
+| 5 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 10          |
+| 6 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               | 8           |
 | 7 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       | 5           |
 | 8 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
 

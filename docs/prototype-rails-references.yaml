@@ -7,9 +7,6 @@ BASE/button_to_remote:
   - name: helpers/portal/student_clazzes_helper.rb#student_add_dropdown
     line: <td>#{button_to_remote("Add", :url => {:controller => 'portal/clazzes',
       :action=>'add_student', :id => clazz}, :with => "'student_id='+$('student_id_selector').value")}</td>
-  - name: helpers/portal/teachers_helper.rb#teacher_add_dropdown
-    line: '#{button_to_remote("Add", :url => {:controller => ''portal/clazzes'', :action=>''add_teacher'',
-      :id => clazz}, :with => "''teacher_id=''+$(''teacher_id_selector'').value")}'
 BASE/draggable_element:
   callers:
   - name: views/external_activities/_runnable_list.html.haml
@@ -80,9 +77,6 @@ BASE/link_to_remote:
     line: "= link_to_remote(fa_icon('trash-o', class: 'control'), { |"
   - name: views/portal/students/_table_for_clazz.html.haml
     line: = link_to_remote I18n.t("RosterRemoveStudent"),
-  - name: views/portal/teachers/_list_for_clazz.html.haml
-    line: = link_to_remote "Add ", :url => {:action=>'add_teacher', :id => portal_clazz},
-      :with => "'teacher_id='+$('teacher_id_selector').value"
   - name: views/search/_material_unassigned_clazzes.html.haml
     line: = link_to_remote "Save", :condition => 'validateSaveAssignToClass()', :before
       => 'setSaveAssignToClassInProgress(true)', :complete => "setSaveAssignToClassInProgress(false);",
@@ -135,23 +129,12 @@ BASE/page <<:
     line: page << "}"
 BASE/remote_form_for:
   callers:
-  - name: views/admin/clients/_remote_form.html.haml
-    line: "= remote_form_for(client, update: { success: dom_id_for(client), failure:
-      dom_id_for(client, :edit)},"
-  - name: views/admin/commons_licenses/_remote_form.html.haml
-    line: "= remote_form_for(license, update: { success: dom_id_for(license), failure:
-      dom_id_for(license, :edit)},"
-  - name: views/admin/external_reports/_remote_form.html.haml
-    line: "= remote_form_for(client, update: { success: dom_id_for(report), failure:
-      dom_id_for(report, :edit)},"
   - name: views/admin/projects/_remote_form.html.haml
     line: "= remote_form_for(project, update: {success: dom_id_for(project), failure:
       dom_id_for(project, :edit)},"
   - name: views/admin/settings/_remote_form.html.haml
     line: = remote_form_for(admin_settings, :before => "if(validate_settings_form_help_page_settings(this)){tinyMCE.triggerSave(true,true)}else
       return false", :update => dom_id_for(admin_settings)) do |f|
-  - name: views/admin/tags/_remote_form.html.haml
-    line: "= remote_form_for(admin_tag, :update => dom_id_for(admin_tag)) do |f|"
   - name: views/author_notes/_remote_form.html.haml
     line: = remote_form_for(author_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)",
       :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
@@ -189,14 +172,8 @@ BASE/remote_form_for:
     line: = remote_form_for(materials_collection, :update => dom_id_for(materials_collection,
       :wrapper), :html => { :onsubmit => 'tinyMCE.triggerSave()' }, :complete => "jQuery('##{dom_id_for(materials_collection,
       :accordion_toggle)}.accordion_toggle_closed').click();") do |f|
-  - name: views/portal/clazzes/_remote_form.html.haml
-    line: "= remote_form_for(portal_clazz, :update => dom_id_for(portal_clazz, :item))
-      do |f|"
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
     line: "= remote_form_for(portal_clazz, :update => dom_id_for(portal_clazz, :item))
-      do |f|"
-  - name: views/portal/districts/_remote_form.html.haml
-    line: "= remote_form_for(portal_district, :update => dom_id_for(portal_district))
       do |f|"
   - name: views/portal/grade_levels/_remote_form.html.haml
     line: "= remote_form_for(portal_grade_level, :update => dom_id_for(portal_grade_level))
@@ -255,12 +232,6 @@ BASE/render :update:
     line: render :update do |page|
   - name: controllers/portal/clazzes_controller.rb#add_student
     line: render :update do |page|
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: render :update do |page|
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: render :update do |page|
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: render :update do|page|
   - name: controllers/portal/students_controller.rb#create
     line: render :update do |page|
   - name: controllers/portal/students_controller.rb#confirm
@@ -281,32 +252,6 @@ BASE/render :update:
     line: render :update do |page|
 BASE/render(:update:
   callers:
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: (render(:update) { |page| page << "$('flash').update('Class not found')"
-      } and return) unless @portal_clazz
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: (render(:update) { |page| page << "$('flash').update('#{Portal::Clazz::ERROR_UNAUTHORIZED}')"
-      } and return) unless current_visitor && @portal_clazz.changeable?(current_visitor)
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: (render(:update) { |page| page << "$('flash').update('Teacher not found')"
-      } and return) unless @teacher
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: (render(:update) { |page| page << "$('flash').update('Class not found')"
-      } and return) unless @portal_clazz
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: (render(:update) { |page| page << "$('flash').update('Teacher not found')"
-      } and return) unless @teacher
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: render(:update) { |page| page << "$('flash').update('#{reason}')" }
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: render(:update) { |page| page.redirect_to home_url }
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: "#render(:update) { |page| page.replace_html 'teachers_listing', :partial
-      => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-      }"
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: render(:update) { |page| page << "$('flash').update('There was an error
-      while processing your request.')" }
   - name: controllers/portal/clazzes_controller.rb#manage_classes
     line: render(:update) { |page|
 BASE/sortable_element:
@@ -357,8 +302,6 @@ BASE/visual_effect:
     line: page.visual_effect :toggle_blind, 'note'
   - name: controllers/author_notes_controller.rb#edit
     line: page.visual_effect :highlite, 'note'
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: "#page.visual_effect :highlight, 'teachers_listing'"
   - name: controllers/portal/students_controller.rb#confirm
     line: page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
   - name: controllers/portal/students_controller.rb#confirm
@@ -369,24 +312,6 @@ BASE/visual_effect:
     line: page.visual_effect :toggle_blind, 'note'
   - name: controllers/teacher_notes_controller.rb#show_teacher_note
     line: page.visual_effect :toggle_blind, 'note'
-controllers/admin/clients_controller.rb#edit:
-  calls:
-  - views/admin/clients/_remote_form.html.haml
-controllers/admin/clients_controller.rb#update:
-  calls:
-  - views/admin/clients/_remote_form.html.haml
-controllers/admin/commons_licenses_controller.rb#edit:
-  calls:
-  - views/admin/commons_licenses/_remote_form.html.haml
-controllers/admin/commons_licenses_controller.rb#update:
-  calls:
-  - views/admin/commons_licenses/_remote_form.html.haml
-controllers/admin/external_reports_controller.rb#edit:
-  calls:
-  - views/admin/external_reports/_remote_form.html.haml
-controllers/admin/external_reports_controller.rb#update:
-  calls:
-  - views/admin/external_reports/_remote_form.html.haml
 controllers/admin/projects_controller.rb#edit:
   calls:
   - views/admin/projects/_remote_form.html.haml
@@ -400,12 +325,6 @@ controllers/admin/settings_controller.rb#edit:
 controllers/admin/settings_controller.rb#update:
   calls:
   - views/admin/settings/_show.html.haml
-controllers/admin/tags_controller.rb#edit:
-  calls:
-  - views/admin/tags/_remote_form.html.haml
-controllers/admin/tags_controller.rb#update:
-  calls:
-  - views/admin/tags/_show.html.haml
 controllers/api/v1/site_notices_controller.rb#dismiss_notice:
   calls:
   - BASE/render :update
@@ -506,20 +425,6 @@ controllers/portal/clazzes_controller.rb#add_student:
   - views/portal/students/_table_for_clazz.html.haml
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
   - views/portal/students/_current_student_list_for_clazz.html.haml
-controllers/portal/clazzes_controller.rb#add_teacher:
-  calls:
-  - BASE/visual_effect
-  - BASE/render :update
-  - BASE/render :update
-  - BASE/render(:update
-  - BASE/render(:update
-  - BASE/render(:update
-  - helpers/portal/teachers_helper.rb#teacher_add_dropdown
-  - views/portal/teachers/_list_for_clazz_setup.html.haml
-  - views/portal/teachers/_table_for_clazz.html.haml
-controllers/portal/clazzes_controller.rb#edit:
-  calls:
-  - views/portal/clazzes/_remote_form.html.haml
 controllers/portal/clazzes_controller.rb#manage_classes:
   calls:
   - BASE/render(:update
@@ -528,27 +433,9 @@ controllers/portal/clazzes_controller.rb#remove_offering:
   - BASE/render :update
   - BASE/render :update
   - views/shared/_runnable.html.haml
-controllers/portal/clazzes_controller.rb#remove_teacher:
-  calls:
-  - BASE/render :update
-  - BASE/render(:update
-  - BASE/render(:update
-  - BASE/render(:update
-  - BASE/render(:update
-  - BASE/render(:update
-  - BASE/render(:update
-  - helpers/portal/teachers_helper.rb#teacher_add_dropdown
-  - views/portal/teachers/_list_for_clazz_setup.html.haml
-  - views/portal/teachers/_table_for_clazz.html.haml
 controllers/portal/clazzes_controller.rb#roster:
   calls:
   - views/portal/clazzes/_remote_form_student_roster.html.haml
-controllers/portal/districts_controller.rb#edit:
-  calls:
-  - views/portal/districts/_remote_form.html.haml
-controllers/portal/districts_controller.rb#update:
-  calls:
-  - views/portal/districts/_show.html.haml
 controllers/portal/students_controller.rb#confirm:
   calls:
   - BASE/visual_effect
@@ -630,14 +517,6 @@ helpers/application_helper.rb#remote_link_button:
       portal_student_clazz), :confirm => "This action will remove the student: ''#{portal_student.name}''
       from the class: #{portal_clazz.name}. \nAre you sure you want to do this?",
       :method => :delete, :title => "remove #{portal_student.name} from #{portal_clazz.name}"'
-  - name: views/portal/teachers/_list_for_clazz_setup.html.haml
-    line: '= remote_link_button "delete.png", :url => {:action=>''remove_teacher'',
-      :id => portal_clazz, :teacher_id => portal_teacher.id}, :confirm => confirm,
-      :method => :delete, :title => "Remove #{portal_teacher.name} from #{portal_clazz.name}"'
-  - name: views/portal/teachers/_table_for_clazz.html.haml
-    line: '= remote_link_button "delete.png", :url => {:action=>''remove_teacher'',
-      :id => portal_clazz, :teacher_id => portal_teacher.id}, :confirm => confirm,
-      :method => :delete, :title => "remove #{portal_teacher.name} from #{portal_clazz.name}"'
   - name: views/shared/_notes_menu.html.haml
     line: = remote_link_button "teacher_note.png", :url=> url_for(:controller=>'teacher_notes',
       :action=>'show_teacher_note', :id=>authorable.teacher_note.id),  :title => "show
@@ -672,8 +551,6 @@ helpers/application_helper.rb#show_menu_for:
     line: "= show_menu_for(admin_settings, options)"
   - name: views/admin/settings/_show_for_managers.html.haml
     line: "= show_menu_for(admin_settings, options)"
-  - name: views/admin/tags/_show.html.haml
-    line: "= show_menu_for(admin_tag, options)"
   - name: views/dataservice/blobs/_show.html.haml
     line: "= show_menu_for(dataservice_blob, options)"
   - name: views/dataservice/bundle_loggers/_show.html.haml
@@ -685,9 +562,6 @@ helpers/application_helper.rb#show_menu_for:
   - name: views/materials_collections/_show.html.haml
     line: "= accordion_for(materials_collection, show_menu_for(materials_collection,
       options), 'accordion') do"
-  - name: views/portal/districts/_show.html.haml
-    line: "= accordion_for(portal_district, show_menu_for(portal_district, options))
-      do"
   - name: views/portal/grade_levels/_show.html.haml
     line: "= show_menu_for(portal_grade_level, options)"
   - name: views/portal/grades/_show.html.haml
@@ -725,9 +599,6 @@ helpers/application_helper.rb#wrap_edit_link_around_content:
   - name: views/admin/settings/_show_for_managers.html.haml
     line: "= wrap_edit_link_around_content(admin_settings, {:complete => mce_init_string})
       do"
-  - name: views/admin/tags/_show.html.haml
-    line: "= wrap_edit_link_around_content(admin_tag, options={:complete => mce_init_string})
-      do"
   - name: views/dataservice/blobs/_show.html.haml
     line: "= wrap_edit_link_around_content(dataservice_blob, options={:complete =>
       mce_init_string}) do"
@@ -743,9 +614,6 @@ helpers/application_helper.rb#wrap_edit_link_around_content:
   - name: views/materials_collections/_show.html.haml
     line: "= wrap_edit_link_around_content(materials_collection, {:complete => mce_init_string})
       do"
-  - name: views/portal/districts/_show.html.haml
-    line: "= wrap_edit_link_around_content(portal_district, options={:complete =>
-      mce_init_string}) do"
   - name: views/portal/grade_levels/_show.html.haml
     line: "= wrap_edit_link_around_content(portal_grade_level, options={:complete
       => mce_init_string}) do"
@@ -776,8 +644,6 @@ helpers/js_helper.rb#safe_js:
     line: safe_js(page,container_dom_id) do
   - name: views/portal/clazzes/destroy.js.rjs
     line: safe_js(page,item_dom_id) do
-  - name: views/portal/districts/destroy.js.rjs
-    line: safe_js(page,dom_id) do
   - name: views/portal/student_clazzes/destroy.js.rjs
     line: safe_js(page,@dom_id) do
   calls:
@@ -807,16 +673,6 @@ helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
     line: page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
   calls:
   - BASE/button_to_remote
-helpers/portal/teachers_helper.rb#teacher_add_dropdown:
-  callers:
-  - name: views/portal/teachers/_table_for_clazz_setup.html.haml
-    line: "= teacher_add_dropdown(portal_clazz)"
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: page.replace 'teacher_add_dropdown', teacher_add_dropdown(@portal_clazz)
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: page.replace 'teacher_add_dropdown', teacher_add_dropdown(@portal_clazz)
-  calls:
-  - BASE/button_to_remote
 lib/clipboard.rb#paste_link_for:
   callers:
   - name: views/shared/_activity_header.haml
@@ -836,33 +692,6 @@ lib/clipboard.rb#paste_link_for:
   calls:
   - BASE/link_to_remote
   - helpers/application_helper.rb#remote_link_button
-views/admin/clients/_remote_form.html.haml:
-  callers:
-  - name: controllers/admin/clients_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :project => @client }
-  - name: controllers/admin/clients_controller.rb#update
-    line: render :partial => 'remote_form', :locals => { :project => @client }, :status
-      => 400
-  calls:
-  - BASE/remote_form_for
-views/admin/commons_licenses/_remote_form.html.haml:
-  callers:
-  - name: controllers/admin/commons_licenses_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :license => @license }
-  - name: controllers/admin/commons_licenses_controller.rb#update
-    line: render :partial => 'remote_form', :locals => { :license => @license }, :status
-      => 400
-  calls:
-  - BASE/remote_form_for
-views/admin/external_reports/_remote_form.html.haml:
-  callers:
-  - name: controllers/admin/external_reports_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :project => @report }
-  - name: controllers/admin/external_reports_controller.rb#update
-    line: render :partial => 'remote_form', :locals => { :project => @report }, :status
-      => 400
-  calls:
-  - BASE/remote_form_for
 views/admin/projects/_remote_form.html.haml:
   callers:
   - name: controllers/admin/projects_controller.rb#edit
@@ -924,30 +753,6 @@ views/admin/settings/index.html.haml:
 views/admin/settings/show.html.haml:
   calls:
   - views/admin/settings/_show.html.haml
-views/admin/tags/_remote_form.html.haml:
-  callers:
-  - name: controllers/admin/tags_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :admin_tag => @admin_tag
-      }
-  calls:
-  - BASE/remote_form_for
-views/admin/tags/_show.html.haml:
-  callers:
-  - name: views/admin/tags/index.html.haml
-    line: "= render :partial => 'show', :collection => @admin_tags, :as => :admin_tag"
-  - name: views/admin/tags/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :admin_tag => @admin_tag }"
-  - name: controllers/admin/tags_controller.rb#update
-    line: render :partial => 'show', :locals => { :admin_tag => @admin_tag }
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/admin/tags/index.html.haml:
-  calls:
-  - views/admin/tags/_show.html.haml
-views/admin/tags/show.html.haml:
-  calls:
-  - views/admin/tags/_show.html.haml
 views/author_notes/_remote_form.html.haml:
   callers:
   - name: controllers/author_notes_controller.rb#show_author_note
@@ -1259,19 +1064,6 @@ views/portal/bookmarks/index.html.haml:
   calls:
   - views/portal/bookmarks/_show.html.haml
   - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
-views/portal/clazzes/_form.html.haml:
-  callers:
-  - name: views/portal/clazzes/_remote_form.html.haml
-    line: = render :partial => "form", :locals => { :portal_clazz => portal_clazz,
-      :f => f  }
-  - name: views/portal/clazzes/edit.html.haml
-    line: "= render :partial => 'form', :locals => { :portal_clazz => @portal_clazz,
-      :f => f }"
-  - name: views/portal/clazzes/new.html.haml
-    line: "= render :partial => 'form', :locals => { :portal_clazz => @portal_clazz,
-      :f => f }"
-  calls:
-  - views/portal/teachers/_table_for_clazz_setup.html.haml
 views/portal/clazzes/_form_student_roster.html.haml:
   callers:
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
@@ -1283,14 +1075,6 @@ views/portal/clazzes/_form_student_roster.html.haml:
   calls:
   - views/portal/students/_table_for_clazz.html.haml
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
-views/portal/clazzes/_remote_form.html.haml:
-  callers:
-  - name: controllers/portal/clazzes_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :portal_clazz => @portal_clazz
-      }
-  calls:
-  - BASE/remote_form_for
-  - views/portal/clazzes/_form.html.haml
 views/portal/clazzes/_remote_form_student_roster.html.haml:
   callers:
   - name: controllers/portal/clazzes_controller.rb#roster
@@ -1306,53 +1090,18 @@ views/portal/clazzes/destroy.js.rjs:
   calls:
   - helpers/js_helper.rb#safe_js
   - helpers/js_helper.rb#safe_js
-views/portal/clazzes/edit.html.haml:
-  calls:
-  - views/portal/clazzes/_form.html.haml
 views/portal/clazzes/edit_offerings.html.haml:
   calls:
   - BASE/drop_receiving_element
   - BASE/drop_receiving_element
   - views/shared/_offering_for_teacher.html.haml
   - views/shared/_runnable_list.html.haml
-views/portal/clazzes/new.html.haml:
-  calls:
-  - views/portal/clazzes/_form.html.haml
 views/portal/clazzes/roster.html.haml:
   calls:
   - views/portal/clazzes/_form_student_roster.html.haml
 views/portal/clazzes/show.html.haml:
   calls:
   - views/shared/_offering_for_teacher.html.haml
-views/portal/districts/_remote_form.html.haml:
-  callers:
-  - name: controllers/portal/districts_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :portal_district => @portal_district
-      }
-  calls:
-  - BASE/remote_form_for
-views/portal/districts/_show.html.haml:
-  callers:
-  - name: views/portal/districts/index.html.haml
-    line: "= render :partial => 'show', :collection => @portal_districts, :as => :portal_district"
-  - name: views/portal/districts/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :portal_district => @portal_district
-      }"
-  - name: controllers/portal/districts_controller.rb#update
-    line: render :partial => 'show', :locals => { :portal_district => @portal_district
-      }
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/portal/districts/destroy.js.rjs:
-  calls:
-  - helpers/js_helper.rb#safe_js
-views/portal/districts/index.html.haml:
-  calls:
-  - views/portal/districts/_show.html.haml
-views/portal/districts/show.html.haml:
-  calls:
-  - views/portal/districts/_show.html.haml
 views/portal/grade_levels/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
@@ -1512,45 +1261,6 @@ views/portal/students/register.html.haml:
 views/portal/students/show.html.haml:
   calls:
   - views/portal/students/_show.html.haml
-views/portal/teachers/_list_for_clazz.html.haml:
-  calls:
-  - BASE/link_to_remote
-  - views/portal/teachers/_table_for_clazz.html.haml
-views/portal/teachers/_list_for_clazz_setup.html.haml:
-  callers:
-  - name: views/portal/teachers/_table_for_clazz_setup.html.haml
-    line: "= render :partial => 'portal/teachers/list_for_clazz_setup', :locals =>
-      {:portal_clazz => portal_clazz}"
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup',
-      :locals => {:portal_clazz => @portal_clazz}
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: replace_html = render_to_string :partial => 'portal/teachers/list_for_clazz_setup',
-      :locals => {:portal_clazz => @portal_clazz}
-  calls:
-  - helpers/application_helper.rb#remote_link_button
-views/portal/teachers/_table_for_clazz.html.haml:
-  callers:
-  - name: views/portal/teachers/_list_for_clazz.html.haml
-    line: "= render :partial => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz
-      => @portal_clazz}"
-  - name: controllers/portal/clazzes_controller.rb#add_teacher
-    line: "#page.replace_html  'teachers_listing', :partial => 'portal/teachers/table_for_clazz',
-      :locals => {:portal_clazz => @portal_clazz}"
-  - name: controllers/portal/clazzes_controller.rb#remove_teacher
-    line: "#render(:update) { |page| page.replace_html 'teachers_listing', :partial
-      => 'portal/teachers/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-      }"
-  calls:
-  - helpers/application_helper.rb#remote_link_button
-views/portal/teachers/_table_for_clazz_setup.html.haml:
-  callers:
-  - name: views/portal/clazzes/_form.html.haml
-    line: '%td{:class=>"left"}= render :partial => ''portal/teachers/table_for_clazz_setup'',
-      :locals => {:portal_clazz => portal_clazz}'
-  calls:
-  - helpers/portal/teachers_helper.rb#teacher_add_dropdown
-  - views/portal/teachers/_list_for_clazz_setup.html.haml
 views/search/_material_unassigned_clazzes.html.haml:
   callers:
   - name: controllers/search_controller.rb#get_current_material_anonymous
