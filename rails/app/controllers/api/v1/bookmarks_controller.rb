@@ -1,7 +1,5 @@
 class API::V1::BookmarksController < API::APIController
 
-  skip_before_filter :verify_authenticity_token
-
   # POST api/v1/bookmarks
   def create
     auth = check_auth(params)
@@ -112,21 +110,14 @@ class API::V1::BookmarksController < API::APIController
     end
 
     begin
-      jwt = get_jwt(params)
-      claims = jwt && jwt[:data] ? jwt[:data]["claims"] : nil
-
-      if !claims || !claims["edit_bookmarks"]
-        raise StandardError, 'You are not authorized to edit bookmarks'
-      end
-
-      clazz_id = claims["clazz_id"]
+      clazz_id = params["clazz_id"]
       if !clazz_id
-        raise StandardError, 'Missing clazz_id claim'
+        raise StandardError, 'Missing clazz_id param'
       end
 
       portal_class = Portal::Clazz.find_by_id(clazz_id)
       if !portal_class
-        raise StandardError, 'Invalid clazz_id claim'
+        raise StandardError, 'Invalid clazz_id param'
       end
 
       if !user.portal_teacher || !user.portal_teacher.has_clazz?(portal_class)

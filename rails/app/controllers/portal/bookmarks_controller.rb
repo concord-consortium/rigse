@@ -13,12 +13,6 @@ class Portal::BookmarksController < ApplicationController
     authorize mark
 
     @bookmarks = Portal::Bookmark.where(clazz_id: @portal_clazz).select([:id, :is_visible, :name, :position, :url])
-    @jwt = SignedJWT::create_portal_token(current_user, {
-      claims: {
-        edit_bookmarks: true,
-        clazz_id: @portal_clazz.id
-      }
-    }, 3600)
 
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['LINKS'])

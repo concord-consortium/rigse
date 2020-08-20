@@ -35,7 +35,7 @@ export class EditBookmarks extends React.Component {
   }
 
   handleCreate () {
-    this.fetch('create')
+    this.apiCall('create')
       .then(bookmark => {
         const { bookmarks } = this.state
         bookmark.editing = true
@@ -57,7 +57,7 @@ export class EditBookmarks extends React.Component {
     }
 
     update(name, url)
-    this.fetch('update', bookmark, { name, url })
+    this.apiCall('update', bookmark, { name, url })
       .catch(err => {
         // reset the bookmark on error
         update(oldName, oldUrl)
@@ -72,7 +72,7 @@ export class EditBookmarks extends React.Component {
       bookmarks.splice(index, 1)
       this.setState({ bookmarks })
 
-      this.fetch('delete', bookmark)
+      this.apiCall('delete', bookmark)
         .catch(err => {
           // add the bookmark back on error
           bookmarks.splice(index, 0, bookmark)
@@ -89,11 +89,24 @@ export class EditBookmarks extends React.Component {
     }
 
     toggle()
-    this.fetch('visibilityToggle', bookmark, { is_visible: bookmark.is_visible })
+    this.apiCall('visibilityToggle', bookmark, { is_visible: bookmark.is_visible })
       .catch(err => {
         // retoggle back on error
         toggle()
         this.showError(err, 'Unable to toggle visibility of link!')
+      })
+  }
+
+  handleSortEnd ({ oldIndex, newIndex }) {
+    let { bookmarks } = this.state
+    bookmarks = arrayMove(bookmarks, oldIndex, newIndex)
+    this.setState({ bookmarks })
+
+    const ids = bookmarks.map(bookmark => bookmark.id)
+    this.apiCall('sort', null, { ids: JSON.stringify(ids) })
+      .catch(err => {
+        this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) })
+        this.showError(err, 'Unable to save link sort order!')
       })
   }
 
@@ -105,50 +118,40 @@ export class EditBookmarks extends React.Component {
     }
   }
 
-  fetch (action, bookmark, body) {
+  apiCall (action, bookmark, data) {
     const basePath = '/api/v1/bookmarks'
 
     bookmark = bookmark || { id: 0 }
 
-    const { url, method } = {
-      create: { url: basePath, method: 'POST' },
-      update: { url: `${basePath}/${bookmark.id}`, method: 'PUT' },
-      visibilityToggle: { url: `${basePath}/${bookmark.id}`, method: 'PUT' },
-      delete: { url: `${basePath}/${bookmark.id}`, method: 'DELETE' },
-      sort: { url: `${basePath}/sort`, method: 'POST' }
+    const { url, type } = {
+      create: { url: basePath, type: 'POST' },
+      update: { url: `${basePath}/${bookmark.id}`, type: 'PUT' },
+      visibilityToggle: { url: `${basePath}/${bookmark.id}`, type: 'PUT' },
+      delete: { url: `${basePath}/${bookmark.id}`, type: 'DELETE' },
+      sort: { url: `${basePath}/sort`, type: 'POST' }
     }[action]
 
-    body = typeof body !== 'undefined' ? JSON.stringify(body) : body
+    // add clazz_id to all requests
+    data = JSON.stringify({ clazz_id: this.props.classId, ...(data || {}) })
 
-    return window.fetch(url, { method,
-      body,
-      cache: 'no-cache',
-      headers: {
-        'Authorization': `Bearer/JWT ${this.props.jwt}`,
-        'Content-Type': 'application/json'
-      },
-      credentials: 'same-origin'
-    })
-      .then(resp => resp.json())
-      .then(json => {
-        if (!json.success) {
-          throw new Error(json.message)
+    return new Promise((resolve, reject) => {
+      jQuery.ajax({
+        url,
+        data,
+        type,
+        dataType: 'json',
+        contentType: 'application/json',
+        success: json => {
+          if (!json.success) {
+            throw new Error(json.message)
+          }
+          resolve(json.data)
+        },
+        error: (jqXHR, textStatus, error) => {
+          reject(error)
         }
-        return json.data
       })
-  }
-
-  handleSortEnd ({ oldIndex, newIndex }) {
-    let { bookmarks } = this.state
-    bookmarks = arrayMove(bookmarks, oldIndex, newIndex)
-    this.setState({ bookmarks })
-
-    const ids = bookmarks.map(bookmark => bookmark.id)
-    this.fetch('sort', null, { ids: JSON.stringify(ids) })
-      .catch(err => {
-        this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) })
-        this.showError(err, 'Unable to save link sort order!')
-      })
+    })
   }
 
   render () {

@@ -117,12 +117,4 @@ class API::APIController < ApplicationController
     end
   end
 
-  def get_jwt(params)
-    header = request.headers["Authorization"]
-    if header && header =~ /^Bearer\/JWT (.*)$/i
-      portal_token = $1
-      return SignedJWT::decode_portal_token(portal_token)
-    end
-  end
-
 end
