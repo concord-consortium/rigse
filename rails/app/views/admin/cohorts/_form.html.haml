@@ -1,0 +1,15 @@
+.item
+  = edit_menu_for(admin_cohort, f, { :omit_cancel => true })
+  = error_messages_for :admin_cohort
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          =f.text_field :name
+
+        %li
+          Project:
+          =f.collection_select(:project_id, Admin::Project.all, :id, :name)
+
+
