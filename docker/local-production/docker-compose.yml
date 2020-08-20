@@ -1,7 +1,9 @@
 # This file is meant for building and testing a locally built production image.
 # It uses dynamically assigned ports so they won't conflict with other services you
 # might have running. You can use `docker-compose port app 80` to find the port
-# Or if you have dinghy-http-proxy installed you can just use app.localproduction.docker
+# Or if you have dinghy-http-proxy installed you can just use app.local-production.docker
+# The first time you test this you'll need to initialize your database:
+#   docker-compose run app bundle exec rake db:setup
 version: '2.1'
 services:
   app:
