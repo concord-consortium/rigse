@@ -71,7 +71,11 @@ class API::V1::BookmarksController < API::APIController
     auth = check_auth(params)
     return error(auth[:error]) if auth[:error]
 
-    ids = JSON.parse(params['ids'])
+    ids = params['ids']
+    if !ids
+      return error("Missing ids parameter")
+    end
+
     bookmarks = ids.map { |i| Portal::Bookmark.find(i) }
     position = 0
     bookmarks.each do |bookmark|

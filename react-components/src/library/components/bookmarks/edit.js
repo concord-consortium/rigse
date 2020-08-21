@@ -35,13 +35,13 @@ export class EditBookmarks extends React.Component {
   }
 
   handleCreate () {
-    this.apiCall('create', {onSuccess: (bookmark) => {
+    this.apiCall('create', { onSuccess: (bookmark) => {
       const { bookmarks } = this.state
       bookmark.editing = true
       bookmarks.push(bookmark)
       this.sortBookmarks(bookmarks)
       this.setState({ bookmarks })
-    }})
+    } })
       .catch(err => this.showError(err, 'Unable to create link!'))
   }
 
@@ -56,7 +56,7 @@ export class EditBookmarks extends React.Component {
     }
 
     update(name, url)
-    this.apiCall('update', {bookmark, data: { name, url }})
+    this.apiCall('update', { bookmark, data: { name, url } })
       .catch(err => {
         // reset the bookmark on error
         update(oldName, oldUrl)
@@ -71,7 +71,7 @@ export class EditBookmarks extends React.Component {
       bookmarks.splice(index, 1)
       this.setState({ bookmarks })
 
-      this.apiCall('delete', {bookmark})
+      this.apiCall('delete', { bookmark })
         .catch(err => {
           // add the bookmark back on error
           bookmarks.splice(index, 0, bookmark)
@@ -88,7 +88,7 @@ export class EditBookmarks extends React.Component {
     }
 
     toggle()
-    this.apiCall('visibilityToggle', {bookmark, data: { is_visible: bookmark.is_visible }})
+    this.apiCall('visibilityToggle', { bookmark, data: { is_visible: bookmark.is_visible } })
       .catch(err => {
         // retoggle back on error
         toggle()
@@ -102,7 +102,7 @@ export class EditBookmarks extends React.Component {
     this.setState({ bookmarks })
 
     const ids = bookmarks.map(bookmark => bookmark.id)
-    this.apiCall('sort', {data: { ids: JSON.stringify(ids) }})
+    this.apiCall('sort', { data: { ids } })
       .catch(err => {
         this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) })
         this.showError(err, 'Unable to save link sort order!')
@@ -119,8 +119,8 @@ export class EditBookmarks extends React.Component {
 
   apiCall (action, options) {
     const basePath = '/api/v1/bookmarks'
-    const {onSuccess} = options
-    let {bookmark, data} = options
+    const { onSuccess } = options
+    let { bookmark, data } = options
 
     bookmark = bookmark || { id: 0 }
 
@@ -133,12 +133,12 @@ export class EditBookmarks extends React.Component {
     }[action]
 
     // add clazz_id to all requests
-    data = JSON.stringify({ clazz_id: this.props.classId, ...(data || {}) })
+    data = { clazz_id: this.props.classId, ...(data || {}) }
 
     return new Promise((resolve, reject) => {
       jQuery.ajax({
         url,
-        data,
+        data: JSON.stringify(data),
         type,
         dataType: 'json',
         contentType: 'application/json',
