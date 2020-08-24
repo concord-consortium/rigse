@@ -7,10 +7,9 @@ import SortableBookmarkRow from './sortable-bookmark-row'
 class UnsortableSortableBookmarks extends React.Component {
   render () {
     const { bookmarks } = this.props
-    if (bookmarks.length === 0) {
-      return null
-    }
 
+    // NOTE: we can't exit early if bookmarks.length === 0 as SortableContainer expects an element
+    // and generates an error which causes it to break if no element exists
     return (
       <div className={css.editBookmarksTable}>
         {bookmarks.map((bookmark, index) => (

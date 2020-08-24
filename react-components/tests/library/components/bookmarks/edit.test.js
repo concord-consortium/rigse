@@ -9,6 +9,29 @@ import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery"
 
 Enzyme.configure({adapter: new Adapter()})
 
+const renderedZeroBookmarks = '<div class="editBookmarksTable"></div><div><button>Create Link</button></div>'
+
+const renderedSingleBookmark = pack(`
+  <div class="editBookmarksTable">
+    <div class="editBookmarkRow">
+      <span class="iconCell">
+        <span class="sortIcon icon-sort"></span>
+      </span>
+      <span class="editBookmarkName">
+        <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
+      </span>
+      <span class="editBookmarkButtons">
+        <button>Edit</button>
+        <button>Hide</button>
+        <button>Delete</button>
+      </span>
+    </div>
+  </div>
+  <div>
+    <button>Create Link</button>
+  </div>
+`)
+
 describe('When I try to render sortable bookmarks', () => {
 
   const clone = (obj) => JSON.parse(JSON.stringify(obj))
@@ -50,29 +73,6 @@ describe('When I try to render sortable bookmarks', () => {
   mockJqueryAjaxSuccess({
     success: true
   })
-
-  const renderedZeroBookmarks = '<div><button>Create Link</button></div>'
-
-  const renderedSingleBookmark = pack(`
-    <div class="editBookmarksTable">
-      <div class="editBookmarkRow">
-        <span class="iconCell">
-          <span class="sortIcon icon-sort"></span>
-        </span>
-        <span class="editBookmarkName">
-          <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
-        </span>
-        <span class="editBookmarkButtons">
-          <button>Edit</button>
-          <button>Hide</button>
-          <button>Delete</button>
-        </span>
-      </div>
-    </div>
-    <div>
-      <button>Create Link</button>
-    </div>
-  `)
 
   it("should render 0 bookmarks", () => {
     const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={[]} />);
@@ -308,7 +308,7 @@ describe("When I try to create bookmarks", () => {
     const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={[]} />);
     const createButton = editBookmarks.find("button").last()
 
-    expect(editBookmarks.html()).toBe('<div><button>Create Link</button></div>')
+    expect(editBookmarks.html()).toBe(renderedZeroBookmarks)
 
     createButton.simulate("click")
     editBookmarks.update()
