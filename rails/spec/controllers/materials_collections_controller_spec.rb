@@ -66,6 +66,7 @@ describe MaterialsCollectionsController do
         }.to change(MaterialsCollection, :count).by(1)
       end
 
+
       it "assigns a newly created materials_collection as @materials_collection" do
         post :create, {:materials_collection => valid_attributes}
         expect(assigns(:materials_collection)).to be_a(MaterialsCollection)
