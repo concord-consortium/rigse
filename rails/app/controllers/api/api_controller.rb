@@ -17,6 +17,7 @@ class API::APIController < ApplicationController
   def error(message, status = 400)
     render :json =>
       {
+        :success => false,
         :response_type => "ERROR",
         :message => message
       },
@@ -115,4 +116,5 @@ class API::APIController < ApplicationController
       raise StandardError, 'You must be logged in to use this endpoint'
     end
   end
+
 end

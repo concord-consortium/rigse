@@ -1,0 +1,39 @@
+.editBookmarksTable {
+  margin: 10px 0;
+}
+
+.editBookmarkRow {
+  display: flex;
+  margin: 5px 0;
+}
+
+.editBookmarkName {
+  flex-grow: 2;
+  padding: 0 5px;
+  cursor: ns-resize;
+
+  input {
+    width: 98%;
+    padding: 3px 5px;
+  }
+}
+
+.editBookmarkButtons {
+  display: flex;
+
+  button {
+    margin: 0 0 0 5px;
+  }
+}
+
+.iconCell {
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 5px;
+  font-size: 0.95em;
+  vertical-align: middle;
+}
+
+.sortIcon {
+  cursor: ns-resize;
+}

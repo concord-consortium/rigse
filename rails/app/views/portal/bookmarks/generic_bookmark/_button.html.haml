@@ -1,6 +1,0 @@
-= button_to_remote('Create Bookmark', { |
-    :url => add_portal_clazz_bookmarks_path, |
-    :loading => "bookmarksManager.bookmarkRequestStarted('create-bookmark', 'Please wait while your bookmark is created');", |
-    :complete => "bookmarksManager.bookmarkRequestFinished('create-bookmark');", |
-    :failure => "bookmarksManager.bookmarkRequestFailed();"}, |
-    {:id => 'create-bookmark'})

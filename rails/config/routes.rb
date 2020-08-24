@@ -82,8 +82,11 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :bookmarks, only: [:index] do
+          member do
+            get 'visit'
+          end
           collection do
-            post 'add'
+            get 'visits'
           end
         end
 
@@ -171,13 +174,6 @@ RailsPortal::Application.routes.draw do
           get :description
         end
       end
-
-      # TODO: clean up these adhoc bookmark routes:
-      match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
-      match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
-      match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
-      match '/bookmark/sort'           => 'bookmarks#sort',       :method => :post, :as => :sort_bookmarks
-      match '/bookmark/edit'           => 'bookmarks#edit',       :method => :post, :as => :edit_bookmark
     end
 
     match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
@@ -521,6 +517,12 @@ RailsPortal::Application.routes.draw do
           post :remove_notice
           post :toggle_notice_display
           post :update
+        end
+
+        resources :bookmarks, only: [:create, :update, :destroy] do
+          collection do
+            post 'sort'
+          end
         end
       end
     end

@@ -22,22 +22,4 @@ RSpec.describe Portal::BookmarksHelper, type: :helper do
     end
   end
 
-  # TODO: auto-generated
-  describe '#render_add_bookmark_buttons' do
-    it 'works' do
-      result = helper.render_add_bookmark_buttons
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#bookmark_dom_item' do
-    xit 'works' do
-      result = helper.bookmark_dom_item('mark')
-
-      expect(result).not_to be_nil
-    end
-  end
-
 end
