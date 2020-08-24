@@ -50,4 +50,30 @@ RSpec.describe Admin::CohortPolicy do
       end
     end
   end
+
+  describe 'create' do
+    let(:cohort_stubs) { {project: 'project' } }
+    let(:proj_user) { @cohort1 = FactoryBot.create(:user) }
+    let(:cohort) { double('cohort', cohort_stubs) }
+
+    context 'as project admin' do
+      before(:each) do
+        allow(proj_user).to receive(:is_project_admin?).and_return(true)
+      end
+
+      it 'should allow create' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to permit(:create)
+      end
+    end
+    context 'not as project admin' do
+      before(:each) do
+        allow(proj_user).to receive(:is_project_admin?).and_return(false)
+      end
+
+      it 'should allow create' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to_not permit(:create)
+      end
+    end
+
+  end
 end
