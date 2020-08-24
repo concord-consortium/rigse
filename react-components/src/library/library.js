@@ -33,6 +33,7 @@ import SMaterialsList from './components/search/materials-list'
 import MaterialsBin from './components/materials-bin/materials-bin'
 import openAssignToClassModal from './components/assign-to-class/assign-to-class'
 import PortalClassSetupForm from './components/portal-classes/setup-form'
+import EditBookmarks from './components/bookmarks/edit'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -237,5 +238,10 @@ window.PortalComponents = {
   PortalClassSetupForm: PortalClassSetupForm,
   renderPortalClassSetupForm: function (options, id) {
     render(React.createElement(PortalClassSetupForm, options), id)
+  },
+
+  EditBookmarks: EditBookmarks,
+  renderEditBookmarks: function (options, id) {
+    render(React.createElement(EditBookmarks, options), id)
   }
 }
