@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 179
+Blocks not fixed      : 173
 
 ## Story 174370119
 
@@ -203,16 +203,16 @@ https://www.pivotaltracker.com/story/show/174373337
 ## Story 174374264
 
 https://www.pivotaltracker.com/story/show/174374264
-|   | Fixed | Block                                                          | Calls                                                            | Num Callers |
-| - | ----- | -------------------------------------------------------------- | ---------------------------------------------------------------- | ----------- |
-| 1 |       | controllers/portal/bookmarks_controller.rb#add                 | render :update, _show.html.haml                                  |             |
-| 2 | Y     | controllers/portal/bookmarks_controller.rb#add_padlet          |                                                                  |             |
-| 3 |       | controllers/portal/bookmarks_controller.rb#delete              | render :update                                                   |             |
-| 4 |       | helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons | _button.html.haml                                                | 1           |
-| 5 |       | views/portal/bookmarks/_show.html.haml                         | link_to_remote                                                   | 2           |
-| 6 |       | views/portal/bookmarks/generic_bookmark/_button.html.haml      | button_to_remote                                                 | 1           |
-| 7 |       | views/portal/bookmarks/index.html.haml                         | _show.html.haml, bookmarks_helper.rb#render_add_bookmark_buttons |             |
-| 8 | Y     | views/portal/bookmarks/padlet_bookmark/_button.html.haml       |                                                                  |             |
+|   | Fixed | Block                                                          | Calls | Num Callers |
+| - | ----- | -------------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/portal/bookmarks_controller.rb#add                 |       |             |
+| 2 | Y     | controllers/portal/bookmarks_controller.rb#add_padlet          |       |             |
+| 3 | Y     | controllers/portal/bookmarks_controller.rb#delete              |       |             |
+| 4 | Y     | helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons |       |             |
+| 5 | Y     | views/portal/bookmarks/_show.html.haml                         |       |             |
+| 6 | Y     | views/portal/bookmarks/generic_bookmark/_button.html.haml      |       |             |
+| 7 | Y     | views/portal/bookmarks/index.html.haml                         |       |             |
+| 8 | Y     | views/portal/bookmarks/padlet_bookmark/_button.html.haml       |       |             |
 
 ## Story 174324301
 

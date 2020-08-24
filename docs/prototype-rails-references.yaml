@@ -2,8 +2,6 @@
 ---
 BASE/button_to_remote:
   callers:
-  - name: views/portal/bookmarks/generic_bookmark/_button.html.haml
-    line: "= button_to_remote('Create Bookmark', { |"
   - name: helpers/portal/student_clazzes_helper.rb#student_add_dropdown
     line: <td>#{button_to_remote("Add", :url => {:controller => 'portal/clazzes',
       :action=>'add_student', :id => clazz}, :with => "'student_id='+$('student_id_selector').value")}</td>
@@ -73,8 +71,6 @@ BASE/link_to_remote:
   callers:
   - name: views/embeddable/multiple_choices/_remote_form.html.haml
     line: '%li= link_to_remote "add choice", :url => add_choice_embeddable_multiple_choice_url(multiple_choice)'
-  - name: views/portal/bookmarks/_show.html.haml
-    line: "= link_to_remote(fa_icon('trash-o', class: 'control'), { |"
   - name: views/portal/students/_table_for_clazz.html.haml
     line: = link_to_remote I18n.t("RosterRemoveStudent"),
   - name: views/search/_material_unassigned_clazzes.html.haml
@@ -215,10 +211,6 @@ BASE/render :update:
   - name: controllers/author_notes_controller.rb#edit
     line: format.js   { render :update do |page|
   - name: controllers/materials_collections_controller.rb#destroy
-    line: render :update do |page|
-  - name: controllers/portal/bookmarks_controller.rb#add
-    line: render :update do |page|
-  - name: controllers/portal/bookmarks_controller.rb#delete
     line: render :update do |page|
   - name: controllers/portal/clazzes_controller.rb#add_offering
     line: render :update do |page|
@@ -403,13 +395,6 @@ controllers/materials_collections_controller.rb#edit:
 controllers/materials_collections_controller.rb#update:
   calls:
   - views/materials_collections/_show.html.haml
-controllers/portal/bookmarks_controller.rb#add:
-  calls:
-  - BASE/render :update
-  - views/portal/bookmarks/_show.html.haml
-controllers/portal/bookmarks_controller.rb#delete:
-  calls:
-  - BASE/render :update
 controllers/portal/clazzes_controller.rb#add_new_student_popup:
   calls:
   - views/portal/students/_add_edit_list_for_clazz.html.haml
@@ -649,12 +634,6 @@ helpers/js_helper.rb#safe_js:
   calls:
   - BASE/page <<
   - BASE/page <<
-helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons:
-  callers:
-  - name: views/portal/bookmarks/index.html.haml
-    line: "- render_add_bookmark_buttons"
-  calls:
-  - views/portal/bookmarks/generic_bookmark/_button.html.haml
 helpers/portal/student_clazzes_helper.rb#student_add_dropdown:
   callers:
   - name: views/portal/clazzes/_form_student_roster.html.haml
@@ -1046,24 +1025,6 @@ views/materials_collections/index.html.haml:
 views/materials_collections/show.html.haml:
   calls:
   - views/materials_collections/_list_show.html.haml
-views/portal/bookmarks/_show.html.haml:
-  callers:
-  - name: views/portal/bookmarks/index.html.haml
-    line: "= render :partial => 'show', :locals => {:bookmark => bookmark}"
-  - name: controllers/portal/bookmarks_controller.rb#add
-    line: ':partial => "portal/bookmarks/show",'
-  calls:
-  - BASE/link_to_remote
-views/portal/bookmarks/generic_bookmark/_button.html.haml:
-  callers:
-  - name: helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
-    line: '# :partial => "portal/bookmarks/generic_bookmark/button"'
-  calls:
-  - BASE/button_to_remote
-views/portal/bookmarks/index.html.haml:
-  calls:
-  - views/portal/bookmarks/_show.html.haml
-  - helpers/portal/bookmarks_helper.rb#render_add_bookmark_buttons
 views/portal/clazzes/_form_student_roster.html.haml:
   callers:
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
