@@ -76,7 +76,6 @@ RailsPortal::Application.routes.draw do
           post :edit_offerings
           get :roster
           post :add_new_student_popup
-          post :copy_class
           get :materials
           get :fullstatus
         end
@@ -92,9 +91,7 @@ RailsPortal::Application.routes.draw do
 
         collection do
           get :info
-          #get :manage_classes, :path => 'manage'
-          match 'manage', :to => 'clazzes#manage_classes'
-          #post :manage_classes_save, :as => 'manage_save'
+          get 'manage', :to => 'clazzes#manage_classes'
         end
       end
 
@@ -471,6 +468,14 @@ RailsPortal::Application.routes.draw do
         namespace :classes do
           get :info
           get :mine
+        end
+
+        resources :teacher_classes, only: [:show] do
+          member do
+            post :sort
+            post :set_active
+            post :copy
+          end
         end
 
         namespace :jwt do
