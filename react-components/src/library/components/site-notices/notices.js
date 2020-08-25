@@ -30,7 +30,9 @@ export default class Notices extends React.Component {
     }
 
     if (notices.length === 0) {
-      this.renderNoNotices()
+      return (
+        this.renderNoNotices()
+      )
     }
 
     return (
