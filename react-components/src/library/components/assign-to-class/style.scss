@@ -164,6 +164,39 @@
   }
 }
 
+.confirmDialogPortal {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.confirmDialogOverlay {
+  background-color: rgba(0,0,0,0.3);
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  z-index: 101;
+}
+.confirmDialog {
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  bottom: auto;
+  left: 50%;
+  margin-right: -50%;
+  outline: none;
+  padding: 20px;
+  position: absolute;
+  right: auto;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+
+  button {
+    margin: 0 auto;
+  }
+}
+
 .textCopiedAlert {
   animation: fadeOut ease 4s;
   background: #ffc320;
