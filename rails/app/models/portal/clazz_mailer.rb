@@ -33,7 +33,8 @@ class Portal::ClazzMailer < ActionMailer::Base
       cohort_admins += cohort_project.project_admins
     end
 
-    cohort_admins.map do |cohort_admin|
+    non_nil_admins = cohort_admins.reject(&:nil?)
+    non_nil_admins.map do |cohort_admin|
       "#{cohort_admin.name} <#{cohort_admin.email}>"
     end
   end
