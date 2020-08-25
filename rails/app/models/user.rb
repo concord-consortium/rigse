@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   has_many :student_cohorts, :through => :portal_student, :source => :cohorts
   has_many :student_cohort_projects, :through => :portal_student, :source => :projects
 
-  has_many :project_users, class_name: 'Admin::ProjectUser'
+  has_many :project_users, class_name: 'Admin::ProjectUser', :dependent => :destroy
 
   has_many :admin_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_admin = ?', true]
   has_many :researcher_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_researcher = ?', true]
