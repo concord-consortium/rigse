@@ -23,7 +23,6 @@ export default class AssignModal extends React.Component {
     this.assignMaterial = this.assignMaterial.bind(this)
     this.copyToClipboard = this.copyToClipboard.bind(this)
     this.updateClassList = this.updateClassList.bind(this)
-    this.openConfirmModal = this.openConfirmModal.bind(this)
     this.closeConfirmModal = this.closeConfirmModal.bind(this)
   }
 
@@ -218,10 +217,6 @@ export default class AssignModal extends React.Component {
         </div>
       </div>
     )
-  }
-
-  openConfirmModal () {
-    this.setState({ showModal: true })
   }
 
   closeConfirmModal () {
