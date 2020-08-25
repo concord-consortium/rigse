@@ -77,9 +77,9 @@ describe Admin::SettingsController do
       expect(assigns[:admin_settings]).to equal(mock_settings)
     end
 
-    it "uses default content if home_page_content is empty" do
+    it "no longer uses default content if home_page_content is empty" do
       allow(mock_settings).to receive(:home_page_content).and_return(nil)
-      expect(mock_settings).to receive(:home_page_content=)
+      expect(mock_settings).not_to receive(:home_page_content=)
       get :edit, :id => "37"
     end
 
@@ -113,19 +113,19 @@ describe Admin::SettingsController do
   end
 
   describe "POST create" do
-
+    let(:params) { { these: 'params' } }
     describe "with valid params" do
       it "assigns a newly created settings as @settings" do
-        expect(Admin::Settings).to receive(:new).with({'these' => 'params'}).and_return(mock_settings(:save => true))
+        expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => true))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => true))
-        post :create, :admin_settings => {:these => 'params'}
+        post :create, admin_settings: params
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "redirects to the created settings" do
         expect(Admin::Settings).to receive(:new).and_return(mock_settings(:save => true))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => true))
-        post :create, :admin_settings => {}
+        post :create, admin_settings: {}
         expect(response).to redirect_to(admin_setting_url(mock_settings))
       end
     end
@@ -134,15 +134,16 @@ describe Admin::SettingsController do
       it "assigns a newly created but unsaved settings as @settings" do
         expect(Admin::Settings).to receive(:new).with({'these' => 'params'}).and_return(mock_settings(:save => false))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => false))
-        post :create, :admin_settings => {:these => 'params'}
+        post :create, admin_settings: params
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "re-renders the 'new' template" do
         expect(Admin::Settings).to receive(:new).and_return(mock_settings(:save => false))
         expect(mock_settings).to receive(:save).and_return(false)
-        post :create, :admin_settings => {}
-        expect(response).to redirect_to(new_admin_setting_url)
+
+        # it should just render the new template:
+        expect(post :create, admin_settings: params).to render_template(:new)
       end
     end
 

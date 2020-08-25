@@ -1,5 +1,5 @@
 import React from 'react'
-import ConfirmDialog from '../../helpers/confirm-dialog'
+import ReactModal from 'react-modal'
 
 import css from './style.scss'
 
@@ -16,12 +16,14 @@ export default class AssignModal extends React.Component {
       },
       copyButtonClicked: false,
       errorMessage: null,
-      resourceAssigned: false
+      resourceAssigned: false,
+      showModal: false
     }
 
     this.assignMaterial = this.assignMaterial.bind(this)
     this.copyToClipboard = this.copyToClipboard.bind(this)
     this.updateClassList = this.updateClassList.bind(this)
+    this.closeConfirmModal = this.closeConfirmModal.bind(this)
   }
 
   componentDidMount () {
@@ -31,10 +33,7 @@ export default class AssignModal extends React.Component {
         material_type: this.props.material_type
       }
       jQuery.post(Portal.API_V1.MATERIAL_UNASSIGNED_CLASSES, data).done(response => {
-        this.setState({
-          classesLoaded: true,
-          classes: response
-        })
+        this.setState({ classesLoaded: true, classes: response })
       }).fail(function (err) {
         if (err && err.responseText) {
           const response = jQuery.parseJSON(err.responseText)
@@ -62,12 +61,11 @@ export default class AssignModal extends React.Component {
 
   assignMaterial () {
     const authToken = jQuery('meta[name="csrf-token"]').attr('content')
-    const assignedClassIds = this.state.assignedClassIds
 
-    if (assignedClassIds.length < 1) {
+    if (this.state.assignedClassIds.length < 1) {
       this.setState({ errorMessage: 'Select at least one class to assign this resource.' })
     } else {
-      for (let classId of assignedClassIds) {
+      for (let classId of this.state.assignedClassIds) {
         let params = {
           assign: 1,
           class_id: classId,
@@ -77,7 +75,7 @@ export default class AssignModal extends React.Component {
         }
         jQuery.post(Portal.API_V1.ASSIGN_MATERIAL_TO_CLASS, params)
           .done(response => {
-            this.setState({ resourceAssigned: true })
+            this.setState({ resourceAssigned: true, showModal: true })
           })
           .fail(function (err) {
             if (err && err.responseText) {
@@ -221,12 +219,17 @@ export default class AssignModal extends React.Component {
     )
   }
 
+  closeConfirmModal () {
+    this.setState({ showModal: false })
+    this.props.closeFunc()
+  }
+
   resourceAssigned () {
-    const alertMessage = <p>The {this.props.resourceType} <strong>{this.props.resourceTitle}</strong> is assigned to the selected class(es) successfully.</p>
     return (
-      <ConfirmDialog open onConfirm={this.props.closeFunc}>
-        {alertMessage}
-      </ConfirmDialog>
+      <ReactModal ariaHideApp={false} isOpen={this.state.showModal} onRequestClose={this.props.closeFunc} className={css.confirmDialog} overlayClassName={css.confirmDialogOverlay} portalClassName={css.confirmDialogPortal}>
+        <p>The {this.props.resourceType} <strong>{this.props.resourceTitle}</strong> is assigned to the selected class(es) successfully.</p>
+        <button onClick={this.closeConfirmModal}>OK</button>
+      </ReactModal>
     )
   }
 

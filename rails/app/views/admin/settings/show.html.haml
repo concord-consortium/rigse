@@ -2,4 +2,5 @@
 = javascript_include_tag('preview_about_page.js')
 = javascript_include_tag('preview_help_page.js')
 = javascript_include_tag 'settings_form'
+%h3=link_to "List Settings", action: "index"
 = render :partial => 'show', :locals=> { :admin_settings => @admin_settings }
