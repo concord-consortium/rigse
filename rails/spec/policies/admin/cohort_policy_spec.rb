@@ -53,7 +53,7 @@ RSpec.describe Admin::CohortPolicy do
 
   describe 'create' do
     let(:cohort_stubs) { {project: 'project' } }
-    let(:proj_user) { @cohort1 = FactoryBot.create(:user) }
+    let(:proj_user) { FactoryBot.create(:user) }
     let(:cohort) { double('cohort', cohort_stubs) }
 
     context 'as project admin' do

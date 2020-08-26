@@ -10,6 +10,8 @@
 
         %li
           Project:
-          =f.collection_select(:project_id, Admin::Project.all, :id, :name)
+          =f.collection_select(:project_id, projects, :id, :name)
 
-
+        %li
+          Enable email notifications:
+          =f.check_box :email_notifications_enabled

@@ -20,12 +20,15 @@ class Admin::CohortsController < ApplicationController
   def new
     authorize Admin::Cohort
     @admin_cohort = Admin::Cohort.new
+    @projects = policy_scope(Admin::Project)
     # render new.html.haml
   end
 
   # GET /admin_cohorts/1/edit
   def edit
+    authorize Admin::Cohort
     @admin_cohort = Admin::Cohort.find(params[:id])
+    @projects = policy_scope(Admin::Project)
     # render edit.html.haml
   end
 

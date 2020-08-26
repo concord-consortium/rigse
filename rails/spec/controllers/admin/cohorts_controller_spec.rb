@@ -96,14 +96,14 @@ describe Admin::CohortsController do
     end
 
     describe 'Show' do
-      describe 'Cohort 1 (user IS a memeber)' do
+      describe 'Cohort 1 (user IS a project admin)' do
         it 'lets them see it' do
           get :show, id:@cohort_1.id
           expect(assigns[:admin_cohort]).to eq(@cohort_1)
           expect(response).to have_http_status(:ok)
         end
       end
-      describe 'Cohort 2 (user is NOT a memeber)' do
+      describe 'Cohort 2 (user is NOT a project admin)' do
         it 'wont let them see it' do
           get :show, id:@cohort_2.id
           # Redirect, and show error when not allowed:
@@ -117,6 +117,33 @@ describe Admin::CohortsController do
       it 'it should show the New form' do
         expect(get :new).to render_template('new')
         # Redirect, and show error when not allowed:
+      end
+      it 'should display only the projects for which the user is an admin' do
+        get :new
+        expect(assigns(:projects)).to include(project_1)
+        expect(assigns(:projects)).not_to include(project_2)
+        expect(assigns(:projects)).not_to include(project_3)
+      end
+      it 'should return an OK http status' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'Edit' do
+      before(:each) do
+        allow(Admin::Cohort).to receive(:find).and_return(@cohort1)
+      end
+      it 'it should show the Edit form' do
+        expect(get :edit).to render_template('edit')
+        # Redirect, and show error when not allowed:
+      end
+      it 'should display only the projects for which the user is an admin' do
+        get :edit
+        expect(assigns(:projects)).to include(project_1)
+        expect(assigns(:projects)).not_to include(project_2)
+        expect(assigns(:projects)).not_to include(project_3)
+      end
+      it 'should return an OK http status' do
         expect(response).to have_http_status(:ok)
       end
     end
@@ -209,6 +236,43 @@ describe Admin::CohortsController do
           expect(response).to redirect_to(admin_cohort_path(cohort))
         end
       end
+
+
+    describe 'New' do
+      it 'it should show the New form' do
+        expect(get :new).to render_template('new')
+        # Redirect, and show error when not allowed:
+      end
+      it 'should display all the projects in the project dropdown' do
+        get :new
+        expect(assigns(:projects)).to include(project_1)
+        expect(assigns(:projects)).to include(project_2)
+        expect(assigns(:projects)).to include(project_3)
+      end
+      it 'should return an OK http status' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe 'Edit' do
+      before(:each) do
+        allow(Admin::Cohort).to receive(:find).and_return(@cohort1)
+      end
+      it 'it should show the Edit form' do
+        expect(get :edit).to render_template('edit')
+        # Redirect, and show error when not allowed:
+      end
+      it 'should display all the projects in the project dropdown' do
+        get :edit
+        expect(assigns(:projects)).to include(project_1)
+        expect(assigns(:projects)).to include(project_2)
+        expect(assigns(:projects)).to include(project_3)
+      end
+      it 'should return an OK http status' do
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
 
       describe 'for a cohort in project 2' do
         let(:project_id) { project_2.id }

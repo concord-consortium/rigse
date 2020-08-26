@@ -1,2 +1,3 @@
+= @projects.map{ |p| "x #{p.name}" }
 = form_for(@admin_cohort) do |f|
-  = render :partial => 'form', :locals => { :admin_cohort => @admin_cohort, :f => f }
+  = render partial: 'form', locals: { admin_cohort: @admin_cohort, projects: @projects, f: f }
