@@ -1,11 +1,20 @@
 class Admin::CohortsController < ApplicationController
   include RestrictedController
+  before_filter :check_for_project
+
+  def check_for_project
+    return unless params[:project_id]
+
+    @project = Admin::Project.find(params[:project_id])
+    authorize @project
+  end
 
   # GET /admin_cohorts
   def index
     authorize Admin::Cohort
-
-    @admin_cohorts = Admin::Cohort.search(params[:search], params[:page], nil, nil, policy_scope(Admin::Cohort))
+    search_scope = policy_scope(Admin::Cohort)
+    search_scope = search_scope.where(project_id: @project.id) if @project
+    @admin_cohorts = Admin::Cohort.search(params[:search], params[:page], nil, nil, search_scope)
     # render index.html.haml
   end
 
@@ -20,6 +29,7 @@ class Admin::CohortsController < ApplicationController
   def new
     authorize Admin::Cohort
     @admin_cohort = Admin::Cohort.new
+    @admin_cohort.project_id = @project.id if @project
     @projects = policy_scope(Admin::Project)
     # render new.html.haml
   end
