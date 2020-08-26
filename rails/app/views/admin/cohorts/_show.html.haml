@@ -13,12 +13,15 @@
           %a{href:url_for(action: :destroy, id:admin_cohort.id), data: {method: 'delete', confirm: "Delete this tag?"} } delete
   %div{:id => dom_id_for(admin_cohort, :item), :class => 'item'}
     %div{:id => dom_id_for(admin_cohort, :details), :class => 'content'}
-      %p.tag
+      %p
         Name:
         = h(admin_cohort.name)
-      %p.scope
+      %p
         Project:
         - if admin_cohort.project
           = h(admin_cohort.project.name)
         - else
           None
+      - if admin_cohort.email_notifications_enabled
+        %p
+          Email notifactions are enabled for this cohort
