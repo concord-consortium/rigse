@@ -273,7 +273,6 @@ describe Admin::CohortsController do
       end
     end
 
-
       describe 'for a cohort in project 2' do
         let(:project_id) { project_2.id }
         it 'should let them' do
@@ -284,6 +283,19 @@ describe Admin::CohortsController do
         end
       end
     end
+  end
 
+  describe 'testing nested routes' do
+    let(:user) { admin_user }
+    let(:project) { project_1 }
+    let(:nested_cohorts_path) { "/admin/projects/#{project.id}/cohorts/" }
+
+    context 'the index page' do
+      context 'when nested under project route' do
+        # it 'should restrict the list of cohorts to that project' do
+        #   get admin_project_cohorts_path project.id
+        # end
+      end
+    end
   end
 end
