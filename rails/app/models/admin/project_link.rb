@@ -3,4 +3,13 @@ class Admin::ProjectLink < ActiveRecord::Base
   belongs_to :project, :class_name => 'Admin::Project'
   attr_accessible :href, :name, :project_id, :link_id, :pop_out, :position
   validates :href, :name, :link_id, :presence => true
+
+  self.extend SearchableModel
+
+  class <<self
+    def searchable_attributes
+      %w{name href link_id}
+    end
+  end
+
 end

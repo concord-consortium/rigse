@@ -270,6 +270,7 @@ RailsPortal::Application.routes.draw do
         resources :cohorts
       end
       resources :cohorts
+      resources :project_links
       resources :clients
       resources :tools
       resources :external_reports

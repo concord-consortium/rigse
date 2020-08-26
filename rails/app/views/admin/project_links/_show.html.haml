@@ -1,0 +1,34 @@
+- display_name = "#{project_link.name}"
+%div{id: dom_id_for(project_link), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3
+        %a{href:admin_project_link_path(project_link)}=display_name
+
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_project_link_path(project_link)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:project_link.id), data: {method: 'delete', confirm: "Delete this Link?"} } delete
+  %div{:id => dom_id_for(project_link, :item), :class => 'item'}
+    %div{:id => dom_id_for(project_link, :details), :class => 'content'}
+      %p
+        %span
+          Name:
+          = h(project_link.name)
+        %span
+          ID:
+          = project_link.link_id
+      %p
+        URL:
+        = project_link.href
+      %p
+        Project:
+        - if project_link.project
+          = project_link.project.name
+        - else
+          None
+      - if project_link.pop_out
+        %p
+          This link opens in a pop-out
