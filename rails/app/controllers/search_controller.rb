@@ -298,7 +298,6 @@ class SearchController < ApplicationController
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
-    @feedback_message = params[:feedback_message]
 
     if material_type != "ExternalActivity" || material_ids.length != 1
       @material_type = material_type
@@ -374,14 +373,13 @@ class SearchController < ApplicationController
     end
 
     if collection_ids.count > 0
-      material_names = materials.map {|m| "<b>#{m.name}</b>" }.join(", ").gsub("'","\\'")
-      feedback_message = "#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully."
+      material_names = materials.map {|m| "#{m.name}" }.join(", ").gsub("'","\\'")
+      flash[:notice] = "#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully."
     else
-      feedback_message = "Select at least one collection to assign this #{runnable_type}"
+      flash[:error] = "Select at least one collection to assign this #{runnable_type}"
     end
 
-    redirect_to "/search/get_current_material_unassigned_collections?material_id=#{params[:material_id]}&material_type=#{runnable_type}&feedback_message=#{URI.encode(feedback_message)}"
-
+    redirect_to action: 'get_current_material_unassigned_collections', material_id: params[:material_id], material_type: runnable_type
   end
 
   private
