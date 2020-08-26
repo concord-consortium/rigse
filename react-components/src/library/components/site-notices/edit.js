@@ -12,6 +12,10 @@ export default class SiteNoticesEditForm extends React.Component {
 
   render () {
     const { notice } = this.state
+    const formAction = '/api/v1/site_notices/' + notice.id
+    const formId = 'edit_admin_site_notice_' + notice.id
+    const authToken = jQuery('meta[name="csrf-token"]').attr('content')
+
     if (!notice) {
       return (
         <div>
@@ -20,9 +24,6 @@ export default class SiteNoticesEditForm extends React.Component {
       )
     }
 
-    const formAction = '/api/v1/site_notices/' + notice.id
-    const formId = 'edit_admin_site_notice_' + notice.id
-    const authToken = jQuery('meta[name="csrf-token"]').attr('content')
     return (
       <div className={css.adminSiteNoticesEdit}>
         <h1>Edit Notice</h1>

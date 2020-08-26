@@ -15,6 +15,8 @@ export default class ShowSiteNotices extends React.Component {
     this.getPortalData = this.getPortalData.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
+    this.renderNoNotices = this.renderNoNotices.bind(this)
+    this.renderTable = this.renderTable.bind(this)
     this.renderRow = this.renderRow.bind(this)
   }
 
@@ -49,7 +51,9 @@ export default class ShowSiteNotices extends React.Component {
         url: dismissUrl,
         type: 'post',
         data: 'authenticity_token=' + encodeURIComponent(authToken),
-        success: data => {},
+        success: (data) => {
+          this.getPortalData()
+        },
         error: () => {
           console.error(`POST failed, can't dismiss notice`)
         }
@@ -75,6 +79,24 @@ export default class ShowSiteNotices extends React.Component {
     }
   }
 
+  renderNoNotices () {
+    return (
+      <div>
+        There are currently no notices.
+      </div>
+    )
+  }
+
+  renderTable (notices) {
+    return (
+      <table className={css.siteNoticesList} id={css.all_notice_to_render}>
+        <tbody>
+          { notices.map(this.renderRow) }
+        </tbody>
+      </table>
+    )
+  }
+
   renderRow (notice) {
     let noticeRowId = 'admin__site_notice_' + notice.id
     return (
@@ -92,13 +114,6 @@ export default class ShowSiteNotices extends React.Component {
 
   render () {
     const { notices, noNotice, noticeDisplay } = this.state
-    if (noNotice) {
-      return (
-        <div>
-          There are currently no notices.
-        </div>
-      )
-    }
 
     let siteNoticesContainerClasses = [css.siteNoticesListContainer, 'webkit_scrollbars']
     let toggleText = 'Hide Notices'
@@ -118,11 +133,7 @@ export default class ShowSiteNotices extends React.Component {
             Notices
           </div>
           <div className={siteNoticesContainerClass}>
-            <table className={css.siteNoticesList} id={css.all_notice_to_render}>
-              <tbody>
-                { notices.map(this.renderRow) }
-              </tbody>
-            </table>
+            {noNotice || notices.length < 1 ? this.renderNoNotices() : this.renderTable(notices)}
           </div>
         </div>
       </div>

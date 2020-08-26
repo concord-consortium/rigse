@@ -88,16 +88,7 @@ class API::V1::SiteNoticesController < API::APIController
     notice.destroy
 
     if request.xhr?
-      render :update do |page|
-        page << "$('#{params[:id]}').remove();"
-        page << "notices_table = document.getElementById('notice_list')"
-        page << "all_notices = notices_table.getElementsByTagName('tr')"
-        page << "if(all_notices.length == 1)"
-        page << "{"
-        page << "$('notice_list').remove();"
-        page << "$('no_notice_msg').update('You have no notices.<br/>To create a notice click the \"Create New Notice\" button.')"
-        page << "}"
-      end
+      render json: { notice_deleted: true }
       return
     end
 
@@ -121,9 +112,7 @@ class API::V1::SiteNoticesController < API::APIController
     user_collapsed_notice.collapsed_status = status_to_be_set
     user_collapsed_notice.save!
     if request.xhr?
-      render :update do |page|
-        status_to_be_set ? page << "$('oHideShowLink').setAttribute('title','Show Notices')" : page << "$('oHideShowLink').setAttribute('title','Hide Notices')"
-      end
+      render json: { notices_collapsed: status_to_be_set }
       return
     end
   end
@@ -136,17 +125,7 @@ class API::V1::SiteNoticesController < API::APIController
     user_notice.updated_at = DateTime.now
     user_notice.save!
     if request.xhr?
-      render :update do |page|
-        page << "$('#{dom_id_for(notice)}').remove();"
-        page << "notice_table = document.getElementById('all_notice_to_render')
-                  all_notices = notice_table.getElementsByTagName('tr')
-                  if(all_notices.length == 0)
-                  {
-                    $('oHideShowLink').remove();
-                    $('notice_container').remove();
-                  }
-                "
-      end
+      render json: { notice_dismissed: true }
       return
     end
   end
