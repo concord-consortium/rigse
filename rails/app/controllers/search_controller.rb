@@ -298,6 +298,7 @@ class SearchController < ApplicationController
     material_type = params[:material_type]
     material_ids = params[:material_id]
     material_ids = material_ids.split(',')
+    @feedback_message = params[:feedback_message]
 
     if material_type != "ExternalActivity" || material_ids.length != 1
       @material_type = material_type
@@ -313,7 +314,9 @@ class SearchController < ApplicationController
     @unassigned_collections = @collections - @assigned_collections
 
     @skip_reload = params[:skip_reload] == 'true'
-    render :partial => 'material_unassigned_collections'
+    respond_to do |format|
+      format.html # get_current_material_unassigned_collections.html.erb
+    end
   end
 
   def add_material_to_collections
@@ -329,7 +332,6 @@ class SearchController < ApplicationController
     runnable_type = params[:material_type].classify
     skip_reload = params[:skip_reload] == 'true'
     assign_summary_data = []
-
 
     collection_ids.each do|collection_id|
       already_assigned_material_names = []
@@ -356,32 +358,30 @@ class SearchController < ApplicationController
       assign_summary_data << [collection.name, newly_assigned_material_names,already_assigned_material_names]
     end
 
-    if request.xhr?
-      render :update do |page|
-        materials = []
-        if runnable_ids.length == 1
-          if runnable_type == "Investigation"
-            materials.push ::Investigation.find(params[:material_id])
-          elsif runnable_type == "Activity"
-            materials.push ::Activity.find(params[:material_id])
-          elsif runnable_type == "ExternalActivity"
-            materials.push ::ExternalActivity.find(params[:material_id])
-          end
-        else
-          runnable_ids.each do |id|
-            materials.push ::Activity.find(id)
-          end
-        end
-
-        if collection_ids.count > 0
-          material_names = materials.map {|m| "<b>#{m.name}</b>" }.join(", ").gsub("'","\\'")
-          page << "close_popup()"
-          page << "getMessagePopup('<div class=\"feedback_message\">#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully.</div>', #{skip_reload})"
-        else
-          page << "$('error_message').update('Select at least one collection to assign this #{runnable_type}');$('error_message').show()"
-        end
+    materials = []
+    if runnable_ids.length == 1
+      if runnable_type == "Investigation"
+        materials.push ::Investigation.find(params[:material_id])
+      elsif runnable_type == "Activity"
+        materials.push ::Activity.find(params[:material_id])
+      elsif runnable_type == "ExternalActivity"
+        materials.push ::ExternalActivity.find(params[:material_id])
+      end
+    else
+      runnable_ids.each do |id|
+        materials.push ::Activity.find(id)
       end
     end
+
+    if collection_ids.count > 0
+      material_names = materials.map {|m| "<b>#{m.name}</b>" }.join(", ").gsub("'","\\'")
+      feedback_message = "#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully."
+    else
+      feedback_message = "Select at least one collection to assign this #{runnable_type}"
+    end
+
+    redirect_to "/search/get_current_material_unassigned_collections?material_id=#{params[:material_id]}&material_type=#{runnable_type}&feedback_message=#{URI.encode(feedback_message)}"
+
   end
 
   private
