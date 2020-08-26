@@ -150,16 +150,4 @@ describe MaterialsCollectionsController do
       expect(response).to redirect_to(materials_collections_url)
     end
   end
-
-  describe "POST sort_materials" do
-    it 'sorts materials appropriately' do
-      collection =  FactoryBot.create(:materials_collection_with_items)
-      current_order = collection.materials_collection_items.map {|i| i.id }.dup
-      shuffled_order = current_order.shuffle
-      post :sort_materials, { :id => collection.id, "materials_materials_collection_#{collection.id}" => shuffled_order }
-      new_order = MaterialsCollectionItem.order(:position).where(materials_collection_id: collection.id).map(&:id)
-      expect(response.status).to eq(200)
-      expect(new_order).to eq(shuffled_order)
-    end
-  end
 end

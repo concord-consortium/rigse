@@ -1,2 +1,11 @@
 = form_for(@materials_collection) do |f|
   = render :partial => 'form', :locals => { :materials_collection => @materials_collection, :f => f }
+
+  %h3 Materials in Collection
+  #edit-items
+  :javascript
+    PortalComponents.renderEditMaterialsCollectionList({
+      collection: #{{id: @materials_collection.id, name: @materials_collection.name}.to_json},
+      items: #{@materials_collection.materials_collection_items.includes(:material).map {|mci| {id: mci.id, name: mci.material.name, url: url_for(mci.material), is_archived: mci.material.is_archived}}.to_json}
+    }, 'edit-items');
+

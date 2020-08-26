@@ -81,26 +81,6 @@ class MaterialsCollectionsController < ApplicationController
     end
   end
 
-  def sort_materials
-    # TODO: Move to a new controllers/api/ route
-    @materials_collection = MaterialsCollection.includes(:materials_collection_items).find(params[:id])
-    paramlistname = view_context.dom_id_for(@materials_collection, :materials)
-    @materials_collection.materials_collection_items.each do |material|
-      material.position = params[paramlistname].index(material.id.to_s) + 1
-      material.save
-    end
-    render :nothing => true
-  end
-
-  def remove_material
-    # TODO: Move to a new controllers/api/ route
-    item = MaterialsCollectionItem.where(id: params[:materials_collection_item_id], materials_collection_id: params[:id]).first
-    if item && item.destroy
-      render :nothing => true
-    else
-      render :nothing => true, :status => :unprocessable_entity
-    end
-  end
 
   private
 
