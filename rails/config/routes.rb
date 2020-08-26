@@ -274,6 +274,7 @@ RailsPortal::Application.routes.draw do
       resources :settings
       resources :tags
       resources :projects
+      resources :cohorts
       resources :clients
       resources :tools
       resources :external_reports

@@ -1,0 +1,27 @@
+- display_name = "#{admin_cohort.name}"
+%div{id: dom_id_for(admin_cohort), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3
+        %a{href:admin_cohort_path(admin_cohort)}=display_name
+
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_cohort_path(admin_cohort)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:admin_cohort.id), data: {method: 'delete', confirm: "Delete this tag?"} } delete
+  %div{:id => dom_id_for(admin_cohort, :item), :class => 'item'}
+    %div{:id => dom_id_for(admin_cohort, :details), :class => 'content'}
+      %p
+        Name:
+        = h(admin_cohort.name)
+      %p
+        Project:
+        - if admin_cohort.project
+          = h(admin_cohort.project.name)
+        - else
+          None
+      - if admin_cohort.email_notifications_enabled
+        %p
+          Email notifactions are enabled for this cohort

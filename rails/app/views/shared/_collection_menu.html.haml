@@ -13,5 +13,5 @@
         = will_paginate collection
     .action_menu_header_right
       %ul.menu
-        - if policy(collection_class).create?
+        - if policy(collection_class).new?
           %li= link_to "create #{collection_class.display_name}", :controller => collection_class.name.underscore.pluralize, :action => :new
