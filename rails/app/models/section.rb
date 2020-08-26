@@ -42,7 +42,6 @@ class Section < ActiveRecord::Base
   include Changeable
 
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
-  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   include Noteable # convenience methods for notes...
 
   validates_presence_of :name, :on => :create, :message => "can't be blank"

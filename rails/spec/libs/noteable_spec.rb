@@ -26,26 +26,6 @@ RSpec.describe Noteable do
   end
 
   # TODO: auto-generated
-  describe '#author_note' do
-    xit 'author_note' do
-      noteable = described_class
-      result = noteable.author_note
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#author_note=' do
-    it 'author_note=' do
-      note = ('note')
-      result = noteable.author_note=(note)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#has_good_teacher_note?' do
     it 'has_good_teacher_note?' do
       result = noteable.has_good_teacher_note?
