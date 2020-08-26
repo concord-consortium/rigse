@@ -41,7 +41,7 @@ export default class SiteNotices extends React.Component {
     return (
       <div className={css.adminSiteNotices}>
         <h1>Notices</h1>
-        <Notices notices={notices} receivedData={receivedData} />
+        <Notices notices={notices} receivedData={receivedData} getPortalData={this.getPortalData} />
         <div className={css.adminSiteNoticesCreate + ' floatR'}>
           <a href='/admin/site_notices/new' className='button'>Create New Notice</a>
         </div>

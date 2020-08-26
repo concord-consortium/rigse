@@ -18,7 +18,9 @@ export default class Notice extends React.Component {
         url: deleteUrl,
         type: 'delete',
         data: 'authenticity_token=' + encodeURIComponent(authToken),
-        success: data => {},
+        success: (data) => {
+          this.props.getPortalData()
+        },
         error: () => {
           console.error(`DELETE failed, can't delete notice`)
         }
