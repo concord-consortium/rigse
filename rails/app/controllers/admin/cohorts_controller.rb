@@ -6,21 +6,14 @@ class Admin::CohortsController < ApplicationController
     authorize Admin::Cohort
 
     @admin_cohorts = Admin::Cohort.search(params[:search], params[:page], nil, nil, policy_scope(Admin::Cohort))
-    respond_to do |format|
-      format.html # index.html.haml
-      format.xml  { render :xml => @admin_cohorts }
-    end
+    # render index.html.haml
   end
 
   # GET /admin_cohorts/1
-  # GET /admin_cohorts/1.xml
   def show
     @admin_cohort = Admin::Cohort.find(params[:id])
     authorize @admin_cohort
-    respond_to do |format|
-      format.html # show.html.haml
-      format.xml  { render :xml => @admin_cohort }
-    end
+    # render show.html.haml
   end
 
   # GET /admin_cohorts/new
