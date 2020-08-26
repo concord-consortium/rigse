@@ -81,14 +81,7 @@ RailsPortal::Application.routes.draw do
           get :fullstatus
         end
 
-        resources :bookmarks, only: [:index] do
-          member do
-            get 'visit'
-          end
-          collection do
-            get 'visits'
-          end
-        end
+        resources :bookmarks, only: [:index]
 
         collection do
           get :info
@@ -97,6 +90,9 @@ RailsPortal::Application.routes.draw do
           #post :manage_classes_save, :as => 'manage_save'
         end
       end
+
+      match '/bookmark/visit/:id' => 'bookmarks#visit',  :as => :visit_bookmark
+      match '/bookmark/visits'    => 'bookmarks#visits', :as => :bookmark_visits
 
       resources :clazzes, :path => :classes do
         resources :student_clazzes
