@@ -1,10 +1,9 @@
 class Admin::CohortsController < ApplicationController
   include RestrictedController
-  before_filter :check_for_project
 
+  before_filter :check_for_project
   before_filter :get_scoped_projects, only: ['new', 'edit']
   before_filter :find_cohort, only: ['show', 'edit', 'update', 'destroy']
-  before_filter :check_for_project
 
   private
 
@@ -17,6 +16,7 @@ class Admin::CohortsController < ApplicationController
 
   def get_scoped_projects
     @projects = policy_scope(Admin::Project)
+    @projects = @projects.where(id: @project.id) if @project
   end
 
   def find_cohort
