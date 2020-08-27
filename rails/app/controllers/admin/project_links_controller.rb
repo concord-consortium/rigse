@@ -76,6 +76,6 @@ class Admin::ProjectLinksController < ApplicationController
   def destroy
     authorize @project_link
     @project_link.destroy
-    redirect_to admin_project_links_url, notice: "Tag #{@project_link.name} was deleted"
+    redirect_to admin_project_links_url, notice: "Link #{@project_link.name} was deleted"
   end
 end
