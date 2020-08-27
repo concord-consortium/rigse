@@ -2,19 +2,9 @@ class API::V1::ClassesController < API::APIController
 
   # GET api/v1/classes/:id
   def show
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
-
-    if user.anonymous?
-      return error('You must be logged in to use this endpoint')
-    end
-
-    if !user.portal_student && !user.portal_teacher
-      return error('You must be logged in as a student or teacher to use this endpoint')
-    end
+    auth = auth_student_or_teacher(params)
+    return error(auth[:error]) if auth[:error]
+    user = auth[:user]
 
     clazz = Portal::Clazz.find_by_id(params[:id])
     if !clazz
@@ -34,20 +24,11 @@ class API::V1::ClassesController < API::APIController
   # GET api/v1/classes/mine
   # lists the users classes
   def mine
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
-
-    if user.anonymous?
-      return error('You must be logged in to use this endpoint')
-    end
+    auth = auth_student_or_teacher(params)
+    return error(auth[:error]) if auth[:error]
+    user = auth[:user]
 
     user_with_clazzes = user.portal_student || user.portal_teacher
-    if !user_with_clazzes
-      return error('You must be logged in as a student or teacher to use this endpoint')
-    end
 
     render :json => {
       classes: user_with_clazzes.clazzes.map do |clazz|

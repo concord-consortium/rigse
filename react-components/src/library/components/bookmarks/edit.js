@@ -2,18 +2,9 @@ import React from 'react'
 import { arrayMove } from 'react-sortable-hoc'
 
 import SortableBookmarks from './sortable-bookmarks'
-import css from './style.scss'
+import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 
-const shouldCancelSorting = e => {
-  // Only HTML elements with selected classes can be used to reorder offerings.
-  const classList = e.target.classList
-  for (const cl of [ css.sortIcon, css.editBookmarkName ]) {
-    if (classList.contains(cl)) {
-      return false
-    }
-  }
-  return true
-}
+import css from './style.scss'
 
 export class EditBookmarks extends React.Component {
   constructor (props) {
@@ -159,6 +150,8 @@ export class EditBookmarks extends React.Component {
   }
 
   render () {
+    const shouldCancelStart = shouldCancelSorting([ css.sortIcon, css.editBookmarkName ])
+
     return (
       <>
         <SortableBookmarks
@@ -166,7 +159,7 @@ export class EditBookmarks extends React.Component {
           handleUpdate={this.handleUpdate}
           handleDelete={this.handleDelete}
           handleVisibilityToggle={this.handleVisibilityToggle}
-          shouldCancelStart={shouldCancelSorting}
+          shouldCancelStart={shouldCancelStart}
           onSortEnd={this.handleSortEnd}
           distance={3}
         />
