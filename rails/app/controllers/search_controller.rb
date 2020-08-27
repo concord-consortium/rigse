@@ -358,19 +358,11 @@ class SearchController < ApplicationController
     end
 
     materials = []
-    if runnable_ids.length == 1
-      if runnable_type == "Investigation"
-        materials.push ::Investigation.find(params[:material_id])
-      elsif runnable_type == "Activity"
-        materials.push ::Activity.find(params[:material_id])
-      elsif runnable_type == "ExternalActivity"
-        materials.push ::ExternalActivity.find(params[:material_id])
-      end
-    else
-      runnable_ids.each do |id|
-        materials.push ::Activity.find(id)
-      end
+    if material_type != "ExternalActivity" || material_ids.length != 1
+      raise 'unsupported type or length'
     end
+
+    materials.push ::ExternalActivity.find(params[:material_id])
 
     if collection_ids.count > 0
       material_names = materials.map {|m| "#{m.name}" }.join(", ").gsub("'","\\'")

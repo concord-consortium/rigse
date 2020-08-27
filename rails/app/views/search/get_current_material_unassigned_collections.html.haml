@@ -1,52 +1,15 @@
 .search_materials
-  - if @material.length == 1
-    - material = @material[0]
-    - if material.is_a? ::Investigation
-      - investigation_name = material.name
-      - activity_name = ""
-      - external_activity_name = ""
-      - existing_collections = nil
-    - elsif material.is_a? ::Activity
-      - investigation_name = ""
-      - external_activity_name = ""
-      - parent_name = (material.parent) ? material.parent.name : ""
-      - activity_name = material.name
-      - existing_collections = []
-      - if material.parent
-        - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.parent.id,:material_type=>"Investigation"})
-    - elsif material.is_a? ::ExternalActivity
-      - investigation_name = ""
-      - activity_name = ""
-      - external_activity_name = material.name
-      - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.id,:material_type=>"ExternalActivity"})
-  - else
-    - investigation_name = ""
-    - parent_name = (@material[0].parent) ? @material[0].parent.name : ""
-    - activity_name = @material.collect{|item| item.name}.join('<br/>')
+  - material = @material[0]
+  - external_activity_name = material.name
+  - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.id,:material_type=>"ExternalActivity"})
 
-  - activity_name = activity_name || ""
   - external_activity_name = external_activity_name || ""
-  - if investigation_name.length > 0
-    %div
-      %table.material_detail
-        %tr
-          %td
-            = investigation_name
-  - if activity_name.length > 0
+
+  %div
     %table.material_detail
       %tr
         %td
-          = activity_name.html_safe
-      %tr
-        %td.title Part&nbsp;Of:
-        %td
-          = parent_name
-  - if external_activity_name.length > 0
-    %div
-      %table.material_detail
-        %tr
-          %td
-            = external_activity_name
+          = external_activity_name
   %br
   #collection_summary_data
     #scrollable_collection_summary_data
