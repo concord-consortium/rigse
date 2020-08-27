@@ -44,7 +44,7 @@
                         = collection.name
 
           =hidden_field_tag(:material_id, @material.collect{|a| a.id}.join(','))
-          =hidden_field_tag(:material_type, @material[0].class.to_s)
+          =hidden_field_tag(:material_type, 'ExternalActivity')
           =submit_tag("Save")
           &nbsp;&nbsp;
           (Close this window/tab to cancel.)

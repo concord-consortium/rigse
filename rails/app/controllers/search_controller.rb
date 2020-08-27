@@ -287,37 +287,6 @@ class SearchController < ApplicationController
     end
   end
 
-  def get_current_material_unassigned_collections
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    material_type = params[:material_type]
-    material_ids = params[:material_id]
-    material_ids = material_ids.split(',')
-
-    if material_type != "ExternalActivity" || material_ids.length != 1
-      @material_type = material_type
-      render :partial => 'unsupported_assignment'
-      return
-    end
-
-    @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
-
-    @material = [ExternalActivity.find(params[:material_id])]
-    @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
-
-    @unassigned_collections = @collections - @assigned_collections
-
-    @skip_reload = params[:skip_reload] == 'true'
-    respond_to do |format|
-      format.html # get_current_material_unassigned_collections.html.erb
-    end
-  end
-
   def add_material_to_collections
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -358,7 +327,7 @@ class SearchController < ApplicationController
     end
 
     materials = []
-    if material_type != "ExternalActivity" || material_ids.length != 1
+    if params[:material_type] != "ExternalActivity" || runnable_ids.length != 1
       raise 'unsupported type or length'
     end
 
@@ -372,15 +341,5 @@ class SearchController < ApplicationController
     end
 
     redirect_to action: 'get_current_material_unassigned_collections', material_id: params[:material_id], material_type: runnable_type
-  end
-
-  private
-
-  def _collection_has_materials(collection, materials)
-    items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
-    material_items = materials.map {|m| [m.class.to_s, m.id] }
-
-    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
-    return has_them_all
   end
 end

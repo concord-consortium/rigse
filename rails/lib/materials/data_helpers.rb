@@ -275,7 +275,7 @@ module Materials
           archive_url:   (material.is_a?(ExternalActivity) && policy(material).archive?) ? view_context.archive_external_activity_url(material) : nil,
           copy_url: external_copyable(material) ? view_context.copy_external_activity_url(material) : nil,
           assign_to_class_url: current_visitor.portal_teacher && material.respond_to?(:offerings) ? "javascript:PortalComponents.renderAssignToClassModal({material_id: #{material.id}, material_type: '#{material.class.to_s}', lightbox_material_text: '#{t('material').pluralize.capitalize}', skip_reload: true})" : nil,
-          assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? "/search/get_current_material_unassigned_collections/?material_id=#{material.id}&material_type=#{material.class.to_s}" : nil,
+          assign_to_collection_url: current_visitor.has_role?('admin') && material.respond_to?(:materials_collections) ? collections_external_activity_path(material) : nil,
           assigned_classes: assigned_clazz_names(material),
           class_count: material_count,
           sensors: tags['sensors'],
@@ -443,7 +443,7 @@ module Materials
         links[:assign_collection] = {
           text: "Add to Collection",
           target: "_blank",
-          url: "/search/get_current_material_unassigned_collections/?material_id=#{material.id}&material_type=#{material.class.to_s}"
+          url: collections_external_activity_path(material)
         }
       end
 

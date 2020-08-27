@@ -22,7 +22,6 @@ RailsPortal::Application.routes.draw do
   post '/search/get_current_material_unassigned_clazzes'
   post '/search/get_current_material_anonymous'
   post '/search/add_material_to_clazzes'
-  post '/search/get_current_material_unassigned_collections'
   post '/search/add_material_to_collections'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
   get 'search/get_search_suggestions'
@@ -340,6 +339,7 @@ RailsPortal::Application.routes.draw do
         get :set_private_before_matedit
         get :copy
         get :edit_basic
+        match 'collections' => 'external_activities#edit_collections', :via => :get 
       end
     end
 

@@ -327,7 +327,30 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
+  def edit_collections
+    authorize @external_activity
+
+    @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
+
+    @material = [@external_activity]
+    @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
+
+    @unassigned_collections = @collections - @assigned_collections
+
+    respond_to do |format|
+      format.html # edit_collections.html.haml
+    end
+  end
+
   private
+
+  def _collection_has_materials(collection, materials)
+    items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
+    material_items = materials.map {|m| [m.class.to_s, m.id] }
+
+    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
+    return has_them_all
+  end
 
   def json_error(msg,code=422)
     render :json => { :error => msg }, :content_type => 'text/json', :status => code
