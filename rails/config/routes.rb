@@ -266,7 +266,9 @@ RailsPortal::Application.routes.draw do
     namespace :admin do
       resources :settings
       resources :tags
-      resources :projects
+      resources :projects do
+        resources :cohorts
+      end
       resources :cohorts
       resources :clients
       resources :tools
