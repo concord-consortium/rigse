@@ -6,7 +6,6 @@ class DeleteAuthorNotes < ActiveRecord::Migration
   def self.down
     create_table :author_notes do |t|
       t.text        :body
-      t.text        :author
       t.integer     :user_id
       t.column      :uuid, :string, :limit => 36
 
