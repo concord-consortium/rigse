@@ -403,123 +403,18 @@ describe Portal::ClazzesController do
     end
   end
 
+  # GET manage_classes
+  describe "GET manage_classes" do
 
-  describe "Put teacher Manage class" do
-    before(:each) do
-      @mock_teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
-
-      mock_clazz_name = "Mock Class Physics"
-      @mock_clazz_phy = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
-      @authorized_teacher.add_clazz(@mock_clazz_phy)
-      @authorized_teacher.save!
-      @mock_teacher_clazz_phy = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
-
-      mock_clazz_name = "Mock Class Chemistry"
-      @mock_clazz_chem = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
-      @authorized_teacher.add_clazz(@mock_clazz_chem)
-      @authorized_teacher.save!
-      @mock_teacher_clazz_chem = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
-
-      mock_clazz_name = "Mock Class Biology"
-      @mock_clazz_bio = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
-      @authorized_teacher.add_clazz(@mock_clazz_bio)
-      @authorized_teacher.save!
-      @mock_teacher_clazz_bio = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
-
-      mock_clazz_name = "Mock Class Mathematics"
-      @mock_clazz_math = mock_clazz({ :name => mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
-      @authorized_teacher.add_clazz(@mock_clazz_math)
-      @authorized_teacher.save!
-      @mock_teacher_clazz_math = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
-
-      @authorized_teacher.reload
-
-    end
-
-    it "should should save all the activated and deactivated classes and in the right order" do
-      sign_in @authorized_teacher_user
-      @post_params = {
-        'teacher_clazz'  => Array[@mock_teacher_clazz.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_bio.id , @mock_teacher_clazz_math.id ],
-        'teacher_clazz_position'  => Array[@mock_teacher_clazz_math.id , @mock_teacher_clazz_phy.id , @mock_teacher_clazz_chem.id, @mock_teacher_clazz_bio.id ,@mock_teacher_clazz.id ]
-      }
-      put :manage_classes, @post_params
-
-      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz.id, @authorized_teacher.id)
-      expect(teacher_clazz).not_to be_nil
-      assert(teacher_clazz.active)
-      expect(teacher_clazz.position).to eq(5)
-
-      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_phy.id, @authorized_teacher.id)
-      expect(teacher_clazz).not_to be_nil
-      assert(teacher_clazz.active)
-      expect(teacher_clazz.position).to eq(2)
-
-      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_chem.id, @authorized_teacher.id)
-      expect(teacher_clazz).not_to be_nil
-      assert(teacher_clazz.active == false)
-      expect(teacher_clazz.position).to eq(3)
-
-      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_bio.id, @authorized_teacher.id)
-      expect(teacher_clazz).not_to be_nil
-      assert(teacher_clazz.active)
-      expect(teacher_clazz.position).to eq(4)
-
-      teacher_clazz = Portal::TeacherClazz.find_by_clazz_id_and_teacher_id(@mock_clazz_math.id, @authorized_teacher.id)
-      expect(teacher_clazz).not_to be_nil
-      assert(teacher_clazz.active)
-      expect(teacher_clazz.position).to eq(1)
-
-    end
-  end
-
-  describe "Post teacher Creates copy of a class" do
-    before(:each) do
-
-      @student_clazz = Portal::StudentClazz.new
-      @student_clazz.clazz_id = @mock_clazz.id
-      @student_clazz.student_id = @authorized_student.id
-      @student_clazz.save!
-
-      @investigation = FactoryBot.create(:investigation)
-      @investigation.name = 'Fluid Mechanics'
-      @investigation.save!
-
-      @offering = Portal::Offering.new
-      @offering.runnable_id = @investigation.id
-      @offering.clazz_id = @mock_clazz.id
-      @offering.runnable_type = 'Investigation'
-      @offering.save!
+    it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
-      @post_params = {
-        :id => @mock_clazz.id,
-        :clazz_name  => 'Concept of physics',
-        :clazz_desc  => 'Concept of physics',
-        :clazz_word => 'Phy123456'
-      }
+      get :manage_classes
+
+      expect(assigns(:teacher)).to eq @authorized_teacher
     end
 
-    it "should create a new class that's a copy of the original class with investigations and teachers but no students" do
-      xhr :post, :copy_class, @post_params
-
-      @copy_clazz = Portal::Clazz.find_by_name('Concept of physics')
-      expect(@copy_clazz).not_to be_nil
-
-      expect(@copy_clazz.teachers.length).to eq(@mock_clazz.teachers.length)
-      @mock_clazz.teachers.each do |teacher|
-        expect(@copy_clazz.teachers.find_by_id(teacher.id)).not_to be_nil
-      end
-
-      expect(@copy_clazz.offerings.length).to eq(@mock_clazz.offerings.length)
-      @mock_clazz.offerings.each do |offering|
-        expect(@copy_clazz.offerings.find_by_runnable_id(offering.runnable_id)).not_to be_nil
-      end
-
-      expect(@copy_clazz.students.length).to eq(0)
-
-    end
   end
-
 
   # GET edit
   describe "GET edit" do
