@@ -268,6 +268,7 @@ RailsPortal::Application.routes.draw do
       resources :tags
       resources :projects do
         resources :cohorts
+        resources :project_links
       end
       resources :cohorts
       resources :project_links

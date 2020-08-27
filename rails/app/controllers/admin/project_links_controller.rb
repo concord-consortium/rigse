@@ -1,9 +1,10 @@
 class Admin::ProjectLinksController < ApplicationController
   include RestrictedController
 
+  before_filter :check_for_project
   before_filter :get_scoped_projects, only: ['new', 'edit']
   before_filter :find_project_link, only: ['show', 'edit', 'update', 'destroy']
-  before_filter :check_for_project
+
 
   def check_for_project
     return unless params[:project_id]
@@ -16,6 +17,7 @@ class Admin::ProjectLinksController < ApplicationController
 
   def get_scoped_projects
     @projects = policy_scope(Admin::Project)
+    @projects = @projects.where(id: @project.id) if @project
   end
 
   def find_project_link
@@ -27,8 +29,9 @@ class Admin::ProjectLinksController < ApplicationController
   # GET /project_links
   def index
     authorize Admin::ProjectLink
-
-    @project_links = Admin::ProjectLink.search(params[:search], params[:page], nil, nil, policy_scope(Admin::ProjectLink))
+    search_scope = policy_scope(Admin::ProjectLink)
+    search_scope = search_scope.where(project_id: @project.id) if @project
+    @project_links = Admin::ProjectLink.search(params[:search], params[:page], nil, nil, search_scope)
     # render index.html.haml
   end
 
@@ -42,6 +45,7 @@ class Admin::ProjectLinksController < ApplicationController
   def new
     authorize Admin::ProjectLink
     @project_link = Admin::ProjectLink.new
+    @project_link.project_id = @project.id if @project
     # render new.html.haml
   end
 
