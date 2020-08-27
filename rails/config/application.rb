@@ -151,7 +151,6 @@ module RailsPortal
     config.assets.precompile += %w(
       print.css
       student_roster.js
-      manage_classes.js
       full_status.js
       preview_home_page.js
       preview_about_page.js
