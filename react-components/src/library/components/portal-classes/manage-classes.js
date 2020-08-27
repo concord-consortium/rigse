@@ -84,7 +84,7 @@ export default class ManageClasses extends React.Component {
       activeToggle: { url: `${basePath}/${clazz.id}/set_active`, type: 'POST' }
     }[action]
 
-    return new Promise((resolve, reject) => {
+    return Promise.resolve(
       jQuery.ajax({
         url,
         data: JSON.stringify(data),
@@ -93,22 +93,21 @@ export default class ManageClasses extends React.Component {
         contentType: 'application/json',
         success: json => {
           if (!json.success) {
-            reject(json)
+            throw json
           } else {
             if (onSuccess) {
               onSuccess(json.data)
             }
-            resolve(json.data)
           }
         },
         error: (jqXHR, textStatus, error) => {
           try {
-            reject(JSON.parse(jqXHR.responseText))
+            error = JSON.parse(jqXHR.responseText)
           } catch (e) {}
-          reject(error)
+          throw error
         }
       })
-    })
+    )
   }
 
   render () {

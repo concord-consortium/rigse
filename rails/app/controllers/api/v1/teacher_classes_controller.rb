@@ -22,9 +22,14 @@ class API::V1::TeacherClassesController < API::APIController
       return error('Missing ids parameter')
     end
 
+    # NOTE: we can't use Portal::TeacherClazz.find(ids) here as the returned array is not in the order of the passed ids
+    # and we need the order preserved so we can update the position based on the id order
     ids.each do |id|
-      teacher_clazz = Portal::TeacherClazz.find_by_id(id)
-      return error("Invalid teacher class id: #{id}") if !teacher_clazz
+      begin
+        teacher_clazz = Portal::TeacherClazz.find(id)
+      rescue ActiveRecord::RecordNotFound => e
+        return error("Invalid teacher class id: #{id}") if !teacher_clazz
+      end
       return error("You are not a teacher of class: #{id}") if !teacher_clazz.clazz.is_teacher?(user)
     end
 
