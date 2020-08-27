@@ -35,7 +35,6 @@ class Page < ActiveRecord::Base
 
   include ResponseTypes
 
-  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   include Noteable # convenience methods for notes...
 

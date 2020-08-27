@@ -14,22 +14,7 @@ namespace :app do
              next
            end
          end
-       end  
-    end
-    
-    desc 'remove teacher notes without an authored entity. reclaim ownership of '
-    task :clean_teacher_notes => :environment do
-      TeacherNote.all.each do |note|
-        if note.authored_entity
-          if note.authored_entity.user
-            unless note.authored_entity.user == note.user
-              puts "changing owner of teacher note #{note.id} to #{note.authored_entity.user.login}"
-              note.user = note.authored_entity.user
-              note.save!
-            end
-          end
-        end
-      end
+       end
     end
   end
 end

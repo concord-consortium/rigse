@@ -41,7 +41,6 @@ class Section < ActiveRecord::Base
 
   include Changeable
 
-  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
   include Noteable # convenience methods for notes...
 

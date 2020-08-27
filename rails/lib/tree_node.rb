@@ -2,7 +2,7 @@
 #  Methods for Objects which are part of the Investigations tree structure
 #
 module TreeNode
-  
+
   def child_after(child)
     index = children.index(child)
     if index
@@ -10,7 +10,7 @@ module TreeNode
     end
     return nil
   end
-  
+
   def child_before(child)
     index = children.index(child)
     if index && (index > 0)
@@ -18,14 +18,14 @@ module TreeNode
     end
     return nil
   end
-  
+
   def next
     if parent
       return parent.child_after(self)
     end
     return nil
   end
-  
+
   def previous
     if parent
       return parent.child_before(self)
@@ -39,12 +39,12 @@ module TreeNode
     end
     return 1
   end
-  
+
   def each(&block)
     block[self]
-    self.children.each do |leaf| 
+    self.children.each do |leaf|
       if leaf.respond_to? 'children'
-        leaf.each(&block) 
+        leaf.each(&block)
       elsif leaf
         block.call(leaf)
       else
@@ -55,7 +55,7 @@ module TreeNode
       end
     end
   end
-  
+
   # TODO, this should probably go into a container module.
   # However, sense it relies on TreeNode methods, it also
   # makes some sense to put here...
@@ -78,16 +78,6 @@ module TreeNode
           end
         end
       end
-      if thing.respond_to? 'teacher_notes'
-        thing.teacher_notes.each do |note|
-          unless note.user == new_user
-            old_login = note.user ? note.user.login : "<nil>"
-            Rails.logger.info "changing ownership of #{note} from #{old_login} to #{new_user.login}" if logging
-            note.user = new_user
-            note.save
-          end
-        end
-      end
       if thing.respond_to? 'author_notes'
         thing.author_notes.each do |note|
           unless note.user == new_user
@@ -99,17 +89,17 @@ module TreeNode
       end
 
     }
-    
-    set_user.call(self)    
+
+    set_user.call(self)
     self.each &set_user
-    
-    
+
+
     if original_user
       unless original_user == new_user
         original_user.removed_investigation
       end
     end
   end
-  
-  
+
+
 end

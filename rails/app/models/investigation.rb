@@ -10,7 +10,6 @@ class Investigation < ActiveRecord::Base
       where('teacher_only' => false)
     end
   end
-  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
   has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
@@ -126,24 +125,15 @@ class Investigation < ActiveRecord::Base
   def deep_xml
     self.to_xml(
       :include => {
-        :teacher_notes=>{
-          :except => [:id,:authored_entity_id, :authored_entity_type]
-        },
         :activities => {
           :exlclude => [:id,:investigation_id],
           :include => {
             :sections => {
               :exlclude => [:id,:activity_id],
               :include => {
-                :teacher_notes=>{
-                  :except => [:id,:authored_entity_id, :authored_entity_type]
-                },
                 :pages => {
                   :exlclude => [:id,:section_id],
                   :include => {
-                    :teacher_notes=>{
-                      :except => [:id,:authored_entity_id, :authored_entity_type]
-                    },
                     :page_elements => {
                       :except => [:id,:page_id],
                       :include => {
