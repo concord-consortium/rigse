@@ -13,15 +13,16 @@ Feature: Student must give consent for research study
   Scenario: Teacher signs up a student, student them must give consent on logging in
     When I am logged in with the username teacher
     And I am on "Student Roster" page for "My Class"
-    And I follow "Register & Add New Student"
+    And I click the span "Register & Add New Student"
     And I should see "Register & Add New Student"
     And I should not see "Your age"
     Then I fill in the following:
-      | user_first_name            | Example  |
-      | user_last_name             | Student  |
-      | user_password              | password |
-      | user_password_confirmation | password |
+      | firstName            | Example  |
+      | lastName             | Student  |
+      | password             | password |
+      | passwordConfirmation | password |
     And I press "Submit"
+    And I wait 1 second
     And I log out
     And I login with username: estudent password: password
     Then I should see "Your age"
@@ -32,5 +33,5 @@ Feature: Student must give consent for research study
     And I log out
     And I login with username: estudent password: password
     Then I should not see "Your age"
-    
-    
+
+

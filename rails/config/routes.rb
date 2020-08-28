@@ -68,8 +68,6 @@ RailsPortal::Application.routes.draw do
           get :add_offering
           post :add_offering
           get :class_list
-          get :add_student
-          post :add_student
           get :remove_offering
           post :remove_offering
           get :edit_offerings
@@ -395,6 +393,9 @@ RailsPortal::Application.routes.draw do
             get :check_class_word
             post :join_class
             post :confirm_class_word
+            post :register
+            post :add_to_class
+            post :remove_from_class
           end
           member do
             post :check_password

@@ -2,7 +2,7 @@ class Portal::StudentClazzesController < ApplicationController
 
   include RestrictedPortalController
   public
-  
+
   # GET /portal_student_clazzes
   # GET /portal_student_clazzes.xml
   def index
@@ -110,7 +110,6 @@ class Portal::StudentClazzesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(portal_student_clazzes_url) }
       format.xml  { head :ok }
-      format.js
     end
   end
 end

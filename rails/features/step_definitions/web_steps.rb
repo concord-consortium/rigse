@@ -89,6 +89,10 @@ When /^(?:|I )follow "([^"]*)"$/ do |link|
   first(:link, link).click
 end
 
+When /^(?:|I )click the span "([^"]*)"$/ do |text|
+  page.find('span', text: text).click
+end
+
 When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
   fill_in(field, :with => value)
 end
@@ -323,3 +327,4 @@ end
 When /^I reload the page$/ do
   page.evaluate_script 'window.location.reload()'
 end
+

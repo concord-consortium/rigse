@@ -379,64 +379,8 @@ class Portal::ClazzesController < ApplicationController
     end
   end
 
-  # HACK: Add a student to a clazz
-  # TODO: test this method
-  # NOTE: delete student is in the student_clazzes_controller.
-  # we should put these functions in the same place ...
-  def add_student
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-    @student = nil
-    @portal_clazz = Portal::Clazz.find(params[:id])
-    valid_data = false
-    begin
-      student_id = params[:student_id].to_i
-      valid_data = true && student_id != 0
-    rescue
-      valid_data = false
-    end
-
-    if params[:student_id] && (!params[:student_id].empty?) && valid_data
-      @student = Portal::Student.find(params[:student_id])
-    end
-    if @student
-      @student.add_clazz(@portal_clazz)
-      @portal_clazz.reload
-      render :update do |page|
-        page << "if ($('students_listing')){"
-        page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        page << "}"
-        #page << "if ($('add_students_listing')){"
-        #page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        #page << "}"
-        page << "if ($('oClassStudentCount')){"
-        page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
-        page << "}"
-        page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
-      end
-    else
-      render :update do |page|
-        # previous message was "that was a total failure"
-        # this case should not happen, but if it does, display something
-        # more friendly such as:
-        page << "alert('Please select a user from the list before clicking add button.')"
-      end
-    end
-  end
-
+  # GET /portal_clazzes/1/class_list
   def class_list
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
 
     respond_to do |format|
@@ -444,27 +388,12 @@ class Portal::ClazzesController < ApplicationController
     end
   end
 
-# GET /portal_clazzes/1/roster
+  # GET /portal_clazzes/1/roster
   def roster
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-
-
-    @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
-    if request.xhr?
-      render :partial => 'remote_form_student_roster', :locals => { :portal_clazz => @portal_clazz }
-      return
-    end
 
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
-
   end
 
 # GET add/edit student list
