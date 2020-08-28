@@ -76,27 +76,20 @@ RailsPortal::Application.routes.draw do
           post :edit_offerings
           get :roster
           post :add_new_student_popup
-          post :copy_class
           get :materials
           get :fullstatus
         end
 
-        resources :bookmarks, only: [:index] do
-          member do
-            get 'visit'
-          end
-          collection do
-            get 'visits'
-          end
-        end
+        resources :bookmarks, only: [:index]
 
         collection do
           get :info
-          #get :manage_classes, :path => 'manage'
-          match 'manage', :to => 'clazzes#manage_classes'
-          #post :manage_classes_save, :as => 'manage_save'
+          get 'manage', :to => 'clazzes#manage_classes'
         end
       end
+
+      match '/bookmark/visit/:id' => 'bookmarks#visit',  :as => :visit_bookmark
+      match '/bookmark/visits'    => 'bookmarks#visits', :as => :bookmark_visits
 
       resources :clazzes, :path => :classes do
         resources :student_clazzes
@@ -141,8 +134,6 @@ RailsPortal::Application.routes.draw do
         collection do
           get :signup
           get :register
-          post :register
-          post :confirm
           get :move_confirm
           post :move_confirm
           get :move
@@ -273,7 +264,9 @@ RailsPortal::Application.routes.draw do
     namespace :admin do
       resources :settings
       resources :tags
-      resources :projects
+      resources :projects do
+        resources :cohorts
+      end
       resources :cohorts
       resources :clients
       resources :tools
@@ -309,7 +302,6 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    resources :author_notes
     resources :n_logo_models
     resources :multiple_choices do
       member do
@@ -405,6 +397,8 @@ RailsPortal::Application.routes.draw do
         resources :students do
           collection do
             get :check_class_word
+            post :join_class
+            post :confirm_class_word
           end
           member do
             post :check_password
@@ -470,6 +464,14 @@ RailsPortal::Application.routes.draw do
         namespace :classes do
           get :info
           get :mine
+        end
+
+        resources :teacher_classes, only: [:show] do
+          member do
+            post :sort
+            post :set_active
+            post :copy
+          end
         end
 
         namespace :jwt do

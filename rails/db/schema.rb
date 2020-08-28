@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200827012553) do
+ActiveRecord::Schema.define(:version => 20200826205527) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -204,16 +204,6 @@ ActiveRecord::Schema.define(:version => 20200827012553) do
   end
 
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
-
-  create_table "author_notes", :force => true do |t|
-    t.text     "body",                 :limit => 16777215
-    t.string   "uuid",                 :limit => 36
-    t.integer  "authored_entity_id"
-    t.string   "authored_entity_type"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-    t.integer  "user_id"
-  end
 
   create_table "authoring_sites", :force => true do |t|
     t.string   "name"

@@ -149,6 +149,55 @@ describe HomeController do
     end
   end
 
+  describe '#my_classes' do
+    let(:school)       { FactoryBot.create(:portal_school) }
+    let(:teacher_user) { FactoryBot.create(:confirmed_user, login: "teacher_user") }
+    let(:teacher)      { FactoryBot.create(:portal_teacher, user: teacher_user, schools: [school]) }
+    let(:course)       { FactoryBot.create(:portal_course, name: "test course", school: school) }
+    let(:clazz)        { FactoryBot.create(:portal_clazz, teachers: [teacher], course: course) }
+    let(:student_user) { FactoryBot.create(:confirmed_user, login: "student_user") }
+    let(:student)      { FactoryBot.create(:portal_student, user: student_user) }
+
+    before(:each) do
+      allow(@test_settings).to receive(:default_cohort).and_return(nil)
+      allow(@test_settings).to receive(:enabled_bookmark_types).and_return(["Portal::GenericBookmark"])
+      student.add_clazz(clazz)
+      sign_in student_user
+    end
+
+    describe "without bookmarks" do
+      it 'GET my_classes should not include class links' do
+        get :my_classes
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to_not include("<h3>Class Links</h3>")
+      end
+    end
+
+    describe "with bookmarks" do
+      let(:bookmark1) { FactoryBot.create(:generic_bookmark, name: "Example Bookmark 1", url: "http://example.com/example1", user: teacher_user, clazz: clazz) }
+      let(:bookmark2) { FactoryBot.create(:generic_bookmark, name: "Example Bookmark 2", url: "http://example.com/example2", user: teacher_user, clazz: clazz, is_visible: false) }
+      let(:bookmark3) { FactoryBot.create(:generic_bookmark, name: "Example Bookmark 3", url: "http://example.com/example3", user: teacher_user, clazz: clazz) }
+
+      before(:each) do
+        # load bookmarks so they exists at get time
+        bookmark1
+        bookmark2
+        bookmark3
+      end
+
+      it 'GET my_classes should include class links' do
+        get :my_classes
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("<h3>Class Links</h3>")
+        expect(response.body).to include("<a href='/portal/bookmark/visit/#{bookmark1.id}' target='_blank'>Example Bookmark 1</a>")
+        expect(response.body).to_not include("<a href='/portal/bookmark/visit/#{bookmark2.id}' target='_blank'>Example Bookmark 2</a>")
+        expect(response.body).to include("<a href='/portal/bookmark/visit/#{bookmark3.id}' target='_blank'>Example Bookmark 3</a>")
+      end
+    end
+  end
+
   # TODO: auto-generated
   describe '#index' do
     it 'GET index' do
@@ -162,15 +211,6 @@ describe HomeController do
   describe '#getting_started' do
     it 'GET getting_started' do
       get :getting_started, {}, {}
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#my_classes' do
-    it 'GET my_classes' do
-      get :my_classes, {}, {}
 
       expect(response).to have_http_status(:ok)
     end

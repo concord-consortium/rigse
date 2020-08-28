@@ -10,7 +10,6 @@ class Investigation < ActiveRecord::Base
       where('teacher_only' => false)
     end
   end
-  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
@@ -92,7 +91,6 @@ class Investigation < ActiveRecord::Base
   end
 
   include Changeable
-  include Noteable # convenience methods for notes...
 
   # Enables a teacher note to call the investigation method of an
   # authored_entity to find the relavent investigation

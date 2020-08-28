@@ -90,8 +90,6 @@ class ExternalActivity < ActiveRecord::Base
   has_many :materials_collection_items, :dependent => :destroy, :as => :material
   has_many :materials_collections, :through => :materials_collection_items
 
-  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
-
   belongs_to :template, :polymorphic => true
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy

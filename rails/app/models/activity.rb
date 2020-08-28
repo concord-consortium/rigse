@@ -23,8 +23,6 @@ class Activity < ActiveRecord::Base
     end
   end
   has_many :pages, :through => :sections
-  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
-
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
@@ -47,7 +45,6 @@ class Activity < ActiveRecord::Base
     WHERE sections.activity_id = #{id}" }
 
   include ResponseTypes
-  include Noteable # convenience methods for notes...
   acts_as_replicatable
   acts_as_list :scope => :investigation
   include Changeable

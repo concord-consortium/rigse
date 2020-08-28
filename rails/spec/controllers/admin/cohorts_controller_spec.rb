@@ -273,7 +273,6 @@ describe Admin::CohortsController do
       end
     end
 
-
       describe 'for a cohort in project 2' do
         let(:project_id) { project_2.id }
         it 'should let them' do
@@ -284,6 +283,41 @@ describe Admin::CohortsController do
         end
       end
     end
+  end
 
+  describe 'Nested controller methods' do
+    let(:user) { admin_user }
+    let(:project) { project_2 }
+
+    context 'when nested under project route' do
+      context 'get index' do
+        it 'should restrict the list of cohorts to that project' do
+          get 'index', project_id: project.id
+          expect(assigns('admin_cohorts')).to include(@cohort_2)
+          expect(assigns('admin_cohorts')).not_to include(@cohort_1)
+          expect(assigns('admin_cohorts')).not_to include(@cohort_3)
+          expect(response).to have_http_status(:ok)
+        end
+      end
+      context 'get new' do
+        it 'should only display the selected project in the drop down' do
+          get 'new', project_id: project.id
+          expect(assigns('projects')).to include(project_2)
+          expect(assigns('projects')).not_to include(project_1)
+          expect(assigns('projects')).not_to include(project_3)
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'should pre-select the correct project from the route' do
+          [project_1, project_2, project_3].each do |chosen_project|
+            get 'new', project_id: chosen_project.id
+            new_admin_cohort = assigns('admin_cohort')
+            expect(new_admin_cohort.project_id).to eq(chosen_project.id)
+            expect(response).to have_http_status(:ok)
+          end
+        end
+      end
+    end
   end
 end
+
