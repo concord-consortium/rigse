@@ -65,4 +65,58 @@ class API::V1::StudentsController < API::APIController
     return error({'password' => 'password incorrect'}, 401)
   end
 
+  def join_class
+    result = get_portal_clazz(params)
+    return error(result[:error]) if result[:error]
+    portal_clazz = result[:portal_clazz]
+
+    if current_visitor.anonymous?
+      return error("You must be logged in to sign up for a class!")
+    end
+
+    if current_visitor.portal_teacher
+      return error("You can't signup for a class while logged in as a teacher!")
+    end
+
+    student = current_visitor.portal_student
+    if !student
+      grade_level = view_context.find_grade_level(params)
+      student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id)
+    end
+    student.process_class_word(params[:class_word])
+
+    render_ok
+  end
+
+  # similar to #check_class_word but uses different error message to be consistent with #join_class
+  def confirm_class_word
+    result = get_portal_clazz(params)
+    if result[:error]
+      error(result[:error])
+    else
+      portal_clazz = result[:portal_clazz]
+      render :json => { success: true, data: {teacher_name: portal_clazz.teacher.user.name} }, :status => :ok
+    end
+  end
+
+  private
+
+  def render_ok
+    render :json => { success: true }, :status => :ok
+  end
+
+  def get_portal_clazz(params)
+    class_word = params[:class_word]
+    if !class_word
+      return {error: "Missing class_word parameter"}
+    end
+
+    portal_clazz = Portal::Clazz.find_by_class_word(class_word)
+    if !portal_clazz
+      return {error: "The class word you provided, \"#{class_word}\", was not valid! Please check with your teacher to ensure you have the correct word."}
+    end
+
+    return {portal_clazz: portal_clazz}
+  end
+
 end

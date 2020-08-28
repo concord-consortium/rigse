@@ -134,8 +134,6 @@ RailsPortal::Application.routes.draw do
         collection do
           get :signup
           get :register
-          post :register
-          post :confirm
           get :move_confirm
           post :move_confirm
           get :move
@@ -401,6 +399,8 @@ RailsPortal::Application.routes.draw do
         resources :students do
           collection do
             get :check_class_word
+            post :join_class
+            post :confirm_class_word
           end
           member do
             post :check_password
