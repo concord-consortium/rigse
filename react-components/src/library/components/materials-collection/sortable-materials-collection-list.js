@@ -2,16 +2,16 @@ import React from 'react'
 import { SortableContainer } from 'react-sortable-hoc'
 import css from './style.scss'
 
-import UnortableMaterialsCollectionListRow from './sortable-materials-collection-list-row'
+import SortableMaterialsCollectionListRow from './sortable-materials-collection-list-row'
 
-class UnsortableMaterialsCollectionList extends React.Component {
+class MaterialsCollectionList extends React.Component {
   render () {
     const { items } = this.props
 
     return (
       <div className={css.editMaterialsCollectionsList}>
         {items.map((item, index) => (
-          <UnortableMaterialsCollectionListRow
+          <SortableMaterialsCollectionListRow
             key={item.id}
             index={index}
             item={item}
@@ -25,6 +25,6 @@ class UnsortableMaterialsCollectionList extends React.Component {
   }
 }
 
-const SortableMaterialsCollectionList = SortableContainer(UnsortableMaterialsCollectionList)
+const SortableMaterialsCollectionList = SortableContainer(MaterialsCollectionList)
 
 export default SortableMaterialsCollectionList

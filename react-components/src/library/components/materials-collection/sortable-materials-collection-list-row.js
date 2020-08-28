@@ -2,7 +2,7 @@ import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
 import css from './style.scss'
 
-class UnortableMaterialsCollectionListRow extends React.Component {
+class MaterialsCollectionListRow extends React.Component {
   render () {
     const { item } = this.props
 
@@ -29,6 +29,6 @@ class UnortableMaterialsCollectionListRow extends React.Component {
   }
 }
 
-const SortableMaterialsCollectionListRow = SortableElement(UnortableMaterialsCollectionListRow)
+const SortableMaterialsCollectionListRow = SortableElement(MaterialsCollectionListRow)
 
 export default SortableMaterialsCollectionListRow
