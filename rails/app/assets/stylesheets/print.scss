@@ -70,19 +70,19 @@ h4, .content, .editable_block {
       width: 100%;
       clear: both;
       margin: 2em;
-      page-break-inside: avoid; }
+      page-break-inside: avoid;
     }
+  }
   .teacher_content {
     display: block;
     float: right;
     padding: 1em;
     width: 20%;
     border: {
-      left: 1px dotted; };
-    .teacher_notes {
-      .teacher_note {
-        font: {
-          size: 0.9em; }; } } } }
+      left: 1px dotted;
+    }
+  }
+}
 
 /* FORMS */
 input {
