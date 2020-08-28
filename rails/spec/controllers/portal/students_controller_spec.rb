@@ -380,14 +380,4 @@ describe Portal::StudentsController do
     end
   end
 
-  # TODO: auto-generated
-  describe '#confirm' do
-    xit 'GET confirm' do
-      get :confirm, class: { class_word: 'word' }
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-
 end

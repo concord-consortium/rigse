@@ -24,7 +24,6 @@ class Activity < ActiveRecord::Base
   end
   has_many :pages, :through => :sections
   has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
-  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
