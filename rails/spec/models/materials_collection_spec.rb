@@ -63,6 +63,25 @@ describe MaterialsCollection do
     end
   end
 
+  describe "#fullname" do
+    subject { collection.fullname }
+    context "without a project" do
+      let(:collection) { FactoryBot.create(:materials_collection,
+        name: "some name")
+      }
+
+      it { is_expected.to  eql("some name") }
+    end
+    context "with a project" do
+      let(:project) { FactoryBot.create(:admin_project, name: "project a") }
+      let(:collection) { FactoryBot.create(:materials_collection,
+        name: "some name", project: project)
+      }
+
+      it { is_expected.to eql("project a: some name") }
+    end
+  end
+
   # TODO: auto-generated
   describe '.searchable_attributes' do
     it 'searchable_attributes' do

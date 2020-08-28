@@ -1,10 +1,8 @@
-- display_name = "#{materials_collection.name}"
-- options = { :hide_componenent_name => true, :display_name => display_name }
 %div{id: dom_id_for(materials_collection), class: 'container_element'}
   .action_menu
     .action_menu_header_left
       %h3
-        %a{href:materials_collection_path(materials_collection)}=materials_collection.name
+        %a{href:materials_collection_path(materials_collection)}=materials_collection.fullname
 
     .action_menu_header_right
       %ul.menu
@@ -15,4 +13,3 @@
   %div{class: 'item'}
     %div{class: 'content'}
       %p.materials_collection= raw(materials_collection.description)
-

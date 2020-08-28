@@ -19,6 +19,10 @@ class MaterialsCollection < ActiveRecord::Base
     end
   end
 
+  def fullname
+    project ? "#{project.name}: #{name}" : name
+  end
+
   # We can't do has_many :through on a polymorphic join, so emulate it...
   # materials_collection_items.map { |mi| mi.material } is simpler, but it
   # hits database N times. Implementation below hits database only MATERIAL_TYPES.count times.
