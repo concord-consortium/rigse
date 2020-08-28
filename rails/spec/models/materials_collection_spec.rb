@@ -73,7 +73,7 @@ describe MaterialsCollection do
       it { is_expected.to  eql("some name") }
     end
     context "with a project" do
-      let(:project) { FactoryBot.create(:admin_project, name: "project a") }
+      let(:project) { FactoryBot.create(:project, name: "project a") }
       let(:collection) { FactoryBot.create(:materials_collection,
         name: "some name", project: project)
       }
