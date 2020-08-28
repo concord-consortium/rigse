@@ -78,17 +78,6 @@ module TreeNode
           end
         end
       end
-      if thing.respond_to? 'teacher_notes'
-        thing.teacher_notes.each do |note|
-          unless note.user == new_user
-            old_login = note.user ? note.user.login : "<nil>"
-            Rails.logger.info "changing ownership of #{note} from #{old_login} to #{new_user.login}" if logging
-            note.user = new_user
-            note.save
-          end
-        end
-      end
-
     }
 
     set_user.call(self)

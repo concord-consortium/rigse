@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20200826205527) do
+ActiveRecord::Schema.define(:version => 20200827012553) do
 
   create_table "access_grants", :force => true do |t|
     t.string   "code"
@@ -1922,6 +1922,15 @@ ActiveRecord::Schema.define(:version => 20200826205527) do
 
   add_index "portal_teachers", ["user_id"], :name => "index_portal_teachers_on_user_id"
 
+  create_table "recent_collections_pages", :force => true do |t|
+    t.integer  "recent_project_id", :null => false
+    t.integer  "teacher_id",        :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  add_index "recent_collections_pages", ["teacher_id"], :name => "index_recent_collections_pages_on_teacher_id"
+
   create_table "report_embeddable_filters", :force => true do |t|
     t.integer  "offering_id"
     t.text     "embeddables", :limit => 16777215
@@ -2246,16 +2255,6 @@ ActiveRecord::Schema.define(:version => 20200826205527) do
 
   create_table "tags", :force => true do |t|
     t.string "name"
-  end
-
-  create_table "teacher_notes", :force => true do |t|
-    t.text     "body",                 :limit => 16777215
-    t.string   "uuid",                 :limit => 36
-    t.integer  "authored_entity_id"
-    t.string   "authored_entity_type"
-    t.datetime "created_at",                               :null => false
-    t.datetime "updated_at",                               :null => false
-    t.integer  "user_id"
   end
 
   create_table "teacher_project_views", :force => true do |t|
