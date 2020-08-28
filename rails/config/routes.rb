@@ -303,7 +303,6 @@ RailsPortal::Application.routes.draw do
     end
 
     resources :teacher_notes
-    resources :author_notes
     resources :n_logo_models
     resources :multiple_choices do
       member do
