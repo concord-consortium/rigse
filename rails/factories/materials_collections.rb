@@ -8,7 +8,7 @@ FactoryBot.define do
   factory :materials_collection do
     name {"Some name"}
     description {"Some description"}
-    # association :project, :factory => :admin_project
+    association :project, :factory => :project
 
     factory :materials_collection_with_items do
       transient do

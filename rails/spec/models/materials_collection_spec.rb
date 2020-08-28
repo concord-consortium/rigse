@@ -66,15 +66,15 @@ describe MaterialsCollection do
   describe "#fullname" do
     subject { collection.fullname }
     context "without a project" do
-      let(:collection) { FactoryBot.create(:materials_collection,
-        name: "some name")
+      let(:collection) { FactoryBot.build(:materials_collection,
+        name: "some name", project: nil)
       }
 
       it { is_expected.to  eql("some name") }
     end
     context "with a project" do
-      let(:project) { FactoryBot.create(:project, name: "project a") }
-      let(:collection) { FactoryBot.create(:materials_collection,
+      let(:project) { FactoryBot.build(:project, name: "project a") }
+      let(:collection) { FactoryBot.build(:materials_collection,
         name: "some name", project: project)
       }
 
@@ -91,15 +91,11 @@ describe MaterialsCollection do
     end
   end
 
-  # TODO: auto-generated
-  describe '#materials' do
-    it 'materials' do
-      materials_collection = described_class.new
-      result = materials_collection.materials([])
-
-      expect(result).not_to be_nil
+  describe "validations" do
+    subject { MaterialsCollection.new }
+    context "without a project" do
+      it { is_expected.not_to be_valid}
     end
   end
-
 
 end
