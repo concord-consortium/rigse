@@ -10,6 +10,7 @@ Feature: Admin can work with materials collections
     And the database has been seeded
     And I am logged in with the username admin
 
+  # the left menu is rendered by react-components
   @javascript
   Scenario: Admin accesses Materials Collections
     When I am on the home page
@@ -21,10 +22,12 @@ Feature: Admin can work with materials collections
     And I should see "Create Materials Collection"
 
   Scenario: Admin creates new Materials Collection
+    Given a project called "My Project"
     When I am on the materials collection index page
     And I click "create Materials Collection"
     Then I should see "(new) /materials_collection"
     When I fill in "materials_collection[name]" with "My new Collection"
+    When I select "My Project" from "materials_collection[project_id]"
     And I fill in "materials_collection[description]" with "My new Description"
     And I press "Save"
     Then I should be on the materials collection index page
