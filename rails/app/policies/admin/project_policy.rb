@@ -50,7 +50,7 @@ class Admin::ProjectPolicy < ApplicationPolicy
   end
 
   def update_edit_or_destroy?
-    admin_or_project_admin?
+    user.has_role?('admin') || user.is_project_admin?(record)
   end
 
   def not_anonymous?

@@ -875,14 +875,62 @@ protected
     end
   end
 
-  # TODO: auto-generated
   describe '#is_project_admin?' do
-    it 'is_project_admin?' do
-      user = described_class.new
-      project = FactoryBot.create(:project)
-      result = user.is_project_admin?(project)
+    let(:user_role) { nil }
+    let(:user_project) { nil }
+    let(:user) {
+      _user = FactoryBot.create(:user)
+      if (user_role && user_project)
+        _user.add_role_for_project(user_role, user_project)
+      end
+      _user
+    }
 
-      expect(result).not_to be_nil
+    context 'when no project is passed in and user is' do
+      subject { user.is_project_admin? }
+
+      context 'not an admin of any projects' do
+        it { is_expected.to be false}
+      end
+
+      context 'an admin of a project' do
+        let(:user_role) { 'admin' }
+        let(:user_project) { FactoryBot.create(:project) }
+        it { is_expected.to be true}
+      end
+
+      context 'a researcher of a project' do
+        let(:user_role) { 'researcher' }
+        let(:user_project) { FactoryBot.create(:project) }
+        it { is_expected.to be false}
+      end
+
+    end
+    context 'when a project is passed in and user is' do
+      let (:target_project) { FactoryBot.create(:project) }
+      subject { user.is_project_admin?(target_project) }
+
+      context 'not an admin of any projects' do
+        it { is_expected.to be false}
+      end
+
+      context 'an admin of a different project' do
+        let(:user_role) { 'admin' }
+        let(:user_project) { FactoryBot.create(:project) }
+        it { is_expected.to be false}
+      end
+
+      context 'an admin of the same project' do
+        let(:user_role) { 'admin' }
+        let(:user_project) { target_project }
+        it { is_expected.to be true}
+      end
+
+      context 'a researcher of the same project' do
+        let(:user_role) { 'researcher' }
+        let(:user_project) { target_project }
+        it { is_expected.to be false}
+      end
     end
   end
 

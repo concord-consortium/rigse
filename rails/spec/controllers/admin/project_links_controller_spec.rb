@@ -6,6 +6,7 @@ RegexForAuthFailModify = /can not update the requested resource/
 
 describe Admin::ProjectLinksController do
   before(:each) do
+    generate_default_settings_and_jnlps_with_mocks
     allow(controller).to receive(:current_user).and_return(user)
     @link_1 = FactoryBot.create(:project_link, link_id: 'link1', href: 'http://link1.com', name: 'link 1', project: project_1)
     @link_2 = FactoryBot.create(:project_link, link_id: 'link2', href: 'http://link2.com', name: 'link 2', project: project_2)
@@ -125,25 +126,24 @@ describe Admin::ProjectLinksController do
         expect(assigns(:projects)).not_to include(project_3)
       end
       it 'should return an OK http status' do
+        get :new
         expect(response).to have_http_status(:ok)
       end
     end
 
     describe 'Edit' do
-      before(:each) do
-        allow(Admin::ProjectLink).to receive(:find).and_return(@link_1)
-      end
       it 'it should show the Edit form' do
-        expect(get :edit).to render_template('edit')
+        expect(get :edit, id: @link_1.id).to render_template('edit')
         # Redirect, and show error when not allowed:
       end
       it 'should display only the projects for which the user is an admin' do
-        get :edit
+        get :edit, id: @link_1.id
         expect(assigns(:projects)).to include(project_1)
         expect(assigns(:projects)).not_to include(project_2)
         expect(assigns(:projects)).not_to include(project_3)
       end
       it 'should return an OK http status' do
+        get :edit, id: @link_1.id
         expect(response).to have_http_status(:ok)
       end
     end
@@ -177,6 +177,72 @@ describe Admin::ProjectLinksController do
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
           expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+        end
+      end
+    end
+
+    describe 'Update' do
+      let(:params) do
+        {
+          admin_project_link: {
+            project_id: new_project_id,
+            name: 'updated name',
+            href: 'http://foo.com/',
+            link_id: 'foo'
+          }
+        }
+      end
+
+      shared_examples 'fails_to_modify' do
+        it 'it should NOT let them' do
+          put :update, full_params
+          expect(response).to have_http_status(:redirect)
+          expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+        end
+      end
+
+      context 'a link of a project which the user IS an admin' do
+        let(:full_params) { params.merge(id: @link_1.id) }
+
+        context 'and not changing the project' do
+          let(:new_project_id) { project_1.id }
+          it 'it SHOULD let them' do
+            put :update, full_params
+            expect(assigns(:project_link)).to be_valid
+            expect(response).to redirect_to(admin_project_link_path(@link_1))
+          end
+        end
+
+        context 'and changing the project to one the user is not an admin of' do
+          let(:new_project_id) { project_2.id }
+          include_examples 'fails_to_modify'
+        end
+
+        context 'and changing the project to an invalid project' do
+          let(:new_project_id) { 999999 }
+          it 'it should NOT let them' do
+            put :update, full_params
+            expect(response).to have_http_status(:not_found)
+          end
+        end
+      end
+
+      context 'a link of a project which the user is NOT an admin' do
+        let(:full_params) { params.merge(id: @link_2.id) }
+
+        context 'and not changing the project' do
+          let(:new_project_id) { project_1.id }
+          include_examples 'fails_to_modify'
+        end
+
+        context 'and changing the project to one the user is not an admin of' do
+          let(:new_project_id) { project_2.id }
+          include_examples 'fails_to_modify'
+        end
+
+        context 'and changing the project to an invalid project' do
+          let(:new_project_id) { 999999 }
+          include_examples 'fails_to_modify'
         end
       end
     end
@@ -217,6 +283,16 @@ describe Admin::ProjectLinksController do
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:ok)
       end
+      it 'should display all the projects in the project dropdown' do
+        get :new
+        expect(assigns(:projects)).to include(project_1)
+        expect(assigns(:projects)).to include(project_2)
+        expect(assigns(:projects)).to include(project_3)
+      end
+      it 'should return an OK http status' do
+        get :new
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     describe 'Create' do
@@ -240,20 +316,14 @@ describe Admin::ProjectLinksController do
         end
       end
 
-
-    describe 'New' do
-      it 'it should show the New form' do
-        expect(get :new).to render_template('new')
-        # Redirect, and show error when not allowed:
-      end
-      it 'should display all the projects in the project dropdown' do
-        get :new
-        expect(assigns(:projects)).to include(project_1)
-        expect(assigns(:projects)).to include(project_2)
-        expect(assigns(:projects)).to include(project_3)
-      end
-      it 'should return an OK http status' do
-        expect(response).to have_http_status(:ok)
+      describe 'for a link in project 2' do
+        let(:project_id) { project_2.id }
+        it 'should let them' do
+          post :create, params
+          link = assigns(:project_link)
+          expect(assigns(:project_link)).to be_valid
+          expect(response).to redirect_to(admin_project_link_path(link))
+        end
       end
     end
 
@@ -276,16 +346,46 @@ describe Admin::ProjectLinksController do
       end
     end
 
-      describe 'for a link in project 2' do
-        let(:project_id) { project_2.id }
-        it 'should let them' do
-          post :create, params
-          link = assigns(:project_link)
+    describe 'Update' do
+      let(:params) do
+        {
+          admin_project_link: {
+            project_id: new_project_id,
+            name: 'updated name',
+            href: 'http://foo.com/',
+            link_id: 'foo'
+          }
+        }
+      end
+      let(:full_params) { params.merge(id: @link_1.id) }
+
+      context 'not changing the project' do
+        let(:new_project_id) { project_1.id }
+        it 'it SHOULD let them' do
+          put :update, full_params
           expect(assigns(:project_link)).to be_valid
-          expect(response).to redirect_to(admin_project_link_path(link))
+          expect(response).to redirect_to(admin_project_link_path(@link_1))
+        end
+      end
+
+      context 'changing the project to a valid project' do
+        let(:new_project_id) { project_2.id }
+        it 'it SHOULD let them' do
+          put :update, full_params
+          expect(assigns(:project_link)).to be_valid
+          expect(response).to redirect_to(admin_project_link_path(@link_1))
+        end
+      end
+
+      context 'changing the project to an invalid project' do
+        let(:new_project_id) { 99999 }
+        it 'it should NOT let them' do
+          put :update, full_params
+          expect(response).to have_http_status(:not_found)
         end
       end
     end
+
   end
 
   describe 'Nested controller methods' do
@@ -317,6 +417,86 @@ describe Admin::ProjectLinksController do
             new_project_link = assigns('project_link')
             expect(new_project_link.project_id).to eq(chosen_project.id)
             expect(response).to have_http_status(:ok)
+          end
+        end
+      end
+    end
+
+    context 'when user is a project admin of the project' do
+      let(:user) {
+        _user = FactoryBot.create(:user)
+        _user.add_role_for_project('admin', project_2)
+        _user
+      }
+
+      describe 'New' do
+        it 'should pre-select the correct project from the route' do
+          get 'new', project_id: project.id
+          expect(assigns('projects')).to include(project)
+          expect(assigns('project_link').project_id).to eq(project.id)
+          expect(response).to have_http_status(:ok)
+        end
+      end
+      describe 'Create' do
+        let(:params) do
+          {
+            admin_project_link: {
+              project_id: new_project_id,
+              name: 'name',
+              href: 'http://foo.com/',
+              link_id: 'foo'
+            }
+          }
+        end
+
+        describe 'when creating a link for a project which they ARE admin for' do
+          let(:new_project_id) { project.id }
+          it 'SHOULD let them' do
+            post :create, params
+            link = assigns(:project_link)
+            expect(assigns(:project_link)).to be_valid
+            expect(response).to redirect_to(admin_project_link_path(link))
+          end
+        end
+        describe 'when creating a link for a project which they are NOT admin for' do
+          let(:new_project_id) { project_1.id }
+          it 'should NOT let them' do
+            post :create, params
+            # Redirect, and show error when not allowed:
+            expect(response).to have_http_status(:redirect)
+            expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+          end
+        end
+      end
+      describe 'Edit' do
+        it 'it should show the Edit form' do
+          expect(get :edit, id: @link_2.id).to render_template('edit')
+          # Redirect, and show error when not allowed:
+        end
+        it 'should return an OK http status' do
+          get :edit, id: @link_2.id
+          expect(response).to have_http_status(:ok)
+        end
+      end
+      describe 'Update' do
+        let(:params) do
+          {
+            admin_project_link: {
+              project_id: new_project_id,
+              name: 'updated name',
+              href: 'http://foo.com/',
+              link_id: 'foo'
+            }
+          }
+        end
+        let(:full_params) { params.merge(id: @link_2.id) }
+
+        context 'not changing the project' do
+          let(:new_project_id) { project_2.id }
+          it 'it SHOULD let them' do
+            put :update, full_params
+            expect(assigns(:project_link)).to be_valid
+            expect(response).to redirect_to(admin_project_link_path(@link_2))
           end
         end
       end

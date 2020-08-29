@@ -412,9 +412,9 @@ class User < ActiveRecord::Base
 
   def is_project_admin?(project=nil)
     if project
-      self.admin_for_projects.include? project
+      self.admin_for_projects.where(id: project.id).exists?
     else
-      self.admin_for_projects.length > 0
+      self.admin_for_projects.exists?
     end
   end
 
