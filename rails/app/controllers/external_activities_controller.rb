@@ -345,55 +345,43 @@ class ExternalActivitiesController < ApplicationController
   def update_collections
     authorize @external_activity
 
+    @external_activity = ExternalActivity.find(params[:material_id])
     collection_ids = params[:materials_collection_id] || []
-    runnable_ids = params[:material_id].split(',')
-    runnable_type = params[:material_type].classify
-    skip_reload = params[:skip_reload] == 'true'
-    assign_summary_data = []
 
-    collection_ids.each do|collection_id|
-      already_assigned_material_names = []
-      newly_assigned_material_names = []
-      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
-      runnable_ids.each do|runnable_id|
-        collection_items = collection.materials_collection_items
-        item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
-        if item.nil?
-          item = MaterialsCollectionItem
-                     .where(materials_collection_id: collection.id,
-                            material_type: runnable_type,
-                            material_id: runnable_id)
-                     .first_or_create
-          if item.position.nil?
-            item.position = collection_items.length
-            item.save!
-          end
-          newly_assigned_material_names << collection.name
-        else
-          already_assigned_material_names << collection.name
-        end
-      end
-      assign_summary_data << [collection.name, newly_assigned_material_names,already_assigned_material_names]
-    end
-
-    materials = []
-    if params[:material_type] != "ExternalActivity" || runnable_ids.length != 1
+    if external_activity_type != "ExternalActivity"
       raise 'unsupported type or length'
     end
 
-    materials.push ::ExternalActivity.find(params[:material_id])
-
     if collection_ids.count > 0
-      material_names = materials.map {|m| "#{m.name}" }.join(", ").gsub("'","\\'")
-      flash[:notice] = "#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully."
+      add_material_to_collection(collection_ids, @external_activity)
+      flash[:notice] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
     else
-      flash[:error] = "Select at least one collection to assign this #{runnable_type}"
+      flash[:error] = "Select at least one collection to assign this #{@external_activity.material_type.classify}"
     end
 
-    redirect_to action: 'edit_collections', material_id: params[:material_id], material_type: runnable_type
+    redirect_to action: 'edit_collections', material_id: @external_activity.id, material_type: @external_activity.material_type
   end
 
   private
+
+  def add_material_to_collection(collection_ids, material)
+    collection_ids.each do |collection_id|
+      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
+      collection_items = collection.materials_collection_items
+      item = collection_items.find_by_material_id_and_material_type(material.id, material.material_type)
+      if item.nil?
+        item = MaterialsCollectionItem
+                   .where(materials_collection_id: collection.id,
+                          material_type: material.material_type,
+                          material_id: material.id)
+                   .first_or_create
+      end
+      if item.position.nil?
+        item.position = collection_items.length
+        item.save!
+      end
+    end
+  end
 
   def _collection_has_materials(collection, materials)
     items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
