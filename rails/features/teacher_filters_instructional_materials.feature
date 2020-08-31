@@ -23,6 +23,7 @@ Feature: Teacher filters instructional materials
     And I check "external_activity[is_official]"
     And I select "published" from "external_activity[publication_status]"
     And I check "grade_levels_5"
+    And I scroll "#subject_areas_math" to the center
     And I check "subject_areas_math"
     And I press "Save"
 
