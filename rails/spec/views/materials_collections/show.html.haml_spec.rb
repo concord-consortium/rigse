@@ -8,11 +8,13 @@ describe "materials_collections/show" do
   end
 
   it "renders attributes in accordion (no materials)" do
-    @materials_collection = assign(:materials_collection, FactoryBot.create(:materials_collection))
+    project = FactoryBot.create(:project, name: "Some Project")
+    assign(:materials_collection, 
+      FactoryBot.create(:materials_collection, project: project))
     render
 
-    assert_select ".list-item-wrapper h3", :text => "Some name".to_s, :count => 1
+    assert_select ".list-item-wrapper h3", :text => "Some Project: Some name".to_s, :count => 1
     assert_select ".list-item-wrapper p", :text => "Some description".to_s, :count => 1
   end
-  
+
 end
