@@ -5,10 +5,6 @@
 export RAILS_ENV=cucumber
 export TEST_SUITE=ci:cucumber_search
 
-bundle exec rake db:schema:load
-bundle exec rake db:migrate
-bundle exec rake db:test:prepare
+bundle exec rake db:feature_test:prepare
 
 bundle exec rake $TEST_SUITE
-
-

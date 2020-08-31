@@ -12,17 +12,15 @@
 
 export RAILS_ENV=test
 bundle exec rake db:create
-bundle exec rake db:schema:load
 bundle exec rake db:test:prepare
 
 RAILS_ENV=feature_test bundle exec rake db:create
-RAILS_ENV=feature_test bundle exec rake db:schema:load
-RAILS_ENV=feature_test bundle exec rake db:test:prepare
+bundle exec rake db:feature_test:prepare
 
 if [ "$1" == "setup" ]; then
-    echo 
-    echo "Spec test setup completed." 
-    echo 
+    echo
+    echo "Spec test setup completed."
+    echo
     exit 0
 fi
 
@@ -30,4 +28,3 @@ fi
 # Run spec tests
 #
 bundle exec rspec spec/
-

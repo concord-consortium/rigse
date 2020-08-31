@@ -98,6 +98,7 @@ pass before changing any code.
 Prepare a database for use when running the spec tests:
 
     rake db:test:prepare
+    rake db:feature_test:prepare
 
 Start SOLR in test environment (it works with cucumber tests too):
 
@@ -109,9 +110,8 @@ Run the rspec unit tests:
 
 Prepare a database for use when running the cucumber tests:
 
-    RAILS_ENV=cucumber rake db:create
-    RAILS_ENV=cucumber rake db:schema:load
-    rake db:test:prepare_cucumber
+    RAILS_ENV=feature_test rake db:create
+    rake db:feature_test:prepare
 
 Run the cucumber integration tests:
 
