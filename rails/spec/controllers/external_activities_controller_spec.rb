@@ -237,6 +237,36 @@ describe ExternalActivitiesController do
     end
   end
 
+  describe "POST update_collections" do
+    let(:mock_school)     { FactoryBot.create(:portal_school) }
+    let(:teacher_user)    { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
+    let(:teacher)         { FactoryBot.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
+    let(:clazz)           { FactoryBot.create(:portal_clazz,:course => @mock_course,:teachers => [teacher]) }
+
+    let(:chemistry_activity)    { FactoryBot.create(:external_activity, :name => 'chemistry_activity', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
+    let(:materials_collection)  { FactoryBot.create(:materials_collection) }
+
+    it "should add materials to a collection" do
+      post_params = {
+          :materials_collection_id => [materials_collection.id],
+          :material_id => chemistry_activity.id,
+          :material_type => 'ExternalActivity'
+      }
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      xhr :post, :update_collections, post_params
+
+      runnable_id = post_params[:material_id]
+      runnable_type = post_params[:material_type].classify
+
+      offering_for_clazz = Portal::Offering.where(clazz_id: clazz.id, runnable_type: runnable_type, runnable_id: runnable_id)
+      materials_collection_items = MaterialsCollectionItem.where(material_id: runnable_id, materials_collection_id: materials_collection.id)
+
+      expect(offering_for_clazz.length).to be(0)
+      expect(materials_collection_items.length).to be(1)
+    end
+  end
+
   describe 'SSL Helper' do
     let(:our_url)    { {} }
     let(:opts)       { {} }
