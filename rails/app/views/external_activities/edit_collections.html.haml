@@ -14,7 +14,7 @@
   #collection_summary_data
     #scrollable_collection_summary_data
       - if @collections.length > 0
-        %form{:id=>"add_material_form", :action=>"/search/add_material_to_collections", :method=>"POST", :onsubmit=>"validateSaveAssignToCollection()"}
+        %form{:id=>"add_material_form", :method=>"POST"}
           - if @unassigned_collections.length > 0
             %div.assign_class_header
               Select Collection(s)

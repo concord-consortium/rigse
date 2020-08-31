@@ -5,7 +5,6 @@ class SearchController < ApplicationController
   # PUNDIT_CHECK_FILTERS
   before_filter :teacher_only, :only => [:index, :show]
   before_filter :check_if_teacher, :only => [:get_current_material_unassigned_clazzes, :add_material_to_clazzes]
-  before_filter :admin_only, :only => [:get_current_material_unassigned_collections, :add_material_to_collections]
 
   protected
 
@@ -285,61 +284,5 @@ class SearchController < ApplicationController
         end
       end
     end
-  end
-
-  def add_material_to_collections
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    collection_ids = params[:materials_collection_id] || []
-    runnable_ids = params[:material_id].split(',')
-    runnable_type = params[:material_type].classify
-    skip_reload = params[:skip_reload] == 'true'
-    assign_summary_data = []
-
-    collection_ids.each do|collection_id|
-      already_assigned_material_names = []
-      newly_assigned_material_names = []
-      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
-      runnable_ids.each do|runnable_id|
-        collection_items = collection.materials_collection_items
-        item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
-        if item.nil?
-          item = MaterialsCollectionItem
-                     .where(materials_collection_id: collection.id,
-                            material_type: runnable_type,
-                            material_id: runnable_id)
-                     .first_or_create
-          if item.position.nil?
-            item.position = collection_items.length
-            item.save!
-          end
-          newly_assigned_material_names << collection.name
-        else
-          already_assigned_material_names << collection.name
-        end
-      end
-      assign_summary_data << [collection.name, newly_assigned_material_names,already_assigned_material_names]
-    end
-
-    materials = []
-    if params[:material_type] != "ExternalActivity" || runnable_ids.length != 1
-      raise 'unsupported type or length'
-    end
-
-    materials.push ::ExternalActivity.find(params[:material_id])
-
-    if collection_ids.count > 0
-      material_names = materials.map {|m| "#{m.name}" }.join(", ").gsub("'","\\'")
-      flash[:notice] = "#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully."
-    else
-      flash[:error] = "Select at least one collection to assign this #{runnable_type}"
-    end
-
-    redirect_to action: 'get_current_material_unassigned_collections', material_id: params[:material_id], material_type: runnable_type
   end
 end

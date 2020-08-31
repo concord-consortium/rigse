@@ -77,4 +77,8 @@ class ExternalActivityPolicy < ApplicationPolicy
     admin?
   end
 
+  def update_collections?
+    admin?
+  end
+
 end
