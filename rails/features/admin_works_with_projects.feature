@@ -26,7 +26,7 @@ Feature: Admin can work with projects
     And I fill in "admin_project[landing_page_content]" with "<h1>New project FooBar!</h1>"
     And I press "Save"
     Then I should be on the projects index page
-    And I should see "1 project"
+    And I should see "2 projects"
     And I should see "Project was successfully created."
     And I should see "My new project"
     When I click "/new-project"

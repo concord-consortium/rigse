@@ -22,12 +22,13 @@ describe MaterialsCollectionsController do
   before(:each) do
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
-
+    generate_default_settings_and_jnlps_with_mocks
     login_admin
   end
 
   let(:materials_collection) { FactoryBot.create(:materials_collection) }
-  let(:valid_attributes)     { { name: "Some name", description: "Some description" } }
+  let(:project) { FactoryBot.create(:project) }
+  let(:valid_attributes)     { { name: "Some name", description: "Some description", project_id: project.id } }
 
   describe "GET index" do
     it "assigns all materials_collections as @materials_collections" do
