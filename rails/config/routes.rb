@@ -297,13 +297,7 @@ RailsPortal::Application.routes.draw do
       resources :firebase_apps
     end
 
-    resources :materials_collections do
-      member do
-        post :sort_materials
-        post :remove_material
-      end
-    end
-
+    resources :materials_collections
     resources :n_logo_models
     resources :multiple_choices do
       member do
@@ -526,6 +520,13 @@ RailsPortal::Application.routes.draw do
         resources :bookmarks, only: [:create, :update, :destroy] do
           collection do
             post 'sort'
+          end
+        end
+
+        resources :materials_collections, :only => [] do
+          member do
+            post :sort_materials
+            post :remove_material
           end
         end
       end
