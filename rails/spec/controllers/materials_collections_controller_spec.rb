@@ -22,12 +22,13 @@ describe MaterialsCollectionsController do
   before(:each) do
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
-
+    generate_default_settings_and_jnlps_with_mocks
     login_admin
   end
 
   let(:materials_collection) { FactoryBot.create(:materials_collection) }
-  let(:valid_attributes)     { { name: "Some name", description: "Some description" } }
+  let(:project) { FactoryBot.create(:project) }
+  let(:valid_attributes)     { { name: "Some name", description: "Some description", project_id: project.id } }
 
   describe "GET index" do
     it "assigns all materials_collections as @materials_collections" do
@@ -65,6 +66,7 @@ describe MaterialsCollectionsController do
           post :create, {:materials_collection => valid_attributes}
         }.to change(MaterialsCollection, :count).by(1)
       end
+
 
       it "assigns a newly created materials_collection as @materials_collection" do
         post :create, {:materials_collection => valid_attributes}
@@ -147,18 +149,6 @@ describe MaterialsCollectionsController do
     it "redirects to the materials_collections list" do
       delete :destroy, {:id => materials_collection.to_param}
       expect(response).to redirect_to(materials_collections_url)
-    end
-  end
-
-  describe "POST sort_materials" do
-    it 'sorts materials appropriately' do
-      collection =  FactoryBot.create(:materials_collection_with_items)
-      current_order = collection.materials_collection_items.map {|i| i.id }.dup
-      shuffled_order = current_order.shuffle
-      post :sort_materials, { :id => collection.id, "materials_materials_collection_#{collection.id}" => shuffled_order }
-      new_order = MaterialsCollectionItem.order(:position).where(materials_collection_id: collection.id).map(&:id)
-      expect(response.status).to eq(200)
-      expect(new_order).to eq(shuffled_order)
     end
   end
 end

@@ -102,7 +102,7 @@ class Portal::StudentsController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Student
     @portal_clazz = find_clazz_from_params
-    @grade_level = find_grade_level_from_params
+    @grade_level = view_context.find_grade_level(params)
     user_attributes = generate_user_attributes_from_params
     @user = User.new(user_attributes)
     errors = []
@@ -292,7 +292,7 @@ class Portal::StudentsController < ApplicationController
         },
         format: :json)
 
-      #FIXME: We should do somethign with the response code -- if response.code == 200 # successful 
+      #FIXME: We should do somethign with the response code -- if response.code == 200 # successful
 
     }
 
@@ -365,72 +365,9 @@ class Portal::StudentsController < ApplicationController
   end
 
   def register
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
-    if request.post?
-      @portal_clazz = find_clazz_from_params
-      class_word = params[:clazz][:class_word]
-      if @portal_clazz && class_word && ! current_visitor.anonymous?
-        @student = current_visitor.portal_student
-        if ! @student
-          @grade_level = find_grade_level_from_params
-          @student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => @grade_level.id)
-        end
-        @student.process_class_word(class_word)
-      else
-        if current_visitor.anonymous?
-          flash[:error] = "You must be logged in to sign up for a class!"
-        else
-          flash[:error] = "The class word you provided was not valid! Please check with your teacher to ensure you have the correct word."
-        end
-      end
-      respond_to do |format|
-        if (@portal_clazz && @student)
-          flash[:notice] = 'Successfully registered for class.'
-          format.html { redirect_to home_path }
-        else
-          @student = Portal::Student.new
-          format.html { render :action => 'register' }
-        end
-      end
-    else
-      @student = Portal::Student.new
-      respond_to do |format|
-        format.html { render :action => 'register' }
-      end
-    end
-  end
-
-  def confirm
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
-    @portal_clazz = find_clazz_from_params
-    if @portal_clazz.nil?
-      render :update do |page|
-        page.remove "invalid_word"
-        page.insert_html :top, "word_form", "<p id='invalid_word' style='background: #f5f5f5; display:none; padding: 10px;'>Please enter a valid class word and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
-      end
-      return
-    end
-    @class_word = params[:clazz][:class_word]
-    render :update do |page|
-      page.remove "invalid_word"
-      page.insert_html :before, "word_form", :partial => "confirmation",
-        :locals => {:class_word => @class_word,
-                    :clazz      => @portal_clazz,
-                    :portal_student => Portal::Student.new}
-      page.visual_effect :BlindDown, "confirmation", :duration => 1
+    @student = Portal::Student.new
+    respond_to do |format|
+      format.html { render :action => 'register' }
     end
   end
 
@@ -509,24 +446,6 @@ class Portal::StudentsController < ApplicationController
       Portal::Clazz.default_class
     end
    @portal_clazz
-  end
-
-  def find_grade_level_from_params
-    grade_level = Portal::GradeLevel.find_by_name('9')
-    if @portal_clazz
-      # Try to get a grade level from the class first.
-      if (!(grade_levels = @portal_clazz.grade_levels).nil? && grade_levels.size > 0)
-        grade_level = grade_levels[0] if grade_levels[0]
-      elsif (@portal_clazz.course && @portal_clazz.course.grade_levels && @portal_clazz.course.grade_levels.size > 0)
-        course = @portal_clazz.course
-        grade_levels = course.grade_levels
-        grade_level = grade_levels[0] if grade_levels[0]
-      elsif @portal_clazz.teacher
-        grade_levels = @portal_clazz.teacher.grade_levels
-        grade_level = grade_levels[0] if grade_levels[0]
-      end
-    end
-    grade_level
   end
 
   def generate_user_attributes_from_params

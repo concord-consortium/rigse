@@ -14,13 +14,12 @@ RSpec.describe Admin::ProjectPolicy do
     end
   end
 
-  # TODO: auto-generated
   describe '#update_edit_or_destroy?' do
     it 'update_edit_or_destroy?' do
       project_policy = described_class.new(nil, nil)
       result = project_policy.update_edit_or_destroy?
 
-      expect(result).to be_nil
+      expect(result).to be_falsey
     end
   end
 

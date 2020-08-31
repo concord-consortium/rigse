@@ -5,6 +5,8 @@ class MaterialsCollection < ActiveRecord::Base
 
   has_many :materials_collection_items, dependent: :destroy, order: :position
 
+  validates_presence_of :project
+
   # List all supported material types in this array! It's used by #materials method.
   MATERIAL_TYPES = [ExternalActivity]
 
@@ -17,6 +19,10 @@ class MaterialsCollection < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+  end
+
+  def fullname
+    project ? "#{project.name}: #{name}" : name
   end
 
   # We can't do has_many :through on a polymorphic join, so emulate it...

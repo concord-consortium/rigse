@@ -132,8 +132,6 @@ RailsPortal::Application.routes.draw do
         collection do
           get :signup
           get :register
-          post :register
-          post :confirm
           get :move_confirm
           post :move_confirm
           get :move
@@ -266,8 +264,10 @@ RailsPortal::Application.routes.draw do
       resources :tags
       resources :projects do
         resources :cohorts
+        resources :project_links
       end
       resources :cohorts
+      resources :project_links
       resources :clients
       resources :tools
       resources :external_reports
@@ -295,15 +295,7 @@ RailsPortal::Application.routes.draw do
       resources :firebase_apps
     end
 
-    resources :materials_collections do
-      member do
-        post :sort_materials
-        post :remove_material
-      end
-    end
-
-    resources :teacher_notes
-    resources :author_notes
+    resources :materials_collections
     resources :n_logo_models
     resources :multiple_choices do
       member do
@@ -401,6 +393,8 @@ RailsPortal::Application.routes.draw do
         resources :students do
           collection do
             get :check_class_word
+            post :join_class
+            post :confirm_class_word
           end
           member do
             post :check_password
@@ -526,6 +520,13 @@ RailsPortal::Application.routes.draw do
         resources :bookmarks, only: [:create, :update, :destroy] do
           collection do
             post 'sort'
+          end
+        end
+
+        resources :materials_collections, :only => [] do
+          member do
+            post :sort_materials
+            post :remove_material
           end
         end
       end

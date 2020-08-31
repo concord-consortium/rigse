@@ -954,11 +954,13 @@ module MockData
     puts
     puts
     MaterialsCollection.destroy_all
+    Admin::Project.destroy_all
+    default_project = FactoryBot.create(:project, name: 'default data project')
     DEFAULT_DATA[:materials_collections].each do |key, mc|
-      if (mc[:items_count] > 0)
-        FactoryBot.create(:materials_collection_with_items, items_count: mc[:items_count], name: mc[:name], description: mc[:description])
+      if (mc[:items_count])
+        FactoryBot.create(:materials_collection_with_items, mc.merge(project: default_project))
       else
-        FactoryBot.create(:materials_collection, name: mc[:name], description: mc[:description])
+        FactoryBot.create(:materials_collection, mc.merge(project: default_project))
       end
     end
     puts "Generated Materials Collections"

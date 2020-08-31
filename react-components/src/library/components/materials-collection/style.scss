@@ -1,0 +1,40 @@
+.editMaterialsCollectionsList {
+  margin: 10px 0;
+}
+
+.editMaterialsCollectionsListRow {
+  display: flex;
+  margin: 5px 0;
+}
+
+.editMaterialsCollectionsListRowName {
+  flex-grow: 2;
+  padding: 0 5px;
+  cursor: ns-resize;
+}
+
+.editMaterialsCollectionsListRowButtons {
+  display: flex;
+
+  button {
+    margin: 0 0 0 5px;
+  }
+}
+
+.archived {
+  color: #ED834E;
+  font-size: 9pt;
+  display: inline-block;
+}
+
+.iconCell {
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 5px;
+  font-size: 0.95em;
+  vertical-align: middle;
+}
+
+.sortIcon {
+  cursor: ns-resize;
+}

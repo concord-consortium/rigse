@@ -4,7 +4,7 @@ import css from './style.scss'
 
 import SortableBookmarkRow from './sortable-bookmark-row'
 
-class UnsortableSortableBookmarks extends React.Component {
+class Bookmarks extends React.Component {
   render () {
     const { bookmarks } = this.props
 
@@ -27,6 +27,6 @@ class UnsortableSortableBookmarks extends React.Component {
   }
 }
 
-const SortableBookmarks = SortableContainer(UnsortableSortableBookmarks)
+const SortableBookmarks = SortableContainer(Bookmarks)
 
 export default SortableBookmarks

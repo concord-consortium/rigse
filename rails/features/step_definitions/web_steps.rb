@@ -126,6 +126,12 @@ When /^(?:|I )uncheck "([^"]*)"$/ do |field|
   uncheck(field)
 end
 
+When "I scroll {string} to the center" do |item|
+  # in newer capybara we can do:
+  # page.find(item).scroll_to(:center)
+  scroll_into_view(item)
+end
+
 When /^(?:|I )choose "([^"]*)"$/ do |field|
   choose(field)
 end

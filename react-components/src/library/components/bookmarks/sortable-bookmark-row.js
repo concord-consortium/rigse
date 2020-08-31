@@ -2,7 +2,7 @@ import React from 'react'
 import { SortableElement } from 'react-sortable-hoc'
 import css from './style.scss'
 
-class UnsortableBookmarkRow extends React.Component {
+class BookmarkRow extends React.Component {
   constructor (props) {
     super(props)
     const { bookmark } = props
@@ -73,6 +73,6 @@ class UnsortableBookmarkRow extends React.Component {
   }
 }
 
-const SortableBookmarkRow = SortableElement(UnsortableBookmarkRow)
+const SortableBookmarkRow = SortableElement(BookmarkRow)
 
 export default SortableBookmarkRow

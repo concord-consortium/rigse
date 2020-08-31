@@ -12,9 +12,9 @@ describe Admin::CohortsController do
     @cohort_3 = FactoryBot.create(:admin_cohort, name: 'cohort 3', project: project_3)
   end
 
-  let(:project_1) { FactoryBot.create(:admin_project, name: 'project_1') }
-  let(:project_2) { FactoryBot.create(:admin_project, name: 'project_2') }
-  let(:project_3) { FactoryBot.create(:admin_project, name: 'project_3') }
+  let(:project_1) { FactoryBot.create(:project, name: 'project_1') }
+  let(:project_2) { FactoryBot.create(:project, name: 'project_2') }
+  let(:project_3) { FactoryBot.create(:project, name: 'project_3') }
 
   let(:admin_user) { FactoryBot.generate(:admin_user) }
   let(:user) { FactoryBot.create(:user) }
