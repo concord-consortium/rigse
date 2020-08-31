@@ -105,8 +105,8 @@ end
 
 if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.present?
   puts
-  puts "*** pending migrations need to be applied to run the tests"
-  puts "*** run: rake db:test:prepare"
+  puts "*** pending migrations need to be applied to run the tests"  
+  puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare"
   puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts "Rails.env: #{Rails.env}"
   puts "Database: #{ActiveRecord::Base.connection.current_database}"
@@ -117,5 +117,3 @@ end
 # Prevent Factory definitions from being loaded multiple times
 # But allow access to cucumber specs and db prep
 @defs_loaded ||= FactoryBot.find_definitions and true
-
-
