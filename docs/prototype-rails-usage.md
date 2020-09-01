@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 155
+Blocks not fixed      : 146
 
 ## Story 174370119
 
@@ -188,17 +188,17 @@ https://www.pivotaltracker.com/story/show/174373929
 ## Story 174373337
 
 https://www.pivotaltracker.com/story/show/174373337
-|   | Fixed | Block                                                          | Calls                                                                                                                        | Num Callers |
-| - | ----- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | controllers/materials_collections_controller.rb#destroy        | render :update                                                                                                               |             |
-| 2 |       | controllers/materials_collections_controller.rb#edit           | _remote_form.html.haml                                                                                                       |             |
-| 3 |       | controllers/materials_collections_controller.rb#update         | _show.html.haml                                                                                                              |             |
-| 4 |       | views/materials_collections/_list_show.html.haml               | _show.html.haml                                                                                                              | 2           |
-| 5 |       | views/materials_collections/_materials_in_collection.html.haml | sortable_element, application_helper.rb#remote_link_button                                                                   | 1           |
-| 6 |       | views/materials_collections/_remote_form.html.haml             | remote_form_for                                                                                                              | 1           |
-| 7 |       | views/materials_collections/_show.html.haml                    | _materials_in_collection.html.haml, application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 2           |
-| 8 |       | views/materials_collections/index.html.haml                    | _list_show.html.haml                                                                                                         |             |
-| 9 |       | views/materials_collections/show.html.haml                     | _list_show.html.haml                                                                                                         |             |
+|   | Fixed | Block                                                          | Calls | Num Callers |
+| - | ----- | -------------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/materials_collections_controller.rb#destroy        |       |             |
+| 2 | Y     | controllers/materials_collections_controller.rb#edit           |       |             |
+| 3 | Y     | controllers/materials_collections_controller.rb#update         |       |             |
+| 4 | Y     | views/materials_collections/_list_show.html.haml               |       |             |
+| 5 | Y     | views/materials_collections/_materials_in_collection.html.haml |       |             |
+| 6 | Y     | views/materials_collections/_remote_form.html.haml             |       |             |
+| 7 | Y     | views/materials_collections/_show.html.haml                    |       |             |
+| 8 | Y     | views/materials_collections/index.html.haml                    |       |             |
+| 9 | Y     | views/materials_collections/show.html.haml                     |       |             |
 
 ## Story 174374264
 
@@ -353,10 +353,10 @@ https://www.pivotaltracker.com/story/show/174365484
 |   | Fixed | Block                                                       | Calls                                                                          | Num Callers |
 | - | ----- | ----------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
 | 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 8           |
-| 2 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 5           |
-| 3 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 10          |
+| 2 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 4           |
+| 3 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 9           |
 | 4 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               | 3           |
-| 5 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 9           |
+| 5 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 8           |
 | 6 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               | 8           |
 | 7 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       | 5           |
 | 8 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |

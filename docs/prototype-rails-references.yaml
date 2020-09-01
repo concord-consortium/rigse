@@ -154,10 +154,6 @@ BASE/remote_form_for:
   - name: views/external_activities/_remote_form.html.haml
     line: = remote_form_for(page, :update => dom_id_for(page, :item), :before =>  "tinyMCE.triggerSave(true,true)")
       do |f|
-  - name: views/materials_collections/_remote_form.html.haml
-    line: = remote_form_for(materials_collection, :update => dom_id_for(materials_collection,
-      :wrapper), :html => { :onsubmit => 'tinyMCE.triggerSave()' }, :complete => "jQuery('##{dom_id_for(materials_collection,
-      :accordion_toggle)}.accordion_toggle_closed').click();") do |f|
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
     line: "= remote_form_for(portal_clazz, :update => dom_id_for(portal_clazz, :item))
       do |f|"
@@ -181,8 +177,6 @@ BASE/remote_function:
       method, :complete => complete, :success => success)
 BASE/render :update:
   callers:
-  - name: controllers/materials_collections_controller.rb#destroy
-    line: render :update do |page|
   - name: controllers/portal/clazzes_controller.rb#add_offering
     line: render :update do |page|
   - name: controllers/portal/clazzes_controller.rb#add_offering
@@ -212,9 +206,6 @@ BASE/sortable_element:
     line: =sortable_element :elements_container,  :url=> {:action => 'sort_elements',
       :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint =>
       :vertical, :scroll => "window"
-  - name: views/materials_collections/_materials_in_collection.html.haml
-    line: = sortable_element elements_container_id, :url => url, :handle=> "material_item_handle",
-      :constraint => :vertical, :scroll => "window"
   - name: views/shared/_accordion_nav.html.haml
     line: "=sortable_element section_list_name.to_sym, :url=> {:controller=> :activities,
       :action => 'sort_sections', :params => {:list_name=>section_list_name,:id =>
@@ -299,15 +290,6 @@ controllers/external_activities_controller.rb#index:
 controllers/external_activities_controller.rb#update:
   calls:
   - views/shared/_external_activity_header.html.haml
-controllers/materials_collections_controller.rb#destroy:
-  calls:
-  - BASE/render :update
-controllers/materials_collections_controller.rb#edit:
-  calls:
-  - views/materials_collections/_remote_form.html.haml
-controllers/materials_collections_controller.rb#update:
-  calls:
-  - views/materials_collections/_show.html.haml
 controllers/portal/clazzes_controller.rb#add_new_student_popup:
   calls:
   - views/portal/students/_add_edit_list_for_clazz.html.haml
@@ -389,10 +371,6 @@ helpers/application_helper.rb#function_link_button:
   - BASE/link_to_function
 helpers/application_helper.rb#remote_link_button:
   callers:
-  - name: views/materials_collections/_materials_in_collection.html.haml
-    line: = remote_link_button "delete.png", :url => url, :submit => "materials_collection_item_#{mci.id}",
-      :confirm => confirm, :name => 'remove material', :title => title, :method =>
-      :post, :success => success
   - name: views/portal/students/_current_student_list_for_clazz.html.haml
     line: '= remote_link_button "delete.png", :url => portal_clazz_student_clazz_url(portal_clazz,
       portal_student_clazz), :confirm => "This action will remove the student: ''#{portal_student.name}''
@@ -422,9 +400,6 @@ helpers/application_helper.rb#show_menu_for:
   - name: views/dataservice/console_loggers/_show.html.haml
     line: "= accordion_for(dataservice_console_logger, show_menu_for(dataservice_console_logger,
       options)) do"
-  - name: views/materials_collections/_show.html.haml
-    line: "= accordion_for(materials_collection, show_menu_for(materials_collection,
-      options), 'accordion') do"
   - name: views/portal/grade_levels/_show.html.haml
     line: "= show_menu_for(portal_grade_level, options)"
   - name: views/portal/grades/_show.html.haml
@@ -470,9 +445,6 @@ helpers/application_helper.rb#wrap_edit_link_around_content:
       mce_init_string}) do"
   - name: views/embeddable/open_responses/_show.html.haml
     line: "= wrap_edit_link_around_content(open_response, options={:complete => mce_init_string})
-      do"
-  - name: views/materials_collections/_show.html.haml
-    line: "= wrap_edit_link_around_content(materials_collection, {:complete => mce_init_string})
       do"
   - name: views/portal/grade_levels/_show.html.haml
     line: "= wrap_edit_link_around_content(portal_grade_level, options={:complete
@@ -830,49 +802,6 @@ views/layouts/application.html.haml:
   - views/shared/_accordion_nav.html.haml
   - views/shared/_general_accordion_nav.html.haml
   - views/shared/_general_accordion_nav.html.haml
-views/materials_collections/_list_show.html.haml:
-  callers:
-  - name: views/materials_collections/index.html.haml
-    line: "= render :partial => 'list_show', :collection => @materials_collections,
-      :as => :materials_collection"
-  - name: views/materials_collections/show.html.haml
-    line: "= render :partial => 'list_show', :locals=> { :materials_collection =>
-      @materials_collection }"
-  calls:
-  - views/materials_collections/_show.html.haml
-views/materials_collections/_materials_in_collection.html.haml:
-  callers:
-  - name: views/materials_collections/_show.html.haml
-    line: "= render :partial => 'materials_in_collection', :locals => { :materials_collection
-      => materials_collection }"
-  calls:
-  - BASE/sortable_element
-  - helpers/application_helper.rb#remote_link_button
-views/materials_collections/_remote_form.html.haml:
-  callers:
-  - name: controllers/materials_collections_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :materials_collection =>
-      @materials_collection }
-  calls:
-  - BASE/remote_form_for
-views/materials_collections/_show.html.haml:
-  callers:
-  - name: views/materials_collections/_list_show.html.haml
-    line: "= render :partial => 'show', locals: { materials_collection: materials_collection
-      }"
-  - name: controllers/materials_collections_controller.rb#update
-    line: render :partial => 'show', :locals => { :materials_collection => @materials_collection
-      }
-  calls:
-  - views/materials_collections/_materials_in_collection.html.haml
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/materials_collections/index.html.haml:
-  calls:
-  - views/materials_collections/_list_show.html.haml
-views/materials_collections/show.html.haml:
-  calls:
-  - views/materials_collections/_list_show.html.haml
 views/portal/clazzes/_form_student_roster.html.haml:
   callers:
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
