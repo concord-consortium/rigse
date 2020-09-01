@@ -30,35 +30,37 @@
           Project card description:
           = f.text_area :project_card_description
       %hr
-      %h3 Links:
-      %table{style: 'width: 400px;'}
-        - project.links.each do |project_link|
+      -# If we don't have an ID yet (new record), we can't display associations
+      - if @project.id
+        %h3 Links:
+        %table{style: 'width: 400px;'}
+          - project.links.each do |project_link|
+            %tr
+              %td
+                %a{href: project_link.href}
+                  = project_link.name
+              %td.edit
+                %span.tiny.edit
+                  = link_to 'edit', edit_admin_project_project_link_path(project,project_link), target: '_blank'
+              %td.delete
+                %span.tiny.delete
+                  = link_to 'delete', admin_project_project_link_path(project, project_link), method: 'delete', target: '_blank', data: { confirm: "Delete this Link?" }
           %tr
-            %td
-              %a{href: project_link.href}
-                = project_link.name
-            %td.edit
-              %span.tiny.edit
-                = link_to 'edit', edit_admin_project_project_link_path(project,project_link), target: '_blank'
-            %td.delete
-              %span.tiny.delete
-                = link_to 'delete', admin_project_project_link_path(project, project_link), method: 'delete', target: '_blank', data: { confirm: "Delete this Link?" }
-        %tr
-          %tr{style: 'border-top: 1px solid;'}
-            %h3= link_to 'Add a link', new_admin_project_project_link_path(project)
-      %hr
-      %h3 Cohorts:
-      %h3= link_to 'Add a cohort', new_admin_project_cohort_path(project)
-      %table{style: 'width: 400px;'}
-        - project.cohorts.each do |cohort|
-          %tr
-            %td
-              = cohort.name
-              - if cohort.email_notifications_enabled
-                (notifications on)
-            %td.edit
-              %span.tiny.edit
-                = link_to 'edit', edit_admin_project_cohort_path(project, cohort), target: '_blank'
-            %td.delete
-              %span.tiny.delete
-                = link_to 'delete', admin_project_cohort_path(project, cohort), method: 'delete', data: { confirm: "Delete this cohort?" }
+            %tr{style: 'border-top: 1px solid;'}
+              %h3= link_to 'Add a link', new_admin_project_project_link_path(project)
+        %hr
+        %h3 Cohorts:
+        %h3= link_to 'Add a cohort', new_admin_project_cohort_path(project)
+        %table{style: 'width: 400px;'}
+          - project.cohorts.each do |cohort|
+            %tr
+              %td
+                = cohort.name
+                - if cohort.email_notifications_enabled
+                  (notifications on)
+              %td.edit
+                %span.tiny.edit
+                  = link_to 'edit', edit_admin_project_cohort_path(project, cohort), target: '_blank'
+              %td.delete
+                %span.tiny.delete
+                  = link_to 'delete', admin_project_cohort_path(project, cohort), method: 'delete', data: { confirm: "Delete this cohort?" }
