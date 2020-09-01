@@ -346,33 +346,34 @@ class ExternalActivitiesController < ApplicationController
     authorize @external_activity
 
     @external_activity = ExternalActivity.find(params[:material_id])
+    material_type = params[:material_type]
     collection_ids = params[:materials_collection_id] || []
 
-    if external_activity_type != "ExternalActivity"
-      raise 'unsupported type or length'
+    if material_type != "ExternalActivity"
+      raise "Unsupported type: #{material_type}"
     end
 
     if collection_ids.count > 0
-      add_material_to_collection(collection_ids, @external_activity)
+      add_material_to_collection(collection_ids, @external_activity, material_type)
       flash[:notice] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
     else
       flash[:error] = "Select at least one collection to assign this #{@external_activity.material_type.classify}"
     end
 
-    redirect_to action: 'edit_collections', material_id: @external_activity.id, material_type: @external_activity.material_type
+    redirect_to action: 'edit_collections', material_id: @external_activity.id, material_type: material_type
   end
 
   private
 
-  def add_material_to_collection(collection_ids, material)
+  def add_material_to_collection(collection_ids, material, material_type)
     collection_ids.each do |collection_id|
       collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
       collection_items = collection.materials_collection_items
-      item = collection_items.find_by_material_id_and_material_type(material.id, material.material_type)
+      item = collection_items.find_by_material_id_and_material_type(material.id, material_type)
       if item.nil?
         item = MaterialsCollectionItem
                    .where(materials_collection_id: collection.id,
-                          material_type: material.material_type,
+                          material_type: material_type,
                           material_id: material.id)
                    .first_or_create
       end
