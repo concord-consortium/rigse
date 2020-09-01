@@ -3,9 +3,13 @@ require 'spec_helper'
 RegexForAuthFailShow = /can not view the requested resource/
 RegexForAuthFailNew = /can not create the requested resource/
 RegexForAuthFailModify = /can not update the requested resource/
+RegexForAuthFailDestroy = /can not destroy the requested resource/
+RegexDeleteSuccess = /(.*) was deleted/
 
 describe Admin::CohortsController do
   before(:each) do
+    # Not required for theses tests, but silences some console warnings:
+    generate_default_settings_and_jnlps_with_mocks
     allow(controller).to receive(:current_user).and_return(user)
     @cohort_1 = FactoryBot.create(:admin_cohort, name: 'cohort 1', project: project_1)
     @cohort_2 = FactoryBot.create(:admin_cohort, name: 'cohort 2', project: project_2)
@@ -62,6 +66,14 @@ describe Admin::CohortsController do
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
         expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+      end
+    end
+    describe 'Destroy' do
+      it 'it wont let them delete an existing cohort' do
+        delete :destroy, id: @cohort_1.id
+        # Redirect, and show error when not allowed:
+        expect(response).to have_http_status(:redirect)
+        expect(request.flash[:alert]).to match(RegexForAuthFailDestroy)
       end
     end
   end
