@@ -29,50 +29,36 @@
         %li
           Project card description:
           = f.text_area :project_card_description
-        %li
-          Links:
-        = nested_form_for project do |f|
-          = f.fields_for :links do |link_form|
-            %li
-              %table
-                %tr
-                  %td{ :style => "padding-right: 10px" } Name:
-                  %td
-                    = link_form.text_field :name
-                %tr
-                  %td URL:
-                  %td
-                    = link_form.text_field :href
-                %tr
-                  %td ID: (eg: '/resources/help'):
-                  %td
-                    = link_form.text_field :link_id
-                %tr
-                  %td Position: (default: '5'):
-                  %td
-                    = link_form.text_field :position
-                %tr
-                  %td Open link in new window:
-                  %td
-                    = link_form.check_box :pop_out
-              = link_form.link_to_remove "Remove this link"
-          %li
-            = f.link_to_add "Add a link", :links
-        %li
-          Cohorts:
-        = nested_form_for project do |f|
-          = f.fields_for :cohorts do |cohort_form|
-            %li
-              %table
-                %tr
-                  %td{ :style => "padding-right: 10px" } Name:
-                  %td
-                    = cohort_form.text_field :name
-              Enable Teacher Activity Notifications:
-              = cohort_form.check_box :email_notifications_enabled
-              %br
-              <small>(Enable this option to email project admins when a cohort teacher adds classes or assigns resources.)</small>
-              %br
-              = cohort_form.link_to_remove "Remove this cohort"
-          %li
-            = f.link_to_add "Add a cohort", :cohorts
+      %hr
+      %h3 Links:
+      %table{style: 'width: 400px;'}
+        - project.links.each do |project_link|
+          %tr
+            %td
+              %a{href: project_link.href}
+                = project_link.name
+            %td.edit
+              %span.tiny.edit
+                = link_to 'edit', edit_admin_project_project_link_path(project,project_link), target: '_blank'
+            %td.delete
+              %span.tiny.delete
+                = link_to 'delete', admin_project_project_link_path(project, project_link), method: 'delete', target: '_blank', data: { confirm: "Delete this Link?" }
+        %tr
+          %tr{style: 'border-top: 1px solid;'}
+            %h3= link_to 'Add a link', new_admin_project_project_link_path(project)
+      %hr
+      %h3 Cohorts:
+      %h3= link_to 'Add a cohort', new_admin_project_cohort_path(project)
+      %table{style: 'width: 400px;'}
+        - project.cohorts.each do |cohort|
+          %tr
+            %td
+              = cohort.name
+              - if cohort.email_notifications_enabled
+                (notifications on)
+            %td.edit
+              %span.tiny.edit
+                = link_to 'edit', edit_admin_project_cohort_path(project, cohort), target: '_blank'
+            %td.delete
+              %span.tiny.delete
+                = link_to 'delete', admin_project_cohort_path(project, cohort), method: 'delete', data: { confirm: "Delete this cohort?" }
