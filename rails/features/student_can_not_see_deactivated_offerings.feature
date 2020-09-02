@@ -13,16 +13,16 @@ Feature: Student can not see deactivated offerings
     And I login with username: monty
     Then I should see "Plant reproduction" in the content
 
+  @javascript
   Scenario: Student should not see deactivated offerings
-    When I am on the class page for "class_with_no_students"
-    And I follow "Deactivate" on the external activity "Plant reproduction" from the class "class_with_no_students"
+    When I am on the teacher view of the class page for "class_with_no_students"
+    And I uncheck Active for the external activity "Plant reproduction"
     And I log out
     And I login with username: monty
     Then I should be on my classes page
     And I should not see "run Plant reproduction" in the content
     And I should see "No offerings available." in the content
 
-    When I am on the class page for "class_with_no_students"
+    When I am on the student view of the class page for "class_with_no_students"
     And I should not see "run Plant reproduction" in the content
     And I should see "No offerings available." in the content
-
