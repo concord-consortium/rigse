@@ -1,9 +1,7 @@
 .search_materials
-  - material = @material[0]
-  - external_activity_name = material.name
-  - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>material.id,:material_type=>"ExternalActivity"})
+  - existing_collections = MaterialsCollection.joins(:materials_collection_items).where(:materials_collection_items => {:material_id=>@external_activity.id,:material_type=>"ExternalActivity"})
 
-  - external_activity_name = external_activity_name || ""
+  - external_activity_name = @external_activity.name || ""
 
   %div
     %table.material_detail
@@ -43,8 +41,6 @@
                       %td.assigned_collections_material
                         = collection.name
 
-          =hidden_field_tag(:material_id, @material.collect{|a| a.id}.join(','))
-          =hidden_field_tag(:material_type, 'ExternalActivity')
           =submit_tag("Save")
           &nbsp;&nbsp;
           (Close this window/tab to cancel.)
