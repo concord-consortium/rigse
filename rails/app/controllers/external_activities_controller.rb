@@ -333,7 +333,7 @@ class ExternalActivitiesController < ApplicationController
     @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
 
     @material = [@external_activity]
-    @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
+    @assigned_collections = @collections.select{|c| c.has_materials(@material) }
 
     @unassigned_collections = @collections - @assigned_collections
 
@@ -345,52 +345,19 @@ class ExternalActivitiesController < ApplicationController
   def update_collections
     authorize @external_activity
 
-    @external_activity = ExternalActivity.find(params[:material_id])
-    material_type = params[:material_type]
     collection_ids = params[:materials_collection_id] || []
 
-    if material_type != "ExternalActivity"
-      raise "Unsupported type: #{material_type}"
-    end
-
     if collection_ids.count > 0
-      add_material_to_collection(collection_ids, @external_activity, material_type)
+      @external_activity.add_to_collections(collection_ids)
       flash[:notice] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
     else
-      flash[:error] = "Select at least one collection to assign this #{@external_activity.material_type.classify}"
+      flash[:error] = "Select at least one collection to assign this resource."
     end
 
-    redirect_to action: 'edit_collections', material_id: @external_activity.id, material_type: material_type
+    redirect_to action: 'edit_collections'
   end
 
   private
-
-  def add_material_to_collection(collection_ids, material, material_type)
-    collection_ids.each do |collection_id|
-      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
-      collection_items = collection.materials_collection_items
-      item = collection_items.find_by_material_id_and_material_type(material.id, material_type)
-      if item.nil?
-        item = MaterialsCollectionItem
-                   .where(materials_collection_id: collection.id,
-                          material_type: material_type,
-                          material_id: material.id)
-                   .first_or_create
-      end
-      if item.position.nil?
-        item.position = collection_items.length
-        item.save!
-      end
-    end
-  end
-
-  def _collection_has_materials(collection, materials)
-    items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
-    material_items = materials.map {|m| [m.class.to_s, m.id] }
-
-    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
-    return has_them_all
-  end
 
   def json_error(msg,code=422)
     render :json => { :error => msg }, :content_type => 'text/json', :status => code
