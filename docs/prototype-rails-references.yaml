@@ -50,13 +50,9 @@ BASE/drop_receiving_element:
       dropped_dom_id: ''offering_list''}"'
 BASE/link_to_function:
   callers:
-  - name: views/author_notes/_show.html.haml
-    line: .tiny= link_to_function ('close',"$('note').hide();")
   - name: views/shared/_activity_trail.html.haml
     line: "%li= link_to_function e.embeddable.name { |page|page[dom_id_for(embeddable,
       :item)].scrollTo() }"
-  - name: views/teacher_notes/_show.html.haml
-    line: .tiny= link_to_function ('close',"$('note').hide();")
   - name: helpers/application_helper.rb#toggle_all
     line: 'link_to_function("show/hide #{label}", "$$(''div[id^=#{id_prefix}]'').each(function(d)
       { Effect.toggle(d,''blind'', {duration:0.25}) });")'
@@ -128,12 +124,6 @@ BASE/remote_form_for:
   - name: views/admin/projects/_remote_form.html.haml
     line: "= remote_form_for(project, update: {success: dom_id_for(project), failure:
       dom_id_for(project, :edit)},"
-  - name: views/admin/settings/_remote_form.html.haml
-    line: = remote_form_for(admin_settings, :before => "if(validate_settings_form_help_page_settings(this)){tinyMCE.triggerSave(true,true)}else
-      return false", :update => dom_id_for(admin_settings)) do |f|
-  - name: views/author_notes/_remote_form.html.haml
-    line: = remote_form_for(author_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)",
-      :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
   - name: views/dataservice/blobs/_remote_form.html.haml
     line: "= remote_form_for(dataservice_blob, :update => dom_id_for(dataservice_blob))
       do |f|"
@@ -164,10 +154,6 @@ BASE/remote_form_for:
   - name: views/external_activities/_remote_form.html.haml
     line: = remote_form_for(page, :update => dom_id_for(page, :item), :before =>  "tinyMCE.triggerSave(true,true)")
       do |f|
-  - name: views/materials_collections/_remote_form.html.haml
-    line: = remote_form_for(materials_collection, :update => dom_id_for(materials_collection,
-      :wrapper), :html => { :onsubmit => 'tinyMCE.triggerSave()' }, :complete => "jQuery('##{dom_id_for(materials_collection,
-      :accordion_toggle)}.accordion_toggle_closed').click();") do |f|
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
     line: "= remote_form_for(portal_clazz, :update => dom_id_for(portal_clazz, :item))
       do |f|"
@@ -184,13 +170,6 @@ BASE/remote_form_for:
     line: = remote_form_for(portal_student, :as => :portal_student, :url => { :controller
       => 'portal/students', :action => "move_confirm/#{@portal_student.id}" }, :html
       => {:id => "move_form"}) do |f|
-  - name: views/portal/students/_register.html.haml
-    line: = remote_form_for(portal_student, :as => :portal_student, :url => { :controller
-      => 'portal/students', :action => 'confirm' }, :html => {:id => "word_form"})
-      do |f|
-  - name: views/teacher_notes/_remote_form.html.haml
-    line: = remote_form_for(teacher_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)",
-      :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
 BASE/remote_function:
   callers:
   - name: helpers/application_helper.rb#wrap_edit_link_around_content
@@ -198,20 +177,6 @@ BASE/remote_function:
       method, :complete => complete, :success => success)
 BASE/render :update:
   callers:
-  - name: controllers/api/v1/site_notices_controller.rb#remove_notice
-    line: render :update do |page|
-  - name: controllers/api/v1/site_notices_controller.rb#toggle_notice_display
-    line: render :update do |page|
-  - name: controllers/api/v1/site_notices_controller.rb#dismiss_notice
-    line: render :update do |page|
-  - name: controllers/author_notes_controller.rb#show_author_note
-    line: render :update do |page|
-  - name: controllers/author_notes_controller.rb#show_author_note
-    line: render :update do |page|
-  - name: controllers/author_notes_controller.rb#edit
-    line: format.js   { render :update do |page|
-  - name: controllers/materials_collections_controller.rb#destroy
-    line: render :update do |page|
   - name: controllers/portal/clazzes_controller.rb#add_offering
     line: render :update do |page|
   - name: controllers/portal/clazzes_controller.rb#add_offering
@@ -226,10 +191,6 @@ BASE/render :update:
     line: render :update do |page|
   - name: controllers/portal/students_controller.rb#create
     line: render :update do |page|
-  - name: controllers/portal/students_controller.rb#confirm
-    line: render :update do |page|
-  - name: controllers/portal/students_controller.rb#confirm
-    line: render :update do |page|
   - name: controllers/portal/students_controller.rb#move_confirm
     line: render :update do |page|
   - name: controllers/search_controller.rb#get_search_suggestions
@@ -238,23 +199,13 @@ BASE/render :update:
     line: render :update do |page|
   - name: controllers/search_controller.rb#add_material_to_collections
     line: render :update do |page|
-  - name: controllers/teacher_notes_controller.rb#show_teacher_note
-    line: render :update do |page|
-  - name: controllers/teacher_notes_controller.rb#show_teacher_note
-    line: render :update do |page|
-BASE/render(:update:
-  callers:
-  - name: controllers/portal/clazzes_controller.rb#manage_classes
-    line: render(:update) { |page|
+BASE/render(:update: {}
 BASE/sortable_element:
   callers:
   - name: views/external_activities/_show.html.haml
     line: =sortable_element :elements_container,  :url=> {:action => 'sort_elements',
       :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint =>
       :vertical, :scroll => "window"
-  - name: views/materials_collections/_materials_in_collection.html.haml
-    line: = sortable_element elements_container_id, :url => url, :handle=> "material_item_handle",
-      :constraint => :vertical, :scroll => "window"
   - name: views/shared/_accordion_nav.html.haml
     line: "=sortable_element section_list_name.to_sym, :url=> {:controller=> :activities,
       :action => 'sort_sections', :params => {:list_name=>section_list_name,:id =>
@@ -276,34 +227,14 @@ BASE/sortable_element:
       }, :handle => 'offering'
 BASE/visual_effect:
   callers:
-  - name: views/author_notes/_remote_form.html.haml
-    line: = remote_form_for(author_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)",
-      :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
   - name: views/external_activities/create.js.rjs
     line: page.visual_effect :highlight, 'section_external_activities_list'
   - name: views/external_activities/create.js.rjs
     line: page.visual_effect :highlight, 'page_tabs'
-  - name: views/teacher_notes/_remote_form.html.haml
-    line: = remote_form_for(teacher_note, :update => 'note', :before =>  "tinyMCE.triggerSave(true,true)",
-      :loaded => visual_effect(:toggle_blind, 'note',:duration => 0.25)) do |f|
   - name: helpers/application_helper.rb#toggle_more
     line: page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
-  - name: controllers/author_notes_controller.rb#show_author_note
-    line: page.visual_effect :toggle_blind, 'note'
-  - name: controllers/author_notes_controller.rb#show_author_note
-    line: page.visual_effect :toggle_blind, 'note'
-  - name: controllers/author_notes_controller.rb#edit
-    line: page.visual_effect :highlite, 'note'
-  - name: controllers/portal/students_controller.rb#confirm
-    line: page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
-  - name: controllers/portal/students_controller.rb#confirm
-    line: page.visual_effect :BlindDown, "confirmation", :duration => 1
   - name: controllers/portal/students_controller.rb#move_confirm
     line: page.visual_effect :BlindDown, @show_msg, :duration => 0.25
-  - name: controllers/teacher_notes_controller.rb#show_teacher_note
-    line: page.visual_effect :toggle_blind, 'note'
-  - name: controllers/teacher_notes_controller.rb#show_teacher_note
-    line: page.visual_effect :toggle_blind, 'note'
 controllers/admin/projects_controller.rb#edit:
   calls:
   - views/admin/projects/_remote_form.html.haml
@@ -311,33 +242,6 @@ controllers/admin/projects_controller.rb#update:
   calls:
   - views/admin/projects/_remote_form.html.haml
   - views/admin/projects/_show.html.haml
-controllers/admin/settings_controller.rb#edit:
-  calls:
-  - views/admin/settings/_remote_form.html.haml
-controllers/admin/settings_controller.rb#update:
-  calls:
-  - views/admin/settings/_show.html.haml
-controllers/api/v1/site_notices_controller.rb#dismiss_notice:
-  calls:
-  - BASE/render :update
-controllers/api/v1/site_notices_controller.rb#remove_notice:
-  calls:
-  - BASE/render :update
-controllers/api/v1/site_notices_controller.rb#toggle_notice_display:
-  calls:
-  - BASE/render :update
-controllers/author_notes_controller.rb#edit:
-  calls:
-  - BASE/visual_effect
-  - BASE/render :update
-controllers/author_notes_controller.rb#show_author_note:
-  calls:
-  - BASE/visual_effect
-  - BASE/visual_effect
-  - BASE/render :update
-  - BASE/render :update
-  - views/author_notes/_remote_form.html.haml
-  - views/author_notes/_show.html.haml
 controllers/embeddable/image_questions_controller.rb#edit:
   calls:
   - views/embeddable/image_questions/_remote_form.html.haml
@@ -386,15 +290,6 @@ controllers/external_activities_controller.rb#index:
 controllers/external_activities_controller.rb#update:
   calls:
   - views/shared/_external_activity_header.html.haml
-controllers/materials_collections_controller.rb#destroy:
-  calls:
-  - BASE/render :update
-controllers/materials_collections_controller.rb#edit:
-  calls:
-  - views/materials_collections/_remote_form.html.haml
-controllers/materials_collections_controller.rb#update:
-  calls:
-  - views/materials_collections/_show.html.haml
 controllers/portal/clazzes_controller.rb#add_new_student_popup:
   calls:
   - views/portal/students/_add_edit_list_for_clazz.html.haml
@@ -410,9 +305,6 @@ controllers/portal/clazzes_controller.rb#add_student:
   - views/portal/students/_table_for_clazz.html.haml
   - helpers/portal/student_clazzes_helper.rb#student_add_dropdown
   - views/portal/students/_current_student_list_for_clazz.html.haml
-controllers/portal/clazzes_controller.rb#manage_classes:
-  calls:
-  - BASE/render(:update
 controllers/portal/clazzes_controller.rb#remove_offering:
   calls:
   - BASE/render :update
@@ -421,12 +313,6 @@ controllers/portal/clazzes_controller.rb#remove_offering:
 controllers/portal/clazzes_controller.rb#roster:
   calls:
   - views/portal/clazzes/_remote_form_student_roster.html.haml
-controllers/portal/students_controller.rb#confirm:
-  calls:
-  - BASE/visual_effect
-  - BASE/visual_effect
-  - BASE/render :update
-  - BASE/render :update
 controllers/portal/students_controller.rb#create:
   calls:
   - BASE/render :update
@@ -454,14 +340,6 @@ controllers/search_controller.rb#get_current_material_unassigned_collections:
 controllers/search_controller.rb#get_search_suggestions:
   calls:
   - BASE/render :update
-controllers/teacher_notes_controller.rb#show_teacher_note:
-  calls:
-  - BASE/visual_effect
-  - BASE/visual_effect
-  - BASE/render :update
-  - BASE/render :update
-  - views/teacher_notes/_remote_form.html.haml
-  - views/teacher_notes/_show.html.haml
 helpers/application_helper.rb#delete_button_for:
   callers:
   - name: views/shared/_activity_header.haml
@@ -493,31 +371,11 @@ helpers/application_helper.rb#function_link_button:
   - BASE/link_to_function
 helpers/application_helper.rb#remote_link_button:
   callers:
-  - name: views/materials_collections/_materials_in_collection.html.haml
-    line: = remote_link_button "delete.png", :url => url, :submit => "materials_collection_item_#{mci.id}",
-      :confirm => confirm, :name => 'remove material', :title => title, :method =>
-      :post, :success => success
   - name: views/portal/students/_current_student_list_for_clazz.html.haml
     line: '= remote_link_button "delete.png", :url => portal_clazz_student_clazz_url(portal_clazz,
       portal_student_clazz), :confirm => "This action will remove the student: ''#{portal_student.name}''
       from the class: #{portal_clazz.name}. \nAre you sure you want to do this?",
       :method => :delete, :title => "remove #{portal_student.name} from #{portal_clazz.name}"'
-  - name: views/shared/_notes_menu.html.haml
-    line: = remote_link_button "teacher_note.png", :url=> url_for(:controller=>'teacher_notes',
-      :action=>'show_teacher_note', :id=>authorable.teacher_note.id),  :title => "show
-      the teacher note for this page"
-  - name: views/shared/_notes_menu.html.haml
-    line: = remote_link_button "no_teacher_note.png", :url=>url_for(:controller=>'teacher_notes',
-      :action=>'show_teacher_note', :authored_entity_id=>authorable.id,:authored_entity_type=>authorable.class.name),
-      :title => "create a teacher note for this page"
-  - name: views/shared/_notes_menu.html.haml
-    line: = remote_link_button "author_note.png", :url=> url_for(:controller=>'author_notes',
-      :action=>'show_author_note', :id=>authorable.author_note.id),  :title => "show
-      the author note for this page"
-  - name: views/shared/_notes_menu.html.haml
-    line: = remote_link_button "no_author_note.png", :url=>url_for(:controller=>'author_notes',
-      :action=>'show_author_note', :authored_entity_id=>authorable.id,:authored_entity_type=>authorable.class.name),
-      :title => "create an author note for this page"
   - name: helpers/application_helper.rb#edit_button_for
     line: remote_link_button "edit.png",  :url => url, :title => title, :update =>
       update, :method => method, :complete => complete, :success => success
@@ -532,8 +390,6 @@ helpers/application_helper.rb#show_menu_for:
   callers:
   - name: views/admin/projects/_show.html.haml
     line: "= show_menu_for project, omit_delete: true"
-  - name: views/admin/settings/_show.html.haml
-    line: "= show_menu_for(admin_settings, options)"
   - name: views/admin/settings/_show_for_managers.html.haml
     line: "= show_menu_for(admin_settings, options)"
   - name: views/dataservice/blobs/_show.html.haml
@@ -544,9 +400,6 @@ helpers/application_helper.rb#show_menu_for:
   - name: views/dataservice/console_loggers/_show.html.haml
     line: "= accordion_for(dataservice_console_logger, show_menu_for(dataservice_console_logger,
       options)) do"
-  - name: views/materials_collections/_show.html.haml
-    line: "= accordion_for(materials_collection, show_menu_for(materials_collection,
-      options), 'accordion') do"
   - name: views/portal/grade_levels/_show.html.haml
     line: "= show_menu_for(portal_grade_level, options)"
   - name: views/portal/grades/_show.html.haml
@@ -578,9 +431,6 @@ helpers/application_helper.rb#wrap_edit_link_around_content:
   callers:
   - name: views/admin/projects/_show.html.haml
     line: "= wrap_edit_link_around_content project do"
-  - name: views/admin/settings/_show.html.haml
-    line: "= wrap_edit_link_around_content(admin_settings, options={:complete => mce_init_string})
-      do"
   - name: views/admin/settings/_show_for_managers.html.haml
     line: "= wrap_edit_link_around_content(admin_settings, {:complete => mce_init_string})
       do"
@@ -595,9 +445,6 @@ helpers/application_helper.rb#wrap_edit_link_around_content:
       mce_init_string}) do"
   - name: views/embeddable/open_responses/_show.html.haml
     line: "= wrap_edit_link_around_content(open_response, options={:complete => mce_init_string})
-      do"
-  - name: views/materials_collections/_show.html.haml
-    line: "= wrap_edit_link_around_content(materials_collection, {:complete => mce_init_string})
       do"
   - name: views/portal/grade_levels/_show.html.haml
     line: "= wrap_edit_link_around_content(portal_grade_level, options={:complete
@@ -697,13 +544,6 @@ views/admin/projects/index.html.haml:
 views/admin/projects/show.html.haml:
   calls:
   - views/admin/projects/_show.html.haml
-views/admin/settings/_remote_form.html.haml:
-  callers:
-  - name: controllers/admin/settings_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :admin_settings => @admin_settings
-      }
-  calls:
-  - BASE/remote_form_for
 views/admin/settings/_show.html.haml:
   callers:
   - name: views/admin/settings/index.html.haml
@@ -711,13 +551,8 @@ views/admin/settings/_show.html.haml:
   - name: views/admin/settings/show.html.haml
     line: "= render :partial => 'show', :locals=> { :admin_settings => @admin_settings
       }"
-  - name: controllers/admin/settings_controller.rb#update
-    line: render :partial => 'show', :locals => { :admin_settings => @admin_settings
-      }
   calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
   - views/admin/settings/_show_for_managers.html.haml
-  - helpers/application_helper.rb#show_menu_for
 views/admin/settings/_show_for_managers.html.haml:
   callers:
   - name: views/admin/settings/_show.html.haml
@@ -732,21 +567,6 @@ views/admin/settings/index.html.haml:
 views/admin/settings/show.html.haml:
   calls:
   - views/admin/settings/_show.html.haml
-views/author_notes/_remote_form.html.haml:
-  callers:
-  - name: controllers/author_notes_controller.rb#show_author_note
-    line: page.replace_html  'note', :partial => 'author_notes/remote_form', :locals
-      => { :author_note => @author_note}
-  calls:
-  - BASE/remote_form_for
-  - BASE/visual_effect
-views/author_notes/_show.html.haml:
-  callers:
-  - name: controllers/author_notes_controller.rb#show_author_note
-    line: page.replace_html  'note', :partial => 'author_notes/show', :locals => {
-      :author_note => @author_note}
-  calls:
-  - BASE/link_to_function
 views/dataservice/blobs/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
@@ -982,49 +802,6 @@ views/layouts/application.html.haml:
   - views/shared/_accordion_nav.html.haml
   - views/shared/_general_accordion_nav.html.haml
   - views/shared/_general_accordion_nav.html.haml
-views/materials_collections/_list_show.html.haml:
-  callers:
-  - name: views/materials_collections/index.html.haml
-    line: "= render :partial => 'list_show', :collection => @materials_collections,
-      :as => :materials_collection"
-  - name: views/materials_collections/show.html.haml
-    line: "= render :partial => 'list_show', :locals=> { :materials_collection =>
-      @materials_collection }"
-  calls:
-  - views/materials_collections/_show.html.haml
-views/materials_collections/_materials_in_collection.html.haml:
-  callers:
-  - name: views/materials_collections/_show.html.haml
-    line: "= render :partial => 'materials_in_collection', :locals => { :materials_collection
-      => materials_collection }"
-  calls:
-  - BASE/sortable_element
-  - helpers/application_helper.rb#remote_link_button
-views/materials_collections/_remote_form.html.haml:
-  callers:
-  - name: controllers/materials_collections_controller.rb#edit
-    line: render :partial => 'remote_form', :locals => { :materials_collection =>
-      @materials_collection }
-  calls:
-  - BASE/remote_form_for
-views/materials_collections/_show.html.haml:
-  callers:
-  - name: views/materials_collections/_list_show.html.haml
-    line: "= render :partial => 'show', locals: { materials_collection: materials_collection
-      }"
-  - name: controllers/materials_collections_controller.rb#update
-    line: render :partial => 'show', :locals => { :materials_collection => @materials_collection
-      }
-  calls:
-  - views/materials_collections/_materials_in_collection.html.haml
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/materials_collections/index.html.haml:
-  calls:
-  - views/materials_collections/_list_show.html.haml
-views/materials_collections/show.html.haml:
-  calls:
-  - views/materials_collections/_list_show.html.haml
 views/portal/clazzes/_form_student_roster.html.haml:
   callers:
   - name: views/portal/clazzes/_remote_form_student_roster.html.haml
@@ -1173,16 +950,6 @@ views/portal/students/_move.html.haml:
       => portal_student }"
   calls:
   - BASE/remote_form_for
-views/portal/students/_register.html.haml:
-  callers:
-  - name: views/portal/students/_show.html.haml
-    line: "= render :partial => 'portal/students/register', :locals => { :portal_student
-      => portal_student }"
-  - name: views/portal/students/register.html.haml
-    line: "= render :partial => 'register', :locals => {:portal_student => @student
-      }"
-  calls:
-  - BASE/remote_form_for
 views/portal/students/_show.html.haml:
   callers:
   - name: views/home/my_classes.html.haml
@@ -1193,7 +960,6 @@ views/portal/students/_show.html.haml:
       => @portal_student}"
   calls:
   - views/portal/students/_move.html.haml
-  - views/portal/students/_register.html.haml
 views/portal/students/_table_for_clazz.html.haml:
   callers:
   - name: views/portal/clazzes/_form_student_roster.html.haml
@@ -1216,9 +982,6 @@ views/portal/students/_table_for_clazz.html.haml:
       :locals => {:portal_clazz => @portal_clazz}
   calls:
   - BASE/link_to_remote
-views/portal/students/register.html.haml:
-  calls:
-  - views/portal/students/_register.html.haml
 views/portal/students/show.html.haml:
   calls:
   - views/portal/students/_show.html.haml
@@ -1248,7 +1011,6 @@ views/shared/_activity_header.haml:
   calls:
   - helpers/application_helper.rb#toggle_all
   - lib/clipboard.rb#paste_link_for
-  - views/shared/_notes_menu.html.haml
   - helpers/application_helper.rb#delete_button_for
   - helpers/application_helper.rb#delete_button_for
 views/shared/_activity_trail.html.haml:
@@ -1296,19 +1058,6 @@ views/shared/_general_accordion_nav.html.haml:
   calls:
   - BASE/sortable_element
   - BASE/sortable_element
-views/shared/_notes_menu.html.haml:
-  callers:
-  - name: views/shared/_activity_header.haml
-    line: = render :partial => "shared/notes_menu", :locals => {:authorable => activity}
-  - name: views/shared/_page_header.html.haml
-    line: = render :partial => "shared/notes_menu", :locals => {:authorable => page}
-  - name: views/shared/_section_header.html.haml
-    line: = render :partial => "shared/notes_menu", :locals => {:authorable => section}
-  calls:
-  - helpers/application_helper.rb#remote_link_button
-  - helpers/application_helper.rb#remote_link_button
-  - helpers/application_helper.rb#remote_link_button
-  - helpers/application_helper.rb#remote_link_button
 views/shared/_offering_for_teacher.html.haml:
   callers:
   - name: views/portal/clazzes/edit_offerings.html.haml
@@ -1336,7 +1085,6 @@ views/shared/_page_header.html.haml:
   - BASE/link_to_remote
   - helpers/application_helper.rb#toggle_all
   - lib/clipboard.rb#paste_link_for
-  - views/shared/_notes_menu.html.haml
   - helpers/application_helper.rb#delete_button_for
   - helpers/application_helper.rb#delete_button_for
 views/shared/_paste_link.html.haml:
@@ -1370,21 +1118,5 @@ views/shared/_section_header.html.haml:
   calls:
   - helpers/application_helper.rb#toggle_all
   - lib/clipboard.rb#paste_link_for
-  - views/shared/_notes_menu.html.haml
   - helpers/application_helper.rb#delete_button_for
   - helpers/application_helper.rb#delete_button_for
-views/teacher_notes/_remote_form.html.haml:
-  callers:
-  - name: controllers/teacher_notes_controller.rb#show_teacher_note
-    line: page.replace_html  'note', :partial => 'teacher_notes/remote_form', :locals
-      => { :teacher_note => @teacher_note}
-  calls:
-  - BASE/remote_form_for
-  - BASE/visual_effect
-views/teacher_notes/_show.html.haml:
-  callers:
-  - name: controllers/teacher_notes_controller.rb#show_teacher_note
-    line: page.replace_html  'note', :partial => 'teacher_notes/show', :locals =>
-      { :teacher_note => @teacher_note  }
-  calls:
-  - BASE/link_to_function

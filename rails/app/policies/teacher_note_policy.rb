@@ -1,2 +1,0 @@
-class TeacherNotePolicy < ApplicationPolicy
-end

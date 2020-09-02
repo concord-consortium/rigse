@@ -316,7 +316,6 @@ materials_collections:
   collection_1:
     name: Collection 1
     description: 00000000-0000-0000-0000-000000000182
-    items_count: 0
   collection_2:
     name: Collection 2
     description: 00000000-0000-0000-0000-000000000183
@@ -328,4 +327,3 @@ materials_collections:
   collection_4:
     name: Collection 4
     description: 00000000-0000-0000-0000-000000000185
-    items_count: 0

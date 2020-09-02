@@ -35,6 +35,8 @@ import openAssignToClassModal from './components/assign-to-class/assign-to-class
 import PortalClassSetupForm from './components/portal-classes/setup-form'
 import EditBookmarks from './components/bookmarks/edit'
 import ManageClasses from './components/portal-classes/manage-classes'
+import EditMaterialsCollectionList from './components/materials-collection/edit-list'
+import JoinClass from './components/portal-students/join-class'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -249,5 +251,15 @@ window.PortalComponents = {
   ManageClasses: ManageClasses,
   renderManageClasses: function (options, id) {
     render(React.createElement(ManageClasses, options), id)
+  },
+
+  EditMaterialsCollectionList: EditMaterialsCollectionList,
+  renderEditMaterialsCollectionList: function (options, id) {
+    render(React.createElement(EditMaterialsCollectionList, options), id)
+  },
+
+  JoinClass: JoinClass,
+  renderJoinClass: function (options, id) {
+    render(React.createElement(JoinClass, options), id)
   }
 }

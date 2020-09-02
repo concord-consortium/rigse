@@ -1,0 +1,25 @@
+.item
+  = edit_menu_for(project_link, f, { :omit_cancel => true })
+  = error_messages_for :project_link
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          =f.text_field :name
+        %li
+          Id:
+          =f.text_field :link_id
+        %li
+          URL:
+          =f.text_field :href
+        %li
+          Positon:
+          =f.text_field :position
+        %li
+          Pop out:
+          =f.check_box :pop_out
+        %li
+          Project:
+          =f.collection_select(:project_id, projects, :id, :name)
+

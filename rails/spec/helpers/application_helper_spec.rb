@@ -626,15 +626,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#htmlize_teacher_note_body' do
-    it 'works' do
-      result = helper.htmlize_teacher_note_body(FactoryBot.build(:teacher_note))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#runnable_list' do
     xit 'works' do
       result = helper.runnable_list({})

@@ -31,13 +31,5 @@ describe MaterialsCollectionsController do
       expect(delete("/materials_collections/1")).to route_to("materials_collections#destroy", :id => "1")
     end
 
-    it "routes to #sort_materials" do
-      expect(post("/materials_collections/1/sort_materials")).to route_to("materials_collections#sort_materials", :id => "1")
-    end
-
-    it "routes to #remove_material" do
-      expect(post("/materials_collections/1/remove_material")).to route_to("materials_collections#remove_material", :id => "1")
-    end
-
   end
 end
