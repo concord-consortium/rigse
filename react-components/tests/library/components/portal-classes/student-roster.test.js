@@ -100,6 +100,33 @@ describe('When I try to render a student roster', () => {
     `));
   });
 
+  it("should render the register another modal", () => {
+    const savedLocation = window.location
+    delete global.window.location
+    global.window.location = {
+      hash: "#registered_student"
+    }
+
+    const studentRoster = Enzyme.mount(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
+    expect(studentRoster.html()).toContain(pack(`
+      <div class="modal">
+        <div class="background"></div>
+        <div class="dialog">
+          <div class="title">Success! The student was registered and added to the class</div>
+          <p>
+            Do you wish to register and add another student?
+          </p>
+          <p class="buttons">
+            <button>Add Another Student</button>
+            <button>Cancel</button>
+          </p>
+        </div>
+      </div>
+    `))
+
+    global.window.location = savedLocation
+  })
+
   // NOTE: the header and the rows are tested fully in their own component tests
 
 })

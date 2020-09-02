@@ -3,10 +3,12 @@ import React from 'react'
 import RegisterStudentModal from './register-student-modal'
 import StudentRosterRow from './student-roster-row'
 import StudentRosterHeader from './student-roster-header'
+import ModalDialog from '../shared/modal-dialog'
 
 import api from '../../helpers/api'
 
 import css from './student-roster.scss'
+import modalDialogCSS from '../shared/modal-dialog.scss'
 
 const apiBasePath = '/api/v1/students'
 const apiCall = api({
@@ -15,12 +17,15 @@ const apiCall = api({
   register: { url: `${apiBasePath}/register` }
 })
 
+const REGISTERED_STUDENT_HASH_MARKER = '#registered_student'
+
 export default class StudentRoster extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      showRegisterStudentModal: false
+      showRegisterStudentModal: false,
+      showRegisterAnotherStudentModal: false
     }
 
     this.handleRemoveStudent = this.handleRemoveStudent.bind(this)
@@ -28,6 +33,16 @@ export default class StudentRoster extends React.Component {
     this.handleAddStudent = this.handleAddStudent.bind(this)
     this.handleToggleRegisterStudentModal = this.handleToggleRegisterStudentModal.bind(this)
     this.handleRegisterStudent = this.handleRegisterStudent.bind(this)
+    this.handleToggleRegisterAnotherModal = this.handleToggleRegisterAnotherModal.bind(this)
+    this.handleRegisterAnotherStudent = this.handleRegisterAnotherStudent.bind(this)
+  }
+
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount () {
+    if (window.location.hash === REGISTERED_STUDENT_HASH_MARKER) {
+      this.setState({ showRegisterAnotherStudentModal: true })
+      window.location.hash = ''
+    }
   }
 
   handleRemoveStudent (student) {
@@ -75,12 +90,41 @@ export default class StudentRoster extends React.Component {
         }
       },
       errorMessage: 'Unable to register student!',
-      onSuccess: () => window.location.reload()
+      onSuccess: () => {
+        // trigger the "register another student?" modal after reload
+        window.location.hash = REGISTERED_STUDENT_HASH_MARKER
+        window.location.reload()
+      }
     })
   }
 
   handleToggleRegisterStudentModal () {
     this.setState({ showRegisterStudentModal: !this.state.showRegisterStudentModal })
+  }
+
+  handleToggleRegisterAnotherModal () {
+    this.setState({ showRegisterAnotherStudentModal: !this.state.showRegisterAnotherStudentModal })
+  }
+
+  handleRegisterAnotherStudent () {
+    this.setState({
+      showRegisterStudentModal: true,
+      showRegisterAnotherStudentModal: false
+    })
+  }
+
+  renderRegisterAnotherModal () {
+    return (
+      <ModalDialog title='Success! The student was registered and added to the class'>
+        <p>
+          Do you wish to register and add another student?
+        </p>
+        <p className={modalDialogCSS.buttons}>
+          <button onClick={this.handleRegisterAnotherStudent}>Add Another Student</button>
+          <button onClick={this.handleToggleRegisterAnotherModal}>Cancel</button>
+        </p>
+      </ModalDialog>
+    )
   }
 
   renderStudents (canEdit) {
@@ -115,7 +159,7 @@ export default class StudentRoster extends React.Component {
   }
 
   render () {
-    const { showRegisterStudentModal } = this.state
+    const { showRegisterStudentModal, showRegisterAnotherStudentModal } = this.state
     const { otherStudents, allowDefaultClass, canEdit } = this.props
 
     return (
@@ -123,6 +167,7 @@ export default class StudentRoster extends React.Component {
         {canEdit ? <StudentRosterHeader allowDefaultClass={allowDefaultClass} otherStudents={otherStudents} onAddStudent={this.handleAddStudent} onRegisterStudent={this.handleToggleRegisterStudentModal} /> : undefined}
         {this.renderStudents(canEdit)}
         {showRegisterStudentModal ? <RegisterStudentModal onSubmit={this.handleRegisterStudent} onCancel={this.handleToggleRegisterStudentModal} /> : undefined }
+        {showRegisterAnotherStudentModal ? this.renderRegisterAnotherModal() : undefined}
       </>
     )
   }
