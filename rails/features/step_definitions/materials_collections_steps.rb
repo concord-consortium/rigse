@@ -4,9 +4,9 @@ When /^I click on the (id|edit|delete) link for materials collection "([^"]*)"$/
     when "id"
       "#{id}"
     when "edit"
-      "edit materials collection"
+      "edit"
     when "delete"
-      "delete materials collection"
+      "delete"
     else
       raise "Invalid materials collection link type: #{link_type}"
     end

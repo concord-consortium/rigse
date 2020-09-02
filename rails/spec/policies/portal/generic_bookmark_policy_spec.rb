@@ -25,16 +25,6 @@ RSpec.describe Portal::GenericBookmarkPolicy do
   end
 
   # TODO: auto-generated
-  describe '#add_padlet?' do
-    it 'add_padlet?' do
-      generic_bookmark_policy = described_class.new(nil, nil)
-      result = generic_bookmark_policy.add_padlet?
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#is_class_owner' do
     it 'is_class_owner' do
       generic_bookmark_policy = described_class.new(nil, nil)

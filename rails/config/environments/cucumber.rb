@@ -37,8 +37,5 @@ RailsPortal::Application.configure do
   config.i18n.default_locale = 'en'
   config.i18n.fallbacks = true
 
-  if BoolENV["RAILS_STDOUT_LOGGING"]
-    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
-    config.logger = Logger.new(STDOUT)
-  end
+  LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end

@@ -89,7 +89,7 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
     scenario 'teacher user should be able to click assign button and see assign dialog modal, but will not see a list of classes.', :js => true do
       # first, archive sample class
       visit "/portal/classes/manage"
-      first("input[type='checkbox']").click
+      first("button").click
       visit "/browse/eresources/1"
       click_on "Assign"
       using_wait_time(1) do

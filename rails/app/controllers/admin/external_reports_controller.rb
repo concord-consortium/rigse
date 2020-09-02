@@ -30,9 +30,6 @@ class Admin::ExternalReportsController < ApplicationController
   def edit
     authorize ExternalReport
     @report = ExternalReport.find(params[:id])
-    if request.xhr?
-      render :partial => 'remote_form', :locals => { :project => @report }
-    end
   end
 
   # POST /admin/report
@@ -60,19 +57,11 @@ class Admin::ExternalReportsController < ApplicationController
         .where('id != ? AND default_report_for_source_type = ?', @report.id, new_params[:default_report_for_source_type])
         .update_all(default_report_for_source_type: nil)
     end
-    if request.xhr?
-      if saved_successfully
-        render :partial => 'show', :locals => { :project => @report }
-      else
-        render :partial => 'remote_form', :locals => { :project => @report }, :status => 400
-      end
+    if saved_successfully
+      flash[:notice]= 'ExternalReport was successfully updated.'
+      redirect_to action: :index
     else
-      if saved_successfully
-        flash[:notice]= 'ExternalReport was successfully updated.'
-        redirect_to action: :index
-      else
-        render :action => 'edit'
-      end
+      render :action => 'edit'
     end
   end
 

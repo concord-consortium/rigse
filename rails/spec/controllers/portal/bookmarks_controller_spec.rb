@@ -18,54 +18,9 @@ RSpec.describe Portal::BookmarksController, type: :controller do
   end
 
   # TODO: auto-generated
-  describe '#add_padlet' do
-    it 'GET add_padlet' do
-      get :add_padlet, {}, {}
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#add' do
-    it 'GET add' do
-      get :add, {}, {}
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#visit' do
     it 'GET visit' do
       get :visit, {}, {}
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#delete' do
-    it 'GET delete' do
-      get :delete, {}, {}
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#sort' do
-    it 'GET sort' do
-      get :sort, ids: [1,2].to_json
-
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#edit' do
-    it 'GET edit' do
-      get :edit, {}, {}
 
       expect(response).to have_http_status(:not_found)
     end

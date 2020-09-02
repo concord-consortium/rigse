@@ -65,8 +65,6 @@ RailsPortal::Application.routes.draw do
       get 'classes/:id/external_report/:report_id' => 'clazzes#external_report', :as => :external_class_report
       resources :clazzes, :path => :classes do
         member do
-          post :add_teacher
-          delete :remove_teacher
           get :add_offering
           post :add_offering
           get :class_list
@@ -78,25 +76,20 @@ RailsPortal::Application.routes.draw do
           post :edit_offerings
           get :roster
           post :add_new_student_popup
-          post :copy_class
           get :materials
           get :fullstatus
         end
 
-        resources :bookmarks, only: [:index] do
-          collection do
-            post 'add'
-            post 'add_padlet'
-          end
-        end
+        resources :bookmarks, only: [:index]
 
         collection do
           get :info
-          #get :manage_classes, :path => 'manage'
-          match 'manage', :to => 'clazzes#manage_classes'
-          #post :manage_classes_save, :as => 'manage_save'
+          get 'manage', :to => 'clazzes#manage_classes'
         end
       end
+
+      match '/bookmark/visit/:id' => 'bookmarks#visit',  :as => :visit_bookmark
+      match '/bookmark/visits'    => 'bookmarks#visits', :as => :bookmark_visits
 
       resources :clazzes, :path => :classes do
         resources :student_clazzes
@@ -141,8 +134,6 @@ RailsPortal::Application.routes.draw do
         collection do
           get :signup
           get :register
-          post :register
-          post :confirm
           get :move_confirm
           post :move_confirm
           get :move
@@ -174,13 +165,6 @@ RailsPortal::Application.routes.draw do
           get :description
         end
       end
-
-      # TODO: clean up these adhoc bookmark routes:
-      match '/bookmark/visit/:id'      => 'bookmarks#visit',      :as => :visit_bookmark
-      match '/bookmark/delete/:id'     => 'bookmarks#delete',     :as => :delete_bookmark
-      match '/bookmark/visits'         => 'bookmarks#visits',     :as => :bookmark_visits
-      match '/bookmark/sort'           => 'bookmarks#sort',       :method => :post, :as => :sort_bookmarks
-      match '/bookmark/edit'           => 'bookmarks#edit',       :method => :post, :as => :edit_bookmark
     end
 
     match '/portal/school_selector/update' => 'portal/school_selector#update', :as => :school_selector_update
@@ -280,7 +264,12 @@ RailsPortal::Application.routes.draw do
     namespace :admin do
       resources :settings
       resources :tags
-      resources :projects
+      resources :projects do
+        resources :cohorts
+        resources :project_links
+      end
+      resources :cohorts
+      resources :project_links
       resources :clients
       resources :tools
       resources :external_reports
@@ -308,15 +297,7 @@ RailsPortal::Application.routes.draw do
       resources :firebase_apps
     end
 
-    resources :materials_collections do
-      member do
-        post :sort_materials
-        post :remove_material
-      end
-    end
-
-    resources :teacher_notes
-    resources :author_notes
+    resources :materials_collections
     resources :n_logo_models
     resources :multiple_choices do
       member do
@@ -359,8 +340,6 @@ RailsPortal::Application.routes.draw do
     resources :images
     match '/images/list/filter' => 'images#index', :as => :list_filter_image, :method => :post
     match '/images/:id/view'    => 'images#view',  :as => :view_image, :method => :get
-
-    resources :installer_reports
 
     resources :images
 
@@ -414,6 +393,8 @@ RailsPortal::Application.routes.draw do
         resources :students do
           collection do
             get :check_class_word
+            post :join_class
+            post :confirm_class_word
           end
           member do
             post :check_password
@@ -481,6 +462,14 @@ RailsPortal::Application.routes.draw do
           get :mine
         end
 
+        resources :teacher_classes, only: [:show] do
+          member do
+            post :sort
+            post :set_active
+            post :copy
+          end
+        end
+
         namespace :jwt do
           post :portal
           post :firebase
@@ -527,6 +516,19 @@ RailsPortal::Application.routes.draw do
           post :toggle_notice_display
           post :update
         end
+
+        resources :bookmarks, only: [:create, :update, :destroy] do
+          collection do
+            post 'sort'
+          end
+        end
+
+        resources :materials_collections, :only => [] do
+          member do
+            post :sort_materials
+            post :remove_material
+          end
+        end
       end
     end
 
@@ -558,7 +560,6 @@ RailsPortal::Application.routes.draw do
     match '/time' => 'misc_metal#time', :as => :time
     match '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     match '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
-    post  '/installer_report' => 'misc#installer_report', :as => :installer_report_post
 
     match '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 

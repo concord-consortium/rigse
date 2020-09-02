@@ -17,6 +17,7 @@ class API::APIController < ApplicationController
   def error(message, status = 400)
     render :json =>
       {
+        :success => false,
         :response_type => "ERROR",
         :message => message
       },
@@ -114,5 +115,43 @@ class API::APIController < ApplicationController
     else
       raise StandardError, 'You must be logged in to use this endpoint'
     end
+  end
+
+  def auth_not_anonymous(params)
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return {error: e.message}
+    end
+
+    if user.anonymous?
+      return {error: 'You must be logged in to use this endpoint'}
+    end
+
+    return {user: user, role: role}
+  end
+
+  def auth_teacher(params)
+    auth = auth_not_anonymous(params)
+    return auth if auth[:error]
+    user = auth[:user]
+
+    if !user.portal_teacher
+      auth[:error] = 'You must be logged in as a teacher to use this endpoint'
+    end
+
+    return auth
+  end
+
+  def auth_student_or_teacher(params)
+    auth = auth_not_anonymous(params)
+    return auth if auth[:error]
+    user = auth[:user]
+
+    if !user.portal_student && !user.portal_teacher
+      auth[:error] = 'You must be logged in as a student or teacher to use this endpoint'
+    end
+
+    return auth
   end
 end

@@ -15,15 +15,4 @@ module Portal::BookmarksHelper
     end
   end
 
-  def render_add_bookmark_buttons
-    each_available_claz do |claz, type|
-      haml_tag '.add_bookmark_button' do
-        haml_concat(render(:partial => "portal/bookmarks/#{type}/button"))
-      end
-    end
-  end
-
-  def bookmark_dom_item(mark)
-    "bookmark_#{mark.type}_#{mark.id}"
-  end
 end

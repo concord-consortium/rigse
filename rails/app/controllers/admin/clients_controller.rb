@@ -31,9 +31,6 @@ class Admin::ClientsController < ApplicationController
   def edit
     authorize Client
     @client = Client.find(params[:id])
-    if request.xhr?
-      render :partial => 'remote_form', :locals => { :project => @client }
-    end
   end
 
   # POST /admin/client
@@ -53,19 +50,11 @@ class Admin::ClientsController < ApplicationController
   def update
     authorize Client
     @client = Client.find(params[:id])
-    if request.xhr?
-      if @client.update_attributes(params[:client])
-        render :partial => 'show', :locals => { :project => @client }
-      else
-        render :partial => 'remote_form', :locals => { :project => @client }, :status => 400
-      end
+    if @client.update_attributes(params[:client])
+      flash[:notice]= 'Client was successfully updated.'
+      redirect_to action: :index
     else
-      if @client.update_attributes(params[:client])
-        flash[:notice]= 'Client was successfully updated.'
-        redirect_to action: :index
-      else
-        render :action => 'edit'
-      end
+      render :action => 'edit'
     end
   end
 

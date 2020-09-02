@@ -5,7 +5,7 @@
   = render :partial => "form_for_managers", :locals => { :admin_settings => admin_settings, :f => f  }
 - else
   .item
-    = edit_menu_for(admin_settings, f, { :omit_cancel => true })
+    = edit_menu_for(admin_settings, f)
     .content
       %p
         %ul.menu_v

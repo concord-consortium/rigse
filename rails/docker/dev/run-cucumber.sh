@@ -6,13 +6,10 @@
 #
 # Prepare cucumber tests
 #
-RAILS_ENV=cucumber bundle exec rake db:create
-RAILS_ENV=cucumber bundle exec rake db:schema:load
-bundle exec rake db:test:prepare_cucumber
+RAILS_ENV=feature_test bundle exec rake db:create
+bundle exec rake db:feature_test:prepare
 
 #
 # Run cucumber tests
 #
 bundle exec rake ci:cucumber_without_javascript
-
-

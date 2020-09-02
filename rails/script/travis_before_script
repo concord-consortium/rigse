@@ -9,13 +9,15 @@ mysql -e 'create database rigse_features;'
 mysql -uroot -e 'GRANT ALL ON rigse_test.* TO 'travis'@'localhost';'
 mysql -uroot -e 'GRANT ALL ON rigse_features.* TO 'travis'@'localhost';'
 bundle exec spring binstub --all
+# db:test:prepare loads the database, but it first checks for migrations
+# so it is necessary to run the migrations on the RAILS_ENV database
+# first even if the the database being prepared (test or feature_test) is
+# different. A better approach might be to just run the steps of db:test:prepare
+# which would skip the requirement to run the migrations
 ./bin/rake db:schema:load
 ./bin/rake db:migrate
 ./bin/rake db:test:prepare
-RAILS_ENV=feature_test ./bin/rake db:schema:load
-RAILS_ENV=feature_test ./bin/rake db:migrate
-RAILS_ENV=feature_test ./bin/rake db:test:prepare
+./bin/rake db:feature_test:prepare
 RAILS_GROUPS=assets ./bin/rake assets:precompile:all
 RAILS_ENV=test ./bin/rake sunspot:solr:start &
 sleep 10 # give SOLR some time to start and init
-

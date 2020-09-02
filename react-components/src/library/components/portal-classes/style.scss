@@ -1,0 +1,112 @@
+.manageClassesSummary {
+    font-weight:bold;
+    font-size: 1.3em;
+    color: #000000;
+    padding-top: 20px;
+}
+
+.manageClassesTable {
+  margin: 10px 0;
+}
+
+.manageClassRow {
+  display: flex;
+  margin: 5px 0;
+}
+
+.manageClassName {
+  flex-grow: 2;
+  padding: 0 5px;
+  cursor: ns-resize;
+
+  input {
+    width: 98%;
+    padding: 3px 5px;
+  }
+}
+
+.manageClassButtons {
+  display: flex;
+
+  button {
+    margin: 0 0 0 5px;
+  }
+}
+
+.iconCell {
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 5px;
+  font-size: 0.95em;
+  vertical-align: middle;
+}
+
+.sortIcon {
+  cursor: ns-resize;
+}
+
+.copyDialogLightbox {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3
+}
+
+.copyDialogBackground {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 0.3;
+}
+
+.copyDialog {
+  z-index: 4;
+  width: 500px;
+  padding: 20px;
+  background-color: #fff;
+  border: solid 2px #ea6d2f;
+
+  table {
+    width: 100%;
+  }
+  textarea {
+    width: 340px;
+    height: 100px;
+    padding: 10px;
+    margin-left: 10px;
+  }
+  input {
+    width: 340px;
+    margin-left: 10px;
+  }
+
+  .description {
+    vertical-align: top;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .buttons {
+    text-align: right;
+
+    button {
+      display: inline;
+      margin: 20px 0 0 10px;
+    }
+  }
+}
+
+.copyTitle {
+  font-size: 1.2em;
+  font-weight: bold;
+}

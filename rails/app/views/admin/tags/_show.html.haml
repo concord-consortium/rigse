@@ -1,19 +1,21 @@
-- options = { :complete => mce_init_string, :omit_delete => true }
-%div{ :id => dom_id_for(admin_tag), :class => "container_element" }
-  = show_menu_for(admin_tag, options)
+- display_name = "#{admin_tag.name}"
+%div{id: dom_id_for(admin_tag), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3
+        %a{href:admin_tag_path(admin_tag)}=display_name
 
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_tag_path(admin_tag)} edit
+        %li
+          %a{href:url_for(action: :destroy, id:admin_tag.id), data: {method: 'delete', confirm: "Delete this tag?"} } delete
   %div{:id => dom_id_for(admin_tag, :item), :class => 'item'}
     %div{:id => dom_id_for(admin_tag, :details), :class => 'content'}
-      = wrap_edit_link_around_content(admin_tag, options={:complete => mce_init_string}) do
-        %h4= h(admin_tag.name)
-        %p
-          %ul.menu_v
-            %li
-              Scope:
-              =h(admin_tag.scope)
-    
-            %li
-              Tag:
-              =h(admin_tag.tag)
-    
-    
+      %p.tag
+        Tag:
+        = h(admin_tag.tag)
+      %p.scope
+        Scope:
+        = h(admin_tag.scope)

@@ -127,6 +127,8 @@ module RailsPortal
         resource '/api/v1/offering/*', :headers => :any, :methods => [:get, :put]
         resource '/api/v1/classes/*', :headers => :any, :methods => [:get]
         resource '/api/v1/jwt/*', :headers => :any, :methods => [:get]
+        resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
+        resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]
       end
 
       # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
@@ -149,8 +151,6 @@ module RailsPortal
     config.assets.precompile += %w(
       print.css
       student_roster.js
-      class_setup_info.js
-      manage_classes.js
       full_status.js
       preview_home_page.js
       preview_about_page.js

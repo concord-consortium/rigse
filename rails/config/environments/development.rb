@@ -70,8 +70,5 @@ RailsPortal::Application.configure do
   localDevPath = File.expand_path((ENV['LOCAL_DEV_ENVIRONMENT_FILE'] || 'local-development.rb'), File.dirname(__FILE__))
   require(localDevPath) if File.file?(localDevPath)
 
-  if BoolENV["RAILS_STDOUT_LOGGING"]
-    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
-    config.logger = Logger.new(STDOUT)
-  end
+  LogConfig.configure(config, ENV['DEV_LOG_LEVEL'], 'DEBUG')
 end

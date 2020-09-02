@@ -57,12 +57,16 @@ And /^the following offerings exist$/ do |offering_table|
 end
 
 When /^(?:I )follow remove image for the teacher name "(.*)"$/ do |teacher_name|
-  step_text = "follow xpath \"//li[contains(., '#{teacher_name}')]/a[@class='rollover']\""
+  step_text = "follow xpath \"//li[contains(., '#{teacher_name}')]/span[@class='rollover']\""
   step step_text
 end
 
-
-When /^(?:I )follow Add Another Teacher drop down$/ do
-  step_text = "follow xpath \"//div[@id='teacher_id_selector_chosen']/a\""
-  step step_text
+Then /^I should not see the remove image for the teacher name "(.*)"$/ do |teacher_name|
+  expect(page).to have_no_xpath "//li[contains(., '#{teacher_name}')]/span[@class='rollover']"
 end
+
+Then /^"([^"]*)" should( not)? be a teacher option$/ do |value, negate|
+  expectation = negate ? :should_not : :should
+  find("#teacher_id_selector").first(:xpath, ".//option[text() = '#{value}']").send(expectation, be_present)
+end
+

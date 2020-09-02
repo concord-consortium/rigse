@@ -2,19 +2,27 @@
 
 require 'spec_helper'
 
-
 RSpec.describe Admin::Tag, type: :model do
-  before(:each) do
-    @valid_attributes = {
-        :scope => "value for scope",
-        :tag => "value for tag"
+  let(:valid_attributes) do
+    {
+      scope: 'value for scope',
+      tag: 'value for tag'
+    }
+  end
+  let(:bad_attributes) do
+    {
+      scope: 'no blank tags',
+      tag: ''
     }
   end
 
-  it "should create a new instance given valid attributes" do
-    Admin::Tag.create!(@valid_attributes)
+  it 'should create a new instance given valid attributes' do
+    Admin::Tag.create!(valid_attributes)
   end
 
+  it 'should not create a new instance given bad attributes' do
+    expect(Admin::Tag.create(bad_attributes)).not_to be_valid
+  end
 
   # TODO: auto-generated
   describe '.searchable_attributes' do
@@ -26,11 +34,10 @@ RSpec.describe Admin::Tag, type: :model do
   end
 
   # TODO: auto-generated
-  describe '.search_list' do
-    xit 'search_list' do
+  describe '.search' do
+    it 'search' do
       options = {}
-      result = described_class.search_list(options)
-
+      result = described_class.search(options, 1, nil)
       expect(result).not_to be_nil
     end
   end
@@ -52,7 +59,6 @@ RSpec.describe Admin::Tag, type: :model do
       tag_type = double('tag_type')
       tag_list = double('tag_list')
       result = described_class.add_new_admin_tags(taggable, tag_type, tag_list)
-
       expect(result).not_to be_nil
     end
   end

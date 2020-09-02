@@ -59,7 +59,8 @@ xml.jnlp(:spec => "1.0+", :codebase => "http://#{current_settings.jnlp_cdn_hostn
     end
 
     xml.property :name=> "jnlp.skip_not_found_dialog", :value => "true"
-    xml.property :name=> "jnlp.test_jar_saving", :value => installer_report_post_url(installer_report_options)
+    # NP: 2020-08-18 -- installer reports removed
+    # xml.property :name=> "jnlp.test_jar_saving", :value => installer_report_post_url(installer_report_options)
     xml.property :name=> "jnlp.install_if_not_found", :value => "true"
 
     # include wrapped_jnlp so we know what jnlp to install from
