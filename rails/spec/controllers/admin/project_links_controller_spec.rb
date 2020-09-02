@@ -160,6 +160,16 @@ describe Admin::ProjectLinksController do
         }
       end
 
+      let(:invalid_params) do
+        {
+          admin_project_link: {
+            project_id: project_id,
+            name: nil
+          }
+        }
+      end
+
+
       describe 'when creating a link for project 1 which they ARE admin for' do
         let(:project_id) { project_1.id }
         it 'it SHOULD let them' do
@@ -168,6 +178,34 @@ describe Admin::ProjectLinksController do
           expect(assigns(:project_link)).to be_valid
           expect(response).to redirect_to(admin_project_link_path(link))
         end
+
+        describe 'with invalid parameters (missing name, link, etc)' do
+
+          it 'should invadidate the model' do
+            post :create, invalid_params
+            expect(assigns(:project_link)).not_to be_valid
+          end
+
+          it 'should redisplay the new form' do
+            post :create, invalid_params
+            expect(response).to render_template('new')
+          end
+
+          it 'should render the dropdown project list' do
+            post :create, invalid_params
+            projects = assigns[:projects]
+            expect(projects).not_to be_nil
+          end
+
+          it 'display field validation errors' do
+            post :create, invalid_params
+            link = assigns[:project_link]
+            expect(link.errors.messages[:name]).to include "can't be blank"
+            expect(link.errors.messages[:href]).to include "can't be blank"
+            expect(link.errors.messages[:link_id]).to include "can't be blank"
+          end
+        end
+
       end
 
       describe 'when creating a link for project 2 (NOT their project)' do
@@ -192,6 +230,16 @@ describe Admin::ProjectLinksController do
           }
         }
       end
+      let(:invalid_params) do
+        {
+          admin_project_link: {
+            project_id: new_project_id,
+            name: nil,
+            href: nil,
+            link_id: nil
+          }
+        }
+      end
 
       shared_examples 'fails_to_modify' do
         it 'it should NOT let them' do
@@ -211,8 +259,36 @@ describe Admin::ProjectLinksController do
             expect(assigns(:project_link)).to be_valid
             expect(response).to redirect_to(admin_project_link_path(@link_1))
           end
-        end
 
+          context 'when missing required parameters' do
+            let(:full_params) { invalid_params.merge(id: @link_1.id) }
+
+            it 'should invadidate the model' do
+              put :update, full_params
+              expect(assigns(:project_link)).not_to be_valid
+            end
+
+            it 'should redisplay the edit form' do
+              put :update, full_params
+              expect(response).to render_template('edit')
+            end
+
+            it 'should render the dropdown project list' do
+              put :update, full_params
+              projects = assigns[:projects]
+              expect(projects).not_to be_nil
+            end
+
+            it 'display field validation errors' do
+              put :update, full_params
+              link = assigns[:project_link]
+              expect(link.errors.messages[:name]).to include "can't be blank"
+              expect(link.errors.messages[:href]).to include "can't be blank"
+              expect(link.errors.messages[:link_id]).to include "can't be blank"
+            end
+          end
+        end
+        
         context 'and changing the project to one the user is not an admin of' do
           let(:new_project_id) { project_2.id }
           include_examples 'fails_to_modify'

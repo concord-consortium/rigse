@@ -2,7 +2,7 @@ class Admin::ProjectLinksController < ApplicationController
   include RestrictedController
 
   before_filter :check_for_project
-  before_filter :get_scoped_projects, only: ['new', 'edit']
+  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_project_link, only: ['show', 'edit', 'update', 'destroy']
 
 
