@@ -2,7 +2,10 @@ class Admin::CohortsController < ApplicationController
   include RestrictedController
 
   before_filter :check_for_project
-  before_filter :get_scoped_projects, only: ['new', 'edit']
+
+  # Note that we have to assign @projects even for create and update
+  # becuase they might render the edit or new templates (on vlidation error)
+  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_cohort, only: ['show', 'edit', 'update', 'destroy']
 
   private
