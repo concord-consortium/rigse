@@ -23,6 +23,6 @@ Feature: Student can not see deactivated offerings
     And I should not see "run Plant reproduction" in the content
     And I should see "No offerings available." in the content
 
-    When I am on the student view of the class page for "class_with_no_students"
+    When I am on the class page for "class_with_no_students"
     And I should not see "run Plant reproduction" in the content
     And I should see "No offerings available." in the content

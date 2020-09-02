@@ -45,7 +45,7 @@ module NavigationHelpers
       "/report/learner?commit=Details+Report"
     when /the teacher view of the class page for "(.*)"/
       "/portal/classes/#{Portal::Clazz.find_by_name($1).id}/materials"
-    when /the student view of the class page for "(.*)"/
+    when /the class page for "(.*)"/
       "/portal/classes/#{Portal::Clazz.find_by_name($1).id}"
     when /the class edit page for "([^"]*)"/
         clazz = Portal::Clazz.find_by_name($1)
