@@ -4,7 +4,7 @@ class Admin::CohortsController < ApplicationController
   before_filter :check_for_project
 
   # Note that we have to assign @projects even for create and update
-  # becuase they might render the edit or new templates (on vlidation error)
+  # because they might render the edit or new templates (on validation error)
   before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_cohort, only: ['show', 'edit', 'update', 'destroy']
 
