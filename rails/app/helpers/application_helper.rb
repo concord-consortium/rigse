@@ -134,15 +134,6 @@ module ApplicationHelper
     tag :input, html_options
   end
 
-  def pdf_footer(message)
-    pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
-      pdf.stroke_horizontal_rule
-      pdf.pad(10) do
-        pdf.text message, :size => 16
-      end
-    end
-  end
-
   def render_top_level_container_list_partial(locals)
     container = top_level_container_name.pluralize
     container_sym = top_level_container_name.pluralize.to_sym
@@ -523,42 +514,6 @@ module ApplicationHelper
       report_url = "#{uri.scheme}://#{uri.host}:#{uri.port}/runs/details?learners=#{learners}&students=#{students}"
       haml_concat " | "
       haml_concat link_to("LARA Run report", report_url, {:target => "_blank"} )
-    end
-  end
-
-  def menu_for_offering(offering, opts = {})
-    options = {
-      :omit_delete => true,
-      :omit_edit => true,
-      :hide_component_name => true,
-      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
-    }
-    options.update(opts)
-    capture_haml do
-      haml_tag :div, :class => 'action_menu_activity' do
-        haml_tag :div, :class => 'action_menu_activity_options' do
-          haml_concat options[:print_link]
-          haml_concat " | "
-          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          report_link = report_link_for(offering, 'Report', 'Report')
-          if !report_link.blank?
-            haml_concat " | #{report_link}"
-          end
-          lara_report_link(offering)
-          haml_concat " | "
-
-          if offering.active?
-            haml_concat activation_toggle_link_for(offering, 'deactivate', 'Deactivate')
-          else
-            haml_concat activation_toggle_link_for(offering, 'activate', 'Activate')
-          end
-
-        end
-        haml_tag :div, :class => 'action_menu_activity_title' do
-          haml_concat title_for_component(offering, options)
-          # haml_concat "Active students: #{offering.learners.length}"
-        end
-      end
     end
   end
 

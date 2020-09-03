@@ -158,15 +158,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#pdf_footer' do
-    xit 'works' do
-      result = helper.pdf_footer('message')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#render_top_level_container_list_partial' do
     xit 'works' do
       result = helper.render_top_level_container_list_partial({})
@@ -433,15 +424,6 @@ describe ApplicationHelper, type: :helper do
       result = helper.lara_report_link(FactoryBot.build(:portal_offering))
 
       expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#menu_for_offering' do
-    xit 'works' do
-      result = helper.menu_for_offering(FactoryBot.build(:portal_offering))
-
-      expect(result).not_to be_nil
     end
   end
 
