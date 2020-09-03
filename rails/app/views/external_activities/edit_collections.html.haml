@@ -12,7 +12,7 @@
   #collection_summary_data
     #scrollable_collection_summary_data
       - if @collections.length > 0
-        %form{:id=>"add_material_form", :method=>"POST"}
+        = form_tag '', :id => "add_material_form", :method => "put" do
           - if @unassigned_collections.length > 0
             %div.assign_class_header
               Select Collection(s)

@@ -331,7 +331,7 @@ RailsPortal::Application.routes.draw do
         get :copy
         get :edit_basic
         match 'collections' => 'external_activities#edit_collections', :via => :get
-        match 'collections' => 'external_activities#update_collections', :via => :post
+        match 'collections' => 'external_activities#update_collections', :via => :put
       end
     end
 
