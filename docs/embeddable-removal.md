@@ -46,9 +46,8 @@ rails/spec/controllers/embeddable/image_questions_controller_spec.rb
 rails/spec/controllers/embeddable/multiple_choices_controller_spec.rb
 rails/spec/controllers/embeddable/open_responses_controller_spec.rb
 
-
+## Helpers
+helpers/js_helper.rb#remove_link
 
 ## TODO:
-
-helpers/js_helper.rb#remove_link
 views/shared/_embeddable_container.html.haml
