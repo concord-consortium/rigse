@@ -8,7 +8,6 @@ class Admin::ProjectLinksController < ApplicationController
 
   def check_for_project
     return unless params[:project_id]
-
     @project = Admin::Project.find(params[:project_id])
   end
 
@@ -90,6 +89,7 @@ class Admin::ProjectLinksController < ApplicationController
   def destroy
     authorize @project_link
     @project_link.destroy
-    redirect_to admin_project_links_url, notice: "Link #{@project_link.name} was deleted"
+    flash[:notice] = "Link #{@project_link.name} was deleted"
+    redirect_back_or admin_project_links_url
   end
 end

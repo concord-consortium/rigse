@@ -3,6 +3,8 @@ require 'spec_helper'
 RegexForAuthFailShow = /can not view the requested resource/
 RegexForAuthFailNew = /can not create the requested resource/
 RegexForAuthFailModify = /can not update the requested resource/
+RegexForAuthFailDestroy = /can not destroy the requested resource/
+RegexDeleteSuccess = /(.*) was deleted/
 
 describe Admin::CohortsController do
   before(:each) do
@@ -64,6 +66,14 @@ describe Admin::CohortsController do
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
         expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+      end
+    end
+    describe 'Destroy' do
+      it 'it wont let them delete an existing cohort' do
+        delete :destroy, id: @cohort_1.id
+        # Redirect, and show error when not allowed:
+        expect(response).to have_http_status(:redirect)
+        expect(request.flash[:alert]).to match(RegexForAuthFailDestroy)
       end
     end
   end

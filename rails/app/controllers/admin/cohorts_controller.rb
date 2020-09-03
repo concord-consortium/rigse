@@ -87,7 +87,9 @@ class Admin::CohortsController < ApplicationController
 
   # DELETE /admin_cohorts/1
   def destroy
+    authorize @admin_cohort
     @admin_cohort.destroy
-    redirect_to admin_cohorts_url, notice: "Cohort #{@admin_cohort.name} was deleted"
+    flash[:notice] = "Cohort #{@admin_cohort.name} was deleted"
+    redirect_back_or admin_cohorts_url
   end
 end

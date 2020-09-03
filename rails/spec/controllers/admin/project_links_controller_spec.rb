@@ -3,7 +3,8 @@ require 'spec_helper'
 RegexForAuthFailShow = /can not view the requested resource/
 RegexForAuthFailNew = /can not create the requested resource/
 RegexForAuthFailModify = /can not update the requested resource/
-
+RegexForAuthFailDestroy = /can not destroy the requested resource/
+RegexDeleteSuccess = /(.*) was deleted/
 describe Admin::ProjectLinksController do
   before(:each) do
     generate_default_settings_and_jnlps_with_mocks
@@ -19,6 +20,14 @@ describe Admin::ProjectLinksController do
 
   let(:admin_user) { FactoryBot.generate(:admin_user) }
   let(:user) { FactoryBot.create(:user) }
+
+  shared_examples 'fails_to_modify' do
+    it 'it should NOT let them' do
+      put :update, full_params
+      expect(response).to have_http_status(:redirect)
+      expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+    end
+  end
 
   describe 'A user not affiliated with a project' do
     describe 'GET index' do
@@ -38,7 +47,6 @@ describe Admin::ProjectLinksController do
         end
       end
     end
-
     describe 'New' do
       it 'it wont let them create a new link' do
         get :new
@@ -59,10 +67,19 @@ describe Admin::ProjectLinksController do
 
     describe 'update' do
       it 'it wont let them update an existing link' do
-        put :update, id:@link_1.id
+        put :update, id: @link_1.id
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
         expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+      end
+    end
+
+    describe 'Destroy' do
+      it 'it wont let them delete an existing link' do
+        delete :destroy, id: @link_1.id
+        # Redirect, and show error when not allowed:
+        expect(response).to have_http_status(:redirect)
+        expect(request.flash[:alert]).to match(RegexForAuthFailDestroy)
       end
     end
   end
@@ -241,13 +258,7 @@ describe Admin::ProjectLinksController do
         }
       end
 
-      shared_examples 'fails_to_modify' do
-        it 'it should NOT let them' do
-          put :update, full_params
-          expect(response).to have_http_status(:redirect)
-          expect(request.flash[:alert]).to match(RegexForAuthFailModify)
-        end
-      end
+
 
       context 'a link of a project which the user IS an admin' do
         let(:full_params) { params.merge(id: @link_1.id) }
@@ -319,6 +330,18 @@ describe Admin::ProjectLinksController do
         context 'and changing the project to an invalid project' do
           let(:new_project_id) { 999999 }
           include_examples 'fails_to_modify'
+        end
+      end
+    end
+
+    describe 'Destroy' do
+      context 'with their project link' do
+        let(:link) { @link_1 }
+        it 'it will let them' do
+          delete :destroy, id: link.id
+          # Redirect, and show error when not allowed:
+          expect(response).to have_http_status(:redirect)
+          expect(request.flash[:notice]).to match(RegexDeleteSuccess)
         end
       end
     end
