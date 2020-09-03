@@ -6,7 +6,7 @@ RegexForAuthFailModify = /can not update the requested resource/
 
 describe Admin::CohortsController do
   before(:each) do
-    # This isn't required but silinces warnings in the console when running
+    # This isn't required but silences warnings in the console when running
     generate_default_settings_and_jnlps_with_mocks
     allow(controller).to receive(:current_user).and_return(user)
     @cohort_1 = FactoryBot.create(:admin_cohort, name: 'cohort 1', project: project_1)
@@ -391,4 +391,3 @@ describe Admin::CohortsController do
     end
   end
 end
-
