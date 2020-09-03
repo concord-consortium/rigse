@@ -10,5 +10,3 @@ Feature: Admin views default class
     And I am logged in with the username admin
     And go to the class page for "Default Class"
     Then I should see "Default Class"
-    
-

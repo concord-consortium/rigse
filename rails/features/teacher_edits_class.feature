@@ -7,7 +7,7 @@ Feature: Teacher can edit their class information
 
   Scenario: Anonymous user can not view class
     When I am an anonymous user
-    And I try to go to the class page for "My Class"
+    And I try to go to the teacher view of the class page for "My Class"
     Then I should be on "the signin page"
 
   Scenario: Anonymous user cannot not edit class

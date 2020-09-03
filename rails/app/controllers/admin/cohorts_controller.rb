@@ -2,7 +2,10 @@ class Admin::CohortsController < ApplicationController
   include RestrictedController
 
   before_filter :check_for_project
-  before_filter :get_scoped_projects, only: ['new', 'edit']
+
+  # Note that we have to assign @projects even for create and update
+  # because they might render the edit or new templates (on validation error)
+  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_cohort, only: ['show', 'edit', 'update', 'destroy']
 
   private
@@ -84,7 +87,9 @@ class Admin::CohortsController < ApplicationController
 
   # DELETE /admin_cohorts/1
   def destroy
+    authorize @admin_cohort
     @admin_cohort.destroy
-    redirect_to admin_cohorts_url, notice: "Cohort #{@admin_cohort.name} was deleted"
+    flash[:notice] = "Cohort #{@admin_cohort.name} was deleted"
+    redirect_back_or admin_cohorts_url
   end
 end

@@ -26,7 +26,7 @@
       %p
         Project:
         - if project_link.project
-          = project_link.project.name
+          = link_to project_link.project.name, project_link.project
         - else
           None
       - if project_link.pop_out

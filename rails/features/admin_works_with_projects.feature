@@ -11,11 +11,11 @@ Feature: Admin can work with projects
 
   Scenario: Admin accesses projects
     Given the default projects exist using factories
-    When I am on the home page
-    And I follow "Admin"
-    And I follow "Projects"
-    Then I should be on the projects index page
-    And I should see "3 projects"
+    When I am on the projects index page
+    And I should see "4 projects"
+    And I should see "project 1"
+    And I should see "project 2"
+    And I should see "project 3"
     And I should see "create Project"
 
   Scenario: Admin creates a new project
@@ -57,7 +57,7 @@ Feature: Admin can work with projects
     And I should see "Name can't be blank"
     And I should see "Landing page slug only allows lower case letters, digits and '-' character"
 
-  @javascript
+
   Scenario: Admin edits existing project
     Given the default projects exist using factories
     And I am on the projects index page
@@ -66,7 +66,17 @@ Feature: Admin can work with projects
     And I press "Save"
     Then I should see "New project name"
 
-  @javascript
+  Scenario: Admin adds a link to an existing project
+    Given the default projects exist using factories
+    And I am on the projects index page
+    And I click on the edit link for project "project 2"
+    When I click "Add a link"
+    And I fill in "admin_project_link[name]" with "New project link"
+    And I fill in "admin_project_link[link_id]" with "new-id"
+    And I fill in "admin_project_link[href]" with "http://google.com"
+    And I press "Save"
+    Then I should see "ProjectLink was successfully created"
+
   Scenario: Admin edits existing project providing invalid params
     Given the default projects exist using factories
     And I am on the projects index page
@@ -83,6 +93,8 @@ Feature: Admin can work with projects
 
   @javascript @search
   Scenario: Admin adds materials to a project
+    Given that this test hasnt run for a while [TODO NP 2020-09-01]
+    Given because the following step wasn't defined:
     Given the default projects exist using factories
     When I am on the search instructional materials page
     And I search for "testing fast cars" on the search instructional materials page
