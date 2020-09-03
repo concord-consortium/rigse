@@ -561,12 +561,12 @@ class API::V1::MaterialsController < API::APIController
     if existing.nil?
         render json: {  :message => "No existing standard statement to delete." },
                         :status => 200
+    else
+      existing.destroy
+
+      render json: {  :message => "Successfully removed standard." },
+                      :status => 200
     end
-
-    existing.destroy
-
-    render json: {  :message => "Successfully removed standard." },
-                    :status => 200
   end
 
 

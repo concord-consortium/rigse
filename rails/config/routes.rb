@@ -314,7 +314,6 @@ RailsPortal::Application.routes.draw do
         get :unarchive
         get :set_private_before_matedit
         get :copy
-        get :edit_basic
         match 'collections' => 'external_activities#edit_collections', :via => :get
         match 'collections' => 'external_activities#update_collections', :via => :put
       end
@@ -464,7 +463,11 @@ RailsPortal::Application.routes.draw do
           post :firebase
         end
 
-        resources :external_activities, :only => [:create]
+        resources :external_activities, :only => [:create] do
+          member do
+            post :update_basic
+          end
+        end
 
         namespace :service do
           get :solr_initialized

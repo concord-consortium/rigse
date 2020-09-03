@@ -15,8 +15,10 @@
         :class=>"button"
       = link_to t("matedit.edit_options"),
         "javascript:void(0)",
-        :onclick=>"get_edit_resource_popup(#{@external_activity.id}, {use_short_form: true, content_height: 400})",
+        :onclick=>"PortalComponents.renderEditEResourceOptions(#{eresources_edit_options_props('edit_eresource_options', @external_activity).to_json}, 'edit_eresource_options')",
         :class=>"button"
+      #edit_eresource_options
+
   -#messgeedit This is edit lara activity page
   %h3.menu
     %span.component_title

@@ -39,6 +39,7 @@ import EditMaterialsCollectionList from './components/materials-collection/edit-
 import JoinClass from './components/portal-students/join-class'
 import StudentRoster from './components/portal-classes/student-roster'
 import AutoSuggest from './components/search/auto-suggest'
+import EditEResourceOptions from './components/eresources/edit-options'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -273,5 +274,10 @@ window.PortalComponents = {
   AutoSuggest: AutoSuggest,
   renderAutoSuggest: function (options, id) {
     render(React.createElement(AutoSuggest, options), id)
+  },
+
+  EditEResourceOptions: EditEResourceOptions,
+  renderEditEResourceOptions: function (options, id) {
+    render(React.createElement(EditEResourceOptions, options), id)
   }
 }

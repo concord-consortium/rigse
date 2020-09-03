@@ -18,7 +18,6 @@ class ExternalActivitiesController < ApplicationController
   def humanized_action
     super({
       matedit: "edit",
-      edit_basic: "edit",
       set_private_before_matedit: "set_private_before_edit"
     })
   end
@@ -88,15 +87,6 @@ class ExternalActivitiesController < ApplicationController
     authorize @external_activity
     if request.xhr?
       render :partial => 'form'
-    end
-  end
-
-  # subset of editing provided to owners of the activities
-  def edit_basic
-    @external_activity = ExternalActivity.find(params[:id])
-    authorize @external_activity
-    if request.xhr?
-      render :partial => 'basic_form'
     end
   end
 
@@ -188,23 +178,15 @@ class ExternalActivitiesController < ApplicationController
       @external_activity.save
     end
 
-    if request.xhr?
-      if cancel || @external_activity.update_attributes(params[:external_activity])
-        render :partial => 'shared/external_activity_header', :locals => { :external_activity => @external_activity }
+    respond_to do |format|
+      if @external_activity.update_attributes(params[:external_activity])
+        flash[:notice] = 'ExternalActivity was successfully updated.'
+        # redirect to browse path instead of show page since the show page is deprecated
+        format.html { redirect_to(browse_external_activity_path(@external_activity)) }
+        format.xml  { head :ok }
       else
-        render :xml => @external_activity.errors, :status => :unprocessable_entity
-      end
-    else
-      respond_to do |format|
-        if @external_activity.update_attributes(params[:external_activity])
-          flash[:notice] = 'ExternalActivity was successfully updated.'
-          # redirect to browse path instead of show page since the show page is deprecated
-          format.html { redirect_to(browse_external_activity_path(@external_activity)) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @external_activity.errors, :status => :unprocessable_entity }
-        end
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @external_activity.errors, :status => :unprocessable_entity }
       end
     end
   end
