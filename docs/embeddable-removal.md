@@ -1,6 +1,8 @@
 Files to remove, update, or review:
 
-DONE:
+## DONE:
+
+### Views:
 views/embeddable/image_questions/_remote_form.html.haml
 views/embeddable/image_questions/_show.html.haml
 views/embeddable/image_questions/destroy.js.rjs
@@ -23,7 +25,7 @@ views/embeddable/open_responses/edit.html.haml
 views/embeddable/open_responses/index.html.haml
 views/embeddable/open_responses/show.html.haml
 
-TODO:
+### Controllers:
 controllers/embeddable/image_questions_controller.rb#edit
 controllers/embeddable/image_questions_controller.rb#new
 controllers/embeddable/image_questions_controller.rb#show
@@ -37,7 +39,16 @@ controllers/embeddable/open_responses_controller.rb#edit
 controllers/embeddable/open_responses_controller.rb#new
 controllers/embeddable/open_responses_controller.rb#show
 controllers/embeddable/open_responses_controller.rb#update
+
+### Tests:
+rails/spec/controllers/embeddable/image_questions_controller.spec.rb
+rails/spec/controllers/embeddable/image_questions_controller_spec.rb
+rails/spec/controllers/embeddable/multiple_choices_controller_spec.rb
+rails/spec/controllers/embeddable/open_responses_controller_spec.rb
+
+
+
+## TODO:
+
 helpers/js_helper.rb#remove_link
-
-
 views/shared/_embeddable_container.html.haml
