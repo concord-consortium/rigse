@@ -1,0 +1,5 @@
+{
+    "chromeWebSecurity" : false,
+    "modifyObstructiveCode" : false,
+    "baseUrl" : "https://learn.staging.concord.org"
+}
