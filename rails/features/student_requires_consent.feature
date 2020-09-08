@@ -22,7 +22,7 @@ Feature: Student must give consent for research study
       | password             | password |
       | passwordConfirmation | password |
     And I press "Submit"
-    And I wait 1 second
+    And I wait for the ajax request to finish
     And I log out
     And I login with username: estudent password: password
     Then I should see "Your age"
