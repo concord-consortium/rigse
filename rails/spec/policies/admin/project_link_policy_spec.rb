@@ -69,6 +69,9 @@ RSpec.describe Admin::ProjectLinkPolicy do
       it 'should allow update' do
         expect(Admin::ProjectLinkPolicy.new(proj_user, project_link)).to permit(:update)
       end
+      it 'should allow destroy' do
+        expect(Admin::ProjectLinkPolicy.new(proj_user, project_link)).to permit(:destroy)
+      end
     end
 
     context 'not as project admin' do
@@ -82,6 +85,10 @@ RSpec.describe Admin::ProjectLinkPolicy do
 
       it 'should not allow update' do
         expect(Admin::ProjectLinkPolicy.new(proj_user, project_link)).to_not permit(:update)
+      end
+
+      it 'should not allow destroy' do
+        expect(Admin::ProjectLinkPolicy.new(proj_user, project_link)).to_not permit(:destroy)
       end
     end
 

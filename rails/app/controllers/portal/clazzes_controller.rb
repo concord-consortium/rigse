@@ -66,6 +66,10 @@ class Portal::ClazzesController < ApplicationController
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['NONE'])
 
+    if current_user.portal_teacher
+      redirect_to(action: 'materials') and return
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml => @portal_clazz}
