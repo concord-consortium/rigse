@@ -5,7 +5,7 @@ describe Portal::TeachersController do
     it "should complain if the login is the same except for case" do
       school   = FactoryBot.create(:portal_school)
       selector = double(:portal_selector, :school => school, :valid? => true)
-      allow(Portal::SchoolSelector).to receive(:new).and_return(selector) 
+      allow(Portal::SchoolSelector).to receive(:new).and_return(selector)
       FactoryBot.create(:user, :login => "tteacher")
 
       params = {
@@ -18,7 +18,7 @@ describe Portal::TeachersController do
           :password_confirmation => "password"
         }
       }
-        
+
       post :create, params
 
       expect(assigns(:user)).not_to be_valid
@@ -27,7 +27,7 @@ describe Portal::TeachersController do
 
   describe "with views" do
     render_views
-    
+
     before(:each) do
       generate_default_settings_and_jnlps_with_mocks
       generate_portal_resources_with_mocks
@@ -41,7 +41,7 @@ describe Portal::TeachersController do
       allow(@selector).to receive(:valid?).and_return true
       @selector.school = @school
       @selector.district = @school.district
-      allow(Portal::SchoolSelector).to receive(:new).and_return(@selector) 
+      allow(Portal::SchoolSelector).to receive(:new).and_return(@selector)
     end
 
     describe "POST create" do
@@ -56,13 +56,13 @@ describe Portal::TeachersController do
             :password_confirmation => "password"
           }
         }
-        
+
         post :create, params
-        
+
         expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
-        
+
       end
-      
+
       it "should not force the teacher not to select a school" do
         params = {
           :user => {
@@ -77,9 +77,9 @@ describe Portal::TeachersController do
         allow(@selector).to receive(:valid?).and_return false
         current_user_count = User.count
         current_teacher_count = Portal::Teacher.count
-        
+
         post :create, params
-        
+
         expect(User.count).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
         expect(Portal::Teacher.count).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
 
@@ -89,7 +89,7 @@ describe Portal::TeachersController do
         expect(@response.body).to include("Sorry")
       end
     end
-  end  
+  end
 
   # TODO: auto-generated
   describe '#teacher_admin_or_manager' do
@@ -101,36 +101,9 @@ describe Portal::TeachersController do
   end
 
   # TODO: auto-generated
-  describe '#index' do
-    it 'GET index' do
-      get :index, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
       get :show, id: FactoryBot.create(:portal_teacher).to_param
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#edit' do
-    it 'GET edit' do
-      get :edit, id: FactoryBot.create(:portal_teacher).to_param
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#update' do
-    it 'PATCH update' do
-      put :update, id: FactoryBot.create(:portal_teacher).to_param
 
       expect(response).to have_http_status(:redirect)
     end

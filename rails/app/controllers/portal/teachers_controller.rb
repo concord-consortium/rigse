@@ -22,23 +22,6 @@ class Portal::TeachersController < ApplicationController
     end
   end
 
-  # GET /portal_teachers
-  # GET /portal_teachers.xml
-  def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Portal::Teacher
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @teachers = policy_scope(Portal::Teacher)
-    @portal_teachers = Portal::Teacher.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @portal_teachers }
-    end
-  end
-
   # GET /portal_teachers/1
   # GET /portal_teachers/1.xml
   def show
@@ -64,16 +47,6 @@ class Portal::TeachersController < ApplicationController
       format.html # new.html.erb
       format.xml  { render :xml => @portal_teacher }
     end
-  end
-
-  # GET /portal_teachers/1/edit
-  def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @teacher
-    @portal_teacher = Portal::Teacher.find(params[:id])
-    @user = @portal_teacher.user
-    @school_selector = Portal::SchoolSelector.new(params)
   end
 
   # POST /portal_teachers
@@ -114,26 +87,6 @@ class Portal::TeachersController < ApplicationController
 
 
     failed_creation
-  end
-
-  # PUT /portal_teachers/1
-  # PUT /portal_teachers/1.xml
-  def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @teacher
-    @portal_teacher = Portal::Teacher.find(params[:id])
-
-    respond_to do |format|
-      if @portal_teacher.update_attributes(params[:teacher])
-        flash[:notice] = 'Portal::Teacher was successfully updated.'
-        format.html { redirect_to(@portal_teacher) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @portal_teacher.errors, :status => :unprocessable_entity }
-      end
-    end
   end
 
   # DELETE /portal_teachers/1
