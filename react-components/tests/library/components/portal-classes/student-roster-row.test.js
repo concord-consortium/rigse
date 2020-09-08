@@ -61,8 +61,8 @@ describe('When I try to render a student roster row', () => {
         <td>Last Tuesday</td>
         <td>2</td>
         <td class="hide_in_print">
-          <span class="link">Remove Student</span>
-          <span class="link">Change Password</span>
+          <span class="link" role="link">Remove Student</span>
+          <span class="link" role="link">Change Password</span>
         </td>
       </tr>
     `));
