@@ -35,31 +35,6 @@ class ExternalActivitiesController < ApplicationController
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
 
-  def index
-    authorize ExternalActivity
-    search_params = { :material_types => [ExternalActivity], :page => params[:page] }
-    if !params[:name].blank?
-      search_params[:search_term] = params[:name]
-    end
-    if !current_visitor.has_role?('admin')
-      search_params[:private] = true
-      search_params[:user_id] = current_visitor.id
-    end
-    s = Search.new(search_params)
-    @external_activities = s.results[:all]
-
-    if request.xhr?
-      render :partial => 'external_activities/runnable_list', :locals => {:external_activities => @external_activities, :paginated_objects => @external_activities}
-    else
-      respond_to do |format|
-        format.html do
-          render 'index'
-        end
-        format.js
-      end
-    end
-  end
-
   def preview_index
     page= params[:page] || 1
     @activities = ExternalActivity.all.paginate(
@@ -233,7 +208,6 @@ class ExternalActivitiesController < ApplicationController
       end
     end
   end
-
 
   # DELETE /external_activities/1
   # DELETE /external_activities/1.xml
