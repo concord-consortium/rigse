@@ -556,6 +556,7 @@ views/embeddable/multiple_choices/_show.html.haml:
   story: https://www.pivotaltracker.com/story/show/174347881
 views/embeddable/multiple_choices/add_choice.js.rjs:
   manual: true
+  fixed: true
   solution: remove
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881

@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 55
+Blocks not fixed      : 54
 
 ## Story 174370119
 
@@ -138,7 +138,7 @@ https://www.pivotaltracker.com/story/show/174347881
 | 21 | Y     | views/embeddable/multiple_choices/_new_choice.html.haml          |       |             |
 | 22 | Y     | views/embeddable/multiple_choices/_remote_form.html.haml         |       |             |
 | 23 | Y     | views/embeddable/multiple_choices/_show.html.haml                |       |             |
-| 24 |       | views/embeddable/multiple_choices/add_choice.js.rjs              |       |             |
+| 24 | Y     | views/embeddable/multiple_choices/add_choice.js.rjs              |       |             |
 | 25 | Y     | views/embeddable/multiple_choices/destroy.js.rjs                 |       |             |
 | 26 | Y     | views/embeddable/multiple_choices/edit.html.haml                 |       |             |
 | 27 | Y     | views/embeddable/multiple_choices/index.html.haml                |       |             |
