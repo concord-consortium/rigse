@@ -301,6 +301,36 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
+  def edit_collections
+    authorize @external_activity
+
+    @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
+
+    @material = [@external_activity]
+    @assigned_collections = @collections.select{|c| c.has_materials(@material) }
+
+    @unassigned_collections = @collections - @assigned_collections
+
+    respond_to do |format|
+      format.html # edit_collections.html.haml
+    end
+  end
+
+  def update_collections
+    authorize @external_activity
+
+    collection_ids = params[:materials_collection_id] || []
+
+    if collection_ids.count > 0
+      @external_activity.add_to_collections(collection_ids)
+      flash[:notice] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
+    else
+      flash[:error] = "Select at least one collection to assign this resource."
+    end
+
+    redirect_to action: 'edit_collections'
+  end
+
   private
 
   def json_error(msg,code=422)

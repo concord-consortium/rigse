@@ -16,8 +16,8 @@ class UnsortableClassRow extends React.Component {
           {clazz.active ? clazz.name : <strike>{clazz.name}</strike>}
         </span>
         <span className={css.manageClassButtons}>
-          <button onClick={handleActiveToggle}>{clazz.active ? 'Archive' : 'Unarchive'}</button>
-          <button onClick={handleCopy}>Copy</button>
+          <button className={'textButton'} onClick={handleActiveToggle}>{clazz.active ? 'Archive' : 'Unarchive'}</button>
+          <button className={'textButton'} onClick={handleCopy}>Copy</button>
         </span>
       </div>
     )

@@ -1,15 +1,3 @@
-When /^I select a school from the list of schools$/ do
-  page.evaluate_script("useDefaultSchool();")
-end
-
-
-Then /^I should see the the teacher signup form$/ do
-  Then I is_expected.to see "Teacher Signup Page"
-  And I is_expected.to see "personal info"
-  And I is_expected.to see "school"
-  And I is_expected.to see "login info"
-end
-
 Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,school_name|
   school = Portal::School.find_by_name(school_name)
   if (school.nil?) then

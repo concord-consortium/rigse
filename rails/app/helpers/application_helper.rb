@@ -547,16 +547,6 @@ module ApplicationHelper
     link_to_function("show/hide #{label}", "$$('div[id^=#{id_prefix}]').each(function(d) { Effect.toggle(d,'blind', {duration:0.25}) });")
   end
 
-  def toggle_more(component, details_id=nil, label="show/hide")
-    toggle_id = dom_id_for(component,:show_hide)
-    details_id ||= dom_id_for(component, :details)
-
-    link_to_function(label, nil, :id => toggle_id, :class=>"small") do |page|
-      page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
-      # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
-    end
-  end
-
   def dropdown_link_for(options ={})
     defaults = {
       :url        => "#",
@@ -609,15 +599,6 @@ module ApplicationHelper
     }
     options = defaults.merge(options)
     link_to_remote image_tag(image, :alt=>options[:title],:title=>options[:title]),options
-  end
-
-  def function_link_button(image,javascript,options={})
-    javascript ||= "alert('Hello world!'); return false;"
-    defaults = {
-      :class      => 'rollover'
-    }
-    options = defaults.merge(options)
-    link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
   end
 
   def tab_for(component, options={})

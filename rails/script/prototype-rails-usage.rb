@@ -68,8 +68,7 @@ end
 
 def block_fixed?(name, block, reference_tree)
   if(block["manual"])
-    # TODO need a way to 'fix', manual blocks
-    false
+    block["fixed"]
   else
     !reference_tree[name]
   end

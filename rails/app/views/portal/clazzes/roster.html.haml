@@ -1,2 +1,19 @@
-= form_for(@portal_clazz) do |f|
-  = render :partial => 'form_student_roster', :locals => { :portal_clazz => @portal_clazz, :f => f }
+.maincontainer.pie
+  .container
+    %div{:id=>"student_roster"}
+      %h1 Student Roster
+      = render :partial => 'clazz_information', :locals => {:portal_clazz => @portal_clazz}
+      .classsummary
+        ='Class Name: '
+        %span{:style => "font-weight:bold"}= @portal_clazz.name
+        %br
+        ='Student Count:'
+        %span{:id=>"oClassStudentCount", :style => "font-weight:bold"}= @portal_clazz.students.length
+      .hide_in_print{:style=>"text-align: right;"}
+        %a{:onclick=>"window.print();", :class=>"pie orange"}
+          Print Student Roster
+      %br.clearBoth
+      %br
+      #student-roster
+      :javascript
+        PortalComponents.renderStudentRoster(#{student_roster_props(@portal_clazz).to_json}, 'student-roster');
