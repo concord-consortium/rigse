@@ -498,33 +498,6 @@ describe Portal::ClazzesController do
     end
   end
 
-  describe "Post add new student popup" do
-    it "should show a popup to add a new student" do
-      #creating real objects for settings and making it current settings
-      #A related example http://stackoverflow.com/questions/5223247/rspec-error-mock-employee-1-received-unexpected-messageto-ary-withno-args
-      @mock_settings = Admin::Settings.new
-      @mock_settings.home_page_content = nil
-      @mock_settings.use_student_security_questions = true
-      @mock_settings.use_bitmap_snapshots = true
-      @mock_settings.allow_adhoc_schools = true
-      @mock_settings.require_user_consent = true
-      @mock_settings.allow_default_class = true
-      @mock_settings.jnlp_cdn_hostname = ''
-      @mock_settings.save!
-      allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
-
-      sign_in @authorized_teacher_user
-
-      @params = {
-        :id => @mock_clazz.id
-      }
-      xhr :post, :add_new_student_popup, @params
-      expect(response).to be_success
-      expect(response).to render_template(:partial => "portal/students/_form")
-    end
-  end
-
-
   # TODO: auto-generated
   describe '#current_clazz' do
     it 'GET current_clazz' do
