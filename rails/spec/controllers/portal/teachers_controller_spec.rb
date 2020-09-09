@@ -1,30 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::TeachersController do
-  describe "POST create" do
-    it "should complain if the login is the same except for case" do
-      school   = FactoryBot.create(:portal_school)
-      selector = double(:portal_selector, :school => school, :valid? => true)
-      allow(Portal::SchoolSelector).to receive(:new).and_return(selector)
-      FactoryBot.create(:user, :login => "tteacher")
-
-      params = {
-        :user => {
-          :first_name => "Test",
-          :last_name => "Teacher",
-          :email => "test@fake.edu",
-          :login => "TTeacher",
-          :password => "password",
-          :password_confirmation => "password"
-        }
-      }
-
-      post :create, params
-
-      expect(assigns(:user)).not_to be_valid
-    end
-  end
-
   describe "with views" do
     render_views
 
@@ -61,32 +37,6 @@ describe Portal::TeachersController do
 
         expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
 
-      end
-
-      it "should not force the teacher not to select a school" do
-        params = {
-          :user => {
-            :first_name => "Test",
-            :last_name => "Teacher",
-            :email => "test@fake.edu",
-            :login => "tteacher",
-            :password => "password",
-            :password_confirmation => "password"
-          }
-        }
-        allow(@selector).to receive(:valid?).and_return false
-        current_user_count = User.count
-        current_teacher_count = Portal::Teacher.count
-
-        post :create, params
-
-        expect(User.count).to eq(current_user_count), "TeachersController#create erroneously created a User when given invalid POST data"
-        expect(Portal::Teacher.count).to eq(current_teacher_count), "TeachersController#create erroneously created a Portal::Teacher when given invalid POST data"
-
-        #expect(flash.now[:error]).not_to be_nil
-        expect(flash[:notice]).to be_nil
-        expect(@response.body).to include("must select a school")
-        expect(@response.body).to include("Sorry")
       end
     end
   end
