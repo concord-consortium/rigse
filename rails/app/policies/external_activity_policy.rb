@@ -73,4 +73,12 @@ class ExternalActivityPolicy < ApplicationPolicy
     admin_or_material_admin? || owner?
   end
 
+  def edit_collections?
+    admin?
+  end
+
+  def update_collections?
+    admin?
+  end
+
 end

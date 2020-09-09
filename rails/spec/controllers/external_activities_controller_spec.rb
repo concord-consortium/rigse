@@ -237,6 +237,37 @@ describe ExternalActivitiesController do
     end
   end
 
+  describe "PUT update_collections" do
+    let(:chemistry_activity)    { FactoryBot.create(:external_activity, :name => 'chemistry_activity', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
+    let(:materials_collection)  { FactoryBot.create(:materials_collection) }
+
+    it "should add materials to a collection" do
+      post_params = {
+          :materials_collection_id => [materials_collection.id]
+      }
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      put :update_collections, post_params
+
+      materials_collection_items = MaterialsCollectionItem.where(materials_collection_id: materials_collection.id)
+      expect(materials_collection_items.length).to be(1)
+      expect(flash[:notice]).to be_present
+      expect(flash[:notice]).to match(/is assigned to the selected collection\(s\) successfully/)
+    end
+
+    it "should return an error if a collection is not specified" do
+      post_params = {
+          :materials_collection_id => []
+      }
+      admin = FactoryBot.generate :admin_user
+      sign_in admin
+      put :update_collections, post_params
+
+      expect(flash[:error]).to be_present
+      expect(flash[:error]).to match(/Select at least one collection to assign this resource/)
+    end
+  end
+
   describe 'SSL Helper' do
     let(:our_url)    { {} }
     let(:opts)       { {} }
