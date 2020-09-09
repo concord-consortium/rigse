@@ -52,6 +52,10 @@ When /^(?:|I )enter search text "(.+)" on the search instructional materials pag
   step 'I should wait 2 seconds'
 end
 
+When /^(?:|I )close the search suggestions$/ do
+  find("#search_term").send_keys :escape
+end
+
 When /^(?:|I )should see search suggestions for "(.+)" on the search instructional materials page$/ do |search_text|
   step_text = "I should see \"#{search_text}\" within suggestion box"
   step step_text
