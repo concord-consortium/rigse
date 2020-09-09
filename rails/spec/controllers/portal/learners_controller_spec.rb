@@ -99,15 +99,6 @@ describe Portal::LearnersController do
   end
 
   # TODO: auto-generated
-  describe '#index' do
-    it 'GET index' do
-      get :index, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#bundle_report' do
     it 'GET bundle_report' do
       get :bundle_report, {}, {}
