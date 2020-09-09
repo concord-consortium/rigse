@@ -61,7 +61,6 @@ In NO case should the system allow:
       | /portal/subjects              |
       | /portal/districts             |
       | /portal/grades                |
-      | /portal/learners              |
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
@@ -85,7 +84,6 @@ In NO case should the system allow:
       | /portal/subjects              |
       | /portal/districts             |
       | /portal/grades                |
-      | /portal/learners              |
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
