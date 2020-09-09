@@ -5,7 +5,6 @@ class SearchController < ApplicationController
   # PUNDIT_CHECK_FILTERS
   before_filter :teacher_only, :only => [:index, :show]
   before_filter :check_if_teacher, :only => [:get_current_material_unassigned_clazzes, :add_material_to_clazzes]
-  before_filter :admin_only, :only => [:get_current_material_unassigned_collections, :add_material_to_collections]
 
   protected
 
@@ -285,112 +284,5 @@ class SearchController < ApplicationController
         end
       end
     end
-  end
-
-  def get_current_material_unassigned_collections
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    material_type = params[:material_type]
-    material_ids = params[:material_id]
-    material_ids = material_ids.split(',')
-
-    if material_type != "ExternalActivity" || material_ids.length != 1
-      @material_type = material_type
-      render :partial => 'unsupported_assignment'
-      return
-    end
-
-    @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
-
-    @material = [ExternalActivity.find(params[:material_id])]
-    @assigned_collections = @collections.select{|c| _collection_has_materials(c, @material) }
-
-    @unassigned_collections = @collections - @assigned_collections
-
-    @skip_reload = params[:skip_reload] == 'true'
-    render :partial => 'material_unassigned_collections'
-  end
-
-  def add_material_to_collections
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    collection_ids = params[:materials_collection_id] || []
-    runnable_ids = params[:material_id].split(',')
-    runnable_type = params[:material_type].classify
-    skip_reload = params[:skip_reload] == 'true'
-    assign_summary_data = []
-
-
-    collection_ids.each do|collection_id|
-      already_assigned_material_names = []
-      newly_assigned_material_names = []
-      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
-      runnable_ids.each do|runnable_id|
-        collection_items = collection.materials_collection_items
-        item = collection_items.find_by_material_id_and_material_type(runnable_id,runnable_type)
-        if item.nil?
-          item = MaterialsCollectionItem
-                     .where(materials_collection_id: collection.id,
-                            material_type: runnable_type,
-                            material_id: runnable_id)
-                     .first_or_create
-          if item.position.nil?
-            item.position = collection_items.length
-            item.save!
-          end
-          newly_assigned_material_names << collection.name
-        else
-          already_assigned_material_names << collection.name
-        end
-      end
-      assign_summary_data << [collection.name, newly_assigned_material_names,already_assigned_material_names]
-    end
-
-    if request.xhr?
-      render :update do |page|
-        materials = []
-        if runnable_ids.length == 1
-          if runnable_type == "Investigation"
-            materials.push ::Investigation.find(params[:material_id])
-          elsif runnable_type == "Activity"
-            materials.push ::Activity.find(params[:material_id])
-          elsif runnable_type == "ExternalActivity"
-            materials.push ::ExternalActivity.find(params[:material_id])
-          end
-        else
-          runnable_ids.each do |id|
-            materials.push ::Activity.find(id)
-          end
-        end
-
-        if collection_ids.count > 0
-          material_names = materials.map {|m| "<b>#{m.name}</b>" }.join(", ").gsub("'","\\'")
-          page << "close_popup()"
-          page << "getMessagePopup('<div class=\"feedback_message\">#{material_names} #{'is'.pluralize(runnable_ids.length)} assigned to the selected collection(s) successfully.</div>', #{skip_reload})"
-        else
-          page << "$('error_message').update('Select at least one collection to assign this #{runnable_type}');$('error_message').show()"
-        end
-      end
-    end
-  end
-
-  private
-
-  def _collection_has_materials(collection, materials)
-    items = collection.materials_collection_items.map{|i| [i.material_type, i.material_id] }
-    material_items = materials.map {|m| [m.class.to_s, m.id] }
-
-    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
-    return has_them_all
   end
 end

@@ -389,20 +389,6 @@ describe Portal::ClazzesController do
     end
   end
 
-  describe "Post add a new student to a class" do
-
-    it "should add a new student to the class" do
-      login_admin
-      post_params = {
-        :id => @mock_clazz.id.to_s,
-        :student_id => @authorized_student.id.to_s
-      }
-      post :add_student, post_params
-      newStudentInClazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
-      expect(newStudentInClazz).not_to be_nil
-    end
-  end
-
   # GET manage_classes
   describe "GET manage_classes" do
 

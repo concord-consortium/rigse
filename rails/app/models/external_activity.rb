@@ -333,6 +333,25 @@ class ExternalActivity < ActiveRecord::Base
     return external_reports.first
   end
 
+  def add_to_collections(collection_ids)
+    collection_ids.each do |collection_id|
+      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
+      collection_items = collection.materials_collection_items
+      item = collection_items.find_by_material_id_and_material_type(id, "ExternalActivity")
+      if item.nil?
+        item = MaterialsCollectionItem
+                   .where(materials_collection_id: collection.id,
+                          material_type: "ExternalActivity",
+                          material_id: id)
+                   .first_or_create
+      end
+      if item.position.nil?
+        item.position = collection_items.length
+        item.save!
+      end
+    end
+  end
+
   private
 
   def append_query(uri, query_str)

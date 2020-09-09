@@ -75,7 +75,7 @@ module SearchHelper
 
   def assign_material_collection_link(material, action, extra={})
     if current_user && current_user.has_role?("admin")
-      link_to("Add to Collection", action, extra.merge({:class=>"button"}))
+      link_to("Add to Collection", action, extra.merge({:target=>"_blank", :class=>"button"}))
     end
   end
 
