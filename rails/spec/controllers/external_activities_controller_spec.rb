@@ -125,12 +125,6 @@ describe ExternalActivitiesController do
     @admin_user = login_admin
   end
 
-  describe '#index' do
-    # material browsing & searching is handled search_controller.rb
-    # one idea: show only the current users list?
-    it "should material indexes display anything?"
-  end
-
   describe "#show" do
     it "should assign the activity correctly" do
       get :show, :id => existing.id
@@ -321,15 +315,6 @@ describe ExternalActivitiesController do
       post :create, {}, {}
 
       expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#update' do
-    it 'PATCH update' do
-      put :update, {}, {}
-
-      expect(response).to have_http_status(:not_found)
     end
   end
 

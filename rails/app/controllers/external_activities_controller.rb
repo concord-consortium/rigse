@@ -35,31 +35,6 @@ class ExternalActivitiesController < ApplicationController
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
 
-  def index
-    authorize ExternalActivity
-    search_params = { :material_types => [ExternalActivity], :page => params[:page] }
-    if !params[:name].blank?
-      search_params[:search_term] = params[:name]
-    end
-    if !current_visitor.has_role?('admin')
-      search_params[:private] = true
-      search_params[:user_id] = current_visitor.id
-    end
-    s = Search.new(search_params)
-    @external_activities = s.results[:all]
-
-    if request.xhr?
-      render :partial => 'external_activities/runnable_list', :locals => {:external_activities => @external_activities, :paginated_objects => @external_activities}
-    else
-      respond_to do |format|
-        format.html do
-          render 'index'
-        end
-        format.js
-      end
-    end
-  end
-
   def preview_index
     page= params[:page] || 1
     @activities = ExternalActivity.all.paginate(
@@ -169,71 +144,6 @@ class ExternalActivitiesController < ApplicationController
       end
     end
   end
-
-  # PUT /external_activities/1
-  # PUT /external_activities/1.xml
-  def update
-    cancel = params[:commit] == "Cancel"
-    @external_activity = ExternalActivity.find(params[:id])
-    authorize @external_activity
-
-    if params[:update_material_properties]
-      # set the material_properties tags
-      @external_activity.material_property_list = (params[:material_properties] || [])
-      @external_activity.save
-    end
-
-    if params[:update_cohorts]
-      # set the cohort tags
-      @external_activity.set_cohorts_by_id(params[:cohort_ids] || [])
-      @external_activity.save
-    end
-
-    if params[:update_grade_levels]
-      # set the grade_level tags
-      @external_activity.grade_level_list = (params[:grade_levels] || [])
-      @external_activity.save
-    end
-
-    if params[:update_subject_areas]
-      # set the subject_area tags
-      @external_activity.subject_area_list = (params[:subject_areas] || [])
-      @external_activity.save
-    end
-
-    if params[:update_sensors]
-      # set the sensor tags
-      @external_activity.sensor_list = (params[:sensors] || [])
-      @external_activity.save
-    end
-
-    if params[:update_external_reports]
-      # set the external reports
-      @external_activity.external_report_ids= (params[:external_reports] || [])
-      @external_activity.save
-    end
-
-    if request.xhr?
-      if cancel || @external_activity.update_attributes(params[:external_activity])
-        render :partial => 'shared/external_activity_header', :locals => { :external_activity => @external_activity }
-      else
-        render :xml => @external_activity.errors, :status => :unprocessable_entity
-      end
-    else
-      respond_to do |format|
-        if @external_activity.update_attributes(params[:external_activity])
-          flash[:notice] = 'ExternalActivity was successfully updated.'
-          # redirect to browse path instead of show page since the show page is deprecated
-          format.html { redirect_to(browse_external_activity_path(@external_activity)) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @external_activity.errors, :status => :unprocessable_entity }
-        end
-      end
-    end
-  end
-
 
   # DELETE /external_activities/1
   # DELETE /external_activities/1.xml
