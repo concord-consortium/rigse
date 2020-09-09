@@ -72,19 +72,8 @@
     #wrapper{ :class => "wrapper cols" }
       - unless @wide_content_layout
         #secondary{ :class => "col-3" }
-          - if @investigation
-            / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
-            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
-          - elsif @activity
-            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :selects => [@activity,@section,@page]}
-          - elsif @portal_teacher && (@portal_teacher.user == current_visitor)
-            = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
-          - elsif @portal_student && (@portal_student.user == current_visitor)
-            = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
-          - elsif current_user.present?
-            -# handle the case of users that are not portal_teachers
-            = render :partial => 'shared/left_menu', :locals => {:top_node => nil, :selects => []}
-          = content_for :side_bar
+          - if current_user.present?
+            = render :partial => 'shared/left_menu'
 
       #primary{ :class => @wide_content_layout ? "wide col-12" : "col-8"}
         #content.main_content_colors
