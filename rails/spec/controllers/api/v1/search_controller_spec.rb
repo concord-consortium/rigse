@@ -31,17 +31,17 @@ describe API::V1::SearchController do
   let(:parallel_lines)           { FactoryBot.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
 
   let(:external_activity1)   { FactoryBot.create(:external_activity,
-                                        :name => 'external_1', 
-                                        :url => "http://concord.org", 
-                                        :publication_status => 'published', 
+                                        :name => 'external_1',
+                                        :url => "http://concord.org",
+                                        :publication_status => 'published',
                                         :is_official => true,
                                         :material_type => 'Activity' ) }
 
   let(:external_activity2)   { FactoryBot.create(:external_activity,
-                                        :name => 'a_study_in_lines_and_curves', 
-                                        :url => "http://github.com", 
-                                        :publication_status => 
-                                        'published', 
+                                        :name => 'a_study_in_lines_and_curves',
+                                        :url => "http://github.com",
+                                        :publication_status =>
+                                        'published',
                                         :is_official => true,
                                         :material_type => 'Activity' ) }
 
@@ -172,6 +172,23 @@ describe API::V1::SearchController do
           end
         end
       end
+    end
+  end
+
+  describe "GET search_suggestions" do
+    it "should fail without a search_term parameter" do
+      get :search_suggestions, {}
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing search_term parameter"}')
+    end
+
+    it "should succeed" do
+      get :search_suggestions, {search_term: "test"}
+      expect(response).to have_http_status(:ok)
+      result = JSON.parse(response.body)
+      expect(result["success"]).to eq(true)
+      expect(result["search_term"]).to eq("test")
+      expect(result["suggestions"]).not_to eq(nil)
     end
   end
 end

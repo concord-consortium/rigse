@@ -13,6 +13,26 @@ class API::V1::SearchController < API::APIController
     end
   end
 
+  def search_suggestions
+    search_term = params[:search_term]
+    if search_term == nil
+      return error('Missing search_term parameter')
+    end
+
+    # nil.to_i and "foo".to_i return 0
+    num_results = params[:num_results].to_i
+    num_results = 10 if num_results == 0
+
+    other_params = {
+      :without_teacher_only => current_visitor.anonymous?,
+      :sort_order => Search::Score,
+      :user_id => current_visitor.id
+    }
+    search = Search.new(params.merge(other_params))
+    suggestions = search.results[:all].slice(0, num_results)
+    render json: {success: true, search_term: search_term, suggestions: suggestions.map { |s| s.name }}
+  end
+
   private
 
   def search_results_data

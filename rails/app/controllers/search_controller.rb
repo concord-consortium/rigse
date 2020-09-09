@@ -71,41 +71,6 @@ class SearchController < ApplicationController
       (current_settings.include_external_activities? ? ['investigation','activity','external_activity'] : ['investigation','activity'])
   end
 
-
-  def get_search_suggestions
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Search
-    # authorize @search
-    # authorize Search, :new_or_create?
-    # authorize @search, :update_edit_or_destroy?
-    setup_material_type
-    search_term         = params[:search_term]
-    ajaxResponseCounter = params[:ajaxRequestCounter]
-    submitform          = params[:submit_form]
-    other_params = {
-      :without_teacher_only => current_visitor.anonymous?,
-      :sort_order => Search::Score,
-      :user_id => current_visitor.id
-    }
-    search = Search.new(params.merge(other_params))
-    suggestions= search.results[:all]
-    if request.xhr?
-       render :update do |page|
-         page << "if (ajaxRequestCounter == #{ajaxResponseCounter}) {"
-         page.replace_html 'search_suggestions', {
-          :partial => 'search/search_suggestions',
-          :locals=> {
-            :textlength  => search_term.length,
-            :suggestions => suggestions,
-            :submit_form => submitform}}
-         page << "addSuggestionClickHandlers();"
-         page << '}'
-       end
-    end
-  end
-
   def get_current_material_anonymous
     material_type = params[:material_type]
     material_ids = params[:material_id]
