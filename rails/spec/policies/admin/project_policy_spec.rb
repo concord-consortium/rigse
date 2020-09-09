@@ -53,4 +53,146 @@ RSpec.describe Admin::ProjectPolicy do
     end
   end
 
+  describe 'CRUD capabilities' do
+    let(:user) { FactoryBot.create(:user)}
+    let(:project) { FactoryBot.create(:project) }
+    let(:policy) { described_class.new(user, project) }
+
+    describe 'destroy' do
+      describe 'a regular user' do
+        it 'should not permit destroy' do
+          expect(policy.destroy?).to be_falsey
+        end
+      end
+
+      describe 'as site admin' do
+        before(:each) do
+          allow(user).to receive(:has_role?).with('admin').and_return(true)
+        end
+        it 'should permit destroy' do
+          expect(policy.destroy?).to be true
+        end
+      end
+
+      #TODO: We used to allow project admins to delete projects.
+      # This seemed bad to me, so this is a change:
+      describe 'as a project admin' do
+        before(:each) do
+          allow(user).to receive(:is_project_admin?).with(project).and_return(true)
+        end
+        it 'should permit destroy' do
+          expect(policy.destroy?).to be false
+        end
+      end
+    end
+
+    describe 'new' do
+      describe 'a regular user' do
+        it 'should not permit new' do
+          expect(policy.new?).to be false
+        end
+      end
+
+      describe 'as site admin' do
+        before(:each) do
+          allow(user).to receive(:has_role?).with('admin').and_return(true)
+        end
+        it 'should permit new' do
+          expect(policy.new?).to be true
+        end
+      end
+
+      describe 'as a project admin' do
+        before(:each) do
+          allow(user).to receive(:is_project_admin?).with(project).and_return(true)
+        end
+        it 'should not permit new' do
+          expect(policy.new?).to be false
+        end
+      end
+    end
+
+    describe 'create' do
+      describe 'a regular user' do
+        it 'should not permit create' do
+          expect(policy.create?).to be false
+        end
+      end
+
+      describe 'as site admin' do
+        before(:each) do
+          allow(user).to receive(:has_role?).with('admin').and_return(true)
+        end
+        it 'should permit create' do
+          expect(policy.create?).to be true
+        end
+      end
+
+      describe 'as a project admin' do
+        before(:each) do
+          allow(user).to receive(:is_project_admin?).with(project).and_return(true)
+        end
+        it 'should not permit create' do
+          expect(policy.create?).to be false
+        end
+      end
+    end
+
+
+    describe 'edit' do
+      describe 'a regular user' do
+        it 'should not permit edit' do
+          expect(policy.edit?).to be false
+        end
+      end
+
+      describe 'as site admin' do
+        before(:each) do
+          allow(user).to receive(:has_role?).with('admin').and_return(true)
+        end
+        it 'should permit edit' do
+          expect(policy.edit?).to be true
+        end
+      end
+
+      describe 'as a project admin' do
+        before(:each) do
+          allow(user).to receive(:is_project_admin?).with(project).and_return(true)
+        end
+        it 'should permit edit' do
+          expect(policy.edit?).to be true
+        end
+      end
+    end
+
+    describe 'update' do
+      describe 'a regular user' do
+        it 'should not permit update' do
+          expect(policy.update?).to be false
+        end
+      end
+
+      describe 'as site admin' do
+        before(:each) do
+          allow(user).to receive(:has_role?).with('admin').and_return(true)
+        end
+        it 'should permit update' do
+          expect(policy.update?).to be true
+        end
+      end
+
+      describe 'as a project admin' do
+        before(:each) do
+          allow(user).to receive(:is_project_admin?).with(project).and_return(true)
+        end
+        it 'should permit update' do
+          expect(policy.update?).to be true
+        end
+      end
+    end
+
+
+  end
+
+
 end

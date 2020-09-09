@@ -2,7 +2,7 @@ class Admin::ProjectsController < ApplicationController
 
   protected
 
-  def humanized_action(map={})
+  def humanized_action(map = {})
     super({landing_page: 'view'})
   end
 
@@ -66,10 +66,7 @@ class Admin::ProjectsController < ApplicationController
   def edit
     @project = Admin::Project.find(params[:id])
     authorize @project
-
-    if request.xhr?
-      render :partial => 'remote_form', :locals => { :project => @project }
-    end
+    # renders edit.html.haml
   end
 
   # POST /admin/projects
@@ -78,9 +75,9 @@ class Admin::ProjectsController < ApplicationController
     @project = Admin::Project.new(params[:admin_project])
 
     if @project.save
-      redirect_to admin_projects_url, :notice => 'Project was successfully created.'
+      redirect_to admin_projects_url, notice: 'Project was successfully created.'
     else
-      render :action => 'new'
+      render action: 'new'
     end
   end
 
@@ -88,19 +85,10 @@ class Admin::ProjectsController < ApplicationController
   def update
     @project = Admin::Project.find(params[:id])
     authorize @project
-
-    if request.xhr?
-      if @project.update_attributes(params[:admin_project])
-        render :partial => 'show', :locals => { :project => @project }
-      else
-        render :partial => 'remote_form', :locals => { :project => @project }, :status => 400
-      end
+    if @project.update_attributes(params[:admin_project])
+      redirect_to @project, notice: 'Project was successfully updated.'
     else
-      if @project.update_attributes(params[:admin_project])
-        redirect_to @project, :notice => 'Project was successfully updated.'
-      else
-        render :action => 'edit'
-      end
+      render action: 'edit'
     end
   end
 
@@ -109,7 +97,6 @@ class Admin::ProjectsController < ApplicationController
     @project = Admin::Project.find(params[:id])
     authorize @project
     @project.destroy
-
     redirect_to admin_projects_url
   end
 

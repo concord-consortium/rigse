@@ -49,24 +49,24 @@ describe('When I try to render manage classes', () => {
           <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
           <span class="manageClassName">test class 1</span>
           <span class="manageClassButtons">
-            <button>Archive</button>
-            <button>Copy</button>
+            <button class="textButton">Archive</button>
+            <button class="textButton">Copy</button>
           </span>
         </div>
         <div class="manageClassRow">
           <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
           <span class="manageClassName"><strike>test class 2</strike></span>
           <span class="manageClassButtons">
-            <button>Unarchive</button>
-            <button>Copy</button>
+            <button class="textButton">Unarchive</button>
+            <button class="textButton">Copy</button>
           </span>
         </div>
         <div class="manageClassRow">
           <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
           <span class="manageClassName">test class 3</span>
           <span class="manageClassButtons">
-            <button>Archive</button>
-            <button>Copy</button>
+            <button class="textButton">Archive</button>
+            <button class="textButton">Copy</button>
           </span>
         </div>
       </div>
@@ -77,15 +77,15 @@ describe('When I try to render manage classes', () => {
     const manageClasses = Enzyme.mount(<ManageClasses classes={classes} />);
     const toggleActiveButton = () => manageClasses.find(".manageClassRow").first().find(".manageClassButtons").childAt(0)
 
-    expect(toggleActiveButton().html()).toBe('<button>Archive</button>')
+    expect(toggleActiveButton().html()).toBe('<button class="textButton">Archive</button>')
 
     toggleActiveButton().simulate("click")
     manageClasses.update()
-    expect(toggleActiveButton().html()).toBe('<button>Unarchive</button>')
+    expect(toggleActiveButton().html()).toBe('<button class="textButton">Unarchive</button>')
 
     toggleActiveButton().simulate("click")
     manageClasses.update()
-    expect(toggleActiveButton().html()).toBe('<button>Archive</button>')
+    expect(toggleActiveButton().html()).toBe('<button class="textButton">Archive</button>')
   })
 
   it("should handle copying", () => {

@@ -928,6 +928,20 @@ button {
       cursor: default;
     }
   }
+
+  &.textButton {
+    background: transparent;
+    border: none;
+    color: #ea6d2f;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 0;
+    
+    &:hover {
+      background: transparent;
+      color: #ffc320;
+    }
+  }
 }
 
 input {

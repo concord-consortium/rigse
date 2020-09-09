@@ -10,7 +10,6 @@ export default class MBMaterial extends React.Component {
     this.assignToSpecificClass = this.assignToSpecificClass.bind(this)
     this.toggleDescription = this.toggleDescription.bind(this)
     this.assignToClass = this.assignToClass.bind(this)
-    this.assignToCollection = this.assignToCollection.bind(this)
     this.archive = this.archive.bind(this)
   }
 
@@ -26,11 +25,6 @@ export default class MBMaterial extends React.Component {
 
   assignToClass (e) {
     Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
-    e.preventDefault()
-  }
-
-  assignToCollection (e) {
-    Portal.assignMaterialToCollection(this.props.material.id, this.props.material.class_name)
     e.preventDefault()
   }
 
@@ -75,7 +69,7 @@ export default class MBMaterial extends React.Component {
               <span className='mb-assign-to-class-text'>Assign or Share</span>
             </a> : undefined}
           {data.assign_to_collection_url != null
-            ? <a className='mb-assign-to-collection' href={data.assign_to_collection_url} onClick={this.assignToCollection} title='Assign this activity to a collection'>
+            ? <a className='mb-assign-to-collection' href={data.assign_to_collection_url} title='Assign this activity to a collection'>
               <span className='mb-assign-to-collection-text'>Assign to collection</span>
             </a> : undefined}
         </span>
