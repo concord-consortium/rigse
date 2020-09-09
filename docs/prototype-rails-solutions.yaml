@@ -318,7 +318,7 @@ helpers/application_helper.rb#delete_button_for:
 helpers/application_helper.rb#edit_button_for:
   solution: remove after rest of work is done
   rational:
-  story: remove after rest of work is done
+  story: https://www.pivotaltracker.com/story/show/174365484
 helpers/application_helper.rb#function_link_button:
   solution: remove
   rational: dead
@@ -556,6 +556,7 @@ views/embeddable/multiple_choices/_show.html.haml:
   story: https://www.pivotaltracker.com/story/show/174347881
 views/embeddable/multiple_choices/add_choice.js.rjs:
   manual: true
+  fixed: true
   solution: remove
   rational: not used
   story: https://www.pivotaltracker.com/story/show/174347881
@@ -625,6 +626,7 @@ views/external_activities/create.js.rjs:
   story: https://www.pivotaltracker.com/story/show/174374664
 views/external_activities/destroy.js.rjs:
   manual: true
+  fixed: true
   solution: remove
   rational:
   story: https://www.pivotaltracker.com/story/show/174374664
