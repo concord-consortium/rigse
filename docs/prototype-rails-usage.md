@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 75
+Blocks not fixed      : 74
 
 ## Story 174370119
 
@@ -20,7 +20,7 @@ https://www.pivotaltracker.com/story/show/174370119
 https://www.pivotaltracker.com/story/show/174370395
 |   | Fixed | Block                                                                                   | Calls | Num Callers |
 | - | ----- | --------------------------------------------------------------------------------------- | ----- | ----------- |
-| 1 |       | assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup |       |             |
+| 1 | Y     | assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup |       |             |
 | 2 | Y     | controllers/search_controller.rb#add_material_to_collections                            |       |             |
 | 3 | Y     | controllers/search_controller.rb#get_current_material_unassigned_collections            |       |             |
 | 4 | Y     | views/search/_material_unassigned_collections.html.haml                                 |       |             |
