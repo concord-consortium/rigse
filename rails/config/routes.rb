@@ -60,7 +60,6 @@ RailsPortal::Application.routes.draw do
           get :edit_offerings
           post :edit_offerings
           get :roster
-          post :add_new_student_popup
           get :materials
           get :fullstatus
         end

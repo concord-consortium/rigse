@@ -305,24 +305,6 @@ class Portal::ClazzesController < ApplicationController
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
   end
 
-# GET add/edit student list
-  def add_new_student_popup
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-    if request.xhr?
-      @portal_student = Portal::Student.new
-      @user = User.new
-      render :partial => 'portal/students/form', :locals => {:portal_student => @portal_student, :portal_clazz => Portal::Clazz.find_by_id(params[:id]), :signup => false}
-      #render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
-      return
-    end
-  end
-
   def manage_classes
     if current_user.nil? || !current_visitor.portal_teacher
       raise Pundit::NotAuthorizedError
