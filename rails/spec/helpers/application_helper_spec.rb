@@ -455,15 +455,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#toggle_more' do
-    it 'works' do
-      result = helper.toggle_more(component, 'details_id', 'label')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#dropdown_link_for' do
     it 'works' do
       result = helper.dropdown_link_for({})
@@ -494,15 +485,6 @@ describe ApplicationHelper, type: :helper do
   describe '#remote_link_button' do
     it 'works' do
       result = helper.remote_link_button('image')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#function_link_button' do
-    it 'works' do
-      result = helper.function_link_button('image', 'javascript')
 
       expect(result).not_to be_nil
     end
