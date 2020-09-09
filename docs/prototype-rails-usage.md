@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 54
+Blocks not fixed      : 53
 
 ## Story 174370119
 
@@ -171,7 +171,7 @@ https://www.pivotaltracker.com/story/show/174374664
 | 4 | Y     | views/external_activities/_runnable_list.html.haml   |       |             |
 | 5 | Y     | views/external_activities/_show.html.haml            |       |             |
 | 6 | Y     | views/external_activities/create.js.rjs              |       |             |
-| 7 |       | views/external_activities/destroy.js.rjs             |       |             |
+| 7 | Y     | views/external_activities/destroy.js.rjs             |       |             |
 | 8 | Y     | views/external_activities/index.html.haml            |       |             |
 | 9 | Y     | views/shared/_external_activity_header.html.haml     |       |             |
 
@@ -352,20 +352,14 @@ https://www.pivotaltracker.com/story/show/174365484
 |   | Fixed | Block                                                       | Calls                                                                          | Num Callers |
 | - | ----- | ----------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
 | 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 1           |
-| 2 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 3           |
-| 3 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 6           |
-| 4 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               |             |
-| 5 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 4           |
-| 6 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               |             |
-| 7 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       |             |
-| 8 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
-
-## Story remove after rest of work is done
-
-remove after rest of work is done
-|   | Fixed | Block                                         | Calls                                    | Num Callers |
-| - | ----- | --------------------------------------------- | ---------------------------------------- | ----------- |
-| 1 |       | helpers/application_helper.rb#edit_button_for | application_helper.rb#remote_link_button | 1           |
+| 2 |       | helpers/application_helper.rb#edit_button_for               | application_helper.rb#remote_link_button                                       | 1           |
+| 3 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 3           |
+| 4 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 6           |
+| 5 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               |             |
+| 6 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 4           |
+| 7 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               |             |
+| 8 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       |             |
+| 9 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
 
 ## Story 174353979
 
