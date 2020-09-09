@@ -39,17 +39,6 @@ RailsPortal::Application.routes.draw do
       end
     end
 
-    namespace :embeddable do
-      resources :multiple_choices do
-        member do
-          post :add_choice
-        end
-      end
-      resources :xhtmls
-      resources :open_responses
-      resources :image_questions
-    end
-
     namespace :browse do
       resources :external_activities, path: 'eresources' do
         member do

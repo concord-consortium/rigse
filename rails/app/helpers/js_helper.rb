@@ -14,12 +14,6 @@ module JsHelper
     page << "}"
   end
 
-  def remove_link(form)
-    out = ''
-    out << form.hidden_field(:_destroy)
-    out << link_to_function("delete", "$('#{dom_id_for(form)}').hide(); $(this).previous().value = '1'", :class=>'delete')
-    out.html_safe
-  end
 
   def add_to_list(pattern)
     # here is a useful prototype pattern: $$('input[name^=multiple_choice\[choices_attributes\]][type=text]')
