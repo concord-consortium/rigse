@@ -44,7 +44,6 @@ class Portal::TeachersController < ApplicationController
     @portal_teacher = Portal::Teacher.new
     @school_selector = Portal::SchoolSelector.new(params)
     respond_to do |format|
-      format.html # new.html.erb
       format.xml  { render :xml => @portal_teacher }
     end
   end
