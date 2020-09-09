@@ -39,11 +39,12 @@ describe Portal::ClazzesController do
 
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
+    @authorized_student_user = @authorized_student.user
 
 
     @mock_clazz_name = "Random Test Class"
     @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
-    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
+    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course, :students => [@authorized_student] })
 
     allow(@controller).to receive(:before_render) {
       allow(response.template).to receive_message_chain(:current_settings, :name).and_return("Test Settings")
@@ -58,10 +59,11 @@ describe Portal::ClazzesController do
   end
 
   describe "GET show" do
-    it "assigns the requested class as @portal_clazz" do
-      login_admin
-      get :show, :id => @mock_clazz.id
-      expect(assigns[:portal_clazz]).to eq(@mock_clazz)
+    it "redirects the teacher to the class's materials page" do
+      sign_in @authorized_teacher_user
+      get :show, { :id => @mock_clazz.id }
+
+      expect(response).to redirect_to("/portal/classes/#{@mock_clazz.id}/materials")
     end
 
     it "doesn't show class to unauthorized teacheruser" do
@@ -72,16 +74,13 @@ describe Portal::ClazzesController do
       expect(response).to redirect_to("/recent_activity")
     end
 
-    it "saves the position of the left pane submenu item for an authorized teacher" do
-      sign_in @authorized_teacher_user
-
+    it "shows student a list of class assignments" do
+      sign_in @authorized_student_user
       get :show, { :id => @mock_clazz.id }
 
-      # All users should see the full class details summary
-      @authorized_teacher.reload
-      expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['NONE'])
+      expect(response).to be_success
+      expect(response.body).to have_content("Random Test Class")
     end
-
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do
@@ -346,21 +345,8 @@ describe Portal::ClazzesController do
     end
   end
 
-  describe "POST add_offering" do
-    it "should run without error" do
-      login_admin
-      external_activity = FactoryBot.create(:external_activity)
-      post_params = runnable_params(external_activity, @mock_clazz)
-      post :add_offering, post_params
-    end
-  end
-
-
   describe "Post edit class information" do
     before(:each) do
-      external_activity = FactoryBot.create(:external_activity)
-      post_params = runnable_params(external_activity, @mock_clazz)
-      post :add_offering, post_params
       offers = Array.new
       @mock_clazz.offerings.each do|offering|
         offers << offering.id.to_s

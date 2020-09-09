@@ -47,4 +47,7 @@ class Admin::CohortPolicy < ApplicationPolicy
     end
   end
 
+  def destroy?
+    update?
+  end
 end

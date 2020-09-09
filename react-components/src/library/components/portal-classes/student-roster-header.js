@@ -65,7 +65,7 @@ export default class StudentRosterHeader extends React.Component {
           or
         </div>
         <div>
-          <span className={css.link} onClick={this.props.onRegisterStudent}>Register & Add New Student</span>
+          <span className={css.link} role='link' onClick={this.props.onRegisterStudent}>Register & Add New Student</span>
         </div>
       </div>
     )

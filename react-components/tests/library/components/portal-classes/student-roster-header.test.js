@@ -21,7 +21,7 @@ describe('When I try to render a student roster header', () => {
           or
         </div>
         <div>
-          <span class="link">
+          <span class="link" role="link">
             Register &amp; Add New Student
           </span>
         </div>
@@ -56,7 +56,7 @@ describe('When I try to render a student roster header', () => {
           or
         </div>
         <div>
-          <span class="link">
+          <span class="link" role="link">
             Register &amp; Add New Student
           </span>
         </div>
@@ -95,7 +95,7 @@ describe('When I try to render a student roster header', () => {
   it("should handle the register & add new student action", () => {
     const registerStudent = jest.fn()
     const studentRosterHeader = Enzyme.mount(<StudentRosterHeader onRegisterStudent={registerStudent} />);
-    expect(studentRosterHeader.html()).toContain('<span class="link">Register &amp; Add New Student</span>')
+    expect(studentRosterHeader.html()).toContain('<span class="link" role="link">Register &amp; Add New Student</span>')
 
     expect(registerStudent).not.toHaveBeenCalled()
 
@@ -115,7 +115,7 @@ describe('When I try to render a student roster header', () => {
           or
         </div>
         <div>
-          <span class="link">
+          <span class="link" role="link">
             Register &amp; Add New Student
           </span>
         </div>

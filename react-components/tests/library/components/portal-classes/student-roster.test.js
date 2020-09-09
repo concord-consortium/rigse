@@ -63,7 +63,7 @@ describe('When I try to render a student roster', () => {
           or
         </div>
         <div>
-          <span class="link">Register &amp; Add New Student</span>
+          <span class="link" role="link">Register &amp; Add New Student</span>
         </div>
       </div>
       <table class="table">
@@ -81,8 +81,8 @@ describe('When I try to render a student roster', () => {
             <td>Last Tuesday</td>
             <td>1</td>
             <td class="hide_in_print">
-              <span class="link">Remove Student</span>
-              <span class="link">Change Password</span>
+              <span class="link" role="link">Remove Student</span>
+              <span class="link" role="link">Change Password</span>
             </td>
           </tr>
           <tr>
@@ -91,8 +91,8 @@ describe('When I try to render a student roster', () => {
             <td>Never</td>
             <td>2</td>
             <td class="hide_in_print">
-              <span class="link">Remove Student</span>
-              <span class="link">Change Password</span>
+              <span class="link" role="link">Remove Student</span>
+              <span class="link" role="link">Change Password</span>
             </td>
           </tr>
         </tbody>

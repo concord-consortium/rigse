@@ -28,8 +28,8 @@ export default class StudentRosterRow extends React.Component {
         <td>{lastLogin}</td>
         <td>{assignmentsStarted}</td>
         {canEdit ? <td className='hide_in_print'>
-          { student.can_remove ? <span className={css.link} onClick={this.handleRemoveStudent}>Remove Student</span> : undefined }
-          { student.can_reset_password ? <span className={css.link} onClick={this.handleChangePassword}>Change Password</span> : undefined }
+          { student.can_remove ? <span className={css.link} role='link' onClick={this.handleRemoveStudent}>Remove Student</span> : undefined }
+          { student.can_reset_password ? <span className={css.link} role='link' onClick={this.handleChangePassword}>Change Password</span> : undefined }
         </td> : undefined}
       </tr>
     )

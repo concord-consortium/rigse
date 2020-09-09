@@ -63,3 +63,8 @@ When /^I run the student's investigation for "([^"]+)"$/ do |clazz_name|
     click_link 'Run'
   end
 end
+
+When /^I uncheck Active for the external activity "(.*)"$/ do |material_name|
+  # find span containing material name, then uncheck the associated checkbox
+  find('span', text: material_name).first(:xpath, './following-sibling::span').find('input[type="checkbox"]').set(false)
+end

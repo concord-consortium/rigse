@@ -122,10 +122,6 @@ module RunnablesHelper
     end
   end
 
-  def run_button_for(component)
-    x_button_for(component, "run")
-  end
-
   def popup_options_for(component,_options={})
     options = _options.dup
     if component.is_a?(ExternalActivity)
@@ -194,10 +190,6 @@ module RunnablesHelper
     x_button_for(component, "preview")
   end
 
-  def teacher_preview_button_for(component)
-    x_button_for(component, "preview", "teacher_preview", {:teacher_mode => true}, "Teacher")
-  end
-
   def preview_link_for(component, as_name = nil, params = {})
     x_link_for(component, "preview", as_name, params)
   end
@@ -212,14 +204,6 @@ module RunnablesHelper
     else
       x_link_for(component, "run", as_name, params)
     end
-  end
-
-  # TODO: think of a better way
-  def preview_list_link
-    if settings_for(:runnable_mime_type) =~ /sparks/i
-      return external_activity_preview_list_path
-    end
-    return investigation_preview_list_path
   end
 
 end

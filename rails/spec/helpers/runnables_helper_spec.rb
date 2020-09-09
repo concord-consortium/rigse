@@ -214,15 +214,6 @@ describe RunnablesHelper, type: :helper  do
   end
 
   # TODO: auto-generated
-  describe '#run_button_for' do
-    xit 'works' do
-      result = helper.run_button_for(component)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#popup_options_for' do
     it 'works' do
       result = helper.popup_options_for(component, {})
@@ -259,15 +250,6 @@ describe RunnablesHelper, type: :helper  do
   end
 
   # TODO: auto-generated
-  describe '#teacher_preview_button_for' do
-    xit 'works' do
-      result = helper.teacher_preview_button_for(FactoryBot.create(:portal_offering))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#preview_link_for' do
     xit 'works' do
       result = helper.preview_link_for(FactoryBot.create(:portal_offering))
@@ -280,15 +262,6 @@ describe RunnablesHelper, type: :helper  do
   describe '#offering_link_for' do
     xit 'works' do
       result = helper.offering_link_for(FactoryBot.create(:portal_offering))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#preview_list_link' do
-    xit 'works' do
-      result = helper.preview_list_link
 
       expect(result).not_to be_nil
     end

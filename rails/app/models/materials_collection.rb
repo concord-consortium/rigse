@@ -37,6 +37,14 @@ class MaterialsCollection < ActiveRecord::Base
     materials_collection_items.map { |mi| materials[mi.material_type][mi.material_id] }.compact
   end
 
+  def has_materials(materials)
+    items = materials_collection_items.map{|i| [i.material_type, i.material_id] }
+    material_items = materials.map {|m| [m.class.to_s, m.id] }
+
+    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
+    return has_them_all
+  end
+
   private
 
   def materials_by_type(allowed_cohorts, show_assessment_items)

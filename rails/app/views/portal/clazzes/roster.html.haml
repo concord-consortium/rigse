@@ -5,10 +5,10 @@
       = render :partial => 'clazz_information', :locals => {:portal_clazz => @portal_clazz}
       .classsummary
         ='Class Name: '
-        %span{:style => "font-weight:bold"} #{@portal_clazz.name}
+        %span{:style => "font-weight:bold"}= @portal_clazz.name
         %br
         ='Student Count:'
-        %span{:id=>"oClassStudentCount", :style => "font-weight:bold"} #{@portal_clazz.students.length}
+        %span{:id=>"oClassStudentCount", :style => "font-weight:bold"}= @portal_clazz.students.length
       .hide_in_print{:style=>"text-align: right;"}
         %a{:onclick=>"window.print();", :class=>"pie orange"}
           Print Student Roster
