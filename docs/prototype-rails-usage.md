@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 74
+Blocks not fixed      : 72
 
 ## Story 174370119
 
@@ -237,9 +237,9 @@ https://www.pivotaltracker.com/story/show/174366664
 |    | Fixed | Block                                                    | Calls                        | Num Callers |
 | -- | ----- | -------------------------------------------------------- | ---------------------------- | ----------- |
 | 1  | Y     | controllers/portal/clazzes_controller.rb#add_offering    |                              |             |
-| 2  |       | controllers/portal/clazzes_controller.rb#class_list      |                              |             |
+| 2  | Y     | controllers/portal/clazzes_controller.rb#class_list      |                              |             |
 | 3  | Y     | controllers/portal/clazzes_controller.rb#remove_offering |                              |             |
-| 4  |       | controllers/portal/offerings_controller.rb#show          |                              |             |
+| 4  | Y     | controllers/portal/offerings_controller.rb#show          |                              |             |
 | 5  | Y     | views/portal/clazzes/class_list.html.haml                |                              |             |
 | 6  | Y     | views/portal/clazzes/destroy.js.rjs                      |                              |             |
 | 7  | Y     | views/portal/clazzes/edit_offerings.html.haml            |                              |             |

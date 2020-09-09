@@ -201,9 +201,12 @@ controllers/portal/clazzes_controller.rb#add_teacher:
   story: https://www.pivotaltracker.com/story/show/174318198
 controllers/portal/clazzes_controller.rb#class_list:
   manual: true
+  fixed: true
   solution: remove
   rational: not used anymore
   story: https://www.pivotaltracker.com/story/show/174366664
+  notes: the view for this was cleaned up to use React, it isn't clear to me
+    if the class list is actually used though so it might still be dead code
 controllers/portal/clazzes_controller.rb#edit:
   solution: convert to react class setup
   rational:
@@ -234,8 +237,11 @@ controllers/portal/districts_controller.rb#update:
   story: https://www.pivotaltracker.com/story/show/174373420
 controllers/portal/offerings_controller.rb#show:
   manual: true
+  fixed: true
   solution: remove format.html
   story: https://www.pivotaltracker.com/story/show/174366664
+  notes: this is still needed for students, so it can't be removed
+    I think we got everything out of it that calls prototype-rails
 controllers/portal/schools_controller.rb#create:
   solution: simplify form and index pages
   rational:
