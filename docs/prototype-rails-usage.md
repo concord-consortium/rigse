@@ -70,15 +70,14 @@ https://www.pivotaltracker.com/story/show/174373123
 ## Story 174373193
 
 https://www.pivotaltracker.com/story/show/174373193
-|   | Fixed | Block                                             | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 | Y     | controllers/admin/settings_controller.rb#edit     |                                                                                          |             |
-| 2 | Y     | controllers/admin/settings_controller.rb#update   |                                                                                          |             |
-| 3 | Y     | views/admin/settings/_remote_form.html.haml       |                                                                                          |             |
-| 4 |       | views/admin/settings/_show.html.haml              | _show_for_managers.html.haml                                                             | 2           |
-| 5 |       | views/admin/settings/_show_for_managers.html.haml | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 1           |
-| 6 |       | views/admin/settings/index.html.haml              | _show.html.haml                                                                          |             |
-| 7 |       | views/admin/settings/show.html.haml               | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                           | Calls                        | Num Callers |
+| - | ----- | ----------------------------------------------- | ---------------------------- | ----------- |
+| 1 | Y     | controllers/admin/settings_controller.rb#edit   |                              |             |
+| 2 | Y     | controllers/admin/settings_controller.rb#update |                              |             |
+| 3 | Y     | views/admin/settings/_remote_form.html.haml     |                              |             |
+| 4 |       | views/admin/settings/_show.html.haml            | _show_for_managers.html.haml | 2           |
+| 5 |       | views/admin/settings/index.html.haml            | _show.html.haml              |             |
+| 6 |       | views/admin/settings/show.html.haml             | _show.html.haml              |             |
 
 ## Story 174373215
 
@@ -382,6 +381,14 @@ https://www.pivotaltracker.com/story/show/174353979
 | 7 | Y     | views/shared/_page_header.html.haml                |       |             |
 | 8 | Y     | views/shared/_paste_link.html.haml                 |       |             |
 | 9 | Y     | views/shared/_section_header.html.haml             |       |             |
+
+## Story 174733429
+
+https://www.pivotaltracker.com/story/show/174733429
+|   | Fixed | Block                                             | Calls                                                                                    | Num Callers |
+| - | ----- | ------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
+| 1 |       | views/admin/settings/_show.html.haml              | _show_for_managers.html.haml                                                             | 2           |
+| 2 |       | views/admin/settings/_show_for_managers.html.haml | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 1           |
 
 ## Story 174354182
 

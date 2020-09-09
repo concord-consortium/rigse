@@ -409,11 +409,13 @@ views/admin/settings/_remote_form.html.haml:
 views/admin/settings/_show.html.haml:
   solution: simplfy
   rational:
-  story: https://www.pivotaltracker.com/story/show/174373193
+  story:
+  - https://www.pivotaltracker.com/story/show/174373193
+  - https://www.pivotaltracker.com/story/show/174733429
 views/admin/settings/_show_for_managers.html.haml:
   solution: simplfy
   rational:
-  story: https://www.pivotaltracker.com/story/show/174373193
+  story: https://www.pivotaltracker.com/story/show/174733429
 views/admin/settings/index.html.haml:
   solution: simplfy
   rational:
