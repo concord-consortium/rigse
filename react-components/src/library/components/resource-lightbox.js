@@ -480,7 +480,7 @@ var ResourceLightbox = Component({
         {Portal.currentUser.isTeacher && resource.has_teacher_edition ? <a className='teacherEditionLink portal-pages-secondary-button' href={MakeTeacherEditionLink(resource.external_url)} target='_blank' onClick={this.handleTeacherEditionClick}>Teacher Edition</a> : null}
         {links.teacher_resources && showTeacherResourcesButton ? <a className='teacherResourcesLink portal-pages-secondary-button' href={links.teacher_resources.url} target='_blank' onClick={this.handleTeacherResourcesClick}>{links.teacher_resources.text}</a> : null}
         {links.assign_material ? <a id={'assign-button'} className='portal-pages-secondary-button' href={`javascript: ${links.assign_material.onclick}`} onClick={this.handleAssignClick}>{links.assign_material.text}</a> : null}
-        {links.assign_collection ? <a className='portal-pages-secondary-button' href={`javascript: ${links.assign_collection.onclick}`} onClick={this.handleAddToCollectionClick}>{links.assign_collection.text}</a> : null}
+        {links.assign_collection ? <a className='portal-pages-secondary-button' href={`${links.assign_collection.url}`} onClick={this.handleAddToCollectionClick} target='_blank'>{links.assign_collection.text}</a> : null}
         {links.teacher_guide ? <a className='portal-pages-secondary-button' href={links.teacher_guide.url} target='_blank' onClick={this.handleTeacherGuideClick}>{links.teacher_guide.text}</a> : null}
       </span>
     )

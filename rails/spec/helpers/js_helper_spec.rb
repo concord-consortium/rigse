@@ -22,14 +22,6 @@ RSpec.describe JsHelper, type: :helper do
     end
   end
 
-  # TODO: auto-generated
-  describe '#remove_link' do
-    xit 'works' do
-      result = helper.remove_link(form)
-
-      expect(result).not_to be_nil
-    end
-  end
 
   # TODO: auto-generated
   describe '#add_to_list' do

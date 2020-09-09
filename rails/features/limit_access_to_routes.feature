@@ -59,13 +59,11 @@ In NO case should the system allow:
       | /portal/student_clazzes       |
       | /portal/students              |
       | /portal/subjects              |
-      | /portal/teachers              |
       | /portal/districts             |
       | /portal/grades                |
       | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
-      | /portal/teachers              |
 
   Scenario Outline: Admin user can accesss portal listing routes
     Given the following users exist:
@@ -84,7 +82,6 @@ In NO case should the system allow:
       | /portal/student_clazzes       |
       | /portal/students              |
       | /portal/subjects              |
-      | /portal/teachers              |
       | /portal/districts             |
       | /portal/grades                |
       | /portal/grade_levels          |

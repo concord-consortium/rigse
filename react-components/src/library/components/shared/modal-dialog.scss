@@ -1,0 +1,26 @@
+.dialog {
+  z-index: 4;
+  padding: 20px;
+  background-color: #fff;
+  border: solid 2px #ea6d2f;
+
+  .title {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
+  label {
+    font-weight: bold;
+    margin-right: 1em;
+  }
+
+  .buttons {
+    text-align: right;
+
+    button, input {
+      display: inline;
+      margin: 20px 0 0 10px;
+    }
+  }
+}
+
