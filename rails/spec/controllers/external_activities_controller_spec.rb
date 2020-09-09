@@ -350,6 +350,15 @@ describe ExternalActivitiesController do
   end
 
   # TODO: auto-generated
+  describe '#update' do
+    it 'PATCH update' do
+      put :update, {}, {}
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
       delete :destroy, id: FactoryBot.create(:external_activity).to_param
