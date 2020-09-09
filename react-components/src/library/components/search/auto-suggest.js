@@ -222,5 +222,3 @@ export default class AutoSuggest extends React.Component {
     )
   }
 }
-
-// TODO: add handler to hide suggestions on click outside of suggestions
