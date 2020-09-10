@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 53
+Blocks not fixed      : 38
 
 ## Story 174370119
 
@@ -70,14 +70,14 @@ https://www.pivotaltracker.com/story/show/174373123
 ## Story 174373193
 
 https://www.pivotaltracker.com/story/show/174373193
-|   | Fixed | Block                                           | Calls                        | Num Callers |
-| - | ----- | ----------------------------------------------- | ---------------------------- | ----------- |
-| 1 | Y     | controllers/admin/settings_controller.rb#edit   |                              |             |
-| 2 | Y     | controllers/admin/settings_controller.rb#update |                              |             |
-| 3 | Y     | views/admin/settings/_remote_form.html.haml     |                              |             |
-| 4 |       | views/admin/settings/_show.html.haml            | _show_for_managers.html.haml | 2           |
-| 5 |       | views/admin/settings/index.html.haml            | _show.html.haml              |             |
-| 6 |       | views/admin/settings/show.html.haml             | _show.html.haml              |             |
+|   | Fixed | Block                                           | Calls | Num Callers |
+| - | ----- | ----------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/settings_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/settings_controller.rb#update |       |             |
+| 3 | Y     | views/admin/settings/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/settings/_show.html.haml            |       |             |
+| 5 | Y     | views/admin/settings/index.html.haml            |       |             |
+| 6 | Y     | views/admin/settings/show.html.haml             |       |             |
 
 ## Story 174373215
 
@@ -354,9 +354,9 @@ https://www.pivotaltracker.com/story/show/174365484
 | 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 1           |
 | 2 |       | helpers/application_helper.rb#edit_button_for               | application_helper.rb#remote_link_button                                       | 1           |
 | 3 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 3           |
-| 4 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 6           |
+| 4 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 3           |
 | 5 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               |             |
-| 6 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 4           |
+| 6 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 1           |
 | 7 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               |             |
 | 8 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       |             |
 | 9 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
@@ -379,10 +379,10 @@ https://www.pivotaltracker.com/story/show/174353979
 ## Story 174733429
 
 https://www.pivotaltracker.com/story/show/174733429
-|   | Fixed | Block                                             | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | views/admin/settings/_show.html.haml              | _show_for_managers.html.haml                                                             | 2           |
-| 2 |       | views/admin/settings/_show_for_managers.html.haml | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 1           |
+|   | Fixed | Block                                             | Calls | Num Callers |
+| - | ----- | ------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | views/admin/settings/_show.html.haml              |       |             |
+| 2 | Y     | views/admin/settings/_show_for_managers.html.haml |       |             |
 
 ## Story 174354182
 
@@ -425,25 +425,25 @@ https://www.pivotaltracker.com/story/show/174374504
 ## Story 174366238
 
 https://www.pivotaltracker.com/story/show/174366238
-|   | Fixed | Block                                         | Calls                                                                                        | Num Callers |
-| - | ----- | --------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | views/layouts/application.html.haml           | _accordion_nav.html.haml, _general_accordion_nav.html.haml, _general_accordion_nav.html.haml |             |
-| 2 |       | views/shared/_accordion_nav.html.haml         | sortable_element, sortable_element                                                           | 1           |
-| 3 |       | views/shared/_general_accordion_nav.html.haml | sortable_element, sortable_element                                                           | 2           |
+|   | Fixed | Block                                         | Calls | Num Callers |
+| - | ----- | --------------------------------------------- | ----- | ----------- |
+| 1 | Y     | views/layouts/application.html.haml           |       |             |
+| 2 | Y     | views/shared/_accordion_nav.html.haml         |       |             |
+| 3 | Y     | views/shared/_general_accordion_nav.html.haml |       |             |
 
 ## Story 174373749
 
 https://www.pivotaltracker.com/story/show/174373749
-|   | Fixed | Block                                            | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------------ | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | views/portal/grade_levels/_remote_form.html.haml | remote_form_for                                                                          |             |
-| 2 |       | views/portal/grade_levels/_show.html.haml        | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 2           |
-| 3 |       | views/portal/grade_levels/index.html.haml        | _show.html.haml                                                                          |             |
-| 4 |       | views/portal/grade_levels/show.html.haml         | _show.html.haml                                                                          |             |
-| 5 |       | views/portal/grades/_remote_form.html.haml       | remote_form_for                                                                          |             |
-| 6 |       | views/portal/grades/_show.html.haml              | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 2           |
-| 7 |       | views/portal/grades/index.html.haml              | _show.html.haml                                                                          |             |
-| 8 |       | views/portal/grades/show.html.haml               | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                            | Calls | Num Callers |
+| - | ----- | ------------------------------------------------ | ----- | ----------- |
+| 1 | Y     | views/portal/grade_levels/_remote_form.html.haml |       |             |
+| 2 | Y     | views/portal/grade_levels/_show.html.haml        |       |             |
+| 3 | Y     | views/portal/grade_levels/index.html.haml        |       |             |
+| 4 | Y     | views/portal/grade_levels/show.html.haml         |       |             |
+| 5 | Y     | views/portal/grades/_remote_form.html.haml       |       |             |
+| 6 | Y     | views/portal/grades/_show.html.haml              |       |             |
+| 7 | Y     | views/portal/grades/index.html.haml              |       |             |
+| 8 | Y     | views/portal/grades/show.html.haml               |       |             |
 
 ## Story 174374611
 
