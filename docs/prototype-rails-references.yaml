@@ -1,16 +1,7 @@
 # This was generated using: cd rails/script; ruby reference-tree.rb
 ---
 BASE/button_to_remote: {}
-BASE/draggable_element:
-  callers:
-  - name: views/external_activities/_runnable_list.html.haml
-    line: "=draggable_element dom_id_for(external_activity), :revert => true , :scroll
-      => 'window'"
-  - name: views/shared/_runnable.html.haml
-    line: "= draggable_element dom_id_for(runnable), :revert => true , :scroll =>
-      'window'"
-  - name: views/shared/_runnables_listing.html.haml
-    line: "=draggable_element dom_id_for(runnable), :revert => true , :scroll => 'window'"
+BASE/draggable_element: {}
 BASE/drop_receiving_element: {}
 BASE/link_to_function:
   callers:
@@ -19,8 +10,6 @@ BASE/link_to_function:
       { Effect.toggle(d,''blind'', {duration:0.25}) });")'
 BASE/link_to_remote:
   callers:
-  - name: views/portal/students/_table_for_clazz.html.haml
-    line: = link_to_remote I18n.t("RosterRemoveStudent"),
   - name: views/search/_material_unassigned_clazzes.html.haml
     line: = link_to_remote "Save", :condition => 'validateSaveAssignToClass()', :before
       => 'setSaveAssignToClassInProgress(true)', :complete => "setSaveAssignToClassInProgress(false);",
@@ -31,16 +20,9 @@ BASE/link_to_remote:
     line: link_to_remote image_tag(image, :alt=>options[:title],:title=>options[:title]),options
   - name: lib/clipboard.rb#paste_link_for
     line: ':title => "paste #{name}") + link_to_remote("paste #{name}",'
-BASE/observe_form:
-  callers:
-  - name: views/external_activities/index.html.haml
-    line: = observe_form 'external_activity_search_form', :url => list_filter_external_activity_url(:index=>"yes"),:before
-      => "$('search_spinner').show();",:loaded => "$('search_spinner').hide();", :frequency
-      => 1, :update => {:success => 'offering_list'}
+BASE/observe_form: {}
 BASE/page <<:
   callers:
-  - name: views/external_activities/create.js.rjs
-    line: page << "document.dialog.close()"
   - name: helpers/js_helper.rb#safe_js
     line: page << "if ($('#{dom_id}')) {"
   - name: helpers/js_helper.rb#safe_js
@@ -65,18 +47,6 @@ BASE/remote_form_for:
   - name: views/external_activities/_basic_form.html.haml
     line: = remote_form_for(@external_activity, :complete => "close_popup();") do
       |f|
-  - name: views/external_activities/_remote_form.html.haml
-    line: = remote_form_for(page, :update => dom_id_for(page, :item), :before =>  "tinyMCE.triggerSave(true,true)")
-      do |f|
-  - name: views/portal/grade_levels/_remote_form.html.haml
-    line: "= remote_form_for(portal_grade_level, :update => dom_id_for(portal_grade_level))
-      do |f|"
-  - name: views/portal/grades/_remote_form.html.haml
-    line: "= remote_form_for(portal_grade, :update => dom_id_for(portal_grade)) do
-      |f|"
-  - name: views/portal/learners/_remote_form.html.haml
-    line: "= remote_form_for(portal_learner, :update => dom_id_for(portal_learner))
-      do |f|"
   - name: views/portal/students/_move.html.haml
     line: = remote_form_for(portal_student, :as => :portal_student, :url => { :controller
       => 'portal/students', :action => "move_confirm/#{@portal_student.id}" }, :html
@@ -90,53 +60,17 @@ BASE/render :update:
   callers:
   - name: controllers/portal/students_controller.rb#move_confirm
     line: render :update do |page|
-  - name: controllers/search_controller.rb#get_search_suggestions
-    line: render :update do |page|
   - name: controllers/search_controller.rb#add_material_to_clazzes
     line: render :update do |page|
 BASE/render(:update: {}
-BASE/sortable_element:
-  callers:
-  - name: views/external_activities/_show.html.haml
-    line: =sortable_element :elements_container,  :url=> {:action => 'sort_elements',
-      :params => {:page_id => page.id }}, :handle=> "action_menu", :constraint =>
-      :vertical, :scroll => "window"
-  - name: views/shared/_accordion_nav.html.haml
-    line: "=sortable_element section_list_name.to_sym, :url=> {:controller=> :activities,
-      :action => 'sort_sections', :params => {:list_name=>section_list_name,:id =>
-      activity.id }}"
-  - name: views/shared/_accordion_nav.html.haml
-    line: "=sortable_element activity_list_name.to_sym, :url=> {:controller=> :investigations,
-      :action => 'sort_activities', :params => {:list_name=>activity_list_name,:id
-      => investigation.id }}"
-  - name: views/shared/_general_accordion_nav.html.haml
-    line: "=sortable_element sub_container_id.to_sym, :url=> {:controller => sub_controller,
-      :action => sub_action, :params => {:list_name=>sub_container_id,:id => child.id
-      }}"
-  - name: views/shared/_general_accordion_nav.html.haml
-    line: "=sortable_element top_container_id.to_sym, :url=> {:controller=> top_controller,
-      :action => top_action, :params => {:list_name=>top_container_id,:id => top_node.id
-      }}"
+BASE/sortable_element: {}
 BASE/visual_effect:
   callers:
-  - name: views/external_activities/create.js.rjs
-    line: page.visual_effect :highlight, 'section_external_activities_list'
-  - name: views/external_activities/create.js.rjs
-    line: page.visual_effect :highlight, 'page_tabs'
   - name: controllers/portal/students_controller.rb#move_confirm
     line: page.visual_effect :BlindDown, @show_msg, :duration => 0.25
 controllers/external_activities_controller.rb#edit_basic:
   calls:
   - views/external_activities/_basic_form.html.haml
-controllers/external_activities_controller.rb#index:
-  calls:
-  - views/external_activities/_runnable_list.html.haml
-controllers/external_activities_controller.rb#update:
-  calls:
-  - views/shared/_external_activity_header.html.haml
-controllers/portal/clazzes_controller.rb#add_new_student_popup:
-  calls:
-  - views/portal/students/_add_edit_list_for_clazz.html.haml
 controllers/portal/students_controller.rb#move_confirm:
   calls:
   - BASE/visual_effect
@@ -150,13 +84,8 @@ controllers/search_controller.rb#get_current_material_anonymous:
 controllers/search_controller.rb#get_current_material_unassigned_clazzes:
   calls:
   - views/search/_material_unassigned_clazzes.html.haml
-controllers/search_controller.rb#get_search_suggestions:
-  calls:
-  - BASE/render :update
 helpers/application_helper.rb#delete_button_for:
   callers:
-  - name: views/shared/_external_activity_header.html.haml
-    line: "= delete_button_for(external_activity)"
   - name: helpers/application_helper.rb#show_menu_for
     line: haml_concat delete_button_for(deletable_element) unless options[:omit_delete]
   calls:
@@ -169,11 +98,6 @@ helpers/application_helper.rb#edit_button_for:
   - helpers/application_helper.rb#remote_link_button
 helpers/application_helper.rb#remote_link_button:
   callers:
-  - name: views/portal/students/_current_student_list_for_clazz.html.haml
-    line: '= remote_link_button "delete.png", :url => portal_clazz_student_clazz_url(portal_clazz,
-      portal_student_clazz), :confirm => "This action will remove the student: ''#{portal_student.name}''
-      from the class: #{portal_clazz.name}. \nAre you sure you want to do this?",
-      :method => :delete, :title => "remove #{portal_student.name} from #{portal_clazz.name}"'
   - name: helpers/application_helper.rb#edit_button_for
     line: remote_link_button "edit.png",  :url => url, :title => title, :update =>
       update, :method => method, :complete => complete, :success => success
@@ -186,8 +110,6 @@ helpers/application_helper.rb#remote_link_button:
   - BASE/link_to_remote
 helpers/application_helper.rb#show_menu_for:
   callers:
-  - name: views/admin/settings/_show_for_managers.html.haml
-    line: "= show_menu_for(admin_settings, options)"
   - name: views/dataservice/blobs/_show.html.haml
     line: "= show_menu_for(dataservice_blob, options)"
   - name: views/dataservice/bundle_loggers/_show.html.haml
@@ -196,10 +118,6 @@ helpers/application_helper.rb#show_menu_for:
   - name: views/dataservice/console_loggers/_show.html.haml
     line: "= accordion_for(dataservice_console_logger, show_menu_for(dataservice_console_logger,
       options)) do"
-  - name: views/portal/grade_levels/_show.html.haml
-    line: "= show_menu_for(portal_grade_level, options)"
-  - name: views/portal/grades/_show.html.haml
-    line: "= show_menu_for(portal_grade, options)"
   calls:
   - helpers/application_helper.rb#edit_button_for
   - helpers/application_helper.rb#delete_button_for
@@ -208,60 +126,19 @@ helpers/application_helper.rb#toggle_all:
   - BASE/link_to_function
 helpers/application_helper.rb#wrap_edit_link_around_content:
   callers:
-  - name: views/admin/settings/_show_for_managers.html.haml
-    line: "= wrap_edit_link_around_content(admin_settings, {:complete => mce_init_string})
-      do"
   - name: views/dataservice/blobs/_show.html.haml
     line: "= wrap_edit_link_around_content(dataservice_blob, options={:complete =>
       mce_init_string}) do"
-  - name: views/portal/grade_levels/_show.html.haml
-    line: "= wrap_edit_link_around_content(portal_grade_level, options={:complete
-      => mce_init_string}) do"
-  - name: views/portal/grades/_show.html.haml
-    line: "= wrap_edit_link_around_content(portal_grade, options={:complete => mce_init_string})
-      do"
   calls:
   - BASE/remote_function
 helpers/js_helper.rb#safe_js:
-  callers:
-  - name: views/external_activities/create.js.rjs
-    line: safe_js(page,'section_external_activities_list') do
-  - name: views/external_activities/create.js.rjs
-    line: safe_js(page,'page_tabs') do
   calls:
   - BASE/page <<
   - BASE/page <<
 lib/clipboard.rb#paste_link_for:
-  callers:
-  - name: views/shared/_external_activity_header.html.haml
-    line: "%li#paste_link= paste_link_for(['section'],{:container_id => @container_id})
-      # see pages_helper.rb"
   calls:
   - BASE/link_to_remote
   - helpers/application_helper.rb#remote_link_button
-views/admin/settings/_show.html.haml:
-  callers:
-  - name: views/admin/settings/index.html.haml
-    line: "= render :partial => 'show', :collection => @admin_settings, :as => :admin_settings"
-  - name: views/admin/settings/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :admin_settings => @admin_settings
-      }"
-  calls:
-  - views/admin/settings/_show_for_managers.html.haml
-views/admin/settings/_show_for_managers.html.haml:
-  callers:
-  - name: views/admin/settings/_show.html.haml
-    line: "= render :partial => 'show_for_managers', :locals => { :admin_settings
-      => admin_settings }"
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/admin/settings/index.html.haml:
-  calls:
-  - views/admin/settings/_show.html.haml
-views/admin/settings/show.html.haml:
-  calls:
-  - views/admin/settings/_show.html.haml
 views/dataservice/blobs/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
@@ -338,100 +215,13 @@ views/external_activities/_basic_form.html.haml:
     line: render :partial => 'basic_form'
   calls:
   - BASE/remote_form_for
-views/external_activities/_remote_form.html.haml:
-  calls:
-  - BASE/remote_form_for
-views/external_activities/_runnable_list.html.haml:
-  callers:
-  - name: views/external_activities/index.html.haml
-    line: =render :partial=>"external_activities/runnable_list", :locals=> locals
-  - name: controllers/external_activities_controller.rb#index
-    line: render :partial => 'external_activities/runnable_list', :locals => {:external_activities
-      => @external_activities, :paginated_objects => @external_activities}
-  calls:
-  - BASE/draggable_element
-views/external_activities/_show.html.haml:
-  calls:
-  - BASE/sortable_element
-views/external_activities/create.js.rjs:
-  calls:
-  - BASE/visual_effect
-  - BASE/visual_effect
-  - BASE/page <<
-  - helpers/js_helper.rb#safe_js
-  - helpers/js_helper.rb#safe_js
-views/external_activities/index.html.haml:
-  calls:
-  - BASE/observe_form
-  - views/external_activities/_runnable_list.html.haml
 views/home/my_classes.html.haml:
   calls:
   - views/portal/students/_show.html.haml
-views/layouts/application.html.haml:
-  calls:
-  - views/shared/_accordion_nav.html.haml
-  - views/shared/_general_accordion_nav.html.haml
-  - views/shared/_general_accordion_nav.html.haml
-views/portal/grade_levels/_remote_form.html.haml:
-  calls:
-  - BASE/remote_form_for
-views/portal/grade_levels/_show.html.haml:
-  callers:
-  - name: views/portal/grade_levels/index.html.haml
-    line: "= render :partial => 'show', :collection => @portal_grade_levels, :as =>
-      :portal_grade_level"
-  - name: views/portal/grade_levels/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :portal_grade_level => @portal_grade_level
-      }"
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/portal/grade_levels/index.html.haml:
-  calls:
-  - views/portal/grade_levels/_show.html.haml
-views/portal/grade_levels/show.html.haml:
-  calls:
-  - views/portal/grade_levels/_show.html.haml
-views/portal/grades/_remote_form.html.haml:
-  calls:
-  - BASE/remote_form_for
-views/portal/grades/_show.html.haml:
-  callers:
-  - name: views/portal/grades/index.html.haml
-    line: "= render :partial => 'show', :collection => @portal_grades, :as => :portal_grade"
-  - name: views/portal/grades/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :portal_grade => @portal_grade
-      }"
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/portal/grades/index.html.haml:
-  calls:
-  - views/portal/grades/_show.html.haml
-views/portal/grades/show.html.haml:
-  calls:
-  - views/portal/grades/_show.html.haml
-views/portal/learners/_remote_form.html.haml:
-  calls:
-  - BASE/remote_form_for
 views/portal/learners/bundle_report.html.haml:
   calls:
   - views/dataservice/bundle_loggers/_show.html.haml
   - views/dataservice/console_loggers/_show.html.haml
-views/portal/students/_add_edit_list_for_clazz.html.haml:
-  callers:
-  - name: controllers/portal/clazzes_controller.rb#add_new_student_popup
-    line: "#render :partial => 'portal/students/add_edit_list_for_clazz', :locals
-      => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}"
-  calls:
-  - views/portal/students/_current_student_list_for_clazz.html.haml
-views/portal/students/_current_student_list_for_clazz.html.haml:
-  callers:
-  - name: views/portal/students/_add_edit_list_for_clazz.html.haml
-    line: "= render :partial => 'portal/students/current_student_list_for_clazz',
-      :locals => {:portal_clazz => portal_clazz}"
-  calls:
-  - helpers/application_helper.rb#remote_link_button
 views/portal/students/_move.html.haml:
   callers:
   - name: views/portal/students/_show.html.haml
@@ -449,9 +239,6 @@ views/portal/students/_show.html.haml:
       => @portal_student}"
   calls:
   - views/portal/students/_move.html.haml
-views/portal/students/_table_for_clazz.html.haml:
-  calls:
-  - BASE/link_to_remote
 views/portal/students/show.html.haml:
   calls:
   - views/portal/students/_show.html.haml
@@ -463,43 +250,3 @@ views/search/_material_unassigned_clazzes.html.haml:
     line: render :partial => 'material_unassigned_clazzes'
   calls:
   - BASE/link_to_remote
-views/shared/_accordion_nav.html.haml:
-  callers:
-  - name: views/layouts/application.html.haml
-    line: "/ = render :partial => 'shared/accordion_nav', :locals => { :investigation=>
-      @investigation}"
-  calls:
-  - BASE/sortable_element
-  - BASE/sortable_element
-views/shared/_external_activity_header.html.haml:
-  callers:
-  - name: controllers/external_activities_controller.rb#update
-    line: render :partial => 'shared/external_activity_header', :locals => { :external_activity
-      => @external_activity }
-  calls:
-  - lib/clipboard.rb#paste_link_for
-  - helpers/application_helper.rb#delete_button_for
-views/shared/_general_accordion_nav.html.haml:
-  callers:
-  - name: views/layouts/application.html.haml
-    line: "= render :partial => 'shared/general_accordion_nav', :locals => {:top_node
-      => @investigation, :selects => [@investigation,@activity,@section,@page]}"
-  - name: views/layouts/application.html.haml
-    line: "= render :partial => 'shared/general_accordion_nav', :locals => {:top_node
-      => @activity, :selects => [@activity,@section,@page]}"
-  calls:
-  - BASE/sortable_element
-  - BASE/sortable_element
-views/shared/_runnable.html.haml:
-  calls:
-  - BASE/draggable_element
-views/shared/_runnable_list.html.haml:
-  calls:
-  - views/shared/_runnables_listing.html.haml
-views/shared/_runnables_listing.html.haml:
-  callers:
-  - name: views/shared/_runnable_list.html.haml
-    line: = render :partial => "shared/runnables_listing", :locals => { :runnables
-      => results[material], :klass => material, :hide_print => true }
-  calls:
-  - BASE/draggable_element
