@@ -14,7 +14,7 @@ Feature: Teacher can reset a students password
     And I am logged in with the username teacher
     And I am on "Student Roster" page for "Class_with_no_students"
     Then I should see "Change Password"
-    When I click "Change Password"
+    When I click the span "Change Password"
     Then I should see "Change Password"
     When I fill in "New Password" with "new_password"
     And I fill in "Confirm New Password" with "new_password"

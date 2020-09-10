@@ -134,15 +134,6 @@ module ApplicationHelper
     tag :input, html_options
   end
 
-  def pdf_footer(message)
-    pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
-      pdf.stroke_horizontal_rule
-      pdf.pad(10) do
-        pdf.text message, :size => 16
-      end
-    end
-  end
-
   def render_top_level_container_list_partial(locals)
     container = top_level_container_name.pluralize
     container_sym = top_level_container_name.pluralize.to_sym
@@ -526,42 +517,6 @@ module ApplicationHelper
     end
   end
 
-  def menu_for_offering(offering, opts = {})
-    options = {
-      :omit_delete => true,
-      :omit_edit => true,
-      :hide_component_name => true,
-      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
-    }
-    options.update(opts)
-    capture_haml do
-      haml_tag :div, :class => 'action_menu_activity' do
-        haml_tag :div, :class => 'action_menu_activity_options' do
-          haml_concat options[:print_link]
-          haml_concat " | "
-          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          report_link = report_link_for(offering, 'Report', 'Report')
-          if !report_link.blank?
-            haml_concat " | #{report_link}"
-          end
-          lara_report_link(offering)
-          haml_concat " | "
-
-          if offering.active?
-            haml_concat activation_toggle_link_for(offering, 'deactivate', 'Deactivate')
-          else
-            haml_concat activation_toggle_link_for(offering, 'activate', 'Activate')
-          end
-
-        end
-        haml_tag :div, :class => 'action_menu_activity_title' do
-          haml_concat title_for_component(offering, options)
-          # haml_concat "Active students: #{offering.learners.length}"
-        end
-      end
-    end
-  end
-
   def show_menu_for(component, options={})
     is_page_element = (component.respond_to? :embeddable)
     deletable_element = component
@@ -590,16 +545,6 @@ module ApplicationHelper
 
   def toggle_all(label='all', id_prefix='details_')
     link_to_function("show/hide #{label}", "$$('div[id^=#{id_prefix}]').each(function(d) { Effect.toggle(d,'blind', {duration:0.25}) });")
-  end
-
-  def toggle_more(component, details_id=nil, label="show/hide")
-    toggle_id = dom_id_for(component,:show_hide)
-    details_id ||= dom_id_for(component, :details)
-
-    link_to_function(label, nil, :id => toggle_id, :class=>"small") do |page|
-      page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
-      # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
-    end
   end
 
   def dropdown_link_for(options ={})
@@ -654,15 +599,6 @@ module ApplicationHelper
     }
     options = defaults.merge(options)
     link_to_remote image_tag(image, :alt=>options[:title],:title=>options[:title]),options
-  end
-
-  def function_link_button(image,javascript,options={})
-    javascript ||= "alert('Hello world!'); return false;"
-    defaults = {
-      :class      => 'rollover'
-    }
-    options = defaults.merge(options)
-    link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
   end
 
   def tab_for(component, options={})

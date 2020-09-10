@@ -146,107 +146,40 @@ class Portal::StudentsController < ApplicationController
       end
     end
 
-    if request.xhr?
-      response_value = {
-        :success => true,
-        :error_msg => nil
-      }
+    respond_to do |format|
+      if user_created && @portal_clazz && @portal_student #&& @grade_level
+        @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
 
-        if user_created && @portal_clazz && @portal_student
-          @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
-          @portal_clazz.reload
-          render :update do |page|
-            add_student_url = new_portal_student_path(:clazz_id => @portal_clazz.id)
-            success_msg = "<div style='padding:5px;font-size:15px'>You have successfully registered <b>#{@user.name}</b> with the username <b>#{@user.login}</b>.</div>" +
-                          "<br/><br/><div style='padding:5px;text-align:center'><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td>" +
-                          "<input type='button' class='pie' onclick='get_Add_Register_Student_Popup(\\\"#{add_student_url}\\\")' value='Add Another' />&nbsp;&nbsp;&nbsp;" +
-                          "<input type='button' class='pie' onclick='close_popup()' value='Close' />" +
-                          "</td></tr></table></div>"
-            page << "close_popup();"
-            page << "student_list_modal = new Lightbox({ theme:\"lightbox\", width:400, height:360,content:\"#{success_msg}\",title:\"Add and Register New Student\"});"
-            page << "if ($('students_listing')){"
-            page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-            page << "}"
-            page << "if ($('oClassStudentCount')){"
-            page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
-            page << "}"
-            page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
-          end
+        if params[:clazz] && params[:clazz][:class_word]
+          # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
+          @user.update_security_questions!(@security_questions) if current_settings.use_student_security_questions
+          format.html { redirect_to thanks_for_sign_up_url(:type=>"student",:login=>"#{@portal_student.user.login}") }
         else
-          @portal_student = Portal::Student.new unless @portal_student
-          errors.each do |e|
-            @user.errors.add(e[0],e[1]);
-          end
-          @portal_student.errors.each do |e|
-            @user.errors.add(e[0],e[1]);
-          end
-          response_value[:success] = false
-          response_value[:error_msg] = @user.errors
-          render :json => response_value
-          return
+          msg = <<-EOF
+          You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
+          <br/>
+          EOF
+          flash[:info] = msg.html_safe
+          format.html { redirect_to(@portal_clazz) }
         end
-    else
-      respond_to do |format|
-        if user_created && @portal_clazz && @portal_student #&& @grade_level
-          @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
-
-          if params[:clazz] && params[:clazz][:class_word]
-            # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
-            @user.update_security_questions!(@security_questions) if current_settings.use_student_security_questions
-            format.html { redirect_to thanks_for_sign_up_url(:type=>"student",:login=>"#{@portal_student.user.login}") }
-          else
-            msg = <<-EOF
-            You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
-            <br/>
-            EOF
-            flash[:info] = msg.html_safe
-            format.html { redirect_to(@portal_clazz) }
+      else  # something didn't get created or referenced correctly
+        @portal_student = Portal::Student.new unless @portal_student
+        @user = User.new unless @user
+        errors.each do |e|
+          @user.errors.add(e[0],e[1]);
+        end
+        if params[:clazz] && params[:clazz][:class_word]
+          if current_settings.use_student_security_questions
+            @security_questions = SecurityQuestion.fill_array(@security_questions)
           end
-        else  # something didn't get created or referenced correctly
-          @portal_student = Portal::Student.new unless @portal_student
-          @user = User.new unless @user
-          errors.each do |e|
-            @user.errors.add(e[0],e[1]);
-          end
-          if params[:clazz] && params[:clazz][:class_word]
-            if current_settings.use_student_security_questions
-              @security_questions = SecurityQuestion.fill_array(@security_questions)
-            end
-            format.html { render :action => "signup" }
-            format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
-          else
-            format.html { render :action => "new" }
-            format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
-          end
+          format.html { render :action => "signup" }
+          format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
         end
       end
     end
-
-    # respond_to do |format|
-    #   if success
-    #     flash[:notice] = 'Student was successfully created.'
-    #     if @portal_clazz
-    #       if params[:clazz][:class_word]
-    #         format.html { render 'signup_success' }
-    #       else
-    #         format.html { redirect_to(@portal_clazz) }
-    #       end
-    #     else
-    #       format.html { redirect_to(@student) }
-    #     end
-    #     format.xml  { render :xml => @student, :status => :created, :location => @student }
-    #   else
-    #     if ! @student
-    #       @student = Portal::Student.new
-    #     end
-    #     if params[:clazz][:class_word]
-    #       format.html { render :action => "signup" }
-    #     else
-    #       format.html { render :action => "new" }
-    #     end
-    #     format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
-    #   end
-    # end
   end
 
   # PUT /portal_students/1

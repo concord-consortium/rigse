@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 146
+Blocks not fixed      : 38
 
 ## Story 174370119
 
@@ -18,12 +18,12 @@ https://www.pivotaltracker.com/story/show/174370119
 ## Story 174370395
 
 https://www.pivotaltracker.com/story/show/174370395
-|   | Fixed | Block                                                                                   | Calls                                      | Num Callers |
-| - | ----- | --------------------------------------------------------------------------------------- | ------------------------------------------ | ----------- |
-| 1 |       | assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup |                                            |             |
-| 2 |       | controllers/search_controller.rb#add_material_to_collections                            | render :update                             |             |
-| 3 |       | controllers/search_controller.rb#get_current_material_unassigned_collections            | _material_unassigned_collections.html.haml |             |
-| 4 |       | views/search/_material_unassigned_collections.html.haml                                 | link_to_remote                             | 1           |
+|   | Fixed | Block                                                                                   | Calls | Num Callers |
+| - | ----- | --------------------------------------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | assets/javascripts/search_materials_add_to_collection.js#get_Assign_To_Collection_Popup |       |             |
+| 2 | Y     | controllers/search_controller.rb#add_material_to_collections                            |       |             |
+| 3 | Y     | controllers/search_controller.rb#get_current_material_unassigned_collections            |       |             |
+| 4 | Y     | views/search/_material_unassigned_collections.html.haml                                 |       |             |
 
 ## Story 174373021
 
@@ -58,27 +58,26 @@ https://www.pivotaltracker.com/story/show/174373092
 ## Story 174373123
 
 https://www.pivotaltracker.com/story/show/174373123
-|   | Fixed | Block                                           | Calls                                                                                    | Num Callers |
-| - | ----- | ----------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | controllers/admin/projects_controller.rb#edit   | _remote_form.html.haml                                                                   |             |
-| 2 |       | controllers/admin/projects_controller.rb#update | _remote_form.html.haml, _show.html.haml                                                  |             |
-| 3 |       | views/admin/projects/_remote_form.html.haml     | remote_form_for                                                                          | 2           |
-| 4 |       | views/admin/projects/_show.html.haml            | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 3           |
-| 5 |       | views/admin/projects/index.html.haml            | _show.html.haml                                                                          |             |
-| 6 |       | views/admin/projects/show.html.haml             | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                           | Calls | Num Callers |
+| - | ----- | ----------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/projects_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/projects_controller.rb#update |       |             |
+| 3 | Y     | views/admin/projects/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/projects/_show.html.haml            |       |             |
+| 5 | Y     | views/admin/projects/index.html.haml            |       |             |
+| 6 | Y     | views/admin/projects/show.html.haml             |       |             |
 
 ## Story 174373193
 
 https://www.pivotaltracker.com/story/show/174373193
-|   | Fixed | Block                                             | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 | Y     | controllers/admin/settings_controller.rb#edit     |                                                                                          |             |
-| 2 | Y     | controllers/admin/settings_controller.rb#update   |                                                                                          |             |
-| 3 | Y     | views/admin/settings/_remote_form.html.haml       |                                                                                          |             |
-| 4 |       | views/admin/settings/_show.html.haml              | _show_for_managers.html.haml                                                             | 2           |
-| 5 |       | views/admin/settings/_show_for_managers.html.haml | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 1           |
-| 6 |       | views/admin/settings/index.html.haml              | _show.html.haml                                                                          |             |
-| 7 |       | views/admin/settings/show.html.haml               | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                           | Calls | Num Callers |
+| - | ----- | ----------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/admin/settings_controller.rb#edit   |       |             |
+| 2 | Y     | controllers/admin/settings_controller.rb#update |       |             |
+| 3 | Y     | views/admin/settings/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/admin/settings/_show.html.haml            |       |             |
+| 5 | Y     | views/admin/settings/index.html.haml            |       |             |
+| 6 | Y     | views/admin/settings/show.html.haml             |       |             |
 
 ## Story 174373215
 
@@ -114,44 +113,44 @@ https://www.pivotaltracker.com/story/show/174367289
 ## Story 174347881
 
 https://www.pivotaltracker.com/story/show/174347881
-|    | Fixed | Block                                                            | Calls                                                                    | Num Callers |
-| -- | ----- | ---------------------------------------------------------------- | ------------------------------------------------------------------------ | ----------- |
-| 1  |       | controllers/embeddable/image_questions_controller.rb#edit        | _remote_form.html.haml                                                   |             |
-| 2  |       | controllers/embeddable/image_questions_controller.rb#new         | _remote_form.html.haml                                                   |             |
-| 3  |       | controllers/embeddable/image_questions_controller.rb#show        | _show.html.haml                                                          |             |
-| 4  |       | controllers/embeddable/image_questions_controller.rb#update      | _show.html.haml                                                          |             |
-| 5  |       | controllers/embeddable/multiple_choices_controller.rb#add_choice | _new_choice.html.haml                                                    |             |
-| 6  |       | controllers/embeddable/multiple_choices_controller.rb#edit       | _remote_form.html.haml                                                   |             |
-| 7  |       | controllers/embeddable/multiple_choices_controller.rb#new        | _remote_form.html.haml                                                   |             |
-| 8  |       | controllers/embeddable/multiple_choices_controller.rb#show       | _show.html.haml                                                          |             |
-| 9  |       | controllers/embeddable/multiple_choices_controller.rb#update     | _show.html.haml                                                          |             |
-| 10 |       | controllers/embeddable/open_responses_controller.rb#edit         | _remote_form.html.haml                                                   |             |
-| 11 |       | controllers/embeddable/open_responses_controller.rb#new          | _remote_form.html.haml                                                   |             |
-| 12 |       | controllers/embeddable/open_responses_controller.rb#show         | _show.html.haml                                                          |             |
-| 13 |       | controllers/embeddable/open_responses_controller.rb#update       | _show.html.haml                                                          |             |
-| 14 |       | helpers/js_helper.rb#remove_link                                 | link_to_function                                                         | 1           |
-| 15 |       | views/embeddable/image_questions/_remote_form.html.haml          | remote_form_for                                                          | 2           |
-| 16 |       | views/embeddable/image_questions/_show.html.haml                 | application_helper.rb#wrap_edit_link_around_content                      | 3           |
-| 17 |       | views/embeddable/image_questions/destroy.js.rjs                  | js_helper.rb#safe_js                                                     |             |
-| 18 |       | views/embeddable/image_questions/index.html.haml                 | _embeddable_container.html.haml                                          |             |
-| 19 |       | views/embeddable/image_questions/show.html.haml                  | _show.html.haml                                                          |             |
-| 20 |       | views/embeddable/multiple_choices/_edit_choice.html.haml         | js_helper.rb#remove_link                                                 | 2           |
-| 21 |       | views/embeddable/multiple_choices/_new_choice.html.haml          | _edit_choice.html.haml                                                   | 1           |
-| 22 |       | views/embeddable/multiple_choices/_remote_form.html.haml         | remote_form_for, link_to_remote, _edit_choice.html.haml                  | 4           |
-| 23 |       | views/embeddable/multiple_choices/_show.html.haml                | application_helper.rb#wrap_edit_link_around_content                      | 2           |
-| 24 |       | views/embeddable/multiple_choices/add_choice.js.rjs              |                                                                          |             |
-| 25 |       | views/embeddable/multiple_choices/destroy.js.rjs                 | js_helper.rb#safe_js                                                     |             |
-| 26 |       | views/embeddable/multiple_choices/edit.html.haml                 | _remote_form.html.haml                                                   |             |
-| 27 |       | views/embeddable/multiple_choices/index.html.haml                | _embeddable_container.html.haml                                          |             |
-| 28 |       | views/embeddable/multiple_choices/new.html.haml                  | _remote_form.html.haml                                                   |             |
-| 29 |       | views/embeddable/multiple_choices/show.html.haml                 | _embeddable_container.html.haml                                          |             |
-| 30 |       | views/embeddable/open_responses/_remote_form.html.haml           | remote_form_for                                                          | 3           |
-| 31 |       | views/embeddable/open_responses/_show.html.haml                  | application_helper.rb#wrap_edit_link_around_content                      | 2           |
-| 32 |       | views/embeddable/open_responses/destroy.js.rjs                   | js_helper.rb#safe_js                                                     |             |
-| 33 |       | views/embeddable/open_responses/edit.html.haml                   | _remote_form.html.haml                                                   |             |
-| 34 |       | views/embeddable/open_responses/index.html.haml                  | _embeddable_container.html.haml                                          |             |
-| 35 |       | views/embeddable/open_responses/show.html.haml                   | _embeddable_container.html.haml                                          |             |
-| 36 |       | views/shared/_embeddable_container.html.haml                     | application_helper.rb#show_menu_for, application_helper.rb#show_menu_for | 5           |
+|    | Fixed | Block                                                            | Calls | Num Callers |
+| -- | ----- | ---------------------------------------------------------------- | ----- | ----------- |
+| 1  | Y     | controllers/embeddable/image_questions_controller.rb#edit        |       |             |
+| 2  | Y     | controllers/embeddable/image_questions_controller.rb#new         |       |             |
+| 3  | Y     | controllers/embeddable/image_questions_controller.rb#show        |       |             |
+| 4  | Y     | controllers/embeddable/image_questions_controller.rb#update      |       |             |
+| 5  | Y     | controllers/embeddable/multiple_choices_controller.rb#add_choice |       |             |
+| 6  | Y     | controllers/embeddable/multiple_choices_controller.rb#edit       |       |             |
+| 7  | Y     | controllers/embeddable/multiple_choices_controller.rb#new        |       |             |
+| 8  | Y     | controllers/embeddable/multiple_choices_controller.rb#show       |       |             |
+| 9  | Y     | controllers/embeddable/multiple_choices_controller.rb#update     |       |             |
+| 10 | Y     | controllers/embeddable/open_responses_controller.rb#edit         |       |             |
+| 11 | Y     | controllers/embeddable/open_responses_controller.rb#new          |       |             |
+| 12 | Y     | controllers/embeddable/open_responses_controller.rb#show         |       |             |
+| 13 | Y     | controllers/embeddable/open_responses_controller.rb#update       |       |             |
+| 14 | Y     | helpers/js_helper.rb#remove_link                                 |       |             |
+| 15 | Y     | views/embeddable/image_questions/_remote_form.html.haml          |       |             |
+| 16 | Y     | views/embeddable/image_questions/_show.html.haml                 |       |             |
+| 17 | Y     | views/embeddable/image_questions/destroy.js.rjs                  |       |             |
+| 18 | Y     | views/embeddable/image_questions/index.html.haml                 |       |             |
+| 19 | Y     | views/embeddable/image_questions/show.html.haml                  |       |             |
+| 20 | Y     | views/embeddable/multiple_choices/_edit_choice.html.haml         |       |             |
+| 21 | Y     | views/embeddable/multiple_choices/_new_choice.html.haml          |       |             |
+| 22 | Y     | views/embeddable/multiple_choices/_remote_form.html.haml         |       |             |
+| 23 | Y     | views/embeddable/multiple_choices/_show.html.haml                |       |             |
+| 24 | Y     | views/embeddable/multiple_choices/add_choice.js.rjs              |       |             |
+| 25 | Y     | views/embeddable/multiple_choices/destroy.js.rjs                 |       |             |
+| 26 | Y     | views/embeddable/multiple_choices/edit.html.haml                 |       |             |
+| 27 | Y     | views/embeddable/multiple_choices/index.html.haml                |       |             |
+| 28 | Y     | views/embeddable/multiple_choices/new.html.haml                  |       |             |
+| 29 | Y     | views/embeddable/multiple_choices/show.html.haml                 |       |             |
+| 30 | Y     | views/embeddable/open_responses/_remote_form.html.haml           |       |             |
+| 31 | Y     | views/embeddable/open_responses/_show.html.haml                  |       |             |
+| 32 | Y     | views/embeddable/open_responses/destroy.js.rjs                   |       |             |
+| 33 | Y     | views/embeddable/open_responses/edit.html.haml                   |       |             |
+| 34 | Y     | views/embeddable/open_responses/index.html.haml                  |       |             |
+| 35 | Y     | views/embeddable/open_responses/show.html.haml                   |       |             |
+| 36 | Y     | views/shared/_embeddable_container.html.haml                     |       |             |
 
 ## Story 174374781
 
@@ -164,17 +163,17 @@ https://www.pivotaltracker.com/story/show/174374781
 ## Story 174374664
 
 https://www.pivotaltracker.com/story/show/174374664
-|   | Fixed | Block                                                | Calls                                                                             | Num Callers |
-| - | ----- | ---------------------------------------------------- | --------------------------------------------------------------------------------- | ----------- |
-| 1 |       | controllers/external_activities_controller.rb#index  | _runnable_list.html.haml                                                          |             |
-| 2 |       | controllers/external_activities_controller.rb#update | _external_activity_header.html.haml                                               |             |
-| 3 |       | views/external_activities/_remote_form.html.haml     | remote_form_for                                                                   |             |
-| 4 |       | views/external_activities/_runnable_list.html.haml   | draggable_element                                                                 | 2           |
-| 5 |       | views/external_activities/_show.html.haml            | sortable_element                                                                  |             |
-| 6 |       | views/external_activities/create.js.rjs              | visual_effect, visual_effect, page <<, js_helper.rb#safe_js, js_helper.rb#safe_js |             |
-| 7 |       | views/external_activities/destroy.js.rjs             |                                                                                   |             |
-| 8 |       | views/external_activities/index.html.haml            | observe_form, _runnable_list.html.haml                                            |             |
-| 9 |       | views/shared/_external_activity_header.html.haml     | clipboard.rb#paste_link_for, application_helper.rb#delete_button_for              | 1           |
+|   | Fixed | Block                                                | Calls | Num Callers |
+| - | ----- | ---------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/external_activities_controller.rb#index  |       |             |
+| 2 | Y     | controllers/external_activities_controller.rb#update |       |             |
+| 3 | Y     | views/external_activities/_remote_form.html.haml     |       |             |
+| 4 | Y     | views/external_activities/_runnable_list.html.haml   |       |             |
+| 5 | Y     | views/external_activities/_show.html.haml            |       |             |
+| 6 | Y     | views/external_activities/create.js.rjs              |       |             |
+| 7 | Y     | views/external_activities/destroy.js.rjs             |       |             |
+| 8 | Y     | views/external_activities/index.html.haml            |       |             |
+| 9 | Y     | views/shared/_external_activity_header.html.haml     |       |             |
 
 ## Story 174373929
 
@@ -217,42 +216,42 @@ https://www.pivotaltracker.com/story/show/174374264
 ## Story 174324301
 
 https://www.pivotaltracker.com/story/show/174324301
-|    | Fixed | Block                                                           | Calls                                                                                                                                                                                                                                                               | Num Callers |
-| -- | ----- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1  |       | controllers/portal/clazzes_controller.rb#add_new_student_popup  | _add_edit_list_for_clazz.html.haml                                                                                                                                                                                                                                  |             |
-| 2  |       | controllers/portal/clazzes_controller.rb#add_student            | render :update, render :update, _table_for_clazz.html.haml, student_clazzes_helper.rb#student_add_dropdown, _current_student_list_for_clazz.html.haml                                                                                                               |             |
-| 3  |       | controllers/portal/clazzes_controller.rb#roster                 | _remote_form_student_roster.html.haml                                                                                                                                                                                                                               |             |
-| 4  |       | controllers/portal/students_controller.rb#create                | render :update, _table_for_clazz.html.haml, student_clazzes_helper.rb#student_add_dropdown                                                                                                                                                                          |             |
-| 5  |       | helpers/portal/student_clazzes_helper.rb#student_add_dropdown   | button_to_remote                                                                                                                                                                                                                                                    | 7           |
-| 6  |       | views/portal/clazzes/_form_student_roster.html.haml             | _table_for_clazz.html.haml, student_clazzes_helper.rb#student_add_dropdown                                                                                                                                                                                          | 2           |
-| 7  |       | views/portal/clazzes/_remote_form_student_roster.html.haml      | remote_form_for, _form_student_roster.html.haml                                                                                                                                                                                                                     | 1           |
-| 8  |       | views/portal/clazzes/roster.html.haml                           | _form_student_roster.html.haml                                                                                                                                                                                                                                      |             |
-| 9  |       | views/portal/student_clazzes/destroy.js.rjs                     | page <<, page <<, page <<, page <<, page <<, page <<, page <<, page <<, _table_for_clazz.html.haml, js_helper.rb#safe_js, student_clazzes_helper.rb#student_add_dropdown, student_clazzes_helper.rb#student_add_dropdown, _current_student_list_for_clazz.html.haml |             |
-| 10 |       | views/portal/students/_add_edit_list_for_clazz.html.haml        | student_clazzes_helper.rb#student_add_dropdown, _current_student_list_for_clazz.html.haml                                                                                                                                                                           | 1           |
-| 11 |       | views/portal/students/_current_student_list_for_clazz.html.haml | application_helper.rb#remote_link_button                                                                                                                                                                                                                            | 3           |
-| 12 |       | views/portal/students/_table_for_clazz.html.haml                | link_to_remote                                                                                                                                                                                                                                                      | 6           |
+|    | Fixed | Block                                                           | Calls | Num Callers |
+| -- | ----- | --------------------------------------------------------------- | ----- | ----------- |
+| 1  | Y     | controllers/portal/clazzes_controller.rb#add_new_student_popup  |       |             |
+| 2  | Y     | controllers/portal/clazzes_controller.rb#add_student            |       |             |
+| 3  | Y     | controllers/portal/clazzes_controller.rb#roster                 |       |             |
+| 4  | Y     | controllers/portal/students_controller.rb#create                |       |             |
+| 5  | Y     | helpers/portal/student_clazzes_helper.rb#student_add_dropdown   |       |             |
+| 6  | Y     | views/portal/clazzes/_form_student_roster.html.haml             |       |             |
+| 7  | Y     | views/portal/clazzes/_remote_form_student_roster.html.haml      |       |             |
+| 8  | Y     | views/portal/clazzes/roster.html.haml                           |       |             |
+| 9  | Y     | views/portal/student_clazzes/destroy.js.rjs                     |       |             |
+| 10 | Y     | views/portal/students/_add_edit_list_for_clazz.html.haml        |       |             |
+| 11 | Y     | views/portal/students/_current_student_list_for_clazz.html.haml |       |             |
+| 12 | Y     | views/portal/students/_table_for_clazz.html.haml                |       |             |
 
 ## Story 174366664
 
 https://www.pivotaltracker.com/story/show/174366664
-|    | Fixed | Block                                                    | Calls                                                                                                                                                     | Num Callers |
-| -- | ----- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1  |       | controllers/portal/clazzes_controller.rb#add_offering    | render :update, render :update, _offering_for_teacher.html.haml                                                                                           |             |
-| 2  |       | controllers/portal/clazzes_controller.rb#class_list      |                                                                                                                                                           |             |
-| 3  |       | controllers/portal/clazzes_controller.rb#remove_offering | render :update, render :update, _runnable.html.haml                                                                                                       |             |
-| 4  |       | controllers/portal/offerings_controller.rb#show          |                                                                                                                                                           |             |
-| 5  |       | views/portal/clazzes/class_list.html.haml                | _table_for_clazz.html.haml                                                                                                                                |             |
-| 6  |       | views/portal/clazzes/destroy.js.rjs                      | js_helper.rb#safe_js, js_helper.rb#safe_js                                                                                                                |             |
-| 7  |       | views/portal/clazzes/edit_offerings.html.haml            | drop_receiving_element, drop_receiving_element, _offering_for_teacher.html.haml, _runnable_list.html.haml                                                 |             |
-| 8  |       | views/portal/clazzes/show.html.haml                      | _offering_for_teacher.html.haml                                                                                                                           |             |
-| 9  |       | views/portal/offerings/_list_for_clazz.html.haml         | drop_receiving_element, drop_receiving_element, drop_receiving_element, drop_receiving_element, _offering_for_teacher.html.haml, _runnable_list.html.haml |             |
-| 10 |       | views/portal/offerings/_show.html.haml                   | _offering_for_teacher.html.haml                                                                                                                           | 1           |
-| 11 |       | views/portal/offerings/show.html.haml                    | _show.html.haml                                                                                                                                           |             |
-| 12 |       | views/portal/students/_list_for_clazz.html.haml          | _table_for_clazz.html.haml, student_clazzes_helper.rb#student_add_dropdown                                                                                |             |
-| 13 |       | views/shared/_offering_for_teacher.html.haml             | sortable_element                                                                                                                                          | 6           |
-| 14 |       | views/shared/_runnable.html.haml                         | draggable_element                                                                                                                                         | 1           |
-| 15 |       | views/shared/_runnable_list.html.haml                    | _runnables_listing.html.haml                                                                                                                              | 2           |
-| 16 |       | views/shared/_runnables_listing.html.haml                | draggable_element                                                                                                                                         | 1           |
+|    | Fixed | Block                                                    | Calls | Num Callers |
+| -- | ----- | -------------------------------------------------------- | ----- | ----------- |
+| 1  | Y     | controllers/portal/clazzes_controller.rb#add_offering    |       |             |
+| 2  | Y     | controllers/portal/clazzes_controller.rb#class_list      |       |             |
+| 3  | Y     | controllers/portal/clazzes_controller.rb#remove_offering |       |             |
+| 4  | Y     | controllers/portal/offerings_controller.rb#show          |       |             |
+| 5  | Y     | views/portal/clazzes/class_list.html.haml                |       |             |
+| 6  | Y     | views/portal/clazzes/destroy.js.rjs                      |       |             |
+| 7  | Y     | views/portal/clazzes/edit_offerings.html.haml            |       |             |
+| 8  | Y     | views/portal/clazzes/show.html.haml                      |       |             |
+| 9  | Y     | views/portal/offerings/_list_for_clazz.html.haml         |       |             |
+| 10 | Y     | views/portal/offerings/_show.html.haml                   |       |             |
+| 11 | Y     | views/portal/offerings/show.html.haml                    |       |             |
+| 12 | Y     | views/portal/students/_list_for_clazz.html.haml          |       |             |
+| 13 | Y     | views/shared/_offering_for_teacher.html.haml             |       |             |
+| 14 | Y     | views/shared/_runnable.html.haml                         |       |             |
+| 15 | Y     | views/shared/_runnable_list.html.haml                    |       |             |
+| 16 | Y     | views/shared/_runnables_listing.html.haml                |       |             |
 
 ## Story 174318198
 
@@ -334,9 +333,9 @@ https://www.pivotaltracker.com/story/show/174381113
 ## Story 174381940
 
 https://www.pivotaltracker.com/story/show/174381940
-|   | Fixed | Block                                                   | Calls          | Num Callers |
-| - | ----- | ------------------------------------------------------- | -------------- | ----------- |
-| 1 |       | controllers/search_controller.rb#get_search_suggestions | render :update |             |
+|   | Fixed | Block                                                   | Calls | Num Callers |
+| - | ----- | ------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/search_controller.rb#get_search_suggestions |       |             |
 
 ## Story 174365885
 
@@ -352,36 +351,38 @@ https://www.pivotaltracker.com/story/show/174365885
 https://www.pivotaltracker.com/story/show/174365484
 |   | Fixed | Block                                                       | Calls                                                                          | Num Callers |
 | - | ----- | ----------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 8           |
-| 2 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 4           |
-| 3 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 9           |
-| 4 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               | 3           |
-| 5 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 8           |
-| 6 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               | 8           |
-| 7 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       | 5           |
-| 8 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
-
-## Story remove after rest of work is done
-
-remove after rest of work is done
-|   | Fixed | Block                                         | Calls                                    | Num Callers |
-| - | ----- | --------------------------------------------- | ---------------------------------------- | ----------- |
-| 1 |       | helpers/application_helper.rb#edit_button_for | application_helper.rb#remote_link_button | 1           |
+| 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 1           |
+| 2 |       | helpers/application_helper.rb#edit_button_for               | application_helper.rb#remote_link_button                                       | 1           |
+| 3 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 3           |
+| 4 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 3           |
+| 5 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               |             |
+| 6 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 1           |
+| 7 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               |             |
+| 8 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       |             |
+| 9 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
 
 ## Story 174353979
 
 https://www.pivotaltracker.com/story/show/174353979
-|   | Fixed | Block                                              | Calls                                                                                                                                                           | Num Callers |
-| - | ----- | -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | helpers/application_helper.rb#function_link_button | link_to_function                                                                                                                                                |             |
-| 2 |       | helpers/application_helper.rb#toggle_more          | visual_effect, link_to_function                                                                                                                                 |             |
-| 3 |       | views/shared/_activity_header.haml                 | application_helper.rb#toggle_all, clipboard.rb#paste_link_for, application_helper.rb#delete_button_for, application_helper.rb#delete_button_for                 |             |
-| 4 |       | views/shared/_activity_trail.html.haml             | link_to_function                                                                                                                                                |             |
-| 5 |       | views/shared/_classes_for_school.haml              | _offering_for_teacher.html.haml                                                                                                                                 |             |
-| 6 | Y     | views/shared/_notes_menu.html.haml                 |                                                                                                                                                                 |             |
-| 7 |       | views/shared/_page_header.html.haml                | link_to_remote, application_helper.rb#toggle_all, clipboard.rb#paste_link_for, application_helper.rb#delete_button_for, application_helper.rb#delete_button_for |             |
-| 8 |       | views/shared/_paste_link.html.haml                 | clipboard.rb#paste_link_for                                                                                                                                     |             |
-| 9 |       | views/shared/_section_header.html.haml             | application_helper.rb#toggle_all, clipboard.rb#paste_link_for, application_helper.rb#delete_button_for, application_helper.rb#delete_button_for                 |             |
+|   | Fixed | Block                                              | Calls | Num Callers |
+| - | ----- | -------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | helpers/application_helper.rb#function_link_button |       |             |
+| 2 | Y     | helpers/application_helper.rb#toggle_more          |       |             |
+| 3 | Y     | views/shared/_activity_header.haml                 |       |             |
+| 4 | Y     | views/shared/_activity_trail.html.haml             |       |             |
+| 5 | Y     | views/shared/_classes_for_school.haml              |       |             |
+| 6 | Y     | views/shared/_notes_menu.html.haml                 |       |             |
+| 7 | Y     | views/shared/_page_header.html.haml                |       |             |
+| 8 | Y     | views/shared/_paste_link.html.haml                 |       |             |
+| 9 | Y     | views/shared/_section_header.html.haml             |       |             |
+
+## Story 174733429
+
+https://www.pivotaltracker.com/story/show/174733429
+|   | Fixed | Block                                             | Calls | Num Callers |
+| - | ----- | ------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | views/admin/settings/_show.html.haml              |       |             |
+| 2 | Y     | views/admin/settings/_show_for_managers.html.haml |       |             |
 
 ## Story 174354182
 
@@ -424,33 +425,33 @@ https://www.pivotaltracker.com/story/show/174374504
 ## Story 174366238
 
 https://www.pivotaltracker.com/story/show/174366238
-|   | Fixed | Block                                         | Calls                                                                                        | Num Callers |
-| - | ----- | --------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | views/layouts/application.html.haml           | _accordion_nav.html.haml, _general_accordion_nav.html.haml, _general_accordion_nav.html.haml |             |
-| 2 |       | views/shared/_accordion_nav.html.haml         | sortable_element, sortable_element                                                           | 1           |
-| 3 |       | views/shared/_general_accordion_nav.html.haml | sortable_element, sortable_element                                                           | 2           |
+|   | Fixed | Block                                         | Calls | Num Callers |
+| - | ----- | --------------------------------------------- | ----- | ----------- |
+| 1 | Y     | views/layouts/application.html.haml           |       |             |
+| 2 | Y     | views/shared/_accordion_nav.html.haml         |       |             |
+| 3 | Y     | views/shared/_general_accordion_nav.html.haml |       |             |
 
 ## Story 174373749
 
 https://www.pivotaltracker.com/story/show/174373749
-|   | Fixed | Block                                            | Calls                                                                                    | Num Callers |
-| - | ----- | ------------------------------------------------ | ---------------------------------------------------------------------------------------- | ----------- |
-| 1 |       | views/portal/grade_levels/_remote_form.html.haml | remote_form_for                                                                          |             |
-| 2 |       | views/portal/grade_levels/_show.html.haml        | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 2           |
-| 3 |       | views/portal/grade_levels/index.html.haml        | _show.html.haml                                                                          |             |
-| 4 |       | views/portal/grade_levels/show.html.haml         | _show.html.haml                                                                          |             |
-| 5 |       | views/portal/grades/_remote_form.html.haml       | remote_form_for                                                                          |             |
-| 6 |       | views/portal/grades/_show.html.haml              | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 2           |
-| 7 |       | views/portal/grades/index.html.haml              | _show.html.haml                                                                          |             |
-| 8 |       | views/portal/grades/show.html.haml               | _show.html.haml                                                                          |             |
+|   | Fixed | Block                                            | Calls | Num Callers |
+| - | ----- | ------------------------------------------------ | ----- | ----------- |
+| 1 | Y     | views/portal/grade_levels/_remote_form.html.haml |       |             |
+| 2 | Y     | views/portal/grade_levels/_show.html.haml        |       |             |
+| 3 | Y     | views/portal/grade_levels/index.html.haml        |       |             |
+| 4 | Y     | views/portal/grade_levels/show.html.haml         |       |             |
+| 5 | Y     | views/portal/grades/_remote_form.html.haml       |       |             |
+| 6 | Y     | views/portal/grades/_show.html.haml              |       |             |
+| 7 | Y     | views/portal/grades/index.html.haml              |       |             |
+| 8 | Y     | views/portal/grades/show.html.haml               |       |             |
 
 ## Story 174374611
 
 https://www.pivotaltracker.com/story/show/174374611
-|   | Fixed | Block                                        | Calls           | Num Callers |
-| - | ----- | -------------------------------------------- | --------------- | ----------- |
-| 1 |       | views/portal/learners/_remote_form.html.haml | remote_form_for |             |
-| 2 | Y     | views/portal/learners/index.html.haml        |                 |             |
+|   | Fixed | Block                                        | Calls | Num Callers |
+| - | ----- | -------------------------------------------- | ----- | ----------- |
+| 1 | Y     | views/portal/learners/_remote_form.html.haml |       |             |
+| 2 | Y     | views/portal/learners/index.html.haml        |       |             |
 
 ## Story 174388646
 

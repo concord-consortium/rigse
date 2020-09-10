@@ -150,7 +150,6 @@ module RailsPortal
     config.assets.enabled = true
     config.assets.precompile += %w(
       print.css
-      student_roster.js
       full_status.js
       preview_home_page.js
       preview_about_page.js

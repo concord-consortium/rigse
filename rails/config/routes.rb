@@ -22,10 +22,7 @@ RailsPortal::Application.routes.draw do
   post '/search/get_current_material_unassigned_clazzes'
   post '/search/get_current_material_anonymous'
   post '/search/add_material_to_clazzes'
-  post '/search/get_current_material_unassigned_collections'
-  post '/search/add_material_to_collections'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
-  get 'search/get_search_suggestions'
   match '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report, :method => :get
   match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
 
@@ -39,17 +36,6 @@ RailsPortal::Application.routes.draw do
         resources :measuring_resistances
         resources :measuring_resistance_reports
       end
-    end
-
-    namespace :embeddable do
-      resources :multiple_choices do
-        member do
-          post :add_choice
-        end
-      end
-      resources :xhtmls
-      resources :open_responses
-      resources :image_questions
     end
 
     namespace :browse do
@@ -68,14 +54,11 @@ RailsPortal::Application.routes.draw do
           get :add_offering
           post :add_offering
           get :class_list
-          get :add_student
-          post :add_student
           get :remove_offering
           post :remove_offering
           get :edit_offerings
           post :edit_offerings
           get :roster
-          post :add_new_student_popup
           get :materials
           get :fullstatus
         end
@@ -332,6 +315,8 @@ RailsPortal::Application.routes.draw do
         get :set_private_before_matedit
         get :copy
         get :edit_basic
+        match 'collections' => 'external_activities#edit_collections', :via => :get
+        match 'collections' => 'external_activities#update_collections', :via => :put
       end
     end
 
@@ -395,6 +380,9 @@ RailsPortal::Application.routes.draw do
             get :check_class_word
             post :join_class
             post :confirm_class_word
+            post :register
+            post :add_to_class
+            post :remove_from_class
           end
           member do
             post :check_password
@@ -437,6 +425,7 @@ RailsPortal::Application.routes.draw do
         end
         namespace :search do
           get :search
+          get :search_suggestions
         end
         namespace :answers do
           get :student_answers

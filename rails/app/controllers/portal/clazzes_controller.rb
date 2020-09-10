@@ -66,6 +66,10 @@ class Portal::ClazzesController < ApplicationController
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['NONE'])
 
+    if current_user.portal_teacher
+      redirect_to(action: 'materials') and return
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml => @portal_clazz}
@@ -284,159 +288,8 @@ class Portal::ClazzesController < ApplicationController
     @portal_clazz = Portal::Clazz.find(params[:id])
   end
 
-  # HACK:
-  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids
-  # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
-  def add_offering
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-    @portal_clazz = Portal::Clazz.find(params[:id])
-    dom_id = params[:dragged_dom_id]
-    container = params[:dropped_dom_id]
-    runnable_id = params[:runnable_id]
-    unless params[:runnable_type] == 'portal_offering'
-      runnable_type = params[:runnable_type].classify
-      @offering = Portal::Offering.where(clazz_id: @portal_clazz.id, runnable_type: runnable_type,runnable_id: runnable_id).first_or_create
-      if @offering.position == 0
-        @offering.position = @portal_clazz.offerings.length
-        @offering.save
-        Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
-      end
-      if @offering
-        if @portal_clazz.default_class == true
-          if @offering.clazz.blank? || (@offering.runnable.offerings_count == 0 && @offering.clazz.default_class == true)
-            @offering.default_offering = true
-            @offering.save
-            # send email notifications about assignment
-            Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
-          else
-            error_msg = "The #{@offering.runnable.class.display_name} #{@offering.runnable.name} is already assigned in a class."
-            @offering.destroy
-            render :update do |page|
-              page << "var element = $('#{dom_id}');"
-              page << "element.show();"
-              page << "$('flash').update('#{error_msg}');"
-              page << "alert('#{error_msg}');"
-            end
-            return
-          end
-        else
-          @offering.save
-          Portal::ClazzMailer.clazz_assignment_notification(@current_user, @portal_clazz, @offering.name).deliver
-        end
-        @portal_clazz.reload
-      end
-      render :update do |page|
-        page << "var element = $('#{dom_id}');"
-        page << "element.remove();"
-        page.insert_html :bottom, container, :partial => 'shared/offering_for_teacher', :locals => {:offering => @offering}
-      end
-    end
-    @offering.refresh_saveable_response_objects
-  end
-
-
-  # HACK:
-  # TODO: (IMPORTANT:) This  method is currenlty only for ajax requests, and uses dom_ids
-  # TODO: to infer runnables. Rewrite this, so that the params are less JS/DOM specific..
-  def remove_offering
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-    @portal_clazz = Portal::Clazz.find(params[:id])
-    dom_id = params[:dragged_dom_id]
-    container = params[:dropped_dom_id]
-    offering_id = params[:offering_id]
-    @offering = Portal::Offering.find(offering_id)
-    if (@offering && @offering.can_be_deleted?)
-      @runnable = @offering.runnable
-      @offering.destroy
-      @portal_clazz.update_offerings_position
-      @portal_clazz.reload
-      render :update do |page|
-        page << "var container = $('#{container}');"
-        page << "var element = $('#{dom_id}');"
-        page << "element.remove();"
-        page << "$('flash').update('');"
-        page.insert_html :top, container, :partial => 'shared/runnable', :locals => {:runnable => @runnable}
-      end
-    else
-      error_msg = "Cannot delete offering with student data. Please deactivate instead."
-      render :update do |page|
-        page << "var element = $('#{dom_id}');"
-        page << "element.show();"
-        page << "alert('#{error_msg}');"
-      end
-    end
-  end
-
-  # HACK: Add a student to a clazz
-  # TODO: test this method
-  # NOTE: delete student is in the student_clazzes_controller.
-  # we should put these functions in the same place ...
-  def add_student
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-    @student = nil
-    @portal_clazz = Portal::Clazz.find(params[:id])
-    valid_data = false
-    begin
-      student_id = params[:student_id].to_i
-      valid_data = true && student_id != 0
-    rescue
-      valid_data = false
-    end
-
-    if params[:student_id] && (!params[:student_id].empty?) && valid_data
-      @student = Portal::Student.find(params[:student_id])
-    end
-    if @student
-      @student.add_clazz(@portal_clazz)
-      @portal_clazz.reload
-      render :update do |page|
-        page << "if ($('students_listing')){"
-        page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        page << "}"
-        #page << "if ($('add_students_listing')){"
-        #page.replace_html 'add_students_listing', :partial => 'portal/students/current_student_list_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-        #page << "}"
-        page << "if ($('oClassStudentCount')){"
-        page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
-        page << "}"
-        page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
-      end
-    else
-      render :update do |page|
-        # previous message was "that was a total failure"
-        # this case should not happen, but if it does, display something
-        # more friendly such as:
-        page << "alert('Please select a user from the list before clicking add button.')"
-      end
-    end
-  end
-
+  # GET /portal_clazzes/1/class_list
   def class_list
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
     @portal_clazz = Portal::Clazz.find_by_id(params[:id])
 
     respond_to do |format|
@@ -444,45 +297,12 @@ class Portal::ClazzesController < ApplicationController
     end
   end
 
-# GET /portal_clazzes/1/roster
+  # GET /portal_clazzes/1/roster
   def roster
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-
-
-    @portal_clazzes = Portal::Clazz.all
     @portal_clazz = Portal::Clazz.find(params[:id])
-    if request.xhr?
-      render :partial => 'remote_form_student_roster', :locals => { :portal_clazz => @portal_clazz }
-      return
-    end
 
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['STUDENT_ROSTER'])
-
-  end
-
-# GET add/edit student list
-  def add_new_student_popup
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-    if request.xhr?
-      @portal_student = Portal::Student.new
-      @user = User.new
-      render :partial => 'portal/students/form', :locals => {:portal_student => @portal_student, :portal_clazz => Portal::Clazz.find_by_id(params[:id]), :signup => false}
-      #render :partial => 'portal/students/add_edit_list_for_clazz', :locals => { :portal_clazz => Portal::Clazz.find_by_id(params[:id])}
-      return
-    end
   end
 
   def manage_classes

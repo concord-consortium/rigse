@@ -37,6 +37,8 @@ import EditBookmarks from './components/bookmarks/edit'
 import ManageClasses from './components/portal-classes/manage-classes'
 import EditMaterialsCollectionList from './components/materials-collection/edit-list'
 import JoinClass from './components/portal-students/join-class'
+import StudentRoster from './components/portal-classes/student-roster'
+import AutoSuggest from './components/search/auto-suggest'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -261,5 +263,15 @@ window.PortalComponents = {
   JoinClass: JoinClass,
   renderJoinClass: function (options, id) {
     render(React.createElement(JoinClass, options), id)
+  },
+
+  StudentRoster: StudentRoster,
+  renderStudentRoster: function (options, id) {
+    render(React.createElement(StudentRoster, options), id)
+  },
+
+  AutoSuggest: AutoSuggest,
+  renderAutoSuggest: function (options, id) {
+    render(React.createElement(AutoSuggest, options), id)
   }
 }

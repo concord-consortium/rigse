@@ -158,15 +158,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#pdf_footer' do
-    xit 'works' do
-      result = helper.pdf_footer('message')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#render_top_level_container_list_partial' do
     xit 'works' do
       result = helper.render_top_level_container_list_partial({})
@@ -437,15 +428,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#menu_for_offering' do
-    xit 'works' do
-      result = helper.menu_for_offering(FactoryBot.build(:portal_offering))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#show_menu_for' do
     xit 'works' do
       result = helper.show_menu_for(component)
@@ -467,15 +449,6 @@ describe ApplicationHelper, type: :helper do
   describe '#toggle_all' do
     it 'works' do
       result = helper.toggle_all('label', 'id_prefix')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#toggle_more' do
-    it 'works' do
-      result = helper.toggle_more(component, 'details_id', 'label')
 
       expect(result).not_to be_nil
     end
@@ -512,15 +485,6 @@ describe ApplicationHelper, type: :helper do
   describe '#remote_link_button' do
     it 'works' do
       result = helper.remote_link_button('image')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#function_link_button' do
-    it 'works' do
-      result = helper.function_link_button('image', 'javascript')
 
       expect(result).not_to be_nil
     end
