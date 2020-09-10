@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 38
+Blocks not fixed      : 36
 
 ## Story 174370119
 
@@ -458,8 +458,8 @@ https://www.pivotaltracker.com/story/show/174374611
 https://www.pivotaltracker.com/story/show/174388646
 |   | Fixed | Block                                   | Calls | Num Callers |
 | - | ----- | --------------------------------------- | ----- | ----------- |
-| 1 |       | views/portal/school_selector/update.rjs |       |             |
-| 2 |       | views/shared/_school_selector.html.haml |       |             |
+| 1 | Y     | views/portal/school_selector/update.rjs |       |             |
+| 2 | Y     | views/shared/_school_selector.html.haml |       |             |
 
 
 -------
