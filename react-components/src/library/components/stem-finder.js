@@ -152,28 +152,10 @@ const StemFinder = Component({
     }.bind(this))
   },
 
-  search: function (incremental) {
-    let displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT
-
-    // short circuit further incremental searches when all data has been downloaded
-    if (incremental && (this.state.lastSearchResultCount === 0)) {
-      this.setState({
-        displayLimit: displayLimit
-      })
-      return
-    }
-
-    let resources = incremental ? this.state.resources.slice(0) : []
-    let searchPage = incremental ? this.state.searchPage + 1 : 1
-
-    let keyword = jQuery.trim(this.state.searchInput)
-    if (keyword !== '') {
-      ga('send', 'event', 'Home Page Search', 'Search', keyword)
-    }
-
-    let query = [
-      'search_term=',
-      encodeURIComponent(keyword),
+  getQueryParams: function (incremental, keyword) {
+    const searchPage = incremental ? this.state.searchPage + 1 : 1
+    let query = keyword !== undefined ? ['search_term=', encodeURIComponent(keyword)] : []
+    query = query.concat([
       '&skip_lightbox_reloads=true',
       '&sort_order=Alphabetical',
       '&include_official=1',
@@ -189,7 +171,7 @@ const StemFinder = Component({
       searchPage,
       '&per_page=',
       DISPLAY_LIMIT_INCREMENT
-    ]
+    ])
 
     // subject areas
     this.state.subjectAreasSelected.forEach(function (subjectArea) {
@@ -229,6 +211,28 @@ const StemFinder = Component({
       // TODO: informal learning?
     })
 
+    return query.join('')
+  },
+
+  search: function (incremental) {
+    let displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT
+
+    // short circuit further incremental searches when all data has been downloaded
+    if (incremental && (this.state.lastSearchResultCount === 0)) {
+      this.setState({
+        displayLimit: displayLimit
+      })
+      return
+    }
+
+    let resources = incremental ? this.state.resources.slice(0) : []
+    let searchPage = incremental ? this.state.searchPage + 1 : 1
+
+    let keyword = jQuery.trim(this.state.searchInput)
+    if (keyword !== '') {
+      ga('send', 'event', 'Home Page Search', 'Search', keyword)
+    }
+
     this.setState({
       keyword,
       searching: true,
@@ -238,7 +242,7 @@ const StemFinder = Component({
 
     jQuery.ajax({
       url: Portal.API_V1.SEARCH,
-      data: query.join(''),
+      data: this.getQueryParams(incremental, keyword),
       dataType: 'json'
     }).done(function (result) {
       let numTotalResources = 0
@@ -413,7 +417,15 @@ const StemFinder = Component({
             </label>
           </div>
           <div className={'portal-pages-search-input-container'}>
-            <AutoSuggest name={'search-terms'} query={this.state.searchInput} onChange={this.handleSearchInputChange} onSubmit={this.handleAutoSuggestSubmit} placeholder={'Type search term here'} />
+            <AutoSuggest
+              name={'search-terms'}
+              query={this.state.searchInput}
+              getQueryParams={this.getQueryParams}
+              onChange={this.handleSearchInputChange}
+              onSubmit={this.handleAutoSuggestSubmit}
+              placeholder={'Type search term here'}
+              skipAutoSearch
+            />
             <a href={'/search'}>
               Advanced Search
             </a>
