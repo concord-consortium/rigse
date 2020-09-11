@@ -121,8 +121,6 @@ export default class ManageClasses extends React.Component {
           My Classes ({classes.length} Total, {numActiveClasses} Active)
         </div>
 
-        <hr className='hr-thick' />
-
         <SortableClasses
           classes={classes}
           handleCopy={this.handleCopy}

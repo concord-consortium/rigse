@@ -56,7 +56,7 @@ export class EditBookmarks extends React.Component {
   }
 
   handleDelete (bookmark) {
-    if (window.confirm(`Are you sure you want to delete this bookmark?\n\n${bookmark.name} -> ${bookmark.url}`)) {
+    if (window.confirm(`Are you sure you want to delete this link?\n\n${bookmark.name} -> ${bookmark.url}`)) {
       const { bookmarks } = this.state
       const index = bookmarks.indexOf(bookmark)
       bookmarks.splice(index, 1)
