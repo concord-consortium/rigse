@@ -1,17 +1,19 @@
-= remote_form_for(portal_student, :as => :portal_student, :url => { :controller => 'portal/students', :action => "move_confirm/#{@portal_student.id}" }, :html => {:id => "move_form"}) do |f|
+%h2
+  Move #{@portal_student.first_name} #{@portal_student.last_name}
+= form_for(@portal_student, url: url_for(controller: "portal/students", action: "move_confirm"), method: "post", html: {id: "move_form"}) do |f|
   %p#invalid
-  = field_set_tag 'Class Word' do
+  = field_set_tag "Class Word" do
     %ul
       %li
-        = label_tag :clazz, 'Current Class Word: '
+        = label_tag :clazz, "Current Class Word: "
         %p= "Not case sensitive"
         = text_field :clazz, :current_class_word, {:live => false}
       %li
-        = label_tag :clazz, 'New Class Word: '
+        = label_tag :clazz, "New Class Word: "
         %p= "Not case sensitive"
         = text_field :clazz, :new_class_word, {:live => false}
       %li
-        = f.submit 'Submit'
+        = f.submit "Submit"
     %p
       %strong IMPORTANT:
       Any work done by the student for assignments in their current class that are not assigned to the new class will be lost.

@@ -98,7 +98,7 @@
 
     //
     // Need to attach these handlers here. HAML can't seem to correctly
-    // register them with :onkeypress maybe because this takes an 
+    // register them with :onkeypress maybe because this takes an
     // event parameter.
     //
     for(var i = 0; i < PARAM_INPUTS.length; i++) {
@@ -132,15 +132,15 @@
             return;
           }
 
-          response["material"] = { 
+          response["material"] = {
             material_type:  "#{object.class.name.underscore}",
             material_id:    "#{object.id}" };
 
-          ReactDOM.render(StandardsTable(response), div[0]);
+          PortalComponents.renderStandardsTable(response, "applied_standards_div");
         }
       });
 
- 
+
     }; // end window.loadAppliedStandards()
 
 
@@ -218,11 +218,11 @@
             return;
           }
 
-          response["material"] = { 
+          response["material"] = {
             material_type:  "#{object.class.name.underscore}",
             material_id:    "#{object.id}" };
 
-          ReactDOM.render(StandardsTable(response), jQuery("#asn_search_results")[0]);
+          PortalComponents.renderStandardsTable(response, "asn_search_results");
           Portal.hideModal();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -235,6 +235,6 @@
 
     window.loadAppliedStandards();
 
-  }); 
+  });
 
-  
+

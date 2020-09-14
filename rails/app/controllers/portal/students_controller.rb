@@ -206,31 +206,35 @@ class Portal::StudentsController < ApplicationController
   end
 
   def move
-    portal_student = Portal::Student.find(params[:id])
-    current_class = Portal::Clazz.find_by_class_word(params[:clazz][:current_class_word])
-    new_class = Portal::Clazz.find_by_class_word(params[:clazz][:new_class_word])
+    if request.get?
+      @portal_student = Portal::Student.find(params[:id])
+    else
+      portal_student = Portal::Student.find(params[:id])
+      current_class = Portal::Clazz.find_by_class_word(params[:clazz][:current_class_word])
+      new_class = Portal::Clazz.find_by_class_word(params[:clazz][:new_class_word])
 
-    portal_student.remove_clazz(current_class)
-    portal_student.add_clazz(new_class)
+      portal_student.remove_clazz(current_class)
+      portal_student.add_clazz(new_class)
 
-    # post data to report service, include bearer token in request
-    config = portal_student.move_student_and_return_config(new_class, current_class)
-    ExternalReport.where('move_students_api_url LIKE "http%"').find_each{ |report|
-      auth_token = 'Bearer %s' % report.move_students_api_token
-      response = HTTParty.post(report.move_students_api_url,
-        body: config.to_json,
-        headers: {
-          'Content-Type' => 'application/json',
-          'Authorization' => auth_token
-        },
-        format: :json)
+      # post data to report service, include bearer token in request
+      config = portal_student.move_student_and_return_config(new_class, current_class)
+      ExternalReport.where('move_students_api_url LIKE "http%"').find_each{ |report|
+        auth_token = 'Bearer %s' % report.move_students_api_token
+        response = HTTParty.post(report.move_students_api_url,
+          body: config.to_json,
+          headers: {
+            'Content-Type' => 'application/json',
+            'Authorization' => auth_token
+          },
+          format: :json)
 
-      #FIXME: We should do somethign with the response code -- if response.code == 200 # successful
+        #FIXME: We should do somethign with the response code -- if response.code == 200 # successful
 
-    }
+      }
 
-    flash[:notice] = 'Successfully moved student to new class.'
-    redirect_to(portal_student)
+      flash[:notice] = 'Successfully moved student to new class.'
+      redirect_to(portal_student)
+    end
   end
 
   # DELETE /portal_students/1
@@ -317,18 +321,6 @@ class Portal::StudentsController < ApplicationController
     if @invalid_error == ''
       @potentially_orphaned_assignments = check_assignments(@new_class, @portal_student)
       @show_msg = 'move_confirmation'
-    end
-
-    render :update do |page|
-      page.replace "invalid", "<p id='invalid' style='background: #f5f5f5; display:none; padding: 10px;'>" + @invalid_error + "</p>"
-      page.insert_html :before, "move_form", :partial => "move_confirmation",
-        :locals => {:current_class_word => @current_class_word,
-                    :current_clazz => @current_class,
-                    :new_class_word => @new_class_word,
-                    :clazz      => @new_class,
-                    :portal_student => @portal_student,
-                    :potentially_orphaned_assignments => @potentially_orphaned_assignments}
-      page.visual_effect :BlindDown, @show_msg, :duration => 0.25
     end
   end
 

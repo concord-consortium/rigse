@@ -19,9 +19,6 @@ RailsPortal::Application.routes.draw do
   match "search" => 'search#index', :as => :search
 
   get 'search/index'
-  post '/search/get_current_material_unassigned_clazzes'
-  post '/search/get_current_material_anonymous'
-  post '/search/add_material_to_clazzes'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
   match '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report, :method => :get
   match '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report, :method => :get
@@ -117,21 +114,19 @@ RailsPortal::Application.routes.draw do
         collection do
           get :signup
           get :register
-          get :move_confirm
-          post :move_confirm
           get :move
           post :move
           put :move
+          post :move_confirm
         end
         member do
           get :ask_consent
           put :update_consent
           get :status
-          get :move_confirm
-          post :move_confirm
           get :move
           post :move
           put :move
+          post :move_confirm
         end
       end
 
