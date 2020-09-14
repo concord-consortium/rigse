@@ -52,11 +52,11 @@ describe Dataservice::BundleContentsController do
         expect(assigns[:dataservice_bundle_content]).to equal(mock_bundle_content)
       end
 
-      it "redirects to the created bundle_content" do
+      it "send http status OK" do
         expect(Dataservice::BundleContent).to receive(:new).and_return(mock_bundle_content(:save => true))
         login_admin
         post :create, :dataservice_bundle_content => {}
-        expect(response).to redirect_to(dataservice_bundle_content_url(mock_bundle_content))
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -68,11 +68,11 @@ describe Dataservice::BundleContentsController do
         expect(assigns[:dataservice_bundle_content]).to equal(mock_bundle_content)
       end
 
-      it "re-renders the 'new' template" do
+      it "sends 'unprocessable_entity' " do
         expect(Dataservice::BundleContent).to receive(:new).and_return(mock_bundle_content(:save => false))
         login_admin
         post :create, :dataservice_bundle_content => {}
-        expect(response).to render_template('new')
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -95,11 +95,11 @@ describe Dataservice::BundleContentsController do
         expect(assigns[:dataservice_bundle_content]).to equal(mock_bundle_content)
       end
 
-      it "redirects to the bundle_content" do
+      it "sends HTTP status OK" do
         expect(Dataservice::BundleContent).to receive(:find).and_return(mock_bundle_content(:update_attributes => true))
         login_admin
         put :update, :id => "1"
-        expect(response).to redirect_to(dataservice_bundle_content_url(mock_bundle_content))
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -118,11 +118,11 @@ describe Dataservice::BundleContentsController do
         expect(assigns[:dataservice_bundle_content]).to equal(mock_bundle_content)
       end
 
-      it "re-renders the 'edit' template" do
+      it "sends HTTP status 'unprocessable_entity' " do
         expect(Dataservice::BundleContent).to receive(:find).and_return(mock_bundle_content(:update_attributes => false))
         login_admin
         put :update, :id => "1"
-        expect(response).to render_template('edit')
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 

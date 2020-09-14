@@ -16,7 +16,7 @@ class Dataservice::BundleContentsController < ApplicationController
     @dataservice_bundle_contents = Dataservice::BundleContent.search(params[:search], params[:page], nil)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { head :ok }
       format.xml  { render :xml => @dataservice_bundle_contents }
     end
   end
@@ -30,7 +30,7 @@ class Dataservice::BundleContentsController < ApplicationController
     @dataservice_bundle_content = Dataservice::BundleContent.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
+      format.html { head :ok }
       format.xml  { render :xml => @dataservice_bundle_content }
     end
   end
@@ -44,7 +44,7 @@ class Dataservice::BundleContentsController < ApplicationController
     @dataservice_bundle_content = Dataservice::BundleContent.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { head :ok }
       format.xml  { render :xml => @dataservice_bundle_content }
     end
   end
@@ -55,6 +55,7 @@ class Dataservice::BundleContentsController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @bundle_content
     @dataservice_bundle_content = Dataservice::BundleContent.find(params[:id])
+    head :ok
   end
 
   # POST /dataservice_bundle_contents
@@ -68,7 +69,7 @@ class Dataservice::BundleContentsController < ApplicationController
       bundle_logger_id = params[:bundle_logger_id]
       if bundle_logger = Dataservice::BundleLogger.find(bundle_logger_id)
         body = request.body.read
-        bundle_logger.end_bundle( { :body => body} )
+        bundle_logger.end_bundle( { body:  body } )
         bundle_content = bundle_logger.bundle_contents.last
         digest = Digest::MD5.hexdigest(body)
         return head :created, :Last_Modified => bundle_content.created_at.httpdate, :Content_MD5 => digest
@@ -76,16 +77,16 @@ class Dataservice::BundleContentsController < ApplicationController
         return head :bad_request
       end
     end
-    
+
     @dataservice_bundle_content = Dataservice::BundleContent.new(params[:dataservice_bundle_content])
 
     respond_to do |format|
       if @dataservice_bundle_content.save
         flash[:notice] = 'Dataservice::BundleContent was successfully created.'
-        format.html { redirect_to(@dataservice_bundle_content) }
+        format.html { head :ok }
         format.xml  { render :xml => @dataservice_bundle_content, :status => :created, :location => @dataservice_bundle_content }
       else
-        format.html { render :action => "new" }
+        format.html { head :unprocessable_entity }
         format.xml  { render :xml => @dataservice_bundle_content.errors, :status => :unprocessable_entity }
       end
     end
@@ -102,10 +103,10 @@ class Dataservice::BundleContentsController < ApplicationController
     respond_to do |format|
       if @dataservice_bundle_content.update_attributes(params[:dataservice_bundle_content])
         flash[:notice] = 'Dataservice::BundleContent was successfully updated.'
-        format.html { redirect_to(@dataservice_bundle_content) }
+        format.html { head :ok }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { head :unprocessable_entity }
         format.xml  { render :xml => @dataservice_bundle_content.errors, :status => :unprocessable_entity }
       end
     end
