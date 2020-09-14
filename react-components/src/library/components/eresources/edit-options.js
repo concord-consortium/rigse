@@ -252,7 +252,7 @@ export class EditOptions extends React.Component {
     return (
       <ModalDialog title='Edit Options'>
         <div className={css.container}>
-          <h3>External Activity: {eresource.name}</h3>
+          <h3>Resource: {eresource.name}</h3>
           <form onSubmit={this.handleSubmit}>
             {this.renderPublicationStatus()}
             {this.renderGradeLevels()}
