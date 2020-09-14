@@ -6,6 +6,7 @@ export const PAGE_SIZE = 10
 export default class StandardsTable extends React.Component {
   constructor (props) {
     super(props)
+    this.search = this.props.search || window.searchASN
     this.paginateUp = this.paginateUp.bind(this)
     this.paginateDown = this.paginateDown.bind(this)
   }
@@ -13,19 +14,23 @@ export default class StandardsTable extends React.Component {
   paginateUp () {
     const { start } = this.props
     if ((start + PAGE_SIZE) < this.props.count) {
-      window.searchASN(start + PAGE_SIZE)
+      this.search(start + PAGE_SIZE)
     }
   }
 
   paginateDown () {
     const { start } = this.props
     if ((start - PAGE_SIZE) > -1) {
-      window.searchASN(start - PAGE_SIZE)
+      this.search(start - PAGE_SIZE)
     }
   }
 
   renderPagination () {
-    const { count, start } = this.props
+    const { count, start, skipPaginate } = this.props
+
+    if (skipPaginate) {
+      return undefined
+    }
 
     if (count) {
       let end = (start + PAGE_SIZE)
@@ -53,7 +58,7 @@ export default class StandardsTable extends React.Component {
   }
 
   render () {
-    const { statements, material } = this.props
+    const { statements, material, afterChange, skipModal } = this.props
 
     return (
       <table className='asn_results_table'>
@@ -69,7 +74,7 @@ export default class StandardsTable extends React.Component {
             <th className='asn_results_th'>Leaf</th>
             <th className='asn_results_th_right'>Action</th>
           </tr>
-          {statements.map(statement => <StandardsRow key={statement.uri} statement={statement} material={material} />)}
+          {statements.map(statement => <StandardsRow key={statement.uri} statement={statement} material={material} afterChange={afterChange} skipModal={skipModal} />)}
         </tbody>
       </table>
     )
