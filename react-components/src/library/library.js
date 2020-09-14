@@ -40,6 +40,7 @@ import JoinClass from './components/portal-students/join-class'
 import StudentRoster from './components/portal-classes/student-roster'
 import AutoSuggest from './components/search/auto-suggest'
 import EditEResourceOptions from './components/eresources/edit-options'
+import StandardsTable from './components/standards/standards-table'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -274,6 +275,11 @@ window.PortalComponents = {
   AutoSuggest: AutoSuggest,
   renderAutoSuggest: function (options, id) {
     render(React.createElement(AutoSuggest, options), id)
+  },
+
+  StandardsTable: StandardsTable,
+  renderStandardsTable: function (options, id) {
+    render(React.createElement(StandardsTable, options), id)
   },
 
   EditEResourceOptions: EditEResourceOptions,

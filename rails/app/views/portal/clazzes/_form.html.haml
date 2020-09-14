@@ -23,7 +23,7 @@
   PortalComponents.renderPortalClassSetupForm({
     portalClass: #{portal_clazz.to_json},
     portalClassGrades: #{portal_clazz.grades.map {|g| g.name}.to_json},
-    portalClassTeacher: #{portal_clazz.teacher ? {name: portal_clazz.teacher.name, id: portal_clazz.teacher.id}.to_json : nil},
+    portalClassTeacher: #{(portal_clazz.teacher ? {name: portal_clazz.teacher.name, id: portal_clazz.teacher.id} : nil).to_json},
     teachers: {
       current: #{current_teachers.to_json},
       unassigned: #{unassigned_teachers.to_json},

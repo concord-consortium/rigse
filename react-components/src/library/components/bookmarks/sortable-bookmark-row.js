@@ -50,7 +50,7 @@ class BookmarkRow extends React.Component {
           </span>
           <span className={css.editBookmarkButtons}>
             <button onClick={handleSave}>Save</button>
-            <button onClick={handleToggleEdit}>Cancel</button>
+            <button className={'textButton'} onClick={handleToggleEdit}>Cancel</button>
           </span>
         </div>
       )
@@ -63,9 +63,9 @@ class BookmarkRow extends React.Component {
             {bookmark.is_visible ? link : <strike>{link}</strike>}
           </span>
           <span className={css.editBookmarkButtons}>
-            <button onClick={handleToggleEdit}>Edit</button>
-            <button onClick={handleVisibilityToggle}>{bookmark.is_visible ? 'Hide' : 'Show'}</button>
-            <button onClick={handleDelete}>Delete</button>
+            <button className={'textButton adminOption'} onClick={handleToggleEdit}>Edit</button>
+            <button className={'textButton adminOption'} onClick={handleVisibilityToggle}>{bookmark.is_visible ? 'Hide' : 'Show'}</button>
+            <button className={'textButton adminOption'} onClick={handleDelete}>Delete</button>
           </span>
         </div>
       )
