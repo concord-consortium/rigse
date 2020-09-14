@@ -18,16 +18,17 @@ module.exports = {
     // publicPath: '../'
   },
 
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+  },
+
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
+          loader: "awesome-typescript-loader",
         }
       },
       {
@@ -56,7 +57,8 @@ module.exports = {
             options: {
               modules: true,
               sourceMap: true,
-              localIdentName: '[local]--[hash:base64:8]'
+              localIdentName: '[local]--[hash:base64:8]',
+              importLoaders: 1
             }
           },
           {

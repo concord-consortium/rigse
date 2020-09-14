@@ -1,0 +1,1204 @@
+
+> rigse-react-components@1.0.0 build-library /home/doug/projects/rigse/react-components
+> cross-env NODE_ENV=production webpack
+
+ℹ ｢atl｣: Using typescript@4.0.2 from typescript
+ℹ ｢atl｣: Using tsconfig.json from /home/doug/projects/rigse/react-components/tsconfig.json
+ℹ ｢atl｣: Checking started in a separate process...
+Hash: 9aab214a38191c89c05a
+Version: webpack 4.43.0
+Time: 11899ms
+Built at: 09/14/2020 6:16:09 AM
+ 2 assets
+Entrypoint react-components = react-components.js
+Entrypoint react-test-globals = react-test-globals.js
+  [9] ./src/library/helpers/component.js 505 bytes {0} [built]
+ [12] ./node_modules/react-sortable-hoc/dist/react-sortable-hoc.esm.js + 21 modules 60.7 KiB {0} [built]
+      |    22 modules
+ [20] ./src/library/helpers/portal-object-helpers.js 1.34 KiB {0} [built]
+ [32] ./src/library/helpers/make-teacher-edition-links.js 1.4 KiB {0} [built]
+ [48] ./node_modules/react-select/dist/react-select.browser.esm.js + 16 modules 213 KiB {0} [built]
+      |    17 modules
+ [54] ./src/library/helpers/fade-in.js 702 bytes {0} [built]
+ [55] ./src/library/helpers/sort-by-name.js 269 bytes {0} [built]
+ [58] ./src/library/helpers/pluralize.js 245 bytes {0} [built]
+ [59] ./src/library/helpers/parse-query-string.js 816 bytes {0} [built]
+ [76] ./src/library/helpers/should-cancel-sorting.js 473 bytes {0} [built]
+ [77] external "jQuery" 42 bytes {0} [built]
+ [98] ./src/library/helpers/shuffle-array.js 359 bytes {0} [built]
+[281] ./src/library/library.js 12.7 KiB {0} [built]
+[282] ./src/library/library.scss 1.19 KiB {0} [built]
+[494] ./src/react-test-globals.js 434 bytes {1} [built]
+    + 485 hidden modules
+
+ERROR in [at-loader] ./src/react-test-globals.js:7:8 
+    TS2339: Property 'ReactTestUtils' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/helpers/sort-by-name.js:4:11 
+    TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+
+ERROR in [at-loader] ./src/library/helpers/sort-by-name.js:4:29 
+    TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+
+ERROR in [at-loader] ./src/library/helpers/wait-for-auto-lightbox-to-close.js:2:7 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/helpers/wait-for-auto-lightbox-to-close.js:2:27 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/helpers/wait-for-auto-lightbox-to-close.js:4:12 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:31:13 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:37:13 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:38:46 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:41:9 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:43:16 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:43:22 
+    TS2554: Expected 0-1 arguments, but got 2.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:44:14 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collection-cards.js:44:14 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/collections-page.js:20:34 
+    TS2345: Argument of type '{ fadeIn: number; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'fadeIn' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/header-filter.js:10:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/header-filter.js:12:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/grade-levels.js:11:28 
+    TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+ERROR in [at-loader] ./src/library/components/grade-levels.js:16:23 
+    TS2345: Argument of type 'string' is not assignable to parameter of type 'never'.
+
+ERROR in [at-loader] ./src/library/components/grade-levels.js:26:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/grade-levels.js:31:19 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:40:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:41:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:42:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:42:24 
+    TS2322: Type '{ resource: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'resource' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:48:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:49:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:50:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:52:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:53:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/related-resource-result.js:53:22 
+    TS2322: Type '{ resource: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'resource' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:107:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:108:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:108:13 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:109:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:124:18 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:125:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:147:17 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:148:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:148:13 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:149:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:160:18 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:161:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:162:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:164:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:185:27 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:186:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:186:15 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:187:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:191:20 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:192:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:193:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:204:24 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:204:33 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/standards-helpers.js:218:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/helpers/make-teacher-edition-links.js:34:26 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:28:19 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:43:27 
+    TS2339: Property 'props' does not exist on type 'UNSAFE_componentWillMount'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:49:10 
+    TS2339: Property 'setState' does not exist on type 'UNSAFE_componentWillMount'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:52:10 
+    TS2339: Property 'replaceResource' does not exist on type 'UNSAFE_componentWillMount'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:72:70 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:109:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:114:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:119:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:124:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:129:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:134:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:158:19 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:159:18 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:167:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:227:7 
+    TS2322: Type 'Element' is not assignable to type 'string'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:287:10 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:313:16 
+    TS2339: Property 'theme' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:323:9 
+    TS2322: Type 'Element' is not assignable to type 'string'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:325:9 
+    TS2322: Type 'Element' is not assignable to type 'string'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:384:48 
+    TS2345: Argument of type '{ key: any; resource: any; replaceResource: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'resource' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:384:85 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:384:85 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:384:85 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/resource-lightbox.js:480:17 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/helpers/lightbox.js:28:37 
+    TS2345: Argument of type 'HTMLElement | null' is not assignable to parameter of type 'Element | DocumentFragment'.
+  Type 'null' is not assignable to type 'Element | DocumentFragment'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:83:9 
+    TS2345: Argument of type '{ resource: any; parentPage: string; toggleLightbox: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'resource' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:88:7 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:100:17 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:100:51 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:115:7 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:160:24 
+    TS2322: Type '{ resource: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'resource' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:170:27 
+    TS2322: Type '{ resource: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'resource' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder-result.js:177:22 
+    TS2322: Type '{ resource: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'resource' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/search/auto-suggest.js:4:17 
+    TS2307: Cannot find module './auto-suggest.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:143:25 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:144:9 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:151:7 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:171:7 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:240:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:259:11 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:260:16 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:260:22 
+    TS2554: Expected 0-1 arguments, but got 2.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:263:7 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:287:7 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:289:36 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:289:36 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:290:39 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:298:9 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:305:7 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:305:119 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:324:18 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:352:7 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:372:15 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:373:15 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:374:20 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:374:20 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:375:29 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:451:57 
+    TS2345: Argument of type '{ key: any; type: string; filter: any; toggleFilter: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'type' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:451:114 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:451:114 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:451:114 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:454:59 
+    TS2345: Argument of type '{ key: any; type: string; filter: any; toggleFilter: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'type' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:454:120 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:454:120 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:454:120 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:457:57 
+    TS2345: Argument of type '{ key: any; type: string; filter: any; toggleFilter: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'type' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:457:114 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:457:114 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:457:114 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:513:12 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:513:12 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:514:9 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:516:7 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:516:56 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/stem-finder.js:540:51 
+    TS2345: Argument of type '{ key: any; resource: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'resource' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/helpers/tooltip.js:20:37 
+    TS2345: Argument of type 'HTMLElement | null' is not assignable to parameter of type 'Element | DocumentFragment'.
+  Type 'null' is not assignable to type 'Element | DocumentFragment'.
+
+ERROR in [at-loader] ./src/library/components/tooltip.js:33:25 
+    TS2339: Property 'state' does not exist on type '(Anonymous function)'.
+
+ERROR in [at-loader] ./src/library/components/tooltip.js:35:24 
+    TS2339: Property 'state' does not exist on type 'setTimer'.
+
+ERROR in [at-loader] ./src/library/components/tooltip.js:44:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/tooltip.js:45:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/tooltip.js:46:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:14:24 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:18:59 
+    TS2339: Property 'oauthProviders' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:19:41 
+    TS2339: Property 'theme' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:20:47 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:21:49 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:34:16 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:34:22 
+    TS2554: Expected 0-1 arguments, but got 2.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:37:20 
+    TS2554: Expected 0-1 arguments, but got 2.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:48:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:51:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:56:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:60:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/page-header.js:86:9 
+    TS2345: Argument of type '{ id: string; text: any; posx: any; posy: any; type: string; close_delay: number; toggleTooltip: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'id' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:7:24 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:16:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:17:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:18:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:19:24 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:19:68 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:20:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:21:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:21:141 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/page-footer.js:22:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:51:28 
+    TS2345: Argument of type '{ resource: any; parentPage: string; toggleLightbox: any; showTeacherResourcesButton: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'resource' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:60:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:65:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:70:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:75:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:80:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:93:29 
+    TS2345: Argument of type '{ resource: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'resource' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:105:21 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:131:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:138:13 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:141:13 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:144:28 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:152:9 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:153:13 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:154:11 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/materials-collection.js:170:52 
+    TS2345: Argument of type '{ key: any; item: any; showTeacherResourcesButton: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'item' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/signup/student_form.js:8:57 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/student_form.js:9:56 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/student_form.js:24:38 
+    TS2339: Property 'isValidAsync' does not exist on type 'ReactInstance'.
+  Property 'isValidAsync' does not exist on type 'Element'.
+
+ERROR in [at-loader] ./src/library/components/signup/school_input.js:7:60 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:20:58 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:21:62 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:22:46 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:23:56 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:53:45 
+    TS2339: Property 'isValidAsync' does not exist on type 'ReactInstance'.
+  Property 'isValidAsync' does not exist on type 'Element'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:56:45 
+    TS2339: Property 'isValidAsync' does not exist on type 'ReactInstance'.
+  Property 'isValidAsync' does not exist on type 'Element'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:98:65 
+    TS2339: Property 'isValidValue' does not exist on type 'ReactInstance'.
+  Property 'isValidValue' does not exist on type 'Element'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_form.js:249:44 
+    TS2339: Property 'enewsSubscriptionEnabled' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/basic_data_form.js:17:52 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/basic_data_form.js:42:53 
+    TS2339: Property 'isValidAsync' does not exist on type 'ReactInstance'.
+  Property 'isValidAsync' does not exist on type 'Element'.
+
+ERROR in [at-loader] ./src/library/components/signup/basic_data_form.js:42:90 
+    TS2339: Property 'isValidAsync' does not exist on type 'ReactInstance'.
+  Property 'isValidAsync' does not exist on type 'Element'.
+
+ERROR in [at-loader] ./src/library/components/signup/basic_data_form.js:53:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/signup/student_registration_complete.js:12:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/signup/teacher_registration_complete.js:5:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/signup/user_type_selector.js:15:5 
+    TS2304: Cannot find name 'ga'.
+
+ERROR in [at-loader] ./src/library/components/signup/signup.js:161:43 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/signup/signup.js:161:78 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/signup/signup.js:181:45 
+    TS2339: Property 'siteName' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/signup.js:183:45 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/login_modal.js:48:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/signup/login_modal.js:53:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/signup/login_modal.js:136:45 
+    TS2339: Property 'siteName' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/signup/forgot_password_modal.js:41:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/signup/forgot_password_modal.js:81:45 
+    TS2339: Property 'siteName' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/common/offering-progress/feedback.js:6:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/common/offering-progress/progress-bar.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/common/offering-progress/index.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/recent-activity/offering.js:5:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/recent-activity/offering.js:6:23 
+    TS2307: Cannot find module '../../styles/common-css-modules.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/recent-activity/legend.js:2:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/url-params.js:7:30 
+    TS2345: Argument of type 'Location' is not assignable to parameter of type 'string'.
+
+ERROR in [at-loader] ./src/library/url-params.js:13:56 
+    TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+
+ERROR in [at-loader] ./src/library/components/recent-activity/index.js:120:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assigments/class-assignments.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assigments/class-assignments.js:4:23 
+    TS2307: Cannot find module '../../styles/common-css-modules.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assigments/class-assignments.js:9:16 
+    TS2339: Property 'theme' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assigments/class-assignments.js:12:16 
+    TS2339: Property 'theme' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assigments/offering-details.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assigments/offering-details.js:5:23 
+    TS2307: Cannot find module '../../styles/common-css-modules.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assigments/offering-row.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assigments/offerings-table.js:6:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:2:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:31:17 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:36:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:39:9 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:60:11 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:66:25 
+    TS2769: No overload matches this call.
+  Overload 1 of 2, '(o: {}): string[]', gave the following error.
+    Argument of type 'null' is not assignable to parameter of type '{}'.
+  Overload 2 of 2, '(o: object): string[]', gave the following error.
+    Argument of type 'null' is not assignable to parameter of type 'object'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:68:43 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:71:73 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:72:34 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/navigation/teacher-project-views.js:75:24 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/navigation/index.js:2:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/navigation/index.js:205:18 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:1:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:13:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:13:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:40:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:98:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:111:33 
+    TS2304: Cannot find name 'OfferingRunStatus'.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:111:51 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:129:15 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:132:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:133:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:135:35 
+    TS2345: Argument of type '{ collaborator: any; handleRemoveCollaborator: any; }' is not assignable to parameter of type 'Attributes'.
+  Object literal may only specify known properties, and 'collaborator' does not exist in type 'Attributes'.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:143:19 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:145:19 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:154:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:155:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:156:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:157:12 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:158:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:159:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:161:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:162:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:165:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:168:14 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:169:16 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:170:30 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:182:8 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/run-with-collaborators/index.js:183:10 
+    TS2686: 'React' refers to a UMD global, but the current file is a module. Consider adding an import instead.
+
+ERROR in [at-loader] ./src/library/components/common/external-report-button.js:62:52 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/learner-report-form/index.js:4:10 
+    TS2614: Module '"../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' has no exported member 'formatDate'. Did you mean to use 'import formatDate from "../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' instead?
+
+ERROR in [at-loader] ./src/library/components/learner-report-form/index.js:4:22 
+    TS2614: Module '"../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' has no exported member 'parseDate'. Did you mean to use 'import parseDate from "../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' instead?
+
+ERROR in [at-loader] ./src/library/components/learner-report-form/index.js:6:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/learner-report-form/index.js:256:11 
+    TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: Readonly<DayPickerInputProps>): DayPickerInput', gave the following error.
+    Type '{ inputProps: { name: any; }; placeholder: string; format: string; parseDate: any; formatDate: any; selectedDay: any; onDayChange: (value: any) => void; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+      Property 'selectedDay' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+  Overload 2 of 2, '(props: DayPickerInputProps, context?: any): DayPickerInput', gave the following error.
+    Type '{ inputProps: { name: any; }; placeholder: string; format: string; parseDate: any; formatDate: any; selectedDay: any; onDayChange: (value: any) => void; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+      Property 'selectedDay' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+
+ERROR in [at-loader] ./src/library/components/learner-report-form/index.js:294:29 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/learner-report-form/index.js:294:87 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/user-report-form/index.js:4:10 
+    TS2614: Module '"../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' has no exported member 'formatDate'. Did you mean to use 'import formatDate from "../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' instead?
+
+ERROR in [at-loader] ./src/library/components/user-report-form/index.js:4:22 
+    TS2614: Module '"../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' has no exported member 'parseDate'. Did you mean to use 'import parseDate from "../../../../node_modules/react-day-picker/types/MomentLocaleUtils"' instead?
+
+ERROR in [at-loader] ./src/library/components/user-report-form/index.js:6:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/user-report-form/index.js:219:11 
+    TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: Readonly<DayPickerInputProps>): DayPickerInput', gave the following error.
+    Type '{ inputProps: { name: any; }; placeholder: string; format: string; parseDate: any; formatDate: any; selectedDay: any; onDayChange: (value: any) => void; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+      Property 'selectedDay' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+  Overload 2 of 2, '(props: DayPickerInputProps, context?: any): DayPickerInput', gave the following error.
+    Type '{ inputProps: { name: any; }; placeholder: string; format: string; parseDate: any; formatDate: any; selectedDay: any; onDayChange: (value: any) => void; }' is not assignable to type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+      Property 'selectedDay' does not exist on type 'IntrinsicAttributes & IntrinsicClassAttributes<DayPickerInput> & Readonly<DayPickerInputProps> & Readonly<...>'.
+
+ERROR in [at-loader] ./src/library/components/user-report-form/index.js:229:29 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/notice.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/site-notices/notice.js:20:58 
+    TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | boolean'.
+  Type 'undefined' is not assignable to type 'string | number | boolean'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/notices.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/site-notices/index.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/site-notices/index.js:55:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/new.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/site-notices/new.js:11:52 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/new.js:13:56 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/edit.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/site-notices/edit.js:32:52 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/show.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/site-notices/show.js:13:33 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/show.js:53:58 
+    TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string | number | boolean'.
+  Type 'undefined' is not assignable to type 'string | number | boolean'.
+
+ERROR in [at-loader] ./src/library/components/site-notices/show.js:146:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/material-icon.js:15:17 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/material-icon.js:21:23 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/material-icon.js:26:23 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/material-icon.js:103:34 
+    TS2538: Type 'false' cannot be used as an index type.
+
+ERROR in [at-loader] ./src/library/components/search/material-icon.js:107:39 
+    TS2538: Type 'true' cannot be used as an index type.
+
+ERROR in [at-loader] ./src/library/components/search/material-links.js:28:16 
+    TS2339: Property 'confirm' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/material-links.js:89:12 
+    TS2339: Property 'hideSharelinks' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/components/search/material-details.js:11:12 
+    TS2339: Property 'toggleDetails' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/components/search/material-details.js:15:12 
+    TS2339: Property 'toggleDetails' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/components/featured-materials/featured-materials.js:16:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/pagination.js:11:25 
+    TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Element | Text | null' is not assignable to parameter of type 'PlainObject<any>'.
+      Type 'null' is not assignable to type 'PlainObject<any>'.
+
+ERROR in [at-loader] ./src/library/components/search/pagination.js:12:10 
+    TS2339: Property 'paging' does not exist on type 'JQueryStatic'.
+
+ERROR in [at-loader] ./src/library/components/search/result-group.js:20:14 
+    TS2339: Property 'updateSearchUrl' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/components/search/result-group.js:30:21 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/search/results.js:8:67 
+    TS2339: Property 'offsetTop' does not exist on type 'JQuery<HTMLElement>'.
+
+ERROR in [at-loader] ./src/library/components/search/results.js:30:9 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/search/results.js:30:38 
+    TS2339: Property 'length' does not exist on type 'string | number | string[]'.
+  Property 'length' does not exist on type 'number'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/materials-category.js:10:47 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/material.js:17:12 
+    TS2339: Property 'assignMaterialToSpecificClass' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/material.js:27:12 
+    TS2339: Property 'assignMaterialToClass' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/material.js:36:19 
+    TS2339: Property 'confirm' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/materials-collection.js:7:16 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/fetch-data-hoc.js:76:33 
+    TS2339: Property 'clone' does not exist on type 'ObjectConstructor'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/own-materials.js:37:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/user-materials-container.js:23:27 
+    TS2339: Property 'archive' does not exist on type '_MBUserMaterialsContainer'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/user-materials-container.js:34:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/user-materials.js:34:11 
+    TS2322: Type '{ userId: any; visible: boolean; assignToSpecificClass: any; archive: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'userId' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/materials-by-author.js:38:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/materials-bin.js:141:49 
+    TS2322: Type '{ key: any; visible: any; assignToSpecificClass: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'visible' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/materials-bin.js:143:54 
+    TS2322: Type '{ key: any; visible: any; assignToSpecificClass: any; }' is not assignable to type 'IntrinsicAttributes & Attributes'.
+  Property 'visible' does not exist on type 'IntrinsicAttributes & Attributes'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:4:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:30:17 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:35:26 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:40:11 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:51:14 
+    TS2345: Argument of type 'string | number | string[] | undefined' is not assignable to parameter of type 'string | number | string[] | ((this: HTMLElement, index: number, value: string) => string)'.
+  Type 'undefined' is not assignable to type 'string | number | string[] | ((this: HTMLElement, index: number, value: string) => string)'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:76:28 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:83:15 
+    TS2683: 'this' implicitly has type 'any' because it does not have a type annotation.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:153:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:154:30 
+    TS2339: Property 'oauthProviders' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:161:32 
+    TS2345: Argument of type 'Location' is not assignable to parameter of type 'string'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:164:5 
+    TS2304: Cannot find name 'PortalComponents'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:165:30 
+    TS2339: Property 'oauthProviders' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-modal.js:247:19 
+    TS2339: Property 'currentUser' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-to-class.js:6:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/assign-to-class/assign-to-class.js:42:22 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/helpers/form-errors.js:15:12 
+    TS2322: Type '{ children: Element[]; class: string; id: string; }' is not assignable to type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'.
+  Property 'class' does not exist on type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>'. Did you mean 'className'?
+
+ERROR in [at-loader] ./src/library/components/portal-classes/setup-form.js:69:66 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/setup-form.js:84:107 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/setup-form.js:84:116 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/bookmarks/sortable-bookmark-row.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/bookmarks/sortable-bookmark-row.js:63:43 
+    TS2339: Property 'strike' does not exist on type 'JSX.IntrinsicElements'.
+
+ERROR in [at-loader] ./src/library/components/bookmarks/sortable-bookmark-row.js:63:57 
+    TS2339: Property 'strike' does not exist on type 'JSX.IntrinsicElements'.
+
+ERROR in [at-loader] ./src/library/components/bookmarks/sortable-bookmarks.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/bookmarks/edit.js:7:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/sortable-class-row.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/sortable-class-row.js:16:40 
+    TS2339: Property 'strike' does not exist on type 'JSX.IntrinsicElements'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/sortable-class-row.js:16:60 
+    TS2339: Property 'strike' does not exist on type 'JSX.IntrinsicElements'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/sortable-classes.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/copy-dialog.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/copy-dialog.js:68:23 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/manage-classes.js:7:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/materials-collection/sortable-materials-collection-list-row.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/materials-collection/sortable-materials-collection-list.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/materials-collection/edit-list.js:5:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-students/join-class.js:3:17 
+    TS2307: Cannot find module './style.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-students/join-class.js:105:32 
+    TS2322: Type '{ type: string; live: string; name: string; ref: RefObject<any>; size: number; disabled: boolean; }' is not assignable to type 'DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>'.
+  Property 'live' does not exist on type 'DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>'.
+
+ERROR in [at-loader] ./src/library/components/portal-students/join-class.js:150:41 
+    TS2531: Object is possibly 'null'.
+
+ERROR in [at-loader] ./src/library/components/shared/modal.js:3:17 
+    TS2307: Cannot find module './modal.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/shared/modal-dialog.js:5:17 
+    TS2307: Cannot find module './modal-dialog.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/register-student-modal.js:4:28 
+    TS2307: Cannot find module '../shared/modal-dialog.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/register-student-modal.js:68:21 
+    TS2322: Type 'string' is not assignable to type 'number | undefined'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/student-roster-row.js:3:17 
+    TS2307: Cannot find module './student-roster.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/student-roster-header.js:3:17 
+    TS2307: Cannot find module './student-roster.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/student-roster-header.js:37:107 
+    TS2532: Object is possibly 'undefined'.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/student-roster.js:10:17 
+    TS2307: Cannot find module './student-roster.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/components/portal-classes/student-roster.js:11:28 
+    TS2307: Cannot find module '../shared/modal-dialog.scss' or its corresponding type declarations.
+
+ERROR in [at-loader] ./src/library/library.js:58:8 
+    TS2339: Property 'PortalPages' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/library.js:59:8 
+    TS2339: Property 'PortalComponents' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/library.js:105:32 
+    TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'typeof Navigation' is not assignable to parameter of type 'string | FunctionComponent<{}> | ComponentClass<{}, any>'.
+      Type 'typeof Navigation' is not assignable to type 'ComponentClass<{}, any>'.
+        Types of parameters 'props' and 'props' are incompatible.
+          Type '{}' is missing the following properties from type '{ greeting: string; name: string; links: never[]; }': greeting, name, links
+
+ERROR in [at-loader] ./src/library/components/materials-bin/collections.js:26:29 
+    TS2339: Property 'archive' does not exist on type '_MBCollections'.
+
+ERROR in [at-loader] ./src/library/components/materials-bin/collections.js:41:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/materials-collection/materials-collection.js:36:19 
+    TS2339: Property 'API_V1' does not exist on type 'typeof Portal'.
+
+ERROR in [at-loader] ./src/library/components/standards/standards-row.js:39:16 
+    TS2339: Property 'loadAppliedStandards' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/components/standards/standards-table.js:16:14 
+    TS2339: Property 'searchASN' does not exist on type 'Window & typeof globalThis'.
+
+ERROR in [at-loader] ./src/library/components/standards/standards-table.js:23:14 
+    TS2339: Property 'searchASN' does not exist on type 'Window & typeof globalThis'.

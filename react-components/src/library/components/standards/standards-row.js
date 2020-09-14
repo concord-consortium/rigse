@@ -1,5 +1,6 @@
 import React from 'react'
 import TextPreview from './text-preview'
+import jQuery from 'jquery'
 
 export default class StandardsRow extends React.Component {
   constructor (props) {
