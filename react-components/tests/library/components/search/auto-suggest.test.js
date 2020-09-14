@@ -29,11 +29,16 @@ describe('When I try to render autosuggest', () => {
     `));
   });
 
-  it("should render with a query prop", () => {
+  it("should render with a query prop and show the suggestions", () => {
     const autoSuggest = Enzyme.mount(<AutoSuggest query="test" />);
     expect(autoSuggest.html()).toBe(pack(`
       <div class="autoSuggest">
         <input type="text" autocomplete="off" value="test">
+        <div id="suggestions" class="suggestions" style="width: 0px;">
+          <div class="suggestion">test 1</div>
+          <div class="suggestion">test 2</div>
+          <div class="suggestion">test 3</div>
+        </div>
       </div>
     `));
   });
@@ -54,14 +59,14 @@ describe('When I try to render autosuggest', () => {
     expect(autoSuggest.state()).toEqual({
       query: 'test',
       suggestions: [ 'test 1', 'test 2', 'test 3' ],
-      selectedSuggestionIndex: 0,
+      selectedSuggestionIndex: -1,
       showSuggestions: true
     })
     expect(autoSuggest.html()).toBe(pack(`
       <div class="autoSuggest">
         <input type="text" autocomplete="off" value="test">
         <div id="suggestions" class="suggestions" style="width: 100px;">
-          <div class="suggestion selectedSuggestion">test 1</div>
+          <div class="suggestion">test 1</div>
           <div class="suggestion">test 2</div>
           <div class="suggestion">test 3</div>
         </div>
@@ -82,37 +87,39 @@ describe('When I try to render autosuggest', () => {
 
       // do the query
       input.prop("onChange")({target: {value: "test"}})
-      expect(autoSuggest.html()).toContain('<div class="suggestion selectedSuggestion">test 1</div>')
+      expect(autoSuggest.html()).toContain('<div class="suggestion">test 1</div>')
+
+      // down arrow selects first
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
+      keyDown(40)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(0)
 
       // down arrow selects next
       keyDown(40)
-      expect(autoSuggest.html()).toContain('<div class="suggestion selectedSuggestion">test 2</div>')
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(1)
 
-      // down arrow selects next
-      keyDown(40)
-      expect(autoSuggest.html()).toContain('<div class="suggestion selectedSuggestion">test 3</div>')
-
-      // two up arrows selects first
+      // up arrow selects first
       keyDown(38)
-      keyDown(38)
-      expect(autoSuggest.html()).toContain('<div class="suggestion selectedSuggestion">test 1</div>')
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(0)
 
       // up arrow at top hides suggestions
       keyDown(38)
       expect(autoSuggest.state().showSuggestions).toEqual(false)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
 
       // down arrow shows suggestions
       keyDown(40)
       expect(autoSuggest.state().showSuggestions).toEqual(true)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(0)
 
       // escape hides suggestions
       keyDown(27)
       expect(autoSuggest.state().showSuggestions).toEqual(false)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
 
       // enter after showing and selecting second suggestion hides the suggestions and invokes the callback
       onChange.mockClear()
       expect(onChange).not.toBeCalledWith("test")
-      keyDown(40)
       keyDown(40)
       keyDown(40)
       keyDown(13)
