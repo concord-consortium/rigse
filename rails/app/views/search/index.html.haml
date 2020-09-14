@@ -34,12 +34,15 @@
       }
     }
 
-    PortalComponents.renderAutoSuggest({
-      id: "search_term",
-      name: "search_term",
-      query: #{@form_model.text.to_json},
-      onSubmit: autoSuggestSubmit
-    }, 'auto-suggest-placeholder')
+    function renderAutoSuggest(query) {
+      PortalComponents.renderAutoSuggest({
+        id: "search_term",
+        name: "search_term",
+        query: query,
+        onSubmit: autoSuggestSubmit,
+        getQueryParams: function () { return jQuery(form).serialize() }
+      }, 'auto-suggest-placeholder')
+    }
 
     function autoSuggestSubmit() {
       // use timeout to avoid React complaining about duplicate roots since search calls into React render
@@ -60,6 +63,8 @@
 
       window.updateSearchUrl(query);
 
+      renderAutoSuggest(form.find('input[name="search_term"]').val())
+
       jQuery.ajax({
         dataType: "json",
         url: apiBase + query,
@@ -72,6 +77,8 @@
         }
       });
     }
+
+    renderAutoSuggest(#{@form_model.text.to_json})
 
     form.on('submit', function(event) {
       event.preventDefault();
