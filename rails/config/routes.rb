@@ -117,21 +117,19 @@ RailsPortal::Application.routes.draw do
         collection do
           get :signup
           get :register
-          get :move_confirm
-          post :move_confirm
           get :move
           post :move
           put :move
+          post :move_confirm
         end
         member do
           get :ask_consent
           put :update_consent
           get :status
-          get :move_confirm
-          post :move_confirm
           get :move
           post :move
           put :move
+          post :move_confirm
         end
       end
 
