@@ -15,7 +15,7 @@ class Dataservice::BlobsController < ApplicationController
     @dataservice_blobs = policy_scope(Dataservice::Blob).search(params[:search], params[:page], nil)
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { head :ok }
       format.xml  { render :xml => @dataservice_blobs }
     end
   end
@@ -30,7 +30,7 @@ class Dataservice::BlobsController < ApplicationController
     respond_to do |format|
       format.html {
         raise Pundit::NotAuthorizedError unless is_authorized
-        render
+        head :ok
       }
       format.xml  {
         raise Pundit::NotAuthorizedError unless is_authorized
@@ -52,7 +52,7 @@ class Dataservice::BlobsController < ApplicationController
     @dataservice_blob = Dataservice::Blob.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { head :ok }
       format.xml  { render :xml => @dataservice_blob }
     end
   end
@@ -61,6 +61,7 @@ class Dataservice::BlobsController < ApplicationController
   def edit
     @dataservice_blob = Dataservice::Blob.find(params[:id])
     authorize @dataservice_blob
+    head :ok
   end
 
   # POST /dataservice_blobs
@@ -72,10 +73,10 @@ class Dataservice::BlobsController < ApplicationController
     respond_to do |format|
       if @dataservice_blob.save
         flash[:notice] = 'Dataservice::Blob was successfully created.'
-        format.html { redirect_to(@dataservice_blob) }
+        format.html { head :ok }
         format.xml  { render :xml => @dataservice_blob, :status => :created, :location => @dataservice_blob }
       else
-        format.html { render :action => "new" }
+        format.html { head :unprocessable_entity }
         format.xml  { render :xml => @dataservice_blob.errors, :status => :unprocessable_entity }
       end
     end
@@ -90,10 +91,10 @@ class Dataservice::BlobsController < ApplicationController
     respond_to do |format|
       if @dataservice_blob.update_attributes(params[:blob])
         flash[:notice] = 'Dataservice::Blob was successfully updated.'
-        format.html { redirect_to(@dataservice_blob) }
+        format.html { head :ok }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { head :unprocessable_entity }
         format.xml  { render :xml => @dataservice_blob.errors, :status => :unprocessable_entity }
       end
     end
@@ -107,7 +108,7 @@ class Dataservice::BlobsController < ApplicationController
     @dataservice_blob.destroy
 
     respond_to do |format|
-      format.html { redirect_to(dataservice_blobs_url) }
+      format.html { head :ok }
       format.xml  { head :ok }
     end
   end

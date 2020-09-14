@@ -46,21 +46,21 @@ describe Dataservice::BlobsController do
       it "redirects to the created blob" do
         allow(Dataservice::Blob).to receive(:new).and_return(mock_blob(:save => true))
         post :create, :blob => {}
-        expect(response).to redirect_to(dataservice_blob_url(mock_blob))
+        expect(response).to have_http_status(:ok)
       end
     end
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved blob as @blob" do
         allow(Dataservice::Blob).to receive(:new).with({'these' => 'params'}).and_return(mock_blob(:save => false))
-        post :create, :blob => {:these => 'params'}
+        post :create, blob: { these: 'params' }
         expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "re-renders the 'new' template" do
         allow(Dataservice::Blob).to receive(:new).and_return(mock_blob(:save => false))
-        post :create, :blob => {}
-        expect(response).to render_template('new')
+        post :create, blob: {}
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -84,7 +84,7 @@ describe Dataservice::BlobsController do
       it "redirects to the blob" do
         allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => true))
         put :update, :id => "1"
-        expect(response).to redirect_to(dataservice_blob_url(mock_blob))
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -104,7 +104,7 @@ describe Dataservice::BlobsController do
       it "re-renders the 'edit' template" do
         allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => false))
         put :update, :id => "1"
-        expect(response).to render_template('edit')
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 
@@ -120,7 +120,7 @@ describe Dataservice::BlobsController do
     it "redirects to the dataservice_blobs list" do
       allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:destroy => true))
       delete :destroy, :id => "1"
-      expect(response).to redirect_to(dataservice_blobs_url)
+      expect(response).to have_http_status(:ok)
     end
   end
 end
