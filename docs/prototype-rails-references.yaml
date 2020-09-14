@@ -47,12 +47,6 @@ BASE/remote_form_for:
   - name: views/external_activities/_basic_form.html.haml
     line: = remote_form_for(@external_activity, :complete => "close_popup();") do
       |f|
-  - name: views/portal/grade_levels/_remote_form.html.haml
-    line: "= remote_form_for(portal_grade_level, :update => dom_id_for(portal_grade_level))
-      do |f|"
-  - name: views/portal/grades/_remote_form.html.haml
-    line: "= remote_form_for(portal_grade, :update => dom_id_for(portal_grade)) do
-      |f|"
   - name: views/portal/students/_move.html.haml
     line: = remote_form_for(portal_student, :as => :portal_student, :url => { :controller
       => 'portal/students', :action => "move_confirm/#{@portal_student.id}" }, :html
@@ -69,24 +63,7 @@ BASE/render :update:
   - name: controllers/search_controller.rb#add_material_to_clazzes
     line: render :update do |page|
 BASE/render(:update: {}
-BASE/sortable_element:
-  callers:
-  - name: views/shared/_accordion_nav.html.haml
-    line: "=sortable_element section_list_name.to_sym, :url=> {:controller=> :activities,
-      :action => 'sort_sections', :params => {:list_name=>section_list_name,:id =>
-      activity.id }}"
-  - name: views/shared/_accordion_nav.html.haml
-    line: "=sortable_element activity_list_name.to_sym, :url=> {:controller=> :investigations,
-      :action => 'sort_activities', :params => {:list_name=>activity_list_name,:id
-      => investigation.id }}"
-  - name: views/shared/_general_accordion_nav.html.haml
-    line: "=sortable_element sub_container_id.to_sym, :url=> {:controller => sub_controller,
-      :action => sub_action, :params => {:list_name=>sub_container_id,:id => child.id
-      }}"
-  - name: views/shared/_general_accordion_nav.html.haml
-    line: "=sortable_element top_container_id.to_sym, :url=> {:controller=> top_controller,
-      :action => top_action, :params => {:list_name=>top_container_id,:id => top_node.id
-      }}"
+BASE/sortable_element: {}
 BASE/visual_effect:
   callers:
   - name: controllers/portal/students_controller.rb#move_confirm
@@ -133,8 +110,6 @@ helpers/application_helper.rb#remote_link_button:
   - BASE/link_to_remote
 helpers/application_helper.rb#show_menu_for:
   callers:
-  - name: views/admin/settings/_show_for_managers.html.haml
-    line: "= show_menu_for(admin_settings, options)"
   - name: views/dataservice/blobs/_show.html.haml
     line: "= show_menu_for(dataservice_blob, options)"
   - name: views/dataservice/bundle_loggers/_show.html.haml
@@ -143,10 +118,6 @@ helpers/application_helper.rb#show_menu_for:
   - name: views/dataservice/console_loggers/_show.html.haml
     line: "= accordion_for(dataservice_console_logger, show_menu_for(dataservice_console_logger,
       options)) do"
-  - name: views/portal/grade_levels/_show.html.haml
-    line: "= show_menu_for(portal_grade_level, options)"
-  - name: views/portal/grades/_show.html.haml
-    line: "= show_menu_for(portal_grade, options)"
   calls:
   - helpers/application_helper.rb#edit_button_for
   - helpers/application_helper.rb#delete_button_for
@@ -155,18 +126,9 @@ helpers/application_helper.rb#toggle_all:
   - BASE/link_to_function
 helpers/application_helper.rb#wrap_edit_link_around_content:
   callers:
-  - name: views/admin/settings/_show_for_managers.html.haml
-    line: "= wrap_edit_link_around_content(admin_settings, {:complete => mce_init_string})
-      do"
   - name: views/dataservice/blobs/_show.html.haml
     line: "= wrap_edit_link_around_content(dataservice_blob, options={:complete =>
       mce_init_string}) do"
-  - name: views/portal/grade_levels/_show.html.haml
-    line: "= wrap_edit_link_around_content(portal_grade_level, options={:complete
-      => mce_init_string}) do"
-  - name: views/portal/grades/_show.html.haml
-    line: "= wrap_edit_link_around_content(portal_grade, options={:complete => mce_init_string})
-      do"
   calls:
   - BASE/remote_function
 helpers/js_helper.rb#safe_js:
@@ -177,29 +139,6 @@ lib/clipboard.rb#paste_link_for:
   calls:
   - BASE/link_to_remote
   - helpers/application_helper.rb#remote_link_button
-views/admin/settings/_show.html.haml:
-  callers:
-  - name: views/admin/settings/index.html.haml
-    line: "= render :partial => 'show', :collection => @admin_settings, :as => :admin_settings"
-  - name: views/admin/settings/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :admin_settings => @admin_settings
-      }"
-  calls:
-  - views/admin/settings/_show_for_managers.html.haml
-views/admin/settings/_show_for_managers.html.haml:
-  callers:
-  - name: views/admin/settings/_show.html.haml
-    line: "= render :partial => 'show_for_managers', :locals => { :admin_settings
-      => admin_settings }"
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/admin/settings/index.html.haml:
-  calls:
-  - views/admin/settings/_show.html.haml
-views/admin/settings/show.html.haml:
-  calls:
-  - views/admin/settings/_show.html.haml
 views/dataservice/blobs/_remote_form.html.haml:
   calls:
   - BASE/remote_form_for
@@ -279,50 +218,6 @@ views/external_activities/_basic_form.html.haml:
 views/home/my_classes.html.haml:
   calls:
   - views/portal/students/_show.html.haml
-views/layouts/application.html.haml:
-  calls:
-  - views/shared/_accordion_nav.html.haml
-  - views/shared/_general_accordion_nav.html.haml
-  - views/shared/_general_accordion_nav.html.haml
-views/portal/grade_levels/_remote_form.html.haml:
-  calls:
-  - BASE/remote_form_for
-views/portal/grade_levels/_show.html.haml:
-  callers:
-  - name: views/portal/grade_levels/index.html.haml
-    line: "= render :partial => 'show', :collection => @portal_grade_levels, :as =>
-      :portal_grade_level"
-  - name: views/portal/grade_levels/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :portal_grade_level => @portal_grade_level
-      }"
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/portal/grade_levels/index.html.haml:
-  calls:
-  - views/portal/grade_levels/_show.html.haml
-views/portal/grade_levels/show.html.haml:
-  calls:
-  - views/portal/grade_levels/_show.html.haml
-views/portal/grades/_remote_form.html.haml:
-  calls:
-  - BASE/remote_form_for
-views/portal/grades/_show.html.haml:
-  callers:
-  - name: views/portal/grades/index.html.haml
-    line: "= render :partial => 'show', :collection => @portal_grades, :as => :portal_grade"
-  - name: views/portal/grades/show.html.haml
-    line: "= render :partial => 'show', :locals=> { :portal_grade => @portal_grade
-      }"
-  calls:
-  - helpers/application_helper.rb#wrap_edit_link_around_content
-  - helpers/application_helper.rb#show_menu_for
-views/portal/grades/index.html.haml:
-  calls:
-  - views/portal/grades/_show.html.haml
-views/portal/grades/show.html.haml:
-  calls:
-  - views/portal/grades/_show.html.haml
 views/portal/learners/bundle_report.html.haml:
   calls:
   - views/dataservice/bundle_loggers/_show.html.haml
@@ -355,22 +250,3 @@ views/search/_material_unassigned_clazzes.html.haml:
     line: render :partial => 'material_unassigned_clazzes'
   calls:
   - BASE/link_to_remote
-views/shared/_accordion_nav.html.haml:
-  callers:
-  - name: views/layouts/application.html.haml
-    line: "/ = render :partial => 'shared/accordion_nav', :locals => { :investigation=>
-      @investigation}"
-  calls:
-  - BASE/sortable_element
-  - BASE/sortable_element
-views/shared/_general_accordion_nav.html.haml:
-  callers:
-  - name: views/layouts/application.html.haml
-    line: "= render :partial => 'shared/general_accordion_nav', :locals => {:top_node
-      => @investigation, :selects => [@investigation,@activity,@section,@page]}"
-  - name: views/layouts/application.html.haml
-    line: "= render :partial => 'shared/general_accordion_nav', :locals => {:top_node
-      => @activity, :selects => [@activity,@section,@page]}"
-  calls:
-  - BASE/sortable_element
-  - BASE/sortable_element

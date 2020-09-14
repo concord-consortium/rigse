@@ -1,0 +1,25 @@
+%h2
+  Confirm Move #{@portal_student.first_name} #{@portal_student.last_name}
+- if @invalid_error == ''
+  %p
+    Are you sure you want to move #{@portal_student.name} from #{@current_class.teacher.user.first_name} #{@current_class.teacher.user.last_name}'s #{@current_class.name} to #{@new_class.teacher.user.first_name} #{@new_class.teacher.user.last_name}'s #{@new_class.name}?
+  - if !@potentially_orphaned_assignments.empty?
+    %div{:class => 'warning', :style => 'background: #fc0; margin-bottom: 10px; padding: 10px;'}
+      %p
+        %strong
+          WARNING
+        %br
+        The following assignments have been completed by #{@portal_student.name} in #{@current_class.name}, but there are no corresponding assignments in #{@new_class.name}. Moving #{@portal_student.name} will result in this work being orphaned and inaccessible to both teacher and student.
+      %ul
+        - @potentially_orphaned_assignments.each do |poa|
+          %li
+            #{poa}
+  = form_for(@portal_student, url: url_for(controller: "portal/students", action: "move"), html: {id: "move_form"}) do |f|
+    = hidden_field_tag "clazz[current_class_word]", @current_class_word
+    = hidden_field_tag "clazz[new_class_word]", @new_class_word
+    = f.submit "Yes"
+    = link_to 'Cancel', {controller: 'portal/students', action: 'show'}, style: 'margin-left: 10px'
+
+- else
+  %p
+    #{@invalid_error}
