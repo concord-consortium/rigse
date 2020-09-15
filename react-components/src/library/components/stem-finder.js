@@ -402,9 +402,11 @@ const StemFinder = Component({
     this.scrollToFinder()
   },
 
-  handleAutoSuggestSubmit () {
-    this.search()
-    this.scrollToFinder()
+  handleAutoSuggestSubmit (searchInput) {
+    this.setState({ searchInput }, () => {
+      this.search()
+      this.scrollToFinder()
+    })
   },
 
   renderSearch: function () {
