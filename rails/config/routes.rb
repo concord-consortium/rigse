@@ -191,17 +191,12 @@ RailsPortal::Application.routes.draw do
     #resource :session
 
     namespace :dataservice do
-      resources :blobs
-      resources :bundle_contents
-      resources :console_contents
-      resources :bundle_loggers do
-        resources :bundle_contents, :except => [:create]
-      end
-      resources :console_loggers do
-        resources :console_contents, :except => [:create]
-      end
-      resources :periodic_bundle_loggers, :only => [:show]
-      resources :bucket_loggers, :only => [:show]
+      # 2020-09-15 NP — I doubt that we actualy need create and update
+      resources :blobs, only: [:show, :index, :create, :update]
+      # 2020-09-15 NP: Most dataservice routes have been removed.
+      # We maintain a few dataservice routes required by external apps like
+      # genigames. Metal routes (below) are used by these too.
+      resources :bucket_loggers, only: [:show]
     end
 
     # metal routing

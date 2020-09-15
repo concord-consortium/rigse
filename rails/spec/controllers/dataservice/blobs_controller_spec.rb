@@ -18,22 +18,6 @@ describe Dataservice::BlobsController do
     end
   end
 
-  describe "GET new" do
-    it "assigns a new blob as @blob" do
-      allow(Dataservice::Blob).to receive(:new).and_return(mock_blob)
-      get :new
-      expect(assigns[:dataservice_blob]).to equal(mock_blob)
-    end
-  end
-
-  describe "GET edit" do
-    it "assigns the requested blob as @blob" do
-      allow(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
-      get :edit, :id => "37"
-      expect(assigns[:dataservice_blob]).to equal(mock_blob)
-    end
-  end
-
   describe "POST create" do
 
     describe "with valid params" do
@@ -110,17 +94,4 @@ describe Dataservice::BlobsController do
 
   end
 
-  describe "DELETE destroy" do
-    it "destroys the requested blob" do
-      expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
-      expect(mock_blob).to receive(:destroy)
-      delete :destroy, :id => "37"
-    end
-
-    it "redirects to the dataservice_blobs list" do
-      allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:destroy => true))
-      delete :destroy, :id => "1"
-      expect(response).to have_http_status(:ok)
-    end
-  end
 end
