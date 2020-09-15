@@ -21,9 +21,9 @@ const renderedSingleBookmark = pack(`
         <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
       </span>
       <span class="editBookmarkButtons">
-        <button>Edit</button>
-        <button>Hide</button>
-        <button>Delete</button>
+        <button class="textButton adminOption">Edit</button>
+        <button class="textButton adminOption">Hide</button>
+        <button class="textButton adminOption">Delete</button>
       </span>
     </div>
   </div>
@@ -96,9 +96,9 @@ describe('When I try to render sortable bookmarks', () => {
             <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
           </span>
           <span class="editBookmarkButtons">
-            <button>Edit</button>
-            <button>Hide</button>
-            <button>Delete</button>
+            <button class="textButton adminOption">Edit</button>
+            <button class="textButton adminOption">Hide</button>
+            <button class="textButton adminOption">Delete</button>
           </span>
         </div>
         <div class="editBookmarkRow">
@@ -111,9 +111,9 @@ describe('When I try to render sortable bookmarks', () => {
             </strike>
           </span>
           <span class="editBookmarkButtons">
-            <button>Edit</button>
-            <button>Show</button>
-            <button>Delete</button>
+            <button class="textButton adminOption">Edit</button>
+            <button class="textButton adminOption">Show</button>
+            <button class="textButton adminOption">Delete</button>
           </span>
         </div>
         <div class="editBookmarkRow">
@@ -124,9 +124,9 @@ describe('When I try to render sortable bookmarks', () => {
             <a href="http://example.com/3" target="_blank" rel="noopener">Link 3</a>
           </span>
           <span class="editBookmarkButtons">
-            <button>Edit</button>
-            <button>Hide</button>
-            <button>Delete</button>
+            <button class="textButton adminOption">Edit</button>
+            <button class="textButton adminOption">Hide</button>
+            <button class="textButton adminOption">Delete</button>
           </span>
         </div>
       </div>
@@ -152,7 +152,7 @@ describe('When I try to render sortable bookmarks', () => {
           </span>
           <span class="editBookmarkButtons">
             <button>Save</button>
-            <button>Cancel</button>
+            <button class="textButton">Cancel</button>
           </span>
         </div>
       </div>
@@ -175,9 +175,9 @@ describe('When I try to render sortable bookmarks', () => {
             <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
           </span>
           <span class="editBookmarkButtons">
-            <button>Edit</button>
-            <button>Hide</button>
-            <button>Delete</button>
+            <button class="textButton adminOption">Edit</button>
+            <button class="textButton adminOption">Hide</button>
+            <button class="textButton adminOption">Delete</button>
           </span>
         </div>
       </div>
@@ -214,9 +214,9 @@ describe('When I try to render sortable bookmarks', () => {
             <a href="http://example.com/updated" target="_blank" rel="noopener">Updated Link Name</a>
           </span>
           <span class="editBookmarkButtons">
-            <button>Edit</button>
-            <button>Hide</button>
-            <button>Delete</button>
+            <button class="textButton adminOption">Edit</button>
+            <button class="textButton adminOption">Hide</button>
+            <button class="textButton adminOption">Delete</button>
           </span>
         </div>
       </div>
@@ -239,9 +239,9 @@ describe('When I try to render sortable bookmarks', () => {
             </strike>
           </span>
           <span class="editBookmarkButtons">
-            <button>Edit</button>
-            <button>Show</button>
-            <button>Delete</button>
+            <button class="textButton adminOption">Edit</button>
+            <button class="textButton adminOption">Show</button>
+            <button class="textButton adminOption">Delete</button>
           </span>
         </div>
       </div>
@@ -322,7 +322,7 @@ describe("When I try to create bookmarks", () => {
           </span>
           <span class="editBookmarkButtons">
             <button>Save</button>
-            <button>Cancel</button>
+            <button class="textButton">Cancel</button>
           </span>
         </div>
       </div>

@@ -12,7 +12,7 @@ describe ExternalActivityPolicy do
     it { is_expected.not_to permit(:matedit)             }
     it { is_expected.not_to permit(:duplicate)           }
     it { is_expected.not_to permit(:copy)                }
-    it { is_expected.not_to permit(:edit_basic)          }
+    it { is_expected.not_to permit(:update_basic)        }
     it { is_expected.not_to permit(:update)              }
     it { is_expected.not_to permit(:archive)             }
     it { is_expected.not_to permit(:unarchive)           }
@@ -29,11 +29,11 @@ describe ExternalActivityPolicy do
     it { is_expected.not_to permit(:duplicate)            }
     it { is_expected.not_to permit(:matedit)              }
     it { is_expected.not_to permit(:duplicate)            }
-    it { is_expected.not_to permit(:edit_basic)           }
+    it { is_expected.not_to permit(:update_basic)         }
     it { is_expected.not_to permit(:update)               }
     it { is_expected.not_to permit(:archive)              }
     it { is_expected.not_to permit(:unarchive)            }
-    it { is_expected.not_to permit(:edit_credits)        }
+    it { is_expected.not_to permit(:edit_credits)         }
   end
 
   context "for the owner" do
@@ -48,7 +48,7 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:copy)                     }
     it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
-    it { is_expected.to permit(:edit_basic)               }
+    it { is_expected.to permit(:update_basic)             }
     it { is_expected.to permit(:archive)                  }
     it { is_expected.to permit(:unarchive)                }
 
@@ -65,7 +65,7 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:copy)                     }
     it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
-    it { is_expected.to permit(:edit_basic)               }
+    it { is_expected.to permit(:update_basic)             }
     it { is_expected.to permit(:archive)                  }
     it { is_expected.to permit(:unarchive)                }
     it { is_expected.to permit(:duplicate)                }
@@ -84,7 +84,7 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:copy)                     }
     it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
-    it { is_expected.to permit(:edit_basic)               }
+    it { is_expected.to permit(:update_basic)             }
     it { is_expected.to permit(:archive)                  }
     it { is_expected.to permit(:unarchive)                }
     it { is_expected.to permit(:duplicate)                }
@@ -177,10 +177,10 @@ describe ExternalActivityPolicy do
   end
 
   # TODO: auto-generated
-  describe '#edit_basic?' do
-    it 'edit_basic?' do
+  describe '#update_basic?' do
+    it 'update_basic?' do
       external_activity_policy = described_class.new(nil, nil)
-      result = external_activity_policy.edit_basic?
+      result = external_activity_policy.update_basic?
 
       expect(result).to be_nil
     end

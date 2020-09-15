@@ -4,11 +4,14 @@ import TextPreview from './text-preview'
 export default class StandardsRow extends React.Component {
   constructor (props) {
     super(props)
+    this.state = {
+      updating: false
+    }
     this.handleButton = this.handleButton.bind(this)
   }
 
   handleButton (e) {
-    const { statement, material } = this.props
+    const { statement, material, afterChange, skipModal } = this.props
     let apiUrl = null
     let add = false
 
@@ -21,30 +24,40 @@ export default class StandardsRow extends React.Component {
     if (!statement.is_applied) {
       apiUrl = '/api/v1/materials/add_materials_standard'
       add = true
-      Portal.showModal('#asn_search_modal', 'Processing...', true)
+      if (!skipModal) {
+        Portal.showModal('#asn_search_modal', 'Processing...', true)
+      }
     } else {
       apiUrl = '/api/v1/materials/remove_materials_standard'
     }
 
-    jQuery.ajax({
-      type: 'POST',
-      url: apiUrl,
-      data: params,
-      dataType: 'json',
+    this.setState({ updating: true }, () => {
+      jQuery.ajax({
+        type: 'POST',
+        url: apiUrl,
+        data: params,
+        dataType: 'json',
 
-      success: data => {
-        statement.is_applied = !statement.is_applied
-        this.setState({ statement })
-        window.loadAppliedStandards()
+        success: data => {
+          statement.is_applied = !statement.is_applied
+          this.setState({ statement, updating: false })
 
-        if (add) {
-          return Portal.hideModal()
+          if (afterChange) {
+            afterChange()
+          }
+          if (window.loadAppliedStandards) {
+            window.loadAppliedStandards()
+          }
+          if (add && !skipModal) {
+            return Portal.hideModal()
+          }
+        },
+
+        error: (jqXHR, textStatus, errorThrown) => {
+          this.setState({ updating: false })
+          return console.error('ERROR', jqXHR.responseText, jqXHR)
         }
-      },
-
-      error: (jqXHR, textStatus, errorThrown) => {
-        return console.error('ERROR', jqXHR.responseText, jqXHR)
-      }
+      })
     })
 
     return e.preventDefault()
@@ -52,12 +65,13 @@ export default class StandardsRow extends React.Component {
 
   render () {
     let buttonText
+    const { updating } = this.state
     const { statement } = this.props
 
     if (!statement.is_applied) {
-      buttonText = 'Add'
+      buttonText = updating ? 'Adding...' : 'Add'
     } else {
-      buttonText = 'Remove'
+      buttonText = updating ? 'Removing...' : 'Remove'
     }
 
     let leaf = ''

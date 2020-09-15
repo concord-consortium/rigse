@@ -2,6 +2,7 @@
 ---
 assets/javascripts/search_materials.js#get_Assign_To_Class_Popup:
   manual: true
+  fixed: true
   solution: remove
   rational: dead
   story: https://www.pivotaltracker.com/story/show/174370119
@@ -830,6 +831,7 @@ views/portal/offerings/show.html.haml:
   story: https://www.pivotaltracker.com/story/show/174366664
 views/portal/school_selector/update.rjs:
   manual: true
+  fixed: true
   manual_callers:
   - name: views/shared/_school_selector.html.haml
     line: var url = "#{school_selector_update_path}";
@@ -999,6 +1001,7 @@ views/shared/_runnables_listing.html.haml:
   story: https://www.pivotaltracker.com/story/show/174366664
 views/shared/_school_selector.html.haml:
   manual: true
+  fixed: true
   manual_callers:
   - name: controllers/portal/school_selector_controller.rb#update
     line:

@@ -47,4 +47,25 @@ class API::V1::ExternalActivitiesController < API::APIController
     render status: 201, json: {edit_url: edit_external_activity_url(external_activity)}
   end
 
+  def update_basic
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message, 403)
+    end
+
+    external_activity = ExternalActivity.find(params[:id])
+    authorize external_activity
+
+    external_activity.publication_status = params[:publication_status]
+    external_activity.grade_level_list = (params[:grade_levels] || [])
+    external_activity.subject_area_list = (params[:subject_areas] || [])
+    external_activity.sensor_list = (params[:sensors] || [])
+
+    if external_activity.save
+      render :json => { success: true }, :status => :ok
+    else
+      error("Unable to save external activity options")
+    end
+  end
 end

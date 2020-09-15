@@ -44,7 +44,6 @@
 = require 'create_status'
 = require 'permission_form'
 = require 'wait_message'
-= require 'external_activities/matedit'
 = require 'iframeable-link'
 = require 'classnames'
 = require 'jquery.paging'
