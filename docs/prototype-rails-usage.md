@@ -2,18 +2,18 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 36
+Blocks not fixed      : 24
 
 ## Story 174370119
 
 https://www.pivotaltracker.com/story/show/174370119
-|   | Fixed | Block                                                                    | Calls                                  | Num Callers |
-| - | ----- | ------------------------------------------------------------------------ | -------------------------------------- | ----------- |
-| 1 |       | assets/javascripts/search_materials.js#get_Assign_To_Class_Popup         |                                        |             |
-| 2 |       | controllers/search_controller.rb#add_material_to_clazzes                 | render :update                         |             |
-| 3 |       | controllers/search_controller.rb#get_current_material_anonymous          | _material_unassigned_clazzes.html.haml |             |
-| 4 |       | controllers/search_controller.rb#get_current_material_unassigned_clazzes | _material_unassigned_clazzes.html.haml |             |
-| 5 |       | views/search/_material_unassigned_clazzes.html.haml                      | link_to_remote                         | 2           |
+|   | Fixed | Block                                                                    | Calls | Num Callers |
+| - | ----- | ------------------------------------------------------------------------ | ----- | ----------- |
+| 1 | Y     | assets/javascripts/search_materials.js#get_Assign_To_Class_Popup         |       |             |
+| 2 | Y     | controllers/search_controller.rb#add_material_to_clazzes                 |       |             |
+| 3 | Y     | controllers/search_controller.rb#get_current_material_anonymous          |       |             |
+| 4 | Y     | controllers/search_controller.rb#get_current_material_unassigned_clazzes |       |             |
+| 5 | Y     | views/search/_material_unassigned_clazzes.html.haml                      |       |             |
 
 ## Story 174370395
 
@@ -155,10 +155,10 @@ https://www.pivotaltracker.com/story/show/174347881
 ## Story 174374781
 
 https://www.pivotaltracker.com/story/show/174374781
-|   | Fixed | Block                                                    | Calls                 | Num Callers |
-| - | ----- | -------------------------------------------------------- | --------------------- | ----------- |
-| 1 |       | controllers/external_activities_controller.rb#edit_basic | _basic_form.html.haml |             |
-| 2 |       | views/external_activities/_basic_form.html.haml          | remote_form_for       | 1           |
+|   | Fixed | Block                                                    | Calls | Num Callers |
+| - | ----- | -------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/external_activities_controller.rb#edit_basic |       |             |
+| 2 | Y     | views/external_activities/_basic_form.html.haml          |       |             |
 
 ## Story 174374664
 
@@ -309,26 +309,26 @@ https://www.pivotaltracker.com/story/show/174361480
 ## Story 174371038
 
 https://www.pivotaltracker.com/story/show/174371038
-|   | Fixed | Block                                             | Calls           | Num Callers |
-| - | ----- | ------------------------------------------------- | --------------- | ----------- |
-| 1 | Y     | controllers/portal/students_controller.rb#confirm |                 |             |
-| 2 |       | views/home/my_classes.html.haml                   | _show.html.haml |             |
-| 3 |       | views/portal/students/_confirmation.html.haml     |                 |             |
-| 4 | Y     | views/portal/students/_register.html.haml         |                 |             |
-| 5 |       | views/portal/students/_show.html.haml             | _move.html.haml | 2           |
-| 6 | Y     | views/portal/students/register.html.haml          |                 |             |
-| 7 |       | views/portal/students/show.html.haml              | _show.html.haml |             |
+|   | Fixed | Block                                             | Calls | Num Callers |
+| - | ----- | ------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | controllers/portal/students_controller.rb#confirm |       |             |
+| 2 | Y     | views/home/my_classes.html.haml                   |       |             |
+| 3 |       | views/portal/students/_confirmation.html.haml     |       |             |
+| 4 | Y     | views/portal/students/_register.html.haml         |       |             |
+| 5 | Y     | views/portal/students/_show.html.haml             |       |             |
+| 6 | Y     | views/portal/students/register.html.haml          |       |             |
+| 7 | Y     | views/portal/students/show.html.haml              |       |             |
 
 ## Story 174381113
 
 https://www.pivotaltracker.com/story/show/174381113
-|   | Fixed | Block                                                  | Calls                         | Num Callers |
-| - | ----- | ------------------------------------------------------ | ----------------------------- | ----------- |
-| 1 |       | controllers/portal/students_controller.rb#move_confirm | visual_effect, render :update |             |
-| 2 |       | views/home/my_classes.html.haml                        | _show.html.haml               |             |
-| 3 |       | views/portal/students/_move.html.haml                  | remote_form_for               | 1           |
-| 4 |       | views/portal/students/_show.html.haml                  | _move.html.haml               | 2           |
-| 5 |       | views/portal/students/show.html.haml                   | _show.html.haml               |             |
+|   | Fixed | Block                                                  | Calls | Num Callers |
+| - | ----- | ------------------------------------------------------ | ----- | ----------- |
+| 1 | Y     | controllers/portal/students_controller.rb#move_confirm |       |             |
+| 2 | Y     | views/home/my_classes.html.haml                        |       |             |
+| 3 | Y     | views/portal/students/_move.html.haml                  |       |             |
+| 4 | Y     | views/portal/students/_show.html.haml                  |       |             |
+| 5 | Y     | views/portal/students/show.html.haml                   |       |             |
 
 ## Story 174381940
 

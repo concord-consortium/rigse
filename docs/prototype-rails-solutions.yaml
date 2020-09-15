@@ -2,6 +2,7 @@
 ---
 assets/javascripts/search_materials.js#get_Assign_To_Class_Popup:
   manual: true
+  fixed: true
   solution: remove
   rational: dead
   story: https://www.pivotaltracker.com/story/show/174370119
