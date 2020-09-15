@@ -63,10 +63,3 @@ When(/^I should see the preview button for "(.*?)"$/) do |arg1|
   element = page.find(selector)
   expect(element).to be_visible
 end
-
-When(/^I should see the assignment button for "(.*?)"$/) do |arg1|
-  selector = "a[href*=\"javascript:get_Assign_To_Class_\"]"
-  element = page.find(selector)
-  expect(element).to be_visible
-end
-
