@@ -37,6 +37,16 @@ module MaterialSharedPolicy
     admin_or_material_admin? || owner?
   end
 
+  # admins and managers are allowed to edit the sensor list
+  def edit_sensors?
+    admin_or_manager?
+  end
+
+  # owners are allowed to edit the subject areas of their materials
+  def edit_standards?
+    admin_or_material_admin? || owner?
+  end
+
   def edit?
     admin_or_material_admin? || edit_projects? || edit_cohorts?
   end
@@ -69,7 +79,7 @@ module MaterialSharedPolicy
     #
     # Admins or material admins can view all.
     #
-    if admin_or_material_admin? 
+    if admin_or_material_admin?
         return true
     end
 
@@ -81,7 +91,7 @@ module MaterialSharedPolicy
     end
 
     #
-    # If it's not published, do not allow anonymous 
+    # If it's not published, do not allow anonymous
     #
     if record.publication_status != 'published'
         if user.nil?

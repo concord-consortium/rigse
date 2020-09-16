@@ -5,10 +5,9 @@ import css from './auto-suggest.scss'
 
 class Suggestion extends React.Component {
   render () {
-    const { suggestion, selected } = this.props
+    const { suggestion } = this.props
     const onClick = () => this.props.onClick(suggestion)
-    const className = `${css.suggestion}${selected ? ` ${css.selectedSuggestion}` : ''}`
-    return <div className={className} onClick={onClick}>{suggestion}</div>
+    return <div className={css.suggestion} onClick={onClick}>{suggestion}</div>
   }
 }
 
@@ -38,6 +37,10 @@ export default class AutoSuggest extends React.Component {
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount () {
     window.addEventListener('click', this.handleOuterClick)
+    const { query } = this.state
+    if (query.length > 0) {
+      this.search(query)
+    }
   }
 
   componentWillUnmount () {
@@ -59,28 +62,38 @@ export default class AutoSuggest extends React.Component {
 
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillReceiveProps (nextProps) {
-    const { query } = nextProps
-    // reset and hide the suggestions when the query is cleared
-    if ((query !== undefined) && (query.length === 0)) {
-      this.setState({ query, suggestions: [], selectedSuggestionIndex: -1, showSuggestions: false })
+    const { query, skipAutoSearch } = nextProps
+    if (query !== undefined) {
+      // reset and hide the suggestions when the query is changed
+      this.setState({ query, suggestions: [], selectedSuggestionIndex: -1, showSuggestions: false }, () => {
+        if (!skipAutoSearch && (query.length > 0)) {
+          this.search(query)
+        }
+      })
     }
   }
 
   search (query) {
     const setSuggestions = (suggestions, callback) => {
       const showSuggestions = suggestions.length > 0
-      this.setState({ suggestions, selectedSuggestionIndex: showSuggestions ? 0 : -1, showSuggestions }, callback)
+      this.setState({ suggestions, selectedSuggestionIndex: -1, showSuggestions }, callback)
     }
     const trimmedQuery = query.trim()
     this.currentQuery = trimmedQuery
-    setSuggestions([], () => {
-      if (trimmedQuery.length > 0) {
-        if (this.queryCache[trimmedQuery]) {
-          setSuggestions(this.queryCache[trimmedQuery])
-        } else {
+    if (trimmedQuery.length === 0) {
+      setSuggestions([])
+    } else {
+      const { getQueryParams } = this.props
+      const queryParams = getQueryParams ? (getQueryParams() || '').replace(/search_term=([^&]*&?)/, '') : ''
+      const data = `search_term=${encodeURIComponent(trimmedQuery)}${queryParams.length > 0 ? `&${queryParams}` : ''}`
+
+      if (this.queryCache[data]) {
+        setSuggestions(this.queryCache[data])
+      } else {
+        setSuggestions([], () => {
           jQuery.ajax({
             url: '/api/v1/search/search_suggestions',
-            data: { search_term: trimmedQuery },
+            data,
             dataType: 'json',
             success: results => {
               this.queryCache[results.search_term] = results.suggestions
@@ -92,9 +105,9 @@ export default class AutoSuggest extends React.Component {
               console.error('GET search suggestions failed')
             }
           })
-        }
+        })
       }
-    })
+    }
   }
 
   userInitiatedSearch (query, onHandler) {
@@ -124,11 +137,11 @@ export default class AutoSuggest extends React.Component {
 
     switch (e.keyCode) {
       case 13: // enter
+        const { onChange, onSubmit } = this.props
         if (showSuggestions) {
           const suggestion = suggestions[selectedSuggestionIndex]
           if (suggestion !== undefined) {
             this.setState({ query: suggestion, showSuggestions: false, selectedSuggestionIndex: -1 }, () => {
-              const { onChange, onSubmit } = this.props
               if (onChange) {
                 onChange(suggestion)
               }
@@ -139,6 +152,9 @@ export default class AutoSuggest extends React.Component {
             })
             handledKey = true
           }
+        } else if (onSubmit) {
+          onSubmit()
+          handledKey = true
         }
         break
       case 27: // escape
@@ -150,9 +166,11 @@ export default class AutoSuggest extends React.Component {
       case 38: // up arrow
         if (showSuggestions) {
           if (selectedSuggestionIndex > 0) {
-            this.setState({ selectedSuggestionIndex: selectedSuggestionIndex - 1 })
+            const index = selectedSuggestionIndex - 1
+            const query = suggestions[index]
+            this.setState({ selectedSuggestionIndex: index, query })
           } else {
-            this.setState({ showSuggestions: false })
+            this.setState({ selectedSuggestionIndex: -1, showSuggestions: false })
           }
           handledKey = true
         }
@@ -160,11 +178,13 @@ export default class AutoSuggest extends React.Component {
       case 40: // down arrow
         if (showSuggestions) {
           if (selectedSuggestionIndex < suggestions.length - 1) {
-            this.setState({ selectedSuggestionIndex: selectedSuggestionIndex + 1 })
+            const index = selectedSuggestionIndex + 1
+            const query = suggestions[index]
+            this.setState({ selectedSuggestionIndex: index, query })
             handledKey = true
           }
-        } else {
-          this.setState({ showSuggestions: true })
+        } else if (suggestions.length > 0) {
+          this.setState({ selectedSuggestionIndex: 0, showSuggestions: true })
           handledKey = true
         }
         break
@@ -177,15 +197,14 @@ export default class AutoSuggest extends React.Component {
   }
 
   renderSuggestions () {
-    const { suggestions, selectedSuggestionIndex, showSuggestions } = this.state
+    const { suggestions, showSuggestions } = this.state
 
     if (!showSuggestions || (suggestions.length === 0)) {
       return undefined
     }
 
     const items = suggestions.map((suggestion, index) => {
-      const selected = index === selectedSuggestionIndex
-      return <Suggestion key={suggestion} suggestion={suggestion} selected={selected} onClick={this.handleSuggestionClick} />
+      return <Suggestion key={suggestion} suggestion={suggestion} onClick={this.handleSuggestionClick} />
     })
 
     let style = {}

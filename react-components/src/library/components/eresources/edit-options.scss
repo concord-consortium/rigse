@@ -1,0 +1,33 @@
+.container {
+  overflow: auto;
+  max-height: 80vh;
+  width: 70vw;
+}
+
+.sectionLabel {
+  font-weight: bold;
+}
+
+.checkboxList {
+  span {
+    margin-right: 10px;
+  }
+  input {
+    margin-right: 5px
+  }
+}
+
+.addStandards {
+  display: flex;
+  align-items: center;
+
+  .addStandardsLabel {
+    flex-grow: 2;
+    font-weight: bold;
+  }
+}
+
+.info {
+  font-style: italic;
+  margin: 10px 20px;
+}

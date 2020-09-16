@@ -43,7 +43,6 @@ describe('When I try to render manage classes', () => {
     const manageClasses = Enzyme.mount(<ManageClasses classes={classes} />);
     expect(manageClasses.html()).toBe(pack(`
       <div class="manageClassesSummary">My Classes (3 Total, 2 Active)</div>
-      <hr class="hr-thick">
       <div class="manageClassesTable">
         <div class="manageClassRow">
           <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
