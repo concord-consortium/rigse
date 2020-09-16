@@ -116,7 +116,7 @@ const PageHeader = Component({
       )
     } else {
       return (
-        <a href='/login' title='Log In' className='portal-pages-main-nav-item__link button log-in' onClick={this.handleLoginButton}><i className='icon-login' />Log In</a>
+        <a href='/users/sign_in' title='Log In' className='portal-pages-main-nav-item__link button log-in' onClick={this.handleLoginButton}><i className='icon-login' />Log In</a>
       )
     }
   },
