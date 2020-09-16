@@ -23,10 +23,6 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /dataservice/bundle_contents  |
-      | /dataservice/bundle_loggers   |
-      | /dataservice/console_contents |
-      | /dataservice/console_loggers  |
       | /dataservice/blobs            |
 
   Scenario Outline: Admin user can accesss dataservice routes
@@ -39,10 +35,6 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /dataservice/bundle_contents  |
-      | /dataservice/bundle_loggers   |
-      | /dataservice/console_loggers  |
-      | /dataservice/console_contents |
       | /dataservice/blobs            |
 
   Scenario Outline: Anonymous user can't access portal listing routes:
