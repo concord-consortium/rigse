@@ -203,24 +203,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#wrap_edit_link_around_content' do
-    xit 'works' do
-      result = helper.wrap_edit_link_around_content(component)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#edit_button_for' do
-    it 'works' do
-      result = helper.edit_button_for(component)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#edit_url_for' do
     it 'works' do
       result = helper.edit_url_for(component)
@@ -256,14 +238,6 @@ describe ApplicationHelper, type: :helper do
     end
   end
 
-  # TODO: auto-generated
-  describe '#otrunk_edit_button_for' do
-    it 'works' do
-      result = helper.otrunk_edit_button_for(component)
-
-      expect(result).not_to be_nil
-    end
-  end
 
   # TODO: auto-generated
   describe '#learner_report_link_for' do
@@ -314,15 +288,6 @@ describe ApplicationHelper, type: :helper do
   describe '#print_link_for' do
     it 'works' do
       result = helper.print_link_for(component)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#delete_button_for' do
-    xit 'works' do
-      result = helper.delete_button_for(model)
 
       expect(result).not_to be_nil
     end
@@ -427,64 +392,12 @@ describe ApplicationHelper, type: :helper do
     end
   end
 
-  # TODO: auto-generated
-  describe '#show_menu_for' do
-    xit 'works' do
-      result = helper.show_menu_for(component)
 
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#toggle_link_title' do
-    it 'works' do
-      result = helper.toggle_link_title('future_state', 'current_state')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#toggle_all' do
-    it 'works' do
-      result = helper.toggle_all('label', 'id_prefix')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#dropdown_link_for' do
-    it 'works' do
-      result = helper.dropdown_link_for({})
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#dropdown_button' do
-    it 'works' do
-      result = helper.dropdown_button('image')
-
-      expect(result).not_to be_nil
-    end
-  end
 
   # TODO: auto-generated
   describe '#link_button' do
     it 'works' do
       result = helper.link_button('image', 'url')
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#remote_link_button' do
-    it 'works' do
-      result = helper.remote_link_button('image')
 
       expect(result).not_to be_nil
     end

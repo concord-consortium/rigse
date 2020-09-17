@@ -2,7 +2,7 @@
 
 Total number of blocks:  237
 
-Blocks not fixed      : 24
+Blocks not fixed      : 0
 
 ## Story 174370119
 
@@ -313,7 +313,7 @@ https://www.pivotaltracker.com/story/show/174371038
 | - | ----- | ------------------------------------------------- | ----- | ----------- |
 | 1 | Y     | controllers/portal/students_controller.rb#confirm |       |             |
 | 2 | Y     | views/home/my_classes.html.haml                   |       |             |
-| 3 |       | views/portal/students/_confirmation.html.haml     |       |             |
+| 3 | Y     | views/portal/students/_confirmation.html.haml     |       |             |
 | 4 | Y     | views/portal/students/_register.html.haml         |       |             |
 | 5 | Y     | views/portal/students/_show.html.haml             |       |             |
 | 6 | Y     | views/portal/students/register.html.haml          |       |             |
@@ -349,17 +349,17 @@ https://www.pivotaltracker.com/story/show/174365885
 ## Story 174365484
 
 https://www.pivotaltracker.com/story/show/174365484
-|   | Fixed | Block                                                       | Calls                                                                          | Num Callers |
-| - | ----- | ----------------------------------------------------------- | ------------------------------------------------------------------------------ | ----------- |
-| 1 |       | helpers/application_helper.rb#delete_button_for             | application_helper.rb#remote_link_button                                       | 1           |
-| 2 |       | helpers/application_helper.rb#edit_button_for               | application_helper.rb#remote_link_button                                       | 1           |
-| 3 |       | helpers/application_helper.rb#remote_link_button            | link_to_remote                                                                 | 3           |
-| 4 |       | helpers/application_helper.rb#show_menu_for                 | application_helper.rb#edit_button_for, application_helper.rb#delete_button_for | 3           |
-| 5 |       | helpers/application_helper.rb#toggle_all                    | link_to_function                                                               |             |
-| 6 |       | helpers/application_helper.rb#wrap_edit_link_around_content | remote_function                                                                | 1           |
-| 7 |       | helpers/js_helper.rb#safe_js                                | page <<, page <<                                                               |             |
-| 8 |       | lib/clipboard.rb#paste_link_for                             | link_to_remote, application_helper.rb#remote_link_button                       |             |
-| 9 | Y     | views/shared/_collection_menu.html.haml                     |                                                                                |             |
+|   | Fixed | Block                                                       | Calls | Num Callers |
+| - | ----- | ----------------------------------------------------------- | ----- | ----------- |
+| 1 | Y     | helpers/application_helper.rb#delete_button_for             |       |             |
+| 2 | Y     | helpers/application_helper.rb#edit_button_for               |       |             |
+| 3 | Y     | helpers/application_helper.rb#remote_link_button            |       |             |
+| 4 | Y     | helpers/application_helper.rb#show_menu_for                 |       |             |
+| 5 | Y     | helpers/application_helper.rb#toggle_all                    |       |             |
+| 6 | Y     | helpers/application_helper.rb#wrap_edit_link_around_content |       |             |
+| 7 | Y     | helpers/js_helper.rb#safe_js                                |       |             |
+| 8 | Y     | lib/clipboard.rb#paste_link_for                             |       |             |
+| 9 | Y     | views/shared/_collection_menu.html.haml                     |       |             |
 
 ## Story 174353979
 
@@ -387,25 +387,25 @@ https://www.pivotaltracker.com/story/show/174733429
 ## Story 174354182
 
 https://www.pivotaltracker.com/story/show/174354182
-|    | Fixed | Block                                                     | Calls                                                                                    | Num Callers |
-| -- | ----- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------- |
-| 1  |       | views/dataservice/blobs/_remote_form.html.haml            | remote_form_for                                                                          |             |
-| 2  |       | views/dataservice/blobs/_show.html.haml                   | application_helper.rb#wrap_edit_link_around_content, application_helper.rb#show_menu_for | 2           |
-| 3  |       | views/dataservice/blobs/index.html.haml                   | _show.html.haml                                                                          |             |
-| 4  |       | views/dataservice/blobs/show.html.haml                    | _show.html.haml                                                                          |             |
-| 5  |       | views/dataservice/bundle_contents/_remote_form.html.haml  | remote_form_for                                                                          |             |
-| 6  | Y     | views/dataservice/bundle_contents/index.html.haml         |                                                                                          |             |
-| 7  |       | views/dataservice/bundle_loggers/_remote_form.html.haml   | remote_form_for                                                                          |             |
-| 8  |       | views/dataservice/bundle_loggers/_show.html.haml          | application_helper.rb#show_menu_for                                                      | 3           |
-| 9  |       | views/dataservice/bundle_loggers/index.html.haml          | _show.html.haml                                                                          |             |
-| 10 |       | views/dataservice/bundle_loggers/show.html.haml           | _show.html.haml                                                                          |             |
-| 11 |       | views/dataservice/console_contents/_remote_form.html.haml | remote_form_for                                                                          |             |
-| 12 | Y     | views/dataservice/console_contents/index.html.haml        |                                                                                          |             |
-| 13 |       | views/dataservice/console_loggers/_remote_form.html.haml  | remote_form_for                                                                          |             |
-| 14 |       | views/dataservice/console_loggers/_show.html.haml         | application_helper.rb#show_menu_for                                                      | 3           |
-| 15 |       | views/dataservice/console_loggers/index.html.haml         | _show.html.haml                                                                          |             |
-| 16 |       | views/dataservice/console_loggers/show.html.haml          | _show.html.haml                                                                          |             |
-| 17 |       | views/portal/learners/bundle_report.html.haml             | _show.html.haml, _show.html.haml                                                         |             |
+|    | Fixed | Block                                                     | Calls | Num Callers |
+| -- | ----- | --------------------------------------------------------- | ----- | ----------- |
+| 1  | Y     | views/dataservice/blobs/_remote_form.html.haml            |       |             |
+| 2  | Y     | views/dataservice/blobs/_show.html.haml                   |       |             |
+| 3  | Y     | views/dataservice/blobs/index.html.haml                   |       |             |
+| 4  | Y     | views/dataservice/blobs/show.html.haml                    |       |             |
+| 5  | Y     | views/dataservice/bundle_contents/_remote_form.html.haml  |       |             |
+| 6  | Y     | views/dataservice/bundle_contents/index.html.haml         |       |             |
+| 7  | Y     | views/dataservice/bundle_loggers/_remote_form.html.haml   |       |             |
+| 8  | Y     | views/dataservice/bundle_loggers/_show.html.haml          |       |             |
+| 9  | Y     | views/dataservice/bundle_loggers/index.html.haml          |       |             |
+| 10 | Y     | views/dataservice/bundle_loggers/show.html.haml           |       |             |
+| 11 | Y     | views/dataservice/console_contents/_remote_form.html.haml |       |             |
+| 12 | Y     | views/dataservice/console_contents/index.html.haml        |       |             |
+| 13 | Y     | views/dataservice/console_loggers/_remote_form.html.haml  |       |             |
+| 14 | Y     | views/dataservice/console_loggers/_show.html.haml         |       |             |
+| 15 | Y     | views/dataservice/console_loggers/index.html.haml         |       |             |
+| 16 | Y     | views/dataservice/console_loggers/show.html.haml          |       |             |
+| 17 | Y     | views/portal/learners/bundle_report.html.haml             |       |             |
 
 ## Story 174374528
 

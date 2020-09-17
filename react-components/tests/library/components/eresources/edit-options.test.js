@@ -61,7 +61,7 @@ describe('When I try to render edit options', () => {
         <div class="dialog">
           <div class="title">Edit Options</div>
           <div class="container">
-            <h3>External Activity: Test Resource</h3>
+            <h3>Resource: Test Resource</h3>
             <form>
               <fieldset>
                 <legend>Publication Status</legend>
@@ -112,7 +112,7 @@ describe('When I try to render edit options', () => {
         <div class="dialog">
           <div class="title">Edit Options</div>
           <div class="container">
-            <h3>External Activity: Test Resource</h3>
+            <h3>Resource: Test Resource</h3>
             <form></form>
           </div>
           <div class="buttons"><button>Save</button><button>Cancel</button></div>

@@ -872,6 +872,7 @@ views/portal/students/_add_edit_list_for_clazz.html.haml:
   story: https://www.pivotaltracker.com/story/show/174324301
 views/portal/students/_confirmation.html.haml:
   manual: true
+  fixed: true
   manual_callers:
   - name: controllers/portal/students_controller.rb#confirm
     line: page.insert_html :before, "word_form", :partial => "confirmation",

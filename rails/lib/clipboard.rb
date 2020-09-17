@@ -64,27 +64,6 @@ module Clipboard
     return name
   end
   
-  
-  def paste_link_for(acceptable_types,options={})
-    clipboard_data_type  = options[:clipboard_data_type] || cookies[:clipboard_data_type]
-    clipboard_data_id    = options[:clipboard_data_id]   || cookies[:clipboard_data_id]
-    container_id         = options[:container_id] || params[:container_id]
-    
-    return "<span class='copy_paste_disabled'>paste (nothing in clipboard)</span>".html_safe unless clipboard_data_type
-    name = clipboard_object_name
-    if acceptable_types.include?(clipboard_data_type) 
-      url = url_for(
-        :action => 'paste', 
-        :method=> 'post', 
-        :clipboard_data_type => clipboard_data_type, 
-        :clipboard_data_id => clipboard_data_id, 
-        :id =>container_id)
-      return remote_link_button("paste-out.png", 
-        :url => url, 
-        :title => "paste #{name}") + link_to_remote("paste #{name}", 
-        :url=>url)
-    end
-    return "<span class='copy_paste_disabled'>can't paste #{clipboard_data_type} #{name} here</span>".html_safe
-  end
+
   
 end
