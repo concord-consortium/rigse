@@ -65,9 +65,6 @@ gem 'open4',                '~> 1.0'
 gem 'paperclip',            '~> 3.4.0'
 gem 'prawn',                '~> 0.12.0'
 gem 'prawn_rails',          '~> 0.0.6'
-# This gem now contains the prototype_legacy view helpers, and the prototype helpers.
-# The repo name should probably be changed to prototype-rails ?
-gem 'prototype-rails', git: 'git://github.com/concord-consortium/prototype_legacy_helper.git'
 gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
