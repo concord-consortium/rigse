@@ -1,4 +1,3 @@
-require 'themes_for_rails'
 require 'haml'
 require 'will_paginate/array'
 
