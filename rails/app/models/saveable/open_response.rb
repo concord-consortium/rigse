@@ -6,11 +6,10 @@ class Saveable::OpenResponse < ActiveRecord::Base
 
   belongs_to :open_response,  :class_name => 'Embeddable::OpenResponse'
 
-  has_many :answers, :dependent => :destroy ,:order => :position, :class_name => "Saveable::OpenResponseAnswer"
+  has_many :answers, -> { order :position },
+    :dependent => :destroy
+    :class_name => "Saveable::OpenResponseAnswer"
 
-  # has_one :answer,
-  #   :class_name => "Saveable::OpenResponseAnswer",
-  #   :order => 'position DESC'
 
   [:prompt, :name].each { |m| delegate m, :to => :open_response, :class_name => 'Embeddable::OpenResponse' }
 

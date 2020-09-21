@@ -5,10 +5,14 @@ class Portal::Clazz < ActiveRecord::Base
 
   belongs_to :course, :class_name => "Portal::Course", :foreign_key => "course_id"
 
+  has_many :offerings, -> { order :position },
+    dependent: :destroy,
+    class_name: 'Portal::Offering',
+    foreign_key: 'clazz_id'
 
-  has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id",
-    :order => :position
-  has_many :active_offerings, -> { where active: true }, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', :order => :position
+  has_many :active_offerings, -> { where(active: true).order(:position) },
+    class_name: 'Portal::Offering',
+    foreign_key: 'clazz_id'
 
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"

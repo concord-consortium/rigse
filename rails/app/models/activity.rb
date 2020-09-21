@@ -17,7 +17,7 @@ class Activity < ActiveRecord::Base
 
   has_many :external_activities, :as => :template
 
-  has_many :sections, :order => :position, :dependent => :destroy do
+  has_many :sections, -> { order :position }, :dependent => :destroy do
     def student_only
       where('teacher_only' => false)
     end
