@@ -1,4 +1,4 @@
-@import "compass";
+@import "no-compass";
 /* browser reset */
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button, fieldset, legend, label, input, textarea, form {
@@ -1495,7 +1495,7 @@ ul.quiet_list {
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 5px;
   /* CSS 3 */
-  @include background-image(linear-gradient(#f3951d, #dd6e0d));
+  background-image: linear-gradient(#f3951d, #dd6e0d);
   _background: #f6f2e2;
   border-radius: 12px;
   /* Opera 10.5, IE 9 */

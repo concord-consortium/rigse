@@ -34,8 +34,8 @@ gem 'aws-sdk',              '~> 3'
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
 gem 'coffee-rails',         "~> 4.0.0" # if running rails 3.1 or greater
-gem 'compass-blueprint'
-gem 'compass-rails'
+# gem 'compass-blueprint'
+# gem 'compass-rails'
 # was sub-dependency of react-rails, needed in test setup code
 gem 'connection_pool'
 gem 'daemons', '~> 1.1.8'
@@ -90,7 +90,8 @@ gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'syntax',               '~> 1.0'
 gem 'test-unit',            '~> 3.0'
 gem 'tinymce-rails',        '~>3.5.6'  # RAILS-4-SPIKE GEMFILE version NOT pinned
-gem 'turbo-sprockets-rails4'
+# gem 'turbo-sprockets-rails4'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
 gem 'themes_for_rails',

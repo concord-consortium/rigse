@@ -1,4 +1,4 @@
-@import "compass";
+// @import "compass";
 
 .scrollertab{
   padding:5px 2px 5px 2px;
@@ -19,7 +19,7 @@
 }
 
 .tab{
-  @include background-image(linear-gradient(#fff, #aaa));
+  background-image: linear-gradient(#fff, #aaa);
   -moz-border-radius: 8px 8px 0px 0px; -webkit-border-radius: 8px 8px 0px 0px;-khtml-border-radius: 8px 8px 0px 0px;border-radius: 8px 8px 0px 0px;
   padding:5px;
   border:solid 1px #666;
@@ -30,7 +30,7 @@
 }
 
 .selected_tab{
-  @include background-image(linear-gradient(#999, #666));
+  background-image: linear-gradient(#999, #666);
   -moz-border-radius:  8px 8px 0px 0px; -webkit-border-radius:  8px 8px 0px 0px;-khtml-border-radius:  8px 8px 0px 0px;border-radius:  8px 8px 0px 0px;
   padding:5px;
   border:solid 1px #666;
@@ -123,7 +123,7 @@
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 14px;
   /* CSS 3 */
-  @include background-image(linear-gradient(#f3951d, #dd6e0d));
+  background-image: linear-gradient(#f3951d, #dd6e0d);
   border-radius: 12px;
   /* Opera 10.5, IE 9 */
   -moz-border-radius: 12px;
