@@ -74,6 +74,7 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'rack-secure_samesite_cookies',
   git: 'https://github.com/concord-consortium/secure-samesite-cookies.git',
   tag: 'v1.0.2'
+gem "rails-observers"
 gem 'rdoc',                 '~> 3.9.4'
 gem 'redcarpet',            '~> 2.1.1'
 gem 'RedCloth',             '~> 4.2.8'
@@ -101,9 +102,6 @@ gem 'uuidtools',            '~> 2.1.2'
 gem 'virtus',               '~>1.0.3'
 gem 'will_paginate',        '~> 3.0.0'
 gem 'yui-compressor'
-
-## Upgrade crutches:
-# gem "rails-observers"   # RAILS-4-SPIKE GEMFILE: this was in the spike branch
 
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
