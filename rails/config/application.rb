@@ -87,9 +87,6 @@ module RailsPortal
     # Run "rake -D time" for a list of tasks for finding time zone names. Comment line to use default local time.
     config.time_zone = 'UTC'
 
-    # Set the default location for page caching
-    config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
-
     # Use SQL instead of Active Record's schema dumper when creating the test database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types

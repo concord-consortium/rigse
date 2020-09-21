@@ -5,6 +5,9 @@ RailsPortal::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
+  # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
+  config.eager_load = true
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true

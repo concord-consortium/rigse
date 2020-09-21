@@ -19,7 +19,7 @@ source 'http://rubygems.org'
 
 gem 'aasm', '~> 2.2.1'
 gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
-# gem "activerecord-session_store"  # RAILS-4-SPIKE GEMFILE: this was in the spike branch
+gem "activerecord-session_store"
 gem 'acts-as-taggable-on', '~> 2.4.1'
 gem 'acts_as_list', '~> 0.1.6'
 gem 'arrayfields'
@@ -43,7 +43,7 @@ gem 'default_value_for', '~> 2.0.3'
 gem 'delayed_job', '~> 4.1.1'
 gem 'delayed_job_active_record', '~> 4.1.0'
 gem 'delayed_job_web'
-gem 'devise'  # RAILS-4-SPIKE GEMFILE: "~> 3.0.0"
+gem 'devise', '~>3.1.0'
 gem 'devise-encryptable'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'exception_notification', '~> 2.5.2'
@@ -67,7 +67,7 @@ gem 'open4',                '~> 1.0'
 gem 'paperclip'
 gem 'prawn',                '~> 0.12.0'
 gem 'prawn_rails',          '~> 0.0.6'
-# gem 'protected_attributes'  # RAILS-4-SPIKE GEMFILE: this was in the spike branch
+#gem 'protected_attributes'
 gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'

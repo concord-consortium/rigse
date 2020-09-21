@@ -7,8 +7,8 @@ RailsPortal::Application.configure do
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
 
-  # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
+  # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
+  config.eager_load = true  # normally false unless you use a tool that preloads your test environment
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
