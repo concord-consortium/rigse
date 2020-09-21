@@ -52,8 +52,8 @@ class User < ActiveRecord::Base
 
   has_many :project_users, class_name: 'Admin::ProjectUser', :dependent => :destroy
 
-  has_many :admin_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_admin = ?', true]
-  has_many :researcher_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_researcher = ?', true]
+  has_many :admin_for_projects, -> { where is_admin: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
+  has_many :researcher_for_projects, -> { where is_researcher: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password_confirmation
 
   # Relationships
-  has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
+  has_and_belongs_to_many :roles, -> { uniq }, :join_table => "roles_users"
 
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user

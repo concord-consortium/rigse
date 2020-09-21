@@ -1,36 +1,30 @@
 class Dataservice::BundleLogger < ActiveRecord::Base
   self.table_name = :dataservice_bundle_loggers
-  
+
   has_one    :learner, :class_name => "Portal::Learner"
   belongs_to :in_progress_bundle, :class_name => "Dataservice::BundleContent"
   has_many   :bundle_contents, :class_name => "Dataservice::BundleContent", :order => :position, :dependent => :destroy
-  
+
   has_many :launch_process_events, :class_name => "Dataservice::LaunchProcessEvent", :through => :bundle_contents, :order => "id ASC"
 
-  has_one :last_non_empty_bundle_content, 
+  has_one :last_non_empty_bundle_content,
     :class_name => "Dataservice::BundleContent",
     :conditions => "empty is false and valid_xml is true",
-    :order => 'position DESC' 
-
-  # This was the query, which was confusing:
-  #has_one :last_non_empty_bundle_content, 
-    #:class_name => "Dataservice::BundleContent",
-    #:conditions => "empty is null and valid_xml is not null",
-    #:order => 'position DESC' 
+    :order => 'position DESC'
 
   OPEN_ELEMENT_EPORTFOLIO = "<sailuserdata:EPortfolio xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:sailuserdata=\"sailuserdata\">\n"
   CLOSE_ELEMENT_EPORTFOLIO = "\n</sailuserdata:EPortfolio>"
-  
+
   include Changeable
 
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{updated_at}
-  
+
   class << self
 
     def searchable_attributes
@@ -38,12 +32,12 @@ class Dataservice::BundleLogger < ActiveRecord::Base
     end
 
   end
-  
+
   # for the view system ...
   def user
     nil
   end
- 
+
   def name
     if learner = self.learner
       user = learner.student.user
@@ -53,19 +47,19 @@ class Dataservice::BundleLogger < ActiveRecord::Base
       "no associated learner"
     end
   end
-  
+
   def extract_saveables
     self.bundle_contents.each { |bc| bc.extract_saveables }
   end
-  
+
   def extract_open_responses
     self.bundle_contents.each { |bc| bc.extract_open_responses }
   end
-  
+
   def extract_multiple_choices
     self.bundle_contents.each { |bc| bc.extract_multiple_choices }
   end
-  
+
   def start_bundle
     self.in_progress_bundle ||= Dataservice::BundleContent.create(:bundle_logger => self)
     self.bundle_contents << self.in_progress_bundle
