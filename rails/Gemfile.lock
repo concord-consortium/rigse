@@ -97,6 +97,12 @@ GEM
     activerecord-deprecated_finders (1.0.4)
     activerecord-import (1.0.6)
       activerecord (>= 3.2)
+    activerecord-session_store (1.1.3)
+      actionpack (>= 4.0)
+      activerecord (>= 4.0)
+      multi_json (~> 1.11, >= 1.11.2)
+      rack (>= 1.5.2, < 3)
+      railties (>= 4.0)
     activesupport (4.0.13)
       i18n (~> 0.6, >= 0.6.9)
       minitest (~> 4.2)
@@ -714,6 +720,10 @@ GEM
       rubyzip (~> 1.2, >= 1.2.1)
     backports (3.11.4)
     bcrypt (3.1.16)
+    bcrypt-ruby (3.1.5)
+      bcrypt (>= 3.1.3)
+    bcrypt-ruby (3.1.5-x86-mingw32)
+      bcrypt (>= 3.1.3)
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -815,11 +825,10 @@ GEM
       chronic
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
-    devise (3.5.10)
-      bcrypt (~> 3.0)
+    devise (3.1.2)
+      bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
-      responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     devise-encryptable (0.1.1)
@@ -1038,8 +1047,6 @@ GEM
     remarkable_activerecord (3.1.13)
       remarkable (~> 3.1.13)
       rspec (>= 1.2.0)
-    responders (1.1.2)
-      railties (>= 3.2, < 4.2)
     rollbar (2.15.5)
       multi_json
     rsolr (1.1.1)
@@ -1200,6 +1207,7 @@ DEPENDENCIES
   activemodel (= 4.0.13)
   activerecord (= 4.0.13)
   activerecord-import
+  activerecord-session_store
   activesupport (= 4.0.13)
   acts-as-taggable-on (~> 2.4.1)
   acts_as_list (~> 0.1.6)
@@ -1230,7 +1238,7 @@ DEPENDENCIES
   delayed_job_active_record (~> 4.1.0)
   delayed_job_web
   delorean
-  devise
+  devise (~> 3.1.0)
   devise-encryptable
   dynamic_form (~> 1.1.4)
   email_spec
