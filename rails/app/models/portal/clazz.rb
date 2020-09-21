@@ -8,8 +8,7 @@ class Portal::Clazz < ActiveRecord::Base
 
   has_many :offerings, :dependent => :destroy, :class_name => "Portal::Offering", :foreign_key => "clazz_id",
     :order => :position
-  has_many :active_offerings, :class_name => "Portal::Offering", :foreign_key => 'clazz_id',
-    :conditions => { :active => true }, :order => :position
+  has_many :active_offerings, -> { where active: true }, :class_name => "Portal::Offering", :foreign_key => 'clazz_id', :order => :position
 
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "clazz_id"
   has_many :students, :through => :student_clazzes, :class_name => "Portal::Student"
