@@ -12,7 +12,8 @@ class Page < ActiveRecord::Base
 
   # Order by ID is important, see: https://www.pivotaltracker.com/story/show/79237764
   # Some older elements in DB can have always position equal to 1.
-  has_many :page_elements, :order => 'position ASC, id ASC', :dependent => :destroy
+  has_many :page_elements, -> { order 'position ASC, id ASC' },
+    dependent: :destroy
 
   # The array of embeddables is defined in conf/initializers/embeddables.rb
   # The order of this array determines the order they show up in the Add menu

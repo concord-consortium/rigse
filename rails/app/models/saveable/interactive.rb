@@ -6,7 +6,9 @@ class Saveable::Interactive < ActiveRecord::Base
 
   belongs_to :iframe,  :class_name => 'Embeddable::Iframe'
 
-  has_many :answers, :dependent => :destroy ,:order => :position, :class_name => "Saveable::InteractiveState"
+  has_many :answers, -> { order :position },
+    :dependent => :destroy,
+    :class_name => "Saveable::InteractiveState"
 
   delegate :name, :to => :iframe
 

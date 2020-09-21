@@ -5,7 +5,7 @@ class Investigation < ActiveRecord::Base
   include Archiveable
 
   belongs_to :user
-  has_many :activities, :order => :position, :dependent => :destroy do
+  has_many :activities, -> { order :position }, :dependent => :destroy do
     def student_only
       where('teacher_only' => false)
     end

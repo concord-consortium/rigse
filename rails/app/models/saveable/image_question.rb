@@ -6,7 +6,9 @@ class Saveable::ImageQuestion < ActiveRecord::Base
 
   belongs_to :image_question,  :class_name => 'Embeddable::ImageQuestion'
 
-  has_many :answers, :dependent => :destroy, :order => :position, :class_name => "Saveable::ImageQuestionAnswer"
+  has_many :answers, -> { order :position },
+    :dependent => :destroy,
+    :class_name => "Saveable::ImageQuestionAnswer"
 
 
   [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
