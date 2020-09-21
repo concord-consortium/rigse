@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/concord-consortium/cc_portal_remote_auth
+  remote: https://github.com/concord-consortium/cc_portal_remote_auth.git
   revision: 03f5695f83c9c84dadfb965925e2f20058a6d35f
   branch: spike-rails4-support
   specs:
@@ -8,7 +8,7 @@ GIT
       rails (> 3.2.11)
 
 GIT
-  remote: git://github.com/concord-consortium/cc_portal_wordpress_integration
+  remote: https://github.com/concord-consortium/cc_portal_wordpress_integration.git
   revision: fa3e1f21e62b8950eed2c486d8a4bdab0be3915e
   branch: spikes-rails4-support
   specs:
@@ -18,7 +18,7 @@ GIT
       rails (> 3.2.11)
 
 GIT
-  remote: git://github.com/concord-consortium/genigames-connector
+  remote: https://github.com/concord-consortium/genigames-connector.git
   revision: 77fc52645b3280fe18f1f8383291e417bf362f82
   branch: spike-rails4-support
   specs:
@@ -28,7 +28,7 @@ GIT
       rails (> 3.2.11)
 
 GIT
-  remote: git://github.com/concord-consortium/geniverse-portal-integration
+  remote: https://github.com/concord-consortium/geniverse-portal-integration.git
   revision: f8b869a26523a280b70b6704aca7e009667fe4a6
   branch: spike-rails4-support
   specs:
@@ -38,20 +38,20 @@ GIT
       rails (> 3.2.19)
 
 GIT
-  remote: git://github.com/concord-consortium/in_place_editing.git
+  remote: https://github.com/concord-consortium/in_place_editing.git
   revision: 2d6b856ca0a3d9eccb9c85bb48725537870ed32c
   specs:
     in_place_editing (1.2.0)
 
 GIT
-  remote: git://github.com/concord-consortium/rush
+  remote: https://github.com/concord-consortium/rush.git
   revision: 10d9715697d7cc5ce069c32093289b809dea8bd3
   specs:
     rush (0.6.8)
       session
 
 GIT
-  remote: git://github.com/concord-consortium/secure-samesite-cookies
+  remote: https://github.com/concord-consortium/secure-samesite-cookies.git
   revision: da3078b1f2d1ac9c4c62b5cd7cd4c1fce1eb6dd1
   tag: v1.0.2
   specs:
@@ -59,7 +59,7 @@ GIT
       rack (>= 1.4.7)
 
 GIT
-  remote: git://github.com/concord-consortium/themes_for_rails
+  remote: https://github.com/concord-consortium/themes_for_rails.git
   revision: 90ce15e3ba9216b87e4fbafa1f2b867bff09707f
   branch: asset-pipeline-only
   specs:
@@ -850,7 +850,6 @@ GEM
       activesupport (>= 3.0.0)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
-    fattr (2.2.1)
     ffi (1.13.1)
     ffi (1.13.1-x86-mingw32)
     font-awesome-rails (4.7.0.1)
@@ -1107,8 +1106,7 @@ GEM
     selenium-webdriver (3.142.3)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
-    session (3.1.0)
-      fattr
+    session (3.2.0)
     sextant (0.2.4)
       rails (>= 3.2)
     shellany (0.0.1)

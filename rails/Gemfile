@@ -51,7 +51,7 @@ gem 'font-awesome-rails'
 gem 'grit', '~> 2.4'
 gem 'haml', '~> 4.0'
 gem 'httparty'
-gem 'in_place_editing', git: 'git://github.com/concord-consortium/in_place_editing.git'
+gem 'in_place_editing', git: 'https://github.com/concord-consortium/in_place_editing.git'
 gem 'json', '~> 1.8.6'
 gem 'jwt'
 gem 'mysql2', '~> 0.3.16', platforms: [:ruby, :mingw]
@@ -72,14 +72,14 @@ gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
 gem 'rack-secure_samesite_cookies',
-  git: 'git://github.com/concord-consortium/secure-samesite-cookies',
+  git: 'https://github.com/concord-consortium/secure-samesite-cookies.git',
   tag: 'v1.0.2'
 gem 'rdoc',                 '~> 3.9.4'
 gem 'redcarpet',            '~> 2.1.1'
 gem 'RedCloth',             '~> 4.2.8'
 gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
-gem 'rush',                 git: 'git://github.com/concord-consortium/rush'
+gem 'rush',                 git: 'https://github.com/concord-consortium/rush.git'
 gem 'sanitize'
 gem 'sass',                 '~> 3.4.0'
 gem 'sass-rails' # if running rails 3.1 or greater
@@ -93,7 +93,7 @@ gem 'turbo-sprockets-rails4'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
 gem 'themes_for_rails',
-  git: 'git://github.com/concord-consortium/themes_for_rails',
+  git: 'https://github.com/concord-consortium/themes_for_rails.git',
   branch: 'asset-pipeline-only'
 gem 'uglifier'
 gem 'useragent' # detect browser types
@@ -115,17 +115,17 @@ end
 
 # Feature enabling groups
 group :genigames_data do
-  gem 'genigames_connector', git: 'git://github.com/concord-consortium/genigames-connector', branch: 'spike-rails4-support'
+  gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', branch: 'spike-rails4-support'
   # gem 'genigames_connector', path: '../genigames-connector'
 end
 group :geniverse_backend do
-  gem 'geniverse_portal_integration', git: 'git://github.com/concord-consortium/geniverse-portal-integration', branch: 'spike-rails4-support'
+  gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git', branch: 'spike-rails4-support'
 end
 group :geniverse_remote_auth do
-  gem 'cc_portal_remote_auth', git: 'git://github.com/concord-consortium/cc_portal_remote_auth', branch: 'spike-rails4-support'
+  gem 'cc_portal_remote_auth', git: 'https://github.com/concord-consortium/cc_portal_remote_auth.git', branch: 'spike-rails4-support'
 end
 group :geniverse_wordpress do
-  gem 'cc_portal_wordpress_integration', git: 'git://github.com/concord-consortium/cc_portal_wordpress_integration', branch: 'spikes-rails4-support'
+  gem 'cc_portal_wordpress_integration', git: 'https://github.com/concord-consortium/cc_portal_wordpress_integration.git', branch: 'spikes-rails4-support'
 end
 
 
