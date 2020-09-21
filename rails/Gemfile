@@ -4,20 +4,22 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-source 'https://gems.railslts.com' do
-  gem 'rails', '~> 3.2.22'
-  gem 'actionmailer',     require: false
-  gem 'activemodel',      require: false
-  gem 'actionpack',       require: false
-  gem 'activerecord',     require: false
-  gem 'activeresource',   require: false
-  gem 'activesupport',    require: false
-  gem 'railties',         require: false
-  gem 'railslts-version', require: false
-end
+# source 'https://gems.railslts.com' do
+  gem 'rails', '4.0.13'
+  # TODO: remove pinned versions of following block when done with upgrade
+  gem 'actionmailer',     '4.0.13', :require => false
+  gem 'actionpack',       '4.0.13', :require => false
+  gem 'activemodel',      '4.0.13', :require => false
+  gem 'activerecord',     '4.0.13', :require => false
+  # gem 'activeresource',   '4.0.13', :require => false
+  gem 'activesupport',    '4.0.13', :require => false
+  gem 'railties',         '4.0.13', :require => false
+  # gem 'railslts-version', '4.0.13', :require => false
+# end
 
 gem 'aasm', '~> 2.2.1'
-gem 'activerecord-import', '~> 0.2.8'
+gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
+# gem "activerecord-session_store"  # RAILS-4-SPIKE GEMFILE: this was in the spike branch
 gem 'acts-as-taggable-on', '~> 2.4.1'
 gem 'acts_as_list', '~> 0.1.6'
 gem 'arrayfields'
@@ -31,9 +33,9 @@ gem 'aws-sdk',              '~> 3'
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
-gem 'coffee-rails' # if running rails 3.1 or greater
+gem 'coffee-rails',         "~> 4.0.0" # if running rails 3.1 or greater
 gem 'compass-blueprint'
-gem 'compass-rails', '~> 2.0.4'
+gem 'compass-rails'
 # was sub-dependency of react-rails, needed in test setup code
 gem 'connection_pool'
 gem 'daemons', '~> 1.1.8'
@@ -41,7 +43,7 @@ gem 'default_value_for', '~> 2.0.3'
 gem 'delayed_job', '~> 4.1.1'
 gem 'delayed_job_active_record', '~> 4.1.0'
 gem 'delayed_job_web'
-gem 'devise', '~>3.1.0'
+gem 'devise'  # RAILS-4-SPIKE GEMFILE: "~> 3.0.0"
 gem 'devise-encryptable'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'exception_notification', '~> 2.5.2'
@@ -62,9 +64,10 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2' # For google login integration.
 gem 'omniauth-oauth' # For schoology integration.
 gem 'open4',                '~> 1.0'
-gem 'paperclip',            '~> 3.4.0'
+gem 'paperclip'
 gem 'prawn',                '~> 0.12.0'
 gem 'prawn_rails',          '~> 0.0.6'
+# gem 'protected_attributes'  # RAILS-4-SPIKE GEMFILE: this was in the spike branch
 gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
@@ -78,15 +81,15 @@ gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
 gem 'rush',                 git: 'git://github.com/concord-consortium/rush'
 gem 'sanitize'
-gem 'sass'
+gem 'sass',                 '~> 3.4.0'
 gem 'sass-rails' # if running rails 3.1 or greater
-gem 'strong_parameters'
+# gem 'strong_parameters'  # RAILS-4-SPIKE GEMFILE REMOVE as part of rails 4.0 upgrade
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'syntax',               '~> 1.0'
 gem 'test-unit',            '~> 3.0'
-gem 'tinymce-rails',        '~>3.5.6'
-gem 'turbo-sprockets-rails3', '~> 0.3.6'
+gem 'tinymce-rails',        '~>3.5.6'  # RAILS-4-SPIKE GEMFILE version NOT pinned
+gem 'turbo-sprockets-rails4'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
 gem 'themes_for_rails',
@@ -99,6 +102,9 @@ gem 'virtus',               '~>1.0.3'
 gem 'will_paginate',        '~> 3.0.0'
 gem 'yui-compressor'
 
+## Upgrade crutches:
+# gem "rails-observers"   # RAILS-4-SPIKE GEMFILE: this was in the spike branch
+
 # see above; for production asset compilation.
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
@@ -109,17 +115,17 @@ end
 
 # Feature enabling groups
 group :genigames_data do
-  gem 'genigames_connector', '0.0.4', git: 'git://github.com/concord-consortium/genigames-connector'
+  gem 'genigames_connector', git: 'git://github.com/concord-consortium/genigames-connector', branch: 'spike-rails4-support'
   # gem 'genigames_connector', path: '../genigames-connector'
 end
 group :geniverse_backend do
-  gem 'geniverse_portal_integration', git: 'git://github.com/concord-consortium/geniverse-portal-integration'
+  gem 'geniverse_portal_integration', git: 'git://github.com/concord-consortium/geniverse-portal-integration', branch: 'spike-rails4-support'
 end
 group :geniverse_remote_auth do
-  gem 'cc_portal_remote_auth', git: 'git://github.com/concord-consortium/cc_portal_remote_auth'
+  gem 'cc_portal_remote_auth', git: 'git://github.com/concord-consortium/cc_portal_remote_auth', branch: 'spike-rails4-support'
 end
 group :geniverse_wordpress do
-  gem 'cc_portal_wordpress_integration', git: 'git://github.com/concord-consortium/cc_portal_wordpress_integration'
+  gem 'cc_portal_wordpress_integration', git: 'git://github.com/concord-consortium/cc_portal_wordpress_integration', branch: 'spikes-rails4-support'
 end
 
 
@@ -142,7 +148,7 @@ group :development do
   gem 'spring', '~> 1.7.2'
   gem 'what_methods'
   gem 'wirble'
-  gem 'xray-rails', '~> 0.1.18' # shows rendered views in browser w cmd+shift+x
+  # gem 'xray-rails', '~> 0.1.18' # shows rendered views in browser w cmd+shift+x
 end
 
 group :test, :cucumber do
