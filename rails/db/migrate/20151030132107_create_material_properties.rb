@@ -17,7 +17,7 @@ class CreateMaterialProperties < ActiveRecord::Migration
   class Investigation < ActiveRecord::Base
     self.table_name = 'investigations'
     acts_as_taggable_on :material_properties
-    has_many :activities, :order => :position
+    has_many :activities, -> { order :position }
     has_many :external_activities, :as => :template
 
     def is_template
