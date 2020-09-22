@@ -96,9 +96,8 @@ gem 'tinymce-rails',        '~>3.5.6'  # RAILS-4-SPIKE GEMFILE version NOT pinne
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
-gem 'themes_for_rails',
-  git: 'https://github.com/concord-consortium/themes_for_rails.git',
-  branch: 'asset-pipeline-only'
+gem 'themes_on_rails'
+
 gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
