@@ -3,7 +3,7 @@ class MaterialsCollection < ActiveRecord::Base
 
   belongs_to :project, :class_name => "Admin::Project"
 
-  has_many :materials_collection_items, dependent: :destroy, order: :position
+  has_many :materials_collection_items, -> { order :position }, dependent: :destroy
 
   validates_presence_of :project
 
