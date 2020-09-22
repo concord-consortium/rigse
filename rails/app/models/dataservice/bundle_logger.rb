@@ -7,9 +7,8 @@ class Dataservice::BundleLogger < ActiveRecord::Base
 
   has_many :launch_process_events, -> {order 'id ASC'}, :class_name => "Dataservice::LaunchProcessEvent", :through => :bundle_contents
 
-  has_one :last_non_empty_bundle_content, -> { order 'position DESC'},
-    :class_name => "Dataservice::BundleContent",
-    :conditions => "empty is false and valid_xml is true"
+  has_one :last_non_empty_bundle_content, -> { where("empty is false and valid_xml is true").order('position DESC') },
+    :class_name => "Dataservice::BundleContent"
 
   OPEN_ELEMENT_EPORTFOLIO = "<sailuserdata:EPortfolio xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:sailuserdata=\"sailuserdata\">\n"
   CLOSE_ELEMENT_EPORTFOLIO = "\n</sailuserdata:EPortfolio>"
