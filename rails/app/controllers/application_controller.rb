@@ -85,22 +85,11 @@ class ApplicationController < ActionController::Base
   end
 
   theme :get_theme
-
+  layout 'application'
   def test
     render :text => mce_in_place_tag(Page.create,'description','none')
   end
 
-  def self.set_theme(name)
-    @@theme = name
-  end
-
-  def get_theme
-    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
-  end
-
-  def self.get_theme
-    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
-  end
 
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
@@ -354,4 +343,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  private
+  def self.set_theme(name)
+    @@theme = name
+  end
+
+  def get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
+
+  def self.get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
 end

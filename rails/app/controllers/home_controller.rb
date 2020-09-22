@@ -9,8 +9,6 @@ class HomeController < ApplicationController
 
   public
 
-  theme "rites"
-
   def index
     homePage = HomePage.new(current_visitor, current_settings)
     flash.keep
