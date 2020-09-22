@@ -1,21 +1,21 @@
 class Dataservice::ConsoleLogger < ActiveRecord::Base
   self.table_name = :dataservice_console_loggers
-  
+
   has_one  :learner, :class_name => "Portal::Learner"
   has_many :console_contents, -> { order :position },
     :class_name => "Dataservice::ConsoleContent",
     :dependent => :destroy
-  has_one :last_console_content, -> { order 'position DESC' }
-    :class_name:  "Dataservice::ConsoleContent"
+  has_one :last_console_content, -> { order 'position DESC' },
+    :class_name =>  "Dataservice::ConsoleContent"
 
   include Changeable
 
   # pagination default
   cattr_reader :per_page
   @@per_page = 5
-  
+
   self.extend SearchableModel
-  
+
   @@searchable_attributes = %w{updated_at}
 
   class <<self
@@ -29,7 +29,7 @@ class Dataservice::ConsoleLogger < ActiveRecord::Base
   def user
     nil
   end
-  
+
   def name
     if learner = self.learner
       user = learner.student.user
