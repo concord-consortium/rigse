@@ -7,7 +7,7 @@ class Saveable::OpenResponse < ActiveRecord::Base
   belongs_to :open_response,  :class_name => 'Embeddable::OpenResponse'
 
   has_many :answers, -> { order :position },
-    :dependent => :destroy
+    :dependent => :destroy,
     :class_name => "Saveable::OpenResponseAnswer"
 
 
