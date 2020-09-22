@@ -54,6 +54,7 @@ gem 'httparty'
 gem 'in_place_editing', git: 'https://github.com/concord-consortium/in_place_editing.git'
 gem 'json', '~> 1.8.6'
 gem 'jwt'
+gem 'jquery-fileupload-rails'
 gem 'mysql2', '~> 0.3.16', platforms: [:ruby, :mingw]
 gem 'nested_form'
 gem 'net-sftp', '~> 2.0', require: 'net/sftp'
@@ -184,8 +185,4 @@ group :test, :cucumber, :development do
   gem 'pry-byebug'
   gem 'remarkable_activerecord', '~> 3.1.13', require: nil
   gem 'simplecov', require: false
-end
-
-group :assets do
-  gem 'jquery-fileupload-rails'
 end
