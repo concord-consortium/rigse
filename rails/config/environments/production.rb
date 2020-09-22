@@ -60,7 +60,6 @@ RailsPortal::Application.configure do
   config.assets.compile = true
 
   # Minify/uglify/compress assets from the pipeline
-  config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :yui
 
