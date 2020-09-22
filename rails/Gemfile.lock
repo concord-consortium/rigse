@@ -1180,6 +1180,7 @@ DEPENDENCIES
   actionpack (= 4.0.13)
   activemodel (= 4.0.13)
   activerecord (= 4.0.13)
+  activerecord-deprecated_finders
   activerecord-import
   activerecord-session_store
   activesupport (= 4.0.13)
