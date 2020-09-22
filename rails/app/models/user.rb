@@ -52,8 +52,14 @@ class User < ActiveRecord::Base
 
   has_many :project_users, class_name: 'Admin::ProjectUser', :dependent => :destroy
 
-  has_many :admin_for_projects, -> { where is_admin: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
-  has_many :researcher_for_projects, -> { where is_researcher: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
+  has_many :_project_user_admins, -> { is_admin }, :class_name => 'Admin::ProjectUser'
+  has_many :_project_user_researchers, -> { is_researcher }, :class_name => 'Admin::ProjectUser'
+
+  has_many :admin_for_projects, :through => :_project_user_admins, :class_name => 'Admin::Project', :source => :project
+
+  has_many :researcher_for_projects, :through => :_project_user_researchers, :class_name => 'Admin::Project', :source => :project
+
+  # has_many :researcher_for_projects, -> { where is_researcher: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
