@@ -1,6 +1,12 @@
 namespace :db do
   namespace :feature_test do
 
+    def mysql_creation_options(config)
+      @charset   = ENV['CHARSET']   || 'utf8'
+      @collation = ENV['COLLATION'] || 'utf8_unicode_ci'
+      {:charset => (config['charset'] || @charset), :collation => (config['collation'] || @collation)}
+    end
+
     # This is a subset of active-record/database.rake db:test:purge
     # desc "Empty the feature_test database"
     task :purge => [:environment, 'db:load_config'] do
