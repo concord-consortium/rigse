@@ -1,5 +1,4 @@
 class HelpController < ApplicationController
-  theme "rites"
 
   def get_help_page(help_type)
     case help_type
