@@ -126,6 +126,11 @@ services:
       # the DejaVu-Sans font is provided by the docker image this one is built on
       WATERMARK_FONT: "${WATERMARK_FONT:-DejaVu-Sans}"
 
+      #
+      # Rails 4 encrypted cookies:
+      #
+      RAILS_SECRET_KEY_BASE: "${RAILS_SECRET_KEY_BASE:-local_dev_only_secret_key_base}"
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
