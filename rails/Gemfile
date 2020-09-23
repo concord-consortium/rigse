@@ -17,7 +17,6 @@ source 'http://rubygems.org'
   # gem 'railslts-version', '4.0.13', :require => false
 # end
 
-gem 'aasm', '~> 2.2.1'
 gem 'activerecord-deprecated_finders'
 gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
 gem "activerecord-session_store"

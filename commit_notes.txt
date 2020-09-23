@@ -1,0 +1,27 @@
+
+commit notes
+
+# module Publishable:
+
+### Public Methods
+* publish!
+* un_publish!
+* available_states
+* public?
+
+### Uses:
+
+* activity.rb
+* exeternal_activity.rb
+* image.rb
+* interactive.rb
+
+### Calls:
+
+#### publish!
+* default_runable.rb
+* specs
+
+#### un_publish!
+* activity_spec.rb
+* investigation_spec.rb
