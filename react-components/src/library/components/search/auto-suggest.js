@@ -133,27 +133,25 @@ export default class AutoSuggest extends React.Component {
 
   handleKeyDown (e) {
     let handledKey = false
-    const { suggestions, selectedSuggestionIndex, showSuggestions } = this.state
+    const { query, suggestions, selectedSuggestionIndex, showSuggestions } = this.state
 
     switch (e.keyCode) {
       case 13: // enter
         const { onChange, onSubmit } = this.props
-        if (showSuggestions) {
-          const suggestion = suggestions[selectedSuggestionIndex]
-          if (suggestion !== undefined) {
-            this.setState({ query: suggestion, showSuggestions: false, selectedSuggestionIndex: -1 }, () => {
-              if (onChange) {
-                onChange(suggestion)
-              }
-              if (onSubmit) {
-                // allow onChange to settle in stem-finder
-                setTimeout(() => onSubmit(), 1)
-              }
-            })
-            handledKey = true
-          }
+        const suggestion = suggestions[selectedSuggestionIndex]
+        const hasSuggestionSelected = suggestion !== undefined
+        if (showSuggestions && hasSuggestionSelected) {
+          this.setState({ query: suggestion, showSuggestions: false, selectedSuggestionIndex: -1 }, () => {
+            if (onChange) {
+              onChange(suggestion)
+            }
+            if (onSubmit) {
+              onSubmit(suggestion)
+            }
+          })
+          handledKey = true
         } else if (onSubmit) {
-          onSubmit()
+          onSubmit(query)
           handledKey = true
         }
         break
