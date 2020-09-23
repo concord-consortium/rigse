@@ -76,21 +76,26 @@ describe('When I try to render autosuggest', () => {
     input.getDOMNode().getBoundingClientRect = savedGBCR
   });
 
-  describe("after a search", () => {
+  describe("after a non-zero result search", () => {
 
     it("should handle navigation keys", () => {
 
       const onChange = jest.fn()
-      const autoSuggest = Enzyme.mount(<AutoSuggest query="test" onChange={onChange} />);
+      const onSubmit = jest.fn()
+      const autoSuggest = Enzyme.mount(<AutoSuggest query="test" onChange={onChange} onSubmit={onSubmit} />);
       const input = autoSuggest.find("input").first()
       const keyDown = (keyCode) => input.prop("onKeyDown")({keyCode, preventDefault: () => undefined, stopPropagation: () => undefined})
 
       // do the query
-      input.prop("onChange")({target: {value: "test"}})
+      expect(input.props().value).toEqual("test")
+      input.prop("onChange")({target: {value: "test query"}})
+
+      // suggestions should show
       expect(autoSuggest.html()).toContain('<div class="suggestion">test 1</div>')
+      expect(autoSuggest.state().showSuggestions).toEqual(true)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
 
       // down arrow selects first
-      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
       keyDown(40)
       expect(autoSuggest.state().selectedSuggestionIndex).toEqual(0)
 
@@ -117,14 +122,16 @@ describe('When I try to render autosuggest', () => {
       expect(autoSuggest.state().showSuggestions).toEqual(false)
       expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
 
-      // enter after showing and selecting second suggestion hides the suggestions and invokes the callback
+      // enter after showing and selecting second suggestion hides the suggestions and invokes both callbacks
       onChange.mockClear()
-      expect(onChange).not.toBeCalledWith("test")
+      expect(onChange).not.toBeCalled()
+      expect(onSubmit).not.toBeCalled()
       keyDown(40)
       keyDown(40)
       keyDown(13)
       expect(autoSuggest.state().showSuggestions).toEqual(false)
       expect(onChange).toBeCalledWith("test 2")
+      expect(onSubmit).toBeCalledWith("test 2")
     });
 
     it("should handle mouse clicks on suggestions", () => {
@@ -149,6 +156,56 @@ describe('When I try to render autosuggest', () => {
       onSubmit.mockClear()
       suggestion.simulate("click")
       expect(onSubmit).toBeCalledWith("test 2")
+    });
+  })
+
+  describe("after a zero-result search", () => {
+
+    mockJqueryAjaxSuccess({
+      search_term: "test",
+      suggestions: []
+    })
+
+    it("should handle navigation keys", () => {
+
+      const onChange = jest.fn()
+      const onSubmit = jest.fn()
+      const autoSuggest = Enzyme.mount(<AutoSuggest query="test" onChange={onChange} onSubmit={onSubmit} />);
+      const input = autoSuggest.find("input").first()
+      const keyDown = (keyCode) => input.prop("onKeyDown")({keyCode, preventDefault: () => undefined, stopPropagation: () => undefined})
+
+      // do the query
+      expect(input.props().value).toEqual("test")
+      input.prop("onChange")({target: {value: "test query"}})
+
+      // no suggestions should show
+      expect(autoSuggest.html()).not.toContain('<div class="suggestion">')
+      expect(autoSuggest.state().showSuggestions).toEqual(false)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
+
+      // down arrow does nothing
+      keyDown(40)
+      expect(autoSuggest.state().showSuggestions).toEqual(false)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
+
+      // up arrow does nothing
+      keyDown(38)
+      expect(autoSuggest.state().showSuggestions).toEqual(false)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
+
+      // escape does nothing
+      keyDown(27)
+      expect(autoSuggest.state().showSuggestions).toEqual(false)
+      expect(autoSuggest.state().selectedSuggestionIndex).toEqual(-1)
+
+      // enter invokes the submit callback (but not the change callback) with the current input value
+      onChange.mockClear()
+      onSubmit.mockClear()
+      expect(onSubmit).not.toBeCalled()
+      expect(onChange).not.toBeCalled()
+      keyDown(13)
+      expect(onSubmit).toBeCalledWith("test query")
+      expect(onChange).not.toBeCalled()
     });
   })
 })
