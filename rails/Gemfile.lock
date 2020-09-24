@@ -103,7 +103,8 @@ GEM
       tzinfo (~> 0.3.37)
     acts-as-taggable-on (2.4.1)
       rails (>= 3, < 5)
-    acts_as_list (0.1.6)
+    acts_as_list (0.9.19)
+      activerecord (>= 3.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (4.0.2)
@@ -1185,7 +1186,7 @@ DEPENDENCIES
   activerecord-session_store
   activesupport (= 4.0.13)
   acts-as-taggable-on (~> 2.4.1)
-  acts_as_list (~> 0.1.6)
+  acts_as_list
   arrayfields
   awesome_print
   aws-sdk (~> 3)
