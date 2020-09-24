@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 class DummyClass
-  def self.aasm_column(symbol) end
   def self.scope(name, lambda) end
   include Publishable
   attr_accessor :publication_status
@@ -84,4 +83,12 @@ RSpec.describe Publishable do
     end
   end
 
+  describe 'it aliases methods to mimic legacy AASM implementation' do
+    it 'the aliases and methods should be the same' do
+      expect(instance.method(:published?)).to eq instance.method(:public?)
+      expect(instance.method(:publish)).to eq instance.method(:publish!)
+      expect(instance.method(:un_publish)).to eq instance.method(:un_publish!)
+    end
+  end
 end
+
