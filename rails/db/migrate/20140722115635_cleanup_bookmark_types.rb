@@ -9,14 +9,14 @@ class CleanupBookmarkTypes < ActiveRecord::Migration
   end
 
   def up
-    Portal::Bookmark.update_all({ type: 'Portal::GenericBookmark' }, { type: 'GenericBookmark' })
-    Portal::Bookmark.update_all({ type: 'Portal::PadletBookmark' }, { type: 'PadletBookmark' })
+    Portal::Bookmark.where({ type: 'GenericBookmark' }).update_all({ type: 'Portal::GenericBookmark' })
+    Portal::Bookmark.where({ type: 'PadletBookmark' }}.update_all({ type: 'Portal::PadletBookmark' })
     # Admin will have to re-enable bookmarks.
     Admin::Project.update_all({ enabled_bookmark_types: [] })
   end
 
   def down
-    Portal::Bookmark.update_all({ type: 'GenericBookmark' }, { type: 'Portal::GenericBookmark' })
-    Portal::Bookmark.update_all({ type: 'PadletBookmark' }, { type: 'Portal::PadletBookmark' })
+    Portal::Bookmark.where({ type: 'Portal::GenericBookmark' }).update_all({ type: 'GenericBookmark' })
+    Portal::Bookmark.where({ type: 'Portal::PadletBookmark' }).update_all({ type: 'PadletBookmark' })
   end
 end
