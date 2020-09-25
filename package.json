@@ -1,0 +1,14 @@
+{
+    "name": "portal-cypress-tests",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "cypress": "^4.11.0"
+    },
+    "scripts": {
+        "test:staging": "cypress open --env testEnv=staging"
+    }
+}
