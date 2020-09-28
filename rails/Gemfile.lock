@@ -68,7 +68,6 @@ GEM
     Platform (0.4.0)
     RedCloth (4.2.9)
     RedCloth (4.2.9-x86-mingw32)
-    aasm (2.2.1)
     actionmailer (4.0.13)
       actionpack (= 4.0.13)
       mail (~> 2.5, >= 2.5.4)
@@ -1176,7 +1175,6 @@ PLATFORMS
 
 DEPENDENCIES
   RedCloth (~> 4.2.8)
-  aasm (~> 2.2.1)
   actionmailer (= 4.0.13)
   actionpack (= 4.0.13)
   activemodel (= 4.0.13)
