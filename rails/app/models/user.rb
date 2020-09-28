@@ -70,7 +70,7 @@ class User < ActiveRecord::Base
   scope :email, -> { where("email NOT LIKE '#{NO_EMAIL_STRING}%'") }
   scope :default, -> { where(default_user: true) }
   scope :with_role, lambda { | role_name |
-    where('roles.title = ?',role_name).includes(:roles)
+    where('roles.title = ?',role_name).includes(:roles).references(:roles)
   }
 
   attr_accessor :skip_notifications
