@@ -16,7 +16,7 @@ module HasEmbeddables
         source: :embeddable,
         source_type: Embeddable::Iframe.to_s
 
-      # Generates Query:
+      # Called by Investigation, this generates a Query like this:
       # SELECT `embeddable_open_responses`.* FROM `embeddable_open_responses`
       #   INNER JOIN `page_elements` ON `embeddable_open_responses`.`id` = `page_elements`.`embeddable_id`
       #   INNER JOIN `pages` ON `page_elements`.`page_id` = `pages`.`id`
