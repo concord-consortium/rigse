@@ -1,5 +1,6 @@
 class Portal::Clazz < ActiveRecord::Base
   self.table_name = :portal_clazzes
+  attr_accessible :name, :description, :class_word, :status, :default_class
 
   acts_as_replicatable
 

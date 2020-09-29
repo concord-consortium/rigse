@@ -66,7 +66,7 @@ module SearchableModel
 
     per_page = self.per_page || 20
     if policy_scope
-      policy_scope.where(conditions).includes(includes).per_page(per_page).page(page)
+      policy_scope.where(conditions).includes(includes).page(page).per_page(per_page)
     else
       where(conditions).includes(includes).page(page).per_page(per_page)
     end

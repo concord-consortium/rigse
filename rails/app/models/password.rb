@@ -2,10 +2,9 @@ require 'digest/sha1'
 
 class Password < ActiveRecord::Base
   attr_accessor :email
-  
-  # Relationships
+  attr_accessible :email, :user
   belongs_to :user
-  
+
   # Validations
   validates_presence_of :email, :user
   validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => 'is not a valid email address'

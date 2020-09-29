@@ -4,7 +4,7 @@ class Admin::Cohort < ActiveRecord::Base
   has_many :items, :class_name => 'Admin::CohortItem', :foreign_key => "admin_cohort_id", :dependent => :destroy
 
   validates_presence_of :name, message: "can't be blank"
-
+  attr_accessible :name, :items, :project, :project_id, :email_notifications_enabled
   self.extend SearchableModel
 
   class <<self
