@@ -847,21 +847,19 @@ protected
 
   # TODO: auto-generated
   describe '#role_names' do
+    let(:user) { factory.create(:user) }
     it 'role_names' do
-      user = described_class.new
-      result = user.role_names
-
-      expect(result).not_to be_nil
+      user.add_role('1')
+      expect(user.role_names).to include '1'
     end
   end
 
   # TODO: auto-generated
   describe '#make_user_a_member' do
+    let(:user) { factory.create(:user) }
     it 'make_user_a_member' do
-      user = described_class.new
       result = user.make_user_a_member
-
-      expect(result).not_to be_nil
+      expect(user.role_names).to include 'member'
     end
   end
 
@@ -1286,6 +1284,5 @@ protected
       expect(result).not_to be_nil
     end
   end
-
 
 end
