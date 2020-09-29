@@ -70,6 +70,7 @@ describe PasswordsController do
           :user_id => @forgetful_user.id
         }
 
+
         @answers_params = {
           :user_id => @forgetful_user.id,
           :security_questions => {
