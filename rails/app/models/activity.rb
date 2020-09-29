@@ -23,11 +23,7 @@ class Activity < ActiveRecord::Base
     end
   end
 
-  has_many :pages, :through => :sections do
-    def student_only
-      where('teacher_only' => false)
-    end
-  end
+  has_many :pages, :through => :sections
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
