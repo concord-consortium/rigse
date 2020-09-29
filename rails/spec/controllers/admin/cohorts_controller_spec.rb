@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+
 RegexForAuthFailShow = /can not view the requested resource/
 RegexForAuthFailNew = /can not create the requested resource/
 RegexForAuthFailModify = /can not update the requested resource/
