@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+def user_with_project_admins(proj_array)
+  user = FactoryBot.create(:user)
+  user.admin_for_projects=proj_array
+  user
+end
+
 describe ExternalActivityPolicy do
   subject                 { ExternalActivityPolicy.new(active_user, activity)   }
   let(:active_user)       { nil                                                 }
@@ -72,10 +78,9 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:edit_credits)             }
   end
 
-
   context "for a material admin" do
     let(:project_a)   { FactoryBot.create(:project)                                 }
-    let(:active_user) { FactoryBot.create(:user, admin_for_projects: [project_a])   }
+    let(:active_user) { user_with_project_admins([project_a])  }
     let(:activity)    { FactoryBot.create(:external_activity, projects: [project_a])}
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
@@ -93,7 +98,8 @@ describe ExternalActivityPolicy do
 
   context "for an admin of a project that is not one of the material's projects" do
     let(:project_a)   { FactoryBot.create(:project)                                 }
-    let(:active_user) { FactoryBot.create(:user, admin_for_projects: [project_a])   }
+    let(:active_user) { user_with_project_admins([project_a])  }
+
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end
