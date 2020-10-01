@@ -404,7 +404,7 @@ class User < ActiveRecord::Base
   end
 
   def role_names
-    roles.select(:title).all.map { |role| role.title }
+    roles.pluck(:title)
   end
 
   def make_user_a_member
