@@ -53,7 +53,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#download' do
     it 'GET download' do
-      request.env["HTTP_REFERER"] = "https://foo.bar.com/some/path.html"
+      request.headers["HTTP_REFERER"] = "https://foo.bar.com/some/path.html"
       Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_USER, import_data: {}).save!
 
       get :download, {}, {}

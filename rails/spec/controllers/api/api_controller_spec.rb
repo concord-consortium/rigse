@@ -1,5 +1,4 @@
 # frozen_string_literal: false
-
 require 'spec_helper'
 
 RSpec.describe API::APIController, type: :controller do
@@ -51,11 +50,11 @@ RSpec.describe API::APIController, type: :controller do
   end
 
   def set_standard_bearer_token(auth_token)
-    request.env["Authorization"] = "Bearer #{auth_token}"
+    request.headers["Authorization"] = "Bearer #{auth_token}"
   end
 
   def set_jwt_bearer_token(auth_token)
-    request.env["Authorization"] = "Bearer/JWT #{auth_token}"
+    request.headers["Authorization"] = "Bearer/JWT #{auth_token}"
   end
 
   def addToken(user, client, expires_at)

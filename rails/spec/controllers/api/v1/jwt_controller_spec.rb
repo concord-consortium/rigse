@@ -3,7 +3,7 @@ require 'spec_helper'
 require 'digest/md5'
 
 def set_auth_token(auth_token)
-  request.env["Authorization"] = "Bearer #{auth_token}"
+  request.headers["Authorization"] = "Bearer #{auth_token}"
 end
 
 def addToken(user, client, expires_at)
