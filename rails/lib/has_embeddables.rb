@@ -37,6 +37,13 @@ module HasEmbeddables
         through: :page_elements,
         source: :embeddable,
         source_type: Embeddable::OpenResponse.to_s
+
+
+      has_many :image_questions,
+        -> { order id: :asc },
+        through: :page_elements,
+        source: :embeddable,
+        source_type: Embeddable::ImageQuestion.to_s
     end
   end
 
