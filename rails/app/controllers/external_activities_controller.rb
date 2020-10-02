@@ -35,11 +35,12 @@ class ExternalActivitiesController < ApplicationController
   in_place_edit_for :external_activity, :url
 
   def preview_index
-    page= params[:page] || 1
-    @activities = ExternalActivity.all.paginate(
-        :page => page || 1,
-        :per_page => params[:per_page] || 20,
-        :order => 'name')
+    page = params[:page] || 1
+    paginate_params = {
+      :page => page || 1,
+      :per_page => params[:per_page] || 20
+    }
+    @activities = ExternalActivity.all.paginate(paginate_params).order('name')
     render 'preview_index'
   end
 
