@@ -44,19 +44,16 @@ describe Report::Learner do
       :periodic_bundle_contents => [@periodic_bundle_content]
     )
 
-    @last_contents   = double(:updated_at => nil)
-    @bucket_contents = double(:last => @last_contents)
-    @bucket_logger   = double(:bucket_contents => @bucket_contents)
+    @last_contents   = double('last_contents', :updated_at => nil)
+    @bucket_contents = double('bucket_contents', :last => @last_contents)
+    @bucket_logger   = double('bucket_logger', :bucket_contents => @bucket_contents)
 
     @learner  = mock_model(Portal::Learner,
       :student  => @student,
       :offering => @offering,
       :bundle_logger => @bundle_logger,
       :periodic_bundle_logger => @periodic_bundle_logger,
-      :bucket_logger => @bucket_logger,
-      # this is needed because of the inverse_of definition in the report_learner associtation
-      # I think newer version of mock_model take care of this for you
-      :association => double(:target= => nil)
+      :bucket_logger => @bucket_logger
     )
   end
 

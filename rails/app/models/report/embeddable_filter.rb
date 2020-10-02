@@ -16,7 +16,9 @@ class Report::EmbeddableFilter < ActiveRecord::Base
   end
   
   def embeddables
-    @embeddables_internal = read_attribute(:embeddables).map{|em| em[:type].constantize.find(em[:id]) }.compact.uniq unless @embeddables_internal
+    return @embeddables_internal if @embeddables_internal
+    _embeddables_internal = read_attribute(:embeddables) || []
+    @embeddables_internal = _embeddables_internal .map{|em| em[:type].constantize.find(em[:id]) }.compact.uniq unless @embeddables_internal
     return @embeddables_internal
   end
   
@@ -27,7 +29,7 @@ class Report::EmbeddableFilter < ActiveRecord::Base
   end
 
   def embeddable_keys
-    read_attribute(:embeddables).map { |em| "#{em[:type]}|#{em[:id]}" }
+    (read_attribute(:embeddables) || []).map { |em| "#{em[:type]}|#{em[:id]}" }
   end
 
   def embeddable_keys=(array)

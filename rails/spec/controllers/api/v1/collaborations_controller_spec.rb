@@ -1,8 +1,8 @@
 # encoding: utf-8
 require 'spec_helper'
 
-def set_request_header(key,value)
-  request.env[key] = value
+def set_request_header(key, value)
+  request.headers[key] = value
 end
 
 def set_auth_token(auth_token)

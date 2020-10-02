@@ -42,8 +42,6 @@ class Portal::ClazzMailer < ActionMailer::Base
   def email_cohort_admins(user, subject)
     emails = cohort_admin_emails_to_notify(user)
     if emails.any?
-      # Need to set the theme because normally it gets set in a controller before_filter...
-      set_theme(APP_CONFIG[:theme]||'default')
       mail(:to => emails,
            :subject => subject,
            :date => Time.now)
