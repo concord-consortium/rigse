@@ -315,8 +315,6 @@ RailsPortal::Application.routes.draw do
     post '/images/list/filter' => 'images#index', :as => :list_filter_image
     get '/images/:id/view'    => 'images#view',  :as => :view_image
 
-    resources :images
-
     resources :interactives do
       collection do
         get :import_model_library
