@@ -547,8 +547,6 @@ RailsPortal::Application.routes.draw do
 
     get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
 
-    get '/:controller(/:action(/:id))'
-
     get 'robots.txt'    => 'robots#index'
     get 'sitemap.xml'   => 'robots#sitemap'
 
