@@ -445,7 +445,7 @@ describe User do
           expect {
             found_user = User.find_for_omniauth(mock_auth)
             user.reload
-          }.to_not change{ user.authentications }
+          }.to_not change{ user.authentications.to_a }
 
           expect(found_user).to eq user
         end
