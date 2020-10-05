@@ -847,7 +847,7 @@ protected
 
   # TODO: auto-generated
   describe '#role_names' do
-    let(:user) { factory.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     it 'role_names' do
       user.add_role('1')
       expect(user.role_names).to include '1'
@@ -856,7 +856,7 @@ protected
 
   # TODO: auto-generated
   describe '#make_user_a_member' do
-    let(:user) { factory.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
     it 'make_user_a_member' do
       result = user.make_user_a_member
       expect(user.role_names).to include 'member'
