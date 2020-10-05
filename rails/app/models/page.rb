@@ -55,17 +55,6 @@ class Page < ActiveRecord::Base
       @@cloneable_associations
     end
 
-    # returns an array of class names transmogrified into the form
-    # we use for dom-ids
-    def paste_acceptable_types
-      element_types.map {|t| t.name.underscore.clipboardify}
-    end
-
-    # Returns the embeddables list as constants (classes) rather than strings
-    def element_types
-      @@element_types.map { |e| e.constantize }
-    end
-
 
     def search_list(options)
       name = options[:name]
