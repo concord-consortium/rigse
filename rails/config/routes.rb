@@ -315,8 +315,6 @@ RailsPortal::Application.routes.draw do
     post '/images/list/filter' => 'images#index', :as => :list_filter_image
     get '/images/:id/view'    => 'images#view',  :as => :view_image
 
-    resources :images
-
     resources :interactives do
       collection do
         get :import_model_library
@@ -546,8 +544,6 @@ RailsPortal::Application.routes.draw do
     get '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
     get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
-
-    get '/:controller(/:action(/:id))'
 
     get 'robots.txt'    => 'robots#index'
     get 'sitemap.xml'   => 'robots#sitemap'

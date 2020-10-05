@@ -1,6 +1,6 @@
 class PasswordMailer < ActionMailer::Base
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
-  
+
   def forgot_password(password)
     @user = password.user
     @url = "#{APP_CONFIG[:site_url]}/change_password/#{password.reset_code}"
@@ -21,8 +21,6 @@ class PasswordMailer < ActionMailer::Base
   protected
 
   def finish_email(user, subject, bcc=nil)
-    # CHECKME: is this theme stuff necessary here?
-    self.theme_name = (APP_CONFIG[:theme]||'default')
     mail(:to => "#{user.name} <#{user.email}>",
          :subject => subject,
          :bcc => [bcc],

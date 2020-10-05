@@ -166,7 +166,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
       it 'should fail when the passwords do not match' do
         post :register, {clazz_id: clazz.id, user: user_parameters}
         expect(response).to have_http_status(:bad_request)
-        expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Password doesn\'t match confirmation"}')
+        expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Password confirmation doesn\'t match Password"}')
       end
     end
 

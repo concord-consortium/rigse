@@ -26,7 +26,7 @@ describe Dataservice::BundleContentsMetalController do
       expect(@mock_bundle_logger).to receive(:end_bundle).with({:body => body_content , :upload_time => be_within(1).of(21) })
       @request.env['RAW_POST_DATA'] = body_content
       # set a start of 20 seconds before now
-      @request.env['X-Queue-Start'] = "t=#{((Time.now - 20).to_f*1000000).to_i}"
+      @request.headers['X-Queue-Start'] = "t=#{((Time.now - 20).to_f*1000000).to_i}"
       post :create, id: 37
     end
   end

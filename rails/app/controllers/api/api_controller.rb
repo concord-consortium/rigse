@@ -1,11 +1,20 @@
 class API::APIController < ApplicationController
 
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
+
   protected
 
   def pundit_user_not_authorized(exception)
     render status: 403, json: {
       success: false,
       message: 'Not authorized'
+    }
+  end
+
+  def parameter_missing(exception)
+    render status: 400, json: {
+      success: false,
+      message: exception.message
     }
   end
 
