@@ -4,10 +4,21 @@ require 'spec_helper'
 
 class DummyClass
   def self.scope(name, lambda) end
+
+  # Our dummy class has to implement `defualt_value_for`
+  def self.default_value_for(column, value)
+    @@defaults ||= {}
+    @@defaults[column] = value
+  end
   include Publishable
   attr_accessor :publication_status
   def initialize
-    self.publication_status = :draft
+    # fake `defualt_value_for` behavior
+    @@defaults.each_key do |k|
+      if self.send(k).nil?
+        self.send("#{k}=", @@defaults[k])
+      end
+    end
   end
 end
 

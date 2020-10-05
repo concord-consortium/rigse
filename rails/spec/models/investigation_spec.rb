@@ -105,11 +105,11 @@ describe Investigation do
       activity_two.insert_at(2)
 
       investigation.reload
-      expect(investigation.activities).to eql([activity_one, activity_two])
+      expect(investigation.activities.to_a).to eql([activity_one, activity_two])
 
       activity_one.move_to_bottom
       investigation.reload
-      expect(investigation.activities).to eql([activity_two, activity_one])
+      expect(investigation.activities.to_a).to eql([activity_two, activity_one])
 
       # must reload the other activity for updated position.
       activity_two.reload

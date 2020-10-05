@@ -13,6 +13,9 @@ module Publishable
       # this needs to come after the class variable definition...
       cattr_accessor :publication_states
 
+      # start in draft state
+      default_value_for :publication_status, "draft"
+
       def publish!
         self.publication_status = "published"
       end
