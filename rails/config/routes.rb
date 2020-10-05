@@ -545,6 +545,12 @@ RailsPortal::Application.routes.draw do
 
     get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
 
+    # Custom project page. This route should be always at the very bottom,
+    # so the custom page URL can't overwrite another resource URL!
+    get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
+
+    get '/:controller(/:action(/:id))'
+
     get 'robots.txt'    => 'robots#index'
     get 'sitemap.xml'   => 'robots#sitemap'
 
@@ -555,8 +561,4 @@ RailsPortal::Application.routes.draw do
     warden = request.env['warden']
     warden.user && warden.user.has_role?("admin")
   }
-
-  # Custom project page. This route should be always at the very bottom,
-  # so the custom page URL can't overwrite another resource URL!
-  get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
 end
