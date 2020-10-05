@@ -13,22 +13,12 @@ describe Page do
     Page.create!(@valid_attributes)
   end
 
-  it 'has an ordered list of embeddables' do
-    Page.class_variables.include?(:@@element_types) &&
-    Page.class_eval("@@element_types").first.kind_of?(String) &&
-    Page.class_eval("@@element_types").first.match(/Embeddable/)
-  end
-
   it 'has_many for all ALL_EMBEDDABLES' do
     expect(ALL_EMBEDDABLES.length).to be > 0
     p = Page.create!(@valid_attributes)
     ALL_EMBEDDABLES.each do |e|
       expect(p.respond_to?(e[/::(\w+)$/, 1].underscore.pluralize)).to be(true)
     end
-  end
-
-  it 'returns a list of embeddable class names' do
-    Page.element_types.first.kind_of?(Class)
   end
 
   # at one point page had a default value set for :position
@@ -69,23 +59,7 @@ describe Page do
     end
   end
 
-  # TODO: auto-generated
-  describe '.paste_acceptable_types' do
-    it 'paste_acceptable_types' do
-      result = described_class.paste_acceptable_types
 
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '.element_types' do
-    it 'element_types' do
-      result = described_class.element_types
-
-      expect(result).not_to be_nil
-    end
-  end
 
   # TODO: auto-generated
   describe '.search_list' do
