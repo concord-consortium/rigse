@@ -73,7 +73,7 @@ describe ImagesController do
       it "should redirect to the created image" do
         allow(Image).to receive(:new).and_return(mock_image(:save => true))
         post :create, :image => {}
-        expect(response).to redirect_to(image_url(mock_image))
+        expect(response).to redirect_to(image_url(mock_image.id))
       end
 
     end
