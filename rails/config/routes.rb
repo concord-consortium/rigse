@@ -545,14 +545,15 @@ RailsPortal::Application.routes.draw do
 
     get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
 
-    # Custom project page. This route should be always at the very bottom,
-    # so the custom page URL can't overwrite another resource URL!
+    get 'robots.txt'    => 'robots#index'
+    get 'sitemap.xml'   => 'robots#sitemap'
+
+    # Custom project page. This route should be always near the very bottom,
+    # so the custom page URL can't overwrite another resource URL other than
+    # the controller catch-all and the root route
     get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
 
     get '/:controller(/:action(/:id))'
-
-    get 'robots.txt'    => 'robots#index'
-    get 'sitemap.xml'   => 'robots#sitemap'
 
     root :to => 'home#index'
   end
