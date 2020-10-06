@@ -100,12 +100,12 @@ describe Admin::PermissionFormsController do
     end
   end
 
+
   # TODO: auto-generated
   describe '#update_forms' do
-    it 'GET update_forms' do
-      get :update_forms, {}, {}
-
-      expect(response).to have_http_status(:redirect)
+    it 'POST update_forms' do
+      post :update_forms, {}, {}
+      expect(response).to have_http_status(:not_found)
     end
   end
 end
