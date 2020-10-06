@@ -23,6 +23,7 @@ RailsPortal::Application.routes.draw do
   get '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report
   get '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report
 
+  get  "help" => "help#index"
   post "help/preview_help_page"
   post "home/preview_about_page"
   post "home/preview_home_page"
