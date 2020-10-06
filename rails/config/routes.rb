@@ -175,7 +175,7 @@ RailsPortal::Application.routes.draw do
         get :reset_password
         get :confirm
         get :limited_edit
-        put :limited_update
+        patch :limited_update
       end
       resource :security_questions, :only => [:edit, :update]
 
