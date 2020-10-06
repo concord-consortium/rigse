@@ -302,9 +302,9 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
-      get :status, id: FactoryBot.create(:portal_student).to_param
+      xhr :get, :status, id: FactoryBot.create(:portal_student).to_param
 
-      expect(response).to have_http_status(406)
+      expect(response).to have_http_status(:ok)
     end
   end
 
