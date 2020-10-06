@@ -4,34 +4,66 @@ require 'spec_helper'
 
 RSpec.describe Portal::BookmarksController, type: :controller do
 
-  before do
-    login_admin
-  end
+  describe "when logged in as admin" do
+    before do
+      login_admin
+    end
 
-  # TODO: auto-generated
-  describe '#index' do
-    it 'GET index' do
-      get :index, {}, {}
+    # TODO: auto-generated
+    describe '#index' do
+      it 'GET index' do
+        get :index, {}, {}
 
-      expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#visit' do
+      it 'GET visit' do
+        get :visit, {}, {}
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#visits' do
+      it 'GET visits' do
+        get :visits, {}, {}
+
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
 
-  # TODO: auto-generated
-  describe '#visit' do
-    it 'GET visit' do
-      get :visit, {}, {}
+  describe "when not logged in" do
 
-      expect(response).to have_http_status(:not_found)
+    # TODO: auto-generated
+    describe '#index' do
+      it 'GET index' do
+        get :index, {}, {}
+
+        expect(response).to have_http_status(:not_found)
+      end
     end
-  end
 
-  # TODO: auto-generated
-  describe '#visits' do
-    it 'GET visits' do
-      get :visits, {}, {}
+    # TODO: auto-generated
+    describe '#visit' do
+      it 'GET visit' do
+        get :visit, {}, {}
 
-      expect(response).to have_http_status(:redirect)
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    # TODO: auto-generated
+    describe '#visits' do
+      it 'GET visits' do
+        get :visits, {}, {}
+
+        expect(response).to have_http_status(:redirect)
+      end
     end
   end
 
