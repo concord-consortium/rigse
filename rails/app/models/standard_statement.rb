@@ -15,6 +15,7 @@ class StandardStatement < ActiveRecord::Base
   #
   attr_accessible :material_type
   attr_accessible :material_id
+  attr_accessible :material
 
   #
   # statement fields
