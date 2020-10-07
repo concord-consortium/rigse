@@ -118,7 +118,7 @@ class API::V1::MaterialsController < API::APIController
   def all
 
     materials = ExternalActivity.includes(:user, :template).to_a +
-                Interactive.to_a
+                Interactive.all.to_a
 
     render json: materials_data(materials)
 

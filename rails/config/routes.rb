@@ -23,6 +23,7 @@ RailsPortal::Application.routes.draw do
   get '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report
   get '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report
 
+  get  "help" => "help#index"
   post "help/preview_help_page"
   post "home/preview_about_page"
   post "home/preview_home_page"
@@ -174,7 +175,7 @@ RailsPortal::Application.routes.draw do
         get :reset_password
         get :confirm
         get :limited_edit
-        put :limited_update
+        patch :limited_update
       end
       resource :security_questions, :only => [:edit, :update]
 
@@ -248,11 +249,11 @@ RailsPortal::Application.routes.draw do
       resources :external_reports
       resources :permission_forms do
         member do
-          post :update_forms
           get  :remove_form
         end
       end
 
+      post 'permission_forms/update_forms' => 'permission_forms#update_forms', :as => :update_permissions_forms
       resources :site_notices
 
       get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
@@ -545,14 +546,15 @@ RailsPortal::Application.routes.draw do
 
     get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
 
-    # Custom project page. This route should be always at the very bottom,
-    # so the custom page URL can't overwrite another resource URL!
+    get 'robots.txt'    => 'robots#index'
+    get 'sitemap.xml'   => 'robots#sitemap'
+
+    # Custom project page. This route should be always near the very bottom,
+    # so the custom page URL can't overwrite another resource URL other than
+    # the controller catch-all and the root route
     get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
 
     get '/:controller(/:action(/:id))'
-
-    get 'robots.txt'    => 'robots#index'
-    get 'sitemap.xml'   => 'robots#sitemap'
 
     root :to => 'home#index'
   end

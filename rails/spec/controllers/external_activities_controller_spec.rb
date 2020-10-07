@@ -345,7 +345,9 @@ describe ExternalActivitiesController do
     it 'POST create' do
       post :create, {}, {}
 
-      expect(response).to have_http_status(:redirect)
+      # bizarrely (confirmed in pre-Rails 4 production instance) you
+      # can create an external activity with no paramters
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -379,9 +381,9 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#matedit' do
     it 'GET matedit' do
-      get :matedit, {}, {}
+      get :matedit, {id: 0}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
@@ -406,18 +408,18 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#set_private_before_matedit' do
     it 'GET set_private_before_matedit' do
-      get :set_private_before_matedit, {}, {}
+      get :set_private_before_matedit, {id: 0}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
   # TODO: auto-generated
   describe '#copy' do
     it 'GET copy' do
-      get :copy, {}, {}
+      get :copy, {id: 0}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 end
