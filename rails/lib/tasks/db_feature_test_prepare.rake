@@ -1,23 +1,10 @@
 namespace :db do
   namespace :feature_test do
 
-    def mysql_creation_options(config)
-      @charset   = ENV['CHARSET']   || 'utf8'
-      @collation = ENV['COLLATION'] || 'utf8_unicode_ci'
-      {:charset => (config['charset'] || @charset), :collation => (config['collation'] || @collation)}
-    end
-
     # This is a subset of active-record/database.rake db:test:purge
-    # desc "Empty the feature_test database"
+    desc "Empty the feature_test database"
     task :purge => [:environment, 'db:load_config'] do
-      abcs = ActiveRecord::Base.configurations
-      case abcs['feature_test']['adapter']
-      when /mysql/
-        ActiveRecord::Base.establish_connection(:feature_test)
-        ActiveRecord::Base.connection.recreate_database(abcs['feature_test']['database'], mysql_creation_options(abcs['feature_test']))
-      else
-        raise "Task not supported by '#{abcs['feature_test']['adapter']}'"
-      end
+      ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations['feature_test']
     end
 
     desc "prepare db for feature and cucumber tests"
@@ -26,9 +13,9 @@ namespace :db do
       ActiveRecord::Base.logger.level = 1
 
       # This is copied from active-record/database.rake db:test:load_schema
-      ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['feature_test'])
+      # ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['feature_test'])
       ActiveRecord::Schema.verbose = false
-      Rake::Task["db:schema:load"].invoke
+      ActiveRecord::Tasks::DatabaseTasks.load_schema_for ActiveRecord::Base.configurations['feature_test'], :ruby, ENV['SCHEMA']
       # end of db:test_load_schema copy
 
       require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
