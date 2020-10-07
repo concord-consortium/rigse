@@ -1,6 +1,8 @@
 class Saveable::Interactive < ActiveRecord::Base
   self.table_name = "saveable_interactives"
 
+  attr_accessible :learner_id, :offering_id, :response_count, :iframe_id
+
   belongs_to :learner,     :class_name => 'Portal::Learner'
   belongs_to :offering,    :class_name => 'Portal::Offering'
 

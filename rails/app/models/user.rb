@@ -4,6 +4,9 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
+
+  # NOTE: for security we are not setting attr_accessible on user
+
   has_many :authentications, :dependent => :delete_all
   has_many :access_grants, :dependent => :delete_all
 

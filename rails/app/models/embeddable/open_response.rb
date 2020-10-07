@@ -1,5 +1,7 @@
 class Embeddable::OpenResponse < ActiveRecord::Base
 
+  attr_accessible :user_id, :uuid, :name, :description, :prompt, :default_response, :rows, :columns, :font_size, :external_id, :is_required, :show_in_featured_question_report
+
   MIN_FONT_SIZE = 9
   MAX_FONT_SIZE = 24
   MAX_ROWS      = 80

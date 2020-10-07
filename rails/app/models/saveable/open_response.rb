@@ -1,6 +1,8 @@
 class Saveable::OpenResponse < ActiveRecord::Base
   self.table_name = "saveable_open_responses"
 
+  attr_accessible :learner_id, :open_response_id, :offering_id, :response_count
+
   belongs_to :learner,        :class_name => 'Portal::Learner'
   belongs_to :offering,        :class_name => 'Portal::Offering'
 

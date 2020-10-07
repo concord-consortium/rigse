@@ -1,4 +1,7 @@
 class Admin::Tag < ActiveRecord::Base
+
+  attr_accessible :scope, :tag
+
   self.table_name = "admin_tags"
 
   validates_presence_of :tag, message: "can't be blank"
@@ -31,7 +34,7 @@ class Admin::Tag < ActiveRecord::Base
         end
         taggable.send("#{tag_type}_list").add(tag)
       end
-    end 
+    end
   end
 
   def name

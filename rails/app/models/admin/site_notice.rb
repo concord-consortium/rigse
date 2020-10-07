@@ -1,4 +1,7 @@
 class Admin::SiteNotice < ActiveRecord::Base
+
+  attr_accessible :notice_html, :created_by, :updated_by
+
   self.table_name = "admin_site_notices"
   has_many :admin_site_notice_users, :dependent => :destroy, :class_name => 'Admin::SiteNoticeUser', :foreign_key => 'notice_id', :primary_key => 'id'
 

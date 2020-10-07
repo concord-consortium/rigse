@@ -1,6 +1,14 @@
 require 'uri'
 class ExternalActivity < ActiveRecord::Base
 
+  attr_accessible :user_id, :uuid, :name, :archived_description, :url, :publication_status, :offerings_count, :save_path,
+                  :append_learner_id_to_url, :popup, :append_survey_monkey_uid, :template_id, :template_type, :launch_url,
+                  :is_official, :student_report_enabled, :teacher_guide_url, :thumbnail_url, :is_featured, :has_pretest,
+                  :short_description, :allow_collaboration, :author_email, :is_locked, :logging, :is_assessment_item,
+                  :author_url, :print_url, :is_archived, :archive_date, :credits, :license_code, :append_auth_token,
+                  :enable_sharing, :material_type, :rubric_url, :saves_student_data, :long_description_for_teacher,
+                  :long_description, :keywords, :tool_id, :has_teacher_edition, :teacher_resources_url
+
   # Possible options for source type attribute. For now it's hardcoded. In the future, we might change
   # that to entities living in a database, so it's easier to add new source types.
   SOURCE_TYPE_OPTIONS = [

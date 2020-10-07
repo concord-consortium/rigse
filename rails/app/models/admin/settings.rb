@@ -18,12 +18,11 @@ class Admin::Settings < ActiveRecord::Base
   include Changeable
   include AppSettings
 
-  attr_accessible :home_page_content, :use_student_security_questions, :allow_default_class, :enable_grade_levels, :use_bitmap_snapshots, :teachers_can_author, :enable_member_registration, :allow_adhoc_schools, :require_user_consent, :use_periodic_bundle_uploading,
-  :jnlp_cdn_hostname, :active, :external_url, :custom_help_page_html, :help_type,
-  :include_external_activities, :enabled_bookmark_types, :pub_interval, :anonymous_can_browse_materials, :jnlp_url, :show_collections_menu, :auto_set_teachers_as_authors,
-  :default_cohort_id, :wrap_home_page_content, :custom_search_path, :teacher_home_path,
-  :about_page_content, :uuid, :description
-
+  attr_accessible :home_page_content, :use_student_security_questions, :allow_default_class, :enable_grade_levels, :use_bitmap_snapshots, :teachers_can_author,
+                  :enable_member_registration, :allow_adhoc_schools, :require_user_consent, :use_periodic_bundle_uploading, :jnlp_cdn_hostname, :active, :external_url,
+                  :custom_help_page_html, :help_type, :include_external_activities, :enabled_bookmark_types, :pub_interval, :anonymous_can_browse_materials, :jnlp_url,
+                  :show_collections_menu, :auto_set_teachers_as_authors, :default_cohort_id, :wrap_home_page_content, :custom_search_path, :teacher_home_path,
+                  :about_page_content, :uuid, :description, :user_id
 
   self.extend SearchableModel
 

@@ -1,6 +1,8 @@
 class Section < ActiveRecord::Base
   include JnlpLaunchable
 
+  attr_accessible :user_id, :activity_id, :uuid, :name, :description, :position, :teacher_only, :publication_status
+
   belongs_to :activity
   belongs_to :user
 

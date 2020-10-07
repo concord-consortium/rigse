@@ -1,4 +1,7 @@
 class Embeddable::ImageQuestion < ActiveRecord::Base
+
+  attr_accessible :user_id, :uuid, :name, :prompt, :external_id, :drawing_prompt, :is_required, :show_in_featured_question_report
+
   self.table_name = "embeddable_image_questions"
   belongs_to :user
   has_many :page_elements, :as => :embeddable

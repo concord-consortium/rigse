@@ -1,6 +1,8 @@
 class Embeddable::MultipleChoice < ActiveRecord::Base
-  self.table_name = "embeddable_multiple_choices"
 
+  attr_accessible :user_id, :uuid, :name, :description, :prompt, :enable_rationale, :rationale_prompt, :allow_multiple_selection, :external_id, :is_required, :show_in_featured_question_report
+
+  self.table_name = "embeddable_multiple_choices"
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable

@@ -1,4 +1,8 @@
 class Embeddable::Iframe < ActiveRecord::Base
+
+  attr_accessible :user_id, :uuid, :name, :description, :width, :height, :url, :external_id, :display_in_iframe,
+                  :is_required, :show_in_featured_question_report
+
   self.table_name = "embeddable_iframes"
 
   belongs_to :user

@@ -2,6 +2,8 @@ class Page < ActiveRecord::Base
   include JnlpLaunchable
   include Clipboard
 
+  attr_accessible :user_id, :section_id, :uuid, :name, :description, :position, :teacher_only, :publication_status, :offerings_count, :url
+
   belongs_to :user
   belongs_to :section
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"

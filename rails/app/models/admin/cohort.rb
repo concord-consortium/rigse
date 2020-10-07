@@ -1,4 +1,7 @@
 class Admin::Cohort < ActiveRecord::Base
+
+  attr_accessible :project_id, :name, :email_notifications_enabled
+
   self.table_name = 'admin_cohorts'
   belongs_to :project, :class_name => 'Admin::Project'
   has_many :items, :class_name => 'Admin::CohortItem', :foreign_key => "admin_cohort_id", :dependent => :destroy

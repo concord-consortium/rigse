@@ -3,6 +3,12 @@
 # learners as would be used in a report.
 
 class Report::Learner < ActiveRecord::Base
+
+  attr_accessible :learner_id, :student_id, :user_id, :offering_id, :class_id, :last_run, :last_report, :offering_name, :teachers_name, :student_name,
+                  :username, :school_name, :class_name, :runnable_id, :runnable_name, :school_id, :num_answerables, :num_answered, :num_correct, :answers,
+                  :runnable_type, :complete_percent, :permission_forms, :num_submitted, :teachers_district, :teachers_state, :teachers_email,
+                  :permission_forms_id, :teachers_id, :teachers_map, :permission_forms_map
+
   self.table_name = "report_learners"
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",

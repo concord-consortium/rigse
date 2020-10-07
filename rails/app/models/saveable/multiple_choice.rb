@@ -1,6 +1,8 @@
 class Saveable::MultipleChoice < ActiveRecord::Base
   self.table_name = "saveable_multiple_choices"
 
+  attr_accessible :learner_id, :multiple_choice_id, :offering_id, :response_count, :uuid
+
   belongs_to :learner,        :class_name => 'Portal::Learner'
   belongs_to :offering,        :class_name => 'Portal::Offering'
 
@@ -25,7 +27,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
   #
   def answered?
 
-    if answers.length == 0 
+    if answers.length == 0
         return false
     end
 

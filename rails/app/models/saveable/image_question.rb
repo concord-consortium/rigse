@@ -1,6 +1,8 @@
 class Saveable::ImageQuestion < ActiveRecord::Base
   self.table_name = "saveable_image_questions"
 
+  attr_accessible :learner_id, :offering_id, :image_question_id, :response_count, :uuid
+
   belongs_to :learner,        :class_name => 'Portal::Learner'
   belongs_to :offering,        :class_name => 'Portal::Offering'
 

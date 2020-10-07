@@ -6,6 +6,8 @@ class Activity < ActiveRecord::Base
   belongs_to :investigation
   belongs_to :original
 
+  attr_accessible :user_id, :uuid, :name, :description, :position, :investigation_id, :original_id, :teacher_only, :publication_status, :offerings_count, :student_report_enabled, :show_score, :teacher_guide_url, :thumbnail_url, :is_featured, :is_assessment_item
+
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
 
   has_many :materials_collection_items, :dependent => :destroy, :as => :material
