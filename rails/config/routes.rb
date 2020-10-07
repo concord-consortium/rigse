@@ -122,7 +122,7 @@ RailsPortal::Application.routes.draw do
         end
         member do
           get :ask_consent
-          put :update_consent
+          patch :update_consent
           get :status
           get :move
           post :move
@@ -188,8 +188,11 @@ RailsPortal::Application.routes.draw do
     end
 
     get '/users/reports/account_report' => 'users#account_report', :as => :users_account_report
-    resources :passwords
-    #resource :session
+
+    resources :passwords, :only => [:update]
+    post '/passwords/create_by_email' => 'passwords#create_by_email'
+    post '/passwords/create_by_login' => 'passwords#create_by_login'
+    post '/passwords/update_users_password' => 'passwords#update_users_password'
 
     namespace :dataservice do
       # 2020-09-15 NP — I doubt that we actualy need create and update
