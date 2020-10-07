@@ -5,16 +5,16 @@ source 'http://rubygems.org'
 
 #### COMMON
 # source 'https://gems.railslts.com' do
-  gem 'rails', '4.0.13'
+  gem 'rails', '4.1.16'
   # TODO: remove pinned versions of following block when done with upgrade
-  gem 'actionmailer',     '4.0.13', :require => false
-  gem 'actionpack',       '4.0.13', :require => false
-  gem 'activemodel',      '4.0.13', :require => false
-  gem 'activerecord',     '4.0.13', :require => false
-  # gem 'activeresource',   '4.0.13', :require => false
-  gem 'activesupport',    '4.0.13', :require => false
-  gem 'railties',         '4.0.13', :require => false
-  # gem 'railslts-version', '4.0.13', :require => false
+  gem 'actionmailer',     '4.1.16', :require => false
+  gem 'actionpack',       '4.1.16', :require => false
+  gem 'activemodel',      '4.1.16', :require => false
+  gem 'activerecord',     '4.1.16', :require => false
+  # gem 'activeresource',   '4.1.16', :require => false
+  gem 'activesupport',    '4.1.16', :require => false
+  gem 'railties',         '4.1.16', :require => false
+  # gem 'railslts-version', '4.1.16', :require => false
 # end
 
 gem 'activerecord-deprecated_finders'
