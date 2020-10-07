@@ -122,7 +122,7 @@ RailsPortal::Application.routes.draw do
         end
         member do
           get :ask_consent
-          put :update_consent
+          patch :update_consent
           get :status
           get :move
           post :move
