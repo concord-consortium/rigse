@@ -13,7 +13,6 @@ class User < ActiveRecord::Base
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
   self.token_authentication_key = "access_token"
-  default_scope { where(User.arel_table[:state].not_in(['disabled'])) }
 
   def apply_omniauth(omniauth)
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
@@ -63,11 +62,14 @@ class User < ActiveRecord::Base
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
+  default_scope { where(User.arel_table[:state].not_in(['disabled'])) }
   scope :all_users, -> { where(nil) }
   scope :active, -> { where(state: 'active') }
   scope :suspended, -> { where(state: 'suspended') }
   scope :no_email, -> { where("email LIKE '#{NO_EMAIL_STRING}%'") }
   scope :email, -> { where("email NOT LIKE '#{NO_EMAIL_STRING}%'") }
+  # NB: This name is unfortunate, it is too similar to default_scope!
+  # Though the names are similar this scope searches for `default` users.
   scope :default, -> { where(default_user: true) }
   scope :with_role, lambda { | role_name |
     where('roles.title = ?',role_name).includes(:roles).references(:roles)

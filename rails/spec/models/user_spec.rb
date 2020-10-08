@@ -479,48 +479,118 @@ protected
     record
   end
 
-  # TODO: auto-generated
-  describe '.all_users' do # scope test
-    it 'supports named scope all_users' do
-      expect(described_class.limit(3).all_users).to all(be_a(described_class))
+  describe 'user scopes' do
+    # There are 3 users already loaded from fixtures in:
+
+    # rails/spec/fixtures/users.yml
+    # ID: email, state:
+    # 1: quentin@example.com, active
+    # 2: aaron@example.com, pending
+    # 3: salty_dog@example.com, active
+
+    let(:quentin) { User.find(1) }
+    let(:arron)   { User.find(2) }
+    let(:salty)   { User.find(3) }
+    let(:all_our_users) { [arron, salty, quentin] }
+
+    let(:saltys_state) { 'pending' }
+    let(:limit) { 3 }
+
+    # For scope tests, all users will be set as 'active'
+    before(:each) do
+      all_our_users.each do |u|
+        u.update_attribute(:state, 'active')
+      end
+      # Saltys state will be changed to tests scopes
+      salty.update_attribute('state', saltys_state)
+    end
+
+    describe '.all_users' do # scope test
+      let(:scope) { 'all_users' }
+      let(:saltys_state) { 'pending' }
+      subject { User.all_users.limit(limit) }
+      it 'returns all users despite status' do
+        expect(subject).to all(be_a(described_class))
+      end
+      it 'should include all of our users' do
+        all_our_users.each do |user|
+          expect(subject).to include(user)
+        end
+      end
+    end
+
+    describe '.active' do
+      let(:saltys_state) { 'pending' }
+      subject { User.active.limit(limit) }
+      it 'should be active users only' do
+        expect(subject).to include(quentin)
+        expect(subject).to include(arron)
+        expect(subject).not_to include(salty)
+      end
+    end
+
+    describe '.suspended' do
+      let(:saltys_state) { 'suspended' }
+      let(:scope) { 'suspended' }
+      subject { User.suspended.limit(limit) }
+      it 'limits to suspended users' do
+        expect(subject).not_to include(quentin)
+        expect(subject).not_to include(arron)
+        expect(salty.state).to eq('suspended')
+        expect(subject).to include(salty)
+      end
+    end
+
+    describe '.no_email' do # scope test
+      before(:each) do
+        salty.update_attribute(
+          :email, "#{User::NO_EMAIL_STRING}-12@#{User::NO_EMAIL_DOMAIN}"
+        )
+      end
+      subject { User.no_email.limit(limit) }
+      it 'limits to users with fake email addresses' do
+        expect(subject).not_to include(quentin)
+        expect(subject).not_to include(arron)
+        expect(subject).to include(salty)
+      end
+    end
+
+    describe '.email' do # scope test
+      before(:each) do
+        salty.update_attribute(:email,
+          "#{User::NO_EMAIL_STRING}-12@#{User::NO_EMAIL_DOMAIN}"
+        )
+      end
+      subject { User.email.limit(limit) }
+      it 'limits to users with fake email addresses' do
+        expect(subject).to include(quentin)
+        expect(subject).to include(arron)
+        expect(subject).not_to include(salty)
+      end
+    end
+
+    # TODO: NB: This name is unfortunate, it is too similar to default_scope!
+    # Though the names are similar this scope searches for `default` users.
+    describe '.default' do # scope test
+      subject { User.default.limit(limit) }
+      before(:each) { salty.update_attribute(:default_user, true) }
+      it 'returns only users with :default set to true' do
+        expect(described_class.limit(limit).default).to all(be_a(described_class))
+      end
+    end
+
+    describe '.with_role' do # scope test
+      let(:role_name) { 'role_name' }
+      before(:each) { salty.add_role(role_name) }
+      subject { User.with_role(role_name).limit(limit) }
+      it 'returns users with matching roles' do
+        expect(subject).not_to include(quentin)
+        expect(subject).not_to include(arron)
+        expect(subject).to include(salty)
+      end
     end
   end
-  # TODO: auto-generated
-  describe '.active' do # scope test
-    it 'supports named scope active' do
-      expect(described_class.limit(3).active).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.suspended' do # scope test
-    it 'supports named scope suspended' do
-      expect(described_class.limit(3).suspended).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.no_email' do # scope test
-    it 'supports named scope no_email' do
-      expect(described_class.limit(3).no_email).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.email' do # scope test
-    it 'supports named scope email' do
-      expect(described_class.limit(3).email).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.default' do # scope test
-    it 'supports named scope default' do
-      expect(described_class.limit(3).default).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.with_role' do # scope test
-    it 'supports named scope with_role' do
-      expect(described_class.limit(3).with_role('role_name')).to all(be_a(described_class))
-    end
-  end
+
 
   # TODO: auto-generated
   describe '#apply_omniauth' do
