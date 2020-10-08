@@ -176,6 +176,8 @@ module RailsPortal
       config.assets.initialize_on_precompile = false
     end
 
+    # use json format for serilized cookies
+    config.action_dispatch.cookies_serializer = :hybrid
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')
