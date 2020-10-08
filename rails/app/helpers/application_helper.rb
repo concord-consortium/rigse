@@ -180,7 +180,7 @@ module ApplicationHelper
   def render_edit_partial_for(component,opts={})
     render_partial_for(component, {:partial => "remote_form"}.merge!(opts))
   end
-  
+
   def edit_url_for(component, scope=false)
     if scope
       { :controller => component.class.name.pluralize.underscore,
@@ -579,7 +579,7 @@ module ApplicationHelper
   end
 
   def students_in_class(all_students)
-    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+    all_students.to_a.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
 
 #            Welcome

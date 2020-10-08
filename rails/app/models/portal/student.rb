@@ -136,7 +136,7 @@ class Portal::Student < ActiveRecord::Base
   ## required for the accordion view
   ##
   def children
-    clazzes.map! {|c| c.extend(FixupClazzes)}
+    clazzes.to_a.map! {|c| c.extend(FixupClazzes)}
   end
 
   def process_class_word(class_word)

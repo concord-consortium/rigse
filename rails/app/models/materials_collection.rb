@@ -53,6 +53,7 @@ class MaterialsCollection < ActiveRecord::Base
        mat = materials_of_type(type)
        mat = mat.filtered_by_cohorts(allowed_cohorts) if allowed_cohorts
        mat = mat.where(is_assessment_item: false) unless show_assessment_items
+       mat = mat.to_a
        mat.reject!{|m| m.archived? }
        materials[type.to_s] = mat.index_by(&:id)
     end

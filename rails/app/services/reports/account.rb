@@ -37,14 +37,14 @@ class Reports::Account < Reports::Excel
     user_school = school_name(portal_user)
     user_district = portal_user.school && portal_user.school.district ? portal_user.school.district.name : 'Unknown District'
     user_state = portal_user.school ? portal_user.school.state : '??'
-    user_classes = portal_user.clazzes.compact.map{ |c| class_name(c) }.join(',')
+    user_classes = portal_user.clazzes.to_a.compact.map{ |c| class_name(c) }.join(',')
 
     user_cohorts = ""
     user_email = portal_user.email
     if user_type == "Teacher"
       user_cohorts = portal_user.cohort_fullnames.join(", ")
     else
-      clazzes = portal_user.clazzes.reject { |c| c.teacher.nil? }
+      clazzes = portal_user.clazzes.to_a.reject { |c| c.teacher.nil? }
       user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_fullnames }.flatten.uniq.compact.join(', ')
     end
 
