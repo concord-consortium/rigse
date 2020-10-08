@@ -43,7 +43,7 @@ class Report::LearnerController < ApplicationController
       end
       respond_to do |format|
         format.html do
-          render :text => text_response, :status => status
+          render :plain => text_response, :status => status
         end
         format.json do
           render :json => json_response, :status => status

@@ -80,7 +80,7 @@ class AuthController < ApplicationController
   end
 
   def failure
-    render :text => "ERROR: #{params[:message]}"
+    render :plain => "ERROR: #{params[:message]}"
   end
 
   def user

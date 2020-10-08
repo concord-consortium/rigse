@@ -163,7 +163,7 @@ class Portal::OfferingsController < ApplicationController
       flash['notice'] = "Your answers have been saved."
       redirect_to :root
     else
-      render :text => 'problem loading offering', :status => 500
+      render :plain => 'problem loading offering', :status => 500
     end
   end
 

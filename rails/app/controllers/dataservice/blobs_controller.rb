@@ -86,7 +86,7 @@ class Dataservice::BlobsController < ApplicationController
       type = params[:mimetype] ? params[:mimetype] : @dataservice_blob.mimetype
       send_data(@dataservice_blob.content, :type => type, :filename => "file", :disposition => 'inline' )
     else
-      render :text => "<error>Forbidden</error>", :status => :forbidden  # Forbidden
+      render :html => "<error>Forbidden</error>", :status => :forbidden  # Forbidden
     end
   end
 end
