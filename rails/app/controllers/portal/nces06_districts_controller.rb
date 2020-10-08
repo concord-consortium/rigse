@@ -93,7 +93,7 @@ class Portal::Nces06DistrictsController < ApplicationController
 
     respond_to do |format|
       if @nces06_district.save
-        flash[:notice] = 'Portal::Nces06District was successfully created.'
+        flash['notice'] = 'Portal::Nces06District was successfully created.'
         format.html { redirect_to(@nces06_district) }
         format.xml  { render :xml => @nces06_district, :status => :created, :location => @nces06_district }
       else
@@ -113,7 +113,7 @@ class Portal::Nces06DistrictsController < ApplicationController
 
     respond_to do |format|
       if @nces06_district.update_attributes(params[:nces06_district])
-        flash[:notice] = 'Portal::Nces06District was successfully updated.'
+        flash['notice'] = 'Portal::Nces06District was successfully updated.'
         format.html { redirect_to(@nces06_district) }
         format.xml  { head :ok }
       else

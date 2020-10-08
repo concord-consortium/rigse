@@ -134,30 +134,30 @@ describe UsersController do
       expect(User.authenticate('aaron', 'monkey')).to be_nil
       get :activate, :activation_code => users(:aaron).activation_code
       expect(response).to redirect_to('/login')
-      expect(flash[:notice]).not_to be_nil
-      expect(flash[:error ]).to     be_nil
+      expect(flash['notice']).not_to be_nil
+      expect(flash['error']).to     be_nil
       expect(User.authenticate('aaron', 'monkey')).to eq(users(:aaron))
     end
 
     it 'does not activate user without key' do
       skip "Broken example"
       get :activate
-      expect(flash[:notice]).to     be_nil
-      expect(flash[:error ]).not_to be_nil
+      expect(flash['notice']).to     be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it 'does not activate user with blank key' do
       skip "Broken example"
       get :activate, :activation_code => ''
-      expect(flash[:notice]).to     be_nil
-      expect(flash[:error ]).not_to be_nil
+      expect(flash['notice']).to     be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it 'does not activate user with bogus key' do
       skip "Broken example"
       get :activate, :activation_code => 'i_haxxor_joo'
-      expect(flash[:notice]).to     be_nil
-      expect(flash[:error ]).not_to be_nil
+      expect(flash['notice']).to     be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it 'shows thank you page to teacher on successful registration' do
@@ -185,8 +185,8 @@ describe UsersController do
 
       assert_select "*#clazzes_nav", false
 
-      expect(flash[:error]).to be_nil
-      expect(flash[:notice]).to be_nil
+      expect(flash['error']).to be_nil
+      expect(flash['notice']).to be_nil
     end
   end
 

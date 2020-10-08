@@ -218,7 +218,7 @@ class Portal::LearnersController < ApplicationController
 
     respond_to do |format|
       if @portal_learner.save
-        flash[:notice] = 'Portal::Learner was successfully created.'
+        flash['notice'] = 'Portal::Learner was successfully created.'
         format.html { redirect_to(@portal_learner) }
         format.xml  { render :xml => @portal_learner, :status => :created, :location => @portal_learner }
       else
@@ -238,7 +238,7 @@ class Portal::LearnersController < ApplicationController
 
     respond_to do |format|
       if @portal_learner.update_attributes(params[:learner])
-        flash[:notice] = 'Portal::Learner was successfully updated.'
+        flash['notice'] = 'Portal::Learner was successfully updated.'
         format.html { redirect_to(@portal_learner) }
         format.xml  { head :ok }
       else

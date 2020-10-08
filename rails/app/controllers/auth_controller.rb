@@ -17,7 +17,7 @@ class AuthController < ApplicationController
   def login
     # Renders a nice login form (views/auth/login.haml).
     @app_name = params[:app_name]
-    @error = flash[:alert]
+    @error = flash['alert']
     @after_sign_in_path = params[:after_sign_in_path]
     # If the user is already signed in and there is is a after_sign_in_path set
     # then redirect the user to this page.

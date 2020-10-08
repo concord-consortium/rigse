@@ -123,12 +123,12 @@ class Portal::ClazzesController < ApplicationController
     okToCreate = true
     if !school_id
       # This should never happen, since the schools dropdown should consist of the default site school if the current user has no schools
-      flash[:error] = "You need to belong to a school in order to create classes. Please join a school and try again."
+      flash['error'] = "You need to belong to a school in order to create classes. Please join a school and try again."
       okToCreate = false
     end
 
     if current_visitor.anonymous?
-      flash[:error] = "Anonymous can't create classes. Please log in and try again."
+      flash['error'] = "Anonymous can't create classes. Please log in and try again."
       okToCreate = false
     end
 
@@ -138,7 +138,7 @@ class Portal::ClazzesController < ApplicationController
         @portal_clazz.grades << grade if grade
       end if grade_levels
       if @portal_clazz.grades.empty?
-        flash[:error] = "You need to select at least one grade level for this class."
+        flash['error'] = "You need to select at least one grade level for this class."
         okToCreate = false
       end
     end
@@ -154,7 +154,7 @@ class Portal::ClazzesController < ApplicationController
           @portal_clazz.teacher = teacher
           @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
         else
-          flash[:error] = "There was an error trying to associate you with this class. Please try again."
+          flash['error'] = "There was an error trying to associate you with this class. Please try again."
           okToCreate = false
         end
       end
@@ -173,7 +173,7 @@ class Portal::ClazzesController < ApplicationController
         # This will finally tie this clazz to a course and a school
         @portal_clazz.course = course
       else
-        flash[:error] = "There was an error trying to create your new class. Please try again."
+        flash['error'] = "There was an error trying to create your new class. Please try again."
         okToCreate = false
       end
     end
@@ -183,7 +183,7 @@ class Portal::ClazzesController < ApplicationController
         # send email notifications about class creation
         Portal::ClazzMailer.clazz_creation_notification(@current_user, @portal_clazz).deliver
 
-        flash[:notice] = 'Class was successfully created.'
+        flash['notice'] = 'Class was successfully created.'
         format.html { redirect_to(url_for([:materials, @portal_clazz])) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
       else
@@ -243,14 +243,14 @@ class Portal::ClazzesController < ApplicationController
 
         if Admin::Settings.default_settings.enable_grade_levels?
           if !grade_levels
-            flash[:error] = "You need to select at least one grade level for this class."
+            flash['error'] = "You need to select at least one grade level for this class."
             okToUpdate = false
           end
         end
 
         if okToUpdate && @portal_clazz.update_attributes(object_params)
           update_teachers.call
-          flash[:notice] = 'Class was successfully updated.'
+          flash['notice'] = 'Class was successfully updated.'
           format.html { redirect_to(url_for([:materials, @portal_clazz])) }
           format.xml  { head :ok }
         else

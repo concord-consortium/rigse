@@ -33,7 +33,7 @@ class Admin::CommonsLicensesController < ApplicationController
     @license = CommonsLicense.new(params[:commons_license])
 
     if @license.save
-      flash[:notice]='License was successfully created.'
+      flash['notice']='License was successfully created.'
       redirect_to action: :index
     else
       render :action => 'new'
@@ -44,7 +44,7 @@ class Admin::CommonsLicensesController < ApplicationController
     authorize CommonsLicense
     @license = CommonsLicense.find(params[:code])
     if @license.update_attributes(params[:commons_license])
-      flash[:notice]= 'License was successfully updated.'
+      flash['notice']= 'License was successfully updated.'
       redirect_to action: :index
     else
       render :action => 'edit'
@@ -55,7 +55,7 @@ class Admin::CommonsLicensesController < ApplicationController
     authorize CommonsLicense
     @license = CommonsLicense.find(params[:code])
     @license.destroy
-    flash[:notice]= 'License was successfully deleted.'
+    flash['notice']= 'License was successfully deleted.'
     redirect_to action: :index
   end
 

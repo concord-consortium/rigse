@@ -51,7 +51,7 @@ class Dataservice::BlobsController < ApplicationController
 
     respond_to do |format|
       if @dataservice_blob.save
-        flash[:notice] = 'Dataservice::Blob was successfully created.'
+        flash['notice'] = 'Dataservice::Blob was successfully created.'
         format.html { head :ok }
         format.xml  { render :xml => @dataservice_blob, :status => :created, :location => @dataservice_blob }
       else
@@ -68,7 +68,7 @@ class Dataservice::BlobsController < ApplicationController
 
     respond_to do |format|
       if @dataservice_blob.update_attributes(params[:blob])
-        flash[:notice] = 'Dataservice::Blob was successfully updated.'
+        flash['notice'] = 'Dataservice::Blob was successfully updated.'
         format.html { head :ok }
         format.xml  { head :ok }
       else

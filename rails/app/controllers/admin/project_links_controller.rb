@@ -89,7 +89,7 @@ class Admin::ProjectLinksController < ApplicationController
   def destroy
     authorize @project_link
     @project_link.destroy
-    flash[:notice] = "Link #{@project_link.name} was deleted"
+    flash['notice'] = "Link #{@project_link.name} was deleted"
     redirect_back_or admin_project_links_url
   end
 end

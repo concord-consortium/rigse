@@ -66,7 +66,7 @@ class Portal::StudentClazzesController < ApplicationController
 
     respond_to do |format|
       if @portal_student_clazz.save
-        flash[:notice] = 'Portal::StudentClazz was successfully created.'
+        flash['notice'] = 'Portal::StudentClazz was successfully created.'
         format.html { redirect_to(@portal_student_clazz) }
         format.xml  { render :xml => @portal_student_clazz, :status => :created, :location => @portal_student_clazz }
       else
@@ -86,7 +86,7 @@ class Portal::StudentClazzesController < ApplicationController
 
     respond_to do |format|
       if @portal_student_clazz.update_attributes(params[:portal_student_clazz])
-        flash[:notice] = 'Portal::StudentClazz was successfully updated.'
+        flash['notice'] = 'Portal::StudentClazz was successfully updated.'
         format.html { redirect_to(@portal_student_clazz) }
         format.xml  { head :ok }
       else

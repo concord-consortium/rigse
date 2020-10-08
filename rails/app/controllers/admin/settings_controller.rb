@@ -81,7 +81,7 @@ class Admin::SettingsController < ApplicationController
   def create
     @admin_settings = Admin::Settings.new(params[:admin_settings])
     if @admin_settings.save
-      flash[:notice] = 'Admin::Settings was successfully created.'
+      flash['notice'] = 'Admin::Settings was successfully created.'
       redirect_to @admin_settings
     else
       render action: 'new'
@@ -92,7 +92,7 @@ class Admin::SettingsController < ApplicationController
   def update
     @admin_settings = Admin::Settings.find(params[:id])
     if @admin_settings.update_attributes(params[:admin_settings])
-      flash[:notice] = 'Admin::Settings was successfully updated.'
+      flash['notice'] = 'Admin::Settings was successfully updated.'
       redirect_to @admin_settings
     else
       render action: 'edit'
@@ -103,7 +103,7 @@ class Admin::SettingsController < ApplicationController
   def destroy
     @settings = Admin::Settings.find(params[:id])
     @settings.destroy
-    flash[:notice] = 'Settings successfully deleted.'
+    flash['notice'] = 'Settings successfully deleted.'
     redirect_to admin_settings_url
   end
 

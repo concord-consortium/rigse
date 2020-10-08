@@ -38,7 +38,7 @@ class Admin::ExternalReportsController < ApplicationController
     @report = ExternalReport.new(params[:external_report])
 
     if @report.save
-      flash[:notice]='ExternalReport was successfully created.'
+      flash['notice']='ExternalReport was successfully created.'
       redirect_to action: :index
     else
       render :action => 'new'
@@ -58,7 +58,7 @@ class Admin::ExternalReportsController < ApplicationController
         .update_all(default_report_for_source_type: nil)
     end
     if saved_successfully
-      flash[:notice]= 'ExternalReport was successfully updated.'
+      flash['notice']= 'ExternalReport was successfully updated.'
       redirect_to action: :index
     else
       render :action => 'edit'
@@ -70,7 +70,7 @@ class Admin::ExternalReportsController < ApplicationController
     authorize ExternalReport
     @report = ExternalReport.find(params[:id])
     @report.destroy
-    flash[:notice]= 'ExternalReport was successfully deleted.'
+    flash['notice']= 'ExternalReport was successfully deleted.'
     redirect_to action: :index
   end
 

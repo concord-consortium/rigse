@@ -68,7 +68,7 @@ class Portal::SchoolMembershipsController < ApplicationController
 
     respond_to do |format|
       if @school_membership.save
-        flash[:notice] = 'Portal::SchoolMembership was successfully created.'
+        flash['notice'] = 'Portal::SchoolMembership was successfully created.'
         format.html { redirect_to(@school_membership) }
         format.xml  { render :xml => @school_membership, :status => :created, :location => @school_membership }
       else
@@ -88,7 +88,7 @@ class Portal::SchoolMembershipsController < ApplicationController
 
     respond_to do |format|
       if @school_membership.update_attributes(params[:portal_school_membership])
-        flash[:notice] = 'Portal::SchoolMembership was successfully updated.'
+        flash['notice'] = 'Portal::SchoolMembership was successfully updated.'
         format.html { redirect_to(@school_membership) }
         format.xml  { head :ok }
       else

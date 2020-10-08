@@ -205,7 +205,7 @@ class Report::LearnerController < ApplicationController
   end
 
   def alert_and_reload(message)
-    flash[:alert] = message
+    flash['alert'] = message
     redirect_to request.GET.except(:commit)
   end
 

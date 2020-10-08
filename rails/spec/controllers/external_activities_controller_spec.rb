@@ -245,8 +245,8 @@ describe ExternalActivitiesController do
 
       materials_collection_items = MaterialsCollectionItem.where(materials_collection_id: materials_collection.id)
       expect(materials_collection_items.length).to be(1)
-      expect(flash[:notice]).to be_present
-      expect(flash[:notice]).to match(/is assigned to the selected collection\(s\) successfully/)
+      expect(flash['notice']).to be_present
+      expect(flash['notice']).to match(/is assigned to the selected collection\(s\) successfully/)
     end
 
     it "should return an error if a collection is not specified" do
@@ -257,8 +257,8 @@ describe ExternalActivitiesController do
       sign_in admin
       put :update_collections, post_params
 
-      expect(flash[:error]).to be_present
-      expect(flash[:error]).to match(/Select at least one collection to assign this resource/)
+      expect(flash['error']).to be_present
+      expect(flash['error']).to match(/Select at least one collection to assign this resource/)
     end
   end
 

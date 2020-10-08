@@ -126,7 +126,7 @@ class ExternalActivitiesController < ApplicationController
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
-        flash[:notice] = 'ExternalActivity was successfully created.'
+        flash['notice'] = 'ExternalActivity was successfully created.'
         format.html { redirect_to(@external_activity) }
         format.xml  { render :xml => @external_activity, :status => :created, :location => @external_activity }
       else
@@ -181,7 +181,7 @@ class ExternalActivitiesController < ApplicationController
 
     respond_to do |format|
       if @external_activity.update_attributes(params[:external_activity])
-        flash[:notice] = 'ExternalActivity was successfully updated.'
+        flash['notice'] = 'ExternalActivity was successfully updated.'
         # redirect to browse path instead of show page since the show page is deprecated
         format.html { redirect_to(browse_external_activity_path(@external_activity)) }
         format.xml  { head :ok }
@@ -251,14 +251,14 @@ class ExternalActivitiesController < ApplicationController
   def archive
     authorize @external_activity
     @external_activity.archive!
-    flash[:notice]= t("matedit.archive_success", {name: @external_activity.name})
+    flash['notice']= t("matedit.archive_success", {name: @external_activity.name})
     redirect_to :search  #TBD:  Where to go?
   end
 
   def unarchive
     authorize @external_activity
     @external_activity.unarchive!
-    flash[:notice]= t("matedit.unarchive_success", {name: @external_activity.name})
+    flash['notice']= t("matedit.unarchive_success", {name: @external_activity.name})
     redirect_to :search  #TBD:  Where to go?
   end
 
@@ -279,7 +279,7 @@ class ExternalActivitiesController < ApplicationController
     if clone
       redirect_to matedit_external_activity_url(clone.id)
     else
-      flash[:error] = "Copying failed"
+      flash['error'] = "Copying failed"
       redirect_to :back
     end
   end
@@ -306,9 +306,9 @@ class ExternalActivitiesController < ApplicationController
 
     if collection_ids.count > 0
       @external_activity.add_to_collections(collection_ids)
-      flash[:notice] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
+      flash['notice'] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
     else
-      flash[:error] = "Select at least one collection to assign this resource."
+      flash['error'] = "Select at least one collection to assign this resource."
     end
 
     redirect_to action: 'edit_collections'

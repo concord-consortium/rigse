@@ -228,7 +228,7 @@ describe Portal::StudentsController do
           to_return(status: 200, body: "Success", headers: {})
 
         post :move, id: @student.id, clazz: @clazz_params
-        expect(flash[:notice]).to match(/Successfully moved student to new class./)
+        expect(flash['notice']).to match(/Successfully moved student to new class./)
       end
     end
 

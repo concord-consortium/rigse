@@ -67,7 +67,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     authorize @user
     @user.destroy
-    flash[:notice] = "User: #{@user.name} successfully deleted!"
+    flash['notice'] = "User: #{@user.name} successfully deleted!"
     redirect_to users_url
   end
 
@@ -166,7 +166,7 @@ class UsersController < ApplicationController
             @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
           end
 
-          flash[:notice] = "User: #{@user.name} was successfully updated."
+          flash['notice'] = "User: #{@user.name} was successfully updated."
           format.html do
             if params[:user][:redirect_user_edit_form] == 'users'
               redirect_to users_path
@@ -220,7 +220,7 @@ class UsersController < ApplicationController
       user.make_user_a_member
 
       # assume this type of user just activated someone from somewhere else in the app
-      flash[:notice] = "Activation of #{user.name_and_login} complete."
+      flash['notice'] = "Activation of #{user.name_and_login} complete."
       redirect_to(session[:return_to] || root_path)
     end
   end
@@ -252,7 +252,7 @@ class UsersController < ApplicationController
         if @user.portal_teacher && params[:user][:has_cohorts_in_form] && policy(@current_user).add_teachers_to_cohorts?
           @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
         end
-        flash[:notice] = "User: #{@user.name} was successfully updated."
+        flash['notice'] = "User: #{@user.name} was successfully updated."
         format.html do
           redirect_to users_path
         end

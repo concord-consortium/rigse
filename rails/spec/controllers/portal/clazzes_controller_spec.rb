@@ -235,7 +235,7 @@ describe Portal::ClazzesController do
 
       post :create, @post_params
 
-      assert flash[:error]
+      assert flash['error']
       expect(Portal::Clazz.count).to eq(current_count)
     end
 
@@ -261,7 +261,7 @@ describe Portal::ClazzesController do
 
       post :create, @post_params
 
-      assert flash[:error]
+      assert flash['error']
       expect(Portal::Clazz.count).to equal(current_count)
     end
 
@@ -319,7 +319,7 @@ describe Portal::ClazzesController do
 
       put :update, @post_params
 
-      assert flash[:error]
+      assert flash['error']
     end
 
     it "should let me update a class with no grade levels when grade levels are disabled" do

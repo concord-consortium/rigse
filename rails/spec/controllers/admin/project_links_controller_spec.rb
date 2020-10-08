@@ -25,7 +25,7 @@ describe Admin::ProjectLinksController do
     it 'it should NOT let them' do
       put :update, full_params
       expect(response).to have_http_status(:redirect)
-      expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+      expect(request.flash['alert']).to match(RegexForAuthFailModify)
     end
   end
 
@@ -43,7 +43,7 @@ describe Admin::ProjectLinksController do
           get :show, id: link.id
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash[:alert]).to match(RegexForAuthFailShow)
+          expect(request.flash['alert']).to match(RegexForAuthFailShow)
         end
       end
     end
@@ -52,7 +52,7 @@ describe Admin::ProjectLinksController do
         get :new
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+        expect(request.flash['alert']).to match(RegexForAuthFailNew)
       end
     end
 
@@ -61,7 +61,7 @@ describe Admin::ProjectLinksController do
         put :create
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+        expect(request.flash['alert']).to match(RegexForAuthFailNew)
       end
     end
 
@@ -70,7 +70,7 @@ describe Admin::ProjectLinksController do
         put :update, id: @link_1.id
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash[:alert]).to match(RegexForAuthFailModify)
+        expect(request.flash['alert']).to match(RegexForAuthFailModify)
       end
     end
 
@@ -79,7 +79,7 @@ describe Admin::ProjectLinksController do
         delete :destroy, id: @link_1.id
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash[:alert]).to match(RegexForAuthFailDestroy)
+        expect(request.flash['alert']).to match(RegexForAuthFailDestroy)
       end
     end
   end
@@ -126,7 +126,7 @@ describe Admin::ProjectLinksController do
           get :show, id:@link_2.id
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash[:alert]).to match(RegexForAuthFailShow)
+          expect(request.flash['alert']).to match(RegexForAuthFailShow)
         end
       end
     end
@@ -231,7 +231,7 @@ describe Admin::ProjectLinksController do
           post :create, params
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+          expect(request.flash['alert']).to match(RegexForAuthFailNew)
         end
       end
     end
@@ -341,7 +341,7 @@ describe Admin::ProjectLinksController do
           delete :destroy, id: link.id
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash[:notice]).to match(RegexDeleteSuccess)
+          expect(request.flash['notice']).to match(RegexDeleteSuccess)
         end
       end
     end
@@ -563,7 +563,7 @@ describe Admin::ProjectLinksController do
             post :create, params
             # Redirect, and show error when not allowed:
             expect(response).to have_http_status(:redirect)
-            expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+            expect(request.flash['alert']).to match(RegexForAuthFailNew)
           end
         end
       end

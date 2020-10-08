@@ -39,7 +39,7 @@ class Admin::ClientsController < ApplicationController
     @client = Client.new(params[:client])
 
     if @client.save
-      flash[:notice]='Client was successfully created.'
+      flash['notice']='Client was successfully created.'
       redirect_to action: :index
     else
       render :action => 'new'
@@ -51,7 +51,7 @@ class Admin::ClientsController < ApplicationController
     authorize Client
     @client = Client.find(params[:id])
     if @client.update_attributes(params[:client])
-      flash[:notice]= 'Client was successfully updated.'
+      flash['notice']= 'Client was successfully updated.'
       redirect_to action: :index
     else
       render :action => 'edit'
@@ -63,7 +63,7 @@ class Admin::ClientsController < ApplicationController
     authorize Client
     @client = Client.find(params[:id])
     @client.destroy
-    flash[:notice]= 'Client was successfully deleted.'
+    flash['notice']= 'Client was successfully deleted.'
     redirect_to action: :index
   end
 

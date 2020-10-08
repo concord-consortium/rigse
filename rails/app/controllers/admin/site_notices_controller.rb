@@ -55,7 +55,7 @@ class Admin::SiteNoticesController < ApplicationController
     end
 
     if error
-      flash[:error] = error.html_safe
+      flash['error'] = error.html_safe
       respond_to do |format|
         format.html { render :action => "edit" }
       end
