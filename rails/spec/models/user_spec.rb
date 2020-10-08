@@ -505,8 +505,61 @@ protected
       salty.update_attribute('state', saltys_state)
     end
 
+    describe 'the default scope' do
+      let(:saltys_state) { 'disabled' }
+      subject { User.all }
+      it 'should not return any disabled users' do
+        expect(subject).to include(quentin)
+        expect(subject).to include(arron)
+        expect(subject).not_to include(salty)
+      end
+
+      describe 'chaining scopes after default_scope' do
+        describe 'adding a where clause' do
+          let(:saltys_state) { 'disabled' }
+          it 'should ignore disabled users' do
+            expect(User.where(email: salty.email)).to_not include(salty)
+            expect(User.where(email: arron.email)).to include(arron)
+          end
+          it 'unless we unscope first' do
+            expect(User.unscoped.where(email: salty.email)).to include(salty)
+          end
+        end
+
+        describe 'masking results in other named scopes' do
+          let(:saltys_state) { 'disabled' } # Will hide salty from all scopes
+          let(:role_name)    { 'role_name' }
+          before(:each) do
+            # In subsequent scope searches in this section,
+            # these attributes are required:
+            arron.update_attribute(:default_user, true)
+            salty.update_attribute(:default_user, true)
+            arron.add_role('role_name')
+            salty.add_role('role_name')
+          end
+          describe 'email scope' do
+            it 'should hide disabled users' do
+              expect(User.email).to_not include(salty)
+              expect(User.email).to include(arron)
+            end
+          end
+          describe '`default` scope' do
+            it 'should hide disabled users' do
+              expect(User.default).to_not include(salty)
+              expect(User.default).to include(arron)
+            end
+          end
+          describe 'with_role scope' do
+            it 'should hide disabled users' do
+              expect(User.with_role(role_name)).to_not include(salty)
+              expect(User.with_role(role_name)).to include(arron)
+            end
+          end
+        end
+      end
+    end
+
     describe '.all_users' do # scope test
-      let(:scope) { 'all_users' }
       let(:saltys_state) { 'pending' }
       subject { User.all_users.limit(limit) }
       it 'returns all users despite status' do
