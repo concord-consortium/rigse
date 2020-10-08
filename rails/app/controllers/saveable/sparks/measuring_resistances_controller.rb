@@ -46,7 +46,7 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
 
     respond_to do |format|
       if @measuring_resistance.save
-        flash[:notice] = 'Saveable::Sparks::MeasuringResistance.was successfully created.'
+        flash['notice'] = 'Saveable::Sparks::MeasuringResistance.was successfully created.'
         format.html { redirect_to(@measuring_resistance) }
         format.json { redirect_to(@measuring_resistance) }
         format.json  { render :xml => @measuring_resistance, :status => :created, :location => @measuring_resistance }
@@ -64,7 +64,7 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
 
     respond_to do |format|
       if @measuring_resistance.update_attributes(params[:measuring_resistance])
-        flash[:notice] = 'Saveable::Sparks::MeasuringResistance.was successfully updated.'
+        flash['notice'] = 'Saveable::Sparks::MeasuringResistance.was successfully updated.'
         format.html { redirect_to(@measuring_resistance) }
         format.json  { head :ok }
       else

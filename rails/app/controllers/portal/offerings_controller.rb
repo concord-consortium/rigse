@@ -107,7 +107,7 @@ class Portal::OfferingsController < ApplicationController
     end
     respond_to do |format|
       if update_successful
-        flash[:notice] = 'Portal::Offering was successfully updated.'
+        flash['notice'] = 'Portal::Offering was successfully updated.'
         format.html { redirect_to(@offering) }
         format.xml  { head :ok }
       else
@@ -160,7 +160,7 @@ class Portal::OfferingsController < ApplicationController
         learner.report_learner.last_run = DateTime.now
         learner.report_learner.update_fields
       end
-      flash[:notice] = "Your answers have been saved."
+      flash['notice'] = "Your answers have been saved."
       redirect_to :root
     else
       render :text => 'problem loading offering', :status => 500

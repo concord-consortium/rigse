@@ -87,7 +87,7 @@ class InteractivesController < ApplicationController
     respond_to do |format|
       if @interactive.save
         format.js  # render the js file
-        flash[:notice] = 'Interactive was successfully created.'
+        flash['notice'] = 'Interactive was successfully created.'
         format.html { redirect_to(@interactive) }
         format.xml  { render :xml => @interactive, :status => :created, :location => @interactive }
       else
@@ -162,7 +162,7 @@ class InteractivesController < ApplicationController
     else
       respond_to do |format|
         if @interactive.update_attributes(params[:interactive])
-          flash[:notice] = 'Interactive was successfully updated.'
+          flash['notice'] = 'Interactive was successfully updated.'
           format.html { redirect_to(@interactive) }
           format.xml  { head :ok }
         else

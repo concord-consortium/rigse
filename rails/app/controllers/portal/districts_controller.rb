@@ -65,7 +65,7 @@ class Portal::DistrictsController < ApplicationController
     cancel = params[:commit] == "Cancel"
 
     if @portal_district.save
-      flash[:notice] = 'Portal::District was successfully created.'
+      flash['notice'] = 'Portal::District was successfully created.'
       redirect_to @portal_district
     else
       render :action => "new"
@@ -82,7 +82,7 @@ class Portal::DistrictsController < ApplicationController
     @portal_district = Portal::District.find(params[:id])
 
     if @portal_district.update_attributes(params[:portal_district])
-      flash[:notice] = 'Portal::District was successfully updated.'
+      flash['notice'] = 'Portal::District was successfully updated.'
       redirect_to @portal_district
     else
       render :action => "edit"

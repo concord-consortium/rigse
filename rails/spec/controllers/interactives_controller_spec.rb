@@ -52,7 +52,7 @@ describe InteractivesController do
           }
         }
 
-        expect(flash[:notice]).to eq("Interactive was successfully created.")
+        expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).publication_status).to be publication_status
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
@@ -72,7 +72,7 @@ describe InteractivesController do
             :credits => credits
           }
         }
-        expect(flash[:notice]).to eq("Interactive was successfully created.")
+        expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).publication_status).to eq("draft")
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
@@ -98,7 +98,7 @@ describe InteractivesController do
           :update_subject_areas => "true",
           :subject_areas => ["Physical Science"]
         }
-        expect(flash[:notice]).to eq("Interactive was successfully created.")
+        expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).model_type_list).to match_array(["model_type_1"])
         expect(assigns(:interactive).grade_level_list).to match_array(["1","5"])
         expect(assigns(:interactive).subject_area_list).to match_array(["Physical Science"])
@@ -135,7 +135,7 @@ describe InteractivesController do
 
       updated = Interactive.find(test_interactive.id)
       expect(updated.model_type_list).to match_array(["model_type_2"])
-      expect(flash[:notice]).to eq("Interactive was successfully updated.")
+      expect(flash['notice']).to eq("Interactive was successfully updated.")
     end
   end
 

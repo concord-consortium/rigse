@@ -66,7 +66,7 @@ class Portal::SubjectsController < ApplicationController
 
     respond_to do |format|
       if @subject.save
-        flash[:notice] = 'Portal::Subject was successfully created.'
+        flash['notice'] = 'Portal::Subject was successfully created.'
         format.html { redirect_to(@subject) }
         format.xml  { render :xml => @subject, :status => :created, :location => @subject }
       else
@@ -86,7 +86,7 @@ class Portal::SubjectsController < ApplicationController
 
     respond_to do |format|
       if @subject.update_attributes(params[:subject])
-        flash[:notice] = 'Portal::Subject was successfully updated.'
+        flash['notice'] = 'Portal::Subject was successfully updated.'
         format.html { redirect_to(@subject) }
         format.xml  { head :ok }
       else

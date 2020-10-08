@@ -159,7 +159,7 @@ class Portal::StudentsController < ApplicationController
           You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
           <br/>
           EOF
-          flash[:info] = msg.html_safe
+          flash['info'] = msg.html_safe
           format.html { redirect_to(@portal_clazz) }
         end
       else  # something didn't get created or referenced correctly
@@ -191,7 +191,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student = Portal::Student.find(params[:id])
     respond_to do |format|
       if @portal_student.update_attributes(params[:portal_student])
-        flash[:notice] = 'Portal::Student was successfully updated.'
+        flash['notice'] = 'Portal::Student was successfully updated.'
         format.html { redirect_to(@portal_student) }
         format.xml  { head :ok }
       else
@@ -232,7 +232,7 @@ class Portal::StudentsController < ApplicationController
 
       }
 
-      flash[:notice] = 'Successfully moved student to new class.'
+      flash['notice'] = 'Successfully moved student to new class.'
       redirect_to(portal_student)
     end
   end

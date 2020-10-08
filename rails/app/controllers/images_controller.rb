@@ -67,10 +67,10 @@ class ImagesController < ApplicationController
     @image = Image.new(params[:image])
 
     if @image.save
-      flash[:notice] = 'Image was successfully created.'
+      flash['notice'] = 'Image was successfully created.'
       redirect_to @image
     else
-      flash[:error] = 'There was a problem with your submission. Check what you entered and try again.'
+      flash['error'] = 'There was a problem with your submission. Check what you entered and try again.'
       render action: 'new'
     end
   end
@@ -79,10 +79,10 @@ class ImagesController < ApplicationController
   def update
     authorize @image
     if update_image_attributes
-      flash[:notice] = 'Image was successfully updated.'
+      flash['notice'] = 'Image was successfully updated.'
       redirect_to @image
     else
-      flash[:error] = 'There was a problem with your submission. Check what you entered and try again.'
+      flash['error'] = 'There was a problem with your submission. Check what you entered and try again.'
       render action: 'edit'
     end
   end

@@ -70,7 +70,7 @@ class Portal::CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.save
-        flash[:notice] = 'Portal::Course was successfully created.'
+        flash['notice'] = 'Portal::Course was successfully created.'
         format.html { redirect_to(@course) }
         format.xml  { render :xml => @course, :status => :created, :location => @course }
       else
@@ -90,7 +90,7 @@ class Portal::CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.update_attributes(params[:portal_course])
-        flash[:notice] = 'Portal::Course was successfully updated.'
+        flash['notice'] = 'Portal::Course was successfully updated.'
         format.html { redirect_to(@course) }
         format.xml  { head :ok }
       else

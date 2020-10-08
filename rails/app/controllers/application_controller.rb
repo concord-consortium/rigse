@@ -54,12 +54,12 @@ class ApplicationController < ActionController::Base
           #    saw the message there is no need to show it again.
           # So instead of showing the error message again, we just send the user to the
           # default login page for that user.
-          flash[:alert] = error_message if not params[:redirecting_after_sign_in]
+          flash['alert'] = error_message if not params[:redirecting_after_sign_in]
 
           redirect_to view_context.current_user_home_path
         end
       else
-        flash[:alert] = error_message
+        flash['alert'] = error_message
         # send the anonymous user to the login page, and then try to send the user back
         # to the original page. In the case of a post request this won't always work so
         # well. It will redirect the user to the GET route of the same URL that was posted

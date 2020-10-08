@@ -94,7 +94,7 @@ class Portal::Nces06SchoolsController < ApplicationController
 
     respond_to do |format|
       if @nces06_school.save
-        flash[:notice] = 'Portal::Nces06School was successfully created.'
+        flash['notice'] = 'Portal::Nces06School was successfully created.'
         format.html { redirect_to(@nces06_school) }
         format.xml  { render :xml => @nces06_school, :status => :created, :location => @nces06_school }
       else
@@ -114,7 +114,7 @@ class Portal::Nces06SchoolsController < ApplicationController
 
     respond_to do |format|
       if @nces06_school.update_attributes(params[:nces06_school])
-        flash[:notice] = 'Portal::Nces06School was successfully updated.'
+        flash['notice'] = 'Portal::Nces06School was successfully updated.'
         format.html { redirect_to(@nces06_school) }
         format.xml  { head :ok }
       else
