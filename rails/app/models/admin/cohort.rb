@@ -14,7 +14,7 @@ class Admin::Cohort < ActiveRecord::Base
   end
 
   def teachers
-    items.where(:item_type => 'Portal::Teacher').map {|i| Portal::Teacher.find_by_id(i.item_id)}.flatten.uniq.compact
+    items.where(:item_type => 'Portal::Teacher').map {|i| Portal::Teacher.find_by_id(i.item_id)}.to_a.flatten.uniq.compact
   end
 
   def students

@@ -1,12 +1,12 @@
 class Report::EmbeddableFilter < ActiveRecord::Base
   self.table_name = "report_embeddable_filters"
-  
+
   belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id"
-  
+
   serialize :embeddables
-  
+
   validates_uniqueness_of :offering_id
-  
+
   def filter(collection)
     embs = embeddables
     if embs.size == 0
@@ -14,14 +14,14 @@ class Report::EmbeddableFilter < ActiveRecord::Base
     end
     return collection & embeddables
   end
-  
+
   def embeddables
     return @embeddables_internal if @embeddables_internal
     _embeddables_internal = read_attribute(:embeddables) || []
-    @embeddables_internal = _embeddables_internal .map{|em| em[:type].constantize.find(em[:id]) }.compact.uniq unless @embeddables_internal
+    @embeddables_internal = _embeddables_internal.to_a.map{|em| em[:type].constantize.find(em[:id]) }.compact.uniq unless @embeddables_internal
     return @embeddables_internal
   end
-  
+
   def embeddables=(array)
     items = array.map{|em| {:type => em.class.to_s, :id => em.id } }
     write_attribute(:embeddables, items)
@@ -40,7 +40,7 @@ class Report::EmbeddableFilter < ActiveRecord::Base
     write_attribute(:embeddables, items)
     @embeddables_internal = nil
   end
-  
+
   def clear
     self.update_attribute(:embeddables, [])
     @embeddables_internal = nil

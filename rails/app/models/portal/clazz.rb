@@ -232,7 +232,7 @@ class Portal::Clazz < ActiveRecord::Base
 
   def offerings_with_default_classes(user=nil)
     return self.offerings_including_default_class unless (user && user.portal_student && self.default_class)
-    real_classes            = user.portal_student.clazzes.reject { |c| c.default_class }
+    real_classes            = user.portal_student.clazzes.to_a.reject { |c| c.default_class }
     real_offering_runnables = real_classes.map{ |c| c.active_offerings.map { |o| o.runnable } }.flatten.uniq.compact
     default_offerings       = self.active_offerings.reject { |o| real_offering_runnables.include?(o.runnable) }
     default_offerings

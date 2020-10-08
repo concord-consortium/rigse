@@ -131,7 +131,7 @@ class Portal::Teacher < ActiveRecord::Base
   end
 
   def students
-    students = clazzes.map { |c| c.students }
+    students = clazzes.to_a.map { |c| c.students }
     students.flatten.compact
   end
   def has_clazz?(clazz)

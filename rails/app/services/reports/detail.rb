@@ -105,6 +105,7 @@ class Reports::Detail < Reports::Excel
   def run_report
     @book = Reports::Book.new(verbose: @verbose)
     @runnable_sheet = {}
+    @runnables = @runnables.to_a
     @runnables.sort!{|a,b| a.name <=> b.name}
 
     print "Creating #{@runnables.size} worksheets for report" if @verbose

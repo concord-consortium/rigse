@@ -484,7 +484,7 @@ class ActivityRuntimeAPI
 
   def self.remove_report_embeddable_filters(external_activity)
     template = external_activity.template
-    filters = template.offerings.map { |offering| offering.report_embeddable_filter }.compact
+    filters = template.offerings.to_a.map { |offering| offering.report_embeddable_filter }.compact
     filters.each { |filter| filter.clear }
   end
 

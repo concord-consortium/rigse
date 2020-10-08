@@ -10,7 +10,7 @@ class CreateMaterialProperties < ActiveRecord::Migration
     belongs_to :investigation
 
     def is_template
-      return external_activities.compact.length > 0
+      return external_activities.to_a.compact.length > 0
     end
   end
 
@@ -22,7 +22,7 @@ class CreateMaterialProperties < ActiveRecord::Migration
 
     def is_template
       return true if activities.detect { |a| a.is_template }
-      return external_activities.compact.length > 0
+      return external_activities.to_a.compact.length > 0
     end
   end
 
@@ -63,7 +63,7 @@ class CreateMaterialProperties < ActiveRecord::Migration
   # Loading those new models here, will throw exceptions. (As happened to me)
   def reindex
     # We would need to set this explicitly to re-index
-    if BoolENV["REINDEX_SOLR"] 
+    if BoolENV["REINDEX_SOLR"]
       Sunspot.session = Sunspot::SessionProxy::Retry5xxSessionProxy.new(Sunspot.session)
       reindex_options = { :batch_commit => false }
       Dir.glob(Rails.root.join('app/models/**/*.rb')).each { |path| require path }
