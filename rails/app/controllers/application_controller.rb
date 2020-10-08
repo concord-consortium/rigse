@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
 
     error_message = not_authorized_error_message
     if request.xhr?
-      render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
+      render :html => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       if current_user
         if BoolENV['RESEARCHER_REPORT_ONLY']
@@ -87,7 +87,7 @@ class ApplicationController < ActionController::Base
   theme :get_theme
   layout 'application'
   def test
-    render :text => mce_in_place_tag(Page.create,'description','none')
+    render :html => mce_in_place_tag(Page.create,'description','none')
   end
 
 
