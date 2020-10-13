@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
-  default_scope { where(User.arel_table[:state].not_in(['disabled'])) }
+  default_scope -> { where.not(state: 'disabled') }
   scope :all_users, -> { where(nil) }
   scope :active, -> { where(state: 'active') }
   scope :suspended, -> { where(state: 'suspended') }
