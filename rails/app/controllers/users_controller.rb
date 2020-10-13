@@ -35,9 +35,12 @@ class UsersController < ApplicationController
 
     user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
 
-    @users = policy_scope(User).search(params[:search], params[:page], nil).
-      includes(:imported_user, :portal_teacher, :portal_student,
-              :teacher_cohorts, :student_cohorts, :roles, :project_users).where(user_types)
+    search_scope = policy_scope(User)
+    .joins(:imported_user, :portal_teacher, :portal_student, :teacher_cohorts, :student_cohorts, :roles, :project_users)
+    search_scope = search_scope.where(user_types)
+
+    @users = User.search(params[:search], params[:page], nil, search_scope)
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
