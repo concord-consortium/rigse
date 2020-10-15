@@ -5,7 +5,7 @@ end
 Given /^there is an unactivated user named "([^"]*)"$/ do |login|
   @unactivated_user = FactoryBot.create(:user, :login => login)
   @unactivated_user.save!
-  assert_equal @unactivated_user.state, 'pending'
+  expect(@unactivated_user.state).to eql('pending')
 end
 
 Then /^I see the activation is complete$/ do
