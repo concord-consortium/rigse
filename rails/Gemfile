@@ -4,18 +4,16 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-# source 'https://gems.railslts.com' do
-  gem 'rails', '4.1.16'
-  # TODO: remove pinned versions of following block when done with upgrade
-  gem 'actionmailer',     '4.1.16', :require => false
-  gem 'actionpack',       '4.1.16', :require => false
-  gem 'activemodel',      '4.1.16', :require => false
-  gem 'activerecord',     '4.1.16', :require => false
-  # gem 'activeresource',   '4.1.16', :require => false
-  gem 'activesupport',    '4.1.16', :require => false
-  gem 'railties',         '4.1.16', :require => false
-  # gem 'railslts-version', '4.1.16', :require => false
-# end
+source 'https://gems.railslts.com' do
+  gem 'rails', '4.2.11.17'
+  gem 'actionmailer',     :require => false
+  gem 'actionpack',       :require => false
+  gem 'activemodel',      :require => false
+  gem 'activerecord',     :require => false
+  gem 'activesupport',    :require => false
+  gem 'railties',         :require => false
+  gem 'railslts-version', :require => false
+end
 
 gem 'activerecord-deprecated_finders'
 gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
