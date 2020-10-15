@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/concord-consortium/cc_portal_wordpress_integration.git
-  revision: fa3e1f21e62b8950eed2c486d8a4bdab0be3915e
-  branch: spikes-rails4-support
+  revision: 3e84bb15f86a2d7631cfa54e461e1f77b547cec6
+  ref: 3e84bb15f86a2d7631cfa54e461e1f77b547cec6
   specs:
     cc_portal_wordpress_integration (0.0.7)
       devise (>= 3.0.0)
@@ -29,8 +29,8 @@ GIT
 
 GIT
   remote: https://github.com/concord-consortium/geniverse-portal-integration.git
-  revision: f8b869a26523a280b70b6704aca7e009667fe4a6
-  branch: spike-rails4-support
+  revision: d49e5e14fa5fac19078ec149c2c89b8e6c946b50
+  ref: d49e5e14fa5fac19078ec149c2c89b8e6c946b50
   specs:
     geniverse_portal_integration (0.0.8)
       haml (~> 4.0)
