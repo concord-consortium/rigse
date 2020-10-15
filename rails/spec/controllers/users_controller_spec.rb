@@ -11,10 +11,28 @@ describe UsersController do
     end
 
     describe "as admin" do
+      # There are 3 users already loaded from fixtures in:
+      # rails/spec/fixtures/users.yml
+      # ID: email, state:
+      # 1: quentin@example.com, active
+      # 2: aaron@example.com, pending
+      # 3: salty_dog@example.com, active
+      let(:quentin) { User.find(1) }
+      let(:arron)   { User.find(2) }
+      let(:salty)   { User.find(3) }
+      let(:all_our_users) { [arron, salty, quentin] }
       it "lets user view users index page" do
         login_admin
         get :index
         expect(response.status).to eq(200)
+      end
+
+      it "lets admin user search for users on the index page" do
+        post_params = { :search => 'quentin' }
+        login_admin
+        post :index, post_params
+        expect(response.status).to eq(200)
+        expect(assigns(:users)).to include(quentin)
       end
 
       it "lets user search for project researchers" do
@@ -39,12 +57,14 @@ describe UsersController do
 
       it "lets user search for admins" do
         post_params = {
-          :search => '',
+          :search => 'salty',
           :portal_admin => true
         }
         login_admin
         post :index, post_params
         expect(response.status).to eq(200)
+        expect(salty.has_role?('admin')).to be false
+        expect(assigns(:users)).not_to include(salty)
       end
     end
 
