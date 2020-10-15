@@ -41,5 +41,8 @@ RailsPortal::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
+  # Keep test order in same order as before Rails 5
+  config.active_support.test_order = :sorted
+
   LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end
