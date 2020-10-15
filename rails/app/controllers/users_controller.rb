@@ -35,12 +35,13 @@ class UsersController < ApplicationController
 
     user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
 
+    join_string =
+      "LEFT JOIN roles_users ON users.id = roles_users.user_id " +
+      "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
+
     search_scope = policy_scope(User)
-    .joins(:imported_user, :portal_teacher, :portal_student, :teacher_cohorts, :student_cohorts, :roles, :project_users)
-    search_scope = search_scope.where(user_types)
-
-    @users = User.search(params[:search], params[:page], nil, search_scope)
-
+    search_scope = search_scope.joins(join_string).where(user_types)
+    @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }

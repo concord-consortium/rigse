@@ -55,16 +55,40 @@ describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "lets user search for admins" do
-        post_params = {
-          :search => 'salty',
-          :portal_admin => true
-        }
-        login_admin
-        post :index, post_params
-        expect(response.status).to eq(200)
-        expect(salty.has_role?('admin')).to be false
-        expect(assigns(:users)).not_to include(salty)
+      describe "admin searching for portal admins" do
+        let(:search_string) { '' }
+        let(:admin_only) { true }
+        let(:post_params) { {search: search_string, portal_admin: admin_only} }
+        before(:each) do
+          login_admin
+          post :index, post_params
+        end
+
+        describe "with no search string" do
+          it "returns a list with quentin(admin), not salty (not admin)" do
+            expect(response.status).to eq(200)
+            expect(assigns(:users)).not_to include(salty)
+            expect(assigns(:users)).to include(quentin)
+          end
+        end
+
+        describe "searching for salty (non-admin)" do
+          let(:search_string) { "salty" }
+          it "doesn't display salty or quentin" do
+            expect(response.status).to eq(200)
+            expect(assigns(:users)).not_to include(salty)
+            expect(assigns(:users)).not_to include(quentin)
+          end
+        end
+
+        describe "searching for quentin (admin)" do
+          let(:search_string) { "quentin" }
+          it "displays quentin" do
+            expect(response.status).to eq(200)
+            expect(assigns(:users)).not_to include(salty)
+            expect(assigns(:users)).to include(quentin)
+          end
+        end
       end
     end
 
