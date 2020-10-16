@@ -1055,6 +1055,9 @@ GEM
     remarkable_activerecord (3.1.13)
       remarkable (~> 3.1.13)
       rspec (>= 1.2.0)
+    responders (2.4.1)
+      actionpack (>= 4.2.0, < 6.0)
+      railties (>= 4.2.0, < 6.0)
     rollbar (2.15.5)
       multi_json
     rsolr (1.1.1)
@@ -1298,6 +1301,7 @@ DEPENDENCIES
   rdoc (~> 3.9.4)
   redcarpet (~> 2.1.1)
   remarkable_activerecord (~> 3.1.13)
+  responders (~> 2.0)
   rollbar
   rspec
   rspec-activemodel-mocks

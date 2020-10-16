@@ -77,6 +77,7 @@ gem "rails-observers"
 gem 'rdoc',                 '~> 3.9.4'
 gem 'redcarpet',            '~> 2.1.1'
 gem 'RedCloth',             '~> 4.2.8'
+gem 'responders',           '~> 2.0'
 gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
 gem 'rush',                 git: 'https://github.com/concord-consortium/rush.git'
