@@ -178,6 +178,10 @@ module RailsPortal
 
     # use json format for serilized cookies
     config.action_dispatch.cookies_serializer = :hybrid
+
+    # propagate errors normally just like in other Active Record callbacks
+    # See https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#error-handling-in-transaction-callbacks
+    config.active_record.raise_in_transactional_callbacks = true
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')
