@@ -9,10 +9,9 @@ class User < ActiveRecord::Base
 
   has_many :favorites
 
-  devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
+  devise :database_authenticatable, :registerable, :token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
-  self.token_authentication_key = "access_token"
 
   def apply_omniauth(omniauth)
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])

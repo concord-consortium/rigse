@@ -259,10 +259,11 @@ Devise.setup do |config|
   #
   # The router that invoked `devise_for`, in the example above, would be:
   # config.router_name = :my_engine
-  #
+
   # When using omniauth, Devise cannot automatically set Omniauth path,
   # so you need to do it manually. For the users scope, it would be:
-  # config.omniauth_path_prefix = "/my_engine/users/auth"
+  config.omniauth_path_prefix = "/users/auth"
+
   config.warden do |manager|
     manager.failure_app = CustomFailure
   end
