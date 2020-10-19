@@ -100,7 +100,7 @@ describe Portal::Course do
       expect(found.id).not_to be(@course_without_number.id)
       expect(found.id).not_to be(@course_with_number.id)
       expect(found.name).to eq(new_course_name)
-      expect(found.course_number).to be(new_course_number)
+      expect(found.course_number).to eq(new_course_number)
     end
 
     it "We should create a new course with a new name and number, even if the name matches an existing name" do
@@ -111,7 +111,7 @@ describe Portal::Course do
       expect(found.id).not_to be(@course_without_number.id)
       expect(found.id).not_to be(@course_with_number.id)
       expect(found.name).to eq(existing_name)
-      expect(found.course_number).to be(new_course_number)
+      expect(found.course_number).to eq(new_course_number)
     end
 
     it "We should create a new course witht the SAME name and SAME number, but with a differing school.id" do
@@ -122,7 +122,7 @@ describe Portal::Course do
       expect(found.id).not_to equal(@course_without_number.id)
       expect(found.id).not_to equal(@course_with_number.id)
       expect(found.name).to eq(@course_with_number.name)
-      expect(found.course_number).to equal(@course_with_number.course_number)
+      expect(found.course_number).to eq(@course_with_number.course_number)
       expect(found.school_id).to equal(777)
     end
   end
