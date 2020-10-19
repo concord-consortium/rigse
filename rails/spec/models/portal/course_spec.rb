@@ -22,14 +22,14 @@ describe Portal::Course do
     })
     @course_with_number.save
     @course_without_number.save
-    
+
     [@course_with_number,@course_without_number].each do |course|
       inspect_course(course)
     end
     expect(@course_without_number.course_number).to be_nil
     expect(@course_with_number.course_number).not_to be_nil
   end
-  
+
   describe "We should be able to find a course by course number and school id" do
     it "We should find a course for a valid course number and school id" do
       found = Portal::Course.find_by_course_number_and_school_id(@course_number,@school.id)
@@ -39,7 +39,7 @@ describe Portal::Course do
     it "We should not find a course for non-existant course numbers" do
       found = Portal::Course.find_by_course_number_and_school_id("PING_PONG",@school.id)
       expect(found).to be_nil
-      
+
       found = Portal::Course.find_by_course_number_and_school_id(@course_number,23)
       expect(found).to be_nil
     end
@@ -56,14 +56,14 @@ describe Portal::Course do
       expect(found).not_to be_nil
       expect(found.id).to be(@course_with_number.id)
     end
-    
+
     it "We should be able to find a course with no course number, but with the same name and school_id" do
       found = Portal::Course.find_by_course_number_name_and_school_id("NEW_COURSE_NUMBER","without number",@school.id)
       expect(found).not_to be_nil
       expect(found.id).to be(@course_without_number.id)
       expect(found.course_number).to be_nil
     end
-    
+
     it "We should not find a course with found name, and schoold_id but differing course_number" do
       found = Portal::Course.find_by_course_number_name_and_school_id("BAD_COURSE_NUMBER","with number",@school.id)
       expect(found).to be_nil
@@ -81,17 +81,17 @@ describe Portal::Course do
       found = Portal::Course.find_or_create_using_course_number_name_and_school_id(@course_number,new_name,@school.id)
       expect(found).not_to be_nil
       expect(found.id).to be(@course_with_number.id)
-      expect(found.name).to be(new_name)
+      expect(found.name).to eq(new_name)
     end
-    
+
     it "We should be able to find a course with no previous course number, but with the same name, and assign the new number" do
       new_course_number="NEW_COURSE_NUMBER"
       found = Portal::Course.find_or_create_using_course_number_name_and_school_id(new_course_number,"without number",@school.id)
       expect(found).not_to be_nil
       expect(found.id).to be(@course_without_number.id)
-      expect(found.course_number).to be(new_course_number)
+      expect(found.course_number).to eq(new_course_number)
     end
-    
+
     it "We should create a new course with a new name and number schoold_id but differing course_number" do
       new_course_number="NEW_C_NMBR"
       new_course_name = "new course name"
@@ -99,10 +99,10 @@ describe Portal::Course do
       expect(found).not_to be_nil
       expect(found.id).not_to be(@course_without_number.id)
       expect(found.id).not_to be(@course_with_number.id)
-      expect(found.name).to be(new_course_name)
+      expect(found.name).to eq(new_course_name)
       expect(found.course_number).to be(new_course_number)
     end
-    
+
     it "We should create a new course with a new name and number, even if the name matches an existing name" do
       new_course_number="NEW_C_NMBR"
       existing_name = "with number"
@@ -110,10 +110,10 @@ describe Portal::Course do
       expect(found).not_to be_nil
       expect(found.id).not_to be(@course_without_number.id)
       expect(found.id).not_to be(@course_with_number.id)
-      expect(found.name).to be(existing_name)
+      expect(found.name).to eq(existing_name)
       expect(found.course_number).to be(new_course_number)
     end
-    
+
     it "We should create a new course witht the SAME name and SAME number, but with a differing school.id" do
       new_course_number="NEW_C_NMBR"
       existing_name = "with number"
@@ -121,7 +121,7 @@ describe Portal::Course do
       expect(found).not_to be_nil
       expect(found.id).not_to equal(@course_without_number.id)
       expect(found.id).not_to equal(@course_with_number.id)
-      expect(found.name).to equal(@course_with_number.name)
+      expect(found.name).to eq(@course_with_number.name)
       expect(found.course_number).to equal(@course_with_number.course_number)
       expect(found.school_id).to equal(777)
     end
