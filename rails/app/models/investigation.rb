@@ -132,18 +132,6 @@ class Investigation < ActiveRecord::Base
     )
   end
 
-
-
-  def duplicate(new_owner)
-    @return_investigation = deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at, :publication_status], :include => {:activities => {:sections => :pages}}
-    @return_investigation.user = new_owner
-    @return_investigation.name = "copy of #{self.name}"
-    @return_investigation.deep_set_user(new_owner)
-    @return_investigation.publication_status = "draft"
-    @return_investigation.offerings_count = 0
-    return @return_investigation
-  end
-
   def print_listing
     listing = []
     self.activities.each do |a|

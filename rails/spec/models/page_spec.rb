@@ -196,16 +196,6 @@ describe Page do
   end
 
   # TODO: auto-generated
-  describe '#duplicate' do
-    it 'duplicate' do
-      page = described_class.new
-      result = page.duplicate
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#reportable_elements' do
     it 'reportable_elements' do
       page = described_class.new
