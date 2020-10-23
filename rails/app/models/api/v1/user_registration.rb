@@ -49,9 +49,7 @@ class API::V1::UserRegistration
 
   def user_params
     valid_keys = [:first_name, :last_name, :password, :password_confirmation, :email, :email_subscribed, :login, :sign_up_path, :asked_age, :have_consent]
-    p = self.attributes.select { |k,v| valid_keys.include? k }
-    permitted = p.map { |k,v| k }
-    p.permit(*permitted)
+    self.attributes.select { |k,v| valid_keys.include? k }
   end
 
   def new_user
