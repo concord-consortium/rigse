@@ -12,7 +12,6 @@ describe ExternalActivityPolicy do
   let(:activity)          { FactoryBot.create(:external_activity)              }
 
   context "for anonymous" do
-    it { is_expected.to permit(:preview_index)           }
     it { is_expected.not_to permit(:publish)             }
     it { is_expected.not_to permit(:duplicate)           }
     it { is_expected.not_to permit(:matedit)             }
@@ -29,7 +28,6 @@ describe ExternalActivityPolicy do
   context "for a normal user" do
     let(:active_user) { FactoryBot.create(:user) }
 
-    it { is_expected.to permit(:preview_index)            }
     it { is_expected.to permit(:copy)                     }
     it { is_expected.not_to permit(:publish)              }
     it { is_expected.not_to permit(:duplicate)            }
@@ -50,7 +48,6 @@ describe ExternalActivityPolicy do
       active_user.add_role('author')
     end
 
-    it { is_expected.to permit(:preview_index)            }
     it { is_expected.to permit(:copy)                     }
     it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
@@ -67,7 +64,6 @@ describe ExternalActivityPolicy do
   context "for an admin" do
     let(:active_user) { FactoryBot.generate(:admin_user)   }
 
-    it { is_expected.to permit(:preview_index)            }
     it { is_expected.to permit(:copy)                     }
     it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
@@ -85,7 +81,6 @@ describe ExternalActivityPolicy do
     before(:each) do
       active_user.add_role_for_project('admin', project_a)
     end
-    it { is_expected.to permit(:preview_index)            }
     it { is_expected.to permit(:copy)                     }
     it { is_expected.to permit(:publish)                  }
     it { is_expected.to permit(:matedit)                  }
@@ -111,16 +106,6 @@ describe ExternalActivityPolicy do
     it { is_expected.to permit(:update)                   }
   end
 
-
-  # TODO: auto-generated
-  describe '#preview_index?' do
-    it 'preview_index?' do
-      external_activity_policy = described_class.new(nil, nil)
-      result = external_activity_policy.preview_index?
-
-      expect(result).not_to be_nil
-    end
-  end
 
   # TODO: auto-generated
   describe '#publish?' do

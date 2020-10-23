@@ -28,21 +28,11 @@ class ExternalActivitiesController < ApplicationController
 
   public
 
-  before_filter :setup_object, :except => [:index, :preview_index, :publish]
+  before_filter :setup_object, :except => [:index, :publish]
   before_filter :render_scope, :only => [:show]
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
-
-  def preview_index
-    page = params[:page] || 1
-    paginate_params = {
-      :page => page || 1,
-      :per_page => params[:per_page] || 20
-    }
-    @activities = ExternalActivity.all.paginate(paginate_params).order('name')
-    render 'preview_index'
-  end
 
   # GET /external_activities/1
   # GET /external_activities/1.xml
