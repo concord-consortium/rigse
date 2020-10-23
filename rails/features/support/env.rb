@@ -80,13 +80,15 @@ After do |scenario|
  end
 
 def add_browser_logs(scenario)
-  time_now = Time.now
-  # Getting current URL
-  current_url = Capybara.current_url.to_s
-  # Gather browser logs
-  logs = page.driver.browser.manage.logs.get(:browser).map {|line| [line.level, line.message]}
-   # Remove warnings and info messages
-  logs.reject! { |line| ['WARNING', 'INFO'].include?(line.first) }
-  logs.any? == true
-  puts "BROWSER ERRORS for \"#{scenario.name}\" (#{current_url}):\n  - " + logs.join("\n  - ")
+  if page.driver.browser.respond_to? :manage
+    time_now = Time.now
+    # Getting current URL
+    current_url = Capybara.current_url.to_s
+    # Gather browser logs
+    logs = page.driver.browser.manage.logs.get(:browser).map {|line| [line.level, line.message]}
+    # Remove warnings and info messages
+    logs.reject! { |line| ['WARNING', 'INFO'].include?(line.first) }
+    logs.any? == true
+    puts "BROWSER ERRORS for \"#{scenario.name}\" (#{current_url}):\n  - " + logs.join("\n  - ")
+  end
 end
