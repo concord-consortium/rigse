@@ -174,7 +174,7 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   const newOrCreateCheck = new RegExp(`\\b${modelName}\\s*.\\s*(new|create!?)\\s*\\(`)
   const modelInfo = {
     name: modelName,
-    methodName: `strong_${modelPath.replace(/\//g, "_").replace(".rb", "")}_params`,
+    methodName: `${modelPath.replace(/\//g, "_").replace(".rb", "")}_strong_params`,
     path: `app/models/${modelPath}`,
     attrs: sortedAttrs(attrArray.replace(attrBrackets, "").split(", ").filter((attr) => !attr.match(attrFilter))),
     attrAccessible: null,

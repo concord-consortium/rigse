@@ -12,7 +12,7 @@
   "models": [
     {
       "name": "AccessGrant",
-      "methodName": "strong_access_grant_params",
+      "methodName": "access_grant_strong_params",
       "path": "app/models/access_grant.rb",
       "attrs": ":access_token, :access_token_expires_at, :client_id, :code, :learner_id, :refresh_token, :state, :teacher_id, :user_id",
       "attrAccessible": {
@@ -24,7 +24,7 @@
     },
     {
       "name": "Activity",
-      "methodName": "strong_activity_params",
+      "methodName": "activity_strong_params",
       "path": "app/models/activity.rb",
       "attrs": ":description, :investigation_id, :is_assessment_item, :is_featured, :name, :offerings_count, :original_id, :position, :publication_status, :show_score, :student_report_enabled, :teacher_guide_url, :teacher_only, :thumbnail_url, :user_id, :uuid",
       "attrAccessible": null,
@@ -33,7 +33,7 @@
     },
     {
       "name": "Admin::AuthoringSite",
-      "methodName": "strong_admin_authoring_site_params",
+      "methodName": "admin_authoring_site_strong_params",
       "path": "app/models/admin/authoring_site.rb",
       "attrs": ":name, :url",
       "attrAccessible": {
@@ -54,7 +54,7 @@
           "line": "if @admin_authoring_site.update_attributes(admin_authoring_site_params)"
         }
       ],
-      "method": "  def strong_admin_authoring_site_params(params)\n    params.permit(:name, :url)\n  end\n",
+      "method": "  def admin_authoring_site_strong_params(params)\n    params.permit(:name, :url)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/authoring_sites_controller.rb"
       ],
@@ -64,7 +64,7 @@
     },
     {
       "name": "Admin::Cohort",
-      "methodName": "strong_admin_cohort_params",
+      "methodName": "admin_cohort_strong_params",
       "path": "app/models/admin/cohort.rb",
       "attrs": ":email_notifications_enabled, :name, :project_id",
       "attrAccessible": {
@@ -85,7 +85,7 @@
           "line": "if @admin_cohort.update_attributes(params[:admin_cohort])"
         }
       ],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email_notifications_enabled, :items, :name, :project, :project_id\n  #  model attrs:     :email_notifications_enabled, :name, :project_id\ndef strong_admin_cohort_params(params)\n    params.permit(:email_notifications_enabled, :name, :project_id)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email_notifications_enabled, :items, :name, :project, :project_id\n  #  model attrs:     :email_notifications_enabled, :name, :project_id\ndef admin_cohort_strong_params(params)\n    params.permit(:email_notifications_enabled, :name, :project_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/cohorts_controller.rb"
       ],
@@ -95,7 +95,7 @@
     },
     {
       "name": "Admin::CohortItem",
-      "methodName": "strong_admin_cohort_item_params",
+      "methodName": "admin_cohort_item_strong_params",
       "path": "app/models/admin/cohort_item.rb",
       "attrs": ":admin_cohort_id, :item_id, :item_type",
       "attrAccessible": null,
@@ -104,7 +104,7 @@
     },
     {
       "name": "Admin::NoticeUserDisplayStatus",
-      "methodName": "strong_admin_notice_user_display_status_params",
+      "methodName": "admin_notice_user_display_status_strong_params",
       "path": "app/models/admin/notice_user_display_status.rb",
       "attrs": ":collapsed_status, :last_collapsed_at_time, :user_id",
       "attrAccessible": null,
@@ -113,7 +113,7 @@
     },
     {
       "name": "Admin::Project",
-      "methodName": "strong_admin_project_params",
+      "methodName": "admin_project_strong_params",
       "path": "app/models/admin/project.rb",
       "attrs": ":landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public",
       "attrAccessible": {
@@ -134,7 +134,7 @@
           "line": "if @project.update_attributes(params[:admin_project])"
         }
       ],
-      "method": "  def strong_admin_project_params(params)\n    params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)\n  end\n",
+      "method": "  def admin_project_strong_params(params)\n    params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/projects_controller.rb"
       ],
@@ -144,7 +144,7 @@
     },
     {
       "name": "Admin::ProjectLink",
-      "methodName": "strong_admin_project_link_params",
+      "methodName": "admin_project_link_strong_params",
       "path": "app/models/admin/project_link.rb",
       "attrs": ":href, :link_id, :name, :pop_out, :position, :project_id",
       "attrAccessible": {
@@ -165,7 +165,7 @@
           "line": "if @project_link.update_attributes(params[:admin_project_link])"
         }
       ],
-      "method": "  def strong_admin_project_link_params(params)\n    params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)\n  end\n",
+      "method": "  def admin_project_link_strong_params(params)\n    params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/project_links_controller.rb"
       ],
@@ -175,7 +175,7 @@
     },
     {
       "name": "Admin::ProjectMaterial",
-      "methodName": "strong_admin_project_material_params",
+      "methodName": "admin_project_material_strong_params",
       "path": "app/models/admin/project_material.rb",
       "attrs": ":material_id, :material_type, :project_id",
       "attrAccessible": null,
@@ -184,7 +184,7 @@
     },
     {
       "name": "Admin::ProjectUser",
-      "methodName": "strong_admin_project_user_params",
+      "methodName": "admin_project_user_strong_params",
       "path": "app/models/admin/project_user.rb",
       "attrs": ":is_admin, :is_researcher, :project_id, :user_id",
       "attrAccessible": null,
@@ -193,7 +193,7 @@
     },
     {
       "name": "Admin::Settings",
-      "methodName": "strong_admin_settings_params",
+      "methodName": "admin_settings_strong_params",
       "path": "app/models/admin/settings.rb",
       "attrs": ":about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content",
       "attrAccessible": {
@@ -214,7 +214,7 @@
           "line": "if @admin_settings.update_attributes(params[:admin_settings])"
         }
       ],
-      "method": "  def strong_admin_settings_params(params)\n    params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content)\n  end\n",
+      "method": "  def admin_settings_strong_params(params)\n    params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/settings_controller.rb"
       ],
@@ -224,7 +224,7 @@
     },
     {
       "name": "Admin::SiteNotice",
-      "methodName": "strong_admin_site_notice_params",
+      "methodName": "admin_site_notice_strong_params",
       "path": "app/models/admin/site_notice.rb",
       "attrs": ":created_by, :notice_html, :updated_by",
       "attrAccessible": null,
@@ -233,7 +233,7 @@
     },
     {
       "name": "Admin::SiteNoticeUser",
-      "methodName": "strong_admin_site_notice_user_params",
+      "methodName": "admin_site_notice_user_strong_params",
       "path": "app/models/admin/site_notice_user.rb",
       "attrs": ":notice_dismissed, :notice_id, :user_id",
       "attrAccessible": null,
@@ -242,7 +242,7 @@
     },
     {
       "name": "Admin::Tag",
-      "methodName": "strong_admin_tag_params",
+      "methodName": "admin_tag_strong_params",
       "path": "app/models/admin/tag.rb",
       "attrs": ":scope, :tag",
       "attrAccessible": null,
@@ -275,7 +275,7 @@
           "line": "if @interactive.update_attributes(params[:interactive])"
         }
       ],
-      "method": "  def strong_admin_tag_params(params)\n    params.permit(:scope, :tag)\n  end\n",
+      "method": "  def admin_tag_strong_params(params)\n    params.permit(:scope, :tag)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/tags_controller.rb",
         "app/controllers/interactives_controller.rb"
@@ -287,7 +287,7 @@
     },
     {
       "name": "Authentication",
-      "methodName": "strong_authentication_params",
+      "methodName": "authentication_strong_params",
       "path": "app/models/authentication.rb",
       "attrs": ":provider, :uid, :user_id",
       "attrAccessible": {
@@ -299,7 +299,7 @@
     },
     {
       "name": "Client",
-      "methodName": "strong_client_params",
+      "methodName": "client_strong_params",
       "path": "app/models/client.rb",
       "attrs": ":app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url",
       "attrAccessible": {
@@ -320,7 +320,7 @@
           "line": "if @client.update_attributes(params[:client])"
         }
       ],
-      "method": "  def strong_client_params(params)\n    params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)\n  end\n",
+      "method": "  def client_strong_params(params)\n    params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/clients_controller.rb"
       ],
@@ -330,7 +330,7 @@
     },
     {
       "name": "CommonsLicense",
-      "methodName": "strong_commons_license_params",
+      "methodName": "commons_license_strong_params",
       "path": "app/models/commons_license.rb",
       "attrs": ":code, :deed, :description, :image, :legal, :name, :number",
       "attrAccessible": {
@@ -351,7 +351,7 @@
           "line": "if @license.update_attributes(params[:commons_license])"
         }
       ],
-      "method": "  def strong_commons_license_params(params)\n    params.permit(:code, :deed, :description, :image, :legal, :name, :number)\n  end\n",
+      "method": "  def commons_license_strong_params(params)\n    params.permit(:code, :deed, :description, :image, :legal, :name, :number)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/commons_licenses_controller.rb"
       ],
@@ -361,7 +361,7 @@
     },
     {
       "name": "Dataservice::Blob",
-      "methodName": "strong_dataservice_blob_params",
+      "methodName": "dataservice_blob_strong_params",
       "path": "app/models/dataservice/blob.rb",
       "attrs": ":bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid",
       "attrAccessible": null,
@@ -379,7 +379,7 @@
           "line": "if @dataservice_blob.update_attributes(params[:blob])"
         }
       ],
-      "method": "  def strong_dataservice_blob_params(params)\n    params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid)\n  end\n",
+      "method": "  def dataservice_blob_strong_params(params)\n    params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/dataservice/blobs_controller.rb"
       ],
@@ -389,7 +389,7 @@
     },
     {
       "name": "Dataservice::BucketContent",
-      "methodName": "strong_dataservice_bucket_content_params",
+      "methodName": "dataservice_bucket_content_strong_params",
       "path": "app/models/dataservice/bucket_content.rb",
       "attrs": ":body, :bucket_logger_id, :empty, :processed",
       "attrAccessible": {
@@ -404,7 +404,7 @@
         }
       ],
       "updates": [],
-      "method": "  def strong_dataservice_bucket_content_params(params)\n    params.permit(:body, :bucket_logger_id, :empty, :processed)\n  end\n",
+      "method": "  def dataservice_bucket_content_strong_params(params)\n    params.permit(:body, :bucket_logger_id, :empty, :processed)\n  end\n",
       "controllerFiles": [
         "app/controllers/dataservice/bucket_contents_metal_controller.rb"
       ],
@@ -414,7 +414,7 @@
     },
     {
       "name": "Dataservice::BucketLogItem",
-      "methodName": "strong_dataservice_bucket_log_item_params",
+      "methodName": "dataservice_bucket_log_item_strong_params",
       "path": "app/models/dataservice/bucket_log_item.rb",
       "attrs": ":bucket_logger_id, :content",
       "attrAccessible": {
@@ -429,7 +429,7 @@
         }
       ],
       "updates": [],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :bucket_logger, :bucket_logger_id, :content\n  #  model attrs:     :bucket_logger_id, :content\ndef strong_dataservice_bucket_log_item_params(params)\n    params.permit(:bucket_logger_id, :content)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :bucket_logger, :bucket_logger_id, :content\n  #  model attrs:     :bucket_logger_id, :content\ndef dataservice_bucket_log_item_strong_params(params)\n    params.permit(:bucket_logger_id, :content)\n  end\n",
       "controllerFiles": [
         "app/controllers/dataservice/bucket_log_items_metal_controller.rb"
       ],
@@ -439,7 +439,7 @@
     },
     {
       "name": "Dataservice::BucketLogger",
-      "methodName": "strong_dataservice_bucket_logger_params",
+      "methodName": "dataservice_bucket_logger_strong_params",
       "path": "app/models/dataservice/bucket_logger.rb",
       "attrs": ":learner_id, :name",
       "attrAccessible": {
@@ -451,7 +451,7 @@
     },
     {
       "name": "Dataservice::BundleContent",
-      "methodName": "strong_dataservice_bundle_content_params",
+      "methodName": "dataservice_bundle_content_strong_params",
       "path": "app/models/dataservice/bundle_content.rb",
       "attrs": ":body, :bundle_logger_id, :collaboration_id, :empty, :original_body, :otml, :position, :processed, :upload_time, :uuid, :valid_xml",
       "attrAccessible": null,
@@ -460,7 +460,7 @@
     },
     {
       "name": "Dataservice::BundleLogger",
-      "methodName": "strong_dataservice_bundle_logger_params",
+      "methodName": "dataservice_bundle_logger_strong_params",
       "path": "app/models/dataservice/bundle_logger.rb",
       "attrs": ":in_progress_bundle_id",
       "attrAccessible": null,
@@ -469,7 +469,7 @@
     },
     {
       "name": "Dataservice::ConsoleContent",
-      "methodName": "strong_dataservice_console_content_params",
+      "methodName": "dataservice_console_content_strong_params",
       "path": "app/models/dataservice/console_content.rb",
       "attrs": ":body, :console_logger_id, :position",
       "attrAccessible": null,
@@ -478,7 +478,7 @@
     },
     {
       "name": "Dataservice::ConsoleLogger",
-      "methodName": "strong_dataservice_console_logger_params",
+      "methodName": "dataservice_console_logger_strong_params",
       "path": "app/models/dataservice/console_logger.rb",
       "attrs": "",
       "attrAccessible": null,
@@ -487,7 +487,7 @@
     },
     {
       "name": "Dataservice::JnlpSession",
-      "methodName": "strong_dataservice_jnlp_session_params",
+      "methodName": "dataservice_jnlp_session_strong_params",
       "path": "app/models/dataservice/jnlp_session.rb",
       "attrs": ":access_count, :token, :user_id",
       "attrAccessible": {
@@ -499,7 +499,7 @@
     },
     {
       "name": "Dataservice::LaunchProcessEvent",
-      "methodName": "strong_dataservice_launch_process_event_params",
+      "methodName": "dataservice_launch_process_event_strong_params",
       "path": "app/models/dataservice/launch_process_event.rb",
       "attrs": ":bundle_content_id, :event_details, :event_type",
       "attrAccessible": null,
@@ -547,7 +547,7 @@
           "line": "if @portal_learner.update_attributes(params[:learner])"
         }
       ],
-      "method": "  def strong_dataservice_launch_process_event_params(params)\n    params.permit(:bundle_content_id, :event_details, :event_type)\n  end\n",
+      "method": "  def dataservice_launch_process_event_strong_params(params)\n    params.permit(:bundle_content_id, :event_details, :event_type)\n  end\n",
       "controllerFiles": [
         "app/controllers/dataservice/bucket_loggers_controller.rb",
         "app/controllers/dataservice/bundle_contents_metal_controller.rb",
@@ -567,7 +567,7 @@
     },
     {
       "name": "Dataservice::PeriodicBundleContent",
-      "methodName": "strong_dataservice_periodic_bundle_content_params",
+      "methodName": "dataservice_periodic_bundle_content_strong_params",
       "path": "app/models/dataservice/periodic_bundle_content.rb",
       "attrs": ":body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml",
       "attrAccessible": null,
@@ -579,7 +579,7 @@
         }
       ],
       "updates": [],
-      "method": "  def strong_dataservice_periodic_bundle_content_params(params)\n    params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)\n  end\n",
+      "method": "  def dataservice_periodic_bundle_content_strong_params(params)\n    params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)\n  end\n",
       "controllerFiles": [
         "app/controllers/dataservice/periodic_bundle_contents_metal_controller.rb"
       ],
@@ -589,7 +589,7 @@
     },
     {
       "name": "Dataservice::PeriodicBundleLogger",
-      "methodName": "strong_dataservice_periodic_bundle_logger_params",
+      "methodName": "dataservice_periodic_bundle_logger_strong_params",
       "path": "app/models/dataservice/periodic_bundle_logger.rb",
       "attrs": ":imports, :learner_id",
       "attrAccessible": null,
@@ -607,7 +607,7 @@
           "line": "if @portal_learner.update_attributes(params[:learner])"
         }
       ],
-      "method": "  def strong_dataservice_periodic_bundle_logger_params(params)\n    params.permit(:imports, :learner_id)\n  end\n",
+      "method": "  def dataservice_periodic_bundle_logger_strong_params(params)\n    params.permit(:imports, :learner_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/learners_controller.rb"
       ],
@@ -617,7 +617,7 @@
     },
     {
       "name": "Dataservice::PeriodicBundlePart",
-      "methodName": "strong_dataservice_periodic_bundle_part_params",
+      "methodName": "dataservice_periodic_bundle_part_strong_params",
       "path": "app/models/dataservice/periodic_bundle_part.rb",
       "attrs": ":delta, :key, :periodic_bundle_logger_id, :value",
       "attrAccessible": null,
@@ -626,7 +626,7 @@
     },
     {
       "name": "Embeddable::Embeddable",
-      "methodName": "strong_embeddable_embeddable_params",
+      "methodName": "embeddable_embeddable_strong_params",
       "path": "app/models/embeddable/embeddable.rb",
       "attrs": "",
       "attrAccessible": null,
@@ -635,7 +635,7 @@
     },
     {
       "name": "Embeddable::Iframe",
-      "methodName": "strong_embeddable_iframe_params",
+      "methodName": "embeddable_iframe_strong_params",
       "path": "app/models/embeddable/iframe.rb",
       "attrs": ":description, :display_in_iframe, :external_id, :height, :is_required, :name, :show_in_featured_question_report, :url, :user_id, :uuid, :width",
       "attrAccessible": null,
@@ -644,7 +644,7 @@
     },
     {
       "name": "Embeddable::ImageQuestion",
-      "methodName": "strong_embeddable_image_question_params",
+      "methodName": "embeddable_image_question_strong_params",
       "path": "app/models/embeddable/image_question.rb",
       "attrs": ":drawing_prompt, :external_id, :is_required, :name, :prompt, :show_in_featured_question_report, :user_id, :uuid",
       "attrAccessible": null,
@@ -653,7 +653,7 @@
     },
     {
       "name": "Embeddable::MultipleChoice",
-      "methodName": "strong_embeddable_multiple_choice_params",
+      "methodName": "embeddable_multiple_choice_strong_params",
       "path": "app/models/embeddable/multiple_choice.rb",
       "attrs": ":allow_multiple_selection, :description, :enable_rationale, :external_id, :is_required, :name, :prompt, :rationale_prompt, :show_in_featured_question_report, :user_id, :uuid",
       "attrAccessible": null,
@@ -662,7 +662,7 @@
     },
     {
       "name": "Embeddable::MultipleChoiceChoice",
-      "methodName": "strong_embeddable_multiple_choice_choice_params",
+      "methodName": "embeddable_multiple_choice_choice_strong_params",
       "path": "app/models/embeddable/multiple_choice_choice.rb",
       "attrs": ":choice, :external_id, :is_correct, :multiple_choice_id",
       "attrAccessible": null,
@@ -671,7 +671,7 @@
     },
     {
       "name": "Embeddable::OpenResponse",
-      "methodName": "strong_embeddable_open_response_params",
+      "methodName": "embeddable_open_response_strong_params",
       "path": "app/models/embeddable/open_response.rb",
       "attrs": ":columns, :default_response, :description, :external_id, :font_size, :is_required, :name, :prompt, :rows, :show_in_featured_question_report, :user_id, :uuid",
       "attrAccessible": null,
@@ -680,7 +680,7 @@
     },
     {
       "name": "ExternalActivity",
-      "methodName": "strong_external_activity_params",
+      "methodName": "external_activity_strong_params",
       "path": "app/models/external_activity.rb",
       "attrs": ":allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid, :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing, :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked, :is_official, :keywords, :launch_url, :license_code, :logging, :long_description, :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, :url, :user_id, :uuid",
       "attrAccessible": null,
@@ -713,7 +713,7 @@
           "line": "if @external_activity.update_attributes(params[:external_activity])"
         }
       ],
-      "method": "  def strong_external_activity_params(params)\n    params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid, :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing, :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked, :is_official, :keywords, :launch_url, :license_code, :logging, :long_description, :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, :url, :user_id, :uuid)\n  end\n",
+      "method": "  def external_activity_strong_params(params)\n    params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid, :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing, :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked, :is_official, :keywords, :launch_url, :license_code, :logging, :long_description, :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, :url, :user_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/external_activities_controller.rb",
         "app/controllers/external_activities_controller.rb"
@@ -725,7 +725,7 @@
     },
     {
       "name": "ExternalActivityReport",
-      "methodName": "strong_external_activity_report_params",
+      "methodName": "external_activity_report_strong_params",
       "path": "app/models/external_activity_report.rb",
       "attrs": ":external_activity_id, :external_report_id",
       "attrAccessible": null,
@@ -734,7 +734,7 @@
     },
     {
       "name": "ExternalReport",
-      "methodName": "strong_external_report_params",
+      "methodName": "external_report_strong_params",
       "path": "app/models/external_report.rb",
       "attrs": ":allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url",
       "attrAccessible": {
@@ -755,7 +755,7 @@
           "line": "saved_successfully = @report.update_attributes(new_params)"
         }
       ],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\n  #  model attrs:     :allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\ndef strong_external_report_params(params)\n    params.permit(:allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\n  #  model attrs:     :allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\ndef external_report_strong_params(params)\n    params.permit(:allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/external_reports_controller.rb"
       ],
@@ -765,7 +765,7 @@
     },
     {
       "name": "Favorite",
-      "methodName": "strong_favorite_params",
+      "methodName": "favorite_strong_params",
       "path": "app/models/favorite.rb",
       "attrs": ":favoritable_id, :favoritable_type, :user_id",
       "attrAccessible": {
@@ -777,7 +777,7 @@
     },
     {
       "name": "FirebaseApp",
-      "methodName": "strong_firebase_app_params",
+      "methodName": "firebase_app_strong_params",
       "path": "app/models/firebase_app.rb",
       "attrs": ":client_email, :name, :private_key",
       "attrAccessible": null,
@@ -795,7 +795,7 @@
           "line": "if @firebase_app.update_attributes(firebase_app_params)"
         }
       ],
-      "method": "  def strong_firebase_app_params(params)\n    params.permit(:client_email, :name, :private_key)\n  end\n",
+      "method": "  def firebase_app_strong_params(params)\n    params.permit(:client_email, :name, :private_key)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/firebase_apps_controller.rb"
       ],
@@ -805,7 +805,7 @@
     },
     {
       "name": "HABTM_Roles",
-      "methodName": "strong_habtm_roles_params",
+      "methodName": "habtm_roles_strong_params",
       "path": "app/models/habtm_roles.rb",
       "attrs": ":role_id, :user_id",
       "attrAccessible": null,
@@ -814,7 +814,7 @@
     },
     {
       "name": "HABTM_Users",
-      "methodName": "strong_habtm_users_params",
+      "methodName": "habtm_users_strong_params",
       "path": "app/models/habtm_users.rb",
       "attrs": ":role_id, :user_id",
       "attrAccessible": null,
@@ -823,7 +823,7 @@
     },
     {
       "name": "Image",
-      "methodName": "strong_image_params",
+      "methodName": "image_strong_params",
       "path": "app/models/image.rb",
       "attrs": ":attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at, :license_code, :name, :publication_status, :user_id, :width",
       "attrAccessible": null,
@@ -846,7 +846,7 @@
           "line": "return @image.update_attributes(img_params)"
         }
       ],
-      "method": "  def strong_image_params(params)\n    params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at, :license_code, :name, :publication_status, :user_id, :width)\n  end\n",
+      "method": "  def image_strong_params(params)\n    params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at, :license_code, :name, :publication_status, :user_id, :width)\n  end\n",
       "controllerFiles": [
         "app/controllers/images_controller.rb"
       ],
@@ -856,7 +856,7 @@
     },
     {
       "name": "Import::DuplicateUser",
-      "methodName": "strong_import_duplicate_user_params",
+      "methodName": "import_duplicate_user_strong_params",
       "path": "app/models/import/duplicate_user.rb",
       "attrs": ":data, :duplicate_by, :email, :import_id, :login, :user_id",
       "attrAccessible": null,
@@ -865,7 +865,7 @@
     },
     {
       "name": "Import::Import",
-      "methodName": "strong_import_import_params",
+      "methodName": "import_import_strong_params",
       "path": "app/models/import/import.rb",
       "attrs": ":import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id",
       "attrAccessible": null,
@@ -882,7 +882,7 @@
         }
       ],
       "updates": [],
-      "method": "  def strong_import_import_params(params)\n    params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)\n  end\n",
+      "method": "  def import_import_strong_params(params)\n    params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/import/imports_controller.rb"
       ],
@@ -892,7 +892,7 @@
     },
     {
       "name": "Import::ImportedUser",
-      "methodName": "strong_import_imported_user_params",
+      "methodName": "import_imported_user_strong_params",
       "path": "app/models/import/imported_user.rb",
       "attrs": ":import_id, :importing_domain, :is_verified, :user_id, :user_url",
       "attrAccessible": {
@@ -904,7 +904,7 @@
     },
     {
       "name": "Import::SchoolDistrictMapping",
-      "methodName": "strong_import_school_district_mapping_params",
+      "methodName": "import_school_district_mapping_strong_params",
       "path": "app/models/import/school_district_mapping.rb",
       "attrs": ":district_id, :import_district_uuid",
       "attrAccessible": {
@@ -916,7 +916,7 @@
     },
     {
       "name": "Import::UserSchoolMapping",
-      "methodName": "strong_import_user_school_mapping_params",
+      "methodName": "import_user_school_mapping_strong_params",
       "path": "app/models/import/user_school_mapping.rb",
       "attrs": ":import_school_url, :school_id",
       "attrAccessible": {
@@ -928,7 +928,7 @@
     },
     {
       "name": "Interactive",
-      "methodName": "strong_interactive_params",
+      "methodName": "interactive_strong_params",
       "path": "app/models/interactive.rb",
       "attrs": ":credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width",
       "attrAccessible": {
@@ -984,7 +984,7 @@
           "line": "if @interactive.update_attributes(params[:interactive])"
         }
       ],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\n  #  model attrs:     :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\ndef strong_interactive_params(params)\n    params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\n  #  model attrs:     :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\ndef interactive_strong_params(params)\n    params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)\n  end\n",
       "controllerFiles": [
         "app/controllers/interactives_controller.rb"
       ],
@@ -994,7 +994,7 @@
     },
     {
       "name": "Investigation",
-      "methodName": "strong_investigation_params",
+      "methodName": "investigation_strong_params",
       "path": "app/models/investigation.rb",
       "attrs": ":abstract, :allow_activity_assignment, :author_email, :description, :is_assessment_item, :is_featured, :name, :offerings_count, :publication_status, :show_score, :student_report_enabled, :teacher_guide_url, :teacher_only, :thumbnail_url, :user_id, :uuid",
       "attrAccessible": null,
@@ -1003,7 +1003,7 @@
     },
     {
       "name": "LearnerProcessingEvent",
-      "methodName": "strong_learner_processing_event_params",
+      "methodName": "learner_processing_event_strong_params",
       "path": "app/models/learner_processing_event.rb",
       "attrs": ":duration, :elapsed_seconds, :lara_duration, :lara_end, :lara_start, :learner_id, :login, :portal_duration, :portal_end, :portal_start, :teacher, :url",
       "attrAccessible": {
@@ -1015,7 +1015,7 @@
     },
     {
       "name": "MaterialsCollection",
-      "methodName": "strong_materials_collection_params",
+      "methodName": "materials_collection_strong_params",
       "path": "app/models/materials_collection.rb",
       "attrs": ":description, :name, :project_id",
       "attrAccessible": {
@@ -1036,7 +1036,7 @@
           "line": "if @materials_collection.update_attributes(materials_collection_params)"
         }
       ],
-      "method": "  def strong_materials_collection_params(params)\n    params.permit(:description, :name, :project_id)\n  end\n",
+      "method": "  def materials_collection_strong_params(params)\n    params.permit(:description, :name, :project_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/materials_collections_controller.rb"
       ],
@@ -1046,7 +1046,7 @@
     },
     {
       "name": "MaterialsCollectionItem",
-      "methodName": "strong_materials_collection_item_params",
+      "methodName": "materials_collection_item_strong_params",
       "path": "app/models/materials_collection_item.rb",
       "attrs": ":material_id, :material_type, :materials_collection_id, :position",
       "attrAccessible": {
@@ -1058,7 +1058,7 @@
     },
     {
       "name": "Page",
-      "methodName": "strong_page_params",
+      "methodName": "page_strong_params",
       "path": "app/models/page.rb",
       "attrs": ":description, :name, :offerings_count, :position, :publication_status, :section_id, :teacher_only, :url, :user_id, :uuid",
       "attrAccessible": null,
@@ -1067,7 +1067,7 @@
     },
     {
       "name": "PageElement",
-      "methodName": "strong_page_element_params",
+      "methodName": "page_element_strong_params",
       "path": "app/models/page_element.rb",
       "attrs": ":embeddable_id, :embeddable_type, :page_id, :position, :user_id",
       "attrAccessible": null,
@@ -1076,7 +1076,7 @@
     },
     {
       "name": "Password",
-      "methodName": "strong_password_params",
+      "methodName": "password_strong_params",
       "path": "app/models/password.rb",
       "attrs": ":expiration_date, :reset_code, :user_id",
       "attrAccessible": {
@@ -1137,7 +1137,7 @@
           "line": "if @user.update_attributes(params[:user])"
         }
       ],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email, :user, :user_id\n  #  model attrs:     :expiration_date, :reset_code, :user_id\ndef strong_password_params(params)\n    params.permit(:expiration_date, :reset_code, :user_id)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email, :user, :user_id\n  #  model attrs:     :expiration_date, :reset_code, :user_id\ndef password_strong_params(params)\n    params.permit(:expiration_date, :reset_code, :user_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/passwords_controller.rb",
         "app/controllers/import/imported_login_controller.rb",
@@ -1153,7 +1153,7 @@
     },
     {
       "name": "Portal::Bookmark",
-      "methodName": "strong_portal_bookmark_params",
+      "methodName": "portal_bookmark_strong_params",
       "path": "app/models/portal/bookmark.rb",
       "attrs": ":clazz_id, :is_visible, :name, :position, :type, :url, :user_id",
       "attrAccessible": {
@@ -1165,7 +1165,7 @@
     },
     {
       "name": "Portal::BookmarkVisit",
-      "methodName": "strong_portal_bookmark_visit_params",
+      "methodName": "portal_bookmark_visit_strong_params",
       "path": "app/models/portal/bookmark_visit.rb",
       "attrs": ":bookmark_id, :user_id",
       "attrAccessible": null,
@@ -1174,7 +1174,7 @@
     },
     {
       "name": "Portal::Clazz",
-      "methodName": "strong_portal_clazz_params",
+      "methodName": "portal_clazz_strong_params",
       "path": "app/models/portal/clazz.rb",
       "attrs": ":class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid",
       "attrAccessible": {
@@ -1205,7 +1205,7 @@
           "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
         }
       ],
-      "method": "  def strong_portal_clazz_params(params)\n    params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid)\n  end\n",
+      "method": "  def portal_clazz_strong_params(params)\n    params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/teacher_classes_controller.rb",
         "app/controllers/portal/clazzes_controller.rb"
@@ -1217,7 +1217,7 @@
     },
     {
       "name": "Portal::Collaboration",
-      "methodName": "strong_portal_collaboration_params",
+      "methodName": "portal_collaboration_strong_params",
       "path": "app/models/portal/collaboration.rb",
       "attrs": ":offering_id, :owner_id",
       "attrAccessible": null,
@@ -1226,7 +1226,7 @@
     },
     {
       "name": "Portal::CollaborationMembership",
-      "methodName": "strong_portal_collaboration_membership_params",
+      "methodName": "portal_collaboration_membership_strong_params",
       "path": "app/models/portal/collaboration_membership.rb",
       "attrs": ":collaboration_id, :student_id",
       "attrAccessible": null,
@@ -1235,7 +1235,7 @@
     },
     {
       "name": "Portal::Country",
-      "methodName": "strong_portal_country_params",
+      "methodName": "portal_country_strong_params",
       "path": "app/models/portal/country.rb",
       "attrs": ":capital, :formal_name, :iso_id, :name, :three_letter, :tld, :two_letter",
       "attrAccessible": null,
@@ -1244,7 +1244,7 @@
     },
     {
       "name": "Portal::Course",
-      "methodName": "strong_portal_course_params",
+      "methodName": "portal_course_strong_params",
       "path": "app/models/portal/course.rb",
       "attrs": ":course_number, :description, :name, :school_id, :status, :uuid",
       "attrAccessible": null,
@@ -1277,7 +1277,7 @@
           "line": "if @course.update_attributes(params[:portal_course])"
         }
       ],
-      "method": "  def strong_portal_course_params(params)\n    params.permit(:course_number, :description, :name, :school_id, :status, :uuid)\n  end\n",
+      "method": "  def portal_course_strong_params(params)\n    params.permit(:course_number, :description, :name, :school_id, :status, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/clazzes_controller.rb",
         "app/controllers/portal/courses_controller.rb"
@@ -1289,7 +1289,7 @@
     },
     {
       "name": "Portal::District",
-      "methodName": "strong_portal_district_params",
+      "methodName": "portal_district_strong_params",
       "path": "app/models/portal/district.rb",
       "attrs": ":description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode",
       "attrAccessible": {
@@ -1310,7 +1310,7 @@
           "line": "if @portal_district.update_attributes(params[:portal_district])"
         }
       ],
-      "method": "  def strong_portal_district_params(params)\n    params.permit(:description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode)\n  end\n",
+      "method": "  def portal_district_strong_params(params)\n    params.permit(:description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/districts_controller.rb"
       ],
@@ -1320,7 +1320,7 @@
     },
     {
       "name": "Portal::GenericBookmark",
-      "methodName": "strong_portal_generic_bookmark_params",
+      "methodName": "portal_generic_bookmark_strong_params",
       "path": "app/models/portal/generic_bookmark.rb",
       "attrs": ":clazz_id, :is_visible, :name, :position, :type, :url, :user_id",
       "attrAccessible": null,
@@ -1337,7 +1337,7 @@
         }
       ],
       "updates": [],
-      "method": "  def strong_portal_generic_bookmark_params(params)\n    params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)\n  end\n",
+      "method": "  def portal_generic_bookmark_strong_params(params)\n    params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/bookmarks_controller.rb",
         "app/controllers/portal/bookmarks_controller.rb"
@@ -1349,7 +1349,7 @@
     },
     {
       "name": "Portal::Grade",
-      "methodName": "strong_portal_grade_params",
+      "methodName": "portal_grade_strong_params",
       "path": "app/models/portal/grade.rb",
       "attrs": ":active, :description, :name, :position, :uuid",
       "attrAccessible": null,
@@ -1358,7 +1358,7 @@
     },
     {
       "name": "Portal::GradeLevel",
-      "methodName": "strong_portal_grade_level_params",
+      "methodName": "portal_grade_level_strong_params",
       "path": "app/models/portal/grade_level.rb",
       "attrs": ":description, :grade_id, :has_grade_levels_id, :has_grade_levels_type, :name, :uuid",
       "attrAccessible": null,
@@ -1367,7 +1367,7 @@
     },
     {
       "name": "Portal::Learner",
-      "methodName": "strong_portal_learner_params",
+      "methodName": "portal_learner_strong_params",
       "path": "app/models/portal/learner.rb",
       "attrs": ":bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid",
       "attrAccessible": null,
@@ -1385,7 +1385,7 @@
           "line": "if @portal_learner.update_attributes(params[:learner])"
         }
       ],
-      "method": "  def strong_portal_learner_params(params)\n    params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)\n  end\n",
+      "method": "  def portal_learner_strong_params(params)\n    params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/learners_controller.rb"
       ],
@@ -1395,7 +1395,7 @@
     },
     {
       "name": "Portal::LearnerActivityFeedback",
-      "methodName": "strong_portal_learner_activity_feedback_params",
+      "methodName": "portal_learner_activity_feedback_strong_params",
       "path": "app/models/portal/learner_activity_feedback.rb",
       "attrs": ":activity_feedback_id, :has_been_reviewed, :portal_learner_id, :rubric_feedback, :score, :text_feedback",
       "attrAccessible": {
@@ -1407,7 +1407,7 @@
     },
     {
       "name": "Portal::LegacyCollaboration",
-      "methodName": "strong_portal_legacy_collaboration_params",
+      "methodName": "portal_legacy_collaboration_strong_params",
       "path": "app/models/portal/legacy_collaboration.rb",
       "attrs": ":bundle_content_id, :student_id",
       "attrAccessible": null,
@@ -1416,7 +1416,7 @@
     },
     {
       "name": "Portal::Nces06District",
-      "methodName": "strong_portal_nces06_district_params",
+      "methodName": "portal_nces06_district_strong_params",
       "path": "app/models/portal/nces06_district.rb",
       "attrs": ":AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST, :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP, :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH, :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM, :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC, :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM, :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION",
       "attrAccessible": null,
@@ -1434,7 +1434,7 @@
           "line": "if @nces06_district.update_attributes(params[:nces06_district])"
         }
       ],
-      "method": "  def strong_portal_nces06_district_params(params)\n    params.permit(:AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST, :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP, :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH, :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM, :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC, :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM, :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION)\n  end\n",
+      "method": "  def portal_nces06_district_strong_params(params)\n    params.permit(:AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST, :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP, :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH, :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM, :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC, :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM, :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/nces06_districts_controller.rb"
       ],
@@ -1444,7 +1444,7 @@
     },
     {
       "name": "Portal::Nces06School",
-      "methodName": "strong_portal_nces06_school_params",
+      "methodName": "portal_nces06_school_strong_params",
       "path": "app/models/portal/nces06_school.rb",
       "attrs": ":AM, :AM01F, :AM01M, :AM01U, :AM02F, :AM02M, :AM02U, :AM03F, :AM03M, :AM03U, :AM04F, :AM04M, :AM04U, :AM05F, :AM05M, :AM05U, :AM06F, :AM06M, :AM06U, :AM07F, :AM07M, :AM07U, :AM08F, :AM08M, :AM08U, :AM09F, :AM09M, :AM09U, :AM10F, :AM10M, :AM10U, :AM11F, :AM11M, :AM11U, :AM12F, :AM12M, :AM12U, :AMALF, :AMALM, :AMALU, :AMKGF, :AMKGM, :AMKGU, :AMPKF, :AMPKM, :AMPKU, :AMUGF, :AMUGM, :AMUGU, :AS01F, :AS01M, :AS01U, :AS02F, :AS02M, :AS02U, :AS03F, :AS03M, :AS03U, :AS04F, :AS04M, :AS04U, :AS05F, :AS05M, :AS05U, :AS06F, :AS06M, :AS06U, :AS07F, :AS07M, :AS07U, :AS08F, :AS08M, :AS08U, :AS09F, :AS09M, :AS09U, :AS10F, :AS10M, :AS10U, :AS11F, :AS11M, :AS11U, :AS12F, :AS12M, :AS12U, :ASALF, :ASALM, :ASALU, :ASIAN, :ASKGF, :ASKGM, :ASKGU, :ASPKF, :ASPKM, :ASPKU, :ASUGF, :ASUGM, :ASUGU, :BL01F, :BL01M, :BL01U, :BL02F, :BL02M, :BL02U, :BL03F, :BL03M, :BL03U, :BL04F, :BL04M, :BL04U, :BL05F, :BL05M, :BL05U, :BL06F, :BL06M, :BL06U, :BL07F, :BL07M, :BL07U, :BL08F, :BL08M, :BL08U, :BL09F, :BL09M, :BL09U, :BL10F, :BL10M, :BL10U, :BL11F, :BL11M, :BL11U, :BL12F, :BL12M, :BL12U, :BLACK, :BLALF, :BLALM, :BLALU, :BLKGF, :BLKGM, :BLKGU, :BLPKF, :BLPKM, :BLPKU, :BLUGF, :BLUGM, :BLUGU, :CDCODE, :CHARTR, :CONAME, :CONUM, :FIPST, :FRELCH, :FTE, :G01, :G02, :G03, :G04, :G05, :G06, :G07, :G08, :G09, :G10, :G11, :G12, :GSHI, :GSLO, :HI01F, :HI01M, :HI01U, :HI02F, :HI02M, :HI02U, :HI03F, :HI03M, :HI03U, :HI04F, :HI04M, :HI04U, :HI05F, :HI05M, :HI05U, :HI06F, :HI06M, :HI06U, :HI07F, :HI07M, :HI07U, :HI08F, :HI08M, :HI08U, :HI09F, :HI09M, :HI09U, :HI10F, :HI10M, :HI10U, :HI11F, :HI11M, :HI11U, :HI12F, :HI12M, :HI12U, :HIALF, :HIALM, :HIALU, :HIKGF, :HIKGM, :HIKGU, :HIPKF, :HIPKM, :HIPKU, :HISP, :HIUGF, :HIUGM, :HIUGU, :IAM, :IAM01F, :IAM01M, :IAM01U, :IAM02F, :IAM02M, :IAM02U, :IAM03F, :IAM03M, :IAM03U, :IAM04F, :IAM04M, :IAM04U, :IAM05F, :IAM05M, :IAM05U, :IAM06F, :IAM06M, :IAM06U, :IAM07F, :IAM07M, :IAM07U, :IAM08F, :IAM08M, :IAM08U, :IAM09F, :IAM09M, :IAM09U, :IAM10F, :IAM10M, :IAM10U, :IAM11F, :IAM11M, :IAM11U, :IAM12F, :IAM12M, :IAM12U, :IAMALF, :IAMALM, :IAMALU, :IAMKGF, :IAMKGM, :IAMKGU, :IAMPKF, :IAMPKM, :IAMPKU, :IAMUGF, :IAMUGM, :IAMUGU, :IAS01F, :IAS01M, :IAS01U, :IAS02F, :IAS02M, :IAS02U, :IAS03F, :IAS03M, :IAS03U, :IAS04F, :IAS04M, :IAS04U, :IAS05F, :IAS05M, :IAS05U, :IAS06F, :IAS06M, :IAS06U, :IAS07F, :IAS07M, :IAS07U, :IAS08F, :IAS08M, :IAS08U, :IAS09F, :IAS09M, :IAS09U, :IAS10F, :IAS10M, :IAS10U, :IAS11F, :IAS11M, :IAS11U, :IAS12F, :IAS12M, :IAS12U, :IASALF, :IASALM, :IASALU, :IASIAN, :IASKGF, :IASKGM, :IASKGU, :IASPKF, :IASPKM, :IASPKU, :IASUGF, :IASUGM, :IASUGU, :IBL01F, :IBL01M, :IBL01U, :IBL02F, :IBL02M, :IBL02U, :IBL03F, :IBL03M, :IBL03U, :IBL04F, :IBL04M, :IBL04U, :IBL05F, :IBL05M, :IBL05U, :IBL06F, :IBL06M, :IBL06U, :IBL07F, :IBL07M, :IBL07U, :IBL08F, :IBL08M, :IBL08U, :IBL09F, :IBL09M, :IBL09U, :IBL10F, :IBL10M, :IBL10U, :IBL11F, :IBL11M, :IBL11U, :IBL12F, :IBL12M, :IBL12U, :IBLACK, :IBLALF, :IBLALM, :IBLALU, :IBLKGF, :IBLKGM, :IBLKGU, :IBLPKF, :IBLPKM, :IBLPKU, :IBLUGF, :IBLUGM, :IBLUGU, :ICHART, :IETH, :IFRELC, :IFTE, :IG01, :IG02, :IG03, :IG04, :IG05, :IG06, :IG07, :IG08, :IG09, :IG10, :IG11, :IG12, :IGSHI, :IGSLO, :IHI01F, :IHI01M, :IHI01U, :IHI02F, :IHI02M, :IHI02U, :IHI03F, :IHI03M, :IHI03U, :IHI04F, :IHI04M, :IHI04U, :IHI05F, :IHI05M, :IHI05U, :IHI06F, :IHI06M, :IHI06U, :IHI07F, :IHI07M, :IHI07U, :IHI08F, :IHI08M, :IHI08U, :IHI09F, :IHI09M, :IHI09U, :IHI10F, :IHI10M, :IHI10U, :IHI11F, :IHI11M, :IHI11U, :IHI12F, :IHI12M, :IHI12U, :IHIALF, :IHIALM, :IHIALU, :IHIKGF, :IHIKGM, :IHIKGU, :IHIPKF, :IHIPKM, :IHIPKU, :IHISP, :IHIUGF, :IHIUGM, :IHIUGU, :IKG, :IMAGNE, :IMEMB, :IMIGRN, :IPK, :IPUTCH, :IREDLC, :ISHARE, :ISTITL, :ITITLI, :ITOTFR, :ITOTGR, :IUG, :IWH01F, :IWH01M, :IWH01U, :IWH02F, :IWH02M, :IWH02U, :IWH03F, :IWH03M, :IWH03U, :IWH04F, :IWH04M, :IWH04U, :IWH05F, :IWH05M, :IWH05U, :IWH06F, :IWH06M, :IWH06U, :IWH07F, :IWH07M, :IWH07U, :IWH08F, :IWH08M, :IWH08U, :IWH09F, :IWH09M, :IWH09U, :IWH10F, :IWH10M, :IWH10U, :IWH11F, :IWH11M, :IWH11U, :IWH12F, :IWH12M, :IWH12U, :IWHALF, :IWHALM, :IWHALU, :IWHITE, :IWHKGF, :IWHKGM, :IWHKGU, :IWHPKF, :IWHPKM, :IWHPKU, :IWHUGF, :IWHUGM, :IWHUGU, :KG, :KIND, :LATCOD, :LCITY, :LEAID, :LEANM, :LEVEL, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MAGNET, :MCITY, :MEMBER, :MIGRNT, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NCESSCH, :PHONE, :PK, :PUPTCH, :REDLCH, :SCHNAM, :SCHNO, :SEASCH, :SHARED, :STATUS, :STID, :STITLI, :TITLEI, :TOTETH, :TOTFRL, :TOTGRD, :UG, :ULOCAL, :WH01F, :WH01M, :WH01U, :WH02F, :WH02M, :WH02U, :WH03F, :WH03M, :WH03U, :WH04F, :WH04M, :WH04U, :WH05F, :WH05M, :WH05U, :WH06F, :WH06M, :WH06U, :WH07F, :WH07M, :WH07U, :WH08F, :WH08M, :WH08U, :WH09F, :WH09M, :WH09U, :WH10F, :WH10M, :WH10U, :WH11F, :WH11M, :WH11U, :WH12F, :WH12M, :WH12U, :WHALF, :WHALM, :WHALU, :WHITE, :WHKGF, :WHKGM, :WHKGU, :WHPKF, :WHPKM, :WHPKU, :WHUGF, :WHUGM, :WHUGU, :nces_district_id",
       "attrAccessible": null,
@@ -1462,7 +1462,7 @@
           "line": "if @nces06_school.update_attributes(params[:nces06_school])"
         }
       ],
-      "method": "  def strong_portal_nces06_school_params(params)\n    params.permit(:AM, :AM01F, :AM01M, :AM01U, :AM02F, :AM02M, :AM02U, :AM03F, :AM03M, :AM03U, :AM04F, :AM04M, :AM04U, :AM05F, :AM05M, :AM05U, :AM06F, :AM06M, :AM06U, :AM07F, :AM07M, :AM07U, :AM08F, :AM08M, :AM08U, :AM09F, :AM09M, :AM09U, :AM10F, :AM10M, :AM10U, :AM11F, :AM11M, :AM11U, :AM12F, :AM12M, :AM12U, :AMALF, :AMALM, :AMALU, :AMKGF, :AMKGM, :AMKGU, :AMPKF, :AMPKM, :AMPKU, :AMUGF, :AMUGM, :AMUGU, :AS01F, :AS01M, :AS01U, :AS02F, :AS02M, :AS02U, :AS03F, :AS03M, :AS03U, :AS04F, :AS04M, :AS04U, :AS05F, :AS05M, :AS05U, :AS06F, :AS06M, :AS06U, :AS07F, :AS07M, :AS07U, :AS08F, :AS08M, :AS08U, :AS09F, :AS09M, :AS09U, :AS10F, :AS10M, :AS10U, :AS11F, :AS11M, :AS11U, :AS12F, :AS12M, :AS12U, :ASALF, :ASALM, :ASALU, :ASIAN, :ASKGF, :ASKGM, :ASKGU, :ASPKF, :ASPKM, :ASPKU, :ASUGF, :ASUGM, :ASUGU, :BL01F, :BL01M, :BL01U, :BL02F, :BL02M, :BL02U, :BL03F, :BL03M, :BL03U, :BL04F, :BL04M, :BL04U, :BL05F, :BL05M, :BL05U, :BL06F, :BL06M, :BL06U, :BL07F, :BL07M, :BL07U, :BL08F, :BL08M, :BL08U, :BL09F, :BL09M, :BL09U, :BL10F, :BL10M, :BL10U, :BL11F, :BL11M, :BL11U, :BL12F, :BL12M, :BL12U, :BLACK, :BLALF, :BLALM, :BLALU, :BLKGF, :BLKGM, :BLKGU, :BLPKF, :BLPKM, :BLPKU, :BLUGF, :BLUGM, :BLUGU, :CDCODE, :CHARTR, :CONAME, :CONUM, :FIPST, :FRELCH, :FTE, :G01, :G02, :G03, :G04, :G05, :G06, :G07, :G08, :G09, :G10, :G11, :G12, :GSHI, :GSLO, :HI01F, :HI01M, :HI01U, :HI02F, :HI02M, :HI02U, :HI03F, :HI03M, :HI03U, :HI04F, :HI04M, :HI04U, :HI05F, :HI05M, :HI05U, :HI06F, :HI06M, :HI06U, :HI07F, :HI07M, :HI07U, :HI08F, :HI08M, :HI08U, :HI09F, :HI09M, :HI09U, :HI10F, :HI10M, :HI10U, :HI11F, :HI11M, :HI11U, :HI12F, :HI12M, :HI12U, :HIALF, :HIALM, :HIALU, :HIKGF, :HIKGM, :HIKGU, :HIPKF, :HIPKM, :HIPKU, :HISP, :HIUGF, :HIUGM, :HIUGU, :IAM, :IAM01F, :IAM01M, :IAM01U, :IAM02F, :IAM02M, :IAM02U, :IAM03F, :IAM03M, :IAM03U, :IAM04F, :IAM04M, :IAM04U, :IAM05F, :IAM05M, :IAM05U, :IAM06F, :IAM06M, :IAM06U, :IAM07F, :IAM07M, :IAM07U, :IAM08F, :IAM08M, :IAM08U, :IAM09F, :IAM09M, :IAM09U, :IAM10F, :IAM10M, :IAM10U, :IAM11F, :IAM11M, :IAM11U, :IAM12F, :IAM12M, :IAM12U, :IAMALF, :IAMALM, :IAMALU, :IAMKGF, :IAMKGM, :IAMKGU, :IAMPKF, :IAMPKM, :IAMPKU, :IAMUGF, :IAMUGM, :IAMUGU, :IAS01F, :IAS01M, :IAS01U, :IAS02F, :IAS02M, :IAS02U, :IAS03F, :IAS03M, :IAS03U, :IAS04F, :IAS04M, :IAS04U, :IAS05F, :IAS05M, :IAS05U, :IAS06F, :IAS06M, :IAS06U, :IAS07F, :IAS07M, :IAS07U, :IAS08F, :IAS08M, :IAS08U, :IAS09F, :IAS09M, :IAS09U, :IAS10F, :IAS10M, :IAS10U, :IAS11F, :IAS11M, :IAS11U, :IAS12F, :IAS12M, :IAS12U, :IASALF, :IASALM, :IASALU, :IASIAN, :IASKGF, :IASKGM, :IASKGU, :IASPKF, :IASPKM, :IASPKU, :IASUGF, :IASUGM, :IASUGU, :IBL01F, :IBL01M, :IBL01U, :IBL02F, :IBL02M, :IBL02U, :IBL03F, :IBL03M, :IBL03U, :IBL04F, :IBL04M, :IBL04U, :IBL05F, :IBL05M, :IBL05U, :IBL06F, :IBL06M, :IBL06U, :IBL07F, :IBL07M, :IBL07U, :IBL08F, :IBL08M, :IBL08U, :IBL09F, :IBL09M, :IBL09U, :IBL10F, :IBL10M, :IBL10U, :IBL11F, :IBL11M, :IBL11U, :IBL12F, :IBL12M, :IBL12U, :IBLACK, :IBLALF, :IBLALM, :IBLALU, :IBLKGF, :IBLKGM, :IBLKGU, :IBLPKF, :IBLPKM, :IBLPKU, :IBLUGF, :IBLUGM, :IBLUGU, :ICHART, :IETH, :IFRELC, :IFTE, :IG01, :IG02, :IG03, :IG04, :IG05, :IG06, :IG07, :IG08, :IG09, :IG10, :IG11, :IG12, :IGSHI, :IGSLO, :IHI01F, :IHI01M, :IHI01U, :IHI02F, :IHI02M, :IHI02U, :IHI03F, :IHI03M, :IHI03U, :IHI04F, :IHI04M, :IHI04U, :IHI05F, :IHI05M, :IHI05U, :IHI06F, :IHI06M, :IHI06U, :IHI07F, :IHI07M, :IHI07U, :IHI08F, :IHI08M, :IHI08U, :IHI09F, :IHI09M, :IHI09U, :IHI10F, :IHI10M, :IHI10U, :IHI11F, :IHI11M, :IHI11U, :IHI12F, :IHI12M, :IHI12U, :IHIALF, :IHIALM, :IHIALU, :IHIKGF, :IHIKGM, :IHIKGU, :IHIPKF, :IHIPKM, :IHIPKU, :IHISP, :IHIUGF, :IHIUGM, :IHIUGU, :IKG, :IMAGNE, :IMEMB, :IMIGRN, :IPK, :IPUTCH, :IREDLC, :ISHARE, :ISTITL, :ITITLI, :ITOTFR, :ITOTGR, :IUG, :IWH01F, :IWH01M, :IWH01U, :IWH02F, :IWH02M, :IWH02U, :IWH03F, :IWH03M, :IWH03U, :IWH04F, :IWH04M, :IWH04U, :IWH05F, :IWH05M, :IWH05U, :IWH06F, :IWH06M, :IWH06U, :IWH07F, :IWH07M, :IWH07U, :IWH08F, :IWH08M, :IWH08U, :IWH09F, :IWH09M, :IWH09U, :IWH10F, :IWH10M, :IWH10U, :IWH11F, :IWH11M, :IWH11U, :IWH12F, :IWH12M, :IWH12U, :IWHALF, :IWHALM, :IWHALU, :IWHITE, :IWHKGF, :IWHKGM, :IWHKGU, :IWHPKF, :IWHPKM, :IWHPKU, :IWHUGF, :IWHUGM, :IWHUGU, :KG, :KIND, :LATCOD, :LCITY, :LEAID, :LEANM, :LEVEL, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MAGNET, :MCITY, :MEMBER, :MIGRNT, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NCESSCH, :PHONE, :PK, :PUPTCH, :REDLCH, :SCHNAM, :SCHNO, :SEASCH, :SHARED, :STATUS, :STID, :STITLI, :TITLEI, :TOTETH, :TOTFRL, :TOTGRD, :UG, :ULOCAL, :WH01F, :WH01M, :WH01U, :WH02F, :WH02M, :WH02U, :WH03F, :WH03M, :WH03U, :WH04F, :WH04M, :WH04U, :WH05F, :WH05M, :WH05U, :WH06F, :WH06M, :WH06U, :WH07F, :WH07M, :WH07U, :WH08F, :WH08M, :WH08U, :WH09F, :WH09M, :WH09U, :WH10F, :WH10M, :WH10U, :WH11F, :WH11M, :WH11U, :WH12F, :WH12M, :WH12U, :WHALF, :WHALM, :WHALU, :WHITE, :WHKGF, :WHKGM, :WHKGU, :WHPKF, :WHPKM, :WHPKU, :WHUGF, :WHUGM, :WHUGU, :nces_district_id)\n  end\n",
+      "method": "  def portal_nces06_school_strong_params(params)\n    params.permit(:AM, :AM01F, :AM01M, :AM01U, :AM02F, :AM02M, :AM02U, :AM03F, :AM03M, :AM03U, :AM04F, :AM04M, :AM04U, :AM05F, :AM05M, :AM05U, :AM06F, :AM06M, :AM06U, :AM07F, :AM07M, :AM07U, :AM08F, :AM08M, :AM08U, :AM09F, :AM09M, :AM09U, :AM10F, :AM10M, :AM10U, :AM11F, :AM11M, :AM11U, :AM12F, :AM12M, :AM12U, :AMALF, :AMALM, :AMALU, :AMKGF, :AMKGM, :AMKGU, :AMPKF, :AMPKM, :AMPKU, :AMUGF, :AMUGM, :AMUGU, :AS01F, :AS01M, :AS01U, :AS02F, :AS02M, :AS02U, :AS03F, :AS03M, :AS03U, :AS04F, :AS04M, :AS04U, :AS05F, :AS05M, :AS05U, :AS06F, :AS06M, :AS06U, :AS07F, :AS07M, :AS07U, :AS08F, :AS08M, :AS08U, :AS09F, :AS09M, :AS09U, :AS10F, :AS10M, :AS10U, :AS11F, :AS11M, :AS11U, :AS12F, :AS12M, :AS12U, :ASALF, :ASALM, :ASALU, :ASIAN, :ASKGF, :ASKGM, :ASKGU, :ASPKF, :ASPKM, :ASPKU, :ASUGF, :ASUGM, :ASUGU, :BL01F, :BL01M, :BL01U, :BL02F, :BL02M, :BL02U, :BL03F, :BL03M, :BL03U, :BL04F, :BL04M, :BL04U, :BL05F, :BL05M, :BL05U, :BL06F, :BL06M, :BL06U, :BL07F, :BL07M, :BL07U, :BL08F, :BL08M, :BL08U, :BL09F, :BL09M, :BL09U, :BL10F, :BL10M, :BL10U, :BL11F, :BL11M, :BL11U, :BL12F, :BL12M, :BL12U, :BLACK, :BLALF, :BLALM, :BLALU, :BLKGF, :BLKGM, :BLKGU, :BLPKF, :BLPKM, :BLPKU, :BLUGF, :BLUGM, :BLUGU, :CDCODE, :CHARTR, :CONAME, :CONUM, :FIPST, :FRELCH, :FTE, :G01, :G02, :G03, :G04, :G05, :G06, :G07, :G08, :G09, :G10, :G11, :G12, :GSHI, :GSLO, :HI01F, :HI01M, :HI01U, :HI02F, :HI02M, :HI02U, :HI03F, :HI03M, :HI03U, :HI04F, :HI04M, :HI04U, :HI05F, :HI05M, :HI05U, :HI06F, :HI06M, :HI06U, :HI07F, :HI07M, :HI07U, :HI08F, :HI08M, :HI08U, :HI09F, :HI09M, :HI09U, :HI10F, :HI10M, :HI10U, :HI11F, :HI11M, :HI11U, :HI12F, :HI12M, :HI12U, :HIALF, :HIALM, :HIALU, :HIKGF, :HIKGM, :HIKGU, :HIPKF, :HIPKM, :HIPKU, :HISP, :HIUGF, :HIUGM, :HIUGU, :IAM, :IAM01F, :IAM01M, :IAM01U, :IAM02F, :IAM02M, :IAM02U, :IAM03F, :IAM03M, :IAM03U, :IAM04F, :IAM04M, :IAM04U, :IAM05F, :IAM05M, :IAM05U, :IAM06F, :IAM06M, :IAM06U, :IAM07F, :IAM07M, :IAM07U, :IAM08F, :IAM08M, :IAM08U, :IAM09F, :IAM09M, :IAM09U, :IAM10F, :IAM10M, :IAM10U, :IAM11F, :IAM11M, :IAM11U, :IAM12F, :IAM12M, :IAM12U, :IAMALF, :IAMALM, :IAMALU, :IAMKGF, :IAMKGM, :IAMKGU, :IAMPKF, :IAMPKM, :IAMPKU, :IAMUGF, :IAMUGM, :IAMUGU, :IAS01F, :IAS01M, :IAS01U, :IAS02F, :IAS02M, :IAS02U, :IAS03F, :IAS03M, :IAS03U, :IAS04F, :IAS04M, :IAS04U, :IAS05F, :IAS05M, :IAS05U, :IAS06F, :IAS06M, :IAS06U, :IAS07F, :IAS07M, :IAS07U, :IAS08F, :IAS08M, :IAS08U, :IAS09F, :IAS09M, :IAS09U, :IAS10F, :IAS10M, :IAS10U, :IAS11F, :IAS11M, :IAS11U, :IAS12F, :IAS12M, :IAS12U, :IASALF, :IASALM, :IASALU, :IASIAN, :IASKGF, :IASKGM, :IASKGU, :IASPKF, :IASPKM, :IASPKU, :IASUGF, :IASUGM, :IASUGU, :IBL01F, :IBL01M, :IBL01U, :IBL02F, :IBL02M, :IBL02U, :IBL03F, :IBL03M, :IBL03U, :IBL04F, :IBL04M, :IBL04U, :IBL05F, :IBL05M, :IBL05U, :IBL06F, :IBL06M, :IBL06U, :IBL07F, :IBL07M, :IBL07U, :IBL08F, :IBL08M, :IBL08U, :IBL09F, :IBL09M, :IBL09U, :IBL10F, :IBL10M, :IBL10U, :IBL11F, :IBL11M, :IBL11U, :IBL12F, :IBL12M, :IBL12U, :IBLACK, :IBLALF, :IBLALM, :IBLALU, :IBLKGF, :IBLKGM, :IBLKGU, :IBLPKF, :IBLPKM, :IBLPKU, :IBLUGF, :IBLUGM, :IBLUGU, :ICHART, :IETH, :IFRELC, :IFTE, :IG01, :IG02, :IG03, :IG04, :IG05, :IG06, :IG07, :IG08, :IG09, :IG10, :IG11, :IG12, :IGSHI, :IGSLO, :IHI01F, :IHI01M, :IHI01U, :IHI02F, :IHI02M, :IHI02U, :IHI03F, :IHI03M, :IHI03U, :IHI04F, :IHI04M, :IHI04U, :IHI05F, :IHI05M, :IHI05U, :IHI06F, :IHI06M, :IHI06U, :IHI07F, :IHI07M, :IHI07U, :IHI08F, :IHI08M, :IHI08U, :IHI09F, :IHI09M, :IHI09U, :IHI10F, :IHI10M, :IHI10U, :IHI11F, :IHI11M, :IHI11U, :IHI12F, :IHI12M, :IHI12U, :IHIALF, :IHIALM, :IHIALU, :IHIKGF, :IHIKGM, :IHIKGU, :IHIPKF, :IHIPKM, :IHIPKU, :IHISP, :IHIUGF, :IHIUGM, :IHIUGU, :IKG, :IMAGNE, :IMEMB, :IMIGRN, :IPK, :IPUTCH, :IREDLC, :ISHARE, :ISTITL, :ITITLI, :ITOTFR, :ITOTGR, :IUG, :IWH01F, :IWH01M, :IWH01U, :IWH02F, :IWH02M, :IWH02U, :IWH03F, :IWH03M, :IWH03U, :IWH04F, :IWH04M, :IWH04U, :IWH05F, :IWH05M, :IWH05U, :IWH06F, :IWH06M, :IWH06U, :IWH07F, :IWH07M, :IWH07U, :IWH08F, :IWH08M, :IWH08U, :IWH09F, :IWH09M, :IWH09U, :IWH10F, :IWH10M, :IWH10U, :IWH11F, :IWH11M, :IWH11U, :IWH12F, :IWH12M, :IWH12U, :IWHALF, :IWHALM, :IWHALU, :IWHITE, :IWHKGF, :IWHKGM, :IWHKGU, :IWHPKF, :IWHPKM, :IWHPKU, :IWHUGF, :IWHUGM, :IWHUGU, :KG, :KIND, :LATCOD, :LCITY, :LEAID, :LEANM, :LEVEL, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MAGNET, :MCITY, :MEMBER, :MIGRNT, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NCESSCH, :PHONE, :PK, :PUPTCH, :REDLCH, :SCHNAM, :SCHNO, :SEASCH, :SHARED, :STATUS, :STID, :STITLI, :TITLEI, :TOTETH, :TOTFRL, :TOTGRD, :UG, :ULOCAL, :WH01F, :WH01M, :WH01U, :WH02F, :WH02M, :WH02U, :WH03F, :WH03M, :WH03U, :WH04F, :WH04M, :WH04U, :WH05F, :WH05M, :WH05U, :WH06F, :WH06M, :WH06U, :WH07F, :WH07M, :WH07U, :WH08F, :WH08M, :WH08U, :WH09F, :WH09M, :WH09U, :WH10F, :WH10M, :WH10U, :WH11F, :WH11M, :WH11U, :WH12F, :WH12M, :WH12U, :WHALF, :WHALM, :WHALU, :WHITE, :WHKGF, :WHKGM, :WHKGU, :WHPKF, :WHPKM, :WHPKU, :WHUGF, :WHUGM, :WHUGU, :nces_district_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/nces06_schools_controller.rb"
       ],
@@ -1472,7 +1472,7 @@
     },
     {
       "name": "Portal::Offering",
-      "methodName": "strong_portal_offering_params",
+      "methodName": "portal_offering_strong_params",
       "path": "app/models/portal/offering.rb",
       "attrs": ":active, :anonymous_report, :clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid",
       "attrAccessible": null,
@@ -1481,7 +1481,7 @@
     },
     {
       "name": "Portal::OfferingActivityFeedback",
-      "methodName": "strong_portal_offering_activity_feedback_params",
+      "methodName": "portal_offering_activity_feedback_strong_params",
       "path": "app/models/portal/offering_activity_feedback.rb",
       "attrs": ":activity_id, :enable_text_feedback, :max_score, :portal_offering_id, :rubric, :score_type, :use_rubric",
       "attrAccessible": {
@@ -1493,7 +1493,7 @@
     },
     {
       "name": "Portal::OfferingEmbeddableMetadata",
-      "methodName": "strong_portal_offering_embeddable_metadata_params",
+      "methodName": "portal_offering_embeddable_metadata_strong_params",
       "path": "app/models/portal/offering_embeddable_metadata.rb",
       "attrs": ":embeddable_id, :embeddable_type, :enable_score, :enable_text_feedback, :max_score, :offering_id",
       "attrAccessible": null,
@@ -1502,7 +1502,7 @@
     },
     {
       "name": "Portal::PermissionForm",
-      "methodName": "strong_portal_permission_form_params",
+      "methodName": "portal_permission_form_strong_params",
       "path": "app/models/portal/permission_form.rb",
       "attrs": ":name, :project_id, :url",
       "attrAccessible": {
@@ -1517,7 +1517,7 @@
         }
       ],
       "updates": [],
-      "method": "  def strong_portal_permission_form_params(params)\n    params.permit(:name, :project_id, :url)\n  end\n",
+      "method": "  def portal_permission_form_strong_params(params)\n    params.permit(:name, :project_id, :url)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/permission_forms_controller.rb"
       ],
@@ -1527,7 +1527,7 @@
     },
     {
       "name": "Portal::School",
-      "methodName": "strong_portal_school_params",
+      "methodName": "portal_school_strong_params",
       "path": "app/models/portal/school.rb",
       "attrs": ":city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode",
       "attrAccessible": null,
@@ -1545,7 +1545,7 @@
           "line": "if @portal_school.update_attributes(params[:portal_school])"
         }
       ],
-      "method": "  def strong_portal_school_params(params)\n    params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode)\n  end\n",
+      "method": "  def portal_school_strong_params(params)\n    params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/schools_controller.rb"
       ],
@@ -1555,7 +1555,7 @@
     },
     {
       "name": "Portal::SchoolMembership",
-      "methodName": "strong_portal_school_membership_params",
+      "methodName": "portal_school_membership_strong_params",
       "path": "app/models/portal/school_membership.rb",
       "attrs": ":description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid",
       "attrAccessible": null,
@@ -1573,7 +1573,7 @@
           "line": "if @school_membership.update_attributes(params[:portal_school_membership])"
         }
       ],
-      "method": "  def strong_portal_school_membership_params(params)\n    params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)\n  end\n",
+      "method": "  def portal_school_membership_strong_params(params)\n    params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/school_memberships_controller.rb"
       ],
@@ -1583,7 +1583,7 @@
     },
     {
       "name": "Portal::Student",
-      "methodName": "strong_portal_student_params",
+      "methodName": "portal_student_strong_params",
       "path": "app/models/portal/student.rb",
       "attrs": ":grade_level_id, :user_id, :uuid",
       "attrAccessible": null,
@@ -1636,7 +1636,7 @@
           "line": "if @portal_student.user.update_attributes(params[:user])"
         }
       ],
-      "method": "  def strong_portal_student_params(params)\n    params.permit(:grade_level_id, :user_id, :uuid)\n  end\n",
+      "method": "  def portal_student_strong_params(params)\n    params.permit(:grade_level_id, :user_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/students_controller.rb",
         "app/controllers/portal/students_controller.rb"
@@ -1648,7 +1648,7 @@
     },
     {
       "name": "Portal::StudentClazz",
-      "methodName": "strong_portal_student_clazz_params",
+      "methodName": "portal_student_clazz_strong_params",
       "path": "app/models/portal/student_clazz.rb",
       "attrs": ":clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid",
       "attrAccessible": null,
@@ -1666,7 +1666,7 @@
           "line": "if @portal_student_clazz.update_attributes(params[:portal_student_clazz])"
         }
       ],
-      "method": "  def strong_portal_student_clazz_params(params)\n    params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid)\n  end\n",
+      "method": "  def portal_student_clazz_strong_params(params)\n    params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/student_clazzes_controller.rb"
       ],
@@ -1676,7 +1676,7 @@
     },
     {
       "name": "Portal::StudentPermissionForm",
-      "methodName": "strong_portal_student_permission_form_params",
+      "methodName": "portal_student_permission_form_strong_params",
       "path": "app/models/portal/student_permission_form.rb",
       "attrs": ":portal_permission_form_id, :portal_student_id, :signed",
       "attrAccessible": {
@@ -1688,7 +1688,7 @@
     },
     {
       "name": "Portal::Subject",
-      "methodName": "strong_portal_subject_params",
+      "methodName": "portal_subject_strong_params",
       "path": "app/models/portal/subject.rb",
       "attrs": ":description, :name, :teacher_id, :uuid",
       "attrAccessible": null,
@@ -1706,7 +1706,7 @@
           "line": "if @subject.update_attributes(params[:subject])"
         }
       ],
-      "method": "  def strong_portal_subject_params(params)\n    params.permit(:description, :name, :teacher_id, :uuid)\n  end\n",
+      "method": "  def portal_subject_strong_params(params)\n    params.permit(:description, :name, :teacher_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/subjects_controller.rb"
       ],
@@ -1716,7 +1716,7 @@
     },
     {
       "name": "Portal::Teacher",
-      "methodName": "strong_portal_teacher_params",
+      "methodName": "portal_teacher_strong_params",
       "path": "app/models/portal/teacher.rb",
       "attrs": ":left_pane_submenu_item, :offerings_count, :user_id, :uuid",
       "attrAccessible": null,
@@ -1739,7 +1739,7 @@
           "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
         }
       ],
-      "method": "  def strong_portal_teacher_params(params)\n    params.permit(:left_pane_submenu_item, :offerings_count, :user_id, :uuid)\n  end\n",
+      "method": "  def portal_teacher_strong_params(params)\n    params.permit(:left_pane_submenu_item, :offerings_count, :user_id, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/clazzes_controller.rb"
       ],
@@ -1749,7 +1749,7 @@
     },
     {
       "name": "Portal::TeacherClazz",
-      "methodName": "strong_portal_teacher_clazz_params",
+      "methodName": "portal_teacher_clazz_strong_params",
       "path": "app/models/portal/teacher_clazz.rb",
       "attrs": ":active, :clazz_id, :description, :end_time, :name, :position, :start_time, :teacher_id, :uuid",
       "attrAccessible": null,
@@ -1758,7 +1758,7 @@
     },
     {
       "name": "Portal::TeacherFullStatus",
-      "methodName": "strong_portal_teacher_full_status_params",
+      "methodName": "portal_teacher_full_status_strong_params",
       "path": "app/models/portal/teacher_full_status.rb",
       "attrs": ":offering_collapsed, :offering_id, :teacher_id",
       "attrAccessible": null,
@@ -1767,7 +1767,7 @@
     },
     {
       "name": "Report::EmbeddableFilter",
-      "methodName": "strong_report_embeddable_filter_params",
+      "methodName": "report_embeddable_filter_strong_params",
       "path": "app/models/report/embeddable_filter.rb",
       "attrs": ":embeddables, :ignore, :offering_id",
       "attrAccessible": null,
@@ -1776,7 +1776,7 @@
     },
     {
       "name": "Report::Learner",
-      "methodName": "strong_report_learner_params",
+      "methodName": "report_learner_strong_params",
       "path": "app/models/report/learner.rb",
       "attrs": ":answers, :class_id, :class_name, :complete_percent, :last_report, :last_run, :learner_id, :num_answerables, :num_answered, :num_correct, :num_submitted, :offering_id, :offering_name, :permission_forms, :permission_forms_id, :permission_forms_map, :runnable_id, :runnable_name, :runnable_type, :school_id, :school_name, :student_id, :student_name, :teachers_district, :teachers_email, :teachers_id, :teachers_map, :teachers_name, :teachers_state, :user_id, :username",
       "attrAccessible": null,
@@ -1785,7 +1785,7 @@
     },
     {
       "name": "Report::LearnerActivity",
-      "methodName": "strong_report_learner_activity_params",
+      "methodName": "report_learner_activity_strong_params",
       "path": "app/models/report/learner_activity.rb",
       "attrs": ":activity_id, :complete_percent, :learner_id",
       "attrAccessible": null,
@@ -1794,7 +1794,7 @@
     },
     {
       "name": "Role",
-      "methodName": "strong_role_params",
+      "methodName": "role_strong_params",
       "path": "app/models/role.rb",
       "attrs": ":position, :title, :uuid",
       "attrAccessible": null,
@@ -1803,7 +1803,7 @@
     },
     {
       "name": "Saveable::ExternalLink",
-      "methodName": "strong_saveable_external_link_params",
+      "methodName": "saveable_external_link_strong_params",
       "path": "app/models/saveable/external_link.rb",
       "attrs": ":embeddable_id, :embeddable_type, :learner_id, :offering_id, :response_count",
       "attrAccessible": null,
@@ -1812,7 +1812,7 @@
     },
     {
       "name": "Saveable::ExternalLinkUrl",
-      "methodName": "strong_saveable_external_link_url_params",
+      "methodName": "saveable_external_link_url_strong_params",
       "path": "app/models/saveable/external_link_url.rb",
       "attrs": ":bundle_content_id, :external_link_id, :feedback, :has_been_reviewed, :is_final, :position, :score, :url",
       "attrAccessible": null,
@@ -1821,7 +1821,7 @@
     },
     {
       "name": "Saveable::ImageQuestion",
-      "methodName": "strong_saveable_image_question_params",
+      "methodName": "saveable_image_question_strong_params",
       "path": "app/models/saveable/image_question.rb",
       "attrs": ":image_question_id, :learner_id, :offering_id, :response_count, :uuid",
       "attrAccessible": null,
@@ -1830,7 +1830,7 @@
     },
     {
       "name": "Saveable::ImageQuestionAnswer",
-      "methodName": "strong_saveable_image_question_answer_params",
+      "methodName": "saveable_image_question_answer_strong_params",
       "path": "app/models/saveable/image_question_answer.rb",
       "attrs": ":blob_id, :bundle_content_id, :feedback, :has_been_reviewed, :image_question_id, :is_final, :note, :position, :score, :uuid",
       "attrAccessible": null,
@@ -1839,7 +1839,7 @@
     },
     {
       "name": "Saveable::Interactive",
-      "methodName": "strong_saveable_interactive_params",
+      "methodName": "saveable_interactive_strong_params",
       "path": "app/models/saveable/interactive.rb",
       "attrs": ":iframe_id, :learner_id, :offering_id, :response_count",
       "attrAccessible": null,
@@ -1848,7 +1848,7 @@
     },
     {
       "name": "Saveable::InteractiveState",
-      "methodName": "strong_saveable_interactive_state_params",
+      "methodName": "saveable_interactive_state_strong_params",
       "path": "app/models/saveable/interactive_state.rb",
       "attrs": ":bundle_content_id, :feedback, :has_been_reviewed, :interactive_id, :is_final, :position, :score, :state",
       "attrAccessible": null,
@@ -1857,7 +1857,7 @@
     },
     {
       "name": "Saveable::MultipleChoice",
-      "methodName": "strong_saveable_multiple_choice_params",
+      "methodName": "saveable_multiple_choice_strong_params",
       "path": "app/models/saveable/multiple_choice.rb",
       "attrs": ":learner_id, :multiple_choice_id, :offering_id, :response_count, :uuid",
       "attrAccessible": null,
@@ -1866,7 +1866,7 @@
     },
     {
       "name": "Saveable::MultipleChoiceAnswer",
-      "methodName": "strong_saveable_multiple_choice_answer_params",
+      "methodName": "saveable_multiple_choice_answer_strong_params",
       "path": "app/models/saveable/multiple_choice_answer.rb",
       "attrs": ":bundle_content_id, :feedback, :has_been_reviewed, :is_final, :multiple_choice_id, :position, :score, :uuid",
       "attrAccessible": null,
@@ -1875,7 +1875,7 @@
     },
     {
       "name": "Saveable::MultipleChoiceRationaleChoice",
-      "methodName": "strong_saveable_multiple_choice_rationale_choice_params",
+      "methodName": "saveable_multiple_choice_rationale_choice_strong_params",
       "path": "app/models/saveable/multiple_choice_rationale_choice.rb",
       "attrs": ":answer_id, :choice_id, :rationale, :uuid",
       "attrAccessible": null,
@@ -1893,7 +1893,7 @@
           "line": "update_successful = @offering.update_attributes(params[:offering])"
         }
       ],
-      "method": "  def strong_saveable_multiple_choice_rationale_choice_params(params)\n    params.permit(:answer_id, :choice_id, :rationale, :uuid)\n  end\n",
+      "method": "  def saveable_multiple_choice_rationale_choice_strong_params(params)\n    params.permit(:answer_id, :choice_id, :rationale, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/portal/offerings_controller.rb"
       ],
@@ -1903,7 +1903,7 @@
     },
     {
       "name": "Saveable::OpenResponse",
-      "methodName": "strong_saveable_open_response_params",
+      "methodName": "saveable_open_response_strong_params",
       "path": "app/models/saveable/open_response.rb",
       "attrs": ":learner_id, :offering_id, :open_response_id, :response_count",
       "attrAccessible": null,
@@ -1912,7 +1912,7 @@
     },
     {
       "name": "Saveable::OpenResponseAnswer",
-      "methodName": "strong_saveable_open_response_answer_params",
+      "methodName": "saveable_open_response_answer_strong_params",
       "path": "app/models/saveable/open_response_answer.rb",
       "attrs": ":answer, :bundle_content_id, :feedback, :has_been_reviewed, :is_final, :open_response_id, :position, :score",
       "attrAccessible": null,
@@ -1921,7 +1921,7 @@
     },
     {
       "name": "Saveable::Sparks::MeasuringResistance",
-      "methodName": "strong_saveable_sparks_measuring_resistance_params",
+      "methodName": "saveable_sparks_measuring_resistance_strong_params",
       "path": "app/models/saveable/sparks/measuring_resistance.rb",
       "attrs": ":learner_id, :offering_id",
       "attrAccessible": null,
@@ -1939,7 +1939,7 @@
           "line": "if @measuring_resistance.update_attributes(params[:measuring_resistance])"
         }
       ],
-      "method": "  def strong_saveable_sparks_measuring_resistance_params(params)\n    params.permit(:learner_id, :offering_id)\n  end\n",
+      "method": "  def saveable_sparks_measuring_resistance_strong_params(params)\n    params.permit(:learner_id, :offering_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/saveable/sparks/measuring_resistances_controller.rb"
       ],
@@ -1949,7 +1949,7 @@
     },
     {
       "name": "Saveable::Sparks::MeasuringResistanceReports",
-      "methodName": "strong_saveable_sparks_measuring_resistance_reports_params",
+      "methodName": "saveable_sparks_measuring_resistance_reports_strong_params",
       "path": "app/models/saveable/sparks/measuring_resistance_reports.rb",
       "attrs": ":content, :measuring_resistance_id, :position",
       "attrAccessible": null,
@@ -1958,7 +1958,7 @@
     },
     {
       "name": "Section",
-      "methodName": "strong_section_params",
+      "methodName": "section_strong_params",
       "path": "app/models/section.rb",
       "attrs": ":activity_id, :description, :name, :position, :publication_status, :teacher_only, :user_id, :uuid",
       "attrAccessible": null,
@@ -1967,7 +1967,7 @@
     },
     {
       "name": "SecurityQuestion",
-      "methodName": "strong_security_question_params",
+      "methodName": "security_question_strong_params",
       "path": "app/models/security_question.rb",
       "attrs": ":answer, :question, :user_id",
       "attrAccessible": null,
@@ -1979,7 +1979,7 @@
         }
       ],
       "updates": [],
-      "method": "  def strong_security_question_params(params)\n    params.permit(:answer, :question, :user_id)\n  end\n",
+      "method": "  def security_question_strong_params(params)\n    params.permit(:answer, :question, :user_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/security_questions_controller.rb"
       ],
@@ -1989,7 +1989,7 @@
     },
     {
       "name": "StandardDocument",
-      "methodName": "strong_standard_document_params",
+      "methodName": "standard_document_strong_params",
       "path": "app/models/standard_document.rb",
       "attrs": ":jurisdiction, :name, :title, :uri",
       "attrAccessible": {
@@ -2001,7 +2001,7 @@
     },
     {
       "name": "StandardStatement",
-      "methodName": "strong_standard_statement_params",
+      "methodName": "standard_statement_strong_params",
       "path": "app/models/standard_statement.rb",
       "attrs": ":description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri",
       "attrAccessible": {
@@ -2016,7 +2016,7 @@
         }
       ],
       "updates": [],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\n  #  model attrs:     :description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\ndef strong_standard_statement_params(params)\n    params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\n  #  model attrs:     :description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\ndef standard_statement_strong_params(params)\n    params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/materials_controller.rb"
       ],
@@ -2026,7 +2026,7 @@
     },
     {
       "name": "TeacherProjectView",
-      "methodName": "strong_teacher_project_view_params",
+      "methodName": "teacher_project_view_strong_params",
       "path": "app/models/teacher_project_view.rb",
       "attrs": ":teacher_id, :viewed_project_id",
       "attrAccessible": {
@@ -2038,7 +2038,7 @@
     },
     {
       "name": "Tool",
-      "methodName": "strong_tool_params",
+      "methodName": "tool_strong_params",
       "path": "app/models/tool.rb",
       "attrs": ":name, :source_type, :tool_id",
       "attrAccessible": {
@@ -2059,7 +2059,7 @@
           "line": "if @tool.update_attributes(params[:tool])"
         }
       ],
-      "method": "  def strong_tool_params(params)\n    params.permit(:name, :source_type, :tool_id)\n  end\n",
+      "method": "  def tool_strong_params(params)\n    params.permit(:name, :source_type, :tool_id)\n  end\n",
       "controllerFiles": [
         "app/controllers/admin/tools_controller.rb"
       ],
@@ -2069,7 +2069,7 @@
     },
     {
       "name": "User",
-      "methodName": "strong_user_params",
+      "methodName": "user_strong_params",
       "path": "app/models/user.rb",
       "attrs": ":asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid",
       "attrAccessible": {
@@ -2105,7 +2105,7 @@
           "line": "if @portal_student.user.update_attributes(params[:user])"
         }
       ],
-      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state\n  #  model attrs:     :asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid\ndef strong_user_params(params)\n    params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid)\n  end\n",
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state\n  #  model attrs:     :asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid\ndef user_strong_params(params)\n    params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid)\n  end\n",
       "controllerFiles": [
         "app/controllers/api/v1/students_controller.rb",
         "app/controllers/portal/students_controller.rb",
