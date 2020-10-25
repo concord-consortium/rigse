@@ -1,0 +1,3650 @@
+{
+  "stats": {
+    "numModels": 110,
+    "hasAttrAccessible": 35,
+    "newOrCreates": {
+      "all": 388,
+      "inControllers": 68,
+      "outsideControllers": 320
+    },
+    "updates": {
+      "all": 0,
+      "inControllers": 54,
+      "outsideControllers": 83
+    }
+  },
+  "models": [
+    {
+      "name": "AccessGrant",
+      "path": "app/models/access_grant.rb",
+      "attrs": ":code, :access_token, :refresh_token, :access_token_expires_at, :user_id, :client_id, :state, :learner_id, :teacher_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "spec/models/access_grant_spec.rb",
+          "lineNumber": 22,
+          "line": "3.times.map { |i| AccessGrant.create(attributes) }"
+        },
+        {
+          "file": "spec/models/access_grant_spec.rb",
+          "lineNumber": 32,
+          "line": "2.times.map { |i| AccessGrant.create(attributes) }"
+        },
+        {
+          "file": "spec/models/access_grant_spec.rb",
+          "lineNumber": 35,
+          "line": "subject{ AccessGrant.create(valid_attributes)}"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Activity",
+      "path": "app/models/activity.rb",
+      "attrs": ":user_id, :uuid, :name, :description, :position, :investigation_id, :original_id, :teacher_only, :publication_status, :offerings_count, :student_report_enabled, :show_score, :teacher_guide_url, :thumbnail_url, :is_featured, :is_assessment_item",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/report/offering/investigation.rb",
+          "lineNumber": 9,
+          "line": "@activities = @investigation.activities.collect { |activity| Report::Offering::Activity.new(self, @offering, activity) }"
+        },
+        {
+          "file": "features/step_definitions/activity_runtime_api_steps.rb",
+          "lineNumber": 4,
+          "line": "activity = Activity.create(:name => \"#{@external_activity.name} Template\")"
+        },
+        {
+          "file": "features/step_definitions/activity_steps.rb",
+          "lineNumber": 51,
+          "line": "activity = Activity.create(:name => 'simple activity', :description => 'simple activity')"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 25,
+          "line": "activity = Activity.create(hash)"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 39,
+          "line": "activity = Activity.create(hash)"
+        },
+        {
+          "file": "features/step_definitions/teacher_searches_groups_and_previews_instructional_materials_steps.rb",
+          "lineNumber": 21,
+          "line": "activity = Activity.create(hash)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 280,
+          "line": "activity = Activity.create({"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 56,
+          "line": "let (:real_activity) { Activity.create!( :name => \"test activity\", :description => \"new decription\" ) }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "Admin::AuthoringSite",
+      "path": "app/models/admin/authoring_site.rb",
+      "attrs": ":name, :url",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/authoring_sites_controller.rb",
+          "lineNumber": 47,
+          "line": "@admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_params)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/authoring_sites_controller.rb",
+          "lineNumber": 67,
+          "line": "if @admin_authoring_site.update_attributes(admin_authoring_site_params)"
+        }
+      ]
+    },
+    {
+      "name": "Admin::Cohort",
+      "path": "app/models/admin/cohort.rb",
+      "attrs": ":project_id, :name, :email_notifications_enabled",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/cohorts_controller.rb",
+          "lineNumber": 68,
+          "line": "@admin_cohort = Admin::Cohort.new(params[:admin_cohort])"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 318,
+          "line": "cohorts = cohorts_names.split(' ').map { |name| Admin::Cohort.create!(:name => name) }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/cohorts_controller.rb",
+          "lineNumber": 80,
+          "line": "if @admin_cohort.update_attributes(params[:admin_cohort])"
+        }
+      ]
+    },
+    {
+      "name": "Admin::CohortItem",
+      "path": "app/models/admin/cohort_item.rb",
+      "attrs": ":admin_cohort_id, :item_id, :item_type",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Admin::NoticeUserDisplayStatus",
+      "path": "app/models/admin/notice_user_display_status.rb",
+      "attrs": ":user_id, :last_collapsed_at_time, :collapsed_status",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Admin::Project",
+      "path": "app/models/admin/project.rb",
+      "attrs": ":name, :landing_page_slug, :landing_page_content, :project_card_image_url, :project_card_description, :public",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/projects_controller.rb",
+          "lineNumber": 74,
+          "line": "@project = Admin::Project.new(params[:admin_project])"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 7,
+          "line": "Admin::Project.create!(valid_attributes)"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 31,
+          "line": "expect(Admin::Project.new(name: 'n').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 32,
+          "line": "expect(Admin::Project.new(name: '').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 33,
+          "line": "expect(Admin::Project.new().valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 39,
+          "line": "expect(Admin::Project.new(name: 'n').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 40,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: '').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 44,
+          "line": "expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 45,
+          "line": "expect(Admin::Project.create(name: 'n', landing_page_slug: 'test').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 46,
+          "line": "expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 47,
+          "line": "expect(Admin::Project.create(name: 'n', landing_page_slug: '').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 48,
+          "line": "expect(Admin::Project.create(name: 'n').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 49,
+          "line": "expect(Admin::Project.create(name: 'n').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 53,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 54,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: 'valid-slug-2').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 55,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: '3-valid-slug').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 56,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: 'Invalid-slug').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 57,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid/slug').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 58,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid.slug').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/projects_spec.rb",
+          "lineNumber": 59,
+          "line": "expect(Admin::Project.new(name: 'n', landing_page_slug: 'invalid:slug').valid?).to be_falsey"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/projects_controller.rb",
+          "lineNumber": 87,
+          "line": "if @project.update_attributes(params[:admin_project])"
+        }
+      ]
+    },
+    {
+      "name": "Admin::ProjectLink",
+      "path": "app/models/admin/project_link.rb",
+      "attrs": ":project_id, :name, :href, :link_id, :pop_out, :position",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/project_links_controller.rb",
+          "lineNumber": 65,
+          "line": "@project_link = Admin::ProjectLink.new(params[:admin_project_link])"
+        },
+        {
+          "file": "spec/models/admin/project_link_spec.rb",
+          "lineNumber": 6,
+          "line": "expect(Admin::ProjectLink.new(name: 'foo', href: 'bar', link_id:'/foo/bar').valid?).to be_truthy"
+        },
+        {
+          "file": "spec/models/admin/project_link_spec.rb",
+          "lineNumber": 7,
+          "line": "expect(Admin::ProjectLink.new(name: 'foo', href: '', link_id: '/foo').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/project_link_spec.rb",
+          "lineNumber": 8,
+          "line": "expect(Admin::ProjectLink.new(name: '', href: 'bar', link_id: '/bar').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/project_link_spec.rb",
+          "lineNumber": 9,
+          "line": "expect(Admin::ProjectLink.new(name: '', href: '', link_id:'/').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/project_link_spec.rb",
+          "lineNumber": 10,
+          "line": "expect(Admin::ProjectLink.new(name: 'foo', href: 'bar', link_id:'').valid?).to be_falsey"
+        },
+        {
+          "file": "spec/models/admin/project_link_spec.rb",
+          "lineNumber": 11,
+          "line": "expect(Admin::ProjectLink.new().valid?).to be_falsey"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/project_links_controller.rb",
+          "lineNumber": 80,
+          "line": "if @project_link.update_attributes(params[:admin_project_link])"
+        }
+      ]
+    },
+    {
+      "name": "Admin::ProjectMaterial",
+      "path": "app/models/admin/project_material.rb",
+      "attrs": ":project_id, :material_id, :material_type",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Admin::ProjectUser",
+      "path": "app/models/admin/project_user.rb",
+      "attrs": ":project_id, :user_id, :is_admin, :is_researcher",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/user.rb",
+          "lineNumber": 450,
+          "line": "project_user ||= Admin::ProjectUser.create!(project_id: project.id, user_id: self.id)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Admin::Settings",
+      "path": "app/models/admin/settings.rb",
+      "attrs": ":user_id, :description, :uuid, :home_page_content, :use_student_security_questions, :allow_default_class, :enable_grade_levels, :use_bitmap_snapshots, :teachers_can_author, :enable_member_registration, :allow_adhoc_schools, :require_user_consent, :use_periodic_bundle_uploading, :jnlp_cdn_hostname, :active, :external_url, :custom_help_page_html, :help_type, :include_external_activities, :enabled_bookmark_types, :pub_interval, :anonymous_can_browse_materials, :jnlp_url, :show_collections_menu, :auto_set_teachers_as_authors, :default_cohort_id, :wrap_home_page_content, :custom_search_path, :teacher_home_path, :about_page_content",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/settings_controller.rb",
+          "lineNumber": 81,
+          "line": "@admin_settings = Admin::Settings.new(admin_settings_params(params[:admin_settings]))"
+        },
+        {
+          "file": "db/seeds.rb",
+          "lineNumber": 153,
+          "line": "Admin::Settings.create(:active => true)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 37,
+          "line": "Admin::Settings.create!(admin_info)"
+        },
+        {
+          "file": "spec/helpers/jnlp_helper_spec.rb",
+          "lineNumber": 21,
+          "line": "@settings = Admin::Settings.new(:pub_interval => 10,"
+        },
+        {
+          "file": "spec/models/admin/settings_spec.rb",
+          "lineNumber": 4,
+          "line": "@new_valid_settings = Admin::Settings.new("
+        },
+        {
+          "file": "spec/views/admin/settings/edit.html.haml_spec.rb",
+          "lineNumber": 7,
+          "line": "@settings = Admin::Settings.new(:pub_interval => @pub_interval)"
+        },
+        {
+          "file": "spec/views/admin/settings/show.html.haml_spec.rb",
+          "lineNumber": 7,
+          "line": "@settings = Admin::Settings.new(:pub_interval => @pub_interval)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/settings_controller.rb",
+          "lineNumber": 93,
+          "line": "if @admin_settings.update_attributes(params[:admin_settings])"
+        },
+        {
+          "file": "spec/models/admin/settings_spec.rb",
+          "lineNumber": 145,
+          "line": "result = settings.update_attributes(hashy)"
+        }
+      ]
+    },
+    {
+      "name": "Admin::SiteNotice",
+      "path": "app/models/admin/site_notice.rb",
+      "attrs": ":notice_html, :created_by, :updated_by",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Admin::SiteNoticeUser",
+      "path": "app/models/admin/site_notice_user.rb",
+      "attrs": ":notice_id, :user_id, :notice_dismissed",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Admin::Tag",
+      "path": "app/models/admin/tag.rb",
+      "attrs": ":scope, :tag",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/tags_controller.rb",
+          "lineNumber": 38,
+          "line": "@admin_tag = Admin::Tag.new(params[:admin_tag])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 191,
+          "line": "admin_tag = Admin::Tag.new({:scope => \"model_types\", :tag => model[:model_type]})"
+        },
+        {
+          "file": "app/models/admin/tag.rb",
+          "lineNumber": 28,
+          "line": "admin_tag = Admin::Tag.new(new_admin_tag)"
+        },
+        {
+          "file": "db/migrate/20151030132107_create_material_properties.rb",
+          "lineNumber": 29,
+          "line": "Admin::Tag.create!(scope: 'material_properties', tag: 'Requires download')"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 972,
+          "line": "admin_tag = Admin::Tag.new(new_admin_tag)"
+        },
+        {
+          "file": "spec/models/admin/tag_spec.rb",
+          "lineNumber": 19,
+          "line": "Admin::Tag.create!(valid_attributes)"
+        },
+        {
+          "file": "spec/models/admin/tag_spec.rb",
+          "lineNumber": 23,
+          "line": "expect(Admin::Tag.create(bad_attributes)).not_to be_valid"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/tags_controller.rb",
+          "lineNumber": 49,
+          "line": "if @admin_tag.update_attributes(params[:admin_tag])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 156,
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 163,
+          "line": "if @interactive.update_attributes(params[:interactive])"
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "path": "app/models/authentication.rb",
+      "attrs": ":user_id, :provider, :uid",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Client",
+      "path": "app/models/client.rb",
+      "attrs": ":name, :app_id, :app_secret, :site_url, :domain_matchers, :client_type, :redirect_uris",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/clients_controller.rb",
+          "lineNumber": 38,
+          "line": "@client = Client.new(params[:client])"
+        },
+        {
+          "file": "features/step_definitions/global_steps.rb",
+          "lineNumber": 38,
+          "line": "Client.create("
+        },
+        {
+          "file": "spec/controllers/api/api_controller_spec.rb",
+          "lineNumber": 127,
+          "line": "let(:client)          { Client.create("
+        },
+        {
+          "file": "spec/controllers/api/v1/jwt_controller_spec.rb",
+          "lineNumber": 58,
+          "line": "let(:client)          { Client.create("
+        },
+        {
+          "file": "spec/libs/bearer_token/bearer_token_authenticatable_spec.rb",
+          "lineNumber": 57,
+          "line": "let(:client)          { Client.create("
+        },
+        {
+          "file": "spec/models/client_spec.rb",
+          "lineNumber": 8,
+          "line": "Client.create("
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/clients_controller.rb",
+          "lineNumber": 52,
+          "line": "if @client.update_attributes(params[:client])"
+        }
+      ]
+    },
+    {
+      "name": "CommonsLicense",
+      "path": "app/models/commons_license.rb",
+      "attrs": ":code, :name, :description, :deed, :legal, :image, :number",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/commons_licenses_controller.rb",
+          "lineNumber": 32,
+          "line": "@license = CommonsLicense.new(params[:commons_license])"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/commons_licenses_controller.rb",
+          "lineNumber": 45,
+          "line": "if @license.update_attributes(params[:commons_license])"
+        }
+      ]
+    },
+    {
+      "name": "Dataservice::Blob",
+      "path": "app/models/dataservice/blob.rb",
+      "attrs": ":content, :token, :bundle_content_id, :periodic_bundle_content_id, :uuid, :mimetype, :file_extension, :learner_id, :checksum",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/dataservice/blobs_controller.rb",
+          "lineNumber": 48,
+          "line": "@dataservice_blob = Dataservice::Blob.new(params[:blob])"
+        },
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 83,
+          "line": ":blob => Dataservice::Blob.create("
+        },
+        {
+          "file": "lib/blob_extraction.rb",
+          "lineNumber": 39,
+          "line": "blob = Dataservice::Blob.create(:content => _content)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 942,
+          "line": "blob = Dataservice::Blob.create!(info)"
+        },
+        {
+          "file": "spec/models/dataservice/blob_spec.rb",
+          "lineNumber": 5,
+          "line": "subject           { Dataservice::Blob.create!(attributes) }"
+        },
+        {
+          "file": "spec/models/dataservice/blob_spec.rb",
+          "lineNumber": 177,
+          "line": "@existing = Dataservice::Blob.create(:learner_id => learner.id, :content => existing_content )"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 95,
+          "line": "emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 209,
+          "line": "emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 284,
+          "line": "emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 368,
+          "line": "emb = Dataservice::Blob.create!(:content => 'image', :bundle_content_id => bundle_content.id)"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 62,
+          "line": "emb = Dataservice::Blob.create!(:content => 'image', :periodic_bundle_content_id => bundle_content.id)"
+        },
+        {
+          "file": "spec/models/portal/learner_spec.rb",
+          "lineNumber": 27,
+          "line": "blob = Dataservice::Blob.create(:learner_id => subject.id)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 182,
+          "line": "add_answer(image_question, {blob: Dataservice::Blob.create(), note: \"note\"} )"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/dataservice/blobs_controller.rb",
+          "lineNumber": 69,
+          "line": "if @dataservice_blob.update_attributes(params[:blob])"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        }
+      ]
+    },
+    {
+      "name": "Dataservice::BucketContent",
+      "path": "app/models/dataservice/bucket_content.rb",
+      "attrs": ":bucket_logger_id, :body, :processed, :empty",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/dataservice/bucket_contents_metal_controller.rb",
+          "lineNumber": 24,
+          "line": "bucket_content = Dataservice::BucketContent.create("
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 18,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body1\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 19,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body4\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 20,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body3\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 28,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body1\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 29,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body4\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 76,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body1\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 77,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body4\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 78,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body3\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 86,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body1\")"
+        },
+        {
+          "file": "spec/integration/dataservice/dataservice_buckets_spec.rb",
+          "lineNumber": 87,
+          "line": "Dataservice::BucketContent.create(:bucket_logger_id => log.id, :processed => true, :empty => false, :body => \"body4\")"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::BucketLogItem",
+      "path": "app/models/dataservice/bucket_log_item.rb",
+      "attrs": ":content, :bucket_logger_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/dataservice/bucket_log_items_metal_controller.rb",
+          "lineNumber": 24,
+          "line": "bucket_content = Dataservice::BucketLogItem.create("
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::BucketLogger",
+      "path": "app/models/dataservice/bucket_logger.rb",
+      "attrs": ":learner_id, :name",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::BundleContent",
+      "path": "app/models/dataservice/bundle_content.rb",
+      "attrs": ":bundle_logger_id, :position, :body, :otml, :processed, :valid_xml, :empty, :uuid, :original_body, :upload_time, :collaboration_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/dataservice/bundle_content.rb",
+          "lineNumber": 247,
+          "line": "bundle_content =Dataservice::BundleContent.create(new_attributes)"
+        },
+        {
+          "file": "app/models/dataservice/bundle_logger.rb",
+          "lineNumber": 61,
+          "line": "self.in_progress_bundle ||= Dataservice::BundleContent.create(:bundle_logger => self)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 90,
+          "line": "bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_blob)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 204,
+          "line": "bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiline_snapshot)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 279,
+          "line": "bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiple_select_and_rationale)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 363,
+          "line": "bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiple_select_and_rationale)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 379,
+          "line": "bundle_content = Dataservice::BundleContent.create!(@valid_attributes_with_multiple_select_and_rationale_updated)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_logger_spec.rb",
+          "lineNumber": 33,
+          "line": "@bad_null_body_content = Dataservice::BundleContent.create()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_logger_spec.rb",
+          "lineNumber": 154,
+          "line": "@new_bundle = Dataservice::BundleContent.create({:bundle_logger => @bundle_logger})"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::BundleLogger",
+      "path": "app/models/dataservice/bundle_logger.rb",
+      "attrs": ":in_progress_bundle_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 51,
+          "line": "blogger = Dataservice::BundleLogger.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 183,
+          "line": "blogger = Dataservice::BundleLogger.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 234,
+          "line": "blogger = Dataservice::BundleLogger.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 317,
+          "line": "blogger = Dataservice::BundleLogger.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_logger_spec.rb",
+          "lineNumber": 21,
+          "line": "Dataservice::BundleLogger.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_logger_spec.rb",
+          "lineNumber": 27,
+          "line": "@bundle_logger = Dataservice::BundleLogger.create(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_logger_spec.rb",
+          "lineNumber": 125,
+          "line": "@bundle_logger = Dataservice::BundleLogger.create(@valid_attributes)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::ConsoleContent",
+      "path": "app/models/dataservice/console_content.rb",
+      "attrs": ":console_logger_id, :position, :body",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "spec/models/dataservice/console_content_spec.rb",
+          "lineNumber": 10,
+          "line": "Dataservice::ConsoleContent.create!(@valid_attributes)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::ConsoleLogger",
+      "path": "app/models/dataservice/console_logger.rb",
+      "attrs": "",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "spec/models/dataservice/console_logger_spec.rb",
+          "lineNumber": 10,
+          "line": "Dataservice::ConsoleLogger.create!(@valid_attributes)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::JnlpSession",
+      "path": "app/models/dataservice/jnlp_session.rb",
+      "attrs": ":token, :user_id, :access_count",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/learner_jnlp_renderer.rb",
+          "lineNumber": 2,
+          "line": "jnlp_session = Dataservice::JnlpSession.create!(:user => current_visitor)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::LaunchProcessEvent",
+      "path": "app/models/dataservice/launch_process_event.rb",
+      "attrs": ":event_type, :event_details, :bundle_content_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/dataservice/bucket_loggers_controller.rb",
+          "lineNumber": 16,
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/dataservice/bucket_loggers_controller.rb",
+          "lineNumber": 52,
+          "line": "Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/dataservice/bundle_contents_metal_controller.rb",
+          "lineNumber": 6,
+          "line": "launch_event = ::Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/dataservice/periodic_bundle_loggers_controller.rb",
+          "lineNumber": 15,
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/dataservice/periodic_bundle_loggers_metal_controller.rb",
+          "lineNumber": 5,
+          "line": "launch_event = ::Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/misc_controller.rb",
+          "lineNumber": 13,
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/portal/learner_jnlp_renderer.rb",
+          "lineNumber": 11,
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/controllers/portal/learners_controller.rb",
+          "lineNumber": 159,
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+        },
+        {
+          "file": "app/services/api/v1/create_collaboration.rb",
+          "lineNumber": 126,
+          "line": "Dataservice::LaunchProcessEvent.create!("
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/learners_controller.rb",
+          "lineNumber": 239,
+          "line": "if @portal_learner.update_attributes(params[:learner])"
+        }
+      ]
+    },
+    {
+      "name": "Dataservice::PeriodicBundleContent",
+      "path": "app/models/dataservice/periodic_bundle_content.rb",
+      "attrs": ":periodic_bundle_logger_id, :body, :processed, :valid_xml, :empty, :uuid, :parts_extracted",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/dataservice/periodic_bundle_contents_metal_controller.rb",
+          "lineNumber": 6,
+          "line": "bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body)"
+        },
+        {
+          "file": "app/models/dataservice/periodic_bundle_content.rb",
+          "lineNumber": 93,
+          "line": "bundle_content = Dataservice::PeriodicBundleContent.create(new_attributes)"
+        },
+        {
+          "file": "app/models/dataservice/periodic_bundle_logger.rb",
+          "lineNumber": 93,
+          "line": "pbc = Dataservice::PeriodicBundleContent.create(:body => last_bundle.otml, :periodic_bundle_logger => self)"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 57,
+          "line": "bundle_content = Dataservice::PeriodicBundleContent.create!(@valid_attributes_with_blob)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Dataservice::PeriodicBundleLogger",
+      "path": "app/models/dataservice/periodic_bundle_logger.rb",
+      "attrs": ":learner_id, :imports",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/learners_controller.rb",
+          "lineNumber": 148,
+          "line": "@portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger"
+        },
+        {
+          "file": "app/helpers/jnlp_helper.rb",
+          "lineNumber": 48,
+          "line": "pbl = l.periodic_bundle_logger || Dataservice::PeriodicBundleLogger.create(:learner_id => l.id)"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 21,
+          "line": "blogger = Dataservice::PeriodicBundleLogger.create!()"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/learners_controller.rb",
+          "lineNumber": 239,
+          "line": "if @portal_learner.update_attributes(params[:learner])"
+        }
+      ]
+    },
+    {
+      "name": "Dataservice::PeriodicBundlePart",
+      "path": "app/models/dataservice/periodic_bundle_part.rb",
+      "attrs": ":periodic_bundle_logger_id, :delta, :key, :value",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Embeddable::Embeddable",
+      "path": "app/models/embeddable/embeddable.rb",
+      "attrs": "",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Embeddable::Iframe",
+      "path": "app/models/embeddable/iframe.rb",
+      "attrs": ":user_id, :uuid, :name, :description, :width, :height, :url, :external_id, :display_in_iframe, :is_required, :show_in_featured_question_report",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 481,
+          "line": "Embeddable::Iframe.create(attrs)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "Embeddable::ImageQuestion",
+      "path": "app/models/embeddable/image_question.rb",
+      "attrs": ":user_id, :uuid, :name, :prompt, :external_id, :drawing_prompt, :is_required, :show_in_featured_question_report",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/activity_runtime_api_steps.rb",
+          "lineNumber": 21,
+          "line": "iq = Embeddable::ImageQuestion.create("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 405,
+          "line": "Embeddable::ImageQuestion.create(attrs)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 606,
+          "line": "image_que = Embeddable::ImageQuestion.create!(imgq)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 87,
+          "line": "emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 25', :prompt => \"Please choose an image\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 201,
+          "line": "emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 847', :prompt => \"Please choose an image\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 253,
+          "line": "emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 847', :prompt => \"Please choose an image\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 337,
+          "line": "emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 847', :prompt => \"Please choose an image\")"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 54,
+          "line": "emb = Embeddable::ImageQuestion.create!(:user_id => 1, :name => 'image question 25', :prompt => \"Please choose an image\")"
+        },
+        {
+          "file": "spec/models/embeddable/image_question.spec.rb",
+          "lineNumber": 20,
+          "line": "image_question = Embeddable::ImageQuestion.create(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/embeddable/image_question.spec.rb",
+          "lineNumber": 26,
+          "line": "#   image_question = Embeddable::ImageQuestion.create(@invalid_attributes)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "Embeddable::MultipleChoice",
+      "path": "app/models/embeddable/multiple_choice.rb",
+      "attrs": ":user_id, :uuid, :name, :description, :prompt, :enable_rationale, :rationale_prompt, :allow_multiple_selection, :external_id, :is_required, :show_in_featured_question_report",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/activity_runtime_api_steps.rb",
+          "lineNumber": 14,
+          "line": "mc = Embeddable::MultipleChoice.create(:name => \"Color\", :prompt => \"What color is the sky?\", :external_id => \"456789\")"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 429,
+          "line": "mc = Embeddable::MultipleChoice.create(attrs)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 565,
+          "line": "multi_ch_que = Embeddable::MultipleChoice.create!(mcq)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 79,
+          "line": "mc = Embeddable::MultipleChoice.create!(:name => 'mc', :description => 'mc', :prompt => 'mc prompt?', :user_id => 1)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 258,
+          "line": "emb = Embeddable::MultipleChoice.create!(:user_id => 1, :name => 'mc', :prompt => \"mc prompt?\", :description => 'mc')"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 342,
+          "line": "emb = Embeddable::MultipleChoice.create!(:user_id => 1, :name => 'mc', :prompt => \"mc prompt?\", :description => 'mc')"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 46,
+          "line": "mc = Embeddable::MultipleChoice.create!(:name => 'mc', :description => 'mc', :prompt => 'mc prompt?', :user_id => 1)"
+        },
+        {
+          "file": "spec/models/report/embeddable_filter_spec.rb",
+          "lineNumber": 3,
+          "line": "let(:mc_question_a)  { Embeddable::MultipleChoice.create() }"
+        },
+        {
+          "file": "spec/models/report/embeddable_filter_spec.rb",
+          "lineNumber": 4,
+          "line": "let(:mc_question_b)  { Embeddable::MultipleChoice.create() }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "Embeddable::MultipleChoiceChoice",
+      "path": "app/models/embeddable/multiple_choice_choice.rb",
+      "attrs": ":choice, :multiple_choice_id, :is_correct, :external_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 55,
+          "line": "#   Embeddable::MultipleChoiceChoice.create(:choice => 'a'),"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 56,
+          "line": "#   Embeddable::MultipleChoiceChoice.create(:choice => 'b'),"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 57,
+          "line": "#   Embeddable::MultipleChoiceChoice.create(:choice => 'c')"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 64,
+          "line": "Embeddable::MultipleChoiceChoice.create(:choice => 'a', :multiple_choice => self)"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 65,
+          "line": "Embeddable::MultipleChoiceChoice.create(:choice => 'b', :multiple_choice => self)"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 66,
+          "line": "Embeddable::MultipleChoiceChoice.create(:choice => 'c', :multiple_choice => self)"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 86,
+          "line": "#   redefine as Embeddable::MultipleChoiceChoice.create(:choice, :mc)"
+        },
+        {
+          "file": "app/models/embeddable/multiple_choice.rb",
+          "lineNumber": 89,
+          "line": "choice = Embeddable::MultipleChoiceChoice.new(:choice => choice_name)"
+        },
+        {
+          "file": "features/step_definitions/authoring_steps.rb",
+          "lineNumber": 31,
+          "line": "choices.map! { |c| Embeddable::MultipleChoiceChoice.create("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 445,
+          "line": "choice ||= Embeddable::MultipleChoiceChoice.create(:external_id => id)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 567,
+          "line": "choices.map! { |c| Embeddable::MultipleChoiceChoice.create("
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 76,
+          "line": "emb = Embeddable::MultipleChoiceChoice.create!(:choice => 'someChoice')"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 263,
+          "line": "emb = Embeddable::MultipleChoiceChoice.create!(:choice => \"someChoice #{i}\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 347,
+          "line": "emb = Embeddable::MultipleChoiceChoice.create!(:choice => \"someChoice #{i}\")"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 43,
+          "line": "emb = Embeddable::MultipleChoiceChoice.create!(:choice => 'someChoice')"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "Embeddable::OpenResponse",
+      "path": "app/models/embeddable/open_response.rb",
+      "attrs": ":user_id, :uuid, :name, :description, :prompt, :default_response, :rows, :columns, :font_size, :external_id, :is_required, :show_in_featured_question_report",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/activity_runtime_api_steps.rb",
+          "lineNumber": 11,
+          "line": "open_res = Embeddable::OpenResponse.create(:name => \"Like\", :prompt => \"Do you like this activity?\", :external_id => \"1234567\")"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 45,
+          "line": "page.add_embeddable(Embeddable::OpenResponse.create(hash))"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 382,
+          "line": "Embeddable::OpenResponse.create(attrs)"
+        },
+        {
+          "file": "spec/libs/reports/detail_spec.rb",
+          "lineNumber": 41,
+          "line": "let(:embeddable)  { Embeddable::OpenResponse.create() }"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 70,
+          "line": "emb = Embeddable::OpenResponse.create!(:name => 'open response', :description => 'open response', :prompt => 'open response?', :default_response => '')"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 37,
+          "line": "emb = Embeddable::OpenResponse.create!(:name => 'open response', :description => 'open response', :prompt => 'open response?', :default_response => '')"
+        },
+        {
+          "file": "spec/models/report/embeddable_filter_spec.rb",
+          "lineNumber": 5,
+          "line": "let(:or_question_a)  { Embeddable::OpenResponse.create()   }"
+        },
+        {
+          "file": "spec/models/report/embeddable_filter_spec.rb",
+          "lineNumber": 6,
+          "line": "let(:or_question_b)  { Embeddable::OpenResponse.create()   }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "ExternalActivity",
+      "path": "app/models/external_activity.rb",
+      "attrs": ":user_id, :uuid, :name, :archived_description, :url, :publication_status, :offerings_count, :save_path, :append_learner_id_to_url, :popup, :append_survey_monkey_uid, :template_id, :template_type, :launch_url, :is_official, :student_report_enabled, :teacher_guide_url, :thumbnail_url, :is_featured, :has_pretest, :short_description, :allow_collaboration, :author_email, :is_locked, :logging, :is_assessment_item, :author_url, :print_url, :is_archived, :archive_date, :credits, :license_code, :append_auth_token, :enable_sharing, :material_type, :rubric_url, :saves_student_data, :long_description_for_teacher, :long_description, :keywords, :tool_id, :has_teacher_edition, :teacher_resources_url",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/external_activities_controller.rb",
+          "lineNumber": 26,
+          "line": "external_activity = ExternalActivity.create("
+        },
+        {
+          "file": "app/controllers/external_activities_controller.rb",
+          "lineNumber": 87,
+          "line": "@external_activity = ExternalActivity.new(params[:external_activity])"
+        },
+        {
+          "file": "app/controllers/external_activities_controller.rb",
+          "lineNumber": 324,
+          "line": "@external_activity = ExternalActivity.new(params[:external_activity])"
+        },
+        {
+          "file": "app/models/external_activity.rb",
+          "lineNumber": 202,
+          "line": "clone = ExternalActivity.new(duplicated_attrs)"
+        },
+        {
+          "file": "features/step_definitions/assignment_steps.rb",
+          "lineNumber": 5,
+          "line": "material = ExternalActivity.create(name: assignable.name)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 48,
+          "line": "external_activity = ExternalActivity.create("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 149,
+          "line": "external_activity = ExternalActivity.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 645,
+          "line": "default_ext_act = ExternalActivity.create!(act)"
+        },
+        {
+          "file": "spec/controllers/api/v1/external_activities_controller_spec.rb",
+          "lineNumber": 94,
+          "line": "let (:activity) { ExternalActivity.create!(valid_attributes) }"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 17,
+          "line": "ExternalActivity.create!(valid_attributes)"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 21,
+          "line": "let(:activity) { ExternalActivity.create!(valid_attributes)}"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 55,
+          "line": "let (:activity) { ExternalActivity.create!(valid_attributes) }"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 68,
+          "line": "let (:activity) { ExternalActivity.create!(valid_attributes) }"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 75,
+          "line": "let (:activity) { ExternalActivity.create!(valid_attributes) }"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 93,
+          "line": "let(:activity) { a = ExternalActivity.create(valid_attributes); a.user = user1; a.save; a }"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 267,
+          "line": "let(:activity) { ExternalActivity.create!(lara_launch_url_attributes)}"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/external_activities_controller.rb",
+          "lineNumber": 172,
+          "line": "if @external_activity.update_attributes(params[:external_activity])"
+        },
+        {
+          "file": "app/controllers/external_activities_controller.rb",
+          "lineNumber": 172,
+          "line": "if @external_activity.update_attributes(params[:external_activity])"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "ExternalActivityReport",
+      "path": "app/models/external_activity_report.rb",
+      "attrs": ":external_activity_id, :external_report_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "ExternalReport",
+      "path": "app/models/external_report.rb",
+      "attrs": ":url, :name, :launch_text, :client_id, :report_type, :allowed_for_students, :default_report_for_source_type, :individual_student_reportable, :individual_activity_reportable, :move_students_api_url, :move_students_api_token",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/external_reports_controller.rb",
+          "lineNumber": 37,
+          "line": "@report = ExternalReport.new(params[:external_report])"
+        },
+        {
+          "file": "features/step_definitions/activity_runtime_api_publish_steps.rb",
+          "lineNumber": 149,
+          "line": "ExternalReport.create(url:report_url)"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 531,
+          "line": "let(:report_a) { ExternalReport.create(report_a_props) }"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 532,
+          "line": "let(:report_b) { ExternalReport.create(report_b_props) }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/external_reports_controller.rb",
+          "lineNumber": 52,
+          "line": "saved_successfully = @report.update_attributes(new_params)"
+        }
+      ]
+    },
+    {
+      "name": "Favorite",
+      "path": "app/models/favorite.rb",
+      "attrs": ":user_id, :favoritable_id, :favoritable_type",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "FirebaseApp",
+      "path": "app/models/firebase_app.rb",
+      "attrs": ":name, :client_email, :private_key",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/firebase_apps_controller.rb",
+          "lineNumber": 47,
+          "line": "@firebase_app = FirebaseApp.new(firebase_app_params)"
+        },
+        {
+          "file": "spec/controllers/api/v1/jwt_controller_spec.rb",
+          "lineNumber": 104,
+          "line": "FirebaseApp.create!(firebase_app_attributes)"
+        },
+        {
+          "file": "spec/controllers/api/v1/jwt_controller_spec.rb",
+          "lineNumber": 127,
+          "line": "FirebaseApp.create!(firebase_app_attributes)"
+        },
+        {
+          "file": "spec/controllers/api/v1/jwt_controller_spec.rb",
+          "lineNumber": 156,
+          "line": "FirebaseApp.create!(firebase_app_attributes)"
+        },
+        {
+          "file": "spec/models/firebase_app_spec.rb",
+          "lineNumber": 31,
+          "line": "FirebaseApp.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/firebase_app_spec.rb",
+          "lineNumber": 35,
+          "line": "FirebaseApp.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/firebase_app_spec.rb",
+          "lineNumber": 49,
+          "line": "FirebaseApp.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/firebase_app_spec.rb",
+          "lineNumber": 57,
+          "line": "FirebaseApp.create!(@valid_attributes)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/firebase_apps_controller.rb",
+          "lineNumber": 67,
+          "line": "if @firebase_app.update_attributes(firebase_app_params)"
+        }
+      ]
+    },
+    {
+      "name": "HABTM_Roles",
+      "path": "app/models/habtm_roles.rb",
+      "attrs": ":role_id, :user_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "HABTM_Users",
+      "path": "app/models/habtm_users.rb",
+      "attrs": ":role_id, :user_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Image",
+      "path": "app/models/image.rb",
+      "attrs": ":user_id, :name, :attribution, :publication_status, :image_file_name, :image_content_type, :image_file_size, :image_updated_at, :license_code, :width, :height",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/images_controller.rb",
+          "lineNumber": 66,
+          "line": "@image = Image.new(params[:image])"
+        },
+        {
+          "file": "spec/models/image_spec.rb",
+          "lineNumber": 21,
+          "line": "subject { Image.create(attributes)}"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/images_controller.rb",
+          "lineNumber": 118,
+          "line": "if @image.update_attributes(my_params)"
+        },
+        {
+          "file": "app/controllers/images_controller.rb",
+          "lineNumber": 121,
+          "line": "return @image.update_attributes(img_params)"
+        }
+      ]
+    },
+    {
+      "name": "Import::DuplicateUser",
+      "path": "app/models/import/duplicate_user.rb",
+      "attrs": ":login, :email, :duplicate_by, :data, :user_id, :import_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/import/import_users.rb",
+          "lineNumber": 56,
+          "line": "Import::DuplicateUser.create({"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Import::Import",
+      "path": "app/models/import/import.rb",
+      "attrs": ":job_id, :job_finished_at, :import_type, :progress, :total_imports, :user_id, :upload_data, :import_data",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/import/imports_controller.rb",
+          "lineNumber": 168,
+          "line": "import = Import::Import.create!()"
+        },
+        {
+          "file": "app/controllers/import/imports_controller.rb",
+          "lineNumber": 279,
+          "line": "import = Import::Import.create!()"
+        },
+        {
+          "file": "spec/controllers/import/imports_controller_spec.rb",
+          "lineNumber": 56,
+          "line": "Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_USER, import_data: {}).save!"
+        },
+        {
+          "file": "spec/controllers/import/imports_controller_spec.rb",
+          "lineNumber": 92,
+          "line": "Import::Import.create!(user_id: @admin_user.id, import_type: Import::Import::IMPORT_TYPE_ACTIVITY)"
+        },
+        {
+          "file": "spec/controllers/import/imports_controller_spec.rb",
+          "lineNumber": 111,
+          "line": "Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY, import_data: {}).save!"
+        },
+        {
+          "file": "spec/controllers/import/imports_controller_spec.rb",
+          "lineNumber": 129,
+          "line": "Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY, import_data: {}).save!"
+        },
+        {
+          "file": "spec/models/import/import_external_activity_spec.rb",
+          "lineNumber": 7,
+          "line": "let(:import) {Import::Import.new(import_type: Import::Import::IMPORT_TYPE_ACTIVITY)}"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Import::ImportedUser",
+      "path": "app/models/import/imported_user.rb",
+      "attrs": ":user_url, :is_verified, :user_id, :importing_domain, :import_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/models/import/import_users.rb",
+          "lineNumber": 33,
+          "line": "new_user.imported_user = Import::ImportedUser.create({"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Import::SchoolDistrictMapping",
+      "path": "app/models/import/school_district_mapping.rb",
+      "attrs": ":district_id, :import_district_uuid",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/models/import/import_schools_and_districts.rb",
+          "lineNumber": 41,
+          "line": "new_map || Import::SchoolDistrictMapping.create({:district_id => new_district.id, :import_district_uuid => district[:uuid]})"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Import::UserSchoolMapping",
+      "path": "app/models/import/user_school_mapping.rb",
+      "attrs": ":school_id, :import_school_url",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/models/import/import_schools_and_districts.rb",
+          "lineNumber": 78,
+          "line": "new_map || Import::UserSchoolMapping.create({:school_id => new_school.id, :import_school_url => school[:school_url]})"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Interactive",
+      "path": "app/models/interactive.rb",
+      "attrs": ":name, :description, :url, :width, :height, :scale, :image_url, :user_id, :credits, :publication_status, :full_window, :no_snapshots, :save_interactive_state, :license_code, :external_activity_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 58,
+          "line": "@interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 63,
+          "line": "@interactive = Interactive.new(interactive_params(params))"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 184,
+          "line": "interactive = Interactive.new(model.except(:model_type))"
+        },
+        {
+          "file": "spec/models/interactive_spec.rb",
+          "lineNumber": 17,
+          "line": "Interactive.create!(valid_attributes)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 156,
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 163,
+          "line": "if @interactive.update_attributes(params[:interactive])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 156,
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 163,
+          "line": "if @interactive.update_attributes(params[:interactive])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 156,
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+        },
+        {
+          "file": "app/controllers/interactives_controller.rb",
+          "lineNumber": 163,
+          "line": "if @interactive.update_attributes(params[:interactive])"
+        }
+      ]
+    },
+    {
+      "name": "Investigation",
+      "path": "app/models/investigation.rb",
+      "attrs": ":user_id, :uuid, :name, :description, :teacher_only, :publication_status, :offerings_count, :student_report_enabled, :allow_activity_assignment, :show_score, :teacher_guide_url, :thumbnail_url, :is_featured, :abstract, :author_email, :is_assessment_item",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 24,
+          "line": "investigation = Investigation.create(hash)"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 38,
+          "line": "investigation = Investigation.create(hash)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 70,
+          "line": "investigation = Investigation.create(:name => hash[\"name\"], :user => external_activity.user)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 170,
+          "line": "investigation = Investigation.create("
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 54,
+          "line": "offering.runnable = Investigation.create!(:name => \"Test Investigation\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 186,
+          "line": "offering.runnable = Investigation.create!(:name => \"Test Investigation\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 237,
+          "line": "offering.runnable = Investigation.create!(:name => \"Test Investigation\")"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 320,
+          "line": "offering.runnable = Investigation.create!(:name => \"Test Investigation\")"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 24,
+          "line": "offering.runnable = Investigation.create!()"
+        },
+        {
+          "file": "spec/models/external_activity_spec.rb",
+          "lineNumber": 57,
+          "line": "let (:investigation) { Investigation.create!(:name => \"test investigation\", :description => \"new decription\") }"
+        },
+        {
+          "file": "spec/models/investigation_spec.rb",
+          "lineNumber": 27,
+          "line": "Investigation.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/investigation_spec.rb",
+          "lineNumber": 32,
+          "line": "@investigation = Investigation.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/investigation_spec.rb",
+          "lineNumber": 40,
+          "line": "@investigation = Investigation.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/investigation_spec.rb",
+          "lineNumber": 151,
+          "line": "@bad  = Investigation.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/investigation_spec.rb",
+          "lineNumber": 152,
+          "line": "@good = Investigation.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/investigation_spec.rb",
+          "lineNumber": 153,
+          "line": "@bad_with_learners  = Investigation.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/page_element_spec.rb",
+          "lineNumber": 39,
+          "line": "expect(described_class.limit(3).page_by_investigation(Investigation.new(id: 1))).to all(be_a(described_class))"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "LearnerProcessingEvent",
+      "path": "app/models/learner_processing_event.rb",
+      "attrs": ":learner_id, :portal_end, :portal_start, :lara_end, :lara_start, :elapsed_seconds, :duration, :login, :teacher, :url, :lara_duration, :portal_duration",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "spec/models/learner_processing_event_spec.rb",
+          "lineNumber": 6,
+          "line": "let(:learner_processing_event) { LearnerProcessingEvent.new(learner, processing_time)}"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "MaterialsCollection",
+      "path": "app/models/materials_collection.rb",
+      "attrs": ":name, :description, :project_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/materials_collections_controller.rb",
+          "lineNumber": 44,
+          "line": "@materials_collection = MaterialsCollection.new(materials_collection_params)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/materials_collections_controller.rb",
+          "lineNumber": 62,
+          "line": "if @materials_collection.update_attributes(materials_collection_params)"
+        }
+      ]
+    },
+    {
+      "name": "MaterialsCollectionItem",
+      "path": "app/models/materials_collection_item.rb",
+      "attrs": ":materials_collection_id, :material_type, :material_id, :position",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Page",
+      "path": "app/models/page.rb",
+      "attrs": ":user_id, :section_id, :uuid, :name, :description, :position, :teacher_only, :publication_status, :offerings_count, :url",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/report/offering/section.rb",
+          "lineNumber": 10,
+          "line": "@pages = @section.pages.collect { |page| Report::Offering::Page.new(self, @offering, page) }"
+        },
+        {
+          "file": "features/step_definitions/activity_steps.rb",
+          "lineNumber": 58,
+          "line": "page = Page.create(:name => 'simple page')"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 27,
+          "line": "page = Page.create(hash)"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 41,
+          "line": "page = Page.create(hash)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 306,
+          "line": "page = Page.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 528,
+          "line": "Page.create!(p)"
+        },
+        {
+          "file": "spec/libs/reports/detail_spec.rb",
+          "lineNumber": 3,
+          "line": "page = Page.create()"
+        },
+        {
+          "file": "spec/models/page_spec.rb",
+          "lineNumber": 12,
+          "line": "Page.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/page_spec.rb",
+          "lineNumber": 17,
+          "line": "p = Page.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/page_spec.rb",
+          "lineNumber": 27,
+          "line": "@page = Page.create!(:name => \"Page\", :description => \"Page description\")"
+        },
+        {
+          "file": "spec/models/page_spec.rb",
+          "lineNumber": 28,
+          "line": "@page2 = Page.create!(:name => \"Page2\", :description => \"Page2 description\")"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "PageElement",
+      "path": "app/models/page_element.rb",
+      "attrs": ":page_id, :embeddable_id, :embeddable_type, :position, :user_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/page.rb",
+          "lineNumber": 110,
+          "line": "page_elements << PageElement.create(:user => user, :embeddable => embeddable, :position => position)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Password",
+      "path": "app/models/password.rb",
+      "attrs": ":user_id, :reset_code, :expiration_date",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/passwords_controller.rb",
+          "lineNumber": 57,
+          "line": "@password = Password.new(:user => user, :email => user.email)"
+        },
+        {
+          "file": "app/controllers/import/imported_login_controller.rb",
+          "lineNumber": 10,
+          "line": "password = Password.new(:user => user, :email => user.email)"
+        },
+        {
+          "file": "app/controllers/passwords_controller.rb",
+          "lineNumber": 11,
+          "line": "@password = Password.new(params[:password])"
+        },
+        {
+          "file": "app/controllers/passwords_controller.rb",
+          "lineNumber": 59,
+          "line": "@password = Password.new(:user => user, :email => user.email)"
+        },
+        {
+          "file": "app/controllers/passwords_controller.rb",
+          "lineNumber": 90,
+          "line": "@password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)"
+        },
+        {
+          "file": "app/controllers/users_controller.rb",
+          "lineNumber": 201,
+          "line": "p = Password.new(:user_id => params[:id])"
+        },
+        {
+          "file": "spec/models/password_spec.rb",
+          "lineNumber": 6,
+          "line": "let(:password) {Password.new(user: user)}"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/passwords_controller.rb",
+          "lineNumber": 143,
+          "line": "if @password.update_attributes(params[:password])"
+        },
+        {
+          "file": "app/controllers/passwords_controller.rb",
+          "lineNumber": 143,
+          "line": "if @password.update_attributes(params[:password])"
+        },
+        {
+          "file": "app/controllers/passwords_controller.rb",
+          "lineNumber": 143,
+          "line": "if @password.update_attributes(params[:password])"
+        },
+        {
+          "file": "app/controllers/users_controller.rb",
+          "lineNumber": 146,
+          "line": "if @user.update_attributes(params[:user])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::Bookmark",
+      "path": "app/models/portal/bookmark.rb",
+      "attrs": ":name, :type, :url, :user_id, :position, :clazz_id, :is_visible",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Portal::BookmarkVisit",
+      "path": "app/models/portal/bookmark_visit.rb",
+      "attrs": ":user_id, :bookmark_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/portal/bookmark.rb",
+          "lineNumber": 64,
+          "line": "self.bookmark_visits << Portal::BookmarkVisit.new(:user => user)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::Clazz",
+      "path": "app/models/portal/clazz.rb",
+      "attrs": ":uuid, :name, :description, :start_time, :end_time, :class_word, :status, :course_id, :semester_id, :teacher_id, :section, :default_class, :logging, :class_hash",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/teacher_classes_controller.rb",
+          "lineNumber": 67,
+          "line": "new_clazz = Portal::Clazz.new("
+        },
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 120,
+          "line": "@portal_clazz = Portal::Clazz.new(@object_params)"
+        },
+        {
+          "file": "app/models/portal/clazz.rb",
+          "lineNumber": 64,
+          "line": "Portal::Clazz.create(:name => \"Default Class\", :default_class => true, :class_word => \"default\")"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 453,
+          "line": "default_clazz = Portal::Clazz.create!(clazz_info)"
+        },
+        {
+          "file": "spec/models/portal/clazz_spec.rb",
+          "lineNumber": 75,
+          "line": "# new_clazz = Portal::Clazz.new(params)"
+        },
+        {
+          "file": "spec/models/portal/clazz_spec.rb",
+          "lineNumber": 78,
+          "line": "# new_clazz = Portal::Clazz.new(params)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 235,
+          "line": "if @portal_clazz.update_attributes(object_params)"
+        },
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 250,
+          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
+        }
+      ]
+    },
+    {
+      "name": "Portal::Collaboration",
+      "path": "app/models/portal/collaboration.rb",
+      "attrs": ":owner_id, :offering_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/services/api/v1/create_collaboration.rb",
+          "lineNumber": 87,
+          "line": "@collaboration = Portal::Collaboration.create!("
+        },
+        {
+          "file": "db/migrate/20140918180332_generate_collaborations_using_legacy_collaborations.rb",
+          "lineNumber": 54,
+          "line": "collaboration = Portal::Collaboration.create(:owner_id => owner_id)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "db/migrate/20140918180332_generate_collaborations_using_legacy_collaborations.rb",
+          "lineNumber": 56,
+          "line": "bundle.update_attributes!(:collaboration_id => collaboration.id)"
+        }
+      ]
+    },
+    {
+      "name": "Portal::CollaborationMembership",
+      "path": "app/models/portal/collaboration_membership.rb",
+      "attrs": ":collaboration_id, :student_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Portal::Country",
+      "path": "app/models/portal/country.rb",
+      "attrs": ":name, :formal_name, :capital, :two_letter, :three_letter, :tld, :iso_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Portal::Course",
+      "path": "app/models/portal/course.rb",
+      "attrs": ":uuid, :name, :description, :school_id, :status, :course_number",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 165,
+          "line": "course = Portal::Course.create({"
+        },
+        {
+          "file": "app/controllers/portal/courses_controller.rb",
+          "lineNumber": 68,
+          "line": "@course = Portal::Course.new(params[:portal_course])"
+        },
+        {
+          "file": "app/models/portal/course.rb",
+          "lineNumber": 70,
+          "line": "results = Portal::Course.create({"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 248,
+          "line": "default_course = Portal::Course.create(course_info)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 235,
+          "line": "if @portal_clazz.update_attributes(object_params)"
+        },
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 250,
+          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
+        },
+        {
+          "file": "app/controllers/portal/courses_controller.rb",
+          "lineNumber": 91,
+          "line": "if @course.update_attributes(params[:portal_course])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::District",
+      "path": "app/models/portal/district.rb",
+      "attrs": ":uuid, :name, :description, :nces_district_id, :state, :leaid, :zipcode",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/districts_controller.rb",
+          "lineNumber": 63,
+          "line": "@portal_district = Portal::District.new(params[:portal_district])"
+        },
+        {
+          "file": "app/models/import/import_schools_and_districts.rb",
+          "lineNumber": 35,
+          "line": "new_district = existing_district || Portal::District.create(district_params)"
+        },
+        {
+          "file": "app/models/portal/district.rb",
+          "lineNumber": 92,
+          "line": "found = Portal::District.new(attrs)"
+        },
+        {
+          "file": "app/models/portal/district.rb",
+          "lineNumber": 102,
+          "line": "found = Portal::District.new(:name => name, :description => \"#{name} created by #{username}\")"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 98,
+          "line": "default_district = Portal::District.create!(district_info)"
+        },
+        {
+          "file": "lib/school_importer.rb",
+          "lineNumber": 97,
+          "line": "district = Portal::District.create(:name => district_name);"
+        },
+        {
+          "file": "spec/models/portal/district_spec.rb",
+          "lineNumber": 11,
+          "line": "Portal::District.create!(@valid_attributes)"
+        },
+        {
+          "file": "spec/models/portal/district_spec.rb",
+          "lineNumber": 15,
+          "line": "expect(Portal::District.create!(@valid_attributes)).to be_virtual"
+        },
+        {
+          "file": "spec/models/portal/district_spec.rb",
+          "lineNumber": 78,
+          "line": "Portal::District.create!(@valid_attributes)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/districts_controller.rb",
+          "lineNumber": 83,
+          "line": "if @portal_district.update_attributes(params[:portal_district])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::GenericBookmark",
+      "path": "app/models/portal/generic_bookmark.rb",
+      "attrs": ":name, :type, :url, :user_id, :position, :clazz_id, :is_visible",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/bookmarks_controller.rb",
+          "lineNumber": 10,
+          "line": "bookmark = Portal::GenericBookmark.new({name: name, url: url})"
+        },
+        {
+          "file": "app/controllers/portal/bookmarks_controller.rb",
+          "lineNumber": 9,
+          "line": "mark = Portal::GenericBookmark.new()"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::Grade",
+      "path": "app/models/portal/grade.rb",
+      "attrs": ":name, :description, :position, :uuid, :active",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "spec/models/portal/grade_spec.rb",
+          "lineNumber": 13,
+          "line": "Portal::Grade.create!(@valid_attributes)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::GradeLevel",
+      "path": "app/models/portal/grade_level.rb",
+      "attrs": ":uuid, :name, :description, :has_grade_levels_id, :has_grade_levels_type, :grade_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 157,
+          "line": "portal_grade_level = Portal::GradeLevel.create!(grade_level_info)"
+        },
+        {
+          "file": "spec/controllers/portal/students_controller_spec.rb",
+          "lineNumber": 40,
+          "line": "@grade_level = Portal::GradeLevel.create({ :name => \"9\" }) # default grade level"
+        },
+        {
+          "file": "spec/models/portal/grade_level_spec.rb",
+          "lineNumber": 14,
+          "line": "Portal::GradeLevel.create!(@valid_attributes)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::Learner",
+      "path": "app/models/portal/learner.rb",
+      "attrs": ":uuid, :student_id, :offering_id, :bundle_logger_id, :console_logger_id, :secure_key",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/learners_controller.rb",
+          "lineNumber": 216,
+          "line": "@portal_learner = Portal::Learner.new(params[:learner])"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 58,
+          "line": "learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 188,
+          "line": "learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 239,
+          "line": "learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 322,
+          "line": "learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 26,
+          "line": "learner = Portal::Learner.create!(:bundle_logger_id => blogger.id, :student_id => student.id, :offering_id => offering.id)"
+        },
+        {
+          "file": "spec/models/portal/learner_spec.rb",
+          "lineNumber": 17,
+          "line": "subject           { Portal::Learner.create!(attributes) }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/learners_controller.rb",
+          "lineNumber": 239,
+          "line": "if @portal_learner.update_attributes(params[:learner])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::LearnerActivityFeedback",
+      "path": "app/models/portal/learner_activity_feedback.rb",
+      "attrs": ":text_feedback, :score, :has_been_reviewed, :portal_learner_id, :activity_feedback_id, :rubric_feedback",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "spec/models/portal/learner_activity_feedback_spec.rb",
+          "lineNumber": 16,
+          "line": "let(:learner_feedback) { Portal::LearnerActivityFeedback.create(feedback_params)         }"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::LegacyCollaboration",
+      "path": "app/models/portal/legacy_collaboration.rb",
+      "attrs": ":bundle_content_id, :student_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Portal::Nces06District",
+      "path": "app/models/portal/nces06_district.rb",
+      "attrs": ":LEAID, :FIPST, :STID, :NAME, :PHONE, :MSTREE, :MCITY, :MSTATE, :MZIP, :MZIP4, :LSTREE, :LCITY, :LSTATE, :LZIP, :LZIP4, :KIND, :UNION, :CONUM, :CONAME, :CSA, :CBSA, :METMIC, :MSC, :ULOCAL, :CDCODE, :LATCOD, :LONCOD, :BOUND, :GSLO, :GSHI, :AGCHRT, :SCH, :TEACH, :UG, :PK12, :MEMBER, :MIGRNT, :SPECED, :ELL, :PKTCH, :KGTCH, :ELMTCH, :SECTCH, :UGTCH, :TOTTCH, :AIDES, :CORSUP, :ELMGUI, :SECGUI, :TOTGUI, :LIBSPE, :LIBSUP, :LEAADM, :LEASUP, :SCHADM, :SCHSUP, :STUSUP, :OTHSUP, :IGSLO, :IGSHI, :ISCH, :ITEACH, :IUG, :IPK12, :IMEMB, :IMIGRN, :ISPEC, :IELL, :IPKTCH, :IKGTCH, :IELTCH, :ISETCH, :IUGTCH, :ITOTCH, :IAIDES, :ICOSUP, :IELGUI, :ISEGUI, :ITOGUI, :ILISPE, :ILISUP, :ILEADM, :ILESUP, :ISCADM, :ISCSUP, :ISTSUP, :IOTSUP",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/nces06_districts_controller.rb",
+          "lineNumber": 91,
+          "line": "@nces06_district = Portal::Nces06District.new(params[:nces06_district])"
+        },
+        {
+          "file": "spec/libs/national_district_importer_spec.rb",
+          "lineNumber": 44,
+          "line": "Portal::Nces06District.create!('NAME' => 'a name')"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/nces06_districts_controller.rb",
+          "lineNumber": 114,
+          "line": "if @nces06_district.update_attributes(params[:nces06_district])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::Nces06School",
+      "path": "app/models/portal/nces06_school.rb",
+      "attrs": ":nces_district_id, :NCESSCH, :FIPST, :LEAID, :SCHNO, :STID, :SEASCH, :LEANM, :SCHNAM, :PHONE, :MSTREE, :MCITY, :MSTATE, :MZIP, :MZIP4, :LSTREE, :LCITY, :LSTATE, :LZIP, :LZIP4, :KIND, :STATUS, :ULOCAL, :LATCOD, :LONCOD, :CDCODE, :CONUM, :CONAME, :FTE, :GSLO, :GSHI, :LEVEL, :TITLEI, :STITLI, :MAGNET, :CHARTR, :SHARED, :FRELCH, :REDLCH, :TOTFRL, :MIGRNT, :PK, :AMPKM, :AMPKF, :AMPKU, :ASPKM, :ASPKF, :ASPKU, :HIPKM, :HIPKF, :HIPKU, :BLPKM, :BLPKF, :BLPKU, :WHPKM, :WHPKF, :WHPKU, :KG, :AMKGM, :AMKGF, :AMKGU, :ASKGM, :ASKGF, :ASKGU, :HIKGM, :HIKGF, :HIKGU, :BLKGM, :BLKGF, :BLKGU, :WHKGM, :WHKGF, :WHKGU, :G01, :AM01M, :AM01F, :AM01U, :AS01M, :AS01F, :AS01U, :HI01M, :HI01F, :HI01U, :BL01M, :BL01F, :BL01U, :WH01M, :WH01F, :WH01U, :G02, :AM02M, :AM02F, :AM02U, :AS02M, :AS02F, :AS02U, :HI02M, :HI02F, :HI02U, :BL02M, :BL02F, :BL02U, :WH02M, :WH02F, :WH02U, :G03, :AM03M, :AM03F, :AM03U, :AS03M, :AS03F, :AS03U, :HI03M, :HI03F, :HI03U, :BL03M, :BL03F, :BL03U, :WH03M, :WH03F, :WH03U, :G04, :AM04M, :AM04F, :AM04U, :AS04M, :AS04F, :AS04U, :HI04M, :HI04F, :HI04U, :BL04M, :BL04F, :BL04U, :WH04M, :WH04F, :WH04U, :G05, :AM05M, :AM05F, :AM05U, :AS05M, :AS05F, :AS05U, :HI05M, :HI05F, :HI05U, :BL05M, :BL05F, :BL05U, :WH05M, :WH05F, :WH05U, :G06, :AM06M, :AM06F, :AM06U, :AS06M, :AS06F, :AS06U, :HI06M, :HI06F, :HI06U, :BL06M, :BL06F, :BL06U, :WH06M, :WH06F, :WH06U, :G07, :AM07M, :AM07F, :AM07U, :AS07M, :AS07F, :AS07U, :HI07M, :HI07F, :HI07U, :BL07M, :BL07F, :BL07U, :WH07M, :WH07F, :WH07U, :G08, :AM08M, :AM08F, :AM08U, :AS08M, :AS08F, :AS08U, :HI08M, :HI08F, :HI08U, :BL08M, :BL08F, :BL08U, :WH08M, :WH08F, :WH08U, :G09, :AM09M, :AM09F, :AM09U, :AS09M, :AS09F, :AS09U, :HI09M, :HI09F, :HI09U, :BL09M, :BL09F, :BL09U, :WH09M, :WH09F, :WH09U, :G10, :AM10M, :AM10F, :AM10U, :AS10M, :AS10F, :AS10U, :HI10M, :HI10F, :HI10U, :BL10M, :BL10F, :BL10U, :WH10M, :WH10F, :WH10U, :G11, :AM11M, :AM11F, :AM11U, :AS11M, :AS11F, :AS11U, :HI11M, :HI11F, :HI11U, :BL11M, :BL11F, :BL11U, :WH11M, :WH11F, :WH11U, :G12, :AM12M, :AM12F, :AM12U, :AS12M, :AS12F, :AS12U, :HI12M, :HI12F, :HI12U, :BL12M, :BL12F, :BL12U, :WH12M, :WH12F, :WH12U, :UG, :AMUGM, :AMUGF, :AMUGU, :ASUGM, :ASUGF, :ASUGU, :HIUGM, :HIUGF, :HIUGU, :BLUGM, :BLUGF, :BLUGU, :WHUGM, :WHUGF, :WHUGU, :MEMBER, :AM, :AMALM, :AMALF, :AMALU, :ASIAN, :ASALM, :ASALF, :ASALU, :HISP, :HIALM, :HIALF, :HIALU, :BLACK, :BLALM, :BLALF, :BLALU, :WHITE, :WHALM, :WHALF, :WHALU, :TOTETH, :PUPTCH, :TOTGRD, :IFTE, :IGSLO, :IGSHI, :ITITLI, :ISTITL, :IMAGNE, :ICHART, :ISHARE, :IFRELC, :IREDLC, :ITOTFR, :IMIGRN, :IPK, :IAMPKM, :IAMPKF, :IAMPKU, :IASPKM, :IASPKF, :IASPKU, :IHIPKM, :IHIPKF, :IHIPKU, :IBLPKM, :IBLPKF, :IBLPKU, :IWHPKM, :IWHPKF, :IWHPKU, :IKG, :IAMKGM, :IAMKGF, :IAMKGU, :IASKGM, :IASKGF, :IASKGU, :IHIKGM, :IHIKGF, :IHIKGU, :IBLKGM, :IBLKGF, :IBLKGU, :IWHKGM, :IWHKGF, :IWHKGU, :IG01, :IAM01M, :IAM01F, :IAM01U, :IAS01M, :IAS01F, :IAS01U, :IHI01M, :IHI01F, :IHI01U, :IBL01M, :IBL01F, :IBL01U, :IWH01M, :IWH01F, :IWH01U, :IG02, :IAM02M, :IAM02F, :IAM02U, :IAS02M, :IAS02F, :IAS02U, :IHI02M, :IHI02F, :IHI02U, :IBL02M, :IBL02F, :IBL02U, :IWH02M, :IWH02F, :IWH02U, :IG03, :IAM03M, :IAM03F, :IAM03U, :IAS03M, :IAS03F, :IAS03U, :IHI03M, :IHI03F, :IHI03U, :IBL03M, :IBL03F, :IBL03U, :IWH03M, :IWH03F, :IWH03U, :IG04, :IAM04M, :IAM04F, :IAM04U, :IAS04M, :IAS04F, :IAS04U, :IHI04M, :IHI04F, :IHI04U, :IBL04M, :IBL04F, :IBL04U, :IWH04M, :IWH04F, :IWH04U, :IG05, :IAM05M, :IAM05F, :IAM05U, :IAS05M, :IAS05F, :IAS05U, :IHI05M, :IHI05F, :IHI05U, :IBL05M, :IBL05F, :IBL05U, :IWH05M, :IWH05F, :IWH05U, :IG06, :IAM06M, :IAM06F, :IAM06U, :IAS06M, :IAS06F, :IAS06U, :IHI06M, :IHI06F, :IHI06U, :IBL06M, :IBL06F, :IBL06U, :IWH06M, :IWH06F, :IWH06U, :IG07, :IAM07M, :IAM07F, :IAM07U, :IAS07M, :IAS07F, :IAS07U, :IHI07M, :IHI07F, :IHI07U, :IBL07M, :IBL07F, :IBL07U, :IWH07M, :IWH07F, :IWH07U, :IG08, :IAM08M, :IAM08F, :IAM08U, :IAS08M, :IAS08F, :IAS08U, :IHI08M, :IHI08F, :IHI08U, :IBL08M, :IBL08F, :IBL08U, :IWH08M, :IWH08F, :IWH08U, :IG09, :IAM09M, :IAM09F, :IAM09U, :IAS09M, :IAS09F, :IAS09U, :IHI09M, :IHI09F, :IHI09U, :IBL09M, :IBL09F, :IBL09U, :IWH09M, :IWH09F, :IWH09U, :IG10, :IAM10M, :IAM10F, :IAM10U, :IAS10M, :IAS10F, :IAS10U, :IHI10M, :IHI10F, :IHI10U, :IBL10M, :IBL10F, :IBL10U, :IWH10M, :IWH10F, :IWH10U, :IG11, :IAM11M, :IAM11F, :IAM11U, :IAS11M, :IAS11F, :IAS11U, :IHI11M, :IHI11F, :IHI11U, :IBL11M, :IBL11F, :IBL11U, :IWH11M, :IWH11F, :IWH11U, :IG12, :IAM12M, :IAM12F, :IAM12U, :IAS12M, :IAS12F, :IAS12U, :IHI12M, :IHI12F, :IHI12U, :IBL12M, :IBL12F, :IBL12U, :IWH12M, :IWH12F, :IWH12U, :IUG, :IAMUGM, :IAMUGF, :IAMUGU, :IASUGM, :IASUGF, :IASUGU, :IHIUGM, :IHIUGF, :IHIUGU, :IBLUGM, :IBLUGF, :IBLUGU, :IWHUGM, :IWHUGF, :IWHUGU, :IMEMB, :IAM, :IAMALM, :IAMALF, :IAMALU, :IASIAN, :IASALM, :IASALF, :IASALU, :IHISP, :IHIALM, :IHIALF, :IHIALU, :IBLACK, :IBLALM, :IBLALF, :IBLALU, :IWHITE, :IWHALM, :IWHALF, :IWHALU, :IETH, :IPUTCH, :ITOTGR",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/nces06_schools_controller.rb",
+          "lineNumber": 92,
+          "line": "@nces06_school = Portal::Nces06School.new(params[:nces06_school])"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/nces06_schools_controller.rb",
+          "lineNumber": 115,
+          "line": "if @nces06_school.update_attributes(params[:nces06_school])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::Offering",
+      "path": "app/models/portal/offering.rb",
+      "attrs": ":uuid, :status, :clazz_id, :runnable_id, :runnable_type, :active, :default_offering, :position, :anonymous_report, :locked",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/global_steps.rb",
+          "lineNumber": 5,
+          "line": "offering = Portal::Offering.create(create_hash)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 53,
+          "line": "offering = Portal::Offering.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 185,
+          "line": "offering = Portal::Offering.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 236,
+          "line": "offering = Portal::Offering.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 319,
+          "line": "offering = Portal::Offering.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 23,
+          "line": "offering = Portal::Offering.create!()"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::OfferingActivityFeedback",
+      "path": "app/models/portal/offering_activity_feedback.rb",
+      "attrs": ":enable_text_feedback, :max_score, :score_type, :activity_id, :portal_offering_id, :use_rubric, :rubric",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "spec/models/portal/learner_activity_feedback_spec.rb",
+          "lineNumber": 11,
+          "line": "let(:activity_feedback)   { Portal::OfferingActivityFeedback.create(off_feedback_params) }"
+        },
+        {
+          "file": "spec/models/portal/offering_activity_feedback_spec.rb",
+          "lineNumber": 10,
+          "line": "let(:activity_feedback){ Portal::OfferingActivityFeedback.create(feedback_params) }"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::OfferingEmbeddableMetadata",
+      "path": "app/models/portal/offering_embeddable_metadata.rb",
+      "attrs": ":offering_id, :embeddable_id, :embeddable_type, :enable_score, :max_score, :enable_text_feedback",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Portal::PermissionForm",
+      "path": "app/models/portal/permission_form.rb",
+      "attrs": ":name, :url, :project_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/permission_forms_controller.rb",
+          "lineNumber": 109,
+          "line": "form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::School",
+      "path": "app/models/portal/school.rb",
+      "attrs": ":uuid, :name, :description, :district_id, :nces_school_id, :state, :zipcode, :ncessch, :country_id, :city",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/schools_controller.rb",
+          "lineNumber": 73,
+          "line": "@portal_school = Portal::School.new(params[:portal_school])"
+        },
+        {
+          "file": "app/models/api/v1/school_registration.rb",
+          "lineNumber": 32,
+          "line": "Portal::School.new(name: school_name, zipcode: zipcode, country_id: country_id)"
+        },
+        {
+          "file": "app/models/import/import_schools_and_districts.rb",
+          "lineNumber": 71,
+          "line": "new_school = existing_school || Portal::School.create(school_params)"
+        },
+        {
+          "file": "app/models/portal/school.rb",
+          "lineNumber": 114,
+          "line": "found = Portal::School.new(attrs)"
+        },
+        {
+          "file": "app/models/portal/school.rb",
+          "lineNumber": 124,
+          "line": "found = Portal::School.new(:name => name, :description => \"#{name} created by #{username}\")"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 201,
+          "line": "school = Portal::School.create!(school_info)"
+        },
+        {
+          "file": "lib/school_importer.rb",
+          "lineNumber": 124,
+          "line": "school = Portal::School.create( :name => school_name, :district => district_for(row))"
+        },
+        {
+          "file": "spec/models/portal/school_spec.rb",
+          "lineNumber": 16,
+          "line": "Portal::School.create!(@valid_attributes)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/schools_controller.rb",
+          "lineNumber": 89,
+          "line": "if @portal_school.update_attributes(params[:portal_school])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::SchoolMembership",
+      "path": "app/models/portal/school_membership.rb",
+      "attrs": ":uuid, :name, :description, :start_time, :end_time, :member_id, :member_type, :school_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/school_memberships_controller.rb",
+          "lineNumber": 66,
+          "line": "@school_membership = Portal::SchoolMembership.new(params[:school_membership])"
+        },
+        {
+          "file": "spec/models/portal/school_spec.rb",
+          "lineNumber": 70,
+          "line": "Portal::SchoolMembership.create(:school => school, :member => student)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/school_memberships_controller.rb",
+          "lineNumber": 89,
+          "line": "if @school_membership.update_attributes(params[:portal_school_membership])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::Student",
+      "path": "app/models/portal/student.rb",
+      "attrs": ":uuid, :user_id, :grade_level_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/students_controller.rb",
+          "lineNumber": 83,
+          "line": "student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id)"
+        },
+        {
+          "file": "app/controllers/api/v1/students_controller.rb",
+          "lineNumber": 141,
+          "line": "portal_student = Portal::Student.create(:user_id => user.id)"
+        },
+        {
+          "file": "app/controllers/api/v1/students_controller.rb",
+          "lineNumber": 143,
+          "line": "portal_student = Portal::Student.create(:user_id => user.id, :grade_level_id => grade_level.id)"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 141,
+          "line": "@portal_student = Portal::Student.create(:user_id => @user.id)"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 143,
+          "line": "@portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)"
+        },
+        {
+          "file": "app/models/api/v1/student_registration.rb",
+          "lineNumber": 43,
+          "line": "user.portal_student = @student = Portal::Student.create(:user => user)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 396,
+          "line": "portal_student = Portal::Student.create!(:user_id => user.id)"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 52,
+          "line": "student = Portal::Student.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 184,
+          "line": "student = Portal::Student.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 235,
+          "line": "student = Portal::Student.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 318,
+          "line": "student = Portal::Student.create!()"
+        },
+        {
+          "file": "spec/models/dataservice/periodic_bundle_content_saveable_extraction_spec.rb",
+          "lineNumber": 22,
+          "line": "student = Portal::Student.create!()"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 192,
+          "line": "if @portal_student.update_attributes(params[:portal_student])"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 277,
+          "line": "if @portal_student.user.update_attributes(params[:user])"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 192,
+          "line": "if @portal_student.update_attributes(params[:portal_student])"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 277,
+          "line": "if @portal_student.user.update_attributes(params[:user])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::StudentClazz",
+      "path": "app/models/portal/student_clazz.rb",
+      "attrs": ":uuid, :name, :description, :start_time, :end_time, :clazz_id, :student_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/student_clazzes_controller.rb",
+          "lineNumber": 64,
+          "line": "@portal_student_clazz = Portal::StudentClazz.new(params[:portal_student_clazz])"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/student_clazzes_controller.rb",
+          "lineNumber": 87,
+          "line": "if @portal_student_clazz.update_attributes(params[:portal_student_clazz])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::StudentPermissionForm",
+      "path": "app/models/portal/student_permission_form.rb",
+      "attrs": ":signed, :portal_student_id, :portal_permission_form_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Portal::Subject",
+      "path": "app/models/portal/subject.rb",
+      "attrs": ":uuid, :name, :description, :teacher_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/subjects_controller.rb",
+          "lineNumber": 64,
+          "line": "@subject = Portal::Subject.new(params[:subject])"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/subjects_controller.rb",
+          "lineNumber": 87,
+          "line": "if @subject.update_attributes(params[:subject])"
+        }
+      ]
+    },
+    {
+      "name": "Portal::Teacher",
+      "path": "app/models/portal/teacher.rb",
+      "attrs": ":uuid, :user_id, :offerings_count, :left_pane_submenu_item",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 150,
+          "line": "teacher = Portal::Teacher.create(:user => current_visitor) # Former call set :user_id directly; class validations didn't like that"
+        },
+        {
+          "file": "app/models/api/v1/teacher_registration.rb",
+          "lineNumber": 21,
+          "line": "user.portal_teacher = @teacher = Portal::Teacher.new(:user => user)"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 343,
+          "line": "portal_teacher = Portal::Teacher.create!(:user_id => user.id)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 235,
+          "line": "if @portal_clazz.update_attributes(object_params)"
+        },
+        {
+          "file": "app/controllers/portal/clazzes_controller.rb",
+          "lineNumber": 250,
+          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
+        }
+      ]
+    },
+    {
+      "name": "Portal::TeacherClazz",
+      "path": "app/models/portal/teacher_clazz.rb",
+      "attrs": ":uuid, :name, :description, :start_time, :end_time, :clazz_id, :teacher_id, :active, :position",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/teacher_steps.rb",
+          "lineNumber": 36,
+          "line": "teacher_clazz = Portal::TeacherClazz.new()"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Portal::TeacherFullStatus",
+      "path": "app/models/portal/teacher_full_status.rb",
+      "attrs": ":offering_id, :teacher_id, :offering_collapsed",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Report::EmbeddableFilter",
+      "path": "app/models/report/embeddable_filter.rb",
+      "attrs": ":offering_id, :embeddables, :ignore",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/report/util.rb",
+          "lineNumber": 93,
+          "line": "@report_embeddable_filter = Report::EmbeddableFilter.create(:offering => @offering, :embeddables => [])"
+        },
+        {
+          "file": "spec/models/report/embeddable_filter_spec.rb",
+          "lineNumber": 12,
+          "line": "filter = Report::EmbeddableFilter.create()"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Report::Learner",
+      "path": "app/models/report/learner.rb",
+      "attrs": ":learner_id, :student_id, :user_id, :offering_id, :class_id, :last_run, :last_report, :offering_name, :teachers_name, :student_name, :username, :school_name, :class_name, :runnable_id, :runnable_name, :school_id, :num_answerables, :num_answered, :num_correct, :answers, :runnable_type, :complete_percent, :permission_forms, :num_submitted, :teachers_district, :teachers_state, :teachers_email, :permission_forms_id, :teachers_id, :teachers_map, :permission_forms_map",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 60,
+          "line": "@report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 70,
+          "line": "report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 75,
+          "line": "report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 91,
+          "line": "report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 104,
+          "line": "report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 119,
+          "line": "report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 133,
+          "line": "report = Report::Learner.create(:learner => @learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 246,
+          "line": "Report::Learner.create(:learner => learner)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 258,
+          "line": "Report::Learner.create(:learner => learner)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        },
+        {
+          "file": "spec/models/report/learner_spec.rb",
+          "lineNumber": 205,
+          "line": "answers_for(open_response).last.update_attributes(feedback)"
+        }
+      ]
+    },
+    {
+      "name": "Report::LearnerActivity",
+      "path": "app/models/report/learner_activity.rb",
+      "attrs": ":learner_id, :activity_id, :complete_percent",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Role",
+      "path": "app/models/role.rb",
+      "attrs": ":title, :position, :uuid",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "db/migrate/20080929171348_bort_migration.rb",
+          "lineNumber": 53,
+          "line": "# admin_role = Role.create(:name => 'admin')"
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 65,
+          "line": "new_role = Role.create!(role)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::ExternalLink",
+      "path": "app/models/saveable/external_link.rb",
+      "attrs": ":embeddable_id, :embeddable_type, :learner_id, :offering_id, :response_count",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Saveable::ExternalLinkUrl",
+      "path": "app/models/saveable/external_link_url.rb",
+      "attrs": ":external_link_id, :bundle_content_id, :position, :url, :is_final, :feedback, :has_been_reviewed, :score",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Saveable::ImageQuestion",
+      "path": "app/models/saveable/image_question.rb",
+      "attrs": ":learner_id, :offering_id, :image_question_id, :response_count, :uuid",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 76,
+          "line": "new_answer = Saveable::ImageQuestion.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 935,
+          "line": "new_answer = Saveable::ImageQuestion.create!(info)"
+        },
+        {
+          "file": "spec/models/saveable/image_question_spec.rb",
+          "lineNumber": 14,
+          "line": "subject {Saveable::ImageQuestion.create(:learner => learner, :image_question => image_q )}"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::ImageQuestionAnswer",
+      "path": "app/models/saveable/image_question_answer.rb",
+      "attrs": ":image_question_id, :bundle_content_id, :blob_id, :position, :note, :uuid, :is_final, :feedback, :has_been_reviewed, :score",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 82,
+          "line": "saveable_answer = Saveable::ImageQuestionAnswer.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 948,
+          "line": "saveable_answer = Saveable::ImageQuestionAnswer.create!(info)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::Interactive",
+      "path": "app/models/saveable/interactive.rb",
+      "attrs": ":learner_id, :offering_id, :response_count, :iframe_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Saveable::InteractiveState",
+      "path": "app/models/saveable/interactive_state.rb",
+      "attrs": ":interactive_id, :bundle_content_id, :position, :state, :is_final, :feedback, :has_been_reviewed, :score",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Saveable::MultipleChoice",
+      "path": "app/models/saveable/multiple_choice.rb",
+      "attrs": ":learner_id, :multiple_choice_id, :offering_id, :response_count, :uuid",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 47,
+          "line": "new_answer = Saveable::MultipleChoice.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 894,
+          "line": "new_answer = Saveable::MultipleChoice.create!(info)"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::MultipleChoiceAnswer",
+      "path": "app/models/saveable/multiple_choice_answer.rb",
+      "attrs": ":multiple_choice_id, :bundle_content_id, :position, :uuid, :is_final, :feedback, :has_been_reviewed, :score",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 52,
+          "line": "saveable_answer = Saveable::MultipleChoiceAnswer.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 895,
+          "line": "saveable_answer = Saveable::MultipleChoiceAnswer.create!(:multiple_choice => new_answer, :uuid => data[:saveable_multiple_choice_answers_uuid])"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::MultipleChoiceRationaleChoice",
+      "path": "app/models/saveable/multiple_choice_rationale_choice.rb",
+      "attrs": ":choice_id, :answer_id, :rationale, :uuid",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/portal/offerings_controller.rb",
+          "lineNumber": 254,
+          "line": "Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)"
+        },
+        {
+          "file": "db/migrate/20130117174756_create_saveable_multiple_choice_rationale_choice.rb",
+          "lineNumber": 26,
+          "line": "Saveable::MultipleChoiceRationaleChoice.create!(:choice_id => answer.choice_id, :answer_id => answer.id)"
+        },
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 55,
+          "line": "Saveable::MultipleChoiceRationaleChoice.create("
+        },
+        {
+          "file": "lib/mock_data/create_default_data.rb",
+          "lineNumber": 896,
+          "line": "Saveable::MultipleChoiceRationaleChoice.create("
+        },
+        {
+          "file": "lib/saveable_extraction.rb",
+          "lineNumber": 108,
+          "line": "Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice_id, :answer_id => saveable_answer.id, :rationale => rationales[choice_id])"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/offerings_controller.rb",
+          "lineNumber": 102,
+          "line": "update_successful = @offering.update_attributes(params[:offering])"
+        }
+      ]
+    },
+    {
+      "name": "Saveable::OpenResponse",
+      "path": "app/models/saveable/open_response.rb",
+      "attrs": ":learner_id, :open_response_id, :offering_id, :response_count",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 62,
+          "line": "new_answer = Saveable::OpenResponse.create("
+        },
+        {
+          "file": "spec/models/api/v1/report_spec.rb",
+          "lineNumber": 98,
+          "line": "let(:open_response_answer) { Saveable::OpenResponse.create(open_response: open_response, learner: learner)}"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::OpenResponseAnswer",
+      "path": "app/models/saveable/open_response_answer.rb",
+      "attrs": ":open_response_id, :bundle_content_id, :position, :answer, :is_final, :feedback, :has_been_reviewed, :score",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "features/step_definitions/researcher_report_steps.rb",
+          "lineNumber": 67,
+          "line": "saveable_answer = Saveable::OpenResponseAnswer.create("
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "Saveable::Sparks::MeasuringResistance",
+      "path": "app/models/saveable/sparks/measuring_resistance.rb",
+      "attrs": ":learner_id, :offering_id",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/saveable/sparks/measuring_resistances_controller.rb",
+          "lineNumber": 44,
+          "line": "@measuring_resistance = Saveable::Sparks::MeasuringResistance.new(params[:measuring_resistance])"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/saveable/sparks/measuring_resistances_controller.rb",
+          "lineNumber": 65,
+          "line": "if @measuring_resistance.update_attributes(params[:measuring_resistance])"
+        }
+      ]
+    },
+    {
+      "name": "Saveable::Sparks::MeasuringResistanceReports",
+      "path": "app/models/saveable/sparks/measuring_resistance_reports.rb",
+      "attrs": ":measuring_resistance_id, :position, :content",
+      "hasAttrAccessible": false,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Section",
+      "path": "app/models/section.rb",
+      "attrs": ":user_id, :activity_id, :uuid, :name, :description, :position, :teacher_only, :publication_status",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/models/report/offering/activity.rb",
+          "lineNumber": 10,
+          "line": "@sections = @activity.sections.collect { |section| Report::Offering::Section.new(self, @offering, section) }"
+        },
+        {
+          "file": "features/step_definitions/activity_steps.rb",
+          "lineNumber": 55,
+          "line": "section = Section.create(:name => 'simple section')"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 26,
+          "line": "section = Section.create(hash)"
+        },
+        {
+          "file": "features/step_definitions/investigations_steps.rb",
+          "lineNumber": 40,
+          "line": "section = Section.create(hash)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 298,
+          "line": "section = Section.create("
+        },
+        {
+          "file": "spec/libs/reports/detail_spec.rb",
+          "lineNumber": 4,
+          "line": "section = Section.create()"
+        }
+      ],
+      "updates": [
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "SecurityQuestion",
+      "path": "app/models/security_question.rb",
+      "attrs": ":user_id, :question, :answer",
+      "hasAttrAccessible": false,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/security_questions_controller.rb",
+          "lineNumber": 48,
+          "line": "#     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })"
+        },
+        {
+          "file": "app/models/security_question.rb",
+          "lineNumber": 65,
+          "line": "SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })"
+        },
+        {
+          "file": "features/step_definitions/student_steps.rb",
+          "lineNumber": 42,
+          "line": "questions << SecurityQuestion.new({ :question => SecurityQuestion::QUESTIONS[0], :answer => \"red\" })"
+        },
+        {
+          "file": "features/step_definitions/student_steps.rb",
+          "lineNumber": 44,
+          "line": "questions << SecurityQuestion.new({ :question => SecurityQuestion::QUESTIONS[1], :answer => \"pizza\" })"
+        },
+        {
+          "file": "features/step_definitions/student_steps.rb",
+          "lineNumber": 46,
+          "line": "questions << SecurityQuestion.new({ :question => SecurityQuestion::QUESTIONS[2], :answer => \"chocolate\" })"
+        },
+        {
+          "file": "spec/controllers/passwords_controller_spec.rb",
+          "lineNumber": 54,
+          "line": "Array.new(3) { |i| SecurityQuestion.create({ :question => \"test #{i}\", :answer => \"test\" }) }.each { |q| @forgetful_user.security_questions << q }"
+        },
+        {
+          "file": "spec/controllers/passwords_controller_spec.rb",
+          "lineNumber": 66,
+          "line": "Array.new(3) { |i| SecurityQuestion.create({ :question => \"test #{i}\", :answer => \"test\" }) }.each { |q| @forgetful_user.security_questions << q }"
+        },
+        {
+          "file": "spec/models/security_question_spec.rb",
+          "lineNumber": 38,
+          "line": "question = SecurityQuestion.create({ :question => \"Existing question\", :answer => \"existing answer\" })"
+        },
+        {
+          "file": "spec/models/security_question_spec.rb",
+          "lineNumber": 59,
+          "line": "SecurityQuestion.new({ :question => \"First test\", :answer => \"test\" }),"
+        },
+        {
+          "file": "spec/models/security_question_spec.rb",
+          "lineNumber": 60,
+          "line": "SecurityQuestion.new({ :question => \"Second test\", :answer => \"test\" }),"
+        },
+        {
+          "file": "spec/models/security_question_spec.rb",
+          "lineNumber": 61,
+          "line": "SecurityQuestion.new({ :question => \"Third test\", :answer => \"test\" })"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 292,
+          "line": "questions = Array.new(3) { |i| SecurityQuestion.new({ :question => \"test #{i}\", :answer => \"test\" }) }"
+        }
+      ],
+      "updates": [
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 149,
+          "line": "users(:quentin).update_attributes({:password => 'new password', :password_confirmation => 'new password'})"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 154,
+          "line": "users(:quentin).update_attributes({:login => 'quentin2'})"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 216,
+          "line": "user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})"
+        }
+      ]
+    },
+    {
+      "name": "StandardDocument",
+      "path": "app/models/standard_document.rb",
+      "attrs": ":uri, :jurisdiction, :title, :name",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "StandardStatement",
+      "path": "app/models/standard_statement.rb",
+      "attrs": ":uri, :doc, :statement_notation, :statement_label, :description, :parents, :material_type, :material_id, :education_level, :is_leaf",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/materials_controller.rb",
+          "lineNumber": 526,
+          "line": "StandardStatement.create("
+        },
+        {
+          "file": "app/models/standard_statement.rb",
+          "lineNumber": 37,
+          "line": "statement = StandardStatement.new(attributes.except('id', 'created_at', 'updated_at', 'material_type', 'material_id'))"
+        },
+        {
+          "file": "spec/models/standard_statement_spec.rb",
+          "lineNumber": 4,
+          "line": "subject { StandardStatement.create(attributes) }"
+        }
+      ],
+      "updates": []
+    },
+    {
+      "name": "TeacherProjectView",
+      "path": "app/models/teacher_project_view.rb",
+      "attrs": ":viewed_project_id, :teacher_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [],
+      "updates": []
+    },
+    {
+      "name": "Tool",
+      "path": "app/models/tool.rb",
+      "attrs": ":name, :source_type, :tool_id",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/admin/tools_controller.rb",
+          "lineNumber": 42,
+          "line": "@tool = Tool.new(params[:tool])"
+        },
+        {
+          "file": "db/migrate/20191120184500_migrate_source_type.rb",
+          "lineNumber": 9,
+          "line": "tool = tool ? tool : Tool.create(name: 'LARA', source_type: 'LARA')"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 42,
+          "line": "Tool.create(source_type: source_type, name: source_type)"
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/admin/tools_controller.rb",
+          "lineNumber": 61,
+          "line": "if @tool.update_attributes(params[:tool])"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 370,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 392,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 415,
+          "line": "existant.update_attributes(attrs)"
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 446,
+          "line": "choice.update_attributes("
+        },
+        {
+          "file": "lib/activity_runtime_api.rb",
+          "lineNumber": 466,
+          "line": "existant.update_attributes(attrs)"
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "path": "app/models/user.rb",
+      "attrs": ":login, :first_name, :last_name, :email, :encrypted_password, :password_salt, :remember_token, :confirmation_token, :state, :remember_created_at, :confirmed_at, :deleted_at, :uuid, :default_user, :site_admin, :external_id, :require_password_reset, :of_consenting_age, :have_consent, :asked_age, :reset_password_token, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :unconfirmed_email, :confirmation_sent_at, :require_portal_user_type, :sign_up_path, :email_subscribed, :can_add_teachers_to_cohorts",
+      "hasAttrAccessible": true,
+      "newOrCreates": [
+        {
+          "file": "app/controllers/api/v1/students_controller.rb",
+          "lineNumber": 128,
+          "line": "user = User.new(user_params(user_attributes))"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 106,
+          "line": "@user = User.new(user_params(user_attributes))"
+        },
+        {
+          "file": "app/controllers/portal/teachers_controller.rb",
+          "lineNumber": 65,
+          "line": "@user = User.new(user_params(params[:user]))"
+        },
+        {
+          "file": "app/models/api/v1/user_registration.rb",
+          "lineNumber": 55,
+          "line": "_user = @user || User.new(user_params)"
+        },
+        {
+          "file": "app/models/import/import_users.rb",
+          "lineNumber": 20,
+          "line": "new_user = User.create({"
+        },
+        {
+          "file": "app/models/user.rb",
+          "lineNumber": 246,
+          "line": "user = User.create!("
+        },
+        {
+          "file": "spec/controllers/portal/students_controller_spec.rb",
+          "lineNumber": 49,
+          "line": "@new_user = User.new(user_attributes)"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 471,
+          "line": "record = User.new({ :first_name => \"foo\","
+        }
+      ],
+      "updates": [
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 192,
+          "line": "if @portal_student.update_attributes(params[:portal_student])"
+        },
+        {
+          "file": "app/controllers/portal/students_controller.rb",
+          "lineNumber": 277,
+          "line": "if @portal_student.user.update_attributes(params[:user])"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 149,
+          "line": "users(:quentin).update_attributes({:password => 'new password', :password_confirmation => 'new password'})"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 154,
+          "line": "users(:quentin).update_attributes({:login => 'quentin2'})"
+        },
+        {
+          "file": "spec/models/user_spec.rb",
+          "lineNumber": 216,
+          "line": "user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})"
+        }
+      ]
+    }
+  ]
+}
