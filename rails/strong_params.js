@@ -10,10 +10,8 @@
 
   TODO:
 
-  1. Add code to generate strong_params method as string
-  2. Add code to inject strong_params method into file at right spot (in class in controller vs at end of fle in spec, etc)
-  3. Add code to check if "strong_params(" is found on new/create/update line (can use "# no strong_params() needed here" to skip line)
-  4. Add code to inject strong_params() wrapper
+  1. Add code to inject strong_params method into file at right spot (in class in controller vs at end of fle in spec, etc)
+  2. Add code to check if "strong_params(" is found on new/create/update line (can use "# no strong_params() needed here" to skip line)
 
 */
 
@@ -162,6 +160,9 @@ const isController = (file) => file.indexOf("_controller.rb") !== -1
 const controllers = {}
 Object.keys(files).filter(isController).map((file) => controllers[file] = files[file])
 
+let uniqueControllerFiles = []
+const distinct = (value, index, self) => self.indexOf(value) === index
+
 // check each model against each ruby file line
 const models = []
 const updateCheck = /\.\s*update_attributes!?\s*\(/
@@ -173,6 +174,7 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   const newOrCreateCheck = new RegExp(`\\b${modelName}\\s*.\\s*(new|create!?)\\s*\\(`)
   const modelInfo = {
     name: modelName,
+    methodName: `strong_${modelPath.replace(/\//g, "_").replace(".rb", "")}_params`,
     path: `app/models/${modelPath}`,
     attrs: sortedAttrs(attrArray.replace(attrBrackets, "").split(", ").filter((attr) => !attr.match(attrFilter))),
     attrAccessible: null,
@@ -198,9 +200,9 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
     })
   })
 
-  const file = files[modelInfo.path]
-  if (file) {
-    file.lines.map((line, lineNumber) => {
+  const modelFile = files[modelInfo.path]
+  if (modelFile) {
+    modelFile.lines.map((line) => {
       const match = line.match(attrAccessibleCheck)
       if (match) {
         const attrAccessible = sortedAttrs(match[1].trim().split(/,\s*/))
@@ -211,7 +213,10 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
 
   if (modelInfo.newOrCreates.length + modelInfo.updates.length > 0) {
     const note = modelInfo.attrAccessible && !modelInfo.attrAccessible.matches ? `  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: ${modelInfo.attrAccessible.value}\n  #  model attrs:     ${modelInfo.attrs}\n` : ""
-    modelInfo.method = `  ${note}def strong_params(params)\n    params.permit(${modelInfo.attrs})\n  end\n`
+    modelInfo.method = `  ${note}def ${modelInfo.methodName}(params)\n    params.permit(${modelInfo.attrs})\n  end\n`
+
+    modelInfo.controllerFiles = modelInfo.newOrCreates.concat(modelInfo.updates).map(m => m.file).filter(distinct)
+    modelInfo.newOrCreateControllerFiles = modelInfo.newOrCreates.map(m => m.file).filter(distinct)
   }
 })
 
