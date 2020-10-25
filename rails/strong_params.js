@@ -171,7 +171,7 @@ const attrFilter = /:id|:created_at|:updated_at/
 const attrAccessibleCheck = /attr_accessible\s(.*)/
 const paramsMatcher = /\(\s*(params\s*\[\s*\:([^\]]+)\])\s*\)/
 
-const hasStrongParams = /strong_params/
+const hasStrongParams = /strong_params|strong params/
 railsConsoleModelInfo.map((consoleModelInfo) => {
   const [modelName, modelPath, attrArray] = consoleModelInfo.split(";")
   const newOrCreateCheck = new RegExp(`\\b${modelName}\\s*.\\s*(new|create!?)\\s*\\(`)
@@ -227,10 +227,13 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
     modelInfo.controllerFiles = changes.map(m => m.file).filter(distinct)
 
     changes.forEach((change) => {
+      const file = files[change.file]
       if (change.autoFixed) {
-        const file = files[change.file]
         file.lines[change.lineNumber] = file.lines[change.lineNumber].replace(change.line, change.autoFix)
+      } else {
+        file.lines[change.lineNumber] = file.lines[change.lineNumber].replace(change.line, `${change.line}   # STRONG_PARAMS_REVIEW: could not auto fix. If not needed change comment to "# strong params not required"`)
       }
+      controllerFilesToSave.add(change.file)
     })
 
     if (!modelInfo.hasStrongParamsMethod) {
@@ -244,14 +247,14 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
           }
         }
         file.lines.splice(index, 0, "\n" + modelInfo.method)
-        controllerFilesToSave.add({path: controllerPath, file})
+        controllerFilesToSave.add(controllerPath)
       })
     }
   }
 })
 
 controllerFilesToSave.forEach((controllerFile) => {
-  fs.writeFileSync(controllerFile.path, controllerFile.file.lines.join("\n"))
+  fs.writeFileSync(controllerFile, files[controllerFile].lines.join("\n"))
 })
 
 const stats = {
