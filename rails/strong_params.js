@@ -160,7 +160,7 @@ const isController = (file) => file.indexOf("_controller.rb") !== -1
 const controllers = {}
 Object.keys(files).filter(isController).map((file) => controllers[file] = files[file])
 
-let uniqueControllerFiles = []
+const controllerFilesToSave = new Set()
 const distinct = (value, index, self) => self.indexOf(value) === index
 
 // check each model against each ruby file line
@@ -176,6 +176,8 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   const [modelName, modelPath, attrArray] = consoleModelInfo.split(";")
   const newOrCreateCheck = new RegExp(`\\b${modelName}\\s*.\\s*(new|create!?)\\s*\\(`)
   const methodName = `${modelPath.replace(/\//g, "_").replace(".rb", "")}_strong_params`
+  const hasMethodCheck = new RegExp(`def ${methodName}`)
+
   const modelInfo = {
     name: modelName,
     methodName,
@@ -183,31 +185,27 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
     attrs: sortedAttrs(attrArray.replace(attrBrackets, "").split(", ").filter((attr) => !attr.match(attrFilter))),
     attrAccessible: null,
     newOrCreates: [],
-    updates: []
+    updates: [],
+    hasStrongParamsMethod: false
   }
   models.push(modelInfo)
 
+  const checkLine = (relativePath, line, lineNumber, lineCheck, saveTo) => {
+    line = line.trim()
+    if (!line.match(hasStrongParams) && line.match(lineCheck)) {
+      const autoFix = line.replace(paramsMatcher, `(${methodName}($1))`)
+      const autoFixed = autoFix !== line
+      saveTo.push({file: relativePath, lineNumber, line, autoFix, autoFixed})
+    } else if (line.match(hasMethodCheck)) {
+      modelInfo.hasStrongParamsMethod = true
+    }
+  }
+
   Object.keys(controllers).map((relativePath) => {
-    const file = files[relativePath]
-    file.lines.map((line, lineNumber) => {
-      line = line.trim()
-      if (!line.match(hasStrongParams) && line.match(newOrCreateCheck)) {
-        const autoFix = line.replace(paramsMatcher, `(${methodName}($1))`)
-        const autoFixed = autoFix !== line
-        modelInfo.newOrCreates.push({file: relativePath, lineNumber, line, autoFix, autoFixed})
-      }
-    })
+    files[relativePath].lines.map((line, lineNumber) => checkLine(relativePath, line, lineNumber, newOrCreateCheck, modelInfo.newOrCreates))
   })
   modelInfo.newOrCreates.map((newOrCreate) => {
-    const file = files[newOrCreate.file]
-    file.lines.map((line, lineNumber) => {
-      line = line.trim()
-      if (!line.match(hasStrongParams) && line.match(updateCheck)) {
-        const autoFix = line.replace(paramsMatcher, `(${methodName}($1))`)
-        const autoFixed = autoFix !== line
-        modelInfo.updates.push({file: newOrCreate.file, lineNumber, line, autoFix, autoFixed})
-      }
-    })
+    files[newOrCreate.file].lines.map((line, lineNumber) => checkLine(newOrCreate.file, line, lineNumber, updateCheck, modelInfo.updates))
   })
 
   const modelFile = files[modelInfo.path]
@@ -221,11 +219,39 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
     })
   }
 
-  if (modelInfo.newOrCreates.length + modelInfo.updates.length > 0) {
+  const changes = modelInfo.newOrCreates.concat(modelInfo.updates)
+
+  if (changes.length > 0) {
     const note = modelInfo.attrAccessible && !modelInfo.attrAccessible.matches ? `  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: ${modelInfo.attrAccessible.value}\n  #  model attrs:     ${modelInfo.attrs}\n` : ""
-    modelInfo.method = `  ${note}def ${modelInfo.methodName}(params)\n    params.permit(${modelInfo.attrs})\n  end\n`
-    modelInfo.controllerFiles = modelInfo.newOrCreates.concat(modelInfo.updates).map(m => m.file).filter(distinct)
+    modelInfo.method = `${note}  def ${modelInfo.methodName}(params)\n    params.permit(${modelInfo.attrs})\n  end`
+    modelInfo.controllerFiles = changes.map(m => m.file).filter(distinct)
+
+    changes.forEach((change) => {
+      if (change.autoFixed) {
+        const file = files[change.file]
+        file.lines[change.lineNumber] = file.lines[change.lineNumber].replace(change.line, change.autoFix)
+      }
+    })
+
+    if (!modelInfo.hasStrongParamsMethod) {
+      modelInfo.controllerFiles.map((controllerPath) => {
+        const file = files[controllerPath]
+        let index = file.lines.length - 1
+        while (index-- >= 0) {
+          const line = file.lines[index].trim()
+          if (line === "end") {
+            break
+          }
+        }
+        file.lines.splice(index, 0, "\n" + modelInfo.method)
+        controllerFilesToSave.add({path: controllerPath, file})
+      })
+    }
   }
+})
+
+controllerFilesToSave.forEach((controllerFile) => {
+  fs.writeFileSync(controllerFile.path, controllerFile.file.lines.join("\n"))
 })
 
 const stats = {
