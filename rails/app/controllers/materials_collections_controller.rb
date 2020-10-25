@@ -42,7 +42,7 @@ class MaterialsCollectionsController < ApplicationController
   # POST /materials_collections
   # POST /materials_collections.json
   def create
-    @materials_collection = MaterialsCollection.new(materials_collection_params)
+    @materials_collection = MaterialsCollection.new(params[:materials_collection])
 
     respond_to do |format|
       if @materials_collection.save
@@ -60,7 +60,7 @@ class MaterialsCollectionsController < ApplicationController
   def update
     @materials_collection = MaterialsCollection.find(params[:id])
     respond_to do |format|
-      if @materials_collection.update_attributes(materials_collection_params)
+      if @materials_collection.update_attributes(params[:materials_collection])
         format.html { redirect_to @materials_collection, notice: 'Materials Collection was successfully updated.' }
         format.json { head :no_content }
       else
@@ -81,13 +81,4 @@ class MaterialsCollectionsController < ApplicationController
     end
   end
 
-
-  private
-
-    # Use this method to whitelist the permissible parameters. Example:
-    # params.require(:person).permit(:name, :age)
-    # Also, you can specialize this method with per-user checking of permissible attributes.
-    def materials_collection_params
-      params.require(:materials_collection).permit(:description, :name, :project_id)
-    end
 end

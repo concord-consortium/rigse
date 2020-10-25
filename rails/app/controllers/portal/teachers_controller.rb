@@ -63,7 +63,7 @@ class Portal::TeachersController < ApplicationController
     end
 
     puts "params[:user]: #{params[:user].inspect}"
-    @user = User.new(user_params(params[:user]))
+    @user = User.new(params[:user])
     puts "@user: #{@user.inspect}"
     @school_selector = Portal::SchoolSelector.new(params)
 
@@ -131,9 +131,5 @@ class Portal::TeachersController < ApplicationController
     sign_out :user
     flash.now[:error] = message
     render :action => :new
-  end
-
-  def user_params(params)
-    params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
   end
 end

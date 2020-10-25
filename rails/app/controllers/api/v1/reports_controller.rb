@@ -60,7 +60,7 @@ class API::V1::ReportsController < API::APIController
       API::V1::Report.update_rubric_v2(offering, params[:rubric_v2])
     end
 
-    offering.update_attributes!(report_params)
+    offering.update_attributes!(params[:anonymous_report])
     head :ok
   end
 
@@ -77,9 +77,5 @@ class API::V1::ReportsController < API::APIController
     end
     filter.ignore = !filter_params[:active]            unless filter_params[:active].nil?
     filter.save!
-  end
-
-  def report_params
-    params.permit(:anonymous_report)
   end
 end
