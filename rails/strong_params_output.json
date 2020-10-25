@@ -7,7 +7,9 @@
       "matches": 19
     },
     "newOrCreates": 68,
-    "updates": 54
+    "updates": 54,
+    "newOrCreatesAutoFixed": 25,
+    "updatesAutoFixed": 42
   },
   "models": [
     {
@@ -44,21 +46,22 @@
         {
           "file": "app/controllers/admin/authoring_sites_controller.rb",
           "lineNumber": 47,
-          "line": "@admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_params)"
+          "line": "@admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_params)",
+          "autoFix": "@admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_params)",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/authoring_sites_controller.rb",
           "lineNumber": 67,
-          "line": "if @admin_authoring_site.update_attributes(admin_authoring_site_params)"
+          "line": "if @admin_authoring_site.update_attributes(admin_authoring_site_params)",
+          "autoFix": "if @admin_authoring_site.update_attributes(admin_authoring_site_params)",
+          "autoFixed": false
         }
       ],
       "method": "  def admin_authoring_site_strong_params(params)\n    params.permit(:name, :url)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/authoring_sites_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/authoring_sites_controller.rb"
       ]
     },
@@ -75,21 +78,22 @@
         {
           "file": "app/controllers/admin/cohorts_controller.rb",
           "lineNumber": 68,
-          "line": "@admin_cohort = Admin::Cohort.new(params[:admin_cohort])"
+          "line": "@admin_cohort = Admin::Cohort.new(params[:admin_cohort])",
+          "autoFix": "@admin_cohort = Admin::Cohort.new(admin_cohort_strong_params(params[:admin_cohort]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/cohorts_controller.rb",
           "lineNumber": 80,
-          "line": "if @admin_cohort.update_attributes(params[:admin_cohort])"
+          "line": "if @admin_cohort.update_attributes(params[:admin_cohort])",
+          "autoFix": "if @admin_cohort.update_attributes(admin_cohort_strong_params(params[:admin_cohort]))",
+          "autoFixed": true
         }
       ],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email_notifications_enabled, :items, :name, :project, :project_id\n  #  model attrs:     :email_notifications_enabled, :name, :project_id\ndef admin_cohort_strong_params(params)\n    params.permit(:email_notifications_enabled, :name, :project_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/cohorts_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/cohorts_controller.rb"
       ]
     },
@@ -124,21 +128,22 @@
         {
           "file": "app/controllers/admin/projects_controller.rb",
           "lineNumber": 74,
-          "line": "@project = Admin::Project.new(params[:admin_project])"
+          "line": "@project = Admin::Project.new(params[:admin_project])",
+          "autoFix": "@project = Admin::Project.new(admin_project_strong_params(params[:admin_project]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/projects_controller.rb",
           "lineNumber": 87,
-          "line": "if @project.update_attributes(params[:admin_project])"
+          "line": "if @project.update_attributes(params[:admin_project])",
+          "autoFix": "if @project.update_attributes(admin_project_strong_params(params[:admin_project]))",
+          "autoFixed": true
         }
       ],
       "method": "  def admin_project_strong_params(params)\n    params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/projects_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/projects_controller.rb"
       ]
     },
@@ -155,21 +160,22 @@
         {
           "file": "app/controllers/admin/project_links_controller.rb",
           "lineNumber": 65,
-          "line": "@project_link = Admin::ProjectLink.new(params[:admin_project_link])"
+          "line": "@project_link = Admin::ProjectLink.new(params[:admin_project_link])",
+          "autoFix": "@project_link = Admin::ProjectLink.new(admin_project_link_strong_params(params[:admin_project_link]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/project_links_controller.rb",
           "lineNumber": 80,
-          "line": "if @project_link.update_attributes(params[:admin_project_link])"
+          "line": "if @project_link.update_attributes(params[:admin_project_link])",
+          "autoFix": "if @project_link.update_attributes(admin_project_link_strong_params(params[:admin_project_link]))",
+          "autoFixed": true
         }
       ],
       "method": "  def admin_project_link_strong_params(params)\n    params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/project_links_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/project_links_controller.rb"
       ]
     },
@@ -204,21 +210,22 @@
         {
           "file": "app/controllers/admin/settings_controller.rb",
           "lineNumber": 81,
-          "line": "@admin_settings = Admin::Settings.new(admin_settings_params(params[:admin_settings]))"
+          "line": "@admin_settings = Admin::Settings.new(admin_settings_params(params[:admin_settings]))",
+          "autoFix": "@admin_settings = Admin::Settings.new(admin_settings_params(admin_settings_strong_params(params[:admin_settings])))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/settings_controller.rb",
           "lineNumber": 93,
-          "line": "if @admin_settings.update_attributes(params[:admin_settings])"
+          "line": "if @admin_settings.update_attributes(params[:admin_settings])",
+          "autoFix": "if @admin_settings.update_attributes(admin_settings_strong_params(params[:admin_settings]))",
+          "autoFixed": true
         }
       ],
       "method": "  def admin_settings_strong_params(params)\n    params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/settings_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/settings_controller.rb"
       ]
     },
@@ -250,37 +257,43 @@
         {
           "file": "app/controllers/admin/tags_controller.rb",
           "lineNumber": 38,
-          "line": "@admin_tag = Admin::Tag.new(params[:admin_tag])"
+          "line": "@admin_tag = Admin::Tag.new(params[:admin_tag])",
+          "autoFix": "@admin_tag = Admin::Tag.new(admin_tag_strong_params(params[:admin_tag]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 191,
-          "line": "admin_tag = Admin::Tag.new({:scope => \"model_types\", :tag => model[:model_type]})"
+          "line": "admin_tag = Admin::Tag.new({:scope => \"model_types\", :tag => model[:model_type]})",
+          "autoFix": "admin_tag = Admin::Tag.new({:scope => \"model_types\", :tag => model[:model_type]})",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/tags_controller.rb",
           "lineNumber": 49,
-          "line": "if @admin_tag.update_attributes(params[:admin_tag])"
+          "line": "if @admin_tag.update_attributes(params[:admin_tag])",
+          "autoFix": "if @admin_tag.update_attributes(admin_tag_strong_params(params[:admin_tag]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 156,
-          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if cancel || @interactive.update_attributes(admin_tag_strong_params(params[:interactive]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 163,
-          "line": "if @interactive.update_attributes(params[:interactive])"
+          "line": "if @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if @interactive.update_attributes(admin_tag_strong_params(params[:interactive]))",
+          "autoFixed": true
         }
       ],
       "method": "  def admin_tag_strong_params(params)\n    params.permit(:scope, :tag)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/tags_controller.rb",
-        "app/controllers/interactives_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/tags_controller.rb",
         "app/controllers/interactives_controller.rb"
       ]
@@ -310,21 +323,22 @@
         {
           "file": "app/controllers/admin/clients_controller.rb",
           "lineNumber": 38,
-          "line": "@client = Client.new(params[:client])"
+          "line": "@client = Client.new(params[:client])",
+          "autoFix": "@client = Client.new(client_strong_params(params[:client]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/clients_controller.rb",
           "lineNumber": 52,
-          "line": "if @client.update_attributes(params[:client])"
+          "line": "if @client.update_attributes(params[:client])",
+          "autoFix": "if @client.update_attributes(client_strong_params(params[:client]))",
+          "autoFixed": true
         }
       ],
       "method": "  def client_strong_params(params)\n    params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/clients_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/clients_controller.rb"
       ]
     },
@@ -341,21 +355,22 @@
         {
           "file": "app/controllers/admin/commons_licenses_controller.rb",
           "lineNumber": 32,
-          "line": "@license = CommonsLicense.new(params[:commons_license])"
+          "line": "@license = CommonsLicense.new(params[:commons_license])",
+          "autoFix": "@license = CommonsLicense.new(commons_license_strong_params(params[:commons_license]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/commons_licenses_controller.rb",
           "lineNumber": 45,
-          "line": "if @license.update_attributes(params[:commons_license])"
+          "line": "if @license.update_attributes(params[:commons_license])",
+          "autoFix": "if @license.update_attributes(commons_license_strong_params(params[:commons_license]))",
+          "autoFixed": true
         }
       ],
       "method": "  def commons_license_strong_params(params)\n    params.permit(:code, :deed, :description, :image, :legal, :name, :number)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/commons_licenses_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/commons_licenses_controller.rb"
       ]
     },
@@ -369,21 +384,22 @@
         {
           "file": "app/controllers/dataservice/blobs_controller.rb",
           "lineNumber": 48,
-          "line": "@dataservice_blob = Dataservice::Blob.new(params[:blob])"
+          "line": "@dataservice_blob = Dataservice::Blob.new(params[:blob])",
+          "autoFix": "@dataservice_blob = Dataservice::Blob.new(dataservice_blob_strong_params(params[:blob]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/dataservice/blobs_controller.rb",
           "lineNumber": 69,
-          "line": "if @dataservice_blob.update_attributes(params[:blob])"
+          "line": "if @dataservice_blob.update_attributes(params[:blob])",
+          "autoFix": "if @dataservice_blob.update_attributes(dataservice_blob_strong_params(params[:blob]))",
+          "autoFixed": true
         }
       ],
       "method": "  def dataservice_blob_strong_params(params)\n    params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/dataservice/blobs_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/dataservice/blobs_controller.rb"
       ]
     },
@@ -400,15 +416,14 @@
         {
           "file": "app/controllers/dataservice/bucket_contents_metal_controller.rb",
           "lineNumber": 24,
-          "line": "bucket_content = Dataservice::BucketContent.create("
+          "line": "bucket_content = Dataservice::BucketContent.create(",
+          "autoFix": "bucket_content = Dataservice::BucketContent.create(",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "  def dataservice_bucket_content_strong_params(params)\n    params.permit(:body, :bucket_logger_id, :empty, :processed)\n  end\n",
       "controllerFiles": [
-        "app/controllers/dataservice/bucket_contents_metal_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/dataservice/bucket_contents_metal_controller.rb"
       ]
     },
@@ -425,15 +440,14 @@
         {
           "file": "app/controllers/dataservice/bucket_log_items_metal_controller.rb",
           "lineNumber": 24,
-          "line": "bucket_content = Dataservice::BucketLogItem.create("
+          "line": "bucket_content = Dataservice::BucketLogItem.create(",
+          "autoFix": "bucket_content = Dataservice::BucketLogItem.create(",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :bucket_logger, :bucket_logger_id, :content\n  #  model attrs:     :bucket_logger_id, :content\ndef dataservice_bucket_log_item_strong_params(params)\n    params.permit(:bucket_logger_id, :content)\n  end\n",
       "controllerFiles": [
-        "app/controllers/dataservice/bucket_log_items_metal_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/dataservice/bucket_log_items_metal_controller.rb"
       ]
     },
@@ -507,56 +521,64 @@
         {
           "file": "app/controllers/dataservice/bucket_loggers_controller.rb",
           "lineNumber": 16,
-          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/dataservice/bucket_loggers_controller.rb",
           "lineNumber": 52,
-          "line": "Dataservice::LaunchProcessEvent.create("
+          "line": "Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/dataservice/bundle_contents_metal_controller.rb",
           "lineNumber": 6,
-          "line": "launch_event = ::Dataservice::LaunchProcessEvent.create("
+          "line": "launch_event = ::Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "launch_event = ::Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/dataservice/periodic_bundle_loggers_controller.rb",
           "lineNumber": 15,
-          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/dataservice/periodic_bundle_loggers_metal_controller.rb",
           "lineNumber": 5,
-          "line": "launch_event = ::Dataservice::LaunchProcessEvent.create("
+          "line": "launch_event = ::Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "launch_event = ::Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/misc_controller.rb",
           "lineNumber": 13,
-          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/learners_controller.rb",
           "lineNumber": 159,
-          "line": "launch_event = Dataservice::LaunchProcessEvent.create("
+          "line": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFix": "launch_event = Dataservice::LaunchProcessEvent.create(",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/learners_controller.rb",
           "lineNumber": 239,
-          "line": "if @portal_learner.update_attributes(params[:learner])"
+          "line": "if @portal_learner.update_attributes(params[:learner])",
+          "autoFix": "if @portal_learner.update_attributes(dataservice_launch_process_event_strong_params(params[:learner]))",
+          "autoFixed": true
         }
       ],
       "method": "  def dataservice_launch_process_event_strong_params(params)\n    params.permit(:bundle_content_id, :event_details, :event_type)\n  end\n",
       "controllerFiles": [
-        "app/controllers/dataservice/bucket_loggers_controller.rb",
-        "app/controllers/dataservice/bundle_contents_metal_controller.rb",
-        "app/controllers/dataservice/periodic_bundle_loggers_controller.rb",
-        "app/controllers/dataservice/periodic_bundle_loggers_metal_controller.rb",
-        "app/controllers/misc_controller.rb",
-        "app/controllers/portal/learners_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/dataservice/bucket_loggers_controller.rb",
         "app/controllers/dataservice/bundle_contents_metal_controller.rb",
         "app/controllers/dataservice/periodic_bundle_loggers_controller.rb",
@@ -575,15 +597,14 @@
         {
           "file": "app/controllers/dataservice/periodic_bundle_contents_metal_controller.rb",
           "lineNumber": 6,
-          "line": "bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body)"
+          "line": "bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body)",
+          "autoFix": "bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body)",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "  def dataservice_periodic_bundle_content_strong_params(params)\n    params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)\n  end\n",
       "controllerFiles": [
-        "app/controllers/dataservice/periodic_bundle_contents_metal_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/dataservice/periodic_bundle_contents_metal_controller.rb"
       ]
     },
@@ -597,21 +618,22 @@
         {
           "file": "app/controllers/portal/learners_controller.rb",
           "lineNumber": 148,
-          "line": "@portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger"
+          "line": "@portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger",
+          "autoFix": "@portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/learners_controller.rb",
           "lineNumber": 239,
-          "line": "if @portal_learner.update_attributes(params[:learner])"
+          "line": "if @portal_learner.update_attributes(params[:learner])",
+          "autoFix": "if @portal_learner.update_attributes(dataservice_periodic_bundle_logger_strong_params(params[:learner]))",
+          "autoFixed": true
         }
       ],
       "method": "  def dataservice_periodic_bundle_logger_strong_params(params)\n    params.permit(:imports, :learner_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/learners_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/learners_controller.rb"
       ]
     },
@@ -688,37 +710,43 @@
         {
           "file": "app/controllers/api/v1/external_activities_controller.rb",
           "lineNumber": 26,
-          "line": "external_activity = ExternalActivity.create("
+          "line": "external_activity = ExternalActivity.create(",
+          "autoFix": "external_activity = ExternalActivity.create(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/external_activities_controller.rb",
           "lineNumber": 87,
-          "line": "@external_activity = ExternalActivity.new(params[:external_activity])"
+          "line": "@external_activity = ExternalActivity.new(params[:external_activity])",
+          "autoFix": "@external_activity = ExternalActivity.new(external_activity_strong_params(params[:external_activity]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/external_activities_controller.rb",
           "lineNumber": 324,
-          "line": "@external_activity = ExternalActivity.new(params[:external_activity])"
+          "line": "@external_activity = ExternalActivity.new(params[:external_activity])",
+          "autoFix": "@external_activity = ExternalActivity.new(external_activity_strong_params(params[:external_activity]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/external_activities_controller.rb",
           "lineNumber": 172,
-          "line": "if @external_activity.update_attributes(params[:external_activity])"
+          "line": "if @external_activity.update_attributes(params[:external_activity])",
+          "autoFix": "if @external_activity.update_attributes(external_activity_strong_params(params[:external_activity]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/external_activities_controller.rb",
           "lineNumber": 172,
-          "line": "if @external_activity.update_attributes(params[:external_activity])"
+          "line": "if @external_activity.update_attributes(params[:external_activity])",
+          "autoFix": "if @external_activity.update_attributes(external_activity_strong_params(params[:external_activity]))",
+          "autoFixed": true
         }
       ],
       "method": "  def external_activity_strong_params(params)\n    params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid, :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing, :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked, :is_official, :keywords, :launch_url, :license_code, :logging, :long_description, :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, :url, :user_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/external_activities_controller.rb",
-        "app/controllers/external_activities_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/external_activities_controller.rb",
         "app/controllers/external_activities_controller.rb"
       ]
@@ -745,21 +773,22 @@
         {
           "file": "app/controllers/admin/external_reports_controller.rb",
           "lineNumber": 37,
-          "line": "@report = ExternalReport.new(params[:external_report])"
+          "line": "@report = ExternalReport.new(params[:external_report])",
+          "autoFix": "@report = ExternalReport.new(external_report_strong_params(params[:external_report]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/external_reports_controller.rb",
           "lineNumber": 52,
-          "line": "saved_successfully = @report.update_attributes(new_params)"
+          "line": "saved_successfully = @report.update_attributes(new_params)",
+          "autoFix": "saved_successfully = @report.update_attributes(new_params)",
+          "autoFixed": false
         }
       ],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\n  #  model attrs:     :allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\ndef external_report_strong_params(params)\n    params.permit(:allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/external_reports_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/external_reports_controller.rb"
       ]
     },
@@ -785,21 +814,22 @@
         {
           "file": "app/controllers/admin/firebase_apps_controller.rb",
           "lineNumber": 47,
-          "line": "@firebase_app = FirebaseApp.new(firebase_app_params)"
+          "line": "@firebase_app = FirebaseApp.new(firebase_app_params)",
+          "autoFix": "@firebase_app = FirebaseApp.new(firebase_app_params)",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/firebase_apps_controller.rb",
           "lineNumber": 67,
-          "line": "if @firebase_app.update_attributes(firebase_app_params)"
+          "line": "if @firebase_app.update_attributes(firebase_app_params)",
+          "autoFix": "if @firebase_app.update_attributes(firebase_app_params)",
+          "autoFixed": false
         }
       ],
       "method": "  def firebase_app_strong_params(params)\n    params.permit(:client_email, :name, :private_key)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/firebase_apps_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/firebase_apps_controller.rb"
       ]
     },
@@ -831,26 +861,29 @@
         {
           "file": "app/controllers/images_controller.rb",
           "lineNumber": 66,
-          "line": "@image = Image.new(params[:image])"
+          "line": "@image = Image.new(params[:image])",
+          "autoFix": "@image = Image.new(image_strong_params(params[:image]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/images_controller.rb",
           "lineNumber": 118,
-          "line": "if @image.update_attributes(my_params)"
+          "line": "if @image.update_attributes(my_params)",
+          "autoFix": "if @image.update_attributes(my_params)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/images_controller.rb",
           "lineNumber": 121,
-          "line": "return @image.update_attributes(img_params)"
+          "line": "return @image.update_attributes(img_params)",
+          "autoFix": "return @image.update_attributes(img_params)",
+          "autoFixed": false
         }
       ],
       "method": "  def image_strong_params(params)\n    params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at, :license_code, :name, :publication_status, :user_id, :width)\n  end\n",
       "controllerFiles": [
-        "app/controllers/images_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/images_controller.rb"
       ]
     },
@@ -873,20 +906,21 @@
         {
           "file": "app/controllers/import/imports_controller.rb",
           "lineNumber": 168,
-          "line": "import = Import::Import.create!()"
+          "line": "import = Import::Import.create!()",
+          "autoFix": "import = Import::Import.create!()",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/import/imports_controller.rb",
           "lineNumber": 279,
-          "line": "import = Import::Import.create!()"
+          "line": "import = Import::Import.create!()",
+          "autoFix": "import = Import::Import.create!()",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "  def import_import_strong_params(params)\n    params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/import/imports_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/import/imports_controller.rb"
       ]
     },
@@ -939,56 +973,71 @@
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 58,
-          "line": "@interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)"
+          "line": "@interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)",
+          "autoFix": "@interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 63,
-          "line": "@interactive = Interactive.new(interactive_params(params))"
+          "line": "@interactive = Interactive.new(interactive_params(params))",
+          "autoFix": "@interactive = Interactive.new(interactive_params(params))",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 184,
-          "line": "interactive = Interactive.new(model.except(:model_type))"
+          "line": "interactive = Interactive.new(model.except(:model_type))",
+          "autoFix": "interactive = Interactive.new(model.except(:model_type))",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 156,
-          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 163,
-          "line": "if @interactive.update_attributes(params[:interactive])"
+          "line": "if @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if @interactive.update_attributes(interactive_strong_params(params[:interactive]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 156,
-          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 163,
-          "line": "if @interactive.update_attributes(params[:interactive])"
+          "line": "if @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if @interactive.update_attributes(interactive_strong_params(params[:interactive]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 156,
-          "line": "if cancel || @interactive.update_attributes(params[:interactive])"
+          "line": "if cancel || @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/interactives_controller.rb",
           "lineNumber": 163,
-          "line": "if @interactive.update_attributes(params[:interactive])"
+          "line": "if @interactive.update_attributes(params[:interactive])",
+          "autoFix": "if @interactive.update_attributes(interactive_strong_params(params[:interactive]))",
+          "autoFixed": true
         }
       ],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\n  #  model attrs:     :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\ndef interactive_strong_params(params)\n    params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)\n  end\n",
       "controllerFiles": [
-        "app/controllers/interactives_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/interactives_controller.rb"
       ]
     },
@@ -1026,21 +1075,22 @@
         {
           "file": "app/controllers/materials_collections_controller.rb",
           "lineNumber": 44,
-          "line": "@materials_collection = MaterialsCollection.new(materials_collection_params)"
+          "line": "@materials_collection = MaterialsCollection.new(materials_collection_params)",
+          "autoFix": "@materials_collection = MaterialsCollection.new(materials_collection_params)",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/materials_collections_controller.rb",
           "lineNumber": 62,
-          "line": "if @materials_collection.update_attributes(materials_collection_params)"
+          "line": "if @materials_collection.update_attributes(materials_collection_params)",
+          "autoFix": "if @materials_collection.update_attributes(materials_collection_params)",
+          "autoFixed": false
         }
       ],
       "method": "  def materials_collection_strong_params(params)\n    params.permit(:description, :name, :project_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/materials_collections_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/materials_collections_controller.rb"
       ]
     },
@@ -1087,64 +1137,78 @@
         {
           "file": "app/controllers/api/v1/passwords_controller.rb",
           "lineNumber": 57,
-          "line": "@password = Password.new(:user => user, :email => user.email)"
+          "line": "@password = Password.new(:user => user, :email => user.email)",
+          "autoFix": "@password = Password.new(:user => user, :email => user.email)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/import/imported_login_controller.rb",
           "lineNumber": 10,
-          "line": "password = Password.new(:user => user, :email => user.email)"
+          "line": "password = Password.new(:user => user, :email => user.email)",
+          "autoFix": "password = Password.new(:user => user, :email => user.email)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/passwords_controller.rb",
           "lineNumber": 11,
-          "line": "@password = Password.new(params[:password])"
+          "line": "@password = Password.new(params[:password])",
+          "autoFix": "@password = Password.new(password_strong_params(params[:password]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/passwords_controller.rb",
           "lineNumber": 59,
-          "line": "@password = Password.new(:user => user, :email => user.email)"
+          "line": "@password = Password.new(:user => user, :email => user.email)",
+          "autoFix": "@password = Password.new(:user => user, :email => user.email)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/passwords_controller.rb",
           "lineNumber": 90,
-          "line": "@password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)"
+          "line": "@password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)",
+          "autoFix": "@password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/users_controller.rb",
           "lineNumber": 201,
-          "line": "p = Password.new(:user_id => params[:id])"
+          "line": "p = Password.new(:user_id => params[:id])",
+          "autoFix": "p = Password.new(:user_id => params[:id])",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/passwords_controller.rb",
           "lineNumber": 143,
-          "line": "if @password.update_attributes(params[:password])"
+          "line": "if @password.update_attributes(params[:password])",
+          "autoFix": "if @password.update_attributes(password_strong_params(params[:password]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/passwords_controller.rb",
           "lineNumber": 143,
-          "line": "if @password.update_attributes(params[:password])"
+          "line": "if @password.update_attributes(params[:password])",
+          "autoFix": "if @password.update_attributes(password_strong_params(params[:password]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/passwords_controller.rb",
           "lineNumber": 143,
-          "line": "if @password.update_attributes(params[:password])"
+          "line": "if @password.update_attributes(params[:password])",
+          "autoFix": "if @password.update_attributes(password_strong_params(params[:password]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/users_controller.rb",
           "lineNumber": 146,
-          "line": "if @user.update_attributes(params[:user])"
+          "line": "if @user.update_attributes(params[:user])",
+          "autoFix": "if @user.update_attributes(password_strong_params(params[:user]))",
+          "autoFixed": true
         }
       ],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email, :user, :user_id\n  #  model attrs:     :expiration_date, :reset_code, :user_id\ndef password_strong_params(params)\n    params.permit(:expiration_date, :reset_code, :user_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/passwords_controller.rb",
-        "app/controllers/import/imported_login_controller.rb",
-        "app/controllers/passwords_controller.rb",
-        "app/controllers/users_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/passwords_controller.rb",
         "app/controllers/import/imported_login_controller.rb",
         "app/controllers/passwords_controller.rb",
@@ -1185,32 +1249,36 @@
         {
           "file": "app/controllers/api/v1/teacher_classes_controller.rb",
           "lineNumber": 67,
-          "line": "new_clazz = Portal::Clazz.new("
+          "line": "new_clazz = Portal::Clazz.new(",
+          "autoFix": "new_clazz = Portal::Clazz.new(",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 120,
-          "line": "@portal_clazz = Portal::Clazz.new(@object_params)"
+          "line": "@portal_clazz = Portal::Clazz.new(@object_params)",
+          "autoFix": "@portal_clazz = Portal::Clazz.new(@object_params)",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 235,
-          "line": "if @portal_clazz.update_attributes(object_params)"
+          "line": "if @portal_clazz.update_attributes(object_params)",
+          "autoFix": "if @portal_clazz.update_attributes(object_params)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 250,
-          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
+          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)",
+          "autoFix": "if okToUpdate && @portal_clazz.update_attributes(object_params)",
+          "autoFixed": false
         }
       ],
       "method": "  def portal_clazz_strong_params(params)\n    params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/teacher_classes_controller.rb",
-        "app/controllers/portal/clazzes_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/teacher_classes_controller.rb",
         "app/controllers/portal/clazzes_controller.rb"
       ]
@@ -1252,37 +1320,43 @@
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 165,
-          "line": "course = Portal::Course.create({"
+          "line": "course = Portal::Course.create({",
+          "autoFix": "course = Portal::Course.create({",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/courses_controller.rb",
           "lineNumber": 68,
-          "line": "@course = Portal::Course.new(params[:portal_course])"
+          "line": "@course = Portal::Course.new(params[:portal_course])",
+          "autoFix": "@course = Portal::Course.new(portal_course_strong_params(params[:portal_course]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 235,
-          "line": "if @portal_clazz.update_attributes(object_params)"
+          "line": "if @portal_clazz.update_attributes(object_params)",
+          "autoFix": "if @portal_clazz.update_attributes(object_params)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 250,
-          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
+          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)",
+          "autoFix": "if okToUpdate && @portal_clazz.update_attributes(object_params)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/courses_controller.rb",
           "lineNumber": 91,
-          "line": "if @course.update_attributes(params[:portal_course])"
+          "line": "if @course.update_attributes(params[:portal_course])",
+          "autoFix": "if @course.update_attributes(portal_course_strong_params(params[:portal_course]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_course_strong_params(params)\n    params.permit(:course_number, :description, :name, :school_id, :status, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/clazzes_controller.rb",
-        "app/controllers/portal/courses_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/clazzes_controller.rb",
         "app/controllers/portal/courses_controller.rb"
       ]
@@ -1300,21 +1374,22 @@
         {
           "file": "app/controllers/portal/districts_controller.rb",
           "lineNumber": 63,
-          "line": "@portal_district = Portal::District.new(params[:portal_district])"
+          "line": "@portal_district = Portal::District.new(params[:portal_district])",
+          "autoFix": "@portal_district = Portal::District.new(portal_district_strong_params(params[:portal_district]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/districts_controller.rb",
           "lineNumber": 83,
-          "line": "if @portal_district.update_attributes(params[:portal_district])"
+          "line": "if @portal_district.update_attributes(params[:portal_district])",
+          "autoFix": "if @portal_district.update_attributes(portal_district_strong_params(params[:portal_district]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_district_strong_params(params)\n    params.permit(:description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/districts_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/districts_controller.rb"
       ]
     },
@@ -1328,21 +1403,21 @@
         {
           "file": "app/controllers/api/v1/bookmarks_controller.rb",
           "lineNumber": 10,
-          "line": "bookmark = Portal::GenericBookmark.new({name: name, url: url})"
+          "line": "bookmark = Portal::GenericBookmark.new({name: name, url: url})",
+          "autoFix": "bookmark = Portal::GenericBookmark.new({name: name, url: url})",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/bookmarks_controller.rb",
           "lineNumber": 9,
-          "line": "mark = Portal::GenericBookmark.new()"
+          "line": "mark = Portal::GenericBookmark.new()",
+          "autoFix": "mark = Portal::GenericBookmark.new()",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "  def portal_generic_bookmark_strong_params(params)\n    params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/bookmarks_controller.rb",
-        "app/controllers/portal/bookmarks_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/bookmarks_controller.rb",
         "app/controllers/portal/bookmarks_controller.rb"
       ]
@@ -1375,21 +1450,22 @@
         {
           "file": "app/controllers/portal/learners_controller.rb",
           "lineNumber": 216,
-          "line": "@portal_learner = Portal::Learner.new(params[:learner])"
+          "line": "@portal_learner = Portal::Learner.new(params[:learner])",
+          "autoFix": "@portal_learner = Portal::Learner.new(portal_learner_strong_params(params[:learner]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/learners_controller.rb",
           "lineNumber": 239,
-          "line": "if @portal_learner.update_attributes(params[:learner])"
+          "line": "if @portal_learner.update_attributes(params[:learner])",
+          "autoFix": "if @portal_learner.update_attributes(portal_learner_strong_params(params[:learner]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_learner_strong_params(params)\n    params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/learners_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/learners_controller.rb"
       ]
     },
@@ -1424,21 +1500,22 @@
         {
           "file": "app/controllers/portal/nces06_districts_controller.rb",
           "lineNumber": 91,
-          "line": "@nces06_district = Portal::Nces06District.new(params[:nces06_district])"
+          "line": "@nces06_district = Portal::Nces06District.new(params[:nces06_district])",
+          "autoFix": "@nces06_district = Portal::Nces06District.new(portal_nces06_district_strong_params(params[:nces06_district]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/nces06_districts_controller.rb",
           "lineNumber": 114,
-          "line": "if @nces06_district.update_attributes(params[:nces06_district])"
+          "line": "if @nces06_district.update_attributes(params[:nces06_district])",
+          "autoFix": "if @nces06_district.update_attributes(portal_nces06_district_strong_params(params[:nces06_district]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_nces06_district_strong_params(params)\n    params.permit(:AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST, :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP, :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH, :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM, :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC, :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM, :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/nces06_districts_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/nces06_districts_controller.rb"
       ]
     },
@@ -1452,21 +1529,22 @@
         {
           "file": "app/controllers/portal/nces06_schools_controller.rb",
           "lineNumber": 92,
-          "line": "@nces06_school = Portal::Nces06School.new(params[:nces06_school])"
+          "line": "@nces06_school = Portal::Nces06School.new(params[:nces06_school])",
+          "autoFix": "@nces06_school = Portal::Nces06School.new(portal_nces06_school_strong_params(params[:nces06_school]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/nces06_schools_controller.rb",
           "lineNumber": 115,
-          "line": "if @nces06_school.update_attributes(params[:nces06_school])"
+          "line": "if @nces06_school.update_attributes(params[:nces06_school])",
+          "autoFix": "if @nces06_school.update_attributes(portal_nces06_school_strong_params(params[:nces06_school]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_nces06_school_strong_params(params)\n    params.permit(:AM, :AM01F, :AM01M, :AM01U, :AM02F, :AM02M, :AM02U, :AM03F, :AM03M, :AM03U, :AM04F, :AM04M, :AM04U, :AM05F, :AM05M, :AM05U, :AM06F, :AM06M, :AM06U, :AM07F, :AM07M, :AM07U, :AM08F, :AM08M, :AM08U, :AM09F, :AM09M, :AM09U, :AM10F, :AM10M, :AM10U, :AM11F, :AM11M, :AM11U, :AM12F, :AM12M, :AM12U, :AMALF, :AMALM, :AMALU, :AMKGF, :AMKGM, :AMKGU, :AMPKF, :AMPKM, :AMPKU, :AMUGF, :AMUGM, :AMUGU, :AS01F, :AS01M, :AS01U, :AS02F, :AS02M, :AS02U, :AS03F, :AS03M, :AS03U, :AS04F, :AS04M, :AS04U, :AS05F, :AS05M, :AS05U, :AS06F, :AS06M, :AS06U, :AS07F, :AS07M, :AS07U, :AS08F, :AS08M, :AS08U, :AS09F, :AS09M, :AS09U, :AS10F, :AS10M, :AS10U, :AS11F, :AS11M, :AS11U, :AS12F, :AS12M, :AS12U, :ASALF, :ASALM, :ASALU, :ASIAN, :ASKGF, :ASKGM, :ASKGU, :ASPKF, :ASPKM, :ASPKU, :ASUGF, :ASUGM, :ASUGU, :BL01F, :BL01M, :BL01U, :BL02F, :BL02M, :BL02U, :BL03F, :BL03M, :BL03U, :BL04F, :BL04M, :BL04U, :BL05F, :BL05M, :BL05U, :BL06F, :BL06M, :BL06U, :BL07F, :BL07M, :BL07U, :BL08F, :BL08M, :BL08U, :BL09F, :BL09M, :BL09U, :BL10F, :BL10M, :BL10U, :BL11F, :BL11M, :BL11U, :BL12F, :BL12M, :BL12U, :BLACK, :BLALF, :BLALM, :BLALU, :BLKGF, :BLKGM, :BLKGU, :BLPKF, :BLPKM, :BLPKU, :BLUGF, :BLUGM, :BLUGU, :CDCODE, :CHARTR, :CONAME, :CONUM, :FIPST, :FRELCH, :FTE, :G01, :G02, :G03, :G04, :G05, :G06, :G07, :G08, :G09, :G10, :G11, :G12, :GSHI, :GSLO, :HI01F, :HI01M, :HI01U, :HI02F, :HI02M, :HI02U, :HI03F, :HI03M, :HI03U, :HI04F, :HI04M, :HI04U, :HI05F, :HI05M, :HI05U, :HI06F, :HI06M, :HI06U, :HI07F, :HI07M, :HI07U, :HI08F, :HI08M, :HI08U, :HI09F, :HI09M, :HI09U, :HI10F, :HI10M, :HI10U, :HI11F, :HI11M, :HI11U, :HI12F, :HI12M, :HI12U, :HIALF, :HIALM, :HIALU, :HIKGF, :HIKGM, :HIKGU, :HIPKF, :HIPKM, :HIPKU, :HISP, :HIUGF, :HIUGM, :HIUGU, :IAM, :IAM01F, :IAM01M, :IAM01U, :IAM02F, :IAM02M, :IAM02U, :IAM03F, :IAM03M, :IAM03U, :IAM04F, :IAM04M, :IAM04U, :IAM05F, :IAM05M, :IAM05U, :IAM06F, :IAM06M, :IAM06U, :IAM07F, :IAM07M, :IAM07U, :IAM08F, :IAM08M, :IAM08U, :IAM09F, :IAM09M, :IAM09U, :IAM10F, :IAM10M, :IAM10U, :IAM11F, :IAM11M, :IAM11U, :IAM12F, :IAM12M, :IAM12U, :IAMALF, :IAMALM, :IAMALU, :IAMKGF, :IAMKGM, :IAMKGU, :IAMPKF, :IAMPKM, :IAMPKU, :IAMUGF, :IAMUGM, :IAMUGU, :IAS01F, :IAS01M, :IAS01U, :IAS02F, :IAS02M, :IAS02U, :IAS03F, :IAS03M, :IAS03U, :IAS04F, :IAS04M, :IAS04U, :IAS05F, :IAS05M, :IAS05U, :IAS06F, :IAS06M, :IAS06U, :IAS07F, :IAS07M, :IAS07U, :IAS08F, :IAS08M, :IAS08U, :IAS09F, :IAS09M, :IAS09U, :IAS10F, :IAS10M, :IAS10U, :IAS11F, :IAS11M, :IAS11U, :IAS12F, :IAS12M, :IAS12U, :IASALF, :IASALM, :IASALU, :IASIAN, :IASKGF, :IASKGM, :IASKGU, :IASPKF, :IASPKM, :IASPKU, :IASUGF, :IASUGM, :IASUGU, :IBL01F, :IBL01M, :IBL01U, :IBL02F, :IBL02M, :IBL02U, :IBL03F, :IBL03M, :IBL03U, :IBL04F, :IBL04M, :IBL04U, :IBL05F, :IBL05M, :IBL05U, :IBL06F, :IBL06M, :IBL06U, :IBL07F, :IBL07M, :IBL07U, :IBL08F, :IBL08M, :IBL08U, :IBL09F, :IBL09M, :IBL09U, :IBL10F, :IBL10M, :IBL10U, :IBL11F, :IBL11M, :IBL11U, :IBL12F, :IBL12M, :IBL12U, :IBLACK, :IBLALF, :IBLALM, :IBLALU, :IBLKGF, :IBLKGM, :IBLKGU, :IBLPKF, :IBLPKM, :IBLPKU, :IBLUGF, :IBLUGM, :IBLUGU, :ICHART, :IETH, :IFRELC, :IFTE, :IG01, :IG02, :IG03, :IG04, :IG05, :IG06, :IG07, :IG08, :IG09, :IG10, :IG11, :IG12, :IGSHI, :IGSLO, :IHI01F, :IHI01M, :IHI01U, :IHI02F, :IHI02M, :IHI02U, :IHI03F, :IHI03M, :IHI03U, :IHI04F, :IHI04M, :IHI04U, :IHI05F, :IHI05M, :IHI05U, :IHI06F, :IHI06M, :IHI06U, :IHI07F, :IHI07M, :IHI07U, :IHI08F, :IHI08M, :IHI08U, :IHI09F, :IHI09M, :IHI09U, :IHI10F, :IHI10M, :IHI10U, :IHI11F, :IHI11M, :IHI11U, :IHI12F, :IHI12M, :IHI12U, :IHIALF, :IHIALM, :IHIALU, :IHIKGF, :IHIKGM, :IHIKGU, :IHIPKF, :IHIPKM, :IHIPKU, :IHISP, :IHIUGF, :IHIUGM, :IHIUGU, :IKG, :IMAGNE, :IMEMB, :IMIGRN, :IPK, :IPUTCH, :IREDLC, :ISHARE, :ISTITL, :ITITLI, :ITOTFR, :ITOTGR, :IUG, :IWH01F, :IWH01M, :IWH01U, :IWH02F, :IWH02M, :IWH02U, :IWH03F, :IWH03M, :IWH03U, :IWH04F, :IWH04M, :IWH04U, :IWH05F, :IWH05M, :IWH05U, :IWH06F, :IWH06M, :IWH06U, :IWH07F, :IWH07M, :IWH07U, :IWH08F, :IWH08M, :IWH08U, :IWH09F, :IWH09M, :IWH09U, :IWH10F, :IWH10M, :IWH10U, :IWH11F, :IWH11M, :IWH11U, :IWH12F, :IWH12M, :IWH12U, :IWHALF, :IWHALM, :IWHALU, :IWHITE, :IWHKGF, :IWHKGM, :IWHKGU, :IWHPKF, :IWHPKM, :IWHPKU, :IWHUGF, :IWHUGM, :IWHUGU, :KG, :KIND, :LATCOD, :LCITY, :LEAID, :LEANM, :LEVEL, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MAGNET, :MCITY, :MEMBER, :MIGRNT, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NCESSCH, :PHONE, :PK, :PUPTCH, :REDLCH, :SCHNAM, :SCHNO, :SEASCH, :SHARED, :STATUS, :STID, :STITLI, :TITLEI, :TOTETH, :TOTFRL, :TOTGRD, :UG, :ULOCAL, :WH01F, :WH01M, :WH01U, :WH02F, :WH02M, :WH02U, :WH03F, :WH03M, :WH03U, :WH04F, :WH04M, :WH04U, :WH05F, :WH05M, :WH05U, :WH06F, :WH06M, :WH06U, :WH07F, :WH07M, :WH07U, :WH08F, :WH08M, :WH08U, :WH09F, :WH09M, :WH09U, :WH10F, :WH10M, :WH10U, :WH11F, :WH11M, :WH11U, :WH12F, :WH12M, :WH12U, :WHALF, :WHALM, :WHALU, :WHITE, :WHKGF, :WHKGM, :WHKGU, :WHPKF, :WHPKM, :WHPKU, :WHUGF, :WHUGM, :WHUGU, :nces_district_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/nces06_schools_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/nces06_schools_controller.rb"
       ]
     },
@@ -1513,15 +1591,14 @@
         {
           "file": "app/controllers/admin/permission_forms_controller.rb",
           "lineNumber": 109,
-          "line": "form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])"
+          "line": "form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])",
+          "autoFix": "form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "  def portal_permission_form_strong_params(params)\n    params.permit(:name, :project_id, :url)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/permission_forms_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/permission_forms_controller.rb"
       ]
     },
@@ -1535,21 +1612,22 @@
         {
           "file": "app/controllers/portal/schools_controller.rb",
           "lineNumber": 73,
-          "line": "@portal_school = Portal::School.new(params[:portal_school])"
+          "line": "@portal_school = Portal::School.new(params[:portal_school])",
+          "autoFix": "@portal_school = Portal::School.new(portal_school_strong_params(params[:portal_school]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/schools_controller.rb",
           "lineNumber": 89,
-          "line": "if @portal_school.update_attributes(params[:portal_school])"
+          "line": "if @portal_school.update_attributes(params[:portal_school])",
+          "autoFix": "if @portal_school.update_attributes(portal_school_strong_params(params[:portal_school]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_school_strong_params(params)\n    params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/schools_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/schools_controller.rb"
       ]
     },
@@ -1563,21 +1641,22 @@
         {
           "file": "app/controllers/portal/school_memberships_controller.rb",
           "lineNumber": 66,
-          "line": "@school_membership = Portal::SchoolMembership.new(params[:school_membership])"
+          "line": "@school_membership = Portal::SchoolMembership.new(params[:school_membership])",
+          "autoFix": "@school_membership = Portal::SchoolMembership.new(portal_school_membership_strong_params(params[:school_membership]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/school_memberships_controller.rb",
           "lineNumber": 89,
-          "line": "if @school_membership.update_attributes(params[:portal_school_membership])"
+          "line": "if @school_membership.update_attributes(params[:portal_school_membership])",
+          "autoFix": "if @school_membership.update_attributes(portal_school_membership_strong_params(params[:portal_school_membership]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_school_membership_strong_params(params)\n    params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/school_memberships_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/school_memberships_controller.rb"
       ]
     },
@@ -1591,57 +1670,71 @@
         {
           "file": "app/controllers/api/v1/students_controller.rb",
           "lineNumber": 83,
-          "line": "student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id)"
+          "line": "student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id)",
+          "autoFix": "student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/api/v1/students_controller.rb",
           "lineNumber": 141,
-          "line": "portal_student = Portal::Student.create(:user_id => user.id)"
+          "line": "portal_student = Portal::Student.create(:user_id => user.id)",
+          "autoFix": "portal_student = Portal::Student.create(:user_id => user.id)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/api/v1/students_controller.rb",
           "lineNumber": 143,
-          "line": "portal_student = Portal::Student.create(:user_id => user.id, :grade_level_id => grade_level.id)"
+          "line": "portal_student = Portal::Student.create(:user_id => user.id, :grade_level_id => grade_level.id)",
+          "autoFix": "portal_student = Portal::Student.create(:user_id => user.id, :grade_level_id => grade_level.id)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 141,
-          "line": "@portal_student = Portal::Student.create(:user_id => @user.id)"
+          "line": "@portal_student = Portal::Student.create(:user_id => @user.id)",
+          "autoFix": "@portal_student = Portal::Student.create(:user_id => @user.id)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 143,
-          "line": "@portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)"
+          "line": "@portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)",
+          "autoFix": "@portal_student = Portal::Student.create(:user_id => @user.id, :grade_level_id => @grade_level.id)",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 192,
-          "line": "if @portal_student.update_attributes(params[:portal_student])"
+          "line": "if @portal_student.update_attributes(params[:portal_student])",
+          "autoFix": "if @portal_student.update_attributes(portal_student_strong_params(params[:portal_student]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 277,
-          "line": "if @portal_student.user.update_attributes(params[:user])"
+          "line": "if @portal_student.user.update_attributes(params[:user])",
+          "autoFix": "if @portal_student.user.update_attributes(portal_student_strong_params(params[:user]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 192,
-          "line": "if @portal_student.update_attributes(params[:portal_student])"
+          "line": "if @portal_student.update_attributes(params[:portal_student])",
+          "autoFix": "if @portal_student.update_attributes(portal_student_strong_params(params[:portal_student]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 277,
-          "line": "if @portal_student.user.update_attributes(params[:user])"
+          "line": "if @portal_student.user.update_attributes(params[:user])",
+          "autoFix": "if @portal_student.user.update_attributes(portal_student_strong_params(params[:user]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_student_strong_params(params)\n    params.permit(:grade_level_id, :user_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/students_controller.rb",
-        "app/controllers/portal/students_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/students_controller.rb",
         "app/controllers/portal/students_controller.rb"
       ]
@@ -1656,21 +1749,22 @@
         {
           "file": "app/controllers/portal/student_clazzes_controller.rb",
           "lineNumber": 64,
-          "line": "@portal_student_clazz = Portal::StudentClazz.new(params[:portal_student_clazz])"
+          "line": "@portal_student_clazz = Portal::StudentClazz.new(params[:portal_student_clazz])",
+          "autoFix": "@portal_student_clazz = Portal::StudentClazz.new(portal_student_clazz_strong_params(params[:portal_student_clazz]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/student_clazzes_controller.rb",
           "lineNumber": 87,
-          "line": "if @portal_student_clazz.update_attributes(params[:portal_student_clazz])"
+          "line": "if @portal_student_clazz.update_attributes(params[:portal_student_clazz])",
+          "autoFix": "if @portal_student_clazz.update_attributes(portal_student_clazz_strong_params(params[:portal_student_clazz]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_student_clazz_strong_params(params)\n    params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/student_clazzes_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/student_clazzes_controller.rb"
       ]
     },
@@ -1696,21 +1790,22 @@
         {
           "file": "app/controllers/portal/subjects_controller.rb",
           "lineNumber": 64,
-          "line": "@subject = Portal::Subject.new(params[:subject])"
+          "line": "@subject = Portal::Subject.new(params[:subject])",
+          "autoFix": "@subject = Portal::Subject.new(portal_subject_strong_params(params[:subject]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/subjects_controller.rb",
           "lineNumber": 87,
-          "line": "if @subject.update_attributes(params[:subject])"
+          "line": "if @subject.update_attributes(params[:subject])",
+          "autoFix": "if @subject.update_attributes(portal_subject_strong_params(params[:subject]))",
+          "autoFixed": true
         }
       ],
       "method": "  def portal_subject_strong_params(params)\n    params.permit(:description, :name, :teacher_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/subjects_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/subjects_controller.rb"
       ]
     },
@@ -1724,26 +1819,29 @@
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 150,
-          "line": "teacher = Portal::Teacher.create(:user => current_visitor) # Former call set :user_id directly; class validations didn't like that"
+          "line": "teacher = Portal::Teacher.create(:user => current_visitor) # Former call set :user_id directly; class validations didn't like that",
+          "autoFix": "teacher = Portal::Teacher.create(:user => current_visitor) # Former call set :user_id directly; class validations didn't like that",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 235,
-          "line": "if @portal_clazz.update_attributes(object_params)"
+          "line": "if @portal_clazz.update_attributes(object_params)",
+          "autoFix": "if @portal_clazz.update_attributes(object_params)",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
           "lineNumber": 250,
-          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
+          "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)",
+          "autoFix": "if okToUpdate && @portal_clazz.update_attributes(object_params)",
+          "autoFixed": false
         }
       ],
       "method": "  def portal_teacher_strong_params(params)\n    params.permit(:left_pane_submenu_item, :offerings_count, :user_id, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/clazzes_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/clazzes_controller.rb"
       ]
     },
@@ -1883,21 +1981,22 @@
         {
           "file": "app/controllers/portal/offerings_controller.rb",
           "lineNumber": 254,
-          "line": "Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)"
+          "line": "Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)",
+          "autoFix": "Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)",
+          "autoFixed": false
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/offerings_controller.rb",
           "lineNumber": 102,
-          "line": "update_successful = @offering.update_attributes(params[:offering])"
+          "line": "update_successful = @offering.update_attributes(params[:offering])",
+          "autoFix": "update_successful = @offering.update_attributes(saveable_multiple_choice_rationale_choice_strong_params(params[:offering]))",
+          "autoFixed": true
         }
       ],
       "method": "  def saveable_multiple_choice_rationale_choice_strong_params(params)\n    params.permit(:answer_id, :choice_id, :rationale, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/portal/offerings_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/portal/offerings_controller.rb"
       ]
     },
@@ -1929,21 +2028,22 @@
         {
           "file": "app/controllers/saveable/sparks/measuring_resistances_controller.rb",
           "lineNumber": 44,
-          "line": "@measuring_resistance = Saveable::Sparks::MeasuringResistance.new(params[:measuring_resistance])"
+          "line": "@measuring_resistance = Saveable::Sparks::MeasuringResistance.new(params[:measuring_resistance])",
+          "autoFix": "@measuring_resistance = Saveable::Sparks::MeasuringResistance.new(saveable_sparks_measuring_resistance_strong_params(params[:measuring_resistance]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/saveable/sparks/measuring_resistances_controller.rb",
           "lineNumber": 65,
-          "line": "if @measuring_resistance.update_attributes(params[:measuring_resistance])"
+          "line": "if @measuring_resistance.update_attributes(params[:measuring_resistance])",
+          "autoFix": "if @measuring_resistance.update_attributes(saveable_sparks_measuring_resistance_strong_params(params[:measuring_resistance]))",
+          "autoFixed": true
         }
       ],
       "method": "  def saveable_sparks_measuring_resistance_strong_params(params)\n    params.permit(:learner_id, :offering_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/saveable/sparks/measuring_resistances_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/saveable/sparks/measuring_resistances_controller.rb"
       ]
     },
@@ -1975,15 +2075,14 @@
         {
           "file": "app/controllers/security_questions_controller.rb",
           "lineNumber": 48,
-          "line": "#     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })"
+          "line": "#     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })",
+          "autoFix": "#     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "  def security_question_strong_params(params)\n    params.permit(:answer, :question, :user_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/security_questions_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/security_questions_controller.rb"
       ]
     },
@@ -2012,15 +2111,14 @@
         {
           "file": "app/controllers/api/v1/materials_controller.rb",
           "lineNumber": 526,
-          "line": "StandardStatement.create("
+          "line": "StandardStatement.create(",
+          "autoFix": "StandardStatement.create(",
+          "autoFixed": false
         }
       ],
       "updates": [],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\n  #  model attrs:     :description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\ndef standard_statement_strong_params(params)\n    params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/materials_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/materials_controller.rb"
       ]
     },
@@ -2049,21 +2147,22 @@
         {
           "file": "app/controllers/admin/tools_controller.rb",
           "lineNumber": 42,
-          "line": "@tool = Tool.new(params[:tool])"
+          "line": "@tool = Tool.new(params[:tool])",
+          "autoFix": "@tool = Tool.new(tool_strong_params(params[:tool]))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/admin/tools_controller.rb",
           "lineNumber": 61,
-          "line": "if @tool.update_attributes(params[:tool])"
+          "line": "if @tool.update_attributes(params[:tool])",
+          "autoFix": "if @tool.update_attributes(tool_strong_params(params[:tool]))",
+          "autoFixed": true
         }
       ],
       "method": "  def tool_strong_params(params)\n    params.permit(:name, :source_type, :tool_id)\n  end\n",
       "controllerFiles": [
-        "app/controllers/admin/tools_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/admin/tools_controller.rb"
       ]
     },
@@ -2080,38 +2179,43 @@
         {
           "file": "app/controllers/api/v1/students_controller.rb",
           "lineNumber": 128,
-          "line": "user = User.new(user_params(user_attributes))"
+          "line": "user = User.new(user_params(user_attributes))",
+          "autoFix": "user = User.new(user_params(user_attributes))",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 106,
-          "line": "@user = User.new(user_params(user_attributes))"
+          "line": "@user = User.new(user_params(user_attributes))",
+          "autoFix": "@user = User.new(user_params(user_attributes))",
+          "autoFixed": false
         },
         {
           "file": "app/controllers/portal/teachers_controller.rb",
           "lineNumber": 65,
-          "line": "@user = User.new(user_params(params[:user]))"
+          "line": "@user = User.new(user_params(params[:user]))",
+          "autoFix": "@user = User.new(user_params(user_strong_params(params[:user])))",
+          "autoFixed": true
         }
       ],
       "updates": [
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 192,
-          "line": "if @portal_student.update_attributes(params[:portal_student])"
+          "line": "if @portal_student.update_attributes(params[:portal_student])",
+          "autoFix": "if @portal_student.update_attributes(user_strong_params(params[:portal_student]))",
+          "autoFixed": true
         },
         {
           "file": "app/controllers/portal/students_controller.rb",
           "lineNumber": 277,
-          "line": "if @portal_student.user.update_attributes(params[:user])"
+          "line": "if @portal_student.user.update_attributes(params[:user])",
+          "autoFix": "if @portal_student.user.update_attributes(user_strong_params(params[:user]))",
+          "autoFixed": true
         }
       ],
       "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state\n  #  model attrs:     :asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid\ndef user_strong_params(params)\n    params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid)\n  end\n",
       "controllerFiles": [
-        "app/controllers/api/v1/students_controller.rb",
-        "app/controllers/portal/students_controller.rb",
-        "app/controllers/portal/teachers_controller.rb"
-      ],
-      "newOrCreateControllerFiles": [
         "app/controllers/api/v1/students_controller.rb",
         "app/controllers/portal/students_controller.rb",
         "app/controllers/portal/teachers_controller.rb"

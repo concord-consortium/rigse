@@ -10,8 +10,8 @@
 
   TODO:
 
-  1. Add code to inject strong_params method into file at right spot (in class in controller vs at end of fle in spec, etc)
-  2. Add code to check if "strong_params(" is found on new/create/update line (can use "# no strong_params() needed here" to skip line)
+  1. Add code to inject strong_params method at end of controller
+  2. Add code to remove attr_accessible from models
 
 */
 
@@ -169,12 +169,16 @@ const updateCheck = /\.\s*update_attributes!?\s*\(/
 const attrBrackets = /\[|\]/g
 const attrFilter = /:id|:created_at|:updated_at/
 const attrAccessibleCheck = /attr_accessible\s(.*)/
+const paramsMatcher = /\(\s*(params\s*\[\s*\:([^\]]+)\])\s*\)/
+
+const hasStrongParams = /strong_params/
 railsConsoleModelInfo.map((consoleModelInfo) => {
   const [modelName, modelPath, attrArray] = consoleModelInfo.split(";")
   const newOrCreateCheck = new RegExp(`\\b${modelName}\\s*.\\s*(new|create!?)\\s*\\(`)
+  const methodName = `${modelPath.replace(/\//g, "_").replace(".rb", "")}_strong_params`
   const modelInfo = {
     name: modelName,
-    methodName: `${modelPath.replace(/\//g, "_").replace(".rb", "")}_strong_params`,
+    methodName,
     path: `app/models/${modelPath}`,
     attrs: sortedAttrs(attrArray.replace(attrBrackets, "").split(", ").filter((attr) => !attr.match(attrFilter))),
     attrAccessible: null,
@@ -186,16 +190,22 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   Object.keys(controllers).map((relativePath) => {
     const file = files[relativePath]
     file.lines.map((line, lineNumber) => {
-      if (line.match(newOrCreateCheck)) {
-        modelInfo.newOrCreates.push({file: relativePath, lineNumber, line: line.trim()})
+      line = line.trim()
+      if (!line.match(hasStrongParams) && line.match(newOrCreateCheck)) {
+        const autoFix = line.replace(paramsMatcher, `(${methodName}($1))`)
+        const autoFixed = autoFix !== line
+        modelInfo.newOrCreates.push({file: relativePath, lineNumber, line, autoFix, autoFixed})
       }
     })
   })
   modelInfo.newOrCreates.map((newOrCreate) => {
     const file = files[newOrCreate.file]
     file.lines.map((line, lineNumber) => {
-      if (line.match(updateCheck)) {
-        modelInfo.updates.push({file: newOrCreate.file, lineNumber, line: line.trim()})
+      line = line.trim()
+      if (!line.match(hasStrongParams) && line.match(updateCheck)) {
+        const autoFix = line.replace(paramsMatcher, `(${methodName}($1))`)
+        const autoFixed = autoFix !== line
+        modelInfo.updates.push({file: newOrCreate.file, lineNumber, line, autoFix, autoFixed})
       }
     })
   })
@@ -214,9 +224,7 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   if (modelInfo.newOrCreates.length + modelInfo.updates.length > 0) {
     const note = modelInfo.attrAccessible && !modelInfo.attrAccessible.matches ? `  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: ${modelInfo.attrAccessible.value}\n  #  model attrs:     ${modelInfo.attrs}\n` : ""
     modelInfo.method = `  ${note}def ${modelInfo.methodName}(params)\n    params.permit(${modelInfo.attrs})\n  end\n`
-
     modelInfo.controllerFiles = modelInfo.newOrCreates.concat(modelInfo.updates).map(m => m.file).filter(distinct)
-    modelInfo.newOrCreateControllerFiles = modelInfo.newOrCreates.map(m => m.file).filter(distinct)
   }
 })
 
@@ -227,11 +235,15 @@ const stats = {
     matches: 0
   },
   newOrCreates: 0,
-  updates: 0
+  updates: 0,
+  newOrCreatesAutoFixed: 0,
+  updatesAutoFixed: 0,
 }
 models.forEach((model) => {
   stats.newOrCreates += model.newOrCreates.length
   stats.updates += model.updates.length
+  stats.newOrCreatesAutoFixed += model.newOrCreates.filter(l => l.autoFixed).length
+  stats.updatesAutoFixed += model.updates.filter(l => l.autoFixed).length
   if (model.attrAccessible) {
     stats.attrAccessible.total++
     if (model.attrAccessible.matches) {
