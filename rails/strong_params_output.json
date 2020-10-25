@@ -1,7 +1,10 @@
 {
   "stats": {
     "numModels": 110,
-    "hasAttrAccessible": 35,
+    "attrAccessible": {
+      "total": 35,
+      "matches": 19
+    },
     "newOrCreates": {
       "all": 388,
       "inControllers": 68,
@@ -17,8 +20,11 @@
     {
       "name": "AccessGrant",
       "path": "app/models/access_grant.rb",
-      "attrs": ":code, :access_token, :refresh_token, :access_token_expires_at, :user_id, :client_id, :state, :learner_id, :teacher_id",
-      "hasAttrAccessible": true,
+      "attrs": ":access_token, :access_token_expires_at, :client_id, :code, :learner_id, :refresh_token, :state, :teacher_id, :user_id",
+      "attrAccessible": {
+        "value": ":access_token, :access_token_expires_at, :client_id, :code, :learner_id, :refresh_token, :state, :teacher_id, :user_id",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "spec/models/access_grant_spec.rb",
@@ -41,8 +47,8 @@
     {
       "name": "Activity",
       "path": "app/models/activity.rb",
-      "attrs": ":user_id, :uuid, :name, :description, :position, :investigation_id, :original_id, :teacher_only, :publication_status, :offerings_count, :student_report_enabled, :show_score, :teacher_guide_url, :thumbnail_url, :is_featured, :is_assessment_item",
-      "hasAttrAccessible": false,
+      "attrs": ":description, :investigation_id, :is_assessment_item, :is_featured, :name, :offerings_count, :original_id, :position, :publication_status, :show_score, :student_report_enabled, :teacher_guide_url, :teacher_only, :thumbnail_url, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/report/offering/investigation.rb",
@@ -117,7 +123,10 @@
       "name": "Admin::AuthoringSite",
       "path": "app/models/admin/authoring_site.rb",
       "attrs": ":name, :url",
-      "hasAttrAccessible": true,
+      "attrAccessible": {
+        "value": ":name, :url",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/authoring_sites_controller.rb",
@@ -136,8 +145,11 @@
     {
       "name": "Admin::Cohort",
       "path": "app/models/admin/cohort.rb",
-      "attrs": ":project_id, :name, :email_notifications_enabled",
-      "hasAttrAccessible": true,
+      "attrs": ":email_notifications_enabled, :name, :project_id",
+      "attrAccessible": {
+        "value": ":email_notifications_enabled, :items, :name, :project, :project_id",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/cohorts_controller.rb",
@@ -162,23 +174,26 @@
       "name": "Admin::CohortItem",
       "path": "app/models/admin/cohort_item.rb",
       "attrs": ":admin_cohort_id, :item_id, :item_type",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Admin::NoticeUserDisplayStatus",
       "path": "app/models/admin/notice_user_display_status.rb",
-      "attrs": ":user_id, :last_collapsed_at_time, :collapsed_status",
-      "hasAttrAccessible": false,
+      "attrs": ":collapsed_status, :last_collapsed_at_time, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Admin::Project",
       "path": "app/models/admin/project.rb",
-      "attrs": ":name, :landing_page_slug, :landing_page_content, :project_card_image_url, :project_card_description, :public",
-      "hasAttrAccessible": true,
+      "attrs": ":landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public",
+      "attrAccessible": {
+        "value": ":landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/projects_controller.rb",
@@ -292,8 +307,11 @@
     {
       "name": "Admin::ProjectLink",
       "path": "app/models/admin/project_link.rb",
-      "attrs": ":project_id, :name, :href, :link_id, :pop_out, :position",
-      "hasAttrAccessible": true,
+      "attrs": ":href, :link_id, :name, :pop_out, :position, :project_id",
+      "attrAccessible": {
+        "value": ":href, :link_id, :name, :pop_out, :position, :project_id",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/project_links_controller.rb",
@@ -342,20 +360,20 @@
     {
       "name": "Admin::ProjectMaterial",
       "path": "app/models/admin/project_material.rb",
-      "attrs": ":project_id, :material_id, :material_type",
-      "hasAttrAccessible": false,
+      "attrs": ":material_id, :material_type, :project_id",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Admin::ProjectUser",
       "path": "app/models/admin/project_user.rb",
-      "attrs": ":project_id, :user_id, :is_admin, :is_researcher",
-      "hasAttrAccessible": false,
+      "attrs": ":is_admin, :is_researcher, :project_id, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/user.rb",
-          "lineNumber": 450,
+          "lineNumber": 449,
           "line": "project_user ||= Admin::ProjectUser.create!(project_id: project.id, user_id: self.id)"
         }
       ],
@@ -364,8 +382,11 @@
     {
       "name": "Admin::Settings",
       "path": "app/models/admin/settings.rb",
-      "attrs": ":user_id, :description, :uuid, :home_page_content, :use_student_security_questions, :allow_default_class, :enable_grade_levels, :use_bitmap_snapshots, :teachers_can_author, :enable_member_registration, :allow_adhoc_schools, :require_user_consent, :use_periodic_bundle_uploading, :jnlp_cdn_hostname, :active, :external_url, :custom_help_page_html, :help_type, :include_external_activities, :enabled_bookmark_types, :pub_interval, :anonymous_can_browse_materials, :jnlp_url, :show_collections_menu, :auto_set_teachers_as_authors, :default_cohort_id, :wrap_home_page_content, :custom_search_path, :teacher_home_path, :about_page_content",
-      "hasAttrAccessible": true,
+      "attrs": ":about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content",
+      "attrAccessible": {
+        "value": ":about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/settings_controller.rb",
@@ -419,16 +440,16 @@
     {
       "name": "Admin::SiteNotice",
       "path": "app/models/admin/site_notice.rb",
-      "attrs": ":notice_html, :created_by, :updated_by",
-      "hasAttrAccessible": false,
+      "attrs": ":created_by, :notice_html, :updated_by",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Admin::SiteNoticeUser",
       "path": "app/models/admin/site_notice_user.rb",
-      "attrs": ":notice_id, :user_id, :notice_dismissed",
-      "hasAttrAccessible": false,
+      "attrs": ":notice_dismissed, :notice_id, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
@@ -436,7 +457,7 @@
       "name": "Admin::Tag",
       "path": "app/models/admin/tag.rb",
       "attrs": ":scope, :tag",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/admin/tags_controller.rb",
@@ -495,16 +516,22 @@
     {
       "name": "Authentication",
       "path": "app/models/authentication.rb",
-      "attrs": ":user_id, :provider, :uid",
-      "hasAttrAccessible": true,
+      "attrs": ":provider, :uid, :user_id",
+      "attrAccessible": {
+        "value": ":provider, :uid, :user_id",
+        "matches": true
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Client",
       "path": "app/models/client.rb",
-      "attrs": ":name, :app_id, :app_secret, :site_url, :domain_matchers, :client_type, :redirect_uris",
-      "hasAttrAccessible": true,
+      "attrs": ":app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url",
+      "attrAccessible": {
+        "value": ":app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/clients_controller.rb",
@@ -548,8 +575,11 @@
     {
       "name": "CommonsLicense",
       "path": "app/models/commons_license.rb",
-      "attrs": ":code, :name, :description, :deed, :legal, :image, :number",
-      "hasAttrAccessible": true,
+      "attrs": ":code, :deed, :description, :image, :legal, :name, :number",
+      "attrAccessible": {
+        "value": ":code, :deed, :description, :image, :legal, :name, :number",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/commons_licenses_controller.rb",
@@ -568,8 +598,8 @@
     {
       "name": "Dataservice::Blob",
       "path": "app/models/dataservice/blob.rb",
-      "attrs": ":content, :token, :bundle_content_id, :periodic_bundle_content_id, :uuid, :mimetype, :file_extension, :learner_id, :checksum",
-      "hasAttrAccessible": false,
+      "attrs": ":bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/dataservice/blobs_controller.rb",
@@ -653,8 +683,11 @@
     {
       "name": "Dataservice::BucketContent",
       "path": "app/models/dataservice/bucket_content.rb",
-      "attrs": ":bucket_logger_id, :body, :processed, :empty",
-      "hasAttrAccessible": true,
+      "attrs": ":body, :bucket_logger_id, :empty, :processed",
+      "attrAccessible": {
+        "value": ":body, :bucket_logger_id, :empty, :processed",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/dataservice/bucket_contents_metal_controller.rb",
@@ -717,8 +750,11 @@
     {
       "name": "Dataservice::BucketLogItem",
       "path": "app/models/dataservice/bucket_log_item.rb",
-      "attrs": ":content, :bucket_logger_id",
-      "hasAttrAccessible": true,
+      "attrs": ":bucket_logger_id, :content",
+      "attrAccessible": {
+        "value": ":bucket_logger, :bucket_logger_id, :content",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/dataservice/bucket_log_items_metal_controller.rb",
@@ -732,15 +768,18 @@
       "name": "Dataservice::BucketLogger",
       "path": "app/models/dataservice/bucket_logger.rb",
       "attrs": ":learner_id, :name",
-      "hasAttrAccessible": true,
+      "attrAccessible": {
+        "value": ":learner, :learner_id, :name",
+        "matches": false
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Dataservice::BundleContent",
       "path": "app/models/dataservice/bundle_content.rb",
-      "attrs": ":bundle_logger_id, :position, :body, :otml, :processed, :valid_xml, :empty, :uuid, :original_body, :upload_time, :collaboration_id",
-      "hasAttrAccessible": false,
+      "attrs": ":body, :bundle_logger_id, :collaboration_id, :empty, :original_body, :otml, :position, :processed, :upload_time, :uuid, :valid_xml",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/dataservice/bundle_content.rb",
@@ -794,7 +833,7 @@
       "name": "Dataservice::BundleLogger",
       "path": "app/models/dataservice/bundle_logger.rb",
       "attrs": ":in_progress_bundle_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "spec/models/dataservice/bundle_content_saveable_extraction_spec.rb",
@@ -837,8 +876,8 @@
     {
       "name": "Dataservice::ConsoleContent",
       "path": "app/models/dataservice/console_content.rb",
-      "attrs": ":console_logger_id, :position, :body",
-      "hasAttrAccessible": false,
+      "attrs": ":body, :console_logger_id, :position",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "spec/models/dataservice/console_content_spec.rb",
@@ -852,7 +891,7 @@
       "name": "Dataservice::ConsoleLogger",
       "path": "app/models/dataservice/console_logger.rb",
       "attrs": "",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "spec/models/dataservice/console_logger_spec.rb",
@@ -865,8 +904,11 @@
     {
       "name": "Dataservice::JnlpSession",
       "path": "app/models/dataservice/jnlp_session.rb",
-      "attrs": ":token, :user_id, :access_count",
-      "hasAttrAccessible": true,
+      "attrs": ":access_count, :token, :user_id",
+      "attrAccessible": {
+        "value": ":access_count, :token, :user, :user_id",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/portal/learner_jnlp_renderer.rb",
@@ -879,8 +921,8 @@
     {
       "name": "Dataservice::LaunchProcessEvent",
       "path": "app/models/dataservice/launch_process_event.rb",
-      "attrs": ":event_type, :event_details, :bundle_content_id",
-      "hasAttrAccessible": false,
+      "attrs": ":bundle_content_id, :event_details, :event_type",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/dataservice/bucket_loggers_controller.rb",
@@ -939,8 +981,8 @@
     {
       "name": "Dataservice::PeriodicBundleContent",
       "path": "app/models/dataservice/periodic_bundle_content.rb",
-      "attrs": ":periodic_bundle_logger_id, :body, :processed, :valid_xml, :empty, :uuid, :parts_extracted",
-      "hasAttrAccessible": false,
+      "attrs": ":body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/dataservice/periodic_bundle_contents_metal_controller.rb",
@@ -968,8 +1010,8 @@
     {
       "name": "Dataservice::PeriodicBundleLogger",
       "path": "app/models/dataservice/periodic_bundle_logger.rb",
-      "attrs": ":learner_id, :imports",
-      "hasAttrAccessible": false,
+      "attrs": ":imports, :learner_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/learners_controller.rb",
@@ -998,8 +1040,8 @@
     {
       "name": "Dataservice::PeriodicBundlePart",
       "path": "app/models/dataservice/periodic_bundle_part.rb",
-      "attrs": ":periodic_bundle_logger_id, :delta, :key, :value",
-      "hasAttrAccessible": false,
+      "attrs": ":delta, :key, :periodic_bundle_logger_id, :value",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
@@ -1007,15 +1049,15 @@
       "name": "Embeddable::Embeddable",
       "path": "app/models/embeddable/embeddable.rb",
       "attrs": "",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Embeddable::Iframe",
       "path": "app/models/embeddable/iframe.rb",
-      "attrs": ":user_id, :uuid, :name, :description, :width, :height, :url, :external_id, :display_in_iframe, :is_required, :show_in_featured_question_report",
-      "hasAttrAccessible": false,
+      "attrs": ":description, :display_in_iframe, :external_id, :height, :is_required, :name, :show_in_featured_question_report, :url, :user_id, :uuid, :width",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "lib/activity_runtime_api.rb",
@@ -1054,8 +1096,8 @@
     {
       "name": "Embeddable::ImageQuestion",
       "path": "app/models/embeddable/image_question.rb",
-      "attrs": ":user_id, :uuid, :name, :prompt, :external_id, :drawing_prompt, :is_required, :show_in_featured_question_report",
-      "hasAttrAccessible": false,
+      "attrs": ":drawing_prompt, :external_id, :is_required, :name, :prompt, :show_in_featured_question_report, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/activity_runtime_api_steps.rb",
@@ -1139,8 +1181,8 @@
     {
       "name": "Embeddable::MultipleChoice",
       "path": "app/models/embeddable/multiple_choice.rb",
-      "attrs": ":user_id, :uuid, :name, :description, :prompt, :enable_rationale, :rationale_prompt, :allow_multiple_selection, :external_id, :is_required, :show_in_featured_question_report",
-      "hasAttrAccessible": false,
+      "attrs": ":allow_multiple_selection, :description, :enable_rationale, :external_id, :is_required, :name, :prompt, :rationale_prompt, :show_in_featured_question_report, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/activity_runtime_api_steps.rb",
@@ -1219,8 +1261,8 @@
     {
       "name": "Embeddable::MultipleChoiceChoice",
       "path": "app/models/embeddable/multiple_choice_choice.rb",
-      "attrs": ":choice, :multiple_choice_id, :is_correct, :external_id",
-      "hasAttrAccessible": false,
+      "attrs": ":choice, :external_id, :is_correct, :multiple_choice_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/embeddable/multiple_choice.rb",
@@ -1329,8 +1371,8 @@
     {
       "name": "Embeddable::OpenResponse",
       "path": "app/models/embeddable/open_response.rb",
-      "attrs": ":user_id, :uuid, :name, :description, :prompt, :default_response, :rows, :columns, :font_size, :external_id, :is_required, :show_in_featured_question_report",
-      "hasAttrAccessible": false,
+      "attrs": ":columns, :default_response, :description, :external_id, :font_size, :is_required, :name, :prompt, :rows, :show_in_featured_question_report, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/activity_runtime_api_steps.rb",
@@ -1404,8 +1446,8 @@
     {
       "name": "ExternalActivity",
       "path": "app/models/external_activity.rb",
-      "attrs": ":user_id, :uuid, :name, :archived_description, :url, :publication_status, :offerings_count, :save_path, :append_learner_id_to_url, :popup, :append_survey_monkey_uid, :template_id, :template_type, :launch_url, :is_official, :student_report_enabled, :teacher_guide_url, :thumbnail_url, :is_featured, :has_pretest, :short_description, :allow_collaboration, :author_email, :is_locked, :logging, :is_assessment_item, :author_url, :print_url, :is_archived, :archive_date, :credits, :license_code, :append_auth_token, :enable_sharing, :material_type, :rubric_url, :saves_student_data, :long_description_for_teacher, :long_description, :keywords, :tool_id, :has_teacher_edition, :teacher_resources_url",
-      "hasAttrAccessible": false,
+      "attrs": ":allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid, :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing, :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked, :is_official, :keywords, :launch_url, :license_code, :logging, :long_description, :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, :url, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/external_activities_controller.rb",
@@ -1555,15 +1597,18 @@
       "name": "ExternalActivityReport",
       "path": "app/models/external_activity_report.rb",
       "attrs": ":external_activity_id, :external_report_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "ExternalReport",
       "path": "app/models/external_report.rb",
-      "attrs": ":url, :name, :launch_text, :client_id, :report_type, :allowed_for_students, :default_report_for_source_type, :individual_student_reportable, :individual_activity_reportable, :move_students_api_url, :move_students_api_token",
-      "hasAttrAccessible": true,
+      "attrs": ":allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url",
+      "attrAccessible": {
+        "value": ":allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/external_reports_controller.rb",
@@ -1597,16 +1642,19 @@
     {
       "name": "Favorite",
       "path": "app/models/favorite.rb",
-      "attrs": ":user_id, :favoritable_id, :favoritable_type",
-      "hasAttrAccessible": true,
+      "attrs": ":favoritable_id, :favoritable_type, :user_id",
+      "attrAccessible": {
+        "value": ":favoritable, :favoritable_id, :favoritable_type, :user, :user_id",
+        "matches": false
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "FirebaseApp",
       "path": "app/models/firebase_app.rb",
-      "attrs": ":name, :client_email, :private_key",
-      "hasAttrAccessible": false,
+      "attrs": ":client_email, :name, :private_key",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/admin/firebase_apps_controller.rb",
@@ -1661,7 +1709,7 @@
       "name": "HABTM_Roles",
       "path": "app/models/habtm_roles.rb",
       "attrs": ":role_id, :user_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
@@ -1669,15 +1717,15 @@
       "name": "HABTM_Users",
       "path": "app/models/habtm_users.rb",
       "attrs": ":role_id, :user_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Image",
       "path": "app/models/image.rb",
-      "attrs": ":user_id, :name, :attribution, :publication_status, :image_file_name, :image_content_type, :image_file_size, :image_updated_at, :license_code, :width, :height",
-      "hasAttrAccessible": false,
+      "attrs": ":attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at, :license_code, :name, :publication_status, :user_id, :width",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/images_controller.rb",
@@ -1706,8 +1754,8 @@
     {
       "name": "Import::DuplicateUser",
       "path": "app/models/import/duplicate_user.rb",
-      "attrs": ":login, :email, :duplicate_by, :data, :user_id, :import_id",
-      "hasAttrAccessible": false,
+      "attrs": ":data, :duplicate_by, :email, :import_id, :login, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/import/import_users.rb",
@@ -1720,8 +1768,8 @@
     {
       "name": "Import::Import",
       "path": "app/models/import/import.rb",
-      "attrs": ":job_id, :job_finished_at, :import_type, :progress, :total_imports, :user_id, :upload_data, :import_data",
-      "hasAttrAccessible": false,
+      "attrs": ":import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/import/imports_controller.rb",
@@ -1764,8 +1812,11 @@
     {
       "name": "Import::ImportedUser",
       "path": "app/models/import/imported_user.rb",
-      "attrs": ":user_url, :is_verified, :user_id, :importing_domain, :import_id",
-      "hasAttrAccessible": true,
+      "attrs": ":import_id, :importing_domain, :is_verified, :user_id, :user_url",
+      "attrAccessible": {
+        "value": ":import_id, :importing_domain, :is_verified, :user_id, :user_url",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/models/import/import_users.rb",
@@ -1779,7 +1830,10 @@
       "name": "Import::SchoolDistrictMapping",
       "path": "app/models/import/school_district_mapping.rb",
       "attrs": ":district_id, :import_district_uuid",
-      "hasAttrAccessible": true,
+      "attrAccessible": {
+        "value": ":district_id, :import_district_uuid",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/models/import/import_schools_and_districts.rb",
@@ -1792,8 +1846,11 @@
     {
       "name": "Import::UserSchoolMapping",
       "path": "app/models/import/user_school_mapping.rb",
-      "attrs": ":school_id, :import_school_url",
-      "hasAttrAccessible": true,
+      "attrs": ":import_school_url, :school_id",
+      "attrAccessible": {
+        "value": ":import_school_url, :school_id",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/models/import/import_schools_and_districts.rb",
@@ -1806,8 +1863,11 @@
     {
       "name": "Interactive",
       "path": "app/models/interactive.rb",
-      "attrs": ":name, :description, :url, :width, :height, :scale, :image_url, :user_id, :credits, :publication_status, :full_window, :no_snapshots, :save_interactive_state, :license_code, :external_activity_id",
-      "hasAttrAccessible": true,
+      "attrs": ":credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width",
+      "attrAccessible": {
+        "value": ":credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/interactives_controller.rb",
@@ -1866,8 +1926,8 @@
     {
       "name": "Investigation",
       "path": "app/models/investigation.rb",
-      "attrs": ":user_id, :uuid, :name, :description, :teacher_only, :publication_status, :offerings_count, :student_report_enabled, :allow_activity_assignment, :show_score, :teacher_guide_url, :thumbnail_url, :is_featured, :abstract, :author_email, :is_assessment_item",
-      "hasAttrAccessible": false,
+      "attrs": ":abstract, :allow_activity_assignment, :author_email, :description, :is_assessment_item, :is_featured, :name, :offerings_count, :publication_status, :show_score, :student_report_enabled, :teacher_guide_url, :teacher_only, :thumbnail_url, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/investigations_steps.rb",
@@ -2011,8 +2071,11 @@
     {
       "name": "LearnerProcessingEvent",
       "path": "app/models/learner_processing_event.rb",
-      "attrs": ":learner_id, :portal_end, :portal_start, :lara_end, :lara_start, :elapsed_seconds, :duration, :login, :teacher, :url, :lara_duration, :portal_duration",
-      "hasAttrAccessible": true,
+      "attrs": ":duration, :elapsed_seconds, :lara_duration, :lara_end, :lara_start, :learner_id, :login, :portal_duration, :portal_end, :portal_start, :teacher, :url",
+      "attrAccessible": {
+        "value": ":duration, :elapsed_seconds, :lara_duration, :lara_end, :lara_start, :learner_id, :login, :portal_duration, :portal_end, :portal_start, :teacher, :url",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "spec/models/learner_processing_event_spec.rb",
@@ -2025,8 +2088,11 @@
     {
       "name": "MaterialsCollection",
       "path": "app/models/materials_collection.rb",
-      "attrs": ":name, :description, :project_id",
-      "hasAttrAccessible": true,
+      "attrs": ":description, :name, :project_id",
+      "attrAccessible": {
+        "value": ":description, :name, :project_id",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/materials_collections_controller.rb",
@@ -2045,16 +2111,19 @@
     {
       "name": "MaterialsCollectionItem",
       "path": "app/models/materials_collection_item.rb",
-      "attrs": ":materials_collection_id, :material_type, :material_id, :position",
-      "hasAttrAccessible": true,
+      "attrs": ":material_id, :material_type, :materials_collection_id, :position",
+      "attrAccessible": {
+        "value": ":material, :material_id, :material_type, :materials_collection, :materials_collection_id, :position",
+        "matches": false
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Page",
       "path": "app/models/page.rb",
-      "attrs": ":user_id, :section_id, :uuid, :name, :description, :position, :teacher_only, :publication_status, :offerings_count, :url",
-      "hasAttrAccessible": false,
+      "attrs": ":description, :name, :offerings_count, :position, :publication_status, :section_id, :teacher_only, :url, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/report/offering/section.rb",
@@ -2143,8 +2212,8 @@
     {
       "name": "PageElement",
       "path": "app/models/page_element.rb",
-      "attrs": ":page_id, :embeddable_id, :embeddable_type, :position, :user_id",
-      "hasAttrAccessible": false,
+      "attrs": ":embeddable_id, :embeddable_type, :page_id, :position, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/page.rb",
@@ -2157,8 +2226,11 @@
     {
       "name": "Password",
       "path": "app/models/password.rb",
-      "attrs": ":user_id, :reset_code, :expiration_date",
-      "hasAttrAccessible": true,
+      "attrs": ":expiration_date, :reset_code, :user_id",
+      "attrAccessible": {
+        "value": ":email, :user, :user_id",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/passwords_controller.rb",
@@ -2222,20 +2294,23 @@
     {
       "name": "Portal::Bookmark",
       "path": "app/models/portal/bookmark.rb",
-      "attrs": ":name, :type, :url, :user_id, :position, :clazz_id, :is_visible",
-      "hasAttrAccessible": true,
+      "attrs": ":clazz_id, :is_visible, :name, :position, :type, :url, :user_id",
+      "attrAccessible": {
+        "value": ":clazz, :clazz_id, :is_visible, :name, :position, :tpye, :url, :user, :user_id",
+        "matches": false
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Portal::BookmarkVisit",
       "path": "app/models/portal/bookmark_visit.rb",
-      "attrs": ":user_id, :bookmark_id",
-      "hasAttrAccessible": false,
+      "attrs": ":bookmark_id, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/portal/bookmark.rb",
-          "lineNumber": 64,
+          "lineNumber": 63,
           "line": "self.bookmark_visits << Portal::BookmarkVisit.new(:user => user)"
         }
       ],
@@ -2244,8 +2319,11 @@
     {
       "name": "Portal::Clazz",
       "path": "app/models/portal/clazz.rb",
-      "attrs": ":uuid, :name, :description, :start_time, :end_time, :class_word, :status, :course_id, :semester_id, :teacher_id, :section, :default_class, :logging, :class_hash",
-      "hasAttrAccessible": true,
+      "attrs": ":class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid",
+      "attrAccessible": {
+        "value": ":class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/teacher_classes_controller.rb",
@@ -2259,7 +2337,7 @@
         },
         {
           "file": "app/models/portal/clazz.rb",
-          "lineNumber": 64,
+          "lineNumber": 62,
           "line": "Portal::Clazz.create(:name => \"Default Class\", :default_class => true, :class_word => \"default\")"
         },
         {
@@ -2294,8 +2372,8 @@
     {
       "name": "Portal::Collaboration",
       "path": "app/models/portal/collaboration.rb",
-      "attrs": ":owner_id, :offering_id",
-      "hasAttrAccessible": false,
+      "attrs": ":offering_id, :owner_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/services/api/v1/create_collaboration.rb",
@@ -2320,23 +2398,23 @@
       "name": "Portal::CollaborationMembership",
       "path": "app/models/portal/collaboration_membership.rb",
       "attrs": ":collaboration_id, :student_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Portal::Country",
       "path": "app/models/portal/country.rb",
-      "attrs": ":name, :formal_name, :capital, :two_letter, :three_letter, :tld, :iso_id",
-      "hasAttrAccessible": false,
+      "attrs": ":capital, :formal_name, :iso_id, :name, :three_letter, :tld, :two_letter",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Portal::Course",
       "path": "app/models/portal/course.rb",
-      "attrs": ":uuid, :name, :description, :school_id, :status, :course_number",
-      "hasAttrAccessible": false,
+      "attrs": ":course_number, :description, :name, :school_id, :status, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
@@ -2380,8 +2458,11 @@
     {
       "name": "Portal::District",
       "path": "app/models/portal/district.rb",
-      "attrs": ":uuid, :name, :description, :nces_district_id, :state, :leaid, :zipcode",
-      "hasAttrAccessible": true,
+      "attrs": ":description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode",
+      "attrAccessible": {
+        "value": ":description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/portal/districts_controller.rb",
@@ -2440,8 +2521,8 @@
     {
       "name": "Portal::GenericBookmark",
       "path": "app/models/portal/generic_bookmark.rb",
-      "attrs": ":name, :type, :url, :user_id, :position, :clazz_id, :is_visible",
-      "hasAttrAccessible": false,
+      "attrs": ":clazz_id, :is_visible, :name, :position, :type, :url, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/bookmarks_controller.rb",
@@ -2459,8 +2540,8 @@
     {
       "name": "Portal::Grade",
       "path": "app/models/portal/grade.rb",
-      "attrs": ":name, :description, :position, :uuid, :active",
-      "hasAttrAccessible": false,
+      "attrs": ":active, :description, :name, :position, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "spec/models/portal/grade_spec.rb",
@@ -2473,8 +2554,8 @@
     {
       "name": "Portal::GradeLevel",
       "path": "app/models/portal/grade_level.rb",
-      "attrs": ":uuid, :name, :description, :has_grade_levels_id, :has_grade_levels_type, :grade_id",
-      "hasAttrAccessible": false,
+      "attrs": ":description, :grade_id, :has_grade_levels_id, :has_grade_levels_type, :name, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "lib/mock_data/create_default_data.rb",
@@ -2497,8 +2578,8 @@
     {
       "name": "Portal::Learner",
       "path": "app/models/portal/learner.rb",
-      "attrs": ":uuid, :student_id, :offering_id, :bundle_logger_id, :console_logger_id, :secure_key",
-      "hasAttrAccessible": false,
+      "attrs": ":bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/learners_controller.rb",
@@ -2547,8 +2628,11 @@
     {
       "name": "Portal::LearnerActivityFeedback",
       "path": "app/models/portal/learner_activity_feedback.rb",
-      "attrs": ":text_feedback, :score, :has_been_reviewed, :portal_learner_id, :activity_feedback_id, :rubric_feedback",
-      "hasAttrAccessible": true,
+      "attrs": ":activity_feedback_id, :has_been_reviewed, :portal_learner_id, :rubric_feedback, :score, :text_feedback",
+      "attrAccessible": {
+        "value": ":activity_feedback, :activity_feedback_id, :has_been_reviewed, :portal_learner, :portal_learner_id, :rubric_feedback, :score, :text_feedback",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "spec/models/portal/learner_activity_feedback_spec.rb",
@@ -2562,15 +2646,15 @@
       "name": "Portal::LegacyCollaboration",
       "path": "app/models/portal/legacy_collaboration.rb",
       "attrs": ":bundle_content_id, :student_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Portal::Nces06District",
       "path": "app/models/portal/nces06_district.rb",
-      "attrs": ":LEAID, :FIPST, :STID, :NAME, :PHONE, :MSTREE, :MCITY, :MSTATE, :MZIP, :MZIP4, :LSTREE, :LCITY, :LSTATE, :LZIP, :LZIP4, :KIND, :UNION, :CONUM, :CONAME, :CSA, :CBSA, :METMIC, :MSC, :ULOCAL, :CDCODE, :LATCOD, :LONCOD, :BOUND, :GSLO, :GSHI, :AGCHRT, :SCH, :TEACH, :UG, :PK12, :MEMBER, :MIGRNT, :SPECED, :ELL, :PKTCH, :KGTCH, :ELMTCH, :SECTCH, :UGTCH, :TOTTCH, :AIDES, :CORSUP, :ELMGUI, :SECGUI, :TOTGUI, :LIBSPE, :LIBSUP, :LEAADM, :LEASUP, :SCHADM, :SCHSUP, :STUSUP, :OTHSUP, :IGSLO, :IGSHI, :ISCH, :ITEACH, :IUG, :IPK12, :IMEMB, :IMIGRN, :ISPEC, :IELL, :IPKTCH, :IKGTCH, :IELTCH, :ISETCH, :IUGTCH, :ITOTCH, :IAIDES, :ICOSUP, :IELGUI, :ISEGUI, :ITOGUI, :ILISPE, :ILISUP, :ILEADM, :ILESUP, :ISCADM, :ISCSUP, :ISTSUP, :IOTSUP",
-      "hasAttrAccessible": false,
+      "attrs": ":AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST, :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP, :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH, :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM, :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC, :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM, :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/nces06_districts_controller.rb",
@@ -2594,8 +2678,8 @@
     {
       "name": "Portal::Nces06School",
       "path": "app/models/portal/nces06_school.rb",
-      "attrs": ":nces_district_id, :NCESSCH, :FIPST, :LEAID, :SCHNO, :STID, :SEASCH, :LEANM, :SCHNAM, :PHONE, :MSTREE, :MCITY, :MSTATE, :MZIP, :MZIP4, :LSTREE, :LCITY, :LSTATE, :LZIP, :LZIP4, :KIND, :STATUS, :ULOCAL, :LATCOD, :LONCOD, :CDCODE, :CONUM, :CONAME, :FTE, :GSLO, :GSHI, :LEVEL, :TITLEI, :STITLI, :MAGNET, :CHARTR, :SHARED, :FRELCH, :REDLCH, :TOTFRL, :MIGRNT, :PK, :AMPKM, :AMPKF, :AMPKU, :ASPKM, :ASPKF, :ASPKU, :HIPKM, :HIPKF, :HIPKU, :BLPKM, :BLPKF, :BLPKU, :WHPKM, :WHPKF, :WHPKU, :KG, :AMKGM, :AMKGF, :AMKGU, :ASKGM, :ASKGF, :ASKGU, :HIKGM, :HIKGF, :HIKGU, :BLKGM, :BLKGF, :BLKGU, :WHKGM, :WHKGF, :WHKGU, :G01, :AM01M, :AM01F, :AM01U, :AS01M, :AS01F, :AS01U, :HI01M, :HI01F, :HI01U, :BL01M, :BL01F, :BL01U, :WH01M, :WH01F, :WH01U, :G02, :AM02M, :AM02F, :AM02U, :AS02M, :AS02F, :AS02U, :HI02M, :HI02F, :HI02U, :BL02M, :BL02F, :BL02U, :WH02M, :WH02F, :WH02U, :G03, :AM03M, :AM03F, :AM03U, :AS03M, :AS03F, :AS03U, :HI03M, :HI03F, :HI03U, :BL03M, :BL03F, :BL03U, :WH03M, :WH03F, :WH03U, :G04, :AM04M, :AM04F, :AM04U, :AS04M, :AS04F, :AS04U, :HI04M, :HI04F, :HI04U, :BL04M, :BL04F, :BL04U, :WH04M, :WH04F, :WH04U, :G05, :AM05M, :AM05F, :AM05U, :AS05M, :AS05F, :AS05U, :HI05M, :HI05F, :HI05U, :BL05M, :BL05F, :BL05U, :WH05M, :WH05F, :WH05U, :G06, :AM06M, :AM06F, :AM06U, :AS06M, :AS06F, :AS06U, :HI06M, :HI06F, :HI06U, :BL06M, :BL06F, :BL06U, :WH06M, :WH06F, :WH06U, :G07, :AM07M, :AM07F, :AM07U, :AS07M, :AS07F, :AS07U, :HI07M, :HI07F, :HI07U, :BL07M, :BL07F, :BL07U, :WH07M, :WH07F, :WH07U, :G08, :AM08M, :AM08F, :AM08U, :AS08M, :AS08F, :AS08U, :HI08M, :HI08F, :HI08U, :BL08M, :BL08F, :BL08U, :WH08M, :WH08F, :WH08U, :G09, :AM09M, :AM09F, :AM09U, :AS09M, :AS09F, :AS09U, :HI09M, :HI09F, :HI09U, :BL09M, :BL09F, :BL09U, :WH09M, :WH09F, :WH09U, :G10, :AM10M, :AM10F, :AM10U, :AS10M, :AS10F, :AS10U, :HI10M, :HI10F, :HI10U, :BL10M, :BL10F, :BL10U, :WH10M, :WH10F, :WH10U, :G11, :AM11M, :AM11F, :AM11U, :AS11M, :AS11F, :AS11U, :HI11M, :HI11F, :HI11U, :BL11M, :BL11F, :BL11U, :WH11M, :WH11F, :WH11U, :G12, :AM12M, :AM12F, :AM12U, :AS12M, :AS12F, :AS12U, :HI12M, :HI12F, :HI12U, :BL12M, :BL12F, :BL12U, :WH12M, :WH12F, :WH12U, :UG, :AMUGM, :AMUGF, :AMUGU, :ASUGM, :ASUGF, :ASUGU, :HIUGM, :HIUGF, :HIUGU, :BLUGM, :BLUGF, :BLUGU, :WHUGM, :WHUGF, :WHUGU, :MEMBER, :AM, :AMALM, :AMALF, :AMALU, :ASIAN, :ASALM, :ASALF, :ASALU, :HISP, :HIALM, :HIALF, :HIALU, :BLACK, :BLALM, :BLALF, :BLALU, :WHITE, :WHALM, :WHALF, :WHALU, :TOTETH, :PUPTCH, :TOTGRD, :IFTE, :IGSLO, :IGSHI, :ITITLI, :ISTITL, :IMAGNE, :ICHART, :ISHARE, :IFRELC, :IREDLC, :ITOTFR, :IMIGRN, :IPK, :IAMPKM, :IAMPKF, :IAMPKU, :IASPKM, :IASPKF, :IASPKU, :IHIPKM, :IHIPKF, :IHIPKU, :IBLPKM, :IBLPKF, :IBLPKU, :IWHPKM, :IWHPKF, :IWHPKU, :IKG, :IAMKGM, :IAMKGF, :IAMKGU, :IASKGM, :IASKGF, :IASKGU, :IHIKGM, :IHIKGF, :IHIKGU, :IBLKGM, :IBLKGF, :IBLKGU, :IWHKGM, :IWHKGF, :IWHKGU, :IG01, :IAM01M, :IAM01F, :IAM01U, :IAS01M, :IAS01F, :IAS01U, :IHI01M, :IHI01F, :IHI01U, :IBL01M, :IBL01F, :IBL01U, :IWH01M, :IWH01F, :IWH01U, :IG02, :IAM02M, :IAM02F, :IAM02U, :IAS02M, :IAS02F, :IAS02U, :IHI02M, :IHI02F, :IHI02U, :IBL02M, :IBL02F, :IBL02U, :IWH02M, :IWH02F, :IWH02U, :IG03, :IAM03M, :IAM03F, :IAM03U, :IAS03M, :IAS03F, :IAS03U, :IHI03M, :IHI03F, :IHI03U, :IBL03M, :IBL03F, :IBL03U, :IWH03M, :IWH03F, :IWH03U, :IG04, :IAM04M, :IAM04F, :IAM04U, :IAS04M, :IAS04F, :IAS04U, :IHI04M, :IHI04F, :IHI04U, :IBL04M, :IBL04F, :IBL04U, :IWH04M, :IWH04F, :IWH04U, :IG05, :IAM05M, :IAM05F, :IAM05U, :IAS05M, :IAS05F, :IAS05U, :IHI05M, :IHI05F, :IHI05U, :IBL05M, :IBL05F, :IBL05U, :IWH05M, :IWH05F, :IWH05U, :IG06, :IAM06M, :IAM06F, :IAM06U, :IAS06M, :IAS06F, :IAS06U, :IHI06M, :IHI06F, :IHI06U, :IBL06M, :IBL06F, :IBL06U, :IWH06M, :IWH06F, :IWH06U, :IG07, :IAM07M, :IAM07F, :IAM07U, :IAS07M, :IAS07F, :IAS07U, :IHI07M, :IHI07F, :IHI07U, :IBL07M, :IBL07F, :IBL07U, :IWH07M, :IWH07F, :IWH07U, :IG08, :IAM08M, :IAM08F, :IAM08U, :IAS08M, :IAS08F, :IAS08U, :IHI08M, :IHI08F, :IHI08U, :IBL08M, :IBL08F, :IBL08U, :IWH08M, :IWH08F, :IWH08U, :IG09, :IAM09M, :IAM09F, :IAM09U, :IAS09M, :IAS09F, :IAS09U, :IHI09M, :IHI09F, :IHI09U, :IBL09M, :IBL09F, :IBL09U, :IWH09M, :IWH09F, :IWH09U, :IG10, :IAM10M, :IAM10F, :IAM10U, :IAS10M, :IAS10F, :IAS10U, :IHI10M, :IHI10F, :IHI10U, :IBL10M, :IBL10F, :IBL10U, :IWH10M, :IWH10F, :IWH10U, :IG11, :IAM11M, :IAM11F, :IAM11U, :IAS11M, :IAS11F, :IAS11U, :IHI11M, :IHI11F, :IHI11U, :IBL11M, :IBL11F, :IBL11U, :IWH11M, :IWH11F, :IWH11U, :IG12, :IAM12M, :IAM12F, :IAM12U, :IAS12M, :IAS12F, :IAS12U, :IHI12M, :IHI12F, :IHI12U, :IBL12M, :IBL12F, :IBL12U, :IWH12M, :IWH12F, :IWH12U, :IUG, :IAMUGM, :IAMUGF, :IAMUGU, :IASUGM, :IASUGF, :IASUGU, :IHIUGM, :IHIUGF, :IHIUGU, :IBLUGM, :IBLUGF, :IBLUGU, :IWHUGM, :IWHUGF, :IWHUGU, :IMEMB, :IAM, :IAMALM, :IAMALF, :IAMALU, :IASIAN, :IASALM, :IASALF, :IASALU, :IHISP, :IHIALM, :IHIALF, :IHIALU, :IBLACK, :IBLALM, :IBLALF, :IBLALU, :IWHITE, :IWHALM, :IWHALF, :IWHALU, :IETH, :IPUTCH, :ITOTGR",
-      "hasAttrAccessible": false,
+      "attrs": ":AM, :AM01F, :AM01M, :AM01U, :AM02F, :AM02M, :AM02U, :AM03F, :AM03M, :AM03U, :AM04F, :AM04M, :AM04U, :AM05F, :AM05M, :AM05U, :AM06F, :AM06M, :AM06U, :AM07F, :AM07M, :AM07U, :AM08F, :AM08M, :AM08U, :AM09F, :AM09M, :AM09U, :AM10F, :AM10M, :AM10U, :AM11F, :AM11M, :AM11U, :AM12F, :AM12M, :AM12U, :AMALF, :AMALM, :AMALU, :AMKGF, :AMKGM, :AMKGU, :AMPKF, :AMPKM, :AMPKU, :AMUGF, :AMUGM, :AMUGU, :AS01F, :AS01M, :AS01U, :AS02F, :AS02M, :AS02U, :AS03F, :AS03M, :AS03U, :AS04F, :AS04M, :AS04U, :AS05F, :AS05M, :AS05U, :AS06F, :AS06M, :AS06U, :AS07F, :AS07M, :AS07U, :AS08F, :AS08M, :AS08U, :AS09F, :AS09M, :AS09U, :AS10F, :AS10M, :AS10U, :AS11F, :AS11M, :AS11U, :AS12F, :AS12M, :AS12U, :ASALF, :ASALM, :ASALU, :ASIAN, :ASKGF, :ASKGM, :ASKGU, :ASPKF, :ASPKM, :ASPKU, :ASUGF, :ASUGM, :ASUGU, :BL01F, :BL01M, :BL01U, :BL02F, :BL02M, :BL02U, :BL03F, :BL03M, :BL03U, :BL04F, :BL04M, :BL04U, :BL05F, :BL05M, :BL05U, :BL06F, :BL06M, :BL06U, :BL07F, :BL07M, :BL07U, :BL08F, :BL08M, :BL08U, :BL09F, :BL09M, :BL09U, :BL10F, :BL10M, :BL10U, :BL11F, :BL11M, :BL11U, :BL12F, :BL12M, :BL12U, :BLACK, :BLALF, :BLALM, :BLALU, :BLKGF, :BLKGM, :BLKGU, :BLPKF, :BLPKM, :BLPKU, :BLUGF, :BLUGM, :BLUGU, :CDCODE, :CHARTR, :CONAME, :CONUM, :FIPST, :FRELCH, :FTE, :G01, :G02, :G03, :G04, :G05, :G06, :G07, :G08, :G09, :G10, :G11, :G12, :GSHI, :GSLO, :HI01F, :HI01M, :HI01U, :HI02F, :HI02M, :HI02U, :HI03F, :HI03M, :HI03U, :HI04F, :HI04M, :HI04U, :HI05F, :HI05M, :HI05U, :HI06F, :HI06M, :HI06U, :HI07F, :HI07M, :HI07U, :HI08F, :HI08M, :HI08U, :HI09F, :HI09M, :HI09U, :HI10F, :HI10M, :HI10U, :HI11F, :HI11M, :HI11U, :HI12F, :HI12M, :HI12U, :HIALF, :HIALM, :HIALU, :HIKGF, :HIKGM, :HIKGU, :HIPKF, :HIPKM, :HIPKU, :HISP, :HIUGF, :HIUGM, :HIUGU, :IAM, :IAM01F, :IAM01M, :IAM01U, :IAM02F, :IAM02M, :IAM02U, :IAM03F, :IAM03M, :IAM03U, :IAM04F, :IAM04M, :IAM04U, :IAM05F, :IAM05M, :IAM05U, :IAM06F, :IAM06M, :IAM06U, :IAM07F, :IAM07M, :IAM07U, :IAM08F, :IAM08M, :IAM08U, :IAM09F, :IAM09M, :IAM09U, :IAM10F, :IAM10M, :IAM10U, :IAM11F, :IAM11M, :IAM11U, :IAM12F, :IAM12M, :IAM12U, :IAMALF, :IAMALM, :IAMALU, :IAMKGF, :IAMKGM, :IAMKGU, :IAMPKF, :IAMPKM, :IAMPKU, :IAMUGF, :IAMUGM, :IAMUGU, :IAS01F, :IAS01M, :IAS01U, :IAS02F, :IAS02M, :IAS02U, :IAS03F, :IAS03M, :IAS03U, :IAS04F, :IAS04M, :IAS04U, :IAS05F, :IAS05M, :IAS05U, :IAS06F, :IAS06M, :IAS06U, :IAS07F, :IAS07M, :IAS07U, :IAS08F, :IAS08M, :IAS08U, :IAS09F, :IAS09M, :IAS09U, :IAS10F, :IAS10M, :IAS10U, :IAS11F, :IAS11M, :IAS11U, :IAS12F, :IAS12M, :IAS12U, :IASALF, :IASALM, :IASALU, :IASIAN, :IASKGF, :IASKGM, :IASKGU, :IASPKF, :IASPKM, :IASPKU, :IASUGF, :IASUGM, :IASUGU, :IBL01F, :IBL01M, :IBL01U, :IBL02F, :IBL02M, :IBL02U, :IBL03F, :IBL03M, :IBL03U, :IBL04F, :IBL04M, :IBL04U, :IBL05F, :IBL05M, :IBL05U, :IBL06F, :IBL06M, :IBL06U, :IBL07F, :IBL07M, :IBL07U, :IBL08F, :IBL08M, :IBL08U, :IBL09F, :IBL09M, :IBL09U, :IBL10F, :IBL10M, :IBL10U, :IBL11F, :IBL11M, :IBL11U, :IBL12F, :IBL12M, :IBL12U, :IBLACK, :IBLALF, :IBLALM, :IBLALU, :IBLKGF, :IBLKGM, :IBLKGU, :IBLPKF, :IBLPKM, :IBLPKU, :IBLUGF, :IBLUGM, :IBLUGU, :ICHART, :IETH, :IFRELC, :IFTE, :IG01, :IG02, :IG03, :IG04, :IG05, :IG06, :IG07, :IG08, :IG09, :IG10, :IG11, :IG12, :IGSHI, :IGSLO, :IHI01F, :IHI01M, :IHI01U, :IHI02F, :IHI02M, :IHI02U, :IHI03F, :IHI03M, :IHI03U, :IHI04F, :IHI04M, :IHI04U, :IHI05F, :IHI05M, :IHI05U, :IHI06F, :IHI06M, :IHI06U, :IHI07F, :IHI07M, :IHI07U, :IHI08F, :IHI08M, :IHI08U, :IHI09F, :IHI09M, :IHI09U, :IHI10F, :IHI10M, :IHI10U, :IHI11F, :IHI11M, :IHI11U, :IHI12F, :IHI12M, :IHI12U, :IHIALF, :IHIALM, :IHIALU, :IHIKGF, :IHIKGM, :IHIKGU, :IHIPKF, :IHIPKM, :IHIPKU, :IHISP, :IHIUGF, :IHIUGM, :IHIUGU, :IKG, :IMAGNE, :IMEMB, :IMIGRN, :IPK, :IPUTCH, :IREDLC, :ISHARE, :ISTITL, :ITITLI, :ITOTFR, :ITOTGR, :IUG, :IWH01F, :IWH01M, :IWH01U, :IWH02F, :IWH02M, :IWH02U, :IWH03F, :IWH03M, :IWH03U, :IWH04F, :IWH04M, :IWH04U, :IWH05F, :IWH05M, :IWH05U, :IWH06F, :IWH06M, :IWH06U, :IWH07F, :IWH07M, :IWH07U, :IWH08F, :IWH08M, :IWH08U, :IWH09F, :IWH09M, :IWH09U, :IWH10F, :IWH10M, :IWH10U, :IWH11F, :IWH11M, :IWH11U, :IWH12F, :IWH12M, :IWH12U, :IWHALF, :IWHALM, :IWHALU, :IWHITE, :IWHKGF, :IWHKGM, :IWHKGU, :IWHPKF, :IWHPKM, :IWHPKU, :IWHUGF, :IWHUGM, :IWHUGU, :KG, :KIND, :LATCOD, :LCITY, :LEAID, :LEANM, :LEVEL, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MAGNET, :MCITY, :MEMBER, :MIGRNT, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NCESSCH, :PHONE, :PK, :PUPTCH, :REDLCH, :SCHNAM, :SCHNO, :SEASCH, :SHARED, :STATUS, :STID, :STITLI, :TITLEI, :TOTETH, :TOTFRL, :TOTGRD, :UG, :ULOCAL, :WH01F, :WH01M, :WH01U, :WH02F, :WH02M, :WH02U, :WH03F, :WH03M, :WH03U, :WH04F, :WH04M, :WH04U, :WH05F, :WH05M, :WH05U, :WH06F, :WH06M, :WH06U, :WH07F, :WH07M, :WH07U, :WH08F, :WH08M, :WH08U, :WH09F, :WH09M, :WH09U, :WH10F, :WH10M, :WH10U, :WH11F, :WH11M, :WH11U, :WH12F, :WH12M, :WH12U, :WHALF, :WHALM, :WHALU, :WHITE, :WHKGF, :WHKGM, :WHKGU, :WHPKF, :WHPKM, :WHPKU, :WHUGF, :WHUGM, :WHUGU, :nces_district_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/nces06_schools_controller.rb",
@@ -2614,8 +2698,8 @@
     {
       "name": "Portal::Offering",
       "path": "app/models/portal/offering.rb",
-      "attrs": ":uuid, :status, :clazz_id, :runnable_id, :runnable_type, :active, :default_offering, :position, :anonymous_report, :locked",
-      "hasAttrAccessible": false,
+      "attrs": ":active, :anonymous_report, :clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/global_steps.rb",
@@ -2653,8 +2737,11 @@
     {
       "name": "Portal::OfferingActivityFeedback",
       "path": "app/models/portal/offering_activity_feedback.rb",
-      "attrs": ":enable_text_feedback, :max_score, :score_type, :activity_id, :portal_offering_id, :use_rubric, :rubric",
-      "hasAttrAccessible": true,
+      "attrs": ":activity_id, :enable_text_feedback, :max_score, :portal_offering_id, :rubric, :score_type, :use_rubric",
+      "attrAccessible": {
+        "value": ":activity, :activity_id, :enable_text_feedback, :max_score, :portal_offering, :portal_offering_id, :rubric, :score_type, :use_rubric",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "spec/models/portal/learner_activity_feedback_spec.rb",
@@ -2672,16 +2759,19 @@
     {
       "name": "Portal::OfferingEmbeddableMetadata",
       "path": "app/models/portal/offering_embeddable_metadata.rb",
-      "attrs": ":offering_id, :embeddable_id, :embeddable_type, :enable_score, :max_score, :enable_text_feedback",
-      "hasAttrAccessible": false,
+      "attrs": ":embeddable_id, :embeddable_type, :enable_score, :enable_text_feedback, :max_score, :offering_id",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Portal::PermissionForm",
       "path": "app/models/portal/permission_form.rb",
-      "attrs": ":name, :url, :project_id",
-      "hasAttrAccessible": true,
+      "attrs": ":name, :project_id, :url",
+      "attrAccessible": {
+        "value": ":name, :project_id, :url",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/permission_forms_controller.rb",
@@ -2694,8 +2784,8 @@
     {
       "name": "Portal::School",
       "path": "app/models/portal/school.rb",
-      "attrs": ":uuid, :name, :description, :district_id, :nces_school_id, :state, :zipcode, :ncessch, :country_id, :city",
-      "hasAttrAccessible": false,
+      "attrs": ":city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/schools_controller.rb",
@@ -2749,8 +2839,8 @@
     {
       "name": "Portal::SchoolMembership",
       "path": "app/models/portal/school_membership.rb",
-      "attrs": ":uuid, :name, :description, :start_time, :end_time, :member_id, :member_type, :school_id",
-      "hasAttrAccessible": false,
+      "attrs": ":description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/school_memberships_controller.rb",
@@ -2774,8 +2864,8 @@
     {
       "name": "Portal::Student",
       "path": "app/models/portal/student.rb",
-      "attrs": ":uuid, :user_id, :grade_level_id",
-      "hasAttrAccessible": false,
+      "attrs": ":grade_level_id, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/students_controller.rb",
@@ -2864,8 +2954,8 @@
     {
       "name": "Portal::StudentClazz",
       "path": "app/models/portal/student_clazz.rb",
-      "attrs": ":uuid, :name, :description, :start_time, :end_time, :clazz_id, :student_id",
-      "hasAttrAccessible": false,
+      "attrs": ":clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/student_clazzes_controller.rb",
@@ -2884,16 +2974,19 @@
     {
       "name": "Portal::StudentPermissionForm",
       "path": "app/models/portal/student_permission_form.rb",
-      "attrs": ":signed, :portal_student_id, :portal_permission_form_id",
-      "hasAttrAccessible": true,
+      "attrs": ":portal_permission_form_id, :portal_student_id, :signed",
+      "attrAccessible": {
+        "value": ":portal_permission_form, :portal_permission_form_id, :portal_student, :portal_student_id, :signed",
+        "matches": false
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Portal::Subject",
       "path": "app/models/portal/subject.rb",
-      "attrs": ":uuid, :name, :description, :teacher_id",
-      "hasAttrAccessible": false,
+      "attrs": ":description, :name, :teacher_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/subjects_controller.rb",
@@ -2912,8 +3005,8 @@
     {
       "name": "Portal::Teacher",
       "path": "app/models/portal/teacher.rb",
-      "attrs": ":uuid, :user_id, :offerings_count, :left_pane_submenu_item",
-      "hasAttrAccessible": false,
+      "attrs": ":left_pane_submenu_item, :offerings_count, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/clazzes_controller.rb",
@@ -2947,8 +3040,8 @@
     {
       "name": "Portal::TeacherClazz",
       "path": "app/models/portal/teacher_clazz.rb",
-      "attrs": ":uuid, :name, :description, :start_time, :end_time, :clazz_id, :teacher_id, :active, :position",
-      "hasAttrAccessible": false,
+      "attrs": ":active, :clazz_id, :description, :end_time, :name, :position, :start_time, :teacher_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/teacher_steps.rb",
@@ -2961,16 +3054,16 @@
     {
       "name": "Portal::TeacherFullStatus",
       "path": "app/models/portal/teacher_full_status.rb",
-      "attrs": ":offering_id, :teacher_id, :offering_collapsed",
-      "hasAttrAccessible": false,
+      "attrs": ":offering_collapsed, :offering_id, :teacher_id",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Report::EmbeddableFilter",
       "path": "app/models/report/embeddable_filter.rb",
-      "attrs": ":offering_id, :embeddables, :ignore",
-      "hasAttrAccessible": false,
+      "attrs": ":embeddables, :ignore, :offering_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/report/util.rb",
@@ -2988,8 +3081,8 @@
     {
       "name": "Report::Learner",
       "path": "app/models/report/learner.rb",
-      "attrs": ":learner_id, :student_id, :user_id, :offering_id, :class_id, :last_run, :last_report, :offering_name, :teachers_name, :student_name, :username, :school_name, :class_name, :runnable_id, :runnable_name, :school_id, :num_answerables, :num_answered, :num_correct, :answers, :runnable_type, :complete_percent, :permission_forms, :num_submitted, :teachers_district, :teachers_state, :teachers_email, :permission_forms_id, :teachers_id, :teachers_map, :permission_forms_map",
-      "hasAttrAccessible": false,
+      "attrs": ":answers, :class_id, :class_name, :complete_percent, :last_report, :last_run, :learner_id, :num_answerables, :num_answered, :num_correct, :num_submitted, :offering_id, :offering_name, :permission_forms, :permission_forms_id, :permission_forms_map, :runnable_id, :runnable_name, :runnable_type, :school_id, :school_name, :student_id, :student_name, :teachers_district, :teachers_email, :teachers_id, :teachers_map, :teachers_name, :teachers_state, :user_id, :username",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "spec/models/report/learner_spec.rb",
@@ -3088,16 +3181,16 @@
     {
       "name": "Report::LearnerActivity",
       "path": "app/models/report/learner_activity.rb",
-      "attrs": ":learner_id, :activity_id, :complete_percent",
-      "hasAttrAccessible": false,
+      "attrs": ":activity_id, :complete_percent, :learner_id",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Role",
       "path": "app/models/role.rb",
-      "attrs": ":title, :position, :uuid",
-      "hasAttrAccessible": false,
+      "attrs": ":position, :title, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "db/migrate/20080929171348_bort_migration.rb",
@@ -3116,23 +3209,23 @@
       "name": "Saveable::ExternalLink",
       "path": "app/models/saveable/external_link.rb",
       "attrs": ":embeddable_id, :embeddable_type, :learner_id, :offering_id, :response_count",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Saveable::ExternalLinkUrl",
       "path": "app/models/saveable/external_link_url.rb",
-      "attrs": ":external_link_id, :bundle_content_id, :position, :url, :is_final, :feedback, :has_been_reviewed, :score",
-      "hasAttrAccessible": false,
+      "attrs": ":bundle_content_id, :external_link_id, :feedback, :has_been_reviewed, :is_final, :position, :score, :url",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Saveable::ImageQuestion",
       "path": "app/models/saveable/image_question.rb",
-      "attrs": ":learner_id, :offering_id, :image_question_id, :response_count, :uuid",
-      "hasAttrAccessible": false,
+      "attrs": ":image_question_id, :learner_id, :offering_id, :response_count, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/researcher_report_steps.rb",
@@ -3155,8 +3248,8 @@
     {
       "name": "Saveable::ImageQuestionAnswer",
       "path": "app/models/saveable/image_question_answer.rb",
-      "attrs": ":image_question_id, :bundle_content_id, :blob_id, :position, :note, :uuid, :is_final, :feedback, :has_been_reviewed, :score",
-      "hasAttrAccessible": false,
+      "attrs": ":blob_id, :bundle_content_id, :feedback, :has_been_reviewed, :image_question_id, :is_final, :note, :position, :score, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/researcher_report_steps.rb",
@@ -3174,16 +3267,16 @@
     {
       "name": "Saveable::Interactive",
       "path": "app/models/saveable/interactive.rb",
-      "attrs": ":learner_id, :offering_id, :response_count, :iframe_id",
-      "hasAttrAccessible": false,
+      "attrs": ":iframe_id, :learner_id, :offering_id, :response_count",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Saveable::InteractiveState",
       "path": "app/models/saveable/interactive_state.rb",
-      "attrs": ":interactive_id, :bundle_content_id, :position, :state, :is_final, :feedback, :has_been_reviewed, :score",
-      "hasAttrAccessible": false,
+      "attrs": ":bundle_content_id, :feedback, :has_been_reviewed, :interactive_id, :is_final, :position, :score, :state",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
@@ -3191,7 +3284,7 @@
       "name": "Saveable::MultipleChoice",
       "path": "app/models/saveable/multiple_choice.rb",
       "attrs": ":learner_id, :multiple_choice_id, :offering_id, :response_count, :uuid",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/researcher_report_steps.rb",
@@ -3209,8 +3302,8 @@
     {
       "name": "Saveable::MultipleChoiceAnswer",
       "path": "app/models/saveable/multiple_choice_answer.rb",
-      "attrs": ":multiple_choice_id, :bundle_content_id, :position, :uuid, :is_final, :feedback, :has_been_reviewed, :score",
-      "hasAttrAccessible": false,
+      "attrs": ":bundle_content_id, :feedback, :has_been_reviewed, :is_final, :multiple_choice_id, :position, :score, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/researcher_report_steps.rb",
@@ -3228,8 +3321,8 @@
     {
       "name": "Saveable::MultipleChoiceRationaleChoice",
       "path": "app/models/saveable/multiple_choice_rationale_choice.rb",
-      "attrs": ":choice_id, :answer_id, :rationale, :uuid",
-      "hasAttrAccessible": false,
+      "attrs": ":answer_id, :choice_id, :rationale, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/portal/offerings_controller.rb",
@@ -3268,8 +3361,8 @@
     {
       "name": "Saveable::OpenResponse",
       "path": "app/models/saveable/open_response.rb",
-      "attrs": ":learner_id, :open_response_id, :offering_id, :response_count",
-      "hasAttrAccessible": false,
+      "attrs": ":learner_id, :offering_id, :open_response_id, :response_count",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/researcher_report_steps.rb",
@@ -3287,8 +3380,8 @@
     {
       "name": "Saveable::OpenResponseAnswer",
       "path": "app/models/saveable/open_response_answer.rb",
-      "attrs": ":open_response_id, :bundle_content_id, :position, :answer, :is_final, :feedback, :has_been_reviewed, :score",
-      "hasAttrAccessible": false,
+      "attrs": ":answer, :bundle_content_id, :feedback, :has_been_reviewed, :is_final, :open_response_id, :position, :score",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "features/step_definitions/researcher_report_steps.rb",
@@ -3302,7 +3395,7 @@
       "name": "Saveable::Sparks::MeasuringResistance",
       "path": "app/models/saveable/sparks/measuring_resistance.rb",
       "attrs": ":learner_id, :offering_id",
-      "hasAttrAccessible": false,
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/saveable/sparks/measuring_resistances_controller.rb",
@@ -3321,16 +3414,16 @@
     {
       "name": "Saveable::Sparks::MeasuringResistanceReports",
       "path": "app/models/saveable/sparks/measuring_resistance_reports.rb",
-      "attrs": ":measuring_resistance_id, :position, :content",
-      "hasAttrAccessible": false,
+      "attrs": ":content, :measuring_resistance_id, :position",
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "Section",
       "path": "app/models/section.rb",
-      "attrs": ":user_id, :activity_id, :uuid, :name, :description, :position, :teacher_only, :publication_status",
-      "hasAttrAccessible": false,
+      "attrs": ":activity_id, :description, :name, :position, :publication_status, :teacher_only, :user_id, :uuid",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/models/report/offering/activity.rb",
@@ -3394,8 +3487,8 @@
     {
       "name": "SecurityQuestion",
       "path": "app/models/security_question.rb",
-      "attrs": ":user_id, :question, :answer",
-      "hasAttrAccessible": false,
+      "attrs": ":answer, :question, :user_id",
+      "attrAccessible": null,
       "newOrCreates": [
         {
           "file": "app/controllers/security_questions_controller.rb",
@@ -3479,16 +3572,22 @@
     {
       "name": "StandardDocument",
       "path": "app/models/standard_document.rb",
-      "attrs": ":uri, :jurisdiction, :title, :name",
-      "hasAttrAccessible": true,
+      "attrs": ":jurisdiction, :name, :title, :uri",
+      "attrAccessible": {
+        "value": ":jurisdiction, :name, :title, :uri",
+        "matches": true
+      },
       "newOrCreates": [],
       "updates": []
     },
     {
       "name": "StandardStatement",
       "path": "app/models/standard_statement.rb",
-      "attrs": ":uri, :doc, :statement_notation, :statement_label, :description, :parents, :material_type, :material_id, :education_level, :is_leaf",
-      "hasAttrAccessible": true,
+      "attrs": ":description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri",
+      "attrAccessible": {
+        "value": ":description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/materials_controller.rb",
@@ -3497,7 +3596,7 @@
         },
         {
           "file": "app/models/standard_statement.rb",
-          "lineNumber": 37,
+          "lineNumber": 11,
           "line": "statement = StandardStatement.new(attributes.except('id', 'created_at', 'updated_at', 'material_type', 'material_id'))"
         },
         {
@@ -3511,8 +3610,11 @@
     {
       "name": "TeacherProjectView",
       "path": "app/models/teacher_project_view.rb",
-      "attrs": ":viewed_project_id, :teacher_id",
-      "hasAttrAccessible": true,
+      "attrs": ":teacher_id, :viewed_project_id",
+      "attrAccessible": {
+        "value": ":created_at, :teacher, :teacher_id, :updated_at, :viewed_project, :viewed_project_id",
+        "matches": false
+      },
       "newOrCreates": [],
       "updates": []
     },
@@ -3520,7 +3622,10 @@
       "name": "Tool",
       "path": "app/models/tool.rb",
       "attrs": ":name, :source_type, :tool_id",
-      "hasAttrAccessible": true,
+      "attrAccessible": {
+        "value": ":name, :source_type, :tool_id",
+        "matches": true
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/admin/tools_controller.rb",
@@ -3574,8 +3679,11 @@
     {
       "name": "User",
       "path": "app/models/user.rb",
-      "attrs": ":login, :first_name, :last_name, :email, :encrypted_password, :password_salt, :remember_token, :confirmation_token, :state, :remember_created_at, :confirmed_at, :deleted_at, :uuid, :default_user, :site_admin, :external_id, :require_password_reset, :of_consenting_age, :have_consent, :asked_age, :reset_password_token, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :unconfirmed_email, :confirmation_sent_at, :require_portal_user_type, :sign_up_path, :email_subscribed, :can_add_teachers_to_cohorts",
-      "hasAttrAccessible": true,
+      "attrs": ":asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid",
+      "attrAccessible": {
+        "value": ":can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state",
+        "matches": false
+      },
       "newOrCreates": [
         {
           "file": "app/controllers/api/v1/students_controller.rb",

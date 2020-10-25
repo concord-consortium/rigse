@@ -153,20 +153,25 @@ const getAllFiles = (dirPath, files) => {
 }
 const files = getAllFiles(__dirname)
 
+const sortedAttrs = (attrs) => {
+  attrs.sort()
+  return attrs.join(", ")
+}
+
 // check each model against each ruby file line
 const models = []
 const updateCheck = /\.\s*update_attributes!?\s*\(/
 const attrBrackets = /\[|\]/g
 const attrFilter = /:id|:created_at|:updated_at/
-const attrAccessibleCheck = /attr_accessible/
+const attrAccessibleCheck = /attr_accessible\s(.*)/
 railsConsoleModelInfo.map((consoleModelInfo) => {
   const [modelName, modelPath, attrArray] = consoleModelInfo.split(";")
   const newOrCreateCheck = new RegExp(`\\b${modelName}\\s*.\\s*(new|create!?)\\s*\\(`)
   const modelInfo = {
     name: modelName,
     path: `app/models/${modelPath}`,
-    attrs: attrArray.replace(attrBrackets, "").split(", ").filter((attr) => !attr.match(attrFilter)).join(", "),
-    hasAttrAccessible: false,
+    attrs: sortedAttrs(attrArray.replace(attrBrackets, "").split(", ").filter((attr) => !attr.match(attrFilter))),
+    attrAccessible: null,
     newOrCreates: [],
     updates: []
   }
@@ -192,17 +197,21 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   const file = files[modelInfo.path]
   if (file) {
     file.lines.map((line, lineNumber) => {
-      if (line.match(attrAccessibleCheck)) {
-        modelInfo.hasAttrAccessible = true
+      const match = line.match(attrAccessibleCheck)
+      if (match) {
+        const attrAccessible = sortedAttrs(match[1].trim().split(/,\s*/))
+        modelInfo.attrAccessible = {value: attrAccessible, matches: modelInfo.attrs === attrAccessible}
       }
     })
   }
 })
 
-
 const stats = {
   numModels: models.length,
-  hasAttrAccessible: 0,
+  attrAccessible: {
+    total: 0,
+    matches: 0
+  },
   newOrCreates: {
     all: 0,
     inControllers: 0,
@@ -216,8 +225,11 @@ const stats = {
 }
 models.forEach((model) => {
   stats.newOrCreates.all += model.newOrCreates.length
-  if (model.hasAttrAccessible) {
-    stats.hasAttrAccessible++
+  if (model.attrAccessible) {
+    stats.attrAccessible.total++
+    if (model.attrAccessible.matches) {
+      stats.attrAccessible.matches++
+    }
   }
   model.newOrCreates.map((newOrCreate) => {
     const isController = newOrCreate.file.indexOf("_controller.rb") !== -1
