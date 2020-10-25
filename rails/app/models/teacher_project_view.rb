@@ -1,8 +1,7 @@
 class TeacherProjectView < ActiveRecord::Base
   self.table_name = :teacher_project_views
 
-  attr_accessible :viewed_project_id, :teacher_id, :created_at, :updated_at,
-    :viewed_project, :teacher
+  attr_accessible :viewed_project_id, :teacher_id, :created_at, :updated_at, :viewed_project, :teacher
   belongs_to :viewed_project, :class_name => "Admin::Project"
   belongs_to :teacher, :class_name => "Portal::Teacher"
 

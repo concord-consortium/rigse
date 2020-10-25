@@ -2,8 +2,7 @@ class Admin::Project < ActiveRecord::Base
   include Changeable
 
   self.table_name = 'admin_projects'
-  attr_accessible :name, :landing_page_slug, :landing_page_content,
-  :project_card_image_url, :project_card_description, :public
+  attr_accessible :name, :landing_page_slug, :landing_page_content, :project_card_image_url, :project_card_description, :public
 
   def changeable?(user)
     # project admins can change the projects they are admins of
