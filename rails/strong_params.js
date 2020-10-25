@@ -158,6 +158,11 @@ const sortedAttrs = (attrs) => {
   return attrs.join(", ")
 }
 
+const isController = (file) => file.indexOf("_controller.rb") !== -1
+
+const controllers = {}
+Object.keys(files).filter(isController).map((file) => controllers[file] = files[file])
+
 // check each model against each ruby file line
 const models = []
 const updateCheck = /\.\s*update_attributes!?\s*\(/
@@ -177,7 +182,7 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
   }
   models.push(modelInfo)
 
-  Object.keys(files).map((relativePath) => {
+  Object.keys(controllers).map((relativePath) => {
     const file = files[relativePath]
     file.lines.map((line, lineNumber) => {
       if (line.match(newOrCreateCheck)) {
@@ -212,33 +217,18 @@ const stats = {
     total: 0,
     matches: 0
   },
-  newOrCreates: {
-    all: 0,
-    inControllers: 0,
-    outsideControllers: 0
-  },
-  updates: {
-    all: 0,
-    inControllers: 0,
-    outsideControllers: 0
-  },
+  newOrCreates: 0,
+  updates: 0
 }
 models.forEach((model) => {
-  stats.newOrCreates.all += model.newOrCreates.length
+  stats.newOrCreates += model.newOrCreates.length
+  stats.updates += model.updates.length
   if (model.attrAccessible) {
     stats.attrAccessible.total++
     if (model.attrAccessible.matches) {
       stats.attrAccessible.matches++
     }
   }
-  model.newOrCreates.map((newOrCreate) => {
-    const isController = newOrCreate.file.indexOf("_controller.rb") !== -1
-    stats.newOrCreates[isController ? "inControllers" : "outsideControllers"]++
-  })
-  model.updates.map((update) => {
-    const isController = update.file.indexOf("_controller.rb") !== -1
-    stats.updates[isController ? "inControllers" : "outsideControllers"]++
-  })
 })
 
-fs.writeFileSync("strong_params_output.json", JSON.stringify({stats, models}, null, 2))
+fs.writeFileSync("strong_params_output.json", JSON.stringify({info: "NOTE: ONLY RUNNING AGAINST MODELS AND CONTROLLERS", stats, models}, null, 2))
