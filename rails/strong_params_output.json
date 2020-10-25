@@ -50,7 +50,8 @@
           "lineNumber": 67,
           "line": "if @admin_authoring_site.update_attributes(admin_authoring_site_params)"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:name, :url)\n  end\n"
     },
     {
       "name": "Admin::Cohort",
@@ -73,7 +74,8 @@
           "lineNumber": 80,
           "line": "if @admin_cohort.update_attributes(params[:admin_cohort])"
         }
-      ]
+      ],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email_notifications_enabled, :items, :name, :project, :project_id\n  #  model attrs:     :email_notifications_enabled, :name, :project_id\ndef strong_params(params)\n    params.permit(:email_notifications_enabled, :name, :project_id)\n  end\n"
     },
     {
       "name": "Admin::CohortItem",
@@ -112,7 +114,8 @@
           "lineNumber": 87,
           "line": "if @project.update_attributes(params[:admin_project])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)\n  end\n"
     },
     {
       "name": "Admin::ProjectLink",
@@ -135,7 +138,8 @@
           "lineNumber": 80,
           "line": "if @project_link.update_attributes(params[:admin_project_link])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)\n  end\n"
     },
     {
       "name": "Admin::ProjectMaterial",
@@ -174,7 +178,8 @@
           "lineNumber": 93,
           "line": "if @admin_settings.update_attributes(params[:admin_settings])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content)\n  end\n"
     },
     {
       "name": "Admin::SiteNotice",
@@ -225,7 +230,8 @@
           "lineNumber": 163,
           "line": "if @interactive.update_attributes(params[:interactive])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:scope, :tag)\n  end\n"
     },
     {
       "name": "Authentication",
@@ -259,7 +265,8 @@
           "lineNumber": 52,
           "line": "if @client.update_attributes(params[:client])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)\n  end\n"
     },
     {
       "name": "CommonsLicense",
@@ -282,7 +289,8 @@
           "lineNumber": 45,
           "line": "if @license.update_attributes(params[:commons_license])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:code, :deed, :description, :image, :legal, :name, :number)\n  end\n"
     },
     {
       "name": "Dataservice::Blob",
@@ -302,7 +310,8 @@
           "lineNumber": 69,
           "line": "if @dataservice_blob.update_attributes(params[:blob])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid)\n  end\n"
     },
     {
       "name": "Dataservice::BucketContent",
@@ -319,7 +328,8 @@
           "line": "bucket_content = Dataservice::BucketContent.create("
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "  def strong_params(params)\n    params.permit(:body, :bucket_logger_id, :empty, :processed)\n  end\n"
     },
     {
       "name": "Dataservice::BucketLogItem",
@@ -336,7 +346,8 @@
           "line": "bucket_content = Dataservice::BucketLogItem.create("
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :bucket_logger, :bucket_logger_id, :content\n  #  model attrs:     :bucket_logger_id, :content\ndef strong_params(params)\n    params.permit(:bucket_logger_id, :content)\n  end\n"
     },
     {
       "name": "Dataservice::BucketLogger",
@@ -440,7 +451,8 @@
           "lineNumber": 239,
           "line": "if @portal_learner.update_attributes(params[:learner])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:bundle_content_id, :event_details, :event_type)\n  end\n"
     },
     {
       "name": "Dataservice::PeriodicBundleContent",
@@ -454,7 +466,8 @@
           "line": "bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body)"
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "  def strong_params(params)\n    params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)\n  end\n"
     },
     {
       "name": "Dataservice::PeriodicBundleLogger",
@@ -474,7 +487,8 @@
           "lineNumber": 239,
           "line": "if @portal_learner.update_attributes(params[:learner])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:imports, :learner_id)\n  end\n"
     },
     {
       "name": "Dataservice::PeriodicBundlePart",
@@ -565,7 +579,8 @@
           "lineNumber": 172,
           "line": "if @external_activity.update_attributes(params[:external_activity])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid, :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing, :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked, :is_official, :keywords, :launch_url, :license_code, :logging, :long_description, :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, :url, :user_id, :uuid)\n  end\n"
     },
     {
       "name": "ExternalActivityReport",
@@ -596,7 +611,8 @@
           "lineNumber": 52,
           "line": "saved_successfully = @report.update_attributes(new_params)"
         }
-      ]
+      ],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\n  #  model attrs:     :allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url\ndef strong_params(params)\n    params.permit(:allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url)\n  end\n"
     },
     {
       "name": "Favorite",
@@ -627,7 +643,8 @@
           "lineNumber": 67,
           "line": "if @firebase_app.update_attributes(firebase_app_params)"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:client_email, :name, :private_key)\n  end\n"
     },
     {
       "name": "HABTM_Roles",
@@ -668,7 +685,8 @@
           "lineNumber": 121,
           "line": "return @image.update_attributes(img_params)"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at, :license_code, :name, :publication_status, :user_id, :width)\n  end\n"
     },
     {
       "name": "Import::DuplicateUser",
@@ -695,7 +713,8 @@
           "line": "import = Import::Import.create!()"
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "  def strong_params(params)\n    params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)\n  end\n"
     },
     {
       "name": "Import::ImportedUser",
@@ -786,7 +805,8 @@
           "lineNumber": 163,
           "line": "if @interactive.update_attributes(params[:interactive])"
         }
-      ]
+      ],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\n  #  model attrs:     :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width\ndef strong_params(params)\n    params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)\n  end\n"
     },
     {
       "name": "Investigation",
@@ -828,7 +848,8 @@
           "lineNumber": 62,
           "line": "if @materials_collection.update_attributes(materials_collection_params)"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:description, :name, :project_id)\n  end\n"
     },
     {
       "name": "MaterialsCollectionItem",
@@ -918,7 +939,8 @@
           "lineNumber": 146,
           "line": "if @user.update_attributes(params[:user])"
         }
-      ]
+      ],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :email, :user, :user_id\n  #  model attrs:     :expiration_date, :reset_code, :user_id\ndef strong_params(params)\n    params.permit(:expiration_date, :reset_code, :user_id)\n  end\n"
     },
     {
       "name": "Portal::Bookmark",
@@ -970,7 +992,8 @@
           "lineNumber": 250,
           "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid)\n  end\n"
     },
     {
       "name": "Portal::Collaboration",
@@ -1029,7 +1052,8 @@
           "lineNumber": 91,
           "line": "if @course.update_attributes(params[:portal_course])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:course_number, :description, :name, :school_id, :status, :uuid)\n  end\n"
     },
     {
       "name": "Portal::District",
@@ -1052,7 +1076,8 @@
           "lineNumber": 83,
           "line": "if @portal_district.update_attributes(params[:portal_district])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode)\n  end\n"
     },
     {
       "name": "Portal::GenericBookmark",
@@ -1071,7 +1096,8 @@
           "line": "mark = Portal::GenericBookmark.new()"
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "  def strong_params(params)\n    params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)\n  end\n"
     },
     {
       "name": "Portal::Grade",
@@ -1107,7 +1133,8 @@
           "lineNumber": 239,
           "line": "if @portal_learner.update_attributes(params[:learner])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)\n  end\n"
     },
     {
       "name": "Portal::LearnerActivityFeedback",
@@ -1146,7 +1173,8 @@
           "lineNumber": 114,
           "line": "if @nces06_district.update_attributes(params[:nces06_district])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST, :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP, :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH, :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM, :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC, :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM, :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION)\n  end\n"
     },
     {
       "name": "Portal::Nces06School",
@@ -1166,7 +1194,8 @@
           "lineNumber": 115,
           "line": "if @nces06_school.update_attributes(params[:nces06_school])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:AM, :AM01F, :AM01M, :AM01U, :AM02F, :AM02M, :AM02U, :AM03F, :AM03M, :AM03U, :AM04F, :AM04M, :AM04U, :AM05F, :AM05M, :AM05U, :AM06F, :AM06M, :AM06U, :AM07F, :AM07M, :AM07U, :AM08F, :AM08M, :AM08U, :AM09F, :AM09M, :AM09U, :AM10F, :AM10M, :AM10U, :AM11F, :AM11M, :AM11U, :AM12F, :AM12M, :AM12U, :AMALF, :AMALM, :AMALU, :AMKGF, :AMKGM, :AMKGU, :AMPKF, :AMPKM, :AMPKU, :AMUGF, :AMUGM, :AMUGU, :AS01F, :AS01M, :AS01U, :AS02F, :AS02M, :AS02U, :AS03F, :AS03M, :AS03U, :AS04F, :AS04M, :AS04U, :AS05F, :AS05M, :AS05U, :AS06F, :AS06M, :AS06U, :AS07F, :AS07M, :AS07U, :AS08F, :AS08M, :AS08U, :AS09F, :AS09M, :AS09U, :AS10F, :AS10M, :AS10U, :AS11F, :AS11M, :AS11U, :AS12F, :AS12M, :AS12U, :ASALF, :ASALM, :ASALU, :ASIAN, :ASKGF, :ASKGM, :ASKGU, :ASPKF, :ASPKM, :ASPKU, :ASUGF, :ASUGM, :ASUGU, :BL01F, :BL01M, :BL01U, :BL02F, :BL02M, :BL02U, :BL03F, :BL03M, :BL03U, :BL04F, :BL04M, :BL04U, :BL05F, :BL05M, :BL05U, :BL06F, :BL06M, :BL06U, :BL07F, :BL07M, :BL07U, :BL08F, :BL08M, :BL08U, :BL09F, :BL09M, :BL09U, :BL10F, :BL10M, :BL10U, :BL11F, :BL11M, :BL11U, :BL12F, :BL12M, :BL12U, :BLACK, :BLALF, :BLALM, :BLALU, :BLKGF, :BLKGM, :BLKGU, :BLPKF, :BLPKM, :BLPKU, :BLUGF, :BLUGM, :BLUGU, :CDCODE, :CHARTR, :CONAME, :CONUM, :FIPST, :FRELCH, :FTE, :G01, :G02, :G03, :G04, :G05, :G06, :G07, :G08, :G09, :G10, :G11, :G12, :GSHI, :GSLO, :HI01F, :HI01M, :HI01U, :HI02F, :HI02M, :HI02U, :HI03F, :HI03M, :HI03U, :HI04F, :HI04M, :HI04U, :HI05F, :HI05M, :HI05U, :HI06F, :HI06M, :HI06U, :HI07F, :HI07M, :HI07U, :HI08F, :HI08M, :HI08U, :HI09F, :HI09M, :HI09U, :HI10F, :HI10M, :HI10U, :HI11F, :HI11M, :HI11U, :HI12F, :HI12M, :HI12U, :HIALF, :HIALM, :HIALU, :HIKGF, :HIKGM, :HIKGU, :HIPKF, :HIPKM, :HIPKU, :HISP, :HIUGF, :HIUGM, :HIUGU, :IAM, :IAM01F, :IAM01M, :IAM01U, :IAM02F, :IAM02M, :IAM02U, :IAM03F, :IAM03M, :IAM03U, :IAM04F, :IAM04M, :IAM04U, :IAM05F, :IAM05M, :IAM05U, :IAM06F, :IAM06M, :IAM06U, :IAM07F, :IAM07M, :IAM07U, :IAM08F, :IAM08M, :IAM08U, :IAM09F, :IAM09M, :IAM09U, :IAM10F, :IAM10M, :IAM10U, :IAM11F, :IAM11M, :IAM11U, :IAM12F, :IAM12M, :IAM12U, :IAMALF, :IAMALM, :IAMALU, :IAMKGF, :IAMKGM, :IAMKGU, :IAMPKF, :IAMPKM, :IAMPKU, :IAMUGF, :IAMUGM, :IAMUGU, :IAS01F, :IAS01M, :IAS01U, :IAS02F, :IAS02M, :IAS02U, :IAS03F, :IAS03M, :IAS03U, :IAS04F, :IAS04M, :IAS04U, :IAS05F, :IAS05M, :IAS05U, :IAS06F, :IAS06M, :IAS06U, :IAS07F, :IAS07M, :IAS07U, :IAS08F, :IAS08M, :IAS08U, :IAS09F, :IAS09M, :IAS09U, :IAS10F, :IAS10M, :IAS10U, :IAS11F, :IAS11M, :IAS11U, :IAS12F, :IAS12M, :IAS12U, :IASALF, :IASALM, :IASALU, :IASIAN, :IASKGF, :IASKGM, :IASKGU, :IASPKF, :IASPKM, :IASPKU, :IASUGF, :IASUGM, :IASUGU, :IBL01F, :IBL01M, :IBL01U, :IBL02F, :IBL02M, :IBL02U, :IBL03F, :IBL03M, :IBL03U, :IBL04F, :IBL04M, :IBL04U, :IBL05F, :IBL05M, :IBL05U, :IBL06F, :IBL06M, :IBL06U, :IBL07F, :IBL07M, :IBL07U, :IBL08F, :IBL08M, :IBL08U, :IBL09F, :IBL09M, :IBL09U, :IBL10F, :IBL10M, :IBL10U, :IBL11F, :IBL11M, :IBL11U, :IBL12F, :IBL12M, :IBL12U, :IBLACK, :IBLALF, :IBLALM, :IBLALU, :IBLKGF, :IBLKGM, :IBLKGU, :IBLPKF, :IBLPKM, :IBLPKU, :IBLUGF, :IBLUGM, :IBLUGU, :ICHART, :IETH, :IFRELC, :IFTE, :IG01, :IG02, :IG03, :IG04, :IG05, :IG06, :IG07, :IG08, :IG09, :IG10, :IG11, :IG12, :IGSHI, :IGSLO, :IHI01F, :IHI01M, :IHI01U, :IHI02F, :IHI02M, :IHI02U, :IHI03F, :IHI03M, :IHI03U, :IHI04F, :IHI04M, :IHI04U, :IHI05F, :IHI05M, :IHI05U, :IHI06F, :IHI06M, :IHI06U, :IHI07F, :IHI07M, :IHI07U, :IHI08F, :IHI08M, :IHI08U, :IHI09F, :IHI09M, :IHI09U, :IHI10F, :IHI10M, :IHI10U, :IHI11F, :IHI11M, :IHI11U, :IHI12F, :IHI12M, :IHI12U, :IHIALF, :IHIALM, :IHIALU, :IHIKGF, :IHIKGM, :IHIKGU, :IHIPKF, :IHIPKM, :IHIPKU, :IHISP, :IHIUGF, :IHIUGM, :IHIUGU, :IKG, :IMAGNE, :IMEMB, :IMIGRN, :IPK, :IPUTCH, :IREDLC, :ISHARE, :ISTITL, :ITITLI, :ITOTFR, :ITOTGR, :IUG, :IWH01F, :IWH01M, :IWH01U, :IWH02F, :IWH02M, :IWH02U, :IWH03F, :IWH03M, :IWH03U, :IWH04F, :IWH04M, :IWH04U, :IWH05F, :IWH05M, :IWH05U, :IWH06F, :IWH06M, :IWH06U, :IWH07F, :IWH07M, :IWH07U, :IWH08F, :IWH08M, :IWH08U, :IWH09F, :IWH09M, :IWH09U, :IWH10F, :IWH10M, :IWH10U, :IWH11F, :IWH11M, :IWH11U, :IWH12F, :IWH12M, :IWH12U, :IWHALF, :IWHALM, :IWHALU, :IWHITE, :IWHKGF, :IWHKGM, :IWHKGU, :IWHPKF, :IWHPKM, :IWHPKU, :IWHUGF, :IWHUGM, :IWHUGU, :KG, :KIND, :LATCOD, :LCITY, :LEAID, :LEANM, :LEVEL, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MAGNET, :MCITY, :MEMBER, :MIGRNT, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NCESSCH, :PHONE, :PK, :PUPTCH, :REDLCH, :SCHNAM, :SCHNO, :SEASCH, :SHARED, :STATUS, :STID, :STITLI, :TITLEI, :TOTETH, :TOTFRL, :TOTGRD, :UG, :ULOCAL, :WH01F, :WH01M, :WH01U, :WH02F, :WH02M, :WH02U, :WH03F, :WH03M, :WH03U, :WH04F, :WH04M, :WH04U, :WH05F, :WH05M, :WH05U, :WH06F, :WH06M, :WH06U, :WH07F, :WH07M, :WH07U, :WH08F, :WH08M, :WH08U, :WH09F, :WH09M, :WH09U, :WH10F, :WH10M, :WH10U, :WH11F, :WH11M, :WH11U, :WH12F, :WH12M, :WH12U, :WHALF, :WHALM, :WHALU, :WHITE, :WHKGF, :WHKGM, :WHKGU, :WHPKF, :WHPKM, :WHPKU, :WHUGF, :WHUGM, :WHUGU, :nces_district_id)\n  end\n"
     },
     {
       "name": "Portal::Offering",
@@ -1210,7 +1239,8 @@
           "line": "form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])"
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "  def strong_params(params)\n    params.permit(:name, :project_id, :url)\n  end\n"
     },
     {
       "name": "Portal::School",
@@ -1230,7 +1260,8 @@
           "lineNumber": 89,
           "line": "if @portal_school.update_attributes(params[:portal_school])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode)\n  end\n"
     },
     {
       "name": "Portal::SchoolMembership",
@@ -1250,7 +1281,8 @@
           "lineNumber": 89,
           "line": "if @school_membership.update_attributes(params[:portal_school_membership])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)\n  end\n"
     },
     {
       "name": "Portal::Student",
@@ -1305,7 +1337,8 @@
           "lineNumber": 277,
           "line": "if @portal_student.user.update_attributes(params[:user])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:grade_level_id, :user_id, :uuid)\n  end\n"
     },
     {
       "name": "Portal::StudentClazz",
@@ -1325,7 +1358,8 @@
           "lineNumber": 87,
           "line": "if @portal_student_clazz.update_attributes(params[:portal_student_clazz])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid)\n  end\n"
     },
     {
       "name": "Portal::StudentPermissionForm",
@@ -1356,7 +1390,8 @@
           "lineNumber": 87,
           "line": "if @subject.update_attributes(params[:subject])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:description, :name, :teacher_id, :uuid)\n  end\n"
     },
     {
       "name": "Portal::Teacher",
@@ -1381,7 +1416,8 @@
           "lineNumber": 250,
           "line": "if okToUpdate && @portal_clazz.update_attributes(object_params)"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:left_pane_submenu_item, :offerings_count, :user_id, :uuid)\n  end\n"
     },
     {
       "name": "Portal::TeacherClazz",
@@ -1513,7 +1549,8 @@
           "lineNumber": 102,
           "line": "update_successful = @offering.update_attributes(params[:offering])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:answer_id, :choice_id, :rationale, :uuid)\n  end\n"
     },
     {
       "name": "Saveable::OpenResponse",
@@ -1549,7 +1586,8 @@
           "lineNumber": 65,
           "line": "if @measuring_resistance.update_attributes(params[:measuring_resistance])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:learner_id, :offering_id)\n  end\n"
     },
     {
       "name": "Saveable::Sparks::MeasuringResistanceReports",
@@ -1579,7 +1617,8 @@
           "line": "#     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })"
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "  def strong_params(params)\n    params.permit(:answer, :question, :user_id)\n  end\n"
     },
     {
       "name": "StandardDocument",
@@ -1607,7 +1646,8 @@
           "line": "StandardStatement.create("
         }
       ],
-      "updates": []
+      "updates": [],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\n  #  model attrs:     :description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri\ndef strong_params(params)\n    params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)\n  end\n"
     },
     {
       "name": "TeacherProjectView",
@@ -1641,7 +1681,8 @@
           "lineNumber": 61,
           "line": "if @tool.update_attributes(params[:tool])"
         }
-      ]
+      ],
+      "method": "  def strong_params(params)\n    params.permit(:name, :source_type, :tool_id)\n  end\n"
     },
     {
       "name": "User",
@@ -1679,7 +1720,8 @@
           "lineNumber": 277,
           "line": "if @portal_student.user.update_attributes(params[:user])"
         }
-      ]
+      ],
+      "method": "    # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: :can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state\n  #  model attrs:     :asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid\ndef strong_params(params)\n    params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid)\n  end\n"
     }
   ]
 }

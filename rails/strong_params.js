@@ -10,10 +10,9 @@
 
   TODO:
 
-  1. Add code to check if "strong_params(" is found on new/create/update line (can use "# no strong_params() needed here" to skip line)
-  2. Add code to generate strong_params method as string
-  3. Add code to inject strong_params method into file at right spot (in class in controller vs at end of fle in spec, etc)
-  4. Add code to inject test for strong_params in controller specs
+  1. Add code to generate strong_params method as string
+  2. Add code to inject strong_params method into file at right spot (in class in controller vs at end of fle in spec, etc)
+  3. Add code to check if "strong_params(" is found on new/create/update line (can use "# no strong_params() needed here" to skip line)
   4. Add code to inject strong_params() wrapper
 
 */
@@ -208,6 +207,11 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
         modelInfo.attrAccessible = {value: attrAccessible, matches: modelInfo.attrs === attrAccessible}
       }
     })
+  }
+
+  if (modelInfo.newOrCreates.length + modelInfo.updates.length > 0) {
+    const note = modelInfo.attrAccessible && !modelInfo.attrAccessible.matches ? `  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: ${modelInfo.attrAccessible.value}\n  #  model attrs:     ${modelInfo.attrs}\n` : ""
+    modelInfo.method = `  ${note}def strong_params(params)\n    params.permit(${modelInfo.attrs})\n  end\n`
   }
 })
 
