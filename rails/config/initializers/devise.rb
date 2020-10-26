@@ -1,11 +1,6 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-  # Any previously stored token in the database will no longer work unless you
-  # set config.allow_insecure_token_lookup = true in your Devise initializer.
-  # Allows users that just requested a token to get their job done.
-  # TODO: Turn this off on production after a few days.
-  config.allow_insecure_token_lookup = true
   config.secret_key = ENV.fetch('DEVISE_SECRET_KEY', '71120fd5d876abea0bd88b933416dac4423afc9a5f7ccd591fe4b5d7bf32752b376c51a6cdb8dcba30be125ca75e59679a41b19804516313ccf4c813d74f37bb')
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
