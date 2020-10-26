@@ -89,7 +89,7 @@ class AccessGrant < ActiveRecord::Base
     client = validation.client
 
     AccessGrant.prune!
-    access_grant = user.access_grants.create({:client => client, :state => params[:state]}, :without_protection => true)
+    access_grant = user.access_grants.create({:client => client, :state => params[:state]})
 
     # validate_oauth_authorize already checked that this client settings matched the response_type
     if params[:response_type] === "token"
