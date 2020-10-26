@@ -66,7 +66,7 @@ class Portal::CoursesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Course
-    @course = Portal::Course.new(params[:portal_course])
+    @course = Portal::Course.new(portal_course_strong_params(params[:portal_course]))
 
     respond_to do |format|
       if @course.save
@@ -89,7 +89,7 @@ class Portal::CoursesController < ApplicationController
     # authorize @course
 
     respond_to do |format|
-      if @course.update_attributes(params[:portal_course])
+      if @course.update_attributes(portal_course_strong_params(params[:portal_course]))
         flash['notice'] = 'Portal::Course was successfully updated.'
         format.html { redirect_to(@course) }
         format.xml  { head :ok }
@@ -113,5 +113,9 @@ class Portal::CoursesController < ApplicationController
       format.html { redirect_to(portal_courses_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_course_strong_params(params)
+    params.permit(:course_number, :description, :name, :school_id, :status, :uuid)
   end
 end

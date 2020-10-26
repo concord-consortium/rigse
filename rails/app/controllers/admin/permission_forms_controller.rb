@@ -107,7 +107,7 @@ class Admin::PermissionFormsController < ApplicationController
     authorize Portal::PermissionForm
     form_data = params['portal_permission']
     if form_data && (!form_data['name'].blank?)
-      form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id'])
+      form = Portal::PermissionForm.create(:name => form_data['name'], :url => form_data['url'], :project_id => form_data['project_id']) # strong params not required
     end
     redirect_to action: 'index'
   end
@@ -117,5 +117,9 @@ class Admin::PermissionFormsController < ApplicationController
     authorize form, :destroy?
     form.destroy
     redirect_to action: 'index'
+  end
+
+  def portal_permission_form_strong_params(params)
+    params.permit(:name, :project_id, :url)
   end
 end

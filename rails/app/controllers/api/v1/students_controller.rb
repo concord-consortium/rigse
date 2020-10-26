@@ -81,7 +81,7 @@ class API::V1::StudentsController < API::APIController
     student = current_visitor.portal_student
     if !student
       grade_level = view_context.find_grade_level(params)
-      student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id)
+      student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => grade_level.id) # strong params not required
     end
     student.process_class_word(params[:class_word])
 
@@ -126,7 +126,7 @@ class API::V1::StudentsController < API::APIController
     user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name])
     user_attributes[:email] = Portal::Student.generate_user_email
 
-    user = User.new(user_attributes)
+    user = User.new(user_strong_params(user_attributes))
     if !user.valid?
       return error(user.errors.full_messages.uniq.join(". ").gsub("..", "."))
     end
@@ -139,9 +139,9 @@ class API::V1::StudentsController < API::APIController
     user.confirm!
 
     if current_settings.allow_default_class || grade_level.nil?
-      portal_student = Portal::Student.create(:user_id => user.id)
+      portal_student = Portal::Student.create(:user_id => user.id) # strong params not required
     else
-      portal_student = Portal::Student.create(:user_id => user.id, :grade_level_id => grade_level.id)
+      portal_student = Portal::Student.create(:user_id => user.id, :grade_level_id => grade_level.id) # strong params not required
     end
 
     if !portal_student
@@ -253,4 +253,19 @@ class API::V1::StudentsController < API::APIController
     true
   end
 
+  def portal_student_strong_params(params)
+    params.permit(:grade_level_id, :user_id, :uuid)
+  end
+
+  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
+  #  attr_accessible: :can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state
+  #  model attrs:     :asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid
+  def user_strong_params(params)
+    params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at,
+                  :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed,
+                  :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip,
+                  :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset,
+                  :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state,
+                  :unconfirmed_email, :uuid)
+  end
 end

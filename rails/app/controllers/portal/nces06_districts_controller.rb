@@ -89,7 +89,7 @@ class Portal::Nces06DistrictsController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Nces06District
-    @nces06_district = Portal::Nces06District.new(params[:nces06_district])
+    @nces06_district = Portal::Nces06District.new(portal_nces06_district_strong_params(params[:nces06_district]))
 
     respond_to do |format|
       if @nces06_district.save
@@ -112,7 +112,7 @@ class Portal::Nces06DistrictsController < ApplicationController
     # authorize @nces06_district
 
     respond_to do |format|
-      if @nces06_district.update_attributes(params[:nces06_district])
+      if @nces06_district.update_attributes(portal_nces06_district_strong_params(params[:nces06_district]))
         flash['notice'] = 'Portal::Nces06District was successfully updated.'
         format.html { redirect_to(@nces06_district) }
         format.xml  { head :ok }
@@ -136,5 +136,15 @@ class Portal::Nces06DistrictsController < ApplicationController
       format.html { redirect_to(portal_nces06_districts_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_nces06_district_strong_params(params)
+    params.permit(:AGCHRT, :AIDES, :BOUND, :CBSA, :CDCODE, :CONAME, :CONUM, :CORSUP, :CSA, :ELL, :ELMGUI, :ELMTCH, :FIPST,
+                  :GSHI, :GSLO, :IAIDES, :ICOSUP, :IELGUI, :IELL, :IELTCH, :IGSHI, :IGSLO, :IKGTCH, :ILEADM, :ILESUP,
+                  :ILISPE, :ILISUP, :IMEMB, :IMIGRN, :IOTSUP, :IPK12, :IPKTCH, :ISCADM, :ISCH, :ISCSUP, :ISEGUI, :ISETCH,
+                  :ISPEC, :ISTSUP, :ITEACH, :ITOGUI, :ITOTCH, :IUG, :IUGTCH, :KGTCH, :KIND, :LATCOD, :LCITY, :LEAADM,
+                  :LEAID, :LEASUP, :LIBSPE, :LIBSUP, :LONCOD, :LSTATE, :LSTREE, :LZIP, :LZIP4, :MCITY, :MEMBER, :METMIC,
+                  :MIGRNT, :MSC, :MSTATE, :MSTREE, :MZIP, :MZIP4, :NAME, :OTHSUP, :PHONE, :PK12, :PKTCH, :SCH, :SCHADM,
+                  :SCHSUP, :SECGUI, :SECTCH, :SPECED, :STID, :STUSUP, :TEACH, :TOTGUI, :TOTTCH, :UG, :UGTCH, :ULOCAL, :UNION)
   end
 end

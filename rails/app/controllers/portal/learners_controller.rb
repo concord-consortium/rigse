@@ -146,7 +146,7 @@ class Portal::LearnersController < ApplicationController
 
     @portal_learner.console_logger = Dataservice::ConsoleLogger.create! unless @portal_learner.console_logger
     @portal_learner.bundle_logger = Dataservice::BundleLogger.create! unless @portal_learner.bundle_logger
-    @portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger
+    @portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger  # strong params not required
 
     respond_to do |format|
       format.html # show.html.erb
@@ -157,7 +157,7 @@ class Portal::LearnersController < ApplicationController
         bundle_get_url = dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle)
         if @portal_learner.student.user == current_visitor
           if @portal_learner.bundle_logger.in_progress_bundle
-            launch_event = Dataservice::LaunchProcessEvent.create(
+            launch_event = Dataservice::LaunchProcessEvent.create( # strong params not required
               :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],
               :event_details => "Activity configuration loaded. Loading prior learner session data...",
               :bundle_content => @portal_learner.bundle_logger.in_progress_bundle
@@ -214,7 +214,7 @@ class Portal::LearnersController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Learner
-    @portal_learner = Portal::Learner.new(params[:learner])
+    @portal_learner = Portal::Learner.new(portal_learner_strong_params(params[:learner]))
 
     respond_to do |format|
       if @portal_learner.save
@@ -237,7 +237,7 @@ class Portal::LearnersController < ApplicationController
     @portal_learner = Portal::Learner.find(params[:id])
 
     respond_to do |format|
-      if @portal_learner.update_attributes(params[:learner])
+      if @portal_learner.update_attributes(portal_learner_strong_params(params[:learner]))
         flash['notice'] = 'Portal::Learner was successfully updated.'
         format.html { redirect_to(@portal_learner) }
         format.xml  { head :ok }
@@ -261,5 +261,9 @@ class Portal::LearnersController < ApplicationController
       format.html { redirect_to(portal_learners_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_learner_strong_params(params)
+    params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)
   end
 end

@@ -3,7 +3,7 @@ class Dataservice::PeriodicBundleLoggersMetalController < ActionController::Meta
   def session_end_notification
     if pbl = Dataservice::PeriodicBundleLogger.find(params[:id])
       if ipb = pbl.learner.bundle_logger.in_progress_bundle
-        launch_event = ::Dataservice::LaunchProcessEvent.create(
+        launch_event = ::Dataservice::LaunchProcessEvent.create( # strong params not required
           :event_type => ::Dataservice::LaunchProcessEvent::TYPES[:bundle_saved],
           :event_details => "Learner session data saved. Activity should now be closed.",
           :bundle_content => ipb
@@ -20,4 +20,7 @@ class Dataservice::PeriodicBundleLoggersMetalController < ActionController::Meta
     end
   end
 
+  def dataservice_launch_process_event_strong_params(params)
+    params.permit(:bundle_content_id, :event_details, :event_type)
+  end
 end

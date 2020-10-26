@@ -45,7 +45,7 @@ class Admin::FirebaseAppsController < ApplicationController
   # POST /admin/firebase_apps.json
   def create
     authorize FirebaseApp
-    @firebase_app = FirebaseApp.new(params[:firebase_app])
+    @firebase_app = FirebaseApp.new(firebase_app_strong_params(params[:firebase_app]))
 
     respond_to do |format|
       if @firebase_app.save
@@ -65,7 +65,7 @@ class Admin::FirebaseAppsController < ApplicationController
     authorize @firebase_app
 
     respond_to do |format|
-      if @firebase_app.update_attributes(params[:firebase_app])
+      if @firebase_app.update_attributes(firebase_app_strong_params(params[:firebase_app]))
         format.html { redirect_to admin_firebase_apps_path, notice: 'Firebase app was successfully updated.' }
         format.json { head :no_content }
       else
@@ -86,5 +86,9 @@ class Admin::FirebaseAppsController < ApplicationController
       format.html { redirect_to admin_firebase_apps_path, notice: 'Firebase app was successfully deleted.' }
       format.json { head :no_content }
     end
+  end
+
+  def firebase_app_strong_params(params)
+    params.permit(:client_email, :name, :private_key)
   end
 end

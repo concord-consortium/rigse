@@ -45,7 +45,7 @@ class Admin::AuthoringSitesController < ApplicationController
   # POST /admin/authoring_sites.json
   def create
     authorize Admin::AuthoringSite
-    @admin_authoring_site = Admin::AuthoringSite.new(params[:admin_authoring_site])
+    @admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_strong_params(params[:admin_authoring_site]))
 
     respond_to do |format|
       if @admin_authoring_site.save
@@ -65,7 +65,7 @@ class Admin::AuthoringSitesController < ApplicationController
     authorize @admin_authoring_site
 
     respond_to do |format|
-      if @admin_authoring_site.update_attributes(params[:admin_authoring_site])
+      if @admin_authoring_site.update_attributes(admin_authoring_site_strong_params(params[:admin_authoring_site]))
         format.html { redirect_to @admin_authoring_site, notice: 'Authoring site was successfully updated.' }
         format.json { head :no_content }
       else
@@ -86,5 +86,9 @@ class Admin::AuthoringSitesController < ApplicationController
       format.html { redirect_to admin_authoring_sites_url }
       format.json { head :no_content }
     end
+  end
+
+  def admin_authoring_site_strong_params(params)
+    params.permit(:name, :url)
   end
 end

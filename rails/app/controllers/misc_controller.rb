@@ -11,7 +11,7 @@ class MiscController < ActionController::Base
   def banner
     learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
     if learner && learner.bundle_logger.in_progress_bundle
-      launch_event = Dataservice::LaunchProcessEvent.create(
+      launch_event = Dataservice::LaunchProcessEvent.create( # strong params not required
         :event_type => Dataservice::LaunchProcessEvent::TYPES[:logo_image_requested],
         :event_details => "Activity launch started. Waiting for configuration...",
         :bundle_content => learner.bundle_logger.in_progress_bundle

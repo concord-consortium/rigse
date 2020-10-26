@@ -144,7 +144,7 @@ class UsersController < ApplicationController
         end
         params[:user].delete :enews_subscription
 
-        if @user.update_attributes(params[:user])
+        if @user.update_attributes(password_strong_params(params[:user]))
 
           # This update method is shared with admins using users/edit and users using users/preferences.
           # Since the values are checkboxes we can't use the absense of them to denote there are no
@@ -199,7 +199,7 @@ class UsersController < ApplicationController
   def reset_password
     @user = User.find(params[:id])
     authorize @user
-    p = Password.new(:user_id => params[:id])
+    p = Password.new(:user_id => params[:id]) # strong params not required
     p.save(:validate => false) # we don't need the user to have a valid email address...
     session[:return_to] = request.referer
     redirect_to change_password_path(:reset_code => p.reset_code)
@@ -263,5 +263,12 @@ class UsersController < ApplicationController
         format.xml  { head :ok }
       end
     end
+  end
+
+  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
+  #  attr_accessible: :email, :user, :user_id
+  #  model attrs:     :expiration_date, :reset_code, :user_id
+  def password_strong_params(params)
+    params.permit(:expiration_date, :reset_code, :user_id)
   end
 end

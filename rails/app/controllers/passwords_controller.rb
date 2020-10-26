@@ -9,7 +9,7 @@ class PasswordsController < ApplicationController
 
   def create_by_email
 
-    @password = Password.new(params[:password])
+    @password = Password.new(password_strong_params(params[:password]))
     @password.user = User.find_by_email(@password.email)
 
     if @password.user && @password.user.is_oauth_user?
@@ -57,7 +57,7 @@ class PasswordsController < ApplicationController
         flash['error'] = "Please contact your teacher to reset your password for you."
       end
     elsif user.email
-      @password = Password.new(:user => user, :email => user.email)
+      @password = Password.new(:user => user, :email => user.email) # strong params not required
       if @password.save
         PasswordMailer.forgot_password(@password).deliver
         flash['notice'] = "A link to change your password has been sent to #{@password.email}."
@@ -88,7 +88,7 @@ class PasswordsController < ApplicationController
 
     if ok == 3
       # success!
-      @password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email)
+      @password = Password.new(:user => @user_check_questions, :email => @user_check_questions.email) # strong params not required
       if @password.save
         redirect_to change_password_path(@password.reset_code)
         return
@@ -141,7 +141,7 @@ class PasswordsController < ApplicationController
 
   def update
     @password = Password.find(params[:id])
-    if @password.update_attributes(params[:password])
+    if @password.update_attributes(password_strong_params(params[:password]))
       flash['notice'] = 'Password was successfully updated.'
       redirect_back_or activities_url
     else
@@ -162,4 +162,11 @@ class PasswordsController < ApplicationController
     end
   end
 
+
+  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
+  #  attr_accessible: :email, :user, :user_id
+  #  model attrs:     :expiration_date, :reset_code, :user_id
+  def password_strong_params(params)
+    params.permit(:expiration_date, :reset_code, :user_id)
+  end
 end

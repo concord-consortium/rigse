@@ -36,7 +36,7 @@ class Admin::ClientsController < ApplicationController
   # POST /admin/client
   def create
     authorize Client
-    @client = Client.new(params[:client])
+    @client = Client.new(client_strong_params(params[:client]))
 
     if @client.save
       flash['notice']='Client was successfully created.'
@@ -50,7 +50,7 @@ class Admin::ClientsController < ApplicationController
   def update
     authorize Client
     @client = Client.find(params[:id])
-    if @client.update_attributes(params[:client])
+    if @client.update_attributes(client_strong_params(params[:client]))
       flash['notice']= 'Client was successfully updated.'
       redirect_to action: :index
     else
@@ -67,4 +67,8 @@ class Admin::ClientsController < ApplicationController
     redirect_to action: :index
   end
 
+
+  def client_strong_params(params)
+    params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)
+  end
 end

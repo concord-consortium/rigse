@@ -36,7 +36,7 @@ class Admin::TagsController < ApplicationController
 
   # POST /admin_tags
   def create
-    @admin_tag = Admin::Tag.new(params[:admin_tag])
+    @admin_tag = Admin::Tag.new(admin_tag_strong_params(params[:admin_tag]))
     if @admin_tag.save
       redirect_to @admin_tag, notice: 'Admin::Tag was successfully created.'
     else
@@ -47,7 +47,7 @@ class Admin::TagsController < ApplicationController
   # PUT /admin_tags/1
   def update
     @admin_tag = Admin::Tag.find(params[:id])
-    if @admin_tag.update_attributes(params[:admin_tag])
+    if @admin_tag.update_attributes(admin_tag_strong_params(params[:admin_tag]))
       redirect_to @admin_tag, notice: 'Admin::Tag was successfully updated.'
     else
       render action: 'edit'
@@ -59,5 +59,9 @@ class Admin::TagsController < ApplicationController
     @admin_tag = Admin::Tag.find(params[:id])
     @admin_tag.destroy
     redirect_to admin_tags_url, notice: "Tag #{@admin_tag.name} was deleted"
+  end
+
+  def admin_tag_strong_params(params)
+    params.permit(:scope, :tag)
   end
 end
