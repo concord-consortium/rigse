@@ -51,6 +51,6 @@ class SecurityQuestionsController < ApplicationController
   # end
 
   def security_question_strong_params(params)
-    params.permit(:answer, :question, :user_id)
+    params && params.permit(:answer, :question, :user_id)
   end
 end

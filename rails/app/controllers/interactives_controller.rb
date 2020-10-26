@@ -241,14 +241,14 @@ class InteractivesController < ApplicationController
   end
 
   def admin_tag_strong_params(params)
-    params.permit(:scope, :tag)
+    params && params.permit(:scope, :tag)
   end
 
   # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
   #  attr_accessible: :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width
   #  model attrs:     :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width
   def interactive_strong_params(params)
-    params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code,
-                  :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)
+    params && params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code,
+                            :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)
   end
 end

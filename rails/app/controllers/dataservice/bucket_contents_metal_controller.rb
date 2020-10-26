@@ -46,6 +46,6 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
   end
 
   def dataservice_bucket_content_strong_params(params)
-    params.permit(:body, :bucket_logger_id, :empty, :processed)
+    params && params.permit(:body, :bucket_logger_id, :empty, :processed)
   end
 end

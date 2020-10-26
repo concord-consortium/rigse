@@ -104,6 +104,6 @@ class Portal::SchoolsController < ApplicationController
   end
 
   def portal_school_strong_params(params)
-    params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode)
+    params && params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :uuid, :zipcode)
   end
 end

@@ -264,6 +264,6 @@ class Portal::LearnersController < ApplicationController
   end
 
   def portal_learner_strong_params(params)
-    params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)
+    params && params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)
   end
 end

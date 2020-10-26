@@ -108,6 +108,6 @@ class Admin::ProjectsController < ApplicationController
 
 
   def admin_project_strong_params(params)
-    params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)
+    params && params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)
   end
 end

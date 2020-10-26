@@ -327,6 +327,6 @@ class Import::ImportsController < ApplicationController
   end
 
   def import_import_strong_params(params)
-    params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)
+    params && params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)
   end
 end

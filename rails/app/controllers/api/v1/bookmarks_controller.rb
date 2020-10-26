@@ -136,6 +136,6 @@ class API::V1::BookmarksController < API::APIController
   end
 
   def portal_generic_bookmark_strong_params(params)
-    params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)
+    params && params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)
   end
 end

@@ -87,6 +87,6 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   end
 
   def saveable_sparks_measuring_resistance_strong_params(params)
-    params.permit(:learner_id, :offering_id)
+    params && params.permit(:learner_id, :offering_id)
   end
 end

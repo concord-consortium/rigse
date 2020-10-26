@@ -848,6 +848,6 @@ class API::V1::MaterialsController < API::APIController
   #  attr_accessible: :description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri
   #  model attrs:     :description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri
   def standard_statement_strong_params(params)
-    params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)
+    params && params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)
   end
 end

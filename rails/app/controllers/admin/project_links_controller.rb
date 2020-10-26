@@ -94,6 +94,6 @@ class Admin::ProjectLinksController < ApplicationController
   end
 
   def admin_project_link_strong_params(params)
-    params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)
+    params && params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)
   end
 end

@@ -81,6 +81,6 @@ class Admin::ToolsController < ApplicationController
   end
 
   def tool_strong_params(params)
-    params.permit(:name, :source_type, :tool_id)
+    params && params.permit(:name, :source_type, :tool_id)
   end
 end

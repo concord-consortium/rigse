@@ -91,6 +91,6 @@ class Dataservice::BlobsController < ApplicationController
   end
 
   def dataservice_blob_strong_params(params)
-    params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid)
+    params && params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token, :uuid)
   end
 end

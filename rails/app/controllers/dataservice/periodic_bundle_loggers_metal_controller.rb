@@ -21,6 +21,6 @@ class Dataservice::PeriodicBundleLoggersMetalController < ActionController::Meta
   end
 
   def dataservice_launch_process_event_strong_params(params)
-    params.permit(:bundle_content_id, :event_details, :event_type)
+    params && params.permit(:bundle_content_id, :event_details, :event_type)
   end
 end

@@ -47,6 +47,6 @@ class Dataservice::BucketLogItemsMetalController < ActionController::Metal
   #  attr_accessible: :bucket_logger, :bucket_logger_id, :content
   #  model attrs:     :bucket_logger_id, :content
   def dataservice_bucket_log_item_strong_params(params)
-    params.permit(:bucket_logger_id, :content)
+    params && params.permit(:bucket_logger_id, :content)
   end
 end

@@ -223,7 +223,7 @@ railsConsoleModelInfo.map((consoleModelInfo) => {
 
   if (changes.length > 0) {
     const note = modelInfo.attrAccessible && !modelInfo.attrAccessible.matches ? `  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:\n  #  attr_accessible: ${modelInfo.attrAccessible.value}\n  #  model attrs:     ${modelInfo.attrs}\n` : ""
-    modelInfo.method = `${note}  def ${modelInfo.methodName}(params)\n    params.permit(${modelInfo.attrs})\n  end`
+    modelInfo.method = `${note}  def ${modelInfo.methodName}(params)\n    params && params.permit(${modelInfo.attrs})\n  end`
     modelInfo.controllerFiles = changes.map(m => m.file).filter(distinct)
 
     changes.forEach((change) => {

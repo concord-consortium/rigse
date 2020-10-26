@@ -267,10 +267,10 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def portal_offering_strong_params(params)
-    params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid)
+    params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid)
   end
 
   def saveable_multiple_choice_rationale_choice_strong_params(params)
-    params.permit(:answer_id, :choice_id, :rationale, :uuid)
+    params && params.permit(:answer_id, :choice_id, :rationale, :uuid)
   end
 end

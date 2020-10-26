@@ -69,6 +69,6 @@ class Admin::ClientsController < ApplicationController
 
 
   def client_strong_params(params)
-    params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)
+    params && params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)
   end
 end

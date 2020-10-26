@@ -1,8 +1,8 @@
 class Portal::SubjectsController < ApplicationController
-  
+
   include RestrictedPortalController
   public
-  
+
   # GET /portal_subjects
   # GET /portal_subjects.xml
   def index
@@ -112,6 +112,6 @@ class Portal::SubjectsController < ApplicationController
   end
 
   def portal_subject_strong_params(params)
-    params.permit(:description, :name, :teacher_id, :uuid)
+    params && params.permit(:description, :name, :teacher_id, :uuid)
   end
 end

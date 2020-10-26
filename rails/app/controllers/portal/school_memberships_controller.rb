@@ -1,10 +1,10 @@
 class Portal::SchoolMembershipsController < ApplicationController
-  
+
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
   public
-  
+
   # GET /portal_school_memberships
   # GET /portal_school_memberships.xml
   def index
@@ -114,6 +114,6 @@ class Portal::SchoolMembershipsController < ApplicationController
   end
 
   def portal_school_membership_strong_params(params)
-    params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)
+    params && params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)
   end
 end

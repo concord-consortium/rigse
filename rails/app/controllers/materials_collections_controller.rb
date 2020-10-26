@@ -82,6 +82,6 @@ class MaterialsCollectionsController < ApplicationController
   end
 
   def materials_collection_strong_params(params)
-    params.permit(:description, :name, :project_id)
+    params && params.permit(:description, :name, :project_id)
   end
 end

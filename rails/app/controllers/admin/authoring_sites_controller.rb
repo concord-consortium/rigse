@@ -89,6 +89,6 @@ class Admin::AuthoringSitesController < ApplicationController
   end
 
   def admin_authoring_site_strong_params(params)
-    params.permit(:name, :url)
+    params && params.permit(:name, :url)
   end
 end

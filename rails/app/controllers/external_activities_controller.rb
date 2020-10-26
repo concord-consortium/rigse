@@ -339,13 +339,13 @@ class ExternalActivitiesController < ApplicationController
   end
 
   def external_activity_strong_params(params)
-    params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid,
-                  :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing,
-                  :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked,
-                  :is_official, :keywords, :launch_url, :license_code, :logging, :long_description,
-                  :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url,
-                  :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description,
-                  :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type,
-                  :thumbnail_url, :tool_id, :url, :user_id, :uuid)
+    params && params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid,
+                            :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing,
+                            :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked,
+                            :is_official, :keywords, :launch_url, :license_code, :logging, :long_description,
+                            :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url,
+                            :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description,
+                            :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type,
+                            :thumbnail_url, :tool_id, :url, :user_id, :uuid)
   end
 end

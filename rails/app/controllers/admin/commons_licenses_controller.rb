@@ -60,6 +60,6 @@ class Admin::CommonsLicensesController < ApplicationController
   end
 
   def commons_license_strong_params(params)
-    params.permit(:code, :deed, :description, :image, :legal, :name, :number)
+    params && params.permit(:code, :deed, :description, :image, :legal, :name, :number)
   end
 end

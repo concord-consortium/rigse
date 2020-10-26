@@ -120,6 +120,6 @@ class Admin::PermissionFormsController < ApplicationController
   end
 
   def portal_permission_form_strong_params(params)
-    params.permit(:name, :project_id, :url)
+    params && params.permit(:name, :project_id, :url)
   end
 end

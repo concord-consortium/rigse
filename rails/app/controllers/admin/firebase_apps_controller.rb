@@ -89,6 +89,6 @@ class Admin::FirebaseAppsController < ApplicationController
   end
 
   def firebase_app_strong_params(params)
-    params.permit(:client_email, :name, :private_key)
+    params && params.permit(:client_email, :name, :private_key)
   end
 end

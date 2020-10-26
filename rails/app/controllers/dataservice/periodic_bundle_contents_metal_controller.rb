@@ -23,6 +23,6 @@ class Dataservice::PeriodicBundleContentsMetalController < ActionController::Met
   end
 
   def dataservice_periodic_bundle_content_strong_params(params)
-    params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)
+    params && params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)
   end
 end

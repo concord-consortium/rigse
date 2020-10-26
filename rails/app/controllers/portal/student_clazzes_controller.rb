@@ -114,6 +114,6 @@ class Portal::StudentClazzesController < ApplicationController
   end
 
   def portal_student_clazz_strong_params(params)
-    params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid)
+    params && params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id, :uuid)
   end
 end

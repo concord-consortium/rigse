@@ -97,6 +97,6 @@ class Admin::CohortsController < ApplicationController
   #  attr_accessible: :email_notifications_enabled, :items, :name, :project, :project_id
   #  model attrs:     :email_notifications_enabled, :name, :project_id
   def admin_cohort_strong_params(params)
-    params.permit(:email_notifications_enabled, :name, :project_id)
+    params && params.permit(:email_notifications_enabled, :name, :project_id)
   end
 end

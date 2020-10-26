@@ -62,6 +62,6 @@ class Admin::TagsController < ApplicationController
   end
 
   def admin_tag_strong_params(params)
-    params.permit(:scope, :tag)
+    params && params.permit(:scope, :tag)
   end
 end

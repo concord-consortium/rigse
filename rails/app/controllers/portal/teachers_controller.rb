@@ -135,11 +135,11 @@ class Portal::TeachersController < ApplicationController
   #  attr_accessible: :can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state
   #  model attrs:     :asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid
   def user_strong_params(params)
-    params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at,
-                  :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed,
-                  :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip,
-                  :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset,
-                  :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state,
-                  :unconfirmed_email, :uuid)
+    params && params.permit(:asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at,
+                            :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed,
+                            :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip,
+                            :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset,
+                            :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state,
+                            :unconfirmed_email, :uuid)
   end
 end

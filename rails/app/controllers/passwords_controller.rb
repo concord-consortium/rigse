@@ -167,6 +167,6 @@ class PasswordsController < ApplicationController
   #  attr_accessible: :email, :user, :user_id
   #  model attrs:     :expiration_date, :reset_code, :user_id
   def password_strong_params(params)
-    params.permit(:expiration_date, :reset_code, :user_id)
+    params && params.permit(:expiration_date, :reset_code, :user_id)
   end
 end

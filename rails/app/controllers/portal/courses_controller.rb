@@ -1,12 +1,12 @@
 class Portal::CoursesController < ApplicationController
-  
-  # TODO:  There need to be a lot more 
+
+  # TODO:  There need to be a lot more
   # controller filters here...
   # this only protects management actions:
   include RestrictedPortalController
-  
-  
-  public 
+
+
+  public
   # GET /portal_courses
   # GET /portal_courses.xml
   def index
@@ -116,6 +116,6 @@ class Portal::CoursesController < ApplicationController
   end
 
   def portal_course_strong_params(params)
-    params.permit(:course_number, :description, :name, :school_id, :status, :uuid)
+    params && params.permit(:course_number, :description, :name, :school_id, :status, :uuid)
   end
 end

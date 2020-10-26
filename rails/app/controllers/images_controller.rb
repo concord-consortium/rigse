@@ -133,7 +133,7 @@ class ImagesController < ApplicationController
   end
 
   def image_strong_params(params)
-    params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at,
-                  :license_code, :name, :publication_status, :user_id, :width)
+    params && params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at,
+                            :license_code, :name, :publication_status, :user_id, :width)
   end
 end
