@@ -21,7 +21,7 @@ class API::V1::OfferingsController < API::APIController
   def update
     offering = Portal::Offering.find(params[:id])
     authorize offering
-    offering.update_attributes!(params)  # NOTE: was `.permit(:active, :locked))` before auto fix
+    offering.update_attributes!(portal_offering_strong_params(params))
     if params[:position]
       clazz = offering.clazz
       clazz.update_offering_position(offering, params[:position].to_i)
@@ -86,5 +86,9 @@ class API::V1::OfferingsController < API::APIController
     offering =  Portal::Offering.find(params[:id])
     params[:user_id] = offering.clazz.teacher.user.id
     index
+  end
+
+  def portal_offering_strong_params(params)
+    params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid)
   end
 end
