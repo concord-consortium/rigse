@@ -67,7 +67,6 @@ gem 'open4',                '~> 1.0'
 gem 'paperclip'
 gem 'prawn',                '~> 0.12.0'
 gem 'prawn_rails',          '~> 0.0.6'
-gem 'protected_attributes'
 gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'

@@ -8,11 +8,6 @@
 
   Currently the result of that search is written out as a json file.
 
-  TODO:
-
-  1. Add code to inject strong_params method at end of controller
-  2. Add code to remove attr_accessible from models
-
 */
 
 const fs = require("fs")

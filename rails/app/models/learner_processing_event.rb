@@ -2,9 +2,6 @@ class LearnerProcessingEvent < ActiveRecord::Base
 
   belongs_to :learner, class_name: Portal::Learner
 
-  attr_accessible :learner_id, :portal_end, :portal_start, :lara_end, :lara_start, :elapsed_seconds, :duration, :login, :teacher, :url, :lara_duration, :portal_duration
-
-
   # Humanize duration seconds, similar to ActiveSupport's distance_of_time_in_words
   def self.humanize(secs)
     if secs.nil?

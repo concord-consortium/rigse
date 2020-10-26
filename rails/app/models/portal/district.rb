@@ -1,8 +1,6 @@
 class Portal::District < ActiveRecord::Base
   self.table_name = :portal_districts
 
-  attr_accessible :uuid, :name, :description, :nces_district_id, :state, :leaid, :zipcode
-
   acts_as_replicatable
 
   has_many :schools, -> { order :name },

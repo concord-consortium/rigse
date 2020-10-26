@@ -3,8 +3,8 @@
   "stats": {
     "numModels": 110,
     "attrAccessible": {
-      "total": 35,
-      "matches": 19
+      "total": 0,
+      "matches": 0
     },
     "newOrCreates": 0,
     "updates": 0,
@@ -17,10 +17,7 @@
       "methodName": "access_grant_strong_params",
       "path": "app/models/access_grant.rb",
       "attrs": ":access_token, :access_token_expires_at, :client_id, :code, :learner_id, :refresh_token, :state, :teacher_id, :user_id",
-      "attrAccessible": {
-        "value": ":access_token, :access_token_expires_at, :client_id, :code, :learner_id, :refresh_token, :state, :teacher_id, :user_id",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -40,10 +37,7 @@
       "methodName": "admin_authoring_site_strong_params",
       "path": "app/models/admin/authoring_site.rb",
       "attrs": ":name, :url",
-      "attrAccessible": {
-        "value": ":name, :url",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -53,10 +47,7 @@
       "methodName": "admin_cohort_strong_params",
       "path": "app/models/admin/cohort.rb",
       "attrs": ":email_notifications_enabled, :name, :project_id",
-      "attrAccessible": {
-        "value": ":email_notifications_enabled, :items, :name, :project, :project_id",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -86,10 +77,7 @@
       "methodName": "admin_project_strong_params",
       "path": "app/models/admin/project.rb",
       "attrs": ":landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public",
-      "attrAccessible": {
-        "value": ":landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -99,10 +87,7 @@
       "methodName": "admin_project_link_strong_params",
       "path": "app/models/admin/project_link.rb",
       "attrs": ":href, :link_id, :name, :pop_out, :position, :project_id",
-      "attrAccessible": {
-        "value": ":href, :link_id, :name, :pop_out, :position, :project_id",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -132,10 +117,7 @@
       "methodName": "admin_settings_strong_params",
       "path": "app/models/admin/settings.rb",
       "attrs": ":about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content",
-      "attrAccessible": {
-        "value": ":about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials, :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description, :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type, :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval, :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots, :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -175,10 +157,7 @@
       "methodName": "authentication_strong_params",
       "path": "app/models/authentication.rb",
       "attrs": ":provider, :uid, :user_id",
-      "attrAccessible": {
-        "value": ":provider, :uid, :user_id",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -188,10 +167,7 @@
       "methodName": "client_strong_params",
       "path": "app/models/client.rb",
       "attrs": ":app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url",
-      "attrAccessible": {
-        "value": ":app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -201,10 +177,7 @@
       "methodName": "commons_license_strong_params",
       "path": "app/models/commons_license.rb",
       "attrs": ":code, :deed, :description, :image, :legal, :name, :number",
-      "attrAccessible": {
-        "value": ":code, :deed, :description, :image, :legal, :name, :number",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -224,10 +197,7 @@
       "methodName": "dataservice_bucket_content_strong_params",
       "path": "app/models/dataservice/bucket_content.rb",
       "attrs": ":body, :bucket_logger_id, :empty, :processed",
-      "attrAccessible": {
-        "value": ":body, :bucket_logger_id, :empty, :processed",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -237,10 +207,7 @@
       "methodName": "dataservice_bucket_log_item_strong_params",
       "path": "app/models/dataservice/bucket_log_item.rb",
       "attrs": ":bucket_logger_id, :content",
-      "attrAccessible": {
-        "value": ":bucket_logger, :bucket_logger_id, :content",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -250,10 +217,7 @@
       "methodName": "dataservice_bucket_logger_strong_params",
       "path": "app/models/dataservice/bucket_logger.rb",
       "attrs": ":learner_id, :name",
-      "attrAccessible": {
-        "value": ":learner, :learner_id, :name",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -303,10 +267,7 @@
       "methodName": "dataservice_jnlp_session_strong_params",
       "path": "app/models/dataservice/jnlp_session.rb",
       "attrs": ":access_count, :token, :user_id",
-      "attrAccessible": {
-        "value": ":access_count, :token, :user, :user_id",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -339,7 +300,7 @@
       "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
-      "hasStrongParamsMethod": true
+      "hasStrongParamsMethod": false
     },
     {
       "name": "Dataservice::PeriodicBundlePart",
@@ -436,10 +397,7 @@
       "methodName": "external_report_strong_params",
       "path": "app/models/external_report.rb",
       "attrs": ":allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url",
-      "attrAccessible": {
-        "value": ":allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -449,10 +407,7 @@
       "methodName": "favorite_strong_params",
       "path": "app/models/favorite.rb",
       "attrs": ":favoritable_id, :favoritable_type, :user_id",
-      "attrAccessible": {
-        "value": ":favoritable, :favoritable_id, :favoritable_type, :user, :user_id",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -522,10 +477,7 @@
       "methodName": "import_imported_user_strong_params",
       "path": "app/models/import/imported_user.rb",
       "attrs": ":import_id, :importing_domain, :is_verified, :user_id, :user_url",
-      "attrAccessible": {
-        "value": ":import_id, :importing_domain, :is_verified, :user_id, :user_url",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -535,10 +487,7 @@
       "methodName": "import_school_district_mapping_strong_params",
       "path": "app/models/import/school_district_mapping.rb",
       "attrs": ":district_id, :import_district_uuid",
-      "attrAccessible": {
-        "value": ":district_id, :import_district_uuid",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -548,10 +497,7 @@
       "methodName": "import_user_school_mapping_strong_params",
       "path": "app/models/import/user_school_mapping.rb",
       "attrs": ":import_school_url, :school_id",
-      "attrAccessible": {
-        "value": ":import_school_url, :school_id",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -561,10 +507,7 @@
       "methodName": "interactive_strong_params",
       "path": "app/models/interactive.rb",
       "attrs": ":credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width",
-      "attrAccessible": {
-        "value": ":credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -584,10 +527,7 @@
       "methodName": "learner_processing_event_strong_params",
       "path": "app/models/learner_processing_event.rb",
       "attrs": ":duration, :elapsed_seconds, :lara_duration, :lara_end, :lara_start, :learner_id, :login, :portal_duration, :portal_end, :portal_start, :teacher, :url",
-      "attrAccessible": {
-        "value": ":duration, :elapsed_seconds, :lara_duration, :lara_end, :lara_start, :learner_id, :login, :portal_duration, :portal_end, :portal_start, :teacher, :url",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -597,10 +537,7 @@
       "methodName": "materials_collection_strong_params",
       "path": "app/models/materials_collection.rb",
       "attrs": ":description, :name, :project_id",
-      "attrAccessible": {
-        "value": ":description, :name, :project_id",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -610,10 +547,7 @@
       "methodName": "materials_collection_item_strong_params",
       "path": "app/models/materials_collection_item.rb",
       "attrs": ":material_id, :material_type, :materials_collection_id, :position",
-      "attrAccessible": {
-        "value": ":material, :material_id, :material_type, :materials_collection, :materials_collection_id, :position",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -643,10 +577,7 @@
       "methodName": "password_strong_params",
       "path": "app/models/password.rb",
       "attrs": ":expiration_date, :reset_code, :user_id",
-      "attrAccessible": {
-        "value": ":email, :user, :user_id",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -656,10 +587,7 @@
       "methodName": "portal_bookmark_strong_params",
       "path": "app/models/portal/bookmark.rb",
       "attrs": ":clazz_id, :is_visible, :name, :position, :type, :url, :user_id",
-      "attrAccessible": {
-        "value": ":clazz, :clazz_id, :is_visible, :name, :position, :tpye, :url, :user, :user_id",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -679,10 +607,7 @@
       "methodName": "portal_clazz_strong_params",
       "path": "app/models/portal/clazz.rb",
       "attrs": ":class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid",
-      "attrAccessible": {
-        "value": ":class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name, :section, :semester_id, :start_time, :status, :teacher_id, :uuid",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -732,10 +657,7 @@
       "methodName": "portal_district_strong_params",
       "path": "app/models/portal/district.rb",
       "attrs": ":description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode",
-      "attrAccessible": {
-        "value": ":description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -785,10 +707,7 @@
       "methodName": "portal_learner_activity_feedback_strong_params",
       "path": "app/models/portal/learner_activity_feedback.rb",
       "attrs": ":activity_feedback_id, :has_been_reviewed, :portal_learner_id, :rubric_feedback, :score, :text_feedback",
-      "attrAccessible": {
-        "value": ":activity_feedback, :activity_feedback_id, :has_been_reviewed, :portal_learner, :portal_learner_id, :rubric_feedback, :score, :text_feedback",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -831,17 +750,14 @@
       "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
-      "hasStrongParamsMethod": false
+      "hasStrongParamsMethod": true
     },
     {
       "name": "Portal::OfferingActivityFeedback",
       "methodName": "portal_offering_activity_feedback_strong_params",
       "path": "app/models/portal/offering_activity_feedback.rb",
       "attrs": ":activity_id, :enable_text_feedback, :max_score, :portal_offering_id, :rubric, :score_type, :use_rubric",
-      "attrAccessible": {
-        "value": ":activity, :activity_id, :enable_text_feedback, :max_score, :portal_offering, :portal_offering_id, :rubric, :score_type, :use_rubric",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -861,10 +777,7 @@
       "methodName": "portal_permission_form_strong_params",
       "path": "app/models/portal/permission_form.rb",
       "attrs": ":name, :project_id, :url",
-      "attrAccessible": {
-        "value": ":name, :project_id, :url",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -914,10 +827,7 @@
       "methodName": "portal_student_permission_form_strong_params",
       "path": "app/models/portal/student_permission_form.rb",
       "attrs": ":portal_permission_form_id, :portal_student_id, :signed",
-      "attrAccessible": {
-        "value": ":portal_permission_form, :portal_permission_form_id, :portal_student, :portal_student_id, :signed",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -940,7 +850,7 @@
       "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
-      "hasStrongParamsMethod": true
+      "hasStrongParamsMethod": false
     },
     {
       "name": "Portal::TeacherClazz",
@@ -1157,10 +1067,7 @@
       "methodName": "standard_document_strong_params",
       "path": "app/models/standard_document.rb",
       "attrs": ":jurisdiction, :name, :title, :uri",
-      "attrAccessible": {
-        "value": ":jurisdiction, :name, :title, :uri",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -1170,10 +1077,7 @@
       "methodName": "standard_statement_strong_params",
       "path": "app/models/standard_statement.rb",
       "attrs": ":description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri",
-      "attrAccessible": {
-        "value": ":description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -1183,10 +1087,7 @@
       "methodName": "teacher_project_view_strong_params",
       "path": "app/models/teacher_project_view.rb",
       "attrs": ":teacher_id, :viewed_project_id",
-      "attrAccessible": {
-        "value": ":created_at, :teacher, :teacher_id, :updated_at, :viewed_project, :viewed_project_id",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": false
@@ -1196,10 +1097,7 @@
       "methodName": "tool_strong_params",
       "path": "app/models/tool.rb",
       "attrs": ":name, :source_type, :tool_id",
-      "attrAccessible": {
-        "value": ":name, :source_type, :tool_id",
-        "matches": true
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true
@@ -1209,10 +1107,7 @@
       "methodName": "user_strong_params",
       "path": "app/models/user.rb",
       "attrs": ":asked_age, :can_add_teachers_to_cohorts, :confirmation_sent_at, :confirmation_token, :confirmed_at, :current_sign_in_at, :current_sign_in_ip, :default_user, :deleted_at, :email, :email_subscribed, :encrypted_password, :external_id, :first_name, :have_consent, :last_name, :last_sign_in_at, :last_sign_in_ip, :login, :of_consenting_age, :password_salt, :remember_created_at, :remember_token, :require_password_reset, :require_portal_user_type, :reset_password_token, :sign_in_count, :sign_up_path, :site_admin, :state, :unconfirmed_email, :uuid",
-      "attrAccessible": {
-        "value": ":can_add_teachers_to_cohorts, :confirmation_token, :confirmed_at, :email, :email_subscribed, :external_id, :first_name, :have_consent, :last_name, :login, :of_consenting_age, :password, :password_confirmation, :remember_me, :require_password_reset, :sign_up_path, :state",
-        "matches": false
-      },
+      "attrAccessible": null,
       "newOrCreates": [],
       "updates": [],
       "hasStrongParamsMethod": true

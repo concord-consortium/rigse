@@ -1,6 +1,4 @@
 class MaterialsCollection < ActiveRecord::Base
-  attr_accessible :description, :name, :project_id
-
   belongs_to :project, :class_name => "Admin::Project"
 
   has_many :materials_collection_items, -> { order :position }, dependent: :destroy

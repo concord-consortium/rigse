@@ -1,10 +1,5 @@
 class StandardStatement < ActiveRecord::Base
 
-  #
-  # Identifier for this statement
-  #
-  attr_accessible :uri, :doc, :material_type, :material_id, :material, :description, :statement_label, :statement_notation, :parents, :education_level, :is_leaf
-
   serialize :description
   serialize :parents
   serialize :education_level
