@@ -29,7 +29,7 @@ describe Portal::ClazzMailer do
   end
 
   describe "clazz_creation_notification" do
-    subject { Portal::ClazzMailer.clazz_creation_notification(user, clazz) }
+    subject { Portal::ClazzMailer.clazz_creation_notification(user, clazz).message }
 
     context "when teacher is in a cohort" do
       it "sends a notification email to project admins" do
@@ -112,7 +112,7 @@ describe Portal::ClazzMailer do
   end
 
   describe "clazz_assignment_notification" do
-    subject { Portal::ClazzMailer.clazz_assignment_notification(user, clazz, "Activity 1") }
+    subject { Portal::ClazzMailer.clazz_assignment_notification(user, clazz, "Activity 1").message }
     context "when a teacher is in a cohort" do
       it "sends a notification email to project admins" do
         expect(subject).to_not be_a(ActionMailer::Base::NullMail)

@@ -104,7 +104,7 @@ class Portal::StudentsController < ApplicationController
     @portal_clazz = find_clazz_from_params
     @grade_level = view_context.find_grade_level(params)
     user_attributes = generate_user_attributes_from_params
-    @user = User.new(user_attributes)
+    @user = User.new(user_params(user_attributes))
     errors = []
     if @portal_clazz.nil?
       errors << [:class_word, "must be a valid class word."]
@@ -378,5 +378,9 @@ class Portal::StudentsController < ApplicationController
     user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name])
     user_attributes[:email] = Portal::Student.generate_user_email
     user_attributes
+  end
+
+  def user_params(params)
+    params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
   end
 end

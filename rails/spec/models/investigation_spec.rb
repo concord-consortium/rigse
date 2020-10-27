@@ -383,17 +383,6 @@ describe Investigation do
   end
 
   # TODO: auto-generated
-  describe '#duplicate' do
-    it 'duplicate' do
-      investigation = described_class.new
-      new_owner = User.new
-      result = investigation.duplicate(new_owner)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#print_listing' do
     it 'print_listing' do
       investigation = described_class.new

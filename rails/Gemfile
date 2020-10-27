@@ -18,7 +18,7 @@ end
 gem 'activerecord-deprecated_finders'
 gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
 gem "activerecord-session_store"
-gem 'acts-as-taggable-on', '~> 2.4.1'
+gem 'acts-as-taggable-on', '~> 3.4.0'
 gem 'acts_as_list'
 gem 'arrayfields'
 # this is the old version of aws and is needed by our old version of paperclip

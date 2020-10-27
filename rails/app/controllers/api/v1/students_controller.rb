@@ -126,9 +126,9 @@ class API::V1::StudentsController < API::APIController
     user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name])
     user_attributes[:email] = Portal::Student.generate_user_email
 
-    user = User.new(user_attributes)
+    user = User.new(user_params(user_attributes))
     if !user.valid?
-      return error(user.errors.full_messages.join(". "))
+      return error(user.errors.full_messages.uniq.join(". ").gsub("..", "."))
     end
 
     # temporarily disable sending email notifications for state change events
@@ -253,5 +253,8 @@ class API::V1::StudentsController < API::APIController
     true
   end
 
+  def user_params(params)
+    params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  end
 
 end

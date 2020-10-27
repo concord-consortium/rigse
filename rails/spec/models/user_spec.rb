@@ -275,9 +275,9 @@ describe User do
     let(:aaron_token)   { users(:aaron).create_access_token_valid_for(1.day) }
 
     it 'can be used to authenticate and get correct user' do
-      conditions = { User.token_authentication_key => quentin_token }
+      conditions = { :access_token => quentin_token }
       expect(User.find_for_token_authentication(conditions)).to eql(users(:quentin))
-      conditions = { User.token_authentication_key => aaron_token }
+      conditions = { :access_token => aaron_token }
       expect(User.find_for_token_authentication(conditions)).to eql(users(:aaron))
     end
   end

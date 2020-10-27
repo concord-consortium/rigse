@@ -23,7 +23,7 @@ class InteractivesController < ApplicationController
     }
 
     #
-    # Load available params 
+    # Load available params
     #
     @form_model = SearchInteractives.new(search_params)
 
@@ -61,7 +61,7 @@ class InteractivesController < ApplicationController
 
   def create
     authorize Interactive
-    @interactive = Interactive.new(params[:interactive])
+    @interactive = Interactive.new(interactive_params(params))
     @interactive.user = current_visitor
 
     if params[:update_material_properties]
@@ -238,6 +238,12 @@ class InteractivesController < ApplicationController
     end
     model_library = {:models => model_library }
     send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "portal_interactives_library.json"
+  end
+
+  def interactive_params(params)
+    params.require(:interactive).permit(:name, :description, :url, :width, :height, :scale, :image_url, :user_id, :credits,
+                                        :publication_status, :project_ids, :full_window, :no_snapshots, :save_interactive_state,
+                                        :external_activity_id,  :license_code)
   end
 
 end

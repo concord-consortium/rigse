@@ -44,5 +44,7 @@ RailsPortal::Application.configure do
   # Keep test order in same order as before Rails 5
   config.active_support.test_order = :sorted
 
+  config.assets.compile = true
+
   LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end

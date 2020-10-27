@@ -112,8 +112,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    acts-as-taggable-on (2.4.1)
-      rails (>= 3, < 5)
+    acts-as-taggable-on (3.4.4)
+      activerecord (>= 3.2, < 5)
     acts_as_list (0.9.19)
       activerecord (>= 3.0)
     addressable (2.5.2)
@@ -1217,7 +1217,7 @@ DEPENDENCIES
   activerecord-import
   activerecord-session_store
   activesupport!
-  acts-as-taggable-on (~> 2.4.1)
+  acts-as-taggable-on (~> 3.4.0)
   acts_as_list
   arrayfields
   awesome_print

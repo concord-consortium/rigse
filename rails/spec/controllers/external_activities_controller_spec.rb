@@ -304,16 +304,6 @@ describe ExternalActivitiesController do
     end
   end
 
-
-  # TODO: auto-generated
-  describe '#preview_index' do
-    it 'GET preview_index' do
-      get :preview_index, {}, {}
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do

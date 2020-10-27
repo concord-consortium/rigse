@@ -160,6 +160,7 @@ module RailsPortal
       print.css
       import_progress.js
       import_model_library.js
+      jquery.placeholder.js
     )
 
     # pre-compile any fonts in the assets/ directory as well

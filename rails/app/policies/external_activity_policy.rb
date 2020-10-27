@@ -9,10 +9,6 @@ class ExternalActivityPolicy < ApplicationPolicy
     end
   end
 
-  def preview_index?
-    true
-  end
-
   def publish?
     new_or_create? || author?
   end

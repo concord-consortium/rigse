@@ -7,7 +7,7 @@ module BearerTokenAuthenticatable
 
     def authenticate!
       return fail(:invalid_token) unless token_valid?
-      resource = mapping.to.find_for_token_authentication(mapping.to.token_authentication_key => token_value)
+      resource = mapping.to.find_for_token_authentication(:access_token => token_value)
       return fail(:invalid_token) unless resource
 
       if validate(resource)

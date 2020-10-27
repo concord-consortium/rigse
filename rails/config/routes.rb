@@ -295,7 +295,6 @@ RailsPortal::Application.routes.draw do
 
     get '/report/user' => 'report/user#index', :as => :user_report
 
-    get '/external_activities/list/preview/' => 'external_activities#preview_index', :as => :external_activity_preview_list
     post '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :version => /v\d+/
     post '/external_activities/republish/:version' => 'external_activities#republish', :as => :external_activity_republish, :version => /v\d+/
     resources :external_activities, path: 'eresources' do
