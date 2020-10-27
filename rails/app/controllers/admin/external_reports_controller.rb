@@ -74,12 +74,9 @@ class Admin::ExternalReportsController < ApplicationController
     redirect_to action: :index
   end
 
-  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
-  #  attr_accessible: :allowed_for_students, :client, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url
-  #  model attrs:     :allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable, :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url, :name, :report_type, :url
   def external_report_strong_params(params)
-    params && params.permit(:allowed_for_students, :client_id, :default_report_for_source_type, :individual_activity_reportable,
-                            :individual_student_reportable, :launch_text, :move_students_api_token, :move_students_api_url,
-                            :name, :report_type, :url)
+    params && params.permit(:allowed_for_students, :client, :client_id, :default_report_for_source_type,
+                            :individual_activity_reportable, :individual_student_reportable, :launch_text,
+                            :move_students_api_token, :move_students_api_url, :name, :report_type, :url)
   end
 end

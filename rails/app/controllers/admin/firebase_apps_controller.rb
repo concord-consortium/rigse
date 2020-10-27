@@ -89,6 +89,11 @@ class Admin::FirebaseAppsController < ApplicationController
   end
 
   def firebase_app_strong_params(params)
-    params && params.permit(:client_email, :name, :private_key)
+    params = (params && params.permit(:client_email, :name, :private_key)) || {}
+    if params.has_key?(:private_key)
+      # convert newlines copied string from credentials json to real newlines
+      params[:private_key] = (params[:private_key] || "").gsub('\n', "\n")
+    end
+    params
   end
 end

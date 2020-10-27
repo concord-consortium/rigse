@@ -113,6 +113,6 @@ class Admin::SettingsController < ApplicationController
                             :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type,
                             :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval,
                             :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots,
-                            :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :uuid, :wrap_home_page_content)
+                            :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :wrap_home_page_content)
   end
 end

@@ -146,7 +146,7 @@ class Portal::LearnersController < ApplicationController
 
     @portal_learner.console_logger = Dataservice::ConsoleLogger.create! unless @portal_learner.console_logger
     @portal_learner.bundle_logger = Dataservice::BundleLogger.create! unless @portal_learner.bundle_logger
-    @portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger  # strong params not required
+    @portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger
 
     respond_to do |format|
       format.html # show.html.erb
@@ -157,7 +157,7 @@ class Portal::LearnersController < ApplicationController
         bundle_get_url = dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle)
         if @portal_learner.student.user == current_visitor
           if @portal_learner.bundle_logger.in_progress_bundle
-            launch_event = Dataservice::LaunchProcessEvent.create( # strong params not required
+            launch_event = Dataservice::LaunchProcessEvent.create(
               :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],
               :event_details => "Activity configuration loaded. Loading prior learner session data...",
               :bundle_content => @portal_learner.bundle_logger.in_progress_bundle
@@ -264,6 +264,6 @@ class Portal::LearnersController < ApplicationController
   end
 
   def portal_learner_strong_params(params)
-    params && params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id, :uuid)
+    params && params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id)
   end
 end

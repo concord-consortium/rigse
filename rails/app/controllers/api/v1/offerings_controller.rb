@@ -89,6 +89,6 @@ class API::V1::OfferingsController < API::APIController
   end
 
   def portal_offering_strong_params(params)
-    params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid)
+    params && params.permit(:active, :locked)
   end
 end

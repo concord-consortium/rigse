@@ -166,7 +166,7 @@ class Import::ImportsController < ApplicationController
       json_object = JSON.parse "#{params['import_activity_form'].read}", :symbolize_names => true
       req_url = "#{request.protocol}#{request.host_with_port}"
       auth_url = get_authoring_url
-      import = Import::Import.create!() # strong params not required
+      import = Import::Import.create!()
       import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_ACTIVITY)
       import.update_attribute(:user_id, current_visitor.id)
       job = Delayed::Job.enqueue Import::ImportExternalActivity.new(import,json_object,req_url,auth_url,current_visitor.id)
@@ -277,7 +277,7 @@ class Import::ImportsController < ApplicationController
     end
     req_url = "#{request.protocol}#{request.host_with_port}"
     auth_url = get_authoring_url
-    import = Import::Import.create!() # strong params not required"
+    import = Import::Import.create!()
     import.update_attribute(:import_type,Import::Import::IMPORT_TYPE_BATCH_ACTIVITY)
     job = Delayed::Job.enqueue Import::ImportExternalActivity.new(import,json_object,req_url,auth_url,current_visitor.id)#delayed job method,send import_job in params
     import.update_attribute(:job_id,job.id)
@@ -324,9 +324,5 @@ class Import::ImportsController < ApplicationController
         .where(user_id: current_visitor.id,
                import_type: Import::Import::IMPORT_TYPE_ACTIVITY)
         .last
-  end
-
-  def import_import_strong_params(params)
-    params && params.permit(:import_data, :import_type, :job_finished_at, :job_id, :progress, :total_imports, :upload_data, :user_id)
   end
 end

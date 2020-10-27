@@ -65,7 +65,7 @@ class API::V1::TeacherClassesController < API::APIController
     teacher_clazz = class_ownership[:teacher_clazz]
 
     class_to_copy = teacher_clazz.clazz
-    new_clazz = Portal::Clazz.new( # strong params not required
+    new_clazz = Portal::Clazz.new(
       :name => params[:name],
       :class_word => params[:classWord],
       :description => params[:description],
@@ -173,10 +173,5 @@ class API::V1::TeacherClassesController < API::APIController
         }
       },
     }
-  end
-
-  def portal_clazz_strong_params(params)
-    params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
-                            :section, :semester_id, :start_time, :status, :teacher_id, :uuid)
   end
 end

@@ -8,7 +8,7 @@ class API::V1::BookmarksController < API::APIController
     name = params[:name] || 'My bookmark'
     url = params[:url] || 'http://concord.org'
 
-    bookmark = Portal::GenericBookmark.new({name: name, url: url}) # strong params not required
+    bookmark = Portal::GenericBookmark.new({name: name, url: url})
     bookmark.user = auth[:user]
     bookmark.clazz = auth[:portal_class]
     authorize bookmark
@@ -133,9 +133,5 @@ class API::V1::BookmarksController < API::APIController
     rescue StandardError => e
       return {error: e.message}
     end
-  end
-
-  def portal_generic_bookmark_strong_params(params)
-    params && params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)
   end
 end

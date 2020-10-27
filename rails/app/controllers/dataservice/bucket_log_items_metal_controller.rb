@@ -22,7 +22,7 @@ class Dataservice::BucketLogItemsMetalController < ActionController::Metal
     if bucket_logger
       body = request.body.read
       # also set processed and empty for now
-      bucket_content = Dataservice::BucketLogItem.create( # strong params not required
+      bucket_content = Dataservice::BucketLogItem.create(
         :bucket_logger_id => bucket_logger.id,
         :content => body
       )
@@ -41,12 +41,5 @@ class Dataservice::BucketLogItemsMetalController < ActionController::Metal
       self.content_type = 'text/html'
       self.response_body = 'Not Found'
     end
-  end
-
-  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
-  #  attr_accessible: :bucket_logger, :bucket_logger_id, :content
-  #  model attrs:     :bucket_logger_id, :content
-  def dataservice_bucket_log_item_strong_params(params)
-    params && params.permit(:bucket_logger_id, :content)
   end
 end

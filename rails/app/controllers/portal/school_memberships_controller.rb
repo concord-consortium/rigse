@@ -114,6 +114,6 @@ class Portal::SchoolMembershipsController < ApplicationController
   end
 
   def portal_school_membership_strong_params(params)
-    params && params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time, :uuid)
+    params && params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time)
   end
 end

@@ -106,6 +106,6 @@ class Portal::DistrictsController < ApplicationController
   end
 
   def portal_district_strong_params(params)
-    params && params.permit(:description, :leaid, :name, :nces_district_id, :state, :uuid, :zipcode)
+    params && params.permit(:description, :leaid, :name, :nces_district_id, :state, :zipcode)
   end
 end

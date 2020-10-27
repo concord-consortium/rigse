@@ -56,7 +56,7 @@ class InteractivesController < ApplicationController
 
   def new
     authorize Interactive
-    @interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400) # strong params not required
+    @interactive = Interactive.new(:scale => 1.0, :width => 690, :height => 400)
   end
 
   def create
@@ -154,14 +154,14 @@ class InteractivesController < ApplicationController
     end
 
     if request.xhr?
-      if cancel || @interactive.update_attributes(admin_tag_strong_params(params[:interactive]))
+      if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))
         render 'show', :locals => { :interactive => @interactive }
       else
         render :xml => @interactive.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @interactive.update_attributes(admin_tag_strong_params(params[:interactive]))
+        if @interactive.update_attributes(interactive_strong_params(params[:interactive]))
           flash['notice'] = 'Interactive was successfully updated.'
           format.html { redirect_to(@interactive) }
           format.xml  { head :ok }
@@ -182,14 +182,14 @@ class InteractivesController < ApplicationController
           Interactive.transaction do
             model_library[:models].each do |model|
 
-              interactive = Interactive.new(model.except(:model_type)) # strong params not required
+              interactive = Interactive.new(model.except(:model_type))
               interactive.user = current_visitor
               interactive.publication_status = "published"
 
               if model[:model_type]
                 new_admin_tag = {:scope => "model_types", :tag => model[:model_type]}
                 if Admin::Tag.fetch_tag(new_admin_tag).size == 0
-                  admin_tag = Admin::Tag.new({:scope => "model_types", :tag => model[:model_type]}) # strong params not required
+                  admin_tag = Admin::Tag.new({:scope => "model_types", :tag => model[:model_type]})
                   admin_tag.save!
                 end
                 interactive.model_type_list.add(model[:model_type])
@@ -240,15 +240,9 @@ class InteractivesController < ApplicationController
     send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "portal_interactives_library.json"
   end
 
-  def admin_tag_strong_params(params)
-    params && params.permit(:scope, :tag)
-  end
-
-  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
-  #  attr_accessible: :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width
-  #  model attrs:     :credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code, :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width
   def interactive_strong_params(params)
     params && params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code,
-                            :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url, :user_id, :width)
+                            :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url,
+                            :user_id, :width)
   end
 end

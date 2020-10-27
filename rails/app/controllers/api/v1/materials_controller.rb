@@ -524,7 +524,7 @@ class API::V1::MaterialsController < API::APIController
 
     end
 
-    StandardStatement.create( # strong params not required
+    StandardStatement.create(
 						:uri			    => uri,
 						:doc                => statement[:doc],
   						:material_type	    => type,
@@ -842,12 +842,5 @@ class API::V1::MaterialsController < API::APIController
         return
     end
 
-  end
-
-  # STRONG_PARAMS_REVIEW: model attr_accessible didn't match model attributes:
-  #  attr_accessible: :description, :doc, :education_level, :is_leaf, :material, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri
-  #  model attrs:     :description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri
-  def standard_statement_strong_params(params)
-    params && params.permit(:description, :doc, :education_level, :is_leaf, :material_id, :material_type, :parents, :statement_label, :statement_notation, :uri)
   end
 end

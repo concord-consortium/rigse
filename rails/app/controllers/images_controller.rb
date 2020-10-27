@@ -119,7 +119,7 @@ class ImagesController < ApplicationController
     if @image.update_attributes(image_strong_params(my_params))
       if @image.reload
         if image
-          return @image.update_attributes(img_params)  # strong params not required
+          return @image.update_attributes(img_params)
         else
           return true
         end

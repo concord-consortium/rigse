@@ -326,14 +326,16 @@ describe Portal::StudentsController do
     end
   end
 
+  # Commented out as a test to see if it is used
+  #
   # TODO: auto-generated
-  describe '#update' do
-    xit 'PATCH update' do
-      put :update, id: FactoryBot.create(:portal_student).to_param
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
+  # describe '#update' do
+  #   xit 'PATCH update' do
+  #     put :update, id: FactoryBot.create(:portal_student).to_param
+  #
+  #     expect(response).to have_http_status(:ok)
+  #   end
+  # end
 
   # TODO: auto-generated
   describe '#destroy' do

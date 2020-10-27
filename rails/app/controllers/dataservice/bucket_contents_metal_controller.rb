@@ -22,7 +22,7 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
     if bucket_logger
       body = request.body.read
       # also set processed and empty for now
-      bucket_content = Dataservice::BucketContent.create( # strong params not required
+      bucket_content = Dataservice::BucketContent.create(
         :bucket_logger_id => bucket_logger.id,
         :body => body,
         :processed => true,
@@ -43,9 +43,5 @@ class Dataservice::BucketContentsMetalController < ActionController::Metal
       self.content_type = 'text/html'
       self.response_body = 'Not Found'
     end
-  end
-
-  def dataservice_bucket_content_strong_params(params)
-    params && params.permit(:body, :bucket_logger_id, :empty, :processed)
   end
 end

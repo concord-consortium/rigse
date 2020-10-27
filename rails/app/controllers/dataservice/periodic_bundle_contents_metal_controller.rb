@@ -4,7 +4,7 @@ class Dataservice::PeriodicBundleContentsMetalController < ActionController::Met
     bundle_content = nil
     if bundle_logger = Dataservice::PeriodicBundleLogger.find(params[:id])
       body = request.body.read
-      bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body) # strong params not required
+      bundle_content = Dataservice::PeriodicBundleContent.create(:periodic_bundle_logger_id => bundle_logger.id, :body => body)
     end
     if bundle_content
       digest = Digest::MD5.hexdigest(body)
@@ -20,9 +20,5 @@ class Dataservice::PeriodicBundleContentsMetalController < ActionController::Met
       self.content_type = 'text/html'
       self.response_body = 'Not Found'
     end
-  end
-
-  def dataservice_periodic_bundle_content_strong_params(params)
-    params && params.permit(:body, :empty, :parts_extracted, :periodic_bundle_logger_id, :processed, :uuid, :valid_xml)
   end
 end

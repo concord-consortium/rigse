@@ -252,7 +252,7 @@ class Portal::OfferingsController < ApplicationController
                        .first_or_create
         if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
           saveable_answer = saveable.answers.create(:bundle_content_id => nil)
-          Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id) # strong params not required
+          Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)
         end
       else
         if ! choice
@@ -267,10 +267,6 @@ class Portal::OfferingsController < ApplicationController
   end
 
   def portal_offering_strong_params(params)
-    params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status, :uuid)
-  end
-
-  def saveable_multiple_choice_rationale_choice_strong_params(params)
-    params && params.permit(:answer_id, :choice_id, :rationale, :uuid)
+    params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status)
   end
 end

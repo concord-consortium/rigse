@@ -46,11 +46,7 @@ class SecurityQuestionsController < ApplicationController
   #       new_question = existing_object.question
   #     end
   #
-  #     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] }) # strong params not required
+  #     SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })
   #   end.compact
   # end
-
-  def security_question_strong_params(params)
-    params && params.permit(:answer, :question, :user_id)
-  end
 end

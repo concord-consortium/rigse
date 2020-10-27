@@ -116,6 +116,6 @@ class Portal::CoursesController < ApplicationController
   end
 
   def portal_course_strong_params(params)
-    params && params.permit(:course_number, :description, :name, :school_id, :status, :uuid)
+    params && params.permit(:course_number, :description, :name, :school_id, :status)
   end
 end

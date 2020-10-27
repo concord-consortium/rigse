@@ -7,7 +7,7 @@ class Portal::BookmarksController < ApplicationController
     #
     # Create a tmp bookmark to perform pundit auth check.
     #
-    mark = Portal::GenericBookmark.new() # strong params not required
+    mark = Portal::GenericBookmark.new()
     mark.user = current_user
     mark.clazz = @portal_clazz
     authorize mark
@@ -37,9 +37,5 @@ class Portal::BookmarksController < ApplicationController
 
   def get_current_clazz()
     Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:clazz_id])
-  end
-
-  def portal_generic_bookmark_strong_params(params)
-    params && params.permit(:clazz_id, :is_visible, :name, :position, :type, :url, :user_id)
   end
 end

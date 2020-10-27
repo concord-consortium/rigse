@@ -112,6 +112,6 @@ class Portal::SubjectsController < ApplicationController
   end
 
   def portal_subject_strong_params(params)
-    params && params.permit(:description, :name, :teacher_id, :uuid)
+    params && params.permit(:description, :name, :teacher_id)
   end
 end

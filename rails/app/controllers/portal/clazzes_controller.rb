@@ -148,7 +148,7 @@ class Portal::ClazzesController < ApplicationController
         @portal_clazz.teacher_id = current_visitor.portal_teacher.id
         @portal_clazz.teacher = current_visitor.portal_teacher
       else
-        teacher = Portal::Teacher.create(:user => current_visitor) # Former call set :user_id directly; class validations didn't like that   # strong params not required
+        teacher = Portal::Teacher.create(:user => current_visitor) # Former call set :user_id directly; class validations didn't like that
         if teacher && teacher.id # Former call used .id directly on create method, leaving room for NilClass error
           @portal_clazz.teacher_id = teacher.id # Former call tried to do another Portal::Teacher.create. We don't want to double-create this teacher
           @portal_clazz.teacher = teacher
@@ -163,7 +163,7 @@ class Portal::ClazzesController < ApplicationController
     if okToCreate
       # We can't use Course.find_or_create_by_course_number_name_and_school_id here, because we don't know what course_number we're looking for
       course = Portal::Course.find_by_name_and_school_id(@portal_clazz.name, school_id)
-      course = Portal::Course.create({ # strong params not required
+      course = Portal::Course.create({
         :name => @portal_clazz.name,
         :course_number => nil,
         :school_id => school_id
@@ -410,7 +410,7 @@ class Portal::ClazzesController < ApplicationController
 
   def portal_clazz_strong_params(params)
     params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
-                            :section, :semester_id, :start_time, :status, :teacher_id, :uuid)
+                            :section, :semester_id, :start_time, :status, :teacher_id)
   end
 
 end
