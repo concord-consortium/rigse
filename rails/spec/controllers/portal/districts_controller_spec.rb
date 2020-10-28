@@ -4,7 +4,7 @@ describe Portal::DistrictsController do
 
   let(:portal_district_params) {{
     "description" => "Test District", "leaid" => "1", "name" => "Test District",
-    "nces_district_id" => "2", "state" => "MA", "uuid" => "test-uuid", "zipcode" => "01234"
+    "nces_district_id" => "2", "state" => "MA", "zipcode" => "01234"
   }}
 
   def mock_district(_stubs={})
