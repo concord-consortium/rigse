@@ -6,7 +6,7 @@ describe Portal::SchoolsController do
   let(:portal_school_params) {{
     "city" => "Testertown", "country_id" => "1", "description" => "Test School", "district_id" => "2",
     "name" => "Testertown School", "nces_school_id" => "3", "ncessch" => "test", "state" => "MA",
-    "uuid" => "test-uuid", "zipcode" => "01234"
+    "zipcode" => "01234"
   }}
 
   def mock_school(_stubs={})
