@@ -60,7 +60,9 @@ class API::V1::ReportsController < API::APIController
       API::V1::Report.update_rubric_v2(offering, params[:rubric_v2])
     end
 
-    offering.update_attributes!(params[:anonymous_report])
+    if params[:anonymous_report]
+      offering.update_attributes!(params[:anonymous_report])
+    end
     head :ok
   end
 
