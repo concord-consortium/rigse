@@ -132,6 +132,6 @@ class Portal::TeachersController < ApplicationController
   end
 
   def user_strong_params(params)
-    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation))
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
   end
 end
