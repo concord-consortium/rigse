@@ -19,23 +19,23 @@ GIT
 
 GIT
   remote: https://github.com/concord-consortium/genigames-connector.git
-  revision: 77fc52645b3280fe18f1f8383291e417bf362f82
-  branch: spike-rails4-support
+  revision: 6a00f07af38e03670f696468578c3ff11a8c8414
+  ref: 6a00f07af38e03670f696468578c3ff11a8c8414
   specs:
     genigames_connector (0.0.5)
       haml (~> 4.0)
       json (~> 1.8.6)
-      rails (> 3.2.11)
+      rails (~> 4.2)
 
 GIT
   remote: https://github.com/concord-consortium/geniverse-portal-integration.git
-  revision: d49e5e14fa5fac19078ec149c2c89b8e6c946b50
-  ref: d49e5e14fa5fac19078ec149c2c89b8e6c946b50
+  revision: 82266fcc5a254691bbc08e2f2ed22eafd13ebde7
+  ref: 82266fcc5a254691bbc08e2f2ed22eafd13ebde7
   specs:
     geniverse_portal_integration (0.0.8)
       haml (~> 4.0)
       json (~> 1.8.6)
-      rails (> 3.2.19)
+      rails (~> 4.2)
 
 GIT
   remote: https://github.com/concord-consortium/in_place_editing.git
