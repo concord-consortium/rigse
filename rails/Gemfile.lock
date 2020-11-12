@@ -29,13 +29,13 @@ GIT
 
 GIT
   remote: https://github.com/concord-consortium/geniverse-portal-integration.git
-  revision: 82266fcc5a254691bbc08e2f2ed22eafd13ebde7
-  ref: 82266fcc5a254691bbc08e2f2ed22eafd13ebde7
+  revision: ad47ec8a24fc59573aca8d2413f8d60d0ce52186
+  ref: ad47ec8a24fc59573aca8d2413f8d60d0ce52186
   specs:
     geniverse_portal_integration (0.0.8)
       haml (~> 4.0)
       json (~> 1.8.6)
-      rails (~> 4.2)
+      rails (= 4.2.11.17)
 
 GIT
   remote: https://github.com/concord-consortium/in_place_editing.git
