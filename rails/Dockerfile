@@ -1,4 +1,4 @@
-FROM concordconsortium/docker-rails-base-private:ruby-2.3.7-rails-3.2.22.19
+FROM concordconsortium/docker-rails-base-private:2.3.7-4.2.11.17
 
 # Debian 8 (jessie) is no longer supported
 RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie main" >> /etc/apt/sources.list.d/jessie.list
