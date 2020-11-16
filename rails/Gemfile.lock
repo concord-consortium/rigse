@@ -29,8 +29,8 @@ GIT
 
 GIT
   remote: https://github.com/concord-consortium/geniverse-portal-integration.git
-  revision: ad47ec8a24fc59573aca8d2413f8d60d0ce52186
-  ref: ad47ec8a24fc59573aca8d2413f8d60d0ce52186
+  revision: 7c7acbb8fc6fa6c2bf2b9ac8c2d154976363cbad
+  ref: 7c7acbb8fc6fa6c2bf2b9ac8c2d154976363cbad
   specs:
     geniverse_portal_integration (0.0.8)
       haml (~> 4.0)
@@ -1163,7 +1163,7 @@ GEM
     tinymce-rails (3.5.11.1)
       railties (>= 3.1.1)
     ttfunk (1.0.3)
-    tzinfo (1.2.7)
+    tzinfo (1.2.8)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -1209,6 +1209,8 @@ DEPENDENCIES
   RedCloth (~> 4.2.8)
   actionmailer!
   actionpack!
+  actionview!
+  activejob!
   activemodel!
   activerecord!
   activerecord-deprecated_finders
