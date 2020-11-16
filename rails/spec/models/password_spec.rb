@@ -18,6 +18,7 @@ RSpec.describe Password, type: :model do
 
     it 'does  create with proper email' do
       password.email = 'abc@example.com'
+      password.user = user
       expect(password).to be_valid
 
       password.save!

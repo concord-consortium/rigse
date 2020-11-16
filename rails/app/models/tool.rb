@@ -5,6 +5,4 @@ class Tool < ActiveRecord::Base
     Tool.all.map { |t| [t.name, t.id] }
   end
 
-  attr_accessible :name, :source_type, :tool_id
-
 end

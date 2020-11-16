@@ -38,9 +38,9 @@ describe MiscController do
   # TODO: auto-generated
   describe '#stats' do
     it 'GET stats' do
-      get :stats, {}, {}
+      xhr :get, :stats, {}, {}
 
-      expect(response).to have_http_status(:not_acceptable)
+      expect(response).to have_http_status(:ok)
     end
   end
 

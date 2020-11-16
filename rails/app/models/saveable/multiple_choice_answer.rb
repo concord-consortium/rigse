@@ -4,7 +4,10 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
   belongs_to :multiple_choice,  :class_name => 'Saveable::MultipleChoice', :counter_cache => :response_count
   belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'
 
-  has_many :rationale_choices, :order => :choice_id, :class_name => 'Saveable::MultipleChoiceRationaleChoice', :foreign_key => :answer_id, :dependent => :destroy
+  has_many :rationale_choices, -> { order :choice_id },
+    :class_name => 'Saveable::MultipleChoiceRationaleChoice',
+    :foreign_key => :answer_id,
+    :dependent => :destroy
 
   acts_as_list :scope => :multiple_choice_id
 
@@ -15,7 +18,7 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
       # figure out if we need to include indexes in the answer
       duplicate_choices = multiple_choice.has_duplicate_choices?
 
-      rationale_choices.compact.select { |rc| rc.choice }.map do |rc|
+      rationale_choices.to_a.compact.select { |rc| rc.choice }.map do |rc|
         data = {
           :choice_id => rc.choice.id,
           :answer => rc.choice.choice,
@@ -47,7 +50,7 @@ class Saveable::MultipleChoiceAnswer < ActiveRecord::Base
 
   def answered_correctly?
     if rationale_choices.size > 0
-      choices = rationale_choices.compact.select{|rc| rc.choice }.map{|rc| rc.choice.is_correct }
+      choices = rationale_choices.to_a.compact.select{|rc| rc.choice }.map{|rc| rc.choice.is_correct }
       !(choices.size == 0 || choices.include?(false))
     else
       false

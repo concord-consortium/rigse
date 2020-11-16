@@ -21,10 +21,10 @@ class SecurityQuestionsController < ApplicationController
     errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
     if (!errors) || errors.empty?
       current_visitor.update_security_questions!(@security_questions)
-      flash[:notice] = "Your security questions have been successfully updated."
+      flash['notice'] = "Your security questions have been successfully updated."
       redirect_to(root_path)
     else
-      flash[:error] = errors.join(", ")
+      flash['error'] = errors.join(", ")
       @security_questions = SecurityQuestion.fill_array(@security_questions)
       render :action => "edit"
     end

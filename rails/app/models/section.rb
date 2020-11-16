@@ -10,26 +10,19 @@ class Section < ActiveRecord::Base
 
   has_one :investigation, :through => :activity
 
-  has_many :pages ,:order => :position, :dependent => :destroy do
+  has_many :pages, -> { order :position}, :dependent => :destroy do
     def student_only
       where('teacher_only' => false)
     end
   end
 
-  has_many :page_elements,
-    :finder_sql => proc { "SELECT page_elements.* FROM page_elements
-    INNER JOIN pages ON page_elements.page_id = pages.id
-    WHERE pages.section_id = #{id}" }
+  # Generates: SELECT `page_elements`.* FROM `page_elements`
+  # INNER JOIN `pages` ON `page_elements`.`page_id` = `pages`.`id`
+  # WHERE `pages`.`section_id` = 2
+  # ORDER BY page_elements.position ASC, page_elements.id ASC, `pages`.`position` ASC
+  has_many :page_elements, :through => :pages
 
-  # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
-  BASE_EMBEDDABLES.each do |klass|
-      eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
-      :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
-      INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'
-      INNER JOIN pages ON page_elements.page_id = pages.id
-      WHERE pages.section_id = \#\{id\}" }!
-  end
-
+  include HasEmbeddables
   include ResponseTypes
 
   acts_as_list :scope => :activity_id

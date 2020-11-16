@@ -2,6 +2,10 @@
 require 'spec_helper'
 
 describe API::V1::TeacherRegistration do
+  let(:school) {
+    FactoryBot.create(:portal_school)
+  }
+
   let(:params) {
      {
         first_name: "teacher",
@@ -9,7 +13,7 @@ describe API::V1::TeacherRegistration do
         login: "teacher_user",
         password: "testingxxy",
         email: "teacher@concord.org",
-        school_id: 123
+        school_id: school.id
     }
   }
 
@@ -43,21 +47,16 @@ describe API::V1::TeacherRegistration do
   end
 
   describe "teacher instance" do
-    let (:teacher) {
+    let(:teacher) {
       registration = API::V1::TeacherRegistration.new(params)
       registration.save
       registration.teacher
     }
 
     describe "when school is found" do
-      before(:each) do
-        allow(Portal::School).to receive(:exists?).and_return(true)
-        allow(Portal::School).to receive(:find).and_return(mock_model(Portal::School, id: 123))
-      end
-
       it "should have exactly one school" do
         expect(teacher.schools.size).to eq(1)
-        expect(teacher.school.id).to eql(123)
+        expect(teacher.school.id).to eql(school.id)
       end
     end
   end

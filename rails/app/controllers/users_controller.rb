@@ -35,9 +35,13 @@ class UsersController < ApplicationController
 
     user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
 
-    @users = policy_scope(User).search(params[:search], params[:page], nil).
-      includes(:imported_user, :portal_teacher, :portal_student,
-              :teacher_cohorts, :student_cohorts, :roles, :project_users).where(user_types)
+    join_string =
+      "LEFT JOIN roles_users ON users.id = roles_users.user_id " +
+      "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
+
+    search_scope = policy_scope(User)
+    search_scope = search_scope.joins(join_string).where(user_types)
+    @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
@@ -67,7 +71,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     authorize @user
     @user.destroy
-    flash[:notice] = "User: #{@user.name} successfully deleted!"
+    flash['notice'] = "User: #{@user.name} successfully deleted!"
     redirect_to users_url
   end
 
@@ -140,7 +144,7 @@ class UsersController < ApplicationController
         end
         params[:user].delete :enews_subscription
 
-        if @user.update_attributes(params[:user])
+        if @user.update_attributes(user_strong_params(params[:user]))
 
           # This update method is shared with admins using users/edit and users using users/preferences.
           # Since the values are checkboxes we can't use the absense of them to denote there are no
@@ -166,7 +170,7 @@ class UsersController < ApplicationController
             @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
           end
 
-          flash[:notice] = "User: #{@user.name} was successfully updated."
+          flash['notice'] = "User: #{@user.name} was successfully updated."
           format.html do
             if params[:user][:redirect_user_edit_form] == 'users'
               redirect_to users_path
@@ -208,7 +212,7 @@ class UsersController < ApplicationController
     sign_out :user
     user = User.find_by_login!(params[:username])
     sign_in user
-    render :text => "#{params[:username]} logged in"
+    render :plain => "#{params[:username]} logged in"
   end
 
   #Used for activation of users by a manager/admin
@@ -220,7 +224,7 @@ class UsersController < ApplicationController
       user.make_user_a_member
 
       # assume this type of user just activated someone from somewhere else in the app
-      flash[:notice] = "Activation of #{user.name_and_login} complete."
+      flash['notice'] = "Activation of #{user.name_and_login} complete."
       redirect_to(session[:return_to] || root_path)
     end
   end
@@ -252,12 +256,16 @@ class UsersController < ApplicationController
         if @user.portal_teacher && params[:user][:has_cohorts_in_form] && policy(@current_user).add_teachers_to_cohorts?
           @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
         end
-        flash[:notice] = "User: #{@user.name} was successfully updated."
+        flash['notice'] = "User: #{@user.name} was successfully updated."
         format.html do
           redirect_to users_path
         end
         format.xml  { head :ok }
       end
     end
+  end
+
+  def user_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
   end
 end

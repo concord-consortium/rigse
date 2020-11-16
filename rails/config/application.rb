@@ -87,9 +87,6 @@ module RailsPortal
     # Run "rake -D time" for a list of tasks for finding time zone names. Comment line to use default local time.
     config.time_zone = 'UTC'
 
-    # Set the default location for page caching
-    config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
-
     # Use SQL instead of Active Record's schema dumper when creating the test database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types
@@ -163,6 +160,7 @@ module RailsPortal
       print.css
       import_progress.js
       import_model_library.js
+      jquery.placeholder.js
     )
 
     # pre-compile any fonts in the assets/ directory as well
@@ -179,6 +177,12 @@ module RailsPortal
       config.assets.initialize_on_precompile = false
     end
 
+    # use json format for serilized cookies
+    config.action_dispatch.cookies_serializer = :hybrid
+
+    # propagate errors normally just like in other Active Record callbacks
+    # See https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#error-handling-in-transaction-callbacks
+    config.active_record.raise_in_transactional_callbacks = true
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

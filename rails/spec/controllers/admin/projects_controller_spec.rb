@@ -207,7 +207,7 @@ describe Admin::ProjectsController do
       it "is unavailable to project admins" do
         get :new, {}
         expect(response).to have_http_status(:redirect)
-        expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+        expect(request.flash['alert']).to match(RegexForAuthFailNew)
       end
     end
 
@@ -226,7 +226,7 @@ describe Admin::ProjectsController do
           other_projects.each do |proj|
             get :edit, { id: proj.id }
             expect(response).to have_http_status(:redirect)
-            expect(request.flash[:alert]).to match(RegexForAuthFailEdit)
+            expect(request.flash['alert']).to match(RegexForAuthFailEdit)
           end
         end
       end
@@ -243,7 +243,7 @@ describe Admin::ProjectsController do
         it "redirects with warning" do
           post :create, {:admin_project => valid_attributes}
           expect(response).to have_http_status(:redirect)
-          expect(request.flash[:alert]).to match(RegexForAuthFailNew)
+          expect(request.flash['alert']).to match(RegexForAuthFailNew)
         end
       end
     end
@@ -300,7 +300,7 @@ describe Admin::ProjectsController do
         it "redirects to the projects list" do
           delete :destroy, {:id => project.id}
           expect(response).to have_http_status(:redirect)
-          expect(request.flash[:alert]).to match(RegexForAuthFailDestroy)
+          expect(request.flash['alert']).to match(RegexForAuthFailDestroy)
         end
       end
     end

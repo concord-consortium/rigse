@@ -11,10 +11,28 @@ describe UsersController do
     end
 
     describe "as admin" do
+      # There are 3 users already loaded from fixtures in:
+      # rails/spec/fixtures/users.yml
+      # ID: email, state:
+      # 1: quentin@example.com, active
+      # 2: aaron@example.com, pending
+      # 3: salty_dog@example.com, active
+      let(:quentin) { User.find(1) }
+      let(:arron)   { User.find(2) }
+      let(:salty)   { User.find(3) }
+      let(:all_our_users) { [arron, salty, quentin] }
       it "lets user view users index page" do
         login_admin
         get :index
         expect(response.status).to eq(200)
+      end
+
+      it "lets admin user search for users on the index page" do
+        post_params = { :search => 'quentin' }
+        login_admin
+        post :index, post_params
+        expect(response.status).to eq(200)
+        expect(assigns(:users)).to include(quentin)
       end
 
       it "lets user search for project researchers" do
@@ -37,14 +55,40 @@ describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "lets user search for admins" do
-        post_params = {
-          :search => '',
-          :portal_admin => true
-        }
-        login_admin
-        post :index, post_params
-        expect(response.status).to eq(200)
+      describe "admin searching for portal admins" do
+        let(:search_string) { '' }
+        let(:admin_only) { true }
+        let(:post_params) { {search: search_string, portal_admin: admin_only} }
+        before(:each) do
+          login_admin
+          post :index, post_params
+        end
+
+        describe "with no search string" do
+          it "returns a list with quentin(admin), not salty (not admin)" do
+            expect(response.status).to eq(200)
+            expect(assigns(:users)).not_to include(salty)
+            expect(assigns(:users)).to include(quentin)
+          end
+        end
+
+        describe "searching for salty (non-admin)" do
+          let(:search_string) { "salty" }
+          it "doesn't display salty or quentin" do
+            expect(response.status).to eq(200)
+            expect(assigns(:users)).not_to include(salty)
+            expect(assigns(:users)).not_to include(quentin)
+          end
+        end
+
+        describe "searching for quentin (admin)" do
+          let(:search_string) { "quentin" }
+          it "displays quentin" do
+            expect(response.status).to eq(200)
+            expect(assigns(:users)).not_to include(salty)
+            expect(assigns(:users)).to include(quentin)
+          end
+        end
       end
     end
 
@@ -134,30 +178,30 @@ describe UsersController do
       expect(User.authenticate('aaron', 'monkey')).to be_nil
       get :activate, :activation_code => users(:aaron).activation_code
       expect(response).to redirect_to('/login')
-      expect(flash[:notice]).not_to be_nil
-      expect(flash[:error ]).to     be_nil
+      expect(flash['notice']).not_to be_nil
+      expect(flash['error']).to     be_nil
       expect(User.authenticate('aaron', 'monkey')).to eq(users(:aaron))
     end
 
     it 'does not activate user without key' do
       skip "Broken example"
       get :activate
-      expect(flash[:notice]).to     be_nil
-      expect(flash[:error ]).not_to be_nil
+      expect(flash['notice']).to     be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it 'does not activate user with blank key' do
       skip "Broken example"
       get :activate, :activation_code => ''
-      expect(flash[:notice]).to     be_nil
-      expect(flash[:error ]).not_to be_nil
+      expect(flash['notice']).to     be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it 'does not activate user with bogus key' do
       skip "Broken example"
       get :activate, :activation_code => 'i_haxxor_joo'
-      expect(flash[:notice]).to     be_nil
-      expect(flash[:error ]).not_to be_nil
+      expect(flash['notice']).to     be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it 'shows thank you page to teacher on successful registration' do
@@ -185,8 +229,8 @@ describe UsersController do
 
       assert_select "*#clazzes_nav", false
 
-      expect(flash[:error]).to be_nil
-      expect(flash[:notice]).to be_nil
+      expect(flash['error']).to be_nil
+      expect(flash['notice']).to be_nil
     end
   end
 

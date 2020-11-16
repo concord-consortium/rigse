@@ -72,7 +72,7 @@ class Admin::ProjectsController < ApplicationController
   # POST /admin/projects
   def create
     authorize Admin::Project
-    @project = Admin::Project.new(params[:admin_project])
+    @project = Admin::Project.new(admin_project_strong_params(params[:admin_project]))
 
     if @project.save
       redirect_to admin_projects_url, notice: 'Project was successfully created.'
@@ -85,7 +85,7 @@ class Admin::ProjectsController < ApplicationController
   def update
     @project = Admin::Project.find(params[:id])
     authorize @project
-    if @project.update_attributes(params[:admin_project])
+    if @project.update_attributes(admin_project_strong_params(params[:admin_project]))
       redirect_to @project, notice: 'Project was successfully updated.'
     else
       render action: 'edit'
@@ -106,4 +106,8 @@ class Admin::ProjectsController < ApplicationController
     params.require(:admin_project).permit(policy(@project).permitted_attributes)
   end
 
+
+  def admin_project_strong_params(params)
+    params && params.permit(:landing_page_content, :landing_page_slug, :name, :project_card_description, :project_card_image_url, :public)
+  end
 end

@@ -6,20 +6,20 @@ describe PageElement do
     @page_element = FactoryBot.create(:page_element)
     @user = FactoryBot.create(:user)
   end
-  
+
   it "should not be nil" do
     expect(@page_element).not_to be_nil
   end
-  
+
   it "not original have an owner" do
     expect(@page_element.user).to be_nil
   end
-  
+
   it "should let an onwer be assinged to it" do
     @page_element.user = @user
     expect(@page_element.user).to be(@user)
   end
-  
+
   it "should persist its owner information" do
     @page_element.user = @user
     @page_element.save
@@ -27,12 +27,12 @@ describe PageElement do
     expect(@page_element.user).not_to be_nil
     expect(@page_element.user).to eq(@user)
   end
-  
+
   it "should be changable by its owner" do
     @page_element.user = @user
     expect(@page_element).to be_changeable(@user)
   end
-  
+
 
   # TODO: auto-generated
   describe '.page_by_investigation' do # scope test
@@ -110,16 +110,6 @@ describe PageElement do
       result = page_element.parent
 
       expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#duplicate' do
-    xit 'duplicate' do
-      page_element = described_class.new
-      result = page_element.duplicate
-
-      expect(result).not_to be_nil
     end
   end
 

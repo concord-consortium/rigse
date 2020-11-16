@@ -198,12 +198,4 @@ module RunnablesHelper
     x_link_for(offering, "run", as_name, params)
   end
 
-  def run_link_for(component, as_name = nil, params = {})
-    if component.kind_of?(Portal::Offering)
-      offering_link_for(component, nil, params.merge({:link_text => "run #{component.name}"}))
-    else
-      x_link_for(component, "run", as_name, params)
-    end
-  end
-
 end

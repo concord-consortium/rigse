@@ -104,7 +104,7 @@ class Portal::StudentsController < ApplicationController
     @portal_clazz = find_clazz_from_params
     @grade_level = view_context.find_grade_level(params)
     user_attributes = generate_user_attributes_from_params
-    @user = User.new(user_attributes)
+    @user = User.new(user_strong_params(user_attributes))
     errors = []
     if @portal_clazz.nil?
       errors << [:class_word, "must be a valid class word."]
@@ -159,7 +159,7 @@ class Portal::StudentsController < ApplicationController
           You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
           <br/>
           EOF
-          flash[:info] = msg.html_safe
+          flash['info'] = msg.html_safe
           format.html { redirect_to(@portal_clazz) }
         end
       else  # something didn't get created or referenced correctly
@@ -182,28 +182,30 @@ class Portal::StudentsController < ApplicationController
     end
   end
 
-  # PUT /portal_students/1
-  # PUT /portal_students/1.xml
-  def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @student
-    @portal_student = Portal::Student.find(params[:id])
-    respond_to do |format|
-      if @portal_student.update_attributes(params[:portal_student])
-        flash[:notice] = 'Portal::Student was successfully updated.'
-        format.html { redirect_to(@portal_student) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
-      end
-      class_word = params[:clazz][:class_word]
-      if class_word
-        @portal_student.process_class_word(class_word)
-      end
-    end
-  end
+  # Commented out as a test to see if it is used
+  #
+  # # PUT /portal_students/1
+  # # PUT /portal_students/1.xml
+  # def update
+  #   # PUNDIT_REVIEW_AUTHORIZE
+  #   # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+  #   # authorize @student
+  #   @portal_student = Portal::Student.find(params[:id])
+  #   respond_to do |format|
+  #     if @portal_student.update_attributes(portal_student_strong_params(params[:portal_student]))
+  #       flash['notice'] = 'Portal::Student was successfully updated.'
+  #       format.html { redirect_to(@portal_student) }
+  #       format.xml  { head :ok }
+  #     else
+  #       format.html { render :action => "edit" }
+  #       format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
+  #     end
+  #     class_word = params[:clazz][:class_word]
+  #     if class_word
+  #       @portal_student.process_class_word(class_word)
+  #     end
+  #   end
+  # end
 
   def move
     if request.get?
@@ -232,7 +234,7 @@ class Portal::StudentsController < ApplicationController
 
       }
 
-      flash[:notice] = 'Successfully moved student to new class.'
+      flash['notice'] = 'Successfully moved student to new class.'
       redirect_to(portal_student)
     end
   end
@@ -275,7 +277,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student = Portal::Student.find(params[:id])
     @portal_student.user.asked_age = true;
     @portal_student.save
-    if @portal_student.user.update_attributes(params[:user])
+    if @portal_student.user.update_attributes(portal_student_strong_params(params[:user]))
       redirect_to root_path
     else
       render :action => "ask_consent"
@@ -379,4 +381,13 @@ class Portal::StudentsController < ApplicationController
     user_attributes[:email] = Portal::Student.generate_user_email
     user_attributes
   end
+
+  def portal_student_strong_params(params)
+    params && params.permit(:grade_level_id, :user_id)
+  end
+
+  def user_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  end
+
 end

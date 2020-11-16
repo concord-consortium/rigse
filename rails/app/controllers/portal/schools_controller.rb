@@ -71,11 +71,11 @@ class Portal::SchoolsController < ApplicationController
       @nces_school = Portal::Nces06School.find(params[:nces_school][:id])
       @portal_school = Portal::School.find_or_create_using_nces_school(@nces_school) if @nces_school
     else
-      @portal_school = Portal::School.new(params[:portal_school])
+      @portal_school = Portal::School.new(portal_school_strong_params(params[:portal_school]))
     end
 
     if @portal_school.save
-      flash[:notice] = 'Portal::School was successfully created.'
+      flash['notice'] = 'Portal::School was successfully created.'
       redirect_to @portal_school
     else
       render :action => 'new'
@@ -87,8 +87,8 @@ class Portal::SchoolsController < ApplicationController
   def update
     cancel = params[:commit] == 'Cancel'
     @portal_school = Portal::School.find(params[:id])
-    if @portal_school.update_attributes(params[:portal_school])
-      flash[:notice] = 'Portal::School was successfully updated.'
+    if @portal_school.update_attributes(portal_school_strong_params(params[:portal_school]))
+      flash['notice'] = 'Portal::School was successfully updated.'
       redirect_to action: :index
     else
       render :action => 'edit'
@@ -101,5 +101,9 @@ class Portal::SchoolsController < ApplicationController
     @portal_school = Portal::School.find(params[:id])
     @portal_school.destroy
     redirect_to action: :index
+  end
+
+  def portal_school_strong_params(params)
+    params && params.permit(:city, :country_id, :description, :district_id, :name, :nces_school_id, :ncessch, :state, :zipcode)
   end
 end

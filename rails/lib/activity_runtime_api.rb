@@ -173,7 +173,8 @@ class ActivityRuntimeAPI
       :user => external_activity.user
     )
     all_student_reports_enabled = true
-    hash['activities'].each_with_index do |act, index|
+    # acts_as_list uses 1-based indexing on position
+    hash['activities'].each.with_index(1) do |act, index|
       activity_from_hash(act, investigation, external_activity.user, index)
       # a sequence has its student_report_enabled set to false if any of its activities have it set to false
       all_student_reports_enabled &&= (act.has_key?("student_report_enabled") ? act["student_report_enabled"] : true)
@@ -249,7 +250,8 @@ class ActivityRuntimeAPI
 
     # Add hashed activities back in to investigation. Note that order
     # of activities in this hash defines order of activities in portal.
-    hash['activities'].each_with_index do |new_activity, index|
+    # acts_as_list uses 1-based index values for position
+    hash['activities'].each.with_index(1) do |new_activity, index|
       existing = activity_cache.delete(new_activity['name'])
       if existing
         build_page_components(new_activity, existing, user, or_cache, mc_cache, iq_cache, if_cache)
@@ -273,7 +275,7 @@ class ActivityRuntimeAPI
     return external_activity
   end
 
-  def self.activity_from_hash(hash, investigation, user, position = nil)
+  def self.activity_from_hash(hash, investigation, user, position = 1)
     # NOTE: It seems like we don't copy thumbnail url.
     # is this the right behavior for the report template?
     activity = Activity.create({
@@ -482,7 +484,7 @@ class ActivityRuntimeAPI
 
   def self.remove_report_embeddable_filters(external_activity)
     template = external_activity.template
-    filters = template.offerings.map { |offering| offering.report_embeddable_filter }.compact
+    filters = template.offerings.to_a.map { |offering| offering.report_embeddable_filter }.compact
     filters.each { |filter| filter.clear }
   end
 

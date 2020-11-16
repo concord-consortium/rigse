@@ -12,7 +12,10 @@ class Dataservice::BundleContent < ActiveRecord::Base
   belongs_to :collaboration, :class_name => "Portal::Collaboration"
   has_many :collaborators, :through => :collaboration, :class_name => "Portal::Student", :source => :students
 
-  has_many :launch_process_events, :dependent => :destroy, :class_name => "Dataservice::LaunchProcessEvent", :foreign_key => "bundle_content_id", :order => "id ASC"
+  has_many :launch_process_events, -> { order :id },
+    dependent: :destroy,
+    class_name: "Dataservice::LaunchProcessEvent",
+    foreign_key: "bundle_content_id"
 
   acts_as_list :scope => :bundle_logger_id
 

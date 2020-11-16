@@ -114,7 +114,7 @@ describe Admin::SettingsController do
   end
 
   describe "POST create" do
-    let(:params) { { these: 'params' } }
+    let(:params) { { description: 'test' } }
     describe "with valid params" do
       it "assigns a newly created settings as @settings" do
         expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => true))
@@ -133,7 +133,7 @@ describe Admin::SettingsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved settings as @settings" do
-        expect(Admin::Settings).to receive(:new).with({'these' => 'params'}).and_return(mock_settings(:save => false))
+        expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => false))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => false))
         post :create, admin_settings: params
         expect(assigns[:admin_settings]).to equal(mock_settings)
@@ -152,11 +152,15 @@ describe Admin::SettingsController do
 
   describe "PUT update" do
 
+    let(:admin_settings_params) {{
+      "description" => "test settings"
+    }}
+
     describe "with valid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :admin_settings => {:these => 'params'}
+        expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
+        put :update, :id => "37", :admin_settings => admin_settings_params
       end
 
       it "assigns the requested settings as @settings" do
@@ -177,8 +181,8 @@ describe Admin::SettingsController do
     describe "with invalid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :admin_settings => {:these => 'params'}
+        expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
+        put :update, :id => "37", :admin_settings => admin_settings_params
       end
 
       it "assigns the settings as @settings" do

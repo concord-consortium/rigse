@@ -54,7 +54,7 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
-    @portal_clazz = Portal::Clazz.find(params[:id], :include =>  [:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }])
+    @portal_clazz = Portal::Clazz.where(id: params[:id]).includes([:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }]).first
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_settings.allow_default_class
@@ -118,17 +118,17 @@ class Portal::ClazzesController < ApplicationController
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
 
-    @portal_clazz = Portal::Clazz.new(@object_params)
+    @portal_clazz = Portal::Clazz.new(portal_clazz_strong_params(@object_params))
 
     okToCreate = true
     if !school_id
       # This should never happen, since the schools dropdown should consist of the default site school if the current user has no schools
-      flash[:error] = "You need to belong to a school in order to create classes. Please join a school and try again."
+      flash['error'] = "You need to belong to a school in order to create classes. Please join a school and try again."
       okToCreate = false
     end
 
     if current_visitor.anonymous?
-      flash[:error] = "Anonymous can't create classes. Please log in and try again."
+      flash['error'] = "Anonymous can't create classes. Please log in and try again."
       okToCreate = false
     end
 
@@ -138,7 +138,7 @@ class Portal::ClazzesController < ApplicationController
         @portal_clazz.grades << grade if grade
       end if grade_levels
       if @portal_clazz.grades.empty?
-        flash[:error] = "You need to select at least one grade level for this class."
+        flash['error'] = "You need to select at least one grade level for this class."
         okToCreate = false
       end
     end
@@ -154,7 +154,7 @@ class Portal::ClazzesController < ApplicationController
           @portal_clazz.teacher = teacher
           @portal_clazz.teacher.schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
         else
-          flash[:error] = "There was an error trying to associate you with this class. Please try again."
+          flash['error'] = "There was an error trying to associate you with this class. Please try again."
           okToCreate = false
         end
       end
@@ -173,7 +173,7 @@ class Portal::ClazzesController < ApplicationController
         # This will finally tie this clazz to a course and a school
         @portal_clazz.course = course
       else
-        flash[:error] = "There was an error trying to create your new class. Please try again."
+        flash['error'] = "There was an error trying to create your new class. Please try again."
         okToCreate = false
       end
     end
@@ -183,7 +183,7 @@ class Portal::ClazzesController < ApplicationController
         # send email notifications about class creation
         Portal::ClazzMailer.clazz_creation_notification(@current_user, @portal_clazz).deliver
 
-        flash[:notice] = 'Class was successfully created.'
+        flash['notice'] = 'Class was successfully created.'
         format.html { redirect_to(url_for([:materials, @portal_clazz])) }
         format.xml  { render :xml => @portal_clazz, :status => :created, :location => @portal_clazz }
       else
@@ -233,7 +233,7 @@ class Portal::ClazzesController < ApplicationController
     }
 
     if request.xhr?
-      if @portal_clazz.update_attributes(object_params)
+      if @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
         update_teachers.call
       end
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
@@ -243,14 +243,14 @@ class Portal::ClazzesController < ApplicationController
 
         if Admin::Settings.default_settings.enable_grade_levels?
           if !grade_levels
-            flash[:error] = "You need to select at least one grade level for this class."
+            flash['error'] = "You need to select at least one grade level for this class."
             okToUpdate = false
           end
         end
 
-        if okToUpdate && @portal_clazz.update_attributes(object_params)
+        if okToUpdate && @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
           update_teachers.call
-          flash[:notice] = 'Class was successfully updated.'
+          flash['notice'] = 'Class was successfully updated.'
           format.html { redirect_to(url_for([:materials, @portal_clazz])) }
           format.xml  { head :ok }
         else
@@ -408,5 +408,9 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url
   end
 
+  def portal_clazz_strong_params(params)
+    params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
+                            :section, :semester_id, :start_time, :status, :teacher_id)
+  end
 
 end

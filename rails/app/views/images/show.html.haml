@@ -40,5 +40,5 @@
   - if @image.changeable?(current_visitor)
     = button_to 'Edit', edit_image_path(@image), :method => :get
     - unless @image.public?
-      = button_to "Delete", image_path(@image), :method => :delete, :confirm => "are you sure?"
+      = button_to "Delete", image_path(@image), :method => :delete, data: {:confirm => "are you sure?"}
   = button_to 'List', images_path, :method => :get

@@ -1,5 +1,4 @@
 # frozen_string_literal: false
-
 require 'spec_helper'
 
 RSpec.describe API::APIController, type: :controller do
@@ -51,19 +50,18 @@ RSpec.describe API::APIController, type: :controller do
   end
 
   def set_standard_bearer_token(auth_token)
-    request.env["Authorization"] = "Bearer #{auth_token}"
+    request.headers["Authorization"] = "Bearer #{auth_token}"
   end
 
   def set_jwt_bearer_token(auth_token)
-    request.env["Authorization"] = "Bearer/JWT #{auth_token}"
+    request.headers["Authorization"] = "Bearer/JWT #{auth_token}"
   end
 
   def addToken(user, client, expires_at)
     grant = user.access_grants.create({
         :client => client,
         :state => nil,
-        :access_token_expires_at => expires_at },
-      :without_protection => true
+        :access_token_expires_at => expires_at }
     )
     grant.access_token
   end
@@ -73,8 +71,7 @@ RSpec.describe API::APIController, type: :controller do
         :client => client,
         :state => nil,
         :learner => learner,
-        :access_token_expires_at => expires_at },
-      :without_protection => true
+        :access_token_expires_at => expires_at }
     )
     grant.access_token
   end
@@ -84,8 +81,7 @@ RSpec.describe API::APIController, type: :controller do
         :client => client,
         :state => nil,
         :teacher => teacher,
-        :access_token_expires_at => expires_at },
-      :without_protection => true
+        :access_token_expires_at => expires_at }
     )
     grant.access_token
   end

@@ -245,8 +245,8 @@ describe ExternalActivitiesController do
 
       materials_collection_items = MaterialsCollectionItem.where(materials_collection_id: materials_collection.id)
       expect(materials_collection_items.length).to be(1)
-      expect(flash[:notice]).to be_present
-      expect(flash[:notice]).to match(/is assigned to the selected collection\(s\) successfully/)
+      expect(flash['notice']).to be_present
+      expect(flash['notice']).to match(/is assigned to the selected collection\(s\) successfully/)
     end
 
     it "should return an error if a collection is not specified" do
@@ -257,8 +257,8 @@ describe ExternalActivitiesController do
       sign_in admin
       put :update_collections, post_params
 
-      expect(flash[:error]).to be_present
-      expect(flash[:error]).to match(/Select at least one collection to assign this resource/)
+      expect(flash['error']).to be_present
+      expect(flash['error']).to match(/Select at least one collection to assign this resource/)
     end
   end
 
@@ -304,16 +304,6 @@ describe ExternalActivitiesController do
     end
   end
 
-
-  # TODO: auto-generated
-  describe '#preview_index' do
-    it 'GET preview_index' do
-      get :preview_index, {}, {}
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
@@ -345,7 +335,9 @@ describe ExternalActivitiesController do
     it 'POST create' do
       post :create, {}, {}
 
-      expect(response).to have_http_status(:redirect)
+      # bizarrely (confirmed in pre-Rails 4 production instance) you
+      # can create an external activity with no paramters
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -379,9 +371,9 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#matedit' do
     it 'GET matedit' do
-      get :matedit, {}, {}
+      get :matedit, {id: 0}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
@@ -406,18 +398,18 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#set_private_before_matedit' do
     it 'GET set_private_before_matedit' do
-      get :set_private_before_matedit, {}, {}
+      get :set_private_before_matedit, {id: 0}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
   # TODO: auto-generated
   describe '#copy' do
     it 'GET copy' do
-      get :copy, {}, {}
+      get :copy, {id: 0}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

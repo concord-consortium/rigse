@@ -29,7 +29,7 @@ class Portal::School < ActiveRecord::Base
   #   teacher.schools
   #   student.schools
   #
-  
+
   # has_many_polymorphs :members, :from => [:"portal/teachers", :"portal/students"], :through => :"portal/members"
   has_many :portal_teachers, :through => :members, :source => 'member', :source_type => "Portal::Teacher"
   alias :teachers :portal_teachers
@@ -144,7 +144,7 @@ class Portal::School < ActiveRecord::Base
   ## required for the accordion view
   ##
   def children
-    clazzes.map! {|c| c.extend(FixupClazzes)}
+    clazzes.to_a.map! {|c| c.extend(FixupClazzes)}
   end
 
   def children
@@ -157,7 +157,7 @@ class Portal::School < ActiveRecord::Base
   def parent
     nil
   end
-  
+
   def add_member(student_or_teacher)
     # add school to the otherside of the relationship
     unless student_or_teacher.schools.include? self

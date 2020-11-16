@@ -21,5 +21,4 @@ class Dataservice::PeriodicBundleContentsMetalController < ActionController::Met
       self.response_body = 'Not Found'
     end
   end
-
 end

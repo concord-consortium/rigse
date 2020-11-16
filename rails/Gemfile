@@ -5,21 +5,21 @@ source 'http://rubygems.org'
 
 #### COMMON
 source 'https://gems.railslts.com' do
-  gem 'rails', '~> 3.2.22'
-  gem 'actionmailer',     require: false
-  gem 'activemodel',      require: false
-  gem 'actionpack',       require: false
-  gem 'activerecord',     require: false
-  gem 'activeresource',   require: false
-  gem 'activesupport',    require: false
-  gem 'railties',         require: false
-  gem 'railslts-version', require: false
+  gem 'rails', '4.2.11.17'
+  gem 'actionmailer',     :require => false
+  gem 'actionpack',       :require => false
+  gem 'activemodel',      :require => false
+  gem 'activerecord',     :require => false
+  gem 'activesupport',    :require => false
+  gem 'railties',         :require => false
+  gem 'railslts-version', :require => false
 end
 
-gem 'aasm', '~> 2.2.1'
-gem 'activerecord-import', '~> 0.2.8'
-gem 'acts-as-taggable-on', '~> 2.4.1'
-gem 'acts_as_list', '~> 0.1.6'
+gem 'activerecord-deprecated_finders'
+gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
+gem "activerecord-session_store"
+gem 'acts-as-taggable-on', '~> 3.4.0'
+gem 'acts_as_list'
 gem 'arrayfields'
 # this is the old version of aws and is needed by our old version of paperclip
 # we cannot upgrade paperclip until we have rails up to version 4.
@@ -31,27 +31,29 @@ gem 'aws-sdk',              '~> 3'
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
-gem 'coffee-rails' # if running rails 3.1 or greater
-gem 'compass-blueprint'
-gem 'compass-rails', '~> 2.0.4'
+gem 'coffee-rails',         "~> 4.0.0" # if running rails 3.1 or greater
+# gem 'compass-blueprint'
+# gem 'compass-rails'
 # was sub-dependency of react-rails, needed in test setup code
 gem 'connection_pool'
 gem 'daemons', '~> 1.1.8'
-gem 'default_value_for', '~> 2.0.3'
+gem 'default_value_for'
 gem 'delayed_job', '~> 4.1.1'
 gem 'delayed_job_active_record', '~> 4.1.0'
 gem 'delayed_job_web'
-gem 'devise', '~>3.1.0'
+gem 'devise', '3.4.0'
 gem 'devise-encryptable'
+gem 'devise-token_authenticatable', '~> 0.3'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'exception_notification', '~> 2.5.2'
 gem 'font-awesome-rails'
 gem 'grit', '~> 2.4'
 gem 'haml', '~> 4.0'
 gem 'httparty'
-gem 'in_place_editing', git: 'git://github.com/concord-consortium/in_place_editing.git'
+gem 'in_place_editing', git: 'https://github.com/concord-consortium/in_place_editing.git'
 gem 'json', '~> 1.8.6'
 gem 'jwt'
+gem 'jquery-fileupload-rails'
 gem 'mysql2', '~> 0.3.16', platforms: [:ruby, :mingw]
 gem 'nested_form'
 gem 'net-sftp', '~> 2.0', require: 'net/sftp'
@@ -62,41 +64,43 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2' # For google login integration.
 gem 'omniauth-oauth' # For schoology integration.
 gem 'open4',                '~> 1.0'
-gem 'paperclip',            '~> 3.4.0'
+gem 'paperclip'
 gem 'prawn',                '~> 0.12.0'
 gem 'prawn_rails',          '~> 0.0.6'
 gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
 gem 'rack-secure_samesite_cookies',
-  git: 'git://github.com/concord-consortium/secure-samesite-cookies',
+  git: 'https://github.com/concord-consortium/secure-samesite-cookies.git',
   tag: 'v1.0.2'
+gem "rails-observers"
 gem 'rdoc',                 '~> 3.9.4'
 gem 'redcarpet',            '~> 2.1.1'
 gem 'RedCloth',             '~> 4.2.8'
+gem 'responders',           '~> 2.0'
 gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
-gem 'rush',                 git: 'git://github.com/concord-consortium/rush'
+gem 'rush',                 git: 'https://github.com/concord-consortium/rush.git'
 gem 'sanitize'
-gem 'sass'
+gem 'sass',                 '~> 3.4.0'
 gem 'sass-rails' # if running rails 3.1 or greater
-gem 'strong_parameters'
+# gem 'strong_parameters'  # RAILS-4-SPIKE GEMFILE REMOVE as part of rails 4.0 upgrade
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'syntax',               '~> 1.0'
 gem 'test-unit',            '~> 3.0'
-gem 'tinymce-rails',        '~>3.5.6'
-gem 'turbo-sprockets-rails3', '~> 0.3.6'
+gem 'tinymce-rails',        '~>3.5.6'  # RAILS-4-SPIKE GEMFILE version NOT pinned
+# gem 'turbo-sprockets-rails4'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
-gem 'themes_for_rails',
-  git: 'git://github.com/concord-consortium/themes_for_rails',
-  branch: 'asset-pipeline-only'
+gem 'themes_on_rails'
+
 gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
 gem 'virtus',               '~>1.0.3'
-gem 'will_paginate',        '~> 3.0.0'
+gem 'will_paginate'
 gem 'yui-compressor'
 
 # see above; for production asset compilation.
@@ -109,17 +113,16 @@ end
 
 # Feature enabling groups
 group :genigames_data do
-  gem 'genigames_connector', '0.0.4', git: 'git://github.com/concord-consortium/genigames-connector'
-  # gem 'genigames_connector', path: '../genigames-connector'
+  gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', ref: '6a00f07af38e03670f696468578c3ff11a8c8414' # branch: 'spike-rails4-support'
 end
 group :geniverse_backend do
-  gem 'geniverse_portal_integration', git: 'git://github.com/concord-consortium/geniverse-portal-integration'
+  gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git', ref: '7c7acbb8fc6fa6c2bf2b9ac8c2d154976363cbad' # branch: 'spike-rails4-support'
 end
 group :geniverse_remote_auth do
-  gem 'cc_portal_remote_auth', git: 'git://github.com/concord-consortium/cc_portal_remote_auth'
+  gem 'cc_portal_remote_auth', git: 'https://github.com/concord-consortium/cc_portal_remote_auth.git', branch: 'spike-rails4-support'
 end
 group :geniverse_wordpress do
-  gem 'cc_portal_wordpress_integration', git: 'git://github.com/concord-consortium/cc_portal_wordpress_integration'
+  gem 'cc_portal_wordpress_integration', git: 'https://github.com/concord-consortium/cc_portal_wordpress_integration.git', ref: '3e84bb15f86a2d7631cfa54e461e1f77b547cec6' # branch: 'spikes-rails4-support'
 end
 
 
@@ -142,7 +145,7 @@ group :development do
   gem 'spring', '~> 1.7.2'
   gem 'what_methods'
   gem 'wirble'
-  gem 'xray-rails', '~> 0.1.18' # shows rendered views in browser w cmd+shift+x
+  # gem 'xray-rails', '~> 0.1.18' # shows rendered views in browser w cmd+shift+x
 end
 
 group :test, :cucumber do
@@ -179,8 +182,4 @@ group :test, :cucumber, :development do
   gem 'pry-byebug'
   gem 'remarkable_activerecord', '~> 3.1.13', require: nil
   gem 'simplecov', require: false
-end
-
-group :assets do
-  gem 'jquery-fileupload-rails'
 end

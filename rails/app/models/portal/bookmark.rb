@@ -3,7 +3,6 @@ class Portal::Bookmark < ActiveRecord::Base
   self.table_name = :portal_bookmarks
 
   # TODO: Its probably best not to use this type directly.
-  attr_accessible :name, :url, :user_id, :user
   belongs_to :user
   belongs_to :clazz, :class_name => "Portal::Clazz"
   has_many   :bookmark_visits, :dependent => :destroy

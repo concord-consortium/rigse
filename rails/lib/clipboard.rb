@@ -36,7 +36,7 @@ module Clipboard
       rescue NameError
         error_message = "unknown object in clipboard #{clipboard_data_type} (id:#{clipboard_data_id})"
         logger.warn(error_message)
-        flash[:warn]=error_message
+        flash['warn']=error_message
       end
     end
     return results

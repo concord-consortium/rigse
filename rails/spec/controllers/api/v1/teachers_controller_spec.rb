@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
+
 RSpec.describe API::V1::TeachersController, type: :controller do
   let(:school) { FactoryBot.create(:portal_school) }
 
@@ -185,21 +186,29 @@ RSpec.describe API::V1::TeachersController, type: :controller do
     end
   end
 
-  # TODO: auto-generated
-  describe '#get_enews_subscription' do
-    it 'GET get_enews_subscription' do
-      get :get_enews_subscription, {}, {}
-
-      expect(response).to have_http_status(:bad_request)
+  describe "e-news subscriptions" do
+    describe "happy path" do
+      let(:teacher)      { FactoryBot.create(:portal_teacher) }
+      let(:current_user) { teacher.user }
+      before(:each) do
+        allow(EnewsSubscription).to receive(:set_status).and_return({status: 'ok'})
+        allow(EnewsSubscription).to receive(:get_status).and_return({status: 'ok'})
+        allow_any_instance_of(API::V1::TeachersController).to receive(:current_user).and_return(current_user)
+      end
+      describe '#get_enews_subscription' do
+        it 'GET get_enews_subscription' do
+          get :get_enews_subscription, { id: teacher.id }
+          expect(response).to have_http_status(:ok)
+        end
+      end
+  
+      describe '#update_enews_subscription' do
+        it 'GET update_enews_subscription' do
+          get :update_enews_subscription, { id: teacher.id, status: 'subbed' }
+          expect(response).to have_http_status(:ok)
+        end
+      end
     end
   end
 
-  # TODO: auto-generated
-  describe '#update_enews_subscription' do
-    it 'GET update_enews_subscription' do
-      get :update_enews_subscription, {}, {}
-
-      expect(response).to have_http_status(:bad_request)
-    end
-  end
 end

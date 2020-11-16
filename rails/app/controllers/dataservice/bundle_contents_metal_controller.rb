@@ -34,5 +34,4 @@ class Dataservice::BundleContentsMetalController < ActionController::Metal
       self.response_body = 'Not Found'
     end
   end
-
 end

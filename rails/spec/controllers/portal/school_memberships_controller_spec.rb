@@ -49,7 +49,7 @@ RSpec.describe Portal::SchoolMembershipsController, type: :controller do
     it 'PATCH update' do
       put :update, {}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 

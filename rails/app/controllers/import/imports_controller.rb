@@ -130,7 +130,7 @@ class Import::ImportsController < ApplicationController
     user_import = Import::Import.where(:import_type => Import::Import::IMPORT_TYPE_USER).last
     duplicate_users = Import::DuplicateUser.where(:import_id => user_import.id)
     if duplicate_users.length == 0
-      flash[:alert] = "No duplicate users found in the import."
+      flash['alert'] = "No duplicate users found in the import."
       redirect_to :back
     else
       send_data duplicate_users.to_json,
@@ -300,7 +300,7 @@ class Import::ImportsController < ApplicationController
         :type => "application/json",
         :x_sendfile => true
     else
-      flash[:alert] = "No failed imports."
+      flash['alert'] = "No failed imports."
       redirect_to :back
     end
   end

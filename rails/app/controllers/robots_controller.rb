@@ -48,7 +48,7 @@ class RobotsController < ApplicationController
         #
         lines.push("Sitemap: #{APP_CONFIG[:site_url]}/sitemap.xml")
 
-        render :text => lines.join("\n")
+        render :plain => lines.join("\n")
         return
     else
 

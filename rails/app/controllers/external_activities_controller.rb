@@ -28,20 +28,11 @@ class ExternalActivitiesController < ApplicationController
 
   public
 
-  before_filter :setup_object, :except => [:index, :preview_index, :publish]
+  before_filter :setup_object, :except => [:index, :publish]
   before_filter :render_scope, :only => [:show]
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url
-
-  def preview_index
-    page= params[:page] || 1
-    @activities = ExternalActivity.all.paginate(
-        :page => page || 1,
-        :per_page => params[:per_page] || 20,
-        :order => 'name')
-    render 'preview_index'
-  end
 
   # GET /external_activities/1
   # GET /external_activities/1.xml
@@ -94,7 +85,7 @@ class ExternalActivitiesController < ApplicationController
   # POST /pages.xml
   def create
     authorize ExternalActivity
-    @external_activity = ExternalActivity.new(params[:external_activity])
+    @external_activity = ExternalActivity.new(external_activity_strong_params(params[:external_activity]))
     @external_activity.user = current_visitor
 
     if params[:update_material_properties]
@@ -125,7 +116,7 @@ class ExternalActivitiesController < ApplicationController
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
-        flash[:notice] = 'ExternalActivity was successfully created.'
+        flash['notice'] = 'ExternalActivity was successfully created.'
         format.html { redirect_to(@external_activity) }
         format.xml  { render :xml => @external_activity, :status => :created, :location => @external_activity }
       else
@@ -179,8 +170,8 @@ class ExternalActivitiesController < ApplicationController
     end
 
     respond_to do |format|
-      if @external_activity.update_attributes(params[:external_activity])
-        flash[:notice] = 'ExternalActivity was successfully updated.'
+      if @external_activity.update_attributes(external_activity_strong_params(params[:external_activity]))
+        flash['notice'] = 'ExternalActivity was successfully updated.'
         # redirect to browse path instead of show page since the show page is deprecated
         format.html { redirect_to(browse_external_activity_path(@external_activity)) }
         format.xml  { head :ok }
@@ -250,14 +241,14 @@ class ExternalActivitiesController < ApplicationController
   def archive
     authorize @external_activity
     @external_activity.archive!
-    flash[:notice]= t("matedit.archive_success", {name: @external_activity.name})
+    flash['notice']= t("matedit.archive_success", {name: @external_activity.name})
     redirect_to :search  #TBD:  Where to go?
   end
 
   def unarchive
     authorize @external_activity
     @external_activity.unarchive!
-    flash[:notice]= t("matedit.unarchive_success", {name: @external_activity.name})
+    flash['notice']= t("matedit.unarchive_success", {name: @external_activity.name})
     redirect_to :search  #TBD:  Where to go?
   end
 
@@ -278,7 +269,7 @@ class ExternalActivitiesController < ApplicationController
     if clone
       redirect_to matedit_external_activity_url(clone.id)
     else
-      flash[:error] = "Copying failed"
+      flash['error'] = "Copying failed"
       redirect_to :back
     end
   end
@@ -305,9 +296,9 @@ class ExternalActivitiesController < ApplicationController
 
     if collection_ids.count > 0
       @external_activity.add_to_collections(collection_ids)
-      flash[:notice] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
+      flash['notice'] = "#{@external_activity.name} is assigned to the selected collection(s) successfully."
     else
-      flash[:error] = "Select at least one collection to assign this resource."
+      flash['error'] = "Select at least one collection to assign this resource."
     end
 
     redirect_to action: 'edit_collections'
@@ -331,7 +322,7 @@ class ExternalActivitiesController < ApplicationController
         @external_activity = ExternalActivity.find(params[:id])
       end
     elsif params[:external_activity]
-      @external_activity = ExternalActivity.new(params[:external_activity])
+      @external_activity = ExternalActivity.new(external_activity_strong_params(params[:external_activity]))
     else
       @external_activity = ExternalActivity.new
     end
@@ -347,4 +338,14 @@ class ExternalActivitiesController < ApplicationController
     return_uri
   end
 
+  def external_activity_strong_params(params)
+    params && params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid,
+                            :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing,
+                            :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked,
+                            :is_official, :keywords, :launch_url, :license_code, :logging, :long_description,
+                            :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url,
+                            :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description,
+                            :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type,
+                            :thumbnail_url, :tool_id, :url, :user_id)
+  end
 end
