@@ -39,11 +39,12 @@ describe Portal::ClazzesController do
 
     @authorized_teacher_user = @authorized_teacher.user
     @unauthorized_teacher_user = @unauthorized_teacher.user
+    @authorized_student_user = @authorized_student.user
 
 
     @mock_clazz_name = "Random Test Class"
     @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
-    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course })
+    @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher, @another_authorized_teacher], :course => @mock_course, :students => [@authorized_student] })
 
     allow(@controller).to receive(:before_render) {
       allow(response.template).to receive_message_chain(:current_settings, :name).and_return("Test Settings")
@@ -58,10 +59,11 @@ describe Portal::ClazzesController do
   end
 
   describe "GET show" do
-    it "assigns the requested class as @portal_clazz" do
-      login_admin
-      get :show, :id => @mock_clazz.id
-      expect(assigns[:portal_clazz]).to eq(@mock_clazz)
+    it "redirects the teacher to the class's materials page" do
+      sign_in @authorized_teacher_user
+      get :show, { :id => @mock_clazz.id }
+
+      expect(response).to redirect_to("/portal/classes/#{@mock_clazz.id}/materials")
     end
 
     it "doesn't show class to unauthorized teacheruser" do
@@ -72,16 +74,13 @@ describe Portal::ClazzesController do
       expect(response).to redirect_to("/recent_activity")
     end
 
-    it "saves the position of the left pane submenu item for an authorized teacher" do
-      sign_in @authorized_teacher_user
-
+    it "shows student a list of class assignments" do
+      sign_in @authorized_student_user
       get :show, { :id => @mock_clazz.id }
 
-      # All users should see the full class details summary
-      @authorized_teacher.reload
-      expect(@authorized_teacher.left_pane_submenu_item).to eq(Portal::Teacher.LEFT_PANE_ITEM['NONE'])
+      expect(response).to be_success
+      expect(response.body).to have_content("Random Test Class")
     end
-
   end # end describe GET show
 
   describe "XMLHttpRequest edit" do
@@ -236,7 +235,7 @@ describe Portal::ClazzesController do
 
       post :create, @post_params
 
-      assert flash[:error]
+      assert flash['error']
       expect(Portal::Clazz.count).to eq(current_count)
     end
 
@@ -262,7 +261,7 @@ describe Portal::ClazzesController do
 
       post :create, @post_params
 
-      assert flash[:error]
+      assert flash['error']
       expect(Portal::Clazz.count).to equal(current_count)
     end
 
@@ -320,7 +319,7 @@ describe Portal::ClazzesController do
 
       put :update, @post_params
 
-      assert flash[:error]
+      assert flash['error']
     end
 
     it "should let me update a class with no grade levels when grade levels are disabled" do
@@ -346,21 +345,8 @@ describe Portal::ClazzesController do
     end
   end
 
-  describe "POST add_offering" do
-    it "should run without error" do
-      login_admin
-      external_activity = FactoryBot.create(:external_activity)
-      post_params = runnable_params(external_activity, @mock_clazz)
-      post :add_offering, post_params
-    end
-  end
-
-
   describe "Post edit class information" do
     before(:each) do
-      external_activity = FactoryBot.create(:external_activity)
-      post_params = runnable_params(external_activity, @mock_clazz)
-      post :add_offering, post_params
       offers = Array.new
       @mock_clazz.offerings.each do|offering|
         offers << offering.id.to_s
@@ -400,20 +386,6 @@ describe Portal::ClazzesController do
       post :update, @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       expect(@portal_clazz.class_word).not_to eq(''), 'Class saved with blank class word.'
-    end
-  end
-
-  describe "Post add a new student to a class" do
-
-    it "should add a new student to the class" do
-      login_admin
-      post_params = {
-        :id => @mock_clazz.id.to_s,
-        :student_id => @authorized_student.id.to_s
-      }
-      post :add_student, post_params
-      newStudentInClazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
-      expect(newStudentInClazz).not_to be_nil
     end
   end
 
@@ -525,33 +497,6 @@ describe Portal::ClazzesController do
       expect(response).to render_template("fullstatus")
     end
   end
-
-  describe "Post add new student popup" do
-    it "should show a popup to add a new student" do
-      #creating real objects for settings and making it current settings
-      #A related example http://stackoverflow.com/questions/5223247/rspec-error-mock-employee-1-received-unexpected-messageto-ary-withno-args
-      @mock_settings = Admin::Settings.new
-      @mock_settings.home_page_content = nil
-      @mock_settings.use_student_security_questions = true
-      @mock_settings.use_bitmap_snapshots = true
-      @mock_settings.allow_adhoc_schools = true
-      @mock_settings.require_user_consent = true
-      @mock_settings.allow_default_class = true
-      @mock_settings.jnlp_cdn_hostname = ''
-      @mock_settings.save!
-      allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
-
-      sign_in @authorized_teacher_user
-
-      @params = {
-        :id => @mock_clazz.id
-      }
-      xhr :post, :add_new_student_popup, @params
-      expect(response).to be_success
-      expect(response).to render_template(:partial => "portal/students/_form")
-    end
-  end
-
 
   # TODO: auto-generated
   describe '#current_clazz' do

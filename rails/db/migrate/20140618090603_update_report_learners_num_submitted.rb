@@ -8,7 +8,7 @@ class UpdateReportLearnersNumSubmitted < ActiveRecord::Migration
     # Of course that makes sense only for old activities that do not have any required questions.
     # Newer activities with required questions and submitted / unsubmitted answers require more
     # complex reprocessing anyway.
-    Report::Learner.update_all('num_submitted = num_answered', 'num_submitted IS NULL')
+    Report::Learner.where('num_submitted IS NULL').update_all('num_submitted = num_answered')
   end
 
   def down

@@ -32,7 +32,7 @@ describe Admin::SettingsController do
   describe "GET index for managers" do
     render_views
 
-    it "only allows managers to edit the current settings and only shows them the information they can change" do
+    it "only allows managers to edit the current settings" do
       settings = FactoryBot.create(:admin_settings, :active => true)
       second_settings = FactoryBot.create(:admin_settings)
       allow(Admin::Settings).to receive(:default_settings).and_return(settings)
@@ -42,7 +42,6 @@ describe Admin::SettingsController do
       get :index
 
       expect(response).to be_success
-      expect(response).to render_template(:partial => "_show_for_managers")
 
       expect(assigns[:admin_settings].size).to be(1)
       expect(assigns[:admin_settings]).to include(settings)
@@ -93,7 +92,7 @@ describe Admin::SettingsController do
   describe "GET edit for managers" do
     render_views
 
-    it "renders the _form_for_managers partial" do
+    it "renders the _form for managers" do
       settings = FactoryBot.create(:admin_settings)
       expect(Admin::Settings).to receive(:find).with("37").and_return(settings)
 
@@ -102,18 +101,20 @@ describe Admin::SettingsController do
       get :edit, :id => "37"
 
       expect(response).to be_success
-      expect(response).to render_template(:partial => "_form_for_managers")
 
       expect(response.body).to have_selector("*[name='admin_settings[home_page_content]']")
 
-      (settings.attributes.keys - ["home_page_content", "wrap_home_page_content"]).each do |attribute|
-        expect(response.body).not_to have_selector("*[name='admin_settings[#{attribute}]']")
+      (
+        ["teachers_can_author", "use_student_security_questions",
+        "allow_default_class", "require_user_consent", "show_collections_menu"]
+      ).each do |attribute|
+        expect(response.body).to have_selector("*[name='admin_settings[#{attribute}]']")
       end
     end
   end
 
   describe "POST create" do
-    let(:params) { { these: 'params' } }
+    let(:params) { { description: 'test' } }
     describe "with valid params" do
       it "assigns a newly created settings as @settings" do
         expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => true))
@@ -132,7 +133,7 @@ describe Admin::SettingsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved settings as @settings" do
-        expect(Admin::Settings).to receive(:new).with({'these' => 'params'}).and_return(mock_settings(:save => false))
+        expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => false))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => false))
         post :create, admin_settings: params
         expect(assigns[:admin_settings]).to equal(mock_settings)
@@ -151,11 +152,15 @@ describe Admin::SettingsController do
 
   describe "PUT update" do
 
+    let(:admin_settings_params) {{
+      "description" => "test settings"
+    }}
+
     describe "with valid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :admin_settings => {:these => 'params'}
+        expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
+        put :update, :id => "37", :admin_settings => admin_settings_params
       end
 
       it "assigns the requested settings as @settings" do
@@ -176,8 +181,8 @@ describe Admin::SettingsController do
     describe "with invalid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :admin_settings => {:these => 'params'}
+        expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
+        put :update, :id => "37", :admin_settings => admin_settings_params
       end
 
       it "assigns the settings as @settings" do

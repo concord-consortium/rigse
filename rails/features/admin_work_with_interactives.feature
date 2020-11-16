@@ -24,7 +24,7 @@ Feature: Admin can work with interactives
     When I click "create interactive"
     Then I should see "(new) /interactives"
     When I fill in "interactive[name]" with "New Interactive"
-    And I fill in "interactive[description]" with "New Description" 
+    And I fill in "interactive[description]" with "New Description"
     And I fill in "interactive[url]" with "http://www.google.com"
     And I press "Save"
     Then I should be on the show page for interactive "New Interactive"
@@ -87,7 +87,7 @@ Feature: Admin can work with interactives
     #  When I create interactive "Interactive 1" before "Interactive 2" by date
     #  And I search for "Interactive" on the search instructional materials page
     #  And I follow "Oldest" in Sort By on the search instructional materials page
-    #  And I wait 2 seconds      
+    #  And I wait 2 seconds
     #  Then "Interactive 1" should appear before "Interactive 2"
     #  When I follow "Newest" in Sort By on the search instructional materials page
     #  And I wait 2 seconds
@@ -97,6 +97,7 @@ Feature: Admin can work with interactives
     Scenario: Admin should be able to see grouped search results on the basis of material type
       Given I am on the search instructional materials page
       When I enter search text "Geometry" on the search instructional materials page
+      And I close the search suggestions
       And I uncheck "Sequence"
       And I uncheck "Interactive"
       And I check "Activity"
@@ -105,6 +106,7 @@ Feature: Admin can work with interactives
       Then I should see "Geometry"
       And I should not see "Radioactivity"
       When I enter search text "Radioactivity" on the search instructional materials page
+      And I close the search suggestions
       And I check "Sequence"
       And I uncheck "Activity"
       And I uncheck "Interactive"
@@ -113,6 +115,7 @@ Feature: Admin can work with interactives
       Then I should see "Radioactivity"
       And I should not see "Geometry"
       When I enter search text "Interactive" on the search instructional materials page
+      And I close the search suggestions
       And I uncheck "Sequence"
       And I uncheck "Activity"
       And I check "Interactive"
@@ -123,7 +126,7 @@ Feature: Admin can work with interactives
 
     #@javascript @search
     #Scenario: User can search Interactives using Subject Areas
-    #  Given I am on the search instructional materials page      
+    #  Given I am on the search instructional materials page
     #  When I check "Earth and Space Science" under "Subject Areas" filter
     #  Then I should see "Interactive 1"
     #  And I should see "Interactive 5"
@@ -155,7 +158,7 @@ Feature: Admin can work with interactives
 
     #@javascript @search
     #Scenario: User can search Interactives using grade levels
-    #  Given I am on the search instructional materials page      
+    #  Given I am on the search instructional materials page
     #  When I check "K-2" under "Grade Levels" filter
     #  Then I should see "Interactive 1"
     #  And I should see "Interactive 2"
@@ -199,13 +202,13 @@ Feature: Admin can work with interactives
 
     #@javascript @search
     #Scenario: User can search Interactives using model types
-    #  Given I am on the search instructional materials page      
+    #  Given I am on the search instructional materials page
     #  When I select "Molecular Workbench" under "Model Types" filter
     #  Then I should see "Interactive 1"
     #  And I should see "Interactive 7"
     #  And I should see "Interactive 13"
     #  And I should not see "Interactive 15"
-    #  When I select "Evolution Readiness" under "Model Types" filter      
+    #  When I select "Evolution Readiness" under "Model Types" filter
     #  Then I should see "Interactive 14"
     #  And I should see "Interactive 2"
     #  And I should see "Interactive 8"

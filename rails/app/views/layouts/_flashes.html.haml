@@ -1,11 +1,11 @@
-- unless (flash[:notice].blank? && flash[:warning].blank?)
+- unless (flash['notice'].blank? && flash['warning'].blank?)
   #flash
     .padded_contents
-      %div.flash{:class => flash[:notice] ? "notice" : "warning"}
-        - if flash[:notice] 
-          = flash[:notice]
+      %div.flash{:class => flash['notice'] ? "notice" : "warning"}
+        - if flash['notice'] 
+          = flash['notice']
         - else 
-          = flash[:warning]
+          = flash['warning']
         %span.close
           %i.fa.fa-times
 

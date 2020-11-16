@@ -273,12 +273,10 @@ describe API::V1::Report do
         let(:feedback_settings) do
           {
               'activity_feedback_id' => feedback_id,
-              'learner_id' => learner_id,
               'max_score' => max_score,
               'score_type' => score_type,
               'enable_text_feedback' => enable_text_feedback,
               'use_rubric' => use_rubric,
-              'rubric_url' => rubric_url,
               'rubric' => rubric
           }
         end

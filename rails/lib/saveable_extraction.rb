@@ -1,5 +1,5 @@
 module SaveableExtraction
-  
+
   def logger
     # It doesn't appear that any saveable extractors define 'logger'
     # but we can do this as a safeguard anyway.
@@ -90,7 +90,7 @@ module SaveableExtraction
       return
     end
 
-    choice = Embeddable::MultipleChoiceChoice.find_by_id(choice_ids.first, :include => :multiple_choice)
+    choice = Embeddable::MultipleChoiceChoice.includes(:multiple_choice).find_by_id(choice_ids.first)
     multiple_choice = choice ? choice.multiple_choice : nil
 
     if multiple_choice && choice

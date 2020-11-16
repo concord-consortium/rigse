@@ -27,7 +27,7 @@ module HtmlSelectorsHelpers
     when "result box"
       "div.results_container"
     when "the student list on the student roster page"
-      "div#students_listing"
+      "div#student-roster"
     when "the lightbox in focus"
       "div.ui-window.lightbox.lightbox_focused"
     when "the modal"

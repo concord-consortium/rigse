@@ -3,8 +3,13 @@
 }
 
 .editBookmarkRow {
+  border-bottom: solid 1px #ccc;
   display: flex;
-  margin: 5px 0;
+  padding: 15px;
+
+  &:nth-child(odd) {
+    background-color: #f1f1f1;
+  }
 }
 
 .editBookmarkName {
@@ -13,16 +18,22 @@
   cursor: ns-resize;
 
   input {
-    width: 98%;
-    padding: 3px 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: calc(98% - 10px);
+
+    &:nth-child(2) {
+      margin-bottom: 0;
+    }
   }
 }
 
 .editBookmarkButtons {
+  align-self: center;
   display: flex;
 
   button {
-    margin: 0 0 0 5px;
+    margin: 0 0 0 10px;
   }
 }
 

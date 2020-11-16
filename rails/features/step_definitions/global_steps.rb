@@ -48,9 +48,10 @@ def post_with_bearer_token(path, post_data, user = 'admin')
                                       :client => Client.last,
                                       :state => nil,
                                       :access_token_expires_at => Time.now + 10.minutes
-                                    }, :without_protection => true)
+                                    })
   token = grant.access_token
-  page.driver.post(path, post_data, {"Authorization" => "Bearer #{token}"})
+  page.driver.header "Authorization", "Bearer #{token}"
+  page.driver.post(path, post_data)
 end
 
 def login_with_auth_login_page_as(username, password)

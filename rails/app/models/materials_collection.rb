@@ -1,9 +1,7 @@
 class MaterialsCollection < ActiveRecord::Base
-  attr_accessible :description, :name, :project_id
-
   belongs_to :project, :class_name => "Admin::Project"
 
-  has_many :materials_collection_items, dependent: :destroy, order: :position
+  has_many :materials_collection_items, -> { order :position }, dependent: :destroy
 
   validates_presence_of :project
 
@@ -37,6 +35,14 @@ class MaterialsCollection < ActiveRecord::Base
     materials_collection_items.map { |mi| materials[mi.material_type][mi.material_id] }.compact
   end
 
+  def has_materials(materials)
+    items = materials_collection_items.map{|i| [i.material_type, i.material_id] }
+    material_items = materials.map {|m| [m.class.to_s, m.id] }
+
+    has_them_all = (material_items - items).empty? && (material_items & items).length == material_items.length
+    return has_them_all
+  end
+
   private
 
   def materials_by_type(allowed_cohorts, show_assessment_items)
@@ -45,6 +51,7 @@ class MaterialsCollection < ActiveRecord::Base
        mat = materials_of_type(type)
        mat = mat.filtered_by_cohorts(allowed_cohorts) if allowed_cohorts
        mat = mat.where(is_assessment_item: false) unless show_assessment_items
+       mat = mat.to_a
        mat.reject!{|m| m.archived? }
        materials[type.to_s] = mat.index_by(&:id)
     end

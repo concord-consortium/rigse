@@ -70,6 +70,13 @@ environment. These can be found in `docker/dev/`. Currently these overrides supp
 
 There is more on each of these below.
 
+To make the initial setup easier there is a .env-osx-sample file that contains the standard setup we use. So you can simply:
+
+```
+cp .env-osx-sample .env
+docker-compose up
+```
+
 ## Running Rails and Rake commands
 
 You can run individual commands like this:

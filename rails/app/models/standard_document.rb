@@ -1,6 +1,4 @@
 class StandardDocument < ActiveRecord::Base
-  attr_accessible :jurisdiction, :name, :title, :uri
-
   #
   # Populate database with default Standard Documents
   #

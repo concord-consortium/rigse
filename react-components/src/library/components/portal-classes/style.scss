@@ -1,8 +1,11 @@
 .manageClassesSummary {
-    font-weight:bold;
-    font-size: 1.3em;
-    color: #000000;
-    padding-top: 20px;
+  border-bottom: solid 5px #f5f5f5;
+  color: #000;
+  font-size: 1.165em;
+  font-weight:bold;
+  margin-bottom: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .manageClassesTable {
@@ -10,8 +13,13 @@
 }
 
 .manageClassRow {
+  border-bottom: solid 1px #ccc;
   display: flex;
-  margin: 5px 0;
+  padding: 15px;
+
+  &:nth-child(even) {
+    background-color: #f1f1f1;
+  }
 }
 
 .manageClassName {
@@ -29,7 +37,9 @@
   display: flex;
 
   button {
-    margin: 0 0 0 5px;
+    font-size: 13px;
+    margin: 0 0 0 20px;
+    text-transform: uppercase;
   }
 }
 

@@ -35,10 +35,10 @@ class Admin::ExternalReportsController < ApplicationController
   # POST /admin/report
   def create
     authorize ExternalReport
-    @report = ExternalReport.new(params[:external_report])
+    @report = ExternalReport.new(external_report_strong_params(params[:external_report]))
 
     if @report.save
-      flash[:notice]='ExternalReport was successfully created.'
+      flash['notice']='ExternalReport was successfully created.'
       redirect_to action: :index
     else
       render :action => 'new'
@@ -50,7 +50,7 @@ class Admin::ExternalReportsController < ApplicationController
     authorize ExternalReport
     @report = ExternalReport.find(params[:id])
     new_params = params[:external_report]
-    saved_successfully = @report.update_attributes(new_params)
+    saved_successfully = @report.update_attributes(external_report_strong_params(new_params))
     if saved_successfully && new_params[:default_report_for_source_type] != nil
       # Automatically ensure that only one report is selected as a default one for a given source type.
       ExternalReport
@@ -58,7 +58,7 @@ class Admin::ExternalReportsController < ApplicationController
         .update_all(default_report_for_source_type: nil)
     end
     if saved_successfully
-      flash[:notice]= 'ExternalReport was successfully updated.'
+      flash['notice']= 'ExternalReport was successfully updated.'
       redirect_to action: :index
     else
       render :action => 'edit'
@@ -70,8 +70,13 @@ class Admin::ExternalReportsController < ApplicationController
     authorize ExternalReport
     @report = ExternalReport.find(params[:id])
     @report.destroy
-    flash[:notice]= 'ExternalReport was successfully deleted.'
+    flash['notice']= 'ExternalReport was successfully deleted.'
     redirect_to action: :index
   end
 
+  def external_report_strong_params(params)
+    params && params.permit(:allowed_for_students, :client, :client_id, :default_report_for_source_type,
+                            :individual_activity_reportable, :individual_student_reportable, :launch_text,
+                            :move_students_api_token, :move_students_api_url, :name, :report_type, :url)
+  end
 end

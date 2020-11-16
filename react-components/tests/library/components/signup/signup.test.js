@@ -20,6 +20,7 @@ describe('When I try to render signup student form', () => {
           <div class="user-type-select">
             <button name="type" value="teacher">I am a <strong>Teacher</strong></button>
             <button name="type" value="student">I am a <strong>Student</strong></button>
+            <p class="signup-form-login-option">Already have an account? <a href="/users/sign_in">Log in »</a></p>
           </div>
         </div>
         <footer class="reg-footer">
@@ -40,6 +41,7 @@ describe('When I try to render signup student form', () => {
           <div class="user-type-select">
             <button name="type" value="teacher">I am a <strong>Teacher</strong></button>
             <button name="type" value="student">I am a <strong>Student</strong></button>
+            <p class="signup-form-login-option">Already have an account? <a href="/users/sign_in">Log in »</a></p>
           </div>
         </div>
         <footer class="reg-footer">

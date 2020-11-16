@@ -1,4 +1,3 @@
-require 'themes_for_rails'
 require 'haml'
 require 'will_paginate/array'
 
@@ -33,7 +32,7 @@ class ApplicationController < ActionController::Base
 
     error_message = not_authorized_error_message
     if request.xhr?
-      render :text => "<div class='flash_error'>#{error_message}</div>", :status => 403
+      render :html => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       if current_user
         if BoolENV['RESEARCHER_REPORT_ONLY']
@@ -55,12 +54,12 @@ class ApplicationController < ActionController::Base
           #    saw the message there is no need to show it again.
           # So instead of showing the error message again, we just send the user to the
           # default login page for that user.
-          flash[:alert] = error_message if not params[:redirecting_after_sign_in]
+          flash['alert'] = error_message if not params[:redirecting_after_sign_in]
 
           redirect_to view_context.current_user_home_path
         end
       else
-        flash[:alert] = error_message
+        flash['alert'] = error_message
         # send the anonymous user to the login page, and then try to send the user back
         # to the original page. In the case of a post request this won't always work so
         # well. It will redirect the user to the GET route of the same URL that was posted
@@ -86,22 +85,11 @@ class ApplicationController < ActionController::Base
   end
 
   theme :get_theme
-
+  layout 'application'
   def test
-    render :text => mce_in_place_tag(Page.create,'description','none')
+    render :html => mce_in_place_tag(Page.create,'description','none')
   end
 
-  def self.set_theme(name)
-    @@theme = name
-  end
-
-  def get_theme
-    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
-  end
-
-  def self.get_theme
-    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
-  end
 
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
@@ -129,7 +117,7 @@ class ApplicationController < ActionController::Base
 
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
-    @container_id =  request.symbolized_path_parameters[:id]
+    @container_id =  request.path_parameters.symbolize_keys[:id]
   end
 
   def current_settings
@@ -355,4 +343,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  private
+  def self.set_theme(name)
+    @@theme = name
+  end
+
+  def get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
+
+  def self.get_theme
+    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+  end
 end

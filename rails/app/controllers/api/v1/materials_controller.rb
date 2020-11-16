@@ -117,8 +117,8 @@ class API::V1::MaterialsController < API::APIController
   #
   def all
 
-    materials = ExternalActivity.includes(:user, :template).all +
-                Interactive.all
+    materials = ExternalActivity.includes(:user, :template).to_a +
+                Interactive.all.to_a
 
     render json: materials_data(materials)
 
@@ -561,12 +561,12 @@ class API::V1::MaterialsController < API::APIController
     if existing.nil?
         render json: {  :message => "No existing standard statement to delete." },
                         :status => 200
+    else
+      existing.destroy
+
+      render json: {  :message => "Successfully removed standard." },
+                      :status => 200
     end
-
-    existing.destroy
-
-    render json: {  :message => "Successfully removed standard." },
-                    :status => 200
   end
 
 
@@ -843,5 +843,4 @@ class API::V1::MaterialsController < API::APIController
     end
 
   end
-
 end

@@ -134,15 +134,6 @@ module ApplicationHelper
     tag :input, html_options
   end
 
-  def pdf_footer(message)
-    pdf.footer [pdf.margin_box.left, pdf.margin_box.bottom + 25] do
-      pdf.stroke_horizontal_rule
-      pdf.pad(10) do
-        pdf.text message, :size => 16
-      end
-    end
-  end
-
   def render_top_level_container_list_partial(locals)
     container = top_level_container_name.pluralize
     container_sym = top_level_container_name.pluralize.to_sym
@@ -188,40 +179,6 @@ module ApplicationHelper
 
   def render_edit_partial_for(component,opts={})
     render_partial_for(component, {:partial => "remote_form"}.merge!(opts))
-  end
-
-  def wrap_edit_link_around_content(component, options={})
-    url      = options[:url]      || edit_url_for(component)
-    update   = options[:update]   || dom_id_for(component, :item)
-    method   = options[:method]   || :get
-    complete = options[:complete] || nil
-    success  = options[:success]  || nil
-    js_function = remote_function(:url => url, :update => update, :method => method, :complete => complete, :success => success)
-    dom_id = dom_id_for(component, :edit_link)
-
-    capture_haml do
-      if component.changeable?(current_visitor)
-        haml_tag :div, :id=> dom_id, :class => 'editable_block', :onDblClick=> js_function  do
-          if block_given?
-            yield
-          end
-        end
-      else
-        if block_given?
-          yield
-        end
-      end
-    end
-  end
-
-  def edit_button_for(component, options={}, scope=false)
-    url      = options[:url]      || edit_url_for(component, scope)
-    update   = options[:update]   || dom_id_for(component, :item)
-    method   = options[:method]   || :get
-    complete = options[:complete] || nil
-    success  = options[:success]  || nil
-    title    = options[:title]    || "edit #{component.class.display_name.downcase}"
-    remote_link_button "edit.png",  :url => url, :title => title, :update => update, :method => method, :complete => complete, :success => success
   end
 
   def edit_url_for(component, scope=false)
@@ -303,11 +260,6 @@ module ApplicationHelper
     select nil, :sort_order, sort_options, {:selected => selected, :include_blank => false }
   end
 
-  def otrunk_edit_button_for(component, options={})
-    controller = component.class.name.pluralize.underscore
-    id = component.id
-    link_to image_tag("edit_otrunk.png"), { :controller => controller, :action => 'edit', :format => 'jnlp', :id => id }, :class => 'rollover' , :title => "edit #{component.class.display_name.downcase} using OTrunk"
-  end
 
   def learner_report_link_for(learner, action='report', link_text='Report ', title=nil)
     return "" unless learner.reportable?
@@ -373,26 +325,7 @@ module ApplicationHelper
     link_to(link_text,url, :target => '_blank')
   end
 
-  def delete_button_for(model, options={})
-    if policy(model).destroy?
-      # find the page_element for the embeddable
-      embeddable = (model.respond_to? :embeddable) ? model.embeddable : model
-      controller = "#{model.class.name.pluralize.underscore}"
-      if defined? model.parent
 
-        # allow specification of options[:redirect] = false to skip
-        if options[:redirect].nil?
-          options[:redirect]= url_for model.parent
-        end
-      end
-      if options[:redirect]
-        url = url_for(:controller => controller, :id => model.id, :action => :destroy, :redirect=>options[:redirect])
-      else
-        url = url_for(:controller => controller, :id => model.id, :action => :destroy)
-      end
-      remote_link_button "delete.png", :method => :delete, :confirm => "Delete  #{embeddable.class.display_name.downcase} named #{embeddable.name}?", :url => url, :title => "delete #{embeddable.class.display_name.downcase}"
-    end
-  end
 
   def link_to_container(container, options={})
     link_to name_for_component(container, options), container, :class => 'container_link'
@@ -526,114 +459,6 @@ module ApplicationHelper
     end
   end
 
-  def menu_for_offering(offering, opts = {})
-    options = {
-      :omit_delete => true,
-      :omit_edit => true,
-      :hide_component_name => true,
-      :print_link =>dropdown_link_for(:text => "Print", :id=> dom_id_for(offering.runnable,"print_rollover"), :content_id=> dom_id_for(offering.runnable,"print_dropdown"),:title => "print this #{top_level_container_name}")
-    }
-    options.update(opts)
-    capture_haml do
-      haml_tag :div, :class => 'action_menu_activity' do
-        haml_tag :div, :class => 'action_menu_activity_options' do
-          haml_concat options[:print_link]
-          haml_concat " | "
-          haml_concat dropdown_link_for(:text => "Run", :id=> dom_id_for(offering.runnable,"run_rollover"), :content_id=> dom_id_for(offering.runnable,"run_dropdown"),:title =>"run this #{top_level_container_name}")
-          report_link = report_link_for(offering, 'Report', 'Report')
-          if !report_link.blank?
-            haml_concat " | #{report_link}"
-          end
-          lara_report_link(offering)
-          haml_concat " | "
-
-          if offering.active?
-            haml_concat activation_toggle_link_for(offering, 'deactivate', 'Deactivate')
-          else
-            haml_concat activation_toggle_link_for(offering, 'activate', 'Activate')
-          end
-
-        end
-        haml_tag :div, :class => 'action_menu_activity_title' do
-          haml_concat title_for_component(offering, options)
-          # haml_concat "Active students: #{offering.learners.length}"
-        end
-      end
-    end
-  end
-
-  def show_menu_for(component, options={})
-    is_page_element = (component.respond_to? :embeddable)
-    deletable_element = component
-    if is_page_element
-      component = component.embeddable
-    end
-    view_class = for_teacher_only?(component) ? "teacher_only action_menu" : "action_menu"
-    capture_haml do
-      haml_tag :div, :class => view_class do
-        haml_tag :div, :class => 'action_menu_header_left' do
-          haml_concat title_for_component(component, options)
-        end
-        haml_tag :div, :class => 'action_menu_header_right' do
-          if (component.changeable?(current_visitor))
-            haml_concat edit_button_for(component, options)  unless options[:omit_edit]
-            haml_concat delete_button_for(deletable_element) unless options[:omit_delete]
-          end
-        end
-      end
-    end
-  end
-
-  def toggle_link_title(future_state, current_state)
-    "<span class='toggle'><span class='current_state'>#{current_state}</span><span class='future_state'>#{future_state}</span></span>"
-  end
-
-  def toggle_all(label='all', id_prefix='details_')
-    link_to_function("show/hide #{label}", "$$('div[id^=#{id_prefix}]').each(function(d) { Effect.toggle(d,'blind', {duration:0.25}) });")
-  end
-
-  def toggle_more(component, details_id=nil, label="show/hide")
-    toggle_id = dom_id_for(component,:show_hide)
-    details_id ||= dom_id_for(component, :details)
-
-    link_to_function(label, nil, :id => toggle_id, :class=>"small") do |page|
-      page.visual_effect(:toggle_blind, details_id,:duration => 0.25)
-      # page.replace_html(toggle_id,page.html(toggle_id) == more ? less : more)
-    end
-  end
-
-  def dropdown_link_for(options ={})
-    defaults = {
-      :url        => "#",
-      :text       => 'add content',
-      :content_id => 'dropdown',
-      :id         => 'add_content',
-      :onmouseover => "dropdown_for('#{options[:id]||'dropdown'}','#{options[:content_id]||'add_content'}')"
-    }
-    options = defaults.merge(options)
-    link_to(options[:text], options[:url], options.except(:text, :url))
-  end
-
-  def dropdown_button(image,options={})
-    name = options[:name] || image.gsub(/\..*/,'') # remove extension of filename
-    if options[:name_postfix]
-      postfix = options[:name_postfix]
-      content_id = "#{name}_#{postfix}_menu"
-      id = "button_#{name}_#{postfix}_menu"
-    else
-      content_id = "#{name}_menu"
-      id = "button_#{name}_menu"
-    end
-    defaults = {
-      :name       =>  name,
-      :text       =>  image_tag(image,:title => options[:title] || name),
-      :class      => 'rollover',
-      :content_id => content_id,
-      :id         => id
-    }
-    options = defaults.merge(options)
-    dropdown_link_for options
-  end
 
   def link_button(image,url,options={})
     defaults = {
@@ -641,28 +466,6 @@ module ApplicationHelper
     }
     options = defaults.merge(options)
     link_to image_tag(image, :alt=>options[:title]) , url, options
-  end
-
-  def remote_link_button(image,options={})
-    defaults = {
-      :html       => {
-        :class => options[:class] || 'rollover',
-        :id    => options[:id],
-        :title => options[:title] || 'no note here'
-        },
-      :title => options[:title] || 'no note here'
-    }
-    options = defaults.merge(options)
-    link_to_remote image_tag(image, :alt=>options[:title],:title=>options[:title]),options
-  end
-
-  def function_link_button(image,javascript,options={})
-    javascript ||= "alert('Hello world!'); return false;"
-    defaults = {
-      :class      => 'rollover'
-    }
-    options = defaults.merge(options)
-    link_to_function(image_tag(image, :alt=>options[:title]), javascript, options)
   end
 
   def tab_for(component, options={})
@@ -776,7 +579,7 @@ module ApplicationHelper
   end
 
   def students_in_class(all_students)
-    all_students.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+    all_students.to_a.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
 
 #            Welcome

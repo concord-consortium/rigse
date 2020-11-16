@@ -42,11 +42,11 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
   # POST /saveable/sparks/measuring_resistances
   # POST /saveable/sparks/measuring_resistances.json
   def create
-    @measuring_resistance = Saveable::Sparks::MeasuringResistance.new(params[:measuring_resistance])
+    @measuring_resistance = Saveable::Sparks::MeasuringResistance.new(saveable_sparks_measuring_resistance_strong_params(params[:measuring_resistance]))
 
     respond_to do |format|
       if @measuring_resistance.save
-        flash[:notice] = 'Saveable::Sparks::MeasuringResistance.was successfully created.'
+        flash['notice'] = 'Saveable::Sparks::MeasuringResistance.was successfully created.'
         format.html { redirect_to(@measuring_resistance) }
         format.json { redirect_to(@measuring_resistance) }
         format.json  { render :xml => @measuring_resistance, :status => :created, :location => @measuring_resistance }
@@ -63,8 +63,8 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
 
     respond_to do |format|
-      if @measuring_resistance.update_attributes(params[:measuring_resistance])
-        flash[:notice] = 'Saveable::Sparks::MeasuringResistance.was successfully updated.'
+      if @measuring_resistance.update_attributes(saveable_sparks_measuring_resistance_strong_params(params[:measuring_resistance]))
+        flash['notice'] = 'Saveable::Sparks::MeasuringResistance.was successfully updated.'
         format.html { redirect_to(@measuring_resistance) }
         format.json  { head :ok }
       else
@@ -84,5 +84,9 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
       format.html { redirect_to(measuring_resistances_url) }
       format.json  { head :ok }
     end
+  end
+
+  def saveable_sparks_measuring_resistance_strong_params(params)
+    params && params.permit(:learner_id, :offering_id)
   end
 end

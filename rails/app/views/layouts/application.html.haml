@@ -20,7 +20,7 @@
     - @open_graph.each_pair do |key, value|
       %meta{ :property => "og:#{key}", :content => value }
 
-    != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
+    != stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     / TODO: if themes need their own print CSS make a themed link here:
     != stylesheet_link_tag 'print', {'media' => 'print'}
 
@@ -31,7 +31,6 @@
 
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
-    / TODO: if themes need their own javascript, add theme_ to this:
     != javascript_include_tag 'application'
 
     / add the external css if defined
@@ -72,19 +71,8 @@
     #wrapper{ :class => "wrapper cols" }
       - unless @wide_content_layout
         #secondary{ :class => "col-3" }
-          - if @investigation
-            / = render :partial => 'shared/accordion_nav', :locals => { :investigation=> @investigation}
-            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @investigation, :selects => [@investigation,@activity,@section,@page]}
-          - elsif @activity
-            = render :partial => 'shared/general_accordion_nav', :locals => {:top_node => @activity, :selects => [@activity,@section,@page]}
-          - elsif @portal_teacher && (@portal_teacher.user == current_visitor)
-            = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_teacher, :selects => [@school,@portal_clazz,@portal_student]}
-          - elsif @portal_student && (@portal_student.user == current_visitor)
-            = render :partial => 'shared/left_menu', :locals => {:top_node => @portal_student, :selects => [@school,@portal_clazz,@offering]}
-          - elsif current_user.present?
-            -# handle the case of users that are not portal_teachers
-            = render :partial => 'shared/left_menu', :locals => {:top_node => nil, :selects => []}
-          = content_for :side_bar
+          - if current_user.present?
+            = render :partial => 'shared/left_menu'
 
       #primary{ :class => @wide_content_layout ? "wide col-12" : "col-8"}
         #content.main_content_colors

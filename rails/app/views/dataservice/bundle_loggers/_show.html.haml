@@ -1,5 +1,0 @@
-- options = { :omit_edit => true, :omit_delete => true}
-= accordion_for(dataservice_bundle_logger, show_menu_for(dataservice_bundle_logger, options)) do
-  %div{:id => dom_id_for(dataservice_bundle_logger, :item), :class => 'item'}
-    %div{:id => dom_id_for(dataservice_bundle_logger, :details), :class => 'content'}
-      = render :partial => 'dataservice/bundle_contents/show', :collection => dataservice_bundle_logger.bundle_contents, :as => :dataservice_bundle_content

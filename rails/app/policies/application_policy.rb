@@ -61,13 +61,11 @@ class ApplicationPolicy
     end
 
     def all
-      # return scoped instead of all so that methods can be chained after
-      scope.scoped
+      scope.all
     end
 
     def none
-      # hack to return an empty relation pre Rails 4
-      scope.where("1 = 0")
+      scope.none
     end
 
     def resolve

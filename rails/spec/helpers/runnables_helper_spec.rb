@@ -128,36 +128,6 @@ describe RunnablesHelper, type: :helper  do
 
   end
 
-  describe ".run_link_for" do
-    it "should render a link for an External Activity" do
-      ext_act = stub_model(ExternalActivity, :name => "Fetching Wood", :template_type => "Investigation")
-      expect(helper.run_link_for(ext_act)).to be_link_like("http://test.host/eresources/#{ext_act.id}.run_resource_html",
-                                                       "run_link rollover",
-                                                       asset_path("run.png"))
-    end
-
-    it "should render a link for a Investigation Offering" do
-      offering = mock_model(Portal::Offering, :name => "Investigation Offering")
-      investigation = stub_model(Investigation)
-      allow(offering).to receive(:runnable).and_return(investigation)
-      allow(offering).to receive(:run_format).and_return :jnlp
-      allow(offering).to receive(:external_activity?).and_return false
-      expect(helper.run_link_for(offering)).to be_link_like("http://test.host/users/#{@anonymous_user.id}/portal/offerings/#{offering.id}.jnlp",
-                                                             "run_link rollover",
-                                                             asset_path("run.png"))
-    end
-
-    it "raises an error for legacy runnables" do
-      section = stub_model(Section, :name => "Learning About Taxidermy")
-      activity = stub_model(Activity, :name => "Fun in the Garden")
-      page = stub_model(Page, :name => "Fun with pages")
-      [section, activity, page].each do |runnable|
-        expect {helper.run_link_for(runnable)}.to raise_error(/Bad runnable component/)
-      end
-    end
-
-  end
-
   # TODO: auto-generated
   describe '#use_adhoc_workgroups?' do
     it 'works' do
@@ -214,15 +184,6 @@ describe RunnablesHelper, type: :helper  do
   end
 
   # TODO: auto-generated
-  describe '#run_button_for' do
-    xit 'works' do
-      result = helper.run_button_for(component)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#popup_options_for' do
     it 'works' do
       result = helper.popup_options_for(component, {})
@@ -259,15 +220,6 @@ describe RunnablesHelper, type: :helper  do
   end
 
   # TODO: auto-generated
-  describe '#teacher_preview_button_for' do
-    xit 'works' do
-      result = helper.teacher_preview_button_for(FactoryBot.create(:portal_offering))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#preview_link_for' do
     xit 'works' do
       result = helper.preview_link_for(FactoryBot.create(:portal_offering))
@@ -280,15 +232,6 @@ describe RunnablesHelper, type: :helper  do
   describe '#offering_link_for' do
     xit 'works' do
       result = helper.offering_link_for(FactoryBot.create(:portal_offering))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#preview_list_link' do
-    xit 'works' do
-      result = helper.preview_list_link
 
       expect(result).not_to be_nil
     end

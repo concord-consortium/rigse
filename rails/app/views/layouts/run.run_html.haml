@@ -10,7 +10,7 @@
     %meta{ :name => "MSSmartTagsPreventParsing", :content => "true" }
     %link{ :href => path_to_image('favicon.ico'), :rel => "shortcut icon"}/
 
-    != theme_stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
+    != stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
     != stylesheet_link_tag 'print', {'media' => 'print'}
     != javascript_include_tag 'application'
 

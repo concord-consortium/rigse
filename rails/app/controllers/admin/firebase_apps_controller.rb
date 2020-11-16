@@ -45,7 +45,7 @@ class Admin::FirebaseAppsController < ApplicationController
   # POST /admin/firebase_apps.json
   def create
     authorize FirebaseApp
-    @firebase_app = FirebaseApp.new(firebase_app_params)
+    @firebase_app = FirebaseApp.new(firebase_app_strong_params(params[:firebase_app]))
 
     respond_to do |format|
       if @firebase_app.save
@@ -65,7 +65,7 @@ class Admin::FirebaseAppsController < ApplicationController
     authorize @firebase_app
 
     respond_to do |format|
-      if @firebase_app.update_attributes(firebase_app_params)
+      if @firebase_app.update_attributes(firebase_app_strong_params(params[:firebase_app]))
         format.html { redirect_to admin_firebase_apps_path, notice: 'Firebase app was successfully updated.' }
         format.json { head :no_content }
       else
@@ -88,12 +88,12 @@ class Admin::FirebaseAppsController < ApplicationController
     end
   end
 
-  private
-
-  def firebase_app_params
-    whitelist = params.require(:firebase_app).permit(:name, :client_email, :private_key)
-    # convert newlines copied string from credentials json to real newlines
-    whitelist[:private_key] = (whitelist[:private_key] || "").gsub('\n', "\n")
-    whitelist
+  def firebase_app_strong_params(params)
+    params = (params && params.permit(:client_email, :name, :private_key)) || {}
+    if params.has_key?(:private_key)
+      # convert newlines copied string from credentials json to real newlines
+      params[:private_key] = (params[:private_key] || "").gsub('\n', "\n")
+    end
+    params
   end
 end

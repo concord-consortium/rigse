@@ -1,7 +1,7 @@
 class Activity < ActiveRecord::Base
   include Cohorts
   include JnlpLaunchable
-
+  include HasEmbeddables
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
@@ -17,32 +17,18 @@ class Activity < ActiveRecord::Base
 
   has_many :external_activities, :as => :template
 
-  has_many :sections, :order => :position, :dependent => :destroy do
+  has_many :sections, -> { order :position }, :dependent => :destroy do
     def student_only
       where('teacher_only' => false)
     end
   end
+
   has_many :pages, :through => :sections
+
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
 
-  # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
-  # This block adds a has_many for each embeddable type to this model.
-  # TODO We don't want Embeddable::Iframe showing up in any menus, so inject it here. It's used by LARA.
-  (BASE_EMBEDDABLES + ["Embeddable::Iframe"]).each do |klass|
-      eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
-      :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
-      INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'
-      INNER JOIN pages ON page_elements.page_id = pages.id
-      INNER JOIN sections ON pages.section_id = sections.id
-      WHERE sections.activity_id = \#\{id\}" }!
-  end
-
-  has_many :page_elements,
-    :finder_sql => proc { "SELECT page_elements.* FROM page_elements
-    INNER JOIN pages ON page_elements.page_id = pages.id
-    INNER JOIN sections ON pages.section_id = sections.id
-    WHERE sections.activity_id = #{id}" }
+  has_many :page_elements, :through => :pages
 
   include ResponseTypes
   acts_as_replicatable
@@ -173,10 +159,10 @@ class Activity < ActiveRecord::Base
   end
 
   def is_template
-    if (investigation && investigation.external_activities.compact.length > 0)
+    if (investigation && investigation.external_activities.to_a.compact.length > 0)
       return true
     end
-    return external_activities.compact.length > 0
+    return external_activities.to_a.compact.length > 0
   end
 
 end

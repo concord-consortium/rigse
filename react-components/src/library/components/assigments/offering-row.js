@@ -44,7 +44,7 @@ export default class OfferingRow extends React.Component {
           <span className={css.activityNameCell}>{ offering.name }</span>
           <span className={css.checkboxCell}><input type='checkbox' checked={offering.active} onChange={this.onActiveUpdate} /></span>
           <span className={css.checkboxCell}><input type='checkbox' checked={offering.locked} onChange={this.onLockedUpdate} /></span>
-          <span className={css.detailsCell}><a onClick={this.onDetailsToggle}>{ this.detailsLabel }</a></span>
+          <span className={css.detailsCell}><button className={'textButton adminOption'} onClick={this.onDetailsToggle}>{ this.detailsLabel }</button></span>
         </div>
         {
           detailsVisible && !offeringDetails && <div className={css.loading}>Loading...</div>

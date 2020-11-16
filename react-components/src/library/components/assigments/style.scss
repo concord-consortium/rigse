@@ -44,18 +44,26 @@
   .headers {
     display: flex;
     flex-flow: row no-wrap;
+    font-size: 15px;
     font-weight: 700;
     text-transform: uppercase;
+
+    span {
+      padding: 0 0 0 15px;
+    }
   }
   .activityNameCell {
     flex: 5;
-    font-size: 1em;
-    padding-right: 5px;
   }
 }
 
 .offering {
-  padding: 10px 0;
+  border-bottom: solid 1px #ccc;
+  padding: 15px;
+
+  &:nth-child(even) {
+    background-color: #f1f1f1;
+  }
 
   div:first-child {
     display: flex;
@@ -85,7 +93,6 @@
   cursor: move;
   display: inline-block;
   vertical-align: middle;
-  font-size: 1.2em;
 }
 
 .checkboxCell {
@@ -96,9 +103,9 @@
 }
 
 .detailsCell {
+  align-self: center;
   display: inline-block;
   flex: 2;
-  padding-right: 5px;
   text-align: right;
 }
 

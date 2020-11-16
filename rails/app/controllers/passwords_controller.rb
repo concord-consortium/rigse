@@ -9,12 +9,12 @@ class PasswordsController < ApplicationController
 
   def create_by_email
 
-    @password = Password.new(params[:password])
+    @password = Password.new(password_strong_params(params[:password]))
     @password.user = User.find_by_email(@password.email)
 
     if @password.user && @password.user.is_oauth_user?
       provider      =   @password.user.authentications[0].provider.titleize
-      flash[:error] =   "This is a #{provider} authenticated account. " <<
+      flash['error'] =   "This is a #{provider} authenticated account. " <<
                         "Please use #{provider} to make password changes."
       render :action => :email
       return
@@ -22,13 +22,13 @@ class PasswordsController < ApplicationController
 
     if @password.save
       PasswordMailer.forgot_password(@password).deliver
-      flash[:notice] = "A link to change your password has been sent to #{@password.email}."
+      flash['notice'] = "A link to change your password has been sent to #{@password.email}."
       redirect_to :action => :email
     else
       # If this fails, we probably didn't find the user by email. Perhaps we should use a friendly custom error
       # message, instead of displaying the Rails error_for content for the failed save? -- Cantina-CMH 6/18/10
       if @password.user.nil?
-        flash[:error] = "Sorry, we could not find a user with that email address. Please verify the address and try again."
+        flash['error'] = "Sorry, we could not find a user with that email address. Please verify the address and try again."
         @password.errors.clear # Ideally, we would only clear the error on :user, but there is no built-in method for that.
       end
       render :action => :email
@@ -39,11 +39,11 @@ class PasswordsController < ApplicationController
     user = User.find_by_login(params[:login])
 
     if user.nil?
-      flash[:error] = "User '#{params[:login]}' not found."
+      flash['error'] = "User '#{params[:login]}' not found."
 
     elsif user.is_oauth_user?
       provider      =   user.authentications[0].provider.titleize
-      flash[:error] =   "This is a #{provider} authenticated account. " <<
+      flash['error'] =   "This is a #{provider} authenticated account. " <<
                         "Please use #{provider} to make password changes."
       return
 
@@ -52,19 +52,19 @@ class PasswordsController < ApplicationController
         redirect_to password_questions_path(user)
         return
       elsif current_settings.use_student_security_questions
-        flash[:error] = "This account has not set any security questions. Please contact your teacher to reset your password for you."
+        flash['error'] = "This account has not set any security questions. Please contact your teacher to reset your password for you."
       else
-        flash[:error] = "Please contact your teacher to reset your password for you."
+        flash['error'] = "Please contact your teacher to reset your password for you."
       end
     elsif user.email
       @password = Password.new(:user => user, :email => user.email)
       if @password.save
         PasswordMailer.forgot_password(@password).deliver
-        flash[:notice] = "A link to change your password has been sent to #{@password.email}."
+        flash['notice'] = "A link to change your password has been sent to #{@password.email}."
         redirect_to root_path
         return
       else
-        flash[:error] = "This account has not set a valid email address. Please contact your school manager to access your account."
+        flash['error'] = "This account has not set a valid email address. Please contact your school manager to access your account."
       end
     end
 
@@ -96,7 +96,7 @@ class PasswordsController < ApplicationController
     end
 
     # TODO: limit the number of wrong attempts for a single user
-    flash[:error] = "Sorry, you did not answer all of your questions correctly."
+    flash['error'] = "Sorry, you did not answer all of your questions correctly."
     redirect_to password_questions_path(@user_check_questions.id)
   end
 
@@ -117,7 +117,7 @@ class PasswordsController < ApplicationController
     @user_reset_password.save
 
     if @user_reset_password.errors.empty?
-      flash[:notice] = "Password for #{@user_reset_password.login} was successfully updated."
+      flash['notice'] = "Password for #{@user_reset_password.login} was successfully updated."
       @user_reset_password.require_password_reset=false
       @user_reset_password.save
 
@@ -133,7 +133,7 @@ class PasswordsController < ApplicationController
       end
       redirect_to(session[:return_to] || root_path)
     else
-      # flash[:error] = 'Password could not be updated'
+      # flash['error'] = 'Password could not be updated'
       # redirect_to :action => :reset, :reset_code => params[:reset_code], :user_errors => @user.errors
       render 'reset'
     end
@@ -141,8 +141,8 @@ class PasswordsController < ApplicationController
 
   def update
     @password = Password.find(params[:id])
-    if @password.update_attributes(params[:password])
-      flash[:notice] = 'Password was successfully updated.'
+    if @password.update_attributes(password_strong_params(params[:password]))
+      flash['notice'] = 'Password was successfully updated.'
       redirect_back_or activities_url
     else
       render :action => :edit
@@ -157,9 +157,14 @@ class PasswordsController < ApplicationController
       @user_find = Password.where('reset_code = ? and expiration_date > ?', params[:reset_code], Time.now).first.user
       return @user_find
     rescue
-      flash[:notice] = 'The change password URL you visited is either invalid or expired.'
+      flash['notice'] = 'The change password URL you visited is either invalid or expired.'
       redirect_to root_path
     end
   end
 
+  def password_strong_params(params)
+    # Changed to test for tighter parameter check - the commented out line is the old attr_accessible items
+    # params && params.permit(:email, :user, :user_id)
+    params && params.permit(:email)
+  end
 end

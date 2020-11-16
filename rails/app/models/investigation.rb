@@ -3,9 +3,9 @@ class Investigation < ActiveRecord::Base
   include Cohorts
   include ResponseTypes
   include Archiveable
-
+  include HasEmbeddables
   belongs_to :user
-  has_many :activities, :order => :position, :dependent => :destroy do
+  has_many :activities, -> { order :position }, :dependent => :destroy do
     def student_only
       where('teacher_only' => false)
     end
@@ -18,46 +18,28 @@ class Investigation < ActiveRecord::Base
 
   has_many :external_activities, :as => :template
 
-  # BASE_EMBEDDABLES is defined in config/initializers/embeddables.rb
-  # TODO We don't want Embeddable::Iframe showing up in any menus, so inject it here. It's used by LARA.
-  (BASE_EMBEDDABLES + ["Embeddable::Iframe"]).each do |klass|
-    eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
-      :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
-      INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'
-      INNER JOIN pages ON page_elements.page_id = pages.id
-      INNER JOIN sections ON pages.section_id = sections.id
-      INNER JOIN activities ON sections.activity_id = activities.id
-      WHERE activities.investigation_id = \#\{id\}" }!
+  has_many :sections, :through => :activities
+
+  has_many :pages, :through => :sections
+
+  has_many :page_elements, :through => :pages
+
+  def student_sections
+    query = [
+      "#{Activity.table_name}.teacher_only=0",
+      "#{Section.table_name}.teacher_only=0"
+    ].join(" AND ")
+    sections.where(query)
   end
 
-  has_many :page_elements,
-    :finder_sql => proc { "SELECT page_elements.* FROM page_elements
-    INNER JOIN pages ON page_elements.page_id = pages.id
-    INNER JOIN sections ON pages.section_id = sections.id
-    INNER JOIN activities ON sections.activity_id = activities.id
-    WHERE activities.investigation_id = #{id}" }
-
-  has_many :sections,
-    :finder_sql => proc { "SELECT sections.* FROM sections
-    INNER JOIN activities ON sections.activity_id = activities.id
-    WHERE activities.investigation_id = #{id}" }
-
-  has_many :student_sections, :class_name => Section.to_s,
-    :finder_sql => proc { "SELECT sections.* FROM sections
-    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
-    WHERE activities.investigation_id = #{id} AND sections.teacher_only = 0" }
-
-  has_many :pages,
-    :finder_sql => proc { "SELECT pages.* FROM pages
-    INNER JOIN sections ON pages.section_id = sections.id
-    INNER JOIN activities ON sections.activity_id = activities.id
-    WHERE activities.investigation_id = #{id}" }
-
-  has_many :student_pages, :class_name => Page.to_s,
-    :finder_sql => proc { "SELECT pages.* FROM pages
-    INNER JOIN sections ON pages.section_id = sections.id AND sections.teacher_only = 0
-    INNER JOIN activities ON sections.activity_id = activities.id AND activities.teacher_only = 0
-    WHERE activities.investigation_id = #{id} AND pages.teacher_only = 0" }
+  def student_pages
+    query = [
+      "#{Activity.table_name}.teacher_only=0",
+      "#{Section.table_name}.teacher_only=0",
+      "#{Page.table_name}.teacher_only=0"
+    ].join(" AND ")
+    pages.where(query)
+  end
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
   has_many :projects, :class_name => "Admin::Project", :through => :project_materials
@@ -150,18 +132,6 @@ class Investigation < ActiveRecord::Base
     )
   end
 
-
-
-  def duplicate(new_owner)
-    @return_investigation = deep_clone :no_duplicates => true, :never_clone => [:uuid, :created_at, :updated_at, :publication_status], :include => {:activities => {:sections => :pages}}
-    @return_investigation.user = new_owner
-    @return_investigation.name = "copy of #{self.name}"
-    @return_investigation.deep_set_user(new_owner)
-    @return_investigation.publication_status = "draft"
-    @return_investigation.offerings_count = 0
-    return @return_investigation
-  end
-
   def print_listing
     listing = []
     self.activities.each do |a|
@@ -239,7 +209,7 @@ class Investigation < ActiveRecord::Base
   end
 
   def is_template
-    return true if activities.detect { |a| a.external_activities.compact.length > 0 }
-    return external_activities.compact.length > 0
+    return true if activities.detect { |a| a.external_activities.to_a.compact.length > 0 }
+    return external_activities.to_a.compact.length > 0
   end
 end

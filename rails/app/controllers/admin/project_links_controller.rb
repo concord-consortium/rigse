@@ -2,13 +2,12 @@ class Admin::ProjectLinksController < ApplicationController
   include RestrictedController
 
   before_filter :check_for_project
-  before_filter :get_scoped_projects, only: ['new', 'edit']
+  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_project_link, only: ['show', 'edit', 'update', 'destroy']
 
 
   def check_for_project
     return unless params[:project_id]
-
     @project = Admin::Project.find(params[:project_id])
   end
 
@@ -64,7 +63,7 @@ class Admin::ProjectLinksController < ApplicationController
 
   # POST /project_links or /admin/project/:project_id/project_links
   def create
-    @project_link = Admin::ProjectLink.new(params[:admin_project_link])
+    @project_link = Admin::ProjectLink.new(admin_project_link_strong_params(params[:admin_project_link]))
     authorize @project_link
     if @project_link.save
       redirect_to @project_link, notice: 'Admin::ProjectLink was successfully created.'
@@ -79,7 +78,7 @@ class Admin::ProjectLinksController < ApplicationController
     # this also has the side effect that a invalid project will raise a record not found
     new_project = Admin::Project.find(params[:admin_project_link][:project_id])
     authorize new_project, :edit?
-    if @project_link.update_attributes(params[:admin_project_link])
+    if @project_link.update_attributes(admin_project_link_strong_params(params[:admin_project_link]))
       redirect_to @project_link, notice: 'Admin::ProjectLink was successfully updated.'
     else
       render action: 'edit'
@@ -90,6 +89,11 @@ class Admin::ProjectLinksController < ApplicationController
   def destroy
     authorize @project_link
     @project_link.destroy
-    redirect_to admin_project_links_url, notice: "Link #{@project_link.name} was deleted"
+    flash['notice'] = "Link #{@project_link.name} was deleted"
+    redirect_back_or admin_project_links_url
+  end
+
+  def admin_project_link_strong_params(params)
+    params && params.permit(:href, :link_id, :name, :pop_out, :position, :project_id)
   end
 end

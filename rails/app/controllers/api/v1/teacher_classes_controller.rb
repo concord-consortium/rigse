@@ -174,5 +174,4 @@ class API::V1::TeacherClassesController < API::APIController
       },
     }
   end
-
 end

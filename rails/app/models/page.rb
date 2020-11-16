@@ -12,27 +12,12 @@ class Page < ActiveRecord::Base
 
   # Order by ID is important, see: https://www.pivotaltracker.com/story/show/79237764
   # Some older elements in DB can have always position equal to 1.
-  has_many :page_elements, :order => 'position ASC, id ASC', :dependent => :destroy
+  # 2020-09-24 included 'page_elements' in order for has_many :through in eg activity.rb
+  # for embeddables becuase polymorphic relations ordering is complicated.
+  has_many :page_elements, -> { order 'page_elements.position ASC, page_elements.id ASC' },
+    dependent: :destroy
 
-  # The array of embeddables is defined in conf/initializers/embeddables.rb
-  # The order of this array determines the order they show up in the Add menu
-  @@element_types = ALL_EMBEDDABLES
-
-  # @@element_types.each do |type|
-  #   unless defined? type.dont_make_associations
-  #     eval "has_many :#{type.to_s.tableize.gsub('/','_')}, :through => :page_elements, :source => :embeddable, :source_type => '#{type.to_s}'"
-  #   end
-  # end
-
-  @@element_types.each do |klass|
-    unless defined? klass.dont_make_associations
-      eval %!has_many :#{klass[/::(\w+)$/, 1].underscore.pluralize}, :class_name => '#{klass}',
-      :finder_sql => proc { "SELECT #{klass.constantize.table_name}.* FROM #{klass.constantize.table_name}
-      INNER JOIN page_elements ON #{klass.constantize.table_name}.id = page_elements.embeddable_id AND page_elements.embeddable_type = '#{klass}'
-      WHERE page_elements.page_id = \#\{id\}" }!
-    end
-  end
-
+  include HasEmbeddables
   include ResponseTypes
 
   include Publishable
@@ -68,17 +53,6 @@ class Page < ActiveRecord::Base
 
     def cloneable_associations
       @@cloneable_associations
-    end
-
-    # returns an array of class names transmogrified into the form
-    # we use for dom-ids
-    def paste_acceptable_types
-      element_types.map {|t| t.name.underscore.clipboardify}
-    end
-
-    # Returns the embeddables list as constants (classes) rather than strings
-    def element_types
-      @@element_types.map { |e| e.constantize }
     end
 
 
@@ -176,26 +150,6 @@ class Page < ActiveRecord::Base
     # careful refactoring... Not sure all the places
     # in the code where we expect embeddables to be returned.
     return page_elements.map { |e| e.embeddable }
-  end
-
-
-  #
-  # Duplicate: try and create a deep clone of this page and its page_elements....
-  # Esoteric question for the future: Would we ever want to clone the elements shallow?
-  # maybe, but it will confuse authors
-  #
-  def duplicate
-    @copy = self.deep_clone :no_duplicates => true, :never_clone => [:uuid, :updated_at,:created_at]
-    @copy.name = "" # allow for auto-numbering of pages
-    @copy.section = self.section
-    @copy.save
-    self.page_elements.each do |e|
-      ecopy = e.duplicate
-      ecopy.page = @copy
-      ecopy.save
-    end
-    @copy.save
-    @copy
   end
 
   # TODO: we have to make this container nuetral,

@@ -95,7 +95,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.expose_current_running_example_as :example
 
-  config.include Sprockets::Helpers::RailsHelper
+  config.include Sprockets::Rails::Helper
   config.include Devise::TestHelpers, :type => :controller
   config.include VerifyAndResetHelpers
   config.include FeatureHelper
@@ -103,9 +103,11 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 end
 
-if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.present?
+begin
+  ActiveRecord::Migration.check_pending!
+rescue => exception
   puts
-  puts "*** pending migrations need to be applied to run the tests"  
+  puts "*** pending migrations need to be applied to run the tests"
   puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare"
   puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts "Rails.env: #{Rails.env}"

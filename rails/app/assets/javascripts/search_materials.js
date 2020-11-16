@@ -5,13 +5,6 @@ jQuery(function () {
         if (!jQuery(this).attr('name')) return;
         submitForm();
     });
-
-    // hide the search suggestions on any click other than in the search box input
-    jQuery('body').on('click', function (e) {
-        if (e.target.name !== 'search_term') {
-            jQuery('#search_suggestions').hide();
-        }
-    })
 });
 
 function setAllSensorsSelected(allChecked) {
@@ -28,119 +21,14 @@ function setAllSensorsSelected(allChecked) {
     }
 }
 
-var suggestioncount = -1;
 var ajaxRequest;
 var goButttondisabled = false;
 var animating = false;
 var ajaxRequestCounter = 0;
 
-function select_suggestion(search_box) {
-    var strSuggestiontext;
-    try{
-        strSuggestiontext = fulltrim(search_box.textContent);
-    }
-    catch(e){
-        strSuggestiontext = fulltrim(search_box.innerText);
-    }
-    $('search_term').value = strSuggestiontext;
-    $('suggestions').remove();
-    //$('show_suggestion').writeAttribute('name','no_suggestion');
-    suggestioncount = -1;
-}
-
 function highlightlabel(e) {
     $$('.highlightoption')[0].removeClassName('highlightoption');
     e.addClassName('highlightoption');
-}
-
-function searchsuggestions(e, oElement,bSubmit_form) {
-    var enter_key_code = 13;
-    var downArrow_key_code = 40;
-    var upArrow_key_code = 38;
-    var escape_key_code = 27;
-    var params = $('material_search_form').serialize(true) || {};
-    if (bSubmit_form === undefined) bSubmit_form = false;
-    if(e.keyCode == enter_key_code || e.keyCode == downArrow_key_code || e.keyCode == upArrow_key_code || e.keyCode == escape_key_code) {
-        return false;
-    }
-    ajaxRequestCounter ++;
-    params.ajaxRequestCounter = ajaxRequestCounter;
-    params.submit_form =  bSubmit_form;
-    ajaxRequest = new Ajax.Request('/search/get_search_suggestions', {
-        parameters: params,
-        method : 'get'
-    });
-}
-
-function addSuggestionClickHandlers() {
-    $$('.suggestion').each( function(elem) {
-        // remove the old handlers...
-        elem.stopObserving('click');
-        elem.observe('click', function(evt) {
-            select_suggestion(elem);
-            submitForm();
-        });
-    });
-}
-function showsuggestion(event, oelem) {
-    var enter_key_code = 13;
-    var downArrow_key_code = 40;
-    var upArrow_key_code = 38;
-    var escape_key_code = 27;
-
-    if(event.keyCode == escape_key_code){
-        //
-        $('search_suggestions').hide();
-        if(event.stop){
-            event.stop();
-        }
-        else{
-            event.returnValue = false;
-        }
-
-        return;
-    }
-    var osuggestions = $$('.suggestion');
-    var ohoverelements = $$('.suggestionhover');
-    $('search_suggestions').show();
-    if(osuggestions.length === 0) {
-        if(event.keyCode == enter_key_code) {
-            submitForm();
-        }
-        return;
-    }
-    if(ohoverelements.length > 0) {
-        ohoverelements[0].removeClassName('suggestionhover');
-    }
-    switch (event.keyCode) {
-        case downArrow_key_code:
-            suggestioncount++;
-            if(suggestioncount >= osuggestions.length) {
-                suggestioncount = 0;
-            }
-            osuggestions[suggestioncount].addClassName('suggestionhover');
-            break;
-
-        case upArrow_key_code:
-            suggestioncount--;
-            if(suggestioncount <= -1) {
-                suggestioncount = osuggestions.length - 1;
-            }
-            osuggestions[suggestioncount].addClassName('suggestionhover');
-            break;
-
-        case enter_key_code:
-            if(suggestioncount != -1) {
-                select_suggestion(osuggestions[suggestioncount]);
-                suggestioncount = -1;
-            }
-
-            submitForm();
-            break;
-
-        default:
-            suggestioncount = -1;
-    }
 }
 
 function showHideFilters(linkElement, animationDuration) {
@@ -179,8 +67,6 @@ var filtersWrapperToggle = function(targetElement, animationDuration, afterFinis
 
 function submitForm() {
     jQuery('#material_search_form').submit();
-    // hide the search suggestions
-    jQuery('#search_suggestions').hide();
 }
 
 function fulltrim(inputText){
@@ -195,35 +81,6 @@ function close_popup()
     list_lightbox = null;
 }
 
-
-
-function get_Assign_To_Class_Popup(assignPopupConfig)
-{
-    // console.log("[DEBUG] get_Assign_To_Class_Popup skip_reload", skip_reload);
-    lightbox_material_text = assignPopupConfig.lightbox_material_text || "Materials";
-    var lightboxConfig = {
-        content:"<div style='padding:10px'>Loading...Please Wait.</div>",
-        id:"assign-and-share",
-        title:""
-    };
-    var searchPath = assignPopupConfig.anonymous ? 'get_current_material_anonymous' : 'get_current_material_unassigned_clazzes';
-    var target_url = "/search/" + searchPath + "?skip_reload=" + (assignPopupConfig.skip_reload || false);
-    var options = {
-        method: 'post',
-        parameters: {'material_type': assignPopupConfig.material_type, 'material_id': assignPopupConfig.material_id},
-        onSuccess: function(transport) {
-            list_lightbox=new Lightbox(lightboxConfig);
-            var text = transport.responseText;
-            text = "<div id='oErrMsgDiv' style='color:Red;font-weight:bold'></div>"+ text;
-            list_lightbox.handle.setContent("<div id='windowcontent' style='overflow: hidden;'>" + text + "</div>");
-            var contentheight=$('windowcontent').getHeight()/2;
-            var contentoffset=75;
-            list_lightbox.handle.setSize(760,contentheight+contentoffset+20);
-            list_lightbox.handle.center();
-        }
-    };
-    new Ajax.Request(target_url, options);
-}
 
 var g_saveAssignToClassInProgress = false;
 
@@ -250,21 +107,6 @@ function setSaveAssignToClassInProgress(value)
 {
     g_saveAssignToClassInProgress = !!value;
     return;
-}
-
-function submit_suggestion(search_box) {
-    var strSuggestiontext;
-    try{
-        strSuggestiontext = fulltrim(search_box.textContent);
-    }
-    catch(e){
-        strSuggestiontext = fulltrim(search_box.innerText);
-    }
-    $('search_term').value = strSuggestiontext;
-    $('suggestions').remove();
-    //$('show_suggestion').writeAttribute('name','no_suggestion');
-    suggestioncount = -1;
-    $('go-button').click();
 }
 
 document.observe("dom:loaded", function() {

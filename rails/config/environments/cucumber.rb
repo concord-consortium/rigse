@@ -7,6 +7,8 @@ RailsPortal::Application.configure do
   # For more information see https://rspec.lighthouseapp.com/projects/16211/tickets/165
   config.cache_classes = true
 
+  config.eager_load = true  # normally false unless you use a tool that preloads your test environment
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 

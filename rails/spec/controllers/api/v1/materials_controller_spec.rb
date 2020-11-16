@@ -65,112 +65,196 @@ describe API::V1::MaterialsController do
 
 
   describe 'other actions' do
-    before(:each) do
-      sign_in user
-      @m1 = FactoryBot.create(:external_activity, user: user)
-      @m2 = FactoryBot.create(:external_activity, user: user)
-      @m3 = FactoryBot.create(:external_activity, user: user)
-      # Materials defined below should NOT be listed:
-      e1 = FactoryBot.create(:external_activity)
-      e2 = FactoryBot.create(:external_activity)
-      FactoryBot.create(:activity, user: user, external_activities: [e1]) # template
-      FactoryBot.create(:investigation, user: user, external_activities: [e2]) # template
-    end
-    
+    describe 'when logged in' do
+      before(:each) do
+        sign_in user
+        @m1 = FactoryBot.create(:external_activity, user: user)
+        @m2 = FactoryBot.create(:external_activity, user: user)
+        @m3 = FactoryBot.create(:external_activity, user: user)
+        # Materials defined below should NOT be listed:
+        e1 = FactoryBot.create(:external_activity)
+        e2 = FactoryBot.create(:external_activity)
+        FactoryBot.create(:activity, user: user, external_activities: [e1]) # template
+        FactoryBot.create(:investigation, user: user, external_activities: [e2]) # template
+      end
 
-    # TODO: auto-generated
-    describe '#all' do
-      it 'GET all' do
-        get :all
+      # TODO: auto-generated
+      describe '#all' do
+        it 'GET all' do
+          get :all
 
-        expect(response).to have_http_status(:ok)
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#remove_favorite' do
+        it 'GET remove_favorite' do
+          get :remove_favorite, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#add_favorite' do
+        it 'GET add_favorite' do
+          get :add_favorite, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#get_favorites' do
+        it 'GET get_favorites' do
+          get :get_favorites, {}, {}
+
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#show' do
+        it 'GET show' do
+          get :show, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#assign_to_class' do
+        it 'GET assign_to_class' do
+          admin = FactoryBot.generate :admin_user
+          sign_in admin
+          get :assign_to_class,
+              class_id: FactoryBot.create(:portal_clazz).to_param,
+              assign: '1',
+              material_type: 'ExternalActivity',
+              material_id: @m1.id
+
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#get_materials_standards' do
+        it 'GET get_materials_standards' do
+          get :get_materials_standards, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#add_materials_standard' do
+        it 'GET add_materials_standard' do
+          get :add_materials_standard, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#remove_materials_standard' do
+        it 'GET remove_materials_standard' do
+          get :remove_materials_standard, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      # TODO: auto-generated
+      describe '#get_standard_statements' do
+        xit 'GET get_standard_statements' do
+          get :get_standard_statements, {}, {}
+
+          expect(response).to have_http_status(:bad_request)
+        end
       end
     end
 
-    # TODO: auto-generated
-    describe '#remove_favorite' do
-      it 'GET remove_favorite' do
-        get :remove_favorite, {}, {}
+    describe 'when logged out' do
+      # TODO: auto-generated
+      describe '#all' do
+        it 'GET all' do
+          get :all
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:ok)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#add_favorite' do
-      it 'GET add_favorite' do
-        get :add_favorite, {}, {}
+      # TODO: auto-generated
+      describe '#remove_favorite' do
+        it 'GET remove_favorite' do
+          get :remove_favorite, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#get_favorites' do
-      it 'GET get_favorites' do
-        get :get_favorites, {}, {}
+      # TODO: auto-generated
+      describe '#add_favorite' do
+        it 'GET add_favorite' do
+          get :add_favorite, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#show' do
-      it 'GET show' do
-        get :show, {}, {}
+      # TODO: auto-generated
+      describe '#get_favorites' do
+        it 'GET get_favorites' do
+          get :get_favorites, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#assign_to_class' do
-      it 'GET assign_to_class' do
-        admin = FactoryBot.generate :admin_user
-        sign_in admin
-        get :assign_to_class,
-            class_id: FactoryBot.create(:portal_clazz).to_param,
-            assign: '1',
-            material_type: 'ExternalActivity',
-            material_id: @m1.id
+      # TODO: auto-generated
+      describe '#show' do
+        it 'GET show' do
+          get :show, {}, {}
 
-        expect(response).to have_http_status(:ok)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#get_materials_standards' do
-      it 'GET get_materials_standards' do
-        get :get_materials_standards, {}, {}
+      # TODO: auto-generated
+      describe '#get_materials_standards' do
+        it 'GET get_materials_standards' do
+          get :get_materials_standards, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#add_materials_standard' do
-      it 'GET add_materials_standard' do
-        get :add_materials_standard, {}, {}
+      # TODO: auto-generated
+      describe '#add_materials_standard' do
+        it 'GET add_materials_standard' do
+          get :add_materials_standard, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#remove_materials_standard' do
-      it 'GET remove_materials_standard' do
-        get :remove_materials_standard, {}, {}
+      # TODO: auto-generated
+      describe '#remove_materials_standard' do
+        it 'GET remove_materials_standard' do
+          get :remove_materials_standard, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
-    end
 
-    # TODO: auto-generated
-    describe '#get_standard_statements' do
-      xit 'GET get_standard_statements' do
-        get :get_standard_statements, {}, {}
+      # TODO: auto-generated
+      describe '#get_standard_statements' do
+        xit 'GET get_standard_statements' do
+          get :get_standard_statements, {}, {}
 
-        expect(response).to have_http_status(:bad_request)
+          expect(response).to have_http_status(:bad_request)
+        end
       end
     end
   end

@@ -8,7 +8,7 @@
   <tr>
     <td><%= link_to 'Show', portal_student %></td>
     <td><%= link_to 'Edit', edit_portal_student_path(portal_student) %></td>
-    <td><%= link_to 'Destroy', portal_student, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Destroy', portal_student, data: {:confirm => 'Are you sure?'}, :method => :delete %></td>
   </tr>
 <% end %>
 </table>

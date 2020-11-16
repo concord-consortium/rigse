@@ -6,15 +6,6 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
   SCORE_TYPES = [SCORE_AUTO, SCORE_MANUAL, SCORE_RUBRIC, SCORE_NONE]
 
   self.table_name = :portal_offering_activity_feedbacks
-  attr_accessible :enable_text_feedback,
-    :max_score,
-    :score_type,
-    :portal_offering,
-    :portal_offering_id,
-    :activity,
-    :activity_id,
-    :use_rubric,
-    :rubric
 
   serialize :rubric, JSON
 

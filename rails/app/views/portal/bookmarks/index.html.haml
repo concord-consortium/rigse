@@ -2,7 +2,7 @@
   .container.bookmarks-page
     .right
       = render :partial => 'portal/clazzes/clazz_information', :locals => {:portal_clazz => @portal_clazz}
-    .header
+    %h3
       Links
     - unless bookmarks_enabled
       Bookmarks support is disabled for this project.

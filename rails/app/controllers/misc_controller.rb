@@ -17,9 +17,9 @@ class MiscController < ActionController::Base
         :bundle_content => learner.bundle_logger.in_progress_bundle
       )
     end
-    asset = ActionController::Base.helpers.asset_paths.asset_for("cc_corner_logo.png", nil)
+    asset_pathname = get_full_path_to_asset("cc_corner_logo.png")
     NoCache.add_headers(response.headers)
-    send_file(asset.pathname.to_s, {:type => 'image/png', :disposition => 'inline'} )
+    send_file(asset_pathname, {:type => 'image/png', :disposition => 'inline'} )
   end
 
 
@@ -137,8 +137,14 @@ class MiscController < ActionController::Base
     redirect_to "/users/auth/#{provider}"
   end
 
-  def get_banner_asset(name)
-    ActionController::Base.helpers.asset_paths.asset_for("new/banners/#{name}.png", nil)
+  # from https://stackoverflow.com/a/61552216
+  def get_full_path_to_asset(filename)
+    manifest_file = Rails.application.assets_manifest.assets[filename]
+    if manifest_file
+      File.join(Rails.application.assets_manifest.directory, manifest_file)
+    else
+      Rails.application.assets&.[](filename)&.filename
+    end
   end
 
 end

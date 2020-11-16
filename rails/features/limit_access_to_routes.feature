@@ -23,10 +23,6 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /dataservice/bundle_contents  |
-      | /dataservice/bundle_loggers   |
-      | /dataservice/console_contents |
-      | /dataservice/console_loggers  |
       | /dataservice/blobs            |
 
   Scenario Outline: Admin user can accesss dataservice routes
@@ -39,10 +35,6 @@ In NO case should the system allow:
 
     Examples:
       | route                         |
-      | /dataservice/bundle_contents  |
-      | /dataservice/bundle_loggers   |
-      | /dataservice/console_loggers  |
-      | /dataservice/console_contents |
       | /dataservice/blobs            |
 
   Scenario Outline: Anonymous user can't access portal listing routes:
@@ -59,14 +51,9 @@ In NO case should the system allow:
       | /portal/student_clazzes       |
       | /portal/students              |
       | /portal/subjects              |
-      | /portal/teachers              |
       | /portal/districts             |
-      | /portal/grades                |
-      | /portal/learners              |
-      | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
-      | /portal/teachers              |
 
   Scenario Outline: Admin user can accesss portal listing routes
     Given the following users exist:
@@ -85,11 +72,7 @@ In NO case should the system allow:
       | /portal/student_clazzes       |
       | /portal/students              |
       | /portal/subjects              |
-      | /portal/teachers              |
       | /portal/districts             |
-      | /portal/grades                |
-      | /portal/learners              |
-      | /portal/grade_levels          |
       | /portal/nces06_districts      |
       | /portal/nces06_schools        |
 

@@ -8,10 +8,4 @@ class Portal::StudentClazz < ActiveRecord::Base
 
   [:name, :description].each { |m| delegate m, :to => :clazz }
 
-  # def before_validation
-  #   # Portal::StudentClazz.count(:conditions => "`clazz_id` = '#{self.clazz_id}' AND `student_id` = '#{self.student_id}'") == 0
-  #   sc = Portal::StudentClazz.find(:first, :conditions => "`clazz_id` = '#{self.clazz_id}' AND `student_id` = '#{self.student_id}'")
-  #   self.id = sc.id
-  # end
-
 end

@@ -64,13 +64,13 @@ class ImagesController < ApplicationController
   def create
     authorize Image
     params[:image][:user_id] = current_visitor.id.to_s
-    @image = Image.new(params[:image])
+    @image = Image.new(image_strong_params(params[:image]))
 
     if @image.save
-      flash[:notice] = 'Image was successfully created.'
+      flash['notice'] = 'Image was successfully created.'
       redirect_to @image
     else
-      flash[:error] = 'There was a problem with your submission. Check what you entered and try again.'
+      flash['error'] = 'There was a problem with your submission. Check what you entered and try again.'
       render action: 'new'
     end
   end
@@ -79,10 +79,10 @@ class ImagesController < ApplicationController
   def update
     authorize @image
     if update_image_attributes
-      flash[:notice] = 'Image was successfully updated.'
+      flash['notice'] = 'Image was successfully updated.'
       redirect_to @image
     else
-      flash[:error] = 'There was a problem with your submission. Check what you entered and try again.'
+      flash['error'] = 'There was a problem with your submission. Check what you entered and try again.'
       render action: 'edit'
     end
   end
@@ -116,7 +116,7 @@ class ImagesController < ApplicationController
     img_params = {:image => image}
     # we're updating the image separately, to avoid having
     # stale attributions being attached to the image
-    if @image.update_attributes(my_params)
+    if @image.update_attributes(image_strong_params(my_params))
       if @image.reload
         if image
           return @image.update_attributes(img_params)
@@ -130,5 +130,10 @@ class ImagesController < ApplicationController
 
   def find_image
     @image = Image.find(params[:id])
+  end
+
+  def image_strong_params(params)
+    params && params.permit(:attribution, :height, :image_content_type, :image_file_name, :image_file_size, :image_updated_at,
+                            :license_code, :name, :publication_status, :user_id, :width)
   end
 end

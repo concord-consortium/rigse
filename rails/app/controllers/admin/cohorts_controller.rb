@@ -2,7 +2,10 @@ class Admin::CohortsController < ApplicationController
   include RestrictedController
 
   before_filter :check_for_project
-  before_filter :get_scoped_projects, only: ['new', 'edit']
+
+  # Note that we have to assign @projects even for create and update
+  # because they might render the edit or new templates (on validation error)
+  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_cohort, only: ['show', 'edit', 'update', 'destroy']
 
   private
@@ -63,7 +66,7 @@ class Admin::CohortsController < ApplicationController
 
   # POST /admin_cohorts
   def create
-    @admin_cohort = Admin::Cohort.new(params[:admin_cohort])
+    @admin_cohort = Admin::Cohort.new(admin_cohort_strong_params(params[:admin_cohort]))
     authorize @admin_cohort
     if @admin_cohort.save
       redirect_to @admin_cohort, notice: 'Admin::Cohort was successfully created.'
@@ -75,7 +78,7 @@ class Admin::CohortsController < ApplicationController
   # PUT /admin_cohorts/1
   def update
     authorize @admin_cohort
-    if @admin_cohort.update_attributes(params[:admin_cohort])
+    if @admin_cohort.update_attributes(admin_cohort_strong_params(params[:admin_cohort]))
       redirect_to @admin_cohort, notice: 'Admin::Cohort was successfully updated.'
     else
       render action: 'edit'
@@ -84,7 +87,13 @@ class Admin::CohortsController < ApplicationController
 
   # DELETE /admin_cohorts/1
   def destroy
+    authorize @admin_cohort
     @admin_cohort.destroy
-    redirect_to admin_cohorts_url, notice: "Cohort #{@admin_cohort.name} was deleted"
+    flash['notice'] = "Cohort #{@admin_cohort.name} was deleted"
+    redirect_back_or admin_cohorts_url
+  end
+
+  def admin_cohort_strong_params(params)
+    params && params.permit(:email_notifications_enabled, :items, :name, :project, :project_id)
   end
 end

@@ -28,6 +28,7 @@ class NationalDistrictImporter
     Rails.logger.info "found    : #{nces_districts.size} national districts to import"
     Rails.logger.info "rejecting: #{existing_district_ids.size} pre-imported districts"
 
+    nces_districts = nces_districts.to_a
     nces_districts.reject! { |d| existing_district_ids.include? d.id }
 
     Rails.logger.info "leaves   : #{nces_districts.size} remaining districts to import"
