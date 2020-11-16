@@ -49,6 +49,10 @@
       = f.text_field :launch_url, :size => 60
       %br
       = t('authoring.launch_url_description')
+    = field_set_tag 'Authoring URL' do
+      = f.text_field :author_url, :size => 60
+      %br
+      = t('authoring.author_url_description')
 
     = render :partial => 'shared/reports_edit', :locals => { :object => @external_activity }
     = field_set_tag 'Teacher Resources (URL)' do
