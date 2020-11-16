@@ -7,14 +7,14 @@
 #   – Or run from shell in docker (`docker-compose run --rm bash` … ./docker/dev/run-ci.sh`)
 
 #
-# Prepare spec tests
+# Prepare the test database by checking if there are migrations not
+# run on the development database,
+# then droping the existing test database
+# and loading the schema.rb into the test database
 #
-export RAILS_ENV=test
-bundle exec rake db:migrate
-bundle exec rake db:create
 bundle exec rake db:test:prepare
 
 #
 # Run spec tests
 #
-bundle exec guard
+RAILS_ENV=test bundle exec guard
