@@ -32,7 +32,7 @@ class API::V1::ExternalActivitiesController < API::APIController
       :append_auth_token      => params[:append_auth_token] || false,
       :author_url             => params[:author_url],
       :print_url              => params[:print_url],
-      :tool                   => ActivityRuntimeAPI.create_tool(params[:source_type] || "LARA", params[:tool_id]),
+      :tool                   => ActivityRuntimeAPI.create_tool(params[:source_type] || "LARA"),
       :thumbnail_url          => params[:thumbnail_url],
       :author_email           => params[:author_email],
       :is_locked              => params[:is_locked],
