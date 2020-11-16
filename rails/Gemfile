@@ -8,6 +8,8 @@ source 'https://gems.railslts.com' do
   gem 'rails', '4.2.11.17'
   gem 'actionmailer',     :require => false
   gem 'actionpack',       :require => false
+  gem 'actionview',       :require => false
+  gem 'activejob',        :require => false
   gem 'activemodel',      :require => false
   gem 'activerecord',     :require => false
   gem 'activesupport',    :require => false
