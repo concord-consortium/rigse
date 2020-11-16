@@ -21,7 +21,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       @teacher2_name = "#{teacher2_user.first_name} #{teacher2_user.last_name}"
       @student_name = "#{student_user.first_name} #{student_user.last_name}"
       @cohort_a_name = "#{project_a.name}: #{cohort_a.name}"
-      login_with_ui_as('admin', 'password')
+      login_as('admin')
       visit users_path
     end
 
