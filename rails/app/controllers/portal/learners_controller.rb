@@ -214,7 +214,7 @@ class Portal::LearnersController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Learner
-    @portal_learner = Portal::Learner.new(params[:learner])
+    @portal_learner = Portal::Learner.new(portal_learner_strong_params(params[:learner]))
 
     respond_to do |format|
       if @portal_learner.save
@@ -237,7 +237,7 @@ class Portal::LearnersController < ApplicationController
     @portal_learner = Portal::Learner.find(params[:id])
 
     respond_to do |format|
-      if @portal_learner.update_attributes(params[:learner])
+      if @portal_learner.update_attributes(portal_learner_strong_params(params[:learner]))
         flash['notice'] = 'Portal::Learner was successfully updated.'
         format.html { redirect_to(@portal_learner) }
         format.xml  { head :ok }
@@ -261,5 +261,9 @@ class Portal::LearnersController < ApplicationController
       format.html { redirect_to(portal_learners_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_learner_strong_params(params)
+    params && params.permit(:bundle_logger_id, :console_logger_id, :offering_id, :secure_key, :student_id)
   end
 end

@@ -19,5 +19,4 @@ class Dataservice::PeriodicBundleLoggersMetalController < ActionController::Meta
       self.response_body = 'Not Found'
     end
   end
-
 end

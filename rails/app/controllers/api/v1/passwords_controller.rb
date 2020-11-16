@@ -11,14 +11,14 @@ class API::V1::PasswordsController < API::APIController
         # Try to find user by login
         #
         user = User.find_by_login(login_or_email)
-    
+
         if user.nil?
             #
             # Try to find user by email
             #
             user = User.find_by_email(login_or_email)
         end
-      
+
         #
         # Could not find user by login or email?
         #
@@ -29,7 +29,7 @@ class API::V1::PasswordsController < API::APIController
                                             :message => message }
             return
         end
-    
+
         #
         # Check if user is an SSO user.
         #
@@ -43,7 +43,7 @@ class API::V1::PasswordsController < API::APIController
                                             :message => message }
             return
         end
-   
+
         #
         # Check if this is a student account
         #
@@ -58,12 +58,12 @@ class API::V1::PasswordsController < API::APIController
         @password = Password.new(:user => user, :email => user.email)
         if @password.save
             PasswordMailer.forgot_password(@password).deliver
-            message =   
+            message =
                 "We've sent you an email containing your username and a link for changing your password if you've forgotten it."
             render status: 200, :json => { :message => message }
             return
         else
-            message =   
+            message =
                 "This account has not set a valid email address. " <<
                 "Please contact your school manager to access your account."
             reason  = "email_invalid"
@@ -71,7 +71,6 @@ class API::V1::PasswordsController < API::APIController
                                             :message => message }
             return
         end
-    
-    end
 
+    end
 end

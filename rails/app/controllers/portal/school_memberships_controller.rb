@@ -1,10 +1,10 @@
 class Portal::SchoolMembershipsController < ApplicationController
-  
+
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
   before_filter :admin_only
   public
-  
+
   # GET /portal_school_memberships
   # GET /portal_school_memberships.xml
   def index
@@ -64,7 +64,7 @@ class Portal::SchoolMembershipsController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::SchoolMembership
-    @school_membership = Portal::SchoolMembership.new(params[:school_membership])
+    @school_membership = Portal::SchoolMembership.new(portal_school_membership_strong_params(params[:school_membership]))
 
     respond_to do |format|
       if @school_membership.save
@@ -87,7 +87,7 @@ class Portal::SchoolMembershipsController < ApplicationController
     # authorize @school_membership
 
     respond_to do |format|
-      if @school_membership.update_attributes(params[:portal_school_membership])
+      if @school_membership.update_attributes(portal_school_membership_strong_params(params[:portal_school_membership]))
         flash['notice'] = 'Portal::SchoolMembership was successfully updated.'
         format.html { redirect_to(@school_membership) }
         format.xml  { head :ok }
@@ -111,5 +111,9 @@ class Portal::SchoolMembershipsController < ApplicationController
       format.html { redirect_to(portal_school_memberships_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_school_membership_strong_params(params)
+    params && params.permit(:description, :end_time, :member_id, :member_type, :name, :school_id, :start_time)
   end
 end

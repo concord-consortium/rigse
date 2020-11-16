@@ -9,7 +9,7 @@ class PasswordsController < ApplicationController
 
   def create_by_email
 
-    @password = Password.new(params[:password])
+    @password = Password.new(password_strong_params(params[:password]))
     @password.user = User.find_by_email(@password.email)
 
     if @password.user && @password.user.is_oauth_user?
@@ -141,7 +141,7 @@ class PasswordsController < ApplicationController
 
   def update
     @password = Password.find(params[:id])
-    if @password.update_attributes(params[:password])
+    if @password.update_attributes(password_strong_params(params[:password]))
       flash['notice'] = 'Password was successfully updated.'
       redirect_back_or activities_url
     else
@@ -162,4 +162,9 @@ class PasswordsController < ApplicationController
     end
   end
 
+  def password_strong_params(params)
+    # Changed to test for tighter parameter check - the commented out line is the old attr_accessible items
+    # params && params.permit(:email, :user, :user_id)
+    params && params.permit(:email)
+  end
 end

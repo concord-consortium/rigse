@@ -2,7 +2,7 @@ require 'digest/sha1'
 
 class Password < ActiveRecord::Base
   attr_accessor :email
-  attr_accessible :email, :user, :user_id
+
   belongs_to :user
 
   # Validations

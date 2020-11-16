@@ -10,8 +10,7 @@ def addToken(user, client, expires_at)
   grant = user.access_grants.create({
       :client => client,
       :state => nil,
-      :access_token_expires_at => expires_at },
-    :without_protection => true
+      :access_token_expires_at => expires_at }
   )
   grant.access_token
 end
@@ -21,8 +20,7 @@ def addTokenForLearner(user, client, learner, expires_at)
       :client => client,
       :state => nil,
       :learner => learner,
-      :access_token_expires_at => expires_at },
-    :without_protection => true
+      :access_token_expires_at => expires_at }
   )
   grant.access_token
 end
@@ -32,8 +30,7 @@ def addTokenForTeacher(user, client, teacher, expires_at)
       :client => client,
       :state => nil,
       :teacher => teacher,
-      :access_token_expires_at => expires_at },
-    :without_protection => true
+      :access_token_expires_at => expires_at }
   )
   grant.access_token
 end

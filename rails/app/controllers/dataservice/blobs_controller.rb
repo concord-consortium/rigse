@@ -46,7 +46,7 @@ class Dataservice::BlobsController < ApplicationController
 
 # TODO: NP 2020-09-15 — See if we can remove this action
   def create
-    @dataservice_blob = Dataservice::Blob.new(params[:blob])
+    @dataservice_blob = Dataservice::Blob.new(dataservice_blob_strong_params(params[:blob]))
     authorize @dataservice_blob
 
     respond_to do |format|
@@ -67,7 +67,7 @@ class Dataservice::BlobsController < ApplicationController
     authorize @dataservice_blob
 
     respond_to do |format|
-      if @dataservice_blob.update_attributes(params[:blob])
+      if @dataservice_blob.update_attributes(dataservice_blob_strong_params(params[:blob]))
         flash['notice'] = 'Dataservice::Blob was successfully updated.'
         format.html { head :ok }
         format.xml  { head :ok }
@@ -88,5 +88,9 @@ class Dataservice::BlobsController < ApplicationController
     else
       render :html => "<error>Forbidden</error>", :status => :forbidden  # Forbidden
     end
+  end
+
+  def dataservice_blob_strong_params(params)
+    params && params.permit(:bundle_content_id, :checksum, :content, :file_extension, :learner_id, :mimetype, :periodic_bundle_content_id, :token)
   end
 end

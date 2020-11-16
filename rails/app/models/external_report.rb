@@ -10,10 +10,6 @@ class ExternalReport < ActiveRecord::Base
   has_many :external_activity_reports
   has_many :external_activities, through: :external_activity_reports
 
-  attr_accessible :name, :url, :launch_text, :client_id, :client, :report_type, :allowed_for_students,
-    :default_report_for_source_type, :individual_student_reportable, :individual_activity_reportable,
-    :move_students_api_url, :move_students_api_token
-
   ReportTokenValidFor = 2.hours
 
   def options_for_client

@@ -40,7 +40,7 @@ class Admin::ToolsController < ApplicationController
   # POST /tools
   def create
     authorize Tool
-    @tool = Tool.new(params[:tool])
+    @tool = Tool.new(tool_strong_params(params[:tool]))
 
     respond_to do |format|
       if @tool.save
@@ -59,7 +59,7 @@ class Admin::ToolsController < ApplicationController
     authorize @tool
 
     respond_to do |format|
-      if @tool.update_attributes(params[:tool])
+      if @tool.update_attributes(tool_strong_params(params[:tool]))
         format.html { redirect_to admin_tools_path, notice: 'Tool was successfully updated.' }
         format.json { head :no_content }
       else
@@ -78,5 +78,9 @@ class Admin::ToolsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(admin_tools_url) }
     end
+  end
+
+  def tool_strong_params(params)
+    params && params.permit(:name, :source_type, :tool_id)
   end
 end

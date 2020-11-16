@@ -62,7 +62,7 @@ class Portal::StudentClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::StudentClazz
-    @portal_student_clazz = Portal::StudentClazz.new(params[:portal_student_clazz])
+    @portal_student_clazz = Portal::StudentClazz.new(portal_student_clazz_strong_params(params[:portal_student_clazz]))
 
     respond_to do |format|
       if @portal_student_clazz.save
@@ -85,7 +85,7 @@ class Portal::StudentClazzesController < ApplicationController
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
 
     respond_to do |format|
-      if @portal_student_clazz.update_attributes(params[:portal_student_clazz])
+      if @portal_student_clazz.update_attributes(portal_student_clazz_strong_params(params[:portal_student_clazz]))
         flash['notice'] = 'Portal::StudentClazz was successfully updated.'
         format.html { redirect_to(@portal_student_clazz) }
         format.xml  { head :ok }
@@ -111,5 +111,9 @@ class Portal::StudentClazzesController < ApplicationController
       format.html { redirect_to(portal_student_clazzes_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_student_clazz_strong_params(params)
+    params && params.permit(:clazz_id, :description, :end_time, :name, :start_time, :student_id)
   end
 end

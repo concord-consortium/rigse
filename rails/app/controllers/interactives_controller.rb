@@ -61,7 +61,7 @@ class InteractivesController < ApplicationController
 
   def create
     authorize Interactive
-    @interactive = Interactive.new(interactive_params(params))
+    @interactive = Interactive.new(interactive_strong_params(params[:interactive]))
     @interactive.user = current_visitor
 
     if params[:update_material_properties]
@@ -131,37 +131,37 @@ class InteractivesController < ApplicationController
 
     if params[:update_material_properties]
       # set the material_properties tags
-      @interactive.material_property_list = (params[:material_properties] || [])
+      @interactive.material_property_list = (params[:material_properties] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @interactive.grade_level_list = (params[:grade_levels] || [])
+      @interactive.grade_level_list = (params[:grade_levels] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if params[:update_subject_areas]
       # set the subject_area tags
-      @interactive.subject_area_list = (params[:subject_areas] || [])
+      @interactive.subject_area_list = (params[:subject_areas] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if params[:update_model_types]
       # set the subject_area tags
-      @interactive.model_type_list = (params[:model_types] || [])
+      @interactive.model_type_list = (params[:model_types] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if request.xhr?
-      if cancel || @interactive.update_attributes(params[:interactive])
+      if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))
         render 'show', :locals => { :interactive => @interactive }
       else
         render :xml => @interactive.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @interactive.update_attributes(params[:interactive])
+        if @interactive.update_attributes(interactive_strong_params(params[:interactive]))
           flash['notice'] = 'Interactive was successfully updated.'
           format.html { redirect_to(@interactive) }
           format.xml  { head :ok }
@@ -240,10 +240,9 @@ class InteractivesController < ApplicationController
     send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "portal_interactives_library.json"
   end
 
-  def interactive_params(params)
-    params.require(:interactive).permit(:name, :description, :url, :width, :height, :scale, :image_url, :user_id, :credits,
-                                        :publication_status, :project_ids, :full_window, :no_snapshots, :save_interactive_state,
-                                        :external_activity_id,  :license_code)
+  def interactive_strong_params(params)
+    params && params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code,
+                            :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url,
+                            :user_id, :width)
   end
-
 end

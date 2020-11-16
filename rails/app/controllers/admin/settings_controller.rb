@@ -79,7 +79,7 @@ class Admin::SettingsController < ApplicationController
 
   # POST /admin/settings
   def create
-    @admin_settings = Admin::Settings.new(admin_settings_params(params[:admin_settings]))
+    @admin_settings = Admin::Settings.new(admin_settings_strong_params(params[:admin_settings]))
     if @admin_settings.save
       flash['notice'] = 'Admin::Settings was successfully created.'
       redirect_to @admin_settings
@@ -91,7 +91,7 @@ class Admin::SettingsController < ApplicationController
   # PUT /admin/settings/1
   def update
     @admin_settings = Admin::Settings.find(params[:id])
-    if @admin_settings.update_attributes(params[:admin_settings])
+    if @admin_settings.update_attributes(admin_settings_strong_params(params[:admin_settings]))
       flash['notice'] = 'Admin::Settings was successfully updated.'
       redirect_to @admin_settings
     else
@@ -107,12 +107,12 @@ class Admin::SettingsController < ApplicationController
     redirect_to admin_settings_url
   end
 
-  def admin_settings_params(params)
-    params.permit(:home_page_content, :use_student_security_questions, :allow_default_class, :enable_grade_levels, :use_bitmap_snapshots, :teachers_can_author, :enable_member_registration, :allow_adhoc_schools, :require_user_consent, :use_periodic_bundle_uploading,
-      :jnlp_cdn_hostname, :active, :external_url, :custom_help_page_html, :help_type,
-      :include_external_activities, :enabled_bookmark_types, :pub_interval, :anonymous_can_browse_materials, :jnlp_url, :show_collections_menu, :auto_set_teachers_as_authors,
-      :default_cohort_id, :wrap_home_page_content, :custom_search_path, :teacher_home_path,
-      :about_page_content, :uuid, :description, :user_id)
+  def admin_settings_strong_params(params)
+    params && params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials,
+                            :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description,
+                            :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type,
+                            :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval,
+                            :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots,
+                            :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :wrap_home_page_content)
   end
-
 end

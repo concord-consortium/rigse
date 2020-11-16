@@ -118,7 +118,7 @@ class Portal::ClazzesController < ApplicationController
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
 
-    @portal_clazz = Portal::Clazz.new(@object_params)
+    @portal_clazz = Portal::Clazz.new(portal_clazz_strong_params(@object_params))
 
     okToCreate = true
     if !school_id
@@ -233,7 +233,7 @@ class Portal::ClazzesController < ApplicationController
     }
 
     if request.xhr?
-      if @portal_clazz.update_attributes(object_params)
+      if @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
         update_teachers.call
       end
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
@@ -248,7 +248,7 @@ class Portal::ClazzesController < ApplicationController
           end
         end
 
-        if okToUpdate && @portal_clazz.update_attributes(object_params)
+        if okToUpdate && @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
           update_teachers.call
           flash['notice'] = 'Class was successfully updated.'
           format.html { redirect_to(url_for([:materials, @portal_clazz])) }
@@ -408,5 +408,9 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url
   end
 
+  def portal_clazz_strong_params(params)
+    params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
+                            :section, :semester_id, :start_time, :status, :teacher_id)
+  end
 
 end

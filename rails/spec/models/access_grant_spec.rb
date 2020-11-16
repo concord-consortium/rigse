@@ -8,7 +8,6 @@ describe AccessGrant do
     {
       :client_id => client.id,
       :state => 'what_is_this_for',
-      :without_protection => true,
       :user => user
     }
   end
@@ -17,7 +16,6 @@ describe AccessGrant do
     attributes = {
       :client_id => 'a',
       :state     => 'b',
-      :without_protection => true,
       :access_token_expires_at => 2.days.ago
     }
     3.times.map { |i| AccessGrant.create(attributes) }
@@ -27,7 +25,6 @@ describe AccessGrant do
     attributes = {
       :client_id => 'a',
       :state     => 'b',
-      :without_protection => true,
       :access_token_expires_at => 0.days.ago
     }
     2.times.map { |i| AccessGrant.create(attributes) }

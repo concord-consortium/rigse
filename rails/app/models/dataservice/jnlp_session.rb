@@ -1,5 +1,4 @@
 class Dataservice::JnlpSession < ActiveRecord::Base
-  attr_accessible :user, :access_count, :token, :user_id
 
   belongs_to :user
 

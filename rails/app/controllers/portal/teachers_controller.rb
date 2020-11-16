@@ -62,9 +62,7 @@ class Portal::TeachersController < ApplicationController
       @portal_grade = Portal::Grade.find(params[:grade][:id])
     end
 
-    puts "params[:user]: #{params[:user].inspect}"
-    @user = User.new(user_params(params[:user]))
-    puts "@user: #{@user.inspect}"
+    @user = User.new(user_strong_params(params[:user]))
     @school_selector = Portal::SchoolSelector.new(params)
 
     if (@user.valid?)
@@ -133,7 +131,7 @@ class Portal::TeachersController < ApplicationController
     render :action => :new
   end
 
-  def user_params(params)
-    params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  def user_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
   end
 end

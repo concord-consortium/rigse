@@ -290,12 +290,6 @@ class User < ActiveRecord::Base
   # default users are a class of users that can be enable
   default_value_for :default_user, false
 
-  # HACK HACK HACK -- how to do attr_accessible from here?
-  # prevents a user from submitting a crafted form that bypasses activation
-  # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :email_subscribed, :first_name, :last_name, :password, :password_confirmation, :sign_up_path, :remember_me,
-                  :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state, :require_password_reset, :can_add_teachers_to_cohorts
-
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u1 =  User.where('login = ? AND state = "active"',login).first

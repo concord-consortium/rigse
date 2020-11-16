@@ -30,7 +30,7 @@ class Admin::CommonsLicensesController < ApplicationController
 
   def create
     authorize CommonsLicense
-    @license = CommonsLicense.new(params[:commons_license])
+    @license = CommonsLicense.new(commons_license_strong_params(params[:commons_license]))
 
     if @license.save
       flash['notice']='License was successfully created.'
@@ -43,7 +43,7 @@ class Admin::CommonsLicensesController < ApplicationController
   def update
     authorize CommonsLicense
     @license = CommonsLicense.find(params[:code])
-    if @license.update_attributes(params[:commons_license])
+    if @license.update_attributes(commons_license_strong_params(params[:commons_license]))
       flash['notice']= 'License was successfully updated.'
       redirect_to action: :index
     else
@@ -59,4 +59,7 @@ class Admin::CommonsLicensesController < ApplicationController
     redirect_to action: :index
   end
 
+  def commons_license_strong_params(params)
+    params && params.permit(:code, :deed, :description, :image, :legal, :name, :number)
+  end
 end

@@ -1,8 +1,8 @@
 class Portal::SubjectsController < ApplicationController
-  
+
   include RestrictedPortalController
   public
-  
+
   # GET /portal_subjects
   # GET /portal_subjects.xml
   def index
@@ -62,7 +62,7 @@ class Portal::SubjectsController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Subject
-    @subject = Portal::Subject.new(params[:subject])
+    @subject = Portal::Subject.new(portal_subject_strong_params(params[:subject]))
 
     respond_to do |format|
       if @subject.save
@@ -85,7 +85,7 @@ class Portal::SubjectsController < ApplicationController
     # authorize @subject
 
     respond_to do |format|
-      if @subject.update_attributes(params[:subject])
+      if @subject.update_attributes(portal_subject_strong_params(params[:subject]))
         flash['notice'] = 'Portal::Subject was successfully updated.'
         format.html { redirect_to(@subject) }
         format.xml  { head :ok }
@@ -109,5 +109,9 @@ class Portal::SubjectsController < ApplicationController
       format.html { redirect_to(portal_subjects_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def portal_subject_strong_params(params)
+    params && params.permit(:description, :name, :teacher_id)
   end
 end

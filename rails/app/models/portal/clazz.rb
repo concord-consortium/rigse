@@ -1,8 +1,5 @@
 class Portal::Clazz < ActiveRecord::Base
   self.table_name = :portal_clazzes
-  attr_accessible :uuid, :name, :description, :start_time, :end_time,
-    :class_word, :status, :course_id, :semester_id, :teacher_id,
-    :section, :default_class, :logging, :class_hash
 
   acts_as_replicatable
 

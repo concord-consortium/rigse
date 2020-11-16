@@ -85,7 +85,7 @@ class ExternalActivitiesController < ApplicationController
   # POST /pages.xml
   def create
     authorize ExternalActivity
-    @external_activity = ExternalActivity.new(params[:external_activity])
+    @external_activity = ExternalActivity.new(external_activity_strong_params(params[:external_activity]))
     @external_activity.user = current_visitor
 
     if params[:update_material_properties]
@@ -170,7 +170,7 @@ class ExternalActivitiesController < ApplicationController
     end
 
     respond_to do |format|
-      if @external_activity.update_attributes(params[:external_activity])
+      if @external_activity.update_attributes(external_activity_strong_params(params[:external_activity]))
         flash['notice'] = 'ExternalActivity was successfully updated.'
         # redirect to browse path instead of show page since the show page is deprecated
         format.html { redirect_to(browse_external_activity_path(@external_activity)) }
@@ -322,7 +322,7 @@ class ExternalActivitiesController < ApplicationController
         @external_activity = ExternalActivity.find(params[:id])
       end
     elsif params[:external_activity]
-      @external_activity = ExternalActivity.new(params[:external_activity])
+      @external_activity = ExternalActivity.new(external_activity_strong_params(params[:external_activity]))
     else
       @external_activity = ExternalActivity.new
     end
@@ -338,4 +338,14 @@ class ExternalActivitiesController < ApplicationController
     return_uri
   end
 
+  def external_activity_strong_params(params)
+    params && params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid,
+                            :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing,
+                            :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked,
+                            :is_official, :keywords, :launch_url, :license_code, :logging, :long_description,
+                            :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url,
+                            :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description,
+                            :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type,
+                            :thumbnail_url, :tool_id, :url, :user_id)
+  end
 end

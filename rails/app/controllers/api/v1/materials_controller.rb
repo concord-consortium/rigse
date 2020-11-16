@@ -843,5 +843,4 @@ class API::V1::MaterialsController < API::APIController
     end
 
   end
-
 end

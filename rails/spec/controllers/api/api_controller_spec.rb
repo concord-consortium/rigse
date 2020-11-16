@@ -61,8 +61,7 @@ RSpec.describe API::APIController, type: :controller do
     grant = user.access_grants.create({
         :client => client,
         :state => nil,
-        :access_token_expires_at => expires_at },
-      :without_protection => true
+        :access_token_expires_at => expires_at }
     )
     grant.access_token
   end
@@ -72,8 +71,7 @@ RSpec.describe API::APIController, type: :controller do
         :client => client,
         :state => nil,
         :learner => learner,
-        :access_token_expires_at => expires_at },
-      :without_protection => true
+        :access_token_expires_at => expires_at }
     )
     grant.access_token
   end
@@ -83,8 +81,7 @@ RSpec.describe API::APIController, type: :controller do
         :client => client,
         :state => nil,
         :teacher => teacher,
-        :access_token_expires_at => expires_at },
-      :without_protection => true
+        :access_token_expires_at => expires_at }
     )
     grant.access_token
   end
