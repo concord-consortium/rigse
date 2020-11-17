@@ -93,6 +93,11 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 -----END RSA PRIVATE KEY-----"
         } }
 
+  before(:each) {
+    # prevent warnings about undefined default settings
+    generate_default_settings_and_jnlps_with_mocks
+  }
+
   describe "GET #firebase" do
 
     context "when a valid authentication header token is sent without a learner or teacher" do
