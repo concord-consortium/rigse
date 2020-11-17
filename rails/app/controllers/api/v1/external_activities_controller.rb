@@ -25,11 +25,18 @@ class API::V1::ExternalActivitiesController < API::APIController
     end
 
     external_activity = ExternalActivity.create(
-      :name               => name,
-      :url                => url,
-      :publication_status => params[:publication_status] || "private",
-      :user               => user,
-      :append_auth_token  => params[:append_auth_token] || false
+      :name                   => name,
+      :url                    => url,
+      :publication_status     => params[:publication_status] || "private",
+      :user                   => user,
+      :append_auth_token      => params[:append_auth_token] || false,
+      :author_url             => params[:author_url],
+      :print_url              => params[:print_url],
+      :tool                   => ActivityRuntimeAPI.create_tool(params[:source_type] || "LARA"),
+      :thumbnail_url          => params[:thumbnail_url],
+      :author_email           => params[:author_email],
+      :is_locked              => params[:is_locked],
+      :student_report_enabled => params[:student_report_enabled]
     )
 
     if params[:external_report_url]
@@ -46,6 +53,36 @@ class API::V1::ExternalActivitiesController < API::APIController
 
     render status: 201, json: {edit_url: edit_external_activity_url(external_activity)}
   end
+
+  def update_by_url
+    begin
+      user, role = check_for_auth_token(params)
+    rescue StandardError => e
+      return error(e.message, 403)
+    end
+
+    external_activity = ExternalActivity.where(url: params[:url]).first
+    authorize external_activity
+
+    external_activity.name = params[:name]
+    external_activity.student_report_enabled = params[:student_report_enabled]
+    external_activity.thumbnail_url = params[:thumbnail_url]
+    external_activity.is_locked = params[:is_locked]
+    external_activity.append_auth_token = params[:append_auth_token]
+    external_activity.save_path = params[:save_path] || ""
+
+    external_activity.publication_status = params[:publication_status]
+    external_activity.grade_level_list = (params[:grade_levels] || [])
+    external_activity.subject_area_list = (params[:subject_areas] || [])
+    external_activity.sensor_list = (params[:sensors] || [])
+
+    if external_activity.save
+      render :json => { success: true }, :status => :ok
+    else
+      error("Unable to save external activity options")
+    end
+  end
+
 
   def update_basic
     begin
