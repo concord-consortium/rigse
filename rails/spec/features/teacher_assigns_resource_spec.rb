@@ -113,7 +113,7 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
 
   context "When logged in as a teacher who has set up classes already," do
     before do
-      login_with_ui_as('teacher', 'password')
+      login_as('teacher')
     end
 
     scenario 'teacher user should see assign button', :js => true do
