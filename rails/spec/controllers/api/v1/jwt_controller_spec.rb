@@ -100,16 +100,42 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
   describe "GET #firebase" do
 
+    context "when a invalid authentication header token is sent" do
+      before(:each) {
+        set_auth_token('invalid_token')
+        FirebaseApp.create!(firebase_app_attributes)
+      }
+
+      it "returns 400" do
+        post :firebase, {:firebase_app => "test app"}, :format => :json
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "when a valid authentication header token is sent without a learner or teacher" do
-      let(:application_url) { "http://test.host/" }
       before(:each) {
         set_auth_token(user_token)
         FirebaseApp.create!(firebase_app_attributes)
       }
 
+      context "when a firebase_app param is not sent" do
+        it "returns 500" do
+          post :firebase, {:firebase_app => "invalid app"}, :format => :json
+          expect(response.status).to eq(500)
+        end
+      end
+
+      context "when an invalid firebase_app param is sent" do
+        it "returns 400" do
+          post :firebase, {}, :format => :json
+          expect(response.status).to eq(400)
+        end
+      end
+
+      context "and a firebase_app param is sent" do
       it "returns a valid JWT" do
         allow(APP_CONFIG).to receive(:[]).and_call_original
-        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(application_url)
+          allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
         post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
 
@@ -122,6 +148,8 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         expect(decoded_token[:data]["claims"]["user_type"]).to eq "user"
         expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
       end
+    end
+
     end
 
     context "when a valid authentication header token is sent with a learner" do
@@ -153,15 +181,21 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     end
 
     context "when a valid authentication header token is sent with a teacher" do
-      let(:application_url) { "http://test.host/" }
       before(:each) {
         set_auth_token(teacher_token)
         FirebaseApp.create!(firebase_app_attributes)
       }
 
+      context "and the class hash is invalid" do
+        it "returns 400" do
+          post :firebase, {:firebase_app => "test app", :class_hash => "invalid"}, :format => :json
+          expect(response.status).to eq(400)
+        end
+      end
+
       it "returns a valid JWT with teacher params without a class hash" do
         allow(APP_CONFIG).to receive(:[]).and_call_original
-        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(application_url)
+        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
         post :firebase, {:firebase_app => "test app"}, :format => :json
         expect(response.status).to eq(201)
         body = JSON.parse(response.body)
@@ -190,11 +224,31 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     end
   end
 
-  describe "GET #portal"
+  describe "GET #portal" do
+    context "when a invalid authentication header token is sent" do
+      before(:each) {
+        set_auth_token('invalid_token')
+      }
+
+      it "returns 400" do
+        post :portal, {}, :format => :json
+        expect(response.status).to eq(400)
+      end
+    end
+
   context "when a valid authentication header token is sent without a learner or teacher" do
     before(:each) {
       set_auth_token(user_token)
     }
+
+      context "when a HMAC secret is not set" do
+        it "returns 500" do
+          allow(ENV).to receive(:[]).and_call_original
+          allow(ENV).to receive(:[]).with('JWT_HMAC_SECRET').and_return(nil)
+          post :portal, {}, :format => :json
+          expect(response.status).to eq(500)
+        end
+      end
 
     it "returns a valid JWT" do
       post :portal, {}, :format => :json
@@ -292,6 +346,6 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       expect(decoded_token[:data]["project_admins"]).to eql [project.id]
     end
   end
-
+  end
 
 end
