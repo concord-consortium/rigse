@@ -95,7 +95,7 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.expose_current_running_example_as :example
 
-  config.include Sprockets::Helpers::RailsHelper
+  config.include Sprockets::Rails::Helper
   config.include Devise::TestHelpers, :type => :controller
   config.include VerifyAndResetHelpers
   config.include FeatureHelper
@@ -103,10 +103,12 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 end
 
-if ActiveRecord::Migrator.new(:up, ::Rails.root.to_s + "/db/migrate").pending_migrations.present?
+begin
+  ActiveRecord::Migration.check_pending!
+rescue => exception
   puts
   puts "*** pending migrations need to be applied to run the tests"
-  puts "*** run: rake db:test:prepare"
+  puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare"
   puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts "Rails.env: #{Rails.env}"
   puts "Database: #{ActiveRecord::Base.connection.current_database}"
@@ -117,5 +119,3 @@ end
 # Prevent Factory definitions from being loaded multiple times
 # But allow access to cucumber specs and db prep
 @defs_loaded ||= FactoryBot.find_definitions and true
-
-

@@ -8,6 +8,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Given The default settings and jnlp resources exist using factories
     And the database has been seeded
     And "differential calculus" has been updated recently
+    And "parallel lines" has been updated recently
     And The materials have been indexed
     Given the default settings has include external activities enabled
     And the following external activities exist:
@@ -131,6 +132,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I should not see "Geometry sequence"
     And I check "Sequence"
     And I uncheck "Activity"
+    And I wait 1 second
     When I enter search text "Radioactivity" on the search instructional materials page
     And I press "GO"
     And I wait 2 seconds

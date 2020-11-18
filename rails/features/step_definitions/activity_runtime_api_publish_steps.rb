@@ -81,6 +81,7 @@ Then /^the portal should create a(?:n)? (.*?) with the following attributes:$/ d
 end
 
 def compare_complex(obj, complex_data)
+  obj = obj.to_a if obj.is_a?(ActiveRecord::Associations::CollectionProxy)
   if obj.is_a?(Array)
     expect(complex_data.class).to be Array
     expect(obj.length).to eq(complex_data.length)

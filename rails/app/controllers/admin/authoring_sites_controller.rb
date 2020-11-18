@@ -45,7 +45,7 @@ class Admin::AuthoringSitesController < ApplicationController
   # POST /admin/authoring_sites.json
   def create
     authorize Admin::AuthoringSite
-    @admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_params)
+    @admin_authoring_site = Admin::AuthoringSite.new(admin_authoring_site_strong_params(params[:admin_authoring_site]))
 
     respond_to do |format|
       if @admin_authoring_site.save
@@ -65,7 +65,7 @@ class Admin::AuthoringSitesController < ApplicationController
     authorize @admin_authoring_site
 
     respond_to do |format|
-      if @admin_authoring_site.update_attributes(admin_authoring_site_params)
+      if @admin_authoring_site.update_attributes(admin_authoring_site_strong_params(params[:admin_authoring_site]))
         format.html { redirect_to @admin_authoring_site, notice: 'Authoring site was successfully updated.' }
         format.json { head :no_content }
       else
@@ -88,12 +88,7 @@ class Admin::AuthoringSitesController < ApplicationController
     end
   end
 
-  private
-
-    # Use this method to whitelist the permissible parameters. Example:
-    # params.require(:person).permit(:name, :age)
-    # Also, you can specialize this method with per-user checking of permissible attributes.
-    def admin_authoring_site_params
-      params.require(:admin_authoring_site).permit(:name, :url)
-    end
+  def admin_authoring_site_strong_params(params)
+    params && params.permit(:name, :url)
+  end
 end

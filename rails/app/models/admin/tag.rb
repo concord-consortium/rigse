@@ -1,6 +1,8 @@
 class Admin::Tag < ActiveRecord::Base
   self.table_name = "admin_tags"
 
+  validates_presence_of :tag, message: "can't be blank"
+
   self.extend SearchableModel
   @@searchable_attributes = %w{scope tag}
 

@@ -78,7 +78,7 @@ describe SecurityQuestionsController do
 
       put :update, @params_for_update
 
-      expect(flash[:error]).to include("Wicked bad errors!")
+      expect(flash['error']).to include("Wicked bad errors!")
       expect(response).to render_template("edit")
     end
   end

@@ -89,6 +89,10 @@ When /^(?:|I )follow "([^"]*)"$/ do |link|
   first(:link, link).click
 end
 
+When /^(?:|I )click the span "([^"]*)"$/ do |text|
+  page.find('span', text: text).click
+end
+
 When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
   fill_in(field, :with => value)
 end
@@ -124,6 +128,12 @@ end
 
 When /^(?:|I )uncheck "([^"]*)"$/ do |field|
   uncheck(field)
+end
+
+When "I scroll {string} to the center" do |item|
+  # in newer capybara we can do:
+  # page.find(item).scroll_to(:center)
+  scroll_into_view(item)
 end
 
 When /^(?:|I )choose "([^"]*)"$/ do |field|
@@ -316,4 +326,12 @@ end
 
 When /^I reload the page$/ do
   page.evaluate_script 'window.location.reload()'
+end
+
+# from https://stackoverflow.com/a/7288046
+When /^I wait for the ajax request to finish$/ do
+  start_time = Time.now
+  page.evaluate_script('jQuery.isReady&&jQuery.active==0').class.should_not eql(String) until page.evaluate_script('jQuery.isReady&&jQuery.active==0') or (start_time + 5.seconds) < Time.now do
+    sleep 1
+  end
 end

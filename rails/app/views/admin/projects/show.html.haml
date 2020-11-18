@@ -1,1 +1,2 @@
-= render partial: 'show', locals: { project: @project }
+%h3= link_to 'List projects', action: 'index'
+= render partial: 'show', locals: { project: @project, show_details: true }

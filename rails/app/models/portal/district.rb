@@ -3,7 +3,11 @@ class Portal::District < ActiveRecord::Base
 
   acts_as_replicatable
 
-  has_many :schools, :dependent => :destroy, :class_name => "Portal::School", :foreign_key => "district_id", :order => "name"
+  has_many :schools, -> { order :name },
+    dependent: :destroy,
+    class_name: 'Portal::School',
+    foreign_key: 'district_id'
+
   belongs_to :nces_district, :class_name => "Portal::Nces06District", :foreign_key => "nces_district_id"
 
   scope :real,    -> { where('nces_district_id is NOT NULL').includes(:schools).order("name") }

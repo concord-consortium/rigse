@@ -3,15 +3,14 @@ require 'spec_helper'
 require 'digest/md5'
 
 def set_auth_token(auth_token)
-  request.env["Authorization"] = "Bearer #{auth_token}"
+  request.headers["Authorization"] = "Bearer #{auth_token}"
 end
 
 def addToken(user, client, expires_at)
   grant = user.access_grants.create({
       :client => client,
       :state => nil,
-      :access_token_expires_at => expires_at },
-    :without_protection => true
+      :access_token_expires_at => expires_at }
   )
   grant.access_token
 end
@@ -21,8 +20,7 @@ def addTokenForLearner(user, client, learner, expires_at)
       :client => client,
       :state => nil,
       :learner => learner,
-      :access_token_expires_at => expires_at },
-    :without_protection => true
+      :access_token_expires_at => expires_at }
   )
   grant.access_token
 end
@@ -32,8 +30,7 @@ def addTokenForTeacher(user, client, teacher, expires_at)
       :client => client,
       :state => nil,
       :teacher => teacher,
-      :access_token_expires_at => expires_at },
-    :without_protection => true
+      :access_token_expires_at => expires_at }
   )
   grant.access_token
 end
@@ -96,200 +93,327 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 -----END RSA PRIVATE KEY-----"
         } }
 
+  before(:each) {
+    # prevent warnings about undefined default settings
+    generate_default_settings_and_jnlps_with_mocks
+  }
+
   describe "GET #firebase" do
 
-    context "when a valid authentication header token is sent without a learner or teacher" do
-      let(:application_url) { "http://test.host/" }
+    context "when a invalid authentication header token is sent" do
       before(:each) {
-        set_auth_token(user_token)
+        set_auth_token('invalid_token')
         FirebaseApp.create!(firebase_app_attributes)
       }
 
-      it "returns a valid JWT" do
-        allow(APP_CONFIG).to receive(:[]).and_call_original
-        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(application_url)
+      it "returns 400" do
         post :firebase, {:firebase_app => "test app"}, :format => :json
-        expect(response.status).to eq(201)
-
-        body = JSON.parse(response.body)
-        token = body["token"]
-        decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-        expect(decoded_token[:data]["uid"]).to eql uid
-        expect(decoded_token[:data]["claims"]["platform_id"]).to eq "http://test.host/"
-        expect(decoded_token[:data]["claims"]["platform_user_id"]).to eq user.id
-        expect(decoded_token[:data]["claims"]["user_type"]).to eq "user"
-        expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+        expect(response.status).to eq(400)
       end
     end
 
-    context "when a valid authentication header token is sent with a learner" do
+    context "when a valid authentication header token is sent" do
+      context "and the token has no learner or teacher" do
+        before(:each) {
+          set_auth_token(user_token)
+          FirebaseApp.create!(firebase_app_attributes)
+        }
+
+        context "and a firebase_app param is not sent" do
+          it "returns 500" do
+            post :firebase, {:firebase_app => "invalid app"}, :format => :json
+            expect(response.status).to eq(500)
+          end
+        end
+
+        context "and an invalid firebase_app param is sent" do
+          it "returns 400" do
+            post :firebase, {}, :format => :json
+            expect(response.status).to eq(400)
+          end
+        end
+
+        context "and a firebase_app param is sent" do
+          it "returns a valid JWT" do
+            allow(APP_CONFIG).to receive(:[]).and_call_original
+            allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
+            post :firebase, {:firebase_app => "test app"}, :format => :json
+            expect(response.status).to eq(201)
+
+            body = JSON.parse(response.body)
+            token = body["token"]
+            decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+            expect(decoded_token[:data]["uid"]).to eql uid
+            expect(decoded_token[:data]["claims"]["platform_id"]).to eq "http://test.host/"
+            expect(decoded_token[:data]["claims"]["platform_user_id"]).to eq user.id
+            expect(decoded_token[:data]["claims"]["user_type"]).to eq "user"
+            expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+          end
+        end
+
+        context "and firebase_app and resource_link_id params are sent" do
+          context "and the user of the auth header token has a learner with that resource_link_id" do
+            let(:user) { learner.student.user }
+            it "returns a valid JWT with learner params" do
+              post :firebase,
+                {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
+                :format => :json
+              expect(response.status).to eq(201)
+
+              body = JSON.parse(response.body)
+              token = body["token"]
+              decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+
+              expect(decoded_token[:data]["uid"]).to eql uid
+              expect(decoded_token[:data]["domain"]).to eql root_url
+              expect(decoded_token[:data]["externalId"]).to eql learner.id
+              expect(decoded_token[:data]["returnUrl"]).not_to be_nil
+              expect(decoded_token[:data]["logging"]).to eql true
+              expect(decoded_token[:data]["domain_uid"]).to eql user.id
+              expect(decoded_token[:data]["class_info_url"]).not_to be_nil
+              expect(decoded_token[:data]["claims"]["user_type"]).to eq "learner"
+              expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+              expect(decoded_token[:data]["claims"]["class_hash"]).not_to be_nil
+              expect(decoded_token[:data]["claims"]["offering_id"]).to eq offering.id
+            end
+          end
+        end
+      end
+
+      context "and the token has a learner" do
+        before(:each) {
+          set_auth_token(learner_token)
+          FirebaseApp.create!(firebase_app_attributes)
+        }
+
+        it "returns a valid JWT with learner params" do
+          post :firebase, {:firebase_app => "test app"}, :format => :json
+          expect(response.status).to eq(201)
+
+          body = JSON.parse(response.body)
+          token = body["token"]
+          decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+
+          expect(decoded_token[:data]["uid"]).to eql uid
+          expect(decoded_token[:data]["domain"]).to eql root_url
+          expect(decoded_token[:data]["externalId"]).to eql learner.id
+          expect(decoded_token[:data]["returnUrl"]).not_to be_nil
+          expect(decoded_token[:data]["logging"]).to eql true
+          expect(decoded_token[:data]["domain_uid"]).to eql user.id
+          expect(decoded_token[:data]["class_info_url"]).not_to be_nil
+          expect(decoded_token[:data]["claims"]["user_type"]).to eq "learner"
+          expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+          expect(decoded_token[:data]["claims"]["class_hash"]).not_to be_nil
+          expect(decoded_token[:data]["claims"]["offering_id"]).to eq offering.id
+        end
+      end
+
+      context "and the token has a teacher" do
+        before(:each) {
+          set_auth_token(teacher_token)
+          FirebaseApp.create!(firebase_app_attributes)
+        }
+
+        context "and there is no class hash" do
+          it "returns a valid JWT" do
+            allow(APP_CONFIG).to receive(:[]).and_call_original
+            allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
+            post :firebase, {:firebase_app => "test app"}, :format => :json
+            expect(response.status).to eq(201)
+            body = JSON.parse(response.body)
+            token = body["token"]
+            decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+            data = OpenStruct.new decoded_token[:data]
+            claims = OpenStruct.new data.claims
+            expect(data.uid).to eql uid
+            expect(data.domain).to eql root_url
+            expect(claims.user_type).to eq "teacher"
+            expect(claims.user_id).to eq url_for_user
+            expect(claims.class_hash).to eq nil
+            expect(claims.platform_id).to eq "http://test.host/"
+          end
+        end
+
+        context "and there is a class hash" do
+          context "and the class hash is invalid" do
+            it "returns 400" do
+              post :firebase, {:firebase_app => "test app", :class_hash => "invalid"}, :format => :json
+              expect(response.status).to eq(400)
+            end
+          end
+
+          context "and the class_hash is for a class of the teacher" do
+            it "returns a valid JWT with this class hash" do
+              post :firebase, {:firebase_app => "test app", :class_hash => clazz.class_hash}, :format => :json
+              expect(response.status).to eq(201)
+
+              body = JSON.parse(response.body)
+              token = body["token"]
+              decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+
+              expect(decoded_token[:data]["claims"]["class_hash"]).to eq clazz.class_hash
+            end
+          end
+        end
+      end
+    end
+  end
+
+  describe "GET #portal" do
+    context "when a invalid authentication header token is sent" do
       before(:each) {
-        set_auth_token(learner_token)
-        FirebaseApp.create!(firebase_app_attributes)
+        set_auth_token('invalid_token')
       }
 
-      it "returns a valid JWT with learner params" do
-        post :firebase, {:firebase_app => "test app"}, :format => :json
-        expect(response.status).to eq(201)
-
-        body = JSON.parse(response.body)
-        token = body["token"]
-        decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-
-        expect(decoded_token[:data]["uid"]).to eql uid
-        expect(decoded_token[:data]["domain"]).to eql root_url
-        expect(decoded_token[:data]["externalId"]).to eql learner.id
-        expect(decoded_token[:data]["returnUrl"]).not_to be_nil
-        expect(decoded_token[:data]["logging"]).to eql true
-        expect(decoded_token[:data]["domain_uid"]).to eql user.id
-        expect(decoded_token[:data]["class_info_url"]).not_to be_nil
-        expect(decoded_token[:data]["claims"]["user_type"]).to eq "learner"
-        expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
-        expect(decoded_token[:data]["claims"]["class_hash"]).not_to be_nil
-        expect(decoded_token[:data]["claims"]["offering_id"]).to eq offering.id
+      it "returns 400" do
+        post :portal, {}, :format => :json
+        expect(response.status).to eq(400)
       end
     end
 
-    context "when a valid authentication header token is sent with a teacher" do
-      let(:application_url) { "http://test.host/" }
-      before(:each) {
-        set_auth_token(teacher_token)
-        FirebaseApp.create!(firebase_app_attributes)
-      }
+    context "when a valid authentication header token is sent" do
 
-      it "returns a valid JWT with teacher params without a class hash" do
-        allow(APP_CONFIG).to receive(:[]).and_call_original
-        allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(application_url)
-        post :firebase, {:firebase_app => "test app"}, :format => :json
-        expect(response.status).to eq(201)
-        body = JSON.parse(response.body)
-        token = body["token"]
-        decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-        data = OpenStruct.new decoded_token[:data]
-        claims = OpenStruct.new data.claims
-        expect(data.uid).to eql uid
-        expect(data.domain).to eql root_url
-        expect(claims.user_type).to eq "teacher"
-        expect(claims.user_id).to eq url_for_user
-        expect(claims.class_hash).to eq nil
-        expect(claims.platform_id).to eq "http://test.host/"
+      context "and the token has no learner or teacher" do
+        before(:each) {
+          set_auth_token(user_token)
+        }
+
+        context "and a JWT_HMAC_SECRET is not set" do
+          it "returns 500" do
+            allow(ENV).to receive(:[]).and_call_original
+            allow(ENV).to receive(:[]).with('JWT_HMAC_SECRET').and_return(nil)
+            post :portal, {}, :format => :json
+            expect(response.status).to eq(500)
+          end
+        end
+
+        it "returns a valid JWT" do
+          post :portal, {}, :format => :json
+          expect(response.status).to eq(201)
+
+          body = JSON.parse(response.body)
+          token = body["token"]
+          decoded_token = SignedJWT::decode_portal_token(token)
+          expect(decoded_token[:data]["uid"]).to eql user.id
+        end
+
+        context "and a resource_link_id is sent" do
+          context "and the user of the token has a learner with that resource_link_id" do
+            let(:user) { learner.student.user }
+            it "returns a valid JWT with learner params" do
+              post :portal, {:resource_link_id => offering.id}, :format => :json
+              expect(response.status).to eq(201)
+
+              body = JSON.parse(response.body)
+              token = body["token"]
+              decoded_token = SignedJWT::decode_portal_token(token)
+
+              expect(decoded_token[:data]["uid"]).to eql user.id
+              expect(decoded_token[:data]["domain"]).to eql root_url
+              expect(decoded_token[:data]["user_type"]).to eq "learner"
+              expect(decoded_token[:data]["user_id"]).not_to be_nil
+              expect(decoded_token[:data]["learner_id"]).to eq learner.id
+              expect(decoded_token[:data]["class_info_url"]).not_to be_nil
+              expect(decoded_token[:data]["offering_id"]).to eq offering.id
+            end
+          end
+          context "and the user of the token has a learner without that resource_link_id" do
+            let(:user) { learner.student.user }
+            it "returns a 400" do
+              post :portal, {:resource_link_id => 99999}, :format => :json
+              expect(response.status).to eq(400)
+            end
+          end
+          context "and the user of the token is not a student" do
+            it "returns a 400" do
+              post :portal, {:resource_link_id => offering.id}, :format => :json
+              expect(response.status).to eq(400)
+            end
+          end
+        end
       end
 
-      it "returns a valid JWT with teacher params with a class hash" do
-        post :firebase, {:firebase_app => "test app", :class_hash => clazz.class_hash}, :format => :json
-        expect(response.status).to eq(201)
+      context "and the token has a learner" do
+        before(:each) {
+          set_auth_token(learner_token)
+        }
 
-        body = JSON.parse(response.body)
-        token = body["token"]
-        decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+        it "returns a valid JWT with learner params" do
+          post :portal, {}, :format => :json
+          expect(response.status).to eq(201)
 
-        expect(decoded_token[:data]["claims"]["class_hash"]).to eq clazz.class_hash
+          body = JSON.parse(response.body)
+          token = body["token"]
+          decoded_token = SignedJWT::decode_portal_token(token)
+
+          expect(decoded_token[:data]["uid"]).to eql user.id
+          expect(decoded_token[:data]["domain"]).to eql root_url
+          expect(decoded_token[:data]["user_type"]).to eq "learner"
+          expect(decoded_token[:data]["user_id"]).not_to be_nil
+          expect(decoded_token[:data]["learner_id"]).to eq learner.id
+          expect(decoded_token[:data]["class_info_url"]).not_to be_nil
+          expect(decoded_token[:data]["offering_id"]).to eq offering.id
+        end
+      end
+
+      context "and the token has a teacher" do
+        before(:each) {
+          set_auth_token(teacher_token)
+        }
+
+        it "returns a valid JWT with teacher params without a class hash" do
+          post :portal, {}, :format => :json
+          expect(response.status).to eq(201)
+
+          body = JSON.parse(response.body)
+          token = body["token"]
+          decoded_token = SignedJWT::decode_portal_token(token)
+
+          expect(decoded_token[:data]["uid"]).to eql user.id
+          expect(decoded_token[:data]["domain"]).to eql root_url
+          expect(decoded_token[:data]["user_type"]).to eq "teacher"
+          expect(decoded_token[:data]["user_id"]).not_to be_nil
+          expect(decoded_token[:data]["teacher_id"]).to eq class_teacher.id
+          expect(decoded_token[:data]["admin"]).to eq -1
+        end
+
+        context "and the user is an admin" do
+          before(:each) {
+            user.add_role("admin")
+          }
+
+          it "returns a valid JWT with an admin flag set" do
+            post :portal, {}, :format => :json
+            expect(response.status).to eq(201)
+
+            body = JSON.parse(response.body)
+            token = body["token"]
+            decoded_token = SignedJWT::decode_portal_token(token)
+
+            expect(decoded_token[:data]["admin"]).to eql 1
+            expect(decoded_token[:data]["project_admins"]).to eql []
+          end
+        end
+
+        context "and the user is a project admin" do
+          let(:project)         { FactoryBot.create(:project)}
+          before(:each) {
+            user.project_users.create({project_id: project.id, is_admin: true})
+          }
+
+          it "returns a valid JWT with the project in project_admins claim and admin is -1" do
+            post :portal, {}, :format => :json
+            expect(response.status).to eq(201)
+
+            body = JSON.parse(response.body)
+            token = body["token"]
+            decoded_token = SignedJWT::decode_portal_token(token)
+
+            expect(decoded_token[:data]["admin"]).to eql -1
+            expect(decoded_token[:data]["project_admins"]).to eql [project.id]
+          end
+        end
       end
     end
   end
-
-  describe "GET #portal"
-  context "when a valid authentication header token is sent without a learner or teacher" do
-    before(:each) {
-      set_auth_token(user_token)
-    }
-
-    it "returns a valid JWT" do
-      post :portal, {}, :format => :json
-      expect(response.status).to eq(201)
-
-      body = JSON.parse(response.body)
-      token = body["token"]
-      decoded_token = SignedJWT::decode_portal_token(token)
-      expect(decoded_token[:data]["uid"]).to eql user.id
-    end
-  end
-
-  context "when a valid authentication header token is sent with a learner" do
-    before(:each) {
-      set_auth_token(learner_token)
-    }
-
-    it "returns a valid JWT with learner params" do
-      post :portal, {}, :format => :json
-      expect(response.status).to eq(201)
-
-      body = JSON.parse(response.body)
-      token = body["token"]
-      decoded_token = SignedJWT::decode_portal_token(token)
-
-      expect(decoded_token[:data]["uid"]).to eql user.id
-      expect(decoded_token[:data]["domain"]).to eql root_url
-      expect(decoded_token[:data]["user_type"]).to eq "learner"
-      expect(decoded_token[:data]["user_id"]).not_to be_nil
-      expect(decoded_token[:data]["learner_id"]).to eq learner.id
-      expect(decoded_token[:data]["class_info_url"]).not_to be_nil
-      expect(decoded_token[:data]["offering_id"]).to eq offering.id
-    end
-  end
-
-  context "when a valid authentication header token is sent with a teacher" do
-    before(:each) {
-      set_auth_token(teacher_token)
-    }
-
-    it "returns a valid JWT with teacher params without a class hash" do
-      post :portal, {}, :format => :json
-      expect(response.status).to eq(201)
-
-      body = JSON.parse(response.body)
-      token = body["token"]
-      decoded_token = SignedJWT::decode_portal_token(token)
-
-      expect(decoded_token[:data]["uid"]).to eql user.id
-      expect(decoded_token[:data]["domain"]).to eql root_url
-      expect(decoded_token[:data]["user_type"]).to eq "teacher"
-      expect(decoded_token[:data]["user_id"]).not_to be_nil
-      expect(decoded_token[:data]["teacher_id"]).to eq class_teacher.id
-      expect(decoded_token[:data]["admin"]).to eq -1
-    end
-  end
-
-  context "when a valid authentication header token is sent with an admin" do
-    let(:user)            { FactoryBot.create(:user) }
-    before(:each) {
-      user.add_role("admin")
-      set_auth_token(teacher_token)
-    }
-
-    it "returns a valid JWT with an admin flag set" do
-      post :portal, {}, :format => :json
-      expect(response.status).to eq(201)
-
-      body = JSON.parse(response.body)
-      token = body["token"]
-      decoded_token = SignedJWT::decode_portal_token(token)
-
-      expect(decoded_token[:data]["admin"]).to eql 1
-      expect(decoded_token[:data]["project_admins"]).to eql []
-    end
-  end
-
-  context "when a valid authentication header token is sent by project admin" do
-    let(:user)            { FactoryBot.create(:user) }
-    let(:project)         { FactoryBot.create(:project)}
-    before(:each) {
-      user.project_users.create({project_id: project.id, is_admin: true})
-      set_auth_token(teacher_token)
-    }
-
-    it "returns a valid JWT with an admin flag set" do
-      post :portal, {}, :format => :json
-      expect(response.status).to eq(201)
-
-      body = JSON.parse(response.body)
-      token = body["token"]
-      decoded_token = SignedJWT::decode_portal_token(token)
-
-      expect(decoded_token[:data]["admin"]).to eql -1
-      expect(decoded_token[:data]["project_admins"]).to eql [project.id]
-    end
-  end
-
-
 end

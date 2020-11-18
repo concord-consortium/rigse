@@ -64,7 +64,7 @@ class Reports::Excel
   #end
 
   def all_students_sorted
-    students = Portal::Student.all
+    students = Portal::Student.all.to_a
     # remove bougs students
     students.reject! { |s| s.user.nil? || s.user.default_user || s.learners.size==0 }
     sorted_students(students)
@@ -97,7 +97,7 @@ class Reports::Excel
   end
 
   def sorted_learners(student)
-    learners = student.learners
+    learners = student.learners.to_a
     learners.reject! { |l| l.offering.nil? || l.offering.clazz.nil? || l.offering.runnable.nil? }
     learners.sort! { |a,b|
       aname = clazz_name_for(a.offering)

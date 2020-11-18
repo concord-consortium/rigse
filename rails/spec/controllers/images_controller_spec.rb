@@ -1,6 +1,13 @@
 require File.expand_path('../../spec_helper', __FILE__)
 describe ImagesController do
 
+  let(:user_id) {"1"}
+  let(:image_params) {{
+    "attribution" => "test attribution", "height" => "100", "image_content_type" => "image/png" ,
+    "image_file_name" => "test.png", "image_file_size" => "1000", "license_code" => "MIT",
+    "name" => "test image", "publication_status" => "published", "user_id" => user_id, "width" => "200"
+  }}
+
   def mock_image(stubs={})
     @mock_image ||= mock_model(Image, stubs)
   end
@@ -61,27 +68,31 @@ describe ImagesController do
   describe "responding to POST create" do
 
     describe "with valid params" do
+      let (:user_id) { @logged_in_user.id.to_s }
+
       it "should expose a newly created image as @image" do
         img = mock_image
         allow(img).to receive_messages(:save => true)
 
-        expect(Image).to receive(:new).with({'these' => 'params', 'user_id' => @logged_in_user.id.to_s}).and_return(img)
-        post :create, :image => {:these => 'params'}
+        expect(Image).to receive(:new).with(image_params).and_return(img)
+        post :create, :image => image_params
         expect(assigns(:image)).to equal(img)
       end
 
       it "should redirect to the created image" do
         allow(Image).to receive(:new).and_return(mock_image(:save => true))
         post :create, :image => {}
-        expect(response).to redirect_to(image_url(mock_image))
+        expect(response).to redirect_to("/images/#{mock_image.id}")
       end
 
     end
 
     describe "with invalid params" do
+      let (:user_id) { @logged_in_user.id.to_s }
+
       it "should expose a newly created but unsaved image as @image" do
-        allow(Image).to receive(:new).with({'these' => 'params','user_id' => @logged_in_user.id.to_s}).and_return(mock_image(:save => false))
-        post :create, :image => {:these => 'params'}
+        allow(Image).to receive(:new).with(image_params).and_return(mock_image(:save => false))
+        post :create, :image => image_params
         expect(assigns(:image)).to equal(mock_image)
       end
 
@@ -104,8 +115,8 @@ describe ImagesController do
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(mock_image).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :image => {:these => 'params'}
+        expect(mock_image).to receive(:update_attributes).with(image_params)
+        put :update, :id => "37", :image => image_params
       end
 
       it "should expose the requested image as @image" do
@@ -129,8 +140,8 @@ describe ImagesController do
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(@img).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :image => {:these => 'params'}
+        expect(@img).to receive(:update_attributes).with(image_params)
+        put :update, :id => "37", :image => image_params
       end
 
       it "should expose the image as @image" do

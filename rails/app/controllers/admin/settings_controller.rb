@@ -6,13 +6,6 @@ class Admin::SettingsController < ApplicationController
   # before_filter :setup_object, :except => [:index]
   # before_filter :render_scope, :only => [:show]
 
-  # editing / modifying / deleting require editable-ness
-  # before_filter :can_edit, :except => [:index,:show,:print,:create,:new,:duplicate,:export]
-  # before_filter :can_create, :only => [:new, :create,:duplicate]
-  #
-  # in_place_edit_for :activity, :name
-  # in_place_edit_for :activity, :description
-
   protected
 
   def admin_only
@@ -36,12 +29,6 @@ class Admin::SettingsController < ApplicationController
   # GET /admin/settings
   # GET /admin/settings.xml
   def index
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Admin::Setting
-    # PUNDIT_REVIEW_SCOPE
-    # PUNDIT_CHECK_SCOPE (did not find instance)
-    # @settings = policy_scope(Admin::Setting)
     default_settings = Admin::Settings.default_settings
 
     if @manager_role
@@ -79,97 +66,53 @@ class Admin::SettingsController < ApplicationController
   end
 
   # GET /admin/settings/new
-  # GET /admin/settings/new.xml
   def new
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Admin::Setting
     @admin_settings = Admin::Settings.new
-    @scope = nil
-
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @admin_settings }
-    end
+    # renders new.html.haml
   end
 
   # GET /admin/settings/1/edit
   def edit
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @setting
     @admin_settings = Admin::Settings.find(params[:id])
-
-    # Pull in the current theme default home page content, if it isn't set in the settings.
-    if @admin_settings.home_page_content.nil? || @admin_settings.home_page_content.empty?
-      render_to_string :partial => "home/project_info"
-
-      @admin_settings.home_page_content = view_context.instance_variable_get(:@content_for_project_info)
-      view_context.instance_variable_set(:@content_for_project_info, nil)
-    end
-
-    if request.xhr?
-      render :partial => 'remote_form', :locals => { :admin_settings => @admin_settings }
-    end
+    # renders edit.html.haml
   end
 
   # POST /admin/settings
-  # POST /admin/settings.xml
   def create
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE
-    # authorize Admin::Setting
-    @admin_settings = Admin::Settings.new(params[:admin_settings])
-    respond_to do |format|
-      if @admin_settings.save
-        flash[:notice] = 'Admin::Settings was successfully created.'
-        format.html { redirect_to(@admin_settings) }
-        format.xml  { render :xml => @admin_settings, :status => :created, :location => @admin_settings }
-      else
-        format.html { redirect_to(new_admin_setting_url) }
-        format.xml  { render :xml => @admin_settings.errors, :status => :unprocessable_entity }
-      end
+    @admin_settings = Admin::Settings.new(admin_settings_strong_params(params[:admin_settings]))
+    if @admin_settings.save
+      flash['notice'] = 'Admin::Settings was successfully created.'
+      redirect_to @admin_settings
+    else
+      render action: 'new'
     end
   end
 
   # PUT /admin/settings/1
-  # PUT /admin/settings/1.xml
   def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @setting
     @admin_settings = Admin::Settings.find(params[:id])
-    if request.xhr?
-      @admin_settings.update_attributes(params[:admin_settings])
-      render :partial => 'show', :locals => { :admin_settings => @admin_settings }
+    if @admin_settings.update_attributes(admin_settings_strong_params(params[:admin_settings]))
+      flash['notice'] = 'Admin::Settings was successfully updated.'
+      redirect_to @admin_settings
     else
-      respond_to do |format|
-        if @admin_settings.update_attributes(params[:admin_settings])
-          flash[:notice] = 'Admin::Settings was successfully updated.'
-          format.html { redirect_to(@admin_settings) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @admin_settings.errors, :status => :unprocessable_entity }
-        end
-      end
+      render action: 'edit'
     end
   end
 
   # DELETE /admin/settings/1
-  # DELETE /admin/settings/1.xml
   def destroy
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @setting
     @settings = Admin::Settings.find(params[:id])
     @settings.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(admin_settings_url) }
-      format.xml  { head :ok }
-    end
+    flash['notice'] = 'Settings successfully deleted.'
+    redirect_to admin_settings_url
   end
 
+  def admin_settings_strong_params(params)
+    params && params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials,
+                            :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description,
+                            :enable_grade_levels, :enable_member_registration, :enabled_bookmark_types, :external_url, :help_type,
+                            :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval,
+                            :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots,
+                            :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :wrap_home_page_content)
+  end
 end

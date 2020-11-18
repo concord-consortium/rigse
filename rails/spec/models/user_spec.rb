@@ -275,9 +275,9 @@ describe User do
     let(:aaron_token)   { users(:aaron).create_access_token_valid_for(1.day) }
 
     it 'can be used to authenticate and get correct user' do
-      conditions = { User.token_authentication_key => quentin_token }
+      conditions = { :access_token => quentin_token }
       expect(User.find_for_token_authentication(conditions)).to eql(users(:quentin))
-      conditions = { User.token_authentication_key => aaron_token }
+      conditions = { :access_token => aaron_token }
       expect(User.find_for_token_authentication(conditions)).to eql(users(:aaron))
     end
   end
@@ -445,7 +445,7 @@ describe User do
           expect {
             found_user = User.find_for_omniauth(mock_auth)
             user.reload
-          }.to_not change{ user.authentications }
+          }.to_not change{ user.authentications.to_a }
 
           expect(found_user).to eq user
         end
@@ -479,48 +479,171 @@ protected
     record
   end
 
-  # TODO: auto-generated
-  describe '.all_users' do # scope test
-    it 'supports named scope all_users' do
-      expect(described_class.limit(3).all_users).to all(be_a(described_class))
+  describe 'user scopes' do
+    # There are 3 users already loaded from fixtures in:
+
+    # rails/spec/fixtures/users.yml
+    # ID: email, state:
+    # 1: quentin@example.com, active
+    # 2: aaron@example.com, pending
+    # 3: salty_dog@example.com, active
+
+    let(:quentin) { User.find(1) }
+    let(:arron)   { User.find(2) }
+    let(:salty)   { User.find(3) }
+    let(:all_our_users) { [arron, salty, quentin] }
+
+    let(:saltys_state) { 'pending' }
+    let(:limit) { 3 }
+
+    # For scope tests, all users will be set as 'active'
+    before(:each) do
+      all_our_users.each do |u|
+        u.update_attribute(:state, 'active')
+      end
+      # Saltys state will be changed to tests scopes
+      salty.update_attribute('state', saltys_state)
+    end
+
+    describe 'the default scope' do
+      let(:saltys_state) { 'disabled' }
+      subject { User.all }
+      it 'should not return any disabled users' do
+        expect(subject).to include(quentin)
+        expect(subject).to include(arron)
+        expect(subject).not_to include(salty)
+      end
+
+      describe 'chaining scopes after default_scope' do
+        describe 'adding a where clause' do
+          let(:saltys_state) { 'disabled' }
+          it 'should ignore disabled users' do
+            expect(User.where(email: salty.email)).to_not include(salty)
+            expect(User.where(email: arron.email)).to include(arron)
+          end
+          it 'unless we unscope first' do
+            expect(User.unscoped.where(email: salty.email)).to include(salty)
+          end
+        end
+
+        describe 'masking results in other named scopes' do
+          let(:saltys_state) { 'disabled' } # Will hide salty from all scopes
+          let(:role_name)    { 'role_name' }
+          before(:each) do
+            # In subsequent scope searches in this section,
+            # these attributes are required:
+            arron.update_attribute(:default_user, true)
+            salty.update_attribute(:default_user, true)
+            arron.add_role('role_name')
+            salty.add_role('role_name')
+          end
+          describe 'email scope' do
+            it 'should hide disabled users' do
+              expect(User.email).to_not include(salty)
+              expect(User.email).to include(arron)
+            end
+          end
+          describe '`default` scope' do
+            it 'should hide disabled users' do
+              expect(User.default).to_not include(salty)
+              expect(User.default).to include(arron)
+            end
+          end
+          describe 'with_role scope' do
+            it 'should hide disabled users' do
+              expect(User.with_role(role_name)).to_not include(salty)
+              expect(User.with_role(role_name)).to include(arron)
+            end
+          end
+        end
+      end
+    end
+
+    describe '.all_users' do # scope test
+      let(:saltys_state) { 'pending' }
+      subject { User.all_users.limit(limit) }
+      it 'returns all users despite status' do
+        expect(subject).to all(be_a(described_class))
+      end
+      it 'should include all of our users' do
+        all_our_users.each do |user|
+          expect(subject).to include(user)
+        end
+      end
+    end
+
+    describe '.active' do
+      let(:saltys_state) { 'pending' }
+      subject { User.active.limit(limit) }
+      it 'should be active users only' do
+        expect(subject).to include(quentin)
+        expect(subject).to include(arron)
+        expect(subject).not_to include(salty)
+      end
+    end
+
+    describe '.suspended' do
+      let(:saltys_state) { 'suspended' }
+      let(:scope) { 'suspended' }
+      subject { User.suspended.limit(limit) }
+      it 'limits to suspended users' do
+        expect(subject).not_to include(quentin)
+        expect(subject).not_to include(arron)
+        expect(salty.state).to eq('suspended')
+        expect(subject).to include(salty)
+      end
+    end
+
+    describe '.no_email' do # scope test
+      before(:each) do
+        salty.update_attribute(
+          :email, "#{User::NO_EMAIL_STRING}-12@#{User::NO_EMAIL_DOMAIN}"
+        )
+      end
+      subject { User.no_email.limit(limit) }
+      it 'limits to users with fake email addresses' do
+        expect(subject).not_to include(quentin)
+        expect(subject).not_to include(arron)
+        expect(subject).to include(salty)
+      end
+    end
+
+    describe '.email' do # scope test
+      before(:each) do
+        salty.update_attribute(:email,
+          "#{User::NO_EMAIL_STRING}-12@#{User::NO_EMAIL_DOMAIN}"
+        )
+      end
+      subject { User.email.limit(limit) }
+      it 'limits to users with fake email addresses' do
+        expect(subject).to include(quentin)
+        expect(subject).to include(arron)
+        expect(subject).not_to include(salty)
+      end
+    end
+
+    # TODO: NB: This name is unfortunate, it is too similar to default_scope!
+    # Though the names are similar this scope searches for `default` users.
+    describe '.default' do # scope test
+      subject { User.default.limit(limit) }
+      before(:each) { salty.update_attribute(:default_user, true) }
+      it 'returns only users with :default set to true' do
+        expect(described_class.limit(limit).default).to all(be_a(described_class))
+      end
+    end
+
+    describe '.with_role' do # scope test
+      let(:role_name) { 'role_name' }
+      before(:each) { salty.add_role(role_name) }
+      subject { User.with_role(role_name).limit(limit) }
+      it 'returns users with matching roles' do
+        expect(subject).not_to include(quentin)
+        expect(subject).not_to include(arron)
+        expect(subject).to include(salty)
+      end
     end
   end
-  # TODO: auto-generated
-  describe '.active' do # scope test
-    it 'supports named scope active' do
-      expect(described_class.limit(3).active).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.suspended' do # scope test
-    it 'supports named scope suspended' do
-      expect(described_class.limit(3).suspended).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.no_email' do # scope test
-    it 'supports named scope no_email' do
-      expect(described_class.limit(3).no_email).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.email' do # scope test
-    it 'supports named scope email' do
-      expect(described_class.limit(3).email).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.default' do # scope test
-    it 'supports named scope default' do
-      expect(described_class.limit(3).default).to all(be_a(described_class))
-    end
-  end
-  # TODO: auto-generated
-  describe '.with_role' do # scope test
-    it 'supports named scope with_role' do
-      expect(described_class.limit(3).with_role('role_name')).to all(be_a(described_class))
-    end
-  end
+
 
   # TODO: auto-generated
   describe '#apply_omniauth' do
@@ -847,21 +970,19 @@ protected
 
   # TODO: auto-generated
   describe '#role_names' do
+    let(:user) { FactoryBot.create(:user) }
     it 'role_names' do
-      user = described_class.new
-      result = user.role_names
-
-      expect(result).not_to be_nil
+      user.add_role('1')
+      expect(user.role_names).to include '1'
     end
   end
 
   # TODO: auto-generated
   describe '#make_user_a_member' do
+    let(:user) { FactoryBot.create(:user) }
     it 'make_user_a_member' do
-      user = described_class.new
       result = user.make_user_a_member
-
-      expect(result).not_to be_nil
+      expect(user.role_names).to include 'member'
     end
   end
 
@@ -875,14 +996,62 @@ protected
     end
   end
 
-  # TODO: auto-generated
   describe '#is_project_admin?' do
-    it 'is_project_admin?' do
-      user = described_class.new
-      project = FactoryBot.create(:project)
-      result = user.is_project_admin?(project)
+    let(:user_role) { nil }
+    let(:user_project) { nil }
+    let(:user) {
+      _user = FactoryBot.create(:user)
+      if (user_role && user_project)
+        _user.add_role_for_project(user_role, user_project)
+      end
+      _user
+    }
 
-      expect(result).not_to be_nil
+    context 'when no project is passed in and user is' do
+      subject { user.is_project_admin? }
+
+      context 'not an admin of any projects' do
+        it { is_expected.to be false}
+      end
+
+      context 'an admin of a project' do
+        let(:user_role) { 'admin' }
+        let(:user_project) { FactoryBot.create(:project) }
+        it { is_expected.to be true}
+      end
+
+      context 'a researcher of a project' do
+        let(:user_role) { 'researcher' }
+        let(:user_project) { FactoryBot.create(:project) }
+        it { is_expected.to be false}
+      end
+
+    end
+    context 'when a project is passed in and user is' do
+      let (:target_project) { FactoryBot.create(:project) }
+      subject { user.is_project_admin?(target_project) }
+
+      context 'not an admin of any projects' do
+        it { is_expected.to be false}
+      end
+
+      context 'an admin of a different project' do
+        let(:user_role) { 'admin' }
+        let(:user_project) { FactoryBot.create(:project) }
+        it { is_expected.to be false}
+      end
+
+      context 'an admin of the same project' do
+        let(:user_role) { 'admin' }
+        let(:user_project) { target_project }
+        it { is_expected.to be true}
+      end
+
+      context 'a researcher of the same project' do
+        let(:user_role) { 'researcher' }
+        let(:user_project) { target_project }
+        it { is_expected.to be false}
+      end
     end
   end
 
@@ -1238,6 +1407,5 @@ protected
       expect(result).not_to be_nil
     end
   end
-
 
 end

@@ -1,5 +1,4 @@
 class Client < ActiveRecord::Base
-  attr_accessible :app_id, :app_secret, :name, :site_url, :domain_matchers, :client_type, :redirect_uris
   has_many :access_grants, :dependent => :delete_all
 
   PUBLIC = "public"

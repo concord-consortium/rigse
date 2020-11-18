@@ -1,15 +1,3 @@
-When /^I select a school from the list of schools$/ do
-  page.evaluate_script("useDefaultSchool();")
-end
-
-
-Then /^I should see the the teacher signup form$/ do
-  Then I is_expected.to see "Teacher Signup Page"
-  And I is_expected.to see "personal info"
-  And I is_expected.to see "school"
-  And I is_expected.to see "login info"
-end
-
 Then /^the teachers "([^"]*)" are in a school named "([^"]*)"$/ do |teachers,school_name|
   school = Portal::School.find_by_name(school_name)
   if (school.nil?) then
@@ -62,4 +50,9 @@ When /^I run the student's investigation for "([^"]+)"$/ do |clazz_name|
   within(".accordion_content") do
     click_link 'Run'
   end
+end
+
+When /^I uncheck Active for the external activity "(.*)"$/ do |material_name|
+  # find span containing material name, then uncheck the associated checkbox
+  find('span', text: material_name).first(:xpath, './following-sibling::span').find('input[type="checkbox"]').set(false)
 end

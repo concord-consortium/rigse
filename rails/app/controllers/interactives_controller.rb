@@ -23,7 +23,7 @@ class InteractivesController < ApplicationController
     }
 
     #
-    # Load available params 
+    # Load available params
     #
     @form_model = SearchInteractives.new(search_params)
 
@@ -61,7 +61,7 @@ class InteractivesController < ApplicationController
 
   def create
     authorize Interactive
-    @interactive = Interactive.new(params[:interactive])
+    @interactive = Interactive.new(interactive_strong_params(params[:interactive]))
     @interactive.user = current_visitor
 
     if params[:update_material_properties]
@@ -87,7 +87,7 @@ class InteractivesController < ApplicationController
     respond_to do |format|
       if @interactive.save
         format.js  # render the js file
-        flash[:notice] = 'Interactive was successfully created.'
+        flash['notice'] = 'Interactive was successfully created.'
         format.html { redirect_to(@interactive) }
         format.xml  { render :xml => @interactive, :status => :created, :location => @interactive }
       else
@@ -131,38 +131,38 @@ class InteractivesController < ApplicationController
 
     if params[:update_material_properties]
       # set the material_properties tags
-      @interactive.material_property_list = (params[:material_properties] || [])
+      @interactive.material_property_list = (params[:material_properties] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if params[:update_grade_levels]
       # set the grade_level tags
-      @interactive.grade_level_list = (params[:grade_levels] || [])
+      @interactive.grade_level_list = (params[:grade_levels] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if params[:update_subject_areas]
       # set the subject_area tags
-      @interactive.subject_area_list = (params[:subject_areas] || [])
+      @interactive.subject_area_list = (params[:subject_areas] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if params[:update_model_types]
       # set the subject_area tags
-      @interactive.model_type_list = (params[:model_types] || [])
+      @interactive.model_type_list = (params[:model_types] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
       @interactive.save
     end
 
     if request.xhr?
-      if cancel || @interactive.update_attributes(params[:interactive])
+      if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))
         render 'show', :locals => { :interactive => @interactive }
       else
         render :xml => @interactive.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @interactive.update_attributes(params[:interactive])
-          flash[:notice] = 'Interactive was successfully updated.'
+        if @interactive.update_attributes(interactive_strong_params(params[:interactive]))
+          flash['notice'] = 'Interactive was successfully updated.'
           format.html { redirect_to(@interactive) }
           format.xml  { head :ok }
         else
@@ -240,4 +240,9 @@ class InteractivesController < ApplicationController
     send_data model_library.to_json, :type => :json, :disposition => "attachment", :filename => "portal_interactives_library.json"
   end
 
+  def interactive_strong_params(params)
+    params && params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code,
+                            :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url,
+                            :user_id, :width)
+  end
 end

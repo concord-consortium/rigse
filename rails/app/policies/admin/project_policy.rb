@@ -49,9 +49,22 @@ class Admin::ProjectPolicy < ApplicationPolicy
     ! student?
   end
 
-  def update_edit_or_destroy?
-    admin_or_project_admin?
+  def update_or_edit?
+    user.present? && (user.has_role?('admin') || user.is_project_admin?(record))
   end
+
+  def update?
+    update_or_edit?
+  end
+
+  def edit?
+    update_or_edit?
+  end
+
+  def destroy?
+    user.present? && user.has_role?('admin')
+  end
+
 
   def not_anonymous?
     admin_or_project_admin?

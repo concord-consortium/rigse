@@ -9,6 +9,7 @@ import pluralize from '../helpers/pluralize'
 import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox-to-close'
 import filters from '../helpers/filters'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
+import AutoSuggest from './search/auto-suggest'
 
 const DISPLAY_LIMIT_INCREMENT = 6
 
@@ -93,7 +94,9 @@ const StemFinder = Component({
       firstSearch: true,
       searching: false,
       noResourcesFound: false,
-      lastSearchResultCount: 0
+      lastSearchResultCount: 0,
+      keyword: '',
+      searchInput: ''
     }
   },
 
@@ -149,28 +152,10 @@ const StemFinder = Component({
     }.bind(this))
   },
 
-  search: function (incremental) {
-    let displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT
-
-    // short circuit further incremental searches when all data has been downloaded
-    if (incremental && (this.state.lastSearchResultCount === 0)) {
-      this.setState({
-        displayLimit: displayLimit
-      })
-      return
-    }
-
-    let resources = incremental ? this.state.resources.slice(0) : []
-    let searchPage = incremental ? this.state.searchPage + 1 : 1
-
-    let keyword = (this.refs.keyword ? this.refs.keyword.value : '') || ''
-    if (keyword !== '') {
-      ga('send', 'event', 'Home Page Search', 'Search', keyword)
-    }
-
-    let query = [
-      'search_term=',
-      encodeURIComponent(keyword),
+  getQueryParams: function (incremental, keyword) {
+    const searchPage = incremental ? this.state.searchPage + 1 : 1
+    let query = keyword !== undefined ? ['search_term=', encodeURIComponent(keyword)] : []
+    query = query.concat([
       '&skip_lightbox_reloads=true',
       '&sort_order=Alphabetical',
       '&include_official=1',
@@ -186,7 +171,7 @@ const StemFinder = Component({
       searchPage,
       '&per_page=',
       DISPLAY_LIMIT_INCREMENT
-    ]
+    ])
 
     // subject areas
     this.state.subjectAreasSelected.forEach(function (subjectArea) {
@@ -226,7 +211,30 @@ const StemFinder = Component({
       // TODO: informal learning?
     })
 
+    return query.join('')
+  },
+
+  search: function (incremental) {
+    let displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT
+
+    // short circuit further incremental searches when all data has been downloaded
+    if (incremental && (this.state.lastSearchResultCount === 0)) {
+      this.setState({
+        displayLimit: displayLimit
+      })
+      return
+    }
+
+    let resources = incremental ? this.state.resources.slice(0) : []
+    let searchPage = incremental ? this.state.searchPage + 1 : 1
+
+    let keyword = jQuery.trim(this.state.searchInput)
+    if (keyword !== '') {
+      ga('send', 'event', 'Home Page Search', 'Search', keyword)
+    }
+
     this.setState({
+      keyword,
       searching: true,
       noResourcesFound: false,
       resources: resources
@@ -234,7 +242,7 @@ const StemFinder = Component({
 
     jQuery.ajax({
       url: Portal.API_V1.SEARCH,
-      data: query.join(''),
+      data: this.getQueryParams(incremental, keyword),
       dataType: 'json'
     }).done(function (result) {
       let numTotalResources = 0
@@ -325,17 +333,17 @@ const StemFinder = Component({
 
   clearFilters: function () {
     jQuery('.portal-pages-finder-form-subject-areas-logo').removeClass('selected')
-    this.refs.keyword.value = ''
     this.setState({
       subjectAreasSelected: [],
       featureFiltersSelected: [],
-      gradeFiltersSelected: []
+      gradeFiltersSelected: [],
+      keyword: '',
+      searchInput: ''
     }, this.search)
   },
 
   clearKeyword: function () {
-    this.refs.keyword.value = ''
-    this.search()
+    this.setState({ keyword: '', searchInput: '' }, () => this.search())
   },
 
   toggleFilter: function (type, filter) {
@@ -383,23 +391,43 @@ const StemFinder = Component({
     )
   },
 
-  renderSearch: function () {
-    const search = function (e) {
-      e.preventDefault()
-      e.stopPropagation()
+  handleSearchInputChange: function (searchInput) {
+    this.setState({ searchInput })
+  },
+
+  handleSearchSubmit (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    this.search()
+    this.scrollToFinder()
+  },
+
+  handleAutoSuggestSubmit (searchInput) {
+    this.setState({ searchInput }, () => {
       this.search()
       this.scrollToFinder()
-    }.bind(this)
+    })
+  },
+
+  renderSearch: function () {
     return (
       <div className={'portal-pages-finder-form-search col-4'}>
-        <form onSubmit={search}>
+        <form onSubmit={this.handleSearchSubmit}>
           <div className={'portal-pages-finder-form-search-title'}>
             <label htmlFor={'search-terms'}>
               Search by keyword
             </label>
           </div>
           <div className={'portal-pages-search-input-container'}>
-            <input id={'search-terms'} ref={'keyword'} placeholder={'Type search term here'} />
+            <AutoSuggest
+              name={'search-terms'}
+              query={this.state.searchInput}
+              getQueryParams={this.getQueryParams}
+              onChange={this.handleSearchInputChange}
+              onSubmit={this.handleAutoSuggestSubmit}
+              placeholder={'Type search term here'}
+              skipAutoSearch
+            />
             <a href={'/search'}>
               Advanced Search
             </a>
@@ -427,7 +455,7 @@ const StemFinder = Component({
   },
 
   renderResultsHeaderFilters: function () {
-    const keyword = jQuery.trim((this.refs.keyword ? this.refs.keyword.value : '') || '')
+    const keyword = jQuery.trim(this.state.keyword)
     if (keyword.length + this.state.subjectAreasSelected.length + this.state.featureFiltersSelected.length + this.state.gradeFiltersSelected.length === 0) {
       return null
     }
@@ -445,7 +473,7 @@ const StemFinder = Component({
 
     if (keyword.length > 0) {
       filters.push(
-        <div className={'portal-pages-finder-header-filter'}>
+        <div key={'keyword'} className={'portal-pages-finder-header-filter'}>
           {'Keyword: ' + keyword}
           <span onClick={this.clearKeyword} />
         </div>

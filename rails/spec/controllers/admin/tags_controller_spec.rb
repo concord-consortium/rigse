@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe Admin::TagsController do
 
+  let (:tag_params) {{
+    "scope" => "test scope", "tag" => "test tag"
+  }}
+
   before(:each) do
     login_admin
   end
@@ -46,8 +50,8 @@ describe Admin::TagsController do
 
     describe "with valid params" do
       it "assigns a newly created tags as @tags" do
-        allow(Admin::Tag).to receive(:new).with({'these' => 'params'}).and_return(mock_tags(:save => true))
-        post :create, :admin_tag => {:these => 'params'}
+        allow(Admin::Tag).to receive(:new).with(tag_params).and_return(mock_tags(:save => true))
+        post :create, :admin_tag => tag_params
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
@@ -60,8 +64,8 @@ describe Admin::TagsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved tags as @tags" do
-        allow(Admin::Tag).to receive(:new).with({'these' => 'params'}).and_return(mock_tags(:save => false))
-        post :create, :admin_tag => {:these => 'params'}
+        allow(Admin::Tag).to receive(:new).with(tag_params).and_return(mock_tags(:save => false))
+        post :create, :admin_tag => tag_params
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
@@ -79,8 +83,8 @@ describe Admin::TagsController do
     describe "with valid params" do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-        expect(mock_tags).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :admin_tag => {:these => 'params'}
+        expect(mock_tags).to receive(:update_attributes).with(tag_params)
+        put :update, :id => "37", :admin_tag => tag_params
       end
 
       it "assigns the requested tags as @tags" do
@@ -99,8 +103,8 @@ describe Admin::TagsController do
     describe "with invalid params" do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-        expect(mock_tags).to receive(:update_attributes).with({'these' => 'params'})
-        put :update, :id => "37", :admin_tag => {:these => 'params'}
+        expect(mock_tags).to receive(:update_attributes).with(tag_params)
+        put :update, :id => "37", :admin_tag => tag_params
       end
 
       it "assigns the tags as @tags" do
@@ -120,13 +124,15 @@ describe Admin::TagsController do
 
   describe "DELETE destroy" do
     it "destroys the requested tags" do
-      expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
+      expect(Admin::Tag).to receive(:find).with("37")
+        .and_return(mock_tags(name:'tag'))
       expect(mock_tags).to receive(:destroy)
       delete :destroy, :id => "37"
     end
 
     it "redirects to the admin_tags list" do
-      allow(Admin::Tag).to receive(:find).and_return(mock_tags(:destroy => true))
+      allow(Admin::Tag).to receive(:find)
+        .and_return(mock_tags(destroy: true, name:'tag'))
       delete :destroy, :id => "1"
       expect(response).to redirect_to(admin_tags_url)
     end

@@ -1,5 +1,5 @@
 class Dataservice::PeriodicBundleLoggersController < ApplicationController
-  # restrict access to admins or bundle formatted requests 
+  # restrict access to admins or bundle formatted requests
   include RestrictedBundleController
 
   # GET /dataservice/periodic_bundle_loggers/1

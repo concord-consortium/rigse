@@ -100,14 +100,14 @@ class Portal::OfferingsController < ApplicationController
   def update
     @offering = Portal::Offering.find(params[:id])
     authorize @offering
-    update_successful = @offering.update_attributes(params[:offering])
+    update_successful = @offering.update_attributes(portal_offering_strong_params(params[:offering]))
     if request.xhr?
       render :nothing => true, :status => update_successful ? 200 : 500
       return
     end
     respond_to do |format|
       if update_successful
-        flash[:notice] = 'Portal::Offering was successfully updated.'
+        flash['notice'] = 'Portal::Offering was successfully updated.'
         format.html { redirect_to(@offering) }
         format.xml  { head :ok }
       else
@@ -160,10 +160,10 @@ class Portal::OfferingsController < ApplicationController
         learner.report_learner.last_run = DateTime.now
         learner.report_learner.update_fields
       end
-      flash[:notice] = "Your answers have been saved."
+      flash['notice'] = "Your answers have been saved."
       redirect_to :root
     else
-      render :text => 'problem loading offering', :status => 500
+      render :plain => 'problem loading offering', :status => 500
     end
   end
 
@@ -266,4 +266,7 @@ class Portal::OfferingsController < ApplicationController
     end
   end
 
+  def portal_offering_strong_params(params)
+    params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status)
+  end
 end

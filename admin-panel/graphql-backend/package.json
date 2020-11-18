@@ -11,11 +11,11 @@
   "author": "The Concord Consortium",
   "license": "MIT",
   "dependencies": {
-    "apollo-server": "^2.14.1",
+    "apollo-server": "^2.14.2",
     "apollo-server-express": "^2.14.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-jwt": "^5.3.3",
+    "express-jwt": "^6.0.0",
     "graphql": "14",
     "jest": "^26.0.1",
     "reflect-metadata": "^0.1.13",

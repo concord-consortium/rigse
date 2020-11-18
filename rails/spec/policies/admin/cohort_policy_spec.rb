@@ -11,6 +11,9 @@ RSpec.describe Admin::CohortPolicy do
 
   let(:user) { FactoryBot.create(:user) }
   let(:scope) { Pundit.policy_scope!(user, Admin::Cohort) }
+  let(:cohort_stubs) { {project: 'project' } }
+  let(:proj_user) { FactoryBot.create(:user) }
+  let(:cohort) { double('cohort', cohort_stubs) }
 
   describe "Scope" do
     context 'normal user' do
@@ -47,6 +50,53 @@ RSpec.describe Admin::CohortPolicy do
       let(:user) { FactoryBot.generate(:admin_user) }
       it 'allows access to all cohorts' do
         expect(scope.to_a).to match_array([@cohort1, @cohort2, @cohort3])
+      end
+    end
+  end
+
+  describe 'create' do
+    context 'as project admin' do
+      before(:each) do
+        allow(proj_user).to receive(:is_project_admin?).and_return(true)
+      end
+
+      it 'should allow create' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to permit(:create)
+      end
+    end
+
+    context 'not as project admin' do
+      before(:each) do
+        allow(proj_user).to receive(:is_project_admin?).and_return(false)
+      end
+      it 'should allow create' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to_not permit(:create)
+      end
+    end
+  end
+
+  describe 'destroy' do
+    context 'as project admin' do
+      before(:each) do
+        allow(proj_user).to receive(:is_project_admin?).and_return(true)
+      end
+
+      it 'should allow destroy' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to permit(:destroy)
+      end
+    end
+
+    context 'not as project admin' do
+      before(:each) do
+        allow(proj_user).to receive(:is_project_admin?).and_return(false)
+      end
+
+      it 'should not allow create' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to_not permit(:create)
+      end
+
+      it 'should not allow destroy' do
+        expect(Admin::CohortPolicy.new(proj_user, cohort)).to_not permit(:destroy)
       end
     end
   end

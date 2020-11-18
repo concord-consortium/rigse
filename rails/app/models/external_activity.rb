@@ -90,9 +90,6 @@ class ExternalActivity < ActiveRecord::Base
   has_many :materials_collection_items, :dependent => :destroy, :as => :material
   has_many :materials_collections, :through => :materials_collection_items
 
-  has_many :teacher_notes, :dependent => :destroy, :as => :authored_entity
-  has_many :author_notes, :dependent => :destroy, :as => :authored_entity
-
   belongs_to :template, :polymorphic => true
 
   has_many :project_materials, :class_name => "Admin::ProjectMaterial", :as => :material, :dependent => :destroy
@@ -334,6 +331,25 @@ class ExternalActivity < ActiveRecord::Base
   # external_activity_reports
   def external_report
     return external_reports.first
+  end
+
+  def add_to_collections(collection_ids)
+    collection_ids.each do |collection_id|
+      collection = MaterialsCollection.includes(:materials_collection_items).find(collection_id)
+      collection_items = collection.materials_collection_items
+      item = collection_items.find_by_material_id_and_material_type(id, "ExternalActivity")
+      if item.nil?
+        item = MaterialsCollectionItem
+                   .where(materials_collection_id: collection.id,
+                          material_type: "ExternalActivity",
+                          material_id: id)
+                   .first_or_create
+      end
+      if item.position.nil?
+        item.position = collection_items.length
+        item.save!
+      end
+    end
   end
 
   private

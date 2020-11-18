@@ -81,13 +81,13 @@ describe Admin::SiteNoticesController do
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).to be_nil
-      expect(flash[:error]).to match(/Notice text is blank/i)
+      expect(flash['error']).to match(/Notice text is blank/i)
 
       @post_params[:notice_html] = "       "
       post :update, @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).to be_nil
-      expect(flash[:error]).to match(/Notice text is blank/i)
+      expect(flash['error']).to match(/Notice text is blank/i)
     end
   end
 

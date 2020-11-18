@@ -26,7 +26,7 @@ describe PasswordsController do
       post :create_by_login, @params
 
       expect(response).to be_success
-      expect(flash[:error]).not_to be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it "will fail gracefully for students without security questions" do
@@ -35,7 +35,7 @@ describe PasswordsController do
       post :create_by_login, @params
 
       expect(response).to be_success
-      expect(flash[:error]).not_to be_nil
+      expect(flash['error']).not_to be_nil
     end
 
     it "will send an email reset notification for non-students with email" do
@@ -47,7 +47,7 @@ describe PasswordsController do
       post :create_by_login, @params
 
       expect(@response).to redirect_to(root_path)
-      expect(flash[:error]).to be_nil
+      expect(flash['error']).to be_nil
     end
 
     it "will ask security questions for students" do
@@ -59,7 +59,7 @@ describe PasswordsController do
       post :create_by_login, @params
 
       expect(@response).to redirect_to(password_questions_path(@forgetful_user))
-      expect(flash[:error]).to be_nil
+      expect(flash['error']).to be_nil
     end
 
     describe "security questions" do
@@ -69,6 +69,7 @@ describe PasswordsController do
         @questions_params = {
           :user_id => @forgetful_user.id
         }
+
 
         @answers_params = {
           :user_id => @forgetful_user.id,
@@ -102,7 +103,7 @@ describe PasswordsController do
         post :check_questions, @answers_params
 
         expect(@response).to redirect_to(password_questions_path(@forgetful_user))
-        expect(flash[:error]).not_to be_nil
+        expect(flash['error']).not_to be_nil
       end
 
       it "will raise an error if the user submits an answer to a question that does not belong to the current user" do
@@ -133,7 +134,7 @@ describe PasswordsController do
 
       post :create_by_email, @params
 
-      expect(flash[:error]).to be_nil
+      expect(flash['error']).to be_nil
     end
 
   end

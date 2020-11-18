@@ -22,13 +22,4 @@ RSpec.describe Portal::TeachersHelper, type: :helper do
     end
   end
 
-  # TODO: auto-generated
-  describe '#teacher_add_dropdown' do
-    xit 'works' do
-      result = helper.teacher_add_dropdown(FactoryBot.create(:portal_teacher))
-
-      expect(result).not_to be_nil
-    end
-  end
-
 end

@@ -87,9 +87,6 @@ module RailsPortal
     # Run "rake -D time" for a list of tasks for finding time zone names. Comment line to use default local time.
     config.time_zone = 'UTC'
 
-    # Set the default location for page caching
-    config.action_controller.page_cache_directory = ::Rails.root.to_s + '/public'
-
     # Use SQL instead of Active Record's schema dumper when creating the test database.
     # This is necessary if your schema can't be completely dumped by the schema dumper,
     # like if you have constraints or database-specific column types
@@ -105,7 +102,7 @@ module RailsPortal
       puts "Didn't start observers because you are running: rake db:migrate"
     else
         begin
-          config.active_record.observers = :user_observer, :"dataservice/bundle_content_observer", :"dataservice/periodic_bundle_content_observer"
+          config.active_record.observers = :"dataservice/bundle_content_observer", :"dataservice/periodic_bundle_content_observer"
         rescue
           # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
           puts "Couldn't start observers #{$!} ... but continuing process anyway"
@@ -127,6 +124,8 @@ module RailsPortal
         resource '/api/v1/offering/*', :headers => :any, :methods => [:get, :put]
         resource '/api/v1/classes/*', :headers => :any, :methods => [:get]
         resource '/api/v1/jwt/*', :headers => :any, :methods => [:get]
+        resource '/api/v1/bookmarks', :headers => :any, :methods => [:post]
+        resource '/api/v1/bookmarks/*', :headers => :any, :methods => [:put, :delete]
       end
 
       # Set up custom CORS, if the environment variable PORTAL_FEATURES includes "allow_cors".
@@ -148,9 +147,6 @@ module RailsPortal
     config.assets.enabled = true
     config.assets.precompile += %w(
       print.css
-      student_roster.js
-      class_setup_info.js
-      manage_classes.js
       full_status.js
       preview_home_page.js
       preview_about_page.js
@@ -164,6 +160,7 @@ module RailsPortal
       print.css
       import_progress.js
       import_model_library.js
+      jquery.placeholder.js
     )
 
     # pre-compile any fonts in the assets/ directory as well
@@ -180,6 +177,12 @@ module RailsPortal
       config.assets.initialize_on_precompile = false
     end
 
+    # use json format for serilized cookies
+    config.action_dispatch.cookies_serializer = :hybrid
+
+    # propagate errors normally just like in other Active Record callbacks
+    # See https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#error-handling-in-transaction-callbacks
+    config.active_record.raise_in_transactional_callbacks = true
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

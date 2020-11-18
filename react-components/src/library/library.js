@@ -32,6 +32,15 @@ import SearchResults from './components/search/results'
 import SMaterialsList from './components/search/materials-list'
 import MaterialsBin from './components/materials-bin/materials-bin'
 import openAssignToClassModal from './components/assign-to-class/assign-to-class'
+import PortalClassSetupForm from './components/portal-classes/setup-form'
+import EditBookmarks from './components/bookmarks/edit'
+import ManageClasses from './components/portal-classes/manage-classes'
+import EditMaterialsCollectionList from './components/materials-collection/edit-list'
+import JoinClass from './components/portal-students/join-class'
+import StudentRoster from './components/portal-classes/student-roster'
+import AutoSuggest from './components/search/auto-suggest'
+import EditEResourceOptions from './components/eresources/edit-options'
+import StandardsTable from './components/standards/standards-table'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -231,6 +240,50 @@ window.PortalComponents = {
     const matches = queryString.match(/assign_to_class=(\d+)/)
     const assignToSpecificClass = matches ? matches[1] : null
     ReactDOM.render(React.createElement(MaterialsBin, { materials: definition, assignToSpecificClass }), jQuery(selectorOrElement)[0])
-  }
+  },
 
+  PortalClassSetupForm: PortalClassSetupForm,
+  renderPortalClassSetupForm: function (options, id) {
+    render(React.createElement(PortalClassSetupForm, options), id)
+  },
+
+  EditBookmarks: EditBookmarks,
+  renderEditBookmarks: function (options, id) {
+    render(React.createElement(EditBookmarks, options), id)
+  },
+
+  ManageClasses: ManageClasses,
+  renderManageClasses: function (options, id) {
+    render(React.createElement(ManageClasses, options), id)
+  },
+
+  EditMaterialsCollectionList: EditMaterialsCollectionList,
+  renderEditMaterialsCollectionList: function (options, id) {
+    render(React.createElement(EditMaterialsCollectionList, options), id)
+  },
+
+  JoinClass: JoinClass,
+  renderJoinClass: function (options, id) {
+    render(React.createElement(JoinClass, options), id)
+  },
+
+  StudentRoster: StudentRoster,
+  renderStudentRoster: function (options, id) {
+    render(React.createElement(StudentRoster, options), id)
+  },
+
+  AutoSuggest: AutoSuggest,
+  renderAutoSuggest: function (options, id) {
+    render(React.createElement(AutoSuggest, options), id)
+  },
+
+  StandardsTable: StandardsTable,
+  renderStandardsTable: function (options, id) {
+    render(React.createElement(StandardsTable, options), id)
+  },
+
+  EditEResourceOptions: EditEResourceOptions,
+  renderEditEResourceOptions: function (options, id) {
+    render(React.createElement(EditEResourceOptions, options), id)
+  }
 }

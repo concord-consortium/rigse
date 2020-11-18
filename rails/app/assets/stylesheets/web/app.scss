@@ -1,4 +1,4 @@
-@import "compass";
+@import "no-compass";
 /* browser reset */
 
 body, div, h1, h2, h3, h4, h5, h6, p, ul, ol, li, dl, dd, dt, blockquote, button, fieldset, legend, label, input, textarea, form {
@@ -928,6 +928,27 @@ button {
       cursor: default;
     }
   }
+
+  &.textButton {
+    background: transparent;
+    border: none;
+    color: #ea6d2f;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 0;
+
+    &:hover {
+      background: transparent;
+      color: #ffc320;
+    }
+
+    &.adminOption {
+      float: right;
+      font-size: 13px;
+      margin: 0 0 0 20px;
+      text-transform: uppercase;
+    }
+  }
 }
 
 input {
@@ -1474,7 +1495,7 @@ ul.quiet_list {
   font: 12px / 1 Arial, Helvetica, sans-serif;
   padding: 4px 5px;
   /* CSS 3 */
-  @include background-image(linear-gradient(#f3951d, #dd6e0d));
+  background-image: linear-gradient(#f3951d, #dd6e0d);
   _background: #f6f2e2;
   border-radius: 12px;
   /* Opera 10.5, IE 9 */
@@ -1638,10 +1659,6 @@ a.hlink:hover{color:#DA5936;text-decoration:none;cursor:pointer}
 #setup_flash_message_div{
   color:black;
   font-weight:bold;
-}
-#teacher_id_selector
-{
-  width:250px;
 }
 
 /* CSS classes to display scrollbars on Mac OS X Lion */

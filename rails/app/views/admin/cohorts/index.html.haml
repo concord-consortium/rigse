@@ -1,0 +1,2 @@
+= render :partial => 'shared/collection_menu', :locals => { :collection => @admin_cohorts, :collection_class => Admin::Cohort }
+= render :partial => 'show', :collection => @admin_cohorts, :collection_class => Admin::Cohort, :as => :admin_cohort

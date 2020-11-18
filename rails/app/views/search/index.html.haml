@@ -6,8 +6,7 @@
       .search-form__label
         SEARCH
       .search-form__field
-        = text_field_tag :search_term, @form_model.text, :autocomplete => "off", :onkeydown=>'if(goButttondisabled){return false;}showsuggestion(event,this)', :onkeyup=>'if(goButttondisabled){return false;}searchsuggestions(event,this)', :id => 'search_term'
-        #search_suggestions
+        #auto-suggest-placeholder
       .search-form__button.go_button.button
         = submit_tag :GO, :name => '', :id => 'go-button'
     = render :partial=>"search/filters"
@@ -24,7 +23,8 @@
   jQuery(document).ready(function() {
     var dest = '#results .search_resultscontainer',
         apiBase = '#{api_v1_search_search_path}?',
-        searchBase = '#{search_path}?';
+        searchBase = '#{search_path}?',
+        form = jQuery('#material_search_form');
 
     window.updateSearchUrl = function(query) {
       if (window.history) {
@@ -34,8 +34,24 @@
       }
     }
 
-    jQuery('#material_search_form').on('submit', function(event) {
-      event.preventDefault();
+    function renderAutoSuggest(query) {
+      PortalComponents.renderAutoSuggest({
+        id: "search_term",
+        name: "search_term",
+        query: query,
+        onSubmit: autoSuggestSubmit,
+        getQueryParams: function () { return jQuery(form).serialize() }
+      }, 'auto-suggest-placeholder')
+    }
+
+    function autoSuggestSubmit() {
+      // use timeout to avoid React complaining about duplicate roots since search calls into React render
+      setTimeout(function () {
+        search()
+      }, 1)
+    }
+
+    function search() {
       PortalPages.renderSearchMessage('Finding materials...', dest)
 
       // Reset our current page numbers
@@ -43,9 +59,11 @@
       jQuery("#activity_page").val(1);
       jQuery("#interactive_page").val(1);
       jQuery("#collection_page").val();
-      var query = jQuery(this).serialize();
+      var query = jQuery(form).serialize();
 
       window.updateSearchUrl(query);
+
+      renderAutoSuggest(form.find('input[name="search_term"]').val())
 
       jQuery.ajax({
         dataType: "json",
@@ -58,6 +76,13 @@
           }
         }
       });
+    }
+
+    renderAutoSuggest(#{@form_model.text.to_json})
+
+    form.on('submit', function(event) {
+      event.preventDefault();
+      search();
     });
 
     jQuery('#material_search_form').submit();

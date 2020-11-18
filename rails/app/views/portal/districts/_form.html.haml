@@ -12,4 +12,4 @@
         = select(:portal_district, :state, Portal::StateOrProvince.state_and_province_abbreviations)
     %p
       = field_set_tag 'Description' do
-        = f.text_area :description
+        = f.text_area :description, class: 'mceNoEditor'

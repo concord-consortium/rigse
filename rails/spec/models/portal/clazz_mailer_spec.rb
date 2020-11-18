@@ -29,7 +29,7 @@ describe Portal::ClazzMailer do
   end
 
   describe "clazz_creation_notification" do
-    subject { Portal::ClazzMailer.clazz_creation_notification(user, clazz) }
+    subject { Portal::ClazzMailer.clazz_creation_notification(user, clazz).message }
 
     context "when teacher is in a cohort" do
       it "sends a notification email to project admins" do
@@ -95,10 +95,24 @@ describe Portal::ClazzMailer do
         expect(subject.To.value.join).to include("Second Manager")
       end
     end
+    context "when teacher is in a cohort of a project with a nil admin" do
+      before(:each) do
+        second_admin = FactoryBot.create(:user, :first_name => "Second", :last_name => "Manager")
+        second_admin.add_role_for_project('admin', project)
+        # we use delete here instead of destroy so the project_admin object that was created
+        # should stick around
+        second_admin.delete
+      end
+      it "sends a notification email only to the first admins" do
+        expect(subject).to_not be_a(ActionMailer::Base::NullMail)
+        expect(subject.To.value.join).to include("Project Manager")
+        expect(subject.To.value.join).to_not include("Second Manager")
+      end
+    end
   end
 
   describe "clazz_assignment_notification" do
-    subject { Portal::ClazzMailer.clazz_assignment_notification(user, clazz, "Activity 1") }
+    subject { Portal::ClazzMailer.clazz_assignment_notification(user, clazz, "Activity 1").message }
     context "when a teacher is in a cohort" do
       it "sends a notification email to project admins" do
         expect(subject).to_not be_a(ActionMailer::Base::NullMail)

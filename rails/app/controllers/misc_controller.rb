@@ -17,19 +17,11 @@ class MiscController < ActionController::Base
         :bundle_content => learner.bundle_logger.in_progress_bundle
       )
     end
-    asset = ActionController::Base.helpers.asset_paths.asset_for("cc_corner_logo.png", nil)
+    asset_pathname = get_full_path_to_asset("cc_corner_logo.png")
     NoCache.add_headers(response.headers)
-    send_file(asset.pathname.to_s, {:type => 'image/png', :disposition => 'inline'} )
+    send_file(asset_pathname, {:type => 'image/png', :disposition => 'inline'} )
   end
 
-  def installer_report
-    body = request.body.read
-    remote_ip = request.env['HTTP_X_FORWARDED_FOR'] || request.remote_ip
-    success = !!(body =~ /Succeeded! Saved and loaded jar./)
-    report = InstallerReport.create(:body => body, :remote_ip => remote_ip, :success => success,
-      :jnlp_session_id => params[:jnlp_session_id])
-    render :xml => "<created/>", :status => :created
-  end
 
   def learner_proc_stats
     render json: LearnerProcessingEvent.histogram(12), :callback => params['callback']
@@ -145,8 +137,14 @@ class MiscController < ActionController::Base
     redirect_to "/users/auth/#{provider}"
   end
 
-  def get_banner_asset(name)
-    ActionController::Base.helpers.asset_paths.asset_for("new/banners/#{name}.png", nil)
+  # from https://stackoverflow.com/a/61552216
+  def get_full_path_to_asset(filename)
+    manifest_file = Rails.application.assets_manifest.assets[filename]
+    if manifest_file
+      File.join(Rails.application.assets_manifest.directory, manifest_file)
+    else
+      Rails.application.assets&.[](filename)&.filename
+    end
   end
 
 end

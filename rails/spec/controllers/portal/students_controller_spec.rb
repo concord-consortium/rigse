@@ -228,7 +228,7 @@ describe Portal::StudentsController do
           to_return(status: 200, body: "Success", headers: {})
 
         post :move, id: @student.id, clazz: @clazz_params
-        expect(flash[:notice]).to match(/Successfully moved student to new class./)
+        expect(flash['notice']).to match(/Successfully moved student to new class./)
       end
     end
 
@@ -302,9 +302,9 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
-      get :status, id: FactoryBot.create(:portal_student).to_param
+      xhr :get, :status, id: FactoryBot.create(:portal_student).to_param
 
-      expect(response).to have_http_status(406)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -326,14 +326,16 @@ describe Portal::StudentsController do
     end
   end
 
+  # Commented out as a test to see if it is used
+  #
   # TODO: auto-generated
-  describe '#update' do
-    xit 'PATCH update' do
-      put :update, id: FactoryBot.create(:portal_student).to_param
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
+  # describe '#update' do
+  #   xit 'PATCH update' do
+  #     put :update, id: FactoryBot.create(:portal_student).to_param
+  #
+  #     expect(response).to have_http_status(:ok)
+  #   end
+  # end
 
   # TODO: auto-generated
   describe '#destroy' do
@@ -379,15 +381,5 @@ describe Portal::StudentsController do
       expect(response).to have_http_status(:ok)
     end
   end
-
-  # TODO: auto-generated
-  describe '#confirm' do
-    xit 'GET confirm' do
-      get :confirm, class: { class_word: 'word' }
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
 
 end

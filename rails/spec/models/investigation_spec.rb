@@ -105,11 +105,11 @@ describe Investigation do
       activity_two.insert_at(2)
 
       investigation.reload
-      expect(investigation.activities).to eql([activity_one, activity_two])
+      expect(investigation.activities.to_a).to eql([activity_one, activity_two])
 
       activity_one.move_to_bottom
       investigation.reload
-      expect(investigation.activities).to eql([activity_two, activity_one])
+      expect(investigation.activities.to_a).to eql([activity_two, activity_one])
 
       # must reload the other activity for updated position.
       activity_two.reload
@@ -377,17 +377,6 @@ describe Investigation do
     it 'deep_xml' do
       investigation = described_class.new
       result = investigation.deep_xml
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#duplicate' do
-    it 'duplicate' do
-      investigation = described_class.new
-      new_owner = User.new
-      result = investigation.duplicate(new_owner)
 
       expect(result).not_to be_nil
     end

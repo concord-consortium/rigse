@@ -97,14 +97,10 @@ class Admin::PermissionFormsController < ApplicationController
     student_id     = params['student_id']
     permission_ids = params['permission_ids']
     status = 400
-    respond_to do |format|
-      format.js do
-        if update_student_permissions(student_id, permission_ids)
-          status = 200
-        end
-        render :nothing => true, :status => status
-      end
+    if update_student_permissions(student_id, permission_ids)
+      status = 200
     end
+    render :nothing => true, :status => status
   end
 
   def create

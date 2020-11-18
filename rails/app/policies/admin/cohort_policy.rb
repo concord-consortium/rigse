@@ -15,4 +15,39 @@ class Admin::CohortPolicy < ApplicationPolicy
     end
   end
 
+  def new?
+    admin_or_project_admin?
+  end
+
+  def create?
+    # if the cohort has a project already, require membership
+    if(record.project)
+      (admin? || user.is_project_admin?(record.project))
+    # inprocess cohort perhaps?
+    else
+      admin_or_project_admin?
+    end
+  end
+
+  def update?
+    # if the cohort has a project already, require membership
+    if(record.project)
+      admin? || user.is_project_admin?(record.project)
+    # inprocess cohort perhaps?
+    else
+      admin_or_project_admin?
+    end
+  end
+
+  def show?
+    if(record.project)
+      admin? || user.is_project_member?(record.project)
+    else
+      admin_or_project_admin?
+    end
+  end
+
+  def destroy?
+    update?
+  end
 end

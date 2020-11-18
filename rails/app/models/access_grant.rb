@@ -5,7 +5,6 @@ class AccessGrant < ActiveRecord::Base
   belongs_to :teacher, :class_name => "Portal::Teacher"
   before_create :generate_tokens
 
-  attr_accessible :access_token, :access_token_expires_at, :client_id, :code, :refresh_token, :state, :user_id, :learner_id, :teacher_id
   ExpireTime = 1.week
 
   # Returns all access grants valid at given time, ordered by expire date.
@@ -90,7 +89,7 @@ class AccessGrant < ActiveRecord::Base
     client = validation.client
 
     AccessGrant.prune!
-    access_grant = user.access_grants.create({:client => client, :state => params[:state]}, :without_protection => true)
+    access_grant = user.access_grants.create({:client => client, :state => params[:state]})
 
     # validate_oauth_authorize already checked that this client settings matched the response_type
     if params[:response_type] === "token"

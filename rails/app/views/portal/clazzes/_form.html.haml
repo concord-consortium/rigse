@@ -1,69 +1,36 @@
-= javascript_include_tag "class_setup_info.js"
 .maincontainer.pie
   .container
-    .content
-      = f.error_messages
-    .right
-      %h1 Class Setup Information
-      - if !(portal_clazz.id.nil?)
-        = render :partial => 'clazz_information', :locals => {:portal_clazz => portal_clazz}
-      %table.classsetupform
-        %tr
-          %td.title= label_tag :name, 'Class Name:', :class=>"right", :style=>"white-space:nowrap"
-          %td= f.text_field :name
+    #portal-class-setup-form
 
+- schools = []
+- if portal_clazz.new_record?
+  - if current_visitor.portal_teacher
+    - schools = current_visitor.portal_teacher.schools
+  - if schools.empty?
+    - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
+- schools = schools.map { |s| {id: s.id, name: s.name} }
 
-        - if !(portal_clazz.id.nil?)
-          %tr
-            %td.title= label_tag :teachers, 'Teachers:', :class=>"right", :style=>"white-space:nowrap"
-            %td{:class=>"left"}= render :partial => 'portal/teachers/table_for_clazz_setup', :locals => {:portal_clazz => portal_clazz}
-        %tr
-          %td.title= label_tag :description, 'Description:', :class=>"right", :style=>"white-space:nowrap"
-          %td= f.text_area :description, :rows => 5, :cols => 50, :class => 'mceNoEditor'
-        - if portal_clazz.new_record? || !APP_CONFIG[:lock_classword]
-          %tr
-            %td.title= label_tag :class_word, 'Class Word:', :class=>"right", :style=>"white-space:nowrap"
-            %td
-              = f.text_field :class_word
+- if portal_clazz.id.nil?
+  - cancel_link = home_url
+- else
+  - cancel_link = materials_portal_clazz_url(portal_clazz)
 
-        - if portal_clazz.new_record?
-          %tr
-            - schools = []
-            - if current_visitor.portal_teacher
-              - schools = current_visitor.portal_teacher.schools
-            - if schools.empty?
-              - schools << Portal::School.find_by_name(APP_CONFIG[:site_school])
-            %td.title= label_tag :school, 'School: ', :class=>"right"
-            %td= f.collection_select(:school, schools, :id, :name, :options => {}, :class => "string")
+- unassigned_teachers = (!portal_clazz.school.nil?) ? portal_clazz.school.portal_teachers - portal_clazz.teachers : []
+- unassigned_teachers = unassigned_teachers.sort { |a,b| (a.list_name <=> b.list_name) }.map { |t| {name: t.list_name, id: t.id} }
+- current_teachers = portal_clazz.teachers.sort { |a,b| (a.list_name <=> b.list_name) }.map { |t| {name: t.list_name, id: t.id} }
 
-        - if Admin::Settings.default_settings.enable_grade_levels?
-          %tr
-            %td.title= label_tag :grade_levels, 'Grade Levels:', :class=>"right", :style=>"white-space:nowrap"
-            %td
-              %table{:style=>"width: 100%;"}
-                - cols = 4
-                - width_perc = (95.0 / cols)
-                - APP_CONFIG[:active_grades].each_with_index do |name,i|
-                  - tag_name = "portal_clazz[grade_levels][#{name}]"
-                  - if i % cols == 0
-                    %tr
-                  %td{:style => "text-align: left; white-space: nowrap; width: #{width_perc}%;"}
-                    = check_box_tag tag_name, "1", !portal_clazz.grades.find_by_name(name).nil?
-                    = label_tag tag_name, name
-      %hr{:class => 'hr-thick'}
-      %div.form-submit
-        - if portal_clazz.id.nil?
-          = link_to "Cancel", home_url
-        - else
-          = link_to "Cancel", materials_portal_clazz_url(portal_clazz)
-        %span.create_button
-          = f.submit 'Save Changes', {:class => 'pie'}
-          .create_in_progress{:style => "display: none;"}
-            .status
-              %span.wait_image
-                =image_tag('wait16.gif')
-              .message.waiting
-                Please wait while your class is created
-
-      = f.hidden_field :teacher_id
-      = f.hidden_field :id
+:javascript
+  PortalComponents.renderPortalClassSetupForm({
+    portalClass: #{portal_clazz.to_json},
+    portalClassGrades: #{portal_clazz.grades.map {|g| g.name}.to_json},
+    portalClassTeacher: #{(portal_clazz.teacher ? {name: portal_clazz.teacher.name, id: portal_clazz.teacher.id} : nil).to_json},
+    teachers: {
+      current: #{current_teachers.to_json},
+      unassigned: #{unassigned_teachers.to_json},
+    },
+    errors: #{portal_clazz.errors.to_json},
+    schools: #{schools.to_json},
+    enableGradeLevels: #{Admin::Settings.default_settings.enable_grade_levels?},
+    activeGrades: #{APP_CONFIG[:active_grades].to_json},
+    cancelLink: #{cancel_link.to_json}
+  }, 'portal-class-setup-form');

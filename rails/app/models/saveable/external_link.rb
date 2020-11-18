@@ -6,7 +6,9 @@ class Saveable::ExternalLink < ActiveRecord::Base
 
   belongs_to :embeddable,  :polymorphic => true
 
-  has_many :answers, :dependent => :destroy ,:order => :position, :class_name => "Saveable::ExternalLinkUrl"
+  has_many :answers, -> { order :position },
+    dependent: :destroy,
+    class_name: 'Saveable::ExternalLinkUrl'
 
   delegate :name, :to => :embeddable
 

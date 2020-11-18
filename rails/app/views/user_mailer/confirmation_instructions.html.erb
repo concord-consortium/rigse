@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<title>Confirm Account</title>
+</head>
+<body style="background:#f1f1f1;margin:0;padding:0;">
+<div style="margin:1%;text-align:center;width:98%;">
+<table width="100%" style="background:#fff;margin:0;padding:20px;text-align:left;">
+<tr><td align="left" valign="middle" style="padding:0;">
+<%= render :partial => 'shared/email_banner' %>
+</td></tr>
+<tr><td align="left" style="padding:0;">
+<p style="font-family:Verdana,Helvetica,Arial,sans-serif;font-size: 16px;margin-top:30px;margin-right:0;margin-bottom:22px;margin-left:0;">Welcome, <%= @user.first_name %>!</p>
+<p style="font-family:Verdana,Helvetica,Arial,sans-serif;font-size: 20px;font-weight:bold;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">Thanks for creating an account on the <%= APP_CONFIG[:site_name] %>.</p>
+<p style="font-family:Verdana,Helvetica,Arial,sans-serif;font-size: 16px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">To complete your registration, click the button below.</p>
+<p style="font-family:Verdana,Helvetica,Arial,sans-serif;font-size: 16px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;"><%= link_to 'Confirm Account', confirmation_url(@user, :confirmation_token => @token), :style=>'background:#ea6d2f;border:none;color:#ffffff;display:inline-block;margin:0;padding:10px 20px;text-decoration:none;' %></p>
+<p style="font-family:Verdana,Helvetica,Arial,sans-serif;font-size: 12px;margin-top:0;margin-right:0;margin-bottom:22px;margin-left:0;">The Concord Consortium<br />
+25 Love Lane<br />
+Concord, MA 01742</p>
+</td></tr>
+</table>
+</div>
+</body>
+</html>

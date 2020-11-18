@@ -5,6 +5,9 @@ RailsPortal::Application.configure do
   # Code is not reloaded between requests
   config.cache_classes = true
 
+  # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
+  config.eager_load = true
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
@@ -18,8 +21,8 @@ RailsPortal::Application.configure do
   # If you have no front-end server that supports something like X-Sendfile,
   # just comment this out and Rails will serve the files
 
-  # See everything in the log (default is :info)
-  # config.log_level = :debug
+  # See info messages and above in the log (default is :debug in Rails 5)
+  config.log_level = :info
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
@@ -57,7 +60,6 @@ RailsPortal::Application.configure do
   config.assets.compile = true
 
   # Minify/uglify/compress assets from the pipeline
-  config.assets.compress = true
   config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :yui
 

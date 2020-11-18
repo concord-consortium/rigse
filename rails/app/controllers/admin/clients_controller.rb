@@ -31,18 +31,15 @@ class Admin::ClientsController < ApplicationController
   def edit
     authorize Client
     @client = Client.find(params[:id])
-    if request.xhr?
-      render :partial => 'remote_form', :locals => { :project => @client }
-    end
   end
 
   # POST /admin/client
   def create
     authorize Client
-    @client = Client.new(params[:client])
+    @client = Client.new(client_strong_params(params[:client]))
 
     if @client.save
-      flash[:notice]='Client was successfully created.'
+      flash['notice']='Client was successfully created.'
       redirect_to action: :index
     else
       render :action => 'new'
@@ -53,19 +50,11 @@ class Admin::ClientsController < ApplicationController
   def update
     authorize Client
     @client = Client.find(params[:id])
-    if request.xhr?
-      if @client.update_attributes(params[:client])
-        render :partial => 'show', :locals => { :project => @client }
-      else
-        render :partial => 'remote_form', :locals => { :project => @client }, :status => 400
-      end
+    if @client.update_attributes(client_strong_params(params[:client]))
+      flash['notice']= 'Client was successfully updated.'
+      redirect_to action: :index
     else
-      if @client.update_attributes(params[:client])
-        flash[:notice]= 'Client was successfully updated.'
-        redirect_to action: :index
-      else
-        render :action => 'edit'
-      end
+      render :action => 'edit'
     end
   end
 
@@ -74,8 +63,12 @@ class Admin::ClientsController < ApplicationController
     authorize Client
     @client = Client.find(params[:id])
     @client.destroy
-    flash[:notice]= 'Client was successfully deleted.'
+    flash['notice']= 'Client was successfully deleted.'
     redirect_to action: :index
   end
 
+
+  def client_strong_params(params)
+    params && params.permit(:app_id, :app_secret, :client_type, :domain_matchers, :name, :redirect_uris, :site_url)
+  end
 end

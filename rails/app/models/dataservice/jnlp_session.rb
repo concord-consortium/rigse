@@ -1,8 +1,6 @@
 class Dataservice::JnlpSession < ActiveRecord::Base
-  attr_accessible :user, :access_count
 
   belongs_to :user
-  has_many :installer_reports, :dependent => :destroy
 
   before_create :create_token
 

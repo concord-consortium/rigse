@@ -875,6 +875,9 @@ $materials-collection-item-icon-width: 300px;
   }
 }
 #signup-default-modal {
+  .signup-form-login-option {
+    margin-top: 20px;
+  }
   .signup-form-school-select {
     margin-bottom: 0;
   }
@@ -900,15 +903,12 @@ $materials-collection-item-icon-width: 300px;
 }
 
 .embedded-signup-form {
-
-  position: absolute;
   display: inline-block;
-  width: 23%;
-
-  top:      0px;
-  right:    0px;
-
   font-size: inherit;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 23%;
 
   .step {
     position: absolute;
@@ -991,6 +991,14 @@ label.inline { display: inline-block !important; }
 
 #flash {
   top: 45px !important;
+}
+
+#teacher_add_dropdown {
+  display: flex;
+}
+#teacher_id_selector {
+  flex-grow: 2;
+  margin-right: 5px;
 }
 
 @import './styles/_media_queries.scss';

@@ -9,11 +9,9 @@ class User < ActiveRecord::Base
 
   has_many :favorites
 
-  devise :database_authenticatable, :registerable,:token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
+  devise :database_authenticatable, :registerable, :token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
          :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
-  self.token_authentication_key = "access_token"
-  default_scope { where(User.arel_table[:state].not_in(['disabled'])) }
 
   def apply_omniauth(omniauth)
     authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
@@ -25,7 +23,7 @@ class User < ActiveRecord::Base
   #  I'm not fixing this now (Jan 30, 2015) because we are about
   #  to do a release and we don't have time to fully test this change
   def self.find_for_token_authentication(conditions)
-    where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[token_authentication_key], Time.now]).joins(:access_grants).select("users.*").first
+    where(["access_grants.access_token = ? AND (access_grants.access_token_expires_at IS NULL OR access_grants.access_token_expires_at > ?)", conditions[:access_token], Time.now]).joins(:access_grants).select("users.*").first
   end
 
   NO_EMAIL_STRING = 'no-email-'
@@ -50,21 +48,30 @@ class User < ActiveRecord::Base
   has_many :student_cohorts, :through => :portal_student, :source => :cohorts
   has_many :student_cohort_projects, :through => :portal_student, :source => :projects
 
-  has_many :project_users, class_name: 'Admin::ProjectUser'
+  has_many :project_users, class_name: 'Admin::ProjectUser', :dependent => :destroy
 
-  has_many :admin_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_admin = ?', true]
-  has_many :researcher_for_projects, :through => :project_users, :class_name => 'Admin::Project', :source => :project, :conditions => ['admin_project_users.is_researcher = ?', true]
+  has_many :_project_user_admins, -> { is_admin }, :class_name => 'Admin::ProjectUser'
+  has_many :_project_user_researchers, -> { is_researcher }, :class_name => 'Admin::ProjectUser'
+
+  has_many :admin_for_projects, :through => :_project_user_admins, :class_name => 'Admin::Project', :source => :project
+
+  has_many :researcher_for_projects, :through => :_project_user_researchers, :class_name => 'Admin::Project', :source => :project
+
+  # has_many :researcher_for_projects, -> { where is_researcher: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
 
   has_one :notice_user_display_status, :dependent => :destroy ,:class_name => "Admin::NoticeUserDisplayStatus", :foreign_key => "user_id"
 
+  default_scope -> { where.not(state: 'disabled') }
   scope :all_users, -> { where(nil) }
   scope :active, -> { where(state: 'active') }
   scope :suspended, -> { where(state: 'suspended') }
   scope :no_email, -> { where("email LIKE '#{NO_EMAIL_STRING}%'") }
   scope :email, -> { where("email NOT LIKE '#{NO_EMAIL_STRING}%'") }
+  # NB: This name is unfortunate, it is too similar to default_scope!
+  # Though the names are similar this scope searches for `default` users.
   scope :default, -> { where(default_user: true) }
   scope :with_role, lambda { | role_name |
-    where('roles.title = ?',role_name).includes(:roles)
+    where('roles.title = ?',role_name).includes(:roles).references(:roles)
   }
 
   attr_accessor :skip_notifications
@@ -144,7 +151,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password_confirmation
 
   # Relationships
-  has_and_belongs_to_many :roles, :uniq => true, :join_table => "roles_users"
+  has_and_belongs_to_many :roles, -> { uniq }, :join_table => "roles_users"
 
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
@@ -283,12 +290,6 @@ class User < ActiveRecord::Base
   # default users are a class of users that can be enable
   default_value_for :default_user, false
 
-  # HACK HACK HACK -- how to do attr_accessible from here?
-  # prevents a user from submitting a crafted form that bypasses activation
-  # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :email_subscribed, :first_name, :last_name, :password, :password_confirmation, :sign_up_path, :remember_me,
-                  :external_id, :of_consenting_age, :have_consent,:confirmation_token,:confirmed_at,:state, :require_password_reset, :can_add_teachers_to_cohorts
-
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u1 =  User.where('login = ? AND state = "active"',login).first
@@ -398,7 +399,7 @@ class User < ActiveRecord::Base
   end
 
   def role_names
-    roles.select(:title).all.map { |role| role.title }
+    roles.pluck(:title)
   end
 
   def make_user_a_member
@@ -412,9 +413,9 @@ class User < ActiveRecord::Base
 
   def is_project_admin?(project=nil)
     if project
-      self.admin_for_projects.include? project
+      self.admin_for_projects.where(id: project.id).exists?
     else
-      self.admin_for_projects.length > 0
+      self.admin_for_projects.exists?
     end
   end
 
@@ -623,6 +624,12 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def send_on_create_confirmation_instructions
+    return if skip_notifications
+    super
+  end
+
   def make_activation_code
     self.deleted_at = nil
     self.activation_code = self.class.make_token

@@ -102,9 +102,9 @@ class Portal::StudentsController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE
     # authorize Portal::Student
     @portal_clazz = find_clazz_from_params
-    @grade_level = find_grade_level_from_params
+    @grade_level = view_context.find_grade_level(params)
     user_attributes = generate_user_attributes_from_params
-    @user = User.new(user_attributes)
+    @user = User.new(user_strong_params(user_attributes))
     errors = []
     if @portal_clazz.nil?
       errors << [:class_word, "must be a valid class word."]
@@ -146,158 +146,97 @@ class Portal::StudentsController < ApplicationController
       end
     end
 
-    if request.xhr?
-      response_value = {
-        :success => true,
-        :error_msg => nil
-      }
-
-        if user_created && @portal_clazz && @portal_student
-          @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
-          @portal_clazz.reload
-          render :update do |page|
-            add_student_url = new_portal_student_path(:clazz_id => @portal_clazz.id)
-            success_msg = "<div style='padding:5px;font-size:15px'>You have successfully registered <b>#{@user.name}</b> with the username <b>#{@user.login}</b>.</div>" +
-                          "<br/><br/><div style='padding:5px;text-align:center'><table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td>" +
-                          "<input type='button' class='pie' onclick='get_Add_Register_Student_Popup(\\\"#{add_student_url}\\\")' value='Add Another' />&nbsp;&nbsp;&nbsp;" +
-                          "<input type='button' class='pie' onclick='close_popup()' value='Close' />" +
-                          "</td></tr></table></div>"
-            page << "close_popup();"
-            page << "student_list_modal = new Lightbox({ theme:\"lightbox\", width:400, height:360,content:\"#{success_msg}\",title:\"Add and Register New Student\"});"
-            page << "if ($('students_listing')){"
-            page.replace_html 'students_listing', :partial => 'portal/students/table_for_clazz', :locals => {:portal_clazz => @portal_clazz}
-            page << "}"
-            page << "if ($('oClassStudentCount')){"
-            page.replace_html 'oClassStudentCount', @portal_clazz.students.length.to_s
-            page << "}"
-            page.replace 'student_add_dropdown', student_add_dropdown(@portal_clazz)
-          end
-        else
-          @portal_student = Portal::Student.new unless @portal_student
-          errors.each do |e|
-            @user.errors.add(e[0],e[1]);
-          end
-          @portal_student.errors.each do |e|
-            @user.errors.add(e[0],e[1]);
-          end
-          response_value[:success] = false
-          response_value[:error_msg] = @user.errors
-          render :json => response_value
-          return
-        end
-    else
-      respond_to do |format|
-        if user_created && @portal_clazz && @portal_student #&& @grade_level
-          @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
-
-          if params[:clazz] && params[:clazz][:class_word]
-            # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
-            @user.update_security_questions!(@security_questions) if current_settings.use_student_security_questions
-            format.html { redirect_to thanks_for_sign_up_url(:type=>"student",:login=>"#{@portal_student.user.login}") }
-          else
-            msg = <<-EOF
-            You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
-            <br/>
-            EOF
-            flash[:info] = msg.html_safe
-            format.html { redirect_to(@portal_clazz) }
-          end
-        else  # something didn't get created or referenced correctly
-          @portal_student = Portal::Student.new unless @portal_student
-          @user = User.new unless @user
-          errors.each do |e|
-            @user.errors.add(e[0],e[1]);
-          end
-          if params[:clazz] && params[:clazz][:class_word]
-            if current_settings.use_student_security_questions
-              @security_questions = SecurityQuestion.fill_array(@security_questions)
-            end
-            format.html { render :action => "signup" }
-            format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
-          else
-            format.html { render :action => "new" }
-            format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
-          end
-        end
-      end
-    end
-
-    # respond_to do |format|
-    #   if success
-    #     flash[:notice] = 'Student was successfully created.'
-    #     if @portal_clazz
-    #       if params[:clazz][:class_word]
-    #         format.html { render 'signup_success' }
-    #       else
-    #         format.html { redirect_to(@portal_clazz) }
-    #       end
-    #     else
-    #       format.html { redirect_to(@student) }
-    #     end
-    #     format.xml  { render :xml => @student, :status => :created, :location => @student }
-    #   else
-    #     if ! @student
-    #       @student = Portal::Student.new
-    #     end
-    #     if params[:clazz][:class_word]
-    #       format.html { render :action => "signup" }
-    #     else
-    #       format.html { render :action => "new" }
-    #     end
-    #     format.xml  { render :xml => @student.errors, :status => :unprocessable_entity }
-    #   end
-    # end
-  end
-
-  # PUT /portal_students/1
-  # PUT /portal_students/1.xml
-  def update
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHECK_AUTHORIZE (did not find instance)
-    # authorize @student
-    @portal_student = Portal::Student.find(params[:id])
     respond_to do |format|
-      if @portal_student.update_attributes(params[:portal_student])
-        flash[:notice] = 'Portal::Student was successfully updated.'
-        format.html { redirect_to(@portal_student) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
-      end
-      class_word = params[:clazz][:class_word]
-      if class_word
-        @portal_student.process_class_word(class_word)
+      if user_created && @portal_clazz && @portal_student #&& @grade_level
+        @portal_student.student_clazzes.create!(:clazz_id => @portal_clazz.id, :student_id => @portal_student.id, :start_time => Time.now)
+
+        if params[:clazz] && params[:clazz][:class_word]
+          # Attach the security questions here. We don't want to bother if there was a problem elsewhere.
+          @user.update_security_questions!(@security_questions) if current_settings.use_student_security_questions
+          format.html { redirect_to thanks_for_sign_up_url(:type=>"student",:login=>"#{@portal_student.user.login}") }
+        else
+          msg = <<-EOF
+          You have successfully registered #{@user.name} with the username <span class="big">#{@user.login}</span>.
+          <br/>
+          EOF
+          flash['info'] = msg.html_safe
+          format.html { redirect_to(@portal_clazz) }
+        end
+      else  # something didn't get created or referenced correctly
+        @portal_student = Portal::Student.new unless @portal_student
+        @user = User.new unless @user
+        errors.each do |e|
+          @user.errors.add(e[0],e[1]);
+        end
+        if params[:clazz] && params[:clazz][:class_word]
+          if current_settings.use_student_security_questions
+            @security_questions = SecurityQuestion.fill_array(@security_questions)
+          end
+          format.html { render :action => "signup" }
+          format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end
+
+  # Commented out as a test to see if it is used
+  #
+  # # PUT /portal_students/1
+  # # PUT /portal_students/1.xml
+  # def update
+  #   # PUNDIT_REVIEW_AUTHORIZE
+  #   # PUNDIT_CHECK_AUTHORIZE (did not find instance)
+  #   # authorize @student
+  #   @portal_student = Portal::Student.find(params[:id])
+  #   respond_to do |format|
+  #     if @portal_student.update_attributes(portal_student_strong_params(params[:portal_student]))
+  #       flash['notice'] = 'Portal::Student was successfully updated.'
+  #       format.html { redirect_to(@portal_student) }
+  #       format.xml  { head :ok }
+  #     else
+  #       format.html { render :action => "edit" }
+  #       format.xml  { render :xml => @portal_student.errors, :status => :unprocessable_entity }
+  #     end
+  #     class_word = params[:clazz][:class_word]
+  #     if class_word
+  #       @portal_student.process_class_word(class_word)
+  #     end
+  #   end
+  # end
 
   def move
-    portal_student = Portal::Student.find(params[:id])
-    current_class = Portal::Clazz.find_by_class_word(params[:clazz][:current_class_word])
-    new_class = Portal::Clazz.find_by_class_word(params[:clazz][:new_class_word])
+    if request.get?
+      @portal_student = Portal::Student.find(params[:id])
+    else
+      portal_student = Portal::Student.find(params[:id])
+      current_class = Portal::Clazz.find_by_class_word(params[:clazz][:current_class_word])
+      new_class = Portal::Clazz.find_by_class_word(params[:clazz][:new_class_word])
 
-    portal_student.remove_clazz(current_class)
-    portal_student.add_clazz(new_class)
+      portal_student.remove_clazz(current_class)
+      portal_student.add_clazz(new_class)
 
-    # post data to report service, include bearer token in request
-    config = portal_student.move_student_and_return_config(new_class, current_class)
-    ExternalReport.where('move_students_api_url LIKE "http%"').find_each{ |report|
-      auth_token = 'Bearer %s' % report.move_students_api_token
-      response = HTTParty.post(report.move_students_api_url,
-        body: config.to_json,
-        headers: {
-          'Content-Type' => 'application/json',
-          'Authorization' => auth_token
-        },
-        format: :json)
+      # post data to report service, include bearer token in request
+      config = portal_student.move_student_and_return_config(new_class, current_class)
+      ExternalReport.where('move_students_api_url LIKE "http%"').find_each{ |report|
+        auth_token = 'Bearer %s' % report.move_students_api_token
+        response = HTTParty.post(report.move_students_api_url,
+          body: config.to_json,
+          headers: {
+            'Content-Type' => 'application/json',
+            'Authorization' => auth_token
+          },
+          format: :json)
 
-      #FIXME: We should do somethign with the response code -- if response.code == 200 # successful 
+        #FIXME: We should do somethign with the response code -- if response.code == 200 # successful
 
-    }
+      }
 
-    flash[:notice] = 'Successfully moved student to new class.'
-    redirect_to(portal_student)
+      flash['notice'] = 'Successfully moved student to new class.'
+      redirect_to(portal_student)
+    end
   end
 
   # DELETE /portal_students/1
@@ -338,7 +277,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student = Portal::Student.find(params[:id])
     @portal_student.user.asked_age = true;
     @portal_student.save
-    if @portal_student.user.update_attributes(params[:user])
+    if @portal_student.user.update_attributes(portal_student_strong_params(params[:user]))
       redirect_to root_path
     else
       render :action => "ask_consent"
@@ -365,72 +304,9 @@ class Portal::StudentsController < ApplicationController
   end
 
   def register
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
-    if request.post?
-      @portal_clazz = find_clazz_from_params
-      class_word = params[:clazz][:class_word]
-      if @portal_clazz && class_word && ! current_visitor.anonymous?
-        @student = current_visitor.portal_student
-        if ! @student
-          @grade_level = find_grade_level_from_params
-          @student = Portal::Student.create(:user_id => current_visitor.id, :grade_level_id => @grade_level.id)
-        end
-        @student.process_class_word(class_word)
-      else
-        if current_visitor.anonymous?
-          flash[:error] = "You must be logged in to sign up for a class!"
-        else
-          flash[:error] = "The class word you provided was not valid! Please check with your teacher to ensure you have the correct word."
-        end
-      end
-      respond_to do |format|
-        if (@portal_clazz && @student)
-          flash[:notice] = 'Successfully registered for class.'
-          format.html { redirect_to home_path }
-        else
-          @student = Portal::Student.new
-          format.html { render :action => 'register' }
-        end
-      end
-    else
-      @student = Portal::Student.new
-      respond_to do |format|
-        format.html { render :action => 'register' }
-      end
-    end
-  end
-
-  def confirm
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Student
-    # authorize @student
-    # authorize Portal::Student, :new_or_create?
-    # authorize @student, :update_edit_or_destroy?
-    @portal_clazz = find_clazz_from_params
-    if @portal_clazz.nil?
-      render :update do |page|
-        page.remove "invalid_word"
-        page.insert_html :top, "word_form", "<p id='invalid_word' style='background: #f5f5f5; display:none; padding: 10px;'>Please enter a valid class word and try again.</p>"
-        page.visual_effect :BlindDown, "invalid_word", :duration => 0.25
-      end
-      return
-    end
-    @class_word = params[:clazz][:class_word]
-    render :update do |page|
-      page.remove "invalid_word"
-      page.insert_html :before, "word_form", :partial => "confirmation",
-        :locals => {:class_word => @class_word,
-                    :clazz      => @portal_clazz,
-                    :portal_student => Portal::Student.new}
-      page.visual_effect :BlindDown, "confirmation", :duration => 1
+    @student = Portal::Student.new
+    respond_to do |format|
+      format.html { render :action => 'register' }
     end
   end
 
@@ -447,18 +323,6 @@ class Portal::StudentsController < ApplicationController
     if @invalid_error == ''
       @potentially_orphaned_assignments = check_assignments(@new_class, @portal_student)
       @show_msg = 'move_confirmation'
-    end
-
-    render :update do |page|
-      page.replace "invalid", "<p id='invalid' style='background: #f5f5f5; display:none; padding: 10px;'>" + @invalid_error + "</p>"
-      page.insert_html :before, "move_form", :partial => "move_confirmation",
-        :locals => {:current_class_word => @current_class_word,
-                    :current_clazz => @current_class,
-                    :new_class_word => @new_class_word,
-                    :clazz      => @new_class,
-                    :portal_student => @portal_student,
-                    :potentially_orphaned_assignments => @potentially_orphaned_assignments}
-      page.visual_effect :BlindDown, @show_msg, :duration => 0.25
     end
   end
 
@@ -511,28 +375,19 @@ class Portal::StudentsController < ApplicationController
    @portal_clazz
   end
 
-  def find_grade_level_from_params
-    grade_level = Portal::GradeLevel.find_by_name('9')
-    if @portal_clazz
-      # Try to get a grade level from the class first.
-      if (!(grade_levels = @portal_clazz.grade_levels).nil? && grade_levels.size > 0)
-        grade_level = grade_levels[0] if grade_levels[0]
-      elsif (@portal_clazz.course && @portal_clazz.course.grade_levels && @portal_clazz.course.grade_levels.size > 0)
-        course = @portal_clazz.course
-        grade_levels = course.grade_levels
-        grade_level = grade_levels[0] if grade_levels[0]
-      elsif @portal_clazz.teacher
-        grade_levels = @portal_clazz.teacher.grade_levels
-        grade_level = grade_levels[0] if grade_levels[0]
-      end
-    end
-    grade_level
-  end
-
   def generate_user_attributes_from_params
     user_attributes = params[:user]
     user_attributes[:login] = Portal::Student.generate_user_login(user_attributes[:first_name], user_attributes[:last_name])
     user_attributes[:email] = Portal::Student.generate_user_email
     user_attributes
   end
+
+  def portal_student_strong_params(params)
+    params && params.permit(:grade_level_id, :user_id)
+  end
+
+  def user_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  end
+
 end

@@ -2,13 +2,14 @@
   .container.bookmarks-page
     .right
       = render :partial => 'portal/clazzes/clazz_information', :locals => {:portal_clazz => @portal_clazz}
-    .header
+    %h3
       Links
     - unless bookmarks_enabled
       Bookmarks support is disabled for this project.
     - else
-      - render_add_bookmark_buttons
-      #bookmarks_box
-        - @bookmarks.each do |bookmark|
-          = render :partial => 'show', :locals => {:bookmark => bookmark}
-      %p.wait-message
+      #edit-bookmarks
+      :javascript
+        PortalComponents.renderEditBookmarks({
+          classId: #{@portal_clazz.id},
+          bookmarks: #{@bookmarks.to_json}
+        }, 'edit-bookmarks');

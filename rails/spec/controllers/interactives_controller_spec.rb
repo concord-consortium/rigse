@@ -29,9 +29,9 @@ describe InteractivesController do
     test_interactive.model_type_list.add("tag1")
     test_interactive.save!
     test_interactive
-  } 
+  }
 
-  before(:each) do    
+  before(:each) do
     test_interactive
   end
 
@@ -40,20 +40,20 @@ describe InteractivesController do
       it "should create interactive" do
         post :create, {
           :interactive => {
-            :name => name, 
-            :description => description, 
-            :publication_status => publication_status, 
-            :url => url, 
-            :scale => scale, 
-            :width => width, 
-            :height => height, 
-            :image_url => image_url, 
+            :name => name,
+            :description => description,
+            :publication_status => publication_status,
+            :url => url,
+            :scale => scale,
+            :width => width,
+            :height => height,
+            :image_url => image_url,
             :credits => credits
           }
         }
 
-        expect(flash[:notice]).to eq("Interactive was successfully created.")
-        expect(assigns(:interactive).publication_status).to be publication_status
+        expect(flash['notice']).to eq("Interactive was successfully created.")
+        expect(assigns(:interactive).publication_status).to eq publication_status
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
     end
@@ -62,17 +62,17 @@ describe InteractivesController do
       it "should create interactive" do
         post :create, {
           :interactive => {
-            :name => name, 
+            :name => name,
             :description => description,
-            :url => url, 
-            :scale => scale, 
-            :width => width, 
-            :height => height, 
-            :image_url => image_url, 
+            :url => url,
+            :scale => scale,
+            :width => width,
+            :height => height,
+            :image_url => image_url,
             :credits => credits
           }
         }
-        expect(flash[:notice]).to eq("Interactive was successfully created.")
+        expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).publication_status).to eq("draft")
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
@@ -98,7 +98,7 @@ describe InteractivesController do
           :update_subject_areas => "true",
           :subject_areas => ["Physical Science"]
         }
-        expect(flash[:notice]).to eq("Interactive was successfully created.")
+        expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).model_type_list).to match_array(["model_type_1"])
         expect(assigns(:interactive).grade_level_list).to match_array(["1","5"])
         expect(assigns(:interactive).subject_area_list).to match_array(["Physical Science"])
@@ -107,27 +107,27 @@ describe InteractivesController do
     end
   end
 
-  describe "#update" do 
+  describe "#update" do
     it "should change the activity's database record to show submitted data" do
       test_interactive
       existing_interactives = Interactive.count
-      post :update, { 
+      post :update, {
           :interactive=>{
-            :name => name, 
-            :description => description, 
-            :publication_status => publication_status, 
-            :url => url, 
-            :scale => scale, 
-            :width => width, 
-            :height => height, 
-            :image_url => image_url, 
-            :credits => credits}, 
-          :update_grade_levels =>"true", 
-          :grade_levels =>["1", "5"], 
-          :update_subject_areas =>"true", 
-          :subject_areas =>["Physical Science"], 
-          :update_model_types =>"true", 
-          :model_types =>["model_type_2"], 
+            :name => name,
+            :description => description,
+            :publication_status => publication_status,
+            :url => url,
+            :scale => scale,
+            :width => width,
+            :height => height,
+            :image_url => image_url,
+            :credits => credits},
+          :update_grade_levels =>"true",
+          :grade_levels =>["1", "5"],
+          :update_subject_areas =>"true",
+          :subject_areas =>["Physical Science"],
+          :update_model_types =>"true",
+          :model_types =>["model_type_2"],
           :id => test_interactive.id
         }
 
@@ -135,11 +135,11 @@ describe InteractivesController do
 
       updated = Interactive.find(test_interactive.id)
       expect(updated.model_type_list).to match_array(["model_type_2"])
-      expect(flash[:notice]).to eq("Interactive was successfully updated.")
+      expect(flash['notice']).to eq("Interactive was successfully updated.")
     end
   end
 
-  describe "#export_model_library" do 
+  describe "#export_model_library" do
     it "should export a json file" do
       get :export_model_library
       expect(response.header["Content-Type"]).to eq("application/json")
@@ -151,9 +151,9 @@ describe InteractivesController do
     import_json = File.new(Rails.root + 'spec/import_examples/portal_interactives_library.json', :symbolize_names => true)
     let(:params1) do
       {
-         import:ActionDispatch::Http::UploadedFile.new(tempfile: import_json, filename: File.basename(import_json), content_type: "application/json")         
+         import:ActionDispatch::Http::UploadedFile.new(tempfile: import_json, filename: File.basename(import_json), content_type: "application/json")
       }
-    end    
+    end
     it "should import all the models from a json" do
       import_hash = JSON.parse(File.read(import_json))
       model_library_count = import_hash["models"].length

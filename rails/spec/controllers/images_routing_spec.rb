@@ -11,15 +11,15 @@ describe ImagesController do
     end
 
     it "should route #create" do
-      expect(:get => "/images/create").to route_to("images#create")
+      expect(:post => "/images").to route_to("images#create")
     end
 
     it "should route #view" do
-      expect(:get => "/images/1/view").to route_to("images#view", :id => "1", :method => :get)
+      expect(:get => "/images/1/view").to route_to("images#view", :id => "1")
     end
 
     it "should route #list_filter" do
-      expect(:post => "/images/list/filter").to route_to("images#index", :method => :post)
+      expect(:post => "/images/list/filter").to route_to("images#index")
     end
 
     it "should route #show" do

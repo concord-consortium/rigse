@@ -131,7 +131,7 @@ class Reports::Counts
       clazzes = active_learners.collect do |learner|
         learner.offering.clazz
       end
-      @active_clazzes = clazzes.compact.uniq
+      @active_clazzes = clazzes.to_a.compact.uniq
     end
     @active_clazzes
   end

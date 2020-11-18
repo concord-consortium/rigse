@@ -7,8 +7,8 @@ RailsPortal::Application.configure do
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
 
-  # Log error messages when you accidentally call methods on nil.
-  config.whiny_nils = true
+  # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
+  config.eager_load = true  # normally false unless you use a tool that preloads your test environment
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
@@ -41,8 +41,10 @@ RailsPortal::Application.configure do
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
 
-  if BoolENV["RAILS_STDOUT_LOGGING"]
-    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
-    config.logger = Logger.new(STDOUT)
-  end
+  # Keep test order in same order as before Rails 5
+  config.active_support.test_order = :sorted
+
+  config.assets.compile = true
+
+  LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end

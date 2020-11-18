@@ -7,6 +7,7 @@ export default class UserTypeSelector extends React.Component {
       userType: null
     }
     this.handleClick = this.handleClick.bind(this)
+    this.handleLoginClick = this.handleLoginClick.bind(this)
   }
 
   handleClick (event) {
@@ -14,6 +15,16 @@ export default class UserTypeSelector extends React.Component {
     console.log('INFO changing type', value)
     ga('send', 'event', 'User Registration', 'Form', 'Step 1 Completed - ' + value.charAt(0).toUpperCase() + value.slice(1))
     this.props.onUserTypeSelect(value)
+  }
+
+  handleLoginClick (event) {
+    event.preventDefault()
+    ga('send', 'event', 'User Registration', 'Form', 'Step 1 Log in Link Clicked')
+    PortalComponents.renderLoginModal({
+      oauthProviders: this.state.oauthProviders,
+      afterSigninPath: this.props.afterSigninPath
+    })
+    ga('send', 'event', 'Login', 'Form', 'Opened')
   }
 
   render () {
@@ -27,6 +38,7 @@ export default class UserTypeSelector extends React.Component {
         <button onClick={this.handleClick} name='type' value='student'>
           I am a <strong>Student</strong>
         </button>
+        <p className={'signup-form-login-option'}>Already have an account? <a href='/users/sign_in' onClick={this.handleLoginClick}>Log in &raquo;</a></p>
       </div>
     )
   }

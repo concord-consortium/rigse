@@ -7,6 +7,8 @@ RailsPortal::Application.configure do
   # For more information see https://rspec.lighthouseapp.com/projects/16211/tickets/165
   config.cache_classes = true
 
+  config.eager_load = true  # normally false unless you use a tool that preloads your test environment
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
@@ -37,8 +39,5 @@ RailsPortal::Application.configure do
   config.i18n.default_locale = 'en'
   config.i18n.fallbacks = true
 
-  if BoolENV["RAILS_STDOUT_LOGGING"]
-    # Disable logging to file. It might have performance impact while using Docker for Mac (slow filesystem sync).
-    config.logger = Logger.new(STDOUT)
-  end
+  LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end
