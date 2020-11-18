@@ -3,7 +3,20 @@ class API::V1::JwtController < API::APIController
   require 'digest/md5'
   skip_before_filter :verify_authenticity_token
 
+  # use exceptions to return errors
+  # instead of directly calling APIController#error
+  rescue_from StandardError, with: :error_400
+  rescue_from SignedJWT::Error, with: :error_500
+
   private
+  def error_400(e)
+    error(e.message, 400)
+  end
+
+  def error_500(e)
+    error(e.message, 500)
+  end
+
   def add_admin_claims(user, claims)
     if (user.has_role? 'admin')
       claims[:admin] = 1
@@ -18,18 +31,32 @@ class API::V1::JwtController < API::APIController
     end
   end
 
-  public
-  def portal
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
+  def handle_initial_auth
+    user, role = check_for_auth_token(params)
 
     if role
       learner = role[:learner]
       teacher = role[:teacher]
     end
+
+    offering_id = params[:resource_link_id]
+    if offering_id
+      if user.portal_student
+        learner = user.portal_student.learners.where(offering_id: offering_id).first
+        if learner.blank?
+          raise StandardError, "current student does not have this resource_link_id"
+        end
+      else
+        raise StandardError, "resource_link_id only currently works with students"
+      end
+    end
+
+    [ user, learner, teacher ]
+  end
+
+  public
+  def portal
+    user, learner, teacher = handle_initial_auth
 
     claims = {}
     if learner
@@ -52,29 +79,16 @@ class API::V1::JwtController < API::APIController
     end
     add_admin_claims(user,claims)
 
-    begin
-      render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
-    rescue StandardError => e
-      return error(e.message, 500)
-    end
+    render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
   end
 
 
   # POST api/v1/jwt/firebase as a logged in user, or
   # GET  api/v1/jwt/firebase?firebase_app=abc with a valid bearer token
   def firebase
-    begin
-      user, role = check_for_auth_token(params)
-    rescue StandardError => e
-      return error(e.message)
-    end
+    user, learner, teacher = handle_initial_auth
 
-    if role
-      learner = role[:learner]
-      teacher = role[:teacher]
-    end
-
-    return error('Missing firebase_app parameter') if params[:firebase_app].blank?
+    raise StandardError, "Missing firebase_app parameter" if params[:firebase_app].blank?
 
     claims = {}
     if learner
@@ -104,7 +118,7 @@ class API::V1::JwtController < API::APIController
       if params[:class_hash].present?
         class_hashes = teacher.clazzes.map {|c| c.class_hash}
         if !class_hashes.include? params[:class_hash]
-          return error('Teacher does not have a class with the requested class_hash')
+          raise StandardError, "Teacher does not have a class with the requested class_hash"
         end
       end
 
@@ -140,11 +154,7 @@ class API::V1::JwtController < API::APIController
     # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string
     uid = Digest::MD5.hexdigest(url_for(user))
 
-    begin
-      render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
-    rescue StandardError => e
-      return error(e.message, 500)
-    end
+    render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
   end
 
 end

@@ -4,12 +4,14 @@
 #
 
 #
-# Prepare cucumber tests
+# Prepare the cucumber database by checking if there are migrations not
+# run on the development database,
+# then loading the schema.rb into the cucumber database
 #
-RAILS_ENV=feature_test bundle exec rake db:create
 bundle exec rake db:feature_test:prepare
+
 
 #
 # Run cucumber tests
 #
-bundle exec rake ci:cucumber_without_javascript
+RAILS_ENV=cucumber bundle exec rake ci:cucumber_without_javascript
