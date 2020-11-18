@@ -227,7 +227,7 @@ introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-
 
 ### Running the rspec tests
 
-**Running all the rspec tests:*
+**Running all the rspec tests:**
 
     bundle exec rake spec
 
