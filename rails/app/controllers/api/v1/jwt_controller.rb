@@ -31,14 +31,32 @@ class API::V1::JwtController < API::APIController
     end
   end
 
-  public
-  def portal
+  def handle_initial_auth
     user, role = check_for_auth_token(params)
 
     if role
       learner = role[:learner]
       teacher = role[:teacher]
     end
+
+    offering_id = params[:resource_link_id]
+    if offering_id
+      if user.portal_student
+        learner = user.portal_student.learners.where(offering_id: offering_id).first
+        if learner.blank?
+          raise StandardError, "current student does not have this resource_link_id"
+        end
+      else
+        raise StandardError, "resource_link_id only currently works with students"
+      end
+    end
+
+    [ user, learner, teacher ]
+  end
+
+  public
+  def portal
+    user, learner, teacher = handle_initial_auth
 
     claims = {}
     if learner
@@ -68,12 +86,7 @@ class API::V1::JwtController < API::APIController
   # POST api/v1/jwt/firebase as a logged in user, or
   # GET  api/v1/jwt/firebase?firebase_app=abc with a valid bearer token
   def firebase
-    user, role = check_for_auth_token(params)
-
-    if role
-      learner = role[:learner]
-      teacher = role[:teacher]
-    end
+    user, learner, teacher = handle_initial_auth
 
     raise StandardError, "Missing firebase_app parameter" if params[:firebase_app].blank?
 
