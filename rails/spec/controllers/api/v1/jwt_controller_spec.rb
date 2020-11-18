@@ -395,7 +395,6 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           end
         end
 
-
         context "and the user is a project admin" do
           let(:project)         { FactoryBot.create(:project)}
           before(:each) {
