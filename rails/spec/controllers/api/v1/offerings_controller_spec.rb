@@ -43,6 +43,11 @@ describe API::V1::OfferingsController do
     learner.report_learner.save!
   end
 
+  before(:each) {
+    # This silences warnings in the console when running
+    generate_default_settings_and_jnlps_with_mocks
+  }
+
   describe "GET #show (+ basic response structure tests)" do
 
     describe "when there is no offering with given ID" do
@@ -124,6 +129,9 @@ describe API::V1::OfferingsController do
         json = JSON.parse(response.body)
         json["id"] = offering.id
         expect(json["clazz"]).to eq clazz.name
+        expect(json["clazz_hash"]).to eq clazz.class_hash
+        expect(json["clazz_id"]).to eq clazz.id
+        expect(json["clazz_info_url"]).to eq "http://test.host/api/v1/classes/#{clazz.id}"
         expect(json["activity"]).to eq runnable.name
         expect(json["report_url"]).to eql report_portal_offering_url(id: offering.id, host: 'test.host')
 
