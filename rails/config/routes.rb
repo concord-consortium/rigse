@@ -459,8 +459,8 @@ RailsPortal::Application.routes.draw do
             post :update_basic
           end
           collection do
-            match 'api/v1/external_activities/update_by_url' => 'external_activities#update_by_url', :via => :post
-          end          
+            match 'update_by_url' => 'external_activities#update_by_url', :via => :post
+          end
         end
 
         namespace :service do
