@@ -1,0 +1,17 @@
+.deleteIcon {
+  width: 18px;
+  height: 18px;
+  max-width: 18px !important;
+  background: url('../../assets/icons/delete.png') 0 0/36px;
+
+  &:hover {
+    background-position-x: right;
+  }
+}
+
+.deleteDisabledIcon {
+  width: 18px;
+  height: 18px;
+  max-width: 18px !important;
+  background: url('../../assets/icons/delete_grey.png') 0 0/36px;
+}
