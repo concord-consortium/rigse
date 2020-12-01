@@ -12,8 +12,4 @@ class API::V1::ExternalActivityPolicy < Struct.new(:user, :api_v1_external_activ
     user && (user.is_project_admin? || user.is_project_researcher? || user.has_role?('manager','admin','researcher'))
   end
 
-  def update_by_url?
-    user && (user.is_project_admin? || user.is_project_researcher? || user.has_role?('manager','admin','researcher','author'))
-  end
-
 end
