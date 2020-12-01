@@ -1,5 +1,6 @@
 import React from 'react'
 import formatDate from '../../helpers/format-date'
+import DeleteIcon from '../icons/delete-icon'
 
 import css from './style.scss'
 
@@ -44,8 +45,8 @@ export default class Notice extends React.Component {
             <a href={editLinkUrl}>edit</a>
           </span>
           <span className={css.adminSiteNoticesListItemDelete}>
-            <a className='rollover' href='#' id={deleteLinkId} onClick={this.handleDelete} title='Delete Notice'>
-              <img alt='Delete Notice' src='/assets/delete.png' title='Delete Notice' />
+            <a href='#' id={deleteLinkId} onClick={this.handleDelete} title='Delete Notice'>
+              <DeleteIcon title='Delete Notice' />
             </a>
           </span>
         </td>

@@ -1,4 +1,5 @@
 import React from 'react'
+import DeleteIcon from '../icons/delete-icon'
 
 export default class TeacherList extends React.Component {
   constructor (props) {
@@ -83,9 +84,9 @@ export default class TeacherList extends React.Component {
               {currentTeachers.map((teacher) => {
                 let deleteButton
                 if (currentTeachers.length === 1) {
-                  deleteButton = <span className='rollover'><img src='/assets/delete_grey.png' title='You cannot remove the last teacher from this class.' /></span>
+                  deleteButton = <span><DeleteIcon disabled title='You cannot remove the last teacher from this class.' /></span>
                 } else {
-                  deleteButton = <span className='rollover' onClick={() => this.handleUnassignTeacher(teacher)}><img src='/assets/delete.png' title={`Remove ${teacher.name} from class`} /></span>
+                  deleteButton = <span onClick={() => this.handleUnassignTeacher(teacher)}><DeleteIcon title={`Remove ${teacher.name} from class`} /></span>
                 }
                 return <li key={teacher.id}>{teacher.name} {deleteButton}</li>
               })}

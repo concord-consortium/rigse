@@ -201,7 +201,7 @@ describe('When I try to render class setup form', () => {
                   <div id="div_teacher_list">
                     <ul>
                       <li>
-                        Tester, J. (joetester) <span class="rollover"><img src="/assets/delete_grey.png" title="You cannot remove the last teacher from this class."></span>
+                        Tester, J. (joetester) <span><img class="deleteDisabledIcon" alt="You cannot remove the last teacher from this class." src="data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot;/>" title="You cannot remove the last teacher from this class."></span>
                       </li>
                     </ul>
                   </div>
@@ -307,7 +307,7 @@ describe('When I try to render class setup form', () => {
       <div id="div_teacher_list">
         <ul>
           <li>
-            Tester, J. (joetester) <span class="rollover"><img src="/assets/delete_grey.png" title="You cannot remove the last teacher from this class."></span>
+            Tester, J. (joetester) <span><img class="deleteDisabledIcon" alt="You cannot remove the last teacher from this class." src="data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot;/>" title="You cannot remove the last teacher from this class."></span>
           </li>
         </ul>
       </div>
@@ -316,10 +316,10 @@ describe('When I try to render class setup form', () => {
       <div id="div_teacher_list">
         <ul>
           <li>
-            Bobberton, B. (bob) <span class="rollover"><img src="/assets/delete.png" title="Remove Bobberton, B. (bob) from class"></span>
+            Bobberton, B. (bob) <span><img class="deleteIcon" alt="Remove Bobberton, B. (bob) from class" src="data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot;/>" title="Remove Bobberton, B. (bob) from class"></span>
           </li>
           <li>
-            Tester, J. (joetester) <span class="rollover"><img src="/assets/delete.png" title="Remove Tester, J. (joetester) from class"></span>
+            Tester, J. (joetester) <span><img class="deleteIcon" alt="Remove Tester, J. (joetester) from class" src="data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot;/>" title="Remove Tester, J. (joetester) from class"></span>
           </li>
         </ul>
       </div>
@@ -330,7 +330,7 @@ describe('When I try to render class setup form', () => {
     classSetupForm.update();
     expect(teacherList.html()).toBe(afterAddHTML);
 
-    const firstRemoveButton = classSetupForm.find('span.rollover').first();
+    const firstRemoveButton = classSetupForm.find('img.deleteIcon').first();
 
     const savedConfirm = global.confirm
 
