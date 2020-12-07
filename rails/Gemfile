@@ -118,7 +118,7 @@ group :genigames_data do
   gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', ref: '6a00f07af38e03670f696468578c3ff11a8c8414' # branch: 'spike-rails4-support'
 end
 group :geniverse_backend do
-  gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git', ref: '7c7acbb8fc6fa6c2bf2b9ac8c2d154976363cbad' # branch: 'spike-rails4-support'
+  gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git'
 end
 group :geniverse_remote_auth do
   gem 'cc_portal_remote_auth', git: 'https://github.com/concord-consortium/cc_portal_remote_auth.git', branch: 'spike-rails4-support'
