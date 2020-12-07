@@ -3,16 +3,20 @@ require File.expand_path('../../spec_helper', __FILE__)#include ApplicationHelpe
 
 describe ExternalActivitiesController do
 
-  let(:name)        { "Cool Activity"                  }
-  let(:description) { name                             }
+  let(:name)        { "Cool Activity" }
+  let(:description) { name }
   let(:url )        { "http://activity.com/activity/1" }
-  let(:launch_url)  { "#{url}/1/sessions/"             }
+  let(:author_url)  { "#{url}/edit" }
+  let(:launch_url)  { "#{url}/1/sessions/" }
+  let(:tool)        { "LARA" }
 
   let(:activity_hash) do
     {
       "name" => name,
       "url" => url,
+      "author_url" => author_url,
       "launch_url" => launch_url,
+      "tool" => tool,
       "sections" => [
         {
           "name" => "Cool Activity Section 1",
@@ -75,27 +79,30 @@ describe ExternalActivitiesController do
       "name" => sequence_name,
       "description" => sequence_desc,
       "url" => sequence_url,
+      "author_url" => "#{sequence_url}/edit",
       "launch_url" => sequence_url,
       "activities" => [activity2_hash]
     }
   end
 
   let (:existing) { FactoryBot.create(:external_activity, {
-      :name        => name,
-      :long_description => description,
-      :url         => url,
+      :name               => name,
+      :long_description   => description,
+      :url                => url,
+      :author_url         => author_url,
       :publication_status => 'published',
-      :template    => FactoryBot.create(:activity, {
+      :template           => FactoryBot.create(:activity, {
         :investigation => FactoryBot.create(:investigation)
       })
     })}
 
   let (:another) { FactoryBot.create(:external_activity, {
-      :name        => "#{name} again",
-      :long_description => "#{description} again",
-      :url         => url,
+      :name               => "#{name} again",
+      :long_description   => "#{description} again",
+      :url                => url,
+      :author_url         => author_url,
       :publication_status => 'published',
-      :is_official => false
+      :is_official        => false
     }) }
 
   def make(let_expression); end # Syntax sugar for our lets

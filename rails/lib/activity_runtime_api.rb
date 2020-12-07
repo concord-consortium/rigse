@@ -43,6 +43,11 @@ class ActivityRuntimeAPI
     Tool.create(source_type: source_type, name: source_type)
   end
 
+  def self.find_tool(tool_id)
+    return nil if tool_id.nil?
+    tool = Tool.where(tool_id: tool_id).first
+  end
+
   def self.publish_activity(hash, user)
     external_activity = nil
     Investigation.transaction do

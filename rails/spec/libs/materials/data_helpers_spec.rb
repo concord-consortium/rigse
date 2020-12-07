@@ -13,6 +13,7 @@ describe DataHelpersTestController, type: :controller do
       :external_activity,
       sensor_list: sensor_names,
       launch_url: 'https://test.org/',
+      author_url: 'https://test.org/authoring',
       print_url: 'https://test.org/print',
       is_locked: false,
       teacher_resources_url: 'https://test.org/teacher-resources',
@@ -25,6 +26,7 @@ describe DataHelpersTestController, type: :controller do
     FactoryBot.create(
       :external_activity,
       launch_url: 'https://test.org/',
+      author_url: 'https://test.org/authoring',
       is_locked: true,
       author_email: 'author2@concord.org'
     )

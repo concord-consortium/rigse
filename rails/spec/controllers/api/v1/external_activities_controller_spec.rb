@@ -145,4 +145,47 @@ describe API::V1::ExternalActivitiesController do
       end
     end
   end
+
+  describe "#update_by_url" do
+    let(:url ) { "http://activity.com/activity/1" }
+    let(:valid_attributes) do
+      {
+        "name" => "Cool Activity",
+        "url" => url,
+        "author_url" => "#{url}/edit",
+        "launch_url" => "#{url}/1/sessions/",
+        "student_report_enabled" => true,
+        "thumbnail_url" => "/path/to/thumbnail",
+        "is_locked" => false,
+        "append_auth_token" => true,
+        "publication_status" => "private"
+      }
+    end
+    let (:activity) { ExternalActivity.create!(valid_attributes) }
+    let (:valid_parameters) { {
+      url: activity.url
+    } }
+
+    context "with a guest" do
+      before (:each) do
+        logout_user
+      end
+
+      it "fails with valid parameters" do
+        post :update_by_url, valid_parameters
+        expect(response.status).to eql(403)
+      end
+    end
+
+    context "with a logged in admin user" do
+      before (:each) do
+        sign_in admin_user
+      end
+
+      it "should create a new activity" do
+        post :update_by_url, valid_parameters
+        expect(response.body).to eql('{"success":true}')
+      end
+    end
+  end
 end

@@ -173,6 +173,9 @@ def create_default_lara_report
     individual_student_reportable: true,
     individual_activity_reportable: true
   )
+
+  # To support Activity Player publishing you need to manually add a Tool with the tool_id of https://activity-player.concord.org. 
+  # The convention is the source_type is ActivityPlayer.
 end
 
 create_district_school

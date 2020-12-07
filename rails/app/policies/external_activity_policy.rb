@@ -61,6 +61,10 @@ class ExternalActivityPolicy < ApplicationPolicy
     edit? || owner?
   end
 
+  def update_by_url?
+    edit? || owner?
+  end
+
   def archive?
     admin_or_material_admin? || owner?
   end

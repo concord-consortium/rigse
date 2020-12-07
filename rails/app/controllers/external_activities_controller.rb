@@ -228,7 +228,7 @@ class ExternalActivitiesController < ApplicationController
 
   def matedit
     authorize @external_activity
-    @uri = ssl_if_we_are(URI.parse("#{@external_activity.url}/edit"))
+    @uri = ssl_if_we_are(URI.parse(@external_activity.author_url))
     @uri.query = {
       :domain => root_url,
       :domain_uid => current_visitor.id

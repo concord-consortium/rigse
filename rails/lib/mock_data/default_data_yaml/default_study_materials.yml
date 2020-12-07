@@ -89,48 +89,56 @@ external_activities:
     name: My Activity
     user: teacher
     url: http://fake-lara.com/mock_html/test-external-activity.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity.html/edit
     uuid: 00000000-0000-0000-0000-000000000181
 
   ext_activity_2:
     name: Radioactive decay
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity2.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity2.html/edit
     uuid: 00000000-0000-0000-0000-000000000164
 
   ext_activity_3:
     name: Gamma Rays
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity3.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity3.html/edit
     uuid: 00000000-0000-0000-0000-000000000165
     
   ext_activity_4:
     name: Diagram
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity4.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity4.html/edit
     uuid: 00000000-0000-0000-0000-000000000166
   
   ext_activity_5:
     name: operations on sets
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity5.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity5.html/edit
     uuid: 00000000-0000-0000-0000-000000000167
 
   ext_activity_6:
     name: Fluid Mechanics
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity6.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity6.html/edit
     uuid: 00000000-0000-0000-0000-000000000168
     
   ext_activity_7:
     name: Circular Motion
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity7.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity7.html/edit
     uuid: 00000000-0000-0000-0000-000000000169
 
   ext_activity_8:
     name: Quantum Mechanics
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity8.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity8.html/edit
     uuid: 00000000-0000-0000-0000-000000000170
 
   ext_activity_9:
@@ -138,12 +146,14 @@ external_activities:
     user: author
     long_description: smaller geometry activity
     url: http://fake-lara.com/mock_html/test-external-activity9.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity9.html/edit
     uuid: 00000000-0000-0000-0000-000000000171
 
   ext_activity_10:
     name: intersecting lines
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity10.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity10.html/edit
     uuid: 00000000-0000-0000-0000-000000000172
 
   ext_activity_11:
@@ -151,6 +161,7 @@ external_activities:
     user: author
     long_description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity11.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity11.html/edit
     uuid: 00000000-0000-0000-0000-000000000173
 
   ext_activity_12:
@@ -158,6 +169,7 @@ external_activities:
     user: author
     long_description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity12.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity12.html/edit
     uuid: 00000000-0000-0000-0000-000000000174
 
   ext_activity_13:
@@ -165,6 +177,7 @@ external_activities:
     user: author
     long_description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity13.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity13.html/edit
     uuid: 00000000-0000-0000-0000-000000000175
 
   ext_activity_14:
@@ -172,6 +185,7 @@ external_activities:
     user: author
     long_description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity14.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity14.html/edit
     uuid: 00000000-0000-0000-0000-000000000176
 
   ext_activity_15:
@@ -179,12 +193,14 @@ external_activities:
     user: author
     long_description: this is a great activity
     url: http://fake-lara.com/mock_html/test-external-activity15.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity15.html/edit
     uuid: 00000000-0000-0000-0000-000000000177
 
   ext_activity_16:
     name: Plant reproduction
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity16.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity16.html/edit
     uuid: 00000000-0000-0000-0000-000000001016
     long_description: this is a great activity
 
@@ -192,6 +208,7 @@ external_activities:
     name: Atomic Energy
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity17.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity17.html/edit
     uuid: 00000000-0000-0000-0000-000000001017
     long_description: this is a great activity
     activities:
@@ -202,6 +219,7 @@ external_activities:
     name: Algebra
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity18.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity18.html/edit
     uuid: 00000000-0000-0000-0000-000000001018
     long_description: this is a great activity
 
@@ -209,6 +227,7 @@ external_activities:
     name: Aerodynamics
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity19.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity19.html/edit
     uuid: 00000000-0000-0000-0000-000000001019
     long_description: this is a great activity
 
@@ -216,6 +235,7 @@ external_activities:
     name: Electricity
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity20.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity20.html/edit
     uuid: 00000000-0000-0000-0000-000000001020
     long_description: this is a great activity
 
@@ -224,12 +244,14 @@ external_activities:
     user: author
     long_description: smaller radioactive activity
     url: http://fake-lara.com/mock_html/test-external-activity21.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity21.html/edit
     uuid: 00000000-0000-0000-0000-000000001021
 
   ext_activity_22:
     name: Lumped circuit abstraction
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity22.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity22.html/edit
     uuid: 00000000-0000-0000-0000-000000001022
     long_description: this is a great activity
 
@@ -237,6 +259,7 @@ external_activities:
     name: Static discipline
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity23.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity23.html/edit
     uuid: 00000000-0000-0000-0000-000000001023
     long_description: this is a great activity
 
@@ -244,6 +267,7 @@ external_activities:
     name: Non Linear Devices
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity24.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity24.html/edit
     uuid: 00000000-0000-0000-0000-000000001024
     long_description: this is a great activity
 
@@ -251,6 +275,7 @@ external_activities:
     name: simple activity
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity25.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity25.html/edit
     uuid: 00000000-0000-0000-0000-000000001025
     long_description: this is a great activity
 
@@ -258,6 +283,7 @@ external_activities:
     name: differential calculus
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity26.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity26.html/edit
     uuid: 00000000-0000-0000-0000-000000001026
     long_description: this is a great activity
 
@@ -265,12 +291,14 @@ external_activities:
     name: integral calculus
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity27.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity27.html/edit
     uuid: 00000000-0000-0000-0000-000000001027
 
   ext_activity_28:
     name: differential calculus
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity28.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity28.html/edit
     uuid: 00000000-0000-0000-0000-000000001028
     long_description: this is a great activity
 
@@ -279,7 +307,7 @@ external_activities:
     user: author
     long_description: Triangle is a great material
     url: http://fake-lara.com/mock_html/test-external-activity29.html
-
+    author_url: http://fake-lara.com/mock_html/test-external-activity29.html/edit
     uuid: 00000000-0000-0000-0000-000000001029
 
   ext_activity_30:
@@ -287,6 +315,7 @@ external_activities:
     user: author
     long_description: Triangle is a great subject
     url: http://fake-lara.com/mock_html/test-external-activity30.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity30.html/edit
     uuid: 00000000-0000-0000-0000-000000001030
     activities:
       - Curvey shapes
@@ -297,6 +326,7 @@ external_activities:
     user: author
     long_description: Nuclear Energy is a great subject
     url: http://fake-lara.com/mock_html/test-external-activity31.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity31.html/edit
     uuid: 00000000-0000-0000-0000-000000001031
     activities:
       - Plutonium
@@ -307,6 +337,7 @@ external_activities:
     user: author
     long_description: how fast can cars go?
     url: http://fake-lara.com/mock_html/test-external-activity32.html
+    author_url: http://fake-lara.com/mock_html/test-external-activity32.html/edit
     uuid: 00000000-0000-0000-0000-000000001032
     activities:
       - Porsche
