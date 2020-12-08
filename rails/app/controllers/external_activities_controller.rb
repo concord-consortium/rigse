@@ -113,6 +113,11 @@ class ExternalActivitiesController < ApplicationController
       @external_activity.sensor_list = (params[:sensors] || [])
     end
 
+    if params[:update_projects]
+      # set the projects
+      @external_activity.projects = Admin::Project.where(id: params[:project_ids] || [])
+    end
+
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
@@ -160,6 +165,12 @@ class ExternalActivitiesController < ApplicationController
     if params[:update_sensors]
       # set the sensor tags
       @external_activity.sensor_list = (params[:sensors] || [])
+      @external_activity.save
+    end
+
+    if params[:update_projects]
+      # set the projects
+      @external_activity.projects = Admin::Project.where(id: params[:project_ids] || [])
       @external_activity.save
     end
 
