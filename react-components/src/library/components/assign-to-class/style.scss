@@ -54,6 +54,16 @@
         font-weight: 700;
         margin: 10px 0 0;
       }
+      .studentDataWarning {
+        background: #fef7e0;
+        border: solid 1px #ea6d2f;
+        color: #ea6d2f;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.4;
+        margin: 10px 0;
+        padding: 10px;
+      }
       .classListContainer {
         max-height: 125px;
         overflow-y: auto;
