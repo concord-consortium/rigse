@@ -197,8 +197,13 @@ export default class AssignModal extends React.Component {
 
   contentForTeacher () {
     const errorMessageClass = this.state.errorMessage ? css.errorMessage + ' ' + css.visible : css.errorMessage
+    const { savesStudentData } = this.props
     return (
       <div>
+        {
+          !savesStudentData &&
+          <div className={css.studentDataWarning}><strong>PLEASE NOTE:</strong> This resource can be assigned, but student responses will not be saved.</div>
+        }
         <p>Select the class(es) you want to assign this resource to below.</p>
         <div id='clazz_summary_data'>
           <div id={css.scrollableClassSummaryData}>

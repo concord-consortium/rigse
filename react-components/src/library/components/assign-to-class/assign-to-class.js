@@ -44,6 +44,7 @@ export default function openAssignToClassModal (properties) {
       properties.resourceTitle = response.name
       properties.previewUrl = response.preview_url
       properties.resourceType = response.material_type.toLowerCase()
+      properties.savesStudentData = response.saves_student_data
       openModal(AssignModal, properties, Modal.hideModal)
     })
     .fail(function (err) {
