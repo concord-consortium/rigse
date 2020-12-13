@@ -22,6 +22,7 @@ gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
 gem "activerecord-session_store"
 gem 'acts-as-taggable-on', '~> 3.4.0'
 gem 'acts_as_list'
+gem 'appsignal'
 gem 'arrayfields'
 # this is the old version of aws and is needed by our old version of paperclip
 # we cannot upgrade paperclip until we have rails up to version 4.
