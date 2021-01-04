@@ -1,0 +1,15 @@
+# This was generated using: cd rails/script; ruby reference-tree.rb
+---
+BASE/button_to_remote: {}
+BASE/draggable_element: {}
+BASE/drop_receiving_element: {}
+BASE/link_to_function: {}
+BASE/link_to_remote: {}
+BASE/observe_form: {}
+BASE/page <<: {}
+BASE/remote_form_for: {}
+BASE/remote_function: {}
+BASE/render :update: {}
+BASE/render(:update: {}
+BASE/sortable_element: {}
+BASE/visual_effect: {}

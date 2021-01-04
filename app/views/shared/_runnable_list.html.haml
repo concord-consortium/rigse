@@ -1,8 +1,0 @@
-- locals = {:portal_clazz_id => portal_clazz_id, :user => current_visitor, :name => "", :hide_print => true}
-- locals[:hide_drafts_checkbox] = (!APP_CONFIG[:allow_drafts_in_assignments])
-
-#assignable_list
-  = render_top_level_container_list_partial(locals)
-  - results = Search.new(locals).results
-  - [Search::ActivityMaterial].each do |material|
-    = render :partial => "shared/runnables_listing", :locals => { :runnables => results[material], :klass => material, :hide_print => true }

@@ -4,7 +4,7 @@ version: '3'
 services:
   app:
     build:
-      context: .
+      context: rails
       dockerfile: Dockerfile-dev
     command: docker/dev/run.sh
     environment:
@@ -32,8 +32,6 @@ services:
 
       SITE_URL:
       RESEARCHER_REPORT_ONLY:
-      REPORT_VIEW_URL:
-      REPORT_DOMAINS:
 
       #
       # ASN API key
@@ -41,9 +39,9 @@ services:
       ASN_API_KEY:
 
       #
-      # portal-pages URLs
+      # external css URL
       #
-      PORTAL_PAGES_LIBRARY_URL: "${PORTAL_PAGES_LIBRARY_URL:-https://portal-pages.concord.org/library}"
+
       EXTERNAL_CSS_URL:
 
       #
@@ -92,6 +90,10 @@ services:
       ROLLBAR_CLIENT_ACCESS_TOKEN:
 
       #
+      # Devise secret key 64 hex-encoded bytes
+      # generate one using eg: hexdump -n 64 -v -e ' 64/1 "%02X" "\n"' /dev/urandom
+      DEVISE_SECRET_KEY:
+      #
       # Set JWT HMAC secret
       #
       JWT_HMAC_SECRET:
@@ -105,9 +107,37 @@ services:
       #
       DOCKER: 'true'
 
+      #
+      # Enables logging to stdout instead of file. Override this in .env
+      #
+      RAILS_STDOUT_LOGGING: "${RAILS_STDOUT_LOGGING:-true}"
+
+      # Logging levels. Override this in .env
+      # DEBUG | INFO | WARN | ERROR | FATAL | UNKNOWN
+      TEST_LOG_LEVEL: "${TEST_LOG_LEVEL:-WARN}"
+      DEV_LOG_LEVEL: "${DEV_LOG_LEVEL:-DEBUG}"
+
+      #
+      # Source for report service lookups
+      #
+      REPORT_SERVICE_SOURCE: "app_lara_docker"
+
+      # Used by imagemagick to add attribution to the images in the image library
+      # the DejaVu-Sans font is provided by the docker image this one is built on
+      WATERMARK_FONT: "${WATERMARK_FONT:-DejaVu-Sans}"
+
+      #
+      # Rails 4 encrypted cookies:
+      #
+      RAILS_SECRET_KEY_BASE: "${RAILS_SECRET_KEY_BASE:-local_dev_only_secret_key_base}"
+
+    # open standard in and turn on tty so we can attach to the container and debug it
+    stdin_open: true
+    tty: true
+
     # no ports are published, see below for details
     volumes:
-      - .:/rigse
+      - ./rails:/rigse
       - bundle:/bundle
     networks:
       # the portal network allows external connections
@@ -122,12 +152,12 @@ services:
     image: concordconsortium/docker-solr-portal
     # no ports are published, see below for details
     volumes:
-      - .:/rigse
+      - ./rails:/rigse
     command: /bin/bash ./start-solr.sh
   mysql:
     image: mysql:5.6
     environment:
-      MYSQL_ROOT_PASSWORD: xyzzy
+      MYSQL_ROOT_PASSWORD:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     volumes:
       # use a named volume here so the database is preserved after a down and up
@@ -140,7 +170,7 @@ services:
     # Mount the portal source in the container under /rigse
     #
     volumes:
-      - .:/rigse
+      - ./rails:/rigse
     #
     # Invoke the docker/dev/start-solr-test.sh script allowing us
     # to specify a port and other parameters.
@@ -160,7 +190,7 @@ services:
       - default
   logstash:
     build:
-      context: docker/logstash
+      context: logstash
       dockerfile: Dockerfile
     environment:
       DB_HOST: mysql
@@ -171,7 +201,7 @@ services:
       ES_HOST: elasticsearch
     volumes:
       # override logstash output to use local elastic search
-      - ./docker/logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
+      - ./logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.1
 volumes:

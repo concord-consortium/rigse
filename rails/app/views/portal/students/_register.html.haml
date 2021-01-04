@@ -1,0 +1,6 @@
+#join-class
+:javascript
+  PortalComponents.renderJoinClass({
+    allowDefaultClass: #{current_settings.allow_default_class.to_json},
+    afterJoin: () => window.location.assign(#{home_path().to_json})
+  }, 'join-class');

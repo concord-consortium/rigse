@@ -98,6 +98,7 @@ pass before changing any code.
 Prepare a database for use when running the spec tests:
 
     rake db:test:prepare
+    rake db:feature_test:prepare
 
 Start SOLR in test environment (it works with cucumber tests too):
 
@@ -109,9 +110,8 @@ Run the rspec unit tests:
 
 Prepare a database for use when running the cucumber tests:
 
-    RAILS_ENV=cucumber rake db:create
-    RAILS_ENV=cucumber rake db:schema:load
-    rake db:test:prepare_cucumber
+    RAILS_ENV=feature_test rake db:create
+    rake db:feature_test:prepare
 
 Run the cucumber integration tests:
 
@@ -204,7 +204,14 @@ School Year 2006–07](http://nces.ed.gov/ccd/pdf/pau061bgen.pdf)
 
 Feature specs that require javascript are run by Chrome via Selenium. By default Chrome will run in headless mode and there is nothing special you need to do inside of a Docker development environment.
 
-However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by setting an environment variable `HEADLESS=false`. You'll need to install `chromedriver` on your host machine and start it with the command: `chromedriver --whitelisted-ips`. Ensure you have no firewall running on your host machine, or if you do please open port `9515`. Also ensure that Chrome is installed on the host machine.
+However, if you would like to run Chrome in **non-headless mode** on your host machine, this is possible by making the following changes:
+
+* set the environment variable `HEADLESS=false` if you are running the tests by using `docker-compose exec app /bin/bash`, then you can set HEADLESS in the shell.
+* expose the capybara port by adding the docker-compose-publish-capybara-port overlay to to your .env file
+* install `chromedriver` on your host machine
+* start it with the command: `chromedriver --whitelisted-ips`
+* ensure you have no firewall running on your host machine, or if you do please open port `9515`
+* ensure that Chrome is installed on the host machine.
 
 #### Factory Bot
 
@@ -220,7 +227,7 @@ introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-
 
 ### Running the rspec tests
 
-**Running all the rspec tests:*
+**Running all the rspec tests:**
 
     bundle exec rake spec
 
@@ -571,6 +578,28 @@ Devise is also setup to use user activation. Users which require
 activation are sent emails
 automatically.
 
+### Single Sign On
+
+The app supports user registration and authentication via third party single sign using OAuth. Using this feature requires setting up OAuth credentials with the third party.
+
+The app currently supports OAuth registration and authentication using Google and Schoology.
+
+To set up single sign on with Google, follow the steps below.
+
+1) Create a new Google app in console.developers.google.com.
+
+2) Create a set of OAuth credentials for the app. For the "Authorized JS origin" value use the valid public domain that resolves to your copy of the app on the web. For the "Authorized redirect URI" value use `https://[your domain]/users/auth/google/callback`.
+
+3) Take the Client ID and Client Secret values created in step two and add them as values for GOOGLE_CLIENT_KEY (Client ID) and GOOGLE_CLIENT_SECRET (Client Secret) in your app's .env file.
+
+4) Restart the app.
+
+#### Testing Single Sign On with Google and a Local Portal
+
+Create a set of OAuth credentials for the app following the steps above, but for the "Authorized JS origin" value use a valid public top level domain that resolves to 127.0.0.1. Google won't accept 127.0.0.1 or a domain like app.portaldocker.local. An easy option is to use `https://lvh.me` which resolves to 127.0.0.1 without requiring any special configuration of your computer.
+
+For the "Authorized redirect URI" value use `https://[your domain]:[your port number]/users/auth/google/callback`. If, for example, you use lvh.me and Docker is serving your portal over port 32789, the value would be `https://lvh.me:32789/users/auth/google/callback`.
+
 ## Uses the Database for Sessions
 
 ### Will Paginate
@@ -762,6 +791,10 @@ using nohup, e.g.:
 `nohup bundle exec rake archive_portal:extract_and_upload_images &`
 
 You can close your ssh session and the task will be still running. Logs will be saved in `nohup.out`.
+## New Admin interfaces
+
+As of 2020-06-12 we are in the process of moving some administrative functions to a new technology stack.
+See the [New Admin interface documentation](docs/admin-interface.md)
 
 ## License
 

@@ -1,0 +1,88 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml", :prefix => "og: http://ogp.me/ns#" }
+  %head
+    %meta{ :content => "text/xhtml; charset=utf-8", "http-equiv" => "content-type" }
+    - page_title = (@page_title) ? "#{@page_title} | #{APP_CONFIG[:site_name]}" : APP_CONFIG[:site_name]
+    %title= page_title
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1"}
+    %meta{ :name => "distribution", :content => "all" }
+    %meta{ :name => "robots", :content => "all" }
+    %meta{ :name => "resource-type", :content => "document" }
+    %link{ :href => asset_path("favicon.ico"), :rel => "shortcut icon"}/
+
+    - @meta_tags = @meta_tags || {}
+    - @meta_tags.each_pair do |key, value|
+      %meta{ :name => key, :content => value }
+
+    / Open graph tags
+    - @open_graph = @open_graph || {}
+    - @open_graph[:site_name] = @open_graph[:site_name] || APP_CONFIG[:site_name]
+    - @open_graph.each_pair do |key, value|
+      %meta{ :property => "og:#{key}", :content => value }
+
+    != stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
+    / TODO: if themes need their own print CSS make a themed link here:
+    != stylesheet_link_tag 'print', {'media' => 'print'}
+
+    / Include museo fonts.
+    %script{ :src => "https://use.typekit.com/juj7nhw.js"}
+    %script
+      try{Typekit.load({ async: true });}catch(e){}
+
+    / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
+    = render :partial => 'dynamic_scripts/all'
+    != javascript_include_tag 'application'
+
+    / add the external css if defined
+    = render :partial => "layouts/external_css"
+
+
+    = csrf_meta_tag
+
+    / shouldn't probably do this here, do it on domloaded elsewhere..:
+    = javascript_tag mce_init_string
+    - if protect_against_forgery?
+      = javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};"
+    - if @container_id
+      = javascript_tag "var container_id = #{@container_id};"
+    - if @container_type
+      = javascript_tag "var container_type = '#{@container_type}';"
+
+    / PIE needs to be conditionally included for IE.
+    / The boxed conditional comment below is required.
+    / Do NOT remove it unless you know what you're doing.
+    /[if lt IE 10]
+      = javascript_include_tag("pie/PIE")
+
+    = render :partial => 'shared/analytics'
+    = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
+
+  - role_classes = current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }
+  - guest_classes = current_user.nil? ? ['main-nav-hidden'] : []
+  %body{:class => (guest_classes + role_classes).join(' ').squish, :'ng-app' => 'cc-portal'}
+
+    #note{:style=>"display: none;"}
+    = content_for :lightboxes
+    #page
+      / For non-visual user agents:
+      #top
+        %a.hidden.doNotPrint{ :href => "#primary" } Skip to main content.
+    = render :partial => 'shared/project_header'
+    #wrapper{ :class => "wrapper cols" }
+      - unless @wide_content_layout
+        #secondary{ :class => "col-3" }
+          - if current_user.present?
+            = render :partial => 'shared/left_menu'
+
+      #primary{ :class => @wide_content_layout ? "wide col-12" : "col-8"}
+        #content.main_content_colors
+          #content_header.main_content_colors
+            = content_for :content_header
+          #js_flash{:style=>"display: none;"}
+          = render :partial=>"layouts/flashes"
+
+          = content_for :layout
+
+    = render :partial => 'shared/footer'
+
+    = content_for :after_footer

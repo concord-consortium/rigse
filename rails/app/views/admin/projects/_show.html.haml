@@ -1,0 +1,45 @@
+%div{id: dom_id_for(project), class: 'container_element'}
+  .action_menu
+    .action_menu_header_left
+      %h3
+        %a{href:admin_project_path(project)}=project.name
+
+    .action_menu_header_right
+      %ul.menu
+        %li
+          %a{href:edit_admin_project_path(project)} edit
+        %li
+          %a{href:url_for(action: :destroy, id: project.id), data: {method: 'delete', confirm: "Delete this project?"} } delete
+
+  %div{id: dom_id_for(project, :item), class: 'item'}
+    %div{id: dom_id_for(project, :details), class: 'content'}
+      %ul
+        %li
+          Name:
+          = project.name
+        %li
+          Public:
+          = project.public
+        - if project.landing_page_slug
+          %li
+            Landing page slug:
+            %a{href: project_page_url(project.landing_page_slug)}= project_page_url(project.landing_page_slug)
+    - if defined?(show_details)
+      %div{style: 'display: flex; flex-wrap: wrap'}
+        - if (project.project_card_image_url.present?)
+          %div{style: 'flex: 1 1 auto'}
+            %img{src:project.project_card_image_url, width: '200px'}
+        - if project.project_card_description.present?
+          %div{style: 'flex: 2 1 300px'}
+            = h(project.project_card_description.html_safe)
+        - if project.landing_page_content.present?
+          %div{style: 'flex: 2 1 300px'}
+            = h(project.landing_page_content.html_safe)
+        - if !project.links.empty?
+          %div{style: 'flex: 3 1 400px'}
+            %h3 Links:
+            = raw project.links.collect { |link| link_to link.name, link.href }.join(" | ")
+        - if !project.cohorts.empty?
+          %div{style: 'flex: 3 1 400px'}
+            %h3 Cohorts:
+            = raw project.cohorts.collect { |cohort| link_to cohort.name, cohort }.join(" | ")

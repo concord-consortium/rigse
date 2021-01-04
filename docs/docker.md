@@ -65,11 +65,17 @@ environment. These can be found in `docker/dev/`. Currently these overrides supp
 
 - `docker-compose-external-mysql.yml`: external mysql server
 - `docker-compose-random-ports.yml`: assign random ports to rails and solr
-- `docker-compose-ssh.yml`: share an ssh-agent with the app service so you can do capistrano deploys
 - `docker-compose-sync.yml`: use a 2 volume sync container for faster performance on OS X, without needing the host to run unison
 - `docker-compose-unison.yml`: *deprecated* using unison for faster performance on OS X, requires the host to run unison
 
 There is more on each of these below.
+
+To make the initial setup easier there is a .env-osx-sample file that contains the standard setup we use. So you can simply:
+
+```
+cp .env-osx-sample .env
+docker-compose up
+```
 
 ## Running Rails and Rake commands
 
@@ -183,27 +189,6 @@ If you are connecting to a mysql running on your host, Docker for Mac requires e
 configuration:
 https://docs.docker.com/docker-for-mac/networking/#/i-want-to-connect-from-a-container-to-a-service-on-the-host
 
-## Setting up a ssh-agent accessible by app service
-
-In order to do capistrano deploys of the portal you'll need to ssh from the app service.
-You'll need to use key pairs to do this so you don't have to type your password lots of
-times. You can copy your ssh keys into the app container, but that is a bit insecure.
-
-A more secure option is to setup a system where the app service accesses a ssh-agent.
-This way the app service never actually has your keys, it just uses the agent to do the
-necessary checking.
-
-Currently with Docker for Mac it is not possible to expose a ssh-agent running on your
-host machine to docker containers. This is because Docker for Mac doesn't support sharing
-file based sockets between the host and the containers. This issue has some more links
-and info: https://github.com/docker/for-mac/issues/410
-
-A work around is to run another ssh-agent in a container:
-https://github.com/whilp/ssh-agent if you do that you can use the override:
-docker/dev/docker-compose-ssh.yml to provide access to this agent.
-
-You will need to add your keys to the ssh-agent container on each reboot. The ssh-agent
-image above has instructions on doing this.
 
 ## Running rspec and cucumber tests with docker
 

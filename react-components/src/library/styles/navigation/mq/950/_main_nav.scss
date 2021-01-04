@@ -1,0 +1,307 @@
+.portal-pages-main-nav-contain {
+  display: none;
+}
+
+.logo-contain {
+  position: relative;
+  z-index: 101;
+  margin: 30px 0;
+}
+
+.mobile-nav-contain {
+  display: block;
+  float: right;
+  line-height: 30px;
+  margin-top: 65px;
+
+  .mobile-search,
+  .mobile-nav-btn {
+    display: inline-block;
+    position: relative;
+    z-index: 102;
+    font-size: 30px;
+    margin-left: 25px;
+
+    i {
+      color: $col-default;
+    }
+  }
+}
+
+.mobile-nav-icon {
+  display: inline-block;
+  vertical-align: top;
+  width: 30px;
+  height: 25px;
+  position: relative;
+  transform: rotate(0);
+  @include transition(all .15s $transition-function);
+  cursor: pointer;
+
+  span {
+    display: block;
+    position: absolute;
+    height: 5px;
+    width: 100%;
+    background: $col-default;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0);
+    @include transition(all .15s $transition-function);
+
+    &:nth-child(1) {
+      top: 0px;
+      -webkit-transform-origin: left center;
+      -moz-transform-origin: left center;
+      -o-transform-origin: left center;
+      transform-origin: left center;
+    }
+
+    &:nth-child(2) {
+      top: 10px;
+      -webkit-transform-origin: left center;
+      -moz-transform-origin: left center;
+      -o-transform-origin: left center;
+      transform-origin: left center;
+    }
+
+    &:nth-child(3) {
+      top: 20px;
+      -webkit-transform-origin: left center;
+      -moz-transform-origin: left center;
+      -o-transform-origin: left center;
+      transform-origin: left center;
+    }
+
+  }
+}
+
+body {
+
+  &[data-mobile-nav="closed"] {
+    .mobile-nav-btn {
+      .closer {
+        display: none;
+      }
+      .opener {
+        display: inline-block;
+      }
+    }
+  }
+
+  &[data-mobile-nav="open"] {
+
+    .mobile-nav-wrapper {
+      display: block;
+    }
+
+    .mobile-nav-btn {
+      .closer {
+        display: inline-block;
+      }
+      .opener {
+        display: none;
+      }
+    }
+
+    .mobile-nav-icon {
+      span {
+        &:nth-child(1) {
+          transform: rotate(45deg);
+          top: 0;
+          left: 0;
+        }
+
+        &:nth-child(2) {
+          width: 0;
+          opacity: 0;
+        }
+
+        &:nth-child(3) {
+          transform: rotate(-45deg);
+          top: 21px;
+          left: 0;
+        }
+      }
+    }
+
+    .concord-navigation {
+      background: $white;
+    }
+    .portal-pages-main-nav-contain {
+      background: $white;
+      box-shadow: 0 6px 3px rgba(51, 51, 51, .1);
+      display: block;
+      left: 0;
+      margin: 0;
+      padding-bottom: 100px;
+      position: absolute;
+      text-align: center;
+      top: 170px;
+      width: 100%;
+      z-index: 101;
+
+      .portal-pages-main-nav-item {
+        display: block;
+        font-size: 24px;
+        margin: 0 40px;
+        &.current-menu-item a {
+          border-color: transparent !important;
+        }
+        ul {
+          border: 0;
+          display: none;
+          height: 0;
+          left: auto;
+          opacity: 0;
+          padding: 0;
+          position: relative;
+          right: auto;
+          top: 150px;
+          z-index: -1;
+          @include transition(all .2s $transition-function);
+          li {
+            font-size: 18px;
+            line-height: 1.3em;
+            margin: 0;
+          }
+          a {
+            color: $col-default;
+          }
+        }
+        &.active {
+          ul {
+            opacity: 1;
+            height: 100%;
+            z-index: 1;
+            display: block;
+            @include transition(all .2s $transition-function);
+          }
+          .mobile-expand {
+            span {
+              @include transition(all .4s $transition-function);
+              &:first-child {
+                transform: rotate(90deg);
+                opacity: 0;
+              }
+              &:last-child {
+                transform: rotate(180deg);
+              }
+            }
+          }
+        }
+      }
+      .selected > a {
+        border: none;
+      }
+      .mobile-expand{
+        display: inline-block;
+        color: $col-default;
+        margin-left: 20px;
+        cursor: pointer;
+        span {
+          display: block;
+          width: 11px;
+          height: 3px;
+          background-color: $col-default;
+          opacity: 1;
+          @include transition(all .4s $transition-function);
+          &:last-child {
+            transform: rotate(90deg);
+            position: relative;
+            top: -3px;
+          }
+        }
+      }
+      a {
+        display: block;
+        color: $col-default;
+        padding: 20px 0;
+        opacity: 1;
+        margin: 10px 0;
+        &:hover {
+          border-color: transparent;
+          opacity: .7;
+        }
+        &.log-in {
+          color: $white;
+          font-size: 24px;
+          margin-top: 20px;
+          i { display: none; }
+        }
+        &.register {
+          color: $col-orange;
+          font-size: 24px;
+          margin-top: 60px;
+          i { display: none; }
+        }
+      }
+    }
+
+    &.admin-bar {
+      .main-nav-contain {
+        top: 200px;
+      }
+    }
+
+    .mobile-overlay {
+      display: block;
+      position: absolute;
+      z-index: 100;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: white;
+    }
+
+  }
+
+}
+
+.page-nav-dropdown__title {
+  color: #fff;
+  padding: 20px 30px;
+  display: block;
+  -webkit-transition: 0.2s ease-in-out;
+  -moz-transition: 0.2s ease-in-out;
+  -ms-transition:  0.2s ease-in-out;
+  -o-transition:  0.2s ease-in-out;
+  transition:  0.2s ease-in-out;
+  &::after {
+    content: "\e905";
+    font-family: "icomoon";
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin: 5px 0 0 0;
+    -webkit-transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -ms-transition:0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    transition: 0.2s ease-in-out;
+  }
+  &.active:after {
+    content: "\e905";
+    font-family: "icomoon";
+    font-size: 13px;
+    color: white;
+    float: right;
+    margin: 5px 0 0 0;
+    transform: rotate(180deg);
+    -webkit-transition: 0.2s ease-in-out;
+    -moz-transition:0.2s ease-in-out;
+    -ms-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    transition:  0.2s ease-in-out;
+  }
+}
+
+.page-nav-contain {
+  border-top: 1px solid rgba(0,0,0,.2);
+  display: none;
+  width: 100%!important;
+  &.active {
+    display: block;
+  }
+}

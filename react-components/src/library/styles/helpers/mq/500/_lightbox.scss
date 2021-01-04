@@ -1,0 +1,48 @@
+.portal-pages-resource-lightbox-modal {
+  left: 0;
+  margin-left: 0;
+  padding: 40px 20px 20px;
+  width: auto;
+}
+
+.portal-pages-resource-lightbox-modal-content-top .preview-image {
+  height: 235px;
+  width: auto;
+}
+
+.portal-pages-primary-button,
+.portal-pages-primary-button:hover,
+.portal-pages-primary-button:visited,
+.portal-pages-secondary-button,
+.portal-pages-secondary-button:hover,
+.portal-pages-secondary-button:visited {
+  clear: both;
+  display: block !important;
+  margin: 0 0 20px !important;
+  width: 416px;
+}
+
+.portal-pages-resource-lightbox-related-content {
+  background: #f5f5f5;
+  padding: 20px 10px 0;
+
+  &.cols:not(.no-collapse) {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  h2 {
+    margin: 0 0 20px;
+  }
+}
+
+.portal-pages-finder-result-favorite,
+.portal-pages-resource-lightbox-modal-sharing,
+.portal-pages-resource-lightbox-modal-utility {
+  display: none;
+}
+
+.lightbox {
+  left: 0 !important;
+  width: 100% !important;
+}

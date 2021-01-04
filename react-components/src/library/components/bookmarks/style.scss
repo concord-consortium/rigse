@@ -1,0 +1,50 @@
+.editBookmarksTable {
+  margin: 10px 0;
+}
+
+.editBookmarkRow {
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  padding: 15px;
+
+  &:nth-child(odd) {
+    background-color: #f1f1f1;
+  }
+}
+
+.editBookmarkName {
+  flex-grow: 2;
+  padding: 0 5px;
+  cursor: ns-resize;
+
+  input {
+    margin-bottom: 10px;
+    padding: 10px;
+    width: calc(98% - 10px);
+
+    &:nth-child(2) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.editBookmarkButtons {
+  align-self: center;
+  display: flex;
+
+  button {
+    margin: 0 0 0 10px;
+  }
+}
+
+.iconCell {
+  display: inline-block;
+  padding-top: 3px;
+  padding-right: 5px;
+  font-size: 0.95em;
+  vertical-align: middle;
+}
+
+.sortIcon {
+  cursor: ns-resize;
+}

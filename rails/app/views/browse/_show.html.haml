@@ -1,0 +1,81 @@
+= javascript_include_tag "share_material"
+
+
+- parent_material = search_material.parent_material
+- material_count = parent_material.material.offerings.count
+- material = parent_material.material
+- external ||= false
+
+
+:sass
+  #content
+    padding-top: 0px
+    padding-right: 0px
+
+
+= hidden_field_tag "investigation_id", parent_material.id
+= hidden_field_tag "material_id", search_material.id
+= hidden_field_tag "assign_material_type", search_material.model_name
+
+%div
+  - unless @back_to_search_url.nil?
+    = link_to "&larr; return to search".html_safe, @back_to_search_url,:class=>"return_link",:title=>"return to search"
+    %br
+    %br
+
+.browse_material_other_data
+  .icon_image
+    = image_tag(parent_material.icon_image_url)
+  %br
+.browse_material_data
+  .browse_material_header
+    .title
+      = parent_material.title
+    .material_type
+      = material.display_name
+  %br
+  .description
+    = sanitize parent_material.long_description_for_current_user
+    %div.clazz_count{:id=>"material_clazz_count"}
+      %i
+        - if(material_count == 0)
+          Not used in any class.
+        - elsif(material_count == 1)
+          Used in 1 class.
+        - else
+          Used in #{material_count} classes.
+        - if material.respond_to?(:archived?) && material.archived?
+          (archived)
+        - if policy(material).edit?
+          = link_to "(portal settings)", edit_polymorphic_url(material)
+    %div{:style=>'float:left;padding:3px'}
+      = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
+    -if external
+      - if material.author_url  && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
+        %div{:style=>'float:left;padding:3px'}
+          = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button", :target => "_blank"
+    -if external
+      - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
+        %div{:style=>'float:left;padding:3px'}
+          = link_to "Copy", copy_external_activity_url(material), :class=>"button", :target => "_blank"
+    %div{:style=>'float:left;padding:3px'}
+      - if current_visitor.portal_teacher && !(material.material_type == 'Collection')
+        = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button", :onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}', false)", :id=>"btn_Assign"
+      - elsif !(material.material_type == 'Collection') && !current_visitor.portal_student
+        = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}', true)", :id=>"btn_Assign", :class=>"button"
+    %div{:style=>'float:left;padding:3px',:class=>"share"}
+      %a{:class=>"button share_Button Expand_Collapse_Link",:id=>"ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share",:href=>"javascript:void(0)",:onclick=>"expandcollapseoptions(#{parent_material.id},'#{parent_material.model_name}','Share')"}Share &#9660;
+      .Expand_Collapse{:id=>"#{parent_material.model_name}#{parent_material.id}Share", :style=>"display:none", :class=>"Expand_Collapse_share" }
+        = render :partial => '/browse/share', :locals => {:material_url => parent_material.url,:material_title=>parent_material.title}
+
+  %br
+  %br
+
+  - unless parent_material.activities.nil?
+    %div
+      %script{:src=>"//platform.linkedin.com/in.js",:type=>"text/javascript"}
+      - if external
+        = render :partial => '/browse/external_sequence_activity_list', :locals => {:search_material => parent_material}
+      - else
+        = render :partial => '/browse/investigation_activity_list', :locals => {:search_material => parent_material}
+.clearboth

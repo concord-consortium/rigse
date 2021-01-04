@@ -1,0 +1,17 @@
+= hidden_field(:user, :has_projects_in_form, :value => true)
+%fieldset
+  %legend
+    Admin for Projects
+  %ul.options-list
+    - projects = projects.sort_by &:name
+    - projects.each_with_index do |p, i|
+      - checkbox_id = "project-" + i.to_s + "-admin"
+      %li
+        = check_box_tag "user[admin_project_ids][]", p.id, @user.admin_for_projects.include?(p), id: checkbox_id
+        = label_tag checkbox_id do
+          = p.name
+  %div.additional-options
+    = hidden_field(:user, :can_add_teachers_to_cohorts, :value => false)
+    = check_box_tag "user[can_add_teachers_to_cohorts]", 1, @user.can_add_teachers_to_cohorts?, id: "user_can_add_teachers_to_cohorts_cb"
+    = label_tag "user_can_add_teachers_to_cohorts_cb" do
+      User can add teachers to cohorts of projects they administer

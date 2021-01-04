@@ -1,0 +1,148 @@
+.classsetupform tr { vertical-align: top; }
+.classsetupform td { padding-top: 10px; padding-left: 10px; }
+.classsetupform td.title{ width: 60px;}
+.classsetupform table { margin: 0;}
+.classsetupform table td { text-align:left;padding:0px 5px 0px 5px}
+
+.classsetupform #sortable {
+  width: 100%;
+
+  li {
+    padding: 0;
+  }
+}
+
+.new_portal_clazz a, .edit_portal_clazz a { color: #888; }
+.new_portal_clazz a.button, .edit_portal_clazz a.button { color: #fff; }
+.new_portal_clazz a.button.secondary, .edit_portal_clazz a.button.secondary { color: #ea6d2f; }
+
+.classsetupform, .edit_portal_clazz {
+  margin-bottom: 50px;
+  text-align: left;
+  width: 100%;
+
+  input, textarea, select {
+    border: solid 2px #0592af;
+    font-family: 'museo-sans', helvetica, verdana, sans-serif;
+    width: calc(100% - 24px);
+  }
+  input[type='text'], textarea {
+    font-weight: 300;
+    padding: 10px;
+  }
+  input[type="button"], input[type="checkbox"], input[type="radio"], input[type="submit"] {
+    border: none;
+    width: auto;
+  }
+  #sortable li label {
+    cursor: move;
+    height: auto;
+    margin: 0;
+    padding: 3px 0 0;
+  }
+  select {
+    background: image-url('chosen-sprite.png') no-repeat;
+    background-position: right -35px top 10px;
+    border-radius: 0;
+    width: 100%;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
+
+  label.right {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  .class-teachers {
+    padding: 0 0 10px;
+
+    .note {
+      font-size: 13px;
+      line-height: 18px;
+      margin-top: 5px;
+    }
+
+    #div_teacher_list {
+      padding: 10px 0;
+
+      li {
+        font-weight: 500;
+        margin-bottom: 0;
+      }
+
+      .rollover, .rollover:visited, .rollover:active {
+        height: 22px;
+        margin-right: 5px;
+
+        img {
+          width: 200%;
+        }
+      }
+    }
+  }
+
+}
+
+.form-submit {
+  text-align: right;
+
+  span.create_button {
+    margin-left: 15px;
+  }
+}
+
+dl.classdata {
+  margin-bottom: 30px;
+
+  dd {
+    display: inline;
+    font-size: 18px;
+
+    &:after {
+      display: block;
+      content: '';
+    }
+  }
+  dt {
+    display: inline;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .classsetupform {
+    padding-left: 0;
+
+    td, td.title {
+      padding-left: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .classsetupform {
+    label.right {
+      text-align: left;
+    }
+    td {
+      display: block;
+      width: 100%;
+
+      &.title {
+        padding-left: 10px;
+      }
+    }
+    input[type='text'], textarea {
+      width: 95%;
+    }
+    select {
+      width: calc(100% - 14px);
+    }
+    #div_teacher_list td {
+      display: table-cell;
+    }
+  }
+
+}

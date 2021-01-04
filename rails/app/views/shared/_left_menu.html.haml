@@ -1,0 +1,6 @@
+- # Renders Navigation React component, configured by `getNavigation()`, into #clazzes_nav
+- # See https://github.com/concord-consortium/portal-pages/blob/master/src/library/library.js
+#clazzes_nav
+:javascript
+  var navOpts = Portal.API_V1.getNavigation()
+  PortalComponents.renderNavigation(Portal.API_V1.getNavigation(), 'clazzes_nav')

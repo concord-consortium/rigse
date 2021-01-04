@@ -1,0 +1,40 @@
+.theme-has {
+  .concord-logo {
+    background-image: url(./assets/banners/has-logo.svg);
+    background-size: 500px;
+    text-indent: -999px;
+    width: 380px;
+  }
+  .portal-pages-main-nav-collections {
+    display: none !important;
+  }
+  .portal-pages-main-nav-about a {
+    color: $white !important;
+    &:hover {
+      border-color: $white;
+    }
+  }
+  .portal-pages-main-nav-item:nth-child(3) {
+    margin-left: 25px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .theme-has {
+    .concord-logo {
+      height: 60px;
+      width: 275px;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .theme-has {
+    ul.portal-pages-main-nav-contain {
+      top: 72px;
+    }
+    .mobile-nav-icon span {
+      background: #ea6d2f;
+    }
+  }
+}

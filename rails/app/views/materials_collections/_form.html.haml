@@ -1,0 +1,15 @@
+.item
+  = edit_menu_for(materials_collection, f, { :omit_cancel => true })
+  = error_messages_for :materials_collection
+  .content
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          =f.text_field :name
+        %li
+          Project:
+          =f.collection_select :project_id, Admin::Project.order("name ASC"), :id, :name, :prompt => "Select project..."
+        %li
+          Description:
+          =f.text_area :description

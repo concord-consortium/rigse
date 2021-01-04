@@ -1,4 +1,42 @@
 *~
+.DS_Store
+docs/api
+docs/app
+rerun.txt
+nbproject
+mkmf.log
+*.swp
+*.swo
+*.orig
+docs/gource/*.mp4
+docs/gource/*.webm
+*.tmproj
+.redcar
+.idea
+*.sublime-project
+*.sublime-workspace
+chromedriver.log
+.floo
+.powenv
+solr
+log
+certs
+pems
+.env
+*.DS_Store
+
+react-components/dist
+react-components/coverage
+react-components/node_modules
+react-components/stats.json
+
+#
+# Old gitignore
+# The lines below here should be deleted after all developers have updated to
+# this new organization of rails in a subfolder. Keeping this old gitignore
+# makes there be less noise when switching back and forth between branches
+#
+*~
 log/*.log
 tmp/*
 .DS_Store
@@ -17,7 +55,6 @@ config/mailer.yml
 config/additional_users.yml
 config/aws_s3.yml
 config/settings.yml
-config/padlet.yml
 config/nces_data
 config/archive_portal.yml
 config/version.yml

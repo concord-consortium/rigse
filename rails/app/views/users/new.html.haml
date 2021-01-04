@@ -1,0 +1,13 @@
+.landing-container
+
+:javascript
+  if (Portal.currentUser.isAnonymous) {
+    PortalComponents.renderSignupModal(
+      {
+        oauthProviders: Portal.oauthProviders,
+        closeable: false
+      }
+    );
+  } else {
+    window.location.href = "/";
+  }

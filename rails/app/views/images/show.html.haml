@@ -1,0 +1,44 @@
+= link_to image_tag(@image.image.url(:attributed)), @image.image.url(:attributed)
+
+%p
+  %b
+    Name:
+  =h @image.name
+
+%p
+  %b
+    Attribution:
+  =(h @image.attribution).gsub("\n", "<br/>\n")
+
+%p
+  %b Embedding Path:
+  = view_image_path(@image)
+
+%p
+  %b Embedding Url:
+  = view_image_url(@image)
+
+%p
+  %b
+    Dimensions:
+  = @image.dimensions
+
+%p
+  %b
+    File Size:
+  = number_to_human_size(@image.image_size)
+
+- license = @image.license
+- if license
+  %p
+    .license
+      %span.image= link_to image_tag(@image.license.image), @image.license.deed, :target => 'new'
+      %br
+      %span.small= link_to license.name, license.deed, :target => 'new'
+      %span.tiny.description= license.description
+.horizontal_button_panel
+  - if @image.changeable?(current_visitor)
+    = button_to 'Edit', edit_image_path(@image), :method => :get
+    - unless @image.public?
+      = button_to "Delete", image_path(@image), :method => :delete, data: {:confirm => "are you sure?"}
+  = button_to 'List', images_path, :method => :get

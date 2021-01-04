@@ -1,0 +1,164 @@
+// Rem output with px fallback
+@mixin font-size($sizeValue: 1) {
+  font-size: ($sizeValue * 16) * 1px;
+  font-size: $sizeValue * 1rem;
+}
+
+// Center block
+@mixin center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+// Clearfix
+// --------
+// For clearing floats like a boss
+@mixin clearfix() {
+  &::after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+// Clear after (not all clearfix need this also)
+@mixin clearfix-after() {
+  clear: both;
+}
+
+// Calc
+// --------
+@mixin calc($property, $expression) {
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -webkit-calc(#{$expression});
+  #{$property}: calc(#{$expression});
+}
+
+// Text overflow
+// -------------------------
+// Requires inline-block or block for proper styling
+@mixin text-overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multi-line text overflow truncation
+// -------------------------
+@mixin truncate($font-size: 1em, $line-height: 1.7em, $lines-to-show: 3, $max-width: inherit) {
+  display: block;
+  display: -webkit-box;
+  max-width: $max-width;
+  height: calc($font-size*$line-height*$lines-to-show); /* Fallback for non-webkit */
+  font-size: $font-size;
+  line-height: $line-height;
+  -webkit-line-clamp: $lines-to-show;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Triangles
+// http://apps.eky.hk/css-triangle-generator/
+@mixin triangle() {
+  border-style: solid;
+  content: ' ';
+  display: block;
+  height: 0;
+  position: absolute;
+  width: 0;
+}
+
+// Transforms
+@mixin transform($transforms) {
+  -webkit-transform: $transforms;
+  -moz-transform: $transforms;
+  -ms-transform: $transforms;
+  transform: $transforms;
+}
+
+// Transitions
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+@mixin transition-property($property...) {
+    -moz-transition-property:    $property;
+    -o-transition-property:      $property;
+    -webkit-transition-property: $property;
+    transition-property:         $property;
+}
+
+@mixin transition-duration($duration...) {
+    -moz-transition-property:    $duration;
+    -o-transition-property:      $duration;
+    -webkit-transition-property: $duration;
+    transition-property:         $duration;
+}
+@mixin transition-timing-function($timing...) {
+    -moz-transition-timing-function:    $timing;
+    -o-transition-timing-function:      $timing;
+    -webkit-transition-timing-function: $timing;
+    transition-timing-function:         $timing;
+}
+@mixin transition-delay($delay...) {
+    -moz-transition-delay:    $delay;
+    -o-transition-delay:      $delay;
+    -webkit-transition-delay: $delay;
+    transition-delay:         $delay;
+}
+
+// Placeholders
+
+// Style placheholders
+// http://stackoverflow.com/questions/17181849/placeholder-mixin-scss-css
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}
+}
+
+// http://codepen.io/manifestinteractive/pen/viaAK/
+@mixin placeholder-focus {
+  :focus::-webkit-input-placeholder {@content}
+  :focus:-moz-placeholder           {@content}
+  :focus::-moz-placeholder          {@content}
+  :focus:-ms-input-placeholder      {@content}
+}
+
+
+
+// Reset List Style
+@mixin list-reset() {
+  padding: 0;
+  background: none;
+  margin: 0;
+  list-style: none;
+}
+
+// Horizontal List
+@mixin horizontal-list() {
+  padding: 0;
+  background: none;
+  margin: 0;
+  display: inline-block;
+}
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}

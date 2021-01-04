@@ -1,0 +1,52 @@
+.theme-itsi-learn {
+  .concord-logo {
+    background-image: url(./assets/banners/itsi-logo.svg);
+    height: 90px;
+    text-indent: -999px;
+    width: 400px;
+  }
+  nav.concord-navigation {
+    background: url(./assets/banners/itsi.jpg) no-repeat center right;
+  }
+  .portal-pages-main-nav-collections {
+    display: none !important;
+  }
+  .portal-pages-main-nav-about a {
+    color: $white !important;
+    &:hover {
+      border-color: $white;
+    }
+  }
+  .portal-pages-main-nav-item:nth-child(3) {
+    margin-left: 25px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .theme-itsi-learn {
+    .concord-logo {
+      height: 60px;
+      width: 290px;
+    }
+  }
+}
+
+
+@media screen and (max-width: 700px) {
+  .theme-itsi-learn {
+    nav.concord-navigation {
+      background: transparent;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .theme-itsi-learn {
+    ul.portal-pages-main-nav-contain {
+      top: 72px;
+    }
+    .mobile-nav-icon span {
+      background: #ea6d2f;
+    }
+  }
+}

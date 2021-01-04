@@ -1,0 +1,17 @@
+.action_menu
+  .action_menu_header
+    .action_menu_header_left
+      = form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do
+        = content_tag :label do
+          = text_field_tag :search, params[:search], :size => 20
+        %input{ :type => "submit", :value => "Search"}
+        - if defined? extra_collection_search_fields
+          %p= extra_collection_search_fields
+      - if collection
+        %p= page_entries_info collection, :model => collection_class.display_name
+      %p.paginator
+        = will_paginate collection
+    .action_menu_header_right
+      %ul.menu
+        - if policy(collection_class).new?
+          %li= link_to "create #{collection_class.display_name}", :controller => collection_class.name.underscore.pluralize, :action => :new

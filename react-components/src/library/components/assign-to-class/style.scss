@@ -1,0 +1,253 @@
+#assignModal {
+  background: #fff;
+  display: block;
+  left: 50%;
+  margin-left: -380px;
+  overflow: hidden;
+  padding: 0;
+  position: fixed;
+  top: 100px;
+  width: 760px;
+
+  &.assignComplete {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .errorMessage {
+    color: #f00;
+    display: none;
+    font-size: 14px;
+
+    &.visible {
+      display: block;
+    }
+  }
+
+  .assignShareCol {
+    box-sizing: border-box;
+    float: left;
+    max-width: 380px;
+    min-height: 450px;
+    padding: 20px;
+    width: 50%;
+    -webkit-font-smoothing: antialiased;
+
+    &#assignCol {
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          font-size: 16px;
+          margin: 0;
+          padding: 0;
+        }
+      }
+      .assignClassHeader {
+        font-size: 16px;
+        font-weight: 900;
+      }
+      .alreadyAssignedClassHeader {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 10px 0 0;
+      }
+      .studentDataWarning {
+        background: #fef7e0;
+        border: solid 1px #ea6d2f;
+        color: #ea6d2f;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.4;
+        margin: 10px 0;
+        padding: 10px;
+      }
+      .classListContainer {
+        max-height: 125px;
+        overflow-y: auto;
+
+        input[type="checkbox"] {
+          margin-right: 5px;
+        }
+      }
+      #scrollableClassSummaryData {
+        margin-bottom: 10px;
+        max-height: 500px;
+        overflow: auto;
+      }
+    }
+
+    &#shareCol {
+      background: #f1f1f1;
+
+      form {
+        position: relative;
+      }
+
+      input#shareUrl {
+        display: block;
+        float: left;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1.7;
+        padding: 5px 10px;
+        width: 258px;
+      }
+      label {
+        font-size: 18px;
+        font-weight: 900;
+      }
+      .button {
+        background: #ea6d2f;
+        color: #fff;
+        line-height: 1.7;
+        margin-right: 0;
+        margin-left: 10px;
+        padding: 7px 15px;
+      }
+    }
+
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+
+    a.button {
+      padding: 13px 15px 12px;
+    }
+    .button {
+      border: none;
+      display: block;
+      float: left;
+      font-size: 16px;
+      font-weight: 500;
+      margin-right: 10px;
+      width: auto;
+    }
+    form {
+      overflow: hidden;
+      padding: 0;
+    }
+    h2 {
+      color: #ea6d2f;
+      font: 900 24px museo-sans, helvetica, verdana, sans-serif;
+      line-height: 30px;
+      margin-bottom: 5px;
+
+      span {
+        font-weight: 300;
+      }
+    }
+    label {
+      text-transform: none;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+
+      &.small {
+        clear: both;
+        font-size: 14px;
+        margin-top: 10px;
+        line-height: 1.2em;
+      }
+    }
+
+    .cancel {
+      background: transparent;
+      border: none;
+      color: #777;
+      display: inline-block;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+      margin-left: 5px;
+      outline: none;
+      padding: 7px 0 0 0;
+    }
+
+    #addMaterialForm {
+      padding: 0;
+    }
+  }
+}
+
+.confirmDialogPortal {
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.confirmDialogOverlay {
+  background-color: rgba(0,0,0,0.3);
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  z-index: 101;
+}
+.confirmDialog {
+  background: #fff;
+  border: none;
+  border-radius: 0;
+  bottom: auto;
+  left: 50%;
+  margin-right: -50%;
+  outline: none;
+  padding: 20px;
+  position: absolute;
+  right: auto;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+
+  button {
+    margin: 0 auto;
+  }
+}
+
+.textCopiedAlert {
+  animation: fadeOut ease 4s;
+  background: #ffc320;
+  font-size: 14px;
+  left: 0;
+  padding: 0 0 0 10px;
+  position: absolute;
+  top: 0;
+  width: calc(100% - 3px);
+
+  span {
+    animation: flash ease 1.25s;
+  }
+}
+
+@keyframes fadeOut {
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes flash {
+  0% { opacity: 1; }
+  15% { opacity: 0; }
+  30% { opacity: 1; }
+  45% { opacity: 0; }
+  60% { opacity: 1; }
+  75% { opacity: 0; }
+  90% { opacity: 1; }
+}
+
+@media screen and (max-width: 745px) {
+  #assignModal {
+    left: 0;
+    margin-left: 0;
+    width: 100%;
+
+    .assignShareCol {
+      float: none;
+      max-width: 100%;
+      min-height: 275px;
+      width: 100%;
+    }
+  }
+}

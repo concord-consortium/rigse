@@ -1,0 +1,147 @@
+.portal-pages-header-contain {
+  height: 195px;
+  margin-bottom: 30px;
+}
+
+/* top bar */
+.portal-pages-umbrella {
+  background-color: $col-blue;
+  height: 40px;
+  line-height: 40px;
+}
+
+.portal-pages-concord-link {
+  text-align: right;
+}
+
+.portal-pages-concord-link__item, a:visited.portal-pages-concord-link__item {
+  color: $col-white;
+  font-weight: 500;
+  font-size:14px;
+  vertical-align: middle;
+
+  i {
+    font-size: 12px;
+    margin-left: 3px;
+  }
+
+  &:hover {
+    color: $col-hover;
+  }
+}
+
+/* nav */
+.mobile-nav-contain {
+  display: none;
+}
+.opener,
+.closer {
+  display: inline-block;
+  text-indent: -9999px;
+}
+
+.logo-contain {
+  margin: 40px 0 35px 0;
+}
+.concord-logo {
+  background: url(./assets/banners/concord-logo.svg) no-repeat center;
+  height: 91px;
+  overflow: hidden;
+  text-indent: 300px;
+  white-space: nowrap;
+  width: 255px;
+
+  &.cc-no-tagline {
+    background-image: url(./assets/banners/concord-logo-no-tag.svg);
+    }
+
+  }
+.theme-learn .logo-contain {
+  margin-bottom: 0;
+  }
+.theme-learn .concord-logo {
+  background: url(./assets/banners/concord-logo.svg) no-repeat top;
+  height: 120px;
+  position: relative;
+  text-indent: 0;
+
+  .concord-logo__linktext {
+      bottom: 0;
+      color: #313131;
+      font-size: 18px;
+      font-weight: 100;
+      letter-spacing: .028em;
+      overflow: hidden;
+      position: absolute;
+      text-indent: 100%;
+      white-space: nowrap;
+      }
+  }
+
+.portal-pages-nav-auth {
+  min-width: 200px;
+  text-align: right;
+}
+
+.portal-pages-main-nav-contain {
+  position: relative;
+  margin-top: 65px;
+  text-align: right;
+}
+
+.portal-pages-main-nav-item {
+  font-size: 18px;
+  display: inline-block;
+  margin-left: 40px;
+  position: relative;
+  &.current-menu-item {
+    a {
+      border-color: #ffc320;
+      padding: 0 0 8px 0;
+    }
+  }
+  &:last-child {
+    margin-left: 10px;
+  }
+  a {
+    color: $col-darkgray !important;
+    border-bottom: 2px solid transparent;
+    @include transition(all $transition-timing $transition-function);
+
+    &:hover {
+      border-color: $col-hover;
+      padding: 0 0 8px 0;
+      cursor: pointer;
+    }
+
+    &.button {
+      background: $col-orange;
+      border: solid 2px $col-orange;
+      border-radius: 0;
+      color: $white !important;
+      font: 700 15px $font-museo-sans;
+      padding: 10px 20px;
+      text-align: center;
+    }
+    &.register {
+      background: $white;
+      color: $col-orange !important;
+    }
+    &.register:hover {
+      background: $col-hover;
+      border-color: $col-hover;
+      color: $white !important;
+    }
+    &.log-in:hover {
+      background-color: $col-hover;
+      border-color: $col-hover;
+      color: $white !important;
+    }
+    i.icon-login, i.icon-home {
+      display: block;
+      float: left;
+      margin-top: 1px;
+      margin-right: 5px;
+    }
+  }
+}

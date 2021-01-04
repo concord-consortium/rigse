@@ -1,0 +1,30 @@
+.item
+  .content
+    - if portal_school.errors.any?
+      %ul.menu_v.error-explanation
+        %li School can't be saved, there are errors in form:
+        - portal_school.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      %ul.menu_v
+        %li
+          Name:
+          = f.text_field :name
+        %li
+          Description:
+          = f.text_area :description, class: 'mceNoEditor'
+        %li
+          Zipcode:
+          = f.text_field :zipcode
+        %li
+          City:
+          = f.text_field :city
+        %li
+          State or province:
+          = f.select(:state, @states_and_provinces, {:prompt => "Select a state or province ..."})
+
+        %li
+          District:
+          = f.select(:state, @districts, {:prompt => "Select a district ..."})
+
+      = submit_tag

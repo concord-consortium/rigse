@@ -1,0 +1,48 @@
+FROM concordconsortium/docker-rails-base-private:2.3.7-4.2.11.17
+
+# Debian 8 (jessie) is no longer supported
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie main" >> /etc/apt/sources.list.d/jessie.list
+RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list.d/jessie.list
+RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie.* main/d' /etc/apt/sources.list
+RUN apt-get -o Acquire::Check-Valid-Until=false update
+
+#
+# Install some basic dev tools
+#
+RUN apt-get install -y vim
+
+#
+# Install java runtime needed by yuicompressor step in rake assets:precompile task
+#
+RUN apt-get install -qq -y default-jre-headless
+
+#
+# Install Google Chrome for Selenium
+#
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+  && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+  && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y google-chrome-stable
+
+#
+# Install wait-for-it to support docker-volume-sync
+#
+WORKDIR /usr/local/bin
+RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/db049716e42767d39961e95dd9696103dca813f1/wait-for-it.sh && \
+    chmod +x wait-for-it.sh
+
+ENV APP_HOME /rigse
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+# use a mounted volume so the gems don't need to be rebundled each time
+ENV BUNDLE_PATH /bundle
+
+ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
+  BUNDLE_JOBS=2 \
+  BUNDLE_PATH=/bundle
+
+ENV RAILS_ENV=development
+
+EXPOSE 3000
+
+CMD rails s -b 0.0.0.0

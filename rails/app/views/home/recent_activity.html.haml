@@ -1,0 +1,6 @@
+%h1=I18n.t('recent_activity.title')
+= render :partial => "notice"
+#recent-activity
+
+:javascript
+  PortalComponents.renderRecentActivity({dataUrl: Portal.API_V1.OFFERINGS + '?user_id=#{current_user.id}'}, 'recent-activity');

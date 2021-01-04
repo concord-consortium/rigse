@@ -1,0 +1,153 @@
+.offeringProgress {
+  tr {
+    height: 35px;
+  }
+
+  .namesTableContainer {
+    width: 30%;
+    display: inline-block;
+    vertical-align: top;
+
+    .namesTable {
+      width: 100%;
+      table-layout: fixed;
+
+      th {
+        text-align: left;
+      }
+
+      .name {
+        width: 100%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .dateHeader {
+        width: 70px;
+      }
+
+      .date {
+        padding-left: 10px;
+      }
+    }
+  }
+
+
+  .progressTableContainer {
+    width: 70%;
+    display: inline-block;
+    overflow-x: scroll;
+    vertical-align: top;
+
+    .progressTable {
+      width: 100%;
+
+      th {
+        max-width: 170px;
+      }
+
+      .activityTitle {
+        width: 100%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
+      }
+
+      td {
+        padding: 0 5px;
+      }
+
+      .progressBar {
+        min-width: 170px;
+        border: solid 1px #666;
+        background: white;
+        position: relative;
+        height: 25px;
+
+        &.clickable {
+          border-color: #f66e2a;
+          cursor: pointer;
+
+          &:hover {
+            box-shadow: 0 0 3px #ffc320;
+          }
+        }
+
+        .textContainer {
+          width: 100%;
+          position: absolute;
+          left: 0;
+          color: black;
+          line-height: 25px;
+
+          .textInfo {
+            margin-left: 5px;
+          }
+
+          .reportLink {
+            float: right;
+            color: #ad5100;
+            margin-right: 4px;
+            margin-top: 2px;
+
+            &:hover {
+              color: #ffc320;
+            }
+          }
+        }
+
+        .bar {
+          position: absolute;
+          left: 0;
+          height: 100%;
+          background: #ffcd99;
+          &.completed {
+            background: #ff8415;
+          }
+        }
+      }
+    }
+  }
+}
+
+.feedback {
+  margin-left: 5px;
+
+  .score {
+    margin-right: 13px;
+  }
+
+  .textFeedbackIcon {
+    line-height: 28px;
+    vertical-align: middle;
+    margin-right: 15px;
+    font-size: 1.1em;
+  }
+
+  .rubricContainer {
+    // Disable ability to click on the Rubric icon.
+    pointer-events: none;
+    display: inline-block;
+    vertical-align: middle;
+    height: 25px;
+    transform-origin: top left;
+
+    &:hover {
+      box-shadow: 0 0 3px #eab136;
+    }
+
+    td {
+      // Fix styling of the rubric box.
+      padding: 0.5em !important;
+      line-height: 1em;
+    }
+  }
+}
+
+.tooltipContent {
+  max-width: 400px;
+}

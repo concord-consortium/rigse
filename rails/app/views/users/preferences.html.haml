@@ -1,0 +1,34 @@
+%h1
+  User Preferences
+= form_for @user do |form|
+  = hidden_field(:user, :redirect_user_edit_form, :value => 'home')
+  .item
+    .content
+      #left-col
+        = form.error_messages
+        = render :partial => 'form', :locals => { :f => form }
+
+        - if @user.portal_student && current_settings.use_student_security_questions
+          %fieldset
+            %legend Security Questions
+            = link_to "Click here", edit_user_security_questions_path(@user)
+            to change the security questions you use to reset your password if you forget it.
+
+      %ul.menu_h
+        %li
+          = submit_tag 'Save'
+        %li
+          = submit_tag 'Cancel', :class => 'button secondary'
+        %li
+          - if @user.is_oauth_user?
+            = submit_tag "Change Password", :class => "secondary", :type => "button", :onclick => "javascript:Portal.confirm({message: 'You are logged in as a #{@user.authentications[0].provider} user. You cannot change your password here.', noCancel: true})"
+          - else
+            = link_to "Change Password", reset_password_user_path(@user), :class => "button secondary"
+
+
+:sass
+  #flash
+    position: absolute
+    top: 535px
+    padding-left: 22px
+    z-index: 1

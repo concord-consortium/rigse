@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 612 792" style="enable-background:new 0 0 612 792;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#4D4D4F;}
+	.st1{font-family:'Museo-500';}
+	.st2{font-size:36px;}
+	.st3{fill:url(#SVGID_1_);}
+	.st4{fill:#FFFFFF;}
+	.st5{fill:#FFFFFF;stroke:#FFFFFF;stroke-width:4;}
+	.st6{fill:#3A878E;}
+</style>
+<g>
+	<text transform="matrix(1 0 0 1 200.0977 391.2642)"><tspan x="0" y="0" class="st0 st1 st2">High-Adventure </tspan><tspan x="0" y="36" class="st0 st1 st2">Science</tspan></text>
+</g>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="113.9819" y1="397.2852" x2="184.8403" y2="397.2852">
+	<stop  offset="0" style="stop-color:#F79557"/>
+	<stop  offset="0.2189" style="stop-color:#EC834C"/>
+	<stop  offset="0.6757" style="stop-color:#D75435"/>
+	<stop  offset="1" style="stop-color:#C9252C"/>
+</linearGradient>
+<circle class="st3" cx="149.4" cy="397.3" r="35.4"/>
+<circle class="st4" cx="149.4" cy="397.3" r="31.9"/>
+<path class="st5" d="M175.5,383.5l-11-14.3l-8.2-10.5l-2.8,7l-6.2,15.5l-6.3-10l-12.1,26.6l-4.3-10l-4.6,10.9
+	C120.1,399.8,175.9,385.2,175.5,383.5z"/>
+<g>
+	<path class="st6" d="M181.2,395.7l-18.8-18.2l-2,15l-5.7-14.1l-5.5,20.3l-5.7-14.1l-1.6,8.4l-2.3-7.5l-10.6,21.9l-2.7-6.2l-1.2,4.4
+		l-1.6-4.7l-4.2,6.5c4.2,12.6,16.2,21.7,30.2,21.7c17.6,0,31.9-14.3,31.9-31.9C181.2,396.7,181.2,396.2,181.2,395.7z"/>
+	<path class="st6" d="M128.8,402.8l12.3-26.9l6.1,9.7l8.3-19.6l1.4-3.2l3.5,4.6l20.7,27.2c-0.2-1.8-0.4-3.5-0.9-5.2l-15.8-20.1
+		l-8.2-10.5l-2.8,7l-6.2,15.5l-6.3-10l-12.1,26.6l-4.3-10l-6.6,15c0.2,1.1,0.4,2.1,0.7,3.2l5.8-12.9L128.8,402.8z"/>
+</g>
+<path class="st4" d="M181.1,394.5l-20.7-27.2l-3.5-4.6l-1.4,3.2l-8.3,19.6l-6.1-9.7l-12.3,26.9l-4.3-9.7l-5.8,12.9
+	c0.1,0.5,0.3,1,0.4,1.5l4.2-6.5l1.6,4.7l1.2-4.4l2.7,6.2l10.6-21.9l2.3,7.5l1.6-8.4l5.7,14.1l5.5-20.3l5.7,14.1l2-15l18.8,18.2
+	C181.1,395.3,181.1,394.9,181.1,394.5z"/>
+</svg>

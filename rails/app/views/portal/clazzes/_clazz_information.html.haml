@@ -1,0 +1,9 @@
+%dl.classdata
+  %dt
+    Teacher:
+  %dd
+    =(portal_clazz.teacher.nil?) ? '' : portal_clazz.teacher.name
+  %dt
+    Class Word:
+  %dd
+    =portal_clazz.class_word.truncate(25)

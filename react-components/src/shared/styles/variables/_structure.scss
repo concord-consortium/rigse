@@ -1,0 +1,13 @@
+$size__site-main: 100%;
+$size__site-sidebar: 25%;
+
+// Dimensions
+$content-max: 1170px;
+$body-width-max: 1170px;
+$body-width-min: 320px;
+$footer-height: 150px;
+
+// Transitions
+$transition-timing: 0.2s;
+$transition-function: ease-in-out;
+$transition-function-dramatic: cubic-bezier(0.645, 0.045, 0.355, 1.000);

@@ -1,0 +1,5 @@
+%h1
+  Create Tool
+
+= form_for(@tool, url: url_for(controller: 'tools', action: 'create'), html: {class: "generic-admin-form"}) do |f|
+  = render partial: 'form', locals: { tool: @tool, f: f }

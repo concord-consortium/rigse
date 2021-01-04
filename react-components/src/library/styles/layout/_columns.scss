@@ -1,0 +1,86 @@
+/* Columns */
+
+@mixin generate-col($_cols, $_width, $_gutters, $_col_wrapper:cols) {
+  $_total: $_cols * ($_width + $_gutters);
+  $_margin: ($_gutters / $_total) * 100;
+
+  @for $i from 1 through $_cols {
+    $_col-width:((($_width * $i) + ($_gutters * ($i - 1)))/$_total);
+    $_col-margin-left:$_margin * 1%;
+
+    %col-#{$i}-of-#{$_cols} {
+      float: left;
+      margin-left: (1% * $_margin) / 2;
+      margin-right: (1% * $_margin) / 2;
+      width: $_col-width * 100%;
+
+      &.reversed {
+        float: right;
+      }
+      &.center {
+        float: none;
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+@include generate-col(12, 65, 30);
+
+.cols {
+  clear: both;
+  margin: 0 auto;
+  padding: 0 15px; // extra gutter on page edges
+  max-width: $body-width-max;
+  min-width: $body-width-min;
+  width: auto;
+  @include clearfix;
+  img {
+    max-width: 100%;
+  }
+  .rollover img {
+    max-width: 36px;
+  }
+  $total-columns: 12;
+  @for $i from 1 through $total-columns {
+    .col-#{$i} {
+      @extend %col-#{$i}-of-#{$total-columns};
+      &.no-margins {
+        margin: 0;
+      }
+    }
+  }
+
+  &.reversed {
+    @for $i from 1 through $total-columns {
+      .col-#{$i} {
+        float: right;
+      }
+    }
+  }
+
+}
+
+.content-inner {
+  margin: 0 auto;
+  max-width: $body-width-max;
+  min-width: $body-width-min;
+  padding: 0 20px;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+.spacer {
+  min-height: 1px;
+}
+
+.main {
+  padding-left: 85px;
+}
+
+#primary {
+  margin: 30px 0 0 30px;
+}

@@ -1,0 +1,9 @@
+.landing-container
+
+:javascript
+  if (Portal.currentUser.isAnonymous) {
+    PortalComponents.renderForgotPasswordModal({});
+  } else {
+    window.location.href = "/";
+  }
+

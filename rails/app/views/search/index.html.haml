@@ -1,0 +1,89 @@
+/- locals = {:search_name => @name, :investigations => @investigations,:activities => @activities, :sort_order => @sort_order}
+= javascript_include_tag "share_material"
+.search_materials
+  %form{:id => 'material_search_form', :onkeypress => 'return event.keyCode!=13'}
+    .search-form
+      .search-form__label
+        SEARCH
+      .search-form__field
+        #auto-suggest-placeholder
+      .search-form__button.go_button.button
+        = submit_tag :GO, :name => '', :id => 'go-button'
+    = render :partial=>"search/filters"
+    = hidden_field_tag 'investigation_page', (@form_model.investigation_page rescue 1)
+    = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)
+    = hidden_field_tag 'interactive_page', (@form_model.interactive_page rescue 1)
+    = hidden_field_tag 'collection_page', (@form_model.collection_page rescue 1)
+  = hidden_field 'prevent','submit',:value=>"0"
+  #results
+    .search_resultscontainer
+      No results found!
+
+:javascript
+  jQuery(document).ready(function() {
+    var dest = '#results .search_resultscontainer',
+        apiBase = '#{api_v1_search_search_path}?',
+        searchBase = '#{search_path}?',
+        form = jQuery('#material_search_form');
+
+    window.updateSearchUrl = function(query) {
+      if (window.history) {
+        window.history.replaceState({}, 'Materials Search' , searchBase + query);
+      } else {
+        // TODO Handle IE 9?
+      }
+    }
+
+    function renderAutoSuggest(query) {
+      PortalComponents.renderAutoSuggest({
+        id: "search_term",
+        name: "search_term",
+        query: query,
+        onSubmit: autoSuggestSubmit,
+        getQueryParams: function () { return jQuery(form).serialize() }
+      }, 'auto-suggest-placeholder')
+    }
+
+    function autoSuggestSubmit() {
+      // use timeout to avoid React complaining about duplicate roots since search calls into React render
+      setTimeout(function () {
+        search()
+      }, 1)
+    }
+
+    function search() {
+      PortalPages.renderSearchMessage('Finding materials...', dest)
+
+      // Reset our current page numbers
+      jQuery("#investigation_page").val(1);
+      jQuery("#activity_page").val(1);
+      jQuery("#interactive_page").val(1);
+      jQuery("#collection_page").val();
+      var query = jQuery(form).serialize();
+
+      window.updateSearchUrl(query);
+
+      renderAutoSuggest(form.find('input[name="search_term"]').val())
+
+      jQuery.ajax({
+        dataType: "json",
+        url: apiBase + query,
+        success: function(data) {
+          // Check if response matches current query (rm '?' character from window.location.search first).
+          // If not, it means it's outdated result and it doesn't make sense to render it.
+          if (data.query === window.location.search.slice(1)) {
+            PortalComponents.renderSearchResults(data.results, dest);
+          }
+        }
+      });
+    }
+
+    renderAutoSuggest(#{@form_model.text.to_json})
+
+    form.on('submit', function(event) {
+      event.preventDefault();
+      search();
+    });
+
+    jQuery('#material_search_form').submit();
+  });

@@ -1,0 +1,153 @@
+#permission_form_form {
+  border: 2px solid #fbf4db;
+  padding: 0.4em;
+  margin-bottom: 2em;
+  table {
+    margin: 0px;
+    padding: 0px;
+    td {
+      vertical-align: top;
+      text-align: right;
+      padding: 4px;
+      &:nth-child(2) {
+        text-align: left;
+      }
+      &:nth-child(3) {
+        text-align: left;
+      }
+    }
+  }
+}
+
+#permission_form_list {
+
+  .existing_permission {
+    display: inline-block;
+    margin: .2em;
+    float: left;
+    padding: 0.4em;
+    background-color: #fbf4db;
+    color: #3f3f3f;
+    .delete {
+      a {
+        color: #6D1414;
+        &:hover {
+          color: #B64646;
+        }
+      }
+    }
+  }
+}
+
+#listings {
+  clear: both;
+  display: inline-block;
+  float: left;
+  margin-bottom: 30px;
+
+  &.scrollable {
+    overflow: scroll;
+    width: 746px;
+    &::-webkit-scrollbar {
+      height: 7px;
+      -webkit-appearance: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      background-color: rgba(0,0,0,.5);
+      -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+  }
+
+  tr.teacher_info {
+    border-top: 2px solid;
+    padding-bottom: 20px;
+    td {
+      white-space: nowrap;
+      padding: 5px;
+      padding-bottom: 20px;
+    }
+  }
+  .admin_class_info {
+    white-space: nowrap;
+    background-color: #f8ac1a;
+    padding: 1em;
+  }
+  .label {
+    font-weight: bold;
+  }
+  .permission_checkbox {
+    padding-left: 2em;
+  }
+  label {
+    font-weight: bold;
+    padding-right: 2em;
+  }
+
+  form {
+    padding: 0px;
+  }
+
+  table {
+    margin: 0px;
+    padding: 0px;
+    td {
+      white-space: nowrap;
+      vertical-align: top;
+      text-align: left;
+    }
+    td.permissions {
+      border-left: 1px solid;
+      padding-left: 5px;
+      white-space: normal;
+      .permission_from_item {
+        white-space: nowrap;
+        display: block;
+        label {
+          vertical-align: top;
+          display: inline-block;
+          white-space: normal;
+        }
+      }
+    }
+
+    tr.student {
+      &:nth-child(odd) {
+        background-color: #fbf4db;
+      }
+      td {
+        padding: 5px;
+        padding-bottom: 10px;
+      }
+    }
+
+    th {
+      text-align: left;
+    }
+  }
+}
+
+.error-explanation {
+  color: #9b3243;
+}
+
+.generic-admin-form {
+  label {
+    display: block;
+    text-transform: none;
+  }
+}
+
+.admin-links-cols {
+  column-count: 2;
+  margin-bottom: 30px;
+
+  .admin-links-cols__column {
+    break-inside: avoid-column;
+  }
+  ul {
+    list-style-position: inside;
+    margin-left: 0;
+    overflow:hidden;
+  }
+}

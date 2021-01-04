@@ -1,0 +1,14 @@
+-# = accordion_for(portal_clazz, 'Student Roster') d
+.item{ :style => "padding: 1em;"}
+  .content
+    %div
+      %strong= "Class: #{@portal_clazz.name}"
+      %strong
+        = "Students: "
+        %span{:id=>"oClassStudentCount"}
+          #{@portal_clazz.students.length}
+      .button.print_button{:style => "float: right; text-align: right;"}
+        = link_to "Print", class_list_portal_clazz_url(@portal_clazz), :onClick => 'autoPrintNextTime(); window.open(this.href); return false;'
+    #student-roster
+    :javascript
+      PortalComponents.renderStudentRoster(#{student_roster_props(@portal_clazz).to_json}, 'student-roster');

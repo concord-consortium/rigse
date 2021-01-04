@@ -1,0 +1,10 @@
+- if !@notice_display_type.nil? && @notice_display_type != Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:no_notice]
+  - if (@notice_display_type == Admin::SiteNotice.NOTICE_DISPLAY_TYPES[:collapsed_notices])
+    - notice_display = 'collapsed'
+
+  #portal-pages-notices
+
+  :javascript
+    jQuery(document).ready(function () {
+      PortalComponents.renderShowSiteNotices({dataUrl: Portal.API_V1.GET_NOTICES_FOR_USER, noticeDisplay: "#{notice_display}"}, 'portal-pages-notices');
+    });

@@ -1,0 +1,47 @@
+.portal-pages-collections-page-header {
+  h1 {
+    font-size: 42px;
+    line-height: 48px;
+  }
+  p {
+    font-size: 18px;
+  }
+  .special-link {
+    font-size: 15px;
+    &:after {
+      font-size: 15px !important;
+    }
+    .complete {
+      display: none;
+    }
+  }
+}
+
+.portal-pages-collections-page-header-info {
+  font-size: 18px;
+  line-height: 30px;
+}
+
+.portal-pages-collection-resource-list .material-item .material-item-content {
+  padding: 50px 0 40px;
+  .material-item__title, .material-item__description {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+}
+
+.portal-pages-finder-materials-collection {
+  .portal-pages-finder-materials-collection-item {
+    clear: both;
+    float: none;
+    margin: 0;
+    width: 100%;
+
+    .portal-pages-finder-materials-collection-item__image {
+      height: 300px;
+      overflow: hidden;
+      max-width: 100%;
+      position: relative;
+    }
+  }
+}
