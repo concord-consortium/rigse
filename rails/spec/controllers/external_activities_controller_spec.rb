@@ -337,8 +337,11 @@ describe ExternalActivitiesController do
     end
   end
 
-  # TODO: auto-generated
   describe '#create' do
+    let (:project1) { FactoryBot.create(:project) }
+    let (:project2) { FactoryBot.create(:project) }
+
+    # TODO: auto-generated
     it 'POST create' do
       post :create, {}, {}
 
@@ -346,14 +349,42 @@ describe ExternalActivitiesController do
       # can create an external activity with no paramters
       expect(response).to have_http_status(:ok)
     end
+
+    it 'handles setting projects' do
+      post :create, {
+        :external_activity => {},
+        :update_projects => "true",
+        :project_ids => [project1.id, project2.id],
+      }, {}
+
+      expect(assigns(:external_activity).projects).to eq([project1, project2])
+      expect(response).to have_http_status(:ok)
+    end
   end
 
-  # TODO: auto-generated
   describe '#update' do
+    let(:external_activity) { FactoryBot.create(:external_activity) }
+    let (:project1) { FactoryBot.create(:project) }
+    let (:project2) { FactoryBot.create(:project) }
+
+    # TODO: auto-generated
     it 'PATCH update' do
       put :update, {}, {}
 
       expect(response).to have_http_status(:not_found)
+    end
+
+    it 'handles setting projects' do
+      put :update, {
+        :id => external_activity.id,
+        :external_activity => {},
+        :update_projects => "true",
+        :project_ids => [project1.id, project2.id],
+      }, {}
+
+      external_activity.reload
+      expect(external_activity.projects).to eq([project1, project2])
+      expect(response).to have_http_status(:redirect)
     end
   end
 

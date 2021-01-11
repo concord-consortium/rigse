@@ -105,9 +105,37 @@ describe InteractivesController do
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
       end
     end
+
+    context "projects" do
+      let (:project1) { FactoryBot.create(:project) }
+      let (:project2) { FactoryBot.create(:project) }
+
+      it "should set the projects" do
+        post :create, {
+          :interactive => {
+            :name => name,
+            :description => description,
+            :url => url,
+            :scale => scale,
+            :width => width,
+            :height => height,
+            :image_url => image_url,
+            :credits => credits
+          },
+          :update_projects => "true",
+          :project_ids => [project1.id, project2.id],
+        }
+        expect(flash['notice']).to eq("Interactive was successfully created.")
+        expect(assigns(:interactive).projects).to eq([project1, project2])
+        expect(response).to redirect_to(interactive_path(assigns(:interactive)))
+      end
+    end
   end
 
   describe "#update" do
+    let (:project1) { FactoryBot.create(:project) }
+    let (:project2) { FactoryBot.create(:project) }
+
     it "should change the activity's database record to show submitted data" do
       test_interactive
       existing_interactives = Interactive.count
@@ -128,6 +156,8 @@ describe InteractivesController do
           :subject_areas =>["Physical Science"],
           :update_model_types =>"true",
           :model_types =>["model_type_2"],
+          :update_projects => "true",
+          :project_ids => [project1.id, project2.id],
           :id => test_interactive.id
         }
 
@@ -135,6 +165,7 @@ describe InteractivesController do
 
       updated = Interactive.find(test_interactive.id)
       expect(updated.model_type_list).to match_array(["model_type_2"])
+      expect(updated.projects).to eq([project1, project2])
       expect(flash['notice']).to eq("Interactive was successfully updated.")
     end
   end

@@ -2,8 +2,9 @@
 - if object && object.respond_to?('projects') && policy(object).edit_projects?
   = field_set_tag 'Projects' do
     .aligned
+      = hidden_field_tag :update_projects, "true"
       %ul.menu_h
-        - prop_name = "#{object.class.name.underscore}[project_ids][]"
+        - prop_name = "project_ids[]"
         -# Hidden field handles a case when all checkboxes are unchecked.
         = hidden_field_tag prop_name
         - project_assigned = Hash[object.projects.map { |p| [p.id, true ] }]

@@ -84,6 +84,11 @@ class InteractivesController < ApplicationController
       @interactive.model_type_list = (params[:model_types] || [])
     end
 
+    if params[:update_projects]
+      # set the projects
+      @interactive.projects = Admin::Project.where(id: params[:project_ids] || [])
+    end
+
     respond_to do |format|
       if @interactive.save
         format.js  # render the js file
@@ -150,6 +155,12 @@ class InteractivesController < ApplicationController
     if params[:update_model_types]
       # set the subject_area tags
       @interactive.model_type_list = (params[:model_types] || []) # STRONG_PARAMS_TODO: manually add strong params function for this
+      @interactive.save
+    end
+
+    if params[:update_projects]
+      # set the projects
+      @interactive.projects = Admin::Project.where(id: params[:project_ids] || [])
       @interactive.save
     end
 
@@ -242,7 +253,7 @@ class InteractivesController < ApplicationController
 
   def interactive_strong_params(params)
     params && params.permit(:credits, :description, :external_activity_id, :full_window, :height, :image_url, :license_code,
-                            :name, :no_snapshots, :project_ids, :publication_status, :save_interactive_state, :scale, :url,
+                            :name, :no_snapshots, :publication_status, :save_interactive_state, :scale, :url,
                             :user_id, :width)
   end
 end
