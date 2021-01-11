@@ -389,19 +389,43 @@ describe User do
     let(:user)             { FactoryBot.create(:user)    }
     let(:selected_projects){ [ projects.first] }
 
-    before(:each) do
-      user.set_role_for_projects('admin', projects, selected_projects.map(&:id) )
+    describe "for admins" do
+      before(:each) do
+        user.set_role_for_projects('admin', projects, selected_projects.map(&:id) )
+      end
+
+      it "should be a project admin for the first project now " do
+        expect(user.is_project_admin?(projects.first)).to eq true
+      end
+
+      it "should list one admin_project" do
+        expect(user.admin_for_projects.size).to eq(1)
+        expect(user.admin_for_projects).to include(projects.first)
+      end
     end
 
-    it "should be a project admin for the first project now " do
-      expect(user.is_project_admin?(projects.first)).to eq true
+    describe "for researchers" do
+      before(:each) do
+        user.set_role_for_projects('researcher', projects, selected_projects.map(&:id) )
+      end
+
+      it "should be a project researcher for the first project now " do
+        expect(user.is_project_researcher?(projects.first)).to eq true
+      end
+
+      it "should list one researcher project" do
+        expect(user.researcher_for_projects.size).to eq(1)
+        expect(user.researcher_for_projects).to include(projects.first)
+      end
     end
 
-    it "should list one admin_project" do
-      expect(user.admin_for_projects.size).to eq(1)
-      expect(user.admin_for_projects).to include(projects.first)
+    describe "for members" do
+      it "should fail as it is no longer a valid role" do
+        expect {
+          user.set_role_for_projects('member', projects, selected_projects.map(&:id) )
+        }.to raise_error(ActiveModel::MissingAttributeError)
+      end
     end
-
   end
 
   describe "find_for_omniauth" do
