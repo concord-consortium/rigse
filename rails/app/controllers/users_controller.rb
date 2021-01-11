@@ -158,7 +158,6 @@ class UsersController < ApplicationController
               all_projects = Admin::Project.all
               @user.set_role_for_projects('admin', all_projects, params[:user][:admin_project_ids] || [])
               @user.set_role_for_projects('researcher', all_projects, params[:user][:researcher_project_ids] || [])
-              @user.set_role_for_projects('member', all_projects, params[:user][:member_project_ids] || [])
             end
           elsif current_visitor.is_project_admin?
             if params[:user][:has_projects_in_form]
