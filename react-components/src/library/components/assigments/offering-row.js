@@ -36,7 +36,7 @@ export default class OfferingRow extends React.Component {
 
   render () {
     const { detailsVisible } = this.state
-    const { offering, offeringDetails } = this.props
+    const { offering, offeringDetails, clazz } = this.props
     return (
       <div className={css.offering}>
         <div>
@@ -47,10 +47,10 @@ export default class OfferingRow extends React.Component {
           <span className={css.detailsCell}><button className={'textButton adminOption'} onClick={this.onDetailsToggle}>{ this.detailsLabel }</button></span>
         </div>
         {
-          detailsVisible && !offeringDetails && <div className={css.loading}>Loading...</div>
+          detailsVisible && !(offeringDetails || clazz) && <div className={css.loading}>Loading...</div>
         }
         {
-          detailsVisible && offeringDetails && <OfferingDetails offering={offeringDetails} />
+          detailsVisible && offeringDetails && clazz && <OfferingDetails offering={offeringDetails} clazz={clazz} />
         }
       </div>
     )

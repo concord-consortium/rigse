@@ -7,7 +7,7 @@ import css from './style.scss'
 
 const SortableOffering = SortableElement(OfferingRow)
 
-const SortableOfferings = SortableContainer(({ offerings, offeringDetails, onOfferingUpdate, requestOfferingDetails }) => {
+const SortableOfferings = SortableContainer(({ offerings, offeringDetails, onOfferingUpdate, requestOfferingDetails, clazz }) => {
   return (
     <div className={css.offeringsTable}>
       <div className={css.headers}>
@@ -20,7 +20,7 @@ const SortableOfferings = SortableContainer(({ offerings, offeringDetails, onOff
       </div>
       {
         offerings.map((offering, idx) =>
-          <SortableOffering key={offering.id} index={idx} offering={offering} offeringDetails={offeringDetails[offering.id]}
+          <SortableOffering key={offering.id} index={idx} offering={offering} offeringDetails={offeringDetails[offering.id]} clazz={clazz}
             requestOfferingDetails={requestOfferingDetails} onOfferingUpdate={onOfferingUpdate} />)
       }
     </div>
@@ -31,12 +31,12 @@ export default class OfferingsTable extends React.Component {
   render () {
     const shouldCancelStart = shouldCancelSorting([ css.sortIcon, css.activityNameCell ])
 
-    const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, requestOfferingDetails } = this.props
+    const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, requestOfferingDetails, clazz } = this.props
     if (offerings.length === 0) {
       return <div className={css.noMaterials}>No materials have been assigned to this class.</div>
     }
     return (
-      <SortableOfferings offerings={offerings} offeringDetails={offeringDetails} onSortEnd={onOfferingsReorder}
+      <SortableOfferings offerings={offerings} offeringDetails={offeringDetails} clazz={clazz} onSortEnd={onOfferingsReorder}
         shouldCancelStart={shouldCancelStart} distance={3}
         onOfferingUpdate={onOfferingUpdate} requestOfferingDetails={requestOfferingDetails} />
     )
