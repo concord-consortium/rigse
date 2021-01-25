@@ -1,7 +1,9 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
 describe ExternalReport do
-  let(:offering)        { FactoryBot.create(:portal_offering, {runnable: FactoryBot.create(:external_activity)}) }
+  let(:logging)         { false }
+  let(:clazz)           { FactoryBot.create(:portal_clazz, logging: logging) }
+  let(:offering)        { FactoryBot.create(:portal_offering, {runnable: FactoryBot.create(:external_activity), clazz: clazz}) }
   let(:external_report) { FactoryBot.create(:external_report, url: 'https://example.com?cool=true') }
   let(:portal_teacher)  { FactoryBot.create(:portal_teacher)}
   let(:extra_params)    { {} }
@@ -84,7 +86,7 @@ describe ExternalReport do
   end
 
   describe "#url_for_class" do
-    subject { external_report.url_for_class(offering.clazz_id, portal_teacher.user, 'https', 'perfect.host.com') }
+    subject { external_report.url_for_class(offering.clazz, portal_teacher.user, 'https', 'perfect.host.com') }
 
     it "should handle report urls with parameters" do
       expect(subject.scan('?').size).to eq(1)
@@ -93,12 +95,28 @@ describe ExternalReport do
     it "should include the correct parameters" do
       expect(subject).to include('reportType=class', 'classOfferings=',
         'class=', 'token=', 'username=')
-    end
+      end
     it "should have correctly escaped url params" do
       uri = URI.parse(subject)
       query_hash = Rack::Utils.parse_query(uri.query)
       expect(query_hash['class']).to start_with('https://')
       expect(query_hash['classOfferings']).to start_with('https://')
+    end
+
+    describe "with logging not enabled" do
+      let(:logging) { false }
+
+      it "should not include the logging parameter" do
+        expect(subject).not_to include('logging=')
+      end
+    end
+
+    describe "with logging enabled" do
+      let(:logging) { true }
+
+      it "should include the logging parameter" do
+        expect(subject).to include('logging=true')
+      end
     end
   end
 
