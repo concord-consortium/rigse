@@ -37,6 +37,7 @@ const classMapping = data => {
     id: data.id,
     name: data.name,
     classWord: data.class_word,
+    classHash: data.class_hash,
     teachers: teachersMapping(data.teachers),
     editPath: data.edit_path,
     assignMaterialsPath: data.assign_materials_path,
@@ -161,7 +162,7 @@ export default class Assignments extends React.Component {
     return (
       <div>
         <ClassAssignments clazz={clazz} />
-        <OfferingsTable offerings={offerings} offeringDetails={offeringDetails}
+        <OfferingsTable offerings={offerings} offeringDetails={offeringDetails} clazz={clazz}
           onOfferingsReorder={this.onOfferingsReorder} onOfferingUpdate={this.onOfferingUpdate} requestOfferingDetails={this.requestOfferingDetails} />
       </div>
     )
