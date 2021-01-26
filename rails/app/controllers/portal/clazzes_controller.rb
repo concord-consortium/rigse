@@ -404,7 +404,7 @@ class Portal::ClazzesController < ApplicationController
   def external_report
     portal_clazz = Portal::Clazz.find(params[:id])
     report = ExternalReport.find(params[:report_id])
-    next_url = report.url_for_class(portal_clazz.id, current_visitor, request.protocol, request.host_with_port)
+    next_url = report.url_for_class(portal_clazz, current_visitor, request.protocol, request.host_with_port)
     redirect_to next_url
   end
 
