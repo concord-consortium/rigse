@@ -35,7 +35,7 @@ class ExternalReport < ActiveRecord::Base
       params = offering_report_params(offering, grant, user, url_options, additional_params)
     end
 
-    if offering.runnable.logging
+    if offering.runnable.logging || offering.clazz.logging
       params[:logging] = 'true'
     end
 
