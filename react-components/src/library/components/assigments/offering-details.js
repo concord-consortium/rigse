@@ -51,7 +51,9 @@ export default class OfferingDetails extends React.Component {
           externalReports && externalReports.map((externalReport, index) => {
             const externalReportLogData = {
               event: 'clickedExternalReport',
-              event_value: externalReport.url
+              event_value: externalReport.url,
+              activity,
+              parameters
             }
             return (
               <a href={externalReport.url}
