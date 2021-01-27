@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201019091321) do
+ActiveRecord::Schema.define(version: 20210127174117) do
 
   create_table "access_grants", force: :cascade do |t|
     t.string   "code",                    limit: 255
@@ -405,13 +405,13 @@ ActiveRecord::Schema.define(version: 20201019091321) do
     t.string   "description",                      limit: 255
     t.integer  "width",                            limit: 4
     t.integer  "height",                           limit: 4
-    t.string   "url",                              limit: 255
+    t.text     "url",                              limit: 65535
     t.string   "external_id",                      limit: 255
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
-    t.boolean  "display_in_iframe",                            default: false
-    t.boolean  "is_required",                                  default: false
-    t.boolean  "show_in_featured_question_report",             default: true
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
+    t.boolean  "display_in_iframe",                              default: false
+    t.boolean  "is_required",                                    default: false
+    t.boolean  "show_in_featured_question_report",               default: true
   end
 
   create_table "embeddable_image_questions", force: :cascade do |t|
