@@ -1,6 +1,6 @@
 class IncreaseEmbeddableIframesUrlLengthLimit < ActiveRecord::Migration
   def up
-    change_column :embeddable_iframes, :url, :text, :limit => 1000
+    change_column :embeddable_iframes, :url, :text
   end
   
   def down
