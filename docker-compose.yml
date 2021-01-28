@@ -131,6 +131,11 @@ services:
       #
       RAILS_SECRET_KEY_BASE: "${RAILS_SECRET_KEY_BASE:-local_dev_only_secret_key_base}"
 
+      #
+      # Log manager endpoint (defaults to staging)
+      #
+      LOGGER_URI: "${LOGGER_URI:-//cc-log-manager-dev.herokuapp.com/api/logs}"
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
