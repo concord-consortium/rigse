@@ -94,8 +94,12 @@
     // NavigationHelper#get_navigation_json  see app/helpers/navigation_helper.rb
     getNavigation: function() {
       return JSON.parse(document.getElementById('navigationData').innerHTML)
-    }
+    },
 
+    // Logging
+    getLogManagerUrl: function () {
+      return "#{ENV['LOGGER_URI']}" || "//cc-log-manager.herokuapp.com/api/logs"
+    }
   };
 - if current_user.present?
   - if current_user.portal_teacher
