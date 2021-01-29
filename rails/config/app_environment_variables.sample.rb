@@ -13,6 +13,11 @@
 ENV['PORTAL_FEATURES']   ||= ''
 ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbgfq7bem.us-east-1.es.amazonaws.com'
 
+# LOGGER_URI:
+# Log manager logging endpoint
+# ENV['LOGGER_URI'] ||= '//cc-log-manager.herokuapp.com/api/logs'      # production
+# ENV['LOGGER_URI'] ||= '//cc-log-manager-dev.herokuapp.com/api/logs'  # staging / development
+
 # Researcher report link can point to a different portal instance to avoid overloading the main server.
 # ENV['RESEARCHER_REPORT_HOST'] ||= 'https://research-report-portal.concord.org'
 # Portal that is dedicated to the research report should enable option below to disable all the links that could

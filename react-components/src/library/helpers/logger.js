@@ -1,6 +1,5 @@
 import { v4 } from 'uuid'
 
-const logManagerUrl = '//cc-log-manager.herokuapp.com/api/logs'
 const sessionId = v4()
 
 export const getDefaultData = () => {
@@ -22,7 +21,7 @@ export const logEvent = function (data) {
 export const postLogEvent = function (data) {
   const processedData = jQuery.extend(true, {}, getDefaultData(), { time: Date.now() }, data)
   jQuery.ajax({
-    url: logManagerUrl,
+    url: Portal.API_V1.getLogManagerUrl(),
     type: 'POST',
     crossDomain: true,
     data: JSON.stringify(processedData),

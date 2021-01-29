@@ -26,6 +26,9 @@ describe('Logger', () => {
       currentUser: {
         isAnonymous: false,
         userId: 1
+      },
+      API_V1: {
+        getLogManagerUrl: () => "https://example.com/"
       }
     }
     expect(getDefaultData().username).toBe("1@portal-test.concord.org")
