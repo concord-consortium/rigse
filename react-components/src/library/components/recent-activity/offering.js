@@ -1,9 +1,8 @@
 import React from 'react'
 import OfferingProgress from '../common/offering-progress/'
-import { MakeTeacherEditionLink } from '../../helpers/make-teacher-edition-links'
+import OfferingButtons from '../common/offering-buttons'
 
 import css from './style.scss'
-import commonCss from '../../styles/common-css-modules.scss'
 
 export default class Offering extends React.Component {
   constructor (props) {
@@ -26,7 +25,7 @@ export default class Offering extends React.Component {
 
   render () {
     const { detailsVisible } = this.state
-    const { clazz, activityName, previewUrl, activityUrl, hasTeacherEdition, students, reportableActivities, reportUrl, externalReports,
+    const { clazz, classHash, activityName, students, reportableActivities,
       completedStudentsCount, inProgressStudentsCount, notStartedStudentsCount } = this.props.offering
     const completedWidth = (completedStudentsCount / students.length) * 100
     const inProgressWidth = (inProgressStudentsCount / students.length) * 100
@@ -54,28 +53,7 @@ export default class Offering extends React.Component {
           </div>
         </div>
         <div className={css.reports}>
-          <a href={previewUrl} target='_blank' className={commonCss.smallButton} title='Preview'>Preview</a>
-          {
-            hasTeacherEdition &&
-            <a href={MakeTeacherEditionLink(activityUrl)} target='_blank' className={'teacherEditionLink ' + commonCss.smallButton} title='Teacher Edition'>Teacher Edition</a>
-          }
-          {
-            reportUrl &&
-            <a href={reportUrl} target='_blank' className={commonCss.smallButton}>Report</a>
-          }
-          {
-            externalReports && externalReports.map((externalReport, index) => {
-              return (
-                <a href={externalReport.url}
-                  key={index}
-                  target='_blank'
-                  className={commonCss.smallButton}>
-                  { externalReport.launchText }
-                </a>
-              )
-            })
-
-          }
+          <OfferingButtons offering={this.props.offering} classHash={classHash} />
         </div>
         <div>
           { detailsVisible && <OfferingProgress activities={progressTableActivities} students={students} /> }

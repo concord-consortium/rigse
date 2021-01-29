@@ -27,6 +27,7 @@ const offeringMapping = data => {
   return {
     id: data.id,
     clazz: data.clazz,
+    classHash: data.clazz_hash,
     activityName: data.activity,
     previewUrl: data.preview_url,
     activityUrl: data.activity_url,
