@@ -59,8 +59,8 @@ export default class OfferingDetails extends React.Component {
               <a href={externalReport.url}
                 key={index}
                 target='_blank'
-                className={commonCss.smallButton}>
-                onClick={() => logEvent(externalReportLogData)}
+                className={commonCss.smallButton}
+                onClick={() => logEvent(externalReportLogData)}>
                 { externalReport.launchText }
               </a>
             )
