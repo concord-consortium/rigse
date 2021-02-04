@@ -344,15 +344,9 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  def self.set_theme(name)
-    @@theme = name
-  end
 
   def get_theme
-    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
+    ENV['THEME'].blank? ? 'learn' : ENV['THEME']
   end
 
-  def self.get_theme
-    @@theme ||= ( APP_CONFIG[:theme] || 'default' )
-  end
 end
