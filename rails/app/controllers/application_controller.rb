@@ -323,7 +323,7 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     # Set locale according to theme
-    name = "en-#{APP_CONFIG[:theme].upcase}" || "en"
+    name = ENV['THEME'].blank? ? "en" : "en-#{ENV['THEME'].upcase}"
     if I18n.available_locales.include?(name.to_sym)
       I18n.locale = name.to_sym
     end
