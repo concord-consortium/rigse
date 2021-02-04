@@ -29,10 +29,6 @@ def create_roles
     unused_roles.each { |role| role.destroy }
   end
 
-  # to make sure the list is ordered correctly in case a new role is added
-  roles_in_order.each_with_index do |role, i|
-    role.insert_at(i)
-  end
 end
 
 def create_default_users
@@ -141,11 +137,6 @@ def create_grades
   grade_11 = Portal::Grade.where(:name => '11').first_or_create(:description => '11th grade'),
   grade_12 = Portal::Grade.where(:name => '12').first_or_create(:description => '12th grade')
   ]
-
-  # to make sure the list is ordered correctly in case a new grade level is added
-  grades_in_order.each_with_index do |grade, i|
-    grade.insert_at(i)
-  end
 end
 
 def create_settings
@@ -160,7 +151,7 @@ def create_default_lara_report
     app_id: "DEFAULT_REPORT_SERVICE_CLIENT",
     app_secret: SecureRandom.uuid(),
     domain_matchers: ".*\.concord\.org localhost.*",
-    type: "public"
+    client_type: "public"
   )
 
   ExternalReport.where(name: "DEFAULT_REPORT_SERVICE").first_or_create(
