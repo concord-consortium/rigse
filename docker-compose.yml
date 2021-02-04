@@ -135,7 +135,7 @@ services:
       # Log manager endpoint (defaults to staging)
       #
       LOGGER_URI: "${LOGGER_URI:-//cc-log-manager-dev.herokuapp.com/api/logs}"
-
+      THEME: "${THEME:-learn}"
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true

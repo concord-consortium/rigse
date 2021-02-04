@@ -33,7 +33,7 @@ development: &non_production_settings
     - "11"
     - "12"
     - "Higher Ed"
-  :theme: learn
+  :theme: <%= ENV["THEME"] || 'learn' %>
   :help_email: rails-portal@concord.org
   :dont_sanitize_xhtml: true
   :tiny_mce:
@@ -84,6 +84,7 @@ staging:
       - justifyleft,justifycenter,justifyright
       - code
   :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
+  :theme: <%= ENV["THEME"] || 'learn' %>
 
 production:
   :site_name: Rails Portal
@@ -113,3 +114,4 @@ production:
       - justifyleft,justifycenter,justifyright
       - code
   :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
+  :theme: <%= ENV["THEME"] || 'learn' %>
