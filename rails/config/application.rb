@@ -172,7 +172,7 @@ module RailsPortal
     # add in the current theme's application.css
     # a proc is used here so the APP_CONFIG is available
     config.assets.precompile << Proc.new do |path|
-      path == "APP_CONFIG[:theme]/stylesheets/application.css"
+      path.match(/\/themes\/.*\/all.s?css/) || path.match(/\/themes\/.*\/application.s?css/)
     end
 
     # do not initialize on precompile so that the Dockerfile can run the precompile

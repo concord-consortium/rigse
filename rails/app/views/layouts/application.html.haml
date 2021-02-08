@@ -21,7 +21,7 @@
       %meta{ :property => "og:#{key}", :content => value }
 
     != stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
-    / TODO: if themes need their own print CSS make a themed link here:
+    != themed_style_sheet_tag
     != stylesheet_link_tag 'print', {'media' => 'print'}
 
     / Include museo fonts.
