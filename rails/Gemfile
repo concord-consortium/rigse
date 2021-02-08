@@ -85,7 +85,7 @@ gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
 gem 'rush',                 git: 'https://github.com/concord-consortium/rush.git'
 gem 'sanitize'
-gem 'sass',                 '~> 3.7.4'
+gem 'sass',                 '~> 3.4.0'
 gem 'sass-rails' # if running rails 3.1 or greater
 # gem 'strong_parameters'  # RAILS-4-SPIKE GEMFILE REMOVE as part of rails 4.0 upgrade
 gem 'sunspot_rails'
