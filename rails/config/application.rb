@@ -148,6 +148,7 @@ module RailsPortal
     config.middleware.insert_before 0, "Rack::ResponseLogger"
 
     config.assets.enabled = true
+    config.assets.export_concurrent = false
     config.assets.precompile += %w(
       print.css
       full_status.js
