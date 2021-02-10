@@ -5,11 +5,6 @@ PORTAL_COLUMNS_TO_SEARCH = {
   'LearnerProcessingEvent' =>  ['url']
 }.freeze
 
-# CollaborationRuns: collaborators_data_url
-# InteractiveRunStates: learner_url
-# PortalPublications: portal_url
-# Runs: remote_endpoint, class_info_url
-# SequenceRuns: remote_endpoint
 
 LARA_COLUMNS_TO_SEARCH = {
   'CollaborationRun' => ['collaborators_data_url'],
@@ -19,14 +14,12 @@ LARA_COLUMNS_TO_SEARCH = {
   'SequenceRun' =>  %w[remote_endpoint class_info_url]
 }.freeze
 
-
 def execute(sql)
   puts sql
   ActiveRecord::Base.connection.execute(sql)
 end
-# Other LARA columns that might be important: imported_activity_url in sequences
 
-# This one only works for LARA:
+# Only use this when setting up a QA environment.
 def delete_unused_portal_publications(good_portal)
   sql = "DELETE FROM portal_publications WHERE portal_url NOT LIKE '%#{good_portal}%'"
   execute(sql)
@@ -48,27 +41,19 @@ def update_server_name(column_hash, old_name, new_name)
     clazz = clazz_name.classify.constantize
     columns.each do |column|
       replace_server_in_table_column(clazz, column, old_name, new_name)
-      # print_values_in_table(clazz, column)
     end
   end
 end
 
 # In the Portal: Update references to LARA
-# update_server_name("authoring.concord.org", "lara-qa.concord-qa.org")
-# https://lara-npaessel-qa.concordqa.org
-# update_server_name(
-#   PORTAL_COLUMNS_TO_SEARCH,
-#   "lara-qa.concord-qa.org",
-#   "lara-npaessel-qa.concordqa.org"
-# )
+def update_portal_lara_refs(old_url='authoring.concord.org', new_url='my-lara.concord-qa.org')
+  update_server_name(PORTAL_COLUMNS_TO_SEARCH, old_url, new_url)
+end
 
-# In the Portal: Update references to PORTAL from LARA
-update_server_name(
-  LARA_COLUMNS_TO_SEARCH,
-  "ngss-assessment.portal.concord.org",
-  "ngsa-npaessel.concordqa.org"
-)
+# In LARA: Update references to Portal
+def update_lara_portal_refs(old_url='learn.concord.org', new_url="my-portal.concordqa.org")
+  update_server_name(LARA_COLUMNS_TO_SEARCH, old_url, new_url)
+  # Danger: remove all publications that aren't to the new portal.
+  # delete_unused_portal_publications(new_url)
+end
 
-delete_unused_portal_publications("ngsa-npaessel.concordqa.org")
-# One other thing we should do ** just to be on the safe side ** is delete portal
-# publications where the the portal_url isn't the one we are paired with.
