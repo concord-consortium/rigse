@@ -113,23 +113,23 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
     end
 
     context "when a valid authentication header token is sent" do
-      context "and the token has no learner or teacher" do
+      context "and the token itself has no learner or teacher" do
         before(:each) {
           set_auth_token(user_token)
           FirebaseApp.create!(firebase_app_attributes)
         }
 
         context "and a firebase_app param is not sent" do
-          it "returns 500" do
-            post :firebase, {:firebase_app => "invalid app"}, :format => :json
-            expect(response.status).to eq(500)
+          it "returns 400" do
+            post :firebase, {}, :format => :json
+            expect(response.status).to eq(400)
           end
         end
 
         context "and an invalid firebase_app param is sent" do
-          it "returns 400" do
-            post :firebase, {}, :format => :json
-            expect(response.status).to eq(400)
+          it "returns 500" do
+            post :firebase, {:firebase_app => "invalid app"}, :format => :json
+            expect(response.status).to eq(500)
           end
         end
 
@@ -164,17 +164,77 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               token = body["token"]
               decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-              expect(decoded_token[:data]["uid"]).to eql uid
-              expect(decoded_token[:data]["domain"]).to eql root_url
-              expect(decoded_token[:data]["externalId"]).to eql learner.id
-              expect(decoded_token[:data]["returnUrl"]).not_to be_nil
-              expect(decoded_token[:data]["logging"]).to eql true
-              expect(decoded_token[:data]["domain_uid"]).to eql user.id
-              expect(decoded_token[:data]["class_info_url"]).not_to be_nil
-              expect(decoded_token[:data]["claims"]["user_type"]).to eq "learner"
-              expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
-              expect(decoded_token[:data]["claims"]["class_hash"]).not_to be_nil
-              expect(decoded_token[:data]["claims"]["offering_id"]).to eq offering.id
+              expect(decoded_token[:data]).to include(
+                  "uid" => uid,
+                  "domain" => root_url,
+                  "externalId" => learner.id,
+                  "returnUrl" => be_present,
+                  "logging" => true,
+                  "domain_uid" => user.id,
+                  "class_info_url"  => be_present
+                )
+
+              expect(decoded_token[:data]["claims"]).to include(
+                "user_type" => "learner",
+                "user_id" => url_for_user,
+                "class_hash" => be_present,
+                "offering_id" => offering.id
+              )
+            end
+          end
+
+          context "and the user of the auth header token has a teacher" do
+            let(:user) { class_teacher.user }
+            context "with a class with that resource_link_id" do
+              it "returns a valid JWT with teacher params, and a class_hash claim" do
+                allow(APP_CONFIG).to receive(:[]).and_call_original
+                allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
+
+                post :firebase,
+                  {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
+                  :format => :json
+                expect(response.status).to eq(201)
+
+                body = JSON.parse(response.body)
+                token = body["token"]
+                decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+
+                expect(decoded_token[:data]).to include(
+                  "uid" => uid,
+                  "domain_uid" => user.id,
+                  "domain" => root_url
+                )
+
+                expect(decoded_token[:data]["claims"]).to include(
+                  "user_type" => "teacher",
+                  "user_id" => url_for_user,
+                  "platform_id" => "http://test.host/",
+                  "class_hash" => be_present
+                )
+
+                # Even though we send in an resource_link_id the claims in this JWT are
+                # Valid for any offering in the class not just the offering of this resource_link_id
+                # This approach is for consitancy with other ways of getting teacher JWTs
+                expect(decoded_token[:data]["claims"]).to_not include(
+                  "offering_id" => be_present
+                )
+              end
+            end
+            context "without a class with that resource_link_id" do
+              it "returns a 400" do
+                post :firebase,
+                  {:firebase_app => "test app", :resource_link_id => 9999.to_s},
+                  :format => :json
+                expect(response.status).to eq(400)
+              end
+            end
+          end
+          context "and the user of the auth header token is not a teacher or student" do
+            it "returns a 400" do
+              post :firebase,
+                {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
+                :format => :json
+              expect(response.status).to eq(400)
             end
           end
         end
@@ -194,17 +254,23 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           token = body["token"]
           decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-          expect(decoded_token[:data]["uid"]).to eql uid
-          expect(decoded_token[:data]["domain"]).to eql root_url
-          expect(decoded_token[:data]["externalId"]).to eql learner.id
-          expect(decoded_token[:data]["returnUrl"]).not_to be_nil
-          expect(decoded_token[:data]["logging"]).to eql true
-          expect(decoded_token[:data]["domain_uid"]).to eql user.id
-          expect(decoded_token[:data]["class_info_url"]).not_to be_nil
-          expect(decoded_token[:data]["claims"]["user_type"]).to eq "learner"
-          expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
-          expect(decoded_token[:data]["claims"]["class_hash"]).not_to be_nil
-          expect(decoded_token[:data]["claims"]["offering_id"]).to eq offering.id
+          expect(decoded_token[:data]).to include(
+              "uid" => uid,
+              "domain" => root_url,
+              "externalId" => learner.id,
+              "returnUrl" => be_present,
+              "logging" => true,
+              "domain_uid" => user.id,
+              "class_info_url"  => be_present
+            )
+
+          expect(decoded_token[:data]["claims"]).to include(
+            "user_type" => "learner",
+            "user_id" => url_for_user,
+            "class_hash" => be_present,
+            "offering_id" => offering.id
+          )
+
         end
       end
 
@@ -223,14 +289,18 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
             body = JSON.parse(response.body)
             token = body["token"]
             decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-            data = OpenStruct.new decoded_token[:data]
-            claims = OpenStruct.new data.claims
-            expect(data.uid).to eql uid
-            expect(data.domain).to eql root_url
-            expect(claims.user_type).to eq "teacher"
-            expect(claims.user_id).to eq url_for_user
-            expect(claims.class_hash).to eq nil
-            expect(claims.platform_id).to eq "http://test.host/"
+
+            expect(decoded_token[:data]).to include(
+                "uid" => uid,
+                "domain" => root_url
+              )
+
+            expect(decoded_token[:data]["claims"]).to include(
+              "user_type" => "teacher",
+              "user_id" => url_for_user,
+              "class_hash" => be_nil,
+              "platform_id" => "http://test.host/"
+            )
           end
         end
 
@@ -251,7 +321,9 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               token = body["token"]
               decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
 
-              expect(decoded_token[:data]["claims"]["class_hash"]).to eq clazz.class_hash
+              expect(decoded_token[:data]["claims"]).to include(
+                "class_hash" => clazz.class_hash
+              )
             end
           end
         end

@@ -42,14 +42,28 @@ class API::V1::JwtController < API::APIController
     offering_id = params[:resource_link_id]
     if offering_id
       if user.portal_student
+        # if there is a valid resource_link_id override any learner that has been
+        # found in the auth token
         learner = user.portal_student.learners.where(offering_id: offering_id).first
         if learner.blank?
           raise StandardError, "current student does not have this resource_link_id"
         end
+      elsif user.portal_teacher
+        # We check to make sure the resource_link_id is valid here
+        # For teachers the usage of it happens later in the code.
+        if user.portal_teacher.offerings.where(id: offering_id).exists?
+          teacher = user.portal_teacher
+        else
+          raise StandardError, "current teacher has not assigned this resource_link_id"
+        end
       else
-        raise StandardError, "resource_link_id only currently works with students"
+        raise StandardError, "resource_link_id requires a student or teacher user"
       end
     end
+
+    # FIXME: there is inconsiency here
+    # When the user is a teacher, but the auth token (grant) doesn't have the teacher set,
+    # the returned teacher here will be nil, unless a valid resource_link_id is passed in.
 
     [ user, learner, teacher ]
   end
@@ -114,12 +128,22 @@ class API::V1::JwtController < API::APIController
         :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
       }
     elsif teacher
-      # verify if the optional passed class_hash is valid
+
+      # add a class_hash claim if a class_hash or resource_link_id param is present
+      class_hash = nil
       if params[:class_hash].present?
+        # verify the optional passed class_hash is valid
         class_hashes = teacher.clazzes.map {|c| c.class_hash}
         if !class_hashes.include? params[:class_hash]
           raise StandardError, "Teacher does not have a class with the requested class_hash"
         end
+        class_hash = params[:class_hash]
+      elsif params[:resource_link_id].present?
+        # The resource_link_id param was already verified in the handle_initial_auth method
+        # The offering_id is not added to the claims because we don't want to restrict the
+        # teacher to just this one offering.
+        offering = Portal::Offering.find(params[:resource_link_id])
+        class_hash = offering.clazz.class_hash
       end
 
       claims = {
@@ -130,7 +154,7 @@ class API::V1::JwtController < API::APIController
           :platform_user_id => user.id,
           :user_type => "teacher",
           :user_id => url_for(user),
-          :class_hash => params[:class_hash]
+          :class_hash => class_hash
         },
         # Depreciated, used by some CC client apps. Do not add more data here, it's better to add that to claims
         # object above, as then Firebase auth rules can read these properties too.
