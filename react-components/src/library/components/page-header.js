@@ -134,8 +134,12 @@ const PageHeader = Component({
     if (!this.state.isStudent) {
       if (this.state.theme === 'ngss-assessment') {
         headerItems.push(
-          <li key={nextKey('AssessmentTasks')} className={'portal-pages-main-nav-item' + ' portal-pages-main-nav-collections' + (this.props.isCollections ? ' current-menu-item' : '')}>
-            <a href='/ngsa-collections' className='portal-pages-main-nav-item__link' title='View Assessment Tasks'>Assessment Tasks</a>
+          <li key={nextKey('AssessmentTasks')} className={'portal-pages-main-nav-item has-drop-down' + ' portal-pages-main-nav-collections' + (this.props.isCollections ? ' current-menu-item' : '')}>
+            <a href='/about' className='portal-pages-main-nav-item__link'>Assessment Tasks</a>
+            <ul className='portal-pages-main-nav-dropdown'>
+              <li className='portal-pages-main-nav-dropdown__item'><a className='portal-pages-main-nav-dropdown__item-link' href='/elementary-school'>Elementary School Tasks</a></li>
+              <li className='portal-pages-main-nav-dropdown__item'><a className='portal-pages-main-nav-dropdown__item-link' href='/middle-school'>Middle School Tasks</a></li>
+            </ul>
           </li>
         )
         if (this.state.loggedIn) {
