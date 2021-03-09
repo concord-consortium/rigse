@@ -229,7 +229,7 @@
 
       &[data-mobile-nav="open"] {
         .portal-pages-main-nav-contain {
-          top: 110px !important;
+          top: 105px !important;
         }
       }
     }
@@ -237,6 +237,9 @@
     .portal-pages-hero {
       .portal-pages-hero__text {
         width: auto;
+      }
+      button {
+        margin-bottom: 10px;
       }
     }
     .cols {

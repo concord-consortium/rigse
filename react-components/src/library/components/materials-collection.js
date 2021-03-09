@@ -84,9 +84,10 @@ const MaterialsCollectionItem = Component({
     const item = this.props.item
     const links = item.links
     const showTeacherResourcesButton = this.props.showTeacherResourcesButton
+    const keywords = item.keywords.replace(/[,|, ]|\r?\n/g, ' ')
 
     return (
-      <div className={'portal-pages-finder-materials-collection-item'}>
+      <div className={'portal-pages-finder-materials-collection-item'} data-keywords={keywords}>
         <div className={'portal-pages-finder-materials-collection-item__image col-4'}>
           <a href={'#'} onClick={this.toggleLightbox}>
             <img src={item.icon.url} />

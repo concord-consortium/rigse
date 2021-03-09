@@ -305,3 +305,11 @@ body {
     display: block;
   }
 }
+
+.portal-pages-main-nav-item.has-drop-down {
+  &:hover {
+    a.portal-pages-main-nav-item__link {
+      border-bottom: 2px solid transparent;
+    }
+  }
+}
