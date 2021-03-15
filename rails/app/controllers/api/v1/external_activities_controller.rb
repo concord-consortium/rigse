@@ -71,7 +71,9 @@ class API::V1::ExternalActivitiesController < API::APIController
     external_activity.append_auth_token = params[:append_auth_token]
     external_activity.save_path = params[:save_path] || ""
 
-    external_activity.publication_status = params[:publication_status]
+    if params[:publication_status]
+      external_activity.publication_status = params[:publication_status]
+    end
     external_activity.grade_level_list = (params[:grade_levels] || [])
     external_activity.subject_area_list = (params[:subject_areas] || [])
     external_activity.sensor_list = (params[:sensors] || [])
