@@ -64,19 +64,9 @@ class API::V1::ExternalActivitiesController < API::APIController
     external_activity = ExternalActivity.where(url: params[:url]).first
     authorize external_activity
 
-    external_activity.name = params[:name]
-    external_activity.student_report_enabled = params[:student_report_enabled]
-    external_activity.thumbnail_url = params[:thumbnail_url]
-    external_activity.is_locked = params[:is_locked]
-    external_activity.append_auth_token = params[:append_auth_token]
-    external_activity.save_path = params[:save_path] || ""
+    permitted_params = params.permit(:name, :student_report_enabled, :thumbnail_url, :is_locked, :append_auth_token, :save_path, :publication_status)
 
-    external_activity.publication_status = params[:publication_status]
-    external_activity.grade_level_list = (params[:grade_levels] || [])
-    external_activity.subject_area_list = (params[:subject_areas] || [])
-    external_activity.sensor_list = (params[:sensors] || [])
-
-    if external_activity.save
+    if external_activity.update(permitted_params)
       render :json => { success: true }, :status => :ok
     else
       error("Unable to save external activity options")
