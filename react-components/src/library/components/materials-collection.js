@@ -84,7 +84,7 @@ const MaterialsCollectionItem = Component({
     const item = this.props.item
     const links = item.links
     const showTeacherResourcesButton = this.props.showTeacherResourcesButton
-    const keywords = item.keywords.replace(/[,|, ]|\r?\n/g, ' ')
+    const keywords = item.keywords ? item.keywords.replace(/[,|, ]|\r?\n/g, ' ') : ''
 
     return (
       <div className={'portal-pages-finder-materials-collection-item'} data-keywords={keywords}>
