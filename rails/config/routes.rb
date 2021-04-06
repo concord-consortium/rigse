@@ -443,10 +443,12 @@ RailsPortal::Application.routes.draw do
 
         resources :teacher_classes, only: [:show] do
           member do
-            post :sort
             post :set_active
             post :copy
           end
+        end
+        namespace :teacher_classes do
+          post :sort
         end
 
         namespace :jwt do
