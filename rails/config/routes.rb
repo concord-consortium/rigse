@@ -442,8 +442,10 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :teacher_classes, only: [:show] do
-          member do
+          collection do
             post :sort
+          end
+          member do
             post :set_active
             post :copy
           end
