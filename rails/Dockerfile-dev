@@ -24,6 +24,11 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
   && apt-get -o Acquire::Check-Valid-Until=false update && apt-get install -y google-chrome-stable
 
 #
+# Install shared mime info for mimemagic gem
+#
+RUN apt-get install -qq -y shared-mime-info
+
+#
 # Install wait-for-it to support docker-volume-sync
 #
 WORKDIR /usr/local/bin
