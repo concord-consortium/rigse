@@ -19,7 +19,9 @@ env:
 before_install:
   - cd rails
   - "export DISPLAY=:99.0"
-  - pip install --user awscli
+  # the next command is to fix "SSLContext object is not available" error in awscli install
+  - travis_retry pip install urllib3[secure]
+  - travis_retry pip install --user awscli
   - bundle config gems.railslts.com $RAILS_LTS_USER:$RAILS_LTS_PASSWORD
 
 before_script:

@@ -726,7 +726,13 @@ hr {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   &.hr-thick {
-  border-top: 5px solid #f5f5f5; } }
+    border-top: 5px solid #f5f5f5;
+
+    &.darker {
+      border-color: #d1d1d1;
+    }
+  }
+}
 
 .copyright {
   letter-spacing: 0.1em; }
@@ -1251,11 +1257,19 @@ ul.quiet_list {
     margin: 0 auto;
     p {
       font-family: museo-sans, verdana, helvetica, sans-serif;
-      padding: 0;}}
+      padding: 0;
+
+      &.ngsa-partners {
+        text-align: center;
+      }
+    }
+  }
   #share-it {
     float: right;
     margin: -26px 123px 0 0;
-    width: 125px; } }
+    width: 125px;
+  }
+}
 
 #under_footer {
   background-color: #fee9aa;
