@@ -40,6 +40,9 @@ class UsersController < ApplicationController
       "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
 
     search_scope = policy_scope(User)
+    search_scope = search_scope
+      .includes(:imported_user, :portal_student, :authentications, :teacher_cohorts, :student_cohorts, :roles)
+      .includes({ portal_teacher: [:schools, teacher_clazzes: [:clazz]] })
     search_scope = search_scope.joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
