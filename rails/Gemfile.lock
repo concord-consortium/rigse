@@ -1274,7 +1274,7 @@ DEPENDENCIES
   jwt
   launchy
   lol_dba
-  mimemagic (~> 0.3.7)
+  mimemagic (= 0.3.10)
   mysql2 (~> 0.3.16)
   nested_form
   net-sftp (~> 2.0)
