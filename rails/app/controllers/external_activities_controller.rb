@@ -118,6 +118,11 @@ class ExternalActivitiesController < ApplicationController
       @external_activity.projects = Admin::Project.where(id: params[:project_ids] || [])
     end
 
+    if params[:update_external_reports]
+      # set the external reports
+      @external_activity.external_report_ids= (params[:external_reports] || [])
+    end
+
     respond_to do |format|
       if @external_activity.save
         format.js  # render the js file
