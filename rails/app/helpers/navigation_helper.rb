@@ -71,6 +71,7 @@ module NavigationHelper
         small: true,
         sort: -1,
         iconName:'icon-help',
+        popOut: true
       }
     else
       false
