@@ -442,13 +442,13 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :teacher_classes, only: [:show] do
+          collection do
+            post :sort
+          end
           member do
             post :set_active
             post :copy
           end
-        end
-        namespace :teacher_classes do
-          post :sort
         end
 
         namespace :jwt do
