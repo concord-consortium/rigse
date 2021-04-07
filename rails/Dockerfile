@@ -15,6 +15,9 @@ RUN apt-get install -qq -y default-jre-headless
 # install foreman
 RUN gem install foreman
 
+# install shared mime info for mimemagic gem
+RUN apt-get install -qq -y shared-mime-info
+
 # if this is changed it also needs to be changed in nginx-sites.conf and unicorn.rb
 ENV APP_HOME /rigse
 
