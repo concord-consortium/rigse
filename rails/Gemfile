@@ -116,7 +116,7 @@ end
 
 # Feature enabling groups
 #
-# TODO: UPDATE ALL OF THESE TO RAILS 5!!!
+# TODO: rails-5-upgrade UPDATE ALL OF THESE TO RAILS 5!!!
 #
 # group :genigames_data do
 #   gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', ref: '6a00f07af38e03670f696468578c3ff11a8c8414' # branch: 'spike-rails4-support'
