@@ -13,7 +13,6 @@ gem 'activemodel',      :require => false
 gem 'activerecord',     :require => false
 gem 'activesupport',    :require => false
 gem 'railties',         :require => false
-gem 'railslts-version', :require => false
 
 gem 'activerecord-deprecated_finders'
 gem 'activerecord-import'
