@@ -76,7 +76,29 @@
       1. paperclip 4.2.4 -> 6.1.0 (step 15) -> 4.2.4
       2. pundit 1.0.1 -> 2.1.0 (step 15) -> 1.0.1
     2. Not sure why I was able to revert back...
+4. Getting rails to start back up from Docker container
+  1. First run of docker-compose up
+  2. Got startup error: `active_support/dependencies.rb:293:in require: cannot load such file`. This is coming from the delayed_job_web gem with uses sinatra 1 which has this bug: https://github.com/sinatra/sinatra/issues/1055
+    1. Going to pin delayed_job_web in Gemfile from 1.2.5 (current) to 1.44 (latest) to see when sinatra updates
+    2. Pinning delayed_job_web caused haml dependency error, setting haml from '~> 4.0' to '~> 4' which also caused error
+  3. Going to comment out delayed_job_web for now
+  4. Second run of docker-compose up
+    1. Got a bunch of deprecation warnings
+    2. Got startup error: `assert_index: No such middleware to insert before: ActionDispatch::ParamsParser (RuntimeError)`
+    3. Step 2 is due to this line in application.rb: `config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")`
+    4. For now I'm going to comment out the middleware line
+    5. Got startup error: `require: cannot load such file -- bullet/ (LoadError)`
+    6. Going to comment out bullet in gemfile and bullet references in code
+    7. Got startup error: `uninitialized constant DelayedJobWeb (NameError)`
+    8. Going to comment out DelayedJobWeb reference in routes.db
+    9. Got WEBrick running (with a lot of deprecation warnings)
 
+## Rails 4 -> 5.0 TODO
+  1. Gemfile: add back delayed_job_web
+  2. application.rb: add back Rack::ExpandB64Gzip middleware
+  3. Gemfile: add back bullet
+  4. development.rb: add back Bullet.xxx references
+  5. routes.rb: add back DelayedJobWeb reference
 
 ## Rails 4 -> 5.0 Gemfile Upgrade Table
 

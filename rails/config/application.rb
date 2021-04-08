@@ -54,7 +54,8 @@ module RailsPortal
     #   use Rack::Head
     #   run ActionController::Dispatcher.new
 
-    config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
+    # TODO: rails-5-upgrade - figure out how to insert in stack as ActionDispatch::ParamsParser doesn't exist in rails 5
+    # config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

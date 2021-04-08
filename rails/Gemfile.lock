@@ -693,9 +693,6 @@ GEM
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
     builder (3.2.4)
-    bullet (4.14.0)
-      activesupport (>= 3.0.0)
-      uniform_notifier (>= 1.6.0)
     byebug (10.0.2)
     capybara (2.18.0)
       addressable
@@ -766,10 +763,6 @@ GEM
     delayed_job_active_record (4.1.6)
       activerecord (>= 3.0, < 6.2)
       delayed_job (>= 3.0, < 5)
-    delayed_job_web (1.2.5)
-      activerecord (> 3.0.0)
-      delayed_job (> 2.0.3)
-      sinatra (>= 0.9.2)
     delorean (2.1.0)
       chronic
     descendants_tracker (0.0.4)
@@ -1088,8 +1081,6 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    sinatra (1.0)
-      rack (>= 1.0)
     spoon (0.0.1)
     spring (1.7.2)
     spring-commands-cucumber (1.0.1)
@@ -1135,7 +1126,6 @@ GEM
     unicorn (5.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uniform_notifier (1.6.2)
     useragent (0.10.0)
     uuidtools (2.1.5)
     virtus (1.0.3)
@@ -1190,7 +1180,6 @@ DEPENDENCIES
   aws-sdk-v1
   axlsx (> 2.5)
   better_errors (~> 1.1.0)
-  bullet
   capybara
   capybara-mechanize
   capybara-screenshot
@@ -1205,7 +1194,6 @@ DEPENDENCIES
   default_value_for
   delayed_job (~> 4.1.1)
   delayed_job_active_record (~> 4.1.0)
-  delayed_job_web
   delorean
   devise (= 4.0.0)
   devise-encryptable
