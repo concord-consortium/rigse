@@ -106,6 +106,7 @@
       4. Using a dynamic :controller segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
       5. Using a dynamic :action segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
   6. Got homepage loading!
+  7. Removed `railslts-version` gem after push to GitHub immediately broke Travis
 
 
 ## Rails 4 -> 5.0 TODO
