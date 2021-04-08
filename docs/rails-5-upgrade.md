@@ -92,13 +92,29 @@
     7. Got startup error: `uninitialized constant DelayedJobWeb (NameError)`
     8. Going to comment out DelayedJobWeb reference in routes.db
     9. Got WEBrick running (with a lot of deprecation warnings)
+  5. Address deprecation warnings
+    1. Fixed
+      1. ActiveRecord::Base.raise_in_transactional_callbacks= is deprecated, has no effect and will be removed without replacement.
+      2. [Devise] config.email_regexp will have a new default on Devise 4.1
+    2. Skipped for now (attempting to fix caused errors that need to be investigated)
+      1. alias_method_chain is deprecated. Please, use Module#prepend instead. From module, you can access the original method using super. (called from block in <top (required)> at /rigse/config/initializers/00_rails-3-deprecate-duplicate-routes.rb:23)
+      2. Passing string to define callback is deprecated and will be removed in Rails 5.1 without replacement. (lib/delayed/worker/scaler.rb:13,14,15)
+      3. Passing strings or symbols to the middleware builder is deprecated, please change
+        1. "ActionDispatch::Cookies" => ActionDispatch::Cookies
+        2. "Rack::ConfigSessionCookies" => Rack::ConfigSessionCookies
+        3. "Rack::ResponseLogger" => Rack::ResponseLogger
+      4. Using a dynamic :controller segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
+      5. Using a dynamic :action segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
+  6. Got homepage loading!
+
 
 ## Rails 4 -> 5.0 TODO
-  1. Gemfile: add back delayed_job_web
-  2. application.rb: add back Rack::ExpandB64Gzip middleware
-  3. Gemfile: add back bullet
-  4. development.rb: add back Bullet.xxx references
-  5. routes.rb: add back DelayedJobWeb reference
+  1. Gemfile: add back geni* gems
+  2. Gemfile: add back delayed_job_web
+  3. application.rb: add back Rack::ExpandB64Gzip middleware
+  4. Gemfile: add back bullet
+  5. development.rb: add back Bullet.xxx references
+  6. routes.rb: add back DelayedJobWeb reference
 
 ## Rails 4 -> 5.0 Gemfile Upgrade Table
 
