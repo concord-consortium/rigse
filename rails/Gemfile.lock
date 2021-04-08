@@ -75,6 +75,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts-as-taggable-on (4.0.0)
+      activerecord (>= 4.0)
     acts_as_list (0.9.19)
       activerecord (>= 3.0)
     addressable (2.5.2)
@@ -686,6 +688,7 @@ GEM
       nokogiri (~> 1.8, >= 1.8.2)
       rubyzip (~> 1.2, >= 1.2.1)
     backports (3.11.4)
+    bcrypt (3.1.16)
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -712,9 +715,19 @@ GEM
     chronic (0.10.2)
     ci_reporter (2.0.0)
       builder (>= 2.1.2)
+    climate_control (0.2.0)
+    cocaine (0.5.8)
+      climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    coffee-rails (4.1.1)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0, < 5.1.x)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     columnize (0.9.0)
     concurrent-ruby (1.1.8)
     connection_pool (2.2.2)
@@ -735,6 +748,12 @@ GEM
       cucumber-tag_expressions (~> 1.1.0)
       gherkin (>= 5.0.0)
     cucumber-expressions (6.0.1)
+    cucumber-rails (1.7.0)
+      capybara (>= 2.3.0, < 4)
+      cucumber (>= 3.0.2, < 4)
+      mime-types (>= 1.17, < 4)
+      nokogiri (~> 1.8)
+      railties (>= 4.2, < 7)
     cucumber-tag_expressions (1.1.1)
     cucumber-wire (0.0.1)
     daemons (1.1.8)
@@ -742,10 +761,29 @@ GEM
     debugger-ruby_core_source (1.3.8)
     default_value_for (3.3.0)
       activerecord (>= 3.2.0, < 6.1)
+    delayed_job (4.1.9)
+      activesupport (>= 3.0, < 6.2)
+    delayed_job_active_record (4.1.6)
+      activerecord (>= 3.0, < 6.2)
+      delayed_job (>= 3.0, < 5)
+    delayed_job_web (1.2.5)
+      activerecord (> 3.0.0)
+      delayed_job (> 2.0.3)
+      sinatra (>= 0.9.2)
     delorean (2.1.0)
       chronic
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    devise (4.0.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0, < 5.1)
+      responders
+      warden (~> 1.2.3)
+    devise-encryptable (0.2.0)
+      devise (>= 2.1.0)
+    devise-token_authenticatable (0.5.3)
+      devise (>= 4.0.0, < 4.4.0)
     diff-lcs (1.3)
     docile (1.3.1)
     domain_name (0.5.20180417)
@@ -756,6 +794,8 @@ GEM
       mail (~> 2.2)
     equalizer (0.0.9)
     erubis (2.7.0)
+    exception_notification (2.5.2)
+      actionmailer (>= 3.0.4)
     execjs (2.7.0)
     factory_bot (4.11.1)
       activesupport (>= 3.0.0)
@@ -763,6 +803,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     ffi (1.13.1)
     ffi (1.13.1-x86-mingw32)
+    font-awesome-rails (4.7.0.7)
+      railties (>= 3.2, < 7)
     formatador (0.2.5)
     gherkin (5.1.0)
     globalid (0.4.2)
@@ -851,7 +893,7 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.0)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.3.0)
     minitest (5.14.4)
     multi_json (1.15.0)
     multi_test (0.1.2)
@@ -869,10 +911,10 @@ GEM
     net-ssh (2.6.3)
     newrelic_rpm (4.4.0.336)
     nio4r (2.5.2)
-    nokogiri (1.10.10)
-      mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.10-x86-mingw32)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.8.5)
+      mini_portile2 (~> 2.3.0)
+    nokogiri (1.8.5-x86-mingw32)
+      mini_portile2 (~> 2.3.0)
     nokogumbo (1.4.1)
       nokogiri
     notiffany (0.1.1)
@@ -898,14 +940,24 @@ GEM
       oauth2 (~> 0.6.0)
       omniauth (~> 1.0)
     open4 (1.3.0)
+    orm_adapter (0.5.0)
+    paperclip (4.2.4)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      cocaine (~> 0.5.5)
+      mime-types
     pdf-reader (1.1.1)
       Ascii85 (~> 1.0.0)
       ruby-rc4
     posix-spawn (0.3.6)
     power_assert (0.2.2)
+    pr_geohash (1.0.0)
     prawn (0.12.0)
       pdf-reader (>= 0.9.0)
       ttfunk (~> 1.0.2)
+    prawn_rails (0.0.11)
+      prawn (>= 0.11.1)
+      railties (>= 3.0.0)
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -913,6 +965,8 @@ GEM
       byebug (~> 10.0)
       pry (~> 0.10)
     public_suffix (3.0.3)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.2.3)
     rack-cors (0.2.9)
     rack-mini-profiler (0.9.2)
@@ -946,7 +1000,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.16.0)
-    rake (12.3.3)
+    rake (0.9.6)
     rb-fchange (0.0.6)
       ffi
     rb-fsevent (0.10.4)
@@ -966,6 +1020,9 @@ GEM
       railties (>= 4.2.0, < 6.0)
     rollbar (2.15.5)
       multi_json
+    rsolr (2.3.0)
+      builder (>= 2.1.2)
+      faraday (>= 0.9.0)
     rspec (3.8.0)
       rspec-core (~> 3.8.0)
       rspec-expectations (~> 3.8.0)
@@ -1023,12 +1080,16 @@ GEM
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
     session (3.2.0)
+    sextant (0.2.4)
+      rails (>= 3.2)
     shellany (0.0.1)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
+    sinatra (1.0)
+      rack (>= 1.0)
     spoon (0.0.1)
     spring (1.7.2)
     spring-commands-cucumber (1.0.1)
@@ -1042,16 +1103,26 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    sunspot (2.5.0)
+      pr_geohash (~> 1.0)
+      rsolr (>= 1.1.1, < 3)
+    sunspot_rails (2.5.0)
+      rails (>= 3)
+      sunspot (= 2.5.0)
     sunspot_solr (2.2.5)
     syntax (1.0.0)
     test-unit (3.0.8)
       power_assert
+    themes_on_rails (0.4.0)
+      rails (>= 3.2)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (1.4.1)
+    tinymce-rails (3.5.11.1)
+      railties (>= 3.1.1)
     ttfunk (1.0.3)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
@@ -1072,6 +1143,8 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    warden (1.2.9)
+      rack (>= 2.0.9)
     webdrivers (3.9.4)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
@@ -1108,6 +1181,7 @@ DEPENDENCIES
   activerecord-import
   activerecord-session_store
   activesupport
+  acts-as-taggable-on (~> 4)
   acts_as_list
   appsignal
   arrayfields
@@ -1121,16 +1195,26 @@ DEPENDENCIES
   capybara-mechanize
   capybara-screenshot
   ci_reporter
+  coffee-rails (~> 4.1.1)
   connection_pool
   cucumber
+  cucumber-rails
   daemons (~> 1.1.8)
   database_cleaner
   debugger-ruby_core_source (~> 1.3.8)
   default_value_for
+  delayed_job (~> 4.1.1)
+  delayed_job_active_record (~> 4.1.0)
+  delayed_job_web
   delorean
+  devise (= 4.0.0)
+  devise-encryptable
+  devise-token_authenticatable (~> 0.3)
   dynamic_form (~> 1.1.4)
   email_spec
+  exception_notification (~> 2.5.2)
   factory_bot
+  font-awesome-rails
   grit (~> 2.4)
   guard
   guard-cucumber
@@ -1152,14 +1236,18 @@ DEPENDENCIES
   nested_form
   net-sftp (~> 2.0)
   newrelic_rpm (~> 4.4, >= 4.4.0.336)
+  nokogiri (~> 1.8.0)
   oj (~> 2.12.14)
   omniauth
   omniauth-google-oauth2
   omniauth-oauth
   open4 (~> 1.0)
+  paperclip (~> 4)
   prawn (~> 0.12.0)
+  prawn_rails (~> 0.0.6)
   pry
   pry-byebug
+  pundit (~> 1)
   rack-cors
   rack-mini-profiler
   rack-secure_samesite_cookies!
@@ -1167,6 +1255,7 @@ DEPENDENCIES
   rails-observers
   railslts-version
   railties
+  rake (~> 0.9.2)
   rb-fchange
   rb-fsevent
   rb-inotify
@@ -1187,15 +1276,19 @@ DEPENDENCIES
   sass (~> 3.4.0)
   sass-rails
   selenium-webdriver
+  sextant
   simplecov
   spring (~> 1.7.2)
   spring-commands-cucumber
   spring-commands-rspec
   sprockets-rails
+  sunspot_rails
   sunspot_solr
   syntax (~> 1.0)
   test-unit (~> 3.0)
+  themes_on_rails
   therubyracer (~> 0.12.1)
+  tinymce-rails (~> 3.5.6)
   uglifier
   unicorn
   useragent

@@ -49,6 +49,65 @@
   11. Ran `bundle update rails` again with success!
   12. Tested out deleting Gemfile.lock and running `bundle install` - this resulted in a **lot** of major upgrades
   13. Added Gemfile.lock back and reran `bundle update rails` to only update rails
+  14. Ran `bundle clean`
+  15. Started adding back commented out gems one at a time by uncommenting and running either `bundle install` or `bundle update <gem>` (if versioned and already installed as sub-dependency)
+    1. cucumber-rails
+    2. sextant
+    3. rake
+    4. themes_on_rails
+    5. tinymce-rails
+    6. sunspot_rails
+    7. pundit
+    8. prawn_rails
+    9. paperclip
+    10. nokogiri
+    11. font-awesome-rails
+    12. exception_notification
+    13. acts-as-taggable-on (changed version from `~> 3.4.0` to `~> 4` as 3.4.0 doesn't support Rails 5)
+    14. coffee-rails (changed version from `~> 4.0.0` to `~> 4.1.1` as 4.0.0 doesn't support Rails 5)
+    15. devise (changed version from `3.4.0` to `4.0.0` as 3.4.0 doesn't support Rails 5)
+    16. devise-encryptable
+    17. devise-token_authenticatable
+    18. delayed_job
+    19. delayed_job_active_record
+    20. delayed_job_web
+  16. Diffed master with new Gemfile.lock to find major upgrades and build gemfile upgrade table below
+    1. After initial diff tried to minimize major upgrades of the following
+      1. paperclip 4.2.4 -> 6.1.0 (step 15) -> 4.2.4
+      2. pundit 1.0.1 -> 2.1.0 (step 15) -> 1.0.1
+    2. Not sure why I was able to revert back...
+
+
+## Rails 4 -> 5.0 Gemfile Upgrade Table
+
+|gem                         | From      | To      |
+|----------------------------|-----------|---------|
+|acts-as-taggable-on         | 3.4.4     | 4.0.0   |
+|coffee-rails                | 4.0.1     | 4.1.1   |
+|cucumber-rails              | 1.4.5     | 1.7.0   |
+|delayed_job                 | 4.1.1     | 4.1.9   |
+|delayed_job_active_record   | 4.1.0     | 4.1.6   |
+|delayed_job_web             | 1.2.9     | 1.2.5   |
+|devise                      | 3.4.0     | 4.0.0   |
+|devise-encryptable          | 0.1.1     | 0.2.0   |
+|devise-token_authenticatable| 0.3.2     | 0.5.3   |
+|font-awesome-rails          | 4.7.0.1   | 4.7.0.7 |
+|prawn_rails                 | 0.0.8     | 0.0.11  |
+|rails                       | 4.2.11.17 | 5.0.7.2 |
+|sunspot_rails               | 2.2.5     | 2.5.0   |
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
