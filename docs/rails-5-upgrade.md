@@ -139,6 +139,14 @@
       2. Did a selective global search and replace for ActiveRecord::Base and replaced with ApplicationRecord (I left in old comments to ActiveRecord::Base but no code)
     5. New Framework Defaults (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-framework-defaults)
       1. Added section to each environment config with note and default values
+      1. Active Record belongs_to Required by Default Option - leave at default of false
+      2. Per-form CSRF Tokens - TBD!
+      3. Forgery Protection with Origin Check - TBD!
+      4. Allow Configuration of Action Mailer Queue Name - not needed, default is fine
+      5. Support Fragment Caching in Action Mailer Views - TBD!
+      6. Configure the Output of db:structure:dump - n/a only applies to PostgeSQL
+      7. Configure SSL Options to Enable HSTS with Subdomains - TBD!
+      8. Preserve Timezone of the Receiver - n/a only applies to Ruby 2.4, we use 2.2 currently
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
