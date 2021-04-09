@@ -15,7 +15,7 @@ class Saveable::MultipleChoice < ApplicationRecord
     :choices,
     :has_correct_answer?,
     :has_duplicate_choices?
-  ].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
+  ].each { |m| delegate m, :to => :multiple_choice }
 
   include Saveable::Saveable
 

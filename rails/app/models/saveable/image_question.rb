@@ -11,7 +11,7 @@ class Saveable::ImageQuestion < ApplicationRecord
     :class_name => "Saveable::ImageQuestionAnswer"
 
 
-  [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
+  [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question }
 
   include Saveable::Saveable
 

@@ -147,6 +147,10 @@
       6. Configure the Output of db:structure:dump - n/a only applies to PostgeSQL
       7. Configure SSL Options to Enable HSTS with Subdomains - TBD!
       8. Preserve Timezone of the Receiver - n/a only applies to Ruby 2.4, we use 2.2 currently
+    6. Get tests starting
+      1. Will be running `bundle exec rake db:migrate; bundle exec rake db:test:prepare; bundle exec rake db:feature_test:prepare` until it migrates
+        1. Fixed `unknown keyword: class_name` error in delegate
+      1. Will be running `bundle exec rspec` until it starts
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
