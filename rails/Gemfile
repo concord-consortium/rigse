@@ -168,6 +168,7 @@ group :test, :cucumber do
   gem 'delorean'
   gem 'email_spec'
   gem 'json-schema'
+  gem 'rails-controller-testing'
   gem 'rspec'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-collection_matchers'

@@ -1,5 +1,6 @@
 # Rails 5 Upgrade Steps
 
+0. Created PT stories for all top level items in the Rails Upgrade Guide.
 1. First attempt to update to last 5.0 version of rails (5.0.7.2)
   1. Attempted upgrade by updating rails version in Gemfile and running `bundle update rails` inside a /bin/bash session in the app Docker container.  Got bundler error: `genigames_connector was resolved to 0.0.5, which depends on rails (~> 4.2)`
 2. Attempted upgrading genigames_connector from 4.2 to 5.0
@@ -107,6 +108,27 @@
       5. Using a dynamic :action segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
   6. Got homepage loading!
   7. Removed `railslts-version` gem after push to GitHub immediately broke Travis
+  8. Looked through all PT stories created from top level Rail Upgrade Guide and delivered all that needed no change to the code as 0 point stories with a comment about them not being needed.
+  9. Estimated remaining PT stories
+  10. Started on PT stories
+    1. Default Template Handler is Now RAW (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#default-template-handler-is-now-raw)
+      1. Ran the following one-liner to find the unique file extensions `find . -type f | rev | awk -F "." 'BEGIN { FS = "/" } ; {print $1}' | rev | awk 'BEGIN { FS = "." } ; {$1 = ""; print $0}' | sort | uniq`.  It output this list (the script replaces periods with spaces):
+        - config builder
+        - erb
+        - haml
+        - html erb
+        - html haml
+        - jnlp builder
+        - pdf prawn
+        - rjs
+        - run_html haml
+        - run_sparks_html haml
+        - text erb
+      2. I checked each extension and looked in the code to see how they were used.  I left a comment in the PT story (https://www.pivotaltracker.com/story/show/177670542/comments/223360555) asking Scott if he had any insight into the extensions I don't have any experience with.  I'm going to leave this PT story open for now.
+    2. Rails Controller Testing
+      1. Added `rails-controller-testing` gem as we are using `assigns` in a lot of tests and it was moved into this gem.
+      2. Converted `ActionDispatch::Http::UploadedFile` to `Rack::Test::UploadedFile`
+      3. These two changes are covered by a unit test but the tests still are not running due to startup issues.  There is a separate PT story for this.
 
 
 ## Rails 4 -> 5.0 TODO
@@ -116,6 +138,7 @@
   4. Gemfile: add back bullet
   5. development.rb: add back Bullet.xxx references
   6. routes.rb: add back DelayedJobWeb reference
+  7. Remove all "RAILS UPGRADE" comments
 
 ## Rails 4 -> 5.0 Gemfile Upgrade Table
 

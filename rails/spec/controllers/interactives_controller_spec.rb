@@ -180,13 +180,14 @@ describe InteractivesController do
 
   describe "#import_model_library" do
     import_json = File.new(Rails.root + 'spec/import_examples/portal_interactives_library.json', :symbolize_names => true)
+    content = File.read(import_json)
     let(:params1) do
       {
-         import:ActionDispatch::Http::UploadedFile.new(tempfile: import_json, filename: File.basename(import_json), content_type: "application/json")
+         import:Rack::Test::UploadedFile.new(content, "application/json")
       }
     end
     it "should import all the models from a json" do
-      import_hash = JSON.parse(File.read(import_json))
+      import_hash = JSON.parse(content)
       model_library_count = import_hash["models"].length
       existing_interactives_count = Interactive.count
       xhr :post, :import_model_library, params1
