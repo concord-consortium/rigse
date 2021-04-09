@@ -9,7 +9,9 @@ class Portal::Offering < ActiveRecord::Base
   self.table_name = :portal_offerings
 
   acts_as_replicatable
-  before_destroy :can_be_deleted?
+
+  # in Rails 5 instead of returning false to terminate the chain you throw :abort
+  before_destroy :throw_abort_if_cant_be_deleted
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
@@ -121,6 +123,12 @@ class Portal::Offering < ActiveRecord::Base
 
   def can_be_deleted?
     learners.empty?
+  end
+
+  def throw_abort_if_cant_be_deleted
+    if !can_be_deleted?
+      throw(:abort)
+    end
   end
 
   def run_format

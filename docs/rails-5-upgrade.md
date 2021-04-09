@@ -125,10 +125,16 @@
         - run_sparks_html haml
         - text erb
       2. I checked each extension and looked in the code to see how they were used.  I left a comment in the PT story (https://www.pivotaltracker.com/story/show/177670542/comments/223360555) asking Scott if he had any insight into the extensions I don't have any experience with.  I'm going to leave this PT story open for now.
-    2. Rails Controller Testing
+    2. Rails Controller Testing (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#rails-controller-testing)
       1. Added `rails-controller-testing` gem as we are using `assigns` in a lot of tests and it was moved into this gem.
       2. Converted `ActionDispatch::Http::UploadedFile` to `Rack::Test::UploadedFile`
       3. These two changes are covered by a unit test but the tests still are not running due to startup issues.  There is a separate PT story for this.
+    3. Halting Callback Chains via throw(:abort) (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#halting-callback-chains-via-throw-abort)
+      1. Searched for all before callbacks in models
+      2. Updated code in
+        1. image.rb#check_image_presence to `throw(:abort)` instead of returning false
+        2. portal/offering.rb from `before_destroy :can_be_deleted?` to `before_destroy :throw_abort_if_cant_be_deleted` where `throw_abort_if_cant_be_deleted` is a new method
+
 
 
 ## Rails 4 -> 5.0 TODO
