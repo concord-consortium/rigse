@@ -8,6 +8,9 @@ RailsPortal::Application.configure do
   # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
   config.eager_load = true
 
+  # this will fall back to autoloading to files outside the app folder
+  config.enable_dependency_loading = true
+
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true

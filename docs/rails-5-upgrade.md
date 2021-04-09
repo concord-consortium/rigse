@@ -151,7 +151,15 @@
       1. Will be running `bundle exec rake db:migrate; bundle exec rake db:test:prepare; bundle exec rake db:feature_test:prepare` until it migrates
         1. Fixed `unknown keyword: class_name` error in delegate
         2. Added `reset_password_sent_at` to user table after getting error and reading devise docs and running `bundle exec rails generate devise user --force` and comparing generated user model with existing user model
-      1. Will be running `bundle exec rspec` until it starts
+      2. First ran `bundle exec rspec` and got repeated `can't modify frozen Array` but then researched and found out it was a red herring
+      3. Based on comment on Stack Overflow looked for smallest spec test that had at least 1 test and found `user_mailer_spec.rb`
+      4. Will be running `bundle exec rspec spec/models/user_mailer_spec.rb` until it starts
+        1. Got `ArgumentError: Before process_action callback :authenticate_user! has not been defined` error in auth_controller.rb.  Fixed by adding `, :raise => false`
+      5. Will be running `bundle exec rspec`
+        1. Got many `NameError: uninitialized constant XXX` where `XXX` is the describe class name in the spec test.
+        2. Fixed this by adding `config.enable_dependency_loading = true` to add environments where `config.eager_load` is true
+
+
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
