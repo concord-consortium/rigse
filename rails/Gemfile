@@ -4,23 +4,20 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-source 'https://gems.railslts.com' do
-  gem 'rails', '4.2.11.17'
-  gem 'actionmailer',     :require => false
-  gem 'actionpack',       :require => false
-  gem 'actionview',       :require => false
-  gem 'activejob',        :require => false
-  gem 'activemodel',      :require => false
-  gem 'activerecord',     :require => false
-  gem 'activesupport',    :require => false
-  gem 'railties',         :require => false
-  gem 'railslts-version', :require => false
-end
+gem 'rails', '5.0.7.2'
+gem 'actionmailer',     :require => false
+gem 'actionpack',       :require => false
+gem 'actionview',       :require => false
+gem 'activejob',        :require => false
+gem 'activemodel',      :require => false
+gem 'activerecord',     :require => false
+gem 'activesupport',    :require => false
+gem 'railties',         :require => false
 
 gem 'activerecord-deprecated_finders'
-gem 'activerecord-import'   # RAILS-4-SPIKE GEMFILE: "0.28.2"
+gem 'activerecord-import'
 gem "activerecord-session_store"
-gem 'acts-as-taggable-on', '~> 3.4.0'
+gem 'acts-as-taggable-on', '~> 4'
 gem 'acts_as_list'
 gem 'appsignal'
 gem 'arrayfields'
@@ -34,7 +31,7 @@ gem 'aws-sdk',              '~> 3'
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
-gem 'coffee-rails',         "~> 4.0.0" # if running rails 3.1 or greater
+gem 'coffee-rails',         "~> 4.1.1"
 # gem 'compass-blueprint'
 # gem 'compass-rails'
 # was sub-dependency of react-rails, needed in test setup code
@@ -43,8 +40,11 @@ gem 'daemons', '~> 1.1.8'
 gem 'default_value_for'
 gem 'delayed_job', '~> 4.1.1'
 gem 'delayed_job_active_record', '~> 4.1.0'
-gem 'delayed_job_web'
-gem 'devise', '3.4.0'
+
+# TODO: rails-5-upgrade RE-ENABLE LATER (see step 4 i docs/rails-5-upgrade.md)
+# gem 'delayed_job_web'
+
+gem 'devise', '4.0.0'
 gem 'devise-encryptable'
 gem 'devise-token_authenticatable', '~> 0.3'
 gem 'dynamic_form', '~> 1.1.4'
@@ -68,10 +68,10 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2' # For google login integration.
 gem 'omniauth-oauth' # For schoology integration.
 gem 'open4',                '~> 1.0'
-gem 'paperclip'
+gem 'paperclip',            '~> 4'
 gem 'prawn',                '~> 0.12.0'
 gem 'prawn_rails',          '~> 0.0.6'
-gem 'pundit'
+gem 'pundit',               '~> 1'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
 gem 'rack-secure_samesite_cookies',
@@ -99,7 +99,6 @@ gem 'sprockets-rails', :require => 'sprockets/railtie'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
 gem 'themes_on_rails'
-
 gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
@@ -116,24 +115,30 @@ group :production do
 end
 
 # Feature enabling groups
-group :genigames_data do
-  gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', ref: '6a00f07af38e03670f696468578c3ff11a8c8414' # branch: 'spike-rails4-support'
-end
-group :geniverse_backend do
-  gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git'
-end
-group :geniverse_remote_auth do
-  gem 'cc_portal_remote_auth', git: 'https://github.com/concord-consortium/cc_portal_remote_auth.git', branch: 'spike-rails4-support'
-end
-group :geniverse_wordpress do
-  gem 'cc_portal_wordpress_integration', git: 'https://github.com/concord-consortium/cc_portal_wordpress_integration.git', ref: '3e84bb15f86a2d7631cfa54e461e1f77b547cec6' # branch: 'spikes-rails4-support'
-end
+#
+# TODO: rails-5-upgrade UPDATE ALL OF THESE TO RAILS 5!!!
+#
+# group :genigames_data do
+#   gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', ref: '6a00f07af38e03670f696468578c3ff11a8c8414' # branch: 'spike-rails4-support'
+# end
+# group :geniverse_backend do
+#   gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git'
+# end
+# group :geniverse_remote_auth do
+#   gem 'cc_portal_remote_auth', git: 'https://github.com/concord-consortium/cc_portal_remote_auth.git', branch: 'spike-rails4-support'
+# end
+# group :geniverse_wordpress do
+#   gem 'cc_portal_wordpress_integration', git: 'https://github.com/concord-consortium/cc_portal_wordpress_integration.git', ref: '3e84bb15f86a2d7631cfa54e461e1f77b547cec6' # branch: 'spikes-rails4-support'
+# end
 
 
 group :development do
   gem 'awesome_print'
   gem 'better_errors', '~> 1.1.0'
-  gem 'bullet'
+
+  # TODO: rails-5-upgrade RE-ENABLE LATER (see step 4 i docs/rails-5-upgrade.md)
+  # gem 'bullet'
+
   gem 'debugger-ruby_core_source', '~> 1.3.8', platforms: [:mri_19]
   gem 'hirb'
   gem 'interactive_editor'

@@ -54,7 +54,8 @@ module RailsPortal
     #   use Rack::Head
     #   run ActionController::Dispatcher.new
 
-    config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
+    # TODO: rails-5-upgrade - figure out how to insert in stack as ActionDispatch::ParamsParser doesn't exist in rails 5
+    # config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -185,7 +186,8 @@ module RailsPortal
 
     # propagate errors normally just like in other Active Record callbacks
     # See https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#error-handling-in-transaction-callbacks
-    config.active_record.raise_in_transactional_callbacks = true
+    # RAILS 5 UPGRADE: deprecated
+    # config.active_record.raise_in_transactional_callbacks = true
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

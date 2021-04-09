@@ -1,4 +1,4 @@
-# Upgrade Steps
+# Rails 4 Upgrade Steps
 
 This documents the steps taken to upgrade Portal from ruby 2.2.6/rails 3.2.22 to the latest ruby/rails version along with any of the issues found along the way.  This should be a good resource for other project upgrades.
 

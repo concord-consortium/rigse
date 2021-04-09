@@ -565,9 +565,11 @@ RailsPortal::Application.routes.draw do
 
     root :to => 'home#index'
   end
+
+  # TODO: rails-5-upgrade - RENABLE when delayed_job_web gem is reenabled
   # Web interface to show the delayed jobs for admins
-  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post], :constraints => lambda { |request|
-    warden = request.env['warden']
-    warden.user && warden.user.has_role?("admin")
-  }
+  # match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post], :constraints => lambda { |request|
+  #   warden = request.env['warden']
+  #   warden.user && warden.user.has_role?("admin")
+  # }
 end

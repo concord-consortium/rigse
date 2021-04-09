@@ -1,0 +1,136 @@
+# Rails 5 Upgrade Steps
+
+1. First attempt to update to last 5.0 version of rails (5.0.7.2)
+  1. Attempted upgrade by updating rails version in Gemfile and running `bundle update rails` inside a /bin/bash session in the app Docker container.  Got bundler error: `genigames_connector was resolved to 0.0.5, which depends on rails (~> 4.2)`
+2. Attempted upgrading genigames_connector from 4.2 to 5.0
+  1. Created `rails5-support` branch from `spike-rails4-support`
+  2. Changed `s.add_dependency "rails", "~> 4.2"` to `s.add_dependency "rails", "~> 5"` in gemspec file and updated version in gem to 0.0.6
+  3. Added `- ..:/projects` to volumes section of app in docker-compose.yml (this points to my root Concord projects folder)
+  4. Ran the following in a rigse Docker bash session: `bundle config local.genigames_connector /projects/genigames-connector/`
+  5. Changed rigse Gemfile to `gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', branch: 'rails5-support'`
+  6. Reran `bundle update rails` but got `genigames_connector was resolved to 0.0.6, which depends on rails (~> 5)`
+  7. Decided to punt upgrades of geni* gems until end of upgrade and removed projects volume
+  8. Disabled geni* features
+    1. Commented out gems in Gemfile
+    2. Removed `PORTAL_FEATURES` environment variable in .env
+    3. Restarted Docker container to ensure features are not enabled
+3. Second attempt to update to last 5.0 version of rails (5.0.7.2)
+  1. Changed rails version in Gemfile
+  2. Based on this post (https://medium.com/nulogy/how-to-upgrade-your-legacy-app-from-4-2-to-rails-5-1-4eb681a864ae) deleted Gemfile.lock
+  3. Ran `bundle install`
+  4. Got `Bundler could not find compatible versions for gem "railties": devise (= 3.4.0) was resolved to 3.4.0, which depends on railties (>= 3.2.6, < 5)`
+  5. Changed `gem 'devise', '3.4.0'` to `gem 'devise', '~> 3.5'`
+  6. Reran `bundle install` and got `devise (~> 3.5) was resolved to 3.5.10, which depends on railties (< 5, >= 3.2.6)`
+  7. Changed `gem 'devise', '3.4.0'` to `gem 'devise', '~> 4'` and got more errors
+  8. Based on post in step 2 I started commenting out gems with a `# RE-ENABLE` comment above them
+    1. devise
+    2. tinymce-rails
+    3. rake
+  9. Added Gemfile.lock back
+  10. Ran `bundle update rails`
+  11. Disabled more gems
+    1. prawn_rails
+    2. themes_on_rails
+    3. sextant
+    4. sunspot_rails
+    5. delayed_job
+    6. delayed_job_active_record
+    7. delayed_job_web
+    8. paperclip
+    9. pundit
+    10. exception_notification
+    11. nokogiri
+    12. acts-as-taggable-on
+    13. cucumber-rails
+    14. coffee-rails
+    15. devise-encryptable
+    16. devise-token_authenticatable
+    17. font-awesome-rails
+  11. Ran `bundle update rails` again with success!
+  12. Tested out deleting Gemfile.lock and running `bundle install` - this resulted in a **lot** of major upgrades
+  13. Added Gemfile.lock back and reran `bundle update rails` to only update rails
+  14. Ran `bundle clean`
+  15. Started adding back commented out gems one at a time by uncommenting and running either `bundle install` or `bundle update <gem>` (if versioned and already installed as sub-dependency)
+    1. cucumber-rails
+    2. sextant
+    3. rake
+    4. themes_on_rails
+    5. tinymce-rails
+    6. sunspot_rails
+    7. pundit
+    8. prawn_rails
+    9. paperclip
+    10. nokogiri
+    11. font-awesome-rails
+    12. exception_notification
+    13. acts-as-taggable-on (changed version from `~> 3.4.0` to `~> 4` as 3.4.0 doesn't support Rails 5)
+    14. coffee-rails (changed version from `~> 4.0.0` to `~> 4.1.1` as 4.0.0 doesn't support Rails 5)
+    15. devise (changed version from `3.4.0` to `4.0.0` as 3.4.0 doesn't support Rails 5)
+    16. devise-encryptable
+    17. devise-token_authenticatable
+    18. delayed_job
+    19. delayed_job_active_record
+    20. delayed_job_web
+  16. Diffed master with new Gemfile.lock to find major upgrades and build gemfile upgrade table below
+    1. After initial diff tried to minimize major upgrades of the following
+      1. paperclip 4.2.4 -> 6.1.0 (step 15) -> 4.2.4
+      2. pundit 1.0.1 -> 2.1.0 (step 15) -> 1.0.1
+    2. Not sure why I was able to revert back...
+4. Getting rails to start back up from Docker container
+  1. First run of docker-compose up
+  2. Got startup error: `active_support/dependencies.rb:293:in require: cannot load such file`. This is coming from the delayed_job_web gem with uses sinatra 1 which has this bug: https://github.com/sinatra/sinatra/issues/1055
+    1. Going to pin delayed_job_web in Gemfile from 1.2.5 (current) to 1.44 (latest) to see when sinatra updates
+    2. Pinning delayed_job_web caused haml dependency error, setting haml from '~> 4.0' to '~> 4' which also caused error
+  3. Going to comment out delayed_job_web for now
+  4. Second run of docker-compose up
+    1. Got a bunch of deprecation warnings
+    2. Got startup error: `assert_index: No such middleware to insert before: ActionDispatch::ParamsParser (RuntimeError)`
+    3. Step 2 is due to this line in application.rb: `config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")`
+    4. For now I'm going to comment out the middleware line
+    5. Got startup error: `require: cannot load such file -- bullet/ (LoadError)`
+    6. Going to comment out bullet in gemfile and bullet references in code
+    7. Got startup error: `uninitialized constant DelayedJobWeb (NameError)`
+    8. Going to comment out DelayedJobWeb reference in routes.db
+    9. Got WEBrick running (with a lot of deprecation warnings)
+  5. Address deprecation warnings
+    1. Fixed
+      1. ActiveRecord::Base.raise_in_transactional_callbacks= is deprecated, has no effect and will be removed without replacement.
+      2. [Devise] config.email_regexp will have a new default on Devise 4.1
+    2. Skipped for now (attempting to fix caused errors that need to be investigated)
+      1. alias_method_chain is deprecated. Please, use Module#prepend instead. From module, you can access the original method using super. (called from block in <top (required)> at /rigse/config/initializers/00_rails-3-deprecate-duplicate-routes.rb:23)
+      2. Passing string to define callback is deprecated and will be removed in Rails 5.1 without replacement. (lib/delayed/worker/scaler.rb:13,14,15)
+      3. Passing strings or symbols to the middleware builder is deprecated, please change
+        1. "ActionDispatch::Cookies" => ActionDispatch::Cookies
+        2. "Rack::ConfigSessionCookies" => Rack::ConfigSessionCookies
+        3. "Rack::ResponseLogger" => Rack::ResponseLogger
+      4. Using a dynamic :controller segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
+      5. Using a dynamic :action segment in a route is deprecated and will be removed in Rails 5.2. (called from add_route_with_duplicate_route_deprecation at /rigse/config/initializers/    x. 00_rails-3-deprecate-duplicate-routes.rb:21)
+  6. Got homepage loading!
+  7. Removed `railslts-version` gem after push to GitHub immediately broke Travis
+
+
+## Rails 4 -> 5.0 TODO
+  1. Gemfile: add back geni* gems
+  2. Gemfile: add back delayed_job_web
+  3. application.rb: add back Rack::ExpandB64Gzip middleware
+  4. Gemfile: add back bullet
+  5. development.rb: add back Bullet.xxx references
+  6. routes.rb: add back DelayedJobWeb reference
+
+## Rails 4 -> 5.0 Gemfile Upgrade Table
+
+|gem                         | From      | To      |
+|----------------------------|-----------|---------|
+|acts-as-taggable-on         | 3.4.4     | 4.0.0   |
+|coffee-rails                | 4.0.1     | 4.1.1   |
+|cucumber-rails              | 1.4.5     | 1.7.0   |
+|delayed_job                 | 4.1.1     | 4.1.9   |
+|delayed_job_active_record   | 4.1.0     | 4.1.6   |
+|delayed_job_web             | 1.2.9     | 1.2.5   |
+|devise                      | 3.4.0     | 4.0.0   |
+|devise-encryptable          | 0.1.1     | 0.2.0   |
+|devise-token_authenticatable| 0.3.2     | 0.5.3   |
+|font-awesome-rails          | 4.7.0.1   | 4.7.0.7 |
+|prawn_rails                 | 0.0.8     | 0.0.11  |
+|rails                       | 4.2.11.17 | 5.0.7.2 |
+|sunspot_rails               | 2.2.5     | 2.5.0   |
