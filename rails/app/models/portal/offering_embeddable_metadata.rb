@@ -1,4 +1,4 @@
-class Portal::OfferingEmbeddableMetadata < ActiveRecord::Base
+class Portal::OfferingEmbeddableMetadata < ApplicationRecord
   # t.boolean  "enable_score",         :default => false
   # t.integer  "max_score"
   # t.boolean  "enable_text_feedback", :default => true

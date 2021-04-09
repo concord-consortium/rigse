@@ -54,7 +54,7 @@ class API::V1::AnswersController < API::APIController
   private
 
   def get_teacher_activities_and_students(teacher_ids)
-    query = ActiveRecord::Base.connection.execute "
+    query = ApplicationRecord.connection.execute "
       SELECT
       pt.id AS teacher_id, u1.first_name AS teacher_first_name, u1.last_name AS teacher_last_name, po.runnable_id AS activity_id, ea.name AS activity_name, po.clazz_id, pc.name AS class_name, ps.id AS student_id, u2.first_name AS student_first_name, u2.last_name AS student_last_name
       FROM portal_offerings po, portal_clazzes pc, portal_teacher_clazzes ptc, portal_teachers pt, users u1, portal_student_clazzes psc, portal_students ps, users u2, external_activities ea
@@ -62,7 +62,7 @@ class API::V1::AnswersController < API::APIController
   end
 
   def get_student_answers(teacher_ids)
-    query = ActiveRecord::Base.connection.execute "
+    query = ApplicationRecord.connection.execute "
       SELECT ptc.teacher_id, rl.runnable_id AS activity_id, rl.class_id as clazz_id, rl.student_id, rl.answers
       FROM portal_teacher_clazzes ptc
       LEFT JOIN report_learners rl ON rl.class_id = ptc.clazz_id
@@ -72,7 +72,7 @@ class API::V1::AnswersController < API::APIController
 
   def get_prompts(teacher_ids)
     prompts = {}
-    query = ActiveRecord::Base.connection.execute "
+    query = ApplicationRecord.connection.execute "
       SELECT
         DISTINCT pe.embeddable_id AS id, pe.embeddable_type AS `type`, eor.prompt AS open_response_prompt, emc.prompt AS multiple_choice_prompt
       FROM

@@ -1,4 +1,4 @@
-class Saveable::ExternalLink < ActiveRecord::Base
+class Saveable::ExternalLink < ApplicationRecord
   self.table_name = "saveable_external_links"
 
   belongs_to :learner,     :class_name => 'Portal::Learner'

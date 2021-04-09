@@ -1,4 +1,4 @@
-class Activity < ActiveRecord::Base
+class Activity < ApplicationRecord
   include Cohorts
   include JnlpLaunchable
   include HasEmbeddables

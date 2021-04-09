@@ -1,5 +1,5 @@
 # encoding: UTF-8
-class Investigation < ActiveRecord::Base
+class Investigation < ApplicationRecord
   include Cohorts
   include ResponseTypes
   include Archiveable

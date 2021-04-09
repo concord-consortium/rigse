@@ -1,4 +1,4 @@
-class PageElement < ActiveRecord::Base
+class PageElement < ApplicationRecord
   belongs_to :user
   belongs_to :page
   acts_as_list :scope => :page_id

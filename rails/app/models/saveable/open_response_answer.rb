@@ -1,4 +1,4 @@
-class Saveable::OpenResponseAnswer < ActiveRecord::Base
+class Saveable::OpenResponseAnswer < ApplicationRecord
   self.table_name = "saveable_open_response_answers"
 
   belongs_to :open_response,  :class_name => 'Saveable::OpenResponse', :counter_cache => :response_count

@@ -1,5 +1,5 @@
 class UpdateReportLearnersNumSubmitted < ActiveRecord::Migration
-  class Report::Learner < ActiveRecord::Base
+  class Report::Learner < ApplicationRecord
     self.table_name = "report_learners"
   end
 

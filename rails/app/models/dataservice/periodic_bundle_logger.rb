@@ -1,4 +1,4 @@
-class Dataservice::PeriodicBundleLogger < ActiveRecord::Base
+class Dataservice::PeriodicBundleLogger < ApplicationRecord
   self.table_name = :dataservice_periodic_bundle_loggers
 
   serialize :imports
@@ -74,7 +74,7 @@ OTML
     imps = (self.imports + ['org.concord.otrunk.OTStateRoot', 'org.concord.otrunk.user.OTUserObject', 'org.concord.otrunk.user.OTReferenceMap']).uniq
     imps.map{|i| %!    <import class="#{i}" />! }.join("\n")
   end
-  
+
   def map_otml(parts, attr = "map")
     out = "            <#{attr}>\n"
     parts.each do |p|

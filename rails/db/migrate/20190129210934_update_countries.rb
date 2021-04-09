@@ -1,7 +1,7 @@
 
 class UpdateCountries < ActiveRecord::Migration
 
-  class PortalCountry < ActiveRecord::Base
+  class PortalCountry < ApplicationRecord
     self.table_name = :portal_countries
 
     @country_names_to_update = {

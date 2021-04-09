@@ -1,8 +1,8 @@
 class MigrateSourceType < ActiveRecord::Migration
-  class Tool < ActiveRecord::Base
+  class Tool < ApplicationRecord
   end
 
-  class ExternalActivity < ActiveRecord::Base
+  class ExternalActivity < ApplicationRecord
   end
 
   def up

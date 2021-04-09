@@ -4,7 +4,7 @@ class AddTeacherInfoToReportLearner < ActiveRecord::Migration
   module Portal
   end
 
-  class Report::Learner < ActiveRecord::Base
+  class Report::Learner < ApplicationRecord
     self.table_name = :report_learners
     belongs_to :clazz, :class_name => "AddTeacherInfoToReportLearner::Portal::Clazz", :foreign_key => "class_id"
 
@@ -16,41 +16,41 @@ class AddTeacherInfoToReportLearner < ActiveRecord::Migration
     end
   end
 
-  class Portal::Clazz < ActiveRecord::Base
+  class Portal::Clazz < ApplicationRecord
     self.table_name = :portal_clazzes
     has_many :teacher_clazzes, :class_name => "AddTeacherInfoToReportLearner::Portal::TeacherClazz", :foreign_key => "clazz_id"
     has_many :teachers, :through => :teacher_clazzes, :class_name => "Portal::Teacher"
   end
 
-  class Portal::TeacherClazz < ActiveRecord::Base
+  class Portal::TeacherClazz < ApplicationRecord
     self.table_name = :portal_teacher_clazzes
     belongs_to :clazz, :class_name => "AddTeacherInfoToReportLearner::Portal::Clazz", :foreign_key => "clazz_id"
     belongs_to :teacher, :class_name => "Portal::Teacher", :foreign_key => "teacher_id"
   end
 
   # need to use normal class name here inorder for polymorhpic type to work correctly
-  class ::Portal::Teacher < ActiveRecord::Base
+  class ::Portal::Teacher < ApplicationRecord
     self.table_name = :portal_teachers
     has_many :school_memberships, :as => :member, :class_name => "AddTeacherInfoToReportLearner::Portal::SchoolMembership"
     has_many :schools, -> { uniq }, :through => :school_memberships, :class_name => "AddTeacherInfoToReportLearner::Portal::School"
     belongs_to :user, :class_name => "AddTeacherInfoToReportLearner::User", :foreign_key => "user_id"
   end
 
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
   end
 
-  class Portal::SchoolMembership < ActiveRecord::Base
+  class Portal::SchoolMembership < ApplicationRecord
     self.table_name = :portal_school_memberships
     belongs_to :school, :class_name => "AddTeacherInfoToReportLearner::Portal::School", :foreign_key => "school_id"
     belongs_to :member, :polymorphic => true
   end
 
-  class Portal::School < ActiveRecord::Base
+  class Portal::School < ApplicationRecord
     self.table_name = :portal_schools
     belongs_to :district, :class_name => "AddTeacherInfoToReportLearner::Portal::District", :foreign_key => "district_id"
   end
 
-  class Portal::District < ActiveRecord::Base
+  class Portal::District < ApplicationRecord
     self.table_name = :portal_districts
   end
 

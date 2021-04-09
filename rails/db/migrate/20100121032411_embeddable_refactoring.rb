@@ -87,8 +87,8 @@ class EmbeddableRefactoring < ActiveRecord::Migration
       rename_table table_pair[0], table_pair[1]
     end
     @@all_model_classname_pairs.each do |model_pair|
-      ActiveRecord::Base.connection.update("UPDATE `page_elements` SET `embeddable_type`='#{model_pair[1]}' WHERE `embeddable_type` = '#{model_pair[0]}';")
-      ActiveRecord::Base.connection.update("UPDATE `embeddable_lab_book_snapshots` SET `target_element_type`='#{model_pair[1]}' WHERE `target_element_type` = '#{model_pair[0]}';")
+      ApplicationRecord.connection.update("UPDATE `page_elements` SET `embeddable_type`='#{model_pair[1]}' WHERE `embeddable_type` = '#{model_pair[0]}';")
+      ApplicationRecord.connection.update("UPDATE `embeddable_lab_book_snapshots` SET `target_element_type`='#{model_pair[1]}' WHERE `target_element_type` = '#{model_pair[0]}';")
     end
   end
 
@@ -97,8 +97,8 @@ class EmbeddableRefactoring < ActiveRecord::Migration
       rename_table table_pair[1], table_pair[0]
     end
     @@all_model_classname_pairs.each do |model_pair|
-      ActiveRecord::Base.connection.update("UPDATE `page_elements` SET `embeddable_type`='#{model_pair[0]}' WHERE `embeddable_type` = '#{model_pair[1]}';")
-      ActiveRecord::Base.connection.update("UPDATE `lab_book_snapshots` SET `target_element_type`='#{model_pair[0]}' WHERE `target_element_type` = '#{model_pair[1]}';")
+      ApplicationRecord.connection.update("UPDATE `page_elements` SET `embeddable_type`='#{model_pair[0]}' WHERE `embeddable_type` = '#{model_pair[1]}';")
+      ApplicationRecord.connection.update("UPDATE `lab_book_snapshots` SET `target_element_type`='#{model_pair[0]}' WHERE `target_element_type` = '#{model_pair[1]}';")
     end
   end
 end

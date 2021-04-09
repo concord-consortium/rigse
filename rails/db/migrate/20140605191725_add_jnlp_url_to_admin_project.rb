@@ -1,21 +1,21 @@
 module Shim
   module Admin
-    class Project < ActiveRecord::Base
+    class Project < ApplicationRecord
       self.table_name = "admin_projects"
     end
   end
 
   module MavenJnlp
-    class VersionedJnlpUrl < ActiveRecord::Base
+    class VersionedJnlpUrl < ApplicationRecord
       self.table_name = "maven_jnlp_versioned_jnlp_urls"
     end
 
-    class MavenJnlpFamily < ActiveRecord::Base
+    class MavenJnlpFamily < ApplicationRecord
       self.table_name = "maven_jnlp_maven_jnlp_families"
       has_many :versioned_jnlp_urls, :class_name => "Shim::MavenJnlp::VersionedJnlpUrl"
     end
 
-    class MavenJnlpServer < ActiveRecord::Base
+    class MavenJnlpServer < ApplicationRecord
       self.table_name = "maven_jnlp_maven_jnlp_servers"
       has_many :maven_jnlp_families, :class_name => "Shim::MavenJnlp::MavenJnlpFamily"
     end

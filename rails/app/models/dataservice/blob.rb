@@ -1,4 +1,4 @@
-class Dataservice::Blob < ActiveRecord::Base
+class Dataservice::Blob < ApplicationRecord
   self.table_name = :dataservice_blobs
 
   belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"

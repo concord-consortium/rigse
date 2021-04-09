@@ -1,4 +1,4 @@
-class Saveable::ExternalLinkUrl < ActiveRecord::Base
+class Saveable::ExternalLinkUrl < ApplicationRecord
   self.table_name = "saveable_external_link_urls"
 
   belongs_to :external_link,  :class_name => 'Saveable::ExternalLink', :counter_cache => :response_count

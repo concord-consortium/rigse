@@ -29,7 +29,7 @@ module ApplicationHelper
     prefix = ''
     optional_prefixes.each { |p| prefix << "#{p.to_s}_" }
     class_name = component.class.name.underscore.clipboardify
-    if component.is_a?(ActiveRecord::Base)
+    if component.is_a?(ApplicationRecord)
       id = component.id || Time.now.to_i
     else
       # this will be a temporary id, so it seems unlikely that these type of ids

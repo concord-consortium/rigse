@@ -1,4 +1,4 @@
-class Role < ActiveRecord::Base
+class Role < ApplicationRecord
 
   has_and_belongs_to_many :users, -> { uniq }, :join_table => "roles_users"
   acts_as_list

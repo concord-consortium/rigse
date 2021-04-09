@@ -134,8 +134,9 @@
       2. Updated code in
         1. image.rb#check_image_presence to `throw(:abort)` instead of returning false
         2. portal/offering.rb from `before_destroy :can_be_deleted?` to `before_destroy :throw_abort_if_cant_be_deleted` where `throw_abort_if_cant_be_deleted` is a new method
-
-
+    4. Rails Active Record Models Now Inherit from ApplicationRecord by Default (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#active-record-models-now-inherit-from-applicationrecord-by-default)
+      1. Added application_record.rb model file
+      2. Did a selective global search and replace for ActiveRecord::Base and replaced with ApplicationRecord (I left in old comments to ActiveRecord::Base but no code)
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems

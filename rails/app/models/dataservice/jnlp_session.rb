@@ -1,4 +1,4 @@
-class Dataservice::JnlpSession < ActiveRecord::Base
+class Dataservice::JnlpSession < ApplicationRecord
 
   belongs_to :user
 

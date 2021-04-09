@@ -8,11 +8,11 @@ class Import::ImportUsers < Struct.new(:import_id)
     start_index = 0
     end_index = batch_size - 1
     import.update_attribute(:total_imports, total_users_count)
-    
+
     0.upto(total_batches-1){|batch_index|
       start_index = batch_index * batch_size
       end_index = (batch_index == total_batches - 1)? (total_users_count - 1) : (start_index + batch_size - 1)
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.transaction do
         start_index.upto(end_index){|index|
           user = content_hash[:users][index]
           new_user = User.find_by_email(user[:email]) || User.find_by_login(user[:login])
@@ -46,7 +46,7 @@ class Import::ImportUsers < Struct.new(:import_id)
                   end
                 end
               end
-              portal_teacher = Portal::Teacher.new 
+              portal_teacher = Portal::Teacher.new
               portal_teacher.user = new_user
               portal_teacher.schools << school if school
               Admin::Tag.add_new_admin_tags(portal_teacher, "cohort", user[:cohorts]) if user[:cohorts]
@@ -55,9 +55,9 @@ class Import::ImportUsers < Struct.new(:import_id)
           else
             duplicate_by = new_user.login == user[:login] ? Import::DuplicateUser::DUPLICATE_BY_LOGIN : new_user.email == user[:email] ? Import::DuplicateUser::DUPLICATE_BY_EMAIL : Import::DuplicateUser::DUPLICATE_BY_LOGIN_AND_EMAIL
             Import::DuplicateUser.create({
-              :login => user[:login], 
-              :email => user[:email], 
-              :duplicate_by => duplicate_by, 
+              :login => user[:login],
+              :email => user[:email],
+              :duplicate_by => duplicate_by,
               :data => user.to_json,
               :import_id => import.id
             })

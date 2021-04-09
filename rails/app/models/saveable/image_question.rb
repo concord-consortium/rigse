@@ -1,4 +1,4 @@
-class Saveable::ImageQuestion < ActiveRecord::Base
+class Saveable::ImageQuestion < ApplicationRecord
   self.table_name = "saveable_image_questions"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'

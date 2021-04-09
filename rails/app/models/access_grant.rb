@@ -1,4 +1,4 @@
-class AccessGrant < ActiveRecord::Base
+class AccessGrant < ApplicationRecord
   belongs_to :user
   belongs_to :client
   belongs_to :learner, :class_name => "Portal::Learner"

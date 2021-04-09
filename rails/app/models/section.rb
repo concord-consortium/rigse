@@ -1,4 +1,4 @@
-class Section < ActiveRecord::Base
+class Section < ApplicationRecord
   include JnlpLaunchable
 
   belongs_to :activity

@@ -1,6 +1,6 @@
 require 'digest/md5'  # for the otml md5 this is only for tracking down errors
 
-class Dataservice::BundleContent < ActiveRecord::Base
+class Dataservice::BundleContent < ApplicationRecord
   require 'otrunk/object_extractor'
   self.table_name = :dataservice_bundle_contents
 

@@ -1,4 +1,4 @@
-class ExternalReport < ActiveRecord::Base
+class ExternalReport < ApplicationRecord
 
   OfferingReport = 'offering'
   ClassReport = 'class'

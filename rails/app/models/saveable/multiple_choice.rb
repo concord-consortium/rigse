@@ -1,4 +1,4 @@
-class Saveable::MultipleChoice < ActiveRecord::Base
+class Saveable::MultipleChoice < ApplicationRecord
   self.table_name = "saveable_multiple_choices"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
@@ -25,7 +25,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
   #
   def answered?
 
-    if answers.length == 0 
+    if answers.length == 0
         return false
     end
 

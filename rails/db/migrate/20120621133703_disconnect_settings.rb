@@ -1,7 +1,7 @@
 class DisconnectSettings < ActiveRecord::Migration
-  
+
   # local model so this migration will always work
-  class AdminProject < ActiveRecord::Base
+  class AdminProject < ApplicationRecord
   end
 
   def self.up
@@ -20,7 +20,7 @@ class DisconnectSettings < ActiveRecord::Migration
 
     # set the first project record to be active
     AdminProject.reset_column_information
-    first_project = AdminProject.first 
+    first_project = AdminProject.first
     if first_project
       first_project.active = TRUE
       first_project.save

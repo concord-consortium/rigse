@@ -1,6 +1,6 @@
 require 'nokogiri'
 
-class Dataservice::PeriodicBundleContent < ActiveRecord::Base
+class Dataservice::PeriodicBundleContent < ApplicationRecord
   self.table_name = :dataservice_periodic_bundle_contents
 
   belongs_to :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger"

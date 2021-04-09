@@ -1,4 +1,4 @@
-class LearnerProcessingEvent < ActiveRecord::Base
+class LearnerProcessingEvent < ApplicationRecord
 
   belongs_to :learner, class_name: Portal::Learner
 

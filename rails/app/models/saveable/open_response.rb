@@ -1,4 +1,4 @@
-class Saveable::OpenResponse < ActiveRecord::Base
+class Saveable::OpenResponse < ApplicationRecord
   self.table_name = "saveable_open_responses"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'

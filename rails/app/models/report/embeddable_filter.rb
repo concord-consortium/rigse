@@ -1,4 +1,4 @@
-class Report::EmbeddableFilter < ActiveRecord::Base
+class Report::EmbeddableFilter < ApplicationRecord
   self.table_name = "report_embeddable_filters"
 
   belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id"

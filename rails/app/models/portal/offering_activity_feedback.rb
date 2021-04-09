@@ -1,4 +1,4 @@
-class Portal::OfferingActivityFeedback < ActiveRecord::Base
+class Portal::OfferingActivityFeedback < ApplicationRecord
   SCORE_AUTO   = "auto"
   SCORE_NONE   = "none"
   SCORE_MANUAL = "manual"
