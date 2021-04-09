@@ -150,6 +150,7 @@
     6. Get tests starting
       1. Will be running `bundle exec rake db:migrate; bundle exec rake db:test:prepare; bundle exec rake db:feature_test:prepare` until it migrates
         1. Fixed `unknown keyword: class_name` error in delegate
+        2. Added `reset_password_sent_at` to user table after getting error and reading devise docs and running `bundle exec rails generate devise user --force` and comparing generated user model with existing user model
       1. Will be running `bundle exec rspec` until it starts
 
 ## Rails 4 -> 5.0 TODO
