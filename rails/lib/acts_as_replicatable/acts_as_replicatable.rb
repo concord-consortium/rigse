@@ -30,6 +30,7 @@ module Foo #:nodoc:
     module Replicatable
 
       def self.included(base) # :nodoc:
+        puts "\n\n\n*** Calling base.extend ***\n\n\n"
         base.extend ClassMethods
       end
 
@@ -58,4 +59,4 @@ module Foo #:nodoc:
   end
 end
 
-ActiveRecord::Base.send :include, Foo::Acts::Replicatable
+ApplicationRecord.send :include, Foo::Acts::Replicatable
