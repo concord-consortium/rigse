@@ -59,4 +59,4 @@ module Foo #:nodoc:
   end
 end
 
-ApplicationRecord.send :include, Foo::Acts::Replicatable
+# ApplicationRecord.send :include, Foo::Acts::Replicatable

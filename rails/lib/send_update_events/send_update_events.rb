@@ -44,4 +44,4 @@ module SendUpdateEvents
 
 end
 
-ApplicationRecord.send :include, SendUpdateEvents
+# ApplicationRecord.send :include, SendUpdateEvents
