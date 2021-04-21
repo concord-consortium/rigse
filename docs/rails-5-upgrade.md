@@ -137,6 +137,8 @@
     4. Rails Active Record Models Now Inherit from ApplicationRecord by Default (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#active-record-models-now-inherit-from-applicationrecord-by-default)
       1. Added application_record.rb model file
       2. Did a selective global search and replace for ActiveRecord::Base and replaced with ApplicationRecord (I left in old comments to ActiveRecord::Base but no code)
+    5. New Framework Defaults (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-framework-defaults)
+      1. Added section to each environment config with note and default values
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
