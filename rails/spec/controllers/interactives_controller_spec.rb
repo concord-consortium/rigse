@@ -190,7 +190,7 @@ describe InteractivesController do
       import_hash = JSON.parse(content)
       model_library_count = import_hash["models"].length
       existing_interactives_count = Interactive.count
-      xhr :post, :import_model_library, params1
+      post :import_model_library, params: params1
       new_interactives_count = Interactive.count
       expect(new_interactives_count - existing_interactives_count).to eq(model_library_count)
     end

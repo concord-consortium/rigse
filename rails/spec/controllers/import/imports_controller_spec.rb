@@ -7,7 +7,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   before(:each) do
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
-    
+
     login_admin
 
   end
@@ -16,7 +16,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   describe '#import_school_district_json' do
     it 'GET import_school_district_json' do
       login_anonymous
-      
+
       get :import_school_district_json, {}, {}
 
       expect(response).to have_http_status(:redirect)
@@ -83,7 +83,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_activity_progress' do
     it 'GET import_activity_progress' do
-      xhr :get, :import_activity_progress
+      get :import_activity_progress, xhr: true
     end
   end
 
@@ -91,7 +91,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   describe '#activity_clear_job' do
     it 'GET activity_clear_job' do
       Import::Import.create!(user_id: @admin_user.id, import_type: Import::Import::IMPORT_TYPE_ACTIVITY)
-      xhr :get, :activity_clear_job
+      get :activity_clear_job, xhr: true
 
       expect(response).to have_http_status(:ok)
     end

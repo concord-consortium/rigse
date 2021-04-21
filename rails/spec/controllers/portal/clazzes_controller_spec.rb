@@ -462,7 +462,7 @@ describe Portal::ClazzesController do
     it "should store position of all the offerings after teacher sorts offerings" do
 
       # Save initial offering positions
-      xhr :post, :sort_offerings, @params
+      post :sort_offerings, params: @params, xhr: true
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
         expect(offering.position ).to eq(@params[:clazz_offerings].index(offering.id) + 1)
@@ -470,7 +470,7 @@ describe Portal::ClazzesController do
 
       # Update offering positions and verify they have been updated
       @params[:clazz_offerings] = [@mathematics_offering.id, @biology_offering.id, @chemistry_offering.id, @physics_offering.id]
-      xhr :post, :sort_offerings, @params
+      post :sort_offerings, params: @params, xhr: true
       offerings = Portal::Offering.where(:id => @params[:clazz_offerings])
       offerings.each do |offering|
         expect(offering.position ).to eq(@params[:clazz_offerings].index(offering.id) + 1)

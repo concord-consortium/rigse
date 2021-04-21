@@ -90,27 +90,27 @@ describe Portal::OfferingsController do
     end
     it "should render nothing and return for users other than teacher" do
       login_admin
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       expect(response.body).to be_blank
 
       sign_in @manager_user
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       expect(response.body).to be_blank
 
       sign_in @researcher_user
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       expect(response.body).to be_blank
 
       sign_in @author_user
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       expect(response.body).to be_blank
 
       sign_in @guest_user
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       expect(response.body).to be_blank
 
       sign_in @student_user
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       expect(response.body).to be_blank
     end
     it "should maintain the offering collapse expand status when user is a teacher" do
@@ -120,14 +120,14 @@ describe Portal::OfferingsController do
       expect(portal_teacher_full_status).to be_nil
 
       # after first expand
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       portal_teacher_full_status = Portal::TeacherFullStatus.find_by_offering_id_and_teacher_id(@params[:id], @authorized_teacher.id)
       expect(portal_teacher_full_status).not_to be_nil
       expect(portal_teacher_full_status.offering_collapsed).to eq(false)
       expect(response.body).to be_blank
 
       #when teacher has collapsed and expanded many times before
-      xhr :post, :offering_collapsed_status, @params
+      post :offering_collapsed_status, params: @params, xhr: true
       portal_teacher_full_status.reload
       expect(portal_teacher_full_status).not_to be_nil
       expect(portal_teacher_full_status.offering_collapsed).to eq(true)
