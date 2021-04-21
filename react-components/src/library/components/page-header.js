@@ -137,8 +137,8 @@ const PageHeader = Component({
           <li key={nextKey('AssessmentTasks')} className={'portal-pages-main-nav-item has-drop-down' + ' portal-pages-main-nav-collections' + (this.props.isCollections ? ' current-menu-item' : '')}>
             <a href='/about' className='portal-pages-main-nav-item__link'>Assessment Tasks</a>
             <ul className='portal-pages-main-nav-dropdown'>
-              <li className='portal-pages-main-nav-dropdown__item'><a className='portal-pages-main-nav-dropdown__item-link' href='/elementary-school'>Elementary School Tasks</a></li>
-              <li className='portal-pages-main-nav-dropdown__item'><a className='portal-pages-main-nav-dropdown__item-link' href='/middle-school'>Middle School Tasks</a></li>
+              <li className='portal-pages-main-nav-dropdown__item'><a className='portal-pages-main-nav-dropdown__item-link' href='/elementary-school'>Elementary Grades (3-5) Tasks</a></li>
+              <li className='portal-pages-main-nav-dropdown__item'><a className='portal-pages-main-nav-dropdown__item-link' href='/middle-school'>Middle Grades (6-8) Tasks</a></li>
             </ul>
           </li>
         )
