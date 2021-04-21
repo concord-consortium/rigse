@@ -11,7 +11,7 @@ class Saveable::OpenResponse < ApplicationRecord
     :class_name => "Saveable::OpenResponseAnswer"
 
 
-  [:prompt, :name].each { |m| delegate m, :to => :open_response, :class_name => 'Embeddable::OpenResponse' }
+  [:prompt, :name].each { |m| delegate m, :to => :open_response }
 
   include Saveable::Saveable
 

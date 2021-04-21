@@ -1,9 +1,6 @@
 require 'digest/sha1'
 
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable and :omniauthable
   has_many :authentications, :dependent => :delete_all
   has_many :access_grants, :dependent => :delete_all
 

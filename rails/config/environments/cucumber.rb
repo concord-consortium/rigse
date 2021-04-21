@@ -9,6 +9,9 @@ RailsPortal::Application.configure do
 
   config.eager_load = true  # normally false unless you use a tool that preloads your test environment
 
+  # this will fall back to autoloading to files outside the app folder
+  config.enable_dependency_loading = true
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 

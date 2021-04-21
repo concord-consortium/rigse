@@ -139,6 +139,27 @@
       2. Did a selective global search and replace for ActiveRecord::Base and replaced with ApplicationRecord (I left in old comments to ActiveRecord::Base but no code)
     5. New Framework Defaults (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#new-framework-defaults)
       1. Added section to each environment config with note and default values
+      1. Active Record belongs_to Required by Default Option - leave at default of false
+      2. Per-form CSRF Tokens - TBD!
+      3. Forgery Protection with Origin Check - TBD!
+      4. Allow Configuration of Action Mailer Queue Name - not needed, default is fine
+      5. Support Fragment Caching in Action Mailer Views - TBD!
+      6. Configure the Output of db:structure:dump - n/a only applies to PostgeSQL
+      7. Configure SSL Options to Enable HSTS with Subdomains - TBD!
+      8. Preserve Timezone of the Receiver - n/a only applies to Ruby 2.4, we use 2.2 currently
+    6. Get tests starting
+      1. Will be running `bundle exec rake db:migrate; bundle exec rake db:test:prepare; bundle exec rake db:feature_test:prepare` until it migrates
+        1. Fixed `unknown keyword: class_name` error in delegate
+        2. Added `reset_password_sent_at` to user table after getting error and reading devise docs and running `bundle exec rails generate devise user --force` and comparing generated user model with existing user model
+      2. First ran `bundle exec rspec` and got repeated `can't modify frozen Array` but then researched and found out it was a red herring
+      3. Based on comment on Stack Overflow looked for smallest spec test that had at least 1 test and found `user_mailer_spec.rb`
+      4. Will be running `bundle exec rspec spec/models/user_mailer_spec.rb` until it starts
+        1. Got `ArgumentError: Before process_action callback :authenticate_user! has not been defined` error in auth_controller.rb.  Fixed by adding `, :raise => false`
+      5. Will be running `bundle exec rspec`
+        1. Got many `NameError: uninitialized constant XXX` where `XXX` is the describe class name in the spec test.
+        2. Fixed this by adding `config.enable_dependency_loading = true` to add environments where `config.eager_load` is true
+
+
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
