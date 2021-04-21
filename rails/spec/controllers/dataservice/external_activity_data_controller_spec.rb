@@ -7,7 +7,7 @@ RSpec.describe Dataservice::ExternalActivityDataController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:not_found)
     end
@@ -16,7 +16,7 @@ RSpec.describe Dataservice::ExternalActivityDataController, type: :controller do
   # TODO: auto-generated
   describe '#create_by_protocol_version' do
     it 'GET create_by_protocol_version' do
-      get :create_by_protocol_version, {}, {}
+      get :create_by_protocol_version
 
       expect(response).to have_http_status(:not_found)
     end

@@ -7,7 +7,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#index' do
     it 'GET index' do
-      get :index, {}, {}
+      get :index
 
       expect(response).to have_http_status(:redirect)
     end
@@ -16,7 +16,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#new' do
     it 'GET new' do
-      get :new, {}, {}
+      get :new
 
       expect(response).to have_http_status(:ok)
     end
@@ -25,7 +25,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: FactoryBot.create(:portal_subject).to_param
+      get :show, params: { id: FactoryBot.create(:portal_subject).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -34,7 +34,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, id: FactoryBot.create(:portal_subject).to_param
+      get :edit, params: { id: FactoryBot.create(:portal_subject).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -43,7 +43,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:redirect)
     end
@@ -52,7 +52,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:not_found)
     end
@@ -61,7 +61,7 @@ RSpec.describe Portal::SubjectsController, type: :controller do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryBot.create(:portal_subject).to_param
+      delete :destroy, params: { id: FactoryBot.create(:portal_subject).to_param }
 
       expect(response).to have_http_status(:redirect)
     end

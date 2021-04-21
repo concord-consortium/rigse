@@ -25,7 +25,7 @@ describe Admin::TagsController do
   describe "GET show" do
     it "assigns the requested tags as @tags" do
       allow(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-      get :show, :id => "37"
+      get :show, params: { :id => "37" }
       expect(assigns[:admin_tag]).to equal(mock_tags)
     end
   end
@@ -41,7 +41,7 @@ describe Admin::TagsController do
   describe "GET edit" do
     it "assigns the requested tags as @tags" do
       allow(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-      get :edit, :id => "37"
+      get :edit, params: { :id => "37" }
       expect(assigns[:admin_tag]).to equal(mock_tags)
     end
   end
@@ -51,13 +51,13 @@ describe Admin::TagsController do
     describe "with valid params" do
       it "assigns a newly created tags as @tags" do
         allow(Admin::Tag).to receive(:new).with(tag_params).and_return(mock_tags(:save => true))
-        post :create, :admin_tag => tag_params
+        post :create, params: { :admin_tag => tag_params }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
       it "redirects to the created tags" do
         allow(Admin::Tag).to receive(:new).and_return(mock_tags(:save => true))
-        post :create, :admin_tag => {}
+        post :create, params: { :admin_tag => {} }
         expect(response).to redirect_to(admin_tag_url(mock_tags))
       end
     end
@@ -65,13 +65,13 @@ describe Admin::TagsController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved tags as @tags" do
         allow(Admin::Tag).to receive(:new).with(tag_params).and_return(mock_tags(:save => false))
-        post :create, :admin_tag => tag_params
+        post :create, params: { :admin_tag => tag_params }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
       it "re-renders the 'new' template" do
         allow(Admin::Tag).to receive(:new).and_return(mock_tags(:save => false))
-        post :create, :admin_tag => {}
+        post :create, params: { :admin_tag => {} }
         expect(response).to render_template('new')
       end
     end
@@ -84,18 +84,18 @@ describe Admin::TagsController do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
         expect(mock_tags).to receive(:update_attributes).with(tag_params)
-        put :update, :id => "37", :admin_tag => tag_params
+        put :update, params: { :id => "37", :admin_tag => tag_params }
       end
 
       it "assigns the requested tags as @tags" do
         allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => true))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
       it "redirects to the tags" do
         allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => true))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(response).to redirect_to(admin_tag_url(mock_tags))
       end
     end
@@ -104,18 +104,18 @@ describe Admin::TagsController do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
         expect(mock_tags).to receive(:update_attributes).with(tag_params)
-        put :update, :id => "37", :admin_tag => tag_params
+        put :update, params: { :id => "37", :admin_tag => tag_params }
       end
 
       it "assigns the tags as @tags" do
         allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => false))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
       it "re-renders the 'edit' template" do
         allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => false))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(response).to render_template('edit')
       end
     end
@@ -127,13 +127,13 @@ describe Admin::TagsController do
       expect(Admin::Tag).to receive(:find).with("37")
         .and_return(mock_tags(name:'tag'))
       expect(mock_tags).to receive(:destroy)
-      delete :destroy, :id => "37"
+      delete :destroy, params: { :id => "37" }
     end
 
     it "redirects to the admin_tags list" do
       allow(Admin::Tag).to receive(:find)
         .and_return(mock_tags(destroy: true, name:'tag'))
-      delete :destroy, :id => "1"
+      delete :destroy, params: { :id => "1" }
       expect(response).to redirect_to(admin_tags_url)
     end
   end

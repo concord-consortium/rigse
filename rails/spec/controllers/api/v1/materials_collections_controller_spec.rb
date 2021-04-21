@@ -12,7 +12,7 @@ describe API::V1::MaterialsCollectionsController do
     describe "each api endpoint" do
       [:sort_materials, :remove_material].each do |method|
         it("should fail") do
-          post method, {}
+          post method
           expect(response.status).to eql(403)
           expect(response.body).to eql('{"success":false,"message":"Not authorized"}')
         end
@@ -29,12 +29,12 @@ describe API::V1::MaterialsCollectionsController do
 
     describe "sort_materials" do
       it "should fail without an id" do
-        post :sort_materials, {}
+        post :sort_materials
         expect(response.status).to eql(404)
       end
 
       it "should fail without item ids" do
-        post :sort_materials, {id: collection.id}
+        post :sort_materials, params: { id: collection.id }
         expect(response.status).to eql(400)
         expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing item_ids parameter"}')
       end
@@ -42,7 +42,7 @@ describe API::V1::MaterialsCollectionsController do
       it "should succeed" do
         # generate randomly sorted ids
         randomized_item_ids = collection.materials_collection_items.map{|mci| mci.id}.shuffle
-        post :sort_materials, {id: collection.id, item_ids: randomized_item_ids}
+        post :sort_materials, params: { id: collection.id, item_ids: randomized_item_ids }
         expect(response.status).to eql(200)
         expect(response.body).to eql('{"success":true}')
 
@@ -55,18 +55,18 @@ describe API::V1::MaterialsCollectionsController do
 
     describe "remove_material" do
       it "should fail without an id" do
-        post :remove_material, {}
+        post :remove_material
         expect(response.status).to eql(404)
       end
 
       it "should fail without an item id" do
-        post :remove_material, {id: collection.id}
+        post :remove_material, params: { id: collection.id }
         expect(response.status).to eql(400)
         expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing item_id parameter"}')
       end
 
       it "should fail with an invalid item id" do
-        post :remove_material, {id: collection.id, item_id: 0}
+        post :remove_material, params: { id: collection.id, item_id: 0 }
         expect(response.status).to eql(400)
         expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid item id: 0"}')
       end
@@ -75,7 +75,7 @@ describe API::V1::MaterialsCollectionsController do
         item = collection.materials_collection_items[0]
         length_before_delete = collection.materials_collection_items.length
 
-        post :remove_material, {id: collection.id, item_id: item.id}
+        post :remove_material, params: { id: collection.id, item_id: item.id }
         expect(response.status).to eql(200)
         expect(response.body).to eql('{"success":true}')
 

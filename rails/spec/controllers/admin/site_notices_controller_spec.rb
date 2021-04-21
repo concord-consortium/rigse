@@ -63,7 +63,7 @@ describe Admin::SiteNoticesController do
       }
     end
     it"should show edit notice form" do
-      get :edit, @params
+      get :edit, params: @params
       expect(response).to render_template("edit")
     end
   end
@@ -78,13 +78,13 @@ describe Admin::SiteNoticesController do
     end
     it("should not create a notice if notice text is blank") do
       @post_params[:notice_html] = ""
-      post :update, @post_params
+      post :update, params: @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).to be_nil
       expect(flash['error']).to match(/Notice text is blank/i)
 
       @post_params[:notice_html] = "       "
-      post :update, @post_params
+      post :update, params: @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).to be_nil
       expect(flash['error']).to match(/Notice text is blank/i)

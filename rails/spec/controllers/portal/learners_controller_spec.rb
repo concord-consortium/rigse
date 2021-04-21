@@ -34,15 +34,15 @@ describe Portal::LearnersController do
         end
 
         it "should redirect to the external reporting service as configured by the environment" do
-          get :report, post_params
+          get :report, params: post_params
           expect(response.location).to match(/#{report_url}/)
         end
         it "should include an authentication token parameter" do
-          get :report, post_params
+          get :report, params: post_params
           expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
         end
         it "should include the studentId parameter" do
-          get :report, post_params
+          get :report, params: post_params
           match_data = /studentId=(\d+)/.match response.location
           expect(match_data).not_to be_nil
           expect(match_data[1]).to eql(learner.student.user.id.to_s)
@@ -55,7 +55,7 @@ describe Portal::LearnersController do
         end
 
         it "should include the student_ids parameter" do
-          get :report, post_params
+          get :report, params: post_params
           expect(response.location).to match(/student_ids/)
         end
       end
@@ -64,7 +64,7 @@ describe Portal::LearnersController do
     describe "when the current user is a teacher without access to this offering" do
       let(:user) { teacher_b.user }
       it "should redirect the user to /recent_activity" do
-        get :report, post_params
+        get :report, params: post_params
         expect(response).to redirect_to :recent_activity
       end
     end
@@ -74,7 +74,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#current_clazz' do
     it 'GET current_clazz' do
-      get :current_clazz, {}, {}
+      get :current_clazz
 
       expect(response).to have_http_status(:redirect)
     end
@@ -83,7 +83,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#handle_jnlp_session' do
     it 'GET handle_jnlp_session' do
-      get :handle_jnlp_session, {}, {}
+      get :handle_jnlp_session
 
       expect(response).to have_http_status(:redirect)
     end
@@ -92,7 +92,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#authorize_show' do
     it 'GET authorize_show' do
-      get :authorize_show, {}, {}
+      get :authorize_show
 
       expect(response).to have_http_status(:redirect)
     end
@@ -101,7 +101,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#bundle_report' do
     it 'GET bundle_report' do
-      get :bundle_report, {}, {}
+      get :bundle_report
 
       expect(response).to have_http_status(:redirect)
     end
@@ -110,7 +110,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show
 
       expect(response).to have_http_status(:not_found)
     end
@@ -119,7 +119,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {}, {}
+      get :edit
 
       expect(response).to have_http_status(:redirect)
     end
@@ -128,7 +128,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:redirect)
     end
@@ -137,7 +137,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:redirect)
     end
@@ -146,7 +146,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy
 
       expect(response).to have_http_status(:redirect)
     end

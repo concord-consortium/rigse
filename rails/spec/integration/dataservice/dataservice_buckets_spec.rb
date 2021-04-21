@@ -35,32 +35,32 @@ describe "Dataservice Buckets" do
 
   it 'should accept posted bundle contents by logger id' do
     log = Dataservice::BucketLogger.where(learner_id: @learner.id).first_or_create
-    post "/dataservice/bucket_loggers/#{log.id}/bucket_contents.bundle", "This is some content"
+    post "/dataservice/bucket_loggers/#{log.id}/bucket_contents.bundle", params: "This is some content"
 
     @learner.reload
     expect(@learner.bucket_logger.most_recent_content).to eq("This is some content")
   end
 
   it 'should accept posted bundle contents by learner id' do
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is some content"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", params: "This is some content"
 
     @learner.reload
     expect(@learner.bucket_logger.most_recent_content).to eq("This is some content")
   end
 
   it 'should accept multiple posted bundle contents by logger id' do
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is some content"
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is some content 2"
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is some content 3"
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", "This is totally different content"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", params: "This is some content"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", params: "This is some content 2"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", params: "This is some content 3"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_contents.bundle", params: "This is totally different content"
 
     @learner.reload
     expect(@learner.bucket_logger.most_recent_content).to eq("This is totally different content")
   end
 
   it 'should accept multiple posted items by logger id and return them all' do
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", "This is some content"
-    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", "This is some content 2"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", params: "This is some content"
+    post "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle", params: "This is some content 2"
 
     get "/dataservice/bucket_loggers/learner/#{@learner.id}/bucket_log_items.bundle"
     expect(response.body).to eq("[This is some content,This is some content 2]")
@@ -92,25 +92,25 @@ describe "Dataservice Buckets" do
     end
 
     it 'should accept posted bundle contents by arbitrary names' do
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", params: "This is some content"
       get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
 
       expect(response.body).to eq("This is some content")
     end
 
     it 'should accept multiple posted bundle contents by arbitrary names' do
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content"
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content 2"
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is some content 3"
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", "This is totally different content"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", params: "This is some content"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", params: "This is some content 2"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", params: "This is some content 3"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle", params: "This is totally different content"
       get "/dataservice/bucket_loggers/name/myBucket/bucket_contents.bundle"
 
       expect(response.body).to eq("This is totally different content")
     end
 
     it 'should accept multiple posted items by name and return them all' do
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", "This is some content"
-      post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", "This is some content 2"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", params: "This is some content"
+      post "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle", params: "This is some content 2"
 
       get "/dataservice/bucket_loggers/name/myBucket/bucket_log_items.bundle"
       expect(response.body).to eq("[This is some content,This is some content 2]")

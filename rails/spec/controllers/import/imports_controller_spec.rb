@@ -17,7 +17,7 @@ RSpec.describe Import::ImportsController, type: :controller do
     it 'GET import_school_district_json' do
       login_anonymous
 
-      get :import_school_district_json, {}, {}
+      get :import_school_district_json
 
       expect(response).to have_http_status(:redirect)
     end
@@ -26,7 +26,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_user_json' do
     it 'GET import_user_json' do
-      get :import_user_json, {}, {}
+      get :import_user_json
 
       expect(response).to have_http_status(:redirect)
     end
@@ -35,7 +35,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_school_district_status' do
     it 'GET import_school_district_status' do
-      get :import_school_district_status, {}, {}
+      get :import_school_district_status
 
       expect(response).to have_http_status(:ok)
     end
@@ -44,7 +44,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_user_status' do
     it 'GET import_user_status' do
-      get :import_user_status, {}, {}
+      get :import_user_status
 
       expect(response).to have_http_status(:ok)
     end
@@ -56,7 +56,7 @@ RSpec.describe Import::ImportsController, type: :controller do
       request.headers["HTTP_REFERER"] = "https://foo.bar.com/some/path.html"
       Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_USER, import_data: {}).save!
 
-      get :download, {}, {}
+      get :download
 
       expect(response).to have_http_status(:redirect)
     end
@@ -65,7 +65,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_activity_status' do
     it 'GET import_activity_status' do
-      get :import_activity_status, {}, {}
+      get :import_activity_status
 
       expect(response).to have_http_status(:ok)
     end
@@ -74,7 +74,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#import_activity' do
     it 'GET import_activity' do
-      get :import_activity, {}, {}
+      get :import_activity
 
       expect(response).to have_http_status(:ok)
     end
@@ -100,7 +100,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   # TODO: auto-generated
   describe '#batch_import_status' do
     it 'GET batch_import_status' do
-      get :batch_import_status, {}, {}
+      get :batch_import_status
 
       expect(response).to have_http_status(:ok)
     end
@@ -111,14 +111,14 @@ RSpec.describe Import::ImportsController, type: :controller do
     it 'GET batch_import_data' do
       Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY, import_data: {}).save!
 
-      expect{ get :batch_import_data, {}, {}  }.to raise_error(ActionController::RoutingError)
+      expect{ get :batch_import_data  }.to raise_error(ActionController::RoutingError)
     end
   end
 
   # TODO: auto-generated
   describe '#batch_import' do
     it 'GET batch_import' do
-      get :batch_import, {}, {}
+      get :batch_import
 
       expect(response).to have_http_status(:redirect)
     end
@@ -128,7 +128,7 @@ RSpec.describe Import::ImportsController, type: :controller do
   describe '#failed_batch_import' do
     it 'GET failed_batch_import' do
       Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY, import_data: {}).save!
-      get :failed_batch_import, {}, {}
+      get :failed_batch_import
 
       expect(response).to have_http_status(:ok)
     end

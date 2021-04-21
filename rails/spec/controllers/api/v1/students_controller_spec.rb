@@ -28,7 +28,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     context "with valid password" do
       it "returns ok" do
-        post :check_password, params
+        post :check_password, params: params
         expect(response.status).to eq(200)
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     context "with invalid password" do
       before { params['password'] = 'wrong_password' }
       it "returns error" do
-        post :check_password, params
+        post :check_password, params: params
         expect(response.status).to eq(401)
       end
     end
@@ -44,7 +44,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     context "with invalid student id" do
       before { params['id'] = 12321321 }
       it "returns error" do
-        post :check_password, params
+        post :check_password, params: params
         expect(response.status).to eq(404)
       end
     end
@@ -54,13 +54,13 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     [:join_class, :confirm_class_word].each do |action|
       it "should fail without a class_word" do
-        post action, {}
+        post action
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing class_word parameter"}')
       end
 
       it "should fail with an unknown class_word" do
-        post action, {class_word: "unknown"}
+        post action, params: { class_word: "unknown" }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"The class word you provided, \"unknown\", was not valid! Please check with your teacher to ensure you have the correct word."}')
       end
@@ -68,14 +68,14 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     describe "#join_class" do
       it "should fail for anonymous users" do
-        post :join_class, {class_word: clazz.class_word}
+        post :join_class, params: { class_word: clazz.class_word }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be logged in to sign up for a class!"}')
       end
 
       it "should fail for teacher users" do
         sign_in teacher_user
-        post :join_class, {class_word: clazz.class_word}
+        post :join_class, params: { class_word: clazz.class_word }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You can\'t signup for a class while logged in as a teacher!"}')
       end
@@ -84,7 +84,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
         grade_level
         sign_in student_user
 
-        post :join_class, {class_word: clazz.class_word}
+        post :join_class, params: { class_word: clazz.class_word }
         expect(response).to have_http_status(:ok)
         expect(response.body).to eq('{"success":true}')
 
@@ -95,7 +95,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     describe "#confirm_class_word" do
       it "should succeed with a known classword" do
-        post :confirm_class_word, {class_word: clazz.class_word}
+        post :confirm_class_word, params: { class_word: clazz.class_word }
         expect(response).to have_http_status(:ok)
         expect(response.body).to eq('{"success":true,"data":{"teacher_name":"joe user"}}')
       end
@@ -106,13 +106,13 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     [:register, :add_to_class].each do |action|
       it 'should fail without a clazz_id parameter' do
-        post action, {}
+        post action
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing clazz_id parameter"}')
       end
 
       it 'should fail with an invalid clazz_id parameter' do
-        post action, {clazz_id: 0}
+        post action, params: { clazz_id: 0 }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id: 0"}')
       end
@@ -129,32 +129,32 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
 
     it 'should fail without a user parameter' do
-      post :register, {clazz_id: clazz.id}
+      post :register, params: { clazz_id: clazz.id }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing user parameters"}')
     end
 
     it 'should fail when the teacher is not in the class' do
-      post :register, {clazz_id: clazz2.id, user: user_parameters}
+      post :register, params: { clazz_id: clazz2.id, user: user_parameters }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to register and add students"}')
     end
 
     describe 'with a bad user parameters ' do
       it 'should fail when the first_name is missing' do
-        post :register, {clazz_id: clazz.id, user: {}}
+        post :register, params: { clazz_id: clazz.id, user: {} }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing user first_name parameter"}')
       end
 
       it 'should fail when the last_name is missing' do
-        post :register, {clazz_id: clazz.id, user: {first_name: "Test"}}
+        post :register, params: { clazz_id: clazz.id, user: {first_name: "Test"} }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing user last_name parameter"}')
       end
 
       it 'should fail when the password is missing' do
-        post :register, {clazz_id: clazz.id, user: {first_name: "Test", last_name: "Testerson"}}
+        post :register, params: { clazz_id: clazz.id, user: {first_name: "Test", last_name: "Testerson"} }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Password can\'t be blank. Password confirmation can\'t be blank"}')
       end
@@ -164,7 +164,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
       let (:password_confirmation) { "testtest!" }
 
       it 'should fail when the passwords do not match' do
-        post :register, {clazz_id: clazz.id, user: user_parameters}
+        post :register, params: { clazz_id: clazz.id, user: user_parameters }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Password confirmation doesn\'t match Password"}')
       end
@@ -172,7 +172,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     it 'should succeed' do
       admin_settings
-      post :register, {clazz_id: clazz.id, user: user_parameters}
+      post :register, params: { clazz_id: clazz.id, user: user_parameters }
       expect(response).to have_http_status(:ok)
 
       json = JSON.parse(response.body)
@@ -195,20 +195,20 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
   describe '#add_to_class' do
     it 'should fail without a student_id parameter' do
-      post :add_to_class, {clazz_id: clazz.id}
+      post :add_to_class, params: { clazz_id: clazz.id }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id parameter"}')
     end
 
     it 'should fail with and invalid student_id parameter' do
-      post :add_to_class, {clazz_id: clazz.id, student_id: 0}
+      post :add_to_class, params: { clazz_id: clazz.id, student_id: 0 }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_id: 0"}')
     end
 
     it 'should fail when the teacher is not in the class' do
       sign_in teacher_user
-      post :add_to_class, {clazz_id: clazz2.id, student_id: student.id}
+      post :add_to_class, params: { clazz_id: clazz2.id, student_id: student.id }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to add students"}')
     end
@@ -216,7 +216,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     it 'should succeed' do
       sign_in teacher_user
       expect(clazz.students.include? student).to eq false
-      post :add_to_class, {clazz_id: clazz.id, student_id: student.id}
+      post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
       expect(response).to have_http_status(:ok)
       expect(response.body).to eq('{"success":true}')
       expect(clazz.students.include? student).to eq true
@@ -225,20 +225,20 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
   describe '#remove_from_class' do
     it 'should fail without a student_clazz_id parameter' do
-      post :remove_from_class, {}
+      post :remove_from_class
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_clazz_id parameter"}')
     end
 
     it 'should fail with an invalid student_clazz_id parameter' do
-      post :remove_from_class, {student_clazz_id: 0}
+      post :remove_from_class, params: { student_clazz_id: 0 }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_clazz_id: 0"}')
     end
 
     it 'should fail when the teacher is not in the class' do
       sign_in teacher_user
-      post :remove_from_class, {student_clazz_id: student_clazz2.id}
+      post :remove_from_class, params: { student_clazz_id: student_clazz2.id }
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to remove students"}')
     end
@@ -246,7 +246,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     it 'should succeed' do
       sign_in teacher_user
       expect { student_clazz.reload }.not_to raise_error
-      post :remove_from_class, {student_clazz_id: student_clazz.id}
+      post :remove_from_class, params: { student_clazz_id: student_clazz.id }
       expect(response).to have_http_status(:ok)
       expect(response.body).to eq('{"success":true}')
       expect { student_clazz.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -256,7 +256,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -265,7 +265,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
   # TODO: auto-generated
   describe '#check_class_word' do
     it 'GET check_class_word' do
-      get :check_class_word, {}, {}
+      get :check_class_word
 
       expect(response).to have_http_status(:bad_request)
     end

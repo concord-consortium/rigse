@@ -7,7 +7,7 @@ RSpec.describe Saveable::Sparks::MeasuringResistancesController, type: :controll
   # TODO: auto-generated
   describe '#index' do
     xit 'GET index' do
-      get :index, {}, {}
+      get :index
 
       expect(response).to have_http_status(:ok)
     end
@@ -16,7 +16,7 @@ RSpec.describe Saveable::Sparks::MeasuringResistancesController, type: :controll
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show
 
       expect(response).to have_http_status(:not_found)
     end
@@ -25,7 +25,7 @@ RSpec.describe Saveable::Sparks::MeasuringResistancesController, type: :controll
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {}, {}
+      get :edit
 
       expect(response).to have_http_status(:not_found)
     end
@@ -34,7 +34,7 @@ RSpec.describe Saveable::Sparks::MeasuringResistancesController, type: :controll
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:redirect)
     end
@@ -43,7 +43,7 @@ RSpec.describe Saveable::Sparks::MeasuringResistancesController, type: :controll
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:not_found)
     end
@@ -52,7 +52,7 @@ RSpec.describe Saveable::Sparks::MeasuringResistancesController, type: :controll
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy
 
       expect(response).to have_http_status(:not_found)
     end

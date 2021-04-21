@@ -6,7 +6,7 @@ describe Portal::OfferingsController do
       offering = FactoryBot.create(:portal_offering)
       admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :show, :id => offering.id, :format => :jnlp
+      get :show, params: { :id => offering.id, :format => :jnlp }
       expect(response).to render_template('shared/_installer')
     end
 
@@ -14,14 +14,14 @@ describe Portal::OfferingsController do
       teacher = FactoryBot.create(:portal_teacher)
       offering = FactoryBot.create(:portal_offering, :clazz => teacher.clazzes.first)
       sign_in teacher.user
-      get :show, :id => offering.id, :format => :jnlp
+      get :show, params: { :id => offering.id, :format => :jnlp }
       expect(response).to render_template('shared/_installer')
     end
 
     it "renders a jnlp as a learner" do
       learner = FactoryBot.create(:full_portal_learner)
       sign_in learner.student.user
-      get :show, :id => learner.offering.id, :format => :jnlp
+      get :show, params: { :id => learner.offering.id, :format => :jnlp }
       expect(response).to render_template('shared/_installer')
     end
   end
@@ -52,7 +52,7 @@ describe Portal::OfferingsController do
     it "saves learner data in the cookie" do
       @runnable.append_learner_id_to_url = false
 
-      get :show, :id => @offering.id, :format => 'run_resource_html'
+      get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response.cookies["save_path"]).to eq(@offering.runnable.save_path)
       expect(response.cookies["learner_id"]).to eq(@learner.id.to_s)
       expect(response.cookies["student_name"]).to eq("#{@user.first_name} #{@user.last_name}")
@@ -65,7 +65,7 @@ describe Portal::OfferingsController do
     it "appends the learner id to the url" do
       @runnable.append_learner_id_to_url = true
       # @runnable.stub!(:append_learner_id_to_url).and_return(true)
-      get :show, :id => @offering.id, :format => 'run_resource_html'
+      get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response).to redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
     end
   end
@@ -169,19 +169,19 @@ describe Portal::OfferingsController do
         end
 
         it "should redirect to the default reporting service" do
-          get :report, post_params
+          get :report, params: post_params
           expect(response.location).to match(/#{report_url}/)
         end
         it "should include an authentication token parameter" do
-          get :report, post_params
+          get :report, params: post_params
           expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
         end
         it "should include an authentication token parameter" do
-          get :report, post_params
+          get :report, params: post_params
           expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
         end
         it "should convert activity_id param into activityIndex" do
-          get :report, { id: offering.id, activity_id: activity.id }
+          get :report, params: { id: offering.id, activity_id: activity.id }
           expect(response.location).to match(/activityIndex=0/)
         end
       end
@@ -193,7 +193,7 @@ describe Portal::OfferingsController do
         end
 
         it "should pass activity_id param" do
-          get :report, { id: offering.id, activity_id: activity.id }
+          get :report, params: { id: offering.id, activity_id: activity.id }
           expect(response.location).to match(/activity_id/)
         end
       end
@@ -202,7 +202,7 @@ describe Portal::OfferingsController do
     describe "when the current user is a teacher without access to this offering" do
       let(:user) { teacher_b.user }
       it "should redirect the user to /recent_activity" do
-        get :report, post_params
+        get :report, params: post_params
         expect(response).to redirect_to :recent_activity
       end
     end
@@ -230,11 +230,11 @@ describe Portal::OfferingsController do
         end
 
         it "should redirect to the default reporting service" do
-          get :student_report, post_params
+          get :student_report, params: post_params
           expect(response.location).to match(/#{report_url}/)
         end
         it "should provide studentId" do
-          get :student_report, post_params
+          get :student_report, params: post_params
           expect(response.location).to include("studentId=#{student.user.id}")
         end
       end
@@ -246,7 +246,7 @@ describe Portal::OfferingsController do
         end
 
         it "should pass activity_id param" do
-          get :student_report, post_params
+          get :student_report, params: post_params
           expect(response.location).to match(/student_ids/)
         end
       end
@@ -257,7 +257,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:not_found)
     end
@@ -266,7 +266,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryBot.create(:portal_offering).to_param
+      delete :destroy, params: { id: FactoryBot.create(:portal_offering).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -281,7 +281,7 @@ describe Portal::OfferingsController do
 
       admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :activate, id: FactoryBot.create(:portal_offering).to_param
+      get :activate, params: { id: FactoryBot.create(:portal_offering).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -295,7 +295,7 @@ describe Portal::OfferingsController do
       allow(request).to receive(:env).and_return({'HTTP_REFERER' => referrer})
       admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :deactivate, id: FactoryBot.create(:portal_offering).to_param
+      get :deactivate, params: { id: FactoryBot.create(:portal_offering).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -306,7 +306,7 @@ describe Portal::OfferingsController do
     it 'GET answers' do
       admin = FactoryBot.generate :admin_user
       sign_in admin
-      get :answers, id: FactoryBot.create(:portal_offering).to_param, questions: []
+      get :answers, params: { id: FactoryBot.create(:portal_offering).to_param, questions: [] }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -316,7 +316,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#student_report' do
     it 'GET student_report' do
-      get :student_report, id: FactoryBot.create(:portal_offering).to_param
+      get :student_report, params: { id: FactoryBot.create(:portal_offering).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -325,7 +325,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#external_report' do
     it 'GET external_report' do
-      get :external_report, id: FactoryBot.create(:portal_offering).to_param
+      get :external_report, params: { id: FactoryBot.create(:portal_offering).to_param }
 
       expect(response).to have_http_status(:redirect)
     end

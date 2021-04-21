@@ -7,7 +7,7 @@ RSpec.describe API::APIController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -16,7 +16,7 @@ RSpec.describe API::APIController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -25,7 +25,7 @@ RSpec.describe API::APIController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -34,7 +34,7 @@ RSpec.describe API::APIController, type: :controller do
   # TODO: auto-generated
   describe '#index' do
     it 'GET index' do
-      get :index, {}, {}
+      get :index
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -43,7 +43,7 @@ RSpec.describe API::APIController, type: :controller do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy
 
       expect(response).to have_http_status(:bad_request)
     end

@@ -35,7 +35,7 @@ describe Admin::CohortsController do
     describe 'Show' do
       it 'wont let them see any cohorts' do
         [@cohort_1,@cohort_2,@cohort_3].each do |cohort|
-          get :show, id: cohort.id
+          get :show, params: { id: cohort.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
           expect(request.flash['alert']).to match(RegexForAuthFailShow)
@@ -63,7 +63,7 @@ describe Admin::CohortsController do
 
     describe 'update' do
       it 'it wont let them update an existing cohort' do
-        put :update, id:@cohort_1.id
+        put :update, params: { id:@cohort_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
         expect(request.flash['alert']).to match(RegexForAuthFailModify)
@@ -71,7 +71,7 @@ describe Admin::CohortsController do
     end
     describe 'Destroy' do
       it 'it wont let them delete an existing cohort' do
-        delete :destroy, id: @cohort_1.id
+        delete :destroy, params: { id: @cohort_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
         expect(request.flash['alert']).to match(RegexForAuthFailDestroy)
@@ -129,14 +129,14 @@ describe Admin::CohortsController do
     describe 'Show' do
       describe 'Cohort 1 (user IS a project admin)' do
         it 'lets them see it' do
-          get :show, id:@cohort_1.id
+          get :show, params: { id:@cohort_1.id }
           expect(assigns[:admin_cohort]).to eq(@cohort_1)
           expect(response).to have_http_status(:ok)
         end
       end
       describe 'Cohort 2 (user is NOT a project admin)' do
         it 'wont let them see it' do
-          get :show, id:@cohort_2.id
+          get :show, params: { id:@cohort_2.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
           expect(request.flash['alert']).to match(RegexForAuthFailShow)
@@ -193,23 +193,23 @@ describe Admin::CohortsController do
           let(:params) { invalid_params }
 
           it 'should return an OK http status' do
-            post :update, params
+            post :update, params: params
             expect(response).to have_http_status(:ok)
           end
 
           it 'should show an error on the name field' do
-            post :update, params
+            post :update, params: params
             cohort = assigns[:admin_cohort]
             expect(cohort.errors.messages[:name]).to include("can't be blank")
           end
 
           it 'should re-render the edit form' do
-            post :update, params
+            post :update, params: params
             expect(response).to render_template('edit')
           end
 
           it 'should assign a projects dropdown list' do
-            post :update, params
+            post :update, params: params
             expect(assigns[:projects]).not_to be_nil
           end
         end
@@ -222,7 +222,7 @@ describe Admin::CohortsController do
       describe 'when creating a cohort for project 1 which they ARE admin for' do
         let(:project_id) { project_1.id }
         it 'it SHOULD let them' do
-          post :create, valid_params
+          post :create, params: valid_params
           cohort = assigns(:admin_cohort)
           expect(cohort).to be_valid
           expect(response).to redirect_to(admin_cohort_path(cohort))
@@ -232,7 +232,7 @@ describe Admin::CohortsController do
       describe 'when creating a cohort for project 2 (NOT their project)' do
         let(:project_id) { project_2.id }
         it 'it should NOT let them' do
-          post :create, valid_params
+          post :create, params: valid_params
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
           expect(request.flash['alert']).to match(RegexForAuthFailNew)
@@ -241,20 +241,20 @@ describe Admin::CohortsController do
 
       context 'with invalid parameters (missing name)' do
         it 'it should display errors' do
-          post :create, invalid_params
+          post :create, params: invalid_params
           cohort = assigns(:admin_cohort)
           expect(cohort).not_to be_valid
           expect(cohort.errors.messages[:name]).to include("can't be blank")
         end
 
         it 'it should re-render the new form' do
-          post :create, invalid_params
+          post :create, params: invalid_params
           expect(response).to render_template('new')
           expect(response).to have_http_status(:ok)
         end
 
         it 'the new form should assign a list of projects' do
-          post :create, invalid_params
+          post :create, params: invalid_params
           expect(assigns(:projects)).not_to be_nil
         end
       end
@@ -278,14 +278,14 @@ describe Admin::CohortsController do
     describe 'Show' do
       describe 'Cohort 1' do
         it 'can see it' do
-          get :show, id: @cohort_1.id
+          get :show, params: { id: @cohort_1.id }
           expect(assigns[:admin_cohort]).to eq(@cohort_1)
           expect(response).to have_http_status(:ok)
         end
       end
       describe 'Cohort 2' do
         it 'can see it' do
-          get :show, id: @cohort_2.id
+          get :show, params: { id: @cohort_2.id }
           expect(assigns[:admin_cohort]).to eq(@cohort_2)
           expect(response).to have_http_status(:ok)
         end
@@ -311,7 +311,7 @@ describe Admin::CohortsController do
       describe 'for a cohort in project 1' do
         let(:project_id) { project_1.id }
         it 'it SHOULD let them create a new cohort' do
-          post :create, params
+          post :create, params: params
           cohort = assigns(:admin_cohort)
           expect(assigns(:admin_cohort)).to be_valid
           expect(response).to redirect_to(admin_cohort_path(cohort))
@@ -320,7 +320,7 @@ describe Admin::CohortsController do
       describe 'for a cohort in project 2' do
         let(:project_id) { project_2.id }
         it 'should let them' do
-          post :create, params
+          post :create, params: params
           cohort = assigns(:admin_cohort)
           expect(assigns(:admin_cohort)).to be_valid
           expect(response).to redirect_to(admin_cohort_path(cohort))
@@ -374,7 +374,7 @@ describe Admin::CohortsController do
     context 'when nested under project route' do
       context 'get index' do
         it 'should restrict the list of cohorts to that project' do
-          get 'index', project_id: project.id
+          get 'index', params: { project_id: project.id }
           expect(assigns('admin_cohorts')).to include(@cohort_2)
           expect(assigns('admin_cohorts')).not_to include(@cohort_1)
           expect(assigns('admin_cohorts')).not_to include(@cohort_3)
@@ -383,7 +383,7 @@ describe Admin::CohortsController do
       end
       context 'get new' do
         it 'should only display the selected project in the drop down' do
-          get 'new', project_id: project.id
+          get 'new', params: { project_id: project.id }
           expect(assigns('projects')).to include(project_2)
           expect(assigns('projects')).not_to include(project_1)
           expect(assigns('projects')).not_to include(project_3)
@@ -392,7 +392,7 @@ describe Admin::CohortsController do
 
         it 'should pre-select the correct project from the route' do
           [project_1, project_2, project_3].each do |chosen_project|
-            get 'new', project_id: chosen_project.id
+            get 'new', params: { project_id: chosen_project.id }
             new_admin_cohort = assigns('admin_cohort')
             expect(new_admin_cohort.project_id).to eq(chosen_project.id)
             expect(response).to have_http_status(:ok)

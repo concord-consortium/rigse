@@ -14,7 +14,7 @@ describe Browse::ExternalActivitiesController do
           :activity_page=>1,
           :id=>@external_activity.id
         }
-        post :show, @post_params
+        post :show, params: @post_params
 
         expect(assigns[:wide_content_layout]).to eq(true)
 

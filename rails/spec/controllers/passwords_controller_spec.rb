@@ -23,7 +23,7 @@ describe PasswordsController do
     it "will fail gracefully if the user is not found by login" do
       @forgetful_user.destroy
 
-      post :create_by_login, @params
+      post :create_by_login, params: @params
 
       expect(response).to be_success
       expect(flash['error']).not_to be_nil
@@ -32,7 +32,7 @@ describe PasswordsController do
     it "will fail gracefully for students without security questions" do
       @forgetful_user.portal_student = FactoryBot.create(:portal_student)
 
-      post :create_by_login, @params
+      post :create_by_login, params: @params
 
       expect(response).to be_success
       expect(flash['error']).not_to be_nil
@@ -44,7 +44,7 @@ describe PasswordsController do
       expect(message).to receive(:deliver)
       expect(PasswordMailer).to receive(:forgot_password).and_return(message)
 
-      post :create_by_login, @params
+      post :create_by_login, params: @params
 
       expect(@response).to redirect_to(root_path)
       expect(flash['error']).to be_nil
@@ -56,7 +56,7 @@ describe PasswordsController do
 
       expect(PasswordMailer).not_to receive(:forgot_password)
 
-      post :create_by_login, @params
+      post :create_by_login, params: @params
 
       expect(@response).to redirect_to(password_questions_path(@forgetful_user))
       expect(flash['error']).to be_nil
@@ -82,7 +82,7 @@ describe PasswordsController do
       end
 
       it "will ask the correct security questions" do
-        post :questions, @questions_params
+        post :questions, params: @questions_params
 
         @forgetful_user.security_questions.each do |q|
           expect(@response.body).to include(q.question)
@@ -90,7 +90,7 @@ describe PasswordsController do
       end
 
       it "will allow the user to reset their password if they answer their questions correctly" do
-        post :check_questions, @answers_params
+        post :check_questions, params: @answers_params
 
         password = assigns[:password]
         expect(password).not_to be_nil
@@ -100,7 +100,7 @@ describe PasswordsController do
       it "will reject incorrect answers" do
         @answers_params[:security_questions][:question2][:answer] = "wrong"
 
-        post :check_questions, @answers_params
+        post :check_questions, params: @answers_params
 
         expect(@response).to redirect_to(password_questions_path(@forgetful_user))
         expect(flash['error']).not_to be_nil
@@ -110,7 +110,7 @@ describe PasswordsController do
         # This is evidence of tampering, so we want to make sure it doesn't get through
         @answers_params[:security_questions][:question2][:id] += 500
 
-        post :check_questions, @answers_params
+        post :check_questions, params: @answers_params
         expect(response.status).to eq(404)
       end
     end
@@ -132,7 +132,7 @@ describe PasswordsController do
       expect(message).to receive(:deliver)
       expect(PasswordMailer).to receive(:forgot_password).and_return(message)
 
-      post :create_by_email, @params
+      post :create_by_email, params: @params
 
       expect(flash['error']).to be_nil
     end
@@ -142,7 +142,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#login' do
     it 'GET login' do
-      get :login, {}, {}
+      get :login
 
       expect(response).to have_http_status(:ok)
     end
@@ -151,7 +151,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#questions' do
     it 'GET questions' do
-      get :questions, {}, {}
+      get :questions
 
       expect(response).to have_http_status(:not_found)
     end
@@ -160,7 +160,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#reset' do
     it 'GET reset' do
-      get :reset, {}, {}
+      get :reset
 
       expect(response).to have_http_status(:redirect)
     end
@@ -169,7 +169,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#update_users_password' do
     xit 'GET update_users_password' do
-      get :update_users_password, user_reset_password: { password: 'password' }
+      get :update_users_password, params: { user_reset_password: { password: 'password' } }
 
       expect(response).to have_http_status(:ok)
     end
@@ -178,7 +178,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:not_found)
     end

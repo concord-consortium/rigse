@@ -16,7 +16,7 @@ RSpec.describe Portal::CoursesController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     xit 'GET show' do
-      get :show, id: FactoryBot.create(:course).to_param
+      get :show, params: { id: FactoryBot.create(:course).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -25,7 +25,7 @@ RSpec.describe Portal::CoursesController, type: :controller do
   # TODO: auto-generated
   describe '#edit' do
     xit 'GET edit' do
-      get :edit, id: FactoryBot.create(:course).to_param
+      get :edit, params: { id: FactoryBot.create(:course).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -34,7 +34,7 @@ RSpec.describe Portal::CoursesController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:redirect)
     end
@@ -43,7 +43,7 @@ RSpec.describe Portal::CoursesController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:not_found)
     end
@@ -52,7 +52,7 @@ RSpec.describe Portal::CoursesController, type: :controller do
   # TODO: auto-generated
   describe '#destroy' do
     xit 'DELETE destroy' do
-      delete :destroy, id: FactoryBot.create(:course).to_param
+      delete :destroy, params: { id: FactoryBot.create(:course).to_param }
 
       expect(response).to have_http_status(:ok)
     end

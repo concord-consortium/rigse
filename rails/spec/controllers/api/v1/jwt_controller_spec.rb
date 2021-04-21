@@ -107,7 +107,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       }
 
       it "returns 400" do
-        post :firebase, {:firebase_app => "test app"}, :format => :json
+        post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
         expect(response.status).to eq(400)
       end
     end
@@ -121,14 +121,14 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
         context "and a firebase_app param is not sent" do
           it "returns 400" do
-            post :firebase, {}, :format => :json
+            post :firebase, session: { :format => :json }
             expect(response.status).to eq(400)
           end
         end
 
         context "and an invalid firebase_app param is sent" do
           it "returns 500" do
-            post :firebase, {:firebase_app => "invalid app"}, :format => :json
+            post :firebase, params: { :firebase_app => "invalid app" }, session: { :format => :json }
             expect(response.status).to eq(500)
           end
         end
@@ -137,7 +137,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           it "returns a valid JWT" do
             allow(APP_CONFIG).to receive(:[]).and_call_original
             allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
-            post :firebase, {:firebase_app => "test app"}, :format => :json
+            post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
             expect(response.status).to eq(201)
 
             body = JSON.parse(response.body)
@@ -155,9 +155,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           context "and the user of the auth header token has a learner with that resource_link_id" do
             let(:user) { learner.student.user }
             it "returns a valid JWT with learner params" do
-              post :firebase,
-                {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
-                :format => :json
+              post :firebase, params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s }, session: { :format => :json }
               expect(response.status).to eq(201)
 
               body = JSON.parse(response.body)
@@ -190,9 +188,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
                 allow(APP_CONFIG).to receive(:[]).and_call_original
                 allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
 
-                post :firebase,
-                  {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
-                  :format => :json
+                post :firebase, params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s }, session: { :format => :json }
                 expect(response.status).to eq(201)
 
                 body = JSON.parse(response.body)
@@ -222,18 +218,14 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
             end
             context "without a class with that resource_link_id" do
               it "returns a 400" do
-                post :firebase,
-                  {:firebase_app => "test app", :resource_link_id => 9999.to_s},
-                  :format => :json
+                post :firebase, params: { :firebase_app => "test app", :resource_link_id => 9999.to_s }, session: { :format => :json }
                 expect(response.status).to eq(400)
               end
             end
           end
           context "and the user of the auth header token is not a teacher or student" do
             it "returns a 400" do
-              post :firebase,
-                {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
-                :format => :json
+              post :firebase, params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s }, session: { :format => :json }
               expect(response.status).to eq(400)
             end
           end
@@ -247,7 +239,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         }
 
         it "returns a valid JWT with learner params" do
-          post :firebase, {:firebase_app => "test app"}, :format => :json
+          post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
           expect(response.status).to eq(201)
 
           body = JSON.parse(response.body)
@@ -284,7 +276,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           it "returns a valid JWT" do
             allow(APP_CONFIG).to receive(:[]).and_call_original
             allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
-            post :firebase, {:firebase_app => "test app"}, :format => :json
+            post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
             expect(response.status).to eq(201)
             body = JSON.parse(response.body)
             token = body["token"]
@@ -307,14 +299,14 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         context "and there is a class hash" do
           context "and the class hash is invalid" do
             it "returns 400" do
-              post :firebase, {:firebase_app => "test app", :class_hash => "invalid"}, :format => :json
+              post :firebase, params: { :firebase_app => "test app", :class_hash => "invalid" }, session: { :format => :json }
               expect(response.status).to eq(400)
             end
           end
 
           context "and the class_hash is for a class of the teacher" do
             it "returns a valid JWT with this class hash" do
-              post :firebase, {:firebase_app => "test app", :class_hash => clazz.class_hash}, :format => :json
+              post :firebase, params: { :firebase_app => "test app", :class_hash => clazz.class_hash }, session: { :format => :json }
               expect(response.status).to eq(201)
 
               body = JSON.parse(response.body)
@@ -338,7 +330,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
       }
 
       it "returns 400" do
-        post :portal, {}, :format => :json
+        post :portal, session: { :format => :json }
         expect(response.status).to eq(400)
       end
     end
@@ -354,13 +346,13 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           it "returns 500" do
             allow(ENV).to receive(:[]).and_call_original
             allow(ENV).to receive(:[]).with('JWT_HMAC_SECRET').and_return(nil)
-            post :portal, {}, :format => :json
+            post :portal, session: { :format => :json }
             expect(response.status).to eq(500)
           end
         end
 
         it "returns a valid JWT" do
-          post :portal, {}, :format => :json
+          post :portal, session: { :format => :json }
           expect(response.status).to eq(201)
 
           body = JSON.parse(response.body)
@@ -373,7 +365,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           context "and the user of the token has a learner with that resource_link_id" do
             let(:user) { learner.student.user }
             it "returns a valid JWT with learner params" do
-              post :portal, {:resource_link_id => offering.id}, :format => :json
+              post :portal, params: { :resource_link_id => offering.id }, session: { :format => :json }
               expect(response.status).to eq(201)
 
               body = JSON.parse(response.body)
@@ -392,13 +384,13 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           context "and the user of the token has a learner without that resource_link_id" do
             let(:user) { learner.student.user }
             it "returns a 400" do
-              post :portal, {:resource_link_id => 99999}, :format => :json
+              post :portal, params: { :resource_link_id => 99999 }, session: { :format => :json }
               expect(response.status).to eq(400)
             end
           end
           context "and the user of the token is not a student" do
             it "returns a 400" do
-              post :portal, {:resource_link_id => offering.id}, :format => :json
+              post :portal, params: { :resource_link_id => offering.id }, session: { :format => :json }
               expect(response.status).to eq(400)
             end
           end
@@ -411,7 +403,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         }
 
         it "returns a valid JWT with learner params" do
-          post :portal, {}, :format => :json
+          post :portal, session: { :format => :json }
           expect(response.status).to eq(201)
 
           body = JSON.parse(response.body)
@@ -434,7 +426,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         }
 
         it "returns a valid JWT with teacher params without a class hash" do
-          post :portal, {}, :format => :json
+          post :portal, session: { :format => :json }
           expect(response.status).to eq(201)
 
           body = JSON.parse(response.body)
@@ -455,7 +447,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           }
 
           it "returns a valid JWT with an admin flag set" do
-            post :portal, {}, :format => :json
+            post :portal, session: { :format => :json }
             expect(response.status).to eq(201)
 
             body = JSON.parse(response.body)
@@ -474,7 +466,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           }
 
           it "returns a valid JWT with the project in project_admins claim and admin is -1" do
-            post :portal, {}, :format => :json
+            post :portal, session: { :format => :json }
             expect(response.status).to eq(201)
 
             body = JSON.parse(response.body)

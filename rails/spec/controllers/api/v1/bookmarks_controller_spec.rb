@@ -18,19 +18,19 @@ describe API::V1::BookmarksController do
     describe "each api endpoint" do
       [:create, :update, :destroy, :sort].each do |method|
         it("should fail without a clazz_id") do
-          post method, {}
+          post method
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing clazz_id param"}')
         end
 
         it("should fail with an invalid clazz_id") do
-          post method, {clazz_id: clazz1.id + 1}
+          post method, params: { clazz_id: clazz1.id + 1 }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id param"}')
         end
 
         it("should fail with a clazz_id I don't own") do
-          post method, {clazz_id: clazz1.id}
+          post method, params: { clazz_id: clazz1.id }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"You are not authorized to edit bookmarks for this class"}')
         end
@@ -47,13 +47,13 @@ describe API::V1::BookmarksController do
     describe "each api endpoint" do
       [:create, :update, :destroy, :sort].each do |method|
         it("should fail without a clazz_id") do
-          post method, {}
+          post method
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing clazz_id param"}')
         end
 
         it("should fail with an invalid clazz_id") do
-          post method, {clazz_id: clazz1.id + 1}
+          post method, params: { clazz_id: clazz1.id + 1 }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id param"}')
         end
@@ -62,7 +62,7 @@ describe API::V1::BookmarksController do
 
     describe "create" do
       it "should use default field values" do
-        post :create, {clazz_id: clazz1.id}
+        post :create, params: { clazz_id: clazz1.id }
         expect(response.status).to eql(200)
         result = JSON.parse response.body
         expect(result["data"]["name"]).to eql "My bookmark"
@@ -71,7 +71,7 @@ describe API::V1::BookmarksController do
       end
 
       it "should use passed values" do
-        post :create, {clazz_id: clazz1.id, name: "Test", url: "http://example.com"}
+        post :create, params: { clazz_id: clazz1.id, name: "Test", url: "http://example.com" }
         expect(response.status).to eql(200)
         result = JSON.parse response.body
         expect(result["data"]["name"]).to eql "Test"
@@ -87,19 +87,19 @@ describe API::V1::BookmarksController do
 
       describe "update" do
         it "should fail with an invalid bookmark id" do
-          post :update, {clazz_id: clazz1.id, id: bookmark2.id + 1}
+          post :update, params: { clazz_id: clazz1.id, id: bookmark2.id + 1 }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid bookmark id"}')
         end
 
         it "should fail when the teacher doesn't own the bookmark" do
-          post :update, {clazz_id: clazz1.id, id: bookmark2.id}
+          post :update, params: { clazz_id: clazz1.id, id: bookmark2.id }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"You are not authorized to update the bookmark"}')
         end
 
         it "should succeed when the teacher owns the bookmark" do
-          post :update, {clazz_id: clazz1.id, id: bookmark1.id, name: 'Updated name', url: 'http://updated.now', is_visible: false }
+          post :update, params: { clazz_id: clazz1.id, id: bookmark1.id, name: 'Updated name', url: 'http://updated.now', is_visible: false }
           expect(response.status).to eql(200)
           result = JSON.parse response.body
           expect(result["data"]["name"]).to eql "Updated name"
@@ -110,19 +110,19 @@ describe API::V1::BookmarksController do
 
       describe "destroy" do
         it "should fail with an invalid bookmark id" do
-          post :destroy, {clazz_id: clazz1.id, id: bookmark2.id + 1}
+          post :destroy, params: { clazz_id: clazz1.id, id: bookmark2.id + 1 }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid bookmark id"}')
         end
 
         it "should fail when the teacher doesn't own the bookmark" do
-          post :destroy, {clazz_id: clazz1.id, id: bookmark2.id}
+          post :destroy, params: { clazz_id: clazz1.id, id: bookmark2.id }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"You are not authorized to delete the bookmark"}')
         end
 
         it "should succeed when the teacher owns the bookmark" do
-          post :destroy, {clazz_id: clazz1.id, id: bookmark1.id }
+          post :destroy, params: { clazz_id: clazz1.id, id: bookmark1.id }
           expect(response.status).to eql(200)
           expect(response.body).to eql('{"success":true}')
         end
@@ -130,13 +130,13 @@ describe API::V1::BookmarksController do
 
       describe "sort" do
         it "should fail without ids" do
-          post :sort, {clazz_id: clazz1.id}
+          post :sort, params: { clazz_id: clazz1.id }
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing ids parameter"}')
         end
 
         it "should succeed with ids" do
-          post :sort, {clazz_id: clazz1.id, ids: [bookmark3.id, bookmark1.id]}
+          post :sort, params: { clazz_id: clazz1.id, ids: [bookmark3.id, bookmark1.id] }
           expect(response.status).to eql(200)
           expect(response.body).to eql('{"success":true}')
         end

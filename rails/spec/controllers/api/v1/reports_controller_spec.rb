@@ -47,11 +47,11 @@ describe API::V1::ReportsController do
   end
 
   def update(opts)
-    put :update, opts
+    put :update, params: opts
   end
 
   def show
-    get :show, :id => offering.id
+    get :show, params: { :id => offering.id }
   end
 
   def question

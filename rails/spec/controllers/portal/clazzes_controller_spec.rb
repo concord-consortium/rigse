@@ -61,14 +61,14 @@ describe Portal::ClazzesController do
   describe "GET show" do
     it "redirects the teacher to the class's materials page" do
       sign_in @authorized_teacher_user
-      get :show, { :id => @mock_clazz.id }
+      get :show, params: { :id => @mock_clazz.id }
 
       expect(response).to redirect_to("/portal/classes/#{@mock_clazz.id}/materials")
     end
 
     it "doesn't show class to unauthorized teacheruser" do
       sign_in @unauthorized_teacher_user
-      get :show, { :id => @mock_clazz.id }
+      get :show, params: { :id => @mock_clazz.id }
 
       expect(response).not_to be_success
       expect(response).to redirect_to("/recent_activity")
@@ -76,7 +76,7 @@ describe Portal::ClazzesController do
 
     it "shows student a list of class assignments" do
       sign_in @authorized_student_user
-      get :show, { :id => @mock_clazz.id }
+      get :show, params: { :id => @mock_clazz.id }
 
       expect(response).to be_success
       expect(response.body).to have_content("Random Test Class")
@@ -163,7 +163,7 @@ describe Portal::ClazzesController do
     it "should create a new class, assigned to the correct teacher, in the correct school" do
       sign_in @authorized_teacher_user
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       @mock_school.reload
       @authorized_teacher.reload
@@ -183,7 +183,7 @@ describe Portal::ClazzesController do
 
       sign_in @authorized_teacher_user
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       course.reload
 
@@ -200,7 +200,7 @@ describe Portal::ClazzesController do
 
       sign_in @authorized_teacher_user
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       @mock_school.reload
       course = Portal::Course.find_by_name(@post_params[:portal_clazz][:name])
@@ -218,7 +218,7 @@ describe Portal::ClazzesController do
 
       @post_params[:portal_clazz][:teacher_id] = nil
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       @random_user.reload
 
@@ -233,7 +233,7 @@ describe Portal::ClazzesController do
 
       @post_params[:portal_clazz][:school] = nil
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       assert flash['error']
       expect(Portal::Clazz.count).to eq(current_count)
@@ -242,7 +242,7 @@ describe Portal::ClazzesController do
     it "should assign the specified grade levels to the new class" do
       sign_in @authorized_teacher_user
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
 
@@ -259,7 +259,7 @@ describe Portal::ClazzesController do
 
       @post_params[:portal_clazz][:grade_levels] = nil
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       assert flash['error']
       expect(Portal::Clazz.count).to equal(current_count)
@@ -273,7 +273,7 @@ describe Portal::ClazzesController do
 
       current_count = Portal::Clazz.count
 
-      post :create, @post_params
+      post :create, params: @post_params
 
       expect(Portal::Clazz.count).to equal(current_count + 1)
     end
@@ -317,7 +317,7 @@ describe Portal::ClazzesController do
 
       @post_params[:portal_clazz][:grade_levels] = nil
 
-      put :update, @post_params
+      put :update, params: @post_params
 
       assert flash['error']
     end
@@ -328,7 +328,7 @@ describe Portal::ClazzesController do
 
       sign_in @authorized_teacher_user
 
-      put :update, @post_params
+      put :update, params: @post_params
 
       expect(Portal::Clazz.find(@mock_clazz.id).name).to eq('New Test Class')
     end
@@ -338,7 +338,7 @@ describe Portal::ClazzesController do
         @authorized_teacher, @another_authorized_teacher
       ])
       sign_in @authorized_teacher_user
-      put :update, @post_params
+      put :update, params: @post_params
       expect(Portal::Clazz.find(@mock_clazz.id).teachers).to eq([
         @authorized_teacher, @teacher2, @teacher3
       ])
@@ -375,7 +375,7 @@ describe Portal::ClazzesController do
     it "should not save the edited class info if the class name is blank" do
       login_admin
       @post_params[:portal_clazz][:name] = ''
-      post :update, @post_params
+      post :update, params: @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       expect(@portal_clazz.name).not_to eq(''), 'Class saved with no name.'
     end
@@ -383,7 +383,7 @@ describe Portal::ClazzesController do
     it "should not save the edited class info if the class word is blank" do
       login_admin
       @post_params[:portal_clazz][:class_word] = ''
-      post :update, @post_params
+      post :update, params: @post_params
       @portal_clazz = Portal::Clazz.find_by_id(@post_params[:id])
       expect(@portal_clazz.class_word).not_to eq(''), 'Class saved with blank class word.'
     end
@@ -408,7 +408,7 @@ describe Portal::ClazzesController do
     it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
-      get :edit, { :id => @mock_clazz.id }
+      get :edit, params: { :id => @mock_clazz.id }
 
       # All users should see the full class details summary
       @authorized_teacher.reload
@@ -423,7 +423,7 @@ describe Portal::ClazzesController do
     it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
-      get :materials, { :id => @mock_clazz.id }
+      get :materials, params: { :id => @mock_clazz.id }
 
       # All users should see the full class details summary
       @authorized_teacher.reload
@@ -438,7 +438,7 @@ describe Portal::ClazzesController do
     it "saves the position of the left pane submenu item for an authorized teacher" do
       sign_in @authorized_teacher_user
 
-      get :roster, { :id => @mock_clazz.id }
+      get :roster, params: { :id => @mock_clazz.id }
 
       # All users should see the full class details summary
       @authorized_teacher.reload
@@ -486,12 +486,12 @@ describe Portal::ClazzesController do
     end
     it "should not allow access for anonymous user" do
       sign_out :user
-      get :fullstatus, @params
+      get :fullstatus, params: @params
       expect(response).not_to be_success
     end
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user
-      get :fullstatus, @params
+      get :fullstatus, params: @params
       expect(assigns[:portal_clazz]).to eq(@mock_clazz)
       expect(response).to be_success
       expect(response).to render_template("fullstatus")
@@ -501,7 +501,7 @@ describe Portal::ClazzesController do
   # TODO: auto-generated
   describe '#current_clazz' do
     it 'GET current_clazz' do
-      get :current_clazz, {}, {}
+      get :current_clazz
 
       expect(response).to have_http_status(:not_found)
     end

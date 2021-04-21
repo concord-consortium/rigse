@@ -193,7 +193,7 @@
         - 45 Using positional arguments in integration tests has been deprecated, in favor of keyword arguments, and will be removed in Rails 5.1.
         - 22 `xhr` and `xml_http_request` are deprecated and will be removed in Rails 5.1. Switch to e.g. `post :create, params: { comment: { body: 'Honey bunny' } }, xhr: true`.
       3. Looked around for automated ways to fix these warnings
-
+        1. Installed rubocop-rails gem and used `bundle exec rubocop --only Rails/HttpPositionalArguments -a` to fix almost all deprecation warnings about positional argurments -- needed to change use of xhr first for the update to fix everything (which is deprecated). Once the update was done I uninstalled rubocop. More info here: https://stackoverflow.com/a/58095264
 
 
 ## Rails 4 -> 5.0 TODO

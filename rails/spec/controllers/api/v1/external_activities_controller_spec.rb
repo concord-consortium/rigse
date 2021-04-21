@@ -14,7 +14,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(403)
       end
     end
@@ -25,7 +25,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(403)
       end
     end
@@ -36,7 +36,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(201)
       end
     end
@@ -47,7 +47,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(201)
       end
     end
@@ -58,22 +58,22 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with a missing name parameter" do
-        post :create, :url => "http://example.com/"
+        post :create, params: { :url => "http://example.com/" }
         expect(response.status).to eql(400)
       end
 
       it "fails with a missing url parameter" do
-        post :create, :url => "http://example.com/"
+        post :create, params: { :url => "http://example.com/" }
         expect(response.status).to eql(400)
       end
 
       it "fails with an invalid url parameter" do
-        post :create, :url => "invalid"
+        post :create, params: { :url => "invalid" }
         expect(response.status).to eql(400)
       end
 
       it "succeeds with valid minimal parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(201)
       end
     end
@@ -107,7 +107,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(403)
       end
     end
@@ -118,7 +118,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(403)
       end
     end
@@ -129,7 +129,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(200)
       end
     end
@@ -140,7 +140,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(200)
       end
     end
@@ -172,7 +172,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :update_by_url, valid_parameters
+        post :update_by_url, params: valid_parameters
         expect(response.status).to eql(403)
       end
     end
@@ -183,7 +183,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "should create a new activity" do
-        post :update_by_url, valid_parameters
+        post :update_by_url, params: valid_parameters
         expect(response.body).to eql('{"success":true}')
       end
     end

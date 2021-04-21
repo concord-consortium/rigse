@@ -52,7 +52,7 @@ describe Admin::SettingsController do
   describe "GET show" do
     it "assigns the requested settings as @settings" do
       expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-      get :show, :id => "37"
+      get :show, params: { :id => "37" }
       expect(assigns[:admin_settings]).to equal(mock_settings)
     end
   end
@@ -72,20 +72,20 @@ describe Admin::SettingsController do
     end
 
     it "assigns the requested settings as @admin_settings" do
-      get :edit, :id => "37"
+      get :edit, params: { :id => "37" }
       expect(assigns[:admin_settings]).to equal(mock_settings)
     end
 
     it "no longer uses default content if home_page_content is empty" do
       allow(mock_settings).to receive(:home_page_content).and_return(nil)
       expect(mock_settings).not_to receive(:home_page_content=)
-      get :edit, :id => "37"
+      get :edit, params: { :id => "37" }
     end
 
     it "uses the value of home_page_content if it is not empty" do
       allow(mock_settings).to receive(:home_page_content).and_return("test content")
       expect(mock_settings).not_to receive(:home_page_content=)
-      get :edit, :id => "37"
+      get :edit, params: { :id => "37" }
     end
   end
 
@@ -98,7 +98,7 @@ describe Admin::SettingsController do
 
       login_manager
 
-      get :edit, :id => "37"
+      get :edit, params: { :id => "37" }
 
       expect(response).to be_success
 
@@ -119,14 +119,14 @@ describe Admin::SettingsController do
       it "assigns a newly created settings as @settings" do
         expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => true))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => true))
-        post :create, admin_settings: params
+        post :create, params: { admin_settings: params }
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "redirects to the created settings" do
         expect(Admin::Settings).to receive(:new).and_return(mock_settings(:save => true))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => true))
-        post :create, admin_settings: {}
+        post :create, params: { admin_settings: {} }
         expect(response).to redirect_to(admin_setting_url(mock_settings))
       end
     end
@@ -135,7 +135,7 @@ describe Admin::SettingsController do
       it "assigns a newly created but unsaved settings as @settings" do
         expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => false))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => false))
-        post :create, admin_settings: params
+        post :create, params: { admin_settings: params }
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
@@ -144,7 +144,7 @@ describe Admin::SettingsController do
         expect(mock_settings).to receive(:save).and_return(false)
 
         # it should just render the new template:
-        expect(post :create, admin_settings: params).to render_template(:new)
+        expect(post :create, params: { admin_settings: params }).to render_template(:new)
       end
     end
 
@@ -160,20 +160,20 @@ describe Admin::SettingsController do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
         expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
-        put :update, :id => "37", :admin_settings => admin_settings_params
+        put :update, params: { :id => "37", :admin_settings => admin_settings_params }
       end
 
       it "assigns the requested settings as @settings" do
         expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => true))
         expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:save => true))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "redirects to the settings" do
         expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => true))
         expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:save => true))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(response).to redirect_to(admin_setting_url(mock_settings))
       end
     end
@@ -182,20 +182,20 @@ describe Admin::SettingsController do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
         expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
-        put :update, :id => "37", :admin_settings => admin_settings_params
+        put :update, params: { :id => "37", :admin_settings => admin_settings_params }
       end
 
       it "assigns the settings as @settings" do
         expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => false))
         expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:update_attributes => false))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "re-renders the 'edit' template" do
         expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => false))
         expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:update_attributes => false))
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(response).to redirect_to(admin_setting_url(mock_settings))
       end
     end
@@ -206,13 +206,13 @@ describe Admin::SettingsController do
     it "destroys the requested settings" do
       expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
       expect(mock_settings).to receive(:destroy)
-      delete :destroy, :id => "37"
+      delete :destroy, params: { :id => "37" }
     end
 
     it "redirects to the admin_settings list" do
       expect(Admin::Settings).to receive(:find).and_return(mock_settings(:destroy => true))
       expect(mock_settings).to receive(:destroy)
-      delete :destroy, :id => "1"
+      delete :destroy, params: { :id => "1" }
       expect(response).to redirect_to(admin_settings_url)
     end
   end

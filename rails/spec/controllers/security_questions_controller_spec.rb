@@ -64,11 +64,11 @@ describe SecurityQuestionsController do
       allow(controller).to receive(:current_user).and_return @student.user
       expect(@student.user).to receive(:update_security_questions!)
 
-      put :update, @params_for_update
+      put :update, params: @params_for_update
     end
 
     it "redirects the user to their home page once they set their security questions" do
-      put :update, @params_for_update
+      put :update, params: @params_for_update
 
       expect(@response).to redirect_to(root_path)
     end
@@ -76,7 +76,7 @@ describe SecurityQuestionsController do
     it "does not accept invalid question values" do
       expect(SecurityQuestion).to receive(:errors_for_questions_list!).and_return(["Wicked bad errors!"])
 
-      put :update, @params_for_update
+      put :update, params: @params_for_update
 
       expect(flash['error']).to include("Wicked bad errors!")
       expect(response).to render_template("edit")

@@ -21,12 +21,12 @@ describe API::V1::ClassesController do
     end
 
     it "returns a 200 code for a valid class" do
-      get :show, id: clazz.id
+      get :show, params: { id: clazz.id }
       expect(response.status).to eql(200)
     end
 
     it "returns only non archived offerings" do
-      get :show, id: clazz.id
+      get :show, params: { id: clazz.id }
       json = JSON.parse(response.body)
       expect(json['offerings'].size).to eq 2
       expect(json['offerings'][0]['id']).to eq offering_a.id
@@ -38,7 +38,7 @@ describe API::V1::ClassesController do
   # TODO: auto-generated
   describe '#mine' do
     it 'GET mine' do
-      get :mine, {}, {}
+      get :mine
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -47,7 +47,7 @@ describe API::V1::ClassesController do
   # TODO: auto-generated
   describe '#info' do
     it 'GET info' do
-      get :info, {}, {}
+      get :info
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -56,7 +56,7 @@ describe API::V1::ClassesController do
   # TODO: auto-generated
   describe '#log_links' do
     it 'GET log_links' do
-      get :log_links, {}, {}
+      get :log_links
 
       expect(response).to have_http_status(:bad_request)
     end

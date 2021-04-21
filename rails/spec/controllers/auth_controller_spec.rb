@@ -7,7 +7,7 @@ RSpec.describe AuthController, type: :controller do
   # TODO: auto-generated
   describe '#verify_logged_in' do
     it 'GET verify_logged_in' do
-      get :verify_logged_in, {}, {}
+      get :verify_logged_in
 
       expect(response).to have_http_status(:redirect)
     end
@@ -16,7 +16,7 @@ RSpec.describe AuthController, type: :controller do
   # TODO: auto-generated
   describe '#login' do
     it 'GET login' do
-      get :login, {}, {}
+      get :login
 
       expect(response).to have_http_status(:ok)
     end
@@ -25,7 +25,7 @@ RSpec.describe AuthController, type: :controller do
   describe '#oauth_authorize' do
     let (:params) { {} }
 
-    subject { get :oauth_authorize, params, {} }
+    subject { get :oauth_authorize, params: params }
 
     context 'without a logged in user' do
       context 'with invalid parameters' do
@@ -78,7 +78,7 @@ RSpec.describe AuthController, type: :controller do
   # TODO: auto-generated
   describe '#access_token' do
     it 'GET access_token' do
-      get :access_token, {}, {}
+      get :access_token
 
       expect(response).to have_http_status(:ok)
     end
@@ -87,7 +87,7 @@ RSpec.describe AuthController, type: :controller do
   # TODO: auto-generated
   describe '#failure' do
     it 'GET failure' do
-      get :failure, {}, {}
+      get :failure
 
       expect(response).to have_http_status(:redirect)
     end
@@ -96,7 +96,7 @@ RSpec.describe AuthController, type: :controller do
   # TODO: auto-generated
   describe '#user' do
     it 'GET user' do
-      get :user, {}, {}
+      get :user
 
       expect(response).to have_http_status(:redirect)
     end
@@ -105,7 +105,7 @@ RSpec.describe AuthController, type: :controller do
   # TODO: auto-generated
   describe '#isalive' do
     it 'GET isalive' do
-      get :isalive, {}, {}
+      get :isalive
 
       expect(response).to have_http_status(:redirect)
     end

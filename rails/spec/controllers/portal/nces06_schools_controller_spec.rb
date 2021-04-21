@@ -14,19 +14,19 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
     end
 
     it 'GET index' do
-      get :index, {}, {}
+      get :index
 
       expect(response).to have_http_status(:ok)
     end
 
     it 'GET index for state' do
-      get :index, state_or_province: 'WA'
+      get :index, params: { state_or_province: 'WA' }
 
       expect(response).to have_http_status(:ok)
     end
 
     it 'GET index for id' do
-      get :index, nces_district_id: 123
+      get :index, params: { nces_district_id: 123 }
 
       expect(response).to have_http_status(:ok)
     end
@@ -35,7 +35,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show
 
       expect(response).to have_http_status(:redirect)
     end
@@ -44,7 +44,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {}, {}
+      get :edit
 
       expect(response).to have_http_status(:redirect)
     end
@@ -53,7 +53,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:redirect)
     end
@@ -62,7 +62,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update
 
       expect(response).to have_http_status(:redirect)
     end
@@ -71,7 +71,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy
 
       expect(response).to have_http_status(:redirect)
     end
@@ -80,7 +80,7 @@ RSpec.describe Portal::Nces06SchoolsController, type: :controller do
   # TODO: auto-generated
   describe '#description' do
     it 'GET description' do
-      get :description, {}, {}
+      get :description
 
       expect(response).to have_http_status(:not_found)
     end
