@@ -1,6 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-describe Portal::Clazz do  
+describe Portal::Clazz do
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
       @existing_clazz = FactoryBot.create(:portal_clazz)
@@ -218,7 +218,7 @@ describe Portal::Clazz do
 
   # def offerings_with_default_classes(user=nil)
   #   return self.offerings_including_default_class unless (user && user.portal_student && self.default_class)
-  #   real_offerings = user.portal_student.clazzes.map{ |c| c.active_offerings }.flatten.uniq.compact
+  #   real_offerings = user.portal_student.clazzes.map{ |c| c.active_offerings }.flatten.distinct.compact
   #   default_offerings = self.active_offerings.reject { |o| real_offerings.include?(o) }
   #   default_offerings
   # end

@@ -112,7 +112,7 @@ class UsersController < ApplicationController
           session[:original_user_id] = switch_from_user.id
         end
         recently_switched_from_users.insert(0, switch_from_user.id)
-        session[:recently_switched_from_users] = recently_switched_from_users.uniq
+        session[:recently_switched_from_users] = recently_switched_from_users.distinct
       end
     end
     redirect_to home_path

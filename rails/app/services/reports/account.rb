@@ -45,7 +45,7 @@ class Reports::Account < Reports::Excel
       user_cohorts = portal_user.cohort_fullnames.join(", ")
     else
       clazzes = portal_user.clazzes.to_a.reject { |c| c.teacher.nil? }
-      user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_fullnames }.flatten.uniq.compact.join(', ')
+      user_cohorts = clazzes.compact.map{|c| c.teacher.cohort_fullnames }.flatten.distinct.compact.join(', ')
     end
 
     user_created = user.created_at

@@ -102,9 +102,9 @@ describe UserPolicy do
     end
 
     it "the active user should be able to view project admins and researchers in project" do
-      admin_and_researcher_ids = (active_user.admin_for_project_admins + active_user.admin_for_project_researchers).uniq.map {|u| u.id}
-      teachers_and_students_ids = (active_user.admin_for_project_teachers + active_user.admin_for_project_students).uniq.map {|u| u.user_id}
-      user_ids = (admin_and_researcher_ids + teachers_and_students_ids).uniq
+      admin_and_researcher_ids = (active_user.admin_for_project_admins + active_user.admin_for_project_researchers).distinct.map {|u| u.id}
+      teachers_and_students_ids = (active_user.admin_for_project_teachers + active_user.admin_for_project_students).distinct.map {|u| u.user_id}
+      user_ids = (admin_and_researcher_ids + teachers_and_students_ids).distinct
       scope.where(["(users.id IN (?)) OR (users.id IN (SELECT user_id FROM portal_teachers))", user_ids])
       teacher_user = User.where(id: a_teacher.user_id).first
       student_user = User.where(id: a_student.user_id).first

@@ -19,12 +19,12 @@ class API::V1::ReportUsersController < API::APIController
     end
     if params[:cohorts] && !params[:cohorts].empty?
       cohort_ids = params[:cohorts].split(',').map(&:to_i)
-      teacher_ids = teacher_ids + Admin::CohortItem.uniq.where("item_type = 'Portal::Teacher' AND admin_cohort_id IN (?)", cohort_ids).pluck("item_id")
+      teacher_ids = teacher_ids + Admin::CohortItem.distinct.where("item_type = 'Portal::Teacher' AND admin_cohort_id IN (?)", cohort_ids).pluck("item_id")
     end
 
     if teacher_ids.length > 0
       users = User
-        .uniq
+        .distinct
         .joins("INNER JOIN portal_teachers ON portal_teachers.user_id = users.id")
         .where("portal_teachers.id IN (?)", teacher_ids)
         .select("users.id, users.login as username, users.first_name, users.last_name")
@@ -93,7 +93,7 @@ class API::V1::ReportUsersController < API::APIController
       results[:totals] = {
         teachers: scopes[:teachers].count(),
         cohorts: scopes[:cohorts].count(),
-        runnables: scopes[:runnables].uniq.select(:runnable_id).count()
+        runnables: scopes[:runnables].distinct.select(:runnable_id).count()
       }
     end
 
@@ -105,7 +105,7 @@ class API::V1::ReportUsersController < API::APIController
       elsif options[:teachers].length >= 4
         like_holder = "%#{options[:teachers]}%"
         ids[:teachers] = scopes[:teachers]
-          .uniq
+          .distinct
           .joins(:user)
           .where("(users.login LIKE ?) OR (users.first_name LIKE ?) OR (users.last_name LIKE ?)", like_holder, like_holder, like_holder)
           .pluck("portal_teachers.id")
@@ -119,7 +119,7 @@ class API::V1::ReportUsersController < API::APIController
         ids[:runnables] = options[:runnables].split(',').map(&:to_i)
       elsif options[:runnables].length >= 4
         ids[:runnables] = scopes[:runnables]
-          .uniq
+          .distinct
           .where("external_activities.name LIKE ?", "%#{options[:runnables]}%")
           .pluck("runnable_id")
       end
@@ -169,7 +169,7 @@ class API::V1::ReportUsersController < API::APIController
     end
 
     query_scope
-      .uniq
+      .distinct
       .joins(:user)
       .select("portal_teachers.id, CONCAT(users.first_name, ' ', users.last_name, ' (', users.login ,')') AS label")
   end
@@ -200,7 +200,7 @@ class API::V1::ReportUsersController < API::APIController
     end
 
     query_scope
-      .uniq
+      .distinct
       .select("admin_cohorts.id, admin_cohorts.name as label")
   end
 
@@ -227,7 +227,7 @@ class API::V1::ReportUsersController < API::APIController
     end
 
     query_scope
-      .uniq
+      .distinct
       .select("external_activities.id, external_activities.name as label")
   end
 

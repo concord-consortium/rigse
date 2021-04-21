@@ -128,7 +128,7 @@ class API::V1::StudentsController < API::APIController
 
     user = User.new(user_strong_params(user_attributes))
     if !user.valid?
-      return error(user.errors.full_messages.uniq.join(". ").gsub("..", "."))
+      return error(user.errors.full_messages.distinct.join(". ").gsub("..", "."))
     end
 
     # temporarily disable sending email notifications for state change events

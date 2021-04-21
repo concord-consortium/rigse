@@ -98,7 +98,7 @@ class Embeddable::MultipleChoice < ApplicationRecord
   end
 
   def has_duplicate_choices?
-    choices.pluck(:choice).uniq.length != choices.length
+    choices.pluck(:choice).distinct.length != choices.length
   end
 
   def correct_answer

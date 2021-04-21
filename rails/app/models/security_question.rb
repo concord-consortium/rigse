@@ -86,7 +86,7 @@ class SecurityQuestion < ApplicationRecord
         valid = false
       end
 
-      if questions.collect { |q| q.question }.uniq.size < questions.size
+      if questions.collect { |q| q.question }.distinct.size < questions.size
         errors << ERROR_DUPLICATE_QUESTIONS
         valid = false
       end

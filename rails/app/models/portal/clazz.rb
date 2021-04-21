@@ -230,7 +230,7 @@ class Portal::Clazz < ApplicationRecord
   def offerings_with_default_classes(user=nil)
     return self.offerings_including_default_class unless (user && user.portal_student && self.default_class)
     real_classes            = user.portal_student.clazzes.to_a.reject { |c| c.default_class }
-    real_offering_runnables = real_classes.map{ |c| c.active_offerings.map { |o| o.runnable } }.flatten.uniq.compact
+    real_offering_runnables = real_classes.map{ |c| c.active_offerings.map { |o| o.runnable } }.flatten.distinct.compact
     default_offerings       = self.active_offerings.reject { |o| real_offering_runnables.include?(o.runnable) }
     default_offerings
   end
@@ -293,7 +293,7 @@ class Portal::Clazz < ApplicationRecord
       .select{ |o| o.runnable && o.runnable.respond_to?(:external_reports) && o.runnable.external_reports }
       .flat_map{ |o| o.runnable.external_reports }
       .select{ |r| r.report_type == "class" }
-      .uniq{ |r| r.id }
+      .distinct{ |r| r.id }
       .sort{ |r1, r2| r1.launch_text <=> r2.launch_text }
   end
 

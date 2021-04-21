@@ -111,7 +111,7 @@ class Portal::Student < ApplicationRecord
 
   ## TODO: fix with has_many finderSQL
   def schools
-    schools = self.clazzes.map {|c| c.school }.uniq.flatten.compact
+    schools = self.clazzes.map {|c| c.school }.distinct.flatten.compact
   end
 
   def school

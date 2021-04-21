@@ -51,7 +51,7 @@ class PageElement < ApplicationRecord
 
   # only destroy the embeddable if it isn't referenced by any other page elements
   def check_for_other_references
-    other_related_page_elements = self.embeddable.page_elements.uniq - [self]
+    other_related_page_elements = self.embeddable.page_elements.distinct - [self]
     self.embeddable.destroy if other_related_page_elements.empty?
   end
 

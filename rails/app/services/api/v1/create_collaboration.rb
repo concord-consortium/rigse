@@ -70,7 +70,7 @@ class API::V1::CreateCollaboration
       external_activity_url = add_param(external_activity_url, 'domain', root_url(protocol: self.protocol,
                                                                                   host:     self.host_with_port))
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
-      
+
       external_activity_url = add_param(external_activity_url, 'logging', @offering.clazz.logging)
       result[:external_activity_url] = external_activity_url
     end
@@ -83,7 +83,7 @@ class API::V1::CreateCollaboration
     @student_objects = self.students.map { |s| Portal::Student.find(s['id']) }
     # Make sure that owner is a collaborator, even if not provided in the list.
     @student_objects << @owner
-    @student_objects = @student_objects.compact.uniq
+    @student_objects = @student_objects.compact.distinct
 
     @collaboration = Portal::Collaboration.create!(
       :owner => @owner,
