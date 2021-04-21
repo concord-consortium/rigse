@@ -250,7 +250,7 @@ class User < ApplicationRecord
           password_confirmation: pw,
           skip_notifications: true
         )
-        user.confirm!
+        user.confirm
       end
 
       #
@@ -313,7 +313,7 @@ class User < ApplicationRecord
     end
   end
 
-  def confirm!
+  def confirm
     super
 
     # send MailChimp subscription data

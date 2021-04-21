@@ -136,7 +136,7 @@ class API::V1::StudentsController < API::APIController
     if !user.save
       return error("Unable to save newly created user")
     end
-    user.confirm!
+    user.confirm
 
     if current_settings.allow_default_class || grade_level.nil?
       portal_student = Portal::Student.create(:user_id => user.id)

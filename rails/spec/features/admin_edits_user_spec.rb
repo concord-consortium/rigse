@@ -183,7 +183,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
   end
 
   def init_project_admin(user, project)
-    user.confirm!
+    user.confirm
     user.confirmed_at { Time.now }
     user.add_role_for_project('admin', project)
   end

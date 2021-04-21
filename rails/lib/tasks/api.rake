@@ -10,7 +10,7 @@ namespace :api do
       :email                 => "admin_api_user@concord.org",
       :password              => password,
       :password_confirmation => password){|u| u.skip_notifications = true}
-    api_user.confirm!
+    api_user.confirm
     api_user.add_role("admin")
 
     # create the client if needed

@@ -881,10 +881,10 @@ protected
   end
 
   # TODO: auto-generated
-  describe '#confirm!' do
-    it 'confirm!' do
+  describe '#confirm' do
+    it 'confirm' do
       user = described_class.new
-      result = user.confirm!
+      result = user.confirm
 
       expect(result).not_to be_nil
     end

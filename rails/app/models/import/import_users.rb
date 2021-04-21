@@ -27,7 +27,7 @@ class Import::ImportUsers < Struct.new(:import_id)
               :password_confirmation => password,
               :require_password_reset => true
             }){|u| u.skip_notifications = true}
-            new_user.confirm!
+            new_user.confirm
             user[:roles].each do |role|
               new_user.add_role(role)
             end

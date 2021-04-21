@@ -222,7 +222,7 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     authorize user
     if user.state != "active"
-      user.confirm!
+      user.confirm
       user.make_user_a_member
 
       # assume this type of user just activated someone from somewhere else in the app
