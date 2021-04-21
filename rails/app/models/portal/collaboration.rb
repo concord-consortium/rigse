@@ -1,4 +1,4 @@
-class Portal::Collaboration < ActiveRecord::Base
+class Portal::Collaboration < ApplicationRecord
   self.table_name = :portal_collaborations
 
   belongs_to :owner, :class_name => "Portal::Student"

@@ -1,4 +1,4 @@
-class Embeddable::ImageQuestion < ActiveRecord::Base
+class Embeddable::ImageQuestion < ApplicationRecord
   self.table_name = "embeddable_image_questions"
   belongs_to :user
   has_many :page_elements, :as => :embeddable

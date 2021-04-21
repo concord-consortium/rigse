@@ -1,4 +1,4 @@
-class Import::DuplicateUser < ActiveRecord::Base
+class Import::DuplicateUser < ApplicationRecord
   self.table_name = :import_duplicate_users
   DUPLICATE_BY_LOGIN = 0
   DUPLICATE_BY_EMAIL = 1

@@ -2,13 +2,13 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Dataservice::BundleContent do
   def reset_table_index(klass, num)
-    ActiveRecord::Base.connection.execute('TRUNCATE ' + klass.table_name)
-    ActiveRecord::Base.connection.execute("ALTER TABLE #{klass.table_name} AUTO_INCREMENT = #{num}")
+    ApplicationRecord.connection.execute('TRUNCATE ' + klass.table_name)
+    ApplicationRecord.connection.execute("ALTER TABLE #{klass.table_name} AUTO_INCREMENT = #{num}")
   end
 
   def restart_transaction
-    ActiveRecord::Base.connection.execute("START TRANSACTION")
-    ActiveRecord::Base.connection.execute("SAVEPOINT active_record_1")
+    ApplicationRecord.connection.execute("START TRANSACTION")
+    ApplicationRecord.connection.execute("SAVEPOINT active_record_1")
   end
 
   describe "normal cases" do

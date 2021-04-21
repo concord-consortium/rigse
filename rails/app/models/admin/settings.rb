@@ -1,6 +1,6 @@
 require 'fileutils'
 
-class Admin::Settings < ActiveRecord::Base
+class Admin::Settings < ApplicationRecord
   MinPubInterval     = 10   # 10 second update seems close to too fast.
   DefaultPubInterval = 300  # default is five minues
   self.table_name = "admin_settings"

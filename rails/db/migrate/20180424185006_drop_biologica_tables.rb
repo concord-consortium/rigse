@@ -1,6 +1,6 @@
 class DropBiologicaTables < ActiveRecord::Migration
   def remove_table(name)
-    drop_table name.to_sym if ActiveRecord::Base.connection.tables.include?(name)
+    drop_table name.to_sym if ApplicationRecord.connection.tables.include?(name)
   end
 
   def up

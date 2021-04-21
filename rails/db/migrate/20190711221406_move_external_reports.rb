@@ -1,14 +1,14 @@
 class MoveExternalReports < ActiveRecord::Migration
 
-  class ExternalReport < ActiveRecord::Base
+  class ExternalReport < ApplicationRecord
   end
 
-  class ExternalActivityReport < ActiveRecord::Base
+  class ExternalActivityReport < ApplicationRecord
     belongs_to :external_activity
     belongs_to :external_report
   end
 
-  class  ExternalActivity  < ActiveRecord::Base
+  class  ExternalActivity  < ApplicationRecord
     belongs_to :external_report
     has_many :external_activity_reports
     has_many :external_reports, through: :external_activity_reports

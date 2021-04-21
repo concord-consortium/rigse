@@ -44,7 +44,7 @@ CapybaraInitializer.configure do |config|
 end
 
 # share the db connections between the test thread and the server thread to fix MySQL errors in tests
-class ActiveRecord::Base
+class ApplicationRecord
   def self.connection
     @@shared_connection
   end
@@ -67,7 +67,7 @@ class ActiveRecord::Base
     configurations.find { |_k, v| v['database'] == connection.current_database }[0]
   end
 end
-ActiveRecord::Base.set_shared_connection
+ApplicationRecord.set_shared_connection
 
 #The above monkeypatch which causes all threads to share the same database connection sometimes causes thread safety related failures. The below monkeypatch attempts to resolve some of those with a mutex. Specifically we were  getting "Mysql2::Error: This connection is in use by..." errors until implementing this fix. This code (and the shared connection code above) can be removed at Rails 5.1 where these issues were solved in Rails & Capybara directly.
 
@@ -87,7 +87,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
-    ActiveRecord::Base.with_database('feature_test') { example.run }
+    ApplicationRecord.with_database('feature_test') { example.run }
   end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -111,7 +111,7 @@ rescue => exception
   puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare"
   puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts "Rails.env: #{Rails.env}"
-  puts "Database: #{ActiveRecord::Base.connection.current_database}"
+  puts "Database: #{ApplicationRecord.connection.current_database}"
   puts
   exit 1
 end

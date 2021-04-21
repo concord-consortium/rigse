@@ -1,9 +1,9 @@
 class CreateMaterialProperties < ActiveRecord::Migration
-  class Admin::Tag < ActiveRecord::Base
+  class Admin::Tag < ApplicationRecord
     self.table_name = 'admin_tags'
   end
 
-  class Activity < ActiveRecord::Base
+  class Activity < ApplicationRecord
     self.table_name = 'activities'
     acts_as_taggable_on :material_properties
     has_many :external_activities, :as => :template
@@ -14,7 +14,7 @@ class CreateMaterialProperties < ActiveRecord::Migration
     end
   end
 
-  class Investigation < ActiveRecord::Base
+  class Investigation < ApplicationRecord
     self.table_name = 'investigations'
     acts_as_taggable_on :material_properties
     has_many :activities, -> { order :position }

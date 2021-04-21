@@ -4,16 +4,16 @@ require 'csv'
 #
 #  * load portal_countries database columns from a CSV file
 #  * associate all existing schools with the USA.
-# 
+#
 #  Much DUPLICATED code here which reflects how the Portal::School and Portal::Country
 #  Classes existed in 2014-09 when this migration was made.
 
-class PortalSchool < ActiveRecord::Base
+class PortalSchool < ApplicationRecord
   self.table_name = :portal_schools
   belongs_to :country, :class_name => "PortalCountry", :foreign_key => "country_id"
 end
 
-class PortalCountry < ActiveRecord::Base
+class PortalCountry < ApplicationRecord
     self.table_name = :portal_countries
     has_many :schools, :class_name => "PortalSchool"
 

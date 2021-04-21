@@ -1,4 +1,4 @@
-class Image < ActiveRecord::Base
+class Image < ApplicationRecord
   attr_accessor :is_reprocessing
 
   belongs_to :user

@@ -1,4 +1,4 @@
-#class ActiveRecord::Base
+#class ApplicationRecord
 #  # stub out the destroy method
 #  def destroy
 #    puts "Psych! not going to destroy: #{self.class} #{self.id} #{self}"
@@ -11,7 +11,7 @@
 #  end
 #end
 
-class UserDeleter 
+class UserDeleter
   DEFAULT_OWNER_LOGIN = "freichsman"
   attr_accessor :keep_list
   attr_accessor :default_owner
@@ -50,7 +50,7 @@ class UserDeleter
 
     self.default_owner = User.find_by_login(DEFAULT_OWNER_LOGIN)
   end
-  
+
   def delete_all
     delete_user_list(User.all)
   end
@@ -70,7 +70,7 @@ class UserDeleter
       Rails.logger.info "I"
     }
   end
-  
+
   def delete_user(user)
     reown_investigations(user)
     delete_clazzes(user)
@@ -85,7 +85,7 @@ class UserDeleter
       Rails.logger.info "S"
     end
   end
-  
+
   def delete_clazzes(user)
     if user.portal_teacher
       if user.portal_teacher.clazzes

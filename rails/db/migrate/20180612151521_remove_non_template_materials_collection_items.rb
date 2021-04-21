@@ -1,5 +1,5 @@
 class RemoveNonTemplateMaterialsCollectionItems < ActiveRecord::Migration
-  class MaterialsCollectionItem < ActiveRecord::Base
+  class MaterialsCollectionItem < ApplicationRecord
   end
 
   def up

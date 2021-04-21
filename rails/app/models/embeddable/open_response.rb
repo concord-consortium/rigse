@@ -1,4 +1,4 @@
-class Embeddable::OpenResponse < ActiveRecord::Base
+class Embeddable::OpenResponse < ApplicationRecord
 
   MIN_FONT_SIZE = 9
   MAX_FONT_SIZE = 24

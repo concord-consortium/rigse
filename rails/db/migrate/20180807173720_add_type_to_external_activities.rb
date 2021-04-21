@@ -1,5 +1,5 @@
 class AddTypeToExternalActivities < ActiveRecord::Migration
-  class ExternalActivity < ActiveRecord::Base
+  class ExternalActivity < ApplicationRecord
   end
 
   def up

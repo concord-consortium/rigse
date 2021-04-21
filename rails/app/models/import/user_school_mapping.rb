@@ -1,3 +1,3 @@
-class Import::UserSchoolMapping < ActiveRecord::Base
+class Import::UserSchoolMapping < ApplicationRecord
   self.table_name = :import_user_school_mappings
 end

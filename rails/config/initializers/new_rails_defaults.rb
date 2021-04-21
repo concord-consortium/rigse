@@ -3,10 +3,10 @@
 
 if defined?(ActiveRecord)
   # Include Active Record class name as root for JSON serialized output.
-  ActiveRecord::Base.include_root_in_json = false
+  ApplicationRecord.include_root_in_json = false
 
   # Store the full class name (including module namespace) in STI type column.
-  ActiveRecord::Base.store_full_sti_class = true
+  ApplicationRecord.store_full_sti_class = true
 end
 
 # Use ISO 8601 format for JSON serialized times and dates.

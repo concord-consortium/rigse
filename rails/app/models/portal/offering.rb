@@ -5,7 +5,7 @@
 # material id of the material assigned.
 # - The clazz_id points to the class to which the material was assigned.
 #
-class Portal::Offering < ActiveRecord::Base
+class Portal::Offering < ApplicationRecord
   self.table_name = :portal_offerings
 
   acts_as_replicatable

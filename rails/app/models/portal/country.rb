@@ -1,6 +1,6 @@
 require 'csv'
 
-class Portal::Country < ActiveRecord::Base
+class Portal::Country < ApplicationRecord
     self.table_name = :portal_countries
     has_many :schools, :class_name => "Portal::School"
 

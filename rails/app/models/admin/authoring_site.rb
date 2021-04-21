@@ -1,3 +1,3 @@
-class Admin::AuthoringSite < ActiveRecord::Base
+class Admin::AuthoringSite < ApplicationRecord
   self.table_name = 'authoring_sites'
 end

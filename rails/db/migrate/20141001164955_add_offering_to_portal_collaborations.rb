@@ -1,19 +1,19 @@
 class AddOfferingToPortalCollaborations < ActiveRecord::Migration
-  class Dataservice::BundleContent < ActiveRecord::Base
+  class Dataservice::BundleContent < ApplicationRecord
     self.table_name = :dataservice_bundle_contents
     belongs_to :collaboration, :class_name => "Portal::Collaboration"
     belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
     delegate :learner, :to => :bundle_logger, :allow_nil => true
   end
-  class Dataservice::BundleLogger < ActiveRecord::Base
+  class Dataservice::BundleLogger < ApplicationRecord
     self.table_name = :dataservice_bundle_loggers
     has_one :learner, :class_name => "Portal::Learner"
   end
-  class Portal::Learner < ActiveRecord::Base
+  class Portal::Learner < ApplicationRecord
     self.table_name = :portal_learners
     belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id"
   end
-  class Portal::Collaboration < ActiveRecord::Base
+  class Portal::Collaboration < ApplicationRecord
     self.table_name = :portal_collaborations
     has_one :bundle_content, :class_name => "Dataservice::BundleContent"
     belongs_to :offering, :class_name => "Portal::Offering"

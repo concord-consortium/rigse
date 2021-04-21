@@ -1,4 +1,4 @@
-class Portal::CollaborationMembership < ActiveRecord::Base
+class Portal::CollaborationMembership < ApplicationRecord
   self.table_name = :portal_collaboration_memberships
 
   belongs_to :collaboration, :class_name => "Portal::Collaboration"

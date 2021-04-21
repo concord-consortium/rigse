@@ -1,4 +1,4 @@
-class Portal::Teacher < ActiveRecord::Base
+class Portal::Teacher < ApplicationRecord
   include Cohorts
 
   self.table_name = :portal_teachers

@@ -1,4 +1,4 @@
-class Portal::LearnerActivityFeedback < ActiveRecord::Base
+class Portal::LearnerActivityFeedback < ApplicationRecord
   belongs_to :portal_learner, class_name: "Portal::Learner"
   belongs_to :activity_feedback, class_name: "Portal::OfferingActivityFeedback"
   self.table_name = :portal_learner_activity_feedbacks

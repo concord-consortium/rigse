@@ -2,7 +2,7 @@
 # This is a denormalized class. Its used to store summary data for
 # learners as would be used in a report.
 
-class Report::Learner < ActiveRecord::Base
+class Report::Learner < ApplicationRecord
   self.table_name = "report_learners"
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",

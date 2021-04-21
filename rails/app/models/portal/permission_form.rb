@@ -1,4 +1,4 @@
-class Portal::PermissionForm < ActiveRecord::Base
+class Portal::PermissionForm < ApplicationRecord
   self.table_name = :portal_permission_forms
 
   has_many :portal_student_permission_forms, :dependent => :destroy, :class_name => "Portal::StudentPermissionForm", :foreign_key => "portal_permission_form_id"

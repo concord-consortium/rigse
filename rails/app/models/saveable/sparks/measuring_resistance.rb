@@ -1,4 +1,4 @@
-class Saveable::Sparks::MeasuringResistance < ActiveRecord::Base
+class Saveable::Sparks::MeasuringResistance < ApplicationRecord
   self.table_name = "saveable_sparks_measuring_resistance"
 
   belongs_to :learner, :class_name => 'Portal::Learner'

@@ -49,7 +49,7 @@ class MiscController < ActionController::Base
 
     # this sql was created because using the active record query language didn't generate the correct distinct ordering
     # additionally it allows us to get all the 'active' stats in one shot
-    result = ActiveRecord::Base.connection.select_one(
+    result = ApplicationRecord.connection.select_one(
       "SELECT COUNT(DISTINCT portal_clazzes.id) AS active_classes, " +
       "COUNT(DISTINCT portal_learners.id) AS active_learners, " +
       "COUNT(DISTINCT portal_learners.student_id) AS active_students, " +
@@ -68,7 +68,7 @@ class MiscController < ActionController::Base
       )
     stats.merge!(result)
 
-    result = ActiveRecord::Base.connection.select_one(
+    result = ApplicationRecord.connection.select_one(
       "SELECT COUNT(DISTINCT portal_schools.id) AS class_schools, " +
       "COUNT(DISTINCT portal_teachers.id) AS class_teachers " +
       "FROM portal_teachers " +
@@ -79,7 +79,7 @@ class MiscController < ActionController::Base
       )
     stats.merge!(result)
 
-    result = ActiveRecord::Base.connection.select_one(
+    result = ApplicationRecord.connection.select_one(
       "SELECT COUNT(DISTINCT portal_schools.id) AS teacher_schools " +
       "FROM portal_teachers " +
       "INNER JOIN portal_school_memberships ON " +

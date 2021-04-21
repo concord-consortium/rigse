@@ -1,4 +1,4 @@
-class Embeddable::MultipleChoice < ActiveRecord::Base
+class Embeddable::MultipleChoice < ApplicationRecord
   self.table_name = "embeddable_multiple_choices"
 
 

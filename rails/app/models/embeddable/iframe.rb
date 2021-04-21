@@ -1,4 +1,4 @@
-class Embeddable::Iframe < ActiveRecord::Base
+class Embeddable::Iframe < ApplicationRecord
   self.table_name = "embeddable_iframes"
 
   belongs_to :user

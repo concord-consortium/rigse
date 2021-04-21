@@ -1,4 +1,4 @@
-class Admin::ProjectMaterial < ActiveRecord::Base
+class Admin::ProjectMaterial < ApplicationRecord
   include Changeable
 
   self.table_name = 'admin_project_materials'

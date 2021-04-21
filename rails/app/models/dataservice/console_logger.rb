@@ -1,4 +1,4 @@
-class Dataservice::ConsoleLogger < ActiveRecord::Base
+class Dataservice::ConsoleLogger < ApplicationRecord
   self.table_name = :dataservice_console_loggers
 
   has_one  :learner, :class_name => "Portal::Learner"

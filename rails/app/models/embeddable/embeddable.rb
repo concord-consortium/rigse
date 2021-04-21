@@ -1,4 +1,4 @@
-class Embeddable::Embeddable < ActiveRecord::Base
+class Embeddable::Embeddable < ApplicationRecord
 
   belongs_to :user
   has_many :page_elements, :as => :embeddable

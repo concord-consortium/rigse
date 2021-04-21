@@ -1,4 +1,4 @@
-class Client < ActiveRecord::Base
+class Client < ApplicationRecord
   has_many :access_grants, :dependent => :delete_all
 
   PUBLIC = "public"

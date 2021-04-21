@@ -1,4 +1,4 @@
-class Portal::Student < ActiveRecord::Base
+class Portal::Student < ApplicationRecord
   self.table_name = :portal_students
 
   acts_as_replicatable
@@ -58,7 +58,7 @@ class Portal::Student < ActiveRecord::Base
     # Disable cache as we have higher chance to avoid race condition causing that the generated login
     # is not unique. Also it's needed when we actually handle that situation (see student_registration.rb),
     # as otherwise subsequent login generation could return the same result as previous call.
-    ActiveRecord::Base.uncached do
+    ApplicationRecord.uncached do
       while (User.login_exists? generated_login)
         counter = counter + 1
         generated_login = "#{suggested_login}#{counter}"

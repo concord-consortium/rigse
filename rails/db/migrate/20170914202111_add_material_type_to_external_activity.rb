@@ -1,6 +1,6 @@
 class AddMaterialTypeToExternalActivity < ActiveRecord::Migration
 
-  class ExternalActivity < ActiveRecord::Base
+  class ExternalActivity < ApplicationRecord
     self.table_name = 'external_activities'
   end
 

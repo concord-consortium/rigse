@@ -1,5 +1,5 @@
 class SpitResearcherReportTypes < ActiveRecord::Migration
-  class ExternalReport < ActiveRecord::Base
+  class ExternalReport < ApplicationRecord
   end
 
   def up

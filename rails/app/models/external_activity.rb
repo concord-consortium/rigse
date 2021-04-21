@@ -1,5 +1,5 @@
 require 'uri'
-class ExternalActivity < ActiveRecord::Base
+class ExternalActivity < ApplicationRecord
 
   # Possible options for source type attribute. For now it's hardcoded. In the future, we might change
   # that to entities living in a database, so it's easier to add new source types.

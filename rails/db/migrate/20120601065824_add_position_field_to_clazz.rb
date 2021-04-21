@@ -1,9 +1,9 @@
 class AddPositionFieldToClazz < ActiveRecord::Migration
-  
-  class Portal::TeacherClazz < ActiveRecord::Base
+
+  class Portal::TeacherClazz < ApplicationRecord
     set_table_name :portal_teacher_clazzes
-  end 
-  
+  end
+
   def self.up
     add_column :portal_teacher_clazzes, :position, :integer, :default=>0
     Portal::TeacherClazz.reset_column_information

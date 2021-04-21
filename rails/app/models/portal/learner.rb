@@ -1,4 +1,4 @@
-class Portal::Learner < ActiveRecord::Base
+class Portal::Learner < ApplicationRecord
   include Rails.application.routes.url_helpers
 
   self.table_name = :portal_learners

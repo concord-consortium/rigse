@@ -1,4 +1,4 @@
-class Dataservice::BucketLogger < ActiveRecord::Base
+class Dataservice::BucketLogger < ApplicationRecord
 
   belongs_to :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
   has_many :bucket_contents, -> { order :updated_at }, :dependent => :destroy ,:class_name => "Dataservice::BucketContent", :foreign_key => 'bucket_logger_id'

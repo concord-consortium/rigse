@@ -5,7 +5,7 @@
 # It's meant to be run by developer in rails console directly (can be copy-pasted to staging or production console).
 # It was used together with LARA scripts generating statistics per each activity (embeddable_stats.rb)
 def assignments_count(activities_csv_path)
-  ActiveRecord::Base.logger = nil # disable SQL logging
+  ApplicationRecord.logger = nil # disable SQL logging
   line_idx = 0
   File.readlines(activities_csv_path).each do |line|
     urls = URI.extract(line)
