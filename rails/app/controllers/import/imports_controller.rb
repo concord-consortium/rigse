@@ -203,7 +203,7 @@ class Import::ImportsController < ApplicationController
       import_activity = fetch_import_activity
       import_activity.destroy
     end
-    render :nothing => true
+    head :ok
   end
 
   def batch_import_status

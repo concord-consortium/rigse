@@ -341,7 +341,7 @@ class Portal::ClazzesController < ApplicationController
     if current_visitor.portal_teacher
       params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
     end
-    render :nothing => true
+    head :ok
   end
 
   def fullstatus
