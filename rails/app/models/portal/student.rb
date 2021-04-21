@@ -17,10 +17,10 @@ class Portal::Student < ApplicationRecord
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
 
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz"
-  has_many :teachers, -> { uniq }, :through => :clazzes, :class_name => "Portal::Teacher"
+  has_many :teachers, -> { distinct }, :through => :clazzes, :class_name => "Portal::Teacher"
   # students cohorts are infered from its teacher(s)
-  has_many :cohorts, -> { uniq }, :through => :teachers, :class_name => "Admin::Cohort"
-  has_many :projects, -> { uniq }, :through => :cohorts, :class_name => "Admin::Project"
+  has_many :cohorts, -> { distinct }, :through => :teachers, :class_name => "Admin::Cohort"
+  has_many :projects, -> { distinct }, :through => :cohorts, :class_name => "Admin::Project"
 
   has_many :own_collaborations, :class_name => "Portal::Collaboration", :foreign_key => "owner_id"
   has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"

@@ -148,7 +148,7 @@ class User < ApplicationRecord
   validates_confirmation_of :password_confirmation
 
   # Relationships
-  has_and_belongs_to_many :roles, -> { uniq }, :join_table => "roles_users"
+  has_and_belongs_to_many :roles, -> { distinct }, :join_table => "roles_users"
 
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
