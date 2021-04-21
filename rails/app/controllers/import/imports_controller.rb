@@ -1,7 +1,7 @@
 class Import::ImportsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_only
+  before_action :admin_only
 
   def import_school_district_json
     # PUNDIT_REVIEW_AUTHORIZE

@@ -3,7 +3,7 @@ class SearchController < ApplicationController
   include RestrictedController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :teacher_only, :only => [:index, :show]
+  before_action :teacher_only, :only => [:index, :show]
 
   protected
 

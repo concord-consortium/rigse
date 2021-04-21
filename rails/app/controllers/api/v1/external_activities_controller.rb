@@ -1,6 +1,6 @@
 class API::V1::ExternalActivitiesController < API::APIController
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   def create
     authorize [:api, :v1, :external_activity]

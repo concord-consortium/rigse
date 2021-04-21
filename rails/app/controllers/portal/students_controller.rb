@@ -3,7 +3,7 @@ class Portal::StudentsController < ApplicationController
   include RestrictedPortalController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :manager_or_researcher, :only => [ :show ]
+  before_action :manager_or_researcher, :only => [ :show ]
 
   public
 

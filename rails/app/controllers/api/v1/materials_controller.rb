@@ -46,7 +46,7 @@ class API::V1::MaterialsController < API::APIController
   #
   # Validate methods that require material type and id.
   #
-  before_filter :validate_material,
+  before_action :validate_material,
                 :only => [  :get_materials_standards,
                             :add_materials_standard,
                             :remove_materials_standard  ]
@@ -54,7 +54,7 @@ class API::V1::MaterialsController < API::APIController
   #
   # Validate methods that require an ASN api key be configured.
   #
-  before_filter :validate_asn_api_key,
+  before_action :validate_asn_api_key,
                 :only => [  :get_standard_statements,
                             :add_materials_standard     ]
 
@@ -62,7 +62,7 @@ class API::V1::MaterialsController < API::APIController
   # Validate methods that mutate material standards, or
   # attempt to access the ASN API.
   #
-  before_filter :validate_standards_permissions,
+  before_action :validate_standards_permissions,
                 :only => [  :get_standard_statements,
                             :add_materials_standard,
                             :remove_materials_standard  ]
@@ -601,7 +601,7 @@ class API::V1::MaterialsController < API::APIController
 
     #
     # Prevent anonymous user from using this as open ASN proxy.
-    # Though this should not be encountered if before_filters are
+    # Though this should not be encountered if before_actions are
     # configured correctly to check for author/admin/project admin on
     # the specified material.
     #

@@ -1,8 +1,8 @@
 class API::V1::SiteNoticesController < API::APIController
 
-  before_filter :authorized
+  before_action :authorized
 
-  # TODO: figure out why rspec is breaking and add authorization back (and remove before_filter)
+  # TODO: figure out why rspec is breaking and add authorization back (and remove before_action)
 
   protected
 

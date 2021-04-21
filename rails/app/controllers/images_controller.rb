@@ -1,5 +1,5 @@
 class ImagesController < ApplicationController
-  before_filter :find_image, :only => [:edit, :update, :destroy]
+  before_action :find_image, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
 
   protected

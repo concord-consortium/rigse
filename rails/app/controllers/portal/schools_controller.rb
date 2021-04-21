@@ -2,8 +2,8 @@ class Portal::SchoolsController < ApplicationController
 
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_manager
-  before_filter :states_and_provinces, :only => [:new, :edit, :create, :update]
+  before_action :admin_or_manager
+  before_action :states_and_provinces, :only => [:new, :edit, :create, :update]
 
   protected
 

@@ -1,8 +1,8 @@
 class Admin::SiteNoticesController < ApplicationController
 
-  before_filter :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
+  before_action :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
 
-  # TODO: figure out why rspec is breaking and add authorization back (and remove before_filter)
+  # TODO: figure out why rspec is breaking and add authorization back (and remove before_action)
 
   protected
 

@@ -2,7 +2,7 @@ class Portal::DistrictsController < ApplicationController
 
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_only
+  before_action :admin_only
 
   public
 

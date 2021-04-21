@@ -1,6 +1,6 @@
 class Admin::TagsController < ApplicationController
   include RestrictedController
-  before_filter :admin_only
+  before_action :admin_only
 
   # GET /admin_tags
   # GET /admin_tags.xml

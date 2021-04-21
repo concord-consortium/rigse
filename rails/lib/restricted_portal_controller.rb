@@ -4,7 +4,7 @@ module RestrictedPortalController
     # include methods like require_roles
     include RestrictedController
      clazz.class_eval {
-       before_filter :manager, :only => :index
+       before_action :manager, :only => :index
 
        protected
        # must define current_clazz in calling controller class
