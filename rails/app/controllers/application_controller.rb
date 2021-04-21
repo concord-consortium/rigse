@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   include Clipboard
   include Pundit
 
-  protect_from_forgery
+  protect_from_forgery prepend: false
 
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
