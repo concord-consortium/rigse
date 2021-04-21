@@ -1221,10 +1221,10 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth
   open4 (~> 1.0)
-  paperclip
+  paperclip (~> 4)
   pry
   pry-byebug
-  pundit
+  pundit (~> 1)
   rack-cors
   rack-mini-profiler
   rack-secure_samesite_cookies!
