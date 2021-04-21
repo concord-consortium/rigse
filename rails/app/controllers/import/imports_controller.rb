@@ -301,7 +301,7 @@ class Import::ImportsController < ApplicationController
         :x_sendfile => true
     else
       flash['alert'] = "No failed imports."
-      redirect_to :back
+      redirect_back(fallback_location: { action: "batch_import_status" })
     end
   end
 

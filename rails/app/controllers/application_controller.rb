@@ -225,9 +225,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_back_or(path)
-    redirect_to :back
-  rescue ActionController::RedirectBackError
-    redirect_to path
+    redirect_back(fallback_location: path)
   end
 
   def session_sensitive_path
