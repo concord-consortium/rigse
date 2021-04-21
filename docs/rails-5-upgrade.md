@@ -159,8 +159,6 @@
         1. Got many `NameError: uninitialized constant XXX` where `XXX` is the describe class name in the spec test.
         2. Fixed this by adding `config.enable_dependency_loading = true` to add environments where `config.eager_load` is true
 
-
-
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
   2. Gemfile: add back delayed_job_web
