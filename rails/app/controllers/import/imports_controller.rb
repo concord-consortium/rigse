@@ -131,7 +131,7 @@ class Import::ImportsController < ApplicationController
     duplicate_users = Import::DuplicateUser.where(:import_id => user_import.id)
     if duplicate_users.length == 0
       flash['alert'] = "No duplicate users found in the import."
-      redirect_to :back
+      redirect_back(fallback_location: admin_path)
     else
       send_data duplicate_users.to_json,
         :filename => "duplicate_users.json",
