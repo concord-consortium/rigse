@@ -89,14 +89,14 @@ describe Portal::ClazzesController do
       teachers = [@authorized_teacher, @random_teacher]
       @mock_clazz.teachers = teachers
 
-      xml_http_html_request :post, :edit, :id => @mock_clazz.id
+      post :edit, params: {id: @mock_clazz.id}, xhr: true
 
       expect(response).not_to be_success
     end
 
     it "should not allow me to modify the requested class's school" do
       login_admin
-      xml_http_request :post, :edit, :id => @mock_clazz.id
+      post :edit, params: {id: @mock_clazz.id}, xhr: true
 
       assert_select("select[name=?]", "#{@mock_clazz.class.table_name.singularize}[school]", false)
     end
@@ -121,7 +121,7 @@ describe Portal::ClazzesController do
       #   teachers = [@authorized_teacher]
       #   @mock_clazz.teachers = teachers
 
-      #   xml_http_html_request :post, :edit, :id => @mock_clazz.id
+      #   post :edit, params: {id: @mock_clazz.id}, xhr: true
 
       #   # There should be only one teacher listed, and it should not be enabled
       #   assert_select("div#teachers_listing") do
