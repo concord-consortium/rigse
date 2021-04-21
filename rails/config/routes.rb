@@ -534,7 +534,6 @@ RailsPortal::Application.routes.draw do
     get '/recent_activity' => 'home#recent_activity', :as => :recent_activity
     get '/getting_started' => 'home#getting_started', :as => :getting_started
     get '/about' => 'home#about'
-    get '/report' => 'home#report', :as => :report
     get '/collections' => 'home#collections'
     get '/test_exception' => 'home#test_exception', :as => :test_exception
     get '/requirements' => 'home#requirements', :as => :requirements

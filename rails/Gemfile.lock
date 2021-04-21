@@ -22,7 +22,6 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    Ascii85 (1.0.1)
     POpen4 (0.1.4)
       Platform (>= 0.4.0)
       open4
@@ -939,18 +938,9 @@ GEM
       activesupport (>= 3.2.0)
       cocaine (~> 0.5.5)
       mime-types
-    pdf-reader (1.1.1)
-      Ascii85 (~> 1.0.0)
-      ruby-rc4
     posix-spawn (0.3.6)
     power_assert (0.2.2)
     pr_geohash (1.0.0)
-    prawn (0.12.0)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.2)
-    prawn_rails (0.0.11)
-      prawn (>= 0.11.1)
-      railties (>= 3.0.0)
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -1053,7 +1043,6 @@ GEM
       linecache (>= 0.3)
     ruby-prof (0.12.1)
     ruby-prof (0.12.1-x86-mingw32)
-    ruby-rc4 (0.1.5)
     ruby_dep (1.5.0)
     rubyzip (1.2.3)
     safe_yaml (1.0.4)
@@ -1117,8 +1106,7 @@ GEM
     tilt (1.4.1)
     tinymce-rails (3.5.11.1)
       railties (>= 3.1.1)
-    ttfunk (1.0.3)
-    tzinfo (1.2.9)
+    tzinfo (1.2.8)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -1233,12 +1221,10 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth
   open4 (~> 1.0)
-  paperclip (~> 4)
-  prawn (~> 0.12.0)
-  prawn_rails (~> 0.0.6)
+  paperclip
   pry
   pry-byebug
-  pundit (~> 1)
+  pundit
   rack-cors
   rack-mini-profiler
   rack-secure_samesite_cookies!
