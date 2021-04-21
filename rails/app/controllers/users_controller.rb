@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  after_filter :store_location, :only => [:index]
+  after_action :store_location, :only => [:index]
 
   protected
 
