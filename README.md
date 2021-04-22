@@ -16,33 +16,6 @@ Working git, ruby, and rubygems, wget
 
 #### Simple Getting Started
 
-##### Local development
-
-This example assumes that [rvm](https://rvm.io/) is installed.
-This could be a good idea because we use an older version of ruby. You should install Ruby 2.2.6 first:
-
-    rvm install 2.2.6
-
-If you use OS X and you see some errors related to SSL, you might need to use following command instead:
-```
-    rvm install 2.2.6 --with-openssl-dir=`brew --prefix openssl`
-```
-
-
-    git clone git@github.com:concord-consortium/rigse.git portal
-    cd portal
-    echo 'rvm --create use 2.2.6@portal' >.rvmrc
-    rvm --create use 2.2.6@portal
-    gem install bundler -v '1.11.0'
-    bundle install
-    cp config/database.sample.yml config/database.yml (need to fix the mysql password and/or user)
-    cp config/settings.sample.yml config/settings.yml
-    cp config/app_environment_variables.sample.rb config/app_environment_variables.rb
-    rake db:setup
-    rails s
-
-Now open your browser to [http://localhost:3000](http://localhost:3000)
-
 ##### Using Docker
 
 Install Docker and make sure that docker-compose is installed too (it should be part of the standard Docker installation).
