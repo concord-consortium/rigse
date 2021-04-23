@@ -189,12 +189,33 @@ describe API::V1::ExternalActivitiesController do
       end
     end
 
+    context "with a logged in author user" do
+      before (:each) do
+        sign_in author_user
+      end
+
+      it "should not update an activity they did not author" do
+        post :update_by_url, valid_parameters
+        expect(response.status).to eql(403)
+      end
+
+      it "should update an activity they did author" do
+        my_url = "http://activity.com/activity/2"
+        post :create, :name => "My Cool Activity", :url => my_url
+        my_valid_parameters = {
+          url: my_url
+        }
+        post :update_by_url, my_valid_parameters
+        expect(response.body).to eql('{"success":true}')
+      end
+    end
+
     context "with a logged in admin user" do
       before (:each) do
         sign_in admin_user
       end
 
-      it "should create a new activity" do
+      it "should update the activity" do
         post :update_by_url, valid_parameters
         expect(response.body).to eql('{"success":true}')
       end
