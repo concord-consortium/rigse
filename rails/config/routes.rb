@@ -561,7 +561,8 @@ RailsPortal::Application.routes.draw do
     # the controller catch-all and the root route
     get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
 
-    get '/:controller(/:action(/:id))'
+    # this is going to be deprecated in Rails 5.2
+    # get '/:controller(/:action(/:id))'
 
     root :to => 'home#index'
   end
