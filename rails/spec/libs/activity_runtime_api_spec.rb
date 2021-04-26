@@ -64,8 +64,36 @@ RSpec::Matchers.define :have_page_like do |name,url|
   match do |thing|
     activity = thing.respond_to?(:template) ? thing.template : thing
     pages = activity.pages
-    pages.detect{|p| p.name == name &&  p.url == url }
+    pages.detect{ |p| p.name == name &&  p.url == url }
   end
+end
+
+def make_activity_hash(num_pages, questions_per_page)
+  act = OpenStruct.new
+  act.name = 'Activity'
+  act.descripton = 'LARA might still send description, but Portal should ignore it'
+  question_number = 0
+  section = OpenStruct.new
+  section.title="Section 1"
+  section.pages = []
+  (1..num_pages + 1).each do |i|
+    page = OpenStruct.new
+    page.name = "Page #{i}"
+    page.url = "https://pages.com/#{i}"
+    page.elements = []
+    (1..questions_per_page + 1).each do |j|
+      question_number += 1
+      page_index = "P:#{i}-#{j}"
+      question = OpenStruct.new
+      question.type = "open_response"
+      question.prompt = "question #{question_number} #{page_index}"
+      question.id = question_number
+      page.elements.push(question.to_h)
+    end
+    section.pages.push(page.to_h)
+  end
+  act.sections = [section.to_h]
+  act.to_h
 end
 
 describe ActivityRuntimeAPI do
