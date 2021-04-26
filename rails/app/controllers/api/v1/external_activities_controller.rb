@@ -27,7 +27,7 @@ class API::V1::ExternalActivitiesController < API::APIController
     external_activity = ExternalActivity.create(
       :name                   => name,
       :url                    => url,
-      :publication_status     => params[:publication_status] || "private",
+      :publication_status     => params[:publication_status] || "published",
       :user                   => user,
       :append_auth_token      => params[:append_auth_token] || false,
       :author_url             => params[:author_url],
