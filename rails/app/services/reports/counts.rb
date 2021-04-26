@@ -30,7 +30,7 @@ class Reports::Counts
   end
 
   def active_students
-    @active_students = active_learners.collect{|l| l.student}.distinct unless @active_students
+    @active_students = active_learners.collect{|l| l.student}.uniq unless @active_students
     @active_students
   end
 
@@ -53,7 +53,7 @@ class Reports::Counts
       teachers = active_clazzes.collect do |clazz|
         clazz.teachers
       end
-      @active_teachers = teachers.flatten.distinct
+      @active_teachers = teachers.flatten.uniq
     end
     @active_teachers
   end
@@ -80,7 +80,7 @@ class Reports::Counts
   BY_COHORT = lambda {|t|
     cs = t.cohort_fullnames || "none" if t.is_a?(Portal::Teacher)
     if t.is_a?(Portal::Student)
-      cs = t.teachers.map{|te| te.cohorts }.flatten.distinct.map{|c| c.fullname }.join(", ")
+      cs = t.teachers.map{|te| te.cohorts }.flatten.uniq.map{|c| c.fullname }.join(", ")
     end
     cs
   }
@@ -131,7 +131,7 @@ class Reports::Counts
       clazzes = active_learners.collect do |learner|
         learner.offering.clazz
       end
-      @active_clazzes = clazzes.to_a.compact.distinct
+      @active_clazzes = clazzes.to_a.compact.uniq
     end
     @active_clazzes
   end

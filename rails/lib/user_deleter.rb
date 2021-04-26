@@ -46,7 +46,7 @@ class UserDeleter
     self.keep_list = self.keep_list - report_users
     self.keep_list = self.keep_list - sakai_users
     self.keep_list = self.keep_list - no_email_users
-    self.keep_list.distinct!
+    self.keep_list.uniq!
 
     self.default_owner = User.find_by_login(DEFAULT_OWNER_LOGIN)
   end

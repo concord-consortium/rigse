@@ -13,11 +13,11 @@ class Admin::Cohort < ApplicationRecord
   end
 
   def teachers
-    items.where(:item_type => 'Portal::Teacher').map {|i| Portal::Teacher.find_by_id(i.item_id)}.to_a.flatten.distinct.compact
+    items.where(:item_type => 'Portal::Teacher').map {|i| Portal::Teacher.find_by_id(i.item_id)}.to_a.flatten.uniq.compact
   end
 
   def students
-    teachers.map {|t| t.students}.flatten.distinct
+    teachers.map {|t| t.students}.flatten.uniq
   end
 
   def fullname

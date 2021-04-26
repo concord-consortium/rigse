@@ -10,7 +10,7 @@ class Admin::PermissionFormsController < ApplicationController
     student = Portal::Student.find(student_id)
     return false unless student
     permission_ids ||= []
-    permission_ids = [permission_ids].flatten.compact.distinct
+    permission_ids = [permission_ids].flatten.compact.uniq
     permissions = permission_ids.map { |pid| Portal::PermissionForm.find(pid) }
     student.permission_forms = permissions
     student.save

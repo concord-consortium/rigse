@@ -577,35 +577,35 @@ class User < ApplicationRecord
   end
 
   def admin_for_project_cohorts
-    admin_for_projects.map {|p| p.cohorts}.flatten.distinct
+    admin_for_projects.map {|p| p.cohorts}.flatten.uniq
   end
 
   def admin_for_project_admins
-    admin_for_projects.map {|p| p.project_admins}.flatten.distinct
+    admin_for_projects.map {|p| p.project_admins}.flatten.uniq
   end
 
   def admin_for_project_researchers
-    admin_for_projects.map {|p| p.project_researchers}.flatten.distinct
+    admin_for_projects.map {|p| p.project_researchers}.flatten.uniq
   end
 
   def admin_for_project_teachers
-    admin_for_project_cohorts.map {|c| c.teachers}.flatten.distinct
+    admin_for_project_cohorts.map {|c| c.teachers}.flatten.uniq
   end
 
   def admin_for_project_students
-    admin_for_project_cohorts.map {|c| c.students}.flatten.distinct
+    admin_for_project_cohorts.map {|c| c.students}.flatten.uniq
   end
 
   def researcher_for_project_cohorts
-    researcher_for_projects.map {|p| p.cohorts}.flatten.distinct
+    researcher_for_projects.map {|p| p.cohorts}.flatten.uniq
   end
 
   def researcher_for_project_teachers
-    researcher_for_project_cohorts.map {|c| c.teachers}.flatten.distinct
+    researcher_for_project_cohorts.map {|c| c.teachers}.flatten.uniq
   end
 
   def researcher_for_project_students
-    researcher_for_project_cohorts.map {|c| c.students}.flatten.distinct
+    researcher_for_project_cohorts.map {|c| c.students}.flatten.uniq
   end
 
   def cohorts

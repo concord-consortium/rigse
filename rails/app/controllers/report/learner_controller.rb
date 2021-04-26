@@ -159,7 +159,7 @@ class Report::LearnerController < ApplicationController
 
     # TODO: instead of refusing the request, modify the arg_block_bouncer to contain a list of the selected
     # authoring sites, with a submit button for each site (and disable the javascript auto-submit)
-    if authoring_sites.distinct.count > 1
+    if authoring_sites.uniq.count > 1
       alert_and_reload "The selected learners' arg block activity occurred on more than one authoring site. Try limiting your request to activities hosted on just one authoring site."
       return
     end

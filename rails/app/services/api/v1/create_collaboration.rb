@@ -83,7 +83,7 @@ class API::V1::CreateCollaboration
     @student_objects = self.students.map { |s| Portal::Student.find(s['id']) }
     # Make sure that owner is a collaborator, even if not provided in the list.
     @student_objects << @owner
-    @student_objects = @student_objects.compact.distinct
+    @student_objects = @student_objects.compact.uniq
 
     @collaboration = Portal::Collaboration.create!(
       :owner => @owner,

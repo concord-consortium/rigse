@@ -18,7 +18,7 @@ class Report::EmbeddableFilter < ApplicationRecord
   def embeddables
     return @embeddables_internal if @embeddables_internal
     _embeddables_internal = read_attribute(:embeddables) || []
-    @embeddables_internal = _embeddables_internal.to_a.map{|em| em[:type].constantize.find(em[:id]) }.compact.distinct unless @embeddables_internal
+    @embeddables_internal = _embeddables_internal.to_a.map{|em| em[:type].constantize.find(em[:id]) }.compact.uniq unless @embeddables_internal
     return @embeddables_internal
   end
 

@@ -30,7 +30,7 @@ module Portal::ClazzesHelper
     other_students = []
     if can_edit
       other_clazzes = portal_clazz.school ? (portal_clazz.school.clazzes.includes(:students => :user) - [portal_clazz]) : []
-      other_students = other_clazzes.map { |c| c.students}.flatten.distinct
+      other_students = other_clazzes.map { |c| c.students}.flatten.uniq
       other_students = other_students - portal_clazz.students
       other_students.reject! { |s| s.user.nil?}
       other_students.compact!

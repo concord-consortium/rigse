@@ -24,7 +24,7 @@ class Report::Learner::Selector
       ids = hits.map { |h| h['_id'] }
       @learners = include_runnable_and_learner ? Report::Learner.includes(:runnable, :learner).find(ids) : Report::Learner.find(ids)
       @runnable_names = hits.map { |h| h['_source']['runnable_type_and_id'] }
-      @runnable_names = @runnable_names.distinct
+      @runnable_names = @runnable_names.uniq
     end
   end
 

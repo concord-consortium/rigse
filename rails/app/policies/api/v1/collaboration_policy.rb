@@ -31,7 +31,7 @@ class API::V1::CollaborationPolicy < Struct.new(:user, :api_v1_collaboration)
   def request_is_peer?
     auth_header = request.headers["Authorization"]
     auth_token = auth_header && auth_header =~ /^Bearer (.*)$/ ? $1 : ""
-    peer_tokens = Client.all.map { |c| c.app_secret }.distinct
+    peer_tokens = Client.all.map { |c| c.app_secret }.uniq
     peer_tokens.include?(auth_token)
   end
 

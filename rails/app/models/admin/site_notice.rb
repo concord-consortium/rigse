@@ -34,7 +34,7 @@ class Admin::SiteNotice < ApplicationRecord
       notice_dismissed = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(notice.id, user.id)
       all_notices << notice if notice_dismissed.nil? or (notice.updated_at > notice_dismissed.updated_at)
     end
-    all_notices = all_notices.distinct
+    all_notices = all_notices.uniq
     all_notices = all_notices.sort{|a,b| b.updated_at <=> a.updated_at }
     if(all_notices.length == 0)
       return notices_hash

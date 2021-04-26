@@ -83,7 +83,7 @@ class Dataservice::ProcessExternalActivityDataJob
     # Delayed::Worker.logger.debug("*** choice_ids #{choice_ids}")
 
     process_multiple_choice(embeddable.id,
-                            choice_ids.compact.distinct,
+                            choice_ids.compact.uniq,
                             {},
                             data["is_final"])
   end

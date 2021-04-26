@@ -521,7 +521,7 @@ module ApplicationHelper
 
     if @render_scope
       if @render_scope.respond_to?("page_elements")
-        embeddables = @render_scope.page_elements.collect{|pe| pe.embeddable}.distinct
+        embeddables = @render_scope.page_elements.collect{|pe| pe.embeddable}.uniq
         if embeddables.include?(thing)
           return true
         end
@@ -579,7 +579,7 @@ module ApplicationHelper
   end
 
   def students_in_class(all_students)
-    all_students.to_a.compact.distinct.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
+    all_students.to_a.compact.uniq.sort{|a,b| (a.user ? [a.first_name, a.last_name] : ["",""]) <=> (b.user ? [b.first_name, b.last_name] : ["",""])}
   end
 
 #            Welcome

@@ -50,7 +50,7 @@ module SaveableExtraction
         choices_to_process << $1.to_i if c.has_attribute?('local_id') && c.get_attribute('local_id') =~ /(?:embeddable__)?multiple_choice_choice_(\d+)/
       end
       rationales = extract_multiple_choice_rationales(choice.parent)
-      process_multiple_choice(nil, choices_to_process.distinct, rationales)
+      process_multiple_choice(nil, choices_to_process.uniq, rationales)
     end
   end
 

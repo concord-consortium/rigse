@@ -36,7 +36,7 @@ module Publishable
         if self.publication_status
           publication_states << self.publication_status.to_sym
         end
-        return publication_states.distinct
+        return publication_states.uniq
       end
 
       def public?

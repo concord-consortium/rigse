@@ -71,7 +71,7 @@ OTML
   private
 
   def imports_otml
-    imps = (self.imports + ['org.concord.otrunk.OTStateRoot', 'org.concord.otrunk.user.OTUserObject', 'org.concord.otrunk.user.OTReferenceMap']).distinct
+    imps = (self.imports + ['org.concord.otrunk.OTStateRoot', 'org.concord.otrunk.user.OTUserObject', 'org.concord.otrunk.user.OTReferenceMap']).uniq
     imps.map{|i| %!    <import class="#{i}" />! }.join("\n")
   end
 
