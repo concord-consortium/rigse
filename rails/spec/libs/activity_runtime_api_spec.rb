@@ -72,28 +72,29 @@ def make_activity_hash(num_pages, questions_per_page)
   act = OpenStruct.new
   act.name = 'Activity'
   act.descripton = 'LARA might still send description, but Portal should ignore it'
+  act.url = "https://activities.com/1"
   question_number = 0
   section = OpenStruct.new
-  section.title="Section 1"
+  section.name = 'Section 1'
   section.pages = []
-  (1..num_pages + 1).each do |i|
+  (1..num_pages).each do |i|
     page = OpenStruct.new
     page.name = "Page #{i}"
     page.url = "https://pages.com/#{i}"
     page.elements = []
-    (1..questions_per_page + 1).each do |j|
+    (1..questions_per_page).each do |j|
       question_number += 1
       page_index = "P:#{i}-#{j}"
       question = OpenStruct.new
-      question.type = "open_response"
+      question.type = 'open_response'
       question.prompt = "question #{question_number} #{page_index}"
       question.id = question_number
-      page.elements.push(question.to_h)
+      page.elements.push(question.to_h.stringify_keys)
     end
-    section.pages.push(page.to_h)
+    section.pages.push(page.to_h.stringify_keys)
   end
-  act.sections = [section.to_h]
-  act.to_h
+  act.sections = [section.to_h.stringify_keys]
+  act.to_h.stringify_keys
 end
 
 describe ActivityRuntimeAPI do
@@ -291,6 +292,18 @@ describe ActivityRuntimeAPI do
 
 
   describe "publish_activity" do
+
+    it "should keep the pages in the correct order" do
+      act_hash = make_activity_hash(4, 3)
+      result = ActivityRuntimeAPI.publish_activity(act_hash, user)
+      act = result.template
+      expect(act).to be_a_kind_of(Activity)
+      expect(act.pages).to have(4).pages
+      act.pages.each_with_index do |page, index|
+        expect(page.position).to eq(index+1)
+        expect(page.name).to eq("Page #{index+1}")
+      end
+    end
 
     describe "When publishing a new external activity" do
       it 'should get nil from update_activity' do
