@@ -40,6 +40,18 @@ You can launch the service on a local server with
 sam local start-api
 ```
 
+## Running tests
+
+Start the server running on port 3001: `sam local start-lambda`
+
+In a new tab
+
+```bash
+cd report-demo
+npm install
+npm run test
+```
+
 ## HMAC secret
 
 In order to validate that the requests from the report portal haven't been modified, the portal's queries are signed with a secret key, `JWTHMACSecret`. This report needs the same key to be able to compare the signatures.
