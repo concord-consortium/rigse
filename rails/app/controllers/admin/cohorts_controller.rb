@@ -10,13 +10,6 @@ class Admin::CohortsController < ApplicationController
 
   private
 
-  def check_for_project
-    return unless params[:project_id]
-
-    @project = Admin::Project.find(params[:project_id])
-    authorize @project
-  end
-
   def get_scoped_projects
     @projects = policy_scope(Admin::Project)
     @projects = @projects.where(id: @project.id) if @project
