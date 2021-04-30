@@ -70,8 +70,10 @@ pass before changing any code.
 
 Prepare a database for use when running the spec tests:
 
+    RAILS_ENV=test rake db:create
     rake db:test:prepare
     rake db:feature_test:prepare
+    RAILS_ENV=cucumber rake app:setup:create_default_data
 
 Start SOLR in test environment (it works with cucumber tests too):
 
@@ -85,6 +87,7 @@ Prepare a database for use when running the cucumber tests:
 
     RAILS_ENV=feature_test rake db:create
     rake db:feature_test:prepare
+    RAILS_ENV=cucumber rake app:setup:create_default_data
 
 Run the cucumber integration tests:
 
