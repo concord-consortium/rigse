@@ -24,6 +24,7 @@ RailsPortal::Application.routes.draw do
 
   get 'search/index'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
+  get 'search/setup_material_type' => 'search#setup_material_type'
   get '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report
   get '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report
 

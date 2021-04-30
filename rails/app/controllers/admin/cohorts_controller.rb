@@ -19,14 +19,14 @@ class Admin::CohortsController < ApplicationController
     @admin_cohort = Admin::Cohort.find(params[:id])
   end
 
-  public
-
   def check_for_project
     return unless params[:project_id]
 
     @project = Admin::Project.find(params[:project_id])
     authorize @project
   end
+
+  public
 
   # GET /admin_cohorts
   def index

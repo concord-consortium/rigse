@@ -15,6 +15,12 @@ class RegistrationsController < Devise::RegistrationsController
     session[:omniauth] = nil unless @user.new_record?
   end
 
+  def after_update_path_for(scope)
+    session[:referrer] ? session[:referrer] : root_path
+  end
+
+  private
+
   def build_resource(*args)
     super
 
@@ -24,7 +30,4 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def after_update_path_for(scope)
-    session[:referrer] ? session[:referrer] : root_path
-  end
 end

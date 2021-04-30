@@ -5,13 +5,12 @@ class Admin::ProjectLinksController < ApplicationController
   before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
   before_filter :find_project_link, only: ['show', 'edit', 'update', 'destroy']
 
+  private
 
   def check_for_project
     return unless params[:project_id]
     @project = Admin::Project.find(params[:project_id])
   end
-
-  private
 
   def get_scoped_projects
     @projects = policy_scope(Admin::Project)
