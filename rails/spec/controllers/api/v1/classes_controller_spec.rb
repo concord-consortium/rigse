@@ -56,7 +56,7 @@ describe API::V1::ClassesController do
   # TODO: auto-generated
   describe '#log_links' do
     it 'GET log_links' do
-      get :log_links, {}, {}
+      get :log_links, {id: 1}, {}
 
       expect(response).to have_http_status(:bad_request)
     end

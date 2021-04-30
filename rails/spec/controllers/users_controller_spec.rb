@@ -206,7 +206,7 @@ describe UsersController do
 
     it 'shows thank you page to teacher on successful registration' do
 
-      get :registration_successful, {:type => 'teacher'}
+      get :registration_successful, {:type => 'teacher', :login => "test"}
 
       expect(@response).to render_template("users/thanks")
 
@@ -217,7 +217,7 @@ describe UsersController do
 
     it 'shows thank you page to the student with login name on successful registration' do
 
-      get :registration_successful, {:type => 'student'}
+      get :registration_successful, {:type => 'student', :login => "test"}
 
       expect(@response).to render_template("portal/students/signup_success")
 

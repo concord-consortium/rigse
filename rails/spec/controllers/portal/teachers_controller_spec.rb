@@ -44,7 +44,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#teacher_admin_or_manager' do
     it 'GET teacher_admin_or_manager' do
-      get :teacher_admin_or_manager, {}, {}
+      get :teacher_admin_or_manager, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -71,7 +71,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#successful_creation' do
     it 'GET successful_creation' do
-      get :successful_creation, {}, {}
+      get :successful_creation, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -80,7 +80,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#failed_creation' do
     it 'GET failed_creation' do
-      get :failed_creation, {}, {}
+      get :failed_creation, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end

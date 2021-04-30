@@ -12,7 +12,7 @@ RSpec.describe Portal::BookmarksController, type: :controller do
     # TODO: auto-generated
     describe '#index' do
       it 'GET index' do
-        get :index, {}, {}
+        get :index, {clazz_id: 1}, {}
 
         expect(response).to have_http_status(:not_found)
       end
@@ -21,7 +21,7 @@ RSpec.describe Portal::BookmarksController, type: :controller do
     # TODO: auto-generated
     describe '#visit' do
       it 'GET visit' do
-        get :visit, {}, {}
+        get :visit, {id: 1}, {}
 
         expect(response).to have_http_status(:not_found)
       end
@@ -42,7 +42,7 @@ RSpec.describe Portal::BookmarksController, type: :controller do
     # TODO: auto-generated
     describe '#index' do
       it 'GET index' do
-        get :index, {}, {}
+        get :index, {clazz_id: 1}, {}
 
         expect(response).to have_http_status(:not_found)
       end
@@ -51,7 +51,7 @@ RSpec.describe Portal::BookmarksController, type: :controller do
     # TODO: auto-generated
     describe '#visit' do
       it 'GET visit' do
-        get :visit, {}, {}
+        get :visit, {id: 1}, {}
 
         expect(response).to have_http_status(:not_found)
       end

@@ -74,7 +74,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#current_clazz' do
     it 'GET current_clazz' do
-      get :current_clazz, {}, {}
+      get :current_clazz, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -83,7 +83,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#handle_jnlp_session' do
     it 'GET handle_jnlp_session' do
-      get :handle_jnlp_session, {}, {}
+      get :handle_jnlp_session, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -92,7 +92,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#authorize_show' do
     it 'GET authorize_show' do
-      get :authorize_show, {}, {}
+      get :authorize_show, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -101,7 +101,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#bundle_report' do
     it 'GET bundle_report' do
-      get :bundle_report, {}, {}
+      get :bundle_report, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -110,7 +110,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {}, {}
+      get :show, {id: 1}, {}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -119,7 +119,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {}, {}
+      get :edit, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -137,7 +137,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -146,7 +146,7 @@ describe Portal::LearnersController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {}, {}
+      delete :destroy, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end

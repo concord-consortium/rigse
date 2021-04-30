@@ -15,6 +15,9 @@ RailsPortal::Application.routes.draw do
   match '/auth/concord_id/user' => 'auth#user', via: [:get, :post]
   match '/auth/login' => 'auth#login', :as => :auth_login, via: [:get, :post]
   match '/oauth/token' => 'auth#access_token', via: [:get, :post]
+  get   '/auth/verify_logged_in' => 'auth#verify_logged_in'
+  get   '/auth/failure' => 'auth#failure'
+  get   '/auth/isalive' => 'auth#isalive'
 
   match "search" => 'search#index', :as => :search, via: [:get, :post]
 
@@ -27,6 +30,22 @@ RailsPortal::Application.routes.draw do
   post "help/preview_help_page"
   post "home/preview_about_page"
   post "home/preview_home_page"
+
+  # external_activities can have uuids for ids so this resource needs to lay outside the :id constaint
+  resources :external_activities, path: 'eresources' do   # this is namespaced as external activities can use uuids for ids and this line lies within a integer id constraint
+    collection do
+      post :publish
+    end
+    member do
+      get :matedit
+      get :archive
+      get :unarchive
+      get :set_private_before_matedit
+      get :copy
+      get 'collections' => 'external_activities#edit_collections'
+      put 'collections' => 'external_activities#update_collections'
+    end
+  end
 
   constraints :id => /\d+/ do
     namespace :saveable do
@@ -59,6 +78,7 @@ RailsPortal::Application.routes.draw do
           get :roster
           get :materials
           get :fullstatus
+          get :current_clazz
         end
 
         resources :bookmarks, only: [:index]
@@ -67,6 +87,10 @@ RailsPortal::Application.routes.draw do
           get :info
           get 'manage', :to => 'clazzes#manage_classes'
         end
+      end
+
+      namespace :clazzes do
+        post :sort_offerings
       end
 
       get '/bookmark/visit/:id' => 'bookmarks#visit',  :as => :visit_bookmark
@@ -89,6 +113,9 @@ RailsPortal::Application.routes.draw do
           get :report
           get :bundle_report
           get :activity_report
+          get :authorize_show
+          get :handle_jnlp_session
+          get :current_clazz
         end
       end
 
@@ -135,7 +162,13 @@ RailsPortal::Application.routes.draw do
 
       resources :subjects
 
-      resources :teachers
+      resources :teachers do
+        member do
+          get :teacher_admin_or_manager
+          get :successful_creation
+          get :failed_creation
+        end
+      end
 
       resources :nces06_districts
 
@@ -153,7 +186,7 @@ RailsPortal::Application.routes.draw do
     match '/signup' => 'users#new', :as => :signup, via: [:get, :post]
     match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil, via: [:get, :post]
     match '/forgot_password' => 'passwords#login', :as => :forgot_password, via: [:get, :post]
-    match '/forgot_password/email' => 'passwords#login', :as => :forgot_password_email, via: [:get, :post]
+    match '/forgot_password/email' => 'passwords#email', :as => :forgot_password_email, via: [:get, :post]
     match '/change_password/:reset_code' => 'passwords#reset', :as => :change_password, via: [:get, :post]
     match '/password/:user_id/questions' => 'passwords#questions', :as => :password_questions, via: [:get, :post]
     match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions, via: [:get, :post]
@@ -292,25 +325,12 @@ RailsPortal::Application.routes.draw do
     get '/report/learner' => 'report/learner#index', :as => :learner_report
     get '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at
     get '/report/learner/report_only' => 'report/learner#report_only', :as => :learner_report_only
+    get '/report/learner/update_learners' => 'report/learner#update_learners'
 
     get '/report/user' => 'report/user#index', :as => :user_report
 
     post '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :version => /v\d+/
     post '/external_activities/republish/:version' => 'external_activities#republish', :as => :external_activity_republish, :version => /v\d+/
-    resources :external_activities, path: 'eresources' do
-      collection do
-        post :publish
-      end
-      member do
-        get :matedit
-        get :archive
-        get :unarchive
-        get :set_private_before_matedit
-        get :copy
-        get 'collections' => 'external_activities#edit_collections'
-        put 'collections' => 'external_activities#update_collections'
-      end
-    end
 
     post '/external_activity/list/filter' => 'external_activities#index', :as => :list_filter_external_activity
 
@@ -548,6 +568,8 @@ RailsPortal::Application.routes.draw do
     get '/time' => 'misc_metal#time', :as => :time
     get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
+    get '/preflight' => 'misc#preflight', :as => :preflight
+    get '/stats' => 'misc#stats', :as => :stats
 
     get '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
@@ -560,8 +582,6 @@ RailsPortal::Application.routes.draw do
     # so the custom page URL can't overwrite another resource URL other than
     # the controller catch-all and the root route
     get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
-
-    # get '/:controller(/:action(/:id))'
 
     root :to => 'home#index'
   end
