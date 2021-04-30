@@ -22,35 +22,6 @@ class API::APIController < ApplicationController
     return error("destroy not configured for this resource")
   end
 
-  protected
-
-  # NOTE: this approach requires you to return from the
-  # method to prevent a double render problem. An easy way to do this:
-  #  return error(...)
-  def error(message, status = 400)
-    render :json =>
-      {
-        :success => false,
-        :response_type => "ERROR",
-        :message => message
-      },
-      :status => status
-  end
-
-  def pundit_user_not_authorized(exception)
-    render status: 403, json: {
-      success: false,
-      message: 'Not authorized'
-    }
-  end
-
-  def parameter_missing(exception)
-    render status: 400, json: {
-      success: false,
-      message: exception.message
-    }
-  end
-
   def check_for_auth_token(params)
     header = request.headers["Authorization"]
     if header && header =~ /^Bearer (.*)$/i
@@ -122,6 +93,35 @@ class API::APIController < ApplicationController
     else
       raise StandardError, 'You must be logged in to use this endpoint'
     end
+  end
+
+  protected
+
+  # NOTE: this approach requires you to return from the
+  # method to prevent a double render problem. An easy way to do this:
+  #  return error(...)
+  def error(message, status = 400)
+    render :json =>
+      {
+        :success => false,
+        :response_type => "ERROR",
+        :message => message
+      },
+      :status => status
+  end
+
+  def pundit_user_not_authorized(exception)
+    render status: 403, json: {
+      success: false,
+      message: 'Not authorized'
+    }
+  end
+
+  def parameter_missing(exception)
+    render status: 400, json: {
+      success: false,
+      message: exception.message
+    }
   end
 
   def auth_not_anonymous(params)
