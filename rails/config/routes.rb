@@ -18,6 +18,7 @@ RailsPortal::Application.routes.draw do
   get   '/auth/verify_logged_in' => 'auth#verify_logged_in'
   get   '/auth/failure' => 'auth#failure'
   get   '/auth/isalive' => 'auth#isalive'
+  get   '/auth/user' => 'auth#user'
 
   match "search" => 'search#index', :as => :search, via: [:get, :post]
 
