@@ -15,7 +15,6 @@ RailsPortal::Application.routes.draw do
   match '/auth/concord_id/user' => 'auth#user', via: [:get, :post]
   match '/auth/login' => 'auth#login', :as => :auth_login, via: [:get, :post]
   match '/oauth/token' => 'auth#access_token', via: [:get, :post]
-  get   '/auth/verify_logged_in' => 'auth#verify_logged_in'
   get   '/auth/failure' => 'auth#failure'
   get   '/auth/isalive' => 'auth#isalive'
   get   '/auth/user' => 'auth#user'
@@ -34,7 +33,7 @@ RailsPortal::Application.routes.draw do
   post "home/preview_home_page"
 
   # external_activities can have uuids for ids so this resource needs to lay outside the :id constaint
-  resources :external_activities, path: 'eresources' do   # this is namespaced as external activities can use uuids for ids and this line lies within a integer id constraint
+  resources :external_activities, path: 'eresources' do
     collection do
       post :publish
     end
@@ -116,7 +115,6 @@ RailsPortal::Application.routes.draw do
           get :bundle_report
           get :activity_report
           get :authorize_show
-          get :handle_jnlp_session
           get :current_clazz
         end
       end
@@ -164,13 +162,7 @@ RailsPortal::Application.routes.draw do
 
       resources :subjects
 
-      resources :teachers do
-        member do
-          get :teacher_admin_or_manager
-          get :successful_creation
-          get :failed_creation
-        end
-      end
+      resources :teachers
 
       resources :nces06_districts
 
