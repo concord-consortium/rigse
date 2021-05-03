@@ -184,7 +184,6 @@ RailsPortal::Application.routes.draw do
     match '/change_password/:reset_code' => 'passwords#reset', :as => :change_password, via: [:get, :post]
     match '/password/:user_id/questions' => 'passwords#questions', :as => :password_questions, via: [:get, :post]
     match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions, via: [:get, :post]
-    get '/email' => 'passwords#email'
     get '/opensession' => 'sessions#create', :as => :open_id_complete, :constraints => { :method => 'get' }
     get '/opencreate' => 'users#create', :as => :open_id_create, :constraints => { :method => 'get' }
     match '/thanks_for_sign_up/:type/:login' => 'users#registration_successful', :as => :thanks_for_sign_up, :type=>nil,:login=>nil, via: [:get, :post]
@@ -218,8 +217,6 @@ RailsPortal::Application.routes.draw do
     get '/users/reports/account_report' => 'users#account_report', :as => :users_account_report
 
     resources :passwords, :only => [:update]
-    post '/passwords/create_by_email' => 'passwords#create_by_email'
-    post '/passwords/create_by_login' => 'passwords#create_by_login'
     post '/passwords/update_users_password' => 'passwords#update_users_password'
 
     namespace :dataservice do

@@ -7,7 +7,7 @@ describe PasswordsController do
     generate_default_settings_and_jnlps_with_mocks
   end
 
-  describe "Reset password by login" do
+  describe "Reset password" do
     before(:each) do
       @forgetful_user = FactoryBot.create(:user, :login => "forgetful_jones", :password => "password", :password_confirmation => "password", :email => "valid@test.com")
 
@@ -18,48 +18,6 @@ describe PasswordsController do
         User.where(login: login).first
       end
 
-    end
-
-    it "will fail gracefully if the user is not found by login" do
-      @forgetful_user.destroy
-
-      post :create_by_login, @params
-
-      expect(response).to be_success
-      expect(flash['error']).not_to be_nil
-    end
-
-    it "will fail gracefully for students without security questions" do
-      @forgetful_user.portal_student = FactoryBot.create(:portal_student)
-
-      post :create_by_login, @params
-
-      expect(response).to be_success
-      expect(flash['error']).not_to be_nil
-    end
-
-    it "will send an email reset notification for non-students with email" do
-
-      message = double("message")
-      expect(message).to receive(:deliver)
-      expect(PasswordMailer).to receive(:forgot_password).and_return(message)
-
-      post :create_by_login, @params
-
-      expect(@response).to redirect_to(root_path)
-      expect(flash['error']).to be_nil
-    end
-
-    it "will ask security questions for students" do
-      @forgetful_user.portal_student = FactoryBot.create(:portal_student)
-      Array.new(3) { |i| SecurityQuestion.create({ :question => "test #{i}", :answer => "test" }) }.each { |q| @forgetful_user.security_questions << q }
-
-      expect(PasswordMailer).not_to receive(:forgot_password)
-
-      post :create_by_login, @params
-
-      expect(@response).to redirect_to(password_questions_path(@forgetful_user))
-      expect(flash['error']).to be_nil
     end
 
     describe "security questions" do
@@ -114,29 +72,6 @@ describe PasswordsController do
         expect(response.status).to eq(404)
       end
     end
-  end
-
-  describe "Reset password by email address" do
-    before(:each) do
-      @forgetful_user = FactoryBot.create(:user, :email => "test@test.com")
-
-      @params = {
-        :password => {
-          :email => @forgetful_user.email
-        }
-      }
-    end
-
-    it "will send an email reset notification for email addresses" do
-      message = double("message")
-      expect(message).to receive(:deliver)
-      expect(PasswordMailer).to receive(:forgot_password).and_return(message)
-
-      post :create_by_email, @params
-
-      expect(flash['error']).to be_nil
-    end
-
   end
 
   # TODO: auto-generated
