@@ -142,7 +142,7 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
     describe 'with a bad user parameters ' do
       it 'should fail when the first_name is missing' do
-        post :register, params: { clazz_id: clazz.id, user: {} }
+        post :register, params: { clazz_id: clazz.id, user: {last_name: "Testerson"} }
         expect(response).to have_http_status(:bad_request)
         expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing user first_name parameter"}')
       end
