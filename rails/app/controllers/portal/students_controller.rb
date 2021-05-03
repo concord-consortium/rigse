@@ -111,7 +111,8 @@ class Portal::StudentsController < ApplicationController
     end
     # Only do this check if the student is signing themselves up. Everything else will work silently if these values are not set.
     if current_settings.use_student_security_questions && params[:clazz] &&params[:clazz][:class_word]
-      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions])
+      # to_unsafe_hash is ok to use here as make_questions_from_hash_and_user validates the input
+      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions].to_unsafe_hash)
       sq_errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
       if sq_errors && sq_errors.size > 0
         errors << [:security_questions, " have errors: #{sq_errors.join(',')}"]

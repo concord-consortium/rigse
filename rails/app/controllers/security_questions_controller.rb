@@ -17,7 +17,8 @@ class SecurityQuestionsController < ApplicationController
   # PUT
   def update
     authorize SecurityQuestion
-    @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions], current_visitor)
+    # to_unsafe_hash is ok to use here as make_questions_from_hash_and_user validates the input
+    @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions].to_unsafe_hash, current_visitor)
     errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
     if (!errors) || errors.empty?
       current_visitor.update_security_questions!(@security_questions)
