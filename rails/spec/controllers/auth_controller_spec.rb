@@ -5,15 +5,6 @@ require 'spec_helper'
 RSpec.describe AuthController, type: :controller do
 
   # TODO: auto-generated
-  describe '#verify_logged_in' do
-    it 'GET verify_logged_in' do
-      get :verify_logged_in, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#login' do
     it 'GET login' do
       get :login, {}, {}

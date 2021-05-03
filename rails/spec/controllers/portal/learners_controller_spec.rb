@@ -81,15 +81,6 @@ describe Portal::LearnersController do
   end
 
   # TODO: auto-generated
-  describe '#handle_jnlp_session' do
-    it 'GET handle_jnlp_session' do
-      get :handle_jnlp_session, {id: 1}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#authorize_show' do
     it 'GET authorize_show' do
       get :authorize_show, {id: 1}, {}
