@@ -15,11 +15,15 @@ RailsPortal::Application.routes.draw do
   match '/auth/concord_id/user' => 'auth#user', via: [:get, :post]
   match '/auth/login' => 'auth#login', :as => :auth_login, via: [:get, :post]
   match '/oauth/token' => 'auth#access_token', via: [:get, :post]
+  get   '/auth/failure' => 'auth#failure'
+  get   '/auth/isalive' => 'auth#isalive'
+  get   '/auth/user' => 'auth#user'
 
   match "search" => 'search#index', :as => :search, via: [:get, :post]
 
   get 'search/index'
   get 'search/unauthorized_user' => 'search#unauthorized_user'
+  get 'search/setup_material_type' => 'search#setup_material_type'
   get '/portal/offerings/:id/activity/:activity_id' => 'portal/offerings#report', :as => :portal_offerings_report
   get '/portal/learners/:id/activity/:activity_id' => 'portal/learners#report', :as => :portal_learners_report
 
@@ -27,6 +31,22 @@ RailsPortal::Application.routes.draw do
   post "help/preview_help_page"
   post "home/preview_about_page"
   post "home/preview_home_page"
+
+  # external_activities can have uuids for ids so this resource needs to lay outside the :id constaint
+  resources :external_activities, path: 'eresources' do
+    collection do
+      post :publish
+    end
+    member do
+      get :matedit
+      get :archive
+      get :unarchive
+      get :set_private_before_matedit
+      get :copy
+      get 'collections' => 'external_activities#edit_collections'
+      put 'collections' => 'external_activities#update_collections'
+    end
+  end
 
   constraints :id => /\d+/ do
     namespace :saveable do
@@ -59,6 +79,7 @@ RailsPortal::Application.routes.draw do
           get :roster
           get :materials
           get :fullstatus
+          get :current_clazz
         end
 
         resources :bookmarks, only: [:index]
@@ -67,6 +88,10 @@ RailsPortal::Application.routes.draw do
           get :info
           get 'manage', :to => 'clazzes#manage_classes'
         end
+      end
+
+      namespace :clazzes do
+        post :sort_offerings
       end
 
       get '/bookmark/visit/:id' => 'bookmarks#visit',  :as => :visit_bookmark
@@ -89,6 +114,8 @@ RailsPortal::Application.routes.draw do
           get :report
           get :bundle_report
           get :activity_report
+          get :authorize_show
+          get :current_clazz
         end
       end
 
@@ -190,8 +217,6 @@ RailsPortal::Application.routes.draw do
     get '/users/reports/account_report' => 'users#account_report', :as => :users_account_report
 
     resources :passwords, :only => [:update]
-    post '/passwords/create_by_email' => 'passwords#create_by_email'
-    post '/passwords/create_by_login' => 'passwords#create_by_login'
     post '/passwords/update_users_password' => 'passwords#update_users_password'
 
     namespace :dataservice do
@@ -292,25 +317,12 @@ RailsPortal::Application.routes.draw do
     get '/report/learner' => 'report/learner#index', :as => :learner_report
     get '/report/learner/updated_at/:id' => 'report/learner#updated_at', :as => :learner_updated_at
     get '/report/learner/report_only' => 'report/learner#report_only', :as => :learner_report_only
+    get '/report/learner/update_learners' => 'report/learner#update_learners'
 
     get '/report/user' => 'report/user#index', :as => :user_report
 
     post '/external_activities/publish/:version' => 'external_activities#publish', :as => :external_activity_publish, :version => /v\d+/
     post '/external_activities/republish/:version' => 'external_activities#republish', :as => :external_activity_republish, :version => /v\d+/
-    resources :external_activities, path: 'eresources' do
-      collection do
-        post :publish
-      end
-      member do
-        get :matedit
-        get :archive
-        get :unarchive
-        get :set_private_before_matedit
-        get :copy
-        get 'collections' => 'external_activities#edit_collections'
-        put 'collections' => 'external_activities#update_collections'
-      end
-    end
 
     post '/external_activity/list/filter' => 'external_activities#index', :as => :list_filter_external_activity
 
@@ -549,6 +561,9 @@ RailsPortal::Application.routes.draw do
     get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
 
+    get '/misc/preflight' => 'misc#preflight', :as => :preflight
+    get '/misc/stats' => 'misc#stats', :as => :stats
+
     get '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
     get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
@@ -560,8 +575,6 @@ RailsPortal::Application.routes.draw do
     # so the custom page URL can't overwrite another resource URL other than
     # the controller catch-all and the root route
     get '/:landing_page_slug' => 'admin/projects#landing_page', :as => :project_page, :constraints => { :landing_page_slug => /[a-z0-9\-]+/ }
-
-    get '/:controller(/:action(/:id))'
 
     root :to => 'home#index'
   end

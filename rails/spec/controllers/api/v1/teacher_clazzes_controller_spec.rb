@@ -51,14 +51,14 @@ describe API::V1::TeacherClassesController do
 
     [:sort, :set_active, :copy].each do |action|
       it "should fail as anonymous" do
-        post action, {}
+        post action, {id: 1}
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["message"]).to eq "You must be logged in to use this endpoint"
       end
 
       it "should fail as a student" do
         sign_in student.user
-        post action, {}
+        post action, {id: 1}
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["message"]).to eq "You must be logged in as a teacher to use this endpoint"
       end

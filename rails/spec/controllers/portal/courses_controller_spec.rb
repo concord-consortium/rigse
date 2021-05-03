@@ -43,7 +43,7 @@ RSpec.describe Portal::CoursesController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update, {id: 1}, {}
 
       expect(response).to have_http_status(:not_found)
     end
