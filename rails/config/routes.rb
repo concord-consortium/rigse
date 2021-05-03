@@ -180,7 +180,7 @@ RailsPortal::Application.routes.draw do
     match '/signup' => 'users#new', :as => :signup, via: [:get, :post]
     match '/activate/:activation_code' => 'users#activate', :as => :activate, :activation_code => nil, via: [:get, :post]
     match '/forgot_password' => 'passwords#login', :as => :forgot_password, via: [:get, :post]
-    match '/forgot_password/email' => 'passwords#email', :as => :forgot_password_email, via: [:get, :post]
+    match '/forgot_password/email' => 'passwords#login', :as => :forgot_password_email, via: [:get, :post]
     match '/change_password/:reset_code' => 'passwords#reset', :as => :change_password, via: [:get, :post]
     match '/password/:user_id/questions' => 'passwords#questions', :as => :password_questions, via: [:get, :post]
     match '/password/:user_id/check_questions' => 'passwords#check_questions', :as => :check_password_questions, via: [:get, :post]
@@ -562,8 +562,9 @@ RailsPortal::Application.routes.draw do
     get '/time' => 'misc_metal#time', :as => :time
     get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
-    get '/preflight' => 'misc#preflight', :as => :preflight
-    get '/stats' => 'misc#stats', :as => :stats
+
+    get '/misc/preflight' => 'misc#preflight', :as => :preflight
+    get '/misc/stats' => 'misc#stats', :as => :stats
 
     get '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
 
