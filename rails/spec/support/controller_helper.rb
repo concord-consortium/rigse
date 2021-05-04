@@ -1,18 +1,3 @@
-
-# In order to run the user specs the encrypted passwords
-# for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
-# need to be created with a hard-coded pepper used for testing.
-#
-# suppress_warnings is a Kernel extension ...
-# See: config/initializers/00_core_extensions.rb
-#
-suppress_warnings {
-  APP_CONFIG[:pepper] = 'sitekeyforrunningtests'
-  Devise.setup do |config|
-    config.pepper = APP_CONFIG[:pepper]
-  end
-}
-
 # This modification allows stubing helper methods when using integrate views
 # the template object isn't ready until the render method is called, so this code
 # adds a hook to be run before render is run.

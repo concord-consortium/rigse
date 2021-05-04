@@ -193,7 +193,10 @@ https://docs.docker.com/docker-for-mac/networking/#/i-want-to-connect-from-a-con
 ## Running rspec and cucumber tests with docker
 
 1. Connect to the running docker instance of your "app" service.
-> `$ docker-compose exec app bash`
+    docker-compose exec app bash
+2. Then in the container, the first time you need to create the test and feature databases
+    RAILS_ENV=test bundle exec rake db:create
+    RAILS_ENV=cucumber bundle exec rake db:create
 2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
     * `docker/dev/run-spec.sh`
     * `docker/dev/run-cucumber.sh`
