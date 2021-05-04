@@ -244,6 +244,7 @@ describe ExternalActivitiesController do
 
     it "should add materials to a collection" do
       post_params = {
+          :id => chemistry_activity.id,
           :materials_collection_id => [materials_collection.id]
       }
       admin = FactoryBot.generate :admin_user
@@ -258,6 +259,7 @@ describe ExternalActivitiesController do
 
     it "should return an error if a collection is not specified" do
       post_params = {
+          :id => chemistry_activity.id,
           :materials_collection_id => []
       }
       admin = FactoryBot.generate :admin_user
@@ -369,7 +371,7 @@ describe ExternalActivitiesController do
 
     # TODO: auto-generated
     it 'PATCH update' do
-      put :update, {}, {}
+      put :update, {id: 2}, {}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -400,7 +402,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#republish' do
     it 'GET republish' do
-      get :republish, {}, {}
+      get :republish, {version: 'v1'}, {}
 
       expect(response).to have_http_status(:unauthorized)
     end
@@ -418,18 +420,18 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#archive' do
     it 'GET archive' do
-      get :archive, {}, {}
+      get :archive, {id: 1}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 
   # TODO: auto-generated
   describe '#unarchive' do
     it 'GET unarchive' do
-      get :unarchive, {}, {}
+      get :unarchive, {id: 1}, {}
 
-      expect(response).to have_http_status(:redirect)
+      expect(response).to have_http_status(:not_found)
     end
   end
 

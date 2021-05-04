@@ -240,7 +240,8 @@ describe API::V1::ReportsController do
     describe "switching to automatic scoring from the API" do
       let(:score_type)  { Portal::OfferingActivityFeedback::SCORE_AUTO  }
       it "should make the scoring automatic" do
-        update(opts)
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update({id: activity_feedback.id}.merge(opts))
         show
         expect(response.status).to eql(200)
         expect(found_feedback.score_type).to eql Portal::OfferingActivityFeedback::SCORE_AUTO
@@ -249,7 +250,7 @@ describe API::V1::ReportsController do
       end
       it "should make the scoring automatic (v2)" do
         activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
-        update(opts_v2)
+        update({id: activity_feedback.id}.merge(opts_v2))
         show
         expect(response.status).to eql(200)
         expect(found_feedback.score_type).to eql Portal::OfferingActivityFeedback::SCORE_AUTO
@@ -261,14 +262,15 @@ describe API::V1::ReportsController do
     describe "when chaging the max score to 20" do
       let(:max_score)   { 20 }
       it "should make max score be 20" do
-        update(opts)
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update({id: activity_feedback.id}.merge(opts))
         show
         expect(response.status).to eql(200)
         expect(found_feedback.max_score).to eq 20
       end
       it "should make max score be 20 (v2)" do
         activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
-        update(opts_v2)
+        update({id: activity_feedback.id}.merge(opts_v2))
         show
         expect(response.status).to eql(200)
         expect(found_feedback.max_score).to eq 20
@@ -278,14 +280,15 @@ describe API::V1::ReportsController do
     describe "when enabling a rubric" do
       let(:use_rubric)    { true }
       it "should specify to use a rubric" do
-        update(opts)
+        activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
+        update({id: activity_feedback.id}.merge(opts))
         show
         expect(response.status).to eql(200)
         expect(found_feedback.use_rubric).to be_truthy
       end
       it "should specify to use a rubric (v2)" do
         activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
-        update(opts_v2)
+        update({id: activity_feedback.id}.merge(opts_v2))
         show
         expect(response.status).to eql(200)
         expect(found_feedback.use_rubric).to be_truthy
@@ -339,7 +342,7 @@ describe API::V1::ReportsController do
     end
 
     it "should update the learners feedback" do
-      update(opts)
+      update({id: activity_feedback.id}.merge(opts))
       show
       expect(response.status).to eql(200)
       feedback = Portal::LearnerActivityFeedback.open_feedback_for(learner, activity_feedback)
@@ -348,7 +351,7 @@ describe API::V1::ReportsController do
 
     it "should update the learners feedback (v2)" do
       activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
-      update(opts_v2)
+      update({id: activity_feedback.id}.merge(opts_v2))
       show
       expect(response.status).to eql(200)
       feedback = Portal::LearnerActivityFeedback.open_feedback_for(learner, activity_feedback)
@@ -371,7 +374,7 @@ describe API::V1::ReportsController do
 
       it "should update activity feedback model" do
         activity_feedback # ensure that activity_feedback object gets created before we start updating feedback
-        update(opts_v2)
+        update({id: activity_feedback.id}.merge(opts_v2))
         show
         expect(response.status).to eql(200)
         expect(Portal::OfferingActivityFeedback.find(activity_feedback.id).rubric).to eql rubric_content
@@ -396,7 +399,7 @@ describe API::V1::ReportsController do
       it "should update all the activity feedback models" do
         activity_feedback_1 # ensure that activity_feedback_1 object gets created before we start updating feedback
         activity_feedback_2 # ensure that activity_feedback_2 object gets created before we start updating feedback
-        update(opts_v2)
+        update({id: runnable.id}.merge(opts_v2))
         show
         expect(response.status).to eql(200)
         expect(Portal::OfferingActivityFeedback.find(activity_feedback_1.id).rubric).to eql rubric_content

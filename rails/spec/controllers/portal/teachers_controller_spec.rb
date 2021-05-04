@@ -42,15 +42,6 @@ describe Portal::TeachersController do
   end
 
   # TODO: auto-generated
-  describe '#teacher_admin_or_manager' do
-    it 'GET teacher_admin_or_manager' do
-      get :teacher_admin_or_manager, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
       get :show, id: FactoryBot.create(:portal_teacher).to_param
@@ -63,24 +54,6 @@ describe Portal::TeachersController do
   describe '#destroy' do
     it 'DELETE destroy' do
       delete :destroy, id: FactoryBot.create(:portal_teacher).to_param
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#successful_creation' do
-    it 'GET successful_creation' do
-      get :successful_creation, {}, {}
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#failed_creation' do
-    it 'GET failed_creation' do
-      get :failed_creation, {}, {}
 
       expect(response).to have_http_status(:redirect)
     end

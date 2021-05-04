@@ -108,7 +108,7 @@ begin
 rescue => exception
   puts
   puts "*** pending migrations need to be applied to run the tests"
-  puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare"
+  puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare; RAILS_ENV=cucumber rake app:setup:create_default_data"
   puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts "Rails.env: #{Rails.env}"
   puts "Database: #{ApplicationRecord.connection.current_database}"
