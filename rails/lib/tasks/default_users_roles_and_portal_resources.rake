@@ -74,7 +74,11 @@ namespace :app do
     end
     
     desc "Create default data. It is a blank task that calls other task to create default data."
-    task :create_default_data => [:environment, :create_default_learners_and_learner_attempts] do
+    task :create_default_data => [:environment, :load_factory_bot, :create_default_learners_and_learner_attempts] do
+    end
+
+    task :load_factory_bot do
+      FactoryBot.find_definitions
     end
     
     desc "Deletes the default data"

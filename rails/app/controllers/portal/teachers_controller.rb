@@ -4,24 +4,6 @@ class Portal::TeachersController < ApplicationController
   before_filter :teacher_admin_or_manager, :except=> [:new, :create]
   public
 
-  def teacher_admin_or_manager
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Teacher
-    # authorize @teacher
-    # authorize Portal::Teacher, :new_or_create?
-    # authorize @teacher, :update_edit_or_destroy?
-    if current_visitor.has_role?('admin') ||
-       current_visitor.has_role?('manager') ||
-       (current_visitor.portal_teacher && current_visitor.portal_teacher.id.to_s == params[:id])
-       # this user is authorized
-       true
-    else
-      raise Pundit::NotAuthorizedError
-    end
-  end
-
   # GET /portal_teachers/1
   # GET /portal_teachers/1.xml
   def show
@@ -103,6 +85,12 @@ class Portal::TeachersController < ApplicationController
     end
   end
 
+  private
+
+  def user_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  end
+
   def successful_creation(user)
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHOOSE_AUTHORIZE
@@ -131,7 +119,21 @@ class Portal::TeachersController < ApplicationController
     render :action => :new
   end
 
-  def user_strong_params(params)
-    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  def teacher_admin_or_manager
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Teacher
+    # authorize @teacher
+    # authorize Portal::Teacher, :new_or_create?
+    # authorize @teacher, :update_edit_or_destroy?
+    if current_visitor.has_role?('admin') ||
+       current_visitor.has_role?('manager') ||
+       (current_visitor.portal_teacher && current_visitor.portal_teacher.id.to_s == params[:id])
+       # this user is authorized
+       true
+    else
+      raise Pundit::NotAuthorizedError
+    end
   end
 end

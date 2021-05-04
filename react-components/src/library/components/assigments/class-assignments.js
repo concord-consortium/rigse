@@ -10,7 +10,7 @@ export default class ClassAssignments extends React.Component {
       return `/itsi?assign_to_class=${clazz.id}`
     }
     if (Portal.theme === 'ngss-assessment') {
-      return `/ngsa-collections`
+      return `/about`
     }
     return clazz.assignMaterialsPath
   }

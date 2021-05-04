@@ -23,7 +23,7 @@ describe SecurityQuestionsController do
       @student.user.security_questions.create({ :question => "Test question 1", :answer => "test answer 1" })
       @student.user.security_questions.create({ :question => "Test question 2", :answer => "test answer 2" })
 
-      get :edit
+      get :edit, {user_id: @student.user.id}
 
       @student.user.security_questions.each_with_index do |q, i|
         assert_select("select[name=?]", "security_questions[question#{i}][question_idx]") do
@@ -37,6 +37,7 @@ describe SecurityQuestionsController do
   describe "PUT update" do
     before(:each) do
       @params_for_update = {
+        :user_id => @student.user.id,
         :security_questions => {
           :question0 => {
             :question_idx => 0,
