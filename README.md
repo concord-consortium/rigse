@@ -98,10 +98,26 @@ for these new features.
 
 #### SSO Clients and LARA (authoring) integration
 
-If you want to provide authentication services to LARA, you need to:
+These instructions assume that you are setting up LARA and Portal using
+docker-compose files. It *may* also assume that you are using something like Dori or Dinghy
+as an http-proxy dns container, so that the portal is available at:`//app.portal.docker`
+and lara is available at `//app.lara.docker`
 
-1. Create a new SSO Client using `rake sso:add_client`
-2. Add the client id and secret to LARA, by editing `config/app_environment_variables.rb`
+If you want to provide authentication services to LARA, you need to:
+1. In the Portal, edit `.env` and append `docker/dev/docker-compose-lara-proxy.yml` to the `COMPOSE_FILE` var.
+1. In the Portal, as an administrator, setup a new "Auth Client". Use the following settings:
+```
+Name: `localhost`
+App Id: `localhost`
+App Secret: 'unsecure local secret'
+Client Type: 'confidential'
+Site Url: `https://app.lara.docker` *(use https if you are running it that way...)
+Allowed Domains: (leave blank)
+Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/callback'
+```
+1. In Lara, edit `.env` and append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
+2. You may need to use the rails console in LARA to set the `is_admin` flag to the portal admin user.
+
 
 ### Theme support & Rolling your own theme:
 
