@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe API::V1::ExternalActivitiesController do
 
-  let(:admin_user)        { FactoryBot.generate(:admin_user)     }
-  let(:simple_user)       { FactoryBot.create(:confirmed_user) }
-  let(:manager_user)      { FactoryBot.generate(:manager_user)   }
-  let(:researcher_user)   { FactoryBot.generate(:researcher_user)   }
+  let(:admin_user)        { FactoryBot.generate(:admin_user)      }
+  let(:simple_user)       { FactoryBot.create(:confirmed_user)    }
+  let(:manager_user)      { FactoryBot.generate(:manager_user)    }
+  let(:researcher_user)   { FactoryBot.generate(:researcher_user) }
+  let(:author_user)       { FactoryBot.generate(:author_user)     }
 
   describe "#create" do
     context "with a guest" do
@@ -52,6 +53,17 @@ describe API::V1::ExternalActivitiesController do
       end
     end
 
+    context "with a logged in author user" do
+      before (:each) do
+        sign_in author_user
+      end
+
+      it "succeeds with valid minimal parameters" do
+        post :create, :name => "test", :url => "http://example.com/"
+        expect(response.status).to eql(201)
+      end
+    end
+
     context "with a logged in admin user" do
       before (:each) do
         sign_in admin_user
@@ -63,7 +75,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with a missing url parameter" do
-        post :create, params: { :url => "http://example.com/" }
+        post :create, :name => "test"
         expect(response.status).to eql(400)
       end
 
@@ -177,13 +189,34 @@ describe API::V1::ExternalActivitiesController do
       end
     end
 
+    context "with a logged in author user" do
+      before (:each) do
+        sign_in author_user
+      end
+
+      it "should not update an activity they did not author" do
+        post :update_by_url, valid_parameters
+        expect(response.status).to eql(403)
+      end
+
+      it "should update an activity they did author" do
+        my_url = "http://activity.com/activity/2"
+        post :create, :name => "My Cool Activity", :url => my_url
+        my_valid_parameters = {
+          url: my_url
+        }
+        post :update_by_url, my_valid_parameters
+        expect(response.body).to eql('{"success":true}')
+      end
+    end
+
     context "with a logged in admin user" do
       before (:each) do
         sign_in admin_user
       end
 
-      it "should create a new activity" do
-        post :update_by_url, params: valid_parameters
+      it "should update the activity" do
+        post :update_by_url, valid_parameters
         expect(response.body).to eql('{"success":true}')
       end
     end

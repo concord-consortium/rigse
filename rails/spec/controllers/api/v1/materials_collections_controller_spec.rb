@@ -12,7 +12,7 @@ describe API::V1::MaterialsCollectionsController do
     describe "each api endpoint" do
       [:sort_materials, :remove_material].each do |method|
         it("should fail") do
-          post method
+          post method, {id: 1}
           expect(response.status).to eql(403)
           expect(response.body).to eql('{"success":false,"message":"Not authorized"}')
         end
@@ -28,8 +28,8 @@ describe API::V1::MaterialsCollectionsController do
     end
 
     describe "sort_materials" do
-      it "should fail without an id" do
-        post :sort_materials
+      it "should fail with a valid id" do
+        post :sort_materials, {id: 0}
         expect(response.status).to eql(404)
       end
 
@@ -54,8 +54,8 @@ describe API::V1::MaterialsCollectionsController do
     end
 
     describe "remove_material" do
-      it "should fail without an id" do
-        post :remove_material
+      it "should fail with an invalid id" do
+        post :remove_material, {id: 0}
         expect(response.status).to eql(404)
       end
 

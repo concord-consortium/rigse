@@ -299,7 +299,7 @@ describe Admin::ProjectLinksController do
             end
           end
         end
-        
+
         context 'and changing the project to one the user is not an admin of' do
           let(:new_project_id) { project_2.id }
           include_examples 'fails_to_modify'
@@ -431,11 +431,11 @@ describe Admin::ProjectLinksController do
         allow(Admin::ProjectLink).to receive(:find).and_return(@link_1)
       end
       it 'it should show the Edit form' do
-        expect(get :edit).to render_template('edit')
+        expect(get :edit, {id: @link_1.id}).to render_template('edit')
         # Redirect, and show error when not allowed:
       end
       it 'should display all the projects in the project dropdown' do
-        get :edit
+        get :edit, {id: @link_1.id}
         expect(assigns(:projects)).to include(project_1)
         expect(assigns(:projects)).to include(project_2)
         expect(assigns(:projects)).to include(project_3)

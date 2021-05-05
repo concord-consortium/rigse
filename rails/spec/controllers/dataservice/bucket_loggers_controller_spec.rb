@@ -7,7 +7,7 @@ RSpec.describe Dataservice::BucketLoggersController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show
+      get :show, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -16,7 +16,7 @@ RSpec.describe Dataservice::BucketLoggersController, type: :controller do
   # TODO: auto-generated
   describe '#show_by_learner' do
     it 'GET show_by_learner' do
-      get :show_by_learner
+      get :show_by_learner, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -25,7 +25,7 @@ RSpec.describe Dataservice::BucketLoggersController, type: :controller do
   # TODO: auto-generated
   describe '#show_by_name' do
     it 'GET show_by_name' do
-      get :show_by_name
+      get :show_by_name, {name: "test"}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -34,7 +34,7 @@ RSpec.describe Dataservice::BucketLoggersController, type: :controller do
   # TODO: auto-generated
   describe '#show_log_items_by_learner' do
     it 'GET show_log_items_by_learner' do
-      get :show_log_items_by_learner
+      get :show_log_items_by_learner, {id: 1}, {}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -43,7 +43,7 @@ RSpec.describe Dataservice::BucketLoggersController, type: :controller do
   # TODO: auto-generated
   describe '#show_log_items_by_name' do
     it 'GET show_log_items_by_name' do
-      get :show_log_items_by_name
+      get :show_log_items_by_name, {name: "test"}, {}
 
       expect(response).to have_http_status(:redirect)
     end

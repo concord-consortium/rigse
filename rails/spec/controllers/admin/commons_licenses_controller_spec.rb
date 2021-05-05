@@ -15,9 +15,13 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
   let(:mock_content_id) do
     mock_content.id
   end
+  let(:mock_content_code) do
+    mock_content.code
+  end
 
   before(:each) do
     sign_in admin_user
+    allow(mock_content).to receive(:code).and_return('code')
   end
 
   describe "GET new" do
@@ -41,7 +45,7 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
   describe '#show' do
     it 'GET show' do
       expect(data).to receive(:find).and_return(mock_content)
-      get :show, params: { id: mock_content_id }
+      get :show, code: mock_content_code
 
       expect(response).to have_http_status(:ok)
     end
@@ -51,7 +55,7 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
   describe '#edit' do
     it 'GET edit' do
       expect(data).to receive(:find).and_return(mock_content)
-      get :edit, params: { id: mock_content_id }
+      get :edit, code: mock_content_code
 
       expect(response).to have_http_status(:ok)
     end
@@ -71,7 +75,7 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
     let(:stubs) {{update_attributes: true}}
     it "updates the model, redirects to index" do
       expect(data).to receive(:find).and_return(mock_content)
-      put :update, params: { :id => mock_content_id, params_key => {:params => 'params'} }
+      put :update, :code => mock_content_code, params_key => {:params => 'params'}
       expect(response).to have_http_status(:redirect)
     end
   end
@@ -80,7 +84,7 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
   describe '#destroy' do
     it 'DELETE destroy' do
       expect(data).to receive(:find).and_return(mock_content)
-      delete :destroy, params: { id: mock_content_id }
+      delete :destroy, code: mock_content_code
 
       expect(response).to have_http_status(:redirect)
     end

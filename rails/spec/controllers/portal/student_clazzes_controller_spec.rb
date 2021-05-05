@@ -2,24 +2,24 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::StudentClazzesController do
   render_views
-    
+
   def mock_clazz(stubs={})
     mock_clazz = FactoryBot.create(:portal_clazz, stubs) #mock_model(Portal::Clazz)
     #mock_clazz.stub!(stubs) unless stubs.empty?
 
     mock_clazz
   end
-  
+
   describe "Delete remove a student" do
     before(:each) do
       @mock_school = FactoryBot.create(:portal_school)
       @authorized_teacher = FactoryBot.create(:portal_teacher, :user => FactoryBot.create(:confirmed_user, :login => "authorized_teacher"), :schools => [@mock_school])
       @authorized_student = FactoryBot.create(:portal_student, :user =>FactoryBot.create(:confirmed_user, :login => "authorized_student"))
-      
+
       @mock_clazz_name = "Random Test Class"
       @mock_course = FactoryBot.create(:portal_course, :name => @mock_clazz_name, :school => @mock_school)
       @mock_clazz = mock_clazz({ :name => @mock_clazz_name, :teachers => [@authorized_teacher], :course => @mock_course })
-      
+
       @authorized_student.add_clazz(@mock_clazz)
       @mock_clazz.reload
       @mock_student_clazz = Portal::StudentClazz.find_by_clazz_id_and_student_id(@mock_clazz.id, @authorized_student.id)
@@ -54,7 +54,7 @@ describe Portal::StudentClazzesController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show
+      get :show, {id: 1, clazz_id: 1}, {}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -63,7 +63,7 @@ describe Portal::StudentClazzesController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit
+      get :edit, {id: 1, clazz_id: 1}, {}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -81,7 +81,7 @@ describe Portal::StudentClazzesController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update
+      put :update, {id: 1, clazz_id: 1}, {}
 
       expect(response).to have_http_status(:not_found)
     end

@@ -82,9 +82,14 @@ Devise.setup do |config|
   # a value less than 10 in other environments.
   config.stretches = (Rails.env.development? || Rails.env.production? || Rails.env.staging?) ? 10 : 1
   #config.stretches = 10
+
   # Setup a pepper to generate the encrypted password.
   # config.pepper = "c035da42b7b4b6cf6b985bebab88a20d78f62c6593f818992be75dca07cf7f6ad9bf983ee8b71ed56354487055fb8ffba683dca86b80f31072ca8692f55dfbc1"
-  config.pepper = APP_CONFIG[:pepper]
+
+  # In order to run the user specs the encrypted passwords
+  # for the 'quentin' and 'aaron' users in spec/fixtures/users.yml
+  # need to be created with a hard-coded pepper used during testing.
+  config.pepper = (Rails.env.development? || Rails.env.production? || Rails.env.staging?) ? APP_CONFIG[:pepper] : 'sitekeyforrunningtests'
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without

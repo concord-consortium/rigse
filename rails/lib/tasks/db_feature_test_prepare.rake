@@ -17,12 +17,6 @@ namespace :db do
       ActiveRecord::Schema.verbose = false
       ActiveRecord::Tasks::DatabaseTasks.load_schema_for ActiveRecord::Base.configurations['feature_test'], :ruby, ENV['SCHEMA']
       # end of db:test_load_schema copy
-
-      require File.expand_path('../../../spec/spec_helper.rb', __FILE__)
-      APP_CONFIG[:password_for_default_users] = 'password'
-
-      puts "Loading default data into database: #{ActiveRecord::Base.connection.current_database}"
-      Rake::Task['app:setup:create_default_data'].invoke
     end
 
   end

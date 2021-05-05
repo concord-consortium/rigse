@@ -327,6 +327,8 @@ class Portal::StudentsController < ApplicationController
     end
   end
 
+  protected
+
   def check_clazzes(current_class, new_class)
     @error = ''
     if current_class.nil? || new_class.nil?
@@ -354,8 +356,6 @@ class Portal::StudentsController < ApplicationController
     end
     @potentially_orphaned_assignments
   end
-
-  protected
 
   def find_clazz_from_params
     # check the multitude of ways that a class might have been passed in

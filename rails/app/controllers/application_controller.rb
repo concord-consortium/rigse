@@ -22,6 +22,52 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :pundit_user_not_authorized
 
+  def pundit_user
+    PunditUserContext.new(current_user, @original_user, request, params)
+  end
+
+  # With +respond_to do |format|+, "406 Not Acceptable" is sent on invalid format.
+  # With a regular render (implicit or explicit), ActionView::MissingTemplate
+  # exception is raised instead. The MissingTemplate exception triggers an
+  # exception notification that we don't really care about.
+  # So instead we catch that and raise a RoutingError which Rails turns
+  # into a 404 response.
+  rescue_from(ActionView::MissingTemplate) do |e|
+    request.format = :html
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
+  theme :get_theme
+  layout 'application'
+  def test
+    render :html => mce_in_place_tag(Page.create,'description','none')
+  end
+
+
+  # helper :all # include all helpers, all the time
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
+  before_filter :setup_container
+  before_filter :reject_old_browsers
+
+  include AuthenticatedSystem
+  include RoleRequirementSystem
+
+  helper :all # include all helpers, all the time
+
+  before_filter :original_user
+  before_filter :portal_resources
+  before_filter :check_for_select_portal_user_type
+  before_filter :check_for_password_reset_requirement
+  before_filter :check_student_security_questions_ok
+  before_filter :check_student_consent
+  before_filter :set_locale
+  before_filter :wide_layout_for_anonymous
+
+  # Portal::School.find(:first).members.count
+
+  protected
+
   def pundit_user_not_authorized(exception)
     # without the no-store Chrome will cache this redirect in some cases
     # for example if a student tries to access a collection page, and then they
@@ -68,52 +114,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
-  def pundit_user
-    PunditUserContext.new(current_user, @original_user, request, params)
-  end
-
-  # With +respond_to do |format|+, "406 Not Acceptable" is sent on invalid format.
-  # With a regular render (implicit or explicit), ActionView::MissingTemplate
-  # exception is raised instead. The MissingTemplate exception triggers an
-  # exception notification that we don't really care about.
-  # So instead we catch that and raise a RoutingError which Rails turns
-  # into a 404 response.
-  rescue_from(ActionView::MissingTemplate) do |e|
-    request.format = :html
-    raise ActionController::RoutingError.new('Not Found')
-  end
-
-  theme :get_theme
-  layout 'application'
-  def test
-    render :html => mce_in_place_tag(Page.create,'description','none')
-  end
-
-
-  # helper :all # include all helpers, all the time
-  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
-
-  before_action :setup_container
-  before_action :reject_old_browsers
-
-  include AuthenticatedSystem
-  include RoleRequirementSystem
-
-  helper :all # include all helpers, all the time
-
-  before_action :original_user
-  before_action :portal_resources
-  before_action :check_for_select_portal_user_type
-  before_action :check_for_password_reset_requirement
-  before_action :check_student_security_questions_ok
-  before_action :check_student_consent
-  before_action :set_locale
-  before_action :wide_layout_for_anonymous
-
-  # Portal::School.find(:first).members.count
-
-  protected
 
   def setup_container
     @container_type = self.class.name[/(.+)sController/,1]
