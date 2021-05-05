@@ -190,7 +190,7 @@ class API::V1::TeachersController < API::APIController
     # If school is not found, try to create a new one.
     school = API::V1::SchoolRegistration.find(params)
     return [school.id, nil] if school
-    school = API::V1::SchoolRegistration.new(params)
+    school = API::V1::SchoolRegistration.new(school_registration_strong_params(params))
     if school.valid?
       school.save
       [school.school_id, nil]
@@ -202,5 +202,9 @@ class API::V1::TeachersController < API::APIController
   def teacher_registration_strong_params(params)
     params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation,
                             :email_subscribed, :sign_up_path, :asked_age, :have_consent, :school_id)
+  end
+
+  def school_registration_strong_params(params)
+    params && params.permit(:school_name, :zipcode, :country_id, :school_id)
   end
 end
