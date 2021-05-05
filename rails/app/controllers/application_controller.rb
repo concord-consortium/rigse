@@ -47,22 +47,22 @@ class ApplicationController < ActionController::Base
   # helper :all # include all helpers, all the time
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  before_filter :setup_container
-  before_filter :reject_old_browsers
+  before_action :setup_container
+  before_action :reject_old_browsers
 
   include AuthenticatedSystem
   include RoleRequirementSystem
 
   helper :all # include all helpers, all the time
 
-  before_filter :original_user
-  before_filter :portal_resources
-  before_filter :check_for_select_portal_user_type
-  before_filter :check_for_password_reset_requirement
-  before_filter :check_student_security_questions_ok
-  before_filter :check_student_consent
-  before_filter :set_locale
-  before_filter :wide_layout_for_anonymous
+  before_action :original_user
+  before_action :portal_resources
+  before_action :check_for_select_portal_user_type
+  before_action :check_for_password_reset_requirement
+  before_action :check_student_security_questions_ok
+  before_action :check_student_consent
+  before_action :set_locale
+  before_action :wide_layout_for_anonymous
 
   # Portal::School.find(:first).members.count
 
