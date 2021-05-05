@@ -257,7 +257,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {id: 1}, {}
+      put :update, params: { id: 1 }
 
       expect(response).to have_http_status(:not_found)
     end
@@ -325,7 +325,7 @@ describe Portal::OfferingsController do
   # TODO: auto-generated
   describe '#external_report' do
     it 'GET external_report' do
-      get :external_report, id: FactoryBot.create(:portal_offering).to_param, report_id: 1
+      get :external_report, params: { id: FactoryBot.create(:portal_offering).to_param, report_id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end

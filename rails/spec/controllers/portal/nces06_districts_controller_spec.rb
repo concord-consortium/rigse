@@ -38,7 +38,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {id: 1}, {}
+      get :edit, params: { id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -56,7 +56,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {id: 1}, {}
+      put :update, params: { id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -65,7 +65,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {id: 1}, {}
+      delete :destroy, params: { id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end

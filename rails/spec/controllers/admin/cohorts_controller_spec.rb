@@ -168,18 +168,18 @@ describe Admin::CohortsController do
       end
 
       it 'it should show the Edit form' do
-        expect(get :edit, {id: @cohort_1.id}).to render_template('edit')
+        expect(get :edit, params: {id: @cohort_1.id}).to render_template('edit')
       end
 
       it 'should display only the projects for which the user is an admin' do
-        get :edit, {id: @cohort_1.id}
+        get :edit, params: {id: @cohort_1.id}
         expect(assigns(:projects)).to include(project_1)
         expect(assigns(:projects)).not_to include(project_2)
         expect(assigns(:projects)).not_to include(project_3)
       end
 
       it 'should return an OK http status' do
-        get :edit, {id: @cohort_1.id}
+        get :edit, params: {id: @cohort_1.id}
         expect(response).to have_http_status(:ok)
       end
     end
@@ -352,11 +352,11 @@ describe Admin::CohortsController do
         allow(Admin::Cohort).to receive(:find).and_return(@cohort_1)
       end
       it 'it should show the Edit form' do
-        expect(get :edit, {id: @cohort_1.id}).to render_template('edit')
+        expect(get :edit, params: {id: @cohort_1.id}).to render_template('edit')
         # Redirect, and show error when not allowed:
       end
       it 'should display all the projects in the project dropdown' do
-        get :edit, {id: @cohort_1.id}
+        get :edit, params: {id: @cohort_1.id}
         expect(assigns(:projects)).to include(project_1)
         expect(assigns(:projects)).to include(project_2)
         expect(assigns(:projects)).to include(project_3)

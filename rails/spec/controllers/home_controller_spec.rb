@@ -300,7 +300,7 @@ describe HomeController do
   # TODO: auto-generated
   describe '#authoring_site_redirect' do
     it 'GET authoring_site_redirect' do
-      get :authoring_site_redirect, {id: 1}, {}
+      get :authoring_site_redirect, params: {id: 1}
 
       expect(response).to have_http_status(:redirect)
     end
@@ -318,7 +318,7 @@ describe HomeController do
   # TODO: auto-generated
   describe '#missing_installer' do
     it 'GET missing_installer' do
-      get :missing_installer, {os: 'osx'}, {}
+      get :missing_installer, params: {os: 'osx'}
 
       expect(response).to have_http_status(:ok)
     end

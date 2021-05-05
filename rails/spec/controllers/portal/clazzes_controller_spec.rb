@@ -501,7 +501,7 @@ describe Portal::ClazzesController do
   # TODO: auto-generated
   describe '#current_clazz' do
     it 'GET current_clazz' do
-      get :current_clazz, {id: 0}, {}
+      get :current_clazz, params: { id: 0 }
 
       expect(response).to have_http_status(:not_found)
     end

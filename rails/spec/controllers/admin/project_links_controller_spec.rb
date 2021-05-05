@@ -431,11 +431,11 @@ describe Admin::ProjectLinksController do
         allow(Admin::ProjectLink).to receive(:find).and_return(@link_1)
       end
       it 'it should show the Edit form' do
-        expect(get :edit, {id: @link_1.id}).to render_template('edit')
+        expect(get :edit, params: {id: @link_1.id}).to render_template('edit')
         # Redirect, and show error when not allowed:
       end
       it 'should display all the projects in the project dropdown' do
-        get :edit, {id: @link_1.id}
+        get :edit, params: {id: @link_1.id}
         expect(assigns(:projects)).to include(project_1)
         expect(assigns(:projects)).to include(project_2)
         expect(assigns(:projects)).to include(project_3)

@@ -86,7 +86,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#questions' do
     it 'GET questions' do
-      get :questions, {user_id: 0}, {}
+      get :questions, params: { user_id: 0 }
 
       expect(response).to have_http_status(:not_found)
     end
@@ -95,7 +95,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#reset' do
     it 'GET reset' do
-      get :reset, {reset_code: 'test'}, {}
+      get :reset, params: { reset_code: 'test' }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -113,7 +113,7 @@ describe PasswordsController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {id: 1}, {}
+      put :update, params: { id: 1 }
 
       expect(response).to have_http_status(:not_found)
     end

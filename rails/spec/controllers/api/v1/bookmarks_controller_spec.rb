@@ -18,19 +18,19 @@ describe API::V1::BookmarksController do
     describe "each api endpoint" do
       [:create, :update, :destroy, :sort].each do |method|
         it("should fail without a clazz_id") do
-          post method, {id: 1}
+          post method, params: {id: 1}
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing clazz_id param"}')
         end
 
         it("should fail with an invalid clazz_id") do
-          post method, {id: 1, clazz_id: clazz1.id + 1}
+          post method, params: {id: 1, clazz_id: clazz1.id + 1}
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id param"}')
         end
 
         it("should fail with a clazz_id I don't own") do
-          post method, {id: 1, clazz_id: clazz1.id}
+          post method, params: {id: 1, clazz_id: clazz1.id}
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"You are not authorized to edit bookmarks for this class"}')
         end
@@ -47,13 +47,13 @@ describe API::V1::BookmarksController do
     describe "each api endpoint" do
       [:create, :update, :destroy, :sort].each do |method|
         it("should fail without a clazz_id") do
-          post method, {id: 1}
+          post method, params: {id: 1}
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Missing clazz_id param"}')
         end
 
         it("should fail with an invalid clazz_id") do
-          post method, {id: 1, clazz_id: clazz1.id + 1}
+          post method, params: {id: 1, clazz_id: clazz1.id + 1}
           expect(response.status).to eql(400)
           expect(response.body).to eql('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id param"}')
         end

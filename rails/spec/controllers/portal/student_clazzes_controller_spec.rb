@@ -54,7 +54,7 @@ describe Portal::StudentClazzesController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, {id: 1, clazz_id: 1}, {}
+      get :show, params: { id: 1, clazz_id: 1 }
 
       expect(response).to have_http_status(:not_found)
     end
@@ -63,7 +63,7 @@ describe Portal::StudentClazzesController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {id: 1, clazz_id: 1}, {}
+      get :edit, params: { id: 1, clazz_id: 1 }
 
       expect(response).to have_http_status(:not_found)
     end
@@ -81,7 +81,7 @@ describe Portal::StudentClazzesController do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {id: 1, clazz_id: 1}, {}
+      put :update, params: { id: 1, clazz_id: 1 }
 
       expect(response).to have_http_status(:not_found)
     end

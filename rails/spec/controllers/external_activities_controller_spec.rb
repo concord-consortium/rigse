@@ -367,7 +367,7 @@ describe ExternalActivitiesController do
 
     # TODO: auto-generated
     it 'PATCH update' do
-      put :update, {id: 2}, {}
+      put :update, params: {id: 2}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -393,7 +393,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#republish' do
     it 'GET republish' do
-      get :republish, {version: 'v1'}, {}
+      get :republish, params: {version: 'v1'}
 
       expect(response).to have_http_status(:unauthorized)
     end
@@ -411,7 +411,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#archive' do
     it 'GET archive' do
-      get :archive, {id: 1}, {}
+      get :archive, params: {id: 1}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -420,7 +420,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#unarchive' do
     it 'GET unarchive' do
-      get :unarchive, {id: 1}, {}
+      get :unarchive, params: {id: 1}
 
       expect(response).to have_http_status(:not_found)
     end
