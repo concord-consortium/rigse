@@ -15,7 +15,7 @@ namespace :db do
       # This is copied from active-record/database.rake db:test:load_schema
       # ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['feature_test'])
       ActiveRecord::Schema.verbose = false
-      ActiveRecord::Tasks::DatabaseTasks.load_schema_for ActiveRecord::Base.configurations['feature_test'], :ruby, ENV['SCHEMA']
+      ActiveRecord::Tasks::DatabaseTasks.load_schema ActiveRecord::Base.configurations['feature_test'], :ruby, ENV['SCHEMA']
       # end of db:test_load_schema copy
     end
 
