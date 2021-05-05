@@ -203,6 +203,7 @@ class API::V1::ReportUsersController < API::APIController
       .joins("LEFT OUTER JOIN admin_projects ON admin_projects.id = admin_cohorts.project_id")
       .uniq
       .select("admin_cohorts.id, CONCAT(COALESCE(admin_projects.name,'No Project'), ': ', admin_cohorts.name) as label")
+      .order("label")
   end
 
   def runnables_query(options, user, scopes, ids)
