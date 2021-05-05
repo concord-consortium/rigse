@@ -114,7 +114,7 @@ describe Admin::ProjectsController do
           # specifies that the Admin::Project created on the previous line
           # receives the :update_attributes message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with({'name' => 'new name'})
+          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with(permit_params!({'name' => 'new name'}))
           put :update, params: { :id => project.to_param, :admin_project => {'name' => 'new name'} }
         end
 
@@ -256,7 +256,7 @@ describe Admin::ProjectsController do
           # specifies that the Admin::Project created on the previous line
           # receives the :update_attributes message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with({'name' => 'new name'})
+          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with(permit_params!({'name' => 'new name'}))
           put :update, params: { :id => project.id, :admin_project => {'name' => 'new name'} }
         end
 
@@ -277,7 +277,7 @@ describe Admin::ProjectsController do
           put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(assigns(:project)).to eq(project)
         end
-  
+
         it "re-renders the 'edit' template" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)

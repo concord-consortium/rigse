@@ -74,7 +74,7 @@ describe ImagesController do
         img = mock_image
         allow(img).to receive_messages(:save => true)
 
-        expect(Image).to receive(:new).with(image_params).and_return(img)
+        expect(Image).to receive(:new).with(permit_params!(image_params)).and_return(img)
         post :create, params: { :image => image_params }
         expect(assigns(:image)).to equal(img)
       end
@@ -91,7 +91,7 @@ describe ImagesController do
       let (:user_id) { @logged_in_user.id.to_s }
 
       it "should expose a newly created but unsaved image as @image" do
-        allow(Image).to receive(:new).with(image_params).and_return(mock_image(:save => false))
+        allow(Image).to receive(:new).with(permit_params!(image_params)).and_return(mock_image(:save => false))
         post :create, params: { :image => image_params }
         expect(assigns(:image)).to equal(mock_image)
       end
@@ -115,7 +115,7 @@ describe ImagesController do
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(mock_image).to receive(:update_attributes).with(image_params)
+        expect(mock_image).to receive(:update_attributes).with(permit_params!(image_params))
         put :update, params: { :id => "37", :image => image_params }
       end
 
@@ -140,7 +140,7 @@ describe ImagesController do
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(@img).to receive(:update_attributes).with(image_params)
+        expect(@img).to receive(:update_attributes).with(permit_params!(image_params))
         put :update, params: { :id => "37", :image => image_params }
       end
 

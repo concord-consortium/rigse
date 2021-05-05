@@ -103,7 +103,7 @@ describe Portal::SchoolsController do
     describe "with invalid portal_school params" do
       it "assigns a newly created but unsaved school as @portal_school" do
         expect(@school).to receive(:save).and_return(true)
-        allow(Portal::School).to receive(:new).with(portal_school_params).and_return(@school)
+        allow(Portal::School).to receive(:new).with(permit_params!(portal_school_params)).and_return(@school)
         post :create, params: { :portal_school => portal_school_params }
         expect(assigns[:portal_school]).to equal(@school)
       end
@@ -123,7 +123,7 @@ describe Portal::SchoolsController do
     describe "with valid params" do
       it "updates the requested school" do
         expect(Portal::School).to receive(:find).with("37").and_return(@school)
-        expect(@school).to receive(:update_attributes).with(portal_school_params)
+        expect(@school).to receive(:update_attributes).with(permit_params!(portal_school_params))
         put :update, params: { :id => "37", :portal_school => portal_school_params }
       end
 
@@ -147,7 +147,7 @@ describe Portal::SchoolsController do
 
       before(:each) do
         allow(@school).to receive_messages(:id => 1)
-        expect(@school).to receive(:update_attributes).with(portal_school_params).and_return(false)
+        expect(@school).to receive(:update_attributes).with(permit_params!(portal_school_params)).and_return(false)
         allow(Portal::School).to receive(:find).and_return(@school)
       end
 

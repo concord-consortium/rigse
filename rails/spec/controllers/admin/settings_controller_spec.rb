@@ -117,7 +117,7 @@ describe Admin::SettingsController do
     let(:params) { { description: 'test' } }
     describe "with valid params" do
       it "assigns a newly created settings as @settings" do
-        expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => true))
+        expect(Admin::Settings).to receive(:new).with(permit_params!(params)).and_return(mock_settings(:save => true))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => true))
         post :create, params: { admin_settings: params }
         expect(assigns[:admin_settings]).to equal(mock_settings)
@@ -133,7 +133,7 @@ describe Admin::SettingsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved settings as @settings" do
-        expect(Admin::Settings).to receive(:new).with(params).and_return(mock_settings(:save => false))
+        expect(Admin::Settings).to receive(:new).with(permit_params!(params)).and_return(mock_settings(:save => false))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => false))
         post :create, params: { admin_settings: params }
         expect(assigns[:admin_settings]).to equal(mock_settings)
@@ -159,7 +159,7 @@ describe Admin::SettingsController do
     describe "with valid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
+        expect(mock_settings).to receive(:update_attributes).with(permit_params!(admin_settings_params))
         put :update, params: { :id => "37", :admin_settings => admin_settings_params }
       end
 
@@ -181,7 +181,7 @@ describe Admin::SettingsController do
     describe "with invalid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with(admin_settings_params)
+        expect(mock_settings).to receive(:update_attributes).with(permit_params!(admin_settings_params))
         put :update, params: { :id => "37", :admin_settings => admin_settings_params }
       end
 

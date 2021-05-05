@@ -106,7 +106,7 @@ describe MaterialsCollectionsController do
         # specifies that the MaterialsCollection created on the previous line
         # receives the :update_attributes message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(MaterialsCollection).to receive(:update_attributes).with({'name' => 'new name'})
+        expect_any_instance_of(MaterialsCollection).to receive(:update_attributes).with(permit_params!({'name' => 'new name'}))
         put :update, params: { :id => materials_collection.to_param, :materials_collection => {'name' => 'new name'} }
       end
 

@@ -28,7 +28,7 @@ describe Dataservice::BlobsController do
 
     describe "with valid params" do
       it "assigns a newly created blob as @blob" do
-        allow(Dataservice::Blob).to receive(:new).with(blob_params).and_return(mock_blob(:save => true))
+        allow(Dataservice::Blob).to receive(:new).with(permit_params!(blob_params)).and_return(mock_blob(:save => true))
         post :create, params: { :blob => blob_params }
         expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
@@ -42,7 +42,7 @@ describe Dataservice::BlobsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved blob as @blob" do
-        allow(Dataservice::Blob).to receive(:new).with(blob_params).and_return(mock_blob(:save => false))
+        allow(Dataservice::Blob).to receive(:new).with(permit_params!(blob_params)).and_return(mock_blob(:save => false))
         post :create, params: { blob: blob_params }
         expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
@@ -61,7 +61,7 @@ describe Dataservice::BlobsController do
     describe "with valid params" do
       it "updates the requested blob" do
         expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
-        expect(mock_blob).to receive(:update_attributes).with(blob_params)
+        expect(mock_blob).to receive(:update_attributes).with(permit_params!(blob_params))
         put :update, params: { :id => "37", :blob => blob_params }
       end
 
@@ -81,7 +81,7 @@ describe Dataservice::BlobsController do
     describe "with invalid params" do
       it "updates the requested blob" do
         expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
-        expect(mock_blob).to receive(:update_attributes).with(blob_params)
+        expect(mock_blob).to receive(:update_attributes).with(permit_params!(blob_params))
         put :update, params: { :id => "37", :blob => blob_params }
       end
 

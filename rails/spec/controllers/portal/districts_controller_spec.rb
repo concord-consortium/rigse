@@ -64,7 +64,7 @@ describe Portal::DistrictsController do
     describe "with valid params" do
       it "assigns a newly created district as @portal_district" do
         allow(@district).to receive_messages(:save => true)
-        allow(Portal::District).to receive(:new).with(portal_district_params).and_return(@district)
+        allow(Portal::District).to receive(:new).with(permit_params!(portal_district_params)).and_return(@district)
         post :create, params: { :portal_district => portal_district_params }
         expect(assigns[:portal_district]).to equal(@district)
       end
@@ -80,7 +80,7 @@ describe Portal::DistrictsController do
     describe "with invalid params" do
       it "assigns a newly created but unsaved district as @portal_district" do
         allow(@district).to receive_messages(:save => false)
-        allow(Portal::District).to receive(:new).with(portal_district_params).and_return(@district)
+        allow(Portal::District).to receive(:new).with(permit_params!(portal_district_params)).and_return(@district)
         post :create, params: { :portal_district => portal_district_params }
         expect(assigns[:portal_district]).to equal(@district)
       end
@@ -100,7 +100,7 @@ describe Portal::DistrictsController do
     describe "with valid params" do
       it "updates the requested district" do
         expect(Portal::District).to receive(:find).with("37").and_return(@district)
-        expect(@mock_district).to receive(:update_attributes).with(portal_district_params).and_return(true)
+        expect(@mock_district).to receive(:update_attributes).with(permit_params!(portal_district_params)).and_return(true)
         put :update, params: { :id => "37", :portal_district => portal_district_params }
       end
 
@@ -122,7 +122,7 @@ describe Portal::DistrictsController do
     describe "with invalid params" do
       it "updates the requested district" do
         expect(Portal::District).to receive(:find).with("37").and_return(@district)
-        expect(@district).to receive(:update_attributes).with(portal_district_params).and_return(false)
+        expect(@district).to receive(:update_attributes).with(permit_params!(portal_district_params)).and_return(false)
         put :update, params: { :id => "37", :portal_district => portal_district_params }
       end
 

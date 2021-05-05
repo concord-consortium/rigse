@@ -50,7 +50,7 @@ describe Admin::TagsController do
 
     describe "with valid params" do
       it "assigns a newly created tags as @tags" do
-        allow(Admin::Tag).to receive(:new).with(tag_params).and_return(mock_tags(:save => true))
+        allow(Admin::Tag).to receive(:new).with(permit_params!(tag_params)).and_return(mock_tags(:save => true))
         post :create, params: { :admin_tag => tag_params }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
@@ -64,7 +64,7 @@ describe Admin::TagsController do
 
     describe "with invalid params" do
       it "assigns a newly created but unsaved tags as @tags" do
-        allow(Admin::Tag).to receive(:new).with(tag_params).and_return(mock_tags(:save => false))
+        allow(Admin::Tag).to receive(:new).with(permit_params!(tag_params)).and_return(mock_tags(:save => false))
         post :create, params: { :admin_tag => tag_params }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
@@ -83,7 +83,7 @@ describe Admin::TagsController do
     describe "with valid params" do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-        expect(mock_tags).to receive(:update_attributes).with(tag_params)
+        expect(mock_tags).to receive(:update_attributes).with(permit_params!(tag_params))
         put :update, params: { :id => "37", :admin_tag => tag_params }
       end
 
@@ -103,7 +103,7 @@ describe Admin::TagsController do
     describe "with invalid params" do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-        expect(mock_tags).to receive(:update_attributes).with(tag_params)
+        expect(mock_tags).to receive(:update_attributes).with(permit_params!(tag_params))
         put :update, params: { :id => "37", :admin_tag => tag_params }
       end
 
