@@ -176,7 +176,7 @@ class Search
     results.facet(:subject_areas).rows.each do |facet|
       self.available_subject_areas << facet.value
     end
-    available_subject_areas.distinct!
+    available_subject_areas.uniq!
     results.facet(:grade_levels).rows.each do |facet|
       self.available_grade_level_groups[facet.value] = 1
     end
@@ -186,11 +186,11 @@ class Search
         self.available_projects << {id: facet.value, name: project.name, landing_page_slug: project.landing_page_slug}
       end
     end
-    available_projects.distinct!
+    available_projects.uniq!
     results.facet(:sensors).rows.each do |facet|
       self.available_sensors << facet.value
     end
-    available_sensors.distinct!
+    available_sensors.uniq!
   end
 
   def search
