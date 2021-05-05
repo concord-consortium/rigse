@@ -1,3 +1,9 @@
+# loads OmniAuth::Strategies::Schoology for omniauth configuration
+require File.expand_path("../../../lib/omni_auth/strategies/schoology", __FILE__)
+
+# loads OmniAuth::Strategies::PortalGoogle for omniauth configuration
+require File.expand_path("../../../lib/omni_auth/strategies/portal_google", __FILE__)
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -223,7 +229,7 @@ Devise.setup do |config|
     end
     config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'],
       {
-        strategy_class: 'OmniAuth::Strategies::Schoology',
+        strategy_class: OmniAuth::Strategies::Schoology,
         scope: 'user',
         setup: SETUP_PROC
       }
@@ -235,7 +241,7 @@ Devise.setup do |config|
     config.omniauth 'google', ENV['GOOGLE_CLIENT_KEY'], ENV['GOOGLE_CLIENT_SECRET'],
       {
         name: 'google',
-        strategy_class: 'OmniAuth::Strategies::PortalGoogle',
+        strategy_class: OmniAuth::Strategies::PortalGoogle,
         scope: [ 'https://www.googleapis.com/auth/userinfo.profile',
                  'https://www.googleapis.com/auth/userinfo.email'    ]
       }

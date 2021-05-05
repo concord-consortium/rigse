@@ -5,6 +5,12 @@ require 'rails/all'
 require File.expand_path('../../lib/load_config', __FILE__)
 require File.expand_path('../../lib/bool_env', __FILE__)
 
+# loads Rack::ConfigSessionCookies for middleware configuration
+require File.expand_path("../../lib/rack/config_session_cookies", __FILE__)
+
+# load Rack::ResponseLogger for middleware configuration
+require File.expand_path("../../lib/rack/response_logger", __FILE__)
+
 module RailsPortal
   class Application < Rails::Application
     config.rails_lts_options = { default: :compatible }
@@ -37,7 +43,7 @@ module RailsPortal
     config.filter_parameters << :password << :password_confirmation
 
     # Subvert the cookies_only=true session policy for requests ending in ".config"
-    config.middleware.insert_before("ActionDispatch::Cookies", "Rack::ConfigSessionCookies")
+    config.middleware.insert_before(ActionDispatch::Cookies, Rack::ConfigSessionCookies)
 
     # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
     #   $ rake middleware
@@ -146,7 +152,7 @@ module RailsPortal
     end
 
     # Add a middlewere to log more info about the response
-    config.middleware.insert_before 0, "Rack::ResponseLogger"
+    config.middleware.insert_before 0, Rack::ResponseLogger
 
     config.assets.enabled = true
     config.assets.precompile += %w(
