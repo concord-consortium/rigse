@@ -114,7 +114,7 @@ module RoleRequirementSystem
 
     def access_denied
       if logged_in?
-        render :nothing => true, :status => 401
+        head :unauthorized
         return false
       else
         super

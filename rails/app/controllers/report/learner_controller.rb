@@ -50,7 +50,7 @@ class Report::LearnerController < ApplicationController
         end
       end
     else
-      render :nothing => true
+      head :ok
     end
   end
 

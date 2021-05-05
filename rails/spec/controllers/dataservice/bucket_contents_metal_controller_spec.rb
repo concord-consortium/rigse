@@ -27,7 +27,7 @@ RSpec.describe Dataservice::BucketContentsMetalController, type: :request do
   # TODO: auto-generated
   describe '#create_by_name' do
     it 'GET create_by_name' do
-      post "/dataservice/bucket_loggers/name/name/bucket_contents.bundle"
+      post "/dataservice/bucket_loggers/name/name/bucket_contents.bundle", params: {}
 
       expect(response).to have_http_status(:created)
     end
