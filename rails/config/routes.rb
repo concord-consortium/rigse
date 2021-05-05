@@ -465,7 +465,9 @@ RailsPortal::Application.routes.draw do
 
         namespace :jwt do
           post :portal
+          get  :portal
           post :firebase
+          get  :firebase
         end
 
         resources :external_activities, :only => [:create] do
