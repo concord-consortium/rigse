@@ -368,14 +368,14 @@ class API::V1::Report
     activity_feedback_id = activity_feedback_hash.delete('activity_feedback_id')
     return false unless activity_feedback_id
     activity_feedback_settings = Portal::OfferingActivityFeedback.find(activity_feedback_id)
-    activity_feedback_settings.set_feedback_options(activity_feedback_hash.symbolize_keys)
+    activity_feedback_settings.set_feedback_options(activity_feedback_hash)
   end
 
   def self.submit_activity_feedback(activity_feedback_hash)
     learner_id = activity_feedback_hash.delete('learner_id')
     activity_feedback_id = activity_feedback_hash.delete('activity_feedback_id')
     return unless learner_id && activity_feedback_id
-    Portal::LearnerActivityFeedback.update_feedback(learner_id, activity_feedback_id, activity_feedback_hash.symbolize_keys)
+    Portal::LearnerActivityFeedback.update_feedback(learner_id, activity_feedback_id, activity_feedback_hash)
   end
 
 
@@ -388,7 +388,7 @@ class API::V1::Report
     template = offering.runnable.template
     activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
     activity_feedback = Portal::OfferingActivityFeedback.find_or_create_for_offering_and_activity(offering, activity)
-    activity_feedback.set_feedback_options(options_hash.symbolize_keys)
+    activity_feedback.set_feedback_options(options_hash)
   end
 
   def self.submit_activity_feedback_v2(offering, activity_feedback_hash)
@@ -399,7 +399,7 @@ class API::V1::Report
     activity = template.is_a?(Investigation) ? template.activities[activity_index] : template
     activity_feedback = Portal::OfferingActivityFeedback.for_offering_and_activity(offering, activity)
     return unless learner && activity_feedback
-    Portal::LearnerActivityFeedback.update_feedback(learner.id, activity_feedback.id, activity_feedback_hash.symbolize_keys)
+    Portal::LearnerActivityFeedback.update_feedback(learner.id, activity_feedback.id, activity_feedback_hash)
   end
 
   def self.update_rubric_v2(offering, options_hash)
