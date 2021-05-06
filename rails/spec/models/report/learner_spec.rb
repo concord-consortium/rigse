@@ -90,7 +90,7 @@ describe Report::Learner do
 
     it "should use the last bundle contents update time" do
       report = Report::Learner.create(:learner => @learner)
-      expect(report.last_run).to eq(@bundle_content.updated_at)
+      expect(report.last_run).to eq(@bundle_content.updated_at.change(:usec => 0))
     end
   end
 
@@ -103,7 +103,7 @@ describe Report::Learner do
 
     it "should use the last bundle contents update time" do
       report = Report::Learner.create(:learner => @learner)
-      expect(report.last_run).to eq(@periodic_bundle_content.updated_at)
+      expect(report.last_run).to eq(@periodic_bundle_content.updated_at.change(:usec => 0))
     end
   end
 
@@ -118,7 +118,7 @@ describe Report::Learner do
 
       it "should use the periodic update time" do
         report = Report::Learner.create(:learner => @learner)
-        expect(report.last_run).to eq(@periodic_bundle_content.updated_at)
+        expect(report.last_run).to eq(@periodic_bundle_content.updated_at.change(:usec => 0))
       end
     end
     describe "when the periodic logger is the most recent" do
@@ -132,7 +132,7 @@ describe Report::Learner do
 
       it "should use the bundle update time" do
         report = Report::Learner.create(:learner => @learner)
-        expect(report.last_run).to eq(@bundle_content.updated_at)
+        expect(report.last_run).to eq(@bundle_content.updated_at.change(:usec => 0))
       end
     end
 
