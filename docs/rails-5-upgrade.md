@@ -209,7 +209,7 @@
       11. Fixed check_image_presence throwing abort now instead of returning false
       12. Fixed another check for empty string in clazzes controller
       13. Fixed uploaded file spec for model library
-
+      14. Fixed clazzes_controller spec
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems

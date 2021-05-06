@@ -244,7 +244,9 @@ describe Portal::ClazzesController do
 
       post :create, params: @post_params
 
-      @new_clazz = Portal::Clazz.find_by_class_word(@post_params[:portal_clazz][:class_word])
+      assert flash['notice']
+
+      @new_clazz = Portal::Clazz.where(class_word: @post_params[:portal_clazz][:class_word]).first
 
       @post_params[:portal_clazz][:grade_levels].each do |name, v|
         grade = Portal::Grade.find_by_name(name.to_s)

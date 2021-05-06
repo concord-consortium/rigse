@@ -117,7 +117,11 @@ class Portal::ClazzesController < ApplicationController
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
-    if !grade_levels.kind_of?(Array)
+
+    if !valid_school_id_param?(school_id)
+      school_id = nil
+    end
+    if !valid_grade_levels_param?(grade_levels)
       grade_levels = nil
     end
 
@@ -206,7 +210,7 @@ class Portal::ClazzesController < ApplicationController
 
     object_params = params[:portal_clazz]
     grade_levels = object_params.delete(:grade_levels)
-    if !grade_levels.kind_of?(Array)
+    if !valid_grade_levels_param?(grade_levels)
       grade_levels = nil
     end
     if grade_levels
@@ -414,9 +418,20 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url
   end
 
+  private
+
   def portal_clazz_strong_params(params)
     params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
                             :section, :semester_id, :start_time, :status, :teacher_id)
+  end
+
+  def valid_grade_levels_param?(grade_levels_param)
+    grade_levels_param.kind_of?(Array) || grade_levels_param.kind_of?(ActionController::Parameters)
+  end
+
+  def valid_school_id_param?(school_id_param)
+    # check if it is an integer
+    school_id_param.to_i.to_s == school_id_param
   end
 
 end
