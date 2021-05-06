@@ -211,6 +211,7 @@
       13. Fixed uploaded file spec for model library
       14. Fixed clazzes_controller spec
       15. Fixed imports_controller_spec for batch_import_data
+      16. Fixed external activities update to handle nil for direct attribute updates
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
