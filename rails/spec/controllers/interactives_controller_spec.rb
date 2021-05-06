@@ -156,17 +156,14 @@ describe InteractivesController do
     content = File.read(import_json)
     let(:params1) do
       {
-         import:Rack::Test::UploadedFile.new(content, "application/json")
+         import: Rack::Test::UploadedFile.new(import_json, "application/json")
       }
-    end
-    before do
-      allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(content)
     end
     it "should import all the models from a json" do
       import_hash = JSON.parse(content)
       model_library_count = import_hash["models"].length
       existing_interactives_count = Interactive.count
-      post :import_model_library, params: params1
+      post :import_model_library, params: params1, format: :js
       new_interactives_count = Interactive.count
       expect(new_interactives_count - existing_interactives_count).to eq(model_library_count)
     end
