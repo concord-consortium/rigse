@@ -14,7 +14,7 @@ class AccessGrant < ApplicationRecord
 
   def self.prune!
     # We need to delete tokens that have expired...
-    delete_all(["access_token_expires_at < ?", 1.minute.ago])
+    AccessGrant.where(["access_token_expires_at < ?", 1.minute.ago]).delete_all
   end
 
   def self.authenticate(code, client_id)

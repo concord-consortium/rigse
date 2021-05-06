@@ -7,7 +7,7 @@ RSpec.describe API::V1::DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#index' do
     it 'GET index' do
-      get :index, state: 'WA'
+      get :index, params: { state: 'WA' }
 
       expect(response).to have_http_status(:ok)
     end

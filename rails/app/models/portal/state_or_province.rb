@@ -1,9 +1,9 @@
 
 class Portal::StateOrProvince
-  
+
   # Rails 3.2 only, returns uniq non nil state strings from current districts
   def self.from_districts
-    Portal::District.where("state IS NOT NULL").uniq.pluck(:state)
+    Portal::District.where("state IS NOT NULL").distinct.pluck(:state)
   end
 
   def self.state_and_province_abbreviations
@@ -11,7 +11,7 @@ class Portal::StateOrProvince
   end
 
   def self.configured
-    case APP_CONFIG[:states_and_provinces] 
+    case APP_CONFIG[:states_and_provinces]
     when 'all'
       state_and_province_abbreviations
     when nil

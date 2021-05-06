@@ -29,13 +29,13 @@ describe API::V1::TeacherClassesController do
     end
 
     it "fails on an invalid class" do
-      get :show, id: 0
+      get :show, params: { id: 0 }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "The requested teacher class was not found"
     end
 
     it "returns a 200 code for a valid class" do
-      get :show, id: teacher_clazz.id
+      get :show, params: { id: teacher_clazz.id }
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)["data"]).to eq({
         "id" => teacher_clazz.id,
@@ -51,14 +51,14 @@ describe API::V1::TeacherClassesController do
 
     [:sort, :set_active, :copy].each do |action|
       it "should fail as anonymous" do
-        post action, {id: 1}
+        post action, params: {id: 1}
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["message"]).to eq "You must be logged in to use this endpoint"
       end
 
       it "should fail as a student" do
         sign_in student.user
-        post action, {id: 1}
+        post action, params: {id: 1}
         expect(response).to have_http_status(:bad_request)
         expect(JSON.parse(response.body)["message"]).to eq "You must be logged in as a teacher to use this endpoint"
       end
@@ -72,25 +72,25 @@ describe API::V1::TeacherClassesController do
     end
 
     it "should fail when ids are missing" do
-      post :sort, {}
+      post :sort
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "Missing ids parameter"
     end
 
     it "should fail when ids are invalid" do
-      post :sort, {ids: [0]}
+      post :sort, params: { ids: [0] }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "Invalid teacher class id: 0"
     end
 
     it "should fail when ids are to classes that the teacher doesn't own" do
-      post :sort, {ids: [other_teacher_clazz.id]}
+      post :sort, params: { ids: [other_teacher_clazz.id] }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of class: #{other_teacher_clazz.id}"
     end
 
     it "should succeed" do
-      post :sort, {ids: [teacher_clazz3.id, teacher_clazz.id, teacher_clazz2.id]}
+      post :sort, params: { ids: [teacher_clazz3.id, teacher_clazz.id, teacher_clazz2.id] }
       teacher_clazz.reload
       teacher_clazz2.reload
       teacher_clazz3.reload
@@ -99,7 +99,7 @@ describe API::V1::TeacherClassesController do
       expect(teacher_clazz.position).to eq 2
       expect(teacher_clazz2.position).to eq 3
 
-      post :sort, {ids: [teacher_clazz2.id, teacher_clazz3.id, teacher_clazz.id]}
+      post :sort, params: { ids: [teacher_clazz2.id, teacher_clazz3.id, teacher_clazz.id] }
       teacher_clazz.reload
       teacher_clazz2.reload
       teacher_clazz3.reload
@@ -116,18 +116,18 @@ describe API::V1::TeacherClassesController do
     end
 
     it "should fail when id is a class that the teacher doesn't own" do
-      post :set_active, {id: other_teacher_clazz.id}
+      post :set_active, params: { id: other_teacher_clazz.id }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of the requested class"
     end
 
     it "should succeed when the id is a class the teacher owns" do
-      post :set_active, {id: teacher_clazz.id, active: true}
+      post :set_active, params: { id: teacher_clazz.id, active: true }
       teacher_clazz.reload
       expect(response).to have_http_status(:ok)
       expect(teacher_clazz.active).to eq true
 
-      post :set_active, {id: teacher_clazz.id, active: false}
+      post :set_active, params: { id: teacher_clazz.id, active: false }
       teacher_clazz.reload
       expect(response).to have_http_status(:ok)
       expect(teacher_clazz.active).to eq false
@@ -140,31 +140,31 @@ describe API::V1::TeacherClassesController do
     end
 
     it "should fail when id is a class that the teacher doesn't own" do
-      post :copy, {id: other_teacher_clazz.id}
+      post :copy, params: { id: other_teacher_clazz.id }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of the requested class"
     end
 
     it "should fail when name is blank" do
-      post :copy, {id: teacher_clazz.id, name: "", classWord: "copyofclazz", description: "test of copy"}
+      post :copy, params: { id: teacher_clazz.id, name: "", classWord: "copyofclazz", description: "test of copy" }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "Name can't be blank"
     end
 
     it "should fail when class word is blank" do
-      post :copy, {id: teacher_clazz.id, name: "Copy of clazz for unit test", classWord: "", description: "test of copy"}
+      post :copy, params: { id: teacher_clazz.id, name: "Copy of clazz for unit test", classWord: "", description: "test of copy" }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "Class word can't be blank"
     end
 
     it "should fail when class word is taken" do
-      post :copy, {id: teacher_clazz.id, name: "Copy of clazz for unit test", classWord: clazz.class_word, description: "test of copy"}
+      post :copy, params: { id: teacher_clazz.id, name: "Copy of clazz for unit test", classWord: clazz.class_word, description: "test of copy" }
       expect(response).to have_http_status(:bad_request)
       expect(JSON.parse(response.body)["message"]).to eq "Class word has already been taken"
     end
 
     it "should succeed when fields are valid" do
-      post :copy, {id: teacher_clazz.id, name: "Copy of clazz for unit test", classWord: "copyofclazz", description: "test of copy"}
+      post :copy, params: { id: teacher_clazz.id, name: "Copy of clazz for unit test", classWord: "copyofclazz", description: "test of copy" }
       expect(response).to have_http_status(:ok)
 
       data = JSON.parse(response.body)["data"]

@@ -15,7 +15,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(403)
       end
     end
@@ -26,7 +26,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(403)
       end
     end
@@ -37,7 +37,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(201)
       end
     end
@@ -48,7 +48,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(201)
       end
     end
@@ -59,7 +59,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid minimal parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: {:name => "test", :url => "http://example.com/"}
         expect(response.status).to eql(201)
       end
     end
@@ -70,22 +70,22 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with a missing name parameter" do
-        post :create, :url => "http://example.com/"
+        post :create, params: { :url => "http://example.com/" }
         expect(response.status).to eql(400)
       end
 
       it "fails with a missing url parameter" do
-        post :create, :name => "test"
+        post :create, params: {:name => "test"}
         expect(response.status).to eql(400)
       end
 
       it "fails with an invalid url parameter" do
-        post :create, :url => "invalid"
+        post :create, params: { :url => "invalid" }
         expect(response.status).to eql(400)
       end
 
       it "succeeds with valid minimal parameters" do
-        post :create, :name => "test", :url => "http://example.com/"
+        post :create, params: { :name => "test", :url => "http://example.com/" }
         expect(response.status).to eql(201)
       end
     end
@@ -119,7 +119,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(403)
       end
     end
@@ -130,7 +130,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(403)
       end
     end
@@ -141,7 +141,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(200)
       end
     end
@@ -152,7 +152,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "succeeds with valid parameters" do
-        post :update_basic, valid_parameters
+        post :update_basic, params: valid_parameters
         expect(response.status).to eql(200)
       end
     end
@@ -184,7 +184,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "fails with valid parameters" do
-        post :update_by_url, valid_parameters
+        post :update_by_url, params: valid_parameters
         expect(response.status).to eql(403)
       end
     end
@@ -195,17 +195,17 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "should not update an activity they did not author" do
-        post :update_by_url, valid_parameters
+        post :update_by_url, params: valid_parameters
         expect(response.status).to eql(403)
       end
 
       it "should update an activity they did author" do
         my_url = "http://activity.com/activity/2"
-        post :create, :name => "My Cool Activity", :url => my_url
+        post :create, params: {:name => "My Cool Activity", :url => my_url}
         my_valid_parameters = {
           url: my_url
         }
-        post :update_by_url, my_valid_parameters
+        post :update_by_url, params: my_valid_parameters
         expect(response.body).to eql('{"success":true}')
       end
     end
@@ -216,7 +216,7 @@ describe API::V1::ExternalActivitiesController do
       end
 
       it "should update the activity" do
-        post :update_by_url, valid_parameters
+        post :update_by_url, params: valid_parameters
         expect(response.body).to eql('{"success":true}')
       end
     end

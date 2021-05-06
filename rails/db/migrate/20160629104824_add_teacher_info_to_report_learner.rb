@@ -32,7 +32,7 @@ class AddTeacherInfoToReportLearner < ActiveRecord::Migration
   class ::Portal::Teacher < ApplicationRecord
     self.table_name = :portal_teachers
     has_many :school_memberships, :as => :member, :class_name => "AddTeacherInfoToReportLearner::Portal::SchoolMembership"
-    has_many :schools, -> { uniq }, :through => :school_memberships, :class_name => "AddTeacherInfoToReportLearner::Portal::School"
+    has_many :schools, -> { distinct }, :through => :school_memberships, :class_name => "AddTeacherInfoToReportLearner::Portal::School"
     belongs_to :user, :class_name => "AddTeacherInfoToReportLearner::User", :foreign_key => "user_id"
   end
 

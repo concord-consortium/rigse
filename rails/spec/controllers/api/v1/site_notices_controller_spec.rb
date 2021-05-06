@@ -20,19 +20,19 @@ describe API::V1::SiteNoticesController do
     end
 
     it("should create a notice with some text") do
-      post :create, @post_params
+      post :create, params: @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
     end
     it("should not create a notice if it is blank") do
       @post_params[:notice_html] = ''
-      post :create, @post_params
+      post :create, params: @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).to be_nil
       expect(flash['error']).to match(/Notice text is blank/i)
 
       @post_params[:notice_html] = ' '
-      post :create, @post_params
+      post :create, params: @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).to be_nil
       expect(flash['error']).to match(/Notice text is blank/i)
@@ -48,7 +48,7 @@ describe API::V1::SiteNoticesController do
       }
     end
     it"should dismiss a notice" do
-      xhr :post, :dismiss_notice, @params
+      post :dismiss_notice, params: @params, xhr: true
       dismissed_notice = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(@notice.id, @teacher_user.id)
       expect(dismissed_notice).not_to be_nil
       assert(dismissed_notice.notice_dismissed)
@@ -61,13 +61,13 @@ describe API::V1::SiteNoticesController do
       @notice = FactoryBot.create(:site_notice, :created_by => @admin_user.id)
     end
     it"should store collapse time and expand and collapse status" do
-      xhr :post, :toggle_notice_display
+      post :toggle_notice_display, xhr: true
       toggle_notice_status = Admin::NoticeUserDisplayStatus.find_by_user_id(@teacher_user.id)
       expect(toggle_notice_status).not_to be_nil
       assert(toggle_notice_status.collapsed_status)
       expect(response).to be_success
 
-      xhr :post, :toggle_notice_display
+      post :toggle_notice_display, xhr: true
       toggle_notice_status.reload
       expect(toggle_notice_status).not_to be_nil
       expect(toggle_notice_status.collapsed_status).to eq(false)
@@ -83,7 +83,7 @@ describe API::V1::SiteNoticesController do
       }
     end
     it("should create a notice if and only if notice contains a non white space character") do
-      post :update, @post_params
+      post :update, params: @post_params
       notice = Admin::SiteNotice.find_by_notice_html(@post_params[:notice_html])
       expect(notice).not_to be_nil
     end
@@ -102,7 +102,7 @@ describe API::V1::SiteNoticesController do
       notice = Admin::SiteNotice.find_by_id(@params[:id])
       expect(notice).not_to be_nil
 
-      xhr :post, :remove_notice, @params
+      post :remove_notice, params: @params, xhr: true
       notice = Admin::SiteNotice.find_by_id(@params[:id])
       expect(notice).to be_nil
       expect(response).to be_success

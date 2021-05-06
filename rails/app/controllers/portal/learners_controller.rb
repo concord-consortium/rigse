@@ -14,10 +14,10 @@ class Portal::LearnersController < ApplicationController
   public
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_config, :except => [:show, :report, :activity_report]
-  before_filter :teacher_admin_or_config, :only => [:activity_report]
-  before_filter :handle_jnlp_session, :only => [:show]
-  before_filter :authorize_show, :only => [:show]
+  before_action :admin_or_config, :except => [:show, :report, :activity_report]
+  before_action :teacher_admin_or_config, :only => [:activity_report]
+  before_action :handle_jnlp_session, :only => [:show]
+  before_action :authorize_show, :only => [:show]
 
   def current_clazz
     # PUNDIT_REVIEW_AUTHORIZE

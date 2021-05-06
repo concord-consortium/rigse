@@ -12,7 +12,7 @@ class API::V1::SchoolsController < API::APIController
   end
 
   def create
-    registration = API::V1::SchoolRegistration.new(params)
+    registration = API::V1::SchoolRegistration.new(school_registration_strong_params(params))
     if registration.valid?
       registration.save
       render :json => registration.attributes
@@ -25,6 +25,10 @@ class API::V1::SchoolsController < API::APIController
 
   def can_create_new_school(params)
     Admin::Settings.default_settings.allow_adhoc_schools
+  end
+
+  def school_registration_strong_params(params)
+    params && params.permit(:school_name, :zipcode, :country_id, :school_id)
   end
 
 end

@@ -38,8 +38,7 @@ describe InteractivesController do
   describe '#create' do
     context "when publication status is provided" do
       it "should create interactive" do
-        post :create, {
-          :interactive => {
+        post :create, params: { :interactive => {
             :name => name,
             :description => description,
             :publication_status => publication_status,
@@ -49,8 +48,7 @@ describe InteractivesController do
             :height => height,
             :image_url => image_url,
             :credits => credits
-          }
-        }
+          } }
 
         expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).publication_status).to eq publication_status
@@ -60,8 +58,7 @@ describe InteractivesController do
 
     context "when publication status is not provided" do
       it "should create interactive" do
-        post :create, {
-          :interactive => {
+        post :create, params: { :interactive => {
             :name => name,
             :description => description,
             :url => url,
@@ -70,8 +67,7 @@ describe InteractivesController do
             :height => height,
             :image_url => image_url,
             :credits => credits
-          }
-        }
+          } }
         expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).publication_status).to eq("draft")
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
@@ -80,8 +76,7 @@ describe InteractivesController do
 
     context "taggings" do
       it "should tag the interactive with proper model_type tag" do
-        post :create, {
-          :interactive => {
+        post :create, params: { :interactive => {
             :name => name,
             :description => description,
             :url => url,
@@ -90,14 +85,7 @@ describe InteractivesController do
             :height => height,
             :image_url => image_url,
             :credits => credits
-          },
-          :update_model_types => "true",
-          :model_types => ["model_type_1"],
-          :update_grade_levels => "true",
-          :grade_levels => ["1","5"],
-          :update_subject_areas => "true",
-          :subject_areas => ["Physical Science"]
-        }
+          }, :update_model_types => "true", :model_types => ["model_type_1"], :update_grade_levels => "true", :grade_levels => ["1","5"], :update_subject_areas => "true", :subject_areas => ["Physical Science"] }
         expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).model_type_list).to match_array(["model_type_1"])
         expect(assigns(:interactive).grade_level_list).to match_array(["1","5"])
@@ -111,8 +99,7 @@ describe InteractivesController do
       let (:project2) { FactoryBot.create(:project) }
 
       it "should set the projects" do
-        post :create, {
-          :interactive => {
+        post :create, params: { :interactive => {
             :name => name,
             :description => description,
             :url => url,
@@ -121,10 +108,7 @@ describe InteractivesController do
             :height => height,
             :image_url => image_url,
             :credits => credits
-          },
-          :update_projects => "true",
-          :project_ids => [project1.id, project2.id],
-        }
+          }, :update_projects => "true", :project_ids => [project1.id, project2.id] }
         expect(flash['notice']).to eq("Interactive was successfully created.")
         expect(assigns(:interactive).projects).to eq([project1, project2])
         expect(response).to redirect_to(interactive_path(assigns(:interactive)))
@@ -139,8 +123,7 @@ describe InteractivesController do
     it "should change the activity's database record to show submitted data" do
       test_interactive
       existing_interactives = Interactive.count
-      post :update, {
-          :interactive=>{
+      post :update, params: { :interactive=>{
             :name => name,
             :description => description,
             :publication_status => publication_status,
@@ -149,17 +132,7 @@ describe InteractivesController do
             :width => width,
             :height => height,
             :image_url => image_url,
-            :credits => credits},
-          :update_grade_levels =>"true",
-          :grade_levels =>["1", "5"],
-          :update_subject_areas =>"true",
-          :subject_areas =>["Physical Science"],
-          :update_model_types =>"true",
-          :model_types =>["model_type_2"],
-          :update_projects => "true",
-          :project_ids => [project1.id, project2.id],
-          :id => test_interactive.id
-        }
+            :credits => credits}, :update_grade_levels =>"true", :grade_levels =>["1", "5"], :update_subject_areas =>"true", :subject_areas =>["Physical Science"], :update_model_types =>"true", :model_types =>["model_type_2"], :update_projects => "true", :project_ids => [project1.id, project2.id], :id => test_interactive.id }
 
       expect(Interactive.count).to eq(existing_interactives)
 
@@ -190,7 +163,7 @@ describe InteractivesController do
       import_hash = JSON.parse(content)
       model_library_count = import_hash["models"].length
       existing_interactives_count = Interactive.count
-      xhr :post, :import_model_library, params1
+      post :import_model_library, params: params1
       new_interactives_count = Interactive.count
       expect(new_interactives_count - existing_interactives_count).to eq(model_library_count)
     end

@@ -34,13 +34,13 @@ class API::V1::ReportsController < API::APIController
       API::V1::Report.update_feedback_settings(offering, params[:feedback_opts])
     end
     if params[:actvity_feedback_opts] # actvity -> this typo can't be fixed to keep API backward-compatible
-      API::V1::Report.update_activity_feedback_settings(params[:actvity_feedback_opts]) # actvity -> this typo can't be fixed to keep API backward-compatible
+      API::V1::Report.update_activity_feedback_settings(activity_feedback_settings_update_strong_params(params[:actvity_feedback_opts])) # actvity -> this typo can't be fixed to keep API backward-compatible
     end
     if params[:feedback]
       API::V1::Report.submit_feedback(params[:feedback])
     end
     if params[:activity_feedback]
-      API::V1::Report.submit_activity_feedback(params[:activity_feedback])
+      API::V1::Report.submit_activity_feedback(activity_feedback_update_strong_params(params[:activity_feedback]))
     end
 
     # These actions have been added to support new Firestore-based Portal Report. Data format is a bit different
@@ -49,11 +49,11 @@ class API::V1::ReportsController < API::APIController
     # feedback can be ignored. Once progress table is redone, this code can be removed.
     if params[:activity_feedback_opts_v2]
       # Activity feedback coming from new, firestore-based Portal Report.
-      API::V1::Report.update_activity_feedback_settings_v2(offering, params[:activity_feedback_opts_v2])
+      API::V1::Report.update_activity_feedback_settings_v2(offering, activity_feedback_settings_update_v2_strong_params(params[:activity_feedback_opts_v2]))
     end
     if params[:activity_feedback_v2]
       # Activity feedback coming from new, firestore-based Portal Report.
-      API::V1::Report.submit_activity_feedback_v2(offering, params[:activity_feedback_v2])
+      API::V1::Report.submit_activity_feedback_v2(offering, activity_feedback_v2_update_strong_params(params[:activity_feedback_v2]))
     end
     if params[:rubric_v2]
       # Rubric coming from new, firestore-based Portal Report.
@@ -80,4 +80,26 @@ class API::V1::ReportsController < API::APIController
     filter.ignore = !filter_params[:active]            unless filter_params[:active].nil?
     filter.save!
   end
+
+  def activity_feedback_update_strong_params(params)
+    # NOTE: learner_id is permitted here even though it is portal_learner_id in the schema as the parameter name used by the callder is learner_id
+    params && params.permit(:text_feedback, :score, :has_been_reviewed, :activity_feedback_id, :rubric_feedback, :learner_id)
+  end
+
+  def activity_feedback_v2_update_strong_params(params)
+    # NOTE: student_user_id and activity_index is permitted here as it is sent to the controller but not used directly in the model
+    #       (it is used to look up other related models)
+    params && params.permit(:text_feedback, :score, :has_been_reviewed, :activity_feedback_id, :rubric_feedback, :student_user_id, :activity_index)
+  end
+
+  def activity_feedback_settings_update_strong_params(params)
+    # NOTE: activity_feedback_id is permitted as it is used as a controller parameter but is not in the model
+    params && params.permit(:enable_text_feedback, :max_score, :score_type, :activity_id, :portal_offering_id, :use_rubric, :rubric, :activity_feedback_id)
+  end
+
+  def activity_feedback_settings_update_v2_strong_params(params)
+    # NOTE: activity_index is permitted as it is used as a controller parameter but is not in the model
+    params && params.permit(:enable_text_feedback, :max_score, :score_type, :activity_id, :portal_offering_id, :use_rubric, :rubric, :activity_index)
+  end
+
 end

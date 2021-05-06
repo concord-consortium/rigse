@@ -75,7 +75,7 @@ class Activity < ApplicationRecord
            'ON (external_activities.template_id = activities.id AND external_activities.template_type = "Activity")',
            'OR (external_activities.template_id = investigations.id AND external_activities.template_type = "Investigation")'])
         .where("external_activities.id IS #{v ? 'NOT' : ''} NULL")
-        .uniq
+        .distinct
   end
   # End scope weeding zone
 

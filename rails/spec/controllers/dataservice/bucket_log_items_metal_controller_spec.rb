@@ -15,7 +15,7 @@ RSpec.describe Dataservice::BucketLogItemsMetalController, type: :request do
   # TODO: auto-generated
   describe '#create_by_learner' do
     it 'GET create_by_learner' do
-      post "/dataservice/bucket_loggers/learner/0/bucket_log_items.bundle"
+      post "/dataservice/bucket_loggers/learner/0/bucket_log_items.bundle", params: {}
       expect(response).to have_http_status(:not_found)
     end
   end
@@ -23,7 +23,7 @@ RSpec.describe Dataservice::BucketLogItemsMetalController, type: :request do
   # TODO: auto-generated
   describe '#create_by_name' do
     it 'GET create_by_name' do
-      post "/dataservice/bucket_loggers/name/name/bucket_log_items.bundle"
+      post "/dataservice/bucket_loggers/name/name/bucket_log_items.bundle", params: {}
       expect(response).to have_http_status(:created)
     end
   end

@@ -1,7 +1,7 @@
 class Portal::Nces06DistrictsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_manager, :except => [ :index ]
+  before_action :admin_or_manager, :except => [ :index ]
   include RestrictedPortalController
 
   protected

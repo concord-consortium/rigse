@@ -14,13 +14,13 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
     end
 
     it 'GET index' do
-      get :index, {}, {}
+      get :index
 
       expect(response).to have_http_status(:ok)
     end
 
     it 'GET index for state' do
-      get :index, state_or_province: 'WA'
+      get :index, params: { state_or_province: 'WA' }
 
       expect(response).to have_http_status(:ok)
     end
@@ -29,7 +29,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: 123
+      get :show, params: { id: 123 }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -38,7 +38,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, {id: 1}, {}
+      get :edit, params: { id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -47,7 +47,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#create' do
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:redirect)
     end
@@ -56,7 +56,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
-      put :update, {id: 1}, {}
+      put :update, params: { id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -65,7 +65,7 @@ RSpec.describe Portal::Nces06DistrictsController, type: :controller do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, {id: 1}, {}
+      delete :destroy, params: { id: 1 }
 
       expect(response).to have_http_status(:redirect)
     end

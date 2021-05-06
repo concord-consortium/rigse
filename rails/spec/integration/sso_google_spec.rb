@@ -55,7 +55,7 @@ describe "when user signs in with a Google" do
     }
     context "with a basic url" do
       it "redirects to google" do
-        get "/users/auth/google"
+        get "/users/auth/google", params: {}
         expect(response).to redirect_to(redirect_url)
       end
     end
@@ -64,7 +64,7 @@ describe "when user signs in with a Google" do
     context "with a url containing simple state" do
       let (:state_param_value) { "some_fake_state" }
       it "redirects to google with that state" do
-        get "/users/auth/google?state=#{state_param_value}"
+        get "/users/auth/google?state=#{state_param_value}", params: {}
         expect(response).to redirect_to(redirect_url)
       end
     end
@@ -72,7 +72,7 @@ describe "when user signs in with a Google" do
     context "with a url containing urlencoded state" do
       let (:state_param_value) { CGI.escape "https://concord.org" }
       it "redirects to google with that state still encoded" do
-        get "/users/auth/google?state=#{state_param_value}"
+        get "/users/auth/google?state=#{state_param_value}", params: {}
         expect(response).to redirect_to(redirect_url)
       end
     end
@@ -81,7 +81,7 @@ describe "when user signs in with a Google" do
       let (:after_sign_in_path) { "/redirect/back/somewhere/else" }
       let (:state_param_value) { CGI.escape("after_sign_in_path=#{after_sign_in_path}") }
       it "redirects to google with the state set to after_still encoded" do
-        get "/users/auth/google?after_sign_in_path=#{CGI.escape(after_sign_in_path)}"
+        get "/users/auth/google?after_sign_in_path=#{CGI.escape(after_sign_in_path)}", params: {}
         expect(response).to redirect_to(redirect_url)
       end
     end
@@ -94,7 +94,7 @@ describe "when user signs in with a Google" do
       let (:request_state_param) { "blahblah" }
       let (:state_param_value) { CGI.escape("#{request_state_param} after_sign_in_path=#{after_sign_in_path}") }
       it "redirects to google with the state set to after_still encoded" do
-        get "/users/auth/google?state=#{request_state_param}&after_sign_in_path=#{CGI.escape(after_sign_in_path)}"
+        get "/users/auth/google?state=#{request_state_param}&after_sign_in_path=#{CGI.escape(after_sign_in_path)}", params: {}
         expect(response).to redirect_to(redirect_url)
       end
     end
@@ -114,7 +114,7 @@ describe "when user signs in with a Google" do
 
     context "when no state has been passed" do
       it "redirects to users normal page" do
-        get "/users/auth/google/callback?code=#{callback_code}"
+        get "/users/auth/google/callback?code=#{callback_code}", params: {}
 
         expect(response).to redirect_to("/getting_started")
         expect(token_stub).to have_been_requested
@@ -127,8 +127,7 @@ describe "when user signs in with a Google" do
       # will be checking it in the newer versions of the gems
 
       it "redirects to the after_sign_in_path" do
-        get "/users/auth/google/callback?code=#{callback_code}" +
-          "&state=#{CGI.escape(state_param)}"
+        get "/users/auth/google/callback?code=#{callback_code}&state=#{CGI.escape(state_param)}", params: {}
 
         expect(response).to redirect_to("/somewhere?redirecting_after_sign_in=1")
         expect(token_stub).to have_been_requested
@@ -141,8 +140,7 @@ describe "when user signs in with a Google" do
       # will be checking it in the newer versions of the gems
 
       it "redirects to the after_sign_in_path" do
-        get "/users/auth/google/callback?code=#{callback_code}" +
-          "&state=#{CGI.escape(state_param)}"
+        get "/users/auth/google/callback?code=#{callback_code}&state=#{CGI.escape(state_param)}", params: {}
 
         expect(response).to redirect_to("/somewhere?redirect=https%3A%2F%2Fconcord.org&redirecting_after_sign_in=1")
         expect(token_stub).to have_been_requested
@@ -155,8 +153,7 @@ describe "when user signs in with a Google" do
       # will be checking it in the newer versions of the gems
 
       it "redirects to the after_sign_in_path" do
-        get "/users/auth/google/callback?code=#{callback_code}" +
-          "&state=#{CGI.escape(state_param)}"
+        get "/users/auth/google/callback?code=#{callback_code}&state=#{CGI.escape(state_param)}", params: {}
 
         expect(response).to redirect_to("/somewhere?redirect=https%3A%2F%2Fconcord.org&redirecting_after_sign_in=1")
         expect(token_stub).to have_been_requested

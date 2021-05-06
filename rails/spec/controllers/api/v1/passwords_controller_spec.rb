@@ -16,7 +16,7 @@ describe API::V1::PasswordsController do
 
         context "with valid email" do
             it "returns success" do
-                post :reset_password, { :login_or_email => user1.email }
+                post :reset_password, params: { :login_or_email => user1.email }
                 expect(response.status).to eq(200)
                 body = JSON.parse(response.body)
                 expect(body['message']).to eq(SUCCESS_MESSAGE)
@@ -25,7 +25,7 @@ describe API::V1::PasswordsController do
 
         context "with valid login" do
             it "returns success" do
-                post :reset_password, { :login_or_email => user1.login }
+                post :reset_password, params: { :login_or_email => user1.login }
                 expect(response.status).to eq(200)
                 body = JSON.parse(response.body)
                 expect(body['message']).to eq(SUCCESS_MESSAGE)
@@ -34,7 +34,7 @@ describe API::V1::PasswordsController do
 
         context "with invalid login" do
             it "returns failure" do
-                post :reset_password, { :login_or_email => "invalid_login_" }
+                post :reset_password, params: { :login_or_email => "invalid_login_" }
                 expect(response.status).to eq(403)
                 body = JSON.parse(response.body)
                 expect(body['message']).to eq('Cannot find user or email.')
@@ -52,7 +52,7 @@ describe API::V1::PasswordsController do
                                     :provider => 'Google',
                                     :uid => 'foo_uid' )
 
-                post :reset_password, { :login_or_email => sso_user.email }
+                post :reset_password, params: { :login_or_email => sso_user.email }
                 expect(response.status).to eq(403)
                 body = JSON.parse(response.body)
                 expect(body['reason']).to eq('external_auth_user')

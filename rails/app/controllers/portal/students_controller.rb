@@ -3,7 +3,7 @@ class Portal::StudentsController < ApplicationController
   include RestrictedPortalController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :manager_or_researcher, :only => [ :show ]
+  before_action :manager_or_researcher, :only => [ :show ]
 
   public
 
@@ -111,7 +111,8 @@ class Portal::StudentsController < ApplicationController
     end
     # Only do this check if the student is signing themselves up. Everything else will work silently if these values are not set.
     if current_settings.use_student_security_questions && params[:clazz] &&params[:clazz][:class_word]
-      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions])
+      # to_unsafe_hash is ok to use here as make_questions_from_hash_and_user validates the input
+      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions].to_unsafe_hash)
       sq_errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
       if sq_errors && sq_errors.size > 0
         errors << [:security_questions, " have errors: #{sq_errors.join(',')}"]
@@ -137,7 +138,7 @@ class Portal::StudentsController < ApplicationController
       @user.save!
       user_created = @user.save
       if user_created
-        @user.confirm!
+        @user.confirm
         if current_settings.allow_default_class || @grade_level.nil?
           @portal_student = Portal::Student.create(:user_id => @user.id)
         else

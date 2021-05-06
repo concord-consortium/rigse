@@ -134,7 +134,7 @@ describe ExternalActivitiesController do
 
   describe "#show" do
     it "should assign the activity correctly" do
-      get :show, :id => existing.id
+      get :show, params: { :id => existing.id }
       result = assigns(:external_activity)
       expect(result.name).to eq(existing.name)
     end
@@ -249,7 +249,7 @@ describe ExternalActivitiesController do
       }
       admin = FactoryBot.generate :admin_user
       sign_in admin
-      put :update_collections, post_params
+      put :update_collections, params: post_params
 
       materials_collection_items = MaterialsCollectionItem.where(materials_collection_id: materials_collection.id)
       expect(materials_collection_items.length).to be(1)
@@ -264,7 +264,7 @@ describe ExternalActivitiesController do
       }
       admin = FactoryBot.generate :admin_user
       sign_in admin
-      put :update_collections, post_params
+      put :update_collections, params: post_params
 
       expect(flash['error']).to be_present
       expect(flash['error']).to match(/Select at least one collection to assign this resource/)
@@ -316,7 +316,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: FactoryBot.create(:external_activity).to_param
+      get :show, params: { id: FactoryBot.create(:external_activity).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -324,7 +324,7 @@ describe ExternalActivitiesController do
     it 'GET show' do
       FactoryBot.create(:external_activity, uuid: 'a' * 36)
 
-      get :show, id: 'a' * 36
+      get :show, params: { id: 'a' * 36 }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -333,7 +333,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#edit' do
     it 'GET edit' do
-      get :edit, id: FactoryBot.create(:external_activity).to_param
+      get :edit, params: { id: FactoryBot.create(:external_activity).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -345,7 +345,7 @@ describe ExternalActivitiesController do
 
     # TODO: auto-generated
     it 'POST create' do
-      post :create, {}, {}
+      post :create
 
       # bizarrely (confirmed in pre-Rails 4 production instance) you
       # can create an external activity with no paramters
@@ -353,11 +353,7 @@ describe ExternalActivitiesController do
     end
 
     it 'handles setting projects' do
-      post :create, {
-        :external_activity => {},
-        :update_projects => "true",
-        :project_ids => [project1.id, project2.id],
-      }, {}
+      post :create, params: { :external_activity => {}, :update_projects => "true", :project_ids => [project1.id, project2.id] }
 
       expect(assigns(:external_activity).projects).to eq([project1, project2])
       expect(response).to have_http_status(:ok)
@@ -371,18 +367,13 @@ describe ExternalActivitiesController do
 
     # TODO: auto-generated
     it 'PATCH update' do
-      put :update, {id: 2}, {}
+      put :update, params: {id: 2}
 
       expect(response).to have_http_status(:not_found)
     end
 
     it 'handles setting projects' do
-      put :update, {
-        :id => external_activity.id,
-        :external_activity => {},
-        :update_projects => "true",
-        :project_ids => [project1.id, project2.id],
-      }, {}
+      put :update, params: { :id => external_activity.id, :external_activity => {}, :update_projects => "true", :project_ids => [project1.id, project2.id] }
 
       external_activity.reload
       expect(external_activity.projects).to eq([project1, project2])
@@ -393,7 +384,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryBot.create(:external_activity).to_param
+      delete :destroy, params: { id: FactoryBot.create(:external_activity).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -402,7 +393,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#republish' do
     it 'GET republish' do
-      get :republish, {version: 'v1'}, {}
+      get :republish, params: {version: 'v1'}
 
       expect(response).to have_http_status(:unauthorized)
     end
@@ -411,7 +402,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#matedit' do
     it 'GET matedit' do
-      get :matedit, {id: 0}, {}
+      get :matedit, params: { id: 0 }
 
       expect(response).to have_http_status(:not_found)
     end
@@ -420,7 +411,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#archive' do
     it 'GET archive' do
-      get :archive, {id: 1}, {}
+      get :archive, params: {id: 1}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -429,7 +420,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#unarchive' do
     it 'GET unarchive' do
-      get :unarchive, {id: 1}, {}
+      get :unarchive, params: {id: 1}
 
       expect(response).to have_http_status(:not_found)
     end
@@ -438,7 +429,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#set_private_before_matedit' do
     it 'GET set_private_before_matedit' do
-      get :set_private_before_matedit, {id: 0}, {}
+      get :set_private_before_matedit, params: { id: 0 }
 
       expect(response).to have_http_status(:not_found)
     end
@@ -447,7 +438,7 @@ describe ExternalActivitiesController do
   # TODO: auto-generated
   describe '#copy' do
     it 'GET copy' do
-      get :copy, {id: 0}, {}
+      get :copy, params: { id: 0 }
 
       expect(response).to have_http_status(:not_found)
     end

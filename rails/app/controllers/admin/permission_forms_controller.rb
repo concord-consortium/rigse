@@ -100,7 +100,7 @@ class Admin::PermissionFormsController < ApplicationController
     if update_student_permissions(student_id, permission_ids)
       status = 200
     end
-    render :nothing => true, :status => status
+    head status
   end
 
   def create

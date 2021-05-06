@@ -30,7 +30,7 @@ describe UsersController do
       it "lets admin user search for users on the index page" do
         post_params = { :search => 'quentin' }
         login_admin
-        post :index, post_params
+        post :index, params: post_params
         expect(response.status).to eq(200)
         expect(assigns(:users)).to include(quentin)
       end
@@ -41,7 +41,7 @@ describe UsersController do
           :project_researcher => true
         }
         login_admin
-        post :index, post_params
+        post :index, params: post_params
         expect(response.status).to eq(200)
       end
 
@@ -51,7 +51,7 @@ describe UsersController do
           :project_admin => true
         }
         login_admin
-        post :index, post_params
+        post :index, params: post_params
         expect(response.status).to eq(200)
       end
 
@@ -61,7 +61,7 @@ describe UsersController do
         let(:post_params) { {search: search_string, portal_admin: admin_only} }
         before(:each) do
           login_admin
-          post :index, post_params
+          post :index, params: post_params
         end
 
         describe "with no search string" do
@@ -176,7 +176,7 @@ describe UsersController do
     it 'activates user' do
       skip "Broken example"
       expect(User.authenticate('aaron', 'monkey')).to be_nil
-      get :activate, :activation_code => users(:aaron).activation_code
+      get :activate, params: { :activation_code => users(:aaron).activation_code }
       expect(response).to redirect_to('/login')
       expect(flash['notice']).not_to be_nil
       expect(flash['error']).to     be_nil
@@ -192,21 +192,21 @@ describe UsersController do
 
     it 'does not activate user with blank key' do
       skip "Broken example"
-      get :activate, :activation_code => ''
+      get :activate, params: { :activation_code => '' }
       expect(flash['notice']).to     be_nil
       expect(flash['error']).not_to be_nil
     end
 
     it 'does not activate user with bogus key' do
       skip "Broken example"
-      get :activate, :activation_code => 'i_haxxor_joo'
+      get :activate, params: { :activation_code => 'i_haxxor_joo' }
       expect(flash['notice']).to     be_nil
       expect(flash['error']).not_to be_nil
     end
 
     it 'shows thank you page to teacher on successful registration' do
 
-      get :registration_successful, {:type => 'teacher', :login => "test"}
+      get :registration_successful, params: { :type => 'teacher', :login => "test" }
 
       expect(@response).to render_template("users/thanks")
 
@@ -217,7 +217,7 @@ describe UsersController do
 
     it 'shows thank you page to the student with login name on successful registration' do
 
-      get :registration_successful, {:type => 'student', :login => "test"}
+      get :registration_successful, params: { :type => 'student', :login => "test" }
 
       expect(@response).to render_template("portal/students/signup_success")
 
@@ -235,7 +235,7 @@ describe UsersController do
   end
 
   def create_user(options = {})
-    post :create, :user => { :login => 'quire', :email => 'quire@example.com',
-      :password => 'quire69', :password_confirmation => 'quire69' }.merge(options)
+    post :create, params: { :user => { :login => 'quire', :email => 'quire@example.com',
+      :password => 'quire69', :password_confirmation => 'quire69' }.merge(options) }
   end
 end

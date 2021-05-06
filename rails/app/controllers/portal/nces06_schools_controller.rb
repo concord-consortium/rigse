@@ -1,7 +1,7 @@
 class Portal::Nces06SchoolsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_manager, :except => [ :description, :index ]
+  before_action :admin_or_manager, :except => [ :description, :index ]
   include RestrictedPortalController
 
   protected

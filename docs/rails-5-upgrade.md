@@ -158,6 +158,43 @@
       5. Will be running `bundle exec rspec`
         1. Got many `NameError: uninitialized constant XXX` where `XXX` is the describe class name in the spec test.
         2. Fixed this by adding `config.enable_dependency_loading = true` to add environments where `config.eager_load` is true
+    7. Default Template Handler is Now RAW (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#default-template-handler-is-now-raw)
+      1. Reviewed all template handlers
+      2. Removed home@report (used prawn)
+      3. Removed prawn and prawn-rails gem and initializers and templates
+      4. Remove destroy.rjs (should have been deleted in Rails 4 upgrade)
+      5. Tested this first on master and Travis was green
+      6. Rebased to rails5 branch from step 6
+    8. protect_from_forgery Now Defaults to prepend: false (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#protect-from-forgery-now-defaults-to-prepend-false)
+      1. Tested first on master and Travis was green
+      2. Rebased to rails5 branch from step 7
+    9. Fix Rails 5.0 -> 5.1 deprecation warning messages
+      1. Grabbed raw Travis log from step 6 and found unique deprecation errors
+      2. Started document in tmp to track deprecations using hand formatted output from previous step.  Here is a summary with counts.
+        - 1 Accessing mime types via constants is deprecated. Please change `Mime::HTML` to `Mime[:html]`.
+        - 2 after_filter is deprecated and will be removed in Rails 5.1. Use after_action instead
+        - 1 alias_method_chain is deprecated. Please, use Module#prepend instead. From module, you can access the original method using super.
+        - 52 before_filter is deprecated and will be removed in Rails 5.1. Use before_action instead
+        - 14 Comparing equality between `ActionController::Parameters` and a `Hash` is deprecated and will be removed in Rails 5.1. Please only do comparisons between instances of `ActionController::Parameters`. If you need to compare to a hash, first convert it using        `ActionController::Parameters#new`.
+        - 2 confirm! is deprecated in favor of confirm
+        - 4 Method symbolize_keys is deprecated and will be removed in Rails 5.1, as `ActionController::Parameters` no longer inherits from hash. Using this deprecated behavior exposes potential security problems. If you continue to use this method you may be creating a security vulnerability in your app that can be exploited. Instead, consider using one of these documented methods which are not deprecated: http://api.rubyonrails.org/v5.0.7.2/classes/ActionController/Parameters.html
+        - 1 Method with_indifferent_access is deprecated and will be removed in Rails 5.1, as `ActionController::Parameters` no longer inherits from hash. Using this deprecated behavior exposes potential security problems. If you continue to use this method you may be creating a security vulnerability in your app that can be exploited. Instead, consider using one of these documented methods which are not deprecated: http://api.rubyonrails.org/v5.0.7.2/classes/ActionController/Parameters.html
+        - 4 `:nothing` option is deprecated and will be removed in Rails 5.1. Use `head` method to respond with empty response body.
+        - 2 Passing an argument to force an association to reload is now deprecated and will be removed in Rails 5.1. Please call `reload` on the result collection proxy instead.
+        - 1 Passing conditions to delete_all is deprecated and will be removed in Rails 5.1. To achieve the same use where(conditions).delete_all.
+        - 3 Passing strings or symbols to the middleware builder is deprecated, please change them to actual class references
+        - 2 `redirect_to :back` is deprecated and will be removed from Rails 5.1. Please use `redirect_back(fallback_location: fallback_location)` where `fallback_location` represents the location to use if the request has no HTTP referer information.
+        - 6 skip_before_filter is deprecated and will be removed in Rails 5.1. Use skip_before_action instead.
+        - 1 This method was renamed to `#load_schema` and will be removed in the future. Use `#load_schema` instead.
+        - 4 #to_hash unexpectedly ignores parameter filtering, and will change to enforce it in Rails 5.1. Enable `raise_on_unfiltered_parameters` to respect parameter filtering, which is the default in new applications. For the existing deprecated behaviour, call #to_unsafe_h instead.
+        - 19 uniq is deprecated and will be removed from Rails 5.1 (use distinct instead)
+        - 2 Using a dynamic :action segment in a route is deprecated and will be removed in Rails 5.2.
+        - LOTS! Using positional arguments in functional tests has been deprecated, in favor of keyword arguments, and will be removed in Rails 5.1.
+        - 45 Using positional arguments in integration tests has been deprecated, in favor of keyword arguments, and will be removed in Rails 5.1.
+        - 22 `xhr` and `xml_http_request` are deprecated and will be removed in Rails 5.1. Switch to e.g. `post :create, params: { comment: { body: 'Honey bunny' } }, xhr: true`.
+      3. Looked around for automated ways to fix these warnings
+        1. Installed rubocop-rails gem and used `bundle exec rubocop --only Rails/HttpPositionalArguments -a` to fix almost all deprecation warnings about positional argurments -- needed to change use of xhr first for the update to fix everything (which is deprecated). Once the update was done I uninstalled rubocop. More info here: https://stackoverflow.com/a/58095264
+
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems

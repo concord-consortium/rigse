@@ -61,7 +61,7 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
   describe '#show' do
     it 'GET show' do
       expect(data).to receive(:find).and_return(mock_content)
-      get :show, id: mock_content_id
+      get :show, params: { id: mock_content_id }
       expect(response).to have_http_status(:ok)
     end
   end
@@ -69,18 +69,18 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
   describe '#edit' do
     it 'GET edit' do
       expect(data).to receive(:find).and_return(mock_content)
-      get :edit, id: mock_content_id
+      get :edit, params: { id: mock_content_id }
       expect(response).to have_http_status(:ok)
     end
   end
 
   describe '#create' do
     it "with invalid params its fails" do
-      post :create, {firebase_app: invalid_attributes}
+      post :create, params: { firebase_app: invalid_attributes }
       expect(response).to render_template("new")
     end
     it "with valid params its creates a new model, redirects to index" do
-      post :create, {firebase_app: valid_attributes}
+      post :create, params: { firebase_app: valid_attributes }
       expect(response).to have_http_status(:redirect)
     end
   end
@@ -89,7 +89,7 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
     let(:stubs) {{update_attributes: true}}
     it "updates the model, redirects to index" do
       expect(data).to receive(:find).and_return(mock_content)
-      put :update, :id => mock_content_id, params_key => {:params => 'params'}
+      put :update, params: { :id => mock_content_id, params_key => {:params => 'params'} }
       expect(response).to have_http_status(:redirect)
     end
   end
@@ -97,7 +97,7 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
   describe '#destroy' do
     it 'DELETE destroy' do
       expect(data).to receive(:find).and_return(mock_content)
-      delete :destroy, id: mock_content_id
+      delete :destroy, params: { id: mock_content_id }
       expect(response).to have_http_status(:redirect)
     end
   end

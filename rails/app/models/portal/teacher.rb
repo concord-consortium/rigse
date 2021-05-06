@@ -24,7 +24,7 @@ class Portal::Teacher < ApplicationRecord
 
 
   has_many :school_memberships, :dependent => :destroy , :as => :member, :class_name => "Portal::SchoolMembership"
-  has_many :schools, -> { uniq }, :through => :school_memberships, :class_name => "Portal::School"
+  has_many :schools, -> { distinct }, :through => :school_memberships, :class_name => "Portal::School"
 
   has_many :subjects, :dependent => :destroy, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
 
@@ -33,7 +33,7 @@ class Portal::Teacher < ApplicationRecord
   # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
   has_many :teacher_clazzes, :dependent => :destroy, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz"
-  has_many :projects, -> { uniq }, :through => :cohorts, :class_name => "Admin::Project"
+  has_many :projects, -> { distinct }, :through => :cohorts, :class_name => "Admin::Project"
 
   has_many :teacher_project_views, :class_name => "TeacherProjectView"
   has_many :viewed_projects, :through => :teacher_project_views, :class_name => "Admin::Project"

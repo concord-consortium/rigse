@@ -69,38 +69,29 @@ describe API::V1::ReportUsersController do
     end
     describe "GET index" do
       it "allows index" do
-        get :index, {
-          teachers: "#{@teacher1.id},#{@teacher2.id}",
-          runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}",
-          cohorts: "#{@cohort1.id},#{@cohort2.id}",
-          start_date: "01/02/19",
-          end_date: "03/04/19"
-        }
+        get :index, params: { teachers: "#{@teacher1.id},#{@teacher2.id}", runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}", cohorts: "#{@cohort1.id},#{@cohort2.id}", start_date: "01/02/19", end_date: "03/04/19" }
         expect(response.status).to eql(200)
       end
       it "gets totals" do
-        get :index, {
-          totals: "true",
-          remove_cc_teachers: true
-        }
+        get :index, params: { totals: "true", remove_cc_teachers: true }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json).to eql({"totals"=>{"cohorts"=>2, "runnables"=>3, "teachers"=>6}})
       end
       it "gets all teachers" do
-        get :index, { load_all: "teachers" }
+        get :index, params: { load_all: "teachers" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["teachers"].length).to eql(6)
       end
       it "gets all cohorts" do
-        get :index, { load_all: "cohorts" }
+        get :index, params: { load_all: "cohorts" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["cohorts"].length).to eql(2)
       end
       it "gets all runnables" do
-        get :index, { load_all: "runnables" }
+        get :index, params: { load_all: "runnables" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["runnables"].length).to eql(3)
@@ -121,13 +112,7 @@ describe API::V1::ReportUsersController do
         expect(response.status).to eql(200)
       end
       it "renders response that includes Log Manager query and signature" do
-        get :external_report_query, {
-          teachers: "#{@teacher1.id},#{@teacher2.id}",
-          runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}",
-          cohorts: "#{@cohort1.id},#{@cohort2.id}",
-          start_date: "01/02/19",
-          end_date: "03/04/19"
-        }
+        get :external_report_query, params: { teachers: "#{@teacher1.id},#{@teacher2.id}", runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}", cohorts: "#{@cohort1.id},#{@cohort2.id}", start_date: "01/02/19", end_date: "03/04/19" }
         resp = JSON.parse(response.body)
         filter = resp["json"]
         expect(filter["type"]).to eq "users"

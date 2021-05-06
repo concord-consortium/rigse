@@ -7,15 +7,15 @@ class Portal::ClazzesController < ApplicationController
 
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
-  before_filter :student_teacher_admin_or_config, :only => [:show]
+  before_action :teacher_admin_or_config, :only => [:class_list, :edit]
+  before_action :student_teacher_admin_or_config, :only => [:show]
 
   #
   # Check that the current teacher owns the class they are
   # accessing.
   #
   include RestrictedTeacherController
-  before_filter :check_teacher_owns_clazz, :only => [   :roster,
+  before_action :check_teacher_owns_clazz, :only => [   :roster,
                                                         :materials,
                                                         :fullstatus ]
 
@@ -341,7 +341,7 @@ class Portal::ClazzesController < ApplicationController
     if current_visitor.portal_teacher
       params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
     end
-    render :nothing => true
+    head :ok
   end
 
   def fullstatus

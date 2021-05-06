@@ -1,6 +1,6 @@
 class API::V1::MaterialsCollectionsController < API::APIController
   include RestrictedController
-  before_filter :admin_only
+  before_action :admin_only
 
   def sort_materials
     materials_collection = MaterialsCollection.find(params[:id])

@@ -86,7 +86,7 @@ Given /the following users exist:$/i do |users_table|
         user.add_role(role)
       end
       user.save!
-      user.confirm!
+      user.confirm
 
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...

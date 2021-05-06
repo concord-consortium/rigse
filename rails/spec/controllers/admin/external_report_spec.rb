@@ -20,21 +20,21 @@ describe Admin::ExternalReportsController do
 
     describe "DELETE destroy" do
       it "wont allow delete, redirects to signin" do
-        delete :destroy, :id => report_id
+        delete :destroy, params: { :id => report_id }
         expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "GET show" do
       it "wont allow show, redirects to signin" do
-        get :show, :id => report_id
+        get :show, params: { :id => report_id }
         expect(response).to redirect_to_path auth_login_path
       end
     end
 
     describe "GET edit" do
       it "wont allow edit, redirects to signin" do
-        get :show, :id => report_id
+        get :show, params: { :id => report_id }
         expect(response).to redirect_to_path auth_login_path
       end
     end
@@ -48,7 +48,7 @@ describe Admin::ExternalReportsController do
 
     describe "PUT update" do
       it "wont allow update, redirects to signin" do
-        put :update, :id => report_id, :report => {:params => 'params'}
+        put :update, params: { :id => report_id, :report => {:params => 'params'} }
         expect(response).to redirect_to_path auth_login_path
       end
     end
@@ -68,21 +68,21 @@ describe Admin::ExternalReportsController do
 
     describe "DELETE destroy" do
       it "wont allow delete, redirects to manager home" do
-        delete :destroy, :id => report_id
+        delete :destroy, params: { :id => report_id }
         expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "GET show" do
       it "wont allow show, redirects to manager home" do
-        get :show, :id => report_id
+        get :show, params: { :id => report_id }
         expect(response).to redirect_to(:getting_started)
       end
     end
 
     describe "GET edit" do
       it "wont allow edit, redirects to manager home" do
-        get :edit, :id => report_id
+        get :edit, params: { :id => report_id }
         expect(response).to redirect_to(:getting_started)
       end
     end
@@ -96,7 +96,7 @@ describe Admin::ExternalReportsController do
 
     describe "PUT update" do
       it "wont allow update, redirects to manager home" do
-        put :update, :id => report_id, :report => {:params => 'params'}
+        put :update, params: { :id => report_id, :report => {:params => 'params'} }
         expect(response).to redirect_to(:getting_started)
       end
     end
@@ -122,7 +122,7 @@ describe Admin::ExternalReportsController do
     describe "DELETE destroy" do
       it "delete, and redirect back to index" do
         expect(ExternalReport).to receive(:find).and_return(mock_report)
-        delete :destroy, :id => report_id
+        delete :destroy, params: { :id => report_id }
         expect(response).to redirect_to(action: :index)
       end
     end
@@ -130,7 +130,7 @@ describe Admin::ExternalReportsController do
     describe "GET show" do
       it "redners the show template" do
         expect(ExternalReport).to receive(:find).and_return(mock_report)
-        get :show, :id => report_id
+        get :show, params: { :id => report_id }
         expect(assigns[:report]).to eq mock_report
         expect(response).to render_template("show")
       end
@@ -139,7 +139,7 @@ describe Admin::ExternalReportsController do
     describe "GET edit" do
       it "renders the edit template" do
         expect(ExternalReport).to receive(:find).and_return(mock_report)
-        get :edit, :id => report_id
+        get :edit, params: { :id => report_id }
         expect(assigns[:report]).to eq mock_report
         expect(response).to render_template("edit")
       end
@@ -157,7 +157,7 @@ describe Admin::ExternalReportsController do
       let(:stubs) {{ update_attributes: true }}
       it "updates the model, redirects to index" do
         expect(ExternalReport).to receive(:find).and_return(mock_report)
-        put :update, :id => report_id, :external_report => {:params => 'params'}
+        put :update, params: { :id => report_id, :external_report => {:params => 'params'} }
         expect(response).to redirect_to(action: :index)
       end
     end

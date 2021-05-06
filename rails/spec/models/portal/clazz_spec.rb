@@ -1,6 +1,6 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-describe Portal::Clazz do  
+describe Portal::Clazz do
   describe "asking if a user is allowed to remove a teacher from a clazz instance" do
     before(:each) do
       @existing_clazz = FactoryBot.create(:portal_clazz)

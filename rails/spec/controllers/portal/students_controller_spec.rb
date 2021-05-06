@@ -58,7 +58,7 @@ describe Portal::StudentsController do
       current_user_count = User.count
       current_student_count = Portal::Student.count
 
-      post :create, @params_for_creation
+      post :create, params: @params_for_creation
 
       expect(User.count).to eq(current_user_count + 1)
       expect(Portal::Student.count).to eq(current_student_count + 1)
@@ -70,7 +70,7 @@ describe Portal::StudentsController do
     # this is because they need to remember their username and password
     it "clearly shows that the student needs to login after successful create" do
       stub_user_with_params
-      post :create, @params_for_creation
+      post :create, params: @params_for_creation
 
       expect(response).to redirect_to(thanks_for_sign_up_url(:type=>"student", :login=>@new_user.login))
 
@@ -79,7 +79,7 @@ describe Portal::StudentsController do
     # student is not logged in, so we shouldn't display their classes!
     it "does not show any of the students classes after successful creation" do
       stub_user_with_params
-      post :create, @params_for_creation
+      post :create, params: @params_for_creation
       expect(response).to redirect_to(thanks_for_sign_up_url(:type=>"student",:login=>@new_user.login))
     end
 
@@ -89,7 +89,7 @@ describe Portal::StudentsController do
       current_user_count = User.count
       current_student_count = Portal::Student.count
 
-      post :create, @params_for_creation
+      post :create, params: @params_for_creation
 
       expect(User.count).to eq(current_user_count)
       expect(Portal::Student.count).to eq(current_student_count)
@@ -101,7 +101,7 @@ describe Portal::StudentsController do
       current_user_count = User.count
       current_student_count = Portal::Student.count
 
-      post :create, @params_for_creation
+      post :create, params: @params_for_creation
 
       expect(User.count).to eq(current_user_count)
       expect(Portal::Student.count).to eq(current_student_count)
@@ -123,7 +123,7 @@ describe Portal::StudentsController do
         current_user_count = User.count
         current_student_count = Portal::Student.count
 
-        post :create, @params_for_creation
+        post :create, params: @params_for_creation
 
         expect(User.count).to eq(current_user_count + 1)
         expect(Portal::Student.count).to eq(current_student_count + 1)
@@ -135,7 +135,7 @@ describe Portal::StudentsController do
         current_user_count = User.count
         current_student_count = Portal::Student.count
 
-        post :create, @params_for_creation
+        post :create, params: @params_for_creation
 
         expect(User.count).to eq(current_user_count)
         expect(Portal::Student.count).to eq(current_student_count)
@@ -148,7 +148,7 @@ describe Portal::StudentsController do
         expect(SecurityQuestion).not_to receive(:errors_for_questions_list!)
         expect(@new_user).not_to receive(:update_security_questions!)
 
-        post :create, @params_for_creation
+        post :create, params: @params_for_creation
       end
 
       it "does not check for security questions when a teacher creates a student" do
@@ -162,7 +162,7 @@ describe Portal::StudentsController do
         expect(SecurityQuestion).not_to receive(:errors_for_questions_list!)
         expect(@new_user).not_to receive(:update_security_questions!)
 
-        post :create, @params_for_creation
+        post :create, params: @params_for_creation
       end
 
       it "checks for security questions when a student signs themselves up" do
@@ -171,7 +171,7 @@ describe Portal::StudentsController do
         expect(SecurityQuestion).to receive(:errors_for_questions_list!)
         expect(@new_user).to receive(:update_security_questions!)
 
-        post :create, @params_for_creation
+        post :create, params: @params_for_creation
       end
     end
   end
@@ -180,13 +180,13 @@ describe Portal::StudentsController do
     let(:student) { FactoryBot.create(:full_portal_student) }
 
     it "should redirect when current user isn't an admin" do
-      get :show, id: student.id
+      get :show, params: { id: student.id }
       expect(response).to redirect_to_path auth_login_path
     end
 
     it "should not redirect when current user is an admin" do
       login_admin
-      get :show, id: student.id
+      get :show, params: { id: student.id }
       expect(response).not_to redirect_to(:home)
       expect(response).to be_success
       expect(response.status).to eq(200)
@@ -227,7 +227,7 @@ describe Portal::StudentsController do
             }).
           to_return(status: 200, body: "Success", headers: {})
 
-        post :move, id: @student.id, clazz: @clazz_params
+        post :move, params: { id: @student.id, clazz: @clazz_params }
         expect(flash['notice']).to match(/Successfully moved student to new class./)
       end
     end
@@ -240,7 +240,7 @@ describe Portal::StudentsController do
           move_students_api_token: 'abc123'
         )
         expect(HTTParty).not_to receive(:post)
-        post :move, id: @student.id, clazz: @clazz_params
+        post :move, params: { id: @student.id, clazz: @clazz_params }
       end
 
       it 'should return an error if move_students_api_url value is a space' do
@@ -249,7 +249,7 @@ describe Portal::StudentsController do
           move_students_api_token: 'abc123'
         )
         expect(HTTParty).not_to receive(:post)
-        post :move, id: @student.id, clazz: @clazz_params
+        post :move, params: { id: @student.id, clazz: @clazz_params }
       end
 
       it 'should return an error if move_students_api_url value is nil' do
@@ -258,7 +258,7 @@ describe Portal::StudentsController do
           move_students_api_token: 'abc123'
         )
         expect(HTTParty).not_to receive(:post)
-        post :move, id: @student.id, clazz: @clazz_params
+        post :move, params: { id: @student.id, clazz: @clazz_params }
       end
     end
   end
@@ -279,22 +279,22 @@ describe Portal::StudentsController do
     let(:clazz_2) { FactoryBot.create(:portal_clazz, teachers: [teacher], :class_word => @clazz_params[:new_class_word]) }
 
     it 'should ask for confirmation' do
-      post :move_confirm, id: student.id, clazz: @clazz_params
+      post :move_confirm, params: { id: student.id, clazz: @clazz_params }
       expect(response.body).to have_content("Are you sure you want to move")
     end
 
     it 'should notify if one or both of the class words are invalid' do
-      post :move_confirm, id: student.id, clazz: {:current_class_word => "wrongclassword1", :new_class_word => "wrongclassword2"}
+      post :move_confirm, params: { id: student.id, clazz: {:current_class_word => "wrongclassword1", :new_class_word => "wrongclassword2"} }
       expect(response.body).to have_content("One or more of the class words you entered is invalid.")
     end
 
     it 'should notify if the student is already in the class specified to move to' do
-      post :move_confirm, id: student.id, clazz: {:current_class_word => @clazz_params[:current_class_word], :new_class_word => @clazz_params[:current_class_word]}
+      post :move_confirm, params: { id: student.id, clazz: {:current_class_word => @clazz_params[:current_class_word], :new_class_word => @clazz_params[:current_class_word]} }
       expect(response.body).to have_content("The student is already in the class you are trying to move them to.")
     end
 
     it 'should notify if the student is not in the class specified to move from' do
-      post :move_confirm, id: student.id, clazz: {:current_class_word => @clazz_params[:new_class_word], :new_class_word => @clazz_params[:new_class_word]}
+      post :move_confirm, params: { id: student.id, clazz: {:current_class_word => @clazz_params[:new_class_word], :new_class_word => @clazz_params[:new_class_word]} }
       expect(response.body).to have_content("The student is not in the class you are trying to move them from.")
     end
   end
@@ -302,7 +302,8 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#status' do
     it 'GET status' do
-      xhr :get, :status, id: FactoryBot.create(:portal_student).to_param
+      params = {id: FactoryBot.create(:portal_student).to_param}
+      get :status, params: params
 
       expect(response).to have_http_status(:ok)
     end
@@ -320,7 +321,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#edit' do
     xit 'GET edit' do
-      get :edit, id: FactoryBot.create(:portal_student).to_param
+      get :edit, params: { id: FactoryBot.create(:portal_student).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -340,7 +341,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy,id: FactoryBot.create(:portal_student).to_param
+      delete :destroy, params: { id: FactoryBot.create(:portal_student).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -349,7 +350,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#ask_consent' do
     xit 'GET ask_consent' do
-      get :ask_consent, id: FactoryBot.create(:portal_student).to_param
+      get :ask_consent, params: { id: FactoryBot.create(:portal_student).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -358,7 +359,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#update_consent' do
     xit 'GET update_consent' do
-      get :update_consent, id: FactoryBot.create(:portal_student).to_param
+      get :update_consent, params: { id: FactoryBot.create(:portal_student).to_param }
 
       expect(response).to have_http_status(:ok)
     end
@@ -367,7 +368,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#signup' do
     it 'GET signup' do
-      get :signup, {}, {}
+      get :signup
 
       expect(response).to have_http_status(:ok)
     end
@@ -376,7 +377,7 @@ describe Portal::StudentsController do
   # TODO: auto-generated
   describe '#register' do
     it 'GET register' do
-      get :register, {}, {}
+      get :register
 
       expect(response).to have_http_status(:ok)
     end

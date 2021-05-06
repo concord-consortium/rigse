@@ -4,7 +4,7 @@ class API::V1::TeachersController < API::APIController
   # - 'school_id' is provided - school is expected to exist
   # - 'school_name', 'country_id' and 'zipcode' are provided instead - school may be created in case of need
   def create
-    teacher_registration = API::V1::TeacherRegistration.new(params)
+    teacher_registration = API::V1::TeacherRegistration.new(teacher_registration_strong_params(params))
 
     # This was added to allow for registering after logging in the first time with SSO
     # But it also occurs if a user is able to access the registration form while being
@@ -190,12 +190,21 @@ class API::V1::TeachersController < API::APIController
     # If school is not found, try to create a new one.
     school = API::V1::SchoolRegistration.find(params)
     return [school.id, nil] if school
-    school = API::V1::SchoolRegistration.new(params)
+    school = API::V1::SchoolRegistration.new(school_registration_strong_params(params))
     if school.valid?
       school.save
       [school.school_id, nil]
     else
       [nil, school.errors]
     end
+  end
+
+  def teacher_registration_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation,
+                            :email_subscribed, :sign_up_path, :asked_age, :have_consent, :school_id)
+  end
+
+  def school_registration_strong_params(params)
+    params && params.permit(:school_name, :zipcode, :country_id, :school_id)
   end
 end

@@ -26,7 +26,7 @@ class UserMailer < Devise::Mailer
   protected
 
   def finish_email(user, subject)
-    # Need to set the theme because normally it gets set in a controller before_filter...
+    # Need to set the theme because normally it gets set in a controller before_action...
     mail(:to => "#{user.name} <#{user.email}>",
          :subject => subject,
          :date => Time.now)

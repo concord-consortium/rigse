@@ -17,7 +17,7 @@ describe Dataservice::BundleContentsMetalController do
       body_content = "body content of bundle"
       expect(@mock_bundle_logger).to receive(:end_bundle).with({:body => body_content , :upload_time => nil })
       @request.env['RAW_POST_DATA'] = body_content
-      post :create, id: 37
+      post :create, params: { id: 37 }
     end
 
     it "records upload time if X-Queue-Start header is set" do
@@ -27,7 +27,7 @@ describe Dataservice::BundleContentsMetalController do
       @request.env['RAW_POST_DATA'] = body_content
       # set a start of 20 seconds before now
       @request.headers['X-Queue-Start'] = "t=#{((Time.now - 20).to_f*1000000).to_i}"
-      post :create, id: 37
+      post :create, params: { id: 37 }
     end
   end
 

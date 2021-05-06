@@ -7,7 +7,7 @@ RSpec.describe API::V1::AnswersController, type: :controller do
   # TODO: auto-generated
   describe '#student_answers' do
     it 'GET student_answers' do
-      get :student_answers, {}, {}
+      get :student_answers
 
       expect(response).to have_http_status(:forbidden)
     end

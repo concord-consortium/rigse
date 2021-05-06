@@ -57,3 +57,7 @@ end
 def factory_create
   FactoryBot.create(subject_class_factory)
 end
+
+def permit_params!(params)
+  ActionController::Parameters.new(params).permit!
+end

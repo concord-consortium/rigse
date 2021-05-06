@@ -34,7 +34,7 @@ describe Admin::PermissionFormsController do
 
     describe "when user is an admin" do
       it "lists all forms, projects and teachers" do
-        get :index, index_form_params
+        get :index, params: index_form_params
         expect(assigns(:projects)).to eq([@project1, @project2])
         expect(assigns(:permission_forms)).to eq([@form1, @form2])
         expect(assigns(:teachers)).to eq([@teacher_view1, @teacher_view2])
@@ -49,7 +49,7 @@ describe Admin::PermissionFormsController do
       end
 
       it "lists forms, projects and teachers that belong to his project" do
-        get :index, index_form_params
+        get :index, params: index_form_params
         expect(assigns(:projects)).to eq([@project1])
         expect(assigns(:permission_forms)).to eq([@form1])
         expect(assigns(:teachers)).to eq([@teacher_view1])
@@ -64,7 +64,7 @@ describe Admin::PermissionFormsController do
       end
 
       it "lists forms, projects and teachers that belong to his project" do
-        get :index, index_form_params
+        get :index, params: index_form_params
         expect(assigns(:projects)).to eq([@project2])
         expect(assigns(:permission_forms)).to eq([@form2])
         expect(assigns(:teachers)).to eq([@teacher_view2])
@@ -76,13 +76,11 @@ describe Admin::PermissionFormsController do
     describe "with valid params" do
       it "creates a new permission form" do
         expect {
-          post :create, {
-            portal_permission: {
+          post :create, params: { portal_permission: {
               name: 'test',
               url: 'http://concord.org',
               project_id: @project1.id
-            }
-          }
+            } }
         }.to change(Portal::PermissionForm, :count).by(1)
         new_form = Portal::PermissionForm.last
         expect(new_form.name).to eq('test')
@@ -95,7 +93,7 @@ describe Admin::PermissionFormsController do
   describe "GET remove_form" do
     it "destroys the requested permission form" do
       expect {
-        get :remove_form, {id: @form1}
+        get :remove_form, params: { id: @form1 }
       }.to change(Portal::PermissionForm, :count).by(-1)
     end
   end
@@ -104,7 +102,7 @@ describe Admin::PermissionFormsController do
   # TODO: auto-generated
   describe '#update_forms' do
     it 'POST update_forms' do
-      post :update_forms, {}, {}
+      post :update_forms
       expect(response).to have_http_status(:not_found)
     end
   end

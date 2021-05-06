@@ -1,10 +1,10 @@
 class Admin::SettingsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_only, :except => [:index, :edit, :update]
-  before_filter :admin_or_manager, :only => [:index, :edit, :update]
-  # before_filter :setup_object, :except => [:index]
-  # before_filter :render_scope, :only => [:show]
+  before_action :admin_only, :except => [:index, :edit, :update]
+  before_action :admin_or_manager, :only => [:index, :edit, :update]
+  # before_action :setup_object, :except => [:index]
+  # before_action :render_scope, :only => [:show]
 
   protected
 

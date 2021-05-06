@@ -35,7 +35,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
         # Return a new scope selecting those records:
         scope
           .where('portal_teachers.id IN (?)', ids)
-          .uniq
+          .distinct
 
       elsif (user.portal_teacher)
         scope.where('user_id = (?)', user.id)

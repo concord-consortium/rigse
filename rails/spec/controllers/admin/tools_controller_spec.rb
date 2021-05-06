@@ -37,7 +37,7 @@ RSpec.describe Admin::ToolsController, type: :controller do
   describe '#show' do
     it 'GET show' do
       expect(Tool).to receive(:find).and_return(mock_content)
-      get :show, id: mock_content_id
+      get :show, params: { id: mock_content_id }
       expect(response).to have_http_status(:ok)
     end
   end
@@ -45,14 +45,14 @@ RSpec.describe Admin::ToolsController, type: :controller do
   describe '#edit' do
     it 'GET edit' do
       expect(Tool).to receive(:find).and_return(mock_content)
-      get :edit, id: mock_content_id
+      get :edit, params: { id: mock_content_id }
       expect(response).to have_http_status(:ok)
     end
   end
 
   describe '#create' do
     it "creates a new model, redirects to index" do
-      post :create, {tool: {}}
+      post :create, params: { tool: {} }
       expect(response).to have_http_status(:redirect)
     end
   end
@@ -61,7 +61,7 @@ RSpec.describe Admin::ToolsController, type: :controller do
     let(:stubs) {{update_attributes: true}}
     it "updates the model, redirects to index" do
       expect(Tool).to receive(:find).and_return(mock_content)
-      put :update, :id => mock_content_id, params_key => {:params => 'params'}
+      put :update, params: { :id => mock_content_id, params_key => {:params => 'params'} }
       expect(response).to have_http_status(:redirect)
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe Admin::ToolsController, type: :controller do
   describe '#destroy' do
     it 'DELETE destroy' do
       expect(Tool).to receive(:find).and_return(mock_content)
-      delete :destroy, id: mock_content_id
+      delete :destroy, params: { id: mock_content_id }
       expect(response).to have_http_status(:redirect)
     end
 

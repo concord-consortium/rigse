@@ -7,7 +7,7 @@ RSpec.describe Dataservice::PeriodicBundleContentsMetalController, type: :contro
   # TODO: auto-generated
   describe '#create' do
     xit 'POST create' do
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:ok)
     end

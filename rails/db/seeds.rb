@@ -77,7 +77,7 @@ def create_default_users
     user.save!
     user.unsuspend! if user.state == 'suspended'
     unless user.state == 'active'
-      user.confirm!
+      user.confirm
     end
     user.roles.clear
   end
@@ -165,7 +165,7 @@ def create_default_lara_report
     individual_activity_reportable: true
   )
 
-  # To support Activity Player publishing you need to manually add a Tool with the tool_id of https://activity-player.concord.org. 
+  # To support Activity Player publishing you need to manually add a Tool with the tool_id of https://activity-player.concord.org.
   # The convention is the source_type is ActivityPlayer.
 end
 

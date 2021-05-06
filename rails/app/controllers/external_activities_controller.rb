@@ -28,8 +28,8 @@ class ExternalActivitiesController < ApplicationController
 
   public
 
-  before_filter :setup_object, :except => [:index, :publish]
-  before_filter :render_scope, :only => [:show]
+  before_action :setup_object, :except => [:index, :publish]
+  before_action :render_scope, :only => [:show]
   in_place_edit_for :external_activity, :name
   in_place_edit_for :external_activity, :description
   in_place_edit_for :external_activity, :url

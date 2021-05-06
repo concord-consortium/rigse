@@ -102,7 +102,8 @@ class Portal::OfferingsController < ApplicationController
     authorize @offering
     update_successful = @offering.update_attributes(portal_offering_strong_params(params[:offering]))
     if request.xhr?
-      render :nothing => true, :status => update_successful ? 200 : 500
+      status = update_successful ? 200 : 500
+      head status
       return
     end
     respond_to do |format|
@@ -169,7 +170,7 @@ class Portal::OfferingsController < ApplicationController
 
   def offering_collapsed_status
     if current_visitor.portal_teacher.nil?
-      render :nothing => true
+      head :ok
       return
     end
     teacher_id = current_visitor.portal_teacher.id
@@ -180,7 +181,7 @@ class Portal::OfferingsController < ApplicationController
     portal_teacher_full_status.offering_collapsed = offering_collapsed
     portal_teacher_full_status.save!
 
-    render :nothing => true
+    head :ok
 
   end
 

@@ -9,7 +9,7 @@ RSpec.describe RegistrationsController, type: :controller do
     it 'POST create' do
       @request.env["devise.mapping"] = Devise.mappings[:user]
 
-      post :create, {}, {}
+      post :create
 
       expect(response).to have_http_status(:ok)
     end
