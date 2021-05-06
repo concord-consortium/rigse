@@ -159,6 +159,9 @@ describe InteractivesController do
          import:Rack::Test::UploadedFile.new(content, "application/json")
       }
     end
+    before do
+      allow(ActionDispatch::Http::UploadedFile).to receive(:new).and_return(content)
+    end
     it "should import all the models from a json" do
       import_hash = JSON.parse(content)
       model_library_count = import_hash["models"].length

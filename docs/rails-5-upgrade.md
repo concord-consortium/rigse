@@ -208,6 +208,7 @@
       10. Fixed can't quote RSpec::Mocks::Double in client_spec
       11. Fixed check_image_presence throwing abort now instead of returning false
       12. Fixed another check for empty string in clazzes controller
+      13. Fixed uploaded file spec for model library
 
 
 ## Rails 4 -> 5.0 TODO
