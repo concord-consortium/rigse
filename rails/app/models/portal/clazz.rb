@@ -293,7 +293,7 @@ class Portal::Clazz < ApplicationRecord
       .select{ |o| o.runnable && o.runnable.respond_to?(:external_reports) && o.runnable.external_reports }
       .flat_map{ |o| o.runnable.external_reports }
       .select{ |r| r.report_type == "class" }
-      .distinct{ |r| r.id }
+      .uniq{ |r| r.id }
       .sort{ |r1, r2| r1.launch_text <=> r2.launch_text }
   end
 
