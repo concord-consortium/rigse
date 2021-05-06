@@ -195,7 +195,9 @@
       3. Looked around for automated ways to fix these warnings
         1. Installed rubocop-rails gem and used `bundle exec rubocop --only Rails/HttpPositionalArguments -a` to fix almost all deprecation warnings about positional argurments -- needed to change use of xhr first for the update to fix everything (which is deprecated). Once the update was done I uninstalled rubocop. More info here: https://stackoverflow.com/a/58095264
     10. Fix broken Rails 4 -> 5.0 tests
-      1. undefined method `distinct' for []:Array
+      1. Fixed undefined method `distinct' for []:Array
+      2. Fixed invalid SQL generation in searchable_model caused by change in how Rails 5 generates SQL when a where condition of [""] is given
+
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
