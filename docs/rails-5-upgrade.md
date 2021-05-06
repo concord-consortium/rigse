@@ -217,6 +217,7 @@
       19. Fixed import_model_library file uploads in spec
       20. Fixed report_user controller spec totals test and added secondary test for better coverage
       21. Fixed unescaped css selector in tag edit haml spec
+      22. Removed two bundle logger specs - this code is going to be removed in master on rails 4 before this is released
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
