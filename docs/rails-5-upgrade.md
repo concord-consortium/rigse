@@ -215,6 +215,7 @@
       17. Fixed several cases of an empty image attribute object being sent in images_controller spec
       18. Fixed rubric_feedback parameter filtering in reports_controller
       19. Fixed import_model_library file uploads in spec
+      20. Fixed report_user controller spec totals test and added secondary test for better coverage
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
