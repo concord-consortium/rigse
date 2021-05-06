@@ -206,6 +206,7 @@
       8. Fixed establish_connection requires symbol parameter instead of string
       9. Fixed missing format in students controller spec
       10. Fixed can't quote RSpec::Mocks::Double in client_spec
+      11. Fixed check_image_presence throwing abort now instead of returning false
 
 
 ## Rails 4 -> 5.0 TODO
