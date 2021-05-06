@@ -199,6 +199,7 @@
       2. Fixed invalid SQL generation in searchable_model caused by change in how Rails 5 generates SQL when a where condition of [""] is given
       3. Fixed removing milliseconds from doubled model compares
       4. Fixed check for empty string in clazzes controller
+      5. Added activemodel-serializers-xml gem to add to_xml back to ActiveRecord
 
 
 ## Rails 4 -> 5.0 TODO
