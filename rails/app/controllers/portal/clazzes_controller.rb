@@ -203,6 +203,9 @@ class Portal::ClazzesController < ApplicationController
 
     object_params = params[:portal_clazz]
     grade_levels = object_params.delete(:grade_levels)
+    if !grade_levels.kind_of?(Array)
+      grade_levels = nil
+    end
     if grade_levels
       # This logic will attempt to prevent someone from removing all grade levels from a class.
       grades_to_add = []
