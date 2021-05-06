@@ -77,7 +77,10 @@ class API::V1::ReportsController < API::APIController
       questions = filter_params[:questions] || []
       filter.embeddable_keys = questions
     end
-    filter.ignore = !filter_params[:active]            unless filter_params[:active].nil?
+    if !filter_params[:active].nil?
+      active = ActiveModel::Type::Boolean.new.cast(filter_params[:active])
+      filter.ignore = !active
+    end
     filter.save!
   end
 
