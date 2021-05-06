@@ -828,8 +828,8 @@ protected
   # TODO: auto-generated
   describe '.authenticate' do
     it 'authenticate' do
-      login = double('login')
-      password = double('password')
+      login = 'login'
+      password = 'password'
       result = described_class.authenticate(login, password)
 
       expect(result).to be_nil
