@@ -212,6 +212,7 @@
       14. Fixed clazzes_controller spec
       15. Fixed imports_controller_spec for batch_import_data
       16. Fixed external activities update to handle nil for direct attribute updates
+      17. Fixed several cases of an empty image attribute object being sent in images_controller spec
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
