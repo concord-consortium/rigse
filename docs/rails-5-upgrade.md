@@ -205,6 +205,7 @@
       7. Fixed user_spec where factory wasn't used but model was reloaded causing error
       8. Fixed establish_connection requires symbol parameter instead of string
       9. Fixed missing format in students controller spec
+      10. Fixed can't quote RSpec::Mocks::Double in client_spec
 
 
 ## Rails 4 -> 5.0 TODO
