@@ -110,8 +110,9 @@ RSpec.describe Import::ImportsController, type: :controller do
   describe '#batch_import_data' do
     it 'GET batch_import_data' do
       Import::Import.new(:import_type => Import::Import::IMPORT_TYPE_BATCH_ACTIVITY, import_data: {}).save!
+      get :batch_import_data, xhr: true
 
-      expect{ get :batch_import_data  }.to raise_error(ActionController::RoutingError)
+      expect(response).to have_http_status(:ok)
     end
   end
 

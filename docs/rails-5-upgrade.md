@@ -210,6 +210,7 @@
       12. Fixed another check for empty string in clazzes controller
       13. Fixed uploaded file spec for model library
       14. Fixed clazzes_controller spec
+      15. Fixed imports_controller_spec for batch_import_data
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems
