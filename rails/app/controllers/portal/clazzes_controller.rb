@@ -117,6 +117,9 @@ class Portal::ClazzesController < ApplicationController
     @object_params = params[:portal_clazz]
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
+    if !grade_levels.kind_of?(Array)
+      grade_levels = nil
+    end
 
     @portal_clazz = Portal::Clazz.new(portal_clazz_strong_params(@object_params))
 
