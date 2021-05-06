@@ -203,6 +203,7 @@
       5. Fixed boolean string conversions (eg !!"false") to use new Rails 5 ActiveModel::Type::Boolean.new.cast method
       6. Fixed can't quote RSpec::Mocks::Double in user_spec
       7. Fixed user_spec where factory wasn't used but model was reloaded causing error
+      8. Fixed establish_connection requires symbol parameter instead of string
 
 
 ## Rails 4 -> 5.0 TODO

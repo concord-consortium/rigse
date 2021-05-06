@@ -55,11 +55,11 @@ class ApplicationRecord
 
   def self.with_database(database)
     previous = current_database_configuration_name
-    establish_connection(database)
+    establish_connection(database.to_sym)
     set_shared_connection
     yield
   ensure
-    establish_connection(previous)
+    establish_connection(previous.to_sym)
     set_shared_connection
   end
 
