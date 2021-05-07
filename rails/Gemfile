@@ -15,7 +15,6 @@ gem 'activesupport',    :require => false
 gem 'railties',         :require => false
 
 gem 'activemodel-serializers-xml'
-gem 'activerecord-deprecated_finders'
 gem 'activerecord-import'
 gem "activerecord-session_store"
 gem 'acts-as-taggable-on', '~> 4'
