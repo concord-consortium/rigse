@@ -34,35 +34,6 @@ Visit [the Docker docs](docs/docker.md) for how to use your portal running in do
 also includes: instructions on speeding things up on OS X, using a local dns+proxy system
 to avoid port conflicts, and setting up ssh for capistrano deploys.
 
-#### Setup Issues
-
-If you get the following error
-
-    An error occurred while installing libv8 (3.16.14.17), and Bundler cannot
-    continue.
-    Make sure that `gem install libv8 -v '3.16.14.17'` succeeds before bundling.
-
- To resolve the error install libv8 sepratelly with --with-system-v8
-
-	gem install libv8 -v '3.16.14.17' -- --with-system-v8
-
-If you get the following error
-
-	An error occurred while installing therubyracer (0.12.1), and Bundler cannot
-	continue.
-	Make sure that `gem install therubyracer -v '0.12.1'` succeeds before bundling.
-
-Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
-
-If `rails s -p 9000` fails due to mysql2 segmentation fault
-
-    gems/mysql2-0.3.21/lib/mysql2/mysql2.bundle: [BUG] Segmentation fault
-
-It usually helps to remove mysql2 and install it again
-
-    gem uninstall mysql2
-    bundle install
-
 #### Tests
 
 After getting the server running it's good to confirm that all the tests
