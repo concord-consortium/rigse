@@ -34,7 +34,7 @@ module BlobExtraction
         packed = $1.gsub(/\s/,"")
         _content = B64Gzip.unpack(packed)
         # the following find is probably of limited use, and is expensive:
-        # blob = Dataservice::Blob.find_or_create_by_bundle_content_id_and_content(self.id, B64Gzip.unpack($1.gsub!(/\s/, "")))
+        # blob = Dataservice::Blob.find_or_create_by(bundle_content_id: self.id, content: B64Gzip.unpack($1.gsub!(/\s/, "")))
 
         # sometimes we don't have a valid id, but thats OK, we build our list here:
         blob = Dataservice::Blob.create(:content => _content)
