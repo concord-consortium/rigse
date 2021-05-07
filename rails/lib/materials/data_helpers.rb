@@ -138,9 +138,9 @@ module Materials
             search = Sunspot.search(Search::DefaultSearchableModels) do
 
                 fulltext "*" do
+                    boost(5.0) { with(:project_ids, project_ids) }
                     boost(4.0) { with(:subject_areas, tags['subject_areas']) }
                     boost(2.0) { with(:grade_levels, tags['grade_levels']) }
-                    boost(1.0) { with(:project_ids, project_ids) }
                 end
 
                 any_of do
@@ -164,6 +164,7 @@ module Materials
                 end
 
                 with        :is_archived,   false
+                with        :is_official,   true
                 without     material
                 order_by    :score, :desc
                 paginate    page: 1, per_page: include_related
