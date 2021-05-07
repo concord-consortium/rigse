@@ -5,6 +5,11 @@ describe API::V1::ReportUsersController do
   let(:admin_user)        { FactoryBot.generate(:admin_user)     }
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
 
+  before(:each) {
+    # This silences warnings in the console when running
+    generate_default_settings_and_jnlps_with_mocks
+  }
+
   describe "anonymous' access" do
     before (:each) do
       logout_user
@@ -50,8 +55,10 @@ describe API::V1::ReportUsersController do
       @teacher5 = FactoryBot.create(:portal_teacher)
       @teacher6 = FactoryBot.create(:portal_teacher)
 
+      @project1 = FactoryBot.create(:project, name: 'Project 1')
+
       @cohort1 = FactoryBot.create(:admin_cohort)
-      @cohort2 = FactoryBot.create(:admin_cohort)
+      @cohort2 = FactoryBot.create(:admin_cohort, project: @project1)
 
       @teacher3.cohorts << @cohort1
       @teacher4.cohorts << @cohort1
@@ -98,6 +105,9 @@ describe API::V1::ReportUsersController do
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["cohorts"].length).to eql(2)
+        # fixme the id
+        expect(json["hits"]["cohorts"][0]).to eql({"id"=>@cohort1.id, "label"=>"No Project: test cohort"})
+        expect(json["hits"]["cohorts"][1]).to eql({"id"=>@cohort2.id, "label"=>"Project 1: test cohort"})
       end
       it "gets all runnables" do
         get :index, { load_all: "runnables" }
