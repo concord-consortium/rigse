@@ -89,5 +89,9 @@ RailsPortal::Application.configure do
   localDevPath = File.expand_path((ENV['LOCAL_DEV_ENVIRONMENT_FILE'] || 'local-development.rb'), File.dirname(__FILE__))
   require(localDevPath) if File.file?(localDevPath)
 
+
+  # Rails 5 defaults to disable submit
+  config.action_view.automatically_disable_submit_tag = false
+  
   LogConfig.configure(config, ENV['DEV_LOG_LEVEL'], 'DEBUG')
 end

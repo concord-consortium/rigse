@@ -93,4 +93,7 @@ RailsPortal::Application.configure do
   #
   # END OF RAILS 5 OPTIONS
 
+  # Rails 5 defaults to disable submit
+  config.action_view.automatically_disable_submit_tag = false
+
 end

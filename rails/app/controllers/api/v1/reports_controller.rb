@@ -77,19 +77,22 @@ class API::V1::ReportsController < API::APIController
       questions = filter_params[:questions] || []
       filter.embeddable_keys = questions
     end
-    filter.ignore = !filter_params[:active]            unless filter_params[:active].nil?
+    if !filter_params[:active].nil?
+      active = ActiveModel::Type::Boolean.new.cast(filter_params[:active])
+      filter.ignore = !active
+    end
     filter.save!
   end
 
   def activity_feedback_update_strong_params(params)
-    # NOTE: learner_id is permitted here even though it is portal_learner_id in the schema as the parameter name used by the callder is learner_id
-    params && params.permit(:text_feedback, :score, :has_been_reviewed, :activity_feedback_id, :rubric_feedback, :learner_id)
+    # NOTE: learner_id is permitted here even though it is portal_learner_id in the schema as the parameter name used by the caller is learner_id
+    rubric_feedback_strong_params(params, [:text_feedback, :score, :has_been_reviewed, :activity_feedback_id, :learner_id])
   end
 
   def activity_feedback_v2_update_strong_params(params)
     # NOTE: student_user_id and activity_index is permitted here as it is sent to the controller but not used directly in the model
     #       (it is used to look up other related models)
-    params && params.permit(:text_feedback, :score, :has_been_reviewed, :activity_feedback_id, :rubric_feedback, :student_user_id, :activity_index)
+    rubric_feedback_strong_params(params, [:text_feedback, :score, :has_been_reviewed, :activity_feedback_id, :student_user_id, :activity_index])
   end
 
   def activity_feedback_settings_update_strong_params(params)
@@ -100,6 +103,24 @@ class API::V1::ReportsController < API::APIController
   def activity_feedback_settings_update_v2_strong_params(params)
     # NOTE: activity_index is permitted as it is used as a controller parameter but is not in the model
     params && params.permit(:enable_text_feedback, :max_score, :score_type, :activity_id, :portal_offering_id, :use_rubric, :rubric, :activity_index)
+  end
+
+  def rubric_feedback_strong_params(params, permitted)
+    if params
+      # allow for an arbitrary shaped object in rubric_feedback
+      has_rubric_feedback = params.has_key?("rubric_feedback")
+      if has_rubric_feedback
+        permitted_rubric_feedback = ActionController::Parameters.new(params[:rubric_feedback].to_unsafe_hash)
+        permitted_rubric_feedback.permit!
+      end
+
+      params = params.permit(*permitted)
+
+      if has_rubric_feedback
+        params[:rubric_feedback] = permitted_rubric_feedback
+      end
+    end
+    params
   end
 
 end

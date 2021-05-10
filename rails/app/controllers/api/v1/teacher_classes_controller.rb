@@ -49,7 +49,7 @@ class API::V1::TeacherClassesController < API::APIController
     return error(class_ownership[:error]) if class_ownership[:error]
     teacher_clazz = class_ownership[:teacher_clazz]
 
-    teacher_clazz.active = !!params[:active]
+    teacher_clazz.active = ActiveModel::Type::Boolean.new.cast(params[:active])
     teacher_clazz.save!
 
     render_ok

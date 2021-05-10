@@ -81,15 +81,19 @@ class API::V1::ReportUsersController < API::APIController
     }
 
     cc_teacher_ids = []
-    if options[:remove_cc_teachers] == "true"
-      cc_school_ids = Portal::School.where("name = 'concord consortium'").select("id")
-      cc_teacher_ids = Portal::SchoolMembership
+    remove_cc_teachers = ActiveModel::Type::Boolean.new.cast(options[:remove_cc_teachers])
+    if remove_cc_teachers
+      cc_school_ids = Portal::School.where("name = 'concord consortium'").pluck("id")
+      cc_teacher_ids = cc_school_ids.length > 0 && Portal::SchoolMembership
         .where("member_type = 'Portal::Teacher' AND school_id IN (?)", cc_school_ids)
         .pluck("member_id")
-      scopes[:teachers] = scopes[:teachers].where("portal_teachers.id NOT IN (?)", cc_teacher_ids)
+      if cc_teacher_ids && cc_teacher_ids.length > 0
+        scopes[:teachers] = scopes[:teachers].where("portal_teachers.id NOT IN (?)", cc_teacher_ids)
+      end
     end
 
-    if options[:totals] == "true"
+    totals = ActiveModel::Type::Boolean.new.cast(options[:totals])
+    if totals
       results[:totals] = {
         teachers: scopes[:teachers].count(),
         cohorts: scopes[:cohorts].count(),

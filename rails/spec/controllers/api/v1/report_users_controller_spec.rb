@@ -43,7 +43,9 @@ describe API::V1::ReportUsersController do
 
   describe "admin access" do
     before (:each) do
-      @teacher1 = FactoryBot.create(:portal_teacher)
+      cc_school = FactoryBot.create(:portal_school, {name: 'concord consortium'})
+
+      @teacher1 = FactoryBot.create(:portal_teacher, {schools: [cc_school]})
       @teacher2 = FactoryBot.create(:portal_teacher)
       @teacher3 = FactoryBot.create(:portal_teacher)
       @teacher4 = FactoryBot.create(:portal_teacher)
@@ -72,11 +74,17 @@ describe API::V1::ReportUsersController do
         get :index, params: { teachers: "#{@teacher1.id},#{@teacher2.id}", runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}", cohorts: "#{@cohort1.id},#{@cohort2.id}", start_date: "01/02/19", end_date: "03/04/19" }
         expect(response.status).to eql(200)
       end
-      it "gets totals" do
-        get :index, params: { totals: "true", remove_cc_teachers: true }
+      it "gets totals with all teachers" do
+        get :index, params: { totals: "true" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json).to eql({"totals"=>{"cohorts"=>2, "runnables"=>3, "teachers"=>6}})
+      end
+      it "gets totals without cc teachers" do
+        get :index, params: { totals: "true", remove_cc_teachers: true }
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json).to eql({"totals"=>{"cohorts"=>2, "runnables"=>3, "teachers"=>5}})
       end
       it "gets all teachers" do
         get :index, params: { load_all: "teachers" }

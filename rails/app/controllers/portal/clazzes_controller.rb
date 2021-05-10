@@ -118,6 +118,13 @@ class Portal::ClazzesController < ApplicationController
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
 
+    if !valid_school_id_param?(school_id)
+      school_id = nil
+    end
+    if !valid_grade_levels_param?(grade_levels)
+      grade_levels = nil
+    end
+
     @portal_clazz = Portal::Clazz.new(portal_clazz_strong_params(@object_params))
 
     okToCreate = true
@@ -203,6 +210,9 @@ class Portal::ClazzesController < ApplicationController
 
     object_params = params[:portal_clazz]
     grade_levels = object_params.delete(:grade_levels)
+    if !valid_grade_levels_param?(grade_levels)
+      grade_levels = nil
+    end
     if grade_levels
       # This logic will attempt to prevent someone from removing all grade levels from a class.
       grades_to_add = []
@@ -408,9 +418,20 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url
   end
 
+  private
+
   def portal_clazz_strong_params(params)
     params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
                             :section, :semester_id, :start_time, :status, :teacher_id)
+  end
+
+  def valid_grade_levels_param?(grade_levels_param)
+    grade_levels_param.kind_of?(Array) || grade_levels_param.kind_of?(ActionController::Parameters)
+  end
+
+  def valid_school_id_param?(school_id_param)
+    # check if it is an integer
+    school_id_param.to_i.to_s == school_id_param
   end
 
 end

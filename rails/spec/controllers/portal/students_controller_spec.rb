@@ -303,7 +303,7 @@ describe Portal::StudentsController do
   describe '#status' do
     it 'GET status' do
       params = {id: FactoryBot.create(:portal_student).to_param}
-      get :status, params: params
+      get :status, params: params, format: :json
 
       expect(response).to have_http_status(:ok)
     end

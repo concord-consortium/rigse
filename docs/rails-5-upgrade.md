@@ -194,7 +194,30 @@
         - 22 `xhr` and `xml_http_request` are deprecated and will be removed in Rails 5.1. Switch to e.g. `post :create, params: { comment: { body: 'Honey bunny' } }, xhr: true`.
       3. Looked around for automated ways to fix these warnings
         1. Installed rubocop-rails gem and used `bundle exec rubocop --only Rails/HttpPositionalArguments -a` to fix almost all deprecation warnings about positional argurments -- needed to change use of xhr first for the update to fix everything (which is deprecated). Once the update was done I uninstalled rubocop. More info here: https://stackoverflow.com/a/58095264
-
+    10. Fix broken Rails 4 -> 5.0 tests
+      1. Fixed undefined method `distinct' for []:Array
+      2. Fixed invalid SQL generation in searchable_model caused by change in how Rails 5 generates SQL when a where condition of [""] is given
+      3. Fixed removing milliseconds from doubled model compares
+      4. Fixed check for empty string in clazzes controller
+      5. Added activemodel-serializers-xml gem to add to_xml back to ActiveRecord
+      5. Fixed boolean string conversions (eg !!"false") to use new Rails 5 ActiveModel::Type::Boolean.new.cast method
+      6. Fixed can't quote RSpec::Mocks::Double in user_spec
+      7. Fixed user_spec where factory wasn't used but model was reloaded causing error
+      8. Fixed establish_connection requires symbol parameter instead of string
+      9. Fixed missing format in students controller spec
+      10. Fixed can't quote RSpec::Mocks::Double in client_spec
+      11. Fixed check_image_presence throwing abort now instead of returning false
+      12. Fixed another check for empty string in clazzes controller
+      13. Fixed uploaded file spec for model library
+      14. Fixed clazzes_controller spec
+      15. Fixed imports_controller_spec for batch_import_data
+      16. Fixed external activities update to handle nil for direct attribute updates
+      17. Fixed several cases of an empty image attribute object being sent in images_controller spec
+      18. Fixed rubric_feedback parameter filtering in reports_controller
+      19. Fixed import_model_library file uploads in spec
+      20. Fixed report_user controller spec totals test and added secondary test for better coverage
+      21. Fixed unescaped css selector in tag edit haml spec
+      22. Removed two bundle logger specs - this code is going to be removed in master on rails 4 before this is released
 
 ## Rails 4 -> 5.0 TODO
   1. Gemfile: add back geni* gems

@@ -7,6 +7,7 @@ describe ImagesController do
     "image_file_name" => "test.png", "image_file_size" => "1000", "license_code" => "MIT",
     "name" => "test image", "publication_status" => "published", "user_id" => user_id, "width" => "200"
   }}
+  let(:non_empty_image) {{rails_5_cannot_send_empty_object: "yep, so adding this so test doesn't break"}}
 
   def mock_image(stubs={})
     @mock_image ||= mock_model(Image, stubs)
@@ -81,7 +82,7 @@ describe ImagesController do
 
       it "should redirect to the created image" do
         allow(Image).to receive(:new).and_return(mock_image(:save => true))
-        post :create, params: { :image => {} }
+        post :create, params: { :image => non_empty_image }
         expect(response).to redirect_to("/images/#{mock_image.id}")
       end
 
@@ -98,7 +99,7 @@ describe ImagesController do
 
       it "should re-render the 'new' template" do
         allow(Image).to receive(:new).and_return(mock_image(:save => false))
-        post :create, params: { :image => {} }
+        post :create, params: { :image => non_empty_image }
         expect(response).to render_template('new')
       end
 
@@ -127,7 +128,7 @@ describe ImagesController do
 
       it "should redirect to the image" do
         allow(Image).to receive(:find).and_return(@img)
-        put :update, params: { :id => "1", :format => :html, :image => {} }
+        put :update, params: { :id => "1", :format => :html, :image => non_empty_image }
         expect(response).to redirect_to(@img)
       end
 

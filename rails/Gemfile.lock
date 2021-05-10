@@ -56,6 +56,10 @@ GEM
       globalid (>= 0.3.6)
     activemodel (5.0.7.2)
       activesupport (= 5.0.7.2)
+    activemodel-serializers-xml (1.0.2)
+      activemodel (> 5.x)
+      activesupport (> 5.x)
+      builder (~> 3.1)
     activerecord (5.0.7.2)
       activemodel (= 5.0.7.2)
       activesupport (= 5.0.7.2)
@@ -1157,6 +1161,7 @@ DEPENDENCIES
   actionview
   activejob
   activemodel
+  activemodel-serializers-xml
   activerecord
   activerecord-deprecated_finders
   activerecord-import

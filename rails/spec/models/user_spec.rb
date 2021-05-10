@@ -828,8 +828,8 @@ protected
   # TODO: auto-generated
   describe '.authenticate' do
     it 'authenticate' do
-      login = double('login')
-      password = double('password')
+      login = 'login'
+      password = 'password'
       result = described_class.authenticate(login, password)
 
       expect(result).to be_nil
@@ -1265,7 +1265,7 @@ protected
   # TODO: auto-generated
   describe '#unsuspend!' do
     it 'unsuspend!' do
-      user = described_class.new
+      user = FactoryBot.create(:user)
       result = user.unsuspend!
 
       expect(result).not_to be_nil
