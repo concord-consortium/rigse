@@ -1,4 +1,3 @@
-# TODO: Fic Mr
 require File.expand_path("../../config/environment", __FILE__)
 require 'factory_bot'
 FactoryBot.definition_file_paths = %w(factories)
