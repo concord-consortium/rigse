@@ -1,3 +1,4 @@
+# TODO: Fic Mr
 require File.expand_path("../../config/environment", __FILE__)
 require 'factory_bot'
 FactoryBot.definition_file_paths = %w(factories)
@@ -44,7 +45,7 @@ CapybaraInitializer.configure do |config|
 end
 
 # share the db connections between the test thread and the server thread to fix MySQL errors in tests
-class ApplicationRecord
+class ActiveRecord::Base
   def self.connection
     @@shared_connection
   end
@@ -67,7 +68,7 @@ class ApplicationRecord
     configurations.find { |_k, v| v['database'] == connection.current_database }[0]
   end
 end
-ApplicationRecord.set_shared_connection
+ActiveRecord::Base.set_shared_connection
 
 #The above monkeypatch which causes all threads to share the same database connection sometimes causes thread safety related failures. The below monkeypatch attempts to resolve some of those with a mutex. Specifically we were  getting "Mysql2::Error: This connection is in use by..." errors until implementing this fix. This code (and the shared connection code above) can be removed at Rails 5.1 where these issues were solved in Rails & Capybara directly.
 
