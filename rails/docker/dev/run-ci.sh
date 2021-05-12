@@ -12,7 +12,7 @@
 # then droping the existing test database
 # and loading the schema.rb into the test database
 #
-bundle exec rake db:test:prepare
+bundle exec rake db:test:prepare DISABLE_DATABASE_ENVIRONMENT_CHECK=1
 
 #
 # Run spec tests
