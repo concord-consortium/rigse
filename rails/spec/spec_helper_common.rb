@@ -96,7 +96,7 @@ RSpec.configure do |config|
   config.expose_current_running_example_as :example
 
   config.include Sprockets::Rails::Helper
-  config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include VerifyAndResetHelpers
   config.include FeatureHelper
 
