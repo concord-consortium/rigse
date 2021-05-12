@@ -1,4 +1,4 @@
-class RenameAdminProjectToAdminSettings < ActiveRecord::Migration
+class RenameAdminProjectToAdminSettings < ActiveRecord::Migration[5.1]
   def change
     rename_table :admin_projects, :admin_settings
 

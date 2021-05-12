@@ -1,4 +1,4 @@
-class CreateCommonsLicense < ActiveRecord::Migration
+class CreateCommonsLicense < ActiveRecord::Migration[5.1]
   def up
     create_table :commons_licenses, :id => false do |t|
       t.string   :code, :uniqueness => true, :null => false, :primary_key => true

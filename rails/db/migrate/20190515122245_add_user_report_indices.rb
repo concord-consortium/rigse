@@ -1,6 +1,6 @@
 # add indices to make Portal::TeacherPolicy, Admin::CohortPolicy, Portal::OfferingPolicy,
 # and API::V1::ReportUsersController#query more performant given their non-standard complex joins
-class AddUserReportIndices < ActiveRecord::Migration
+class AddUserReportIndices < ActiveRecord::Migration[5.1]
   def change
     add_index :admin_cohort_items, :item_id, :name => "index_admin_cohort_items_on_item_id"
     add_index :admin_cohort_items, :item_type, :name => "index_admin_cohort_items_on_item_type"

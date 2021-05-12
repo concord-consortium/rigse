@@ -1,4 +1,4 @@
-class RenameAuthorNoteAuthorandTeacherNotAuthor < ActiveRecord::Migration
+class RenameAuthorNoteAuthorandTeacherNotAuthor < ActiveRecord::Migration[5.1]
   def self.up
     add_column :teacher_notes, :user_id, :integer
     add_column :author_notes,  :user_id, :integer

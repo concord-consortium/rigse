@@ -1,4 +1,4 @@
-class CreateSmartgraphRangeQuestions < ActiveRecord::Migration
+class CreateSmartgraphRangeQuestions < ActiveRecord::Migration[5.1]
   def self.up
     create_table :smartgraph_range_questions do |t|
       

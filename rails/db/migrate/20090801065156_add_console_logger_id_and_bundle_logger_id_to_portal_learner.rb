@@ -1,4 +1,4 @@
-class AddConsoleLoggerIdAndBundleLoggerIdToPortalLearner < ActiveRecord::Migration
+class AddConsoleLoggerIdAndBundleLoggerIdToPortalLearner < ActiveRecord::Migration[5.1]
   def self.up
     add_column :portal_learners, :bundle_logger_id, :integer
     add_column :portal_learners, :console_logger_id, :integer

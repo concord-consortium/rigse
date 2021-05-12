@@ -1,4 +1,4 @@
-class AddReportUrlToExternalActivities < ActiveRecord::Migration
+class AddReportUrlToExternalActivities < ActiveRecord::Migration[5.1]
   def self.up
     add_column :external_activities, :report_url, :string
     add_index :external_activities, :report_url

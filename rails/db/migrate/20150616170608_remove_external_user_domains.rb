@@ -1,4 +1,4 @@
-class RemoveExternalUserDomains < ActiveRecord::Migration
+class RemoveExternalUserDomains < ActiveRecord::Migration[5.1]
   def up
     drop_table :external_user_domains
   end

@@ -1,4 +1,4 @@
-class CreatePortalLearnerActivityFeedbacks < ActiveRecord::Migration
+class CreatePortalLearnerActivityFeedbacks < ActiveRecord::Migration[5.1]
   def change
     create_table :portal_learner_activity_feedbacks do |t|
       t.text :text_feedback

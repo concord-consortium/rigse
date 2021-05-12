@@ -1,4 +1,4 @@
-class CreateAssessmentTargetUnifyingThemes < ActiveRecord::Migration
+class CreateAssessmentTargetUnifyingThemes < ActiveRecord::Migration[5.1]
   def self.up
     create_table :assessment_target_unifying_themes, :id => false do |t|
       t.integer :assessment_target_id

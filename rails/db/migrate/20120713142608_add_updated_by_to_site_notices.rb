@@ -1,4 +1,4 @@
-class AddUpdatedByToSiteNotices < ActiveRecord::Migration
+class AddUpdatedByToSiteNotices < ActiveRecord::Migration[5.1]
   def self.up
     add_column :site_notices, :updated_by, :integer
   end

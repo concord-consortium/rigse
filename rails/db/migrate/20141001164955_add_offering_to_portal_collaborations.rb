@@ -1,4 +1,4 @@
-class AddOfferingToPortalCollaborations < ActiveRecord::Migration
+class AddOfferingToPortalCollaborations < ActiveRecord::Migration[5.1]
   class Dataservice::BundleContent < ApplicationRecord
     self.table_name = :dataservice_bundle_contents
     belongs_to :collaboration, :class_name => "Portal::Collaboration"

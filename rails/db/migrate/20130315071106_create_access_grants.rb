@@ -1,4 +1,4 @@
-class CreateAccessGrants < ActiveRecord::Migration
+class CreateAccessGrants < ActiveRecord::Migration[5.1]
   def change
     create_table :access_grants do |t|
       t.string :code

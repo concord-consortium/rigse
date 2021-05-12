@@ -1,4 +1,4 @@
-class AddActiveFieldToTeacherClazz < ActiveRecord::Migration
+class AddActiveFieldToTeacherClazz < ActiveRecord::Migration[5.1]
 
   # faux model for successful migration
   class Portal::TeacherClazz < ApplicationRecord

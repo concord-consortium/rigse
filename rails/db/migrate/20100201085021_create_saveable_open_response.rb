@@ -1,4 +1,4 @@
-class CreateSaveableOpenResponse < ActiveRecord::Migration
+class CreateSaveableOpenResponse < ActiveRecord::Migration[5.1]
   def self.up
     create_table :saveable_open_responses do |t|
       t.integer     :learner_id

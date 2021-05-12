@@ -1,4 +1,4 @@
-class CreateResourcePages < ActiveRecord::Migration
+class CreateResourcePages < ActiveRecord::Migration[5.1]
   def self.up
     create_table :resource_pages do |t|
       t.integer   :user_id

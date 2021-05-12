@@ -1,4 +1,4 @@
-class CreateNoticeUserDisplayStatuses < ActiveRecord::Migration
+class CreateNoticeUserDisplayStatuses < ActiveRecord::Migration[5.1]
   def self.up
     create_table :notice_user_display_statuses do |t|
       t.integer :user_id

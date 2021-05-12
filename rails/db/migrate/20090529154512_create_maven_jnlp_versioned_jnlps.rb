@@ -1,4 +1,4 @@
-class CreateMavenJnlpVersionedJnlps < ActiveRecord::Migration
+class CreateMavenJnlpVersionedJnlps < ActiveRecord::Migration[5.1]
   def self.up
     create_table :maven_jnlp_versioned_jnlps do |t|
       t.integer :versioned_jnlp_url_id

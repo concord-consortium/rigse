@@ -1,4 +1,4 @@
-class CreatePortalCountries < ActiveRecord::Migration
+class CreatePortalCountries < ActiveRecord::Migration[5.1]
   def change
     create_table :portal_countries do |t|
       t.string  :name,             :limit => 255

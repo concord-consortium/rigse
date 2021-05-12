@@ -53,7 +53,7 @@ class PortalCountry < ApplicationRecord
 end
 
 
-class PopulateSchoolCountries < ActiveRecord::Migration
+class PopulateSchoolCountries < ActiveRecord::Migration[5.1]
   def up
   	PortalCountry.from_csv_file
   	us = PortalCountry.find_by_two_letter("US")

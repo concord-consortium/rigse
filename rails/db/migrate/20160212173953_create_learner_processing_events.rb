@@ -1,4 +1,4 @@
-class CreateLearnerProcessingEvents < ActiveRecord::Migration
+class CreateLearnerProcessingEvents < ActiveRecord::Migration[5.1]
   def change
     create_table :learner_processing_events do |t|
       t.references :learner

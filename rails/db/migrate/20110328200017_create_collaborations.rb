@@ -1,4 +1,4 @@
-class CreateCollaborations < ActiveRecord::Migration
+class CreateCollaborations < ActiveRecord::Migration[5.1]
   def self.up
     create_table :collaborations do |t|
       t.integer :bundle_content_id

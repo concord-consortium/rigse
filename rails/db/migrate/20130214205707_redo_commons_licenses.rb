@@ -1,7 +1,7 @@
 # Somehow the old migration was edited, and recommitted.
 # luckily this table contains non-volitile data with natural keys.
 # rebuilding it shouldn't cause any trouble.  February 14, 2013 (NP)
-class RedoCommonsLicenses < ActiveRecord::Migration
+class RedoCommonsLicenses < ActiveRecord::Migration[5.1]
   def up
     drop_table :commons_licenses
       create_table :commons_licenses, :id => false do |t|

@@ -1,4 +1,4 @@
-class AddToolModel < ActiveRecord::Migration
+class AddToolModel < ActiveRecord::Migration[5.1]
   def change
     create_table :tools do |t|
       t.string :name

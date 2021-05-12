@@ -1,4 +1,4 @@
-class ChangePortalGradeLevelsToPolymorphic < ActiveRecord::Migration
+class ChangePortalGradeLevelsToPolymorphic < ActiveRecord::Migration[5.1]
   def self.up
     add_column :portal_grade_levels, :has_grade_levels_id, :integer
     add_column :portal_grade_levels, :has_grade_levels_type, :string

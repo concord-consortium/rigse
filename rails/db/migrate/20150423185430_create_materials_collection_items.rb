@@ -1,4 +1,4 @@
-class CreateMaterialsCollectionItems < ActiveRecord::Migration
+class CreateMaterialsCollectionItems < ActiveRecord::Migration[5.1]
   def change
     create_table :materials_collection_items do |t|
       t.integer :materials_collection_id

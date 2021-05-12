@@ -1,4 +1,4 @@
-class AddEmptyAndValidAndOtmlToDataserviceBundleContents < ActiveRecord::Migration
+class AddEmptyAndValidAndOtmlToDataserviceBundleContents < ActiveRecord::Migration[5.1]
   def self.up
     add_column :dataservice_bundle_contents, :otml, :text, :limit => 16777215 # 16MB
 

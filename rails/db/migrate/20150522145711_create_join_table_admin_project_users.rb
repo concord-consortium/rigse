@@ -1,4 +1,4 @@
-class CreateJoinTableAdminProjectUsers < ActiveRecord::Migration
+class CreateJoinTableAdminProjectUsers < ActiveRecord::Migration[5.1]
   def change
     create_table :admin_project_users, :id => false do |t|
       t.integer :project_id

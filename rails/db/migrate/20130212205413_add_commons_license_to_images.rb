@@ -1,4 +1,4 @@
-class AddCommonsLicenseToImages < ActiveRecord::Migration
+class AddCommonsLicenseToImages < ActiveRecord::Migration[5.1]
   def up
     add_column :images, :license_code, :string
   end

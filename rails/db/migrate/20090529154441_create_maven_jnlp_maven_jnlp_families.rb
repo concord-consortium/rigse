@@ -1,4 +1,4 @@
-class CreateMavenJnlpMavenJnlpFamilies < ActiveRecord::Migration
+class CreateMavenJnlpMavenJnlpFamilies < ActiveRecord::Migration[5.1]
   def self.up
     create_table :maven_jnlp_maven_jnlp_families do |t|
       t.integer :maven_jnlp_server_id

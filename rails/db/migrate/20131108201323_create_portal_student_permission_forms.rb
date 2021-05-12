@@ -1,4 +1,4 @@
-class CreatePortalStudentPermissionForms < ActiveRecord::Migration
+class CreatePortalStudentPermissionForms < ActiveRecord::Migration[5.1]
   def change
     create_table :portal_student_permission_forms do |t|
       t.boolean :signed

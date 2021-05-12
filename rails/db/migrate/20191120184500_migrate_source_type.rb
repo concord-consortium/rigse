@@ -1,4 +1,4 @@
-class MigrateSourceType < ActiveRecord::Migration
+class MigrateSourceType < ActiveRecord::Migration[5.1]
   class Tool < ApplicationRecord
   end
 

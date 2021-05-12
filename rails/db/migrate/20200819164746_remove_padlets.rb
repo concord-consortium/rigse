@@ -1,4 +1,4 @@
-class RemovePadlets < ActiveRecord::Migration
+class RemovePadlets < ActiveRecord::Migration[5.1]
   class Portal::Bookmark < ApplicationRecord
     self.table_name = :portal_bookmarks
   end

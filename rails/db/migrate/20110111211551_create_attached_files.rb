@@ -1,4 +1,4 @@
-class CreateAttachedFiles < ActiveRecord::Migration
+class CreateAttachedFiles < ActiveRecord::Migration[5.1]
   def self.up
     create_table :attached_files do |t|
       t.integer :user_id

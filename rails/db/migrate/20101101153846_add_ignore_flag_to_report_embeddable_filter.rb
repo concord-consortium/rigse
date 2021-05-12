@@ -1,4 +1,4 @@
-class AddIgnoreFlagToReportEmbeddableFilter < ActiveRecord::Migration
+class AddIgnoreFlagToReportEmbeddableFilter < ActiveRecord::Migration[5.1]
   def self.up
     add_column :report_embeddable_filters, :ignore, :boolean
   end

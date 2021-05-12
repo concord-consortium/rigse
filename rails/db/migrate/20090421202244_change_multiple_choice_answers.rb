@@ -1,4 +1,4 @@
-class ChangeMultipleChoiceAnswers < ActiveRecord::Migration
+class ChangeMultipleChoiceAnswers < ActiveRecord::Migration[5.1]
   def self.up
     rename_table :multiple_choice_answers, :multiple_choice_choices
     rename_column :multiple_choice_choices, :answer, :choice

@@ -1,4 +1,4 @@
-class AddOriginalBodyToBundleContents < ActiveRecord::Migration
+class AddOriginalBodyToBundleContents < ActiveRecord::Migration[5.1]
   def self.up
     add_column :dataservice_bundle_contents, :original_body, :text
   end

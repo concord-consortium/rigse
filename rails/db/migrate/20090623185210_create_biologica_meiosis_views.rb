@@ -1,4 +1,4 @@
-class CreateBiologicaMeiosisViews < ActiveRecord::Migration
+class CreateBiologicaMeiosisViews < ActiveRecord::Migration[5.1]
   def self.up
     create_table :biologica_meiosis_views do |t|
       

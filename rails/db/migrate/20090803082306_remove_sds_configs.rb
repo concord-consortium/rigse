@@ -1,4 +1,4 @@
-class RemoveSdsConfigs < ActiveRecord::Migration
+class RemoveSdsConfigs < ActiveRecord::Migration[5.1]
   def self.up
     drop_table :portal_sds_configs
   end

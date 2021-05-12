@@ -1,4 +1,4 @@
-class CreateDataserviceConsoleLoggers < ActiveRecord::Migration
+class CreateDataserviceConsoleLoggers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :dataservice_console_loggers do |t|
 

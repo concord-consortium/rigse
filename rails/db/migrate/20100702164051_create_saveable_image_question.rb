@@ -1,4 +1,4 @@
-class CreateSaveableImageQuestion < ActiveRecord::Migration
+class CreateSaveableImageQuestion < ActiveRecord::Migration[5.1]
   def self.up
     create_table :saveable_image_questions do |t|
       t.integer     :learner_id

@@ -1,4 +1,4 @@
-class CreateDataserviceBlobs < ActiveRecord::Migration
+class CreateDataserviceBlobs < ActiveRecord::Migration[5.1]
   def self.up
     create_table :dataservice_blobs do |t|
       t.binary :content, :limit => 16777215

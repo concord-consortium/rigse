@@ -1,4 +1,4 @@
-class AddPositionFieldToClazz < ActiveRecord::Migration
+class AddPositionFieldToClazz < ActiveRecord::Migration[5.1]
 
   class Portal::TeacherClazz < ApplicationRecord
     set_table_name :portal_teacher_clazzes

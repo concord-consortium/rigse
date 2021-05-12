@@ -1,4 +1,4 @@
-class CreateSubjects < ActiveRecord::Migration
+class CreateSubjects < ActiveRecord::Migration[5.1]
   def self.up
     create_table :portal_subjects do |t|
 

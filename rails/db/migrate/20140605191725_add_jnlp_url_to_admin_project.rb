@@ -41,7 +41,7 @@ module Shim
   end
 end
 
-class AddJnlpUrlToAdminProject < ActiveRecord::Migration
+class AddJnlpUrlToAdminProject < ActiveRecord::Migration[5.1]
   def up
     add_column :admin_projects, :jnlp_url, :string
 

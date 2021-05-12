@@ -1,4 +1,4 @@
-class AddPrecisionAndWidthToDataTables < ActiveRecord::Migration
+class AddPrecisionAndWidthToDataTables < ActiveRecord::Migration[5.1]
   def self.up
     # default for precision comes from the pt story: 
     # https://www.pivotaltracker.com/story/show/8840073

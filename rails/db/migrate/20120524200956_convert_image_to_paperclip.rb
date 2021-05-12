@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), "20090130033823_create_images.rb")
-class ConvertImageToPaperclip < ActiveRecord::Migration
+class ConvertImageToPaperclip < ActiveRecord::Migration[5.1]
   def self.up
     create_table :images, :force => true do |t|
       t.integer           :user_id

@@ -1,4 +1,4 @@
-class ChangeJ2seFieldnameMavenJnlpVersionedJnlp < ActiveRecord::Migration
+class ChangeJ2seFieldnameMavenJnlpVersionedJnlp < ActiveRecord::Migration[5.1]
   def self.up
     rename_column :maven_jnlp_versioned_jnlps, :j2se, :j2se_version
   end

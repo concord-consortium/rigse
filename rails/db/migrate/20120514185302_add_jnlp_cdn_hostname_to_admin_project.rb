@@ -1,4 +1,4 @@
-class AddJnlpCdnHostnameToAdminProject < ActiveRecord::Migration
+class AddJnlpCdnHostnameToAdminProject < ActiveRecord::Migration[5.1]
   def self.up
     add_column :admin_projects, :jnlp_cdn_hostname, :string
   end

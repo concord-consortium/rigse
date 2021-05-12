@@ -1,4 +1,4 @@
-class CreateBiologicaChromosomeZooms < ActiveRecord::Migration
+class CreateBiologicaChromosomeZooms < ActiveRecord::Migration[5.1]
   def self.up
     create_table :biologica_chromosome_zooms do |t|
       

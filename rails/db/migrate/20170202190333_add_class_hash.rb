@@ -1,4 +1,4 @@
-class AddClassHash < ActiveRecord::Migration
+class AddClassHash < ActiveRecord::Migration[5.1]
   def up
     add_column :portal_clazzes, :class_hash, :string, :limit => 48
 

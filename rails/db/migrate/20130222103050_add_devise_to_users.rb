@@ -1,4 +1,4 @@
-class AddDeviseToUsers < ActiveRecord::Migration
+class AddDeviseToUsers < ActiveRecord::Migration[5.1]
   def self.up
     change_column :users, :email, :string, :default => "", :null => false, :limit => 128
     rename_column :users, :crypted_password, :encrypted_password

@@ -1,4 +1,4 @@
-class CreateDataserviceBucketLogItems < ActiveRecord::Migration
+class CreateDataserviceBucketLogItems < ActiveRecord::Migration[5.1]
   def change
     create_table :dataservice_bucket_log_items do |t|
       t.text :content

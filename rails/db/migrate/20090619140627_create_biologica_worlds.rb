@@ -1,4 +1,4 @@
-class CreateBiologicaWorlds < ActiveRecord::Migration
+class CreateBiologicaWorlds < ActiveRecord::Migration[5.1]
   def self.up
     create_table :biologica_worlds do |t|
       

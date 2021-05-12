@@ -1,4 +1,4 @@
-class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration
+class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration[5.1]
   class Portal::Student < ApplicationRecord
     self.table_name = :portal_students
   end

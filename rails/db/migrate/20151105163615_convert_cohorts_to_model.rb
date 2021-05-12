@@ -1,4 +1,4 @@
-class ConvertCohortsToModel < ActiveRecord::Migration
+class ConvertCohortsToModel < ActiveRecord::Migration[5.1]
   def up
     create_table :admin_cohorts do |t|
       t.integer :project_id

@@ -1,4 +1,4 @@
-class CreateInstallerReports < ActiveRecord::Migration
+class CreateInstallerReports < ActiveRecord::Migration[5.1]
   def self.up
     create_table :installer_reports do |t|
       t.text :body

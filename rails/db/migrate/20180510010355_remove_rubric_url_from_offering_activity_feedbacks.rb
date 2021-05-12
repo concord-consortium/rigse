@@ -1,4 +1,4 @@
-class RemoveRubricUrlFromOfferingActivityFeedbacks < ActiveRecord::Migration
+class RemoveRubricUrlFromOfferingActivityFeedbacks < ActiveRecord::Migration[5.1]
   def up
     remove_column :portal_offering_activity_feedbacks, :rubric_url
   end

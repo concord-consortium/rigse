@@ -1,4 +1,4 @@
-class CreateDrawingTools < ActiveRecord::Migration
+class CreateDrawingTools < ActiveRecord::Migration[5.1]
   def self.up
     create_table :drawing_tools do |t|
       

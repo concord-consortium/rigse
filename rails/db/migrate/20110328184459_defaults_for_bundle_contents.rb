@@ -1,4 +1,4 @@
-class DefaultsForBundleContents < ActiveRecord::Migration
+class DefaultsForBundleContents < ActiveRecord::Migration[5.1]
   def self.up
     # 1. set default values on the tables
     change_column_default(:dataservice_bundle_contents, :empty, true)

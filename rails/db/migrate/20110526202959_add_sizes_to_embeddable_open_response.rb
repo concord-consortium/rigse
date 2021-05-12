@@ -1,4 +1,4 @@
-class AddSizesToEmbeddableOpenResponse < ActiveRecord::Migration
+class AddSizesToEmbeddableOpenResponse < ActiveRecord::Migration[5.1]
   def self.up
     add_column :embeddable_open_responses, :rows,      :integer, :default => 5
     add_column :embeddable_open_responses, :columns,   :integer, :default => 32

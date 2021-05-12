@@ -1,4 +1,4 @@
-class UpdateReportLearnersNumSubmitted < ActiveRecord::Migration
+class UpdateReportLearnersNumSubmitted < ActiveRecord::Migration[5.1]
   class Report::Learner < ApplicationRecord
     self.table_name = "report_learners"
   end

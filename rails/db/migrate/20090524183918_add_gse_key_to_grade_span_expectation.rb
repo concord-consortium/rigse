@@ -1,4 +1,4 @@
-class AddGseKeyToGradeSpanExpectation < ActiveRecord::Migration
+class AddGseKeyToGradeSpanExpectation < ActiveRecord::Migration[5.1]
   def self.up
     add_column :grade_span_expectations, :gse_key, :string
   end

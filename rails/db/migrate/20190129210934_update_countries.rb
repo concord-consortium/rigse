@@ -1,5 +1,5 @@
 
-class UpdateCountries < ActiveRecord::Migration
+class UpdateCountries < ActiveRecord::Migration[5.1]
 
   class PortalCountry < ApplicationRecord
     self.table_name = :portal_countries

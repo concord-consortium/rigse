@@ -1,4 +1,4 @@
-class AddOtmlContentToDataCollectors < ActiveRecord::Migration
+class AddOtmlContentToDataCollectors < ActiveRecord::Migration[5.1]
   def self.up
     add_column :data_collectors, :otml_root_content, :text
     add_column :data_collectors, :otml_library_content, :text

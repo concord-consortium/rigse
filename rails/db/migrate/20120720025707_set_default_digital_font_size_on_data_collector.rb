@@ -1,4 +1,4 @@
-class SetDefaultDigitalFontSizeOnDataCollector < ActiveRecord::Migration
+class SetDefaultDigitalFontSizeOnDataCollector < ActiveRecord::Migration[5.1]
   def up
     # set all the existing contents as having been extracted.
     execute "UPDATE embeddable_data_collectors SET dd_font_size = 30 WHERE dd_font_size IS NULL"

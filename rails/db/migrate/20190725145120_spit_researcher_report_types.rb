@@ -1,4 +1,4 @@
-class SpitResearcherReportTypes < ActiveRecord::Migration
+class SpitResearcherReportTypes < ActiveRecord::Migration[5.1]
   class ExternalReport < ApplicationRecord
   end
 

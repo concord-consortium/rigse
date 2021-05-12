@@ -1,4 +1,4 @@
-class AddPublicationStatusToSectionsAndPages < ActiveRecord::Migration
+class AddPublicationStatusToSectionsAndPages < ActiveRecord::Migration[5.1]
   def self.up
     add_column :sections, :publication_status, :string
     add_column :pages,    :publication_status, :string

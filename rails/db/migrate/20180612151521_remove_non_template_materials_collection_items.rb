@@ -1,4 +1,4 @@
-class RemoveNonTemplateMaterialsCollectionItems < ActiveRecord::Migration
+class RemoveNonTemplateMaterialsCollectionItems < ActiveRecord::Migration[5.1]
   class MaterialsCollectionItem < ApplicationRecord
   end
 

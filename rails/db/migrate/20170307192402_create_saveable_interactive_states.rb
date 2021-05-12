@@ -1,4 +1,4 @@
-class CreateSaveableInteractiveStates < ActiveRecord::Migration
+class CreateSaveableInteractiveStates < ActiveRecord::Migration[5.1]
   def change
     create_table :saveable_interactive_states do |t|
       t.integer :interactive_id
