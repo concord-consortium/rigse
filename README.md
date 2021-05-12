@@ -34,35 +34,6 @@ Visit [the Docker docs](docs/docker.md) for how to use your portal running in do
 also includes: instructions on speeding things up on OS X, using a local dns+proxy system
 to avoid port conflicts, and setting up ssh for capistrano deploys.
 
-#### Setup Issues
-
-If you get the following error
-
-    An error occurred while installing libv8 (3.16.14.17), and Bundler cannot
-    continue.
-    Make sure that `gem install libv8 -v '3.16.14.17'` succeeds before bundling.
-
- To resolve the error install libv8 sepratelly with --with-system-v8
-
-	gem install libv8 -v '3.16.14.17' -- --with-system-v8
-
-If you get the following error
-
-	An error occurred while installing therubyracer (0.12.1), and Bundler cannot
-	continue.
-	Make sure that `gem install therubyracer -v '0.12.1'` succeeds before bundling.
-
-Replace `gem 'therubyracer',         "~>0.12.1"` entry in the Gemfile to `gem 'therubyracer',         "~>0.10.2"`
-
-If `rails s -p 9000` fails due to mysql2 segmentation fault
-
-    gems/mysql2-0.3.21/lib/mysql2/mysql2.bundle: [BUG] Segmentation fault
-
-It usually helps to remove mysql2 and install it again
-
-    gem uninstall mysql2
-    bundle install
-
 #### Tests
 
 After getting the server running it's good to confirm that all the tests
@@ -98,10 +69,26 @@ for these new features.
 
 #### SSO Clients and LARA (authoring) integration
 
-If you want to provide authentication services to LARA, you need to:
+These instructions assume that you are setting up LARA and Portal using
+docker-compose files. It *may* also assume that you are using something like Dori or Dinghy
+as an http-proxy dns container, so that the portal is available at:`//app.portal.docker`
+and lara is available at `//app.lara.docker`
 
-1. Create a new SSO Client using `rake sso:add_client`
-2. Add the client id and secret to LARA, by editing `config/app_environment_variables.rb`
+If you want to provide authentication services to LARA, you need to:
+1. In the Portal, edit `.env` and append `docker/dev/docker-compose-lara-proxy.yml` to the `COMPOSE_FILE` var.
+1. In the Portal, as an administrator, setup a new "Auth Client". Use the following settings:
+```
+Name: `localhost`
+App Id: `localhost`
+App Secret: 'unsecure local secret'
+Client Type: 'confidential'
+Site Url: `https://app.lara.docker` *(use https if you are running it that way...)
+Allowed Domains: (leave blank)
+Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/callback'
+```
+1. In Lara, edit `.env` and append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
+2. You may need to use the rails console in LARA to set the `is_admin` flag to the portal admin user.
+
 
 ### Theme support & Rolling your own theme:
 

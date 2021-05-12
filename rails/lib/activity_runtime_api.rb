@@ -300,15 +300,16 @@ class ActivityRuntimeAPI
     iq_cache = {} unless iq_cache.kind_of?(Hash)
     if_cache = {} unless if_cache.kind_of?(Hash)
 
-    hash["sections"].each_with_index do |section_data, section_index|
+    hash["sections"].each.with_index(1) do |section_data, section_index|
       section = Section.create(
         :name => section_data["name"],
         :activity => activity,
         :user => user,
         :position => section_index
       )
-
-      section_data["pages"].each_with_index do |page_data, page_index|
+      # acts_as_list uses 1-based indexing on position. A 0 here could
+      # mess things up, see https://github.com/brendon/acts_as_list#more-options
+      section_data["pages"].each.with_index(1) do |page_data, page_index|
         page = Page.create(
           :name => page_data["name"],
           :url => page_data["url"],
@@ -317,7 +318,7 @@ class ActivityRuntimeAPI
           :position => page_index
         )
 
-        page_data["elements"].each_with_index do |element_data, element_index|
+        page_data["elements"].each.with_index(1) do |element_data, element_index|
           embeddable = case element_data["type"]
           when "open_response"
             existant = or_cache.delete(element_data["id"].to_s) # nil if the key doesn't exist - note the key must be string
