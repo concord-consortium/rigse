@@ -65,13 +65,12 @@ RailsPortal::Application.configure do
   # Comment out locally if you need speed.
   config.assets.debug = true
 
-  # TODO: rails-5-upgrade - add lines below back when bullet is added back to gemfile
-  # config.after_initialize do
-  #   Bullet.enable = true
-  #   Bullet.bullet_logger = !BoolENV["RAILS_STDOUT_LOGGING"]
-  #   Bullet.rails_logger = true
-  #   Bullet.add_footer = true
-  # end
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = !BoolENV["RAILS_STDOUT_LOGGING"]
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+  end
 
   # include per developer environment files if found (the default is excluded by .gitignore)
   #
@@ -92,6 +91,6 @@ RailsPortal::Application.configure do
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
-  
+
   LogConfig.configure(config, ENV['DEV_LOG_LEVEL'], 'DEBUG')
 end

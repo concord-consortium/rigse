@@ -218,15 +218,15 @@
       20. Fixed report_user controller spec totals test and added secondary test for better coverage
       21. Fixed unescaped css selector in tag edit haml spec
       22. Removed two bundle logger specs - this code is going to be removed in master on rails 4 before this is released
-
-## Rails 4 -> 5.0 TODO
-  1. Gemfile: add back geni* gems
-  2. Gemfile: add back delayed_job_web
-  3. application.rb: add back Rack::ExpandB64Gzip middleware
-  4. Gemfile: add back bullet
-  5. development.rb: add back Bullet.xxx references
-  6. routes.rb: add back DelayedJobWeb reference
-  7. Remove all "RAILS UPGRADE" comments
+    11. Remove support for activerecord-deprecated_finders gem
+    12. Fix commented out code from start of upgrade process
+      1. Gemfile: do not add back geni* gems, but add comment
+      2. Gemfile: replaced delayed_job_web (only supports up to Rails 4) with delayed-web
+      3. routes.rb: replace DelayedJobWeb reference with Delayed::Web::Engine
+      4. Gemfile: add back bullet
+      5. development.rb: add back Bullet.xxx references
+      6. application.rb: add back Rack::ExpandB64Gzip middleware using different mount point due to old mount point being deprecated
+      7. Remove all "rails-5-upgrade" comments
 
 ## Rails 4 -> 5.0 Gemfile Upgrade Table
 

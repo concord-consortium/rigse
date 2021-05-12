@@ -11,8 +11,12 @@ require File.expand_path("../../lib/rack/config_session_cookies", __FILE__)
 # load Rack::ResponseLogger for middleware configuration
 require File.expand_path("../../lib/rack/response_logger", __FILE__)
 
+# load Rack::ExpandB64Gzip for middleware configuration
+require File.expand_path("../../lib/rack/expand_b64_gzip", __FILE__)
+
 module RailsPortal
   class Application < Rails::Application
+    config.assets.precompile << 'delayed/web/application.css'
     config.rails_lts_options = { default: :compatible }
     # Use RSpec when generating tests, not test_unit
     config.generators do |g|
@@ -45,23 +49,10 @@ module RailsPortal
     # Subvert the cookies_only=true session policy for requests ending in ".config"
     config.middleware.insert_before(ActionDispatch::Cookies, Rack::ConfigSessionCookies)
 
-    # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
-    #   $ rake middleware
-    #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
-    #   use Rack::Lock
-    #   use ActionController::Failsafe
-    #   use ActionController::Reloader
-    #   use ActiveRecord::ConnectionAdapters::ConnectionManagement
-    #   use ActiveRecord::QueryCache
-    #   use ActiveRecord::SessionStore, #<Proc:0x0192dfc8@(eval):8>
-    #   use Rack::ExpandB64Gzip
-    #   use ActionController::ParamsParser
-    #   use Rack::MethodOverride
-    #   use Rack::Head
-    #   run ActionController::Dispatcher.new
-
-    # TODO: rails-5-upgrade - figure out how to insert in stack as ActionDispatch::ParamsParser doesn't exist in rails 5
-    # config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
+    # Expands posted content with a content-encoding of: 'b64gzip'
+    # NOTE: pre-Rails 5 this was inserted before ActionController::ParamsParser but that middleware
+    # was deprecated in Rails 5 so Rack::Head was chosen based on posts found online about compression middlewares
+    config.middleware.insert_before(Rack::Head, Rack::ExpandB64Gzip)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

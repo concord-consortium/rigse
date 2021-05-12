@@ -10,9 +10,15 @@ module Delayed::Worker::Scaler
   def self.included(base)
     base.send :extend, ClassMethods
     base.class_eval do
-      after_destroy "self.class.down"
-      after_create "self.class.up"
-      after_update "self.class.down", :unless => Proc.new {|r| r.failed_at.nil? }
+      after_commit(on: :update, if: proc { |r| !r.failed_at.nil? }) do 
+        self.class.down
+      end
+      after_commit(on: :destroy, if: proc { |r| r.destroyed? || !r.failed_at.nil? }) do
+        self.class.down
+      end
+      after_commit(on: :create) do
+        self.class.up
+      end
     end
   end
 
@@ -39,7 +45,7 @@ module Delayed::Worker::Scaler
     end
 
     def jobs
-      Delayed::Job.all(:conditions => { :failed_at => nil })
+      Delayed::Job.where(failed_at: nil)
     end
 
     def process_tag
