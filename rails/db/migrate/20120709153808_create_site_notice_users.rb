@@ -1,4 +1,4 @@
-class CreateSiteNoticeUsers < ActiveRecord::Migration
+class CreateSiteNoticeUsers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :site_notice_users do |t|
       t.integer :notice_id

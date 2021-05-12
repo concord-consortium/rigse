@@ -1,4 +1,4 @@
-class CreateOtrunkExampleOtmlCategories < ActiveRecord::Migration
+class CreateOtrunkExampleOtmlCategories < ActiveRecord::Migration[5.1]
   def self.up
     create_table :otrunk_example_otml_categories do |t|
       t.string :uuid

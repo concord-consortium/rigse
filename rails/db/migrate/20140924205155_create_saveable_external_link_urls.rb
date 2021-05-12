@@ -1,4 +1,4 @@
-class CreateSaveableExternalLinkUrls < ActiveRecord::Migration
+class CreateSaveableExternalLinkUrls < ActiveRecord::Migration[5.1]
   def change
     create_table :saveable_external_link_urls do |t|
       t.integer :external_link_id

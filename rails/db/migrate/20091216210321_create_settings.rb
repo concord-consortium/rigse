@@ -1,4 +1,4 @@
-class CreateSettings < ActiveRecord::Migration
+class CreateSettings < ActiveRecord::Migration[5.1]
   def self.up
     create_table :settings do |t|
       t.integer     :scope_id

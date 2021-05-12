@@ -1,4 +1,4 @@
-class AddIncludeExternalActivitiesToAdminProjects < ActiveRecord::Migration
+class AddIncludeExternalActivitiesToAdminProjects < ActiveRecord::Migration[5.1]
   def self.up
     add_column :admin_projects, :include_external_activities, :boolean, :default => false
   end

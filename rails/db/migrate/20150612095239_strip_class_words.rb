@@ -1,4 +1,4 @@
-class StripClassWords < ActiveRecord::Migration
+class StripClassWords < ActiveRecord::Migration[5.1]
   class Portal::Clazz < ApplicationRecord
     self.table_name = 'portal_clazzes'
   end

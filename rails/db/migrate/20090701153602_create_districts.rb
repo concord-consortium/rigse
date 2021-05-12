@@ -1,4 +1,4 @@
-class CreateDistricts < ActiveRecord::Migration
+class CreateDistricts < ActiveRecord::Migration[5.1]
   def self.up
     create_table :portal_districts do |t|
 

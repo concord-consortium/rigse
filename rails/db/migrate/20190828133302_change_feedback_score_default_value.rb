@@ -1,4 +1,4 @@
-class ChangeFeedbackScoreDefaultValue < ActiveRecord::Migration
+class ChangeFeedbackScoreDefaultValue < ActiveRecord::Migration[5.1]
   def up
     change_column_default(:portal_learner_activity_feedbacks, :score, 0)
   end

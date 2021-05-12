@@ -1,4 +1,4 @@
-class RemoveProbeFields < ActiveRecord::Migration
+class RemoveProbeFields < ActiveRecord::Migration[5.1]
   def remove_table(name)
     drop_table name.to_sym if ApplicationRecord.connection.tables.include?(name)
   end

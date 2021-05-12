@@ -1207,6 +1207,7 @@ DEPENDENCIES
   devise-token_authenticatable
   dynamic_form (~> 1.1.4)
   email_spec
+  erubis
   exception_notification
   factory_bot
   font-awesome-rails

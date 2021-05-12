@@ -1,4 +1,4 @@
-class CreateDataTables < ActiveRecord::Migration
+class CreateDataTables < ActiveRecord::Migration[5.1]
   def self.up
     create_table :data_tables do |t|
       

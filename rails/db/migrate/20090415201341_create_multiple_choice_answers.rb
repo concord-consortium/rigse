@@ -1,4 +1,4 @@
-class CreateMultipleChoiceAnswers < ActiveRecord::Migration
+class CreateMultipleChoiceAnswers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :multiple_choice_answers do |t|
       t.text :answer

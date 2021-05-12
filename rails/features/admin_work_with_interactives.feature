@@ -15,7 +15,7 @@ Feature: Admin can work with interactives
     And I wait 2 seconds
     And I follow "Interactives"
     Then I should be on the interactives index page
-    And I should see "Displaying all 15 models"
+    And I should see "Displaying all 15 models"
     And I should see "Create Interactive"
     And I should see "Export Interactives"
 

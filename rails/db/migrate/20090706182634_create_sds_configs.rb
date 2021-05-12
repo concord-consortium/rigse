@@ -1,4 +1,4 @@
-class CreateSdsConfigs < ActiveRecord::Migration
+class CreateSdsConfigs < ActiveRecord::Migration[5.1]
   def self.up
     create_table :portal_sds_configs do |t|
       t.integer :configurable_id

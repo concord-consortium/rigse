@@ -1,4 +1,4 @@
-class AddCompletePercentToReportLearner < ActiveRecord::Migration
+class AddCompletePercentToReportLearner < ActiveRecord::Migration[5.1]
 
   # faux model for successful migration
   class Report::Learner < ApplicationRecord

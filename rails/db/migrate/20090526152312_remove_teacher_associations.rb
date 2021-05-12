@@ -1,4 +1,4 @@
-class RemoveTeacherAssociations < ActiveRecord::Migration
+class RemoveTeacherAssociations < ActiveRecord::Migration[5.1]
   def self.up
     drop_table :teacher_notes_unifying_themes
     drop_table :teacher_notes_domains

@@ -1,7 +1,4 @@
 class Page < ApplicationRecord
-  include JnlpLaunchable
-  include Clipboard
-
   belongs_to :user
   belongs_to :section
   has_many :offerings, :dependent => :destroy, :as => :runnable, :class_name => "Portal::Offering"
@@ -17,12 +14,6 @@ class Page < ApplicationRecord
   has_many :page_elements, -> { order 'page_elements.position ASC, page_elements.id ASC' },
     dependent: :destroy
 
-  include HasEmbeddables
-  include ResponseTypes
-
-  include Publishable
-  include Archiveable
-
   acts_as_replicatable
   acts_as_list :scope => :section
 
@@ -32,6 +23,13 @@ class Page < ApplicationRecord
   }
 
   include Changeable
+  include JnlpLaunchable
+  include Clipboard
+  include HasEmbeddables
+  include ResponseTypes
+  include Publishable
+  include Archiveable
+
   # validates_presence_of :name, :on => :create, :message => "can't be blank"
 
   accepts_nested_attributes_for :page_elements, :allow_destroy => true

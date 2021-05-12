@@ -1,4 +1,4 @@
-class CreateGradeLevels < ActiveRecord::Migration
+class CreateGradeLevels < ActiveRecord::Migration[5.1]
   def self.up
     create_table :portal_grade_levels do |t|
 

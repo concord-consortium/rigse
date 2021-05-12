@@ -1,4 +1,4 @@
-class AddCopiedFromToActivities < ActiveRecord::Migration
+class AddCopiedFromToActivities < ActiveRecord::Migration[5.1]
   def self.up
     add_column :activities, :original_id, :integer
   end

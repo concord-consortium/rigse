@@ -1,4 +1,4 @@
-class ProbesAndMore < ActiveRecord::Migration
+class ProbesAndMore < ActiveRecord::Migration[5.1]
   def self.up
     create_table :calibrations do |t|
       t.integer :data_filter_id

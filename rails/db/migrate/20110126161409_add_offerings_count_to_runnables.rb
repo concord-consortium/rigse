@@ -1,4 +1,4 @@
-class AddOfferingsCountToRunnables < ActiveRecord::Migration
+class AddOfferingsCountToRunnables < ActiveRecord::Migration[5.1]
   def self.up
     add_column :investigations, :offerings_count, :integer, :default => 0
     add_column :resource_pages, :offerings_count, :integer, :default => 0

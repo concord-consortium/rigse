@@ -1,4 +1,4 @@
-class RemoveExternalUsers < ActiveRecord::Migration
+class RemoveExternalUsers < ActiveRecord::Migration[5.1]
   def up
     remove_column :users, :type
     remove_column :users, :external_user_domain_id

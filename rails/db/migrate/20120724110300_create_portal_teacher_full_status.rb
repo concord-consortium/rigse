@@ -1,4 +1,4 @@
-class CreatePortalTeacherFullStatus < ActiveRecord::Migration
+class CreatePortalTeacherFullStatus < ActiveRecord::Migration[5.1]
   def up
     create_table :portal_teacher_full_status do |t|
       t.integer  :offering_id

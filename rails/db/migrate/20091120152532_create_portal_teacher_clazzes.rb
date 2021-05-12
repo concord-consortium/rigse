@@ -1,4 +1,4 @@
-class CreatePortalTeacherClazzes < ActiveRecord::Migration
+class CreatePortalTeacherClazzes < ActiveRecord::Migration[5.1]
   def self.up
     create_table :portal_teacher_clazzes do |t|
       t.string    :uuid, :limit => 36

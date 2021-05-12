@@ -1,4 +1,4 @@
-class AddAnonymousBrowseMaterialsToAdminProject < ActiveRecord::Migration
+class AddAnonymousBrowseMaterialsToAdminProject < ActiveRecord::Migration[5.1]
   def up
     add_column :admin_projects, :anonymous_can_browse_materials, :boolean, :default => true
 

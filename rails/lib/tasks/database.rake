@@ -36,7 +36,7 @@ namespace :db do
   end
   
   require 'active_record'
-  class RemoveTables < ActiveRecord::Migration
+  class RemoveTables < ActiveRecord::Migration[5.1]
     def self.up
       ActiveRecord::Base.connection.tables.each do |table|
         drop_table(table)

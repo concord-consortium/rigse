@@ -14,7 +14,7 @@ describe "rendering application.html.haml" do
   it "applies the correct role classes" do
     assign(:original_user, fake_visitor)
     render(
-      :text => "nothing",
+      :html => "nothing",
       :layout => "layouts/application"
     )
     expect(rendered).to have_selector("body.first-role-visitor")

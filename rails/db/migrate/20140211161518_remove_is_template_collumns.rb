@@ -1,4 +1,4 @@
-class RemoveIsTemplateCollumns < ActiveRecord::Migration
+class RemoveIsTemplateCollumns < ActiveRecord::Migration[5.1]
   def up
     remove_column :investigations, :is_template
     remove_column :activities, :is_template

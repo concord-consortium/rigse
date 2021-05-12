@@ -1,4 +1,4 @@
-class CreateSaveableMultipleChoiceRationaleChoice < ActiveRecord::Migration
+class CreateSaveableMultipleChoiceRationaleChoice < ActiveRecord::Migration[5.1]
   # This is a rich join model so that Saveable::MultipleChoice can support
   # multiple selection, and also support rationale.
 

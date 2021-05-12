@@ -1,4 +1,4 @@
-class CreateStandardDocuments < ActiveRecord::Migration
+class CreateStandardDocuments < ActiveRecord::Migration[5.1]
   def change
     create_table :standard_documents do |t|
       t.string :uri

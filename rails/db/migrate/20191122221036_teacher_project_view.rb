@@ -1,4 +1,4 @@
-class TeacherProjectView < ActiveRecord::Migration
+class TeacherProjectView < ActiveRecord::Migration[5.1]
   def change
     create_table :teacher_project_views do |t|
       t.string :limit  => 36

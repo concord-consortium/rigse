@@ -1,4 +1,4 @@
-class CreateMavenJnlpMavenJnlpServers < ActiveRecord::Migration
+class CreateMavenJnlpMavenJnlpServers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :maven_jnlp_maven_jnlp_servers do |t|
       t.string :uuid

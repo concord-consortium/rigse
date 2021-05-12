@@ -1,4 +1,4 @@
-class Rigse < ActiveRecord::Migration
+class Rigse < ActiveRecord::Migration[5.1]
   def self.up
     create_table :domains do |t|
       t.string :name

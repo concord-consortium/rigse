@@ -1,4 +1,4 @@
-class CreateEmbeddableImageQuestions < ActiveRecord::Migration
+class CreateEmbeddableImageQuestions < ActiveRecord::Migration[5.1]
   def self.up
     create_table :embeddable_image_questions do |t|
       

@@ -1,4 +1,4 @@
-class UpdateExternalActivityDescriptionFields < ActiveRecord::Migration
+class UpdateExternalActivityDescriptionFields < ActiveRecord::Migration[5.1]
   class ExternalActivity < ApplicationRecord
   end
 

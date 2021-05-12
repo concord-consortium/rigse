@@ -1,4 +1,4 @@
-class AddAuthorEmailToInvestigation < ActiveRecord::Migration
+class AddAuthorEmailToInvestigation < ActiveRecord::Migration[5.1]
   def up
     add_column :investigations, :author_email, :string
   end

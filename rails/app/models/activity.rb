@@ -1,7 +1,5 @@
 class Activity < ApplicationRecord
-  include Cohorts
-  include JnlpLaunchable
-  include HasEmbeddables
+
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
@@ -30,13 +28,17 @@ class Activity < ApplicationRecord
 
   has_many :page_elements, :through => :pages
 
-  include ResponseTypes
   acts_as_replicatable
   acts_as_list :scope => :investigation
+  
   include Changeable
   include TreeNode
   include Publishable
   include Archiveable
+  include Cohorts
+  include JnlpLaunchable
+  include ResponseTypes
+  include HasEmbeddables
 
   send_update_events_to :investigation
 

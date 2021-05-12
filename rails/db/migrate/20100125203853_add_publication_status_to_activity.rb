@@ -1,4 +1,4 @@
-class AddPublicationStatusToActivity < ActiveRecord::Migration
+class AddPublicationStatusToActivity < ActiveRecord::Migration[5.1]
   def self.up
     add_column :activities, :publication_status, :string
   end

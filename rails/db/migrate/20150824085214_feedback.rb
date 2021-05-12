@@ -1,4 +1,4 @@
-class Feedback < ActiveRecord::Migration
+class Feedback < ActiveRecord::Migration[5.1]
   def change
     add_column :saveable_external_link_urls, :feedback, :text
     add_column :saveable_image_question_answers, :feedback, :text

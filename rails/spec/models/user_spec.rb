@@ -864,7 +864,7 @@ protected
       user = described_class.new
       result = user.active_for_authentication?
 
-      expect(result).to be_nil
+      expect(result).to be_falsey
     end
   end
 

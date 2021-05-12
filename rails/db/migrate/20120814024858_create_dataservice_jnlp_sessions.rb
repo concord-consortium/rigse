@@ -1,4 +1,4 @@
-class CreateDataserviceJnlpSessions < ActiveRecord::Migration
+class CreateDataserviceJnlpSessions < ActiveRecord::Migration[5.1]
   def change
     create_table :dataservice_jnlp_sessions do |t|
       t.string :token

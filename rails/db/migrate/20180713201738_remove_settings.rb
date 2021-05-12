@@ -1,4 +1,4 @@
-class RemoveSettings < ActiveRecord::Migration
+class RemoveSettings < ActiveRecord::Migration[5.1]
   def up
     remove_index :settings, [:scope_id  , :scope_type, :name]
     remove_index :settings, [:scope_type, :scope_id,   :name]

@@ -1,4 +1,4 @@
-class EmbeddableRefactoring < ActiveRecord::Migration
+class EmbeddableRefactoring < ActiveRecord::Migration[5.1]
   @@all_table_pairs = [
     ['assessment_target_unifying_themes',      'ri_gse_assessment_target_unifying_themes'          ],
     ['biologica_multiple_organisms',           'embeddable_biologica_multiple_organisms'           ],

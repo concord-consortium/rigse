@@ -1,4 +1,4 @@
-class AddResourceLicense < ActiveRecord::Migration
+class AddResourceLicense < ActiveRecord::Migration[5.1]
   def up
     add_column :external_activities, :license_code, :string
     add_column :interactives, :license_code, :string

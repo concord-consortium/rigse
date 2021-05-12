@@ -1,4 +1,4 @@
-class AddHasBeenReviewedToSavables < ActiveRecord::Migration
+class AddHasBeenReviewedToSavables < ActiveRecord::Migration[5.1]
   def up
       add_column :saveable_external_link_urls, :has_been_reviewed, :boolean, :default => false
       add_column :saveable_image_question_answers, :has_been_reviewed, :boolean, :default => false

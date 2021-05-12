@@ -1,4 +1,4 @@
-class RenameInvestigation < ActiveRecord::Migration
+class RenameInvestigation < ActiveRecord::Migration[5.1]
   def self.up
     rename_table :investigations, :activities
     rename_column :sections, :investigation_id, :activity_id

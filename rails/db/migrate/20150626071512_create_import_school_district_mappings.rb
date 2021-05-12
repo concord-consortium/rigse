@@ -1,4 +1,4 @@
-class CreateImportSchoolDistrictMappings < ActiveRecord::Migration
+class CreateImportSchoolDistrictMappings < ActiveRecord::Migration[5.1]
   def up
     create_table :import_school_district_mappings do |t|
       t.integer :district_id

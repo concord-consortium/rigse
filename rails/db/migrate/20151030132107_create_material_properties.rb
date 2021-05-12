@@ -1,4 +1,4 @@
-class CreateMaterialProperties < ActiveRecord::Migration
+class CreateMaterialProperties < ActiveRecord::Migration[5.1]
   class Admin::Tag < ApplicationRecord
     self.table_name = 'admin_tags'
   end

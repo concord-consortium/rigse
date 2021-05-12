@@ -1,4 +1,4 @@
-class JarsVersionedJnlps < ActiveRecord::Migration
+class JarsVersionedJnlps < ActiveRecord::Migration[5.1]
   def self.up
     create_table :jars_versioned_jnlps, :id => false do |t|
       t.integer :jar_id

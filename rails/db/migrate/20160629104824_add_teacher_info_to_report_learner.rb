@@ -1,4 +1,4 @@
-class AddTeacherInfoToReportLearner < ActiveRecord::Migration
+class AddTeacherInfoToReportLearner < ActiveRecord::Migration[5.1]
   module Report
   end
   module Portal

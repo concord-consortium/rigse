@@ -1,4 +1,4 @@
-class DeleteTeacherNotes < ActiveRecord::Migration
+class DeleteTeacherNotes < ActiveRecord::Migration[5.1]
   def self.up
     drop_table :teacher_notes
   end

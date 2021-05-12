@@ -1,4 +1,4 @@
-class OtmlFilesOtrunkViewEntries < ActiveRecord::Migration
+class OtmlFilesOtrunkViewEntries < ActiveRecord::Migration[5.1]
   def self.up
     create_table :otml_files_otrunk_view_entries, :id => false do |t|
       t.integer :otml_file_id

@@ -1,4 +1,4 @@
-class AddSecurityQuestions < ActiveRecord::Migration
+class AddSecurityQuestions < ActiveRecord::Migration[5.1]
   def self.up
     create_table :security_questions do |t|
       t.integer   :user_id, :null => false

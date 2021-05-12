@@ -1,4 +1,4 @@
-class CreateJoinTableCollaborationMemberships < ActiveRecord::Migration
+class CreateJoinTableCollaborationMemberships < ActiveRecord::Migration[5.1]
   def change
     create_table :collaboration_memberships do |t|
       t.integer :collaboration_id

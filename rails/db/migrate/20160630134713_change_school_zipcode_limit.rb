@@ -1,4 +1,4 @@
-class ChangeSchoolZipcodeLimit < ActiveRecord::Migration
+class ChangeSchoolZipcodeLimit < ActiveRecord::Migration[5.1]
   def up
     change_column :portal_schools, :zipcode, :string, :limit => 20
   end

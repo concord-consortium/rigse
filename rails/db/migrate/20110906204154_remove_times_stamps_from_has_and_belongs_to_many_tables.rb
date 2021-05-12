@@ -1,4 +1,4 @@
-class RemoveTimesStampsFromHasAndBelongsToManyTables < ActiveRecord::Migration
+class RemoveTimesStampsFromHasAndBelongsToManyTables < ActiveRecord::Migration[5.1]
   def self.up
     remove_column :embeddable_biologica_chromosome_zooms_organisms, :created_at
     remove_column :embeddable_biologica_chromosome_zooms_organisms, :updated_at

@@ -1,9 +1,6 @@
 # encoding: UTF-8
 class Investigation < ApplicationRecord
-  include Cohorts
-  include ResponseTypes
-  include Archiveable
-  include HasEmbeddables
+
   belongs_to :user
   has_many :activities, -> { order :position }, :dependent => :destroy do
     def student_only
@@ -49,6 +46,10 @@ class Investigation < ApplicationRecord
   acts_as_replicatable
 
   include Publishable
+  include HasEmbeddables
+  include ResponseTypes
+  include Cohorts
+  include Archiveable
 
   scope :assigned, -> { where('investigations.offerings_count > 0') }
 

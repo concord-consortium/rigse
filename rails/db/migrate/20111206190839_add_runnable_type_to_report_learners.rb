@@ -1,4 +1,4 @@
-class AddRunnableTypeToReportLearners < ActiveRecord::Migration
+class AddRunnableTypeToReportLearners < ActiveRecord::Migration[5.1]
   def self.up
     add_column :report_learners, :runnable_type, :string
   end

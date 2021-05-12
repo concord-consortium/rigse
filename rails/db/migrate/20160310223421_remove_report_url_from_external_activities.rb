@@ -1,4 +1,4 @@
-class RemoveReportUrlFromExternalActivities < ActiveRecord::Migration
+class RemoveReportUrlFromExternalActivities < ActiveRecord::Migration[5.1]
   def up
     remove_column :external_activities, :report_url
   end

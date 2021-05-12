@@ -1,4 +1,4 @@
-class AddMoreIndexes < ActiveRecord::Migration
+class AddMoreIndexes < ActiveRecord::Migration[5.1]
   def self.up
     add_index :embeddable_multiple_choice_choices, :multiple_choice_id
     add_index :saveable_open_response_answers, [:open_response_id, :position], :name => 'o_r_id_and_position_index'

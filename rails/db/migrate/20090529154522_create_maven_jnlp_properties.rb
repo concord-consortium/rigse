@@ -1,4 +1,4 @@
-class CreateMavenJnlpProperties < ActiveRecord::Migration
+class CreateMavenJnlpProperties < ActiveRecord::Migration[5.1]
   def self.up
     create_table :maven_jnlp_properties do |t|
       t.string :uuid

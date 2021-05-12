@@ -1,4 +1,4 @@
-class RedoExpectationToGradeSpanExp < ActiveRecord::Migration
+class RedoExpectationToGradeSpanExp < ActiveRecord::Migration[5.1]
   def self.up
     drop_table   :expectation_stems_grade_span_expectations
     create_table :expectation_stems_grade_span_expectations, :id => false do |t|

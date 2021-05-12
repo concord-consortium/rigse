@@ -1,4 +1,4 @@
-class CreateSiteNotices < ActiveRecord::Migration
+class CreateSiteNotices < ActiveRecord::Migration[5.1]
   def self.up
     create_table :site_notices do |t|
       t.text :notice_html

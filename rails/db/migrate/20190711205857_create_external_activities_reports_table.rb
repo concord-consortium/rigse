@@ -1,6 +1,6 @@
 
 
-class CreateExternalActivitiesReportsTable < ActiveRecord::Migration
+class CreateExternalActivitiesReportsTable < ActiveRecord::Migration[5.1]
   def up
     create_table :external_activity_reports, id: false do |t|
       t.references :external_activity

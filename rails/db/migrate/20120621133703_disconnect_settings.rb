@@ -1,4 +1,4 @@
-class DisconnectSettings < ActiveRecord::Migration
+class DisconnectSettings < ActiveRecord::Migration[5.1]
 
   # local model so this migration will always work
   class AdminProject < ApplicationRecord

@@ -1,4 +1,4 @@
-class MoveExternalReports < ActiveRecord::Migration
+class MoveExternalReports < ActiveRecord::Migration[5.1]
 
   class ExternalReport < ApplicationRecord
   end

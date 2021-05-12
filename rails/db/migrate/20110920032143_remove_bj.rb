@@ -1,4 +1,4 @@
-class RemoveBj < ActiveRecord::Migration
+class RemoveBj < ActiveRecord::Migration[5.1]
   def self.up
     drop_table :bj_config
     drop_table :bj_job

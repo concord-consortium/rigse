@@ -1,4 +1,4 @@
-class CreateDataservicePeriodicBundleContents < ActiveRecord::Migration
+class CreateDataservicePeriodicBundleContents < ActiveRecord::Migration[5.1]
   def self.up
     create_table :dataservice_periodic_bundle_contents do |t|
       t.integer :periodic_bundle_logger_id
