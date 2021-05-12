@@ -4,15 +4,15 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-gem 'rails', '5.0.7.2'
-gem 'actionmailer',     :require => false
-gem 'actionpack',       :require => false
-gem 'actionview',       :require => false
-gem 'activejob',        :require => false
-gem 'activemodel',      :require => false
-gem 'activerecord',     :require => false
-gem 'activesupport',    :require => false
-gem 'railties',         :require => false
+gem 'rails', '5.1.7'
+# gem 'actionmailer',     :require => false
+# gem 'actionpack',       :require => false
+# gem 'actionview',       :require => false
+# gem 'activejob',        :require => false
+# gem 'activemodel',      :require => false
+# gem 'activerecord',     :require => false
+# gem 'activesupport',    :require => false
+# gem 'railties',         :require => false
 
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
@@ -31,7 +31,7 @@ gem 'aws-sdk',              '~> 3'
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
-gem 'coffee-rails',         "~> 4.1.1"
+gem 'coffee-rails'
 # gem 'compass-blueprint'
 # gem 'compass-rails'
 # was sub-dependency of react-rails, needed in test setup code
@@ -41,11 +41,11 @@ gem 'default_value_for'
 gem 'delayed_job', '~> 4.1.1'
 gem 'delayed_job_active_record', '~> 4.1.0'
 gem 'delayed-web'
-gem 'devise', '4.0.0'
+gem 'devise'
 gem 'devise-encryptable'
-gem 'devise-token_authenticatable', '~> 0.3'
+gem 'devise-token_authenticatable'
 gem 'dynamic_form', '~> 1.1.4'
-gem 'exception_notification', '~> 2.5.2'
+gem 'exception_notification'
 gem 'font-awesome-rails'
 gem 'grit', '~> 2.4'
 gem 'haml', '~> 4.0'
@@ -55,17 +55,17 @@ gem 'json', '~> 1.8.6'
 gem 'jwt'
 gem 'jquery-fileupload-rails'
 gem 'mimemagic', '0.3.10'
-gem 'mysql2', '~> 0.3.16', platforms: [:ruby, :mingw]
+gem 'mysql2', platforms: [:ruby, :mingw]
 gem 'nested_form'
 gem 'net-sftp', '~> 2.0', require: 'net/sftp'
 gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
 gem 'nokogiri', '~> 1.8.0'
-gem 'oj', '~> 2.12.14'
+gem 'oj'
 gem 'omniauth'
 gem 'omniauth-google-oauth2' # For google login integration.
 gem 'omniauth-oauth' # For schoology integration.
 gem 'open4',                '~> 1.0'
-gem 'paperclip',            '~> 4'
+gem 'paperclip'
 gem 'pundit',               '~> 1'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
 gem 'rack-cors', require: 'rack/cors'
@@ -76,7 +76,7 @@ gem "rails-observers"
 gem 'rdoc',                 '~> 3.9.4'
 gem 'redcarpet',            '~> 2.1.1'
 gem 'RedCloth',             '~> 4.2.8'
-gem 'responders',           '~> 2.0'
+gem 'responders'
 gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
 gem 'rush',                 git: 'https://github.com/concord-consortium/rush.git'
@@ -91,6 +91,7 @@ gem 'test-unit',            '~> 3.0'
 gem 'tinymce-rails',        '~>3.5.6'  # RAILS-4-SPIKE GEMFILE version NOT pinned
 # gem 'turbo-sprockets-rails4'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'sprockets', '~> 3'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
 gem 'themes_on_rails'
@@ -105,7 +106,7 @@ gem 'yui-compressor'
 # as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
 # when compressing assets without a javascript runtime:
 group :production do
-  gem 'therubyracer',         '~>0.12.1'
+  gem 'therubyracer'
   gem 'unicorn'
 end
 
@@ -135,7 +136,7 @@ group :development do
   gem 'interactive_editor'
   gem 'lol_dba'
   gem 'rack-mini-profiler'
-  gem 'rake', '~> 0.9.2'
+  gem 'rake'
   gem 'rb-fchange', require: false
   gem 'rb-fsevent', require: false
   gem 'rb-inotify', require: false

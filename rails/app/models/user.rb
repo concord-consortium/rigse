@@ -34,6 +34,9 @@ class User < ApplicationRecord
   has_many :external_activities
   has_many :security_questions
 
+  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
+  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
+
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
   has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
 
@@ -150,8 +153,7 @@ class User < ApplicationRecord
   # Relationships
   has_and_belongs_to_many :roles, -> { distinct }, :join_table => "roles_users"
 
-  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
-  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
+
   has_one :imported_user, :dependent => :destroy, :class_name => "Import::ImportedUser", :inverse_of => :user
 
   attr_accessor :updating_password
