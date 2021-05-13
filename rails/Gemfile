@@ -17,7 +17,7 @@ gem 'rails', '5.1.7'
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
 gem "activerecord-session_store"
-gem 'acts-as-taggable-on', '~> 4'
+gem 'acts-as-taggable-on'
 gem 'acts_as_list'
 gem 'appsignal'
 gem 'arrayfields'
