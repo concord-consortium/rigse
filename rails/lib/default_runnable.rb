@@ -38,7 +38,7 @@ class DefaultRunnable
         investigation.activities << activity
         section1 = DefaultRunnable.add_section_to_activity(activity, "Collect Data ...", "Collect Data using probes.")
         page1, open_response = DefaultRunnable.add_page_to_section(section1, "Find the hottest",
-          '<p>Find the hottest thing in the room with the temperature probe.</p>',
+          '<p>Find the hottest thing in the room with the temperature probe.</p>'.html_safe,
           "Student's explore their environment with a tempemerature probe.")
         investigation.deep_set_user(user)
       end

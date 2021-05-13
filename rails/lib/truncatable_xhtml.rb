@@ -85,7 +85,7 @@ module TruncatableXhtml
   DEFAULT_REPLACEABLES= {
     /\s+style\s?=\s?"(.*?)"/ => "",
     /(&nbsp;)+/ => " ",
-    /<br>/i => "<br/>"
+    /<br>/i => "<br/>".html_safe
   }
 
   ## for ITSI carolyn might want everything

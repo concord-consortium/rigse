@@ -27,16 +27,16 @@ class SecurityQuestion < ApplicationRecord
     def select_options
       options = []
       if self.question && !self.question.empty?
-        options << "<option value=\"current\" selected>#{self.question}</option>" unless self.id.nil?
+        options << "<option value=\"current\" selected>#{self.question}</option>".html_safe unless self.id.nil?
       else
-        options << "<option value=\"\">- Please select a question</option>"
+        options << "<option value=\"\">- Please select a question</option>".html_safe
       end
 
       SecurityQuestion::QUESTIONS.each_with_index do |q, i|
         if q != self.question
-          options << "<option value=\"#{i}\">#{q}</option>"
+          options << "<option value=\"#{i}\">#{q}</option>".html_safe
         elsif self.id.nil?
-          options << "<option value=\"#{i}\" selected>#{q}</option>"
+          options << "<option value=\"#{i}\" selected>#{q}</option>".html_safe
         end
       end
 
