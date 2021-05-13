@@ -1,6 +1,6 @@
 class LearnerProcessingEvent < ApplicationRecord
 
-  belongs_to :learner, class_name: Portal::Learner
+  belongs_to :learner, class_name: "Portal::Learner"
 
   # Humanize duration seconds, similar to ActiveSupport's distance_of_time_in_words
   def self.humanize(secs)
