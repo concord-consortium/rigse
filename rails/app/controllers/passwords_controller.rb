@@ -59,7 +59,7 @@ class PasswordsController < ApplicationController
 
       if @user_reset_password.id == current_visitor.id
         #re-sign-in user
-        sign_in @user_reset_password, :bypass => true
+        bypass_sign_in @user_reset_password
       end
       redirect_to(session[:return_to] || root_path)
     else
