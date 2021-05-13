@@ -9,7 +9,7 @@ class Dataservice::ExternalActivityDataController < ApplicationController
         Delayed::Job.enqueue Dataservice::V1::ProcessExternalActivityDataJob.new(learner.id, request.body.read, Time.now)
         head :created
       else
-        render :status => 501, :text  => "Can't find protocol for version: #{version}"
+        render :status => 501, :plain  => "Can't find protocol for version: #{version}"
     end
   end
 
