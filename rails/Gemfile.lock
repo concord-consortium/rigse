@@ -77,8 +77,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    acts-as-taggable-on (4.0.0)
-      activerecord (>= 4.0)
+    acts-as-taggable-on (7.0.0)
+      activerecord (>= 5.0, < 6.2)
     acts_as_list (1.0.4)
       activerecord (>= 4.2)
     addressable (2.5.2)
@@ -837,7 +837,8 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    haml (4.0.7)
+    haml (5.2.1)
+      temple (>= 0.8.0)
       tilt
     hashdiff (0.3.7)
     hashie (2.0.3)
@@ -1111,6 +1112,7 @@ GEM
       sunspot (= 2.5.0)
     sunspot_solr (2.5.0)
     syntax (1.0.0)
+    temple (0.8.2)
     terrapin (0.6.0)
       climate_control (>= 0.0.3, < 1.0)
     test-unit (3.0.8)
@@ -1122,7 +1124,7 @@ GEM
       ref
     thor (1.1.0)
     thread_safe (0.3.6)
-    tilt (1.4.1)
+    tilt (2.0.10)
     tinymce-rails (3.5.11.1)
       railties (>= 3.1.1)
     tzinfo (1.2.9)
@@ -1176,7 +1178,7 @@ DEPENDENCIES
   activemodel-serializers-xml
   activerecord-import
   activerecord-session_store
-  acts-as-taggable-on (~> 4)
+  acts-as-taggable-on
   acts_as_list
   appsignal
   arrayfields
@@ -1215,7 +1217,7 @@ DEPENDENCIES
   guard
   guard-cucumber
   guard-rspec
-  haml (~> 4.0)
+  haml
   highline
   hirb
   httparty

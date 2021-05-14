@@ -54,11 +54,11 @@ class Dataservice::Blob < ApplicationRecord
   def html_content(path_to_self)
     case self.mimetype
     when /image/
-      return "<img src='#{path_to_self}' />"
+      return "<img src='#{path_to_self}' />".html_safe
     when "application/octet-stream"
-      return "<div>Unknown binary content</div>"
+      return "<div>Unknown binary content</div>".html_safe
     end
-    return "<div>Unknown binary content</div>"
+    return "<div>Unknown binary content</div>".html_safe
   end
 
   def content=(new_content)

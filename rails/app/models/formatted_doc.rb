@@ -2,7 +2,7 @@ class FormattedDoc
   
   def initialize(path)
     @document_path = File.join(::Rails.root.to_s, path)
-    @html = "<p>Technical document: <i><b>#{File.basename(@document_path)}</i></b> not found</p>"
+    @html = "<p>Technical document: <i><b>#{File.basename(@document_path)}</i></b> not found</p>".html_safe
     if File.exists?(@document_path)
       @last_changed = File.ctime(@document_path)
     end
@@ -28,7 +28,7 @@ private
       when 'md'
         @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new).render(File.read(@document_path))
       else
-        @html = "<p>Document: <i><b>#{File.basename(@document_path)}</i></b> not displayable.</p>"
+        @html = "<p>Document: <i><b>#{File.basename(@document_path)}</i></b> not displayable.</p>".html_safe
       end
     end
   end

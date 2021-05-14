@@ -335,9 +335,9 @@ module ApplicationHelper
     title = name_for_component(component, options)
     id = dom_id_for(component, options[:id_prefix], :title)
     if ::Rails.env == "development" || current_visitor.has_role?('admin')
-      "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span><span class='dev_note'> #{link_to(component.id, component)}</span>".html_safe
     else
-      "<span id=#{id} class='component_title'>#{title}</span>"
+      "<span id=#{id} class='component_title'>#{title}</span>".html_safe
     end
   end
 
@@ -470,9 +470,9 @@ module ApplicationHelper
 
   def tab_for(component, options={})
     if(options[:active])
-      "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>"
+      "<li id=#{dom_id_for(component, :tab)} class='tab active'>#{link_to component.name, component, :class => 'active'}</li>".html_safe
     else
-      "<li id=#{dom_id_for(component, :tab)} class='tab'>#{link_to component.name, component}</li>"
+      "<li id=#{dom_id_for(component, :tab)} class='tab'>#{link_to component.name, component}</li>".html_safe
     end
   end
 
