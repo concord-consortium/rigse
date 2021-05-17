@@ -19,12 +19,12 @@ RSpec.describe Admin::AuthoringSitesController, type: :controller do
   before(:each) do
     sign_in admin_user
   end
-  
+
   describe "GET new" do
     it "renders the new form" do
       get :new
       expect(response).to render_template("new")
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

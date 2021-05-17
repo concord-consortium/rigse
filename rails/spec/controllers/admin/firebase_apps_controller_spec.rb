@@ -47,7 +47,7 @@ gpZlAvdO9CFaBcBKsAcJnNDQBY2lhFsSeqYs78PoW7Zz
     it "renders the new form" do
       get :new
       expect(response).to render_template("new")
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

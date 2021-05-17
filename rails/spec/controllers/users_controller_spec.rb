@@ -142,7 +142,7 @@ describe UsersController do
       expect do
         create_user(:login => nil)
         expect(assigns[:user].errors[:login]).not_to be_nil
-        expect(response).to be_success
+        expect(response).to be_successful
       end.not_to change(User, :count)
     end
 
@@ -151,7 +151,7 @@ describe UsersController do
       expect do
         create_user(:password => nil)
         expect(assigns[:user].errors[:password]).not_to be_nil
-        expect(response).to be_success
+        expect(response).to be_successful
       end.not_to change(User, :count)
     end
 
@@ -160,7 +160,7 @@ describe UsersController do
       expect do
         create_user(:password_confirmation => nil)
         expect(assigns[:user].errors[:password_confirmation]).not_to be_nil
-        expect(response).to be_success
+        expect(response).to be_successful
       end.not_to change(User, :count)
     end
 
@@ -169,7 +169,7 @@ describe UsersController do
       expect do
         create_user(:email => nil)
         expect(assigns[:user].errors[:email]).not_to be_nil
-        expect(response).to be_success
+        expect(response).to be_successful
       end.not_to change(User, :count)
     end
 

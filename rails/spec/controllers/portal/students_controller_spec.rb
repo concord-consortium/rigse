@@ -188,7 +188,7 @@ describe Portal::StudentsController do
       login_admin
       get :show, params: { id: student.id }
       expect(response).not_to redirect_to(:home)
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.status).to eq(200)
     end
   end
