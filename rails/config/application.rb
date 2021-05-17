@@ -185,6 +185,14 @@ module RailsPortal
     # See https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#error-handling-in-transaction-callbacks
     # RAILS 5 UPGRADE: deprecated
     # config.active_record.raise_in_transactional_callbacks = true
+
+    # RAILS 5.2 UPGRADE: DISABLING THIS NEW SETTING FOR NOW WHILE VALIDATING DEPLOY
+    #
+    # To improve security, Rails now embeds the expiry information also in encrypted or signed cookies value.
+    # This new embed information make those cookies incompatible with versions of Rails older than 5.2.
+    # If you require your cookies to be read by 5.1 and older, or you are still validating your 5.2 deploy
+    # and want to allow you to rollback set Rails.application.config.action_dispatch.use_authenticated_cookie_encryption to false.
+    config.action_dispatch.use_authenticated_cookie_encryption = false
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')
