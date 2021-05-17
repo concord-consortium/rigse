@@ -4,15 +4,7 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-gem 'rails', '5.1.7'
-# gem 'actionmailer',     :require => false
-# gem 'actionpack',       :require => false
-# gem 'actionview',       :require => false
-# gem 'activejob',        :require => false
-# gem 'activemodel',      :require => false
-# gem 'activerecord',     :require => false
-# gem 'activesupport',    :require => false
-# gem 'railties',         :require => false
+gem 'rails', '5.2.6'
 
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
