@@ -145,7 +145,7 @@ describe ExternalActivitiesController do
     context "when no version information is in the request" do
       describe "when no existing external_activity exists" do
         it "should create a new activity" do
-          raw_post :publish, {}, activity_hash.to_json
+          post :publish, params: {}, body: activity_hash.to_json
           created = assigns(:external_activity)
           expect(created).not_to be_nil
           expect(created.name).to eq(name)
@@ -157,7 +157,7 @@ describe ExternalActivitiesController do
       describe "when an existing external_activity does exist" do
         it "should update the existing activity" do
           existing
-          raw_post :publish, {}, activity_hash.to_json
+          post :publish, params: {}, body: activity_hash.to_json
           created = assigns(:external_activity)
           expect(created).not_to be_nil
           expect(created.name).to eq(name)
@@ -183,7 +183,7 @@ describe ExternalActivitiesController do
 
       describe "when there is no existing external_activity" do
         it "should create a new activity" do
-          raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
+          post :publish, params: { :version => 'v2' }, body: activity2_hash.to_json
           created = assigns(:external_activity)
           expect(created).not_to be_nil
           expect(created.name).to eq(name)
@@ -196,7 +196,7 @@ describe ExternalActivitiesController do
       describe "when there is already an existing external_activity" do
         it "should update the existing activity" do
           existing
-          raw_post :publish, { :version => 'v2' }, activity2_hash.to_json
+          post :publish, params: { :version => 'v2' }, body: activity2_hash.to_json
           created = assigns(:external_activity)
           expect(created).not_to be_nil
           expect(created.name).to eq(name)
@@ -213,7 +213,7 @@ describe ExternalActivitiesController do
       describe "when no external_activity exists for the sequence" do
         it 'should create a new external activity with an investigation template' do
           sequence_hash['url'] = 'http://activity.org/sequence/2'
-          raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
+          post :publish, params: { :version => 'v2' }, body: sequence_hash.to_json
           created = assigns(:external_activity)
           expect(created).not_to be_nil
           expect(created.name).to eq(sequence_name)
@@ -226,7 +226,7 @@ describe ExternalActivitiesController do
       describe "when an external_activity already exists for the sequence" do
         it 'should update the existing external_activity' do
           existing_sequence
-          raw_post :publish, { :version => 'v2' }, sequence_hash.to_json
+          post :publish, params: { :version => 'v2' }, body: sequence_hash.to_json
           updated = assigns(:external_activity)
           expect(updated).not_to be_nil
           expect(updated.name).to eq(sequence_name)
