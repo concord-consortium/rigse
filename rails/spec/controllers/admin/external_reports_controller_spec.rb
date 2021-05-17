@@ -24,7 +24,7 @@ RSpec.describe Admin::ExternalReportsController, type: :controller do
     it "renders the new form" do
       get :new
       expect(response).to render_template("new")
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 

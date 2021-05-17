@@ -52,7 +52,7 @@ describe API::V1::SiteNoticesController do
       dismissed_notice = Admin::SiteNoticeUser.find_by_notice_id_and_user_id(@notice.id, @teacher_user.id)
       expect(dismissed_notice).not_to be_nil
       assert(dismissed_notice.notice_dismissed)
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
   describe "toggle_notice_display" do
@@ -65,13 +65,13 @@ describe API::V1::SiteNoticesController do
       toggle_notice_status = Admin::NoticeUserDisplayStatus.find_by_user_id(@teacher_user.id)
       expect(toggle_notice_status).not_to be_nil
       assert(toggle_notice_status.collapsed_status)
-      expect(response).to be_success
+      expect(response).to be_successful
 
       post :toggle_notice_display, xhr: true
       toggle_notice_status.reload
       expect(toggle_notice_status).not_to be_nil
       expect(toggle_notice_status.collapsed_status).to eq(false)
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
   describe "Update a notice after saving it" do
@@ -105,7 +105,7 @@ describe API::V1::SiteNoticesController do
       post :remove_notice, params: @params, xhr: true
       notice = Admin::SiteNotice.find_by_id(@params[:id])
       expect(notice).to be_nil
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end

@@ -70,7 +70,7 @@ describe Portal::ClazzesController do
       sign_in @unauthorized_teacher_user
       get :show, params: { :id => @mock_clazz.id }
 
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       expect(response).to redirect_to("/recent_activity")
     end
 
@@ -78,7 +78,7 @@ describe Portal::ClazzesController do
       sign_in @authorized_student_user
       get :show, params: { :id => @mock_clazz.id }
 
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.body).to have_content("Random Test Class")
     end
   end # end describe GET show
@@ -91,7 +91,7 @@ describe Portal::ClazzesController do
 
       post :edit, params: {id: @mock_clazz.id}, xhr: true
 
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
 
     it "should not allow me to modify the requested class's school" do
@@ -489,13 +489,13 @@ describe Portal::ClazzesController do
     it "should not allow access for anonymous user" do
       sign_out :user
       get :fullstatus, params: @params
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
     it "should retrieve the class when user is not anonymous user" do
       sign_in @authorized_teacher_user
       get :fullstatus, params: @params
       expect(assigns[:portal_clazz]).to eq(@mock_clazz)
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template("fullstatus")
     end
   end

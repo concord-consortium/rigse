@@ -65,7 +65,7 @@ describe HomeController do
         :home_page_preview_content =>"<b>Home page content.</b>",
       }
       post :preview_home_page, params: @post_params
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response.body).to include(@post_params[:home_page_preview_content])
     end
   end
@@ -79,30 +79,30 @@ describe HomeController do
     # note: in the tests below the "slug" param is always optional
     it "should return 200 when a valid activity is used" do
       get :stem_resources, params: { :id => activity.id }
-      expect(response).to be_success
+      expect(response).to be_successful
       get :stem_resources, params: { :id => activity.id, :slug => "test" }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should return 404 when an unknown activity is used" do
       get :stem_resources, params: { :id => 999999999999999 }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       get :stem_resources, params: { :id => 999999999999999, :slug => "test" }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
 
     it "should return 200 when a valid sequence is used" do
       get :stem_resources, params: { :id => sequence.id }
-      expect(response).to be_success
+      expect(response).to be_successful
       get :stem_resources, params: { :id => sequence.id, :slug => "test" }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should return 404 when an unknown sequence is used" do
       get :stem_resources, params: { :id => 999999999999999 }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       get :stem_resources, params: { :id => 999999999999999, :slug => "test" }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
 
     it "should return 200 when a valid interactive is used" do
@@ -114,9 +114,9 @@ describe HomeController do
 
     it "should return 404 when an unknown interactive is used" do
       get :stem_resources, params: { :type => "interactive", :id_or_filter_value => 999999999999999 }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
       get :stem_resources, params: { :type => "interactive", :id_or_filter_value => 999999999999999, :slug => "test" }
-      expect(response).not_to be_success
+      expect(response).not_to be_successful
     end
 
     #
@@ -124,9 +124,9 @@ describe HomeController do
     #
     it "should return 200 when an unknown type is used" do
       get :stem_resources, params: { :type => "unknown-type", :id_or_filter_value => 1 }
-      expect(response).to be_success
+      expect(response).to be_successful
       get :stem_resources, params: { :type => "unknown-type", :id_or_filter_value => 1, :slug => "test" }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "should include the required Javascript when a valid activity is used" do

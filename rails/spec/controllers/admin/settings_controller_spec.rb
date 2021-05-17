@@ -41,7 +41,7 @@ describe Admin::SettingsController do
 
       get :index
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       expect(assigns[:admin_settings].size).to be(1)
       expect(assigns[:admin_settings]).to include(settings)
@@ -100,7 +100,7 @@ describe Admin::SettingsController do
 
       get :edit, params: { :id => "37" }
 
-      expect(response).to be_success
+      expect(response).to be_successful
 
       expect(response.body).to have_selector("*[name='admin_settings[home_page_content]']")
 
