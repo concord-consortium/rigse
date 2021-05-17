@@ -43,6 +43,7 @@ module RailsPortal
 
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
+    config.autoload_paths += Dir["#{config.root}/app/helpers/**/"] # include app/helpers and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
 
