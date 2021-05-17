@@ -23,6 +23,7 @@ gem 'aws-sdk',              '~> 3'
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
+gem 'bootsnap'
 gem 'coffee-rails'
 # gem 'compass-blueprint'
 # gem 'compass-rails'

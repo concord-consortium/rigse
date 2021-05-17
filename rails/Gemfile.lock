@@ -698,6 +698,8 @@ GEM
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
+    bootsnap (1.7.5)
+      msgpack (~> 1.0)
     builder (3.2.4)
     bullet (6.1.4)
       activesupport (>= 3.0.0)
@@ -908,6 +910,7 @@ GEM
     mini_mime (1.1.0)
     mini_portile2 (2.3.0)
     minitest (5.14.4)
+    msgpack (1.4.2)
     multi_json (1.15.0)
     multi_test (0.1.2)
     multi_xml (0.5.1)
@@ -1193,6 +1196,7 @@ DEPENDENCIES
   aws-sdk-v1
   axlsx (> 2.5)
   better_errors (~> 1.1.0)
+  bootsnap
   bullet
   capybara
   capybara-mechanize
