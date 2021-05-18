@@ -1,3 +1,5 @@
+require_relative "../../lib/log_config"
+
 RailsPortal::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
