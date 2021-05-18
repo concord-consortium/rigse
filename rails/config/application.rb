@@ -187,13 +187,22 @@ module RailsPortal
     # RAILS 5 UPGRADE: deprecated
     # config.active_record.raise_in_transactional_callbacks = true
 
-    # RAILS 5.2 UPGRADE: DISABLING THIS NEW SETTING FOR NOW WHILE VALIDATING DEPLOY
+    # RAILS5.2 UPGRADE: DISABLING THIS NEW SETTING FOR NOW WHILE VALIDATING DEPLOY
     #
     # To improve security, Rails now embeds the expiry information also in encrypted or signed cookies value.
     # This new embed information make those cookies incompatible with versions of Rails older than 5.2.
     # If you require your cookies to be read by 5.1 and older, or you are still validating your 5.2 deploy
     # and want to allow you to rollback set Rails.application.config.action_dispatch.use_authenticated_cookie_encryption to false.
     config.action_dispatch.use_authenticated_cookie_encryption = false
+
+    # RAILS6.0 UPGRADE: DISABLING THIS NEW SETTING FOR NOW WHILE VALIDATING DEPLOY
+    #
+    # To improve security, Rails embeds the purpose and expiry metadata inside encrypted or signed cookies value.
+    # This new embed metadata make those cookies incompatible with versions of Rails older than 6.0.
+    # If you require your cookies to be read by Rails 5.2 and older, or you are still validating your 6.0 deploy and want to be able
+    # to rollback set Rails.application.config.action_dispatch.use_cookies_with_metadata to false.
+    # Rails can then thwart attacks that attempt to copy the signed/encrypted value of a cookie and use it as the value of another cookie.
+    config.action_dispatch.use_cookies_with_metadata = false
 
     # Allow requests from any domain (skips DNS rebinding attack guards)
     config.hosts = nil
