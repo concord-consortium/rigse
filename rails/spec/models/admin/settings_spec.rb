@@ -139,8 +139,8 @@ describe Admin::Settings do
   end
 
   # TODO: auto-generated
-  describe '#update_attributes' do
-    xit 'update_attributes' do
+  describe '#update' do
+    xit 'update' do
       settings = described_class.new
       hashy = double('hashy')
       result = settings.update(hashy)

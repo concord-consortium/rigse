@@ -154,7 +154,7 @@ describe Admin::ClientsController do
     end
 
     describe "PUT update" do
-      let(:stubs) {{ update_attributes: true }}
+      let(:stubs) {{ update: true }}
       it "updates the model, redirects to index" do
         expect(Client).to receive(:find).and_return(mock_client)
         put :update, params: { :id => client_id, :client => {:params => 'params'} }

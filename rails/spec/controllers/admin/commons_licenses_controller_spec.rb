@@ -72,7 +72,7 @@ RSpec.describe Admin::CommonsLicensesController, type: :controller do
 
   # TODO: auto-generated
   describe '#update' do
-    let(:stubs) {{update_attributes: true}}
+    let(:stubs) {{update: true}}
     it "updates the model, redirects to index" do
       expect(data).to receive(:find).and_return(mock_content)
       put :update, params: {:code => mock_content_code, params_key => {:params => 'params'}}

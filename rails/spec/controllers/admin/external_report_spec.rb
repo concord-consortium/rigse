@@ -154,7 +154,7 @@ describe Admin::ExternalReportsController do
     end
 
     describe "PUT update" do
-      let(:stubs) {{ update_attributes: true }}
+      let(:stubs) {{ update: true }}
       it "updates the model, redirects to index" do
         expect(ExternalReport).to receive(:find).and_return(mock_report)
         put :update, params: { :id => report_id, :external_report => {:params => 'params'} }

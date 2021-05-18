@@ -58,7 +58,7 @@ RSpec.describe Admin::ToolsController, type: :controller do
   end
 
   describe '#update' do
-    let(:stubs) {{update_attributes: true}}
+    let(:stubs) {{update: true}}
     it "updates the model, redirects to index" do
       expect(Tool).to receive(:find).and_return(mock_content)
       put :update, params: { :id => mock_content_id, params_key => {:params => 'params'} }
