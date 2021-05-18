@@ -8,7 +8,7 @@ Parameters:
   JwtHmacSecret:
     Type: String
     Description: Secret to verify request
-    # Default: [for development, the JwtHmacSecret can be pasted here]
+    # Default: [for development, the JwtHmacSecret can be pasted here, BUT SHOULD NEVER BE COMMITTED]
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
