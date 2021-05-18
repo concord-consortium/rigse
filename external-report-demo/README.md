@@ -60,6 +60,6 @@ This key can be found in AWS -> Cloud Formation -> Stacks -> [Stack name, e.g. l
 
 During the guided deployment, you will be asked if you want to paste in this key. You can do so, but be aware that if you tell the guided deployment to write the configs to a .toml file, it will add this key, so don't commit it.
 
-You can also add or modify this parameter after deployment by finding the function in AWS -> Lambda -> Functions and adding it to Configuration -> Environment Variables.
+You can also add or modify this parameter after deployment by finding the Cloud Formation stack for this report (AWS -> Cloud Formation -> Stacks -> [Stack name, e.g. report-service-demo-report] -> Parameters) and pasting it there.
 
 For local testing, you can add the secret to `template.yml` so long as it is not committed.
