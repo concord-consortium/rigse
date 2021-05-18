@@ -10,14 +10,14 @@ class Dataservice::ConsoleContentsMetalController < ActionController::Metal
       digest = Digest::MD5.hexdigest(body)
 
       self.status = 201
-      self.content_type = 'text/xml'
+      self.media_type = 'text/xml'
       self.response_body = ''
       self.headers['Last-Modified'] = console_content.created_at.httpdate
       self.headers['Content-Length'] = '0'
       self.headers['Content-MD5'] = digest
     else
       self.status = 404
-      self.content_type = 'text/html'
+      self.media_type = 'text/html'
       self.response_body = 'Not Found'
     end
   end

@@ -11,11 +11,11 @@ class Dataservice::PeriodicBundleLoggersMetalController < ActionController::Meta
         pbl.learner.bundle_logger.end_bundle( { :body => "" } )
       end
       self.status = 201
-      self.content_type = 'text/xml'
+      self.media_type = 'text/xml'
       self.response_body = '<ok/>'
     else
       self.status = 404
-      self.content_type = 'text/html'
+      self.media_type = 'text/html'
       self.response_body = 'Not Found'
     end
   end

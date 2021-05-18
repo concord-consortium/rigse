@@ -84,7 +84,7 @@ class Dataservice::Blob < ApplicationRecord
     return if url.blank?
     response = HTTParty.get(url)
     if response.code.equal?(200)
-      self.mimetype = response.content_type
+      self.mimetype = response.media_type
       self.content  = response.body
     end
   end
