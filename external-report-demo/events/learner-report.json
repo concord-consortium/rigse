@@ -1,0 +1,57 @@
+{
+  "body": "allowDebug=1&json=%7B%22type%22%3A%22learners%22%2C%22version%22%3A%221.1%22%2C%22learners%22%3A%5B%7B%22run_remote_endpoint%22%3A%22https%3A%2F%2Flearn.staging.concord.org%2Fdataservice%2Fexternal_activity_data%2Fbcae98fe-b30a-4ddc-a451-91b3a9fcf9c5%22%2C%22class_id%22%3A8%2C%22runnable_url%22%3A%22https%3A%2F%2Fauthoring.staging.concord.org%2Factivities%2F20648%22%7D%2C%7B%22run_remote_endpoint%22%3A%22https%3A%2F%2Flearn.staging.concord.org%2Fdataservice%2Fexternal_activity_data%2F033e70fd-eb4b-4d86-9db7-785b84c175a6%22%2C%22class_id%22%3A8%2C%22runnable_url%22%3A%22https%3A%2F%2Fauthoring.staging.concord.org%2Factivities%2F20648%22%7D%5D%2C%22user%22%3A%7B%22id%22%3A%22https%3A%2F%2Flearn-report.staging.concord.org%2Fusers%2F66%22%2C%22email%22%3A%22sfentress%40concord.org%22%7D%7D&signature=abd2b97c013890c966caee03e4739d0f397a30443912551eb4f9b33866c68456",
+  "resource": "/{proxy+}",
+  "path": "/path/to/resource",
+  "httpMethod": "POST",
+  "isBase64Encoded": false,
+  "queryStringParameters": {},
+  "pathParameters": {
+    "proxy": "/path/to/resource"
+  },
+  "headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Encoding": "gzip, deflate, sdch",
+    "Accept-Language": "en-US,en;q=0.8",
+    "Cache-Control": "max-age=0",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Custom User Agent String",
+    "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
+    "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "resourceId": "123456",
+    "stage": "prod",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "requestTime": "09/Apr/2015:12:34:56 +0000",
+    "requestTimeEpoch": 1428582896000,
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "accessKey": null,
+      "sourceIp": "127.0.0.1",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "Custom User Agent String",
+      "user": null
+    },
+    "path": "/prod/path/to/resource",
+    "resourcePath": "/{proxy+}",
+    "httpMethod": "POST",
+    "apiId": "1234567890",
+    "protocol": "HTTP/1.1"
+  }
+}
