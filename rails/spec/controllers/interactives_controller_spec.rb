@@ -147,7 +147,7 @@ describe InteractivesController do
     it "should export a json file" do
       get :export_model_library
       expect(response.header["Content-Type"]).to eq("application/json")
-      expect(response.header["Content-Disposition"]).to eq("attachment; filename=\"portal_interactives_library.json\"")
+      expect(response.header["Content-Disposition"]).to eq("attachment; filename=\"portal_interactives_library.json\"; filename*=UTF-8''portal_interactives_library.json")
     end
   end
 

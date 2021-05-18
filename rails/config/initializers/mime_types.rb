@@ -8,10 +8,9 @@ Mime::Type.register "application/x-java-jnlp-file", :jnlp
 Mime::Type.register "text/bundle", :bundle
 Mime::Type.register "text/bundle", :config
 
-# RAILS6 UPGRADE: empty mime types now throw an error
-# Mime::Type.register "", :run_html
-# Mime::Type.register "", :run_resource_html
-# Mime::Type.register "", :run_sparks_html
+Mime::Type.register "text/html", :run_html
+Mime::Type.register "text/html", :run_resource_html
+Mime::Type.register "text/html", :run_sparks_html
 
 # for blobs
 Mime::Type.register "application/octet-stream", :blob

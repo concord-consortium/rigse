@@ -18,7 +18,9 @@ WebMock.disable_net_connect!(allow_localhost: true, :allow =>
                                 [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
                                     'host.docker.internal:9515',
-                                    'chromedriver.storage.googleapis.com' ]
+                                    'chromedriver.storage.googleapis.com',
+                                    'collector.newrelic.com'
+                                ]
                             )
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
@@ -64,7 +66,7 @@ class ActiveRecord::Base
   end
 
   def self.current_database_configuration_name
-    configurations.find { |_k, v| v['database'] == connection.current_database }[0]
+    configurations.to_h.find { |_k, v| v['database'] == connection.current_database }[0]
   end
 end
 ActiveRecord::Base.set_shared_connection
