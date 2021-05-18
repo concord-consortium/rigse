@@ -43,6 +43,7 @@ module RailsPortal
 
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
+    config.autoload_paths += Dir["#{config.root}/app/helpers/**/"] # include app/helpers and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
 
@@ -193,6 +194,9 @@ module RailsPortal
     # If you require your cookies to be read by 5.1 and older, or you are still validating your 5.2 deploy
     # and want to allow you to rollback set Rails.application.config.action_dispatch.use_authenticated_cookie_encryption to false.
     config.action_dispatch.use_authenticated_cookie_encryption = false
+
+    # Allow requests from any domain (skips DNS rebinding attack guards)
+    config.hosts = nil
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

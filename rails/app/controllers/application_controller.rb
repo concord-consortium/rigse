@@ -37,7 +37,8 @@ class ApplicationController < ActionController::Base
     raise ActionController::RoutingError.new('Not Found')
   end
 
-  theme :get_theme
+  # RAILS6 disabled for now
+  # theme :get_theme
   layout 'application'
   def test
     render :html => mce_in_place_tag(Page.create,'description','none')

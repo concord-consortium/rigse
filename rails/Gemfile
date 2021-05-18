@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-gem 'rails', '5.2.6'
+gem 'rails', '6.0.3.7'
 
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
@@ -23,7 +23,7 @@ gem 'aws-sdk',              '~> 3'
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
-gem 'bootsnap'
+gem 'bootsnap',     '1.4.4' # pinned to fix upgrade to Rails 6 on Ruby 2.5
 gem 'coffee-rails'
 # gem 'compass-blueprint'
 # gem 'compass-rails'
@@ -52,7 +52,7 @@ gem 'mimemagic', '0.3.10'
 gem 'mysql2', platforms: [:ruby, :mingw]
 gem 'nested_form'
 gem 'net-sftp', '~> 2.0', require: 'net/sftp'
-gem 'newrelic_rpm', '~> 4.4', '>= 4.4.0.336'
+gem 'newrelic_rpm'
 gem 'nokogiri', '~> 1.8.0'
 gem 'oj'
 gem 'omniauth'
@@ -88,7 +88,7 @@ gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'sprockets', '~> 3'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
-gem 'themes_on_rails'
+# gem 'themes_on_rails'  # RAILS6 disabled for now
 gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
