@@ -165,6 +165,11 @@ module RailsPortal
       jquery.placeholder.js
     )
 
+    # RAILS6 - remove this with fix for themes_for_rails
+    config.assets.precompile += %w(
+      learn/all.css
+    )
+
     # pre-compile any fonts in the assets/ directory as well
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
 
