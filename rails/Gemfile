@@ -88,7 +88,7 @@ gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'sprockets', '~> 3'
 # this customization is so the digests or fingerprints are correctly added to
 # the assets even when they are from a theme.
-gem 'themes_on_rails'
+# gem 'themes_on_rails'  # RAILS6 disabled for now
 gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
