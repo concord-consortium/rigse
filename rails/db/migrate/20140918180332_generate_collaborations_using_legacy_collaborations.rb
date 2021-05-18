@@ -54,7 +54,7 @@ class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration[
        owner_id = bundle.bundle_logger.learner.student.id
        collaboration = Portal::Collaboration.create(:owner_id => owner_id)
        collaboration.students = collaborators
-       bundle.update_attributes!(:collaboration_id => collaboration.id)
+       bundle.update!(:collaboration_id => collaboration.id)
     end
   end
 

@@ -143,7 +143,7 @@ describe Admin::Settings do
     xit 'update_attributes' do
       settings = described_class.new
       hashy = double('hashy')
-      result = settings.update_attributes(hashy)
+      result = settings.update(hashy)
 
       expect(result).not_to be_nil
     end

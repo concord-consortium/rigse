@@ -193,7 +193,7 @@ class Portal::StudentsController < ApplicationController
   #   # authorize @student
   #   @portal_student = Portal::Student.find(params[:id])
   #   respond_to do |format|
-  #     if @portal_student.update_attributes(portal_student_strong_params(params[:portal_student]))
+  #     if @portal_student.update(portal_student_strong_params(params[:portal_student]))
   #       flash['notice'] = 'Portal::Student was successfully updated.'
   #       format.html { redirect_to(@portal_student) }
   #       format.xml  { head :ok }
@@ -278,7 +278,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student = Portal::Student.find(params[:id])
     @portal_student.user.asked_age = true;
     @portal_student.save
-    if @portal_student.user.update_attributes(portal_student_strong_params(params[:user]))
+    if @portal_student.user.update(portal_student_strong_params(params[:user]))
       redirect_to root_path
     else
       render :action => "ask_consent"

@@ -147,7 +147,7 @@ class UsersController < ApplicationController
         end
         params[:user].delete :enews_subscription
 
-        if @user.update_attributes(user_strong_params(params[:user]))
+        if @user.update(user_strong_params(params[:user]))
 
           # This update method is shared with admins using users/edit and users using users/preferences.
           # Since the values are checkboxes we can't use the absense of them to denote there are no

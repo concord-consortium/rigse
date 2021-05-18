@@ -61,7 +61,7 @@ class API::V1::ReportsController < API::APIController
     end
 
     if params[:anonymous_report]
-      offering.update_attributes!(params[:anonymous_report])
+      offering.update!(params[:anonymous_report])
     end
     head :ok
   end

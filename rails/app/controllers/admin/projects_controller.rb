@@ -85,7 +85,7 @@ class Admin::ProjectsController < ApplicationController
   def update
     @project = Admin::Project.find(params[:id])
     authorize @project
-    if @project.update_attributes(admin_project_strong_params(params[:admin_project]))
+    if @project.update(admin_project_strong_params(params[:admin_project]))
       redirect_to @project, notice: 'Project was successfully updated.'
     else
       render action: 'edit'

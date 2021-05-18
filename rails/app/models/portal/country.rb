@@ -38,7 +38,7 @@ class Portal::Country < ApplicationRecord
         in_hash[:name] = adjust_country_name(in_hash[:name])
 
         existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
-        existing.update_attributes(in_hash)
+        existing.update(in_hash)
       end
     end
 

@@ -243,7 +243,7 @@ class Portal::ClazzesController < ApplicationController
     }
 
     if request.xhr?
-      if @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
+      if @portal_clazz.update(portal_clazz_strong_params(object_params))
         update_teachers.call
       end
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
@@ -258,7 +258,7 @@ class Portal::ClazzesController < ApplicationController
           end
         end
 
-        if okToUpdate && @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
+        if okToUpdate && @portal_clazz.update(portal_clazz_strong_params(object_params))
           update_teachers.call
           flash['notice'] = 'Class was successfully updated.'
           format.html { redirect_to(url_for([:materials, @portal_clazz])) }

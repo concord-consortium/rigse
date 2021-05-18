@@ -13,13 +13,13 @@ module Archiveable
 
   def archive!
     attempt_archive do
-      update_attributes(is_archived: true, archive_date: Time.now)
+      update(is_archived: true, archive_date: Time.now)
     end
   end
 
   def unarchive!
     attempt_archive do
-      update_attributes(is_archived: false, archive_date: nil)
+      update(is_archived: false, archive_date: nil)
     end
   end
 

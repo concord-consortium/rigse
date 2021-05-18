@@ -65,7 +65,7 @@ class Admin::AuthoringSitesController < ApplicationController
     authorize @admin_authoring_site
 
     respond_to do |format|
-      if @admin_authoring_site.update_attributes(admin_authoring_site_strong_params(params[:admin_authoring_site]))
+      if @admin_authoring_site.update(admin_authoring_site_strong_params(params[:admin_authoring_site]))
         format.html { redirect_to @admin_authoring_site, notice: 'Authoring site was successfully updated.' }
         format.json { head :no_content }
       else

@@ -71,7 +71,7 @@ class Admin::CohortsController < ApplicationController
   # PUT /admin_cohorts/1
   def update
     authorize @admin_cohort
-    if @admin_cohort.update_attributes(admin_cohort_strong_params(params[:admin_cohort]))
+    if @admin_cohort.update(admin_cohort_strong_params(params[:admin_cohort]))
       redirect_to @admin_cohort, notice: 'Admin::Cohort was successfully updated.'
     else
       render action: 'edit'

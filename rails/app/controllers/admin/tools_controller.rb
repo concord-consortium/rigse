@@ -59,7 +59,7 @@ class Admin::ToolsController < ApplicationController
     authorize @tool
 
     respond_to do |format|
-      if @tool.update_attributes(tool_strong_params(params[:tool]))
+      if @tool.update(tool_strong_params(params[:tool]))
         format.html { redirect_to admin_tools_path, notice: 'Tool was successfully updated.' }
         format.json { head :no_content }
       else

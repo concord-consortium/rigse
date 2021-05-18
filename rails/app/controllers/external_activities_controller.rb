@@ -187,7 +187,7 @@ class ExternalActivitiesController < ApplicationController
 
     respond_to do |format|
       # allow for params[:external_activity] to not exist while other update_* params to update
-      if !params[:external_activity] || @external_activity.update_attributes(external_activity_strong_params(params[:external_activity]))
+      if !params[:external_activity] || @external_activity.update(external_activity_strong_params(params[:external_activity]))
         flash['notice'] = 'ExternalActivity was successfully updated.'
         # redirect to browse path instead of show page since the show page is deprecated
         format.html { redirect_to(browse_external_activity_path(@external_activity)) }

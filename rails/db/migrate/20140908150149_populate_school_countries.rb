@@ -48,7 +48,7 @@ class PortalCountry < ApplicationRecord
 
     def self.from_hash(in_hash)
         existing = self.find_by_two_letter(in_hash[:two_letter]) || self.new()
-        existing.update_attributes(in_hash)
+        existing.update(in_hash)
     end
 end
 

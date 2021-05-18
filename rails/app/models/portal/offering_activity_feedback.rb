@@ -39,7 +39,7 @@ class Portal::OfferingActivityFeedback < ApplicationRecord
         opts.delete :score_type
       end
     end
-    self.update_attributes(opts)
+    self.update(opts)
   end
 
   def enable_score_feedback

@@ -23,7 +23,7 @@ describe API::V1::MaterialsBinController do
         m.save!
       end
       # Set one material to be an assessment item.
-      materials[2].update_attributes!(is_assessment_item: true)
+      materials[2].update!(is_assessment_item: true)
       # Assign all materials to collection.
       materials.each do |m|
         FactoryBot.create(:materials_collection_item, material: m, materials_collection: collection)

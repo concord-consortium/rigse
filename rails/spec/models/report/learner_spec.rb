@@ -203,7 +203,7 @@ describe Report::Learner do
               subject.answers.detect { |k,v| k == "#{open_response.class.to_s}|#{open_response.id}"}
             end
             before(:each) do
-              answers_for(open_response).last.update_attributes(feedback)
+              answers_for(open_response).last.update(feedback)
               report_learner.update_answers()
             end
 
