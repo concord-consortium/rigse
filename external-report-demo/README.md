@@ -54,12 +54,15 @@ npm run test
 
 ## HMAC secret
 
-In order to validate that the requests from the report portal haven't been modified, the portal's queries are signed with a secret key, `JWTHMACSecret`. This report needs the same key to be able to compare the signatures.
+In order to validate that the requests from the report portal haven't been modified, the portal's queries are signed
+with a secret key, `JWTHMACSecret`. This report needs the same key to be able to compare the signatures.
 
 This key can be found in AWS -> Cloud Formation -> Stacks -> [Stack name, e.g. learn-ecs-staging] -> Parameters.
 
-During the guided deployment, you will be asked if you want to paste in this key. You can do so, but be aware that if you tell the guided deployment to write the configs to a .toml file, it will add this key, so don't commit it.
+During the guided deployment, you will be asked if you want to paste in this key. You can do so, but be aware that if
+you tell the guided deployment to write the configs to a .toml file, it will add this key, so don't commit it.
 
-You can also add or modify this parameter after deployment by finding the Cloud Formation stack for this report (AWS -> Cloud Formation -> Stacks -> [Stack name, e.g. report-service-demo-report] -> Parameters) and pasting it there.
+You can also add or modify this parameter after deployment by finding the Cloud Formation stack for this report
+(AWS -> Cloud Formation -> Stacks -> [Stack name, e.g. report-service-demo-report] -> Parameters) and pasting it there.
 
 For local testing, you can add the secret to `template.yml` so long as it is not committed.
