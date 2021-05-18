@@ -17,12 +17,12 @@ class Portal::OfferingsMetalController < ActionController::Metal
       end
 
       self.status = 200
-      self.media_type = 'application/json'
+      self.content_type = 'application/json'
       self.response_body = status_event_info.to_json
       NoCache.add_headers(self.headers)
     else
       self.status = 404
-      self.media_type = 'text/html'
+      self.content_type = 'text/html'
       self.response_body = 'Not Found'
     end
   end
