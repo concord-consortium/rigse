@@ -551,7 +551,7 @@ describe ApplicationHelper, type: :helper do
   # TODO: auto-generated
   describe '#with_format' do
     it 'works' do
-      result = helper.with_format('format')  {}
+      result = helper.with_format(:html)  {}
 
       expect(result).to be_nil
     end
