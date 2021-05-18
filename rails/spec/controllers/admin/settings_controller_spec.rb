@@ -159,20 +159,20 @@ describe Admin::SettingsController do
     describe "with valid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with(permit_params!(admin_settings_params))
+        expect(mock_settings).to receive(:update).with(permit_params!(admin_settings_params))
         put :update, params: { :id => "37", :admin_settings => admin_settings_params }
       end
 
       it "assigns the requested settings as @settings" do
-        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => true))
-        expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:save => true))
+        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update => true))
+        expect(mock_settings).to receive(:update).and_return(mock_settings(:save => true))
         put :update, params: { :id => "1" }
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "redirects to the settings" do
-        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => true))
-        expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:save => true))
+        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update => true))
+        expect(mock_settings).to receive(:update).and_return(mock_settings(:save => true))
         put :update, params: { :id => "1" }
         expect(response).to redirect_to(admin_setting_url(mock_settings))
       end
@@ -181,20 +181,20 @@ describe Admin::SettingsController do
     describe "with invalid params" do
       it "updates the requested settings" do
         expect(Admin::Settings).to receive(:find).with("37").and_return(mock_settings)
-        expect(mock_settings).to receive(:update_attributes).with(permit_params!(admin_settings_params))
+        expect(mock_settings).to receive(:update).with(permit_params!(admin_settings_params))
         put :update, params: { :id => "37", :admin_settings => admin_settings_params }
       end
 
       it "assigns the settings as @settings" do
-        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => false))
-        expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:update_attributes => false))
+        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update => false))
+        expect(mock_settings).to receive(:update).and_return(mock_settings(:update => false))
         put :update, params: { :id => "1" }
         expect(assigns[:admin_settings]).to equal(mock_settings)
       end
 
       it "re-renders the 'edit' template" do
-        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update_attributes => false))
-        expect(mock_settings).to receive(:update_attributes).and_return(mock_settings(:update_attributes => false))
+        expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update => false))
+        expect(mock_settings).to receive(:update).and_return(mock_settings(:update => false))
         put :update, params: { :id => "1" }
         expect(response).to redirect_to(admin_setting_url(mock_settings))
       end

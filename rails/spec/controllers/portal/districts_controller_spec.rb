@@ -100,19 +100,19 @@ describe Portal::DistrictsController do
     describe "with valid params" do
       it "updates the requested district" do
         expect(Portal::District).to receive(:find).with("37").and_return(@district)
-        expect(@mock_district).to receive(:update_attributes).with(permit_params!(portal_district_params)).and_return(true)
+        expect(@mock_district).to receive(:update).with(permit_params!(portal_district_params)).and_return(true)
         put :update, params: { :id => "37", :portal_district => portal_district_params }
       end
 
       it "assigns the requested district as @portal_district" do
-        allow(@district).to receive_messages(:update_attributes => true)
+        allow(@district).to receive_messages(:update => true)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, params: { :id => "1" }
         expect(assigns[:portal_district]).to equal(@district)
       end
 
       it "redirects to the district" do
-        allow(@district).to receive_messages(:update_attributes => true)
+        allow(@district).to receive_messages(:update => true)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, params: { :id => "1" }
         expect(response).to redirect_to(portal_district_url(@district))
@@ -122,19 +122,19 @@ describe Portal::DistrictsController do
     describe "with invalid params" do
       it "updates the requested district" do
         expect(Portal::District).to receive(:find).with("37").and_return(@district)
-        expect(@district).to receive(:update_attributes).with(permit_params!(portal_district_params)).and_return(false)
+        expect(@district).to receive(:update).with(permit_params!(portal_district_params)).and_return(false)
         put :update, params: { :id => "37", :portal_district => portal_district_params }
       end
 
       it "assigns the district as @portal_district" do
-        allow(@district).to receive_messages(:update_attributes => false)
+        allow(@district).to receive_messages(:update => false)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, params: { :id => "1" }
         expect(assigns[:portal_district]).to equal(@district)
       end
 
       it "re-renders the 'edit' template" do
-        allow(@district).to receive_messages(:update_attributes => false)
+        allow(@district).to receive_messages(:update => false)
         allow(Portal::District).to receive(:find).and_return(@district)
         put :update, params: { :id => "1" }
         expect(response).to render_template('edit')

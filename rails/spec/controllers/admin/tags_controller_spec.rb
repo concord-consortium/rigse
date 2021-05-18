@@ -83,18 +83,18 @@ describe Admin::TagsController do
     describe "with valid params" do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-        expect(mock_tags).to receive(:update_attributes).with(permit_params!(tag_params))
+        expect(mock_tags).to receive(:update).with(permit_params!(tag_params))
         put :update, params: { :id => "37", :admin_tag => tag_params }
       end
 
       it "assigns the requested tags as @tags" do
-        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => true))
+        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update => true))
         put :update, params: { :id => "1" }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
       it "redirects to the tags" do
-        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => true))
+        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update => true))
         put :update, params: { :id => "1" }
         expect(response).to redirect_to(admin_tag_url(mock_tags))
       end
@@ -103,18 +103,18 @@ describe Admin::TagsController do
     describe "with invalid params" do
       it "updates the requested tags" do
         expect(Admin::Tag).to receive(:find).with("37").and_return(mock_tags)
-        expect(mock_tags).to receive(:update_attributes).with(permit_params!(tag_params))
+        expect(mock_tags).to receive(:update).with(permit_params!(tag_params))
         put :update, params: { :id => "37", :admin_tag => tag_params }
       end
 
       it "assigns the tags as @tags" do
-        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => false))
+        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update => false))
         put :update, params: { :id => "1" }
         expect(assigns[:admin_tag]).to equal(mock_tags)
       end
 
       it "re-renders the 'edit' template" do
-        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update_attributes => false))
+        allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update => false))
         put :update, params: { :id => "1" }
         expect(response).to render_template('edit')
       end

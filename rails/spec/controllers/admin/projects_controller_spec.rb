@@ -112,9 +112,9 @@ describe Admin::ProjectsController do
         it "updates the requested project" do
           # Assuming there are no other projects in the database, this
           # specifies that the Admin::Project created on the previous line
-          # receives the :update_attributes message with whatever params are
+          # receives the :update message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with(permit_params!({'name' => 'new name'}))
+          expect_any_instance_of(Admin::Project).to receive(:update).with(permit_params!({'name' => 'new name'}))
           put :update, params: { :id => project.to_param, :admin_project => {'name' => 'new name'} }
         end
 
@@ -254,9 +254,9 @@ describe Admin::ProjectsController do
         it "updates the requested project" do
           # Assuming there are no other projects in the database, this
           # specifies that the Admin::Project created on the previous line
-          # receives the :update_attributes message with whatever params are
+          # receives the :update message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with(permit_params!({'name' => 'new name'}))
+          expect_any_instance_of(Admin::Project).to receive(:update).with(permit_params!({'name' => 'new name'}))
           put :update, params: { :id => project.id, :admin_project => {'name' => 'new name'} }
         end
 

@@ -111,12 +111,12 @@ describe ImagesController do
 
     describe "with valid params" do
       before(:each) do
-        @img = mock_image(:save => true, :update_attributes => true, :reload => true)
+        @img = mock_image(:save => true, :update => true, :reload => true)
         expect(@img).to receive(:changeable?).with(@logged_in_user).and_return(true)
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(mock_image).to receive(:update_attributes).with(permit_params!(image_params))
+        expect(mock_image).to receive(:update).with(permit_params!(image_params))
         put :update, params: { :id => "37", :image => image_params }
       end
 
@@ -136,12 +136,12 @@ describe ImagesController do
 
     describe "with invalid params" do
       before(:each) do
-        @img = mock_image(:save => false, :update_attributes => false, :reload => false)
+        @img = mock_image(:save => false, :update => false, :reload => false)
         expect(@img).to receive(:changeable?).with(@logged_in_user).and_return(true)
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(@img).to receive(:update_attributes).with(permit_params!(image_params))
+        expect(@img).to receive(:update).with(permit_params!(image_params))
         put :update, params: { :id => "37", :image => image_params }
       end
 
