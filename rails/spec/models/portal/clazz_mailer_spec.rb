@@ -17,7 +17,7 @@ describe Portal::ClazzMailer do
     if teacher.nil?
       FactoryBot.create(:user)
     else
-      teacher.user.update_attributes(first_name: "Cohort", last_name: "Teacher")
+      teacher.user.update(first_name: "Cohort", last_name: "Teacher")
       teacher.user
     end
   }

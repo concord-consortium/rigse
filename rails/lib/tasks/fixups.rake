@@ -8,7 +8,7 @@ namespace :app do
     task :fix_invalid_user_fields => :environment do
         regex = /(?=\A[^[:cntrl:]\\<>\/&]*\z)(.*[\p{L}\d].*)/u
         count = 0
-        puts 
+        puts
         puts "ID,Login,First name,Last name,Email"
         User.find_each do |u|
             if !(u.first_name =~ regex && u.last_name =~ regex)
@@ -17,10 +17,10 @@ namespace :app do
                 end
                 puts line
                 if(u.first_name !~ regex)
-                    u.update_attributes(first_name: "unknown")
+                    u.update(first_name: "unknown")
                 end
                 if(u.last_name !~ regex)
-                    u.update_attributes(last_name: "unknown")
+                    u.update(last_name: "unknown")
                 end
                 count+=1
             end
@@ -93,17 +93,17 @@ namespace :app do
       end
       puts
     end
-    
+
     desc 'generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls'
     task :generate_date_str_for_versioned_jnlp_urls => :environment do
-      puts "\nprocessing #{MavenJnlp::VersionedJnlpUrl.count} MavenJnlp::VersionedJnlpUrl model instances, generating date_str from version_str\n"      
+      puts "\nprocessing #{MavenJnlp::VersionedJnlpUrl.count} MavenJnlp::VersionedJnlpUrl model instances, generating date_str from version_str\n"
       MavenJnlp::VersionedJnlpUrl.find_in_batches do |group|
         group.each { |j| j.save! }
         print '.'; STDOUT.flush
       end
       puts
     end
-    
+
     desc "Create bundle and console loggers for learners"
     task :create_bundle_and_console_loggers_for_learners => :environment do
       Portal::Learner.all.each do |learner|
@@ -116,7 +116,7 @@ namespace :app do
 
     def find_and_report_on_invalid_bundle_contents(&block)
       count = Dataservice::BundleContent.count
-      puts "\nScanning #{count} Dataservice::BundleContent model instances for invalid bodies\n\n"      
+      puts "\nScanning #{count} Dataservice::BundleContent model instances for invalid bodies\n\n"
       invalid = []
       Dataservice::BundleContent.find_in_batches(:batch_size => 10) do |group|
         invalid << group.find_all { |bc| !bc.valid? }
@@ -149,7 +149,7 @@ namespace :app do
       find_and_report_on_invalid_bundle_contents do |bc|
         puts
         puts " deleting Dataservice::BundleContent id:#{bc.id}..."
-        bc.destroy        
+        bc.destroy
       end
     end
 
@@ -222,7 +222,7 @@ namespace :app do
       file_name = args.file_name
       suspect_activities = Activity.where("position is null and investigation_id is not null")
       good_activities =  Activity.where("position is not null and investigation_id is not null")
-      puts "#{suspect_activities.size} without positions & #{good_activities.size} with good positions" 
+      puts "#{suspect_activities.size} without positions & #{good_activities.size} with good positions"
       bad_hash = suspect_activities.map do |a|
         {
           :id => a.id,
@@ -269,7 +269,7 @@ namespace :app do
           if (act.position != position)
             puts "    fix: (#{act.position}) ==> (#{position})"
           end
-          act.update_attributes!(:position => position)
+          act.update!(:position => position)
           position = position + 1
         end
         inv.reload

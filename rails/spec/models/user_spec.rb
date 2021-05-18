@@ -147,12 +147,12 @@ describe User do
   end
 
   it 'resets password' do
-    users(:quentin).update_attributes({:password => 'new password', :password_confirmation => 'new password'})
+    users(:quentin).update({:password => 'new password', :password_confirmation => 'new password'})
     expect(User.authenticate('quentin', 'new password')).to eq(users(:quentin))
   end
 
   it 'does not rehash password' do
-    users(:quentin).update_attributes({:login => 'quentin2'})
+    users(:quentin).update({:login => 'quentin2'})
     expect(User.authenticate('quentin2', 'monkey')).to eq(users(:quentin))
   end
 
@@ -214,7 +214,7 @@ describe User do
   it 'registers passive user' do
     user = create_user(:password => nil, :password_confirmation => nil)
     expect(user.state).to eq('passive')
-    user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})
+    user.update({:password => 'new password', :password_confirmation => 'new password'})
     user.save!
     user.reload
     expect(user.state).to eq('pending')

@@ -21,7 +21,7 @@ class API::V1::OfferingsController < API::APIController
   def update
     offering = Portal::Offering.find(params[:id])
     authorize offering
-    offering.update_attributes!(portal_offering_strong_params(params))
+    offering.update!(portal_offering_strong_params(params))
     if params[:position]
       clazz = offering.clazz
       clazz.update_offering_position(offering, params[:position].to_i)

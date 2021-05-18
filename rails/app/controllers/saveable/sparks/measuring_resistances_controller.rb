@@ -63,7 +63,7 @@ class Saveable::Sparks::MeasuringResistancesController < ApplicationController
     @measuring_resistance = Saveable::Sparks::MeasuringResistance.find(params[:id])
 
     respond_to do |format|
-      if @measuring_resistance.update_attributes(saveable_sparks_measuring_resistance_strong_params(params[:measuring_resistance]))
+      if @measuring_resistance.update(saveable_sparks_measuring_resistance_strong_params(params[:measuring_resistance]))
         flash['notice'] = 'Saveable::Sparks::MeasuringResistance.was successfully updated.'
         format.html { redirect_to(@measuring_resistance) }
         format.json  { head :ok }

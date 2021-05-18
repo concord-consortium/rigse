@@ -5,7 +5,7 @@ class StripClassWords < ActiveRecord::Migration[5.1]
 
   def up
     Portal::Clazz.where('class_word like " %" OR class_word like "% "').each do |c|
-      c.update_attributes!(class_word: c.class_word.strip)
+      c.update!(class_word: c.class_word.strip)
     end
   end
 

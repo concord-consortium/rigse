@@ -81,7 +81,7 @@ class Portal::DistrictsController < ApplicationController
     cancel = params[:commit] == "Cancel"
     @portal_district = Portal::District.find(params[:id])
 
-    if @portal_district.update_attributes(portal_district_strong_params(params[:portal_district]))
+    if @portal_district.update(portal_district_strong_params(params[:portal_district]))
       flash['notice'] = 'Portal::District was successfully updated.'
       redirect_to @portal_district
     else

@@ -61,18 +61,18 @@ describe Dataservice::BlobsController do
     describe "with valid params" do
       it "updates the requested blob" do
         expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
-        expect(mock_blob).to receive(:update_attributes).with(permit_params!(blob_params))
+        expect(mock_blob).to receive(:update).with(permit_params!(blob_params))
         put :update, params: { :id => "37", :blob => blob_params }
       end
 
       it "assigns the requested blob as @blob" do
-        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => true))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update => true))
         put :update, params: { :id => "1" }
         expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "redirects to the blob" do
-        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => true))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update => true))
         put :update, params: { :id => "1" }
         expect(response).to have_http_status(:ok)
       end
@@ -81,18 +81,18 @@ describe Dataservice::BlobsController do
     describe "with invalid params" do
       it "updates the requested blob" do
         expect(Dataservice::Blob).to receive(:find).with("37").and_return(mock_blob)
-        expect(mock_blob).to receive(:update_attributes).with(permit_params!(blob_params))
+        expect(mock_blob).to receive(:update).with(permit_params!(blob_params))
         put :update, params: { :id => "37", :blob => blob_params }
       end
 
       it "assigns the blob as @blob" do
-        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => false))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update => false))
         put :update, params: { :id => "1" }
         expect(assigns[:dataservice_blob]).to equal(mock_blob)
       end
 
       it "re-renders the 'edit' template" do
-        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update_attributes => false))
+        allow(Dataservice::Blob).to receive(:find).and_return(mock_blob(:update => false))
         put :update, params: { :id => "1" }
         expect(response).to have_http_status(:unprocessable_entity)
       end

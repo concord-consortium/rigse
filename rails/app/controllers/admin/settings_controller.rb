@@ -91,7 +91,7 @@ class Admin::SettingsController < ApplicationController
   # PUT /admin/settings/1
   def update
     @admin_settings = Admin::Settings.find(params[:id])
-    if @admin_settings.update_attributes(admin_settings_strong_params(params[:admin_settings]))
+    if @admin_settings.update(admin_settings_strong_params(params[:admin_settings]))
       flash['notice'] = 'Admin::Settings was successfully updated.'
       redirect_to @admin_settings
     else

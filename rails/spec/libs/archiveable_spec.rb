@@ -8,7 +8,7 @@ class WithArchiveFields
   include Archiveable
   attr_accessor :is_archived
   attr_accessor :archive_date
-  def update_attributes(hash_data)
+  def update(hash_data)
     hash_data.each do |k,v|
       self.send("#{k}=".to_sym,v)
     end
@@ -37,7 +37,7 @@ describe Archiveable do
       end
     end
   end
-  
+
   describe "A class that  responds to is_archived and is_archived=" do
     let(:undertest) { WithArchiveFields }
     describe "archived?" do

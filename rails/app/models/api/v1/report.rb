@@ -355,7 +355,7 @@ class API::V1::Report
     if answer.respond_to? :add_feedback # the answer is a saveable
       answer.add_feedback(answer_feedback_hash)
     else # assume answer has feedback columns.
-      answer.update_attributes(answer_feedback_hash)
+      answer.update(answer_feedback_hash)
     end
     # All answers should delegate learner to their saveables...
     # We need to update fields, because the answer is serialized in the report learner

@@ -237,7 +237,7 @@ class Portal::LearnersController < ApplicationController
     @portal_learner = Portal::Learner.find(params[:id])
 
     respond_to do |format|
-      if @portal_learner.update_attributes(portal_learner_strong_params(params[:learner]))
+      if @portal_learner.update(portal_learner_strong_params(params[:learner]))
         flash['notice'] = 'Portal::Learner was successfully updated.'
         format.html { redirect_to(@portal_learner) }
         format.xml  { head :ok }

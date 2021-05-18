@@ -87,7 +87,7 @@ class Portal::SchoolsController < ApplicationController
   def update
     cancel = params[:commit] == 'Cancel'
     @portal_school = Portal::School.find(params[:id])
-    if @portal_school.update_attributes(portal_school_strong_params(params[:portal_school]))
+    if @portal_school.update(portal_school_strong_params(params[:portal_school]))
       flash['notice'] = 'Portal::School was successfully updated.'
       redirect_to action: :index
     else

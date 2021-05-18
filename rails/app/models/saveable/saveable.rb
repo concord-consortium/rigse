@@ -66,6 +66,6 @@ module Saveable::Saveable
     opts[:score]             = feedback_opts['score']    if feedback_opts.has_key?('score')
     opts[:feedback]          = feedback_opts['feedback'] if feedback_opts.has_key?('feedback')
     opts[:has_been_reviewed] = feedback_opts['has_been_reviewed'] if feedback_opts.has_key?('has_been_reviewed')
-    answers.last.update_attributes(opts)
+    answers.last.update(opts)
   end
 end

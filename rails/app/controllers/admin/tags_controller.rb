@@ -47,7 +47,7 @@ class Admin::TagsController < ApplicationController
   # PUT /admin_tags/1
   def update
     @admin_tag = Admin::Tag.find(params[:id])
-    if @admin_tag.update_attributes(admin_tag_strong_params(params[:admin_tag]))
+    if @admin_tag.update(admin_tag_strong_params(params[:admin_tag]))
       redirect_to @admin_tag, notice: 'Admin::Tag was successfully updated.'
     else
       render action: 'edit'

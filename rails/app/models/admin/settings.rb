@@ -39,7 +39,7 @@ class Admin::Settings < ApplicationRecord
     id.to_s
   end
 
-  def update_attributes(hashy)
+  def update(hashy)
     enabled_bookmark_types = hashy['enabled_bookmark_types']
     if enabled_bookmark_types
       enabled_bookmark_types = enabled_bookmark_types.map { |h| h.split(",") }

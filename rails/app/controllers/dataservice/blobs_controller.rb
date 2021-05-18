@@ -67,7 +67,7 @@ class Dataservice::BlobsController < ApplicationController
     authorize @dataservice_blob
 
     respond_to do |format|
-      if @dataservice_blob.update_attributes(dataservice_blob_strong_params(params[:blob]))
+      if @dataservice_blob.update(dataservice_blob_strong_params(params[:blob]))
         flash['notice'] = 'Dataservice::Blob was successfully updated.'
         format.html { head :ok }
         format.xml  { head :ok }

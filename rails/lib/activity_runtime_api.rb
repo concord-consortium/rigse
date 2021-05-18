@@ -374,7 +374,7 @@ class ActivityRuntimeAPI
     }.merge(
       optional_attrs(or_data, "is_required", "show_in_featured_question_report")
     )
-    existant.update_attributes(attrs)
+    existant.update(attrs)
     return existant
   end
 
@@ -396,7 +396,7 @@ class ActivityRuntimeAPI
     }.merge(
       optional_attrs(iq_data, "is_required", "show_in_featured_question_report")
     )
-    existant.update_attributes(attrs)
+    existant.update(attrs)
     return existant
   end
 
@@ -419,7 +419,7 @@ class ActivityRuntimeAPI
     }.merge(
       optional_attrs(mc_data, "is_required", "show_in_featured_question_report")
     )
-    existant.update_attributes(attrs)
+    existant.update(attrs)
     self.add_choices(existant, mc_data)
     return existant
   end
@@ -450,7 +450,7 @@ class ActivityRuntimeAPI
       choice   = cached_choices.delete(id)
       choice.reload if choice
       choice ||= Embeddable::MultipleChoiceChoice.create(:external_id => id)
-      choice.update_attributes(
+      choice.update(
         :multiple_choice => mc,
         :choice => choice_data["content"],
         :is_correct => choice_data["correct"]
@@ -470,7 +470,7 @@ class ActivityRuntimeAPI
     }.merge(
       optional_attrs(if_data, "is_required", "show_in_featured_question_report", "display_in_iframe")
     )
-    existant.update_attributes(attrs)
+    existant.update(attrs)
     return existant
   end
 

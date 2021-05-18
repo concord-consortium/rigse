@@ -100,7 +100,7 @@ class Portal::OfferingsController < ApplicationController
   def update
     @offering = Portal::Offering.find(params[:id])
     authorize @offering
-    update_successful = @offering.update_attributes(portal_offering_strong_params(params[:offering]))
+    update_successful = @offering.update(portal_offering_strong_params(params[:offering]))
     if request.xhr?
       status = update_successful ? 200 : 500
       head status

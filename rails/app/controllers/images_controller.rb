@@ -116,10 +116,10 @@ class ImagesController < ApplicationController
     img_params = {:image => image}
     # we're updating the image separately, to avoid having
     # stale attributions being attached to the image
-    if @image.update_attributes(image_strong_params(my_params))
+    if @image.update(image_strong_params(my_params))
       if @image.reload
         if image
-          return @image.update_attributes(img_params)
+          return @image.update(img_params)
         else
           return true
         end

@@ -113,7 +113,7 @@ class Portal::Nces06SchoolsController < ApplicationController
     # authorize @nces06_school
 
     respond_to do |format|
-      if @nces06_school.update_attributes(portal_nces06_school_strong_params(params[:nces06_school]))
+      if @nces06_school.update(portal_nces06_school_strong_params(params[:nces06_school]))
         flash['notice'] = 'Portal::Nces06School was successfully updated.'
         format.html { redirect_to(@nces06_school) }
         format.xml  { head :ok }

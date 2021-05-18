@@ -10,7 +10,7 @@ class AddResourceLicense < ActiveRecord::Migration[5.1]
     defs = YAML::load_file(File.join(Rails.root,"config","licenses.yml"));
     defs['licenses'].each do |license_hash|
       license = CommonsLicense.find_or_create(code: license_hash)
-      license.update_attributes(license_hash)
+      license.update(license_hash)
       license.save
     end
 

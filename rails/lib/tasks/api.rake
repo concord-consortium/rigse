@@ -21,7 +21,7 @@ namespace :api do
 
     # create the access token
     access_grant = api_user.access_grants.create({:client => client, :state => nil})
-    access_grant.update_attributes(:access_token_expires_at => Time.now + 10.year)
+    access_grant.update(:access_token_expires_at => Time.now + 10.year)
 
     puts "Access token: #{access_grant.access_token} (valid until #{access_grant.access_token_expires_at})"
   end

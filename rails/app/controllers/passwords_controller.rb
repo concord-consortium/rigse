@@ -71,7 +71,7 @@ class PasswordsController < ApplicationController
 
   def update
     @password = Password.find(params[:id])
-    if @password.update_attributes(password_strong_params(params[:password]))
+    if @password.update(password_strong_params(params[:password]))
       flash['notice'] = 'Password was successfully updated.'
       redirect_back_or activities_url
     else

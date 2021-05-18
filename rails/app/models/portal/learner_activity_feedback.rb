@@ -19,6 +19,6 @@ class Portal::LearnerActivityFeedback < ApplicationRecord
 
   def self.update_feedback(learner_id, activity_feedback_id, attributes)
     open  = self.open_feedback_for(learner_id, activity_feedback_id)
-    open.update_attributes(attributes)
+    open.update(attributes)
   end
 end
