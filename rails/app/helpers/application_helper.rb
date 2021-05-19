@@ -564,7 +564,7 @@ module ApplicationHelper
 
   def render_project_info
     unless @rendered_project_info
-      render :partial => "home/project_info"
+      render_themed_partial("home/project_info")
       @rendered_project_info = true
     end
   end

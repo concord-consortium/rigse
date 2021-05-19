@@ -13,5 +13,9 @@ module ThemeHelper
     # stylesheet_link_tag "#{theme_name}/#{name}", { 'media' => media }
   end
 
+  def render_themed_partial(partial)
+    partial_path = "themes/#{theme_name}/#{partial}"
+    render partial: partial_path
+  end
 
 end
