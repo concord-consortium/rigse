@@ -15,7 +15,11 @@ module ThemeHelper
 
   def render_themed_partial(partial)
     partial_path = "themes/#{theme_name}/#{partial}"
-    render partial: partial_path
+    if lookup_context.template_exists?(partial_path, [], true)
+      render partial: partial_path
+    else
+      render partial: partial
+    end
   end
 
 end
