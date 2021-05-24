@@ -1,7 +1,7 @@
 namespace :db do
   desc "Dump the current database to a MySQL file"
   task :dump => :environment do
-    db_config = ActiveRecord::Base.configs_for(env_name: Rails.env)
+    db_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env)
     case db_config["adapter"]
     when 'mysql', 'mysql2'
       # make sure we can connect to the db...
@@ -48,7 +48,7 @@ namespace :db do
   end
 
   task :load => :environment do
-    db_config = ActiveRecord::Base.configs_for(env_name: Rails.env)
+    db_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env)
 
     RemoveTables.up
 
