@@ -16,6 +16,9 @@ require File.expand_path("../../lib/rack/expand_b64_gzip", __FILE__)
 
 module RailsPortal
   class Application < Rails::Application
+    config.load_defaults 6.0
+    config.autoloader = :classic
+
     config.assets.precompile << 'delayed/web/application.css'
     config.rails_lts_options = { default: :compatible }
     # Use RSpec when generating tests, not test_unit
@@ -43,7 +46,7 @@ module RailsPortal
 
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
-    config.autoload_paths += Dir["#{config.root}/app/helpers/**/"] # include app/helpers and all subdirectories
+    config.autoload_paths += Dir["#{config.root}/app/helpers/"] # include app/helpers and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
 
