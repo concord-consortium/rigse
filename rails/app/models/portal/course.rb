@@ -5,7 +5,7 @@ class Portal::Course < ApplicationRecord
 
   belongs_to :school, :class_name => "Portal::School", :foreign_key => "school_id"
 
-  has_many :clazzes, :dependent => :destroy, :class_name => "Portal::Clazz", :foreign_key => "course_id", :source => :clazz
+  has_many :clazzes, :dependent => :destroy, :class_name => "Portal::Clazz", :foreign_key => "course_id" #, :source => :clazz  # REMOVED due to `Unknown key: :source` error
   # has_and_belongs_to_many :grade_levels, :join_table => "portal_courses_grade_levels", :class_name => "Portal::GradeLevel"
 
   has_many :grade_levels, :dependent => :destroy, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
