@@ -17,33 +17,43 @@ let response;
  */
 exports.lambdaHandler = async (event, context) => {
     try {
-      const json = validateJSON(event);
+      const body = validateJSON(event);
 
-      const renderCSV = (key) => {
-        if (json[key] && json[key].length > 0) {
-          message = Object.keys(json[key][0]).join(",") + "\n";
-          message += json[key].map(item => Object.values(item).join(",")).join("\n");
-        } else {
-          message = `${key.charAt(0).toUpperCase() + key.slice(1)} report requested, but no ${key} were in the query.\n\n`
-          message += "Full query:\n\n"
-          message += json;
+      if (body.jwt) {
+        body.json = JSON.parse(body.json);
+        body.parsedJWT = JSON.parse(Buffer.from(body.jwt.split('.')[1], 'base64').toString());
+        response = {
+          statusCode: 200,
+          body: JSON.stringify(body, null, 2)
         }
-      }
-
-      let message;
-
-      if (json.type == "learners") {
-        renderCSV("learners");
-      } else if (json.type == "users") {
-        renderCSV("users");
       } else {
-        throw new Error("Demo report must be called from learner or user report page");
-      }
+        const json = body.json;
+        const renderCSV = (key) => {
+          if (json[key] && json[key].length > 0) {
+            message = Object.keys(json[key][0]).join(",") + "\n";
+            message += json[key].map(item => Object.values(item).join(",")).join("\n");
+          } else {
+            message = `${key.charAt(0).toUpperCase() + key.slice(1)} report requested, but no ${key} were in the query.\n\n`
+            message += "Full query:\n\n"
+            message += json;
+          }
+        }
+
+        let message;
+
+        if (json.type == "learners") {
+          renderCSV("learners");
+        } else if (json.type == "users") {
+          renderCSV("users");
+        } else {
+          throw new Error("Demo report must be called from learner or user report page");
+        }
 
 
-      response = {
-        statusCode: 200,
-        body: message
+        response = {
+          statusCode: 200,
+          body: message
+        }
       }
     } catch (err) {
       console.log(err);
@@ -62,6 +72,12 @@ function validateJSON(event) {
   }
 
   const body = queryString.parse(event.body);
+
+  if (body.jwt) {
+    // pass back the quole request without any verification
+    return body;
+  }
+
   let json = body.json;
   if (!json) {
     throw new Error("Missing json body parameter");
@@ -89,5 +105,7 @@ function validateJSON(event) {
     throw new Error("Unable to parse json parameter");
   }
 
-  return json;
+  body.json = json;
+
+  return body;
 }
