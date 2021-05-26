@@ -4,11 +4,12 @@ import jQuery from 'jquery'
 // changed from string based form generation to using jQuery to fix issue with single quoted
 // values in json field (it was delimited with single quotes and would break if the json
 // contained values with single quotes)
-export const generateJQueryForm = (url, json, signature, portalToken) => {
+export const generateJQueryForm = (url, json, signature, jwt, portalToken) => {
   const form = jQuery('<form>', { action: url, method: 'POST', target: '_blank' })
     .append(jQuery('<input>', { type: 'hidden', name: 'allowDebug', value: '1' }))
     .append(jQuery('<input>', { type: 'hidden', name: 'json', value: JSON.stringify(json) }))
     .append(jQuery('<input>', { type: 'hidden', name: 'signature', value: signature }))
+    .append(jQuery('<input>', { type: 'hidden', name: 'jwt', value: jwt }))
   if (portalToken) {
     form.append(jQuery('<input>', { type: 'hidden', name: 'portal_token', value: portalToken }))
   }
@@ -32,7 +33,7 @@ export default class ExternalReportButton extends React.Component {
 
   render () {
     const { label, isDisabled } = this.props
-    return <input style={{ marginRight: 10 }} type='submit' onClick={this.handleClick} disabled={isDisabled} value={label} />
+    return <input style={{ marginRight: 10 }} type='submit' onClick={this.handleClick} disabled={isDisabled} value={`${label}??!`} />
   }
 
   handleClick (event) {
@@ -46,7 +47,7 @@ export default class ExternalReportButton extends React.Component {
       // jQuery.param nicely converts JS hash into query params string.
       url: `${queryUrl}?${jQuery.param(queryParams)}`,
       success: response => {
-        postToUrl(reportUrl, response.json, response.signature, portalToken)
+        postToUrl(reportUrl, response.json, response.signature, response.token, portalToken)
       },
       error: (jqXHR, textStatus, error) => {
         console.error('logs_query request failed', error)

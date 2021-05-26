@@ -291,7 +291,8 @@ export default class LearnerReportForm extends React.Component {
     const { externalReports } = this.props
     const { queryParams, externalReportButtonDisabled } = this.state
     // ...LEARNER_QUERY is the renamed ...REPORT_QUERY, use a fallback to wait for the portal to update
-    const queryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
+    const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
+    const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT
 
     return (
       <form method='get'>
@@ -309,9 +310,12 @@ export default class LearnerReportForm extends React.Component {
         {this.renderButton('Details Report')}
         {this.renderButton('Arg Block Report')}
 
-        {externalReports.map(lr =>
-          <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
-        )}
+        {
+          externalReports.map(lr => {
+            const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl
+            return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
+          })
+        }
       </form>
     )
   }
