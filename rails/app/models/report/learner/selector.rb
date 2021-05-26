@@ -17,6 +17,9 @@ class Report::Learner::Selector
     # by default it includes up to 5000 learners, but this can overridden with the
     # size_limit parameter
     params['show_learners'] = params['size_limit'].present? ? params['size_limit'].to_i : 5000
+    if (options.has_key?(:start_from))
+      params['start_from'] = options[:start_from]
+    end
     esResponse = API::V1::ReportLearnersEsController.query_es(params, current_visitor)
     hits = esResponse['hits']['hits']
 

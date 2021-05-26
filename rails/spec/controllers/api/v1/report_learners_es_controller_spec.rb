@@ -93,6 +93,10 @@ describe API::V1::ReportLearnersEsController do
     }.to_json
   end
 
+  let(:activity1) do
+    FactoryBot.create(:external_activity, :url => "https://example.com/1")
+  end
+
 
   before (:each) do
     WebMock.stub_request(:post, /report_learners\/_search$/).
@@ -159,7 +163,6 @@ describe API::V1::ReportLearnersEsController do
     end
     describe "GET external_report_query" do
       let(:url_for_user) { "http://test.host/users/#{admin_user.id}" } # can't use url_for(user) helper in specs
-      let(:activity1)    { FactoryBot.create(:external_activity, :url => "https://example.com/1") }
 
       it "allows index" do
         get :external_report_query
@@ -267,6 +270,33 @@ describe API::V1::ReportLearnersEsController do
             headers: {'Content-Type'=>'application/json'},
             body: restricted_search_body,
           ).times(1)
+      end
+    end
+  end
+
+  describe "jwt query" do
+
+    describe "admin access" do
+      before (:each) do
+        sign_in admin_user
+      end
+      describe "GET external_report_jwt_query" do
+
+        it "renders response that includes Log Manager query and signature" do
+          # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
+          learner1.report_learner.runnable = activity1
+          learner1.report_learner.save!
+
+          get :external_report_query_jwt
+          resp = JSON.parse(response.body)
+          filter = resp["json"]
+          expect(filter["type"]).to eq "learners"
+          expect(filter["query"]).not_to eq nil
+          expect(filter["reportServiceUrl"]).to eq "http://test.host/api/v1/report_learners_es/external_report_learners_from_jwt"
+          expect(filter["paginationSize"]).to eq 1000
+          expect(resp["token"]).to be_an_instance_of(String)
+          expect(resp["signature"]).to eq nil
+        end
       end
     end
   end
