@@ -162,7 +162,8 @@ def create_default_lara_report
     allowed_for_students: true,
     default_report_for_source_type: "LARA",
     individual_student_reportable: true,
-    individual_activity_reportable: true
+    individual_activity_reportable: true,
+    use_query_jwt: false
   )
 
   # To support Activity Player publishing you need to manually add a Tool with the tool_id of https://activity-player.concord.org. 

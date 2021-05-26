@@ -65,6 +65,13 @@
             When report is used as a default report, Portal might generate links for reports focused on individual activities.
         %li
           %label
+            = f.check_box :use_query_jwt
+            Use Query JWT
+          %br
+          %p
+            Submit a JWT containing the query to the report. If unchecked, the result of the query will be sent instead.
+        %li
+          %label
             Move Students API URL
           %br
           = f.text_field :move_students_api_url, style: "width: 95%;"

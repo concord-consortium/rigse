@@ -18,5 +18,6 @@ FactoryBot.define do
     f.default_report_for_source_type {"LARA"}
     f.individual_student_reportable {true}
     f.individual_activity_reportable {true}
+    f.use_query_jwt {false}
   end
 end
