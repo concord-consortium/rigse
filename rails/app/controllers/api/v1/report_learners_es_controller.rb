@@ -352,14 +352,18 @@ class API::V1::ReportLearnersEsController < API::APIController
       permission_forms: learner.permission_forms,
       username: learner.username,
       student_name: learner.student_name,
-      teacher_name: learner.teachers_name,
-      teacher_id: learner.teachers_id,
-      teacher_district: learner.teachers_district,
-      teacher_state: learner.teachers_state,
-      teacher_email: learner.teachers_email,
       last_run: learner.last_run,
       run_remote_endpoint: learner.learner ? learner.learner.remote_endpoint_url : nil,
-      runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil
+      runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil,
+      teachers: [
+        {
+          user_id: learner.teachers_id,
+          name: learner.teachers_name,
+          district: learner.teachers_district,
+          state: learner.teachers_state,
+          email: learner.teachers_email
+        }
+      ]
     }
   end
 end
