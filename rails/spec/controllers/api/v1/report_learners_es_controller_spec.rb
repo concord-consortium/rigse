@@ -292,7 +292,7 @@ describe API::V1::ReportLearnersEsController do
           filter = resp["json"]
           expect(filter["type"]).to eq "learners"
           expect(filter["query"]).not_to eq nil
-          expect(filter["reportServiceUrl"]).to eq "http://test.host/api/v1/report_learners_es/external_report_learners_from_jwt"
+          expect(filter["learnersApiUrl"]).to eq "http://test.host/api/v1/report_learners_es/external_report_learners_from_jwt"
           expect(filter["paginationSize"]).to eq 1000
           expect(resp["token"]).to be_an_instance_of(String)
           expect(resp["signature"]).to eq nil
