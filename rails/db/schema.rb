@@ -427,8 +427,6 @@ ActiveRecord::Schema.define(version: 20210520131514) do
     t.boolean  "show_in_featured_question_report",                  default: true
   end
 
-  add_index "embeddable_image_questions", ["external_id"], name: "index_embeddable_image_questions_on_external_id", using: :btree
-
   create_table "embeddable_multiple_choice_choices", force: :cascade do |t|
     t.text     "choice",             limit: 16777215
     t.integer  "multiple_choice_id", limit: 4
@@ -492,7 +490,6 @@ ActiveRecord::Schema.define(version: 20210520131514) do
     t.string   "launch_url",                   limit: 255
     t.boolean  "is_official",                                   default: false
     t.boolean  "student_report_enabled",                        default: true
-    t.text     "long_description_for_teacher", limit: 16777215
     t.string   "teacher_guide_url",            limit: 255
     t.string   "thumbnail_url",                limit: 255
     t.boolean  "is_featured",                                   default: false
@@ -514,6 +511,7 @@ ActiveRecord::Schema.define(version: 20210520131514) do
     t.string   "material_type",                limit: 255,      default: "Activity"
     t.string   "rubric_url",                   limit: 255
     t.boolean  "saves_student_data",                            default: true
+    t.text     "long_description_for_teacher", limit: 65535
     t.text     "long_description",             limit: 65535
     t.text     "keywords",                     limit: 65535
     t.integer  "tool_id",                      limit: 4
@@ -2257,8 +2255,8 @@ ActiveRecord::Schema.define(version: 20210520131514) do
   create_table "teacher_project_views", force: :cascade do |t|
     t.integer  "viewed_project_id", limit: 4, null: false
     t.integer  "teacher_id",        limit: 4, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "teacher_project_views", ["teacher_id"], name: "index_teacher_project_views_on_teacher_id", using: :btree
