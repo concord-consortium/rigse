@@ -2,8 +2,6 @@ require 'digest/md5'
 
 class API::V1::ReportLearnersEsController < API::APIController
 
-  PAGINATED_ELASTIC_SEARCH_SIZE = 1000
-
   public
 
   # Returns Elasticsearch query of report_learners, with filters and
@@ -93,8 +91,7 @@ class API::V1::ReportLearnersEsController < API::APIController
           id: url_for(current_user),
           email: current_user.email
         },
-        learnersApiUrl: external_report_learners_from_jwt_api_v1_report_learners_es_url,
-        paginationSize: PAGINATED_ELASTIC_SEARCH_SIZE
+        learnersApiUrl: external_report_learners_from_jwt_api_v1_report_learners_es_url
       }
     }
 
@@ -105,17 +102,28 @@ class API::V1::ReportLearnersEsController < API::APIController
   # The JWT is parsed by the common api controller, and if it contains a user's uid it will assign
   # current_user to that user.
   # The query is the same query from the report filter page that would otherwise be passed to external_report_query.
-  # This will return a list of learner-details no larger than PAGINATED_ELASTIC_SEARCH_SIZE
+  # This will return a list of learner-details no larger than the requested page size
   # in order to retrieve more results, this same route can be requested multiple times with a start_from parameter.
   # Note that this version of the pagination is capped at 100,000 results:
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
+  #
+  # @param query - (required) query from external_report_query_jwt
+  # @param page_size - (required) number of learners per page, hard-capped at 2000
+  # @param start_from - (optional) learner index to start from for the next page
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
 
     query = params["query"]
-    start_from = params["start_from"] || 0
+    page_size = params["page_size"].to_i
+    start_from = params["start_from"].to_i || 0
 
-    query[:size_limit] = PAGINATED_ELASTIC_SEARCH_SIZE
+    if (page_size == nil || page_size < 1)
+      return error "param page_size must be a positive number", 400
+    elsif (page_size > 2000)
+      return error "param page_size may not be larger than 2000", 400
+    end
+
+    query[:size_limit] = page_size
 
     learner_selector = Report::Learner::Selector.new(query, current_user, {
       :include_runnable_and_learner => true,

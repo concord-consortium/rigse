@@ -321,7 +321,6 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["type"]).to eq "learners"
           expect(filter["query"]).not_to eq nil
           expect(filter["learnersApiUrl"]).to eq "http://test.host/api/v1/report_learners_es/external_report_learners_from_jwt"
-          expect(filter["paginationSize"]).to eq 1000
           expect(resp["token"]).to be_an_instance_of(String)
           expect(resp["signature"]).to eq nil
         end
@@ -383,7 +382,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "wont allow external_report_learners_from_jwt, returns error 403" do
-          get :external_report_learners_from_jwt
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
           expect(response.status).to eql(403)
         end
       end
@@ -397,12 +396,12 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
 
-        it "renders response that includes learers" do
+        it "renders response that includes learners" do
           # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
           learner1.report_learner.runnable = activity1
           learner1.report_learner.save!
 
-          get :external_report_learners_from_jwt, {:query => {}}
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
           resp = JSON.parse(response.body)
           filter = resp["json"]
           expect(filter["learners"].length).to eq 2
@@ -410,6 +409,19 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"][0]["learner_id"]).to be_an_instance_of(Fixnum)
           expect(filter["learners"][0]["class_id"]).to be_an_instance_of(Fixnum)
         end
+      end
+
+      describe "GET external_report_learners_from_jwt with incorrect page_size" do
+
+        it "renders an error if page_size is missing" do
+          get :external_report_learners_from_jwt, {:query => {}}
+          expect(response.status).to eql(400)
+        end
+        it "renders an error if page_size is too large" do
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 10000}
+          expect(response.status).to eql(400)
+        end
+
       end
     end
 
@@ -421,7 +433,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "allows external_report_learners_from_jwt" do
-          get :external_report_learners_from_jwt, {:query => {}}
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
           expect(response.status).to eql(200)
         end
       end
@@ -441,7 +453,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "allows external_report_learners_from_jwt" do
-          get :external_report_learners_from_jwt, {:query => {}}
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
           expect(response.status).to eql(200)
         end
       end
