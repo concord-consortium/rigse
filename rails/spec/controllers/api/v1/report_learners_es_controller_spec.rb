@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe API::V1::ReportLearnersEsController do
 
+  def set_jwt_bearer_token(auth_token)
+    request.headers["Authorization"] = "Bearer/JWT #{auth_token}"
+  end
+
   let(:admin_user)        { FactoryBot.generate(:admin_user)     }
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
@@ -274,7 +278,31 @@ describe API::V1::ReportLearnersEsController do
     end
   end
 
-  describe "jwt query" do
+  describe "external_report_query_jwt" do
+
+    describe "anonymous' access" do
+      before (:each) do
+        logout_user
+      end
+      describe "GET external_report_query_jwt" do
+        it "wont allow external_report_query_jwt, returns error 403" do
+          get :external_report_query_jwt
+          expect(response.status).to eql(403)
+        end
+      end
+    end
+
+    describe "simple user access" do
+      before (:each) do
+        sign_in simple_user
+      end
+      describe "GET external_report_query_jwt" do
+        it "wont allow external_report_query_jwt, returns error 403" do
+          get :external_report_query_jwt
+          expect(response.status).to eql(403)
+        end
+      end
+    end
 
     describe "admin access" do
       before (:each) do
@@ -282,7 +310,7 @@ describe API::V1::ReportLearnersEsController do
       end
       describe "GET external_report_jwt_query" do
 
-        it "renders response that includes Log Manager query and signature" do
+        it "renders response that includes Log Manager query and JWT" do
           # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
           learner1.report_learner.runnable = activity1
           learner1.report_learner.save!
@@ -299,6 +327,125 @@ describe API::V1::ReportLearnersEsController do
         end
       end
     end
+
+    describe "manager access" do
+      before (:each) do
+        sign_in manager_user
+      end
+      describe "GET external_report_query_jwt" do
+        it "allows external_report_query_jwt" do
+          get :external_report_query_jwt
+          expect(response.status).to eql(200)
+        end
+      end
+    end
+
+    describe "project researcher access" do
+
+      before (:each) do
+        @project1 = FactoryBot.create(:project)
+        @form1 = FactoryBot.create(:permission_form, project: @project1)
+        user = FactoryBot.create(:confirmed_user)
+        user.add_role_for_project('researcher', @project1)
+        sign_in user
+      end
+
+      describe "GET external_report_query_jwt" do
+        it "allows external_report_query_jwt" do
+          get :external_report_query_jwt
+          expect(response.status).to eql(200)
+        end
+      end
+    end
+
   end
 
+  describe "external_report_learners_from_jwt" do
+
+    before (:each) do
+      logout_user
+    end
+
+    describe "without a JWT" do
+      describe "GET external_report_learners_from_jwt" do
+        it "wont allow external_report_learners_from_jwt, returns error 403" do
+          get :external_report_learners_from_jwt
+          expect(response.status).to eql(403)
+        end
+      end
+    end
+
+    describe "simple user access" do
+      before (:each) do
+        jwt = SignedJWT::create_portal_token(simple_user, {}, 3600)
+        set_jwt_bearer_token(jwt)
+      end
+
+      describe "GET external_report_learners_from_jwt" do
+        it "wont allow external_report_learners_from_jwt, returns error 403" do
+          get :external_report_learners_from_jwt
+          expect(response.status).to eql(403)
+        end
+      end
+    end
+
+    describe "admin access" do
+      before (:each) do
+        jwt = SignedJWT::create_portal_token(admin_user, {}, 3600)
+        set_jwt_bearer_token(jwt)
+      end
+
+      describe "GET external_report_learners_from_jwt" do
+
+        it "renders response that includes learers" do
+          # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
+          learner1.report_learner.runnable = activity1
+          learner1.report_learner.save!
+
+          get :external_report_learners_from_jwt, {:query => {}}
+          resp = JSON.parse(response.body)
+          filter = resp["json"]
+          expect(filter["learners"].length).to eq 2
+          expect(filter["learners"][0]["student_id"]).to be_an_instance_of(Fixnum)
+          expect(filter["learners"][0]["learner_id"]).to be_an_instance_of(Fixnum)
+          expect(filter["learners"][0]["class_id"]).to be_an_instance_of(Fixnum)
+        end
+      end
+    end
+
+    describe "manager access" do
+      before (:each) do
+        jwt = SignedJWT::create_portal_token(manager_user, {}, 3600)
+        set_jwt_bearer_token(jwt)
+      end
+
+      describe "GET external_report_learners_from_jwt" do
+        it "allows external_report_learners_from_jwt" do
+          get :external_report_learners_from_jwt, {:query => {}}
+          expect(response.status).to eql(200)
+        end
+      end
+    end
+
+    describe "project researcher access" do
+
+      before (:each) do
+        @project1 = FactoryBot.create(:project)
+        @form1 = FactoryBot.create(:permission_form, project: @project1)
+        user = FactoryBot.create(:confirmed_user)
+        user.add_role_for_project('researcher', @project1)
+
+        jwt = SignedJWT::create_portal_token(user, {}, 3600)
+        set_jwt_bearer_token(jwt)
+      end
+
+      describe "GET external_report_learners_from_jwt" do
+        it "allows external_report_learners_from_jwt" do
+          get :external_report_learners_from_jwt, {:query => {}}
+          expect(response.status).to eql(200)
+        end
+      end
+    end
+
+  end
 end
