@@ -1,3 +1,4 @@
+const axios = require('axios');
 const crypto = require('crypto');
 const queryString = require('query-string');
 
@@ -20,11 +21,31 @@ exports.lambdaHandler = async (event, context) => {
       const body = validateJSON(event);
 
       if (body.jwt) {
-        body.json = JSON.parse(body.json);
-        body.parsedJWT = JSON.parse(Buffer.from(body.jwt.split('.')[1], 'base64').toString());
+        const {jwt, json, learnersApiUrl} = body;
+        const parsedJson = JSON.parse(json);
+        // create a copy of our request to display back to the user
+        const infoBody = {
+          jwt,
+          json: parsedJson
+        };
+        let message = "Called with:\n\n";
+        message += JSON.stringify(infoBody, null, 2) + "\n\n";
+        message += "Parsed JWT:\n\n";
+        message += Buffer.from(body.jwt.split('.')[1], 'base64').toString() + "\n\n";
+
+        const pageSize = 5;   // for demo purposes, but really something like 1000 would be reasonable
+        const learnersArray = await fetchLearnerData(jwt, parsedJson.query, learnersApiUrl, pageSize);
+
+        message += `Learners returned, using page size ${pageSize}:\n`;
+        message += `  Total pages: ${learnersArray.length}\n`;
+        if (learnersArray.length > 0) {
+          message += `  Total learners: ${learnersArray.reduce((acc, arr) => acc + arr.length, 0)}\n\n`;
+          message += JSON.stringify(learnersArray, null, 2);
+        }
+
         response = {
           statusCode: 200,
-          body: JSON.stringify(body, null, 2)
+          body: message
         }
       } else {
         const json = body.json;
@@ -108,4 +129,49 @@ function validateJSON(event) {
   body.json = json;
 
   return body;
+}
+
+/**
+ * To demonstrate the pagination, this returns a 2d array, each array is one batch of learners returned
+ */
+async function fetchLearnerData(jwt, query, learnersApiUrl, pageSize) {
+  const queryParams = {
+    query,
+    page_size: pageSize,
+    start_from: 0
+  };
+  const allLearners = [];
+  let foundAllLearners = false;
+  let totalLearnersFound = 0;
+
+  while (!foundAllLearners) {
+    const res = await getLearnerDataWithJwt(learnersApiUrl, queryParams, jwt);
+    if (res.json.learners) {
+      allLearners.push(res.json.learners);
+
+      if (res.json.learners.length < pageSize) {
+        foundAllLearners = true;
+      } else {
+        totalLearnersFound += res.json.learners.length;
+        queryParams.start_from = totalLearnersFound;
+      }
+    } else {
+      throw new Error("Malformed response from the portal: " + JSON.stringify(res));
+    }
+  }
+  return allLearners;
+}
+
+async function getLearnerDataWithJwt(learnersApiUrl, queryParams, jwt) {
+  return axios.post(learnersApiUrl, queryParams,
+    {
+      headers: {
+        "Authorization": `Bearer/JWT ${jwt}`
+      }
+    }
+  ).then((res) => {
+    return res.data;
+  }, (error) => {
+    throw error;
+  });
 }
