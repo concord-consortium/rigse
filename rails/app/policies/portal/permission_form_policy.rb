@@ -35,7 +35,7 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def external_report_learners_from_jwt?
-    true
+    manager_or_researcher_or_project_researcher?
   end
 
   def update_forms?

@@ -110,6 +110,8 @@ class API::V1::ReportLearnersEsController < API::APIController
   # Note that this version of the pagination is capped at 100,000 results:
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
   def external_report_learners_from_jwt
+    authorize Portal::PermissionForm
+
     query = params["query"]
     start_from = params["start_from"] || 0
 
