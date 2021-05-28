@@ -27,7 +27,7 @@ end
 
 Then /^I should see a project link labeled "([^"]*)" linking to "([^"]*)"$/ do |link, href|
   expect(page).to have_link link
-  expect(find_link(link)[:href]).to eq href
+  expect(find_link(link)[:href]).to match /^#{href}\/?$/
 end
 
 Then /^I expand the "([^"]*)" section$/ do |section_name|
