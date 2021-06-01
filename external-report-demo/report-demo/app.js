@@ -95,7 +95,7 @@ function validateJSON(event) {
   const body = queryString.parse(event.body);
 
   if (body.jwt) {
-    // pass back the quole request without any verification
+    // pass back the wuole request without any verification
     return body;
   }
 

@@ -98,7 +98,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     render json: response.to_json
   end
 
-  # returns an array of learer-details, given a query and a jwt
+  # returns an array of learner-details, given a query and a jwt
   # The JWT is parsed by the common api controller, and if it contains a user's uid it will assign
   # current_user to that user.
   # The query is the same query from the report filter page that would otherwise be passed to external_report_query.
