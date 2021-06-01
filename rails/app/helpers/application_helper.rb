@@ -716,7 +716,7 @@ module ApplicationHelper
     if collection.total_pages < 2
       case model_count
       when 0 then "No #{model_name} found".html_safe
-      when 1 then "Displaying #{b}1#{eb} #model_name}".html_safe
+      when 1 then "Displaying #{b}1#{eb} #{model_name}".html_safe
       else "Displaying #{b}all#{sp}#{model_count}#{eb} #{model_name}".html_safe
       end
     else
