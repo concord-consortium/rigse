@@ -396,9 +396,16 @@ describe ApplicationHelper, type: :helper do
 
   # TODO: auto-generated
   describe '#link_button' do
-    it 'works' do
+    it 'works when we stub out the compute_asset_path method' do
+      # 2021-06-01 -- This doesn't work any more because the asset packaging
+      # pipeline expects an image named 'image' to exist in the pipeline.
+      expect(helper).to receive(:compute_asset_path).and_return("image")
       result = helper.link_button('image', 'url')
+      expect(result).not_to be_nil
 
+    end
+    it 'works if we give it a valid image from the asset path too' do
+      result = helper.link_button('cc-logo', 'url')
       expect(result).not_to be_nil
     end
   end

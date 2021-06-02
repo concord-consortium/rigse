@@ -12,7 +12,7 @@ Feature: Admin can work with projects
   Scenario: Admin accesses projects
     Given the default projects exist using factories
     When I am on the projects index page
-    And I should see "4 projects"
+    And I should see "4 Projects"
     And I should see "project 1"
     And I should see "project 2"
     And I should see "project 3"
@@ -26,7 +26,7 @@ Feature: Admin can work with projects
     And I fill in "admin_project[landing_page_content]" with "<h1>New project FooBar!</h1>"
     And I press "Save"
     Then I should be on the projects index page
-    And I should see "2 projects"
+    And I should see "2 Projects"
     And I should see "Project was successfully created."
     And I should see "My new project"
     When I click "/new-project"
