@@ -68,7 +68,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     }.to_json
   end
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
   rescue_from SignedJWT::Error, with: :error_500
 
   # returns a JWT containing the uuid of the requester, alongside the original query and some other parameters.
