@@ -382,7 +382,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "wont allow external_report_learners_from_jwt, returns error 403" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           expect(response.status).to eql(403)
         end
       end
@@ -401,7 +401,7 @@ describe API::V1::ReportLearnersEsController do
           learner1.report_learner.runnable = activity1
           learner1.report_learner.save!
 
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           resp = JSON.parse(response.body)
           filter = resp["json"]
           expect(filter["learners"].length).to eq 2
@@ -414,11 +414,11 @@ describe API::V1::ReportLearnersEsController do
       describe "GET external_report_learners_from_jwt with incorrect page_size" do
 
         it "renders an error if page_size is missing" do
-          get :external_report_learners_from_jwt, {:query => {}}
+          get :external_report_learners_from_jwt, params: { query: {} }
           expect(response.status).to eql(400)
         end
         it "renders an error if page_size is too large" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 10000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 10000 }
           expect(response.status).to eql(400)
         end
 
@@ -433,7 +433,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "allows external_report_learners_from_jwt" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           expect(response.status).to eql(200)
         end
       end
@@ -453,7 +453,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "allows external_report_learners_from_jwt" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           expect(response.status).to eql(200)
         end
       end

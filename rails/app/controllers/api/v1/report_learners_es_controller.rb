@@ -113,7 +113,9 @@ class API::V1::ReportLearnersEsController < API::APIController
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
 
-    query = params["query"]
+    # Empty hashes and arrays are removed from param list now
+    # see: https://github.com/rails/rails/issues/26569
+    query = params["query"] || {}
     page_size = params["page_size"].to_i
     start_from = params["start_from"].to_i || 0
 
