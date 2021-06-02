@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210127174117) do
+ActiveRecord::Schema.define(version: 20210520131514) do
 
   create_table "access_grants", force: :cascade do |t|
     t.string   "code",                    limit: 255
@@ -547,6 +547,7 @@ ActiveRecord::Schema.define(version: 20210127174117) do
     t.boolean  "individual_activity_reportable",               default: false
     t.text     "move_students_api_url",          limit: 65535
     t.string   "move_students_api_token",        limit: 255
+    t.boolean  "use_query_jwt",                                default: false
   end
 
   add_index "external_reports", ["client_id"], name: "index_external_reports_on_client_id", using: :btree

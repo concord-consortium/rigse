@@ -40,7 +40,7 @@ Feature: Author can filter their own material
     Then I should see "external_activity_1"
     And I should see "external_activity_2"
 
-  @javascript @search
+  @javascript @search @wip
   Scenario: Authors can filter their own published materials
     Given the following users exist:
       | login    | password | roles |
@@ -54,7 +54,10 @@ Feature: Author can filter their own material
     When I am logged in with the username author_1
     And I am on the search instructional materials page
     And I search for my own materials
+    And I wait 2 seconds
     And I check "official" under Authorship
+    And I wait 2 seconds
+    Then the "include_official" checkbox should be checked
     Then I should see "external_activity_1"
     And I should not see "external_activity_2"
     And I should not see "external_activity_3"

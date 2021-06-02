@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class API::V1::ReportLearnersEsController < API::APIController
 
   public
@@ -33,7 +35,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     render :json => esSearchResult
   end
 
-  # Returns a signed query that can be used by the external researcher report.
+  # Returns a signed set of learners from a query that can be used by the external researcher report.
   def external_report_query
     authorize Portal::PermissionForm
 
@@ -41,7 +43,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     # API::V1::ReportLearnersEsController.query_es.
     learner_selector = Report::Learner::Selector.new(params, current_user, {:include_runnable_and_learner => true})
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
-    query = {
+    response = {
       type: "learners",
       version: "1.1",
       learners: learner_selector.learners.map do |l|
@@ -59,15 +61,86 @@ class API::V1::ReportLearnersEsController < API::APIController
     # Note that we're not generating JWT. We're only signing generated query JSON, so the external report can verify
     # that it's coming from the Portal and it hasn't been modified on the way. The external report app needs to know
     # hmac_secret to verify query and signature.
-    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, query.to_json)
+    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, response.to_json)
     render json: {
-      json: query,
+      json: response,
       signature: signature
     }.to_json
   end
 
-  def self.query_es(options, user)
+  skip_before_filter :verify_authenticity_token
+  rescue_from SignedJWT::Error, with: :error_500
 
+  # returns a JWT containing the uuid of the requester, alongside the original query and some other parameters.
+  # By sending back the JWT and query to external_report_learners_from_jwt, we can make an authorized request
+  # for the learner data details (with the permissions available to the user named in the jwt).
+  # The JSON containing the query doesn't get signed because a report will ask for it directly from the portal
+  # API (unlike the external_report_query route above, which is queried internally by the portal report filter
+  # page, and then the results are handed to the external request as POST from a form, so the report doesn't
+  # actually know where they came from.)
+  def external_report_query_jwt
+    authorize Portal::PermissionForm
+
+    response = {
+      token: SignedJWT::create_portal_token(current_user, {}, 3600),   # just sets uid
+      json: {
+        query: params,
+        type: "learners",
+        version: "2",
+        user: {
+          id: url_for(current_user),
+          email: current_user.email
+        },
+        learnersApiUrl: external_report_learners_from_jwt_api_v1_report_learners_es_url
+      }
+    }
+
+    render json: response.to_json
+  end
+
+  # returns an array of learner-details, given a query and a jwt
+  # The JWT is parsed by the common api controller, and if it contains a user's uid it will assign
+  # current_user to that user.
+  # The query is the same query from the report filter page that would otherwise be passed to external_report_query.
+  # This will return a list of learner-details no larger than the requested page size
+  # in order to retrieve more results, this same route can be requested multiple times with a start_from parameter.
+  # Note that this version of the pagination is capped at 100,000 results:
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
+  #
+  # @param query - (required) query from external_report_query_jwt
+  # @param page_size - (required) number of learners per page, hard-capped at 2000
+  # @param start_from - (optional) learner index to start from for the next page
+  def external_report_learners_from_jwt
+    authorize Portal::PermissionForm
+
+    query = params["query"]
+    page_size = params["page_size"].to_i
+    start_from = params["start_from"].to_i || 0
+
+    if (page_size == nil || page_size < 1)
+      return error "param page_size must be a positive number", 400
+    elsif (page_size > 2000)
+      return error "param page_size may not be larger than 2000", 400
+    end
+
+    query[:size_limit] = page_size
+
+    learner_selector = Report::Learner::Selector.new(query, current_user, {
+      :include_runnable_and_learner => true,
+      :start_from => start_from
+    })
+
+    response = {
+      json: {
+        version: "1",
+        learners: learner_selector.learners.map {|l| self.class.detailed_learner_info l}
+      }
+    }
+    render json: response.to_json
+  end
+
+  # Query elastic search to get the learners we want, with the permissions we have available
+  def self.query_es(options, user)
     if user.has_role?('manager','admin','researcher')
       all_access = true
     else
@@ -263,6 +336,10 @@ class API::V1::ReportLearnersEsController < API::APIController
       }
     }
 
+    if options[:start_from]
+      query[:from] = options[:start_from]
+    end
+
     logger.info "ES Query:"
     logger.info query
 
@@ -270,5 +347,31 @@ class API::V1::ReportLearnersEsController < API::APIController
       :body => query.to_json,
       :headers => { 'Content-Type' => 'application/json' } )
     return esSearchResult
+  end
+
+  def self.detailed_learner_info(learner)
+    {
+      student_id: learner.student_id,
+      learner_id: learner.learner_id,
+      class_id: learner.class_id,
+      class: learner.class_name,
+      school: learner.school_name,
+      user_id: learner.user_id,
+      permission_forms: learner.permission_forms,
+      username: learner.username,
+      student_name: learner.student_name,
+      last_run: learner.last_run,
+      run_remote_endpoint: learner.learner ? learner.learner.remote_endpoint_url : nil,
+      runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil,
+      teachers: [
+        {
+          user_id: learner.teachers_id,
+          name: learner.teachers_name,
+          district: learner.teachers_district,
+          state: learner.teachers_state,
+          email: learner.teachers_email
+        }
+      ]
+    }
   end
 end

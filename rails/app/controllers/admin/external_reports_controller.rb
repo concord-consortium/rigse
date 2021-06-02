@@ -77,6 +77,6 @@ class Admin::ExternalReportsController < ApplicationController
   def external_report_strong_params(params)
     params && params.permit(:allowed_for_students, :client, :client_id, :default_report_for_source_type,
                             :individual_activity_reportable, :individual_student_reportable, :launch_text,
-                            :move_students_api_token, :move_students_api_url, :name, :report_type, :url)
+                            :move_students_api_token, :move_students_api_url, :name, :report_type, :url, :use_query_jwt)
   end
 end

@@ -65,7 +65,7 @@ describe('ExternalReportButton', () => {
         logsQueryRequest.done()
         // Note that it's impossible to use Nock to check second POST request, because JSDOM doesn't implement
         // form.submit() function. That's browser navigation and JSODM doesn't seem to handle it.
-        expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined)
+        expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined, undefined)
         done()
       }, 100)
     })
@@ -93,7 +93,7 @@ describe('ExternalReportButton', () => {
         logsQueryRequest.done()
         // Note that it's impossible to use Nock to check second POST request, because JSDOM doesn't implement
         // form.submit() function. That's browser navigation and JSODM doesn't seem to handle it.
-        expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, portalToken)
+        expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined, portalToken)
         done()
       }, 100)
     })
@@ -104,7 +104,7 @@ describe('ExternalReportButton', () => {
       const json = {query: "What's up doc?"}
       const portalToken = "testtoken"
       const form = generateJQueryForm(reportUrl, json, querySignature, portalToken);
-      expect(form.html()).toBe("<input type=\"hidden\" name=\"allowDebug\" value=\"1\"><input type=\"hidden\" name=\"json\" value=\"{&quot;query&quot;:&quot;What's up doc?&quot;}\"><input type=\"hidden\" name=\"signature\" value=\"fakeQueryHMACSignature\"><input type=\"hidden\" name=\"portal_token\" value=\"testtoken\">");
+      expect(form.html()).toBe("<input type=\"hidden\" name=\"allowDebug\" value=\"1\"><input type=\"hidden\" name=\"json\" value=\"{&quot;query&quot;:&quot;What's up doc?&quot;}\"><input type=\"hidden\" name=\"signature\" value=\"fakeQueryHMACSignature\"><input type=\"hidden\" name=\"jwt\" value=\"testtoken\">");
     })
   })
 })
