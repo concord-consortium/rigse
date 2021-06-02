@@ -40,7 +40,7 @@ Feature: Author can filter their own material
     Then I should see "external_activity_1"
     And I should see "external_activity_2"
 
-  @javascript @search
+  @javascript @search @wip
   Scenario: Authors can filter their own published materials
     Given the following users exist:
       | login    | password | roles |
