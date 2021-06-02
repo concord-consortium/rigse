@@ -59,7 +59,7 @@
 
   - role_classes = current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }
   - guest_classes = current_user.nil? ? ['main-nav-hidden'] : []
-  %body{:class => (guest_classes + role_classes).join(' ').squish, :'ng-app' => 'cc-portal'}
+  %body{:class => (guest_classes + role_classes themed_body_class).join(' ').squish, :'ng-app' => 'cc-portal'}
 
     #note{:style=>"display: none;"}
     = content_for :lightboxes

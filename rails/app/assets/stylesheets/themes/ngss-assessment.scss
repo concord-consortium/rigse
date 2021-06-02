@@ -1,27 +1,20 @@
-/*
- * This is a manifest file that'll automatically include all the stylesheets available in this directory
- * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
- * the top of the compiled file, but it's generally better to create a new file per style scope.
- *
- *= require_self
- *= require_tree .
-*/
-
-.project-header h1 {
-  background: transparent image-url("/assets/banners/ngss-assessment.png") 0 0 no-repeat;
-  @media
-  only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (min--moz-device-pixel-ratio: 2),
-  only screen and (-o-min-device-pixel-ratio: 2/1),
-  only screen and (min-device-pixel-ratio: 2),
-  only screen and (min-resolution: 192dpi),
-  only screen and (min-resolution: 2dppx) {
-      background: transparent image-url("/assets/banners/ngss-assessment@2x.png") 0 0 no-repeat;
-      background-size: 325px 100px;
+ngss-assessment-theme-styles {
+  .project-header h1 {
+    background: transparent image-url("/assets/banners/ngss-assessment.png") 0 0 no-repeat;
+    @media
+    only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and (min--moz-device-pixel-ratio: 2),
+    only screen and (-o-min-device-pixel-ratio: 2/1),
+    only screen and (min-device-pixel-ratio: 2),
+    only screen and (min-resolution: 192dpi),
+    only screen and (min-resolution: 2dppx) {
+        background: transparent image-url("/assets/banners/ngss-assessment@2x.png") 0 0 no-repeat;
+        background-size: 325px 100px;
+    }
   }
-}
-
-#footer {
-  font-size: 15px;
-  text-align: center;
+  
+  #footer {
+    font-size: 15px;
+    text-align: center;
+  }
 }
