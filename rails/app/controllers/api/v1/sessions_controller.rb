@@ -27,8 +27,9 @@ class API::V1::SessionsController < Devise::SessionsController
     user = User.find_by_login(username)
 
     if user && user.valid_password?(password)
-
       sign_in(resource_name, user)
+      flash[:notice] = "Signed in successfully."
+      flash.keep(:notice)
       render status: 200, :json => {
         :message => "Login success.",
         :redirect_path => after_sign_in_path_for(current_user)

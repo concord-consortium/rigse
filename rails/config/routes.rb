@@ -17,6 +17,7 @@ RailsPortal::Application.routes.draw do
   match '/oauth/token' => 'auth#access_token', via: [:get, :post]
   get   '/auth/failure' => 'auth#failure'
   get   '/auth/isalive' => 'auth#isalive'
+  get   '/auth/oauth_authorize' => 'auth#oauth_authorize'
   get   '/auth/user' => 'auth#user'
 
   match "search" => 'search#index', :as => :search, via: [:get, :post]
@@ -486,6 +487,8 @@ RailsPortal::Application.routes.draw do
         resources :report_learners_es, only: [:index] do
           collection do
             get :external_report_query
+            get :external_report_query_jwt
+            post :external_report_learners_from_jwt
           end
         end
 

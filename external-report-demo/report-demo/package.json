@@ -1,0 +1,19 @@
+{
+  "name": "portal-external-report-demo",
+  "version": "1.0.0",
+  "description": "SAM demo of external report",
+  "main": "app.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "query-string": "^6.13.1"
+  },
+  "scripts": {
+    "test": "JWT_HMAC_SECRET=test-key mocha tests/unit/"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.815.0",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
+  }
+}

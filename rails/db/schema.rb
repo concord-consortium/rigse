@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210409152901) do
+ActiveRecord::Schema.define(version: 20210520131514) do
 
   create_table "access_grants", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "code"
@@ -518,7 +518,8 @@ ActiveRecord::Schema.define(version: 20210409152901) do
     t.boolean  "individual_student_reportable",                default: false
     t.boolean  "individual_activity_reportable",               default: false
     t.text     "move_students_api_url",          limit: 65535
-    t.string   "move_students_api_token"
+    t.string   "move_students_api_token",        limit: 255
+    t.boolean  "use_query_jwt",                                default: false
     t.index ["client_id"], name: "index_external_reports_on_client_id", using: :btree
   end
 
