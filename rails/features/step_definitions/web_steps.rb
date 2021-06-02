@@ -225,25 +225,15 @@ Then /^the "([^"]*)" field(?: within (.*))? should not contain "([^"]*)"$/ do |f
   end
 end
 
-Then /^the "([^"]*)" checkbox(?: within (.*))? should be checked$/ do |label, parent|
+Then /^the "([^"]*)" checkbox(?: inside (.*))? should be checked$/ do |label, parent|
   with_scope(parent) do
-    field_checked = find_field(label)['checked']
-    if field_checked.respond_to? :should
-      expect(field_checked).to be_truthy
-    else
-      assert field_checked
-    end
+    expect(page).to have_field(label, checked: true)
   end
 end
 
-Then /^the "([^"]*)" checkbox(?: within (.*))? should not be checked$/ do |label, parent|
+Then /^the "([^"]*)" checkbox(?: inside (.*))? should not be checked$/ do |label, parent|
   with_scope(parent) do
-    field_checked = find_field(label)['checked']
-    if field_checked.respond_to? :should
-      expect(field_checked).to be_falsey
-    else
-      assert !field_checked
-    end
+    expect(page).to have_field(label, unchecked: true)
   end
 end
 

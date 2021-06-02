@@ -54,7 +54,9 @@ Feature: Author can filter their own material
     When I am logged in with the username author_1
     And I am on the search instructional materials page
     And I search for my own materials
+    Then the "include_official" checkbox should not be checked
     And I check "official" under Authorship
+    Then the "include_official" checkbox should be checked
     Then I should see "external_activity_1"
     And I should not see "external_activity_2"
     And I should not see "external_activity_3"
