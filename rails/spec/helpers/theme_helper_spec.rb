@@ -23,8 +23,8 @@ describe ThemeHelper do
     it "should respond to :render_themed_partial" do
       expect(instance).to respond_to :render_themed_partial
     end
-    it "should respond to :themed_style_sheet_tag" do
-      expect(instance).to respond_to :themed_style_sheet_tag
+    it "should respond to :themed_body_class" do
+      expect(instance).to respond_to :themed_body_class
     end
     it "should respond to :theme_name" do
       expect(instance).to respond_to :theme_name
@@ -45,6 +45,15 @@ describe ThemeHelper do
         set_theme_env('foo')
         expect(instance.theme_name).to eql 'foo'
       end
+    end
+  end
+
+  describe ":themed_body_class" do
+    it "returns css class name including `{theme_name}` and `-theme-styles`" do
+      set_theme_env('learn')
+      expect(instance.themed_body_class).to eql 'learn-theme-styles'
+      set_theme_env('foo')
+      expect(instance.themed_body_class).to eql 'foo-theme-styles'
     end
   end
 
