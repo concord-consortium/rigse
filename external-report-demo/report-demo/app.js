@@ -21,8 +21,10 @@ exports.lambdaHandler = async (event, context) => {
       const body = validateJSON(event);
 
       if (body.jwt) {
-        const {jwt, json, learnersApiUrl} = body;
+        const {jwt, json} = body;
         const parsedJson = JSON.parse(json);
+        const learnersApiUrl = parsedJson.learnersApiUrl;
+
         // create a copy of our request to display back to the user
         const infoBody = {
           jwt,
@@ -95,7 +97,7 @@ function validateJSON(event) {
   const body = queryString.parse(event.body);
 
   if (body.jwt) {
-    // pass back the wuole request without any verification
+    // pass back the whole request without any verification
     return body;
   }
 
