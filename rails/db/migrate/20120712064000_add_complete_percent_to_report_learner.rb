@@ -2,7 +2,7 @@ class AddCompletePercentToReportLearner < ActiveRecord::Migration
 
   # faux model for successful migration
   class Report::Learner < ActiveRecord::Base
-    set_table_name :report_learners
+    self.table_name = :report_learners
     belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
   end
 
