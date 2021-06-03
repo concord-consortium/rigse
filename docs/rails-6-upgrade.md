@@ -28,14 +28,13 @@
       - ✔ views/home/_project_summary
       - ✔ views/shared/_footer
       - ✔ views/shared/_logo
-
+    3. ✔ verify view partials rendering for mailers are needed and still work:
+      - ✔ views/shared/_email_banner
+      - ✔ rails/app/views/password_mailer/forgot_password.html.erb:
+      - ✔ rails/app/views/portal/clazz_mailer/clazz_assignment_notification.html.erb:11
+      - ✔ rails/app/views/portal/clazz_mailer/clazz_creation_notification.html.erb:11
+      - ✔ rails/app/views/user_mailer/confirmation_instructions.html.erb:11
 ## TODO
 
 1. Find all `RAILS6` comments and address them
-2. Replacement for theme_on_rails:
-  a. verify view partials rendering for mailers are needed and still work:
-      - views/shared/_email_banner
-        - rails/app/views/password_mailer/forgot_password.html.erb:
-        - rails/app/views/portal/clazz_mailer/clazz_assignment_notification.html.erb:11
-        - rails/app/views/portal/clazz_mailer/clazz_creation_notification.html.erb:11
-        - rails/app/views/user_mailer/confirmation_instructions.html.erb:11
+

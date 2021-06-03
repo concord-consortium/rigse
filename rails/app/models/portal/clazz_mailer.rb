@@ -1,6 +1,6 @@
 class Portal::ClazzMailer < ActionMailer::Base
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
-
+  helper :theme
   def clazz_creation_notification(user, clazz)
     if user.present? && user.portal_teacher.present?
       @teacher_name = user.name
