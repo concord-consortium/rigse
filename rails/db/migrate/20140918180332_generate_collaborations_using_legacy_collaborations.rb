@@ -43,11 +43,12 @@ class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration
 
     # decrease batch size for tempormental hosts.
     # eagerly load associations to be faster
-    Dataservice::BundleContent.find_each(
-    :include => [
+    Dataservice::BundleContent
+    .includes([
        {:bundle_logger => {:learner => :student}},
        :collaborators
-     ], :batch_size => 250) do |bundle|
+     ])
+    .find_each(:batch_size => 250) do |bundle|
        collaborators = bundle.collaborators
        next if collaborators.size == 0
        next if bundle.bundle_logger.learner.nil?

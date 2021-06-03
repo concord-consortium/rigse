@@ -9,7 +9,7 @@ class AddResourceLicense < ActiveRecord::Migration
     # load updated licenses with version numbers
     defs = YAML::load_file(File.join(Rails.root,"config","licenses.yml"));
     defs['licenses'].each do |license_hash|
-      license = CommonsLicense.find_or_create(code: license_hash)
+      license = CommonsLicense.find_or_create_by(license_hash)
       license.update_attributes(license_hash)
       license.save
     end
