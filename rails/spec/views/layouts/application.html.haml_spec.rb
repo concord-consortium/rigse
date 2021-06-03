@@ -1,11 +1,5 @@
 require 'spec_helper'
 
-
-def set_theme_env(name)
-  allow(ENV).to receive(:[]).and_call_original # Let other ENV reqs to pass
-  allow(ENV).to receive(:[]).with(ThemeHelper::ENV_THEME_KEY).and_return(name)
-end
-
 describe "rendering application.html.haml" do
   let(:fake_visitor) { FactoryBot.create(:user, {id: 101}) }
   let(:roles) {['first-role']}

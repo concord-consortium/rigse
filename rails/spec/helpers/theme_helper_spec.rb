@@ -4,10 +4,6 @@ class ConsumerClass
   include ThemeHelper
 end
 
-def set_theme_env(name)
-  allow(ENV).to receive(:[]).with(ThemeHelper::ENV_THEME_KEY).and_return(name)
-end
-
 def stub_env(key, value)
 end
 
