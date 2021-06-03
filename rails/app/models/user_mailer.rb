@@ -1,5 +1,6 @@
 class UserMailer < Devise::Mailer
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
+  helper :theme
 
   def confirmation_instructions(record, token, opts={})
     @url = "#{APP_CONFIG[:site_url]}/activate/#{token}"
