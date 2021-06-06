@@ -89,6 +89,15 @@ Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/c
 1. In Lara, edit `.env` and append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
 2. You may need to use the rails console in LARA to set the `is_admin` flag to the portal admin user.
 
+#### Virtual host settings (currently used for automation)
+If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
+1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker
+2. In the Portal, edit '.env' file and update PORTAL_PROTOCOL as https for automation
+3. In the Portal, as an administrator, edit the Auth Client settings:
+```   
+    Site Url: 'https://learn.dev.docker'
+    Allowed URL Redirects: 'https://learn.dev.docker/users/auth/cc_portal_localhost/callback'
+```
 
 ### Theme support & Rolling your own theme:
 
