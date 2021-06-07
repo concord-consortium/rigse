@@ -1,3 +1,0 @@
-RAILS6: remove this folder and all.css when themes_for_rails is fix_rwky_redis
-
-This was copied from the themes folder to get the tests running

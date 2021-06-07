@@ -166,21 +166,11 @@ module RailsPortal
       import_progress.js
       import_model_library.js
       jquery.placeholder.js
-    )
-
-    # RAILS6 - remove this with fix for themes_for_rails
-    config.assets.precompile += %w(
-      learn/all.css
+      themes/all.scss
     )
 
     # pre-compile any fonts in the assets/ directory as well
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
-
-    # add in the current theme's application.css
-    # a proc is used here so the APP_CONFIG is available
-    config.assets.precompile << Proc.new do |path|
-      path.match(/\/themes\/.*\/all.s?css/) || path.match(/\/themes\/.*\/application.s?css/)
-    end
 
     # do not initialize on precompile so that the Dockerfile can run the precompile
     if BoolENV['DOCKER_NO_INIT_ON_PRECOMPILE']

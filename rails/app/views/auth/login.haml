@@ -111,7 +111,7 @@
         %div{:style => "position: relative"}
           - if @after_sign_in_path.present?
             = hidden_field_tag('after_sign_in_path', @after_sign_in_path)
-          = render partial: 'shared/logo'
+          = render_themed_partial 'shared/logo'
           %p
             Log in with your #{APP_CONFIG[:site_name]} account
             = @app_name.present? ? " to access the #{@app_name}" : ""

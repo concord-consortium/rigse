@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "rendering application.html.haml" do
-  let(:fake_visitor) { FactoryBot.create(:user, {id: 101,}) }
+  let(:fake_visitor) { FactoryBot.create(:user, {id: 101}) }
   let(:roles) {['first-role']}
 
   before do
@@ -18,6 +18,31 @@ describe "rendering application.html.haml" do
       :layout => "layouts/application"
     )
     expect(rendered).to have_selector("body.first-role-visitor")
+  end
+
+  it "hides the main nav for guests" do
+    allow(view).to receive(:current_user).and_return(nil)
+    render(
+      :html => "nothing",
+      :layout => "layouts/application"
+    )
+    expect(rendered).to have_selector("body.main-nav-hidden")
+  end
+
+  it "applies the correct theme classes" do
+    set_theme_env('learn')
+    render(
+      :html => "nothing",
+      :layout => "layouts/application"
+    )
+    expect(rendered).to have_selector("body.learn-theme-styles")
+
+    set_theme_env('foo')
+    render(
+      :html => "nothing",
+      :layout => "layouts/application"
+    )
+    expect(rendered).to have_selector("body.foo-theme-styles")
   end
 end
 
