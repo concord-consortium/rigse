@@ -10,8 +10,30 @@ describe API::V1::ReportLearnersEsController do
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
 
-  let(:learner1)          { FactoryBot.create(:full_portal_learner) }
-  let(:learner2)          { FactoryBot.create(:full_portal_learner) }
+  let(:mock_school)    { FactoryBot.create(:portal_school) }
+  let(:teacher_user1)  { FactoryBot.create(:confirmed_user, login: "teacher_user1") }
+  let(:teacher_user2)  { FactoryBot.create(:confirmed_user, login: "teacher_user2") }
+  let(:teacher1)       { FactoryBot.create(:portal_teacher, user: teacher_user1, schools: [mock_school]) }
+  let(:teacher2)       { FactoryBot.create(:portal_teacher, user: teacher_user2, schools: [mock_school]) }
+  let(:clazz1)         { FactoryBot.create(:portal_clazz, teachers: [teacher1]) }
+  let(:clazz2)         { FactoryBot.create(:portal_clazz, teachers: [teacher1, teacher2]) }
+  let(:external_activity) { FactoryBot.create(:external_activity) }
+  let(:offering1) { FactoryBot.create(
+    :portal_offering,
+    runnable_id: external_activity.id,
+    runnable_type: 'ExternalActivity',
+    clazz: clazz1
+  )}
+  let(:offering2) { FactoryBot.create(
+    :portal_offering,
+    runnable_id: external_activity.id,
+    runnable_type: 'ExternalActivity',
+    clazz: clazz2
+  )}
+
+  let(:learner1)          { FactoryBot.create(:full_portal_learner, { offering_id: offering1.id }) }
+  let(:learner2)          { FactoryBot.create(:full_portal_learner, { offering_id: offering2.id }) }
+  let(:learner3)          { FactoryBot.create(:full_portal_learner) }
 
   let(:index_search_body) do
     {
@@ -91,14 +113,16 @@ describe API::V1::ReportLearnersEsController do
             _source: {
               runnable_type_and_id: 'externalactivity_2',
             }
+          },
+          {
+            _id: learner3.report_learner.id,
+            _source: {
+              runnable_type_and_id: 'externalactivity_2',
+            }
           }
         ]
       }
     }.to_json
-  end
-
-  let(:activity1) do
-    FactoryBot.create(:external_activity, :url => "https://example.com/1")
   end
 
 
@@ -181,22 +205,18 @@ describe API::V1::ReportLearnersEsController do
           ).times(1)
       end
       it "renders response that includes Log Manager query and signature" do
-        # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
-        learner1.report_learner.runnable = activity1
-        learner1.report_learner.save!
-
         get :external_report_query
         resp = JSON.parse(response.body)
         filter = resp["json"]
         expect(filter["type"]).to eq "learners"
         expect(filter["version"]).to eq "1.1"
-        expect(filter["learners"].length).to eq 2
+        expect(filter["learners"].length).to eq 3
         expect(filter["learners"][0]["run_remote_endpoint"]).to eq learner1.remote_endpoint_url
         expect(filter["learners"][0]["class_id"]).to eq learner1.offering.clazz_id
-        expect(filter["learners"][0]["runnable_url"]).to eq activity1.url # not nil because it is an external activity
+        expect(filter["learners"][0]["runnable_url"]).to eq external_activity.url # not nil because it is an external activity
         expect(filter["learners"][1]["run_remote_endpoint"]).to eq learner2.remote_endpoint_url
         expect(filter["learners"][1]["class_id"]).to eq learner2.offering.clazz_id
-        expect(filter["learners"][1]["runnable_url"]).to eq nil  # nil because it is in investigation
+        expect(filter["learners"][2]["runnable_url"]).to eq nil  # nil because it is in investigation
         expect(filter["user"]["id"]).to eq url_for_user
         expect(filter["user"]["email"]).to eq admin_user.email
 
@@ -311,10 +331,6 @@ describe API::V1::ReportLearnersEsController do
       describe "GET external_report_jwt_query" do
 
         it "renders response that includes Log Manager query and JWT" do
-          # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
-          learner1.report_learner.runnable = activity1
-          learner1.report_learner.save!
-
           get :external_report_query_jwt
           resp = JSON.parse(response.body)
           filter = resp["json"]
@@ -397,17 +413,18 @@ describe API::V1::ReportLearnersEsController do
       describe "GET external_report_learners_from_jwt" do
 
         it "renders response that includes learners" do
-          # change first learner's runnable from an investigation to an external activity to ensure the report url is emitted
-          learner1.report_learner.runnable = activity1
-          learner1.report_learner.save!
-
           get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
           resp = JSON.parse(response.body)
           filter = resp["json"]
-          expect(filter["learners"].length).to eq 2
-          expect(filter["learners"][0]["student_id"]).to be_an_instance_of(Fixnum)
-          expect(filter["learners"][0]["learner_id"]).to be_an_instance_of(Fixnum)
-          expect(filter["learners"][0]["class_id"]).to be_an_instance_of(Fixnum)
+          expect(filter["learners"].length).to eq 3
+          expect(filter["learners"][0]["student_id"].to_i).to be_an_instance_of(Fixnum)
+          expect(filter["learners"][0]["learner_id"].to_i).to eq learner1.id
+          expect(filter["learners"][0]["class_id"].to_i).to eq clazz1.id
+          expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
+          expect(filter["learners"][0]["teachers"].length).to eq 1
+          expect(filter["learners"][1]["teachers"].length).to eq 2    # learner2's class has two teachers
+          expect(filter["learners"][1]["teachers"][0]["user_id"].to_i).to eq teacher2.id
+          expect(filter["learners"][1]["teachers"][1]["user_id"].to_i).to eq teacher1.id
         end
       end
 
