@@ -471,7 +471,7 @@ RailsPortal::Application.routes.draw do
           get  :firebase
         end
 
-        resources :external_activities, :only => [:create] do
+        resources :external_activities, :only => [:create,:update] do
           member do
             post :update_basic
           end
