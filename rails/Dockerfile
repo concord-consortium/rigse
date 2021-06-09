@@ -51,7 +51,12 @@ ENV RAILS_ENV=production
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
 RUN cp config/settings.sample.yml config/settings.yml
 ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
-RUN bundle exec rake assets:precompile
+
+
+ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
+# Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
+# Instead we need to fake some ENV Vars for the precompile ...
+RUN SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
 RUN cp docker/prod/config/settings.yml config/settings.yml
 
 EXPOSE 80
