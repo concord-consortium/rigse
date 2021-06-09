@@ -10,7 +10,7 @@ describe API::V1::ReportLearnersEsController do
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
 
-  let(:mock_school)    { FactoryBot.create(:portal_school) }
+  let(:mock_school)    { FactoryBot.create(:portal_school, {:district => nil}) }
   let(:teacher_user1)  { FactoryBot.create(:confirmed_user, login: "teacher_user1") }
   let(:teacher_user2)  { FactoryBot.create(:confirmed_user, login: "teacher_user2") }
   let(:teacher1)       { FactoryBot.create(:portal_teacher, user: teacher_user1, schools: [mock_school]) }
@@ -472,6 +472,27 @@ describe API::V1::ReportLearnersEsController do
         it "allows external_report_learners_from_jwt" do
           get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
           expect(response.status).to eql(200)
+        end
+      end
+    end
+
+    describe "school without district" do
+      before (:each) do
+        jwt = SignedJWT::create_portal_token(admin_user, {}, 3600)
+        set_jwt_bearer_token(jwt)
+      end
+
+      describe "GET external_report_learners_from_jwt" do
+
+        it "renders response that includes learners" do
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          resp = JSON.parse(response.body)
+          filter = resp["json"]
+          expect(filter["learners"].length).to eq 3
+          expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
+          expect(filter["learners"][0]["teachers"].length).to eq 1
+          expect(filter["learners"][0]["teachers"][0]["user_id"].to_i).to eq teacher1.id
+          expect(filter["learners"][0]["teachers"][0]["district"]).to eq nil
         end
       end
     end
