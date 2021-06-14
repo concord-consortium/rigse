@@ -1,7 +1,8 @@
 import React from 'react'
 
 import Component from '../helpers/component'
-import stemFinderResult from '../components/stem-finder-result'
+import StemFinderResult from '../components/stem-finder-result'
+import HeaderFilter from '../components/header-filter'
 import sortByName from '../helpers/sort-by-name'
 import fadeIn from '../helpers/fade-in'
 import pluralize from '../helpers/pluralize'
@@ -10,19 +11,16 @@ import filters from '../helpers/filters'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
 import AutoSuggest from './search/auto-suggest'
 
-import css from './stem-finder.scss'
-
-const DISPLAY_LIMIT_INCREMENT = 10
+const DISPLAY_LIMIT_INCREMENT = 6
 
 const StemFinder = Component({
 
   getInitialState: function () {
     let subjectAreaKey = this.props.subjectAreaKey
     let gradeLevelKey = this.props.gradeLevelKey
-    let projectId = this.props.projectId || null
-    let sortOrder = this.props.sortOrder || 'Alphabetical'
+    let featureTypeKey = this.props.featureTypeKey
 
-    if (!subjectAreaKey && !gradeLevelKey) {
+    if (!subjectAreaKey && !gradeLevelKey && !featureTypeKey) {
       //
       // If we are not passed props indicating filters to pre-populate
       // then attempt to see if this information is available in the URL.
@@ -30,6 +28,7 @@ const StemFinder = Component({
       const params = this.getFiltersFromURL()
       subjectAreaKey = params.subject
       gradeLevelKey = params['grade-level']
+      featureTypeKey = params.feature
 
       subjectAreaKey = this.mapSubjectArea(subjectAreaKey)
     }
@@ -37,8 +36,8 @@ const StemFinder = Component({
     //
     // Scroll to stem finder if we have filters specified.
     //
-    if (subjectAreaKey || gradeLevelKey) {
-      // this.scrollToFinder()
+    if (subjectAreaKey || gradeLevelKey || featureTypeKey) {
+      this.scrollToFinder()
     }
 
     let subjectAreasSelected = []
@@ -56,23 +55,28 @@ const StemFinder = Component({
       }
     }
 
-    let gradeLevelsSelected = []
-    let gradeLevelsSelectedMap = {}
+    let gradeFiltersSelected = []
 
     if (gradeLevelKey) {
-      let gradeLevels = filters.gradeLevels
+      let gradeLevels = filters.gradeFilters
       for (i = 0; i < gradeLevels.length; i++) {
         let gradeLevel = gradeLevels[i]
         if (gradeLevel.key === gradeLevelKey) {
-          gradeLevelsSelected.push(gradeLevel)
-          gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel
+          gradeFiltersSelected.push(gradeLevel)
         }
       }
     }
 
-    let projectsSelected = []
-    if (projectId) {
-      projectsSelected.push(projectId)
+    let featureFiltersSelected = []
+
+    if (featureTypeKey) {
+      let featureTypes = filters.featureFilters
+      for (i = 0; i < featureTypes.length; i++) {
+        let featureType = featureTypes[i]
+        if (featureType.key === featureTypeKey) {
+          featureFiltersSelected.push(featureType)
+        }
+      }
     }
 
     // console.log("INFO stem-finder initial subject areas: ", subjectAreasSelected);
@@ -81,10 +85,8 @@ const StemFinder = Component({
       opacity: 1,
       subjectAreasSelected: subjectAreasSelected,
       subjectAreasSelectedMap: subjectAreasSelectedMap,
-      gradeLevelsSelected: gradeLevelsSelected,
-      gradeLevelsSelectedMap: gradeLevelsSelectedMap,
-      projectsSelected: projectsSelected,
-      sortOrder: sortOrder,
+      featureFiltersSelected: featureFiltersSelected,
+      gradeFiltersSelected: gradeFiltersSelected,
       resources: [],
       numTotalResources: 0,
       displayLimit: DISPLAY_LIMIT_INCREMENT,
@@ -111,6 +113,8 @@ const StemFinder = Component({
 
     let parts = path.split('/')
 
+    // console.log("INFO getFiltersFromURL() found URL parts", parts);
+
     if (parts.length >= 4 && parts[1] === 'resources') {
       ret[parts[2]] = parts[3]
     }
@@ -123,10 +127,23 @@ const StemFinder = Component({
       case 'biology':
       case 'life-science':
         return 'life-sciences'
+      case 'chemistry':
+      case 'physics':
+        return 'physics-chemistry'
       case 'engineering':
         return 'engineering-tech'
     }
     return subjectArea
+  },
+
+  //
+  // Scroll to top of stem-finder filter form.
+  //
+  scrollToFinder: function () {
+    let finderFormTop = jQuery('.portal-pages-finder-form').offset().top - 100
+    if (jQuery(document).scrollTop() < finderFormTop) {
+      jQuery('body, html').animate({ scrollTop: finderFormTop }, 600)
+    }
   },
 
   UNSAFE_componentWillMount: function () {
@@ -140,9 +157,10 @@ const StemFinder = Component({
     let query = keyword !== undefined ? ['search_term=', encodeURIComponent(keyword)] : []
     query = query.concat([
       '&skip_lightbox_reloads=true',
+      '&sort_order=Alphabetical',
       '&include_official=1',
       '&model_types=All',
-      '&include_related=0',
+      '&include_related=2',
       '&investigation_page=',
       searchPage,
       '&activity_page=',
@@ -163,8 +181,27 @@ const StemFinder = Component({
       })
     })
 
+    // features
+    this.state.featureFiltersSelected.forEach(function (featureFilter) {
+      if (featureFilter.searchMaterialType) {
+        query.push('&material_types[]=')
+        query.push(encodeURIComponent(featureFilter.searchMaterialType))
+      }
+      if (featureFilter.searchMaterialProperty) {
+        query.push('&material_properties[]=')
+        query.push(encodeURIComponent(featureFilter.searchMaterialProperty))
+      }
+      if (featureFilter.searchSensors) {
+        featureFilter.searchSensors.forEach(function (searchSensor) {
+          query.push('&sensors[]=')
+          query.push(encodeURIComponent(searchSensor))
+        })
+      }
+      // TODO: model
+    })
+
     // grade
-    this.state.gradeLevelsSelected.forEach(function (gradeFilter) {
+    this.state.gradeFiltersSelected.forEach(function (gradeFilter) {
       if (gradeFilter.searchGroups) {
         gradeFilter.searchGroups.forEach(function (searchGroup) {
           query.push('&grade_level_groups[]=')
@@ -173,18 +210,6 @@ const StemFinder = Component({
       }
       // TODO: informal learning?
     })
-
-    // project
-    this.state.projectsSelected.forEach(function (project) {
-      if (project) {
-        query.push('&project_ids[]=')
-        query.push(encodeURIComponent(project))
-      }
-    })
-
-    // sort
-    query.push('&sort_order=')
-    query.push(encodeURIComponent(this.state.sortOrder))
 
     return query.join('')
   },
@@ -252,123 +277,66 @@ const StemFinder = Component({
     }.bind(this))
   },
 
-  buildFilterId: function (filterKey) {
-    const filterKeyWords = filterKey.split('-')
-    const filterId = filterKeyWords.length > 1
-      ? filterKeyWords[0] + filterKeyWords[1].charAt(0).toUpperCase() + filterKeyWords[1].slice(1)
-      : filterKeyWords[0]
-    return filterId
-  },
-
   renderLogo: function (subjectArea) {
     // console.log("INFO renderLogo", subjectArea);
 
-    let className = 'portal-pages-finder-form-subject-areas-logo'
-    const filterId = this.buildFilterId(subjectArea.key)
+    let className = 'portal-pages-finder-form-subject-areas-logo col-2'
 
     var selected = this.state.subjectAreasSelectedMap[subjectArea.key]
     if (selected) {
-      className += ' ' + css.selected
+      className += ' selected'
     }
 
     const clicked = function () {
+      this.scrollToFinder()
+
       const subjectAreasSelected = this.state.subjectAreasSelected.slice()
       const subjectAreasSelectedMap = this.state.subjectAreasSelectedMap
+
       const index = subjectAreasSelected.indexOf(subjectArea)
 
       if (index === -1) {
         subjectAreasSelectedMap[subjectArea.key] = subjectArea
         subjectAreasSelected.push(subjectArea)
-        jQuery('#' + css[filterId]).addClass(css.selected)
+        jQuery('#' + subjectArea.key).addClass('selected')
         ga('send', 'event', 'Home Page Filter', 'Click', subjectArea.title)
       } else {
         subjectAreasSelectedMap[subjectArea.key] = undefined
         subjectAreasSelected.splice(index, 1)
-        jQuery('#' + css[filterId]).removeClass(css.selected)
+        jQuery('#' + subjectArea.key).removeClass('selected')
       }
       // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ subjectAreasSelected: subjectAreasSelected, subjectAreasSelectedMap: subjectAreasSelectedMap }, this.search)
     }.bind(this)
 
     return (
-      <li key={subjectArea.key} id={css[filterId]} className={className} onClick={clicked}>
+      <div key={subjectArea.key} id={subjectArea.key} className={className} onClick={clicked}>
         <div className={'portal-pages-finder-form-subject-areas-logo-inner'} />
         <div className={'portal-pages-finder-form-subject-areas-logo-label'}>
           {subjectArea.title}
         </div>
-      </li>
-    )
-  },
-
-  renderGLLogo: function (gradeLevel) {
-    let className = 'portal-pages-finder-form-filters-logo'
-    const filterId = this.buildFilterId(gradeLevel.key)
-
-    var selected = this.state.gradeLevelsSelectedMap[gradeLevel.key]
-    if (selected) {
-      className += ' ' + css.selected
-    }
-
-    const clicked = function () {
-      const gradeLevelsSelected = this.state.gradeLevelsSelected.slice()
-      const gradeLevelsSelectedMap = this.state.gradeLevelsSelectedMap
-      const index = gradeLevelsSelected.indexOf(gradeLevel)
-
-      if (index === -1) {
-        gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel
-        gradeLevelsSelected.push(gradeLevel)
-        jQuery('#' + css[filterId]).addClass(css.selected)
-        ga('send', 'event', 'Home Page Filter', 'Click', gradeLevel.title)
-      } else {
-        gradeLevelsSelectedMap[gradeLevel.key] = undefined
-        gradeLevelsSelected.splice(index, 1)
-        jQuery('#' + css[filterId]).removeClass(css.selected)
-      }
-      // console.log("INFO subject areas", subjectAreasSelected);
-      this.setState({ gradeLevelsSelected: gradeLevelsSelected, gradeLevelsSelectedMap: gradeLevelsSelectedMap }, this.search)
-    }.bind(this)
-
-    return (
-      <li key={gradeLevel.key} id={css[filterId]} className={className} onClick={clicked}>
-        <div className={'portal-pages-finder-form-filters-logo-inner'} />
-        <div className={'portal-pages-finder-form-filters-logo-label'}>
-          {gradeLevel.title}
-        </div>
-      </li>
+      </div>
     )
   },
 
   renderSubjectAreas: function () {
     return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <h2>Subject</h2>
-        <ul>
-          {filters.subjectAreas.map(function (subjectArea) {
-            return this.renderLogo(subjectArea)
-          }.bind(this))}
-        </ul>
-      </div>
-    )
-  },
-
-  renderGradeLevels: function () {
-    return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <h2>Grade Level</h2>
-        <ul>
-          {filters.gradeFilters.map(function (gradeLevel) {
-            return this.renderGLLogo(gradeLevel)
-          }.bind(this))}
-        </ul>
+      <div className={'portal-pages-finder-form-subject-areas col-12'}>
+        <div className={'col-1 spacer'} />
+        {filters.subjectAreas.map(function (subjectArea) {
+          // console.log("INFO renderSubjectAreas, selected subjects:", this.state.subjectAreasSelected);
+          return this.renderLogo(subjectArea)
+        }.bind(this))}
       </div>
     )
   },
 
   clearFilters: function () {
-    jQuery('.portal-pages-finder-form-subject-areas-logo').removeClass(css.selected)
+    jQuery('.portal-pages-finder-form-subject-areas-logo').removeClass('selected')
     this.setState({
       subjectAreasSelected: [],
-      gradeLevelsSelected: [],
+      featureFiltersSelected: [],
+      gradeFiltersSelected: [],
       keyword: '',
       searchInput: ''
     }, this.search)
@@ -384,11 +352,11 @@ const StemFinder = Component({
     const index = selectedFilters.indexOf(filter)
     if (index === -1) {
       selectedFilters.push(filter)
-      jQuery('#' + filter.key).addClass(css.selected)
+      jQuery('#' + filter.key).addClass('selected')
       ga('send', 'event', 'Home Page Filter', 'Click', filter.title)
     } else {
       selectedFilters.splice(index, 1)
-      jQuery('#' + filter.key).removeClass(css.selected)
+      jQuery('#' + filter.key).removeClass('selected')
     }
     let state = {}
     state[selectedKey] = selectedFilters
@@ -397,11 +365,11 @@ const StemFinder = Component({
 
   renderFilters: function (type, title) {
     return (
-      <div className={'portal-pages-finder-form-filters'}>
+      <div className={'portal-pages-finder-form-filters col-3'}>
         <div className={'portal-pages-finder-form-filters-title'}>
           {title}
         </div>
-        <ul className={'portal-pages-finder-form-filters-options'}>
+        <div className={'portal-pages-finder-form-filters-options'}>
           {filters[type].map(function (filter) {
             const selectedKey = type + 'Selected'
             const handleChange = function () {
@@ -410,15 +378,15 @@ const StemFinder = Component({
             }.bind(this)
             const checked = this.state[selectedKey].indexOf(filter) !== -1
             return (
-              <li key={filter.key} className={'portal-pages-finder-form-filters-option'}>
+              <div key={filter.key} className={'portal-pages-finder-form-filters-option'}>
                 <input type={'checkbox'} id={filter.key} name={filter.key} onChange={handleChange} checked={checked} />
                 <label htmlFor={filter.key}>
                   {filter.title}
                 </label>
-              </li>
+              </div>
             )
           }.bind(this))}
-        </ul>
+        </div>
       </div>
     )
   },
@@ -431,7 +399,7 @@ const StemFinder = Component({
     e.preventDefault()
     e.stopPropagation()
     this.search()
-    // this.scrollToFinder()
+    this.scrollToFinder()
   },
 
   handleAutoSuggestSubmit (searchInput) {
@@ -441,35 +409,13 @@ const StemFinder = Component({
     })
   },
 
-  handleCurriculaSelection (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log('curric')
-    console.log(e)
-    console.log(e.target.value)
-    this.setState({ projectsSelected: [e.target.value] }, () => {
-      this.search()
-    })
-  },
-
-  handleSortSelection (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log('sort')
-    console.log(e)
-    console.log(e.target.value)
-    this.setState({ sortOrder: [e.target.value] }, () => {
-      this.search()
-    })
-  },
-
   renderSearch: function () {
     return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
+      <div className={'portal-pages-finder-form-search col-4'}>
         <form onSubmit={this.handleSearchSubmit}>
           <div className={'portal-pages-finder-form-search-title'}>
             <label htmlFor={'search-terms'}>
-              Keywords
+              Search by keyword
             </label>
           </div>
           <div className={'portal-pages-search-input-container'}>
@@ -482,52 +428,67 @@ const StemFinder = Component({
               placeholder={'Type search term here'}
               skipAutoSearch
             />
+            <a href={'/search'}>
+              Advanced Search
+            </a>
           </div>
         </form>
-      </div>
-    )
-  },
-
-  renderCurricula: function () {
-    return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <form>
-          <div className={'portal-pages-finder-form-search-title'}>
-            <label htmlFor={'search-terms'}>
-              Curricula
-            </label>
-          </div>
-          <div className={'portal-pages-search-input-container'}>
-            <select name='curricula' className={css.curriculaSelect} onChange={this.handleCurriculaSelection}>
-              <option value=''>Select one...</option>
-              <option value='3'>High-Adventure Science</option>
-              <option value='1'>ITSI</option>
-              <option value='6'>NGSS Assessments</option>
-            </select>
-          </div>
-        </form>
-      </div>
-    )
-  },
-
-  renderAdvanced: function () {
-    return (
-      <div className={css.finderOptionsContainer}>
-        <h2>Advanced</h2>
       </div>
     )
   },
 
   renderForm: function () {
     return (
-      <div className={'col-3 ' + css.finderForm}>
-        <div className={'portal-pages-finder-form-inner'} style={{ opacity: this.state.opacity }}>
-          {this.renderSearch()}
-          {this.renderCurricula()}
+      <div className={'portal-pages-finder-form'}>
+        <div className={'portal-pages-finder-form-inner cols'} style={{ opacity: this.state.opacity }}>
           {this.renderSubjectAreas()}
-          {this.renderGradeLevels()}
-          {this.renderAdvanced()}
+          <div className={'col-1 spacer'} />
+          <div className={'mobile-filter-toggle'}>
+            More Filters
+          </div>
+          {this.renderFilters('featureFilters', 'Filter by Type')}
+          {this.renderFilters('gradeFilters', 'Filter by Grade')}
+          {this.renderSearch()}
         </div>
+      </div>
+    )
+  },
+
+  renderResultsHeaderFilters: function () {
+    const keyword = jQuery.trim(this.state.keyword)
+    if (keyword.length + this.state.subjectAreasSelected.length + this.state.featureFiltersSelected.length + this.state.gradeFiltersSelected.length === 0) {
+      return null
+    }
+
+    let filters = []
+    this.state.subjectAreasSelected.forEach(function (subjectArea) {
+      filters.push(HeaderFilter({ key: subjectArea.key, type: 'subjectAreas', filter: subjectArea, toggleFilter: this.toggleFilter }))
+    }.bind(this))
+    this.state.featureFiltersSelected.forEach(function (featureFilter) {
+      filters.push(HeaderFilter({ key: featureFilter.key, type: 'featureFilters', filter: featureFilter, toggleFilter: this.toggleFilter }))
+    }.bind(this))
+    this.state.gradeFiltersSelected.forEach(function (gradeFilter) {
+      filters.push(HeaderFilter({ key: gradeFilter.key, type: 'gradeFilters', filter: gradeFilter, toggleFilter: this.toggleFilter }))
+    }.bind(this))
+
+    if (keyword.length > 0) {
+      filters.push(
+        <div key={'keyword'} className={'portal-pages-finder-header-filter'}>
+          {'Keyword: ' + keyword}
+          <span onClick={this.clearKeyword} />
+        </div>
+      )
+    }
+
+    filters.push(
+      <div key={'clear'} className={'portal-pages-finder-header-filters-clear'} onClick={this.clearFilters}>
+        Clear Filters
+      </div>
+    )
+
+    return (
+      <div className={'portal-pages-finder-header-filters'}>
+        {filters}
       </div>
     )
   },
@@ -535,10 +496,11 @@ const StemFinder = Component({
   renderResultsHeader: function () {
     if (this.state.noResourcesFound || this.state.searching) {
       return (
-        <div className={css.finderHeader}>
-          <div className={css.finderHeaderResourceCount}>
+        <div className={'portal-pages-finder-header'}>
+          <div className={'portal-pages-finder-header-resource-count'}>
             {this.state.noResourcesFound ? 'No Resources Found' : 'Searching...'}
           </div>
+          {this.renderResultsHeaderFilters()}
         </div>
       )
     }
@@ -548,25 +510,14 @@ const StemFinder = Component({
     const resourceCount = showingAll ? this.state.numTotalResources : this.state.displayLimit + ' of ' + this.state.numTotalResources
     jQuery('#portal-pages-finder').removeClass('loading')
     return (
-      <div className={css.finderHeader}>
-        <h2>Activities List</h2>
-        <div className={css.finderHeaderResourceCount}>
+      <div className={'portal-pages-finder-header'}>
+        <div className={'portal-pages-finder-header-resource-count'}>
           {showingAll && multipleResources ? 'Showing All ' : 'Showing '}
           <strong>
             {resourceCount + ' ' + pluralize(resourceCount, 'Resource')}
           </strong>
         </div>
-        <div className={css.sortMenu}>
-          <label htmlFor='sort'>Sort by</label>
-          <select name='sort' onChange={this.handleSortSelection}>
-            <option value=''>Select one...</option>
-            <option value='Time'>Time Required</option>
-            <option value='Alphabetical'>Title</option>
-            <option value='Newest'>Newest</option>
-            <option value='Oldest'>Oldest</option>
-            <option value='Newest'>Date Published</option>
-          </select>
-        </div>
+        {this.renderResultsHeaderFilters()}
       </div>
     )
   },
@@ -582,7 +533,7 @@ const StemFinder = Component({
       return null
     }
     return (
-      <div className={'portal-pages-finder-load-all center'} onClick={handleLoadAll}>
+      <div className={'portal-pages-finder-load-all col-6 center'} onClick={handleLoadAll}>
         <button>
           {this.state.searching ? 'Loading...' : 'Load More'}
         </button>
@@ -596,24 +547,24 @@ const StemFinder = Component({
     }
     const resources = this.state.resources.slice(0, this.state.displayLimit)
     return (
-      <>
+      <div className={'portal-pages-finder-results-inner'}>
         {this.renderResultsHeader()}
-        <div className={css.finderResultsContainer}>
+        <div className={'portal-pages-finder-results-cards'}>
           {resources.map(function (resource, index) {
-            return stemFinderResult({ key: index, resource: resource })
+            return StemFinderResult({ key: index, resource: resource })
           })}
         </div>
         {this.renderLoadMore()}
-      </>
+      </div>
     )
   },
 
   render: function () {
     // console.log("INFO stem-finder render()");
     return (
-      <div className={'cols ' + css.finderWrapper}>
+      <div>
         {this.renderForm()}
-        <div className={'portal-pages-finder-results col-9'} style={{ opacity: this.state.opacity }}>
+        <div className={'portal-pages-finder-results cols'} style={{ opacity: this.state.opacity }}>
           {this.renderResults()}
         </div>
       </div>

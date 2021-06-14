@@ -1,10 +1,11 @@
 const filters = {
   subjectAreas: [
-    { key: 'physics-chemistry', title: 'Physics & Chemistry', searchAreas: ['Chemistry', 'Physics'] },
-    { key: 'life-sciences', title: 'Life Science', searchAreas: ['Biology'] },
-    { key: 'engineering-tech', title: 'Engineering', searchAreas: ['Engineering'] },
+    { key: 'chemistry', title: 'Chemistry', searchAreas: ['Chemistry'] },
     { key: 'earth-space', title: 'Earth & Space', searchAreas: ['Earth and Space Science'] },
-    { key: 'mathematics', title: 'Mathematics', searchAreas: ['Mathematics'] }
+    { key: 'engineering-tech', title: 'Engineering', searchAreas: ['Engineering'] },
+    { key: 'life-sciences', title: 'Life Science', searchAreas: ['Biology'] },
+    { key: 'mathematics', title: 'Mathematics', searchAreas: ['Mathematics'] },
+    { key: 'physics', title: 'Physics', searchAreas: ['Physics'] }
   ],
 
   featureFilters: [

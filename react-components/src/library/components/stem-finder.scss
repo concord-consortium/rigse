@@ -1,0 +1,214 @@
+@import '../../shared/styles/variables/_colors.scss';
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../../shared/styles/variables/_typography.scss';
+@import '../../shared/styles/variables/_variables.scss';
+
+.finderWrapper {
+  padding: 0;
+  position: relative;
+
+  .finderForm {
+    position: sticky;
+    top: 50px;
+  }
+}
+.finderOptionsContainer {
+  background: $white;
+  border-radius: 2px;
+  margin: 0 0 20px;
+  padding: 0 0 3px;
+
+  form {
+    margin: 0;
+    padding: 0;
+
+    input {
+      border-radius: 3px;
+      &[type="text"] {
+        padding: 5px;
+        width: calc(100% - 59px);
+      }
+    }
+  }
+
+  h2, label {
+    color: $col-darkgray;
+    display: block;
+    font-family: $font-museo;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+    padding: 10px 10px 5px 29px;
+    position: relative;
+    text-transform: uppercase;
+
+    &:before {
+      content: "\203A";
+      display: inline-block;
+      font-size: 23px;
+      font-weight: 500;
+      left: 13px;
+      line-height: .45;
+      margin: 0 12px 0 0;
+      position: absolute;
+      top: 10px;
+      transition: .1s;
+    }
+  }
+  &.open {
+    padding: 0;
+
+    h2, label {
+      &:before {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      color: $col-darkgray;
+      cursor: pointer;
+      line-height: 1;
+      padding: 5px 10px 5px 37px;
+      position: relative;
+
+      &.selected {
+        background: $col-blue;
+        color: $white;
+      }
+      &:last-child {
+        padding-bottom: 15px;
+      }
+      &:before {
+        content: ' ';
+        display: block;
+        font: 20px icomoon;
+        left: 10px;
+        line-height: 1;
+        margin: 0 10px 0 0;
+        padding: 0;
+        position: absolute;
+        top: 3px;
+      }
+
+      &#chemistry {
+        &:before {
+          content: "\e918";
+        }
+      }
+      &#earthSpace {
+        &:before {
+          content: "\e915";
+        }
+      }
+      &#engineeringTech {
+        &:before {
+          content: "\e916";
+        }
+      }
+      &#lifeSciences {
+        &:before {
+          content: "\e917";
+        }
+      }
+      &#mathematics {
+        &:before {
+          content: "\e914";
+        }
+      }
+      &#physics {
+        &:before {
+          content: "\e918";
+        }
+      }
+
+      &#elementarySchool {
+        &:before {
+          background: url(http://test.local:9990/logos/elementary3.png) no-repeat;
+          background-size: 100%;
+          height: 22px;
+          width: 22px;
+        }
+      }
+      &#middleSchool {
+        &:before {
+          background: url(http://test.local:9990/logos/middle-school.png) no-repeat;
+          background-size: 100%;
+          height: 22px;
+          width: 22px;
+        }
+      }
+      &#highSchool {
+        &:before {
+          background: url(http://test.local:9990/logos/high-school.png) no-repeat;
+          background-size: 100%;
+          height: 24px;
+          width: 24px;
+        }
+      }
+      &#higherEducation {
+        &:before {
+          background: url(http://test.local:9990/logos/university.png) no-repeat;
+          background-size: 100%;
+          height: 22px;
+          width: 22px;
+        }
+      }
+    }
+  }
+  .curriculaSelect {
+    border-radius: 3px;
+    font-size: 14px;
+    margin: 0 10px 10px;
+    overflow: hidden;
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 20px);
+  }
+}
+
+.finderHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  h2 {
+    color: $col-darkgray;
+    font-family: $font-museo;
+    font-size: 24px;
+    line-height: .8;
+    width: 100%;
+  }
+  .finderHeaderResourceCount {
+    align-self: center;
+    color: $col-darkgray;
+  }
+  .sortMenu {
+    display: flex;
+    
+    label {
+      align-self: center;
+      color: $col-darkgray;
+      font-size: 14px;
+      font-weight: 300;
+      text-transform: none;
+      white-space: nowrap;
+    }
+    select {
+      border-radius: 3px;
+      font-size: 14px;
+      margin: 0 0 0 5px;
+      overflow: hidden;
+      padding: 5px;
+      white-space: nowrap;
+      width: 129px;
+    }
+  }
+}

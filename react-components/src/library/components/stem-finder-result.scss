@@ -1,0 +1,202 @@
+@import '../../shared/styles/variables/_colors.scss';
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../../shared/styles/variables/_variables.scss';
+
+.finderResult {
+  background: $white;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100px;
+  margin: 0 0 20px;
+  overflow: hidden;
+  padding: 10px 10px 34px;
+  position: relative;
+
+  &:after {
+    background: $white;
+    bottom: 0;
+    content: ' ';
+    display: block;
+    height: 41px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+  }
+
+  .finderResultLinks {
+    bottom: 10px;
+    font-size: 14px;
+    line-height: 1;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+
+    a {
+      border-left: solid 1px $col-orange;
+      display: inline-block;
+      line-height: .9;
+      margin: 0 0 0 10px;
+      padding: 0 0 0 10px;
+      text-transform: uppercase;
+
+      &:first-child {
+        border-left: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      &.lessLink {
+        display: none;
+      }
+    }
+  }
+
+  &.open {
+    height: auto;
+
+    &:after {
+      display: none;
+    }
+
+    .finderResultLinks {
+      a {
+        &.lessLink {
+          display: inline-block;
+        }
+        &.moreLink {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .finderResultImagePreview {
+    border: solid 1px $col-lightgray;
+    height: 90px;
+    margin: 0 10px 15px 0;
+    overflow: hidden;
+    position: relative;
+    width: 160px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .finderResultText {
+    margin: 0 10px 10px 0;
+    min-height: 100px;
+    width: 340px;
+
+    .finderResultTextName {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .finderResultTextDescription {
+      font-size: 14px;
+      line-height: 1.3;
+    }
+  }
+  .previewLink {
+    margin-bottom: 27px;
+    width: 150px;
+
+    .previewLinkButton {
+      background: #fff;
+      border: solid 2px #ea6d2f;
+      border-radius: 3px;
+      color: #ea6d2f;
+      display: block;
+      font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
+      padding: 8px 25px;
+      text-align: center;
+    }
+
+    .projectLabel {
+      font-size: 14px;
+      font-weight: 500;
+      height: 42px;
+      padding: 30px 0 0 55px;
+
+      &.highadventuresci {
+        padding-left: 0;
+      }
+      &.itsi {
+        background: url(http://test.local:9990/logos/itsi.png) no-repeat center left;
+        background-size: 42px;
+      }
+      &.ngssassessment {
+        background: url(http://test.local:9990/logos/ngss.png) no-repeat center left;
+        background-size: 42px;
+      }
+    }
+  }
+
+  .collapsible {
+    background: $col-lightgray;
+    height: 14px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    padding: 10px;
+    width: 100%;
+
+    .collapsibleHeading {
+      color: $col-darkgray;
+      cursor: pointer;
+      font-family: $font-museo-sans;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 10px;
+      padding-left: 14px;
+      position: relative;
+      width: 100%;
+
+      &:before {
+        content: "\203A";
+        display: inline-block;
+        font-size: 22px;
+        left: 0;
+        line-height: .45;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        transition: .1s;
+      }
+    }
+    .collapsibleBody {
+      font-size: 14px;
+    }
+
+    &.collapsibleOpen {
+      height: auto;
+
+      .collapsibleHeading {
+
+        &:before {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+
+  .finderResultFavorite {
+    color: $col-lightgray;
+    font-size: 20px;
+    left: 145px;
+    position: absolute;
+    text-shadow: -1px 0 $col-darkgray-50, 0 1px $col-darkgray-50, 1px 0 $col-darkgray-50, 0 -1px $col-darkgray-50;
+    top: 12px;
+
+    &.finderResultFavoriteActive {
+      color: $col-gold;
+      text-shadow: 0 0 transparent, 0 0 transparent, 0 0 transparent, 0 0 transparent;
+    }
+  }
+}

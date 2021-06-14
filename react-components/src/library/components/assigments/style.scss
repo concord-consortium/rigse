@@ -9,12 +9,14 @@
     }
 
     .assignMaterials {
-      flex: 1;
       font-size: 1.2em;
-      margin-top: 10px;
-      text-align: right;
       text-transform: uppercase;
       white-space: nowrap;
+
+      button {
+        background: #0592af;
+        border-color: #0592af;
+      }
     }
   }
   .reports {

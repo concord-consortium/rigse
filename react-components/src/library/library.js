@@ -6,6 +6,7 @@ import CollectionsPage from './components/collections-page'
 import CollectionCards from './components/collection-cards'
 import HeaderFilter from './components/header-filter'
 import ResourceLightbox from './components/resource-lightbox'
+import ResourceFinderLightbox from './components/resource-finder-lightbox'
 import StemFinderResult from './components/stem-finder-result'
 import StemFinder from './components/stem-finder'
 import PageHeader from './components/page-header'
@@ -140,6 +141,9 @@ window.PortalComponents = {
 
   ResourceLightbox: ResourceLightbox,
   renderResourceLightbox: renderComponentFn(ResourceLightbox),
+
+  ResourceFinderLightbox: ResourceFinderLightbox,
+  renderResourceFinderLightbox: renderComponentFn(ResourceFinderLightbox),
 
   StemFinderResult: StemFinderResult,
   renderStemFinderResult: renderComponentFn(StemFinderResult),

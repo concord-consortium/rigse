@@ -1,7 +1,20 @@
 import React from 'react'
+import ResourceFinderLightbox from '../resource-finder-lightbox'
+import Lightbox from '../../helpers/lightbox'
 
 import css from './style.scss'
 import commonCss from '../../styles/common-css-modules.scss'
+
+const closeLightbox = (e) => {
+  Lightbox.close()
+}
+
+const handleAssignMaterialsButtonClick = (e) => {
+  const resourceFinderLightbox = ResourceFinderLightbox({
+    closeLightbox: closeLightbox
+  })
+  Lightbox.open(resourceFinderLightbox)
+}
 
 export default class ClassAssignments extends React.Component {
   get assignMaterialsPath () {
@@ -22,7 +35,7 @@ export default class ClassAssignments extends React.Component {
         <header>
           <h1>Assignments for { clazz.name }</h1>
           <div className={css.assignMaterials}>
-            <a className='button' href={this.assignMaterialsPath}>Assign Materials</a>
+            <button onClick={handleAssignMaterialsButtonClick}>Assign Materials</button>
           </div>
         </header>
         <table className={css.classInfo}>

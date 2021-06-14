@@ -2,19 +2,21 @@ import React from 'react'
 import Component from '../helpers/component'
 
 import ResourceLightbox from './resource-lightbox'
-import ResourceType from './resource-type'
 import GradeLevels from './grade-levels'
 import Lightbox from '../helpers/lightbox'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
+
+import css from './stem-finder-result.scss'
 
 // vars for special treatment of hover and click states on touch-enabled devices
 let pageScrolling = false
 let touchInitialized = false
 
-const StemFinderResult = Component({
+const stemFinderResult = Component({
   getInitialState: function () {
     return {
       hovering: false,
+      isOpen: false,
       favorited: this.props.resource.is_favorite,
       lightbox: false
     }
@@ -122,8 +124,8 @@ const StemFinderResult = Component({
   },
 
   renderFavoriteStar: function () {
-    let active = this.state.favorited ? ' portal-pages-finder-result-favorite-active' : ''
-    const divClass = 'portal-pages-finder-result-favorite' + active
+    let active = this.state.favorited ? css.finderResultFavoriteActive : ''
+    const divClass = css.finderResultFavorite + ' ' + active
     return (
       <div className={divClass} onClick={this.toggleFavorite}>
         <i className={'icon-favorite'} />
@@ -131,53 +133,100 @@ const StemFinderResult = Component({
     )
   },
 
+  renderLinks: function () {
+    const resource = this.props.resource
+    // console.log(resource)
+    const assignLink = resource.links.assign_material
+      ? <a href={`javascript: ${resource.links.assign_material.onclick}`}>{resource.links.assign_material.text}</a>
+      : null
+    const copyLink = resource.links.copy_url
+      ? <a href={resource.links.copy_url} target='_blank'>Copy</a>
+      : null
+    const printLink = resource.links.print_url
+      ? <a href={resource.links.print_url} target='_blank'>Print</a>
+      : null
+    const teacherEditionLink = resource.has_teacher_edition
+      ? <a href={`${resource.links.preview.url}?mode=teacher-edition`} target='_blank'>Teacher Edition</a>
+      : null
+
+    return (
+      <div className={css.finderResultLinks}>
+        {assignLink}
+        {teacherEditionLink}
+        {printLink}
+        {copyLink}
+        <a href='#' className={css.moreLink} onClick={this.toggleResource}>More</a>
+        <a href='#' className={css.lessLink} onClick={this.toggleResource}>Less</a>
+      </div>
+    )
+  },
+
+  toggleResource: function (e) {
+    e.preventDefault()
+    this.setState({ isOpen: !this.state.isOpen })
+  },
+
+  toggleCollapsible: function (e) {
+    console.log(e)
+    jQuery(e.currentTarget).parent().toggleClass(css.collapsibleOpen)
+  },
+
   render: function () {
     const resource = this.props.resource
-
+    const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open}` : css.finderResult
     // truncate title and/or description if they are too long for resource card height
-    const maxCharTitle = 125
-    const maxCharDesc = 320
-    let resourceName = portalObjectHelpers.shortenText(resource.name, maxCharTitle, true)
-    let shortDesc = resource.filteredShortDescription
-    if (shortDesc.length + resource.name.length >= maxCharDesc) { // use full resource name on 'back' of card, not truncated version
-      shortDesc = portalObjectHelpers.shortenText(shortDesc, maxCharDesc - resource.name.length, true)
-    }
+    // const maxCharTitle = 180
+    const maxCharDesc = 180
+    const resourceName = resource.name
+    const shortDesc = this.state.isOpen ? resource.filteredShortDescription : portalObjectHelpers.shortenText(resource.filteredShortDescription, maxCharDesc, true)
+    const projectName = resource.projects[0] ? resource.projects[0].name : null
+    const projectNameRegex = / |-|\./
+    const projectClass = projectName ? projectName.replace(projectNameRegex, '').toLowerCase() : null
+    console.log(projectClass)
+    const projectNameShow = projectName
+      ? projectName === 'NGSS Assessment'
+        ? projectName.substr(0, 11) + '.' : projectName
+      : null
 
-    if (this.state.hovering || this.state.lightbox) {
-      return (
-        <div className={'portal-pages-finder-result col-4'} onClick={this.toggleLightbox} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-          <a href={resource.stem_resource_url}>
-            <div className={'portal-pages-finder-result-description'}>
-              <div className={'title'}>
-                {resource.name}
-              </div>
-              <div>
-                {shortDesc}
-              </div>
-            </div>
-            {this.renderFavoriteStar()}
-          </a>
-          <GradeLevels resource={resource} />
-          {this.renderFavoriteStar()}
-        </div>
-      )
-    }
     return (
-      <div className={'portal-pages-finder-result col-4'} onClick={this.toggleLightbox} onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-        <a href={resource.stem_resource_url}>
-          <div className={'portal-pages-finder-result-image-preview'}>
-            <img alt={resource.name} src={resource.icon.url} />
-            <ResourceType resource={resource} />
-          </div>
-          <div className={'portal-pages-finder-result-name'}>
+      <div className={finderResultClasses}>
+        <div className={css.finderResultImagePreview}>
+          <img alt={resource.name} src={resource.icon.url} />
+          <GradeLevels resource={resource} />
+        </div>
+        <div className={css.finderResultText}>
+          <div className={css.finderResultTextName}>
             {resourceName}
           </div>
-          {this.renderFavoriteStar()}
-        </a>
-        <GradeLevels resource={resource} />
+          <div className={css.finderResultTextDescription}>
+            {shortDesc}
+          </div>
+        </div>
+        <div className={css.previewLink}>
+          <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
+          <div className={`${css.projectLabel} ${css[projectClass]}`}>
+            {projectNameShow}
+          </div>
+        </div>
+        <div className={css.collapsible}>
+          <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Standards</h2>
+          <div className={css.collapsibleBody}>
+            <p>Globular star cluster venture cosmos billions upon billions intelligent beings cosmic fugue. Hundreds of thousands hundreds of thousands with pretty stories for which there's little good evidence muse about as a patch of light laws of physics.</p>
+            <p>Emerged into consciousness white dwarf vastness is bearable only through love the only home we've ever known made in the interiors of collapsing stars bits of moving fluff? A very small stage in a vast cosmic arena gathered by gravity made in the interiors of collapsing stars invent the universe a mote of dust suspended in a sunbeam made in the interiors of collapsing stars and billions upon billions upon billions upon billions upon billions upon billions upon billions.</p>
+          </div>
+        </div>
+        <div className={css.collapsible}>
+          <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Related Materials</h2>
+          <div className={css.collapsibleBody}>
+            <p>Globular star cluster venture cosmos billions upon billions intelligent beings cosmic fugue. Hundreds of thousands hundreds of thousands with pretty stories for which there's little good evidence muse about as a patch of light laws of physics.</p>
+            <p>Emerged into consciousness white dwarf vastness is bearable only through love the only home we've ever known made in the interiors of collapsing stars bits of moving fluff? A very small stage in a vast cosmic arena gathered by gravity made in the interiors of collapsing stars invent the universe a mote of dust suspended in a sunbeam made in the interiors of collapsing stars and billions upon billions upon billions upon billions upon billions upon billions upon billions.</p>
+          </div>
+        </div>
+        {this.renderLinks()}
+        {this.renderFavoriteStar()}
       </div>
     )
   }
 })
 
-export default StemFinderResult
+export default stemFinderResult
