@@ -405,9 +405,9 @@ describe API::V1::ReportLearnersEsController do
           resp = JSON.parse(response.body)
           filter = resp["json"]
           expect(filter["learners"].length).to eq 2
-          expect(filter["learners"][0]["student_id"]).to be_an_instance_of(Fixnum)
-          expect(filter["learners"][0]["learner_id"]).to be_an_instance_of(Fixnum)
-          expect(filter["learners"][0]["class_id"]).to be_an_instance_of(Fixnum)
+          expect(filter["learners"][0]["student_id"]).to be_an_instance_of(Integer)
+          expect(filter["learners"][0]["learner_id"]).to be_an_instance_of(Integer)
+          expect(filter["learners"][0]["class_id"]).to be_an_instance_of(Integer)
         end
       end
 
