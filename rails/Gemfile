@@ -73,7 +73,6 @@ gem 'RedCloth',             '~> 4.2.8'
 gem 'responders'
 gem 'rollbar'
 gem 'rubyzip',              '~> 1.2.2'
-gem 'rush',                 git: 'https://github.com/concord-consortium/rush.git'
 gem 'sanitize'
 gem 'sass',                 '~> 3.4.0'
 gem 'sass-rails' # if running rails 3.1 or greater
@@ -136,7 +135,6 @@ group :development do
   gem 'rb-inotify', require: false
   gem 'ruby-debug', platforms: [:mri_18, :mingw_18]
   gem 'ruby-prof'
-  gem 'sextant' # adds http://localhost:9000/rails/routes in dev mode
   gem 'spring', '~> 1.7.2'
   gem 'what_methods'
   gem 'wirble'

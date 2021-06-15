@@ -5,13 +5,6 @@ GIT
     in_place_editing (1.2.0)
 
 GIT
-  remote: https://github.com/concord-consortium/rush.git
-  revision: 10d9715697d7cc5ce069c32093289b809dea8bd3
-  specs:
-    rush (0.6.8)
-      session
-
-GIT
   remote: https://github.com/concord-consortium/secure-samesite-cookies.git
   revision: da3078b1f2d1ac9c4c62b5cd7cd4c1fce1eb6dd1
   tag: v1.0.2
@@ -1110,9 +1103,6 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    session (3.2.0)
-    sextant (0.2.4)
-      rails (>= 3.2)
     shellany (0.0.1)
     simplecov (0.16.1)
       docile (~> 1.1)
@@ -1294,12 +1284,10 @@ DEPENDENCIES
   ruby-debug
   ruby-prof
   rubyzip (~> 1.2.2)
-  rush!
   sanitize
   sass (~> 3.4.0)
   sass-rails
   selenium-webdriver
-  sextant
   simplecov
   spring (~> 1.7.2)
   spring-commands-cucumber
