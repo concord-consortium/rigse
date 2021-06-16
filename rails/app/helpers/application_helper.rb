@@ -689,7 +689,7 @@ module ApplicationHelper
   end
 
   # Addresses issue in will_paginate / translate in rails: https://github.com/mislav/will_paginate/issues/618
-  # TODO: Remove this after Rails 6.1.4. RAILS6 FIXME
+  # TODO: Remove this once Rails 6.1.4 is released.
   def rails_6_page_entries_info(collection, options = {})
     model = options[:model]
     model = collection.first.class unless model || collection.empty?
