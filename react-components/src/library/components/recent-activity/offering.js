@@ -26,7 +26,7 @@ export default class Offering extends React.Component {
   render () {
     const { detailsVisible } = this.state
     const { clazz, classHash, activityName, students, reportableActivities,
-      completedStudentsCount, inProgressStudentsCount, notStartedStudentsCount } = this.props.offering
+      notStartedStudentsCount, startedStudentsCount } = this.props.offering
 
     // Activities listed in the progress table are either reportable activities or just the main offering.
     const progressTableActivities = reportableActivities || [{ id: 0, name: activityName, feedbackOptions: null }]
@@ -38,7 +38,7 @@ export default class Offering extends React.Component {
         </div>
         <div className={css.classProgress}>
           <span className={css.classSize}>Class size = { students.length }</span>
-          <span>Started = { completedStudentsCount + inProgressStudentsCount }</span>
+          <span>Started = { startedStudentsCount }</span>
           <span>Not Started = { notStartedStudentsCount }</span>
 
         </div>
