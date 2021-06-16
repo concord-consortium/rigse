@@ -202,6 +202,10 @@ module RailsPortal
     # Rails can then thwart attacks that attempt to copy the signed/encrypted value of a cookie and use it as the value of another cookie.
     config.action_dispatch.use_cookies_with_metadata = false
 
+
+    # Specify cookies SameSite protection level: either :none, :lax, or :strict.
+    config.action_dispatch.cookies_same_site_protection = :none
+
     # Allow requests from any domain (skips DNS rebinding attack guards)
     config.hosts = nil
   end
