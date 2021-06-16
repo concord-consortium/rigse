@@ -116,8 +116,10 @@ const StemFinderResult = Component({
     }.bind(this)
     if (resource.is_favorite) {
       jQuery.post('/api/v1/materials/remove_favorite', { favorite_id: resource.favorite_id }, done)
+      ga('send', 'event', 'Favorite Button', 'Click', `${resource.name} removed from favorites`)
     } else {
       jQuery.post('/api/v1/materials/add_favorite', { id: resource.id, material_type: resource.class_name_underscored }, done)
+      ga('send', 'event', 'Favorite Button', 'Click', `${resource.name} added to favorites`)
     }
   },
 
