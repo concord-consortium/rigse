@@ -76,18 +76,14 @@ gem 'rubyzip',              '~> 1.2.2'
 gem 'sanitize'
 gem 'sass',                 '~> 3.4.0'
 gem 'sass-rails' # if running rails 3.1 or greater
-# gem 'strong_parameters'  # RAILS-4-SPIKE GEMFILE REMOVE as part of rails 4.0 upgrade
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'syntax',               '~> 1.0'
 gem 'test-unit',            '~> 3.0'
-gem 'tinymce-rails',        '~>3.5.6'  # RAILS-4-SPIKE GEMFILE version NOT pinned
+gem 'tinymce-rails',        '~>3.5.6'
 # gem 'turbo-sprockets-rails4'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'sprockets', '~> 3'
-# this customization is so the digests or fingerprints are correctly added to
-# the assets even when they are from a theme.
-# gem 'themes_on_rails'  # RAILS6 disabled for now
 gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
@@ -102,23 +98,6 @@ group :production do
   gem 'therubyracer'
   gem 'unicorn'
 end
-
-# Feature enabling groups
-#
-# NOTE: this was disabled in the Rails 5 upgrade and will be removed when this is merged to master and deployed to production
-#
-# group :genigames_data do
-#   gem 'genigames_connector', git: 'https://github.com/concord-consortium/genigames-connector.git', ref: '6a00f07af38e03670f696468578c3ff11a8c8414' # branch: 'spike-rails4-support'
-# end
-# group :geniverse_backend do
-#   gem 'geniverse_portal_integration', git: 'https://github.com/concord-consortium/geniverse-portal-integration.git'
-# end
-# group :geniverse_remote_auth do
-#   gem 'cc_portal_remote_auth', git: 'https://github.com/concord-consortium/cc_portal_remote_auth.git', branch: 'spike-rails4-support'
-# end
-# group :geniverse_wordpress do
-#   gem 'cc_portal_wordpress_integration', git: 'https://github.com/concord-consortium/cc_portal_wordpress_integration.git', ref: '3e84bb15f86a2d7631cfa54e461e1f77b547cec6' # branch: 'spikes-rails4-support'
-# end
 
 group :development do
   gem 'awesome_print'
