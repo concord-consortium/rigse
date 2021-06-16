@@ -204,7 +204,9 @@ module RailsPortal
 
 
     # Specify cookies SameSite protection level: either :none, :lax, or :strict.
-    config.action_dispatch.cookies_same_site_protection = :none
+    # When running tests, we want to use lax protection (breaks cucumber tests otherwise)
+    same_site_protection = (Rails.env.cucumber? || Rails.env.test? || Rails.env.feature_test?) ? :lax : :none
+    config.action_dispatch.cookies_same_site_protection = same_site_protection
 
     # Allow requests from any domain (skips DNS rebinding attack guards)
     config.hosts = nil
