@@ -1,4 +1,4 @@
-# new base class for Rails 5 modls
+# new base class for Rails 5 models
 class ApplicationRecord < ActiveRecord::Base
   include Foo::Acts::Replicatable
   include SendUpdateEvents
