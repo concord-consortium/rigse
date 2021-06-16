@@ -1,6 +1,6 @@
 = form_for portal_student do |f|
-  = error_messages_for 'user'
-  = error_messages_for 'portal_student', :object_name => 'student'
+  = error_messages_for @user
+  = error_messages_for @portal_student, :object_name => 'student'
   %table.form
     %tr
       %td= label_tag :user, 'First Name:'
@@ -14,7 +14,7 @@
 
     %tr
       %td= label_tag :user, 'Password:'
-      %td= password_field :user, :password, {:live => false} 
+      %td= password_field :user, :password, {:live => false}
 
     %tr
       %td= label_tag :user, 'Password Again:'
