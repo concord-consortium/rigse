@@ -68,6 +68,11 @@ class API::V1::JwtController < API::APIController
     [ user, learner, teacher ]
   end
 
+  def jwt_user_id(user)
+    site_url_without_trailing_slash = APP_CONFIG[:site_url].sub(/\/$/,'')
+    site_url_without_trailing_slash + polymorphic_path(user)
+  end
+
   public
   def portal
     user, learner, teacher = handle_initial_auth
@@ -114,7 +119,7 @@ class API::V1::JwtController < API::APIController
           :platform_id => APP_CONFIG[:site_url],
           :platform_user_id => user.id,
           :user_type => "learner",
-          :user_id => url_for(user),
+          :user_id => jwt_user_id(user),
           :class_hash => offering.clazz.class_hash,
           :offering_id => offering.id
         },
@@ -153,7 +158,7 @@ class API::V1::JwtController < API::APIController
           :platform_id => APP_CONFIG[:site_url],
           :platform_user_id => user.id,
           :user_type => "teacher",
-          :user_id => url_for(user),
+          :user_id => jwt_user_id(user),
           :class_hash => class_hash
         },
         # Depreciated, used by some CC client apps. Do not add more data here, it's better to add that to claims
@@ -169,14 +174,14 @@ class API::V1::JwtController < API::APIController
           :platform_id => APP_CONFIG[:site_url],
           :platform_user_id => user.id,
           :user_type => "user",
-          :user_id => url_for(user)
+          :user_id => jwt_user_id(user)
         }
       }
       # since the generic user case was added after domain and domain_uid where deprecated they are not set here
     end
 
     # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string
-    uid = Digest::MD5.hexdigest(url_for(user))
+    uid = Digest::MD5.hexdigest(jwt_user_id(user))
 
     render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
   end
