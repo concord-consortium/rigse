@@ -6,4 +6,6 @@
 # which shouldn't be used to store highly confidential information
 # (create the session table with "rails generate session_migration")
 
-RailsPortal::Application.config.session_store :active_record_store, :key => '_rails_portal_session', secure: :true
+# For testing environments, we don't use SSL and can't set cookie to secure.
+secure = !(Rails.env.cucumber? || Rails.env.test? || Rails.env.feature_test?)
+RailsPortal::Application.config.session_store :active_record_store, :key => '_rails_portal_session', secure: secure
