@@ -1,6 +1,5 @@
 import React from 'react'
 import Offering from './offering'
-import Legend from './legend'
 
 export default class Offerings extends React.Component {
   render () {
@@ -26,7 +25,6 @@ export default class Offerings extends React.Component {
     }
     return (
       <div>
-        <Legend />
         { offerings.map(offering => <Offering key={offering.id} offering={offering} />) }
       </div>
     )

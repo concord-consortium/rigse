@@ -47,7 +47,7 @@ export default class ProgressTable extends React.Component {
                       { student.lastRun ? formatDate(student.lastRun) : 'n/a' }
                     </td>
                     <td className={css.status}>
-                      { student.startedActivity ? 'started' : 'not started' }
+                      { student.startedActivity ? 'Started' : 'Not Started' }
                     </td>
                   </tr>
                 )

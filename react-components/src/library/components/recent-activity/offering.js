@@ -27,9 +27,7 @@ export default class Offering extends React.Component {
     const { detailsVisible } = this.state
     const { clazz, classHash, activityName, students, reportableActivities,
       completedStudentsCount, inProgressStudentsCount, notStartedStudentsCount } = this.props.offering
-    const completedWidth = (completedStudentsCount / students.length) * 100
-    const inProgressWidth = (inProgressStudentsCount / students.length) * 100
-    const notStartedWidth = (notStartedStudentsCount / students.length) * 100
+
     // Activities listed in the progress table are either reportable activities or just the main offering.
     const progressTableActivities = reportableActivities || [{ id: 0, name: activityName, feedbackOptions: null }]
     return (
@@ -38,19 +36,11 @@ export default class Offering extends React.Component {
           <span className={css.offeringHeader}>{clazz}: { activityName }</span>
           <a className={css.detailsToggle} onClick={this.toggleDetails}>{this.detailsToggleLabel}</a>
         </div>
-        <div>
-          <span>Class size = { students.length }</span>
-          <div className={css.classProgress}>
-            <div className={css.completed} style={{ width: `${completedWidth}%` }} >
-              { completedStudentsCount > 0 && <div className={css.count}>{ completedStudentsCount }</div> }
-            </div>
-            <div className={css.inProgress} style={{ width: `${inProgressWidth}%` }} >
-              { inProgressStudentsCount > 0 && <div className={css.count}>{ inProgressStudentsCount }</div> }
-            </div>
-            <div className={css.notStarted} style={{ width: `${notStartedWidth}%` }} >
-              { notStartedStudentsCount > 0 && <div className={css.count}>{ notStartedStudentsCount }</div> }
-            </div>
-          </div>
+        <div className={css.classProgress}>
+          <span className={css.classSize}>Class size = { students.length }</span>
+          <span>Started = { completedStudentsCount + inProgressStudentsCount }</span>
+          <span>Not Started = { notStartedStudentsCount }</span>
+
         </div>
         <div className={css.reports}>
           <OfferingButtons offering={this.props.offering} classHash={classHash} />
