@@ -1,4 +1,4 @@
-FROM concordconsortium/docker-rails-base-private:2.5.9-2021-05-11-a
+FROM concordconsortium/docker-rails-base-private:ruby-2.7-rails-6.1.3.2
 
 RUN apt-get -o Acquire::Check-Valid-Until=false update
 

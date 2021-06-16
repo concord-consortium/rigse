@@ -114,7 +114,7 @@ GEM
     better_errors (1.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
-    bootsnap (1.4.4)
+    bootsnap (1.7.5)
       msgpack (~> 1.0)
     builder (3.2.4)
     bullet (6.1.4)
@@ -273,14 +273,13 @@ GEM
       actionpack (>= 3.1)
       railties (>= 3.1)
       sassc
-    json (1.8.6)
+    json (2.5.1)
     json-schema (2.8.0)
       addressable (>= 2.4)
     jwt (1.5.6)
     kgio (2.10.0)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libv8 (3.16.14.19)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
     listen (3.1.5)
@@ -417,7 +416,6 @@ GEM
       ffi (~> 1.0)
     rbx-require-relative (0.0.9)
     redcarpet (2.1.1)
-    ref (2.0.0)
     regexp_parser (2.1.1)
     remarkable (3.1.13)
       rspec (>= 1.2.0)
@@ -514,9 +512,6 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     test-unit (3.0.8)
       power_assert
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
@@ -578,7 +573,7 @@ DEPENDENCIES
   aws-sdk-s3
   axlsx (> 2.5)
   better_errors (~> 1.1.0)
-  bootsnap (= 1.4.4)
+  bootsnap
   bullet
   capybara
   capybara-mechanize
@@ -609,7 +604,7 @@ DEPENDENCIES
   highline
   httparty
   jquery-fileupload-rails
-  json (~> 1.8.6)
+  json
   json-schema
   jwt
   launchy
@@ -653,7 +648,6 @@ DEPENDENCIES
   sunspot_rails
   sunspot_solr
   test-unit (~> 3.0)
-  therubyracer
   tinymce-rails (~> 3.5.6)
   uglifier
   unicorn

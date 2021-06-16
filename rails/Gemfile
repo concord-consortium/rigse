@@ -15,7 +15,7 @@ gem 'appsignal'
 gem 'arrayfields'
 gem 'aws-sdk-s3'
 gem 'axlsx',                '> 2.5'
-gem 'bootsnap',     '1.4.4' # pinned to fix upgrade to Rails 6 on Ruby 2.5
+gem 'bootsnap'
 gem 'coffee-rails'
 # was sub-dependency of react-rails, needed in test setup code
 gem 'connection_pool'
@@ -31,7 +31,7 @@ gem 'exception_notification'
 gem 'font-awesome-rails'
 gem 'haml'
 gem 'httparty'
-gem 'json', '~> 1.8.6'
+gem 'json'
 gem 'jwt'
 gem 'jquery-fileupload-rails'
 gem 'mimemagic', '0.3.10'
@@ -71,11 +71,7 @@ gem 'virtus',               '~>1.0.3'
 gem 'will_paginate'
 gem 'yui-compressor'
 
-# see above; for production asset compilation.
-# as per http://guides.rubyonrails.org/asset_pipeline.html#precompiling-assets
-# when compressing assets without a javascript runtime:
 group :production do
-  gem 'therubyracer'
   gem 'unicorn'
 end
 
