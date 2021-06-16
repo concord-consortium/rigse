@@ -14,8 +14,8 @@
 }
 .finderOptionsContainer {
   background: $white;
-  border-radius: 2px;
-  margin: 0 0 20px;
+  border-radius: 4px;
+  margin: 0 0 10px;
   padding: 0 0 3px;
 
   form {
@@ -23,7 +23,7 @@
     padding: 0;
 
     input {
-      border-radius: 3px;
+      border-radius: 4px;
       &[type="text"] {
         padding: 5px;
         width: calc(100% - 59px);
@@ -57,7 +57,7 @@
     }
   }
   &.open {
-    padding: 0;
+    padding: 0 0 10px;
 
     h2, label {
       &:before {
@@ -80,9 +80,6 @@
       &.selected {
         background: $col-blue;
         color: $white;
-      }
-      &:last-child {
-        padding-bottom: 15px;
       }
       &:before {
         content: ' ';
@@ -162,9 +159,9 @@
     }
   }
   .curriculaSelect {
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 14px;
-    margin: 0 10px 10px;
+    margin: 0 10px;
     overflow: hidden;
     padding: 5px;
     text-overflow: ellipsis;
@@ -202,7 +199,7 @@
       white-space: nowrap;
     }
     select {
-      border-radius: 3px;
+      border-radius: 4px;
       font-size: 14px;
       margin: 0 0 0 5px;
       overflow: hidden;

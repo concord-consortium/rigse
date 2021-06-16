@@ -3,8 +3,10 @@ import Component from '../helpers/component'
 
 import ResourceLightbox from './resource-lightbox'
 import GradeLevels from './grade-levels'
+import RelatedResourceResult from './related-resource-result'
 import Lightbox from '../helpers/lightbox'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
+import StandardsHelpers from '../helpers/standards-helpers'
 
 import css from './stem-finder-result.scss'
 
@@ -161,6 +163,107 @@ const stemFinderResult = Component({
     )
   },
 
+  renderStandards: function () {
+    const resource = this.props.resource
+    // if (!resource.standard_statements || resource.standard_statements.length === 0) {
+    //   return null
+    // }
+
+    const allStatements = resource.standard_statements
+    let helpers = {}
+    let unhelped = []
+
+    helpers.NGSS = StandardsHelpers.getStandardsHelper('NGSS')
+
+    for (let i = 0; i < allStatements.length; i++) {
+      let statement = allStatements[i]
+      let helper = helpers[statement.type]
+
+      if (helper) {
+        helper.add(statement)
+      } else {
+        unhelped.push(statement)
+      }
+    }
+
+    // const unhelpedStandards = unhelped.map(function (statement) {
+    //   var description = statement.description
+    //   if (Array.isArray && Array.isArray(description)) {
+    //     var formatted = ''
+    //     for (var i = 0; i < description.length; i++) {
+    //       if (description[i].endsWith(':')) {
+    //         description[i] += ' '
+    //       } else if (!description[i].endsWith('.')) {
+    //         description[i] += '. '
+    //       }
+    //       formatted += description[i]
+    //     }
+    //     description = formatted
+    //   }
+    //   return (
+    //     <div>
+    //       <h3>{statement.notation}</h3>
+    //       {description}
+    //     </div>
+    //   )
+    // })
+
+    return (
+      <div className={`${css.collapsible} ${css.finderResultStandards}`}>
+        <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Standards</h2>
+        <div className={css.collapsibleBody}>
+          {/* helpers.NGSS.getDiv() */}
+          {/* unhelpedStandards */}
+          <h3>NGSS Alignments</h3>
+          <h4>Science and Engineering Practices:</h4>
+          <ul className={css.practices}>
+            <li>Developing and Using Models</li>
+            <li>Constructing Explanations</li>
+          </ul>
+          <h4>Crosscutting Concepts:</h4>
+          <ul className={css.crosscuttingConcepts}>
+            <li>Patterns</li>
+            <li>Cause and Effect: Mechanism and Explanation</li>
+            <li>Systems and System Models</li>
+          </ul>
+          <h4>Disciplinary Core Ideas:</h4>
+          <h5>ESS2.B: Plate Tectonics and Large-Scale System Interactions</h5>
+          <ul className={css.coreIdeas}>
+            <li>Maps of ancient land and water patterns, based on investigations of rocks and fossils, make clear how Earth’s plates have moved great distances, collided, and spread apart. (MS-ESS2-3)</li>
+            <li>The radioactive decay of unstable isotopes continually generates new energy within Earth’s crust and mantle, providing the primary source of the heat that drives mantle convection. Plate tectonics can be viewed as the surface expression of mantle convection. (HS-ESS2-3)</li>
+            <li>Plate tectonics is the unifying theory that explains the past and current movements of the rocks at Earth’s surface and provides a framework for understanding its geologic history. (ESS2.B Grade 8 GBE) (secondary to HS-ESS1-5),(HS-ESS2-1)</li>
+            <li>Plate movements are responsible for most continental and ocean-floor features and for the distribution of most rocks and minerals within Earth’s crust. (ESS2.B Grade 8 GBE) (HS-ESS2-1)</li>
+          </ul>
+          <h5>ESS1.C: The History of Planet Earth</h5>
+          <ul className={css.coreIdeas}>
+            <li>Continental rocks, which can be older than 4 billion years, are generally much older than the rocks of the ocean floor, which are less than 200 million years old. (HS-ESS1-5)</li>
+            <li>Tectonic processes continually generate new ocean sea floor at ridges and destroy old sea floor at trenches. (HS.ESS1.C GBE),(secondary to MS-ESS2-3)</li>
+          </ul>
+        </div>
+      </div>
+    )
+  },
+
+  renderRelatedResources: function (e) {
+    const resource = this.props.resource
+    if (resource.related_materials.length === 0) {
+      return null
+    }
+
+    const relatedResources = resource.related_materials.map(function (resource, i) {
+      if (i < 2) {
+        return RelatedResourceResult({ key: i, resource: resource, replaceResource: this.replaceResource })
+      }
+    }.bind(this))
+
+    return (
+      <div className={css.collapsible}>
+        <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Related Activities</h2>
+        {relatedResources}
+      </div>
+    )
+  },
+
   toggleResource: function (e) {
     e.preventDefault()
     this.setState({ isOpen: !this.state.isOpen })
@@ -173,14 +276,15 @@ const stemFinderResult = Component({
 
   render: function () {
     const resource = this.props.resource
+    console.log(resource)
     const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open}` : css.finderResult
     // truncate title and/or description if they are too long for resource card height
     // const maxCharTitle = 180
-    const maxCharDesc = 180
+    const maxCharDesc = 135
     const resourceName = resource.name
     const shortDesc = this.state.isOpen ? resource.filteredShortDescription : portalObjectHelpers.shortenText(resource.filteredShortDescription, maxCharDesc, true)
     const projectName = resource.projects[0] ? resource.projects[0].name : null
-    const projectNameRegex = / |-|\./
+    const projectNameRegex = / |-|\./g
     const projectClass = projectName ? projectName.replace(projectNameRegex, '').toLowerCase() : null
     console.log(projectClass)
     const projectNameShow = projectName
@@ -192,7 +296,6 @@ const stemFinderResult = Component({
       <div className={finderResultClasses}>
         <div className={css.finderResultImagePreview}>
           <img alt={resource.name} src={resource.icon.url} />
-          <GradeLevels resource={resource} />
         </div>
         <div className={css.finderResultText}>
           <div className={css.finderResultTextName}>
@@ -201,6 +304,12 @@ const stemFinderResult = Component({
           <div className={css.finderResultTextDescription}>
             {shortDesc}
           </div>
+          <div className={css.metaTags}>
+            <GradeLevels resource={resource} />
+            <div className={`${css.metaTag} ${css.timeRequired}`}>
+              1 Day
+            </div>
+          </div>
         </div>
         <div className={css.previewLink}>
           <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
@@ -208,20 +317,8 @@ const stemFinderResult = Component({
             {projectNameShow}
           </div>
         </div>
-        <div className={css.collapsible}>
-          <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Standards</h2>
-          <div className={css.collapsibleBody}>
-            <p>Globular star cluster venture cosmos billions upon billions intelligent beings cosmic fugue. Hundreds of thousands hundreds of thousands with pretty stories for which there's little good evidence muse about as a patch of light laws of physics.</p>
-            <p>Emerged into consciousness white dwarf vastness is bearable only through love the only home we've ever known made in the interiors of collapsing stars bits of moving fluff? A very small stage in a vast cosmic arena gathered by gravity made in the interiors of collapsing stars invent the universe a mote of dust suspended in a sunbeam made in the interiors of collapsing stars and billions upon billions upon billions upon billions upon billions upon billions upon billions.</p>
-          </div>
-        </div>
-        <div className={css.collapsible}>
-          <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Related Materials</h2>
-          <div className={css.collapsibleBody}>
-            <p>Globular star cluster venture cosmos billions upon billions intelligent beings cosmic fugue. Hundreds of thousands hundreds of thousands with pretty stories for which there's little good evidence muse about as a patch of light laws of physics.</p>
-            <p>Emerged into consciousness white dwarf vastness is bearable only through love the only home we've ever known made in the interiors of collapsing stars bits of moving fluff? A very small stage in a vast cosmic arena gathered by gravity made in the interiors of collapsing stars invent the universe a mote of dust suspended in a sunbeam made in the interiors of collapsing stars and billions upon billions upon billions upon billions upon billions upon billions upon billions.</p>
-          </div>
-        </div>
+        {this.renderStandards()}
+        {this.renderRelatedResources()}
         {this.renderLinks()}
         {this.renderFavoriteStar()}
       </div>

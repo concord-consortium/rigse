@@ -3,14 +3,12 @@
 @import '../../shared/styles/variables/_variables.scss';
 
 .finderResultGradeLevels {
-  bottom: 5px;
-  left: 5px;
+  display: inline-block;
   pointer-events: none;
-  position: absolute;
 }
 .finderResultGradeLevel {
   background-color: $light-gray;
-  color: $col-darkgray-50;
+  color: $col-darkgray-75;
   display: inline-block;
   font-size: 12px;
   margin-top: 10px;

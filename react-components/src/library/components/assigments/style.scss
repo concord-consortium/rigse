@@ -1,3 +1,6 @@
+@import '../../../shared/styles/mixins/_mixins.scss';
+@import '../../../shared/styles/variables/_colors.scss';
+@import '../../../shared/styles/variables/_variables.scss';
 .classAssignments {
 
   header {
@@ -10,12 +13,54 @@
 
     .assignMaterials {
       font-size: 1.2em;
+      position: relative;
+      text-align: right;
       text-transform: uppercase;
       white-space: nowrap;
 
       button {
-        background: #0592af;
-        border-color: #0592af;
+        background: $col-blue;
+        border-color: $col-blue;
+        display: inline;
+
+        &:hover {
+          background: $col-darkblue;
+          border-color: $col-darkblue;
+          color: $white;
+        }
+        &:active {
+          background: $col-lightblue;
+          border-color: $col-lightblue;
+          color: $white;            
+        }
+      }
+      ul {
+        font-size: 15px;
+        font-weight: 300;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        right: 0;
+        z-index: 5;
+
+        li {
+          background: $col-blue;
+          color: $white;
+          cursor: pointer;
+          padding: 14px 20px;
+          text-align: left;
+          text-transform: none;
+
+          &:hover {
+            background: $col-darkblue;
+            color: $white;
+          }
+          &:active {
+            background: $col-lightblue;
+            color: $white;            
+          }
+        }
       }
     }
   }

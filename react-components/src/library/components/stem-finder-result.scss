@@ -11,6 +11,7 @@
   overflow: hidden;
   padding: 10px 10px 34px;
   position: relative;
+  transition: .3s;
 
   &:after {
     background: $white;
@@ -46,8 +47,32 @@
         padding-left: 0;
       }
 
+      &.moreLink {
+        position: relative;
+        &:after {
+          content: "\2303";
+          display: inline-block;
+          font-size: 12px;
+          margin: 0;
+          position: absolute;
+          right: -12px;
+          top: -2px;
+          transform: rotate(180deg);
+        }
+      }
+
       &.lessLink {
         display: none;
+        position: relative;
+        &:after {
+          content: "\2303";
+          display: inline-block;
+          font-size: 12px;
+          margin: 0;
+          position: absolute;
+          right: -12px;
+          top: 2px;
+        }
       }
     }
   }
@@ -69,6 +94,9 @@
         }
       }
     }
+    .metaTags {
+      bottom: -5px !important;
+    }
   }
 
   .finderResultImagePreview {
@@ -86,21 +114,43 @@
   }
   .finderResultText {
     margin: 0 10px 10px 0;
-    min-height: 100px;
+    min-height: 80px;
+    padding-bottom: 20px;
+    position: relative;
     width: 340px;
 
     .finderResultTextName {
       font-size: 16px;
       font-weight: 700;
       line-height: 1;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     .finderResultTextDescription {
       font-size: 14px;
-      line-height: 1.3;
+      line-height: 1.2;
+    }
+    .metaTags {
+      bottom: 32px;
+      position: absolute;
+      width: 100%;
+
+      .metaTag {
+        background-color: $col-lightgray;
+        color: $col-darkgray-75;
+        display: inline-block;
+        font-size: 12px;
+        margin-top: 10px;
+        margin-right: 5px;
+        padding: 3px 5px;
+
+        &.timeRequired {
+          background: $col-lightgray url(https://learn-resources.concord.org/images/clock.png) no-repeat 7px 3px;
+          padding-left: 30px;
+        }
+      }
     }
   }
   .previewLink {
@@ -109,13 +159,22 @@
 
     .previewLinkButton {
       background: #fff;
-      border: solid 2px #ea6d2f;
-      border-radius: 3px;
-      color: #ea6d2f;
+      border: solid 2px $col-orange;
+      color: $col-orange;
       display: block;
       font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
       padding: 8px 25px;
       text-align: center;
+
+      &:hover {
+        background: $col-orange;
+        color: $white;
+      }
+      &:active {
+        background: $col-gold;
+        border-color: $col-gold;
+        color: $white;
+      }
     }
 
     .projectLabel {
@@ -140,11 +199,15 @@
 
   .collapsible {
     background: $col-lightgray;
-    height: 14px;
+    height: 34px;
     margin-bottom: 5px;
     overflow: hidden;
-    padding: 10px;
+    padding: 0;
     width: 100%;
+
+    &:hover {
+      background: $col-mediumgray;
+    }
 
     .collapsibleHeading {
       color: $col-darkgray;
@@ -153,8 +216,8 @@
       font-size: 14px;
       font-weight: 300;
       line-height: 1;
-      margin-bottom: 10px;
-      padding-left: 14px;
+      margin-bottom: 0;
+      padding: 10px 10px 10px 24px;
       position: relative;
       width: 100%;
 
@@ -162,16 +225,17 @@
         content: "\203A";
         display: inline-block;
         font-size: 22px;
-        left: 0;
+        left: 10px;
         line-height: .45;
         margin: 0;
         position: absolute;
-        top: 0;
+        top: 10px;
         transition: .1s;
       }
     }
     .collapsibleBody {
       font-size: 14px;
+      padding: 0 10px 10px;
     }
 
     &.collapsibleOpen {
@@ -181,6 +245,38 @@
 
         &:before {
           transform: rotate(90deg);
+        }
+      }
+    }
+  }
+
+  .finderResultStandards {
+    h3 {
+      color: $col-darkgray;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h4 {
+      color: $col-darkgray;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    h5 {
+      color: $col-darkgray;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    ul {
+      list-style: none;
+      margin: 0 0 20px;
+
+      li {
+        margin: 0;
+      }
+      &.coreIdeas {
+        li {
+          margin: 0 0 10px;
         }
       }
     }

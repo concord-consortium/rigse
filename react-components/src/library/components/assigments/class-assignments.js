@@ -5,18 +5,49 @@ import Lightbox from '../../helpers/lightbox'
 import css from './style.scss'
 import commonCss from '../../styles/common-css-modules.scss'
 
-const closeLightbox = (e) => {
-  Lightbox.close()
-}
-
-const handleAssignMaterialsButtonClick = (e) => {
-  const resourceFinderLightbox = ResourceFinderLightbox({
-    closeLightbox: closeLightbox
-  })
-  Lightbox.open(resourceFinderLightbox)
-}
-
 export default class ClassAssignments extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      showAssignOptions: false
+    }
+    this.closeLightbox = this.closeLightbox.bind(this)
+    this.handleAssignMaterialsButtonClick = this.handleAssignMaterialsButtonClick.bind(this)
+    this.handleAssignButtonMouseEnter = this.handleAssignButtonMouseEnter.bind(this)
+    this.handleAssignButtonMouseLeave = this.handleAssignButtonMouseLeave.bind(this)
+    this.renderAssignOptions = this.renderAssignOptions.bind(this)
+  }
+
+  closeLightbox (e) {
+    Lightbox.close()
+  }
+
+  handleAssignMaterialsButtonClick (e) {
+    this.setState({ showAssignOptions: false })
+    const resourceFinderLightbox = ResourceFinderLightbox({
+      closeLightbox: this.closeLightbox
+    })
+    Lightbox.open(resourceFinderLightbox)
+  }
+
+  handleAssignButtonMouseEnter (e) {
+    this.setState({ showAssignOptions: true })
+  }
+
+  handleAssignButtonMouseLeave (e) {
+    this.setState({ showAssignOptions: false })
+  }
+
+  renderAssignOptions () {
+    return (
+      <ul onMouseEnter={this.handleAssignButtonMouseEnter} onMouseLeave={this.handleAssignButtonMouseLeave}>
+        <li onClick={this.handleAssignMaterialsButtonClick}>Recent: ITSI Materials</li>
+        <li onClick={this.handleAssignMaterialsButtonClick}>Recent: NGSA Materials</li>
+        <li onClick={this.handleAssignMaterialsButtonClick}>All Materials</li>
+      </ul>
+    )
+  }
+
   get assignMaterialsPath () {
     const { clazz } = this.props
     if (Portal.theme === 'itsi-learn') {
@@ -30,12 +61,15 @@ export default class ClassAssignments extends React.Component {
 
   render () {
     const { clazz } = this.props
+    console.log(this.state.showAssignOptions)
+    const assignOptions = this.state.showAssignOptions ? this.renderAssignOptions() : null
     return (
       <div className={css.classAssignments}>
         <header>
           <h1>Assignments for { clazz.name }</h1>
           <div className={css.assignMaterials}>
-            <button onClick={handleAssignMaterialsButtonClick}>Assign Materials</button>
+            <button onMouseEnter={this.handleAssignButtonMouseEnter} onMouseLeave={this.handleAssignButtonMouseLeave} onClick={this.handleAssignMaterialsButtonClick}>Assign Materials</button>
+            {assignOptions}
           </div>
         </header>
         <table className={css.classInfo}>

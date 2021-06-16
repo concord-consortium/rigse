@@ -1,0 +1,41 @@
+@import '../../shared/styles/variables/_variables.scss';
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../styles/helpers/_modal.scss';
+
+.finderRelatedResult {
+  display: flex;
+
+  .finderRelatedResultImagePreview {
+    border: solid 1px $col-lightgray;
+    height: 90px;
+    margin: 0 10px 15px 0;
+    overflow: hidden;
+    position: relative;
+    width: 160px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .finderRelatedResultText {
+    margin: 0 10px 10px 0;
+    min-height: 100px;
+    width: 340px;
+
+    .finderRelatedResultTextName {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .finderRelatedResultTextDescription {
+      font-size: 14px;
+      line-height: 1.3;
+    }
+  }
+}

@@ -1,3 +1,68 @@
 @import "icomoon";
 @import "special_link";
 @import "forms";
+
+body.member-visitor {
+  #page-header {
+    height: 70px;
+  }
+}
+#portal-pages-finder {
+  background: #ffc320 !important;
+  background: #e2f4f8 !important;
+  background: #6fc6da !important;
+  padding-top: 30px !important;
+}
+
+.home-page-content {
+  .portal-pages-hero h1 {
+    font: 100 40px museo, sans-serif !important;
+    line-height: 46px !important;
+
+    strong:before {
+      display: none !important;
+    }
+  }
+  .portal-pages-hero-info {
+    font: 300 20px museo-sans, sans-serif !important;
+    line-height: 26px !important;
+    margin: 10px 0 30px 0 !important;
+  }
+  .portal-pages-diagonal-spacer-2 {
+    background: #e2f4f8 !important;
+    background: #6fc6da !important;
+  }
+  .skew.mediumgray {
+    background: #ffc320 !important;
+  }
+  #portal-pages-finder {
+    div[class^="finderOptionsContainer--"] {
+      form input[type="text"] {
+        font-size: 12px;
+        width: calc(100% - 69px) !important;
+      }
+      form input[type="submit"] {
+        font-size: 15px;
+        padding: 9px 5px !important;
+      }
+    }
+    div[class^="finderOptionsContainer--"] {
+      select[class^="curriculaSelect--"] {
+        width: calc(100% - 35px);
+      }
+    }
+    .portal-pages-finder-form-subject-areas-logo-inner {
+      display: none !important;
+    }
+    .portal-pages-finder-form-subject-areas-logo-label, 
+    .portal-pages-finder-form-filters-logo-label {
+      font-size: 16px;
+      font-weight: 300;
+      text-align: left !important;
+      text-transform: none !important;
+    }
+    div[class^="finderResultText--"] {
+      width: 494px !important;
+    }
+  }
+}

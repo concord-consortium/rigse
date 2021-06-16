@@ -142,7 +142,7 @@ const StemFinder = Component({
       '&skip_lightbox_reloads=true',
       '&include_official=1',
       '&model_types=All',
-      '&include_related=0',
+      '&include_related=2',
       '&investigation_page=',
       searchPage,
       '&activity_page=',
@@ -233,7 +233,9 @@ const StemFinder = Component({
         numTotalResources += result.pagination.total_items
       })
 
-      resources.sort(sortByName)
+      if (this.state.sortOrder) {
+        resources.sort(sortByName)
+      }
 
       if (this.state.firstSearch) {
         fadeIn(this, 1000)
@@ -444,9 +446,6 @@ const StemFinder = Component({
   handleCurriculaSelection (e) {
     e.preventDefault()
     e.stopPropagation()
-    console.log('curric')
-    console.log(e)
-    console.log(e.target.value)
     this.setState({ projectsSelected: [e.target.value] }, () => {
       this.search()
     })
@@ -455,9 +454,6 @@ const StemFinder = Component({
   handleSortSelection (e) {
     e.preventDefault()
     e.stopPropagation()
-    console.log('sort')
-    console.log(e)
-    console.log(e.target.value)
     this.setState({ sortOrder: [e.target.value] }, () => {
       this.search()
     })
