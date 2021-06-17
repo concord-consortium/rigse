@@ -66,7 +66,7 @@ class Reports::Account < Reports::Excel
 
     active_users = User.active.includes(
       portal_teacher: [:clazzes, {schools: :district}],
-      portal_student: [{clazzes: [:teachers, course: {school: :district}]}, {learners: :bundle_logger}])
+      portal_student: [{clazzes: [:teachers, course: {school: :district}]}])
     active_users = active_users.order("last_name").where(default_user: false)
     active_users.each do |user|
       if user.portal_teacher

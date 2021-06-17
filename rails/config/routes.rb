@@ -222,31 +222,7 @@ RailsPortal::Application.routes.draw do
     namespace :dataservice do
       # 2020-09-15 NP — I doubt that we actualy need create and update
       resources :blobs, only: [:show, :index, :create, :update]
-      # 2020-09-15 NP: Most dataservice routes have been removed.
-      # We maintain a few dataservice routes required by external apps like
-      # genigames. Metal routes (below) are used by these too.
-      resources :bucket_loggers, only: [:show]
     end
-
-    # metal routing
-    post '/dataservice/bundle_loggers/:id/bundle_contents.bundle' => 'dataservice/bundle_contents_metal#create', :constraints => { :format => 'bundle' }
-    post '/dataservice/console_loggers/:id/console_contents.bundle' => 'dataservice/console_contents_metal#create', :constraints => { :format => 'bundle' }
-    post '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle' => 'dataservice/periodic_bundle_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_periodic_bundle_contents'
-    post '/dataservice/periodic_bundle_loggers/:id/session_end_notification.bundle' => 'dataservice/periodic_bundle_loggers_metal#session_end_notification', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_session_end_notification'
-
-    # bucket contents routes
-    post '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_learner'
-    get  '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_learner',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_learner'
-    post '/dataservice/bucket_loggers/name/:name/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_name', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_name'
-    get  '/dataservice/bucket_loggers/name/:name/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_name',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_name'
-    post '/dataservice/bucket_loggers/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents'
-
-    # bucket log items routes
-    post '/dataservice/bucket_loggers/:id/bucket_log_items(.:format)'         => 'dataservice/bucket_log_items_metal#create',            :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items'
-    post '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_learner'
-    get  '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_learner'
-    post '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_name'
-    get  '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_name'
 
     # external activity return url (:id_or_key refers learner's ID or key)
     # - key is a random UUID string, so it's impossible to guess somebody's else endpoint (more secure)

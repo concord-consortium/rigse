@@ -42,17 +42,6 @@ module JnlpHelper
       additional_properties = [
         ['jnlp.otrunk.view.mode', 'student'],
       ]
-      if current_settings.use_periodic_bundle_uploading?
-        # make sure the periodic bundle logger exists, just in case
-        l = options[:learner]
-        if l.student.user == current_visitor
-          pbl = l.periodic_bundle_logger || Dataservice::PeriodicBundleLogger.create(:learner_id => l.id)
-          additional_properties << ['jnlp.otrunk.periodic.uploading.enabled', 'true']
-          additional_properties << ['jnlp.otrunk.periodic.uploading.url', dataservice_periodic_bundle_logger_periodic_bundle_contents_url(pbl)]
-          additional_properties << ['jnlp.otrunk.periodic.uploading.interval', pub_interval]
-          additional_properties << ['jnlp.otrunk.session_end.notification.url', dataservice_periodic_bundle_logger_session_end_notification_url(pbl)]
-        end
-      end
     else
       additional_properties = [
         ['jnlp.otrunk.view.mode', 'student'],
@@ -73,7 +62,7 @@ module JnlpHelper
   end
 
   def jnlp_information(xml, learner = nil)
-    xml.information { 
+    xml.information {
       xml.title APP_CONFIG[:site_name]
       xml.vendor "Concord Consortium"
       xml.homepage :href => APP_CONFIG[:site_url]
@@ -95,7 +84,7 @@ module JnlpHelper
   #
   # convenient
   #
-  def load_yaml(filename) 
+  def load_yaml(filename)
     file_txt = "---"
     begin
       File.open(filename, "r") do |f|

@@ -97,22 +97,6 @@ module RailsPortal
     # Activate observers that should always be running
     # Please note that observers generated using script/generate observer need to have an _observer suffix
 
-    # ... observers are now started in config/initializers/observers.rb
-    # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
-    # if ApplicationRecord.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-    if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
-      puts "Didn't start observers because you are running: rake db:migrate"
-    else
-        begin
-          config.active_record.observers = :"dataservice/bundle_content_observer", :"dataservice/periodic_bundle_content_observer"
-        rescue
-          # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
-          puts "Couldn't start observers #{$!} ... but continuing process anyway"
-          puts "This might be because you have not setup the appropriate database tables yet... "
-          puts "see config/initializers/observers.rb for more information."
-        end
-    end
-
     config.middleware.insert_before 0, Rack::Cors do
 
       allow do

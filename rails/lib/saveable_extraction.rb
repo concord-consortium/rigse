@@ -13,7 +13,7 @@ module SaveableExtraction
          saveable_open_response.answers.last.answer != answer ||
          saveable_open_response.answers.last.is_final != is_final
 
-        saveable_open_response.answers.create(:bundle_content_id => self.id, :answer => answer, :is_final => is_final)
+        saveable_open_response.answers.create(:answer => answer, :is_final => is_final)
       end
     else
       logger.error("Missing Embeddable::OpenResponse id: #{parent_id}")
@@ -42,7 +42,7 @@ module SaveableExtraction
       # Do not associate answers with this question.
       #
       saveable = Saveable::MultipleChoice.where(learner_id: @learner_id, offering_id: @offering_id, multiple_choice_id: embeddable_id).first_or_create
-      saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => embeddable_id, :is_final => is_final)
+      saveable_answer = saveable.answers.create(:multiple_choice_id => embeddable_id, :is_final => is_final)
       return
     end
 
@@ -60,7 +60,7 @@ module SaveableExtraction
          ((saveable.answers.last.rationale_choices.map{|rc| rc.rationale}.compact - rationales.values).size != 0) || # the actual rationales differ
          saveable.answers.last.is_final != is_final # is_final differs (answer is explicitly submitted by learner)
 
-        saveable_answer = saveable.answers.create(:bundle_content_id => self.id, :multiple_choice_id => multiple_choice.id, :is_final => is_final)
+        saveable_answer = saveable.answers.create(:multiple_choice_id => multiple_choice.id, :is_final => is_final)
         choice_ids.each do |choice_id|
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice_id, :answer_id => saveable_answer.id, :rationale => rationales[choice_id])
         end

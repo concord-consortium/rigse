@@ -240,7 +240,7 @@ class Portal::OfferingsController < ApplicationController
                                           open_response_id: embeddable.id)
                                    .first_or_create
       if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
-        saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
+        saveable_open_response.answers.create(:answer => answer)
       end
     when Embeddable::MultipleChoice
       choice = parse_embeddable(answer)
@@ -252,7 +252,7 @@ class Portal::OfferingsController < ApplicationController
                               multiple_choice_id: embeddable.id)
                        .first_or_create
         if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
-          saveable_answer = saveable.answers.create(:bundle_content_id => nil)
+          saveable_answer = saveable.answers.create()
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)
         end
       else

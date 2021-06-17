@@ -44,11 +44,6 @@
           %br
           (This option changes whether or not users will be asked for consent to use their data)
         %li
-          = f.label :use_periodic_bundle_uploading, "Use Periodic Bundle Uploading:", :style => "display:inline;"
-          = f.check_box :use_periodic_bundle_uploading
-          %br
-          (This option changes whether student data will be uploaded in chunks at intervals throughout the session, or in one large chunk at the end of the session)
-        %li
           = f.label :pub_interval, "PUB Interval seconds:", :style => "display:inline;"
           = f.text_field :pub_interval, :size=>4
           %br

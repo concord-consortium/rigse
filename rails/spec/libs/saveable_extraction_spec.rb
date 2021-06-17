@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe SaveableExtraction do
-  let(:saveable_extraction) { Dataservice::BundleContent.new }
+  let(:saveable_extraction) { Dataservice::ProcessExternalActivityDataJob.new }
   # TODO: auto-generated
   describe '#logger' do
     it 'logger' do
