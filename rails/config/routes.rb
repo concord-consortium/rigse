@@ -113,7 +113,6 @@ RailsPortal::Application.routes.draw do
       resources :learners do
         member do
           get :report
-          get :bundle_report
           get :activity_report
           get :authorize_show
           get :current_clazz
@@ -560,7 +559,6 @@ RailsPortal::Application.routes.draw do
     get 'authoring' => 'home#authoring', :as => :authoring
     get '/authoring_site_redirect/:id' => 'home#authoring_site_redirect', :as => :authoring_site_redirect
 
-    get '/banner' => 'misc#banner', :as => :banner
     get '/time' => 'misc_metal#time', :as => :time
     get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc

@@ -32,28 +32,9 @@ describe Report::Learner do
       :reload => nil
     )
 
-    @bundle_content = mock_model(Dataservice::BundleContent)
-
-    @bundle_logger = mock_model(Dataservice::BundleLogger,
-      :last_non_empty_bundle_content => @bundle_content
-    )
-
-    @periodic_bundle_content = mock_model(Dataservice::PeriodicBundleContent)
-
-    @periodic_bundle_logger = mock_model(Dataservice::PeriodicBundleLogger,
-      :periodic_bundle_contents => [@periodic_bundle_content]
-    )
-
-    @last_contents   = double('last_contents', :updated_at => nil)
-    @bucket_contents = double('bucket_contents', :last => @last_contents)
-    @bucket_logger   = double('bucket_logger', :bucket_contents => @bucket_contents)
-
     @learner  = mock_model(Portal::Learner,
       :student  => @student,
-      :offering => @offering,
-      :bundle_logger => @bundle_logger,
-      :periodic_bundle_logger => @periodic_bundle_logger,
-      :bucket_logger => @bucket_logger
+      :offering => @offering
     )
   end
 
@@ -61,12 +42,7 @@ describe Report::Learner do
     @report = Report::Learner.create(:learner => @learner)
   end
 
-  describe "with no bundle_loggers" do
-    before(:each) do
-      allow(@learner).to receive_messages(:periodic_bundle_logger => nil)
-      allow(@bundle_logger).to receive_messages(:last_non_empty_bundle_content => nil)
-    end
-
+  describe "with a learner" do
     it "the last_run time should be nil" do
       report = Report::Learner.create(:learner => @learner)
       expect(report.last_run).to be_nil
@@ -80,62 +56,6 @@ describe Report::Learner do
       report.calculate_last_run
       expect(report.last_run).to eq(now)
     end
-  end
-
-  describe "with only old type bundle loggers" do
-    before(:each) do
-      allow(@learner).to receive_messages(:periodic_bundle_logger => nil)
-      allow(@bundle_content).to receive_messages(:updated_at => Time.now)
-    end
-
-    it "should use the last bundle contents update time" do
-      report = Report::Learner.create(:learner => @learner)
-      expect(report.last_run).to eq(@bundle_content.updated_at.change(:usec => 0))
-    end
-  end
-
-  describe "with only periodic bundle loggers" do
-    before(:each) do
-      allow(@learner).to receive_messages(:bundle_logger => nil)
-      allow(@periodic_bundle_content).to receive_messages(:updated_at => Time.now)
-      allow(@periodic_bundle_logger).to receive_messages(:periodic_bundle_contents => [@periodic_bundle_content])
-    end
-
-    it "should use the last bundle contents update time" do
-      report = Report::Learner.create(:learner => @learner)
-      expect(report.last_run).to eq(@periodic_bundle_content.updated_at.change(:usec => 0))
-    end
-  end
-
-  describe "with both preiodic and standard loggers" do
-    describe "when the periodic logger is the most recent" do
-      before(:each) do
-        allow(@bundle_content).to receive_messages(:updated_at => Time.now - 2.hours)
-        allow(@bundle_logger).to receive_messages(:last_non_empty_bundle_content => @bundle_content)
-        allow(@periodic_bundle_content).to receive_messages(:updated_at => Time.now)
-        allow(@periodic_bundle_logger).to receive_messages(:periodic_bundle_contents => [@periodic_bundle_content])
-      end
-
-      it "should use the periodic update time" do
-        report = Report::Learner.create(:learner => @learner)
-        expect(report.last_run).to eq(@periodic_bundle_content.updated_at.change(:usec => 0))
-      end
-    end
-    describe "when the periodic logger is the most recent" do
-      before(:each) do
-        allow(@bundle_content).to receive_messages(:updated_at => Time.now)
-        allow(@bundle_logger).to receive_messages(:last_non_empty_bundle_content => @bundle_content)
-
-        allow(@periodic_bundle_content).to receive_messages(:updated_at => Time.now - 2.hours)
-        allow(@periodic_bundle_logger).to receive_messages(:periodic_bundle_contents => [@periodic_bundle_content])
-      end
-
-      it "should use the bundle update time" do
-        report = Report::Learner.create(:learner => @learner)
-        expect(report.last_run).to eq(@bundle_content.updated_at.change(:usec => 0))
-      end
-    end
-
   end
 
   describe "feedback in reports" do

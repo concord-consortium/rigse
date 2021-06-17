@@ -25,7 +25,6 @@ class Portal::Student < ApplicationRecord
   has_many :own_collaborations, :class_name => "Portal::Collaboration", :foreign_key => "owner_id"
   has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
   has_many :collaborations, :through => :collaboration_memberships, :class_name => "Portal::Collaboration"
-  has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content
 
   has_many :portal_student_permission_forms, :dependent => :destroy, :class_name => "Portal::StudentPermissionForm", :foreign_key => "portal_student_id"
 

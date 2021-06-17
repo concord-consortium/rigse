@@ -127,11 +127,6 @@ Portal::Student:  #{Portal::Student.count}
 Portal::Offering: #{Portal::Offering.count}
 Portal::Learner:  #{Portal::Learner.count}
 
-Dataservice::BundleLogger:  #{Dataservice::BundleLogger.count}
-Dataservice::BundleContent: #{Dataservice::BundleContent.count}
-Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
-Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
-
 There are #{Portal::Teacher.select {|t| t.user == nil}.size} Teachers without Users
 There are #{Portal::Student.select {|s| s.user == nil}.size} Students which no longer have Teachers
 There are #{Portal::Clazz.select {|i| i.teacher == nil}.size} Classes which no longer have Teachers

@@ -370,12 +370,7 @@ module ApplicationHelper
   end
 
   def sessions_learner_stat(learner)
-    sessions = learner.bundle_logger.bundle_contents.count
-    if sessions > 0
-      pluralize(learner.bundle_logger.bundle_contents.count, 'session')
-    else
-      ''
-    end
+    'n/a'
   end
 
   def learner_specific_stats(learner)
@@ -385,7 +380,7 @@ module ApplicationHelper
     mc_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
     mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
     mc_total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
-    "sessions: #{learner.bundle_logger.bundle_contents.count}, open response: #{or_answered}/#{or_total}, multiple choice:  #{mc_answered}/#{mc_correct}/#{mc_total}"
+    "sessions: n/a, open response: #{or_answered}/#{or_total}, multiple choice:  #{mc_answered}/#{mc_correct}/#{mc_total}"
   end
 
   def report_details_for_learner(learner, opts = {})

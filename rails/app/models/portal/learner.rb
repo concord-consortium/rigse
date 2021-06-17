@@ -11,11 +11,6 @@ class Portal::Learner < ApplicationRecord
   belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id",
     :inverse_of => :learners
 
-  belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
-  belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
-  has_one    :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger", :foreign_key => "learner_id", :dependent => :destroy
-  has_one    :bucket_logger, :class_name => "Dataservice::BucketLogger", :foreign_key => "learner_id", :dependent => :destroy
-
   has_many :open_responses, :dependent => :destroy , :class_name => "Saveable::OpenResponse" do
     def answered
       all.select { |question| question.answered? }
@@ -67,46 +62,16 @@ class Portal::Learner < ApplicationRecord
     super || create_report_learner!
   end
 
-  def sessions
-    self.bundle_logger.bundle_contents.length
-  end
-
   [:name, :first_name, :last_name, :email].each { |m| delegate m, :to => :student }
 
-  before_create do |learner|
-    learner.create_console_logger
-    learner.create_bundle_logger
-  end
-
   after_create do |learner|
-    # have to create this after so that the learner id can be stored in the new bundle logger
-    learner.create_periodic_bundle_logger
     # make the report learner now, so two parts of the code aren't trying to create it at the
     # same time later
     learner.report_learner.update_fields
   end
 
-  def valid_loggers?
-    console_logger && bundle_logger && periodic_bundle_logger
-  end
-
-  def create_new_loggers
-    create_console_logger
-    create_bundle_logger
-    create_periodic_bundle_logger
-  end
-
-  # validates_presence_of :console_logger, :message => "console_logger association not specified"
-  # validates_presence_of :bundle_logger,  :message => "bundle_logger association not specified"
-
   validates_presence_of :student,  :message => "student association not specified"
   validates_presence_of :offering, :message => "offering association not specified"
-
-  #
-  # before_save do |learner|
-  #   learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
-  #   learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
-  # end
 
   include Changeable
 
@@ -145,10 +110,6 @@ class Portal::Learner < ApplicationRecord
 
   def name
     user = student.user.name
-    # name = user.name
-    # login = user.login
-    # runnable_name = (offering ? offering.runnable.name : "invalid offering runnable")
-    # "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
   end
 
   def saveable_count

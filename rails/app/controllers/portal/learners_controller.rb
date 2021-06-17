@@ -1,6 +1,6 @@
 class Portal::LearnersController < ApplicationController
 
-  layout 'report', :only => %w{report bundle_report}
+  layout 'report', :only => %w{report}
 
   include RestrictedPortalController
   include Portal::LearnerJnlpRenderer
@@ -119,23 +119,6 @@ class Portal::LearnersController < ApplicationController
     redirect_to next_url
   end
 
-  # GET /portal/learners/1/bundle_report
-  # GET /portal/learners/1/bundle_report.xml
-  def bundle_report
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Learner
-    # authorize @learner
-    # authorize Portal::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    @portal_learner = Portal::Learner.find(params[:id])
-
-    respond_to do |format|
-      format.html # report.html.haml
-    end
-  end
-
   # GET /portal/learners/1
   # GET /portal/learners/1.xml
   def show
@@ -144,44 +127,9 @@ class Portal::LearnersController < ApplicationController
     # authorize @learner
     @portal_learner = Portal::Learner.find(params[:id])
 
-    @portal_learner.console_logger = Dataservice::ConsoleLogger.create! unless @portal_learner.console_logger
-    @portal_learner.bundle_logger = Dataservice::BundleLogger.create! unless @portal_learner.bundle_logger
-    @portal_learner.periodic_bundle_logger = Dataservice::PeriodicBundleLogger.create!(:learner_id => @portal_learner.id) unless @portal_learner.periodic_bundle_logger
-
     respond_to do |format|
       format.html # show.html.erb
       format.jnlp { render_learner_jnlp @portal_learner }
-      format.config {
-        # if this isn't the learner then it is launched read only
-        properties = {}
-        bundle_get_url = dataservice_bundle_logger_url(@portal_learner.bundle_logger, :format => :bundle)
-        if @portal_learner.student.user == current_visitor
-          if @portal_learner.bundle_logger.in_progress_bundle
-            launch_event = Dataservice::LaunchProcessEvent.create(
-              :event_type => Dataservice::LaunchProcessEvent::TYPES[:config_requested],
-              :event_details => "Activity configuration loaded. Loading prior learner session data...",
-              :bundle_content => @portal_learner.bundle_logger.in_progress_bundle
-            )
-          end
-          bundle_post_url = dataservice_bundle_logger_bundle_contents_url(@portal_learner.bundle_logger, :format => :bundle)
-        else
-          bundle_post_url = nil
-          properties['otrunk.view.user_data_warning'] = 'true'
-        end
-        if current_settings.use_periodic_bundle_uploading?
-          bundle_get_url = dataservice_periodic_bundle_logger_url(@portal_learner.periodic_bundle_logger, :format => :bundle)
-          bundle_post_url = nil
-        end
-        render :partial => 'shared/sail',
-          :locals => {
-            :otml_url => polymorphic_url(@portal_learner.offering.runnable, :format => :dynamic_otml, :learner_id => @portal_learner.id),
-            :session_id => (params[:session] || request.env["rack.session.options"][:id]),
-            :console_post_url => dataservice_console_logger_console_contents_url(@portal_learner.console_logger, :format => :bundle),
-            :bundle_url => bundle_get_url,
-            :bundle_post_url => bundle_post_url,
-            :properties => properties
-          }
-      }
       format.xml  { render :xml => @portal_learner }
     end
   end
