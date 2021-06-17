@@ -130,17 +130,6 @@ describe API::V1::CreateCollaboration do
           expect(collaboration.students).to match_array(students)
         end
       end
-
-      describe "when offering is an external activity" do
-        before do
-          offering.runnable = FactoryBot.create(:external_activity)
-          offering.save!
-        end
-
-        it "should have #bundle_content equal to nil" do
-          expect(collaboration.bundle_content).to eql(nil)
-        end
-      end
     end
 
     describe "side effects of collaboration generation" do

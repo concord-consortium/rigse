@@ -2,8 +2,12 @@
 
 require 'spec_helper'
 
+class TestSaveableExtraction
+  include SaveableExtraction
+end
+
 RSpec.describe SaveableExtraction do
-  let(:saveable_extraction) { Dataservice::ProcessExternalActivityDataJob.new }
+  let(:saveable_extraction) { TestSaveableExtraction.new }
   # TODO: auto-generated
   describe '#logger' do
     it 'logger' do
