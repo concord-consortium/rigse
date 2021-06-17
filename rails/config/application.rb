@@ -196,6 +196,12 @@ module RailsPortal
     # Rails can then thwart attacks that attempt to copy the signed/encrypted value of a cookie and use it as the value of another cookie.
     config.action_dispatch.use_cookies_with_metadata = true
 
+
+    # Specify cookies SameSite protection level: either :none, :lax, or :strict.
+    # When running tests, we want to use lax protection (breaks cucumber tests otherwise)
+    same_site_protection = (Rails.env.cucumber? || Rails.env.test? || Rails.env.feature_test?) ? :lax : :none
+    config.action_dispatch.cookies_same_site_protection = same_site_protection
+
     # Allow requests from any domain (skips DNS rebinding attack guards)
     config.hosts = nil
   end

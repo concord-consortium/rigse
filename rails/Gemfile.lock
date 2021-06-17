@@ -4,14 +4,6 @@ GIT
   specs:
     in_place_editing (1.2.0)
 
-GIT
-  remote: https://github.com/concord-consortium/secure-samesite-cookies.git
-  revision: da3078b1f2d1ac9c4c62b5cd7cd4c1fce1eb6dd1
-  tag: v1.0.2
-  specs:
-    rack-secure_samesite_cookies (1.0.2)
-      rack (>= 1.4.7)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -1264,7 +1256,6 @@ DEPENDENCIES
   pundit (~> 1)
   rack-cors
   rack-mini-profiler
-  rack-secure_samesite_cookies!
   rails (= 6.1.3.2)
   rails-controller-testing
   rails-observers
