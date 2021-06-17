@@ -62,9 +62,9 @@ class Report::Learner < ApplicationRecord
   end
 
   def self.build_last_run_string(last_run, opts={})
-    not_run_str = "not yet started" || opts[:not_run]
-    prefix      = "Last run"        || opts[:prefix]
-    format      = "%b %d, %Y"       || opts[:format]
+    not_run_str = "Not yet started"   || opts[:not_run]
+    prefix      = "Started, last run" || opts[:prefix]
+    format      = "%b %d, %Y"         || opts[:format]
 
     return not_run_str if !last_run
     return "#{prefix} #{last_run.strftime(format)}"
