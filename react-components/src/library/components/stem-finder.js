@@ -13,7 +13,7 @@ import AutoSuggest from './search/auto-suggest'
 
 import css from './stem-finder.scss'
 
-const DISPLAY_LIMIT_INCREMENT = 10
+const DISPLAY_LIMIT_INCREMENT = 6
 
 const StemFinder = Component({
 
@@ -145,10 +145,38 @@ const StemFinder = Component({
           return collections
         }, [])
         collections.sort(sortByName)
-        console.log(collections)
         this.setState({ collections: collections })
       }.bind(this))
     }.bind(this))
+  },
+
+  handleScroll: function (event) {
+    let scrollTop = event.srcElement.scrollTop
+    console.log(scrollTop)
+    if (
+      scrollTop > window.innerHeight / 3 &&
+      !this.state.searching &&
+      this.state.resources.length !== 0 &&
+      !(this.state.displayLimit >= this.state.numTotalResources)
+    ) {
+      this.search(true)
+    }
+  },
+
+  componentDidMount: function () {
+    if (document.getElementById('pprfl')) {
+      document.getElementById('pprfl').addEventListener('scroll', this.handleScroll)
+    } else {
+      document.body.removeEventListener('scroll', this.handleScroll)
+    }
+  },
+
+  componentWillUnmount: function () {
+    if (document.getElementById('pprfl')) {
+      document.getElementById('pprfl').removeEventListener('scroll', this.handleScroll)
+    } else {
+      document.body.removeEventListener('scroll', this.handleScroll)
+    }
   },
 
   getQueryParams: function (incremental, keyword) {
@@ -274,7 +302,6 @@ const StemFinder = Component({
   },
 
   scrollToFinder: function () {
-    console.log('scroll to')
     document.getElementById('finderLightbox').scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
   },
 
@@ -547,8 +574,6 @@ const StemFinder = Component({
   },
 
   handleFilterHeaderClick: function (e) {
-    console.log('header click')
-    console.log(e.currentTarget)
     e.currentTarget.parentElement.classList.toggle(css.open)
   },
 
@@ -590,7 +615,7 @@ const StemFinder = Component({
         <div className={css.finderHeaderResourceCount}>
           {showingAll && multipleResources ? 'Showing All ' : 'Showing '}
           <strong>
-            {resourceCount + ' ' + pluralize(resourceCount, 'Resource')}
+            {resourceCount + ' ' + pluralize(resourceCount, 'Activity')}
           </strong>
         </div>
         {this.renderSortMenu()}
@@ -599,27 +624,31 @@ const StemFinder = Component({
   },
 
   renderLoadMore: function () {
-    const handleLoadAll = function () {
-      if (!this.state.searching) {
-        this.search(true)
-      }
-      ga('send', 'event', 'Load More Button', 'Click', this.state.displayLimit + ' resources displayed')
-    }.bind(this)
+    // const handleLoadAll = function () {
+    //   if (!this.state.searching) {
+    //     this.search(true)
+    //   }
+    //   ga('send', 'event', 'Load More Button', 'Click', this.state.displayLimit + ' resources displayed')
+    // }.bind(this)
     if ((this.state.resources.length === 0) || (this.state.displayLimit >= this.state.numTotalResources)) {
       return null
     }
-    return (
-      <div className={'portal-pages-finder-load-all center'} onClick={handleLoadAll}>
-        <button>
-          {this.state.searching ? 'Loading...' : 'Load More'}
-        </button>
-      </div>
-    )
+    // return (
+    //   <div className={'portal-pages-finder-load-all center'} onClick={handleLoadAll}>
+    //     <button>
+    //       {this.state.searching ? 'Loading...' : 'Load More'}
+    //     </button>
+    //   </div>
+    // )
   },
 
   renderResults: function () {
     if (this.state.firstSearch) {
-      return null
+      return (
+        <div class={css.loading}>
+          Loading
+        </div>
+      )
     }
     const resources = this.state.resources.slice(0, this.state.displayLimit)
     return (
@@ -630,6 +659,7 @@ const StemFinder = Component({
             return stemFinderResult({ key: index, resource: resource })
           })}
         </div>
+        {this.state.searching ? <div class={css.loading}>Loading</div> : null}
         {this.renderLoadMore()}
       </>
     )
@@ -640,7 +670,7 @@ const StemFinder = Component({
     return (
       <div className={'cols ' + css.finderWrapper}>
         {this.renderForm()}
-        <div className={'portal-pages-finder-results col-9'} style={{ opacity: this.state.opacity }}>
+        <div id={css.finderResults} className='portal-pages-finder-results col-9' style={{ opacity: this.state.opacity }}>
           {this.renderResults()}
         </div>
       </div>

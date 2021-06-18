@@ -30,6 +30,8 @@
     %script
       try{Typekit.load({ async: true });}catch(e){}
 
+    %script{:src => "https://kit.fontawesome.com/f1125dd2ef.js", :crossorigin => "anonymous"}
+
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
     != javascript_include_tag 'application'

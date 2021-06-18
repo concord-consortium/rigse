@@ -60,6 +60,15 @@
             background: $col-lightblue;
             color: $white;            
           }
+
+          &.recentlySearchedHeading {
+            font-size: 12px;
+            padding: 0 20px;
+
+            &:hover {
+              background: $col-blue;
+            }
+          }
         }
       }
     }

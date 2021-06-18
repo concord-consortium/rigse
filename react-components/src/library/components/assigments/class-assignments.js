@@ -41,9 +41,9 @@ export default class ClassAssignments extends React.Component {
   renderAssignOptions () {
     return (
       <ul onMouseEnter={this.handleAssignButtonMouseEnter} onMouseLeave={this.handleAssignButtonMouseLeave}>
-        <li onClick={this.handleAssignMaterialsButtonClick}>Recent: ITSI Materials</li>
-        <li onClick={this.handleAssignMaterialsButtonClick}>Recent: NGSA Materials</li>
-        <li onClick={this.handleAssignMaterialsButtonClick}>All Materials</li>
+        <li onClick={this.handleAssignMaterialsButtonClick}>Search All Resources</li>
+        <li onClick={this.handleAssignMaterialsButtonClick}>Search ITSI Curriculum</li>
+        <li onClick={this.handleAssignMaterialsButtonClick}>Search NGSA Curriculum</li>
       </ul>
     )
   }
@@ -68,7 +68,7 @@ export default class ClassAssignments extends React.Component {
         <header>
           <h1>Assignments for { clazz.name }</h1>
           <div className={css.assignMaterials}>
-            <button onMouseEnter={this.handleAssignButtonMouseEnter} onMouseLeave={this.handleAssignButtonMouseLeave} onClick={this.handleAssignMaterialsButtonClick}>Assign Materials</button>
+            <button onClick={this.handleAssignMaterialsButtonClick}>Find More Resources</button>
             {assignOptions}
           </div>
         </header>

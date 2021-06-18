@@ -36,7 +36,7 @@ var ResourceFinderLightbox = Component({
     return (
       <div>
         <div className={css.portalPagesResourceFinderLightboxBackground} />
-        <div className={css.portalPagesResourceFinderLightboxContainer}>
+        <div id='pprfl' className={css.portalPagesResourceFinderLightboxContainer}>
           <div id='finderLightbox' className={css.portalPagesResourceFinderLightbox} onClick={(e) => this.handleClose(e)}>
             <div className={css.portalPagesResourceFinderLightboxBackgroundClose} onClick={(e) => this.handleClose(e)}>
               x

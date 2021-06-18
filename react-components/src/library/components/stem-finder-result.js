@@ -292,7 +292,7 @@ const stemFinderResult = Component({
 
   render: function () {
     const resource = this.props.resource
-    console.log(resource)
+    // console.log(resource)
     const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open}` : css.finderResult
     // truncate title and/or description if they are too long for resource card height
     // const maxCharTitle = 180
