@@ -15,62 +15,16 @@
   }
 
   .classProgress {
-    display: inline-block;
-    float: right;
-    width: 70%;
-    height: 35px;
-    border: 1px solid black;
-    background: #fff;
-    margin-bottom: 15px;
-
-    & > div {
-      display: inline-block;
-      height: 100%;
+    span {
+      margin-right: 3em;
+      font-style: italic;
     }
-
-    .count {
-      float: right;
-      margin-top: 35px;
-      font-weight: bold;
-    }
-
-    .completed {
-      background: #ff8415;
-    }
-    .inProgress {
-      background: #ffcd99;
-    }
-    .notStarted {
-      background: #fff;
+    .classSize {
+      font-style: normal;
     }
   }
 
   .reports {
     clear: both;
-  }
-}
-
-.legend {
-  text-align: center;
-  width: 100%;
-  padding: 20px 0 20px 0;
-
-  & > div {
-    border: solid 1px #666;
-    margin-left: 25px;
-    height: 18px;
-    width: 18px;
-    vertical-align: middle;
-    display: inline-block;
-  }
-
-  .completed {
-    background: #ff8415;
-  }
-  .inProgress {
-    background: #ffcd99;
-  }
-  .notStarted {
-    background: #fff;
   }
 }

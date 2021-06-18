@@ -15,15 +15,15 @@ const externalReportMapping = data => {
 
 const offeringMapping = data => {
   const lastRunDates = data.students
-    // Filer out offerings that have never been run.
+    // Filter out offerings that have never been run.
     .filter(s => s.last_run !== null)
     .map(s => new Date(s.last_run))
-  // Reportable offerings will have meaningful progress specified. Non-reportable offerings will have some progress
-  // specified too (99% or 100%), but it's safer to look at started_activity property.
-  const reportable = data.reportable
-  const notStartedStudents = data.students.filter(s => reportable ? s.total_progress === 0 : !s.started_activity)
-  const inProgressStudents = data.students.filter(s => reportable ? s.total_progress > 0 && s.total_progress < 100 : false)
-  const completedStudents = data.students.filter(s => reportable ? s.total_progress === 100 : s.started_activity)
+  const notStartedStudentsCount = data.students
+    .filter(s => !s.started_activity)
+    .length
+  const startedStudentsCount = data.students
+    .filter(s => s.started_activity)
+    .length
   return {
     id: data.id,
     clazz: data.clazz,
@@ -33,9 +33,8 @@ const offeringMapping = data => {
     activityUrl: data.activity_url,
     hasTeacherEdition: data.has_teacher_edition,
     lastRun: lastRunDates.length > 0 ? lastRunDates[0] : null,
-    notStartedStudentsCount: notStartedStudents.length,
-    inProgressStudentsCount: inProgressStudents.length,
-    completedStudentsCount: completedStudents.length,
+    notStartedStudentsCount,
+    startedStudentsCount,
     reportUrl: data.report_url,
     externalReports: data.external_reports && data.external_reports.map(r => externalReportMapping(r)),
     reportableActivities: data.reportable_activities && data.reportable_activities.map(a => reportableActivityMapping(a)),
