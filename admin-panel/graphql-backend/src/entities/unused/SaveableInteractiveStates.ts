@@ -8,9 +8,6 @@ export class SaveableInteractiveStates {
   @Column("int", { name: "interactive_id", nullable: true })
   interactiveId: number | null;
 
-  @Column("int", { name: "bundle_content_id", nullable: true })
-  bundleContentId: number | null;
-
   @Column("int", { name: "position", nullable: true })
   position: number | null;
 

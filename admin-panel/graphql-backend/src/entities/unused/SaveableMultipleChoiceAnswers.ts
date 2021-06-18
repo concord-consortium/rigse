@@ -9,9 +9,6 @@ export class SaveableMultipleChoiceAnswers {
   @Column("int", { name: "multiple_choice_id", nullable: true })
   multipleChoiceId: number | null;
 
-  @Column("int", { name: "bundle_content_id", nullable: true })
-  bundleContentId: number | null;
-
   @Column("int", { name: "position", nullable: true })
   position: number | null;
 

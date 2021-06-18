@@ -82,9 +82,6 @@ export class AdminSettings {
   })
   requireUserConsent: boolean | null;
 
-  @Column("varchar", { name: "jnlp_cdn_hostname", nullable: true, length: 255 })
-  jnlpCdnHostname: string | null;
-
   @Column("tinyint", { name: "active", nullable: true, width: 1 })
   active: boolean | null;
 
@@ -122,9 +119,6 @@ export class AdminSettings {
     default: () => "'1'",
   })
   anonymousCanBrowseMaterials: boolean | null;
-
-  @Column("varchar", { name: "jnlp_url", nullable: true, length: 255 })
-  jnlpUrl: string | null;
 
   @Column("tinyint", {
     name: "show_collections_menu",

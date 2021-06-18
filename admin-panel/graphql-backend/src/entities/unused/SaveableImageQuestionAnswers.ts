@@ -9,9 +9,6 @@ export class SaveableImageQuestionAnswers {
   @Column("int", { name: "image_question_id", nullable: true })
   imageQuestionId: number | null;
 
-  @Column("int", { name: "bundle_content_id", nullable: true })
-  bundleContentId: number | null;
-
   @Column("int", { name: "blob_id", nullable: true })
   blobId: number | null;
 
