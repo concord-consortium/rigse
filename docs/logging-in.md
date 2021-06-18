@@ -2,7 +2,7 @@ The portal has a pretty complex set of login options.
 It can use other sites as authentication providers such as Schoology. It is also an
 authentication provider for other sites such as LARA.
 
-There are at least 5 possible places a user can enter their username and password:
+There are at least 4 possible places a user can enter their username and password:
 
 1. By the default the header of pages has a login box, some pages change this.
 2. During the registration process there is a custom login form that is shown the user at
@@ -10,9 +10,7 @@ the last step so they can login the first time more easily.
 3. There is a stand alone login page at `/auth/login` that is used when there is an
 authorization error. This page is also used when the portal is acting as the
 authentication provider for another site (like LARA).
-4. The geniverse extensions to the portal provide their own login form which submits the
-username and password to the portal.
-5. (Deprecated) There is an old standalone page at /users/sign_in that has not been
+4. (Deprecated) There is an old standalone page at /users/sign_in that has not been
 updated recently.
 
 It supports redirecting a user to particular page after logging in. This is done with
@@ -44,7 +42,7 @@ a redirect location in the session. The session is shared by all tabs of the bro
 Here is the status of this design goal:
 
 - code that handles redirecting after an attempt to access a restricted page does not use
-the session.  
+the session.
 - code that handles redirecting to an authentication client like LARA still
 uses the session.
 

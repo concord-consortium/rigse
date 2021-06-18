@@ -2,13 +2,9 @@
 # On servers this file will be generated & maintained by littlchef.
 # ENV['PORTAL_FEATURES'] : enable / disable portal extension features. Here are some such features:
 #
-# `geniverse_remote_auth`: Remote authentication
 # `allow_cors`: Allow CORS requests (see below)
-# `genigames_data`: Genigames-related student sata saving
-# `geniverse_wordpress`: Geniverse-related Wordpress connection
 #
-# sample :  ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
-# EG, enable genigame auth / data via `     ENV['PORTAL_FEATURES']  ||= 'geniverse_remote_auth genigames_data'
+# sample :  ENV['PORTAL_FEATURES']  ||= 'allow_cors'
 
 ENV['PORTAL_FEATURES']   ||= ''
 ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbgfq7bem.us-east-1.es.amazonaws.com'
