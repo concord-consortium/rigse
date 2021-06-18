@@ -98,9 +98,6 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
   before(:each) {
     # prevent warnings about undefined default settings
     generate_default_settings_with_mocks
-    allow(APP_CONFIG).to receive(:[]).and_call_original
-    allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(site_url)
-
   }
 
   describe "GET #firebase" do
