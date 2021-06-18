@@ -18,7 +18,7 @@
     bottom: 0;
     content: ' ';
     display: block;
-    height: 41px;
+    height: 30px;
     left: 0;
     position: absolute;
     width: 100%;
@@ -101,11 +101,11 @@
 
   .finderResultImagePreview {
     border: solid 1px $col-lightgray;
-    height: 90px;
+    height: 96px;
     margin: 0 10px 15px 0;
     overflow: hidden;
     position: relative;
-    width: 160px;
+    width: 170px;
 
     img {
       height: 100%;
@@ -117,7 +117,7 @@
     min-height: 80px;
     padding-bottom: 20px;
     position: relative;
-    width: 340px;
+    width: 390px;
 
     .finderResultTextName {
       font-size: 16px;
@@ -130,10 +130,11 @@
     }
     .finderResultTextDescription {
       font-size: 14px;
-      line-height: 1.2;
+      line-height: 1.3;
+      min-height: 80px;
     }
     .metaTags {
-      bottom: 32px;
+      bottom: 22px;
       position: absolute;
       width: 100%;
 
@@ -142,20 +143,26 @@
         color: $col-darkgray-75;
         display: inline-block;
         font-size: 12px;
-        margin-top: 10px;
+        line-height: 1;
         margin-right: 5px;
-        padding: 3px 5px;
+        padding: 5px 5px 4px;
 
         &.timeRequired {
-          background: $col-lightgray url(https://learn-resources.concord.org/images/clock.png) no-repeat 7px 3px;
-          padding-left: 30px;
+
+          &:before {
+            content: '\f017';
+            font-family: "Font Awesome 5 Free";
+            font-size: 15px;
+            margin-right: 3px;
+            opacity: .7;
+            vertical-align: middle;
+          }
         }
       }
     }
   }
   .previewLink {
-    margin-bottom: 27px;
-    width: 150px;
+    width: 120px;
 
     .previewLinkButton {
       background: #fff;
@@ -163,7 +170,8 @@
       color: $col-orange;
       display: block;
       font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
-      padding: 8px 25px;
+      line-height: .8;
+      padding: 10px 25px;
       text-align: center;
 
       &:hover {
@@ -178,21 +186,25 @@
     }
 
     .projectLabel {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
-      height: 42px;
-      padding: 30px 0 0 55px;
+      height: 40px;
+      line-height: 1.2;
+      margin-top: 10px;
+      text-align: center;
 
       &.highadventuresci {
         padding-left: 0;
       }
       &.itsi {
-        background: url(http://test.local:9990/logos/itsi.png) no-repeat center left;
-        background-size: 42px;
+        background: url(http://test.local:9990/logos/itsi.png) no-repeat center top;
+        background-size: 35px;
+        padding: 37px 0 0;
       }
       &.ngssassessment {
-        background: url(http://test.local:9990/logos/ngss.png) no-repeat center left;
-        background-size: 42px;
+        background: url(http://test.local:9990/logos/ngss.png) no-repeat center top;
+        background-size: 35px;
+        padding: 37px 0 0;
       }
     }
   }
@@ -285,7 +297,7 @@
   .finderResultFavorite {
     color: $col-lightgray;
     font-size: 20px;
-    left: 145px;
+    left: 157px;
     position: absolute;
     text-shadow: -1px 0 $col-darkgray-50, 0 1px $col-darkgray-50, 1px 0 $col-darkgray-50, 0 -1px $col-darkgray-50;
     top: 12px;

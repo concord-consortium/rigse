@@ -3,6 +3,7 @@ import React from 'react'
 import Component from '../helpers/component'
 import stemFinderResult from '../components/stem-finder-result'
 import sortByName from '../helpers/sort-by-name'
+import sortResources from '../helpers/sort-resources'
 import fadeIn from '../helpers/fade-in'
 import pluralize from '../helpers/pluralize'
 import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox-to-close'
@@ -20,7 +21,7 @@ const StemFinder = Component({
     let subjectAreaKey = this.props.subjectAreaKey
     let gradeLevelKey = this.props.gradeLevelKey
     let projectId = this.props.projectId || null
-    let sortOrder = this.props.sortOrder || 'Alphabetical'
+    let sortOrder = this.props.sortOrder || ''
 
     if (!subjectAreaKey && !gradeLevelKey) {
       //
@@ -132,6 +133,21 @@ const StemFinder = Component({
   UNSAFE_componentWillMount: function () {
     waitForAutoShowingLightboxToClose(function () {
       this.search()
+      jQuery.ajax({
+        url: '/api/v1/projects', // TODO: replace with Portal.API_V1 constant when available
+        dataType: 'json'
+      }).done(function (data) {
+        let collections = data.reduce(function (collections, collection) {
+          if (collection.landing_page_slug) {
+            collection.filteredDescription = portalObjectHelpers.textOfHtml(collection.project_card_description)
+            collections.push(collection)
+          }
+          return collections
+        }, [])
+        collections.sort(sortByName)
+        console.log(collections)
+        this.setState({ collections: collections })
+      }.bind(this))
     }.bind(this))
   },
 
@@ -140,6 +156,7 @@ const StemFinder = Component({
     let query = keyword !== undefined ? ['search_term=', encodeURIComponent(keyword)] : []
     query = query.concat([
       '&skip_lightbox_reloads=true',
+      '&sort_order=Alphabetical',
       '&include_official=1',
       '&model_types=All',
       '&include_related=2',
@@ -181,10 +198,6 @@ const StemFinder = Component({
         query.push(encodeURIComponent(project))
       }
     })
-
-    // sort
-    query.push('&sort_order=')
-    query.push(encodeURIComponent(this.state.sortOrder))
 
     return query.join('')
   },
@@ -233,9 +246,7 @@ const StemFinder = Component({
         numTotalResources += result.pagination.total_items
       })
 
-      if (this.state.sortOrder) {
-        resources.sort(sortByName)
-      }
+      resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
         fadeIn(this, 1000)
@@ -260,6 +271,11 @@ const StemFinder = Component({
       ? filterKeyWords[0] + filterKeyWords[1].charAt(0).toUpperCase() + filterKeyWords[1].slice(1)
       : filterKeyWords[0]
     return filterId
+  },
+
+  scrollToFinder: function () {
+    console.log('scroll to')
+    document.getElementById('finderLightbox').scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
   },
 
   renderLogo: function (subjectArea) {
@@ -290,6 +306,7 @@ const StemFinder = Component({
       }
       // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ subjectAreasSelected: subjectAreasSelected, subjectAreasSelectedMap: subjectAreasSelectedMap }, this.search)
+      this.scrollToFinder()
     }.bind(this)
 
     return (
@@ -328,6 +345,7 @@ const StemFinder = Component({
       }
       // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ gradeLevelsSelected: gradeLevelsSelected, gradeLevelsSelectedMap: gradeLevelsSelectedMap }, this.search)
+      this.scrollToFinder()
     }.bind(this)
 
     return (
@@ -343,7 +361,7 @@ const StemFinder = Component({
   renderSubjectAreas: function () {
     return (
       <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <h2>Subject</h2>
+        <h2 onClick={this.handleFilterHeaderClick}>Subject</h2>
         <ul>
           {filters.subjectAreas.map(function (subjectArea) {
             return this.renderLogo(subjectArea)
@@ -356,7 +374,7 @@ const StemFinder = Component({
   renderGradeLevels: function () {
     return (
       <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <h2>Grade Level</h2>
+        <h2 onClick={this.handleFilterHeaderClick}>Grade Level</h2>
         <ul>
           {filters.gradeFilters.map(function (gradeLevel) {
             return this.renderGLLogo(gradeLevel)
@@ -433,7 +451,7 @@ const StemFinder = Component({
     e.preventDefault()
     e.stopPropagation()
     this.search()
-    // this.scrollToFinder()
+    this.scrollToFinder()
   },
 
   handleAutoSuggestSubmit (searchInput) {
@@ -454,7 +472,7 @@ const StemFinder = Component({
   handleSortSelection (e) {
     e.preventDefault()
     e.stopPropagation()
-    this.setState({ sortOrder: [e.target.value] }, () => {
+    this.setState({ sortOrder: e.target.value }, () => {
       this.search()
     })
   },
@@ -485,23 +503,19 @@ const StemFinder = Component({
   },
 
   renderCurricula: function () {
+    if (!this.state.collections || this.state.collections.length === 0) {
+      return
+    }
+    const curricula = this.state.collections
     return (
       <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <form>
-          <div className={'portal-pages-finder-form-search-title'}>
-            <label htmlFor={'search-terms'}>
-              Curricula
-            </label>
-          </div>
-          <div className={'portal-pages-search-input-container'}>
-            <select name='curricula' className={css.curriculaSelect} onChange={this.handleCurriculaSelection}>
-              <option value=''>Select one...</option>
-              <option value='3'>High-Adventure Science</option>
-              <option value='1'>ITSI</option>
-              <option value='6'>NGSS Assessments</option>
-            </select>
-          </div>
-        </form>
+        <h2 onClick={this.handleFilterHeaderClick}>Curricula</h2>
+        <select name='curricula' value={this.state.projectsSelected[0]} className={css.curriculaSelect} onChange={this.handleCurriculaSelection}>
+          <option value=''>Select one...</option>
+          {curricula.map(function (curriculum, index) {
+            return <option value={curriculum.id}>{curriculum.name}</option>
+          })}
+        </select>
       </div>
     )
   },
@@ -509,7 +523,11 @@ const StemFinder = Component({
   renderAdvanced: function () {
     return (
       <div className={css.finderOptionsContainer}>
-        <h2>Advanced</h2>
+        <h2 onClick={this.handleFilterHeaderClick}>Advanced</h2>
+        <ul>
+          <li id={css.official}>Official</li>
+          <li id={css.community}>Community</li>
+        </ul>
       </div>
     )
   },
@@ -528,6 +546,28 @@ const StemFinder = Component({
     )
   },
 
+  handleFilterHeaderClick: function (e) {
+    console.log('header click')
+    console.log(e.currentTarget)
+    e.currentTarget.parentElement.classList.toggle(css.open)
+  },
+
+  renderSortMenu: function () {
+    const sortValues = ['Title', 'Time Required (asc)', 'Time Required (desc)', 'Newest', 'Oldest']
+
+    return (
+      <div className={css.sortMenu}>
+        <label htmlFor='sort'>Sort by</label>
+        <select name='sort' value={this.state.sortOrder} onChange={this.handleSortSelection}>
+          <option value=''>Select one...</option>
+          {sortValues.map(function (sortValue, index) {
+            return <option value={sortValue}>{sortValue}</option>
+          })}
+        </select>
+      </div>
+    )
+  },
+
   renderResultsHeader: function () {
     if (this.state.noResourcesFound || this.state.searching) {
       return (
@@ -535,6 +575,7 @@ const StemFinder = Component({
           <div className={css.finderHeaderResourceCount}>
             {this.state.noResourcesFound ? 'No Resources Found' : 'Searching...'}
           </div>
+          {this.renderSortMenu()}
         </div>
       )
     }
@@ -552,17 +593,7 @@ const StemFinder = Component({
             {resourceCount + ' ' + pluralize(resourceCount, 'Resource')}
           </strong>
         </div>
-        <div className={css.sortMenu}>
-          <label htmlFor='sort'>Sort by</label>
-          <select name='sort' onChange={this.handleSortSelection}>
-            <option value=''>Select one...</option>
-            <option value='Time'>Time Required</option>
-            <option value='Alphabetical'>Title</option>
-            <option value='Newest'>Newest</option>
-            <option value='Oldest'>Oldest</option>
-            <option value='Newest'>Date Published</option>
-          </select>
-        </div>
+        {this.renderSortMenu()}
       </div>
     )
   },

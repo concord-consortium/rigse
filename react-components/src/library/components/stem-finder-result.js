@@ -135,19 +135,36 @@ const stemFinderResult = Component({
     )
   },
 
+  renderTimeRequired: function () {
+    const resource = this.props.resource
+    const timeRequired = resource.material_type === 'Activity'
+      ? '45 minutes'
+      : resource.material_type === 'Investigation'
+        ? '2 weeks'
+        : ''
+
+    if (timeRequired === '') {
+      return
+    }
+    return (
+      <div className={`${css.metaTag} ${css.timeRequired}`}>
+        {timeRequired}
+      </div>
+    )
+  },
+
   renderLinks: function () {
     const resource = this.props.resource
-    // console.log(resource)
     const assignLink = resource.links.assign_material
       ? <a href={`javascript: ${resource.links.assign_material.onclick}`}>{resource.links.assign_material.text}</a>
       : null
-    const copyLink = resource.links.copy_url
+    const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher
       ? <a href={resource.links.copy_url} target='_blank'>Copy</a>
       : null
     const printLink = resource.links.print_url
       ? <a href={resource.links.print_url} target='_blank'>Print</a>
       : null
-    const teacherEditionLink = resource.has_teacher_edition
+    const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
       ? <a href={`${resource.links.preview.url}?mode=teacher-edition`} target='_blank'>Teacher Edition</a>
       : null
 
@@ -270,7 +287,6 @@ const stemFinderResult = Component({
   },
 
   toggleCollapsible: function (e) {
-    console.log(e)
     jQuery(e.currentTarget).parent().toggleClass(css.collapsibleOpen)
   },
 
@@ -286,11 +302,6 @@ const stemFinderResult = Component({
     const projectName = resource.projects[0] ? resource.projects[0].name : null
     const projectNameRegex = / |-|\./g
     const projectClass = projectName ? projectName.replace(projectNameRegex, '').toLowerCase() : null
-    console.log(projectClass)
-    const projectNameShow = projectName
-      ? projectName === 'NGSS Assessment'
-        ? projectName.substr(0, 11) + '.' : projectName
-      : null
 
     return (
       <div className={finderResultClasses}>
@@ -306,15 +317,13 @@ const stemFinderResult = Component({
           </div>
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
-            <div className={`${css.metaTag} ${css.timeRequired}`}>
-              1 Day
-            </div>
+            {this.renderTimeRequired()}
           </div>
         </div>
         <div className={css.previewLink}>
           <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
           <div className={`${css.projectLabel} ${css[projectClass]}`}>
-            {projectNameShow}
+            {projectName}
           </div>
         </div>
         {this.renderStandards()}

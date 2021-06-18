@@ -291,6 +291,7 @@ module Materials
           user: user_data,
           assigned: active_assigned_materials.include?("#{material.class.name}::#{material.id}"),
           credits: material.respond_to?(:credits) ? material.credits : nil,
+          created_at: material.created_at,
 
           license_info: license_info_json,
 

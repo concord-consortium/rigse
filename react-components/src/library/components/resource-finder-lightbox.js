@@ -37,11 +37,11 @@ var ResourceFinderLightbox = Component({
       <div>
         <div className={css.portalPagesResourceFinderLightboxBackground} />
         <div className={css.portalPagesResourceFinderLightboxContainer}>
-          <div className={css.portalPagesResourceFinderLightbox} onClick={(e) => this.handleClose(e)}>
+          <div id='finderLightbox' className={css.portalPagesResourceFinderLightbox} onClick={(e) => this.handleClose(e)}>
             <div className={css.portalPagesResourceFinderLightboxBackgroundClose} onClick={(e) => this.handleClose(e)}>
               x
             </div>
-            <div className={css.portalPagesResourceFinderLightboxModal}>
+            <div id='finderLightboxModal' className={css.portalPagesResourceFinderLightboxModal}>
               <StemFinder />
             </div>
           </div>
