@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_18_091948) do
+ActiveRecord::Schema.define(version: 2021_06_18_120607) do
 
   create_table "access_grants", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "code"
@@ -137,7 +137,6 @@ ActiveRecord::Schema.define(version: 2021_06_18_091948) do
     t.boolean "enable_member_registration", default: false
     t.boolean "allow_adhoc_schools", default: false
     t.boolean "require_user_consent", default: false
-    t.string "jnlp_cdn_hostname"
     t.boolean "active"
     t.string "external_url"
     t.text "custom_help_page_html", size: :medium
@@ -146,7 +145,6 @@ ActiveRecord::Schema.define(version: 2021_06_18_091948) do
     t.text "enabled_bookmark_types", size: :medium
     t.integer "pub_interval", default: 10
     t.boolean "anonymous_can_browse_materials", default: true
-    t.string "jnlp_url"
     t.boolean "show_collections_menu", default: false
     t.boolean "auto_set_teachers_as_authors", default: false
     t.integer "default_cohort_id"
@@ -236,15 +234,6 @@ ActiveRecord::Schema.define(version: 2021_06_18_091948) do
     t.string "checksum"
     t.index ["checksum"], name: "index_dataservice_blobs_on_checksum"
     t.index ["learner_id"], name: "index_dataservice_blobs_on_learner_id"
-  end
-
-  create_table "dataservice_jnlp_sessions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
-    t.string "token"
-    t.integer "user_id"
-    t.integer "access_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["token"], name: "index_dataservice_jnlp_sessions_on_token"
   end
 
   create_table "delayed_jobs", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
@@ -672,28 +661,6 @@ ActiveRecord::Schema.define(version: 2021_06_18_091948) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_materials_collections_on_project_id"
-  end
-
-  create_table "otrunk_example_otrunk_imports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
-    t.string "uuid"
-    t.string "classname"
-    t.string "fq_classname"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_imports_on_fq_classname", unique: true
-  end
-
-  create_table "otrunk_example_otrunk_view_entries", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
-    t.string "uuid"
-    t.integer "otrunk_import_id"
-    t.string "classname"
-    t.string "fq_classname"
-    t.boolean "standard_view"
-    t.boolean "standard_edit_view"
-    t.boolean "edit_view"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_view_entries_on_fq_classname", unique: true
   end
 
   create_table "page_elements", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
