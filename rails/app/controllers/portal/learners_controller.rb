@@ -13,7 +13,7 @@ class Portal::LearnersController < ApplicationController
   public
 
   # PUNDIT_CHECK_FILTERS
-  before_action :admin, :except => [:show, :report, :activity_report]
+  before_action :admin_only, :except => [:show, :report, :activity_report]
   before_action :teacher_admin, :only => [:activity_report]
   before_action :authorize_show, :only => [:show]
 
@@ -40,11 +40,7 @@ class Portal::LearnersController < ApplicationController
         current_clazz.is_teacher?(current_visitor) ||
         current_visitor.has_role?('admin')
     if !authorized_user
-      if request.format.config?
-        raise "unauthorized config request"
-      else
-        force_signin
-      end
+      force_signin
     end
   end
 
