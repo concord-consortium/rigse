@@ -245,18 +245,6 @@ RSpec.describe ApplicationPolicy do
   end
 
   # TODO: auto-generated
-  describe '#admin_or_config?' do
-    it 'admin_or_config?' do
-      context = nil # double('context')
-      record = nil
-      application_policy = described_class.new(context, record)
-      result = application_policy.admin_or_config?
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#author?' do
     it 'author?' do
       context = nil # double('context')

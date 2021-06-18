@@ -5,7 +5,7 @@ Feature: Student registers to use the portal
   In order to access my classes
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
 
   @javascript
@@ -32,8 +32,8 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Signed in successfully."
-    
-    
+
+
   Scenario: Anonymous user signs up as student with form errors
     And the following classes exist:
       | name       | teacher |
@@ -53,7 +53,7 @@ Feature: Student registers to use the portal
 
     And I press "Submit"
     Then I should see "Success!"
-    
+
   @javascript
   Scenario: Class words are not case sensitive
     And the following classes exist:
@@ -75,7 +75,7 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Signed in successfully."
-    
+
   @javascript
   Scenario: Student registered when default classes are enabled
     Given the option to allow default classes is enabled
@@ -93,7 +93,7 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     And I should see "Signed in successfully."
-    
+
   @javascript
   Scenario: Student under 18 registered when student consent is enabled
     Given the default settings has student consent enabled
@@ -116,7 +116,7 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Signed in successfully."
-    
+
   @javascript
   Scenario: Student over 18 registers and gives consent
     Given the default settings has student consent enabled
@@ -140,7 +140,7 @@ Feature: Student registers to use the portal
     And I should not see "Sorry, there was an error creating your account"
     When I login with username: estudent password: password
     Then I should see "Signed in successfully."
-    
+
   @javascript
   Scenario: Student over 18 registered and doesn't give consent
     Given the default settings has student consent enabled

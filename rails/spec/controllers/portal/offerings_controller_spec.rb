@@ -1,34 +1,9 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::OfferingsController do
-  describe "Show Jnlp Offering" do
-    it "renders a jnlp for an admin" do
-      offering = FactoryBot.create(:portal_offering)
-      admin = FactoryBot.generate :admin_user
-      sign_in admin
-      get :show, params: { :id => offering.id, :format => :jnlp }
-      expect(response).to render_template('shared/_installer')
-    end
-
-    it "renders a jnlp for a teacher" do
-      teacher = FactoryBot.create(:portal_teacher)
-      offering = FactoryBot.create(:portal_offering, :clazz => teacher.clazzes.first)
-      sign_in teacher.user
-      get :show, params: { :id => offering.id, :format => :jnlp }
-      expect(response).to render_template('shared/_installer')
-    end
-
-    it "renders a jnlp as a learner" do
-      learner = FactoryBot.create(:full_portal_learner)
-      sign_in learner.student.user
-      get :show, params: { :id => learner.offering.id, :format => :jnlp }
-      expect(response).to render_template('shared/_installer')
-    end
-  end
-
   describe "External Activities Offering" do
     before(:each) do
-      generate_default_settings_and_jnlps_with_mocks
+      generate_default_settings_with_mocks
       generate_portal_resources_with_mocks
       allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
 

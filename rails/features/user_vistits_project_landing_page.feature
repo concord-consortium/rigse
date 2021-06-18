@@ -4,7 +4,7 @@ Feature: User can visit custom project landing page
   I can see custom project page content
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And the project "FooBar" has slug "foo-bar" and landing page
       """

@@ -8,13 +8,13 @@ module RestrictedPortalController
 
        protected
        # must define current_clazz in calling controller class
-       def teacher_admin_or_config
-         force_signin unless current_clazz.is_teacher?(current_visitor) || current_visitor.has_role?('admin') || request.format == :config
+       def teacher_admin
+         force_signin unless current_clazz.is_teacher?(current_visitor) || current_visitor.has_role?('admin')
        end
 
-       def student_teacher_admin_or_config
+       def student_teacher_admin
          force_signin unless current_clazz.is_student?(current_visitor) || current_clazz.is_teacher?(current_visitor) ||
-                   current_visitor.has_role?('admin') || request.format == :config
+                   current_visitor.has_role?('admin')
        end
 
        def student_teacher_or_admin

@@ -30,13 +30,12 @@ class Activity < ApplicationRecord
 
   acts_as_replicatable
   acts_as_list :scope => :investigation
-  
+
   include Changeable
   include TreeNode
   include Publishable
   include Archiveable
   include Cohorts
-  include JnlpLaunchable
   include ResponseTypes
   include HasEmbeddables
 

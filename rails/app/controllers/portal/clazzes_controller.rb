@@ -7,8 +7,8 @@ class Portal::ClazzesController < ApplicationController
 
 
   # PUNDIT_CHECK_FILTERS
-  before_action :teacher_admin_or_config, :only => [:class_list, :edit]
-  before_action :student_teacher_admin_or_config, :only => [:show]
+  before_action :teacher_admin, :only => [:class_list, :edit]
+  before_action :student_teacher_admin, :only => [:show]
 
   #
   # Check that the current teacher owns the class they are

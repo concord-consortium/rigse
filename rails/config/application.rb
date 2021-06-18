@@ -5,9 +5,6 @@ require 'rails/all'
 require File.expand_path('../../lib/load_config', __FILE__)
 require File.expand_path('../../lib/bool_env', __FILE__)
 
-# loads Rack::ConfigSessionCookies for middleware configuration
-require File.expand_path("../../lib/rack/config_session_cookies", __FILE__)
-
 # load Rack::ResponseLogger for middleware configuration
 require File.expand_path("../../lib/rack/response_logger", __FILE__)
 
@@ -49,9 +46,6 @@ module RailsPortal
     config.autoload_paths += Dir["#{config.root}/app/helpers/"] # include app/helpers and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
-
-    # Subvert the cookies_only=true session policy for requests ending in ".config"
-    config.middleware.insert_before(ActionDispatch::Cookies, Rack::ConfigSessionCookies)
 
     # Expands posted content with a content-encoding of: 'b64gzip'
     # NOTE: pre-Rails 5 this was inserted before ActionController::ParamsParser but that middleware

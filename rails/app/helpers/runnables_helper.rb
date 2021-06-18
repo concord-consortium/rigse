@@ -4,21 +4,13 @@ module RunnablesHelper
     return APP_CONFIG[:use_adhoc_workgroups]
   end
 
-  def use_jnlps?
-    return APP_CONFIG[:use_jnlps]
-  end
-
   def display_workgroups_run_link?(offering)
     runnable = offering.runnable
     return runnable.allow_collaboration if runnable.respond_to?(:allow_collaboration)
-    return true if runnable.is_a?(JnlpLaunchable) && use_adhoc_workgroups?
     return false
   end
 
   def display_status_updates?(offering)
-    if offering.runnable.respond_to? :has_update_status?
-      return offering.runnable.has_update_status?
-    end
     return false
   end
 
@@ -45,11 +37,6 @@ module RunnablesHelper
       end
       if display_workgroups_run_link?(offering)
         options[:class] = student_run_button_css(offering, ["in_group"])
-        # Collaboration setup works differently for external activities and JNLP ones.
-        # jnlp-url attribute lets us distinguish between them.
-        if !offering.external_activity?
-          options[:'data-jnlp-url'] = run_url_for(offering)
-        end
         options[:label] = group_label
         options[:offeringId] = offering.id
         span_id = "run-with-collaborators-button-#{offering.id}"
@@ -77,9 +64,6 @@ module RunnablesHelper
 
   def title_text(component, verb, run_as)
     text = "#{verb.capitalize} the #{runnable_type_label(component)}: '#{component.name}' as a #{run_as}."
-    if component.is_a?(JnlpLaunchable) && use_jnlps?
-      text << " The first time you do this it may take a while to startup as the Java code is downloaded and saved on your hard drive."
-    end
     text
   end
 
@@ -110,7 +94,6 @@ module RunnablesHelper
     params[:format] = format
     if component.kind_of?(Portal::Offering)
       # the user id is added to this url to make the url be unique for each user
-      # this ought to prevent jnlps from being cached and shared by users
       # the user id is not actually used to generate the response or authorize it
       # route: portal/offerings#show {:id=>/\d+/, :user_id=>/\d+/}
       user_portal_offering_url(current_visitor, component, params)
@@ -136,7 +119,6 @@ module RunnablesHelper
 
     unless run_as
       run_as = case component
-      when JnlpLaunchable   then use_jnlps? ? "Java Web Start application" : "Browser Activity"
       when ExternalActivity then ExternalActivity.display_name
       end
     end
@@ -158,7 +140,6 @@ module RunnablesHelper
     url = run_url_for(component, params, params.delete(:format))
 
     run_type = case component
-    when JnlpLaunchable   then use_jnlps? ? "Java Web Start application" : "Browser Activity"
     when ExternalActivity then ExternalActivity.display_name
     end
 

@@ -7,7 +7,7 @@ describe UsersController do
 
   context "when logged in" do
     before(:each) do
-      generate_default_settings_and_jnlps_with_mocks
+      generate_default_settings_with_mocks
     end
 
     describe "as admin" do
@@ -112,7 +112,7 @@ describe UsersController do
 
   context "when logged out" do
     before(:each) do
-      generate_default_settings_and_jnlps_with_mocks
+      generate_default_settings_with_mocks
       logout_user
     end
 

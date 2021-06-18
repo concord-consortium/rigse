@@ -3,7 +3,6 @@ class Portal::LearnersController < ApplicationController
   layout 'report', :only => %w{report}
 
   include RestrictedPortalController
-  include Portal::LearnerJnlpRenderer
 
   protected
 
@@ -14,9 +13,8 @@ class Portal::LearnersController < ApplicationController
   public
 
   # PUNDIT_CHECK_FILTERS
-  before_action :admin_or_config, :except => [:show, :report, :activity_report]
-  before_action :teacher_admin_or_config, :only => [:activity_report]
-  before_action :handle_jnlp_session, :only => [:show]
+  before_action :admin, :except => [:show, :report, :activity_report]
+  before_action :teacher_admin, :only => [:activity_report]
   before_action :authorize_show, :only => [:show]
 
   def current_clazz
@@ -28,40 +26,6 @@ class Portal::LearnersController < ApplicationController
     # authorize Portal::Learner, :new_or_create?
     # authorize @learner, :update_edit_or_destroy?
     Portal::Learner.find(params[:id]).offering.clazz
-  end
-
-  def handle_jnlp_session
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Learner
-    # authorize @learner
-    # authorize Portal::Learner, :new_or_create?
-    # authorize @learner, :update_edit_or_destroy?
-    if request.format.config? && params[:jnlp_session]
-      # this will only work once for this token
-      if jnlp_user = Dataservice::JnlpSession.get_user_from_token(params[:jnlp_session])
-        # log out any current user because java might support persistant cookies sometime in the future
-        # and we don't want an existing logged in user to mess up the sign_in process
-        sign_out current_user if current_user
-        # log in the user so future requests don't need a token
-        sign_in jnlp_user
-        # Calling sign_in without :bypass => true will cause the session to be renewed
-        # when the session is renewed it means that the session id will change just before the response
-        # is sent to the client.
-        # which means the code to generate the config file won't have the correct session in it
-        # Calling sign_in with :bypass => true skips all the warden callbacks wich means that
-        # current_user is not configured
-        # the hack for now is to delete the :renew flag added to session options, so the session won't be
-        # renewed
-        request.env['rack.session.options'].delete(:renew)
-      else
-        # no valid jnlp_session could be found for this token
-        render :partial => 'shared/sail',
-          :formats => [:config],
-          :locals => {}
-      end
-    end
   end
 
   def authorize_show
@@ -129,7 +93,6 @@ class Portal::LearnersController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.jnlp { render_learner_jnlp @portal_learner }
       format.xml  { render :xml => @portal_learner }
     end
   end

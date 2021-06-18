@@ -22,7 +22,7 @@ describe MaterialsCollectionsController do
   before(:each) do
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
     login_admin
   end
 

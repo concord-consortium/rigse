@@ -16,33 +16,9 @@ describe RunnablesHelper, type: :helper  do
         allow(helper).to receive(:use_adhoc_workgroups?).and_return true
       end
 
-      context "with a jnlp launchable" do
-        let :offering do
-          runnable = Object.new().extend(JnlpLaunchable)
-          double(:runnable => runnable)
-        end
-        it "should return true" do
-          expect(helper.display_workgroups_run_link?(offering)).to be_truthy
-        end
-      end
-      context "with non-jlnp launchables" do
+      context "with runnables" do
         let :offering do
           double(:runnable => Object.new)
-        end
-        it "should return false" do
-          expect(helper.display_workgroups_run_link?(offering)).to be_falsey
-        end
-      end
-    end
-
-    context "with workgroups disabled" do
-      before :each do
-        allow(helper).to receive(:use_adhoc_workgroups?).and_return false
-      end
-
-      context "with a jnlp launchable" do
-        let :offering do
-          double(:runnable => Object.new().extend(JnlpLaunchable))
         end
         it "should return false" do
           expect(helper.display_workgroups_run_link?(offering)).to be_falsey
@@ -52,14 +28,6 @@ describe RunnablesHelper, type: :helper  do
   end
 
   describe ".display_status_updates?" do
-      context "with an offering that can update statuses" do
-        let :offering do
-          double(:runnable => double(:has_update_status? => true))
-        end
-        it "should return true" do
-          expect(helper.display_status_updates?(offering)).to be_truthy
-        end
-      end
       context "with simpler offering" do
         let :offering do
           double(:runnable => Object.new())
@@ -136,16 +104,6 @@ describe RunnablesHelper, type: :helper  do
       expect(result).to be_nil
     end
   end
-
-  # TODO: auto-generated
-  describe '#use_jnlps?' do
-    it 'works' do
-      result = helper.use_jnlps?
-
-      expect(result).not_to be_nil
-    end
-  end
-
 
   # TODO: auto-generated
   describe '#student_run_button_css' do
