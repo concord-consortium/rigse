@@ -271,15 +271,6 @@ describe HomeController do
   end
 
   # TODO: auto-generated
-  describe '#requirements' do
-    it 'GET requirements' do
-      get :requirements
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#admin' do
     it 'GET admin' do
       get :admin
@@ -310,15 +301,6 @@ describe HomeController do
   describe '#name_for_clipboard_data' do
     it 'GET name_for_clipboard_data' do
       get :name_for_clipboard_data
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#missing_installer' do
-    it 'GET missing_installer' do
-      get :missing_installer, params: {os: 'osx'}
 
       expect(response).to have_http_status(:ok)
     end
