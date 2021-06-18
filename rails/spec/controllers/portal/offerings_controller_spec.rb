@@ -160,18 +160,6 @@ describe Portal::OfferingsController do
           expect(response.location).to match(/activityIndex=0/)
         end
       end
-
-      describe "when deprecated report is used" do
-        before(:each) do
-          # Ensure that default report is available.
-          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
-        end
-
-        it "should pass activity_id param" do
-          get :report, params: { id: offering.id, activity_id: activity.id }
-          expect(response.location).to match(/activity_id/)
-        end
-      end
     end
 
     describe "when the current user is a teacher without access to this offering" do
@@ -211,18 +199,6 @@ describe Portal::OfferingsController do
         it "should provide studentId" do
           get :student_report, params: post_params
           expect(response.location).to include("studentId=#{student.user.id}")
-        end
-      end
-
-      describe "when deprecated report is used" do
-        before(:each) do
-          # Ensure that default report is available.
-          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
-        end
-
-        it "should pass activity_id param" do
-          get :student_report, params: post_params
-          expect(response.location).to match(/student_ids/)
         end
       end
     end
