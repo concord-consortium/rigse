@@ -10,8 +10,6 @@ class Browse::ExternalActivitiesController < ApplicationController
       @back_to_search_url = url_for :controller => '/search', :action => 'index',:search_term=>params["search_term"],:activity_page=>params["activity_page"],:investigation_page=>params["investigation_page"]
     end
 
-    @wide_content_layout = true
-
     material = ::ExternalActivity.find(params[:id])
 
     @search_material = Search::SearchMaterial.new(material, current_visitor)
