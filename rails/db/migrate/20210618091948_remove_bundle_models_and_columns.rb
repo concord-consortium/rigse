@@ -12,6 +12,7 @@ class RemoveBundleModelsAndColumns < ActiveRecord::Migration[6.1]
     remove_column :saveable_image_question_answers, :bundle_content_id
     remove_column :saveable_multiple_choice_answers, :bundle_content_id
     remove_column :saveable_interactive_states, :bundle_content_id
+    remove_column :saveable_open_response_answers, :bundle_content_id
 
     drop_table :dataservice_bucket_contents
     drop_table :dataservice_bucket_log_items
