@@ -39,7 +39,7 @@ module Delayed::Worker::Scaler
     end
 
     def jobs
-      Delayed::Job.all(:conditions => { :failed_at => nil })
+      Delayed::Job.where(:failed_at => nil)
     end
 
     def process_tag
