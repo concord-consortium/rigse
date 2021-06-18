@@ -2,1151 +2,1029 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210520131514) do
+ActiveRecord::Schema.define(version: 2021_06_18_091948) do
 
-  create_table "access_grants", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "code"
-    t.string   "access_token"
-    t.string   "refresh_token"
+  create_table "access_grants", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "code"
+    t.string "access_token"
+    t.string "refresh_token"
     t.datetime "access_token_expires_at"
-    t.integer  "user_id"
-    t.integer  "client_id"
-    t.string   "state"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "learner_id"
-    t.integer  "teacher_id"
-    t.index ["client_id"], name: "index_access_grants_on_client_id", using: :btree
-    t.index ["learner_id"], name: "index_access_grants_on_learner_id", using: :btree
-    t.index ["teacher_id"], name: "index_access_grants_on_teacher_id", using: :btree
-    t.index ["user_id"], name: "index_access_grants_on_user_id", using: :btree
+    t.integer "user_id"
+    t.integer "client_id"
+    t.string "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "learner_id"
+    t.integer "teacher_id"
+    t.index ["client_id"], name: "index_access_grants_on_client_id"
+    t.index ["learner_id"], name: "index_access_grants_on_learner_id"
+    t.index ["teacher_id"], name: "index_access_grants_on_teacher_id"
+    t.index ["user_id"], name: "index_access_grants_on_user_id"
   end
 
-  create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                   limit: 36
-    t.string   "name"
-    t.text     "description",            limit: 16777215
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
-    t.integer  "position"
-    t.integer  "investigation_id"
-    t.integer  "original_id"
-    t.boolean  "teacher_only",                            default: false
-    t.string   "publication_status"
-    t.integer  "offerings_count",                         default: 0
-    t.boolean  "student_report_enabled",                  default: true
-    t.boolean  "show_score",                              default: false
-    t.string   "teacher_guide_url"
-    t.string   "thumbnail_url"
-    t.boolean  "is_featured",                             default: false
-    t.boolean  "is_assessment_item",                      default: false
-    t.index ["investigation_id", "position"], name: "index_activities_on_investigation_id_and_position", using: :btree
-    t.index ["is_featured", "publication_status"], name: "featured_public", using: :btree
-    t.index ["publication_status"], name: "pub_status", using: :btree
+  create_table "activities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "position"
+    t.integer "investigation_id"
+    t.integer "original_id"
+    t.boolean "teacher_only", default: false
+    t.string "publication_status"
+    t.integer "offerings_count", default: 0
+    t.boolean "student_report_enabled", default: true
+    t.boolean "show_score", default: false
+    t.string "teacher_guide_url"
+    t.string "thumbnail_url"
+    t.boolean "is_featured", default: false
+    t.boolean "is_assessment_item", default: false
+    t.index ["investigation_id", "position"], name: "index_activities_on_investigation_id_and_position"
+    t.index ["is_featured", "publication_status"], name: "featured_public"
+    t.index ["publication_status"], name: "pub_status"
   end
 
-  create_table "admin_cohort_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "admin_cohort_items", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "admin_cohort_id"
     t.integer "item_id"
-    t.string  "item_type"
-    t.index ["admin_cohort_id"], name: "index_admin_cohort_items_on_admin_cohort_id", using: :btree
-    t.index ["item_id"], name: "index_admin_cohort_items_on_item_id", using: :btree
-    t.index ["item_type"], name: "index_admin_cohort_items_on_item_type", using: :btree
+    t.string "item_type"
+    t.index ["admin_cohort_id"], name: "index_admin_cohort_items_on_admin_cohort_id"
+    t.index ["item_id"], name: "index_admin_cohort_items_on_item_id"
+    t.index ["item_type"], name: "index_admin_cohort_items_on_item_type"
   end
 
-  create_table "admin_cohorts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "admin_cohorts", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "project_id"
-    t.string  "name"
+    t.string "name"
     t.boolean "email_notifications_enabled", default: false
-    t.index ["project_id", "name"], name: "index_admin_cohorts_on_project_id_and_name", unique: true, using: :btree
-    t.index ["project_id"], name: "index_admin_cohorts_on_project_id", using: :btree
+    t.index ["project_id", "name"], name: "index_admin_cohorts_on_project_id_and_name", unique: true
+    t.index ["project_id"], name: "index_admin_cohorts_on_project_id"
   end
 
-  create_table "admin_notice_user_display_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
+  create_table "admin_notice_user_display_statuses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
     t.datetime "last_collapsed_at_time"
-    t.boolean  "collapsed_status"
-    t.index ["user_id"], name: "index_admin_notice_user_display_statuses_on_user_id", using: :btree
+    t.boolean "collapsed_status"
+    t.index ["user_id"], name: "index_admin_notice_user_display_statuses_on_user_id"
   end
 
-  create_table "admin_project_links", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "project_id"
-    t.text     "name",       limit: 16777215
-    t.text     "href",       limit: 16777215
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.string   "link_id"
-    t.boolean  "pop_out"
-    t.integer  "position",                    default: 5
+  create_table "admin_project_links", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "project_id"
+    t.text "name", size: :medium
+    t.text "href", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "link_id"
+    t.boolean "pop_out"
+    t.integer "position", default: 5
   end
 
-  create_table "admin_project_materials", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "project_id"
-    t.integer  "material_id"
-    t.string   "material_type"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["material_id", "material_type"], name: "admin_proj_mat_mat_idx", using: :btree
-    t.index ["project_id", "material_id", "material_type"], name: "admin_proj_mat_proj_mat_idx", using: :btree
-    t.index ["project_id"], name: "admin_proj_mat_proj_idx", using: :btree
+  create_table "admin_project_materials", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "material_id"
+    t.string "material_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["material_id", "material_type"], name: "admin_proj_mat_mat_idx"
+    t.index ["project_id", "material_id", "material_type"], name: "admin_proj_mat_proj_mat_idx"
+    t.index ["project_id"], name: "admin_proj_mat_proj_idx"
   end
 
-  create_table "admin_project_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "admin_project_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "project_id"
     t.integer "user_id"
-    t.boolean "is_admin",      default: false
+    t.boolean "is_admin", default: false
     t.boolean "is_researcher", default: false
-    t.index ["project_id", "user_id"], name: "admin_proj_user_uniq_idx", unique: true, using: :btree
-    t.index ["project_id"], name: "index_admin_project_users_on_project_id", using: :btree
-    t.index ["user_id"], name: "index_admin_project_users_on_user_id", using: :btree
+    t.index ["project_id", "user_id"], name: "admin_proj_user_uniq_idx", unique: true
+    t.index ["project_id"], name: "index_admin_project_users_on_project_id"
+    t.index ["user_id"], name: "index_admin_project_users_on_user_id"
   end
 
-  create_table "admin_projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
-    t.string   "landing_page_slug"
-    t.text     "landing_page_content",     limit: 16777215
-    t.string   "project_card_image_url"
-    t.string   "project_card_description"
-    t.boolean  "public",                                    default: true
-    t.index ["landing_page_slug"], name: "index_admin_projects_on_landing_page_slug", unique: true, using: :btree
+  create_table "admin_projects", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "landing_page_slug"
+    t.text "landing_page_content", size: :medium
+    t.string "project_card_image_url"
+    t.string "project_card_description"
+    t.boolean "public", default: true
+    t.index ["landing_page_slug"], name: "index_admin_projects_on_landing_page_slug", unique: true
   end
 
-  create_table "admin_settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.text     "description",                    limit: 16777215
-    t.string   "uuid",                           limit: 36
-    t.datetime "created_at",                                                                   null: false
-    t.datetime "updated_at",                                                                   null: false
-    t.text     "home_page_content",              limit: 16777215
-    t.boolean  "use_student_security_questions",                  default: false
-    t.boolean  "allow_default_class"
-    t.boolean  "enable_grade_levels",                             default: false
-    t.boolean  "use_bitmap_snapshots",                            default: false
-    t.boolean  "teachers_can_author",                             default: true
-    t.boolean  "enable_member_registration",                      default: false
-    t.boolean  "allow_adhoc_schools",                             default: false
-    t.boolean  "require_user_consent",                            default: false
-    t.boolean  "use_periodic_bundle_uploading",                   default: false
-    t.string   "jnlp_cdn_hostname"
-    t.boolean  "active"
-    t.string   "external_url"
-    t.text     "custom_help_page_html",          limit: 16777215
-    t.string   "help_type"
-    t.boolean  "include_external_activities",                     default: false
-    t.text     "enabled_bookmark_types",         limit: 16777215
-    t.integer  "pub_interval",                                    default: 10
-    t.boolean  "anonymous_can_browse_materials",                  default: true
-    t.string   "jnlp_url"
-    t.boolean  "show_collections_menu",                           default: false
-    t.boolean  "auto_set_teachers_as_authors",                    default: false
-    t.integer  "default_cohort_id"
-    t.boolean  "wrap_home_page_content",                          default: true
-    t.string   "custom_search_path",                              default: "/search"
-    t.string   "teacher_home_path",                               default: "/getting_started"
-    t.text     "about_page_content",             limit: 16777215
+  create_table "admin_settings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.text "description", size: :medium
+    t.string "uuid", limit: 36
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "home_page_content", size: :medium
+    t.boolean "use_student_security_questions", default: false
+    t.boolean "allow_default_class"
+    t.boolean "enable_grade_levels", default: false
+    t.boolean "use_bitmap_snapshots", default: false
+    t.boolean "teachers_can_author", default: true
+    t.boolean "enable_member_registration", default: false
+    t.boolean "allow_adhoc_schools", default: false
+    t.boolean "require_user_consent", default: false
+    t.string "jnlp_cdn_hostname"
+    t.boolean "active"
+    t.string "external_url"
+    t.text "custom_help_page_html", size: :medium
+    t.string "help_type"
+    t.boolean "include_external_activities", default: false
+    t.text "enabled_bookmark_types", size: :medium
+    t.integer "pub_interval", default: 10
+    t.boolean "anonymous_can_browse_materials", default: true
+    t.string "jnlp_url"
+    t.boolean "show_collections_menu", default: false
+    t.boolean "auto_set_teachers_as_authors", default: false
+    t.integer "default_cohort_id"
+    t.boolean "wrap_home_page_content", default: true
+    t.string "custom_search_path", default: "/search"
+    t.string "teacher_home_path", default: "/getting_started"
+    t.text "about_page_content", size: :medium
   end
 
-  create_table "admin_site_notice_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "notice_id"
-    t.integer  "user_id"
-    t.boolean  "notice_dismissed"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["notice_id"], name: "index_admin_site_notice_users_on_notice_id", using: :btree
-    t.index ["user_id"], name: "index_admin_site_notice_users_on_user_id", using: :btree
+  create_table "admin_site_notice_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "notice_id"
+    t.integer "user_id"
+    t.boolean "notice_dismissed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notice_id"], name: "index_admin_site_notice_users_on_notice_id"
+    t.index ["user_id"], name: "index_admin_site_notice_users_on_user_id"
   end
 
-  create_table "admin_site_notices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.text     "notice_html", limit: 16777215
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "created_by"
-    t.integer  "updated_by"
-    t.index ["created_by"], name: "index_admin_site_notices_on_created_by", using: :btree
-    t.index ["updated_by"], name: "index_admin_site_notices_on_updated_by", using: :btree
+  create_table "admin_site_notices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.text "notice_html", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "created_by"
+    t.integer "updated_by"
+    t.index ["created_by"], name: "index_admin_site_notices_on_created_by"
+    t.index ["updated_by"], name: "index_admin_site_notices_on_updated_by"
   end
 
-  create_table "admin_tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "scope"
-    t.string   "tag"
+  create_table "admin_tags", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "scope"
+    t.string "tag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "authentications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "provider"
-    t.string   "uid"
+  create_table "authentications", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "provider"
+    t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_authentications_on_user_id", using: :btree
+    t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
-  create_table "authoring_sites", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "clients", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "app_id"
-    t.string   "app_secret"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
-    t.string   "site_url"
-    t.string   "domain_matchers"
-    t.string   "client_type",                   default: "confidential"
-    t.text     "redirect_uris",   limit: 65535
-  end
-
-  create_table "commons_licenses", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "code",                         null: false
-    t.string   "name",                         null: false
-    t.text     "description", limit: 16777215
-    t.string   "deed"
-    t.string   "legal"
-    t.string   "image"
-    t.integer  "number"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.index ["code"], name: "index_commons_licenses_on_code", using: :btree
-  end
-
-  create_table "dataservice_blobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.binary   "content",                    limit: 16777215
-    t.string   "token"
-    t.integer  "bundle_content_id"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.integer  "periodic_bundle_content_id"
-    t.string   "uuid",                       limit: 36
-    t.string   "mimetype"
-    t.string   "file_extension"
-    t.integer  "learner_id"
-    t.string   "checksum"
-    t.index ["bundle_content_id"], name: "index_dataservice_blobs_on_bundle_content_id", using: :btree
-    t.index ["checksum"], name: "index_dataservice_blobs_on_checksum", using: :btree
-    t.index ["learner_id"], name: "index_dataservice_blobs_on_learner_id", using: :btree
-    t.index ["periodic_bundle_content_id"], name: "pbc_idx", using: :btree
-  end
-
-  create_table "dataservice_bucket_contents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "bucket_logger_id"
-    t.text     "body",             limit: 16777215
-    t.boolean  "processed"
-    t.boolean  "empty"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.index ["bucket_logger_id"], name: "index_dataservice_bucket_contents_on_bucket_logger_id", using: :btree
-  end
-
-  create_table "dataservice_bucket_log_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.text     "content",          limit: 16777215
-    t.integer  "bucket_logger_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.index ["bucket_logger_id"], name: "index_dataservice_bucket_log_items_on_bucket_logger_id", using: :btree
-  end
-
-  create_table "dataservice_bucket_loggers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string   "name"
-    t.index ["learner_id"], name: "index_dataservice_bucket_loggers_on_learner_id", using: :btree
-    t.index ["name"], name: "index_dataservice_bucket_loggers_on_name", using: :btree
-  end
-
-  create_table "dataservice_bundle_contents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "bundle_logger_id"
-    t.integer  "position"
-    t.text     "body",             limit: 4294967295
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.text     "otml",             limit: 4294967295
-    t.boolean  "processed"
-    t.boolean  "valid_xml",                           default: false
-    t.boolean  "empty",                               default: true
-    t.string   "uuid",             limit: 36
-    t.text     "original_body",    limit: 16777215
-    t.float    "upload_time",      limit: 24
-    t.integer  "collaboration_id"
-    t.index ["bundle_logger_id"], name: "index_dataservice_bundle_contents_on_bundle_logger_id", using: :btree
-    t.index ["collaboration_id"], name: "index_dataservice_bundle_contents_on_collaboration_id", using: :btree
-  end
-
-  create_table "dataservice_bundle_loggers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.integer  "in_progress_bundle_id"
-    t.index ["in_progress_bundle_id"], name: "index_dataservice_bundle_loggers_on_in_progress_bundle_id", using: :btree
-  end
-
-  create_table "dataservice_console_contents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "console_logger_id"
-    t.integer  "position"
-    t.text     "body",              limit: 16777215
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-  end
-
-  create_table "dataservice_console_loggers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "authoring_sites", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "dataservice_jnlp_sessions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "token"
-    t.integer  "user_id"
-    t.integer  "access_count", default: 0
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.index ["token"], name: "index_dataservice_jnlp_sessions_on_token", using: :btree
+  create_table "clients", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "app_id"
+    t.string "app_secret"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "site_url"
+    t.string "domain_matchers"
+    t.string "client_type", default: "confidential"
+    t.text "redirect_uris"
   end
 
-  create_table "dataservice_launch_process_events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "event_type"
-    t.text     "event_details",     limit: 16777215
-    t.integer  "bundle_content_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.index ["bundle_content_id"], name: "index_dataservice_launch_process_events_on_bundle_content_id", using: :btree
+  create_table "commons_licenses", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "name", null: false
+    t.text "description", size: :medium
+    t.string "deed"
+    t.string "legal"
+    t.string "image"
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_commons_licenses_on_code"
   end
 
-  create_table "dataservice_periodic_bundle_contents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "periodic_bundle_logger_id"
-    t.text     "body",                      limit: 4294967295
-    t.boolean  "processed"
-    t.boolean  "valid_xml"
-    t.boolean  "empty"
-    t.string   "uuid"
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
-    t.boolean  "parts_extracted",                              default: false
-    t.index ["periodic_bundle_logger_id"], name: "bundle_logger_index", using: :btree
+  create_table "dataservice_blobs", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.binary "content", size: :medium
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "uuid", limit: 36
+    t.string "mimetype"
+    t.string "file_extension"
+    t.integer "learner_id"
+    t.string "checksum"
+    t.index ["checksum"], name: "index_dataservice_blobs_on_checksum"
+    t.index ["learner_id"], name: "index_dataservice_blobs_on_learner_id"
   end
 
-  create_table "dataservice_periodic_bundle_loggers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.text     "imports",    limit: 16777215
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.index ["learner_id"], name: "learner_index", using: :btree
+  create_table "dataservice_jnlp_sessions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "token"
+    t.integer "user_id"
+    t.integer "access_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_dataservice_jnlp_sessions_on_token"
   end
 
-  create_table "dataservice_periodic_bundle_parts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "periodic_bundle_logger_id"
-    t.boolean  "delta",                                        default: true
-    t.string   "key"
-    t.text     "value",                     limit: 4294967295
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
-    t.index ["key"], name: "parts_key_index", using: :btree
-    t.index ["periodic_bundle_logger_id"], name: "bundle_logger_index", using: :btree
-  end
-
-  create_table "delayed_jobs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "priority",                      default: 0
-    t.integer  "attempts",                      default: 0
-    t.text     "handler",    limit: 4294967295
-    t.text     "last_error", limit: 16777215
+  create_table "delayed_jobs", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "priority", default: 0
+    t.integer "attempts", default: 0
+    t.text "handler", size: :long
+    t.text "last_error", size: :medium
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "embeddable_iframes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                             limit: 36
-    t.string   "name"
-    t.string   "description"
-    t.integer  "width"
-    t.integer  "height"
-    t.text     "url",                              limit: 65535
-    t.string   "external_id"
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
-    t.boolean  "display_in_iframe",                              default: false
-    t.boolean  "is_required",                                    default: false
-    t.boolean  "show_in_featured_question_report",               default: true
+  create_table "embeddable_iframes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.string "description"
+    t.integer "width"
+    t.integer "height"
+    t.text "url"
+    t.string "external_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "display_in_iframe", default: false
+    t.boolean "is_required", default: false
+    t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "embeddable_image_questions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                             limit: 36
-    t.string   "name"
-    t.text     "prompt",                           limit: 16777215
-    t.datetime "created_at",                                                        null: false
-    t.datetime "updated_at",                                                        null: false
-    t.string   "external_id"
-    t.text     "drawing_prompt",                   limit: 16777215
-    t.boolean  "is_required",                                       default: false, null: false
-    t.boolean  "show_in_featured_question_report",                  default: true
+  create_table "embeddable_image_questions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "prompt", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "external_id"
+    t.text "drawing_prompt", size: :medium
+    t.boolean "is_required", default: false, null: false
+    t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "embeddable_multiple_choice_choices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.text     "choice",             limit: 16777215
-    t.integer  "multiple_choice_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.boolean  "is_correct"
-    t.string   "external_id"
-    t.index ["multiple_choice_id"], name: "index_embeddable_multiple_choice_choices_on_multiple_choice_id", using: :btree
+  create_table "embeddable_multiple_choice_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.text "choice", size: :medium
+    t.integer "multiple_choice_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_correct"
+    t.string "external_id"
+    t.index ["multiple_choice_id"], name: "index_embeddable_multiple_choice_choices_on_multiple_choice_id"
   end
 
-  create_table "embeddable_multiple_choices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                             limit: 36
-    t.string   "name"
-    t.text     "description",                      limit: 16777215
-    t.text     "prompt",                           limit: 16777215
-    t.datetime "created_at",                                                        null: false
-    t.datetime "updated_at",                                                        null: false
-    t.boolean  "enable_rationale",                                  default: false
-    t.text     "rationale_prompt",                 limit: 16777215
-    t.boolean  "allow_multiple_selection",                          default: false
-    t.string   "external_id"
-    t.boolean  "is_required",                                       default: false, null: false
-    t.boolean  "show_in_featured_question_report",                  default: true
+  create_table "embeddable_multiple_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.text "prompt", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "enable_rationale", default: false
+    t.text "rationale_prompt", size: :medium
+    t.boolean "allow_multiple_selection", default: false
+    t.string "external_id"
+    t.boolean "is_required", default: false, null: false
+    t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "embeddable_open_responses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                             limit: 36
-    t.string   "name"
-    t.text     "description",                      limit: 16777215
-    t.text     "prompt",                           limit: 16777215
-    t.string   "default_response"
-    t.datetime "created_at",                                                        null: false
-    t.datetime "updated_at",                                                        null: false
-    t.integer  "rows",                                              default: 5
-    t.integer  "columns",                                           default: 32
-    t.integer  "font_size",                                         default: 12
-    t.string   "external_id"
-    t.boolean  "is_required",                                       default: false, null: false
-    t.boolean  "show_in_featured_question_report",                  default: true
+  create_table "embeddable_open_responses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.text "prompt", size: :medium
+    t.string "default_response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "rows", default: 5
+    t.integer "columns", default: 32
+    t.integer "font_size", default: 12
+    t.string "external_id"
+    t.boolean "is_required", default: false, null: false
+    t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "external_activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid"
-    t.string   "name"
-    t.text     "archived_description",         limit: 16777215
-    t.text     "url",                          limit: 16777215
-    t.string   "publication_status"
-    t.datetime "created_at",                                                         null: false
-    t.datetime "updated_at",                                                         null: false
-    t.integer  "offerings_count",                               default: 0
-    t.string   "save_path"
-    t.boolean  "append_learner_id_to_url"
-    t.boolean  "popup",                                         default: true
-    t.boolean  "append_survey_monkey_uid"
-    t.integer  "template_id"
-    t.string   "template_type"
-    t.string   "launch_url"
-    t.boolean  "is_official",                                   default: false
-    t.boolean  "student_report_enabled",                        default: true
-    t.string   "teacher_guide_url"
-    t.string   "thumbnail_url"
-    t.boolean  "is_featured",                                   default: false
-    t.boolean  "has_pretest",                                   default: false
-    t.text     "short_description",            limit: 16777215
-    t.boolean  "allow_collaboration",                           default: false
-    t.string   "author_email"
-    t.boolean  "is_locked"
-    t.boolean  "logging",                                       default: false
-    t.boolean  "is_assessment_item",                            default: false
-    t.text     "author_url",                   limit: 65535
-    t.text     "print_url",                    limit: 65535
-    t.boolean  "is_archived",                                   default: false
+  create_table "external_activities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid"
+    t.string "name"
+    t.text "archived_description", size: :medium
+    t.text "url", size: :medium
+    t.string "publication_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "offerings_count", default: 0
+    t.string "save_path"
+    t.boolean "append_learner_id_to_url"
+    t.boolean "popup", default: true
+    t.boolean "append_survey_monkey_uid"
+    t.integer "template_id"
+    t.string "template_type"
+    t.string "launch_url"
+    t.boolean "is_official", default: false
+    t.boolean "student_report_enabled", default: true
+    t.string "teacher_guide_url"
+    t.string "thumbnail_url"
+    t.boolean "is_featured", default: false
+    t.boolean "has_pretest", default: false
+    t.text "short_description", size: :medium
+    t.boolean "allow_collaboration", default: false
+    t.string "author_email"
+    t.boolean "is_locked"
+    t.boolean "logging", default: false
+    t.boolean "is_assessment_item", default: false
+    t.text "author_url"
+    t.text "print_url"
+    t.boolean "is_archived", default: false
     t.datetime "archive_date"
-    t.string   "credits"
-    t.string   "license_code"
-    t.boolean  "append_auth_token"
-    t.boolean  "enable_sharing",                                default: true
-    t.string   "material_type",                                 default: "Activity"
-    t.string   "rubric_url"
-    t.boolean  "saves_student_data",                            default: true
-    t.text     "long_description_for_teacher", limit: 65535
-    t.text     "long_description",             limit: 65535
-    t.text     "keywords",                     limit: 65535
-    t.integer  "tool_id"
-    t.boolean  "has_teacher_edition",                           default: false
-    t.text     "teacher_resources_url",        limit: 65535
-    t.index ["is_featured", "publication_status"], name: "featured_public", using: :btree
-    t.index ["publication_status"], name: "pub_status", using: :btree
-    t.index ["save_path"], name: "index_external_activities_on_save_path", using: :btree
-    t.index ["template_id", "template_type"], name: "index_external_activities_on_template_id_and_template_type", using: :btree
-    t.index ["user_id"], name: "index_external_activities_on_user_id", using: :btree
+    t.string "credits"
+    t.string "license_code"
+    t.boolean "append_auth_token"
+    t.boolean "enable_sharing", default: true
+    t.string "material_type", default: "Activity"
+    t.string "rubric_url"
+    t.boolean "saves_student_data", default: true
+    t.text "long_description_for_teacher"
+    t.text "long_description"
+    t.text "keywords"
+    t.integer "tool_id"
+    t.boolean "has_teacher_edition", default: false
+    t.text "teacher_resources_url"
+    t.index ["is_featured", "publication_status"], name: "featured_public"
+    t.index ["publication_status"], name: "pub_status"
+    t.index ["save_path"], name: "index_external_activities_on_save_path"
+    t.index ["template_id", "template_type"], name: "index_external_activities_on_template_id_and_template_type"
+    t.index ["user_id"], name: "index_external_activities_on_user_id"
   end
 
-  create_table "external_activity_reports", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "external_activity_reports", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "external_activity_id"
     t.integer "external_report_id"
-    t.index ["external_activity_id", "external_report_id"], name: "activity_reports_activity_index", using: :btree
-    t.index ["external_report_id"], name: "activity_reports_index", using: :btree
+    t.index ["external_activity_id", "external_report_id"], name: "activity_reports_activity_index"
+    t.index ["external_report_id"], name: "activity_reports_index"
   end
 
-  create_table "external_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "url"
-    t.string   "name"
-    t.string   "launch_text"
-    t.integer  "client_id"
-    t.datetime "created_at",                                                        null: false
-    t.datetime "updated_at",                                                        null: false
-    t.string   "report_type",                                  default: "offering"
-    t.boolean  "allowed_for_students",                         default: false
-    t.string   "default_report_for_source_type"
-    t.boolean  "individual_student_reportable",                default: false
-    t.boolean  "individual_activity_reportable",               default: false
-    t.text     "move_students_api_url",          limit: 65535
-    t.string   "move_students_api_token",        limit: 255
-    t.boolean  "use_query_jwt",                                default: false
-    t.index ["client_id"], name: "index_external_reports_on_client_id", using: :btree
+  create_table "external_reports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "url"
+    t.string "name"
+    t.string "launch_text"
+    t.integer "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "report_type", default: "offering"
+    t.boolean "allowed_for_students", default: false
+    t.string "default_report_for_source_type"
+    t.boolean "individual_student_reportable", default: false
+    t.boolean "individual_activity_reportable", default: false
+    t.text "move_students_api_url"
+    t.string "move_students_api_token"
+    t.boolean "use_query_jwt", default: false
+    t.index ["client_id"], name: "index_external_reports_on_client_id"
   end
 
-  create_table "favorites", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.integer  "favoritable_id"
-    t.string   "favoritable_type"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["favoritable_id"], name: "index_favorites_on_favoritable_id", using: :btree
-    t.index ["favoritable_type"], name: "index_favorites_on_favoritable_type", using: :btree
-    t.index ["user_id", "favoritable_id", "favoritable_type"], name: "favorite_unique", unique: true, using: :btree
+  create_table "favorites", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "favoritable_id"
+    t.string "favoritable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["favoritable_id"], name: "index_favorites_on_favoritable_id"
+    t.index ["favoritable_type"], name: "index_favorites_on_favoritable_type"
+    t.index ["user_id", "favoritable_id", "favoritable_type"], name: "favorite_unique", unique: true
   end
 
-  create_table "firebase_apps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "client_email"
-    t.text     "private_key",  limit: 65535
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.index ["name"], name: "index_firebase_apps_on_name", using: :btree
+  create_table "firebase_apps", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "client_email"
+    t.text "private_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_firebase_apps_on_name"
   end
 
-  create_table "geniverse_activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.text     "initial_alleles",            limit: 16777215
-    t.string   "base_channel_name"
-    t.integer  "max_users_in_room"
-    t.boolean  "send_bred_dragons"
-    t.string   "title"
-    t.string   "hidden_genes"
-    t.text     "static_genes",               limit: 16777215
-    t.boolean  "crossover_when_breeding",                     default: false
-    t.string   "route"
-    t.string   "pageType"
-    t.text     "message",                    limit: 16777215
-    t.text     "match_dragon_alleles",       limit: 16777215
-    t.integer  "myCase_id"
-    t.integer  "myCaseOrder"
-    t.boolean  "is_argumentation_challenge",                  default: false
-    t.integer  "threshold_three_stars"
-    t.integer  "threshold_two_stars"
-    t.boolean  "show_color_labels"
-    t.text     "congratulations",            limit: 16777215
-    t.boolean  "show_tooltips",                               default: false
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
-    t.index ["route"], name: "index_activities_on_route", using: :btree
+  create_table "geniverse_activities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.text "initial_alleles", size: :medium
+    t.string "base_channel_name"
+    t.integer "max_users_in_room"
+    t.boolean "send_bred_dragons"
+    t.string "title"
+    t.string "hidden_genes"
+    t.text "static_genes", size: :medium
+    t.boolean "crossover_when_breeding", default: false
+    t.string "route"
+    t.string "pageType"
+    t.text "message", size: :medium
+    t.text "match_dragon_alleles", size: :medium
+    t.integer "myCase_id"
+    t.integer "myCaseOrder"
+    t.boolean "is_argumentation_challenge", default: false
+    t.integer "threshold_three_stars"
+    t.integer "threshold_two_stars"
+    t.boolean "show_color_labels"
+    t.text "congratulations", size: :medium
+    t.boolean "show_tooltips", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["route"], name: "index_activities_on_route"
   end
 
-  create_table "geniverse_articles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "group"
-    t.integer  "activity_id"
-    t.text     "text",           limit: 16777215
-    t.integer  "time"
-    t.boolean  "submitted"
-    t.text     "teacherComment", limit: 16777215
-    t.boolean  "accepted"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+  create_table "geniverse_articles", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "group"
+    t.integer "activity_id"
+    t.text "text", size: :medium
+    t.integer "time"
+    t.boolean "submitted"
+    t.text "teacherComment", size: :medium
+    t.boolean "accepted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "geniverse_cases", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.integer  "order"
-    t.string   "introImageUrl"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+  create_table "geniverse_cases", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "order"
+    t.string "introImageUrl"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "geniverse_dragons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.integer  "sex"
-    t.string   "alleles"
-    t.string   "imageURL"
-    t.integer  "mother_id"
-    t.integer  "father_id"
-    t.boolean  "bred"
-    t.integer  "user_id"
-    t.integer  "stableOrder"
-    t.boolean  "isEgg",                      default: false
-    t.boolean  "isInMarketplace",            default: true
-    t.integer  "activity_id"
-    t.integer  "breeder_id"
-    t.string   "breedTime",       limit: 16
-    t.boolean  "isMatchDragon",              default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.index ["activity_id"], name: "index_dragons_on_activity_id", using: :btree
-    t.index ["breeder_id", "breedTime", "id"], name: "breed_record_index", using: :btree
-    t.index ["father_id"], name: "father_index", using: :btree
-    t.index ["id"], name: "index_dragons_on_id", using: :btree
-    t.index ["mother_id"], name: "mother_index", using: :btree
-    t.index ["user_id"], name: "index_dragons_on_user_id", using: :btree
+  create_table "geniverse_dragons", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "sex"
+    t.string "alleles"
+    t.string "imageURL"
+    t.integer "mother_id"
+    t.integer "father_id"
+    t.boolean "bred"
+    t.integer "user_id"
+    t.integer "stableOrder"
+    t.boolean "isEgg", default: false
+    t.boolean "isInMarketplace", default: true
+    t.integer "activity_id"
+    t.integer "breeder_id"
+    t.string "breedTime", limit: 16
+    t.boolean "isMatchDragon", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["activity_id"], name: "index_dragons_on_activity_id"
+    t.index ["breeder_id", "breedTime", "id"], name: "breed_record_index"
+    t.index ["father_id"], name: "father_index"
+    t.index ["id"], name: "index_dragons_on_id"
+    t.index ["mother_id"], name: "mother_index"
+    t.index ["user_id"], name: "index_dragons_on_user_id"
   end
 
-  create_table "geniverse_help_messages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "page_name"
-    t.text     "message",    limit: 16777215
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+  create_table "geniverse_help_messages", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "page_name"
+    t.text "message", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "geniverse_unlockables", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "title"
-    t.text     "content",            limit: 16777215
-    t.string   "trigger"
-    t.boolean  "open_automatically",                  default: false
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+  create_table "geniverse_unlockables", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "title"
+    t.text "content", size: :medium
+    t.string "trigger"
+    t.boolean "open_automatically", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "geniverse_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "username"
-    t.string   "password_hash"
-    t.integer  "group_id"
-    t.integer  "member_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.text     "note",          limit: 16777215
-    t.string   "class_name"
-    t.text     "metadata",      limit: 4294967295
-    t.string   "avatar"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.index ["username", "password_hash"], name: "index_users_on_username_and_password_hash", length: { username: 125, password_hash: 125 }, using: :btree
+  create_table "geniverse_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "username"
+    t.string "password_hash"
+    t.integer "group_id"
+    t.integer "member_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.text "note", size: :medium
+    t.string "class_name"
+    t.text "metadata", size: :long
+    t.string "avatar"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["username", "password_hash"], name: "index_users_on_username_and_password_hash", length: 125
   end
 
-  create_table "images", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "attribution",        limit: 16777215
-    t.string   "publication_status",                  default: "published"
-    t.datetime "created_at",                                                null: false
-    t.datetime "updated_at",                                                null: false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
+  create_table "images", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name"
+    t.text "attribution", size: :medium
+    t.string "publication_status", default: "published"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
-    t.string   "license_code"
-    t.integer  "width",                               default: 0
-    t.integer  "height",                              default: 0
+    t.string "license_code"
+    t.integer "width", default: 0
+    t.integer "height", default: 0
   end
 
-  create_table "import_duplicate_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string  "login"
-    t.string  "email"
+  create_table "import_duplicate_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "login"
+    t.string "email"
     t.integer "duplicate_by"
-    t.text    "data",         limit: 16777215
+    t.text "data", size: :medium
     t.integer "user_id"
     t.integer "import_id"
   end
 
-  create_table "import_school_district_mappings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "import_school_district_mappings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "district_id"
-    t.string  "import_district_uuid"
+    t.string "import_district_uuid"
   end
 
-  create_table "import_user_school_mappings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "import_user_school_mappings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "school_id"
-    t.string  "import_school_url"
+    t.string "import_school_url"
   end
 
-  create_table "imported_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string  "user_url"
+  create_table "imported_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "user_url"
     t.boolean "is_verified"
     t.integer "user_id"
-    t.string  "importing_domain"
+    t.string "importing_domain"
     t.integer "import_id"
   end
 
-  create_table "imports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "job_id"
+  create_table "imports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "job_id"
     t.datetime "job_finished_at"
-    t.integer  "import_type"
-    t.integer  "progress"
-    t.integer  "total_imports"
-    t.integer  "user_id"
-    t.text     "upload_data",     limit: 4294967295
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
-    t.text     "import_data",     limit: 4294967295
+    t.integer "import_type"
+    t.integer "progress"
+    t.integer "total_imports"
+    t.integer "user_id"
+    t.text "upload_data", size: :long
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "import_data", size: :long
   end
 
-  create_table "interactives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.text     "description",            limit: 16777215
-    t.string   "url"
-    t.integer  "width"
-    t.integer  "height"
-    t.float    "scale",                  limit: 24
-    t.string   "image_url"
-    t.integer  "user_id"
-    t.string   "credits"
-    t.string   "publication_status"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
-    t.boolean  "full_window",                             default: false
-    t.boolean  "no_snapshots",                            default: false
-    t.boolean  "save_interactive_state",                  default: false
-    t.string   "license_code"
-    t.integer  "external_activity_id"
+  create_table "interactives", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description", size: :medium
+    t.string "url"
+    t.integer "width"
+    t.integer "height"
+    t.float "scale"
+    t.string "image_url"
+    t.integer "user_id"
+    t.string "credits"
+    t.string "publication_status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "full_window", default: false
+    t.boolean "no_snapshots", default: false
+    t.boolean "save_interactive_state", default: false
+    t.string "license_code"
+    t.integer "external_activity_id"
   end
 
-  create_table "investigations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "uuid",                      limit: 36
-    t.string   "name"
-    t.text     "description",               limit: 16777215
-    t.datetime "created_at",                                                 null: false
-    t.datetime "updated_at",                                                 null: false
-    t.boolean  "teacher_only",                               default: false
-    t.string   "publication_status"
-    t.integer  "offerings_count",                            default: 0
-    t.boolean  "student_report_enabled",                     default: true
-    t.boolean  "allow_activity_assignment",                  default: true
-    t.boolean  "show_score",                                 default: false
-    t.string   "teacher_guide_url"
-    t.string   "thumbnail_url"
-    t.boolean  "is_featured",                                default: false
-    t.text     "abstract",                  limit: 16777215
-    t.string   "author_email"
-    t.boolean  "is_assessment_item",                         default: false
-    t.index ["is_featured", "publication_status"], name: "featured_public", using: :btree
-    t.index ["publication_status"], name: "pub_status", using: :btree
+  create_table "investigations", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "teacher_only", default: false
+    t.string "publication_status"
+    t.integer "offerings_count", default: 0
+    t.boolean "student_report_enabled", default: true
+    t.boolean "allow_activity_assignment", default: true
+    t.boolean "show_score", default: false
+    t.string "teacher_guide_url"
+    t.string "thumbnail_url"
+    t.boolean "is_featured", default: false
+    t.text "abstract", size: :medium
+    t.string "author_email"
+    t.boolean "is_assessment_item", default: false
+    t.index ["is_featured", "publication_status"], name: "featured_public"
+    t.index ["publication_status"], name: "pub_status"
   end
 
-  create_table "learner_processing_events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
+  create_table "learner_processing_events", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
     t.datetime "portal_end"
     t.datetime "portal_start"
     t.datetime "lara_end"
     t.datetime "lara_start"
-    t.integer  "elapsed_seconds"
-    t.string   "duration"
-    t.string   "login"
-    t.string   "teacher"
-    t.string   "url"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "lara_duration"
-    t.integer  "portal_duration"
-    t.index ["learner_id"], name: "index_learner_processing_events_on_learner_id", using: :btree
-    t.index ["url"], name: "index_learner_processing_events_on_url", using: :btree
+    t.integer "elapsed_seconds"
+    t.string "duration"
+    t.string "login"
+    t.string "teacher"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "lara_duration"
+    t.integer "portal_duration"
+    t.index ["learner_id"], name: "index_learner_processing_events_on_learner_id"
+    t.index ["url"], name: "index_learner_processing_events_on_url"
   end
 
-  create_table "legacy_collaborations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "bundle_content_id"
-    t.integer  "student_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+  create_table "materials_collection_items", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "materials_collection_id"
+    t.string "material_type"
+    t.integer "material_id"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["material_id", "material_type", "position"], name: "material_idx"
+    t.index ["materials_collection_id", "position"], name: "materials_collection_idx"
   end
 
-  create_table "materials_collection_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "materials_collection_id"
-    t.string   "material_type"
-    t.integer  "material_id"
-    t.integer  "position"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.index ["material_id", "material_type", "position"], name: "material_idx", using: :btree
-    t.index ["materials_collection_id", "position"], name: "materials_collection_idx", using: :btree
+  create_table "materials_collections", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "description", size: :medium
+    t.integer "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_materials_collections_on_project_id"
   end
 
-  create_table "materials_collections", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.text     "description", limit: 16777215
-    t.integer  "project_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.index ["project_id"], name: "index_materials_collections_on_project_id", using: :btree
+  create_table "otrunk_example_otrunk_imports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid"
+    t.string "classname"
+    t.string "fq_classname"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_imports_on_fq_classname", unique: true
   end
 
-  create_table "otrunk_example_otrunk_imports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid"
-    t.string   "classname"
-    t.string   "fq_classname"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_imports_on_fq_classname", unique: true, using: :btree
+  create_table "otrunk_example_otrunk_view_entries", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid"
+    t.integer "otrunk_import_id"
+    t.string "classname"
+    t.string "fq_classname"
+    t.boolean "standard_view"
+    t.boolean "standard_edit_view"
+    t.boolean "edit_view"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_view_entries_on_fq_classname", unique: true
   end
 
-  create_table "otrunk_example_otrunk_view_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid"
-    t.integer  "otrunk_import_id"
-    t.string   "classname"
-    t.string   "fq_classname"
-    t.boolean  "standard_view"
-    t.boolean  "standard_edit_view"
-    t.boolean  "edit_view"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_view_entries_on_fq_classname", unique: true, using: :btree
+  create_table "page_elements", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "page_id"
+    t.integer "embeddable_id"
+    t.string "embeddable_type"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["embeddable_id", "embeddable_type"], name: "index_page_elements_on_embeddable_id_and_embeddable_type"
+    t.index ["embeddable_id"], name: "index_page_elements_on_embeddable_id"
+    t.index ["page_id"], name: "index_page_elements_on_page_id"
+    t.index ["position"], name: "index_page_elements_on_position"
   end
 
-  create_table "page_elements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "page_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "position"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "user_id"
-    t.index ["embeddable_id", "embeddable_type"], name: "index_page_elements_on_embeddable_id_and_embeddable_type", using: :btree
-    t.index ["embeddable_id"], name: "index_page_elements_on_embeddable_id", using: :btree
-    t.index ["page_id"], name: "index_page_elements_on_page_id", using: :btree
-    t.index ["position"], name: "index_page_elements_on_position", using: :btree
+  create_table "pages", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "section_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "teacher_only", default: false
+    t.string "publication_status"
+    t.integer "offerings_count", default: 0
+    t.text "url"
+    t.index ["position"], name: "index_pages_on_position"
+    t.index ["section_id", "position"], name: "index_pages_on_section_id_and_position"
   end
 
-  create_table "pages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.integer  "section_id"
-    t.string   "uuid",               limit: 36
-    t.string   "name"
-    t.text     "description",        limit: 16777215
-    t.integer  "position"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.boolean  "teacher_only",                        default: false
-    t.string   "publication_status"
-    t.integer  "offerings_count",                     default: 0
-    t.text     "url",                limit: 65535
-    t.index ["position"], name: "index_pages_on_position", using: :btree
-    t.index ["section_id", "position"], name: "index_pages_on_section_id_and_position", using: :btree
-  end
-
-  create_table "passwords", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.string   "reset_code"
+  create_table "passwords", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "reset_code"
     t.datetime "expiration_date"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["user_id"], name: "index_passwords_on_user_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_passwords_on_user_id"
   end
 
-  create_table "portal_bookmark_visits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.integer  "bookmark_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+  create_table "portal_bookmark_visits", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "bookmark_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "portal_bookmarks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "type"
-    t.string   "url"
-    t.integer  "user_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.integer  "position"
-    t.integer  "clazz_id"
-    t.boolean  "is_visible", default: true, null: false
-    t.index ["clazz_id"], name: "index_bookmarks_on_clazz_id", using: :btree
-    t.index ["id", "type"], name: "index_portal_bookmarks_on_id_and_type", using: :btree
-    t.index ["user_id"], name: "index_portal_bookmarks_on_user_id", using: :btree
+  create_table "portal_bookmarks", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "type"
+    t.string "url"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "position"
+    t.integer "clazz_id"
+    t.boolean "is_visible", default: true, null: false
+    t.index ["clazz_id"], name: "index_bookmarks_on_clazz_id"
+    t.index ["id", "type"], name: "index_portal_bookmarks_on_id_and_type"
+    t.index ["user_id"], name: "index_portal_bookmarks_on_user_id"
   end
 
-  create_table "portal_clazzes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",          limit: 36
-    t.string   "name"
-    t.text     "description",   limit: 16777215
+  create_table "portal_clazzes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
     t.datetime "start_time"
     t.datetime "end_time"
-    t.string   "class_word"
-    t.string   "status"
-    t.integer  "course_id"
-    t.integer  "semester_id"
-    t.integer  "teacher_id"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
-    t.string   "section"
-    t.boolean  "default_class",                  default: false
-    t.boolean  "logging",                        default: false
-    t.string   "class_hash",    limit: 48
-    t.index ["class_word"], name: "index_portal_clazzes_on_class_word", unique: true, using: :btree
+    t.string "class_word"
+    t.string "status"
+    t.integer "course_id"
+    t.integer "semester_id"
+    t.integer "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "section"
+    t.boolean "default_class", default: false
+    t.boolean "logging", default: false
+    t.string "class_hash", limit: 48
+    t.index ["class_word"], name: "index_portal_clazzes_on_class_word", unique: true
   end
 
-  create_table "portal_collaboration_memberships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "collaboration_id"
-    t.integer  "student_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["collaboration_id", "student_id"], name: "index_portal_coll_mem_on_collaboration_id_and_student_id", using: :btree
+  create_table "portal_collaboration_memberships", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "collaboration_id"
+    t.integer "student_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collaboration_id", "student_id"], name: "index_portal_coll_mem_on_collaboration_id_and_student_id"
   end
 
-  create_table "portal_collaborations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "owner_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "offering_id"
-    t.index ["offering_id"], name: "index_portal_collaborations_on_offering_id", using: :btree
-    t.index ["owner_id"], name: "index_portal_collaborations_on_owner_id", using: :btree
+  create_table "portal_collaborations", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "offering_id"
+    t.index ["offering_id"], name: "index_portal_collaborations_on_offering_id"
+    t.index ["owner_id"], name: "index_portal_collaborations_on_owner_id"
   end
 
-  create_table "portal_countries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "formal_name"
-    t.string   "capital"
-    t.string   "two_letter",   limit: 2
-    t.string   "three_letter", limit: 3
-    t.string   "tld"
-    t.integer  "iso_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["iso_id"], name: "index_portal_countries_on_iso_id", using: :btree
-    t.index ["name"], name: "index_portal_countries_on_name", using: :btree
-    t.index ["two_letter"], name: "index_portal_countries_on_two_letter", using: :btree
+  create_table "portal_countries", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "formal_name"
+    t.string "capital"
+    t.string "two_letter", limit: 2
+    t.string "three_letter", limit: 3
+    t.string "tld"
+    t.integer "iso_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["iso_id"], name: "index_portal_countries_on_iso_id"
+    t.index ["name"], name: "index_portal_countries_on_name"
+    t.index ["two_letter"], name: "index_portal_countries_on_two_letter"
   end
 
-  create_table "portal_courses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",          limit: 36
-    t.string   "name"
-    t.text     "description",   limit: 16777215
-    t.integer  "school_id"
-    t.string   "status"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "course_number"
-    t.index ["course_number"], name: "index_portal_courses_on_course_number", using: :btree
-    t.index ["name"], name: "index_portal_courses_on_name", using: :btree
-    t.index ["school_id"], name: "index_portal_courses_on_school_id", using: :btree
+  create_table "portal_courses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.integer "school_id"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "course_number"
+    t.index ["course_number"], name: "index_portal_courses_on_course_number"
+    t.index ["name"], name: "index_portal_courses_on_name"
+    t.index ["school_id"], name: "index_portal_courses_on_school_id"
   end
 
-  create_table "portal_courses_grade_levels", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "portal_courses_grade_levels", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "grade_level_id"
     t.integer "course_id"
   end
 
-  create_table "portal_districts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",             limit: 36
-    t.string   "name"
-    t.text     "description",      limit: 16777215
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.integer  "nces_district_id"
-    t.string   "state",            limit: 2
-    t.string   "leaid",            limit: 7
-    t.string   "zipcode",          limit: 5
-    t.index ["nces_district_id"], name: "index_portal_districts_on_nces_district_id", using: :btree
-    t.index ["state"], name: "index_portal_districts_on_state", using: :btree
+  create_table "portal_districts", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "nces_district_id"
+    t.string "state", limit: 2
+    t.string "leaid", limit: 7
+    t.string "zipcode", limit: 5
+    t.index ["nces_district_id"], name: "index_portal_districts_on_nces_district_id"
+    t.index ["state"], name: "index_portal_districts_on_state"
   end
 
-  create_table "portal_grade_levels", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",                  limit: 36
-    t.string   "name"
-    t.text     "description",           limit: 16777215
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.integer  "has_grade_levels_id"
-    t.string   "has_grade_levels_type"
-    t.integer  "grade_id"
+  create_table "portal_grade_levels", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "has_grade_levels_id"
+    t.string "has_grade_levels_type"
+    t.integer "grade_id"
   end
 
-  create_table "portal_grade_levels_teachers", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "portal_grade_levels_teachers", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "grade_level_id"
     t.integer "teacher_id"
   end
 
-  create_table "portal_grades", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "description"
-    t.integer  "position"
-    t.string   "uuid"
-    t.boolean  "active",      default: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+  create_table "portal_grades", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.integer "position"
+    t.string "uuid"
+    t.boolean "active", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "portal_learner_activity_feedbacks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.text     "text_feedback",        limit: 65535
-    t.integer  "score",                              default: 0
-    t.boolean  "has_been_reviewed",                  default: false
-    t.integer  "portal_learner_id"
-    t.integer  "activity_feedback_id"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.text     "rubric_feedback",      limit: 65535
-    t.index ["activity_feedback_id"], name: "index_portal_learner_activity_feedbacks_on_activity_feedback_id", using: :btree
-    t.index ["portal_learner_id"], name: "index_portal_learner_activity_feedbacks_on_portal_learner_id", using: :btree
+  create_table "portal_learner_activity_feedbacks", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.text "text_feedback"
+    t.integer "score", default: 0
+    t.boolean "has_been_reviewed", default: false
+    t.integer "portal_learner_id"
+    t.integer "activity_feedback_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "rubric_feedback"
+    t.index ["activity_feedback_id"], name: "index_portal_learner_activity_feedbacks_on_activity_feedback_id"
+    t.index ["portal_learner_id"], name: "index_portal_learner_activity_feedbacks_on_portal_learner_id"
   end
 
-  create_table "portal_learners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",              limit: 36
-    t.integer  "student_id"
-    t.integer  "offering_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "bundle_logger_id"
-    t.integer  "console_logger_id"
-    t.string   "secure_key"
-    t.index ["bundle_logger_id"], name: "index_portal_learners_on_bundle_logger_id", using: :btree
-    t.index ["console_logger_id"], name: "index_portal_learners_on_console_logger_id", using: :btree
-    t.index ["offering_id"], name: "index_portal_learners_on_offering_id", using: :btree
-    t.index ["secure_key"], name: "index_portal_learners_on_sec_key", unique: true, using: :btree
-    t.index ["student_id"], name: "index_portal_learners_on_student_id", using: :btree
+  create_table "portal_learners", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.integer "student_id"
+    t.integer "offering_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "secure_key"
+    t.index ["offering_id"], name: "index_portal_learners_on_offering_id"
+    t.index ["secure_key"], name: "index_portal_learners_on_sec_key", unique: true
+    t.index ["student_id"], name: "index_portal_learners_on_student_id"
   end
 
-  create_table "portal_nces06_districts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string  "LEAID",  limit: 7
-    t.string  "FIPST",  limit: 2
-    t.string  "STID",   limit: 14
-    t.string  "NAME",   limit: 60
-    t.string  "PHONE",  limit: 10
-    t.string  "MSTREE", limit: 30
-    t.string  "MCITY",  limit: 30
-    t.string  "MSTATE", limit: 2
-    t.string  "MZIP",   limit: 5
-    t.string  "MZIP4",  limit: 4
-    t.string  "LSTREE", limit: 30
-    t.string  "LCITY",  limit: 30
-    t.string  "LSTATE", limit: 2
-    t.string  "LZIP",   limit: 5
-    t.string  "LZIP4",  limit: 4
-    t.string  "KIND",   limit: 1
-    t.string  "UNION",  limit: 3
-    t.string  "CONUM",  limit: 5
-    t.string  "CONAME", limit: 30
-    t.string  "CSA",    limit: 3
-    t.string  "CBSA",   limit: 5
-    t.string  "METMIC", limit: 1
-    t.string  "MSC",    limit: 1
-    t.string  "ULOCAL", limit: 2
-    t.string  "CDCODE", limit: 4
-    t.float   "LATCOD", limit: 24
-    t.float   "LONCOD", limit: 24
-    t.string  "BOUND",  limit: 1
-    t.string  "GSLO",   limit: 2
-    t.string  "GSHI",   limit: 2
-    t.string  "AGCHRT", limit: 1
+  create_table "portal_nces06_districts", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "LEAID", limit: 7
+    t.string "FIPST", limit: 2
+    t.string "STID", limit: 14
+    t.string "NAME", limit: 60
+    t.string "PHONE", limit: 10
+    t.string "MSTREE", limit: 30
+    t.string "MCITY", limit: 30
+    t.string "MSTATE", limit: 2
+    t.string "MZIP", limit: 5
+    t.string "MZIP4", limit: 4
+    t.string "LSTREE", limit: 30
+    t.string "LCITY", limit: 30
+    t.string "LSTATE", limit: 2
+    t.string "LZIP", limit: 5
+    t.string "LZIP4", limit: 4
+    t.string "KIND", limit: 1
+    t.string "UNION", limit: 3
+    t.string "CONUM", limit: 5
+    t.string "CONAME", limit: 30
+    t.string "CSA", limit: 3
+    t.string "CBSA", limit: 5
+    t.string "METMIC", limit: 1
+    t.string "MSC", limit: 1
+    t.string "ULOCAL", limit: 2
+    t.string "CDCODE", limit: 4
+    t.float "LATCOD"
+    t.float "LONCOD"
+    t.string "BOUND", limit: 1
+    t.string "GSLO", limit: 2
+    t.string "GSHI", limit: 2
+    t.string "AGCHRT", limit: 1
     t.integer "SCH"
-    t.float   "TEACH",  limit: 24
+    t.float "TEACH"
     t.integer "UG"
     t.integer "PK12"
     t.integer "MEMBER"
     t.integer "MIGRNT"
     t.integer "SPECED"
     t.integer "ELL"
-    t.float   "PKTCH",  limit: 24
-    t.float   "KGTCH",  limit: 24
-    t.float   "ELMTCH", limit: 24
-    t.float   "SECTCH", limit: 24
-    t.float   "UGTCH",  limit: 24
-    t.float   "TOTTCH", limit: 24
-    t.float   "AIDES",  limit: 24
-    t.float   "CORSUP", limit: 24
-    t.float   "ELMGUI", limit: 24
-    t.float   "SECGUI", limit: 24
-    t.float   "TOTGUI", limit: 24
-    t.float   "LIBSPE", limit: 24
-    t.float   "LIBSUP", limit: 24
-    t.float   "LEAADM", limit: 24
-    t.float   "LEASUP", limit: 24
-    t.float   "SCHADM", limit: 24
-    t.float   "SCHSUP", limit: 24
-    t.float   "STUSUP", limit: 24
-    t.float   "OTHSUP", limit: 24
-    t.string  "IGSLO",  limit: 1
-    t.string  "IGSHI",  limit: 1
-    t.string  "ISCH",   limit: 1
-    t.string  "ITEACH", limit: 1
-    t.string  "IUG",    limit: 1
-    t.string  "IPK12",  limit: 1
-    t.string  "IMEMB",  limit: 1
-    t.string  "IMIGRN", limit: 1
-    t.string  "ISPEC",  limit: 1
-    t.string  "IELL",   limit: 1
-    t.string  "IPKTCH", limit: 1
-    t.string  "IKGTCH", limit: 1
-    t.string  "IELTCH", limit: 1
-    t.string  "ISETCH", limit: 1
-    t.string  "IUGTCH", limit: 1
-    t.string  "ITOTCH", limit: 1
-    t.string  "IAIDES", limit: 1
-    t.string  "ICOSUP", limit: 1
-    t.string  "IELGUI", limit: 1
-    t.string  "ISEGUI", limit: 1
-    t.string  "ITOGUI", limit: 1
-    t.string  "ILISPE", limit: 1
-    t.string  "ILISUP", limit: 1
-    t.string  "ILEADM", limit: 1
-    t.string  "ILESUP", limit: 1
-    t.string  "ISCADM", limit: 1
-    t.string  "ISCSUP", limit: 1
-    t.string  "ISTSUP", limit: 1
-    t.string  "IOTSUP", limit: 1
-    t.index ["LEAID"], name: "index_portal_nces06_districts_on_LEAID", using: :btree
-    t.index ["NAME"], name: "index_portal_nces06_districts_on_NAME", using: :btree
-    t.index ["STID"], name: "index_portal_nces06_districts_on_STID", using: :btree
+    t.float "PKTCH"
+    t.float "KGTCH"
+    t.float "ELMTCH"
+    t.float "SECTCH"
+    t.float "UGTCH"
+    t.float "TOTTCH"
+    t.float "AIDES"
+    t.float "CORSUP"
+    t.float "ELMGUI"
+    t.float "SECGUI"
+    t.float "TOTGUI"
+    t.float "LIBSPE"
+    t.float "LIBSUP"
+    t.float "LEAADM"
+    t.float "LEASUP"
+    t.float "SCHADM"
+    t.float "SCHSUP"
+    t.float "STUSUP"
+    t.float "OTHSUP"
+    t.string "IGSLO", limit: 1
+    t.string "IGSHI", limit: 1
+    t.string "ISCH", limit: 1
+    t.string "ITEACH", limit: 1
+    t.string "IUG", limit: 1
+    t.string "IPK12", limit: 1
+    t.string "IMEMB", limit: 1
+    t.string "IMIGRN", limit: 1
+    t.string "ISPEC", limit: 1
+    t.string "IELL", limit: 1
+    t.string "IPKTCH", limit: 1
+    t.string "IKGTCH", limit: 1
+    t.string "IELTCH", limit: 1
+    t.string "ISETCH", limit: 1
+    t.string "IUGTCH", limit: 1
+    t.string "ITOTCH", limit: 1
+    t.string "IAIDES", limit: 1
+    t.string "ICOSUP", limit: 1
+    t.string "IELGUI", limit: 1
+    t.string "ISEGUI", limit: 1
+    t.string "ITOGUI", limit: 1
+    t.string "ILISPE", limit: 1
+    t.string "ILISUP", limit: 1
+    t.string "ILEADM", limit: 1
+    t.string "ILESUP", limit: 1
+    t.string "ISCADM", limit: 1
+    t.string "ISCSUP", limit: 1
+    t.string "ISTSUP", limit: 1
+    t.string "IOTSUP", limit: 1
+    t.index ["LEAID"], name: "index_portal_nces06_districts_on_LEAID"
+    t.index ["NAME"], name: "index_portal_nces06_districts_on_NAME"
+    t.index ["STID"], name: "index_portal_nces06_districts_on_STID"
   end
 
-  create_table "portal_nces06_schools", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "portal_nces06_schools", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "nces_district_id"
-    t.string  "NCESSCH",          limit: 12
-    t.string  "FIPST",            limit: 2
-    t.string  "LEAID",            limit: 7
-    t.string  "SCHNO",            limit: 5
-    t.string  "STID",             limit: 14
-    t.string  "SEASCH",           limit: 20
-    t.string  "LEANM",            limit: 60
-    t.string  "SCHNAM",           limit: 50
-    t.string  "PHONE",            limit: 10
-    t.string  "MSTREE",           limit: 30
-    t.string  "MCITY",            limit: 30
-    t.string  "MSTATE",           limit: 2
-    t.string  "MZIP",             limit: 5
-    t.string  "MZIP4",            limit: 4
-    t.string  "LSTREE",           limit: 30
-    t.string  "LCITY",            limit: 30
-    t.string  "LSTATE",           limit: 2
-    t.string  "LZIP",             limit: 5
-    t.string  "LZIP4",            limit: 4
-    t.string  "KIND",             limit: 1
-    t.string  "STATUS",           limit: 1
-    t.string  "ULOCAL",           limit: 2
-    t.float   "LATCOD",           limit: 24
-    t.float   "LONCOD",           limit: 24
-    t.string  "CDCODE",           limit: 4
-    t.string  "CONUM",            limit: 5
-    t.string  "CONAME",           limit: 30
-    t.float   "FTE",              limit: 24
-    t.string  "GSLO",             limit: 2
-    t.string  "GSHI",             limit: 2
-    t.string  "LEVEL",            limit: 1
-    t.string  "TITLEI",           limit: 1
-    t.string  "STITLI",           limit: 1
-    t.string  "MAGNET",           limit: 1
-    t.string  "CHARTR",           limit: 1
-    t.string  "SHARED",           limit: 1
+    t.string "NCESSCH", limit: 12
+    t.string "FIPST", limit: 2
+    t.string "LEAID", limit: 7
+    t.string "SCHNO", limit: 5
+    t.string "STID", limit: 14
+    t.string "SEASCH", limit: 20
+    t.string "LEANM", limit: 60
+    t.string "SCHNAM", limit: 50
+    t.string "PHONE", limit: 10
+    t.string "MSTREE", limit: 30
+    t.string "MCITY", limit: 30
+    t.string "MSTATE", limit: 2
+    t.string "MZIP", limit: 5
+    t.string "MZIP4", limit: 4
+    t.string "LSTREE", limit: 30
+    t.string "LCITY", limit: 30
+    t.string "LSTATE", limit: 2
+    t.string "LZIP", limit: 5
+    t.string "LZIP4", limit: 4
+    t.string "KIND", limit: 1
+    t.string "STATUS", limit: 1
+    t.string "ULOCAL", limit: 2
+    t.float "LATCOD"
+    t.float "LONCOD"
+    t.string "CDCODE", limit: 4
+    t.string "CONUM", limit: 5
+    t.string "CONAME", limit: 30
+    t.float "FTE"
+    t.string "GSLO", limit: 2
+    t.string "GSHI", limit: 2
+    t.string "LEVEL", limit: 1
+    t.string "TITLEI", limit: 1
+    t.string "STITLI", limit: 1
+    t.string "MAGNET", limit: 1
+    t.string "CHARTR", limit: 1
+    t.string "SHARED", limit: 1
     t.integer "FRELCH"
     t.integer "REDLCH"
     t.integer "TOTFRL"
@@ -1413,812 +1291,808 @@ ActiveRecord::Schema.define(version: 20210520131514) do
     t.integer "WHALF"
     t.integer "WHALU"
     t.integer "TOTETH"
-    t.float   "PUPTCH",           limit: 24
+    t.float "PUPTCH"
     t.integer "TOTGRD"
-    t.string  "IFTE",             limit: 1
-    t.string  "IGSLO",            limit: 1
-    t.string  "IGSHI",            limit: 1
-    t.string  "ITITLI",           limit: 1
-    t.string  "ISTITL",           limit: 1
-    t.string  "IMAGNE",           limit: 1
-    t.string  "ICHART",           limit: 1
-    t.string  "ISHARE",           limit: 1
-    t.string  "IFRELC",           limit: 1
-    t.string  "IREDLC",           limit: 1
-    t.string  "ITOTFR",           limit: 1
-    t.string  "IMIGRN",           limit: 1
-    t.string  "IPK",              limit: 1
-    t.string  "IAMPKM",           limit: 1
-    t.string  "IAMPKF",           limit: 1
-    t.string  "IAMPKU",           limit: 1
-    t.string  "IASPKM",           limit: 1
-    t.string  "IASPKF",           limit: 1
-    t.string  "IASPKU",           limit: 1
-    t.string  "IHIPKM",           limit: 1
-    t.string  "IHIPKF",           limit: 1
-    t.string  "IHIPKU",           limit: 1
-    t.string  "IBLPKM",           limit: 1
-    t.string  "IBLPKF",           limit: 1
-    t.string  "IBLPKU",           limit: 1
-    t.string  "IWHPKM",           limit: 1
-    t.string  "IWHPKF",           limit: 1
-    t.string  "IWHPKU",           limit: 1
-    t.string  "IKG",              limit: 1
-    t.string  "IAMKGM",           limit: 1
-    t.string  "IAMKGF",           limit: 1
-    t.string  "IAMKGU",           limit: 1
-    t.string  "IASKGM",           limit: 1
-    t.string  "IASKGF",           limit: 1
-    t.string  "IASKGU",           limit: 1
-    t.string  "IHIKGM",           limit: 1
-    t.string  "IHIKGF",           limit: 1
-    t.string  "IHIKGU",           limit: 1
-    t.string  "IBLKGM",           limit: 1
-    t.string  "IBLKGF",           limit: 1
-    t.string  "IBLKGU",           limit: 1
-    t.string  "IWHKGM",           limit: 1
-    t.string  "IWHKGF",           limit: 1
-    t.string  "IWHKGU",           limit: 1
-    t.string  "IG01",             limit: 1
-    t.string  "IAM01M",           limit: 1
-    t.string  "IAM01F",           limit: 1
-    t.string  "IAM01U",           limit: 1
-    t.string  "IAS01M",           limit: 1
-    t.string  "IAS01F",           limit: 1
-    t.string  "IAS01U",           limit: 1
-    t.string  "IHI01M",           limit: 1
-    t.string  "IHI01F",           limit: 1
-    t.string  "IHI01U",           limit: 1
-    t.string  "IBL01M",           limit: 1
-    t.string  "IBL01F",           limit: 1
-    t.string  "IBL01U",           limit: 1
-    t.string  "IWH01M",           limit: 1
-    t.string  "IWH01F",           limit: 1
-    t.string  "IWH01U",           limit: 1
-    t.string  "IG02",             limit: 1
-    t.string  "IAM02M",           limit: 1
-    t.string  "IAM02F",           limit: 1
-    t.string  "IAM02U",           limit: 1
-    t.string  "IAS02M",           limit: 1
-    t.string  "IAS02F",           limit: 1
-    t.string  "IAS02U",           limit: 1
-    t.string  "IHI02M",           limit: 1
-    t.string  "IHI02F",           limit: 1
-    t.string  "IHI02U",           limit: 1
-    t.string  "IBL02M",           limit: 1
-    t.string  "IBL02F",           limit: 1
-    t.string  "IBL02U",           limit: 1
-    t.string  "IWH02M",           limit: 1
-    t.string  "IWH02F",           limit: 1
-    t.string  "IWH02U",           limit: 1
-    t.string  "IG03",             limit: 1
-    t.string  "IAM03M",           limit: 1
-    t.string  "IAM03F",           limit: 1
-    t.string  "IAM03U",           limit: 1
-    t.string  "IAS03M",           limit: 1
-    t.string  "IAS03F",           limit: 1
-    t.string  "IAS03U",           limit: 1
-    t.string  "IHI03M",           limit: 1
-    t.string  "IHI03F",           limit: 1
-    t.string  "IHI03U",           limit: 1
-    t.string  "IBL03M",           limit: 1
-    t.string  "IBL03F",           limit: 1
-    t.string  "IBL03U",           limit: 1
-    t.string  "IWH03M",           limit: 1
-    t.string  "IWH03F",           limit: 1
-    t.string  "IWH03U",           limit: 1
-    t.string  "IG04",             limit: 1
-    t.string  "IAM04M",           limit: 1
-    t.string  "IAM04F",           limit: 1
-    t.string  "IAM04U",           limit: 1
-    t.string  "IAS04M",           limit: 1
-    t.string  "IAS04F",           limit: 1
-    t.string  "IAS04U",           limit: 1
-    t.string  "IHI04M",           limit: 1
-    t.string  "IHI04F",           limit: 1
-    t.string  "IHI04U",           limit: 1
-    t.string  "IBL04M",           limit: 1
-    t.string  "IBL04F",           limit: 1
-    t.string  "IBL04U",           limit: 1
-    t.string  "IWH04M",           limit: 1
-    t.string  "IWH04F",           limit: 1
-    t.string  "IWH04U",           limit: 1
-    t.string  "IG05",             limit: 1
-    t.string  "IAM05M",           limit: 1
-    t.string  "IAM05F",           limit: 1
-    t.string  "IAM05U",           limit: 1
-    t.string  "IAS05M",           limit: 1
-    t.string  "IAS05F",           limit: 1
-    t.string  "IAS05U",           limit: 1
-    t.string  "IHI05M",           limit: 1
-    t.string  "IHI05F",           limit: 1
-    t.string  "IHI05U",           limit: 1
-    t.string  "IBL05M",           limit: 1
-    t.string  "IBL05F",           limit: 1
-    t.string  "IBL05U",           limit: 1
-    t.string  "IWH05M",           limit: 1
-    t.string  "IWH05F",           limit: 1
-    t.string  "IWH05U",           limit: 1
-    t.string  "IG06",             limit: 1
-    t.string  "IAM06M",           limit: 1
-    t.string  "IAM06F",           limit: 1
-    t.string  "IAM06U",           limit: 1
-    t.string  "IAS06M",           limit: 1
-    t.string  "IAS06F",           limit: 1
-    t.string  "IAS06U",           limit: 1
-    t.string  "IHI06M",           limit: 1
-    t.string  "IHI06F",           limit: 1
-    t.string  "IHI06U",           limit: 1
-    t.string  "IBL06M",           limit: 1
-    t.string  "IBL06F",           limit: 1
-    t.string  "IBL06U",           limit: 1
-    t.string  "IWH06M",           limit: 1
-    t.string  "IWH06F",           limit: 1
-    t.string  "IWH06U",           limit: 1
-    t.string  "IG07",             limit: 1
-    t.string  "IAM07M",           limit: 1
-    t.string  "IAM07F",           limit: 1
-    t.string  "IAM07U",           limit: 1
-    t.string  "IAS07M",           limit: 1
-    t.string  "IAS07F",           limit: 1
-    t.string  "IAS07U",           limit: 1
-    t.string  "IHI07M",           limit: 1
-    t.string  "IHI07F",           limit: 1
-    t.string  "IHI07U",           limit: 1
-    t.string  "IBL07M",           limit: 1
-    t.string  "IBL07F",           limit: 1
-    t.string  "IBL07U",           limit: 1
-    t.string  "IWH07M",           limit: 1
-    t.string  "IWH07F",           limit: 1
-    t.string  "IWH07U",           limit: 1
-    t.string  "IG08",             limit: 1
-    t.string  "IAM08M",           limit: 1
-    t.string  "IAM08F",           limit: 1
-    t.string  "IAM08U",           limit: 1
-    t.string  "IAS08M",           limit: 1
-    t.string  "IAS08F",           limit: 1
-    t.string  "IAS08U",           limit: 1
-    t.string  "IHI08M",           limit: 1
-    t.string  "IHI08F",           limit: 1
-    t.string  "IHI08U",           limit: 1
-    t.string  "IBL08M",           limit: 1
-    t.string  "IBL08F",           limit: 1
-    t.string  "IBL08U",           limit: 1
-    t.string  "IWH08M",           limit: 1
-    t.string  "IWH08F",           limit: 1
-    t.string  "IWH08U",           limit: 1
-    t.string  "IG09",             limit: 1
-    t.string  "IAM09M",           limit: 1
-    t.string  "IAM09F",           limit: 1
-    t.string  "IAM09U",           limit: 1
-    t.string  "IAS09M",           limit: 1
-    t.string  "IAS09F",           limit: 1
-    t.string  "IAS09U",           limit: 1
-    t.string  "IHI09M",           limit: 1
-    t.string  "IHI09F",           limit: 1
-    t.string  "IHI09U",           limit: 1
-    t.string  "IBL09M",           limit: 1
-    t.string  "IBL09F",           limit: 1
-    t.string  "IBL09U",           limit: 1
-    t.string  "IWH09M",           limit: 1
-    t.string  "IWH09F",           limit: 1
-    t.string  "IWH09U",           limit: 1
-    t.string  "IG10",             limit: 1
-    t.string  "IAM10M",           limit: 1
-    t.string  "IAM10F",           limit: 1
-    t.string  "IAM10U",           limit: 1
-    t.string  "IAS10M",           limit: 1
-    t.string  "IAS10F",           limit: 1
-    t.string  "IAS10U",           limit: 1
-    t.string  "IHI10M",           limit: 1
-    t.string  "IHI10F",           limit: 1
-    t.string  "IHI10U",           limit: 1
-    t.string  "IBL10M",           limit: 1
-    t.string  "IBL10F",           limit: 1
-    t.string  "IBL10U",           limit: 1
-    t.string  "IWH10M",           limit: 1
-    t.string  "IWH10F",           limit: 1
-    t.string  "IWH10U",           limit: 1
-    t.string  "IG11",             limit: 1
-    t.string  "IAM11M",           limit: 1
-    t.string  "IAM11F",           limit: 1
-    t.string  "IAM11U",           limit: 1
-    t.string  "IAS11M",           limit: 1
-    t.string  "IAS11F",           limit: 1
-    t.string  "IAS11U",           limit: 1
-    t.string  "IHI11M",           limit: 1
-    t.string  "IHI11F",           limit: 1
-    t.string  "IHI11U",           limit: 1
-    t.string  "IBL11M",           limit: 1
-    t.string  "IBL11F",           limit: 1
-    t.string  "IBL11U",           limit: 1
-    t.string  "IWH11M",           limit: 1
-    t.string  "IWH11F",           limit: 1
-    t.string  "IWH11U",           limit: 1
-    t.string  "IG12",             limit: 1
-    t.string  "IAM12M",           limit: 1
-    t.string  "IAM12F",           limit: 1
-    t.string  "IAM12U",           limit: 1
-    t.string  "IAS12M",           limit: 1
-    t.string  "IAS12F",           limit: 1
-    t.string  "IAS12U",           limit: 1
-    t.string  "IHI12M",           limit: 1
-    t.string  "IHI12F",           limit: 1
-    t.string  "IHI12U",           limit: 1
-    t.string  "IBL12M",           limit: 1
-    t.string  "IBL12F",           limit: 1
-    t.string  "IBL12U",           limit: 1
-    t.string  "IWH12M",           limit: 1
-    t.string  "IWH12F",           limit: 1
-    t.string  "IWH12U",           limit: 1
-    t.string  "IUG",              limit: 1
-    t.string  "IAMUGM",           limit: 1
-    t.string  "IAMUGF",           limit: 1
-    t.string  "IAMUGU",           limit: 1
-    t.string  "IASUGM",           limit: 1
-    t.string  "IASUGF",           limit: 1
-    t.string  "IASUGU",           limit: 1
-    t.string  "IHIUGM",           limit: 1
-    t.string  "IHIUGF",           limit: 1
-    t.string  "IHIUGU",           limit: 1
-    t.string  "IBLUGM",           limit: 1
-    t.string  "IBLUGF",           limit: 1
-    t.string  "IBLUGU",           limit: 1
-    t.string  "IWHUGM",           limit: 1
-    t.string  "IWHUGF",           limit: 1
-    t.string  "IWHUGU",           limit: 1
-    t.string  "IMEMB",            limit: 1
-    t.string  "IAM",              limit: 1
-    t.string  "IAMALM",           limit: 1
-    t.string  "IAMALF",           limit: 1
-    t.string  "IAMALU",           limit: 1
-    t.string  "IASIAN",           limit: 1
-    t.string  "IASALM",           limit: 1
-    t.string  "IASALF",           limit: 1
-    t.string  "IASALU",           limit: 1
-    t.string  "IHISP",            limit: 1
-    t.string  "IHIALM",           limit: 1
-    t.string  "IHIALF",           limit: 1
-    t.string  "IHIALU",           limit: 1
-    t.string  "IBLACK",           limit: 1
-    t.string  "IBLALM",           limit: 1
-    t.string  "IBLALF",           limit: 1
-    t.string  "IBLALU",           limit: 1
-    t.string  "IWHITE",           limit: 1
-    t.string  "IWHALM",           limit: 1
-    t.string  "IWHALF",           limit: 1
-    t.string  "IWHALU",           limit: 1
-    t.string  "IETH",             limit: 1
-    t.string  "IPUTCH",           limit: 1
-    t.string  "ITOTGR",           limit: 1
-    t.index ["NCESSCH"], name: "index_portal_nces06_schools_on_NCESSCH", using: :btree
-    t.index ["SCHNAM"], name: "index_portal_nces06_schools_on_SCHNAM", using: :btree
-    t.index ["SEASCH"], name: "index_portal_nces06_schools_on_SEASCH", using: :btree
-    t.index ["STID"], name: "index_portal_nces06_schools_on_STID", using: :btree
-    t.index ["nces_district_id"], name: "index_portal_nces06_schools_on_nces_district_id", using: :btree
+    t.string "IFTE", limit: 1
+    t.string "IGSLO", limit: 1
+    t.string "IGSHI", limit: 1
+    t.string "ITITLI", limit: 1
+    t.string "ISTITL", limit: 1
+    t.string "IMAGNE", limit: 1
+    t.string "ICHART", limit: 1
+    t.string "ISHARE", limit: 1
+    t.string "IFRELC", limit: 1
+    t.string "IREDLC", limit: 1
+    t.string "ITOTFR", limit: 1
+    t.string "IMIGRN", limit: 1
+    t.string "IPK", limit: 1
+    t.string "IAMPKM", limit: 1
+    t.string "IAMPKF", limit: 1
+    t.string "IAMPKU", limit: 1
+    t.string "IASPKM", limit: 1
+    t.string "IASPKF", limit: 1
+    t.string "IASPKU", limit: 1
+    t.string "IHIPKM", limit: 1
+    t.string "IHIPKF", limit: 1
+    t.string "IHIPKU", limit: 1
+    t.string "IBLPKM", limit: 1
+    t.string "IBLPKF", limit: 1
+    t.string "IBLPKU", limit: 1
+    t.string "IWHPKM", limit: 1
+    t.string "IWHPKF", limit: 1
+    t.string "IWHPKU", limit: 1
+    t.string "IKG", limit: 1
+    t.string "IAMKGM", limit: 1
+    t.string "IAMKGF", limit: 1
+    t.string "IAMKGU", limit: 1
+    t.string "IASKGM", limit: 1
+    t.string "IASKGF", limit: 1
+    t.string "IASKGU", limit: 1
+    t.string "IHIKGM", limit: 1
+    t.string "IHIKGF", limit: 1
+    t.string "IHIKGU", limit: 1
+    t.string "IBLKGM", limit: 1
+    t.string "IBLKGF", limit: 1
+    t.string "IBLKGU", limit: 1
+    t.string "IWHKGM", limit: 1
+    t.string "IWHKGF", limit: 1
+    t.string "IWHKGU", limit: 1
+    t.string "IG01", limit: 1
+    t.string "IAM01M", limit: 1
+    t.string "IAM01F", limit: 1
+    t.string "IAM01U", limit: 1
+    t.string "IAS01M", limit: 1
+    t.string "IAS01F", limit: 1
+    t.string "IAS01U", limit: 1
+    t.string "IHI01M", limit: 1
+    t.string "IHI01F", limit: 1
+    t.string "IHI01U", limit: 1
+    t.string "IBL01M", limit: 1
+    t.string "IBL01F", limit: 1
+    t.string "IBL01U", limit: 1
+    t.string "IWH01M", limit: 1
+    t.string "IWH01F", limit: 1
+    t.string "IWH01U", limit: 1
+    t.string "IG02", limit: 1
+    t.string "IAM02M", limit: 1
+    t.string "IAM02F", limit: 1
+    t.string "IAM02U", limit: 1
+    t.string "IAS02M", limit: 1
+    t.string "IAS02F", limit: 1
+    t.string "IAS02U", limit: 1
+    t.string "IHI02M", limit: 1
+    t.string "IHI02F", limit: 1
+    t.string "IHI02U", limit: 1
+    t.string "IBL02M", limit: 1
+    t.string "IBL02F", limit: 1
+    t.string "IBL02U", limit: 1
+    t.string "IWH02M", limit: 1
+    t.string "IWH02F", limit: 1
+    t.string "IWH02U", limit: 1
+    t.string "IG03", limit: 1
+    t.string "IAM03M", limit: 1
+    t.string "IAM03F", limit: 1
+    t.string "IAM03U", limit: 1
+    t.string "IAS03M", limit: 1
+    t.string "IAS03F", limit: 1
+    t.string "IAS03U", limit: 1
+    t.string "IHI03M", limit: 1
+    t.string "IHI03F", limit: 1
+    t.string "IHI03U", limit: 1
+    t.string "IBL03M", limit: 1
+    t.string "IBL03F", limit: 1
+    t.string "IBL03U", limit: 1
+    t.string "IWH03M", limit: 1
+    t.string "IWH03F", limit: 1
+    t.string "IWH03U", limit: 1
+    t.string "IG04", limit: 1
+    t.string "IAM04M", limit: 1
+    t.string "IAM04F", limit: 1
+    t.string "IAM04U", limit: 1
+    t.string "IAS04M", limit: 1
+    t.string "IAS04F", limit: 1
+    t.string "IAS04U", limit: 1
+    t.string "IHI04M", limit: 1
+    t.string "IHI04F", limit: 1
+    t.string "IHI04U", limit: 1
+    t.string "IBL04M", limit: 1
+    t.string "IBL04F", limit: 1
+    t.string "IBL04U", limit: 1
+    t.string "IWH04M", limit: 1
+    t.string "IWH04F", limit: 1
+    t.string "IWH04U", limit: 1
+    t.string "IG05", limit: 1
+    t.string "IAM05M", limit: 1
+    t.string "IAM05F", limit: 1
+    t.string "IAM05U", limit: 1
+    t.string "IAS05M", limit: 1
+    t.string "IAS05F", limit: 1
+    t.string "IAS05U", limit: 1
+    t.string "IHI05M", limit: 1
+    t.string "IHI05F", limit: 1
+    t.string "IHI05U", limit: 1
+    t.string "IBL05M", limit: 1
+    t.string "IBL05F", limit: 1
+    t.string "IBL05U", limit: 1
+    t.string "IWH05M", limit: 1
+    t.string "IWH05F", limit: 1
+    t.string "IWH05U", limit: 1
+    t.string "IG06", limit: 1
+    t.string "IAM06M", limit: 1
+    t.string "IAM06F", limit: 1
+    t.string "IAM06U", limit: 1
+    t.string "IAS06M", limit: 1
+    t.string "IAS06F", limit: 1
+    t.string "IAS06U", limit: 1
+    t.string "IHI06M", limit: 1
+    t.string "IHI06F", limit: 1
+    t.string "IHI06U", limit: 1
+    t.string "IBL06M", limit: 1
+    t.string "IBL06F", limit: 1
+    t.string "IBL06U", limit: 1
+    t.string "IWH06M", limit: 1
+    t.string "IWH06F", limit: 1
+    t.string "IWH06U", limit: 1
+    t.string "IG07", limit: 1
+    t.string "IAM07M", limit: 1
+    t.string "IAM07F", limit: 1
+    t.string "IAM07U", limit: 1
+    t.string "IAS07M", limit: 1
+    t.string "IAS07F", limit: 1
+    t.string "IAS07U", limit: 1
+    t.string "IHI07M", limit: 1
+    t.string "IHI07F", limit: 1
+    t.string "IHI07U", limit: 1
+    t.string "IBL07M", limit: 1
+    t.string "IBL07F", limit: 1
+    t.string "IBL07U", limit: 1
+    t.string "IWH07M", limit: 1
+    t.string "IWH07F", limit: 1
+    t.string "IWH07U", limit: 1
+    t.string "IG08", limit: 1
+    t.string "IAM08M", limit: 1
+    t.string "IAM08F", limit: 1
+    t.string "IAM08U", limit: 1
+    t.string "IAS08M", limit: 1
+    t.string "IAS08F", limit: 1
+    t.string "IAS08U", limit: 1
+    t.string "IHI08M", limit: 1
+    t.string "IHI08F", limit: 1
+    t.string "IHI08U", limit: 1
+    t.string "IBL08M", limit: 1
+    t.string "IBL08F", limit: 1
+    t.string "IBL08U", limit: 1
+    t.string "IWH08M", limit: 1
+    t.string "IWH08F", limit: 1
+    t.string "IWH08U", limit: 1
+    t.string "IG09", limit: 1
+    t.string "IAM09M", limit: 1
+    t.string "IAM09F", limit: 1
+    t.string "IAM09U", limit: 1
+    t.string "IAS09M", limit: 1
+    t.string "IAS09F", limit: 1
+    t.string "IAS09U", limit: 1
+    t.string "IHI09M", limit: 1
+    t.string "IHI09F", limit: 1
+    t.string "IHI09U", limit: 1
+    t.string "IBL09M", limit: 1
+    t.string "IBL09F", limit: 1
+    t.string "IBL09U", limit: 1
+    t.string "IWH09M", limit: 1
+    t.string "IWH09F", limit: 1
+    t.string "IWH09U", limit: 1
+    t.string "IG10", limit: 1
+    t.string "IAM10M", limit: 1
+    t.string "IAM10F", limit: 1
+    t.string "IAM10U", limit: 1
+    t.string "IAS10M", limit: 1
+    t.string "IAS10F", limit: 1
+    t.string "IAS10U", limit: 1
+    t.string "IHI10M", limit: 1
+    t.string "IHI10F", limit: 1
+    t.string "IHI10U", limit: 1
+    t.string "IBL10M", limit: 1
+    t.string "IBL10F", limit: 1
+    t.string "IBL10U", limit: 1
+    t.string "IWH10M", limit: 1
+    t.string "IWH10F", limit: 1
+    t.string "IWH10U", limit: 1
+    t.string "IG11", limit: 1
+    t.string "IAM11M", limit: 1
+    t.string "IAM11F", limit: 1
+    t.string "IAM11U", limit: 1
+    t.string "IAS11M", limit: 1
+    t.string "IAS11F", limit: 1
+    t.string "IAS11U", limit: 1
+    t.string "IHI11M", limit: 1
+    t.string "IHI11F", limit: 1
+    t.string "IHI11U", limit: 1
+    t.string "IBL11M", limit: 1
+    t.string "IBL11F", limit: 1
+    t.string "IBL11U", limit: 1
+    t.string "IWH11M", limit: 1
+    t.string "IWH11F", limit: 1
+    t.string "IWH11U", limit: 1
+    t.string "IG12", limit: 1
+    t.string "IAM12M", limit: 1
+    t.string "IAM12F", limit: 1
+    t.string "IAM12U", limit: 1
+    t.string "IAS12M", limit: 1
+    t.string "IAS12F", limit: 1
+    t.string "IAS12U", limit: 1
+    t.string "IHI12M", limit: 1
+    t.string "IHI12F", limit: 1
+    t.string "IHI12U", limit: 1
+    t.string "IBL12M", limit: 1
+    t.string "IBL12F", limit: 1
+    t.string "IBL12U", limit: 1
+    t.string "IWH12M", limit: 1
+    t.string "IWH12F", limit: 1
+    t.string "IWH12U", limit: 1
+    t.string "IUG", limit: 1
+    t.string "IAMUGM", limit: 1
+    t.string "IAMUGF", limit: 1
+    t.string "IAMUGU", limit: 1
+    t.string "IASUGM", limit: 1
+    t.string "IASUGF", limit: 1
+    t.string "IASUGU", limit: 1
+    t.string "IHIUGM", limit: 1
+    t.string "IHIUGF", limit: 1
+    t.string "IHIUGU", limit: 1
+    t.string "IBLUGM", limit: 1
+    t.string "IBLUGF", limit: 1
+    t.string "IBLUGU", limit: 1
+    t.string "IWHUGM", limit: 1
+    t.string "IWHUGF", limit: 1
+    t.string "IWHUGU", limit: 1
+    t.string "IMEMB", limit: 1
+    t.string "IAM", limit: 1
+    t.string "IAMALM", limit: 1
+    t.string "IAMALF", limit: 1
+    t.string "IAMALU", limit: 1
+    t.string "IASIAN", limit: 1
+    t.string "IASALM", limit: 1
+    t.string "IASALF", limit: 1
+    t.string "IASALU", limit: 1
+    t.string "IHISP", limit: 1
+    t.string "IHIALM", limit: 1
+    t.string "IHIALF", limit: 1
+    t.string "IHIALU", limit: 1
+    t.string "IBLACK", limit: 1
+    t.string "IBLALM", limit: 1
+    t.string "IBLALF", limit: 1
+    t.string "IBLALU", limit: 1
+    t.string "IWHITE", limit: 1
+    t.string "IWHALM", limit: 1
+    t.string "IWHALF", limit: 1
+    t.string "IWHALU", limit: 1
+    t.string "IETH", limit: 1
+    t.string "IPUTCH", limit: 1
+    t.string "ITOTGR", limit: 1
+    t.index ["NCESSCH"], name: "index_portal_nces06_schools_on_NCESSCH"
+    t.index ["SCHNAM"], name: "index_portal_nces06_schools_on_SCHNAM"
+    t.index ["SEASCH"], name: "index_portal_nces06_schools_on_SEASCH"
+    t.index ["STID"], name: "index_portal_nces06_schools_on_STID"
+    t.index ["nces_district_id"], name: "index_portal_nces06_schools_on_nces_district_id"
   end
 
-  create_table "portal_offering_activity_feedbacks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.boolean  "enable_text_feedback",               default: false
-    t.integer  "max_score",                          default: 10
-    t.string   "score_type",                         default: "none"
-    t.integer  "activity_id"
-    t.integer  "portal_offering_id"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.boolean  "use_rubric"
-    t.text     "rubric",               limit: 65535
-  end
-
-  create_table "portal_offering_embeddable_metadata", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "offering_id"
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.boolean  "enable_score",         default: false
-    t.integer  "max_score"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.boolean  "enable_text_feedback", default: false
-    t.index ["offering_id", "embeddable_id", "embeddable_type"], name: "index_portal_offering_metadata", unique: true, using: :btree
-  end
-
-  create_table "portal_offerings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",             limit: 36
-    t.string   "status"
-    t.integer  "clazz_id"
-    t.integer  "runnable_id"
-    t.string   "runnable_type"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.boolean  "active",                      default: true
-    t.boolean  "default_offering",            default: false
-    t.integer  "position",                    default: 0
-    t.boolean  "anonymous_report",            default: false
-    t.boolean  "locked",                      default: false
-    t.index ["clazz_id"], name: "index_portal_offerings_on_clazz_id", using: :btree
-    t.index ["runnable_id"], name: "index_portal_offerings_on_runnable_id", using: :btree
-    t.index ["runnable_type"], name: "index_portal_offerings_on_runnable_type", using: :btree
-  end
-
-  create_table "portal_permission_forms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "name"
-    t.string   "url"
+  create_table "portal_offering_activity_feedbacks", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.boolean "enable_text_feedback", default: false
+    t.integer "max_score", default: 10
+    t.string "score_type", default: "none"
+    t.integer "activity_id"
+    t.integer "portal_offering_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer  "project_id"
+    t.boolean "use_rubric"
+    t.text "rubric"
   end
 
-  create_table "portal_school_memberships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",        limit: 36
-    t.string   "name"
-    t.text     "description", limit: 16777215
+  create_table "portal_offering_embeddable_metadata", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "offering_id"
+    t.integer "embeddable_id"
+    t.string "embeddable_type"
+    t.boolean "enable_score", default: false
+    t.integer "max_score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "enable_text_feedback", default: false
+    t.index ["offering_id", "embeddable_id", "embeddable_type"], name: "index_portal_offering_metadata", unique: true
+  end
+
+  create_table "portal_offerings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "status"
+    t.integer "clazz_id"
+    t.integer "runnable_id"
+    t.string "runnable_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "active", default: true
+    t.boolean "default_offering", default: false
+    t.integer "position", default: 0
+    t.boolean "anonymous_report", default: false
+    t.boolean "locked", default: false
+    t.index ["clazz_id"], name: "index_portal_offerings_on_clazz_id"
+    t.index ["runnable_id"], name: "index_portal_offerings_on_runnable_id"
+    t.index ["runnable_type"], name: "index_portal_offerings_on_runnable_type"
+  end
+
+  create_table "portal_permission_forms", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "project_id"
+  end
+
+  create_table "portal_school_memberships", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
     t.datetime "start_time"
     t.datetime "end_time"
-    t.integer  "member_id"
-    t.string   "member_type"
-    t.integer  "school_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.index ["member_type", "member_id"], name: "member_type_id_index", using: :btree
-    t.index ["school_id", "member_id", "member_type"], name: "school_memberships_long_idx", using: :btree
+    t.integer "member_id"
+    t.string "member_type"
+    t.integer "school_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["member_type", "member_id"], name: "member_type_id_index"
+    t.index ["school_id", "member_id", "member_type"], name: "school_memberships_long_idx"
   end
 
-  create_table "portal_schools", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",           limit: 36
-    t.string   "name"
-    t.text     "description",    limit: 16777215
-    t.integer  "district_id"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.integer  "nces_school_id"
-    t.string   "state",          limit: 80
-    t.string   "zipcode",        limit: 20
-    t.string   "ncessch",        limit: 12
-    t.integer  "country_id"
-    t.text     "city",           limit: 16777215
-    t.index ["country_id"], name: "index_portal_schools_on_country_id", using: :btree
-    t.index ["district_id"], name: "index_portal_schools_on_district_id", using: :btree
-    t.index ["name"], name: "index_portal_schools_on_name", using: :btree
-    t.index ["nces_school_id"], name: "index_portal_schools_on_nces_school_id", using: :btree
-    t.index ["state"], name: "index_portal_schools_on_state", using: :btree
+  create_table "portal_schools", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.integer "district_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "nces_school_id"
+    t.string "state", limit: 80
+    t.string "zipcode", limit: 20
+    t.string "ncessch", limit: 12
+    t.integer "country_id"
+    t.text "city", size: :medium
+    t.index ["country_id"], name: "index_portal_schools_on_country_id"
+    t.index ["district_id"], name: "index_portal_schools_on_district_id"
+    t.index ["name"], name: "index_portal_schools_on_name"
+    t.index ["nces_school_id"], name: "index_portal_schools_on_nces_school_id"
+    t.index ["state"], name: "index_portal_schools_on_state"
   end
 
-  create_table "portal_student_clazzes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",        limit: 36
-    t.string   "name"
-    t.text     "description", limit: 16777215
+  create_table "portal_student_clazzes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
     t.datetime "start_time"
     t.datetime "end_time"
-    t.integer  "clazz_id"
-    t.integer  "student_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.index ["clazz_id"], name: "index_portal_student_clazzes_on_clazz_id", using: :btree
-    t.index ["student_id", "clazz_id"], name: "student_class_index", using: :btree
+    t.integer "clazz_id"
+    t.integer "student_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clazz_id"], name: "index_portal_student_clazzes_on_clazz_id"
+    t.index ["student_id", "clazz_id"], name: "student_class_index"
   end
 
-  create_table "portal_student_permission_forms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.boolean  "signed"
-    t.integer  "portal_student_id"
-    t.integer  "portal_permission_form_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.index ["portal_permission_form_id"], name: "p_s_p_form_id", using: :btree
-    t.index ["portal_student_id"], name: "index_portal_student_permission_forms_on_portal_student_id", using: :btree
+  create_table "portal_student_permission_forms", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.boolean "signed"
+    t.integer "portal_student_id"
+    t.integer "portal_permission_form_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["portal_permission_form_id"], name: "p_s_p_form_id"
+    t.index ["portal_student_id"], name: "index_portal_student_permission_forms_on_portal_student_id"
   end
 
-  create_table "portal_students", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",           limit: 36
-    t.integer  "user_id"
-    t.integer  "grade_level_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.index ["user_id"], name: "index_portal_students_on_user_id", using: :btree
+  create_table "portal_students", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.integer "user_id"
+    t.integer "grade_level_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_portal_students_on_user_id"
   end
 
-  create_table "portal_subjects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",        limit: 36
-    t.string   "name"
-    t.text     "description", limit: 16777215
-    t.integer  "teacher_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+  create_table "portal_subjects", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.integer "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "portal_teacher_clazzes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",        limit: 36
-    t.string   "name"
-    t.text     "description", limit: 16777215
+  create_table "portal_teacher_clazzes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
     t.datetime "start_time"
     t.datetime "end_time"
-    t.integer  "clazz_id"
-    t.integer  "teacher_id"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.boolean  "active",                       default: true
-    t.integer  "position",                     default: 0
-    t.index ["clazz_id"], name: "index_portal_teacher_clazzes_on_clazz_id", using: :btree
-    t.index ["teacher_id"], name: "index_portal_teacher_clazzes_on_teacher_id", using: :btree
+    t.integer "clazz_id"
+    t.integer "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "active", default: true
+    t.integer "position", default: 0
+    t.index ["clazz_id"], name: "index_portal_teacher_clazzes_on_clazz_id"
+    t.index ["teacher_id"], name: "index_portal_teacher_clazzes_on_teacher_id"
   end
 
-  create_table "portal_teacher_full_status", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "portal_teacher_full_status", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "offering_id"
     t.integer "teacher_id"
     t.boolean "offering_collapsed"
-    t.index ["offering_id"], name: "index_portal_teacher_full_status_on_offering_id", using: :btree
-    t.index ["teacher_id"], name: "index_portal_teacher_full_status_on_teacher_id", using: :btree
+    t.index ["offering_id"], name: "index_portal_teacher_full_status_on_offering_id"
+    t.index ["teacher_id"], name: "index_portal_teacher_full_status_on_teacher_id"
   end
 
-  create_table "portal_teachers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uuid",                   limit: 36
-    t.integer  "user_id"
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.integer  "offerings_count",                   default: 0
-    t.integer  "left_pane_submenu_item"
-    t.index ["user_id"], name: "index_portal_teachers_on_user_id", using: :btree
+  create_table "portal_teachers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uuid", limit: 36
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "offerings_count", default: 0
+    t.integer "left_pane_submenu_item"
+    t.index ["user_id"], name: "index_portal_teachers_on_user_id"
   end
 
-  create_table "report_embeddable_filters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "offering_id"
-    t.text     "embeddables", limit: 16777215
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.boolean  "ignore"
-    t.index ["offering_id"], name: "index_report_embeddable_filters_on_offering_id", using: :btree
+  create_table "report_embeddable_filters", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "offering_id"
+    t.text "embeddables", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "ignore"
+    t.index ["offering_id"], name: "index_report_embeddable_filters_on_offering_id"
   end
 
-  create_table "report_learner_activity", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "report_learner_activity", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "activity_id"
-    t.float   "complete_percent", limit: 24
-    t.index ["activity_id"], name: "index_report_learner_activity_on_activity_id", using: :btree
-    t.index ["learner_id"], name: "index_report_learner_activity_on_learner_id", using: :btree
+    t.float "complete_percent"
+    t.index ["activity_id"], name: "index_report_learner_activity_on_activity_id"
+    t.index ["learner_id"], name: "index_report_learner_activity_on_learner_id"
   end
 
-  create_table "report_learners", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.integer  "student_id"
-    t.integer  "user_id"
-    t.integer  "offering_id"
-    t.integer  "class_id"
+  create_table "report_learners", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
+    t.integer "student_id"
+    t.integer "user_id"
+    t.integer "offering_id"
+    t.integer "class_id"
     t.datetime "last_run"
     t.datetime "last_report"
-    t.string   "offering_name"
-    t.string   "teachers_name"
-    t.string   "student_name"
-    t.string   "username"
-    t.string   "school_name"
-    t.string   "class_name"
-    t.integer  "runnable_id"
-    t.string   "runnable_name"
-    t.integer  "school_id"
-    t.integer  "num_answerables"
-    t.integer  "num_answered"
-    t.integer  "num_correct"
-    t.text     "answers",              limit: 4294967295
-    t.string   "runnable_type"
-    t.float    "complete_percent",     limit: 24
-    t.text     "permission_forms",     limit: 16777215
-    t.integer  "num_submitted"
-    t.string   "teachers_district"
-    t.string   "teachers_state"
-    t.string   "teachers_email"
-    t.string   "permission_forms_id"
-    t.string   "teachers_id"
-    t.text     "teachers_map",         limit: 65535
-    t.text     "permission_forms_map", limit: 65535
-    t.index ["class_id"], name: "index_report_learners_on_class_id", using: :btree
-    t.index ["last_run"], name: "index_report_learners_on_last_run", using: :btree
-    t.index ["learner_id"], name: "index_report_learners_on_learner_id", using: :btree
-    t.index ["offering_id"], name: "index_report_learners_on_offering_id", using: :btree
-    t.index ["runnable_id", "runnable_type"], name: "index_report_learners_on_runnable_id_and_runnable_type", using: :btree
-    t.index ["runnable_id"], name: "index_report_learners_on_runnable_id", using: :btree
-    t.index ["school_id"], name: "index_report_learners_on_school_id", using: :btree
-    t.index ["student_id"], name: "index_report_learners_on_student_id", using: :btree
+    t.string "offering_name"
+    t.string "teachers_name"
+    t.string "student_name"
+    t.string "username"
+    t.string "school_name"
+    t.string "class_name"
+    t.integer "runnable_id"
+    t.string "runnable_name"
+    t.integer "school_id"
+    t.integer "num_answerables"
+    t.integer "num_answered"
+    t.integer "num_correct"
+    t.text "answers", size: :long
+    t.string "runnable_type"
+    t.float "complete_percent"
+    t.text "permission_forms", size: :medium
+    t.integer "num_submitted"
+    t.string "teachers_district"
+    t.string "teachers_state"
+    t.string "teachers_email"
+    t.string "permission_forms_id"
+    t.string "teachers_id"
+    t.text "teachers_map"
+    t.text "permission_forms_map"
+    t.index ["class_id"], name: "index_report_learners_on_class_id"
+    t.index ["last_run"], name: "index_report_learners_on_last_run"
+    t.index ["learner_id"], name: "index_report_learners_on_learner_id"
+    t.index ["offering_id"], name: "index_report_learners_on_offering_id"
+    t.index ["runnable_id", "runnable_type"], name: "index_report_learners_on_runnable_id_and_runnable_type"
+    t.index ["runnable_id"], name: "index_report_learners_on_runnable_id"
+    t.index ["school_id"], name: "index_report_learners_on_school_id"
+    t.index ["student_id"], name: "index_report_learners_on_student_id"
   end
 
-  create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string  "title"
+  create_table "roles", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "title"
     t.integer "position"
-    t.string  "uuid",     limit: 36
+    t.string "uuid", limit: 36
   end
 
-  create_table "roles_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "roles_users", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "role_id"
     t.integer "user_id"
-    t.index ["role_id", "user_id"], name: "index_roles_users_on_role_id_and_user_id", using: :btree
-    t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id", using: :btree
+    t.index ["role_id", "user_id"], name: "index_roles_users_on_role_id_and_user_id"
+    t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
   end
 
-  create_table "saveable_external_link_urls", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "external_link_id"
-    t.integer  "bundle_content_id"
-    t.integer  "position"
-    t.text     "url",               limit: 65535
-    t.boolean  "is_final"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.text     "feedback",          limit: 65535
-    t.boolean  "has_been_reviewed",               default: false
-    t.integer  "score"
-    t.index ["external_link_id"], name: "index_saveable_external_link_urls_on_external_link_id", using: :btree
+  create_table "saveable_external_link_urls", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "external_link_id"
+    t.integer "position"
+    t.text "url"
+    t.boolean "is_final"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "feedback"
+    t.boolean "has_been_reviewed", default: false
+    t.integer "score"
+    t.index ["external_link_id"], name: "index_saveable_external_link_urls_on_external_link_id"
   end
 
-  create_table "saveable_external_links", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "embeddable_id"
-    t.string   "embeddable_type"
-    t.integer  "learner_id"
-    t.integer  "offering_id"
-    t.integer  "response_count"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["embeddable_id", "embeddable_type"], name: "svbl_xtrn_links_poly", using: :btree
-    t.index ["learner_id"], name: "index_saveable_external_links_on_learner_id", using: :btree
-    t.index ["offering_id"], name: "index_saveable_external_links_on_offering_id", using: :btree
+  create_table "saveable_external_links", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "embeddable_id"
+    t.string "embeddable_type"
+    t.integer "learner_id"
+    t.integer "offering_id"
+    t.integer "response_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["embeddable_id", "embeddable_type"], name: "svbl_xtrn_links_poly"
+    t.index ["learner_id"], name: "index_saveable_external_links_on_learner_id"
+    t.index ["offering_id"], name: "index_saveable_external_links_on_offering_id"
   end
 
-  create_table "saveable_image_question_answers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "image_question_id"
-    t.integer  "bundle_content_id"
-    t.integer  "blob_id"
-    t.integer  "position"
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.text     "note",              limit: 16777215
-    t.string   "uuid",              limit: 36
-    t.boolean  "is_final"
-    t.text     "feedback",          limit: 65535
-    t.boolean  "has_been_reviewed",                  default: false
-    t.integer  "score"
-    t.index ["image_question_id", "position"], name: "i_q_id_and_position_index", using: :btree
+  create_table "saveable_image_question_answers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "image_question_id"
+    t.integer "blob_id"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "note", size: :medium
+    t.string "uuid", limit: 36
+    t.boolean "is_final"
+    t.text "feedback"
+    t.boolean "has_been_reviewed", default: false
+    t.integer "score"
+    t.index ["image_question_id", "position"], name: "i_q_id_and_position_index"
   end
 
-  create_table "saveable_image_questions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.integer  "offering_id"
-    t.integer  "image_question_id"
-    t.integer  "response_count",               default: 0
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
-    t.string   "uuid",              limit: 36
-    t.index ["image_question_id"], name: "index_saveable_image_questions_on_image_question_id", using: :btree
-    t.index ["learner_id"], name: "index_saveable_image_questions_on_learner_id", using: :btree
-    t.index ["offering_id"], name: "index_saveable_image_questions_on_offering_id", using: :btree
+  create_table "saveable_image_questions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
+    t.integer "offering_id"
+    t.integer "image_question_id"
+    t.integer "response_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "uuid", limit: 36
+    t.index ["image_question_id"], name: "index_saveable_image_questions_on_image_question_id"
+    t.index ["learner_id"], name: "index_saveable_image_questions_on_learner_id"
+    t.index ["offering_id"], name: "index_saveable_image_questions_on_offering_id"
   end
 
-  create_table "saveable_interactive_states", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "interactive_id"
-    t.integer  "bundle_content_id"
-    t.integer  "position"
-    t.text     "state",             limit: 4294967295
-    t.boolean  "is_final"
-    t.text     "feedback",          limit: 65535
-    t.boolean  "has_been_reviewed",                    default: false
-    t.integer  "score"
-    t.datetime "created_at",                                           null: false
-    t.datetime "updated_at",                                           null: false
-    t.index ["interactive_id", "position"], name: "inter_id_and_position_index", using: :btree
+  create_table "saveable_interactive_states", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "interactive_id"
+    t.integer "position"
+    t.text "state", size: :long
+    t.boolean "is_final"
+    t.text "feedback"
+    t.boolean "has_been_reviewed", default: false
+    t.integer "score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["interactive_id", "position"], name: "inter_id_and_position_index"
   end
 
-  create_table "saveable_interactives", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.integer  "offering_id"
-    t.integer  "response_count"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.integer  "iframe_id"
+  create_table "saveable_interactives", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
+    t.integer "offering_id"
+    t.integer "response_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "iframe_id"
   end
 
-  create_table "saveable_multiple_choice_answers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "multiple_choice_id"
-    t.integer  "bundle_content_id"
-    t.integer  "position"
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
-    t.string   "uuid",               limit: 36
-    t.boolean  "is_final"
-    t.text     "feedback",           limit: 65535
-    t.boolean  "has_been_reviewed",                default: false
-    t.integer  "score"
-    t.index ["multiple_choice_id", "position"], name: "m_c_id_and_position_index", using: :btree
+  create_table "saveable_multiple_choice_answers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "multiple_choice_id"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "uuid", limit: 36
+    t.boolean "is_final"
+    t.text "feedback"
+    t.boolean "has_been_reviewed", default: false
+    t.integer "score"
+    t.index ["multiple_choice_id", "position"], name: "m_c_id_and_position_index"
   end
 
-  create_table "saveable_multiple_choice_rationale_choices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "choice_id"
-    t.integer  "answer_id"
-    t.string   "rationale"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.string   "uuid",       limit: 36
-    t.index ["answer_id"], name: "index_saveable_multiple_choice_rationale_choices_on_answer_id", using: :btree
-    t.index ["choice_id"], name: "index_saveable_multiple_choice_rationale_choices_on_choice_id", using: :btree
+  create_table "saveable_multiple_choice_rationale_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "choice_id"
+    t.integer "answer_id"
+    t.string "rationale"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "uuid", limit: 36
+    t.index ["answer_id"], name: "index_saveable_multiple_choice_rationale_choices_on_answer_id"
+    t.index ["choice_id"], name: "index_saveable_multiple_choice_rationale_choices_on_choice_id"
   end
 
-  create_table "saveable_multiple_choices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.integer  "multiple_choice_id"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.integer  "offering_id"
-    t.integer  "response_count",                default: 0
-    t.string   "uuid",               limit: 36
-    t.index ["learner_id"], name: "index_saveable_multiple_choices_on_learner_id", using: :btree
-    t.index ["multiple_choice_id"], name: "index_saveable_multiple_choices_on_multiple_choice_id", using: :btree
-    t.index ["offering_id"], name: "index_saveable_multiple_choices_on_offering_id", using: :btree
+  create_table "saveable_multiple_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
+    t.integer "multiple_choice_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "offering_id"
+    t.integer "response_count", default: 0
+    t.string "uuid", limit: 36
+    t.index ["learner_id"], name: "index_saveable_multiple_choices_on_learner_id"
+    t.index ["multiple_choice_id"], name: "index_saveable_multiple_choices_on_multiple_choice_id"
+    t.index ["offering_id"], name: "index_saveable_multiple_choices_on_offering_id"
   end
 
-  create_table "saveable_open_response_answers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "open_response_id"
-    t.integer  "bundle_content_id"
-    t.integer  "position"
-    t.text     "answer",            limit: 16777215
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.boolean  "is_final"
-    t.text     "feedback",          limit: 65535
-    t.boolean  "has_been_reviewed",                  default: false
-    t.integer  "score"
-    t.index ["open_response_id", "position"], name: "o_r_id_and_position_index", using: :btree
+  create_table "saveable_open_response_answers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "open_response_id"
+    t.integer "bundle_content_id"
+    t.integer "position"
+    t.text "answer", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_final"
+    t.text "feedback"
+    t.boolean "has_been_reviewed", default: false
+    t.integer "score"
+    t.index ["open_response_id", "position"], name: "o_r_id_and_position_index"
   end
 
-  create_table "saveable_open_responses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.integer  "open_response_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.integer  "offering_id"
-    t.integer  "response_count",   default: 0
-    t.index ["learner_id"], name: "index_saveable_open_responses_on_learner_id", using: :btree
-    t.index ["offering_id"], name: "index_saveable_open_responses_on_offering_id", using: :btree
-    t.index ["open_response_id"], name: "index_saveable_open_responses_on_open_response_id", using: :btree
+  create_table "saveable_open_responses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
+    t.integer "open_response_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "offering_id"
+    t.integer "response_count", default: 0
+    t.index ["learner_id"], name: "index_saveable_open_responses_on_learner_id"
+    t.index ["offering_id"], name: "index_saveable_open_responses_on_offering_id"
+    t.index ["open_response_id"], name: "index_saveable_open_responses_on_open_response_id"
   end
 
-  create_table "saveable_sparks_measuring_resistance", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "learner_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.integer  "offering_id"
-    t.index ["learner_id"], name: "index_saveable_sparks_measuring_resistance_on_learner_id", using: :btree
-    t.index ["offering_id"], name: "index_saveable_sparks_measuring_resistance_on_offering_id", using: :btree
+  create_table "saveable_sparks_measuring_resistance", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "learner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "offering_id"
+    t.index ["learner_id"], name: "index_saveable_sparks_measuring_resistance_on_learner_id"
+    t.index ["offering_id"], name: "index_saveable_sparks_measuring_resistance_on_offering_id"
   end
 
-  create_table "saveable_sparks_measuring_resistance_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "measuring_resistance_id"
-    t.integer  "position"
-    t.text     "content",                 limit: 16777215
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+  create_table "saveable_sparks_measuring_resistance_reports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "measuring_resistance_id"
+    t.integer "position"
+    t.text "content", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "sections", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "user_id"
-    t.integer  "activity_id"
-    t.string   "uuid",               limit: 36
-    t.string   "name"
-    t.text     "description",        limit: 16777215
-    t.integer  "position"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
-    t.boolean  "teacher_only",                        default: false
-    t.string   "publication_status"
-    t.index ["activity_id", "position"], name: "index_sections_on_activity_id_and_position", using: :btree
-    t.index ["position"], name: "index_sections_on_position", using: :btree
+  create_table "sections", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "activity_id"
+    t.string "uuid", limit: 36
+    t.string "name"
+    t.text "description", size: :medium
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "teacher_only", default: false
+    t.string "publication_status"
+    t.index ["activity_id", "position"], name: "index_sections_on_activity_id_and_position"
+    t.index ["position"], name: "index_sections_on_position"
   end
 
-  create_table "security_questions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer "user_id",              null: false
-    t.string  "question", limit: 100, null: false
-    t.string  "answer",   limit: 100, null: false
-    t.index ["user_id"], name: "index_security_questions_on_user_id", using: :btree
+  create_table "security_questions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "question", limit: 100, null: false
+    t.string "answer", limit: 100, null: false
+    t.index ["user_id"], name: "index_security_questions_on_user_id"
   end
 
-  create_table "sessions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "session_id",                  null: false
-    t.text     "data",       limit: 16777215
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.index ["session_id"], name: "index_sessions_on_session_id", using: :btree
-    t.index ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
+  create_table "sessions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "session_id", null: false
+    t.text "data", size: :medium
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_sessions_on_session_id"
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "standard_documents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uri"
-    t.string   "jurisdiction"
-    t.string   "title"
-    t.string   "name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.index ["name"], name: "index_standard_documents_on_name", unique: true, using: :btree
+  create_table "standard_documents", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uri"
+    t.string "jurisdiction"
+    t.string "title"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_standard_documents_on_name", unique: true
   end
 
-  create_table "standard_statements", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "uri"
-    t.string   "doc"
-    t.string   "statement_notation"
-    t.string   "statement_label"
-    t.text     "description",        limit: 65535
-    t.text     "parents",            limit: 65535
-    t.string   "material_type"
-    t.integer  "material_id"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
-    t.string   "education_level"
-    t.boolean  "is_leaf"
-    t.index ["uri", "material_type", "material_id"], name: "standard_unique", unique: true, using: :btree
+  create_table "standard_statements", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "uri"
+    t.string "doc"
+    t.string "statement_notation"
+    t.string "statement_label"
+    t.text "description"
+    t.text "parents"
+    t.string "material_type"
+    t.integer "material_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "education_level"
+    t.boolean "is_leaf"
+    t.index ["uri", "material_type", "material_id"], name: "standard_unique", unique: true
   end
 
-  create_table "taggings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "tag_id"
-    t.integer  "taggable_id"
-    t.integer  "tagger_id"
-    t.string   "tagger_type"
-    t.string   "taggable_type"
-    t.string   "context"
+  create_table "taggings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "tag_id"
+    t.integer "taggable_id"
+    t.integer "tagger_id"
+    t.string "tagger_type"
+    t.string "taggable_type"
+    t.string "context"
     t.datetime "created_at"
-    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
   end
 
-  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string  "name"
+  create_table "tags", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
     t.integer "taggings_count", default: 0
-    t.index ["name"], name: "index_tags_on_name", unique: true, using: :btree
+    t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "teacher_project_views", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.integer  "viewed_project_id", null: false
-    t.integer  "teacher_id",        null: false
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["teacher_id"], name: "index_teacher_project_views_on_teacher_id", using: :btree
+  create_table "teacher_project_views", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.integer "viewed_project_id", null: false
+    t.integer "teacher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_project_views_on_teacher_id"
   end
 
-  create_table "tools", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+  create_table "tools", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "source_type"
-    t.text   "tool_id",     limit: 65535
+    t.text "tool_id"
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string   "login",                       limit: 40
-    t.string   "first_name",                  limit: 100, default: ""
-    t.string   "last_name",                   limit: 100, default: ""
-    t.string   "email",                       limit: 128, default: "",        null: false
-    t.string   "encrypted_password",          limit: 128, default: "",        null: false
-    t.string   "password_salt",                           default: "",        null: false
-    t.string   "remember_token"
-    t.string   "confirmation_token"
-    t.string   "state",                                   default: "passive", null: false
+  create_table "users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "login", limit: 40
+    t.string "first_name", limit: 100, default: ""
+    t.string "last_name", limit: 100, default: ""
+    t.string "email", limit: 128, default: "", null: false
+    t.string "encrypted_password", limit: 128, default: "", null: false
+    t.string "password_salt", default: "", null: false
+    t.string "remember_token"
+    t.string "confirmation_token"
+    t.string "state", default: "passive", null: false
     t.datetime "remember_created_at"
     t.datetime "confirmed_at"
     t.datetime "deleted_at"
-    t.string   "uuid",                        limit: 36
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
-    t.boolean  "default_user",                            default: false
-    t.boolean  "site_admin",                              default: false
-    t.string   "external_id"
-    t.boolean  "require_password_reset",                  default: false
-    t.boolean  "of_consenting_age",                       default: false
-    t.boolean  "have_consent",                            default: false
-    t.boolean  "asked_age",                               default: false
-    t.string   "reset_password_token"
-    t.integer  "sign_in_count",                           default: 0
+    t.string "uuid", limit: 36
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "default_user", default: false
+    t.boolean "site_admin", default: false
+    t.string "external_id"
+    t.boolean "require_password_reset", default: false
+    t.boolean "of_consenting_age", default: false
+    t.boolean "have_consent", default: false
+    t.boolean "asked_age", default: false
+    t.string "reset_password_token"
+    t.integer "sign_in_count", default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.string   "unconfirmed_email"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.string "unconfirmed_email"
     t.datetime "confirmation_sent_at"
-    t.boolean  "require_portal_user_type",                default: false
-    t.string   "sign_up_path"
-    t.boolean  "email_subscribed",                        default: false
-    t.boolean  "can_add_teachers_to_cohorts",             default: false
+    t.boolean "require_portal_user_type", default: false
+    t.string "sign_up_path"
+    t.boolean "email_subscribed", default: false
+    t.boolean "can_add_teachers_to_cohorts", default: false
     t.datetime "reset_password_sent_at"
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-    t.index ["id"], name: "index_users_on_id_and_type", using: :btree
-    t.index ["login"], name: "index_users_on_login", unique: true, using: :btree
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["id"], name: "index_users_on_id_and_type"
+    t.index ["login"], name: "index_users_on_login", unique: true
   end
 
 end
