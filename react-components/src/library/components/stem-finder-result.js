@@ -138,10 +138,10 @@ const stemFinderResult = Component({
   renderTimeRequired: function () {
     const resource = this.props.resource
     const timeRequired = resource.material_type === 'Activity'
-      ? '45 minutes'
+      ? '45 Minutes'
       : resource.material_type === 'Investigation'
-        ? '2 weeks'
-        : ''
+        ? '2 Weeks'
+        : 'Varies'
 
     if (timeRequired === '') {
       return
@@ -307,6 +307,10 @@ const stemFinderResult = Component({
       <div className={finderResultClasses}>
         <div className={css.finderResultImagePreview}>
           <img alt={resource.name} src={resource.icon.url} />
+          <div className={css.metaTags}>
+            <GradeLevels resource={resource} />
+            {this.renderTimeRequired()}
+          </div>
         </div>
         <div className={css.finderResultText}>
           <div className={css.finderResultTextName}>
@@ -314,10 +318,6 @@ const stemFinderResult = Component({
           </div>
           <div className={css.finderResultTextDescription}>
             {shortDesc}
-          </div>
-          <div className={css.metaTags}>
-            <GradeLevels resource={resource} />
-            {this.renderTimeRequired()}
           </div>
         </div>
         <div className={css.previewLink}>

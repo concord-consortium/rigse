@@ -3,9 +3,9 @@ const sortResources = function (resources, sortMethod) {
     ? resources.sort(sortByNewest)
     : sortMethod === 'Oldest'
       ? resources.sort(sortByOldest)
-      : sortMethod === 'Time Required (asc)'
+      : sortMethod === 'Less time required'
         ? resources.sort(sortByTimeRequiredAsc)
-        : sortMethod === 'Time Required (desc)'
+        : sortMethod === 'More time required'
           ? resources.sort(sortByTimeRequiredDesc)
           : resources.sort(sortByName)
 

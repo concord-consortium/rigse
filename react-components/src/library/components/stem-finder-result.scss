@@ -111,6 +111,35 @@
       height: 100%;
       width: 100%;
     }
+
+    .metaTags {
+      bottom: 5px;
+      left: 5px;
+      position: absolute;
+      width: 100%;
+
+      .metaTag {
+        background-color: $col-lightgray;
+        color: $col-darkgray-75;
+        display: inline-block;
+        font-size: 12px;
+        line-height: 1;
+        margin-right: 5px;
+        padding: 6px 5px 5px;
+
+        &.timeRequired {
+
+          &:before {
+            content: '\f017';
+            font-family: "Font Awesome 5 Free";
+            font-size: 15px;
+            margin-right: 3px;
+            opacity: .7;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
   }
   .finderResultText {
     margin: 0 10px 10px 0;

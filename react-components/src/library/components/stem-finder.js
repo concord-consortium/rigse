@@ -150,8 +150,21 @@ const StemFinder = Component({
     }.bind(this))
   },
 
-  handleScroll: function (event) {
-    let scrollTop = event.srcElement.scrollTop
+  handlePageScroll: function (event) {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    console.log(scrollTop)
+    if (
+      scrollTop > window.innerHeight / 2 &&
+      !this.state.searching &&
+      this.state.resources.length !== 0 &&
+      !(this.state.displayLimit >= this.state.numTotalResources)
+    ) {
+      this.search(true)
+    }
+  },
+
+  handleLightboxScroll: function (event) {
+    const scrollTop = event.srcElement.scrollTop
     console.log(scrollTop)
     if (
       scrollTop > window.innerHeight / 3 &&
@@ -165,17 +178,17 @@ const StemFinder = Component({
 
   componentDidMount: function () {
     if (document.getElementById('pprfl')) {
-      document.getElementById('pprfl').addEventListener('scroll', this.handleScroll)
+      document.getElementById('pprfl').addEventListener('scroll', this.handleLightboxScroll)
     } else {
-      document.body.removeEventListener('scroll', this.handleScroll)
+      document.addEventListener('scroll', this.handlePageScroll)
     }
   },
 
   componentWillUnmount: function () {
     if (document.getElementById('pprfl')) {
-      document.getElementById('pprfl').removeEventListener('scroll', this.handleScroll)
+      document.getElementById('pprfl').removeEventListener('scroll', this.handleLightboxScroll)
     } else {
-      document.body.removeEventListener('scroll', this.handleScroll)
+      document.removeEventListener('scroll', this.handlePageScroll)
     }
   },
 
@@ -578,7 +591,7 @@ const StemFinder = Component({
   },
 
   renderSortMenu: function () {
-    const sortValues = ['Title', 'Time Required (asc)', 'Time Required (desc)', 'Newest', 'Oldest']
+    const sortValues = ['Title', 'Less time required', 'More time required', 'Newest', 'Oldest']
 
     return (
       <div className={css.sortMenu}>
@@ -615,7 +628,7 @@ const StemFinder = Component({
         <div className={css.finderHeaderResourceCount}>
           {showingAll && multipleResources ? 'Showing All ' : 'Showing '}
           <strong>
-            {resourceCount + ' ' + pluralize(resourceCount, 'Activity')}
+            {resourceCount + ' ' + pluralize(resourceCount, 'Activity', 'Activities')}
           </strong>
         </div>
         {this.renderSortMenu()}
