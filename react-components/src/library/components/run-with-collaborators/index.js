@@ -87,7 +87,6 @@ var RunWithCollaborators = Component({
 
   handleRun: function () {
     var self = this
-    var jnlpUrl = this.props['data-jnlp-url']
     var collaborators = this.state.collaborators
     if (collaborators.length === 0) {
       return
@@ -104,15 +103,7 @@ var RunWithCollaborators = Component({
       }),
       success: function (data) {
         self.setState({ showingDialog: false }, function () {
-          if (jnlpUrl) {
-            // NOTE: this block was copied from the old portal angular code
-            // I'm not sure why we are updating the run status and then immediately redirecting
-            // https://github.com/concord-consortium/rigse/blob/7d74408d9f0218670e345da0fbaa5584a79c6461/app/assets/javascripts/angular/collaboration.js.coffee#L107-L116
-            var runStatus = new OfferingRunStatus(this.buttonElement)
-            runStatus.toggleRunStatusView()
-            runStatus.trigger_status_updates()
-          }
-          window.location.href = jnlpUrl || data.external_activity_url
+          window.location.href = data.external_activity_url
         })
       },
       error: function () {
