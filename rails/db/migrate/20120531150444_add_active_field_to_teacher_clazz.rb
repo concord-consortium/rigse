@@ -2,7 +2,7 @@ class AddActiveFieldToTeacherClazz < ActiveRecord::Migration[5.1]
 
   # faux model for successful migration
   class Portal::TeacherClazz < ApplicationRecord
-    set_table_name :portal_teacher_clazzes
+    self.table_name = :portal_teacher_clazzes
   end
 
 

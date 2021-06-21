@@ -6,7 +6,7 @@ version: '2.1'
 services:
   app:
     # To use a different tag, create an .env file with PORTAL_IMAGE_TAG defined
-    image: concordconsortium/rigse:${PORTAL_IMAGE_TAG:-master}
+    image: concordconsortium/rigse-railslts:${PORTAL_IMAGE_TAG:-master}
     environment:
       DB_HOST: mysql
       DB_USER: root

@@ -30,7 +30,7 @@ services:
       GOOGLE_CLIENT_KEY:
       GOOGLE_CLIENT_SECRET:
 
-      SITE_URL:
+      SITE_URL: "${PORTAL_PROTOCOL:-http}://${PORTAL_HOST:-app.portal.docker}"
       RESEARCHER_REPORT_ONLY:
 
       #
@@ -136,6 +136,9 @@ services:
       #
       LOGGER_URI: "${LOGGER_URI:-//cc-log-manager-dev.herokuapp.com/api/logs}"
       THEME: "${THEME:-learn}"
+
+      VIRTUAL_HOST: "${PORTAL_HOST:-app.portal.docker}"
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
