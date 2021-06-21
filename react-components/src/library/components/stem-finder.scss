@@ -42,6 +42,8 @@
 
     input {
       border-radius: 4px;
+      font: 300 14px $font-museo-sans;
+
       &[type="text"] {
         padding: 5px;
         width: calc(100% - 59px);
@@ -235,7 +237,7 @@
   }
   .curriculaSelect {
     border-radius: 4px;
-    font-size: 14px;
+    font: 300 14px $font-museo-sans;
     margin: 2px 10px 0 10px;
     overflow: hidden;
     padding: 5px;
@@ -275,7 +277,7 @@
     }
     select {
       border-radius: 4px;
-      font-size: 14px;
+      font: 300 14px $font-museo-sans;
       margin: 0 0 0 5px;
       overflow: hidden;
       padding: 5px;
