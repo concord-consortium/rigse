@@ -119,7 +119,6 @@ RailsPortal::Application.routes.draw do
         end
       end
 
-      get 'offerings/:id/launch_status.:format' => 'offerings_metal#launch_status', :constraints => { :format => 'json' }, :as => :launch_status
       get 'offerings/:id/external_report/:report_id' => 'offerings#external_report', :as => :external_report
       resources :offerings do
         member do
