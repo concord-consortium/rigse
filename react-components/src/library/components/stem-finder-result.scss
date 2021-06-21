@@ -152,19 +152,12 @@
       font-size: 16px;
       font-weight: 700;
       line-height: 1;
-      margin-bottom: 3px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .finderResultTextDescription {
-      font-size: 14px;
-      line-height: 1.3;
-      min-height: 80px;
-    }
     .metaTags {
-      bottom: 22px;
-      position: absolute;
+      margin-bottom: 3px;
       width: 100%;
 
       .metaTag {
@@ -188,6 +181,11 @@
           }
         }
       }
+    }
+    .finderResultTextDescription {
+      font-size: 14px;
+      line-height: 1.3;
+      min-height: 80px;
     }
   }
   .previewLink {
@@ -226,12 +224,12 @@
         padding-left: 0;
       }
       &.itsi {
-        background: url(http://test.local:9990/logos/itsi.png) no-repeat center top;
+        background: url(https://learn-resources.concord.org/images/itsi.png) no-repeat center top;
         background-size: 35px;
         padding: 37px 0 0;
       }
       &.ngssassessment {
-        background: url(http://test.local:9990/logos/ngss.png) no-repeat center top;
+        background: url(https://learn-resources.concord.org/images/ngss.png) no-repeat center top;
         background-size: 35px;
         padding: 37px 0 0;
       }

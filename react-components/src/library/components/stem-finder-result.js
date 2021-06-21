@@ -307,14 +307,14 @@ const stemFinderResult = Component({
       <div className={finderResultClasses}>
         <div className={css.finderResultImagePreview}>
           <img alt={resource.name} src={resource.icon.url} />
-          <div className={css.metaTags}>
-            <GradeLevels resource={resource} />
-            {this.renderTimeRequired()}
-          </div>
         </div>
         <div className={css.finderResultText}>
           <div className={css.finderResultTextName}>
             {resourceName}
+          </div>
+          <div className={css.metaTags}>
+            <GradeLevels resource={resource} />
+            {this.renderTimeRequired()}
           </div>
           <div className={css.finderResultTextDescription}>
             {shortDesc}
