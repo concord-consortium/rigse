@@ -119,4 +119,14 @@ describe Portal::Learner do
       expect(result).not_to be_nil
     end
   end
+
+  describe '#update_last_run' do
+    it 'should modify the last_run with the current time' do
+      now = Time.now
+      max_delta_seconds = 2
+      subject.update_last_run
+      elapsed_seconds = subject.last_run - now
+      expect(elapsed_seconds).to be < max_delta_seconds
+    end
+  end
 end

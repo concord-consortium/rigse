@@ -46,6 +46,7 @@ class Portal::OfferingsController < ApplicationController
 
       format.run_resource_html   {
          if learner = setup_portal_student
+          # learner.update_last_run
            cookies[:save_path] = @offering.runnable.save_path
            cookies[:learner_id] = learner.id
            cookies[:student_name] = "#{current_visitor.first_name} #{current_visitor.last_name}"

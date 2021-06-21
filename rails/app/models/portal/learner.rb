@@ -70,6 +70,17 @@ class Portal::Learner < ApplicationRecord
     learner.report_learner.update_fields
   end
 
+  # 2021-06-21 NP: We update last_run when the run button pressed
+  # see offering_controller#show run_resource_html block
+  def update_last_run
+    self.report_learner.update_attribute('last_run', Time.now)
+  end
+
+  # 2021-06-21 NP: method deligation because maybe report_learner will go away
+  def last_run
+    self.report_learner.last_run
+  end
+
   validates_presence_of :student,  :message => "student association not specified"
   validates_presence_of :offering, :message => "offering association not specified"
 
