@@ -7,6 +7,5 @@ class CreateExternalReports < ActiveRecord::Migration[5.1]
       t.references :client
       t.timestamps
     end
-    add_index :external_reports, :client_id
   end
 end
