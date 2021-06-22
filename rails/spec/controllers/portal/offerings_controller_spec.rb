@@ -44,6 +44,7 @@ describe Portal::OfferingsController do
       @user = FactoryBot.create(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
+      allow(@learner).to receive(:update_last_run)
       allow(controller).to receive(:setup_portal_student).and_return(@learner)
       allow(Portal::Offering).to receive(:find).and_return(@offering)
       sign_in @user
@@ -51,7 +52,6 @@ describe Portal::OfferingsController do
 
     it "saves learner data in the cookie" do
       @runnable.append_learner_id_to_url = false
-
       get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response.cookies["save_path"]).to eq(@offering.runnable.save_path)
       expect(response.cookies["learner_id"]).to eq(@learner.id.to_s)
