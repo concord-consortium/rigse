@@ -9,7 +9,7 @@ class CreateCommonsLicense < ActiveRecord::Migration[5.1]
       t.string   :image
       t.timestamps
     end
-    execute "ALTER TABLE commons_licenses ADD PRIMARY KEY (code);"
+    # execute "ALTER TABLE commons_licenses ADD PRIMARY KEY (code);"
   end
 
   def down
