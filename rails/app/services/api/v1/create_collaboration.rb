@@ -98,7 +98,8 @@ class API::V1::CreateCollaboration
   def setup_learners
     @owner_learner = @offering.find_or_create_learner(@owner)
     @learner_objects = @student_objects.map do |s|
-      @offering.find_or_create_learner(s)
+      l = @offering.find_or_create_learner(s)
+      l.update_last_run
     end
   end
 
