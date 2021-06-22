@@ -55,7 +55,7 @@ module RunnablesHelper
         span_id = "run-with-collaborators-button-#{offering.id}"
         haml_tag :span, {:id => span_id}
         haml_tag :script do
-          haml_concat "PortalComponents.renderRunWithCollaborators(#{options.to_json}, '#{span_id}');"
+          haml_concat "PortalComponents.renderRunWithCollaborators(#{options.to_json}, '#{span_id}');".html_safe
         end
       end
     end
