@@ -65,7 +65,7 @@ class Dataservice::PeriodicBundleContent < ActiveRecord::Base
     extract_everything(extractor)
 
     # Also create/update a Report::Learner object for reporting
-    self.learner.report_learner.update_fields if self.learner
+    self.learner.update_report_model_cache if self.learner
   end
 
   def copy_to_collaborators

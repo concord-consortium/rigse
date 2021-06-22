@@ -81,9 +81,7 @@ class Portal::Learner < ActiveRecord::Base
   after_create do |learner|
     # have to create this after so that the learner id can be stored in the new bundle logger
     learner.create_periodic_bundle_logger
-    # make the report learner now, so two parts of the code aren't trying to create it at the
-    # same time later
-    learner.report_learner.update_fields
+    learner.update_report_model_cache
   end
 
   def valid_loggers?
@@ -208,4 +206,14 @@ class Portal::Learner < ActiveRecord::Base
       "#{APP_CONFIG[:site_url]}#{external_activity_return_path(id)}"
     end
   end
+
+  def update_report_model_cache
+    # We need to keep this in for now, to keep the ReportLearner up-to-date for the built-in reports.
+    # update_fields also updates the activity completion status as a side-effect, something that would
+    # be easy to re-add here if/when we remove ReportLearners
+    self.report_learner.update_fields
+
+    # TODO Update ElasticSearch database ...
+  end
+
 end

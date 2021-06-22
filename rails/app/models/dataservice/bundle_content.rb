@@ -194,7 +194,7 @@ class Dataservice::BundleContent < ActiveRecord::Base
     extract_everything(extractor)
 
     # Also create/update a Report::Learner object for reporting
-    learner.report_learner.update_fields if learner
+    learner.update_report_model_cache if learner
   end
 
   def description
