@@ -23,11 +23,6 @@ config/version.yml
 public/images/0*
 nbproject
 config/db_backup/
-public/jnlp/*/*
-config/jnlp_objects/*/*
-config/jnlp_objects/*.yaml
-config/maven_jnlp_object*.yaml
-public/otrunk-examples/
 public/resources
 public/stylesheets/active_scaffold/DO_NOT_EDIT
 public/stylesheets/active_scaffold/default/stylesheet-ie.css
@@ -44,7 +39,6 @@ docs/guides
 import_log.txt*
 public/stylesheets/themes/
 config/*.backup
-jnlp_url.properties
 rites.xml
 resources/import_test_data/report*
 mkmf.log

@@ -8,22 +8,22 @@ end
 #
 # generator methods are in spec/helpers/controller_helper.rb
 #
-Given /^The default settings and jnlp resources exist$/ do
-  generate_default_settings_and_jnlps_with_factories
+Given /^The default settings exist$/ do
+  generate_default_settings_with_factories
 end
 
-Given /^The default settings and jnlp resources exist using mocks$/ do
-  generate_default_settings_and_jnlps_with_mocks
+Given /^The default settings exist using mocks$/ do
+  generate_default_settings_with_mocks
 end
 
-Given /^The default settings and jnlp resources exist using factories$/ do
-  generate_default_settings_and_jnlps_with_factories
+Given /^The default settings exist using factories$/ do
+  generate_default_settings_with_factories
 end
 
 def get_settings
   settings = Admin::Settings.default_settings
   unless settings
-    generate_default_settings_and_jnlps_with_factories
+    generate_default_settings_with_factories
     settings = Admin::Settings.default_settings
   end
   settings

@@ -5,7 +5,7 @@ describe Portal::TeachersController do
     render_views
 
     before(:each) do
-      generate_default_settings_and_jnlps_with_mocks
+      generate_default_settings_with_mocks
       generate_portal_resources_with_mocks
     end
 

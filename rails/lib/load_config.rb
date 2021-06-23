@@ -7,7 +7,6 @@ app_config = AppSettings.load_app_settings
 app_config = {
   :recent_activity_on_login => true,
   :top_level_container_name => 'investigation',
-  :use_jnlps => true,
   :host => nil
 }.merge(app_config)
 
@@ -17,11 +16,6 @@ app_config[:host] = site_url.to_s.gsub("http://","").gsub("https://","")
 
 USING_RITES = app_config[:theme] && (app_config[:theme] == 'default' || app_config[:theme] == 'rites')
 NOT_USING_RITES = !USING_RITES
-
-# handle legacy configuration
-if app_config[:runnables_use] && app_config[:runnables_use] != 'otrunk_jnlp'
-  app_config[:use_jnlps] = false
-end
 
 APP_CONFIG = app_config # It's constant now
 

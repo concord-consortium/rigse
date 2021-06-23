@@ -45,7 +45,7 @@ describe API::V1::OfferingsController do
 
   before(:each) {
     # This silences warnings in the console when running
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
   }
 
   describe "GET #show (+ basic response structure tests)" do

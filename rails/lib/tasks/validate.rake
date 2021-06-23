@@ -109,7 +109,6 @@ namespace :app do
       OK_TO_BE_NIL = [
         [User, :portal_teacher],
         [User, :portal_student],
-        [MavenJnlp::VersionedJnlp, :icon],
         [Activity, :original]
       ]
       results = {}

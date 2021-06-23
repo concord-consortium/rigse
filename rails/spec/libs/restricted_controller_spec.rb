@@ -36,10 +36,10 @@ RSpec.xdescribe RestrictedController do
   end
 
   # TODO: auto-generated
-  describe '#admin_or_config' do
-    it 'admin_or_config' do
+  describe '#admin' do
+    it 'admin' do
       restricted_controller = described_class.new
-      result = restricted_controller.admin_or_config
+      result = restricted_controller.admin
 
       expect(result).not_to be_nil
     end

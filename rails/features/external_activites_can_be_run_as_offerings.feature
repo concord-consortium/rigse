@@ -4,7 +4,7 @@ Feature: External Activities can be run as offerings
   I want to run an External Activity that has been assigned to me
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
 
   @javascript
@@ -14,4 +14,3 @@ Feature: External Activities can be run as offerings
     When I go to my classes page
     And I follow "Class_with_no_assignment" within left panel for class navigation
     And I should see an external run link to "mock_html/test-external-activity.html"
-    

@@ -15,7 +15,6 @@ development: &id003
   :theme: xproject
   :site_name: Cross Project Portal
   :site_url: http://localhost:3000
-  :runnables_use: otrunk_jnlp
   :runnable_mime_type:
   :top_level_container_name: investigation
   :site_school: Cross Project Portal-school

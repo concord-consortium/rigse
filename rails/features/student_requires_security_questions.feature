@@ -6,7 +6,7 @@ Feature: Student must specify security questions before using the portal
   security questions
 
   Background: portal configured with s-questions, user doesn't have them
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And the default settings has security questions enabled
     And the student "student" has no security questions set

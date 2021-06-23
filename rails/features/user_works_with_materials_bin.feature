@@ -4,7 +4,7 @@ Feature: User works with materials bin
   I can see materials bin
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And the project "FooBar" has slug "foo-bar" and ITSI bin
       """

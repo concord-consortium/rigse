@@ -7,7 +7,7 @@ RegexForAuthFailDestroy = /can not destroy the requested resource/
 RegexDeleteSuccess = /(.*) was deleted/
 describe Admin::ProjectLinksController do
   before(:each) do
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
     allow(controller).to receive(:current_user).and_return(user)
     @link_1 = FactoryBot.create(:project_link, link_id: 'link1', href: 'http://link1.com', name: 'link 1', project: project_1)
     @link_2 = FactoryBot.create(:project_link, link_id: 'link2', href: 'http://link2.com', name: 'link 2', project: project_2)

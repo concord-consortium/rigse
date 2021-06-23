@@ -17,7 +17,7 @@ Feature: Student views report
       Super Cool Activity here.
       """
 
-  @lightweight @mechanize
+  @mechanize
   Scenario: Student sees report link
     When I login with username: davy
     Then I should not see a link to generate a report of my work
@@ -28,7 +28,7 @@ Feature: Student views report
     Then I should see "Last run"
     When I should see a link to generate a report of my work
 
-  @lightweight @mechanize
+  @mechanize
   Scenario: Student does not see report link if student report is disabled
     When the student report is disabled for the activity "simple activity"
     When I login with username: davy

@@ -94,16 +94,6 @@ namespace :app do
       puts
     end
 
-    desc 'generate date_str attributes from version_str for MavenJnlp::VersionedJnlpUrls'
-    task :generate_date_str_for_versioned_jnlp_urls => :environment do
-      puts "\nprocessing #{MavenJnlp::VersionedJnlpUrl.count} MavenJnlp::VersionedJnlpUrl model instances, generating date_str from version_str\n"
-      MavenJnlp::VersionedJnlpUrl.find_in_batches do |group|
-        group.each { |j| j.save! }
-        print '.'; STDOUT.flush
-      end
-      puts
-    end
-
     desc "Convert Existing Clazzes so that multiple Teachers can own a clazz. (many to many change)"
     task :convert_clazzes_to_multi_teacher => :environment do
       MultiteacherClazzes.make_all_multi_teacher
