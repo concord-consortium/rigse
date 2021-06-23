@@ -39,7 +39,7 @@ describe API::V1::JwtController, :type => :controller do
 
   let(:expires)         { Time.now + 1000000000.minutes}
   let(:user_token)      { addToken(user, client, expires) }
-  let(:user)            { FactoryBot.create(:user) }
+  let(:user)            { FactoryBot.create(:user, id: 1000) }
   let(:url_for_user)    { "http://test.host/users/#{user.id}" } # can't use url_for(user) helper in specs
   let(:uid)             { Digest::MD5.hexdigest(url_for_user) }
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
@@ -98,6 +98,8 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
   before(:each) {
     # prevent warnings about undefined default settings
     generate_default_settings_with_mocks
+    allow(APP_CONFIG).to receive(:[]).and_call_original
+    allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(site_url)
   }
 
   describe "GET #firebase" do
