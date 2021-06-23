@@ -1,12 +1,12 @@
 class RemoveGeniModels < ActiveRecord::Migration[6.1]
   def up
-    drop_table :geniverse_activities
-    drop_table :geniverse_articles
-    drop_table :geniverse_cases
-    drop_table :geniverse_dragons
-    drop_table :geniverse_help_messages
-    drop_table :geniverse_unlockables
-    drop_table :geniverse_users
+    drop_table :geniverse_activities, :if_exists => true
+    drop_table :geniverse_articles, :if_exists => true
+    drop_table :geniverse_cases, :if_exists => true
+    drop_table :geniverse_dragons, :if_exists => true
+    drop_table :geniverse_help_messages, :if_exists => true
+    drop_table :geniverse_unlockables, :if_exists => true
+    drop_table :geniverse_users, :if_exists => true
   end
 
   def down
