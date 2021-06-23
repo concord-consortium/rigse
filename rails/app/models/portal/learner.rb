@@ -242,6 +242,7 @@ class Portal::Learner < ActiveRecord::Base
       learner_id: self.id,
       student_id: self.student.id,
       user_id:  self.student.user.id,
+      created_at: self.student.user.created_at,
       offering_id: self.offering.id,
       offering_name: self.offering.name,
       class_id: self.offering.clazz.id,
