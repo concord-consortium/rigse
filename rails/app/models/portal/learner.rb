@@ -213,6 +213,11 @@ class Portal::Learner < ActiveRecord::Base
     # be easy to re-add here if/when we remove ReportLearners
     self.report_learner.update_fields
 
+    # mostly to stop spec tests from failing
+    unless (self.student && self.student.user && self.offering && self.offering.clazz && self.offering.clazz.teachers)
+      return
+    end
+
     if !ENV['ELASTICSEARCH_URL']
       return error("Elasticsearch endpoint url not set")
     end

@@ -10,7 +10,8 @@ describe API::V1::ReportLearnersEsController do
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
 
-  let(:mock_school)    { FactoryBot.create(:portal_school, {:district => nil}) }
+  let(:district)       { FactoryBot.create(:portal_district) }
+  let(:mock_school)    { FactoryBot.create(:portal_school, {:district => district}) }
   let(:teacher_user1)  { FactoryBot.create(:confirmed_user, login: "teacher_user1") }
   let(:teacher_user2)  { FactoryBot.create(:confirmed_user, login: "teacher_user2") }
   let(:teacher1)       { FactoryBot.create(:portal_teacher, user: teacher_user1, schools: [mock_school]) }
@@ -492,7 +493,7 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
           expect(filter["learners"][0]["teachers"].length).to eq 1
           expect(filter["learners"][0]["teachers"][0]["user_id"].to_i).to eq teacher1.id
-          expect(filter["learners"][0]["teachers"][0]["district"]).to eq nil
+          expect(filter["learners"][0]["teachers"][0]["district"]).to eq "Rails Portal-district"
         end
       end
     end

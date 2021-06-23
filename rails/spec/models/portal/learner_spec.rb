@@ -1,7 +1,8 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Learner do
-  let(:student)        { mock_model(Portal::Student)     }
+  let(:user)           { mock_model(User) }
+  let(:student)        { mock_model(Portal::Student, {:user => user, :permission_forms => []})     }
   let(:offering)       { FactoryBot.create(:portal_offering)   }
   let(:report_learner) { mock_model(Report::Learner,
     :[]= => nil,

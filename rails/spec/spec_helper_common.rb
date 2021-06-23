@@ -101,6 +101,11 @@ RSpec.configure do |config|
   config.include FeatureHelper
 
   config.infer_spec_type_from_file_location!
+
+  # Stub all elasticsearch posts from learner update_report_model_cache
+  config.before(:each) do
+    WebMock.stub_request(:post, /elasticsearch/).to_return(status: 200, body: "", headers: {})
+  end
 end
 
 begin
