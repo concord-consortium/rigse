@@ -69,6 +69,29 @@ namespace :app do
       puts " done."
     end
 
+    desc "Pushes all the Portal::Learner objects to the ElasticSearch database"
+    task :update_elastic_search_learners => :environment do |t, args|
+      puts "#{Portal::Offering.count} offerings to process...\n"
+      i = 0
+      Portal::Offering.includes(:runnable,
+                                :learners => [
+                                    :report_learner,
+                                    { :student => :user }
+                                ],
+                                :clazz => [
+                                  :teachers,
+                                  :course => :school
+                                ] ).find_each do |offering|
+        print ("\n%5d: " % i) if (i % 50 == 0)
+        offering.learners.each do |learner|
+          learner.update_report_model_cache(true)
+        end
+        print '.'
+        i += 1
+      end
+      puts " done."
+    end
+
     # NP 2019-05-24: Preparing to move to reporting service.
     # Part of: https://www.pivotaltracker.com/story/show/165217423
     # The idea is to update about ~500K learner-runs in LARA to include

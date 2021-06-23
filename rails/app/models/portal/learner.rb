@@ -207,11 +207,13 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
 
-  def update_report_model_cache
-    # We need to keep this in for now, to keep the ReportLearner up-to-date for the built-in reports.
-    # update_fields also updates the activity completion status as a side-effect, something that would
-    # be easy to re-add here if/when we remove ReportLearners
-    self.report_learner.update_fields
+  def update_report_model_cache(skip_report_learner_update = false)
+    unless (skip_report_learner_update)
+      # We need to keep this in for now, to keep the ReportLearner up-to-date for the built-in reports.
+      # update_fields also updates the activity completion status as a side-effect, something that would
+      # be easy to re-add here if/when we remove ReportLearners
+      self.report_learner.update_fields
+    end
 
     # mostly to stop spec tests from failing
     unless (self.student && self.student.user && self.offering && self.offering.clazz && self.offering.clazz.teachers)
