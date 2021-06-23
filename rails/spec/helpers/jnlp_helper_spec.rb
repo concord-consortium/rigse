@@ -19,8 +19,7 @@ describe JnlpHelper, type: :helper  do
   describe "system_properties" do
     describe "with pub enabled, and a learner" do
       before :each do
-        @settings = Admin::Settings.new(:pub_interval => 10,
-          :use_periodic_bundle_uploading => true)
+        @settings = Admin::Settings.new(:pub_interval => 10)
         @student = double()
         @user = FactoryBot.create(:user)
         allow(@student).to receive_messages(:user => @user)

@@ -110,10 +110,7 @@ namespace :app do
         [User, :portal_teacher],
         [User, :portal_student],
         [MavenJnlp::VersionedJnlp, :icon],
-        [Activity, :original],
-        [Dataservice::BundleLogger, :in_progress_bundle],
-        [Dataservice::BundleLogger, :last_non_empty_bundle_content],
-        [Dataservice::ConsoleLogger, :last_console_content]
+        [Activity, :original]
       ]
       results = {}
       assocs_cache = {}

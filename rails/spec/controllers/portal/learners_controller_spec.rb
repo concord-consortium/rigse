@@ -90,15 +90,6 @@ describe Portal::LearnersController do
   end
 
   # TODO: auto-generated
-  describe '#bundle_report' do
-    it 'GET bundle_report' do
-      get :bundle_report, params: { id: 1 }
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
       get :show, params: { id: 1 }

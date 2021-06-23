@@ -59,10 +59,6 @@ class Portal::Offering < ApplicationRecord
     super || create_report_embeddable_filter(:embeddables => [])
   end
 
-  def sessions
-    self.learners.inject(0) { |sum, l| sum + l.sessions }
-  end
-
   def find_or_create_learner(student)
     learners.find_by_student_id(student) || learners.create(:student_id => student.id)
   end

@@ -36,9 +36,7 @@ class Reports::Counts
 
   def active_learners
     unless @active_learners
-      @active_learners = Portal::Learner.all.select do |learner|
-        learner.sessions > 0
-      end
+      @active_learners = Portal::Learner.count()
     end
     @active_learners
   end

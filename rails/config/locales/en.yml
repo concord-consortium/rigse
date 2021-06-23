@@ -8,10 +8,6 @@ en:
         first_name: 'First name'
         last_name: 'Last name'
     models:
-      "dataservice/bundle_content": BundleContent
-      "dataservice/bundle_logger": BundleLogger
-      "dataservice/console_content": ConsoleContent
-      "dataservice/console_logger": ConsoleLogger
       "embeddable/image_question" : "Image Question"
       "embeddable/multiple_choice" : "Multiple Choice Question"
       "portal/clazz": Class

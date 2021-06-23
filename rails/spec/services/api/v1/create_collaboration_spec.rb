@@ -130,17 +130,6 @@ describe API::V1::CreateCollaboration do
           expect(collaboration.students).to match_array(students)
         end
       end
-
-      describe "when offering is an external activity" do
-        before do
-          offering.runnable = FactoryBot.create(:external_activity)
-          offering.save!
-        end
-
-        it "should have #bundle_content equal to nil" do
-          expect(collaboration.bundle_content).to eql(nil)
-        end
-      end
     end
 
     describe "side effects of collaboration generation" do
@@ -151,6 +140,16 @@ describe API::V1::CreateCollaboration do
         create_collaboration.call
         offering.reload
         expect(offering.learners.map { |l| l.student }).to match_array(students)
+      end
+
+      it "shold update the last_run attribute of all learners" do
+        start = Time.now
+        max_delta_seconds = 2
+        create_collaboration.call
+        offering.reload
+        offering.learners.each do |l|
+          expect(l.last_run - start).to be < max_delta_seconds
+        end
       end
     end
   end

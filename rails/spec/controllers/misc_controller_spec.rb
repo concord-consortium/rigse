@@ -9,15 +9,6 @@ describe MiscController do
   end
 
   # TODO: auto-generated
-  describe '#banner' do
-    it 'GET banner' do
-      get :banner
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#learner_proc_stats' do
     it 'GET learner_proc_stats' do
       get :learner_proc_stats

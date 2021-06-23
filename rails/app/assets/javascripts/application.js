@@ -40,7 +40,6 @@
 = require 'search_materials_add_to_collection'
 = require 'search_materials_expand'
 = require 'progress_disclosure'
-= require 'run_status'
 = require 'create_status'
 = require 'permission_form'
 = require 'wait_message'

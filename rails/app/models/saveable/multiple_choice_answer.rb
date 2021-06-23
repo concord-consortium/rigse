@@ -2,7 +2,6 @@ class Saveable::MultipleChoiceAnswer < ApplicationRecord
   self.table_name = "saveable_multiple_choice_answers"
 
   belongs_to :multiple_choice,  :class_name => 'Saveable::MultipleChoice', :counter_cache => :response_count
-  belongs_to :bundle_content, :class_name => 'Dataservice::BundleContent'
 
   has_many :rationale_choices, -> { order :choice_id },
     :class_name => 'Saveable::MultipleChoiceRationaleChoice',

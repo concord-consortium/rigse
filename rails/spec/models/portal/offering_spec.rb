@@ -105,15 +105,6 @@ describe Portal::Offering do
     end
   end
 
-  describe '#sessions' do
-    it 'sessions' do
-      offering = described_class.new
-      result = offering.sessions
-
-      expect(result).not_to be_nil
-    end
-  end
-
   describe '#saveables' do
     it 'saveables' do
       offering = described_class.new

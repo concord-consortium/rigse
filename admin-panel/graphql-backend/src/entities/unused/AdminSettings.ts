@@ -82,14 +82,6 @@ export class AdminSettings {
   })
   requireUserConsent: boolean | null;
 
-  @Column("tinyint", {
-    name: "use_periodic_bundle_uploading",
-    nullable: true,
-    width: 1,
-    default: () => "'0'",
-  })
-  usePeriodicBundleUploading: boolean | null;
-
   @Column("varchar", { name: "jnlp_cdn_hostname", nullable: true, length: 255 })
   jnlpCdnHostname: string | null;
 
