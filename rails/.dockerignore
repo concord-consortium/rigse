@@ -5,7 +5,6 @@ log/*
 tmp/*
 config/app_environment_variables.rb
 config/aws_s3.yml
-config/installer.yml
 config/settings.yml
 config/initializers/site_keys.yml
 docker-compose.yml

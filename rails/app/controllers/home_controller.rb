@@ -97,9 +97,6 @@ class HomeController < ApplicationController
   render layout: 'minimal'
   end
 
-  def requirements
-  end
-
   def admin
     authorize :home, :admin?
   end
@@ -124,10 +121,6 @@ class HomeController < ApplicationController
   # view_context is a reference to the View template object
   def name_for_clipboard_data
     render :plain=> view_context.clipboard_object_name(params)
-  end
-
-  def missing_installer
-    @os = params['os']
   end
 
   def test_exception

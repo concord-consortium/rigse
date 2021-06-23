@@ -43,17 +43,9 @@ config/settings-backup.yml
 docs/guides
 import_log.txt*
 public/stylesheets/themes/
-resources/bitrock_installer/jars/*
-resources/bitrock_installer/installers/*
-public/installers/*.dmg
-resources/bitrock_installer/*.backup
 config/*.backup
-config/installer.yml
-config/installer.yml.mine
 jnlp_url.properties
 rites.xml
-resources/bitrock_installer/jnlps.conf
-public/installers/*
 resources/import_test_data/report*
 mkmf.log
 hudson/*

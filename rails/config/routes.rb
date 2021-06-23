@@ -517,7 +517,6 @@ RailsPortal::Application.routes.draw do
 
     get "api/v1/materials/:material_type/:id", to: "api/v1/materials#show"
 
-    get '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     get '/readme' => 'home#readme', :as => :readme
     get '/docs/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
     get '/home'       => 'home#index', :as => :home
@@ -527,7 +526,6 @@ RailsPortal::Application.routes.draw do
     get '/about' => 'home#about'
     get '/collections' => 'home#collections'
     get '/test_exception' => 'home#test_exception', :as => :test_exception
-    get '/requirements' => 'home#requirements', :as => :requirements
     get '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     get '/admin' => 'home#admin', :as => :admin
     get '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
