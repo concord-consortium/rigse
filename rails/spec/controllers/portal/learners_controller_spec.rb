@@ -48,17 +48,6 @@ describe Portal::LearnersController do
           expect(match_data[1]).to eql(learner.student.user.id.to_s)
         end
       end
-
-      describe "when depreciated report is used" do
-        before(:each) do
-          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
-        end
-
-        it "should include the student_ids parameter" do
-          get :report, params: post_params
-          expect(response.location).to match(/student_ids/)
-        end
-      end
     end
 
     describe "when the current user is a teacher without access to this offering" do

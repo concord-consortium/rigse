@@ -9,8 +9,8 @@ class DefaultReportService
     return nil unless source_type
     ExternalReport
       .where(
-        "default_report_for_source_type = ? AND (report_type = ? OR report_type = ?) AND allowed_for_students = true",
-        source_type, ExternalReport::OfferingReport, ExternalReport::DeprecatedReport
+        "default_report_for_source_type = ? AND report_type = ? AND allowed_for_students = true",
+        source_type, ExternalReport::OfferingReport
       )
       .first
   end

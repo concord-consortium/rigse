@@ -48,41 +48,6 @@ describe ExternalReport do
         end
       end
     end
-
-    describe "when report type is `deprecated-report`" do
-      let(:external_report) { FactoryBot.create(:external_report, url: 'https://example.com?cool=true', report_type: 'deprecated-report') }
-
-      it "should include the correct parameters" do
-        expect(subject).to include('reportUrl=', 'token=')
-      end
-
-      it "should have correctly escaped url params" do
-        uri = URI.parse(subject)
-        query_hash = Rack::Utils.parse_query(uri.query)
-        expect(query_hash['reportUrl']).to start_with('https://')
-      end
-
-      describe "when extra params are provided" do
-        let(:external_activity) { FactoryBot.create(:external_activity) }
-        let(:investigation) { FactoryBot.create(:investigation) }
-        let(:activity) { FactoryBot.create(:activity) }
-        let(:offering) { FactoryBot.create(:portal_offering, {runnable: external_activity}) }
-        let(:learner) { FactoryBot.create(:full_portal_learner, {offering: offering }) }
-        let(:extra_params) { {activity_id: activity.id, student_id: learner.student.id} }
-
-        before(:each) do
-          investigation.activities << activity
-          external_activity.template = investigation
-          external_activity.save!
-        end
-
-        it "reportUrl should include the correct parameters" do
-          uri = URI.parse(subject)
-          query_hash = Rack::Utils.parse_query(uri.query)
-          expect(query_hash['reportUrl']).to include("activity_id=#{activity.id}", "student_ids%5B%5D=#{learner.student.id}")
-        end
-      end
-    end
   end
 
   describe "#url_for_class" do
