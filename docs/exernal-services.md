@@ -191,10 +191,8 @@ This client of the Tool can be used by the Portal when generating tokens during 
 
 If we take this approach it means we'll need to make Tools for all external activities which make connections back to the Portal. Currently this list probably is:
 - CLUE
-- genigames
 - sparks-activities
 - tt.concord.org
-- geniventure.concord.org
 
 ## Improve Move students between classes
 Currently the move student between classes is defunct. We broke it when adding the report-service way of storing the student work. And additionally it had problems when LARA interactives or plugins stored data in their own databases (usually FiresStore or Firebase realtime database).
