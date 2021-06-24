@@ -16,10 +16,13 @@ gem 'arrayfields'
 # this is the old version of aws and is needed by our old version of paperclip
 # we cannot upgrade paperclip until we have rails up to version 4.
 # This uses the AWS namespace.
-gem 'aws-sdk-v1'
+# gem 'aws-sdk-v1'
 # This is the new version of the aws sdk. It uses the Aws namespace.
 # it is currently used by a rake task to archive old portals
-gem 'aws-sdk',              '~> 3'
+# gem 'aws-sdk',              '~> 3'
+
+gem 'aws-sdk-s3'
+
 # currently (2017-06-13) axlsx requires an older version of rubyzip,
 # hopefully this will shortly be remedied
 gem 'axlsx',                '> 2.5'
