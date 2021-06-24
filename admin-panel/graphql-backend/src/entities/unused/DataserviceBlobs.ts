@@ -1,6 +1,5 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("index_dataservice_blobs_on_bundle_content_id", ["bundleContentId"], {})
 @Index("index_dataservice_blobs_on_checksum", ["checksum"], {})
 @Index("index_dataservice_blobs_on_learner_id", ["learnerId"], {})
 @Index("pbc_idx", ["periodicBundleContentId"], {})
@@ -15,17 +14,11 @@ export class DataserviceBlobs {
   @Column("varchar", { name: "token", nullable: true, length: 255 })
   token: string | null;
 
-  @Column("int", { name: "bundle_content_id", nullable: true })
-  bundleContentId: number | null;
-
   @Column("datetime", { name: "created_at" })
   createdAt: Date;
 
   @Column("datetime", { name: "updated_at" })
   updatedAt: Date;
-
-  @Column("int", { name: "periodic_bundle_content_id", nullable: true })
-  periodicBundleContentId: number | null;
 
   @Column("varchar", { name: "uuid", nullable: true, length: 36 })
   uuid: string | null;
