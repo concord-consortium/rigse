@@ -1,0 +1,40 @@
+// used in views/admin/permission_forms/index.html.haml
+// handles check-boxes for students who have consented to research
+
+class PermissionForm {
+
+  constructor(checkbox) {
+    this.checkbox = checkbox;
+    this.form = this.checkbox.up('form');
+    this.bind_events();
+  }
+
+  bind_events() {
+    // disable any lingering events:
+    this.checkbox.stopObserving('click');
+    this.checkbox.observe("click", evt => {
+      this.update_checkbox();
+    });
+  }
+
+  update_checkbox() {
+    const last_value = !this.checkbox.checked;
+    this.form.request({
+      onSuccess: () => {
+        this.form.enable();
+      },
+      onFailure: () => {
+        this.form.enable();
+        this.form.highlight({startcolor: '#ff0000'});
+        this.checkbox.checked = last_value;
+      }
+    });
+    this.form.disable();
+  }
+}
+
+
+document.observe("dom:loaded", () => $$("input.permission_checkbox").each(function(item) {
+  let reporter;
+  reporter = new PermissionForm(item);
+}));
