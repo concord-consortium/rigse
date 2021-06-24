@@ -5,7 +5,7 @@ reported on. When a report is run it currently pulls data directly from the data
 not Elasticsearch.
 
 The Elasticsearch service is kept up-to-date by pushing learner objects to the database
-each time a learner is created changes. There is also a rake task,
+each time a learner is created or changes. There is also a rake task,
 app:report:update_elastic_search_learners, which will find all learners and push them
 to the database.
 
@@ -43,4 +43,3 @@ https://www.elastic.co/guide/en/elasticsearch/guide/current/running-elasticsearc
 2. `cd path/to/kibana-5.x.y`
    `bin/kibana`
 3. Test by navigating to http://localhost:5601
-
