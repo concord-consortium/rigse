@@ -104,24 +104,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#git_repo_info' do
-    xit 'works' do
-      result = helper.git_repo_info
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#display_repo_info' do
-    xit 'works' do
-      result = helper.display_repo_info
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#title_tag' do
     it 'works' do
       result = helper.title_tag('cc', 'container')

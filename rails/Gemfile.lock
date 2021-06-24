@@ -244,10 +244,6 @@ GEM
     gherkin (5.1.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    grit (2.5.0)
-      diff-lcs (~> 1.1)
-      mime-types (~> 1.15)
-      posix-spawn (~> 0.3.6)
     guard (2.14.2)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -387,7 +383,6 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    posix-spawn (0.3.6)
     power_assert (0.2.2)
     pr_geohash (1.0.0)
     pry (0.11.3)
@@ -642,7 +637,6 @@ DEPENDENCIES
   exception_notification
   factory_bot
   font-awesome-rails
-  grit (~> 2.4)
   guard
   guard-cucumber
   guard-rspec

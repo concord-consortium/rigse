@@ -49,60 +49,6 @@ module ApplicationHelper
     name.strip.downcase.gsub(/\W+/, '_')
   end
 
-  def git_repo_info
-    # For some strange reason running repo.head during tests sometimes generates this
-    # error running the first time: Errno::ECHILD Exception: No child processes
-    #
-    # The operation seems to work fine the second time ... ?
-    # Here's an example from the debugger:
-    #
-    #   (rdb:1) repo.head
-    #   Errno::ECHILD Exception: No child processes
-    #   (rdb:1) repo.head
-    #   #<Grit::Head "emb-test">
-    #
-    repo = Grit::Repo.new(".")
-    head = nil
-    begin
-      head = repo.head
-    rescue Errno::ECHILD
-      begin
-        head = repo.head
-      rescue Errno::ECHILD
-      end
-    end
-    if head
-      branch = head.name
-      last_commit = repo.commits(branch).first
-      {
-        :branch => branch,
-        :last_commit => repo.commits(branch).first,
-        :short_message => truncate(last_commit.message, :length => 54),
-        :href => "http://github.com/concord-consortium/rigse/commit/#{last_commit.id}",
-        :short_id => truncate(last_commit.id, :length => 16),
-        :name => last_commit.author.name,
-        :date => last_commit.authored_date.strftime('%a %b %d %H:%M:%S')
-      }
-    else
-      {}
-    end
-  end
-
-  def display_repo_info
-    if repo = Grit::Repo.new(".")
-      branch = repo.head.name
-      last_commit = repo.commits(branch).first
-      message = last_commit.message
-      content_tag('ul', :class => 'tiny menu_h') do
-        list = ''
-        list << content_tag('li') { branch }
-        list << content_tag('li') { "<a title='href='http://github.com/concord-consortium/rigse/commit/#{last_commit.id}'>#{truncate(last_commit.id, :length => 16)}</a>" }
-        list << content_tag('li') { last_commit.author.name }
-        list << content_tag('li') { last_commit.authored_date.strftime('%a %b %d %H:%M:%S') }
-        list << content_tag('li') { truncate(message, :length => 70) }
-      end
-    end
-  end
 
   # Sets the page title and outputs title if container is passed in.
   # eg. <%= title('Hello World', :h2) %> will return the following:
