@@ -67,7 +67,7 @@ class Dataservice::ProcessExternalActivityDataJob
       end
     end
     learner.report_learner.last_run = Time.now
-    learner.update_report_model_cache if learner && learner.respond_to?(:update_report_model_cache)
+    learner.update_report_model_cache if learner
   end
 
   def internal_process_open_response(data, embeddable)
