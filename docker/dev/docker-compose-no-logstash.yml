@@ -11,7 +11,5 @@ version: '3'
 services:
   elasticsearch:
     image: hello-world
-  logstash:
-    image: hello-world
   kibana:
     image: hello-world

@@ -360,7 +360,7 @@ class API::V1::Report
     # All answers should delegate learner to their saveables...
     # We need to update fields, because the answer is serialized in the report learner
     if answer.respond_to?(:learner) && answer.learner
-      answer.learner.report_learner.update_fields()
+      answer.learner.update_report_model_cache
     end
   end
 

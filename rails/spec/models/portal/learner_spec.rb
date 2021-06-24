@@ -1,7 +1,8 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Learner do
-  let(:student)        { mock_model(Portal::Student)     }
+  let(:user)           { mock_model(User) }
+  let(:student)        { mock_model(Portal::Student, {:user => user, :permission_forms => []})     }
   let(:offering)       { FactoryBot.create(:portal_offering)   }
   let(:report_learner) { mock_model(Report::Learner,
     :[]= => nil,
@@ -147,6 +148,27 @@ describe Portal::Learner do
       result = subject.saveable_answered
 
       expect(result).not_to be_nil
+    end
+  end
+
+  describe "update_report_model_cache" do
+    it "should call the ElasticSearch API with the approriate data" do
+      WebMock::RequestRegistry.instance.reset!
+
+      # by calling `subject` we trigger the Create method to be called for this test
+      subject
+
+      assert_requested(:post, /report_learners\/doc/,
+        times: 1) { |req|
+          req.headers == {'Content-Type' => 'application/json'}
+          body = JSON.parse(req.body)
+          body["doc"] != nil
+          body["doc"]["learner_id"].is_a? Integer
+          body["doc"]["student_id"].is_a? Integer
+          body["doc"]["user_id"].is_a? Integer
+          body["doc"]["offering_name"] =~ /test investigation/
+          body["doc_as_upsert"] == true
+      }
     end
   end
 end

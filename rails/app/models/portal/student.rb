@@ -180,7 +180,7 @@ class Portal::Student < ActiveRecord::Base
         if sa.offering.runnable == nca.runnable
           learner_to_update = Portal::Learner.find(sa.id)
           learner_to_update.update_attribute('offering_id', nca.id)
-          learner_to_update.report_learner.update_fields
+          learner_to_update.update_report_model_cache
           # add assignment to JSON for report API call
           assignments << {
             new_resource_link_id: nca.id.to_s,

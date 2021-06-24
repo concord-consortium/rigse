@@ -81,9 +81,7 @@ class Portal::Learner < ActiveRecord::Base
   after_create do |learner|
     # have to create this after so that the learner id can be stored in the new bundle logger
     learner.create_periodic_bundle_logger
-    # make the report learner now, so two parts of the code aren't trying to create it at the
-    # same time later
-    learner.report_learner.update_fields
+    learner.update_report_model_cache
   end
 
   def valid_loggers?
@@ -207,5 +205,135 @@ class Portal::Learner < ActiveRecord::Base
     else
       "#{APP_CONFIG[:site_url]}#{external_activity_return_path(id)}"
     end
+  end
+
+  def update_report_model_cache(skip_report_learner_update = false)
+    unless (skip_report_learner_update)
+      # We need to keep this in for now, to keep the ReportLearner up-to-date for the built-in reports.
+      # update_fields also updates the activity completion status as a side-effect, something that would
+      # be easy to re-add here if/when we remove ReportLearners
+      self.report_learner.update_fields
+    end
+
+    # mostly to stop spec tests from failing
+    unless (self.student && self.student.user && self.offering && self.offering.clazz && self.offering.clazz.teachers)
+      return
+    end
+
+    if !ENV['ELASTICSEARCH_URL']
+      return error("Elasticsearch endpoint url not set")
+    end
+
+    update_url = "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{self.id}/_update"
+
+    # check to see if we can obtain the last run info
+    if self.offering.internal_report?
+      last_run = calculate_last_run
+      answersMeta = update_answers
+      num_answerables = answersMeta[:num_answerables]
+      num_answered = answersMeta[:num_answered]
+      num_submitted = answersMeta[:num_submitted]
+      num_correct = answersMeta[:num_correct]
+      complete_percent = answersMeta[:complete_percent]
+    else
+      num_answerables = 0
+      num_answered = 0
+      num_submitted = 0
+      num_correct = 0
+      # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
+      complete_percent = 100
+      last_run = Time.now
+    end
+
+    elastic_search_learner_model = {
+      learner_id: self.id,
+      student_id: self.student.id,
+      user_id:  self.student.user.id,
+      created_at: self.student.user.created_at,
+      offering_id: self.offering.id,
+      offering_name: self.offering.name,
+      class_id: self.offering.clazz.id,
+      class_name: self.offering.clazz.name,
+      last_run: last_run,
+      school_id: self.offering.clazz.school.id,
+      school_name: self.offering.clazz.school.name,
+      school_name_and_id: "#{self.offering.clazz.school.id}:#{self.offering.clazz.school.name}",
+      runnable_id: self.offering.runnable.id,
+      runnable_name: self.offering.runnable.name,
+      runnable_type: self.offering.runnable.class.to_s.downcase,
+      runnable_type_and_id: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}",
+      runnable_type_id_name: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}:#{self.offering.runnable.name}",
+      num_answerables: num_answerables,
+      num_answered: num_answered,
+      num_submitted: num_submitted,
+      num_correct: num_correct,
+      complete_percent: complete_percent,
+      teachers_id: self.offering.clazz.teachers.map { |t| t.id },
+      teachers_name: self.offering.clazz.teachers.map { |t| escape_comma(t.user.name) },
+      teachers_district: self.offering.clazz.teachers.map { |t|
+        t.schools.map{ |s| escape_comma(s.district.name)}.join(", ")
+      },
+      teachers_state: self.offering.clazz.teachers.map { |t|
+        t.schools.map{ |s| escape_comma(s.district.state)}.join(", ")
+      },
+      teachers_email: self.offering.clazz.teachers.map { |t| escape_comma(t.user.email)},
+      teachers_map: self.offering.clazz.teachers.map { |t| "#{t.id}: #{escape_comma(t.user.name)}"},
+      permission_forms: self.student.permission_forms.map { |p| escape_comma(p.fullname) },
+      permission_forms_id: self.student.permission_forms.map { |p| p.id },
+      permission_forms_map: self.student.permission_forms.map{ |p| "#{p.id}: #{escape_comma(p.fullname)}" }
+    }
+
+    # doc_as_upsert means update if exists, create if it doesn't
+    HTTParty.post(update_url,
+      :body => {
+        :doc => elastic_search_learner_model,
+        :doc_as_upsert => true
+      }.to_json,
+      :headers => { 'Content-Type' => 'application/json' } )
+  end
+
+  def calculate_last_run
+    bundle_logger = self.bundle_logger
+    pub_logger = self.periodic_bundle_logger
+    bucket_logger = self.bucket_logger
+    bundle_time = nil
+    pub_time = nil
+    bucket_time = nil
+
+    if bundle_logger && bundle_logger.last_non_empty_bundle_content
+      bundle_time = bundle_logger.last_non_empty_bundle_content.updated_at
+    end
+
+    if pub_logger && pub_logger.periodic_bundle_contents.last
+      pub_time = pub_logger.periodic_bundle_contents.last.updated_at
+    end
+
+    if bucket_logger && bucket_logger.bucket_contents.last
+      bucket_time = bucket_logger.bucket_contents.last.updated_at
+    end
+
+    times = [pub_time,bundle_time,bucket_time].compact.sort
+    if times.size > 0
+      last_run = times.last
+    end
+    last_run || Time.now
+  end
+
+  def update_answers
+    report_util = Report::UtilLearner.new(self)
+
+    answersMeta = {
+      :num_answerables => report_util.embeddables.size,
+      :num_answered => report_util.saveables.count { |s| s.answered? },
+      :num_submitted => report_util.saveables.count { |s| s.submitted? },
+      :num_correct => report_util.saveables.count { |s|
+          (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
+        },
+      :complete_percent => report_util.complete_percent
+    }
+  end
+
+  def escape_comma(string)
+    string&.gsub(',', ' ')
   end
 end

@@ -18,7 +18,9 @@ class Report::LearnerController < ApplicationController
 
   def update_learners
     authorize Report::Learner
-    Portal::Learner.all.each { |l| l.report_learner.update_fields }
+    Portal::Learner.all.each { |l|
+      l.update_report_model_cache
+    }
   end
 
   def index

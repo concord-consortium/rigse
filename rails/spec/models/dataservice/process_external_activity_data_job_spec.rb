@@ -49,6 +49,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
   subject { Dataservice::ProcessExternalActivityDataJob.new(23,json_content)}
   before(:each) do
     allow(Portal::Learner).to receive_messages(:find => learner)
+    allow(learner).to receive_messages(:update_report_model_cache => true)
     allow(subject).to receive(:internal_process_open_response)
     allow(subject).to receive(:internal_process_multiple_choice)
     allow(subject).to receive(:internal_process_image_question)
