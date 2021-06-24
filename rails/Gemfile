@@ -53,8 +53,9 @@ gem 'jwt'
 gem 'jquery-fileupload-rails'
 gem 'mimemagic', '0.3.10'
 gem 'mysql2', platforms: [:ruby, :mingw]
-gem 'nested_form'
-gem 'net-sftp', '~> 2.0', require: 'net/sftp'
+
+# gem 'nested_form'
+# gem 'net-sftp', '~> 2.0', require: 'net/sftp'
 gem 'newrelic_rpm'
 gem 'nokogiri'
 gem 'oj'
