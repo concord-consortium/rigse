@@ -21,8 +21,6 @@ class SearchController < ApplicationController
     end
   end
 
-  in_place_edit_for :investigation, :search_term
-
   public
 
   def index

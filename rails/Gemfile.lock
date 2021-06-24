@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/concord-consortium/in_place_editing.git
-  revision: 2d6b856ca0a3d9eccb9c85bb48725537870ed32c
-  specs:
-    in_place_editing (1.2.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -644,7 +638,6 @@ DEPENDENCIES
   highline
   hirb
   httparty
-  in_place_editing!
   interactive_editor
   jquery-fileupload-rails
   json (~> 1.8.6)
