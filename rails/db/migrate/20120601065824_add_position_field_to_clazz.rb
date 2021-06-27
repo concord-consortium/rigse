@@ -1,7 +1,7 @@
 class AddPositionFieldToClazz < ActiveRecord::Migration[5.1]
 
   class Portal::TeacherClazz < ApplicationRecord
-    set_table_name :portal_teacher_clazzes
+    self.table_name = :portal_teacher_clazzes
   end
 
   def self.up

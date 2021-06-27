@@ -5,9 +5,6 @@ require 'rails/all'
 require File.expand_path('../../lib/load_config', __FILE__)
 require File.expand_path('../../lib/bool_env', __FILE__)
 
-# loads Rack::ConfigSessionCookies for middleware configuration
-require File.expand_path("../../lib/rack/config_session_cookies", __FILE__)
-
 # load Rack::ResponseLogger for middleware configuration
 require File.expand_path("../../lib/rack/response_logger", __FILE__)
 
@@ -49,9 +46,6 @@ module RailsPortal
     config.autoload_paths += Dir["#{config.root}/app/helpers/"] # include app/helpers and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
-
-    # Subvert the cookies_only=true session policy for requests ending in ".config"
-    config.middleware.insert_before(ActionDispatch::Cookies, Rack::ConfigSessionCookies)
 
     # Expands posted content with a content-encoding of: 'b64gzip'
     # NOTE: pre-Rails 5 this was inserted before ActionController::ParamsParser but that middleware
@@ -96,22 +90,6 @@ module RailsPortal
 
     # Activate observers that should always be running
     # Please note that observers generated using script/generate observer need to have an _observer suffix
-
-    # ... observers are now started in config/initializers/observers.rb
-    # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
-    # if ApplicationRecord.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-    if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
-      puts "Didn't start observers because you are running: rake db:migrate"
-    else
-        begin
-          config.active_record.observers = :"dataservice/bundle_content_observer", :"dataservice/periodic_bundle_content_observer"
-        rescue
-          # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
-          puts "Couldn't start observers #{$!} ... but continuing process anyway"
-          puts "This might be because you have not setup the appropriate database tables yet... "
-          puts "see config/initializers/observers.rb for more information."
-        end
-    end
 
     config.middleware.insert_before 0, Rack::Cors do
 

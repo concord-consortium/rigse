@@ -93,9 +93,13 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 -----END RSA PRIVATE KEY-----"
         } }
 
+  let(:site_url) { "http://test.host/" }
+
   before(:each) {
     # prevent warnings about undefined default settings
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
+    allow(APP_CONFIG).to receive(:[]).and_call_original
+    allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return(site_url)
   }
 
   describe "GET #firebase" do
@@ -111,6 +115,36 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         expect(response.status).to eq(400)
       end
     end
+
+    def decode_token
+      expect(response.status).to eq(201)
+
+      body = JSON.parse(response.body)
+      token = body["token"]
+      SignedJWT::decode_firebase_token(token, firebase_app_name)
+    end
+
+    shared_examples "valid learner jwt" do
+      it "returns a valid JWT with learner params" do
+        decoded_token = decode_token()
+        expect(decoded_token[:data]).to include(
+          "uid" => uid,
+          "domain" => root_url,
+          "externalId" => learner.id,
+          "returnUrl" => be_present,
+          "logging" => true,
+          "domain_uid" => user.id,
+          "class_info_url"  => be_present
+        )
+        expect(decoded_token[:data]["claims"]).to include(
+          "user_type" => "learner",
+          "user_id" => url_for_user,
+          "class_hash" => be_present,
+          "offering_id" => offering.id
+        )
+      end
+    end
+
 
     context "when a valid authentication header token is sent" do
       context "and the token itself has no learner or teacher" do
@@ -134,86 +168,98 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         end
 
         context "and a firebase_app param is sent" do
-          it "returns a valid JWT" do
-            allow(APP_CONFIG).to receive(:[]).and_call_original
-            allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
-            post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
-            expect(response.status).to eq(201)
+          shared_examples "valid user jwt" do
+            it "returns a valid JWT" do
+              decoded_token = decode_token()
+              expect(decoded_token[:data]).to include(
+                  "uid" => uid,
+                )
+              expect(decoded_token[:data]["claims"]).to include(
+                "user_type" => "user",
+                "user_id" => url_for_user,
+                "platform_id" => site_url,
+                "platform_user_id" => user.id
+              )
+            end
+          end
 
-            body = JSON.parse(response.body)
-            token = body["token"]
-            decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-            expect(decoded_token[:data]["uid"]).to eql uid
-            expect(decoded_token[:data]["claims"]["platform_id"]).to eq "http://test.host/"
-            expect(decoded_token[:data]["claims"]["platform_user_id"]).to eq user.id
-            expect(decoded_token[:data]["claims"]["user_type"]).to eq "user"
-            expect(decoded_token[:data]["claims"]["user_id"]).to eq url_for_user
+          before(:each){
+            post :firebase,
+              params: { :firebase_app => "test app" },
+              session: { :format => :json }
+          }
+
+          it_behaves_like "valid user jwt"
+
+          context "and the site_url differs from the request domain" do
+            let(:site_url)        { "http://canonical.host/"}
+            let(:url_for_user)    { "#{site_url}users/#{user.id}" } # can't use url_for(user) helper in specs
+
+            it_behaves_like "valid user jwt"
           end
         end
 
         context "and firebase_app and resource_link_id params are sent" do
           context "and the user of the auth header token has a learner with that resource_link_id" do
             let(:user) { learner.student.user }
-            it "returns a valid JWT with learner params" do
-              post :firebase, params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s }, session: { :format => :json }
-              expect(response.status).to eq(201)
 
-              body = JSON.parse(response.body)
-              token = body["token"]
-              decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+            before(:each) {
+              post :firebase,
+                params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s },
+                session: { :format => :json }
+            }
+            it_behaves_like "valid learner jwt"
 
-              expect(decoded_token[:data]).to include(
-                  "uid" => uid,
-                  "domain" => root_url,
-                  "externalId" => learner.id,
-                  "returnUrl" => be_present,
-                  "logging" => true,
-                  "domain_uid" => user.id,
-                  "class_info_url"  => be_present
-                )
+            context "and the site_url differs from the request domain" do
+              let(:site_url)        { "http://canonical.host/"}
+              let(:url_for_user)    { "http://canonical.host/users/#{user.id}" } # can't use url_for(user) helper in specs
 
-              expect(decoded_token[:data]["claims"]).to include(
-                "user_type" => "learner",
-                "user_id" => url_for_user,
-                "class_hash" => be_present,
-                "offering_id" => offering.id
-              )
+              it_behaves_like "valid learner jwt"
             end
           end
 
           context "and the user of the auth header token has a teacher" do
             let(:user) { class_teacher.user }
             context "with a class with that resource_link_id" do
-              it "returns a valid JWT with teacher params, and a class_hash claim" do
-                allow(APP_CONFIG).to receive(:[]).and_call_original
-                allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
+              shared_examples "valid teacher jwt" do
+                it "returns a valid JWT with teacher params, and a class_hash claim" do
+                  decoded_token = decode_token()
+                  expect(decoded_token[:data]).to include(
+                    "uid" => uid,
+                    "domain_uid" => user.id,
+                    "domain" => root_url
+                  )
+                  expect(decoded_token[:data]["claims"]).to include(
+                    "user_type" => "teacher",
+                    "user_id" => url_for_user,
+                    "platform_id" => site_url,
+                    "class_hash" => be_present
+                  )
 
-                post :firebase, params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s }, session: { :format => :json }
-                expect(response.status).to eq(201)
+                  # Even though we send in an resource_link_id the claims in this JWT are
+                  # Valid for any offering in the class not just the offering of this resource_link_id
+                  # This approach is for consitancy with other ways of getting teacher JWTs
+                  expect(decoded_token[:data]["claims"]).to_not include(
+                    "offering_id" => be_present
+                  )
+                end
+              end
 
-                body = JSON.parse(response.body)
-                token = body["token"]
-                decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+              before(:each){
+                post :firebase,
+                  params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s },
+                  session: { :format => :json }
+              }
 
-                expect(decoded_token[:data]).to include(
-                  "uid" => uid,
-                  "domain_uid" => user.id,
-                  "domain" => root_url
-                )
 
-                expect(decoded_token[:data]["claims"]).to include(
-                  "user_type" => "teacher",
-                  "user_id" => url_for_user,
-                  "platform_id" => "http://test.host/",
-                  "class_hash" => be_present
-                )
 
-                # Even though we send in an resource_link_id the claims in this JWT are
-                # Valid for any offering in the class not just the offering of this resource_link_id
-                # This approach is for consitancy with other ways of getting teacher JWTs
-                expect(decoded_token[:data]["claims"]).to_not include(
-                  "offering_id" => be_present
-                )
+              it_behaves_like "valid teacher jwt"
+
+              context "and the site_url differs from the request domain" do
+                let(:site_url)        { "http://canonical.host/"}
+                let(:url_for_user)    { "http://canonical.host/users/#{user.id}" } # can't use url_for(user) helper in specs
+
+                it_behaves_like "valid teacher jwt"
               end
             end
             context "without a class with that resource_link_id" do
@@ -236,34 +282,11 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         before(:each) {
           set_auth_token(learner_token)
           FirebaseApp.create!(firebase_app_attributes)
+          post :firebase, params: {:firebase_app => "test app"}, session: { :format => :json }
         }
 
-        it "returns a valid JWT with learner params" do
-          post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
-          expect(response.status).to eq(201)
 
-          body = JSON.parse(response.body)
-          token = body["token"]
-          decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
-
-          expect(decoded_token[:data]).to include(
-              "uid" => uid,
-              "domain" => root_url,
-              "externalId" => learner.id,
-              "returnUrl" => be_present,
-              "logging" => true,
-              "domain_uid" => user.id,
-              "class_info_url"  => be_present
-            )
-
-          expect(decoded_token[:data]["claims"]).to include(
-            "user_type" => "learner",
-            "user_id" => url_for_user,
-            "class_hash" => be_present,
-            "offering_id" => offering.id
-          )
-
-        end
+        it_behaves_like "valid learner jwt"
       end
 
       context "and the token has a teacher" do
@@ -273,27 +296,34 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         }
 
         context "and there is no class hash" do
-          it "returns a valid JWT" do
-            allow(APP_CONFIG).to receive(:[]).and_call_original
-            allow(APP_CONFIG).to receive(:[]).with(:site_url).and_return("http://test.host/")
-            post :firebase, params: { :firebase_app => "test app" }, session: { :format => :json }
-            expect(response.status).to eq(201)
-            body = JSON.parse(response.body)
-            token = body["token"]
-            decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+          shared_examples "valid teacher jwt" do
+            it "returns a valid JWT" do
+              post :firebase, params: {:firebase_app => "test app"}, session: { :format => :json }
+              decoded_token = decode_token()
 
-            expect(decoded_token[:data]).to include(
-                "uid" => uid,
-                "domain" => root_url
+              expect(decoded_token[:data]).to include(
+                  "uid" => uid,
+                  "domain" => root_url
+                )
+
+              expect(decoded_token[:data]["claims"]).to include(
+                "user_type" => "teacher",
+                "user_id" => url_for_user,
+                "class_hash" => be_nil,
+                "platform_id" => site_url
               )
-
-            expect(decoded_token[:data]["claims"]).to include(
-              "user_type" => "teacher",
-              "user_id" => url_for_user,
-              "class_hash" => be_nil,
-              "platform_id" => "http://test.host/"
-            )
+            end
           end
+
+          it_behaves_like "valid teacher jwt"
+
+          context "and the site_url differs from the request domain" do
+            let(:site_url)        { "http://canonical.host/"}
+            let(:url_for_user)    { "http://canonical.host/users/#{user.id}" } # can't use url_for(user) helper in specs
+
+            it_behaves_like "valid teacher jwt"
+          end
+
         end
 
         context "and there is a class hash" do
@@ -306,12 +336,10 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
           context "and the class_hash is for a class of the teacher" do
             it "returns a valid JWT with this class hash" do
-              post :firebase, params: { :firebase_app => "test app", :class_hash => clazz.class_hash }, session: { :format => :json }
-              expect(response.status).to eq(201)
 
-              body = JSON.parse(response.body)
-              token = body["token"]
-              decoded_token = SignedJWT::decode_firebase_token(token, firebase_app_name)
+              post :firebase, params: {:firebase_app => "test app", :class_hash => clazz.class_hash}, session: { :format => :json }
+              decoded_token = decode_token()
+
 
               expect(decoded_token[:data]["claims"]).to include(
                 "class_hash" => clazz.class_hash

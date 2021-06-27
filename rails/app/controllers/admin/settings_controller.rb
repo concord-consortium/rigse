@@ -111,9 +111,9 @@ class Admin::SettingsController < ApplicationController
     params && params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials,
                             :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description,
                             :enable_grade_levels, :enable_member_registration, :external_url, :help_type,
-                            :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval,
+                            :home_page_content, :include_external_activities, :pub_interval,
                             :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots,
-                            :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :wrap_home_page_content,
+                            :use_student_security_questions, :user_id, :wrap_home_page_content,
                             # array value for this field
                             :enabled_bookmark_types => [])
   end

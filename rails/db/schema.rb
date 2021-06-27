@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_20_131514) do
+ActiveRecord::Schema.define(version: 2021_06_18_123809) do
 
-  create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "access_grants", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
     t.string "refresh_token"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_access_grants_on_user_id"
   end
 
-  create_table "activities", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "activities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid", limit: 36
     t.string "name"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["publication_status"], name: "pub_status"
   end
 
-  create_table "admin_cohort_items", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_cohort_items", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "admin_cohort_id"
     t.integer "item_id"
     t.string "item_type"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["item_type"], name: "index_admin_cohort_items_on_item_type"
   end
 
-  create_table "admin_cohorts", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_cohorts", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "project_id"
     t.string "name"
     t.boolean "email_notifications_enabled", default: false
@@ -71,14 +71,14 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["project_id"], name: "index_admin_cohorts_on_project_id"
   end
 
-  create_table "admin_notice_user_display_statuses", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_notice_user_display_statuses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.datetime "last_collapsed_at_time"
     t.boolean "collapsed_status"
     t.index ["user_id"], name: "index_admin_notice_user_display_statuses_on_user_id"
   end
 
-  create_table "admin_project_links", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_project_links", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "project_id"
     t.text "name", size: :medium
     t.text "href", size: :medium
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "position", default: 5
   end
 
-  create_table "admin_project_materials", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_project_materials", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "project_id"
     t.integer "material_id"
     t.string "material_type"
@@ -100,7 +100,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["project_id"], name: "admin_proj_mat_proj_idx"
   end
 
-  create_table "admin_project_users", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_project_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "project_id"
     t.integer "user_id"
     t.boolean "is_admin", default: false
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_admin_project_users_on_user_id"
   end
 
-  create_table "admin_projects", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_projects", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["landing_page_slug"], name: "index_admin_projects_on_landing_page_slug", unique: true
   end
 
-  create_table "admin_settings", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_settings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.text "description", size: :medium
     t.string "uuid", limit: 36
@@ -137,8 +137,6 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.boolean "enable_member_registration", default: false
     t.boolean "allow_adhoc_schools", default: false
     t.boolean "require_user_consent", default: false
-    t.boolean "use_periodic_bundle_uploading", default: false
-    t.string "jnlp_cdn_hostname"
     t.boolean "active"
     t.string "external_url"
     t.text "custom_help_page_html", size: :medium
@@ -147,7 +145,6 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.text "enabled_bookmark_types", size: :medium
     t.integer "pub_interval", default: 10
     t.boolean "anonymous_can_browse_materials", default: true
-    t.string "jnlp_url"
     t.boolean "show_collections_menu", default: false
     t.boolean "auto_set_teachers_as_authors", default: false
     t.integer "default_cohort_id"
@@ -157,7 +154,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.text "about_page_content", size: :medium
   end
 
-  create_table "admin_site_notice_users", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_site_notice_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "notice_id"
     t.integer "user_id"
     t.boolean "notice_dismissed"
@@ -167,7 +164,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_admin_site_notice_users_on_user_id"
   end
 
-  create_table "admin_site_notices", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_site_notices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.text "notice_html", size: :medium
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -177,14 +174,14 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["updated_by"], name: "index_admin_site_notices_on_updated_by"
   end
 
-  create_table "admin_tags", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "admin_tags", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "scope"
     t.string "tag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "authentications", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "authentications", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "provider"
     t.string "uid"
@@ -193,14 +190,14 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
-  create_table "authoring_sites", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "authoring_sites", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "clients", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "clients", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "app_id"
     t.string "app_secret"
@@ -212,7 +209,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.text "redirect_uris"
   end
 
-  create_table "commons_licenses", id: false, charset: "utf8", force: :cascade do |t|
+  create_table "commons_licenses", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "code", null: false
     t.string "name", null: false
     t.text "description", size: :medium
@@ -225,140 +222,21 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["code"], name: "index_commons_licenses_on_code"
   end
 
-  create_table "dataservice_blobs", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "dataservice_blobs", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.binary "content", size: :medium
     t.string "token"
-    t.integer "bundle_content_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "periodic_bundle_content_id"
     t.string "uuid", limit: 36
     t.string "mimetype"
     t.string "file_extension"
     t.integer "learner_id"
     t.string "checksum"
-    t.index ["bundle_content_id"], name: "index_dataservice_blobs_on_bundle_content_id"
     t.index ["checksum"], name: "index_dataservice_blobs_on_checksum"
     t.index ["learner_id"], name: "index_dataservice_blobs_on_learner_id"
-    t.index ["periodic_bundle_content_id"], name: "pbc_idx"
   end
 
-  create_table "dataservice_bucket_contents", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "bucket_logger_id"
-    t.text "body", size: :medium
-    t.boolean "processed"
-    t.boolean "empty"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bucket_logger_id"], name: "index_dataservice_bucket_contents_on_bucket_logger_id"
-  end
-
-  create_table "dataservice_bucket_log_items", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.text "content", size: :medium
-    t.integer "bucket_logger_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bucket_logger_id"], name: "index_dataservice_bucket_log_items_on_bucket_logger_id"
-  end
-
-  create_table "dataservice_bucket_loggers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name"
-    t.index ["learner_id"], name: "index_dataservice_bucket_loggers_on_learner_id"
-    t.index ["name"], name: "index_dataservice_bucket_loggers_on_name"
-  end
-
-  create_table "dataservice_bundle_contents", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "bundle_logger_id"
-    t.integer "position"
-    t.text "body", size: :long
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "otml", size: :long
-    t.boolean "processed"
-    t.boolean "valid_xml", default: false
-    t.boolean "empty", default: true
-    t.string "uuid", limit: 36
-    t.text "original_body", size: :medium
-    t.float "upload_time"
-    t.integer "collaboration_id"
-    t.index ["bundle_logger_id"], name: "index_dataservice_bundle_contents_on_bundle_logger_id"
-    t.index ["collaboration_id"], name: "index_dataservice_bundle_contents_on_collaboration_id"
-  end
-
-  create_table "dataservice_bundle_loggers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "in_progress_bundle_id"
-    t.index ["in_progress_bundle_id"], name: "index_dataservice_bundle_loggers_on_in_progress_bundle_id"
-  end
-
-  create_table "dataservice_console_contents", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "console_logger_id"
-    t.integer "position"
-    t.text "body", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "dataservice_console_loggers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "dataservice_jnlp_sessions", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "token"
-    t.integer "user_id"
-    t.integer "access_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["token"], name: "index_dataservice_jnlp_sessions_on_token"
-  end
-
-  create_table "dataservice_launch_process_events", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "event_type"
-    t.text "event_details", size: :medium
-    t.integer "bundle_content_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bundle_content_id"], name: "index_dataservice_launch_process_events_on_bundle_content_id"
-  end
-
-  create_table "dataservice_periodic_bundle_contents", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "periodic_bundle_logger_id"
-    t.text "body", size: :long
-    t.boolean "processed"
-    t.boolean "valid_xml"
-    t.boolean "empty"
-    t.string "uuid"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "parts_extracted", default: false
-    t.index ["periodic_bundle_logger_id"], name: "bundle_logger_index"
-  end
-
-  create_table "dataservice_periodic_bundle_loggers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.text "imports", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["learner_id"], name: "learner_index"
-  end
-
-  create_table "dataservice_periodic_bundle_parts", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "periodic_bundle_logger_id"
-    t.boolean "delta", default: true
-    t.string "key"
-    t.text "value", size: :long
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["key"], name: "parts_key_index"
-    t.index ["periodic_bundle_logger_id"], name: "bundle_logger_index"
-  end
-
-  create_table "delayed_jobs", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "delayed_jobs", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "priority", default: 0
     t.integer "attempts", default: 0
     t.text "handler", size: :long
@@ -373,7 +251,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "embeddable_iframes", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "embeddable_iframes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid", limit: 36
     t.string "name"
@@ -389,7 +267,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "embeddable_image_questions", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "embeddable_image_questions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid", limit: 36
     t.string "name"
@@ -402,7 +280,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "embeddable_multiple_choice_choices", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "embeddable_multiple_choice_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.text "choice", size: :medium
     t.integer "multiple_choice_id"
     t.datetime "created_at", null: false
@@ -412,7 +290,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["multiple_choice_id"], name: "index_embeddable_multiple_choice_choices_on_multiple_choice_id"
   end
 
-  create_table "embeddable_multiple_choices", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "embeddable_multiple_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid", limit: 36
     t.string "name"
@@ -428,7 +306,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "embeddable_open_responses", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "embeddable_open_responses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid", limit: 36
     t.string "name"
@@ -445,7 +323,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.boolean "show_in_featured_question_report", default: true
   end
 
-  create_table "external_activities", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "external_activities", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid"
     t.string "name"
@@ -498,14 +376,14 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_external_activities_on_user_id"
   end
 
-  create_table "external_activity_reports", id: false, charset: "utf8", force: :cascade do |t|
+  create_table "external_activity_reports", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "external_activity_id"
     t.integer "external_report_id"
     t.index ["external_activity_id", "external_report_id"], name: "activity_reports_activity_index"
     t.index ["external_report_id"], name: "activity_reports_index"
   end
 
-  create_table "external_reports", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "external_reports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "url"
     t.string "name"
     t.string "launch_text"
@@ -523,7 +401,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["client_id"], name: "index_external_reports_on_client_id"
   end
 
-  create_table "favorites", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "favorites", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "favoritable_id"
     t.string "favoritable_type"
@@ -534,7 +412,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id", "favoritable_id", "favoritable_type"], name: "favorite_unique", unique: true
   end
 
-  create_table "firebase_apps", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "firebase_apps", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "client_email"
     t.text "private_key"
@@ -543,111 +421,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["name"], name: "index_firebase_apps_on_name"
   end
 
-  create_table "geniverse_activities", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.text "initial_alleles", size: :medium
-    t.string "base_channel_name"
-    t.integer "max_users_in_room"
-    t.boolean "send_bred_dragons"
-    t.string "title"
-    t.string "hidden_genes"
-    t.text "static_genes", size: :medium
-    t.boolean "crossover_when_breeding", default: false
-    t.string "route"
-    t.string "pageType"
-    t.text "message", size: :medium
-    t.text "match_dragon_alleles", size: :medium
-    t.integer "myCase_id"
-    t.integer "myCaseOrder"
-    t.boolean "is_argumentation_challenge", default: false
-    t.integer "threshold_three_stars"
-    t.integer "threshold_two_stars"
-    t.boolean "show_color_labels"
-    t.text "congratulations", size: :medium
-    t.boolean "show_tooltips", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["route"], name: "index_activities_on_route"
-  end
-
-  create_table "geniverse_articles", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "group"
-    t.integer "activity_id"
-    t.text "text", size: :medium
-    t.integer "time"
-    t.boolean "submitted"
-    t.text "teacherComment", size: :medium
-    t.boolean "accepted"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "geniverse_cases", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "name"
-    t.integer "order"
-    t.string "introImageUrl"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "geniverse_dragons", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "name"
-    t.integer "sex"
-    t.string "alleles"
-    t.string "imageURL"
-    t.integer "mother_id"
-    t.integer "father_id"
-    t.boolean "bred"
-    t.integer "user_id"
-    t.integer "stableOrder"
-    t.boolean "isEgg", default: false
-    t.boolean "isInMarketplace", default: true
-    t.integer "activity_id"
-    t.integer "breeder_id"
-    t.string "breedTime", limit: 16
-    t.boolean "isMatchDragon", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["activity_id"], name: "index_dragons_on_activity_id"
-    t.index ["breeder_id", "breedTime", "id"], name: "breed_record_index"
-    t.index ["father_id"], name: "father_index"
-    t.index ["id"], name: "index_dragons_on_id"
-    t.index ["mother_id"], name: "mother_index"
-    t.index ["user_id"], name: "index_dragons_on_user_id"
-  end
-
-  create_table "geniverse_help_messages", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "page_name"
-    t.text "message", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "geniverse_unlockables", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "title"
-    t.text "content", size: :medium
-    t.string "trigger"
-    t.boolean "open_automatically", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "geniverse_users", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "username"
-    t.string "password_hash"
-    t.integer "group_id"
-    t.integer "member_id"
-    t.string "first_name"
-    t.string "last_name"
-    t.text "note", size: :medium
-    t.string "class_name"
-    t.text "metadata", size: :long
-    t.string "avatar"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["username", "password_hash"], name: "index_users_on_username_and_password_hash", length: 125
-  end
-
-  create_table "images", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "images", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "name"
     t.text "attribution", size: :medium
@@ -663,7 +437,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "height", default: 0
   end
 
-  create_table "import_duplicate_users", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "import_duplicate_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "login"
     t.string "email"
     t.integer "duplicate_by"
@@ -672,17 +446,17 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "import_id"
   end
 
-  create_table "import_school_district_mappings", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "import_school_district_mappings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "district_id"
     t.string "import_district_uuid"
   end
 
-  create_table "import_user_school_mappings", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "import_user_school_mappings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "school_id"
     t.string "import_school_url"
   end
 
-  create_table "imported_users", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "imported_users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "user_url"
     t.boolean "is_verified"
     t.integer "user_id"
@@ -690,7 +464,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "import_id"
   end
 
-  create_table "imports", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "imports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "job_id"
     t.datetime "job_finished_at"
     t.integer "import_type"
@@ -703,10 +477,10 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.text "import_data", size: :long
   end
 
-  create_table "interactives", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "interactives", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.text "description", size: :medium
-    t.text "url"
+    t.string "url"
     t.integer "width"
     t.integer "height"
     t.float "scale"
@@ -723,7 +497,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "external_activity_id"
   end
 
-  create_table "investigations", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "investigations", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid", limit: 36
     t.string "name"
@@ -746,7 +520,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["publication_status"], name: "pub_status"
   end
 
-  create_table "learner_processing_events", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "learner_processing_events", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.datetime "portal_end"
     t.datetime "portal_start"
@@ -765,14 +539,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["url"], name: "index_learner_processing_events_on_url"
   end
 
-  create_table "legacy_collaborations", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "bundle_content_id"
-    t.integer "student_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "materials_collection_items", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "materials_collection_items", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "materials_collection_id"
     t.string "material_type"
     t.integer "material_id"
@@ -783,7 +550,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["materials_collection_id", "position"], name: "materials_collection_idx"
   end
 
-  create_table "materials_collections", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "materials_collections", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.text "description", size: :medium
     t.integer "project_id"
@@ -792,29 +559,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["project_id"], name: "index_materials_collections_on_project_id"
   end
 
-  create_table "otrunk_example_otrunk_imports", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "uuid"
-    t.string "classname"
-    t.string "fq_classname"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_imports_on_fq_classname", unique: true
-  end
-
-  create_table "otrunk_example_otrunk_view_entries", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "uuid"
-    t.integer "otrunk_import_id"
-    t.string "classname"
-    t.string "fq_classname"
-    t.boolean "standard_view"
-    t.boolean "standard_edit_view"
-    t.boolean "edit_view"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["fq_classname"], name: "index_otrunk_example_otrunk_view_entries_on_fq_classname", unique: true
-  end
-
-  create_table "page_elements", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "page_elements", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "page_id"
     t.integer "embeddable_id"
     t.string "embeddable_type"
@@ -828,7 +573,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["position"], name: "index_page_elements_on_position"
   end
 
-  create_table "pages", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "pages", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "section_id"
     t.string "uuid", limit: 36
@@ -845,7 +590,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["section_id", "position"], name: "index_pages_on_section_id_and_position"
   end
 
-  create_table "passwords", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "passwords", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.string "reset_code"
     t.datetime "expiration_date"
@@ -854,14 +599,14 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_passwords_on_user_id"
   end
 
-  create_table "portal_bookmark_visits", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_bookmark_visits", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "bookmark_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "portal_bookmarks", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_bookmarks", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "type"
     t.string "url"
@@ -876,7 +621,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_portal_bookmarks_on_user_id"
   end
 
-  create_table "portal_clazzes", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_clazzes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -896,7 +641,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["class_word"], name: "index_portal_clazzes_on_class_word", unique: true
   end
 
-  create_table "portal_collaboration_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_collaboration_memberships", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "collaboration_id"
     t.integer "student_id"
     t.datetime "created_at", null: false
@@ -904,7 +649,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["collaboration_id", "student_id"], name: "index_portal_coll_mem_on_collaboration_id_and_student_id"
   end
 
-  create_table "portal_collaborations", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_collaborations", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -913,7 +658,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["owner_id"], name: "index_portal_collaborations_on_owner_id"
   end
 
-  create_table "portal_countries", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_countries", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "formal_name"
     t.string "capital"
@@ -928,7 +673,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["two_letter"], name: "index_portal_countries_on_two_letter"
   end
 
-  create_table "portal_courses", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_courses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -942,12 +687,12 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["school_id"], name: "index_portal_courses_on_school_id"
   end
 
-  create_table "portal_courses_grade_levels", id: false, charset: "utf8", force: :cascade do |t|
+  create_table "portal_courses_grade_levels", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "grade_level_id"
     t.integer "course_id"
   end
 
-  create_table "portal_districts", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_districts", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -961,7 +706,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["state"], name: "index_portal_districts_on_state"
   end
 
-  create_table "portal_grade_levels", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_grade_levels", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -972,12 +717,12 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "grade_id"
   end
 
-  create_table "portal_grade_levels_teachers", id: false, charset: "utf8", force: :cascade do |t|
+  create_table "portal_grade_levels_teachers", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "grade_level_id"
     t.integer "teacher_id"
   end
 
-  create_table "portal_grades", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_grades", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.integer "position"
@@ -987,7 +732,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "portal_learner_activity_feedbacks", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_learner_activity_feedbacks", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.text "text_feedback"
     t.integer "score", default: 0
     t.boolean "has_been_reviewed", default: false
@@ -1000,23 +745,19 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["portal_learner_id"], name: "index_portal_learner_activity_feedbacks_on_portal_learner_id"
   end
 
-  create_table "portal_learners", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_learners", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.integer "student_id"
     t.integer "offering_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "bundle_logger_id"
-    t.integer "console_logger_id"
     t.string "secure_key"
-    t.index ["bundle_logger_id"], name: "index_portal_learners_on_bundle_logger_id"
-    t.index ["console_logger_id"], name: "index_portal_learners_on_console_logger_id"
     t.index ["offering_id"], name: "index_portal_learners_on_offering_id"
     t.index ["secure_key"], name: "index_portal_learners_on_sec_key", unique: true
     t.index ["student_id"], name: "index_portal_learners_on_student_id"
   end
 
-  create_table "portal_nces06_districts", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_nces06_districts", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "LEAID", limit: 7
     t.string "FIPST", limit: 2
     t.string "STID", limit: 14
@@ -1109,7 +850,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["STID"], name: "index_portal_nces06_districts_on_STID"
   end
 
-  create_table "portal_nces06_schools", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_nces06_schools", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "nces_district_id"
     t.string "NCESSCH", limit: 12
     t.string "FIPST", limit: 2
@@ -1698,7 +1439,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["nces_district_id"], name: "index_portal_nces06_schools_on_nces_district_id"
   end
 
-  create_table "portal_offering_activity_feedbacks", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_offering_activity_feedbacks", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.boolean "enable_text_feedback", default: false
     t.integer "max_score", default: 10
     t.string "score_type", default: "none"
@@ -1710,7 +1451,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.text "rubric"
   end
 
-  create_table "portal_offering_embeddable_metadata", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_offering_embeddable_metadata", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "offering_id"
     t.integer "embeddable_id"
     t.string "embeddable_type"
@@ -1722,7 +1463,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["offering_id", "embeddable_id", "embeddable_type"], name: "index_portal_offering_metadata", unique: true
   end
 
-  create_table "portal_offerings", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_offerings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "status"
     t.integer "clazz_id"
@@ -1740,7 +1481,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["runnable_type"], name: "index_portal_offerings_on_runnable_type"
   end
 
-  create_table "portal_permission_forms", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_permission_forms", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "url"
     t.datetime "created_at", null: false
@@ -1748,7 +1489,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "project_id"
   end
 
-  create_table "portal_school_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_school_memberships", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -1763,7 +1504,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["school_id", "member_id", "member_type"], name: "school_memberships_long_idx"
   end
 
-  create_table "portal_schools", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_schools", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -1783,7 +1524,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["state"], name: "index_portal_schools_on_state"
   end
 
-  create_table "portal_student_clazzes", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_student_clazzes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -1797,7 +1538,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["student_id", "clazz_id"], name: "student_class_index"
   end
 
-  create_table "portal_student_permission_forms", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_student_permission_forms", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.boolean "signed"
     t.integer "portal_student_id"
     t.integer "portal_permission_form_id"
@@ -1807,7 +1548,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["portal_student_id"], name: "index_portal_student_permission_forms_on_portal_student_id"
   end
 
-  create_table "portal_students", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_students", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.integer "user_id"
     t.integer "grade_level_id"
@@ -1816,7 +1557,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_portal_students_on_user_id"
   end
 
-  create_table "portal_subjects", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_subjects", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -1825,7 +1566,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "portal_teacher_clazzes", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_teacher_clazzes", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
@@ -1841,7 +1582,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["teacher_id"], name: "index_portal_teacher_clazzes_on_teacher_id"
   end
 
-  create_table "portal_teacher_full_status", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_teacher_full_status", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "offering_id"
     t.integer "teacher_id"
     t.boolean "offering_collapsed"
@@ -1849,7 +1590,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["teacher_id"], name: "index_portal_teacher_full_status_on_teacher_id"
   end
 
-  create_table "portal_teachers", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "portal_teachers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.integer "user_id"
     t.datetime "created_at", null: false
@@ -1859,7 +1600,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["user_id"], name: "index_portal_teachers_on_user_id"
   end
 
-  create_table "report_embeddable_filters", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "report_embeddable_filters", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "offering_id"
     t.text "embeddables", size: :medium
     t.datetime "created_at", null: false
@@ -1868,7 +1609,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["offering_id"], name: "index_report_embeddable_filters_on_offering_id"
   end
 
-  create_table "report_learner_activity", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "report_learner_activity", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "activity_id"
     t.float "complete_percent"
@@ -1876,7 +1617,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["learner_id"], name: "index_report_learner_activity_on_learner_id"
   end
 
-  create_table "report_learners", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "report_learners", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "student_id"
     t.integer "user_id"
@@ -1918,22 +1659,21 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["student_id"], name: "index_report_learners_on_student_id"
   end
 
-  create_table "roles", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "roles", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "title"
     t.integer "position"
     t.string "uuid", limit: 36
   end
 
-  create_table "roles_users", id: false, charset: "utf8", force: :cascade do |t|
+  create_table "roles_users", id: false, charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "role_id"
     t.integer "user_id"
     t.index ["role_id", "user_id"], name: "index_roles_users_on_role_id_and_user_id"
     t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
   end
 
-  create_table "saveable_external_link_urls", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_external_link_urls", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "external_link_id"
-    t.integer "bundle_content_id"
     t.integer "position"
     t.text "url"
     t.boolean "is_final"
@@ -1945,7 +1685,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["external_link_id"], name: "index_saveable_external_link_urls_on_external_link_id"
   end
 
-  create_table "saveable_external_links", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_external_links", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "embeddable_id"
     t.string "embeddable_type"
     t.integer "learner_id"
@@ -1958,9 +1698,8 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["offering_id"], name: "index_saveable_external_links_on_offering_id"
   end
 
-  create_table "saveable_image_question_answers", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_image_question_answers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "image_question_id"
-    t.integer "bundle_content_id"
     t.integer "blob_id"
     t.integer "position"
     t.datetime "created_at", null: false
@@ -1974,7 +1713,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["image_question_id", "position"], name: "i_q_id_and_position_index"
   end
 
-  create_table "saveable_image_questions", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_image_questions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "offering_id"
     t.integer "image_question_id"
@@ -1987,9 +1726,8 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["offering_id"], name: "index_saveable_image_questions_on_offering_id"
   end
 
-  create_table "saveable_interactive_states", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_interactive_states", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "interactive_id"
-    t.integer "bundle_content_id"
     t.integer "position"
     t.text "state", size: :long
     t.boolean "is_final"
@@ -2001,7 +1739,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["interactive_id", "position"], name: "inter_id_and_position_index"
   end
 
-  create_table "saveable_interactives", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_interactives", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "offering_id"
     t.integer "response_count"
@@ -2010,9 +1748,8 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.integer "iframe_id"
   end
 
-  create_table "saveable_multiple_choice_answers", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_multiple_choice_answers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "multiple_choice_id"
-    t.integer "bundle_content_id"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -2024,7 +1761,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["multiple_choice_id", "position"], name: "m_c_id_and_position_index"
   end
 
-  create_table "saveable_multiple_choice_rationale_choices", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_multiple_choice_rationale_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "choice_id"
     t.integer "answer_id"
     t.string "rationale"
@@ -2035,7 +1772,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["choice_id"], name: "index_saveable_multiple_choice_rationale_choices_on_choice_id"
   end
 
-  create_table "saveable_multiple_choices", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_multiple_choices", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "multiple_choice_id"
     t.datetime "created_at", null: false
@@ -2048,7 +1785,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["offering_id"], name: "index_saveable_multiple_choices_on_offering_id"
   end
 
-  create_table "saveable_open_response_answers", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_open_response_answers", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "open_response_id"
     t.integer "bundle_content_id"
     t.integer "position"
@@ -2062,7 +1799,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["open_response_id", "position"], name: "o_r_id_and_position_index"
   end
 
-  create_table "saveable_open_responses", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_open_responses", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "open_response_id"
     t.datetime "created_at", null: false
@@ -2074,7 +1811,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["open_response_id"], name: "index_saveable_open_responses_on_open_response_id"
   end
 
-  create_table "saveable_sparks_measuring_resistance", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_sparks_measuring_resistance", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "learner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -2083,7 +1820,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["offering_id"], name: "index_saveable_sparks_measuring_resistance_on_offering_id"
   end
 
-  create_table "saveable_sparks_measuring_resistance_reports", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "saveable_sparks_measuring_resistance_reports", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "measuring_resistance_id"
     t.integer "position"
     t.text "content", size: :medium
@@ -2091,7 +1828,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "sections", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "sections", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "activity_id"
     t.string "uuid", limit: 36
@@ -2106,14 +1843,14 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["position"], name: "index_sections_on_position"
   end
 
-  create_table "security_questions", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "security_questions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "question", limit: 100, null: false
     t.string "answer", limit: 100, null: false
     t.index ["user_id"], name: "index_security_questions_on_user_id"
   end
 
-  create_table "sessions", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "sessions", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data", size: :medium
     t.datetime "created_at", null: false
@@ -2122,7 +1859,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "standard_documents", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "standard_documents", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uri"
     t.string "jurisdiction"
     t.string "title"
@@ -2132,7 +1869,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["name"], name: "index_standard_documents_on_name", unique: true
   end
 
-  create_table "standard_statements", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "standard_statements", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "uri"
     t.string "doc"
     t.string "statement_notation"
@@ -2148,7 +1885,7 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["uri", "material_type", "material_id"], name: "standard_unique", unique: true
   end
 
-  create_table "taggings", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "taggings", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "tag_id"
     t.integer "taggable_id"
     t.integer "tagger_id"
@@ -2156,24 +1893,17 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.string "taggable_type"
     t.string "context"
     t.datetime "created_at"
-    t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
-    t.index ["tag_id"], name: "index_taggings_on_tag_id"
     t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
-    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
-    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
-    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
-    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
-    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.string "name", collation: "utf8_bin"
+  create_table "tags", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
+    t.string "name"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 
-  create_table "teacher_project_views", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "teacher_project_views", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.integer "viewed_project_id", null: false
     t.integer "teacher_id", null: false
     t.datetime "created_at", null: false
@@ -2181,13 +1911,13 @@ ActiveRecord::Schema.define(version: 2021_05_20_131514) do
     t.index ["teacher_id"], name: "index_teacher_project_views_on_teacher_id"
   end
 
-  create_table "tools", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "tools", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.string "source_type"
     t.text "tool_id"
   end
 
-  create_table "users", id: :integer, charset: "utf8", force: :cascade do |t|
+  create_table "users", charset: "utf8", collation: "utf8_unicode_ci", force: :cascade do |t|
     t.string "login", limit: 40
     t.string "first_name", limit: 100, default: ""
     t.string "last_name", limit: 100, default: ""

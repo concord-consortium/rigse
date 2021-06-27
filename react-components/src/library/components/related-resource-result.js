@@ -11,6 +11,13 @@ const RelatedResourceResult = Component({
     portalObjectHelpers.processResource(resource)
   },
 
+  handleClick: function (e) {
+    e.preventDefault()
+    e.stopPropagation()
+    this.props.replaceResource(this.props.resource)
+    ga('send', 'event', 'Related Resource Card', 'Click', this.props.resource.name)
+  },
+
   render: function () {
     var resource = this.props.resource
 

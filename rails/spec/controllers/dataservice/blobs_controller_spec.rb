@@ -3,9 +3,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 describe Dataservice::BlobsController do
 
   let (:blob_params) {{
-    "bundle_content_id" => "1", "checksum" => "12345", "content" => "test blob",
+    "checksum" => "12345", "content" => "test blob",
     "file_extension" => "txt", "learner_id" => "2", "mimetype" => "text/plain",
-    "periodic_bundle_content_id" => "3", "token" => "test-token"
+    "token" => "test-token"
   }}
 
   before(:each) do

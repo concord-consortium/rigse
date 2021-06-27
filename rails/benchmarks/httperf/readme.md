@@ -30,10 +30,10 @@ Add to /etc/hosts:
 
 Add to: /etc/apache2/extra/httpd-vhosts.conf
 
-    # Proxying to passenger-standalone running under Ruby 1.8.7                                                                                                                                             
-    # http://blog.phusion.nl/2010/09/21/phusion-passenger-running-multiple-ruby-versions/                                                                                                                   
-    # /Users/stephen/dev/test/xproject-git                                                                                                                                                                  
-    # passenger start -a 127.0.0.1 -p 3003 -d                                                                                                                                                               
+    # Proxying to passenger-standalone running under Ruby 1.8.7
+    # http://blog.phusion.nl/2010/09/21/phusion-passenger-running-multiple-ruby-versions/
+    # /Users/stephen/dev/test/xproject-git
+    # passenger start -a 127.0.0.1 -p 3003 -d
 
     <VirtualHost xproject.local:80>
        ServerName xproject.local
@@ -51,11 +51,11 @@ Add to: /etc/apache2/extra/httpd-vhosts.conf
        ErrorLog "/Users/stephen/dev/test/xproject-git/log/assessments.localhost-error_log"
        CustomLog "/Users/stephen/dev/test/xproject-git/log/assessments.localhost-access_log" common
     </VirtualHost>
-  
-    # after making changes ...                                                                                                                                                                              
-    # testing the config: apachectl configtest                                                                                                                                                              
-    # restarting apache: sudo apachectl restart                                                                                                                                                             
-    # or tailing the general apache2 error log                                                                                                                                                              
+
+    # after making changes ...
+    # testing the config: apachectl configtest
+    # restarting apache: sudo apachectl restart
+    # or tailing the general apache2 error log
     # tail -n 200 -f /var/log/apache2/error_log
 
 Test the apache config and restart.
@@ -71,11 +71,6 @@ We'll be adding a bunch of records into the database, save a dump of your curren
 
     $ rake db:dump
 
-Check to see how many Dataservice::BundleContent models you are starting with:
-
-    $ bin/rails runner "puts Dataservice::BundleContent.count"
-    => 2
-
 cd to the httperf dir:
 
     $ cd benchmarks/httperf
@@ -86,7 +81,7 @@ Check the os settings for maximum number of open files -- httperf uses select() 
 
 On my Mac the maximum open files descriptors was set to 256
 
-    $ ulimit -acore 
+    $ ulimit -acore
     file size          (blocks, -c) 0
     data seg size           (kbytes, -d) unlimited
     file size               (blocks, -f) unlimited
@@ -102,15 +97,6 @@ On my Mac the maximum open files descriptors was set to 256
 Increase the maximum number of file descriptors to 1024:
 
     $ ulimit -n 1024
-
-
-
-    curl -i --header "Content-Type: application/xml" --header "Content-Encoding: b64gzip" --header "Content-md5: 2f90a99d87961e3ffdf585cd0c523b42 --cookie _rails_portal_session=520923139d1eb51aea3715a82ad94cba; --data @curl-data/dataservice_bundle_loggers_1_bundle_contents.bundle.med.txt" http://xproject3.local/dataservice/bundle_loggers/1/bundle_contents.bundle
-
-
-This measures the time to post 100 OTrunk session bundles:
-
-    $ httperf --hog --server xproject.local --add-header="Content-Type: application/xml\nContent-Encoding: b64gzip\nContent-md5: 2f90a99d87961e3ffdf585cd0c523b42\n" --wsesslog 100,0,sessions/dataservice_bundle_loggers_1_bundle_contents.bundle.med.txt
 
 The results running both httperf and the rails-portal server on the same machine:
 
@@ -143,11 +129,6 @@ The results running both httperf and the rails-portal server on the same machine
     Session failtime [s]: 0.0
     Session length histogram: 0 100
 
-If you ran the previous test once you should have 100 more Dataservice::BundleContent models than you starting with:
-
-    $ bin/rails runner "puts Dataservice::BundleContent.count"
-    => 102
-
 When you are done restore the previous state of the database:
 
     $ rake db:load
@@ -166,10 +147,6 @@ Install and setup JRuby for running the rails-portal:
 Start the server in production mode using mongrel:
 
     $ script/server -e production
-
-Run the same bundle post tests specifying localhost as the server and port 3000:
-
-    $ httperf --hog --server localhost --port 3000 --add-header="Content-Type: application/xml\nContent-Encoding: b64gzip\nContent-md5: 2f90a99d87961e3ffdf585cd0c523b42\n" --wsesslog 100,0,sessions/dataservice_bundle_loggers_1_bundle_contents.bundle.med.txt
 
 JRuby starts at about 5 bundle posts a second but after warming up hotspot by the third run of httperf the rate is up to 9.9:
 
@@ -236,4 +213,3 @@ After running the httperf test several times the server is now processing bundle
     Session lifetime [s]: 0.1
     Session failtime [s]: 0.0
     Session length histogram: 0 100
-    

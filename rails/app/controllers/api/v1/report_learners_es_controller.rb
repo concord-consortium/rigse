@@ -352,6 +352,16 @@ class API::V1::ReportLearnersEsController < API::APIController
   end
 
   def self.detailed_learner_info(learner)
+    teacherIds = learner.teachers_id ? learner.teachers_id.split(', ') : []
+    teachers = teacherIds.each_with_index.map do |id, i|
+      {
+        user_id: id,
+        name: learner.teachers_name ? learner.teachers_name.split(', ')[i] : nil,
+        district: learner.teachers_district ? learner.teachers_district.split(', ')[i] : nil,
+        state: learner.teachers_state ? learner.teachers_state.split(', ')[i] : nil,
+        email: learner.teachers_email ? learner.teachers_email.split(', ')[i] : nil,
+      }
+    end
     {
       student_id: learner.student_id,
       learner_id: learner.learner_id,
@@ -365,15 +375,7 @@ class API::V1::ReportLearnersEsController < API::APIController
       last_run: learner.last_run,
       run_remote_endpoint: learner.learner ? learner.learner.remote_endpoint_url : nil,
       runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil,
-      teachers: [
-        {
-          user_id: learner.teachers_id,
-          name: learner.teachers_name,
-          district: learner.teachers_district,
-          state: learner.teachers_state,
-          email: learner.teachers_email
-        }
-      ]
+      teachers: teachers
     }
   end
 end

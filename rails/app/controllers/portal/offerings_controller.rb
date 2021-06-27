@@ -1,5 +1,4 @@
 class Portal::OfferingsController < ApplicationController
-  include Portal::LearnerJnlpRenderer
 
   protected
 
@@ -46,6 +45,7 @@ class Portal::OfferingsController < ApplicationController
 
       format.run_resource_html   {
          if learner = setup_portal_student
+          learner.update_last_run
            cookies[:save_path] = @offering.runnable.save_path
            cookies[:learner_id] = learner.id
            cookies[:student_name] = "#{current_visitor.first_name} #{current_visitor.last_name}"
@@ -82,16 +82,6 @@ class Portal::OfferingsController < ApplicationController
            redirect_to(@offering.runnable.url(learner, root_url))
          end
        }
-
-      format.jnlp {
-        # check if the user is a student in this offering's class
-        if learner = setup_portal_student
-          render_learner_jnlp learner
-        else
-          # The current_visitor is a teacher (or another user acting like a teacher)
-          render :partial => 'shared/installer', :locals => { :runnable => @offering.runnable, :teacher_mode => true }
-        end
-      }
     end
   end
 
@@ -240,7 +230,7 @@ class Portal::OfferingsController < ApplicationController
                                           open_response_id: embeddable.id)
                                    .first_or_create
       if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
-        saveable_open_response.answers.create(:bundle_content_id => nil, :answer => answer)
+        saveable_open_response.answers.create(:answer => answer)
       end
     when Embeddable::MultipleChoice
       choice = parse_embeddable(answer)
@@ -252,7 +242,7 @@ class Portal::OfferingsController < ApplicationController
                               multiple_choice_id: embeddable.id)
                        .first_or_create
         if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
-          saveable_answer = saveable.answers.create(:bundle_content_id => nil)
+          saveable_answer = saveable.answers.create()
           Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)
         end
       else

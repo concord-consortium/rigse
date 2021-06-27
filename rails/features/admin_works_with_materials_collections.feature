@@ -6,7 +6,7 @@ Feature: Admin can work with materials collections
 
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And I am logged in with the username admin
 

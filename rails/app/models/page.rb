@@ -23,7 +23,6 @@ class Page < ApplicationRecord
   }
 
   include Changeable
-  include JnlpLaunchable
   include Clipboard
   include HasEmbeddables
   include ResponseTypes

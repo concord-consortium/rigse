@@ -1,8 +1,7 @@
 class PortalOfferings < ActiveRecord::Migration[5.1]
   def self.up
-    add_column :portal_offerings, :position, :integer, :default=>0 
-    clazzes = Portal::Clazz.find(:all)
-    clazzes.each do|clazz|
+    add_column :portal_offerings, :position, :integer, :default=>0
+    clazzes = Portal::Clazz.find_each do|clazz|
       portal_offerings = clazz.offerings
       position = 1
       portal_offerings.each do|portal_offering|

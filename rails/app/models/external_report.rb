@@ -4,8 +4,7 @@ class ExternalReport < ApplicationRecord
   ClassReport = 'class'
   ResearcherLearnerReport = 'researcher-learner'
   ResearcherUserReport = 'researcher-user'
-  DeprecatedReport = 'deprecated-report'
-  ReportTypes = [OfferingReport, ClassReport, ResearcherLearnerReport, ResearcherUserReport, DeprecatedReport]
+  ReportTypes = [OfferingReport, ClassReport, ResearcherLearnerReport, ResearcherUserReport]
   belongs_to :client
   has_many :external_activity_reports
   has_many :external_activities, through: :external_activity_reports
@@ -29,11 +28,7 @@ class ExternalReport < ApplicationRecord
     end
     url_options = {protocol: protocol, host: host}
 
-    if report_type === DeprecatedReport
-      params = deprecated_report_params(offering, grant, url_options, additional_params)
-    else
-      params = offering_report_params(offering, grant, user, url_options, additional_params)
-    end
+    params = offering_report_params(offering, grant, user, url_options, additional_params)
 
     if offering.runnable.logging || offering.clazz.logging
       params[:logging] = 'true'
@@ -49,24 +44,6 @@ class ExternalReport < ApplicationRecord
     end
 
     add_query_params(url, params)
-  end
-
-  def deprecated_report_params(offering, grant, url_options, additional_params = {})
-    routes = Rails.application.routes.url_helpers
-    # Deprecated, default report service that was provided by Portal. Pretty similar to offering report,
-    # but it uses different API (Report API) and different set of launch URL parameters.
-    report_url_extra_params = {}
-    # Note that depreciated report expects ID of the Student model (not ID of the User model).
-    if additional_params[:student_id]
-      report_url_extra_params[:student_ids] = [ additional_params[:student_id] ]
-    end
-    if additional_params[:activity_id]
-      report_url_extra_params[:activity_id] = additional_params[:activity_id]
-    end
-    {
-      reportUrl: routes.api_v1_report_url(offering.id, url_options.merge(report_url_extra_params)),
-      token: grant.access_token
-    }
   end
 
   def offering_report_params(offering, grant, user, url_options, additional_params = {})

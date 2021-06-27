@@ -3,25 +3,21 @@ class DefaultRunnable
   class <<self
 
     def create_default_runnable_for_user(user, name="simple default #{TOP_LEVEL_CONTAINER_NAME}", logging=false)
-      if APP_CONFIG[:use_jnlps] && TOP_LEVEL_CONTAINER_NAME == 'investigation'
-        runnable = create_default_investigation_for_user(user, name, logging)
-      else
-        unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)
-          runnable = TOP_LEVEL_CONTAINER_NAME.camelize.constantize.create do |i|
-            i.name = name
-            i.user = user
-            i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
-            case TOP_LEVEL_CONTAINER_NAME
-              when 'external_activity'
-                i.url = "http://redcloth.org/hobix.com/textile/quick.html"
-              end
-          end
+      unless runnable = user.send(TOP_LEVEL_CONTAINER_NAME_PLURAL).find_by_name(name)
+        runnable = TOP_LEVEL_CONTAINER_NAME.camelize.constantize.create do |i|
+          i.name = name
+          i.user = user
+          i.description = "A simple default #{TOP_LEVEL_CONTAINER_NAME} automatically created for the user '#{user.login}'"
+          case TOP_LEVEL_CONTAINER_NAME
+            when 'external_activity'
+              i.url = "http://redcloth.org/hobix.com/textile/quick.html"
+            end
         end
       end
       runnable.publish! unless runnable.publication_status == "published"
       runnable
     end
-    
+
     def create_default_investigation_for_user(user, name, logging)
       puts
       unless investigation = user.investigations.find_by_name(name)

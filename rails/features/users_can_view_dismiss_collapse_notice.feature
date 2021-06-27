@@ -5,47 +5,47 @@ Feature: Users can view notices created by project staff
   In order to be notified about updates or important information
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And a notice for all roles "Notice for all users"
-    
-    
+
+
   Scenario: Member roles should see notices
     When I am logged in with the username teacher
     And am on getting started page
     Then I should see "Notice for all users"
-    
-    
+
+
   Scenario: Admin roles should see notices
     And I am logged in with the username admin
     And am on the my home page
     Then I should see "Notice for all users"
-    
-    
+
+
   Scenario: Author roles should see notices
     And I am logged in with the username author
     And am on the my home page
     Then I should see "Notice for all users"
-    
-    
+
+
   Scenario: Manager roles should see notices
     And I am logged in with the username manager
     And am on the my home page
     Then I should see "Notice for all users"
-    
-    
+
+
   Scenario: Researcher roles should see notices
     And I am logged in with the username researcher
     And am on the my home page
     Then I should see "Notice for all users"
-    
-    
+
+
   Scenario: Students should not see notices
     And I am logged in with the username student
     And am on my classes page
     Then I should not see "Notice for all users"
-    
-    
+
+
   @dialog
   @javascript
   Scenario: Users can dismiss a notice without affecting other users
@@ -62,8 +62,8 @@ Feature: Users can view notices created by project staff
     And I login as an admin
     And am on the my home page
     And I should see "Notice for all users"
-    
-    
+
+
   @javascript
   Scenario: Users can collapse and expand notices
     When I am logged in with the username manager
@@ -94,5 +94,5 @@ Feature: Users can view notices created by project staff
     And I am logged in with the username manager
     And am on the my home page
     Then I should see "Hide Notices"
-    
-    
+
+

@@ -29,7 +29,7 @@ RegexDeleteSuccess = /(.*) was deleted/
 describe Admin::ProjectsController do
   before(:each) do
     # not required, but prevents warning messages in console when running specs:
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
   end
   let(:project) { FactoryBot.create(:project, landing_page_slug: 'foo-proj', landing_page_content: '<h1>Foo</h1>') }
   let(:valid_attributes) { { name: "Some name" } }

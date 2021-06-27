@@ -80,30 +80,6 @@ describe Portal::Learner do
     end
   end
 
-  describe '#sessions' do
-    it 'sessions' do
-      result = subject.sessions
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  describe '#valid_loggers?' do
-    it 'valid_loggers?' do
-      result = subject.valid_loggers?
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  describe '#create_new_loggers' do
-    it 'create_new_loggers' do
-      result = subject.create_new_loggers
-
-      expect(result).not_to be_nil
-    end
-  end
-
   describe '#user' do
     xit 'user' do
       result = subject.user
@@ -141,6 +117,16 @@ describe Portal::Learner do
       result = subject.saveable_answered
 
       expect(result).not_to be_nil
+    end
+  end
+
+  describe '#update_last_run' do
+    it 'should modify the last_run with the current time' do
+      now = Time.now
+      max_delta_seconds = 2
+      subject.update_last_run
+      elapsed_seconds = subject.last_run - now
+      expect(elapsed_seconds).to be < max_delta_seconds
     end
   end
 end

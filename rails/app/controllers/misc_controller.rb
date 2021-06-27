@@ -8,21 +8,6 @@ class MiscController < ActionController::Base
   # so if a session does not already exist *it will not be created*
   # unless you action accesses session[].
 
-  def banner
-    learner = (params[:learner_id] ? Portal::Learner.find(params[:learner_id]) : nil)
-    if learner && learner.bundle_logger.in_progress_bundle
-      launch_event = Dataservice::LaunchProcessEvent.create(
-        :event_type => Dataservice::LaunchProcessEvent::TYPES[:logo_image_requested],
-        :event_details => "Activity launch started. Waiting for configuration...",
-        :bundle_content => learner.bundle_logger.in_progress_bundle
-      )
-    end
-    asset_pathname = get_full_path_to_asset("cc_corner_logo.png")
-    NoCache.add_headers(response.headers)
-    send_file(asset_pathname, {:type => 'image/png', :disposition => 'inline'} )
-  end
-
-
   def learner_proc_stats
     render json: LearnerProcessingEvent.histogram(12), :callback => params['callback']
   end
@@ -39,8 +24,6 @@ class MiscController < ActionController::Base
     stats[:users] = User.count
     stats[:learners] = Portal::Learner.count
     stats[:offerings] = Portal::Offering.count
-    stats[:bundle_loggers] = Dataservice::BundleLogger.count
-    stats[:bundle_contents] = Dataservice::BundleContent.count
     stats[:investigations] = Investigation.count
     stats[:activities] = Activity.count
     stats[:sections] = Section.count

@@ -26,7 +26,6 @@ class Section < ApplicationRecord
 
   acts_as_replicatable
 
-  include JnlpLaunchable
   include Publishable
   include Changeable
   include HasEmbeddables

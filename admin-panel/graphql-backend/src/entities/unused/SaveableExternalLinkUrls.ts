@@ -13,9 +13,6 @@ export class SaveableExternalLinkUrls {
   @Column("int", { name: "external_link_id", nullable: true })
   externalLinkId: number | null;
 
-  @Column("int", { name: "bundle_content_id", nullable: true })
-  bundleContentId: number | null;
-
   @Column("int", { name: "position", nullable: true })
   position: number | null;
 

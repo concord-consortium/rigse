@@ -6,16 +6,6 @@ production:
   theme: <%= ENV["THEME"] %>
   admin_email: <%= ENV["ADMIN_EMAIL"] %>
   help_email: <%= ENV["HELP_EMAIL"] %>
-  default_maven_jnlp:
-    server: concord
-    family: all-otrunk-snapshot
-    version: snapshot
-  maven_jnlp_families:
-  - all-otrunk-snapshot
-  maven_jnlp_servers:
-  - name: concord
-    host: http://jnlp.concord.org
-    path: /dev3/org/concord/maven-jnlp/
   use_adhoc_workgroups: true
   site_school: <%= ENV["SITE_NAME"] %>-school
   site_district: <%= ENV["SITE_NAME"] %>-district
@@ -37,7 +27,6 @@ production:
   - "11"
   - "12"
   - "Higher Ed"
-  net_logo_package_name: otrunknl41
   tiny_mce:
     buttons1:
     - bold,italic,underline
@@ -53,7 +42,6 @@ production:
     last_name: Paessel
     email: npaessel@concord.org
   states_and_provinces: all
-  runnables_use: otrunk_jnlp
   runnable_mime_type:
   top_level_container_name: <%= ENV["TOP_LEVEL_CONTAINER_NAME"] %>
   pepper: <%= ENV["SITE_KEY"] %>

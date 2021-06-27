@@ -23,8 +23,6 @@ private
   def generate_html
     if File.exists?(@document_path)
       case @markup
-      when 'textile'
-        @html = RedCloth.new(File.read(@document_path)).to_html
       when 'md'
         @html = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new).render(File.read(@document_path))
       else

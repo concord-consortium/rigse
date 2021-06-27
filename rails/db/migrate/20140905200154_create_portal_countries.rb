@@ -7,8 +7,8 @@ class CreatePortalCountries < ActiveRecord::Migration[5.1]
       t.string  :two_letter,       :limit => 2
       t.string  :three_letter,     :limit => 3
       t.string  :tld,              :limit => 255
-      t.integer :iso_id,           :limit => 255
-      
+      t.integer :iso_id
+
       t.timestamps
     end
 
@@ -17,4 +17,3 @@ class CreatePortalCountries < ActiveRecord::Migration[5.1]
     add_index :portal_countries, :name
   end
 end
-

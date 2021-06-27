@@ -14,7 +14,6 @@ class CreateLearnerProcessingEvents < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
-    add_index :learner_processing_events, :learner_id
     add_index :learner_processing_events, :url
   end
 end

@@ -2,9 +2,9 @@ Feature: User logs in using auth/login page (e.g. coming from an external site)
 
   As a user
   I want to login
-  
+
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
 
   Scenario: Users with different roles should be able to log in

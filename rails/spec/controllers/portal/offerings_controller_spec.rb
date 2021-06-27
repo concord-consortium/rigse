@@ -1,34 +1,9 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::OfferingsController do
-  describe "Show Jnlp Offering" do
-    it "renders a jnlp for an admin" do
-      offering = FactoryBot.create(:portal_offering)
-      admin = FactoryBot.generate :admin_user
-      sign_in admin
-      get :show, params: { :id => offering.id, :format => :jnlp }
-      expect(response).to render_template('shared/_installer')
-    end
-
-    it "renders a jnlp for a teacher" do
-      teacher = FactoryBot.create(:portal_teacher)
-      offering = FactoryBot.create(:portal_offering, :clazz => teacher.clazzes.first)
-      sign_in teacher.user
-      get :show, params: { :id => offering.id, :format => :jnlp }
-      expect(response).to render_template('shared/_installer')
-    end
-
-    it "renders a jnlp as a learner" do
-      learner = FactoryBot.create(:full_portal_learner)
-      sign_in learner.student.user
-      get :show, params: { :id => learner.offering.id, :format => :jnlp }
-      expect(response).to render_template('shared/_installer')
-    end
-  end
-
   describe "External Activities Offering" do
     before(:each) do
-      generate_default_settings_and_jnlps_with_mocks
+      generate_default_settings_with_mocks
       generate_portal_resources_with_mocks
       allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
 
@@ -44,6 +19,7 @@ describe Portal::OfferingsController do
       @user = FactoryBot.create(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
       @portal_student = mock_model(Portal::Student)
       @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
+      allow(@learner).to receive(:update_last_run)
       allow(controller).to receive(:setup_portal_student).and_return(@learner)
       allow(Portal::Offering).to receive(:find).and_return(@offering)
       sign_in @user
@@ -51,7 +27,6 @@ describe Portal::OfferingsController do
 
     it "saves learner data in the cookie" do
       @runnable.append_learner_id_to_url = false
-
       get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response.cookies["save_path"]).to eq(@offering.runnable.save_path)
       expect(response.cookies["learner_id"]).to eq(@learner.id.to_s)
@@ -185,18 +160,6 @@ describe Portal::OfferingsController do
           expect(response.location).to match(/activityIndex=0/)
         end
       end
-
-      describe "when deprecated report is used" do
-        before(:each) do
-          # Ensure that default report is available.
-          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
-        end
-
-        it "should pass activity_id param" do
-          get :report, params: { id: offering.id, activity_id: activity.id }
-          expect(response.location).to match(/activity_id/)
-        end
-      end
     end
 
     describe "when the current user is a teacher without access to this offering" do
@@ -236,18 +199,6 @@ describe Portal::OfferingsController do
         it "should provide studentId" do
           get :student_report, params: post_params
           expect(response.location).to include("studentId=#{student.user.id}")
-        end
-      end
-
-      describe "when deprecated report is used" do
-        before(:each) do
-          # Ensure that default report is available.
-          FactoryBot.create(:default_lara_report, { url: report_url, report_type: "deprecated-report" })
-        end
-
-        it "should pass activity_id param" do
-          get :student_report, params: post_params
-          expect(response.location).to match(/student_ids/)
         end
       end
     end

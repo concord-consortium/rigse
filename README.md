@@ -89,6 +89,15 @@ Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/c
 1. In Lara, edit `.env` and append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
 2. You may need to use the rails console in LARA to set the `is_admin` flag to the portal admin user.
 
+#### Virtual host settings (currently used for automation)
+If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
+1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker
+2. In the Portal, edit '.env' file and update PORTAL_PROTOCOL as https for automation
+3. In the Portal, as an administrator, edit the Auth Client settings:
+```   
+    Site Url: 'https://learn.dev.docker'
+    Allowed URL Redirects: 'https://learn.dev.docker/users/auth/cc_portal_localhost/callback'
+```
 
 ### Theme support & Rolling your own theme:
 
@@ -240,9 +249,9 @@ For a particular cucumber test where JavaScript is enabled, find the step you wa
 
 Find the corresponding step definition and insert `binding.pry`:
 
-    When /^(?:|I )follow "([^"]*)"$/ do |link|    
-      binding.pry    
-      first(:link, link).click    
+    When /^(?:|I )follow "([^"]*)"$/ do |link|
+      binding.pry
+      first(:link, link).click
     end
 
 Make sure chromedriver is running and run the test with HEADLESS=false prepended to the path
@@ -434,96 +443,6 @@ to install this plugin we followed this procedure:
 1. `gem install --no-ri haml`
 1. `haml --rails path/to/rigse_app`
 
-
-## Installers
-
-Building installers requires that you are running on a mac with a local
-installation of [Bit Rock](http://bitrock.com/)
-The rake tasks assume that bitrock is in the standard /Applications/
-folder.
-You can override this by setting an environment variable in your shell
-which points to the correct path, eg:
-`export BITROCK_INSTALLER=/path/to/bitrock.app`
-
-### config/installer.yml
-
-Every host should have its own config/installer.yml file. There is a
-config/installer.sample.yml file which can help get you started.
-The shortname field should be specific to that host. Because of
-limitations in bitrock, the shortname can not use
-spaces,dashes,underscore, &etc.
-The jnlp_url should point to a jnlp url on the target host. When you
-run the
-`rake build:installer:build_all` or
-`cap installer:create` tasks, the jnlp_url must be available.
-
-
-### Installer Rake Tasks:
-
-Most of the installer building happens via rake tasks defined in
-lib/tasks/make_installers.rake. a complete list of tasks can
-be gotten using: `rake -T installer`
-
-Here are the two useful tasks:
-
-    rake build:installer:build_all # build all installers
-    rake build:installer:new_release # create a new release specification interactively
-
-Assuming that your installer.yml file is correct, running
-`rake build:installer:build_all` will take care of the rest.
-Build_all will automatically clean up, recache jars, and bump version
-numbers.
-
-### Installer Capistrano Recipes
-
-There are two cap recipes in config/deploy.rb which take care of
-creating installers using remote hosts installer.yml files.
-* `cap installer:copy_config` copies the local installer.yml to the
-remote server. This would be useful if you ran new_release locally, and
-then
-wanted to copy those config settings to the remote server.
-* `cap installer:create` creates the installers and updates the remote
-installer.yml file, and deploys the installer images.
-
-
-### Sample session for building installers:
-
-#### boot strapping an unconfigured server:
-
-In this session we are assuming that we are working with a host which
-does not have a local installer.yml file.
-First we create a new local release. The first rake tasks asks a bunch
-of questions, which are answered from the point of view of the staging
-server.
-
-     rake build:installer:new_release
-     cap staging installer:copy_config
-     cap staging installer:create
-
-
-After running `rake build:installer:new_release`we end up with the
-following local installer file:
-
-    shortname: RitesStaging
-    version: "200912.00"
-    jnlp_config: [http://rites-investigations.staging.concord.org/investigations/545.jnlp](http://rites-investigations.staging.concord.org/investigations/545.jnlp)
-
-
-this file gets pushed up to staging. with
-`cap staging installer:copy_config` we only have to do that the first
-time we create an
-installer on staging. We could just as easily edit config/installer.yml.
-
-The `cap staging installer:create` handles incrementing the version
-number, and pushing the new config files and installers onto staging.
-
-#### creating a fresh installer for a host that has had installers
-before:
-
-    cap staging installer:create
-
-not much to do.
-
 ## Authentication, Sessions, and Cookies
 
 ### User authentication with Devise
@@ -701,10 +620,7 @@ Certain features of the portal are controlled via environment variables.
 The `PORTAL_FEATURES` environment variable can take a string of the form "feature1 feature2" to
 include the following features:
 
-* `geniverse_remote_auth`: Remote authentication
 * `allow_cors`: Allow CORS requests (see below)
-* `genigames_data`: Genigames-related student sata saving
-* `geniverse_wordpress`: Geniverse-related Wordpress connection
 
 If CORS is enable, by default it will allow any request from '*.concord.org', to any route, but can
 be controlled by two additional environment variables:
