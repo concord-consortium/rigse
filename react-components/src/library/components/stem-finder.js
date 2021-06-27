@@ -501,7 +501,7 @@ const StemFinder = Component({
     })
   },
 
-  handleCurriculaSelection (e) {
+  handleCollectionSelection (e) {
     e.preventDefault()
     e.stopPropagation()
     this.setState({ projectsSelected: [e.target.value] }, () => {
@@ -542,18 +542,18 @@ const StemFinder = Component({
     )
   },
 
-  renderCurricula: function () {
+  renderCollections: function () {
     if (!this.state.collections || this.state.collections.length === 0) {
       return
     }
-    const curricula = this.state.collections
+    const collections = this.state.collections
     return (
       <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <h2 onClick={this.handleFilterHeaderClick}>Curricula</h2>
-        <select name='curricula' value={this.state.projectsSelected[0]} className={css.curriculaSelect} onChange={this.handleCurriculaSelection}>
+        <h2 onClick={this.handleFilterHeaderClick}>Collections</h2>
+        <select name='collections' value={this.state.projectsSelected[0]} className={css.collectionSelect} onChange={this.handleCollectionSelection}>
           <option value=''>Select one...</option>
-          {curricula.map(function (curriculum, index) {
-            return <option value={curriculum.id}>{curriculum.name}</option>
+          {collections.map(function (collection, index) {
+            return <option value={collection.id}>{collection.name}</option>
           })}
         </select>
       </div>
@@ -577,7 +577,7 @@ const StemFinder = Component({
       <div className={'col-3 ' + css.finderForm}>
         <div className={'portal-pages-finder-form-inner'} style={{ opacity: this.state.opacity }}>
           {this.renderSearch()}
-          {this.renderCurricula()}
+          {this.renderCollections()}
           {this.renderSubjectAreas()}
           {this.renderGradeLevels()}
           {this.renderAdvanced()}

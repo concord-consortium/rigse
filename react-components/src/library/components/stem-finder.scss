@@ -45,7 +45,7 @@
       font: 300 14px $font-museo-sans;
 
       &[type="text"] {
-        padding: 5px;
+        padding: 7px 5px 6px;
         width: calc(100% - 59px);
 
         &::-webkit-input-placeholder, 
@@ -235,7 +235,7 @@
       }
     }
   }
-  .curriculaSelect {
+  .collectionSelect {
     border-radius: 4px;
     font: 300 14px $font-museo-sans;
     margin: 2px 10px 0 10px;

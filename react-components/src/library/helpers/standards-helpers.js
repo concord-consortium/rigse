@@ -104,9 +104,8 @@ var NgssHelper = function () {
     if (this.pe.length > 0) {
       // console.log("[DEBUG] Displaying PEs", this.pe);
 
-      peDiv = <div>
-        <b><i>{PE}</i></b>
-        <br />
+      peDiv = <div className='standards-ngss-pe'>
+        <h4>{PE}</h4>
         {this.pe.map(function (s) {
           var description = s.description
           if (Array.isArray && Array.isArray(description)) {
@@ -122,7 +121,7 @@ var NgssHelper = function () {
             description = formatted
           }
           return <>
-            <h3>{s.notation}</h3>
+            <h5>{s.notation}</h5>
             {description}
           </>
         })}
@@ -144,9 +143,8 @@ var NgssHelper = function () {
       // - Title  ( leaf parent desc )
       // - Desc   ( leaf desc )
       //
-      dciDiv = <div>
-        <b><i>{DCI}</i></b>
-        <br />
+      dciDiv = <div className='standards-ngss-dci'>
+        <h4>{DCI}</h4>
         {this.dci.map(function (s) {
           // console.log("[DEBUG] Displaying DCI", s);
           var arrDesc = s.description
@@ -158,7 +156,7 @@ var NgssHelper = function () {
             notation = grade + '-' + parent.statement_notation
           }
           return <>
-            <b>{notation}</b> {arrDesc[1]}
+            <strong>{notation}</strong> {arrDesc[1]}
             <br />
             {arrDesc[2]}
             <br />
@@ -183,13 +181,12 @@ var NgssHelper = function () {
         //              to leaf )
         //
         var groupedDiv = <div>
-          <b><i>{heading}</i></b>
-          <br />
+          <h4>{heading}</h4>
 
           {Object.keys(groupMap).map(function (title) {
             var statements = groupMap[title]
             return <>
-              <b>{title}</b>
+              <strong>{title}</strong>
               <br />
               {statements.map(function (s) {
                 var arrDesc = s.description

@@ -22,6 +22,7 @@
         background: $col-blue;
         border-color: $col-blue;
         display: inline;
+        min-width: 150px;
 
         &:hover {
           background: $col-darkblue;
@@ -39,6 +40,7 @@
         font-weight: 300;
         list-style: none;
         margin: 0;
+        min-width: 230px;
         padding: 0;
         position: absolute;
         right: 0;
@@ -48,6 +50,7 @@
           background: $col-blue;
           color: $white;
           cursor: pointer;
+          min-width: 150px;
           padding: 14px 20px;
           text-align: left;
           text-transform: none;

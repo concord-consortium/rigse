@@ -28,7 +28,7 @@ class _MBCollections extends React.Component {
               teacherGuideUrl={this.props.collections[idx].teacherGuideUrl}
               assignToSpecificClass={this.props.assignToSpecificClass}
             />)
-          : <div>Loading...</div>}
+          : <div class='loading'>loading</div>}
       </div>
     )
   }

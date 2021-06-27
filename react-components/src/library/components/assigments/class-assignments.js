@@ -1,5 +1,6 @@
 import React from 'react'
 import ResourceFinderLightbox from '../resource-finder-lightbox'
+import CollectionLightbox from '../collection-lightbox'
 import Lightbox from '../../helpers/lightbox'
 
 import css from './style.scss'
@@ -9,13 +10,27 @@ export default class ClassAssignments extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      showAssignOptions: false
+      showAssignOptions: false,
+      collectionViews: []
     }
     this.closeLightbox = this.closeLightbox.bind(this)
     this.handleAssignMaterialsButtonClick = this.handleAssignMaterialsButtonClick.bind(this)
+    this.handleAssignMaterialsOptionClick = this.handleAssignMaterialsOptionClick.bind(this)
     this.handleAssignButtonMouseEnter = this.handleAssignButtonMouseEnter.bind(this)
     this.handleAssignButtonMouseLeave = this.handleAssignButtonMouseLeave.bind(this)
     this.renderAssignOptions = this.renderAssignOptions.bind(this)
+  }
+
+  componentDidMount () {
+    jQuery.ajax({
+      url: Portal.API_V1.GET_TEACHER_PROJECT_VIEWS,
+      dataType: 'json',
+      success: function (data) {
+        this.setState({
+          collectionViews: data
+        })
+      }.bind(this)
+    })
   }
 
   closeLightbox (e) {
@@ -23,11 +38,24 @@ export default class ClassAssignments extends React.Component {
   }
 
   handleAssignMaterialsButtonClick (e) {
+    this.setState({ showAssignOptions: !this.state.showAssignOptions })
+  }
+
+  handleAssignMaterialsOptionClick (e, collectionId) {
     this.setState({ showAssignOptions: false })
-    const resourceFinderLightbox = ResourceFinderLightbox({
-      closeLightbox: this.closeLightbox
-    })
-    Lightbox.open(resourceFinderLightbox)
+
+    if (typeof collectionId !== 'undefined') {
+      const collectionLightbox = CollectionLightbox({
+        closeLightbox: this.closeLightbox,
+        collectionId: collectionId
+      })
+      Lightbox.open(collectionLightbox)
+    } else {
+      const resourceFinderLightbox = ResourceFinderLightbox({
+        closeLightbox: this.closeLightbox
+      })
+      Lightbox.open(resourceFinderLightbox)
+    }
   }
 
   handleAssignButtonMouseEnter (e) {
@@ -38,12 +66,21 @@ export default class ClassAssignments extends React.Component {
     this.setState({ showAssignOptions: false })
   }
 
-  renderAssignOptions () {
+  renderAssignOption () {
+    const collectionViews = this.state.collectionViews
     return (
-      <ul onMouseEnter={this.handleAssignButtonMouseEnter} onMouseLeave={this.handleAssignButtonMouseLeave}>
-        <li onClick={this.handleAssignMaterialsButtonClick}>Search All Resources</li>
-        <li onClick={this.handleAssignMaterialsButtonClick}>Search ITSI Curriculum</li>
-        <li onClick={this.handleAssignMaterialsButtonClick}>Search NGSA Curriculum</li>
+      collectionViews.map(collection => (
+        <li onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</li>
+      ))
+    )
+  }
+
+  renderAssignOptions () {
+    const recentCollectionItems = this.state.collectionViews.length > 0 ? this.renderAssignOption() : null
+    return (
+      <ul>
+        <li onClick={(e) => this.handleAssignMaterialsOptionClick(e)}>Search All Resources</li>
+        {recentCollectionItems}
       </ul>
     )
   }
@@ -61,7 +98,6 @@ export default class ClassAssignments extends React.Component {
 
   render () {
     const { clazz } = this.props
-    console.log(this.state.showAssignOptions)
     const assignOptions = this.state.showAssignOptions ? this.renderAssignOptions() : null
     return (
       <div className={css.classAssignments}>

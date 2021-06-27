@@ -3,3 +3,26 @@
 
 .landing-page-content
   = raw(@landing_page_content)
+
+:javascript
+  var isAssignWrapped = window.self !== window.top
+                        && window.self.location.hostname === window.top.location.hostname;
+  jQuery(function() {
+    if (isAssignWrapped) {
+      assignViewAdjustment();
+    }
+  });
+
+  function assignViewAdjustment() {
+    jQuery("hr, #portal-pages-header, #footer, .footer-inner, .portal-pages-collection-page-intro, #teacher-resources").hide();
+    jQuery(".skew").removeClass("skew top-only gray");
+    jQuery(".cols").removeClass("cols skew-cancel");
+    jQuery(".col-12").removeClass("col-12");
+    jQuery("body").css({"background": "#e2f4f8"});
+  }
+
+  function cleanUpAssignViewAdjustment() {
+    window.parent.document.getElementById('collectionIframe').style.height = document.body.scrollHeight + 'px';
+    window.parent.document.getElementById('collectionIframe').style.visibility = 'visible';
+    window.parent.document.getElementById('collectionIframeLoading').style.display = 'none';
+  }

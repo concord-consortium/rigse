@@ -1,11 +1,11 @@
 import React from 'react'
 import Component from '../helpers/component'
-
+import { MakeTeacherEditionLink } from '../helpers/make-teacher-edition-links'
 import ResourceLightbox from './resource-lightbox'
 import GradeLevels from './grade-levels'
 import RelatedResourceResult from './related-resource-result'
 import Lightbox from '../helpers/lightbox'
-import portalObjectHelpers from '../helpers/portal-object-helpers'
+// import portalObjectHelpers from '../helpers/portal-object-helpers'
 import StandardsHelpers from '../helpers/standards-helpers'
 
 import css from './stem-finder-result.scss'
@@ -17,10 +17,11 @@ let touchInitialized = false
 const stemFinderResult = Component({
   getInitialState: function () {
     return {
+      favorited: this.props.resource.is_favorite,
       hovering: false,
       isOpen: false,
-      favorited: this.props.resource.is_favorite,
-      lightbox: false
+      lightbox: false,
+      showTeacherResourcesButton: false
     }
   },
 
@@ -155,8 +156,15 @@ const stemFinderResult = Component({
 
   renderLinks: function () {
     const resource = this.props.resource
+    const isAssignWrapped = window.self !== window.top &&
+      window.self.location.hostname === window.top.location.hostname
+    const assignHandler = resource.links.assign_material && isAssignWrapped
+      ? `javascript: window.parent.${resource.links.assign_material.onclick}`
+      : resource.links.assign_material
+        ? `javascript: ${resource.links.assign_material.onclick}`
+        : null
     const assignLink = resource.links.assign_material
-      ? <a href={`javascript: ${resource.links.assign_material.onclick}`}>{resource.links.assign_material.text}</a>
+      ? <a href={assignHandler}>{resource.links.assign_material.text}</a>
       : null
     const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher
       ? <a href={resource.links.copy_url} target='_blank'>Copy</a>
@@ -165,7 +173,7 @@ const stemFinderResult = Component({
       ? <a href={resource.links.print_url} target='_blank'>Print</a>
       : null
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
-      ? <a href={`${resource.links.preview.url}?mode=teacher-edition`} target='_blank'>Teacher Edition</a>
+      ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank'>Teacher Edition</a>
       : null
 
     return (
@@ -182,9 +190,9 @@ const stemFinderResult = Component({
 
   renderStandards: function () {
     const resource = this.props.resource
-    // if (!resource.standard_statements || resource.standard_statements.length === 0) {
-    //   return null
-    // }
+    if (!resource.standard_statements || resource.standard_statements.length === 0) {
+      return null
+    }
 
     const allStatements = resource.standard_statements
     let helpers = {}
@@ -203,59 +211,34 @@ const stemFinderResult = Component({
       }
     }
 
-    // const unhelpedStandards = unhelped.map(function (statement) {
-    //   var description = statement.description
-    //   if (Array.isArray && Array.isArray(description)) {
-    //     var formatted = ''
-    //     for (var i = 0; i < description.length; i++) {
-    //       if (description[i].endsWith(':')) {
-    //         description[i] += ' '
-    //       } else if (!description[i].endsWith('.')) {
-    //         description[i] += '. '
-    //       }
-    //       formatted += description[i]
-    //     }
-    //     description = formatted
-    //   }
-    //   return (
-    //     <div>
-    //       <h3>{statement.notation}</h3>
-    //       {description}
-    //     </div>
-    //   )
-    // })
+    const unhelpedStandards = unhelped.map(function (statement) {
+      var description = statement.description
+      if (Array.isArray && Array.isArray(description)) {
+        var formatted = ''
+        for (var i = 0; i < description.length; i++) {
+          if (description[i].endsWith(':')) {
+            description[i] += ' '
+          } else if (!description[i].endsWith('.')) {
+            description[i] += '. '
+          }
+          formatted += description[i]
+        }
+        description = formatted
+      }
+      return (
+        <div>
+          <h3>{statement.notation}</h3>
+          {description}
+        </div>
+      )
+    })
 
     return (
       <div className={`${css.collapsible} ${css.finderResultStandards}`}>
         <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Standards</h2>
         <div className={css.collapsibleBody}>
-          {/* helpers.NGSS.getDiv() */}
-          {/* unhelpedStandards */}
-          <h3>NGSS Alignments</h3>
-          <h4>Science and Engineering Practices:</h4>
-          <ul className={css.practices}>
-            <li>Developing and Using Models</li>
-            <li>Constructing Explanations</li>
-          </ul>
-          <h4>Crosscutting Concepts:</h4>
-          <ul className={css.crosscuttingConcepts}>
-            <li>Patterns</li>
-            <li>Cause and Effect: Mechanism and Explanation</li>
-            <li>Systems and System Models</li>
-          </ul>
-          <h4>Disciplinary Core Ideas:</h4>
-          <h5>ESS2.B: Plate Tectonics and Large-Scale System Interactions</h5>
-          <ul className={css.coreIdeas}>
-            <li>Maps of ancient land and water patterns, based on investigations of rocks and fossils, make clear how Earth’s plates have moved great distances, collided, and spread apart. (MS-ESS2-3)</li>
-            <li>The radioactive decay of unstable isotopes continually generates new energy within Earth’s crust and mantle, providing the primary source of the heat that drives mantle convection. Plate tectonics can be viewed as the surface expression of mantle convection. (HS-ESS2-3)</li>
-            <li>Plate tectonics is the unifying theory that explains the past and current movements of the rocks at Earth’s surface and provides a framework for understanding its geologic history. (ESS2.B Grade 8 GBE) (secondary to HS-ESS1-5),(HS-ESS2-1)</li>
-            <li>Plate movements are responsible for most continental and ocean-floor features and for the distribution of most rocks and minerals within Earth’s crust. (ESS2.B Grade 8 GBE) (HS-ESS2-1)</li>
-          </ul>
-          <h5>ESS1.C: The History of Planet Earth</h5>
-          <ul className={css.coreIdeas}>
-            <li>Continental rocks, which can be older than 4 billion years, are generally much older than the rocks of the ocean floor, which are less than 200 million years old. (HS-ESS1-5)</li>
-            <li>Tectonic processes continually generate new ocean sea floor at ridges and destroy old sea floor at trenches. (HS.ESS1.C GBE),(secondary to MS-ESS2-3)</li>
-          </ul>
+          {helpers.NGSS.getDiv()}
+          {unhelpedStandards}
         </div>
       </div>
     )
@@ -292,13 +275,12 @@ const stemFinderResult = Component({
 
   render: function () {
     const resource = this.props.resource
-    // console.log(resource)
     const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open}` : css.finderResult
     // truncate title and/or description if they are too long for resource card height
     // const maxCharTitle = 180
-    const maxCharDesc = 135
+    // const maxCharDesc = 135
     const resourceName = resource.name
-    const shortDesc = this.state.isOpen ? resource.filteredShortDescription : portalObjectHelpers.shortenText(resource.filteredShortDescription, maxCharDesc, true)
+    const shortDesc = resource.filteredShortDescription
     const projectName = resource.projects[0] ? resource.projects[0].name : null
     const projectNameRegex = / |-|\./g
     const projectClass = projectName ? projectName.replace(projectNameRegex, '').toLowerCase() : null

@@ -1,5 +1,4 @@
 import React from 'react'
-
 import MBMaterial from './material'
 
 export default class MBMaterialsCollection extends React.Component {
@@ -11,9 +10,12 @@ export default class MBMaterialsCollection extends React.Component {
 
   render () {
     return (
-      <div className='mb-collection'>
-        <div className='mb-collection-name'>{this.props.name}</div>
-        {this.renderTeacherGuide()}
+      <section className='mb-collection'>
+        <header>
+          <h3 className='mb-collection-name'>{this.props.name}</h3>
+          {this.renderTeacherGuide()}
+        </header>
+
         {(this.props.materials || []).map((material) =>
           <MBMaterial
             key={`${material.class_name}${material.id}`}
@@ -21,7 +23,7 @@ export default class MBMaterialsCollection extends React.Component {
             archive={this.props.archive}
             assignToSpecificClass={this.props.assignToSpecificClass}
           />)}
-      </div>
+      </section>
     )
   }
 }

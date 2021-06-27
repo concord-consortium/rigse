@@ -11,7 +11,7 @@
   }
 }
 
-.finderResult {
+.materialsCollectionItem {
   animation-name: animateIn;
   animation-duration: 350ms;
   background: $white;
@@ -43,7 +43,7 @@
     z-index: 1;
   }
 
-  .finderResultLinks {
+  .materialsCollectionItemLinks {
     bottom: 10px;
     font-size: 14px;
     line-height: 1;
@@ -102,14 +102,7 @@
       display: none;
     }
 
-    .finderResultText {
-      .finderResultTextDescription {
-        display: block;
-        -webkit-line-clamp: none;
-      }
-    }
-
-    .finderResultLinks {
+    .materialsCollectionItemLinks {
       a {
         &.lessLink {
           display: inline-block;
@@ -124,7 +117,7 @@
     }
   }
 
-  .finderResultImagePreview {
+  .materialsCollectionItemImagePreview {
     border: solid 1px $col-lightgray;
     height: 96px;
     margin: 0 10px 15px 0;
@@ -137,15 +130,14 @@
       width: 100%;
     }
   }
-  .finderResultText {
-    flex-grow: 1;
+  .materialsCollectionItemText {
     margin: 0 10px 10px 0;
     min-height: 80px;
     padding-bottom: 20px;
     position: relative;
-    width: 390px;
+    width: 648px;
 
-    .finderResultTextName {
+    .materialsCollectionItemTextName {
       font-size: 16px;
       font-weight: 700;
       line-height: 1;
@@ -179,13 +171,10 @@
         }
       }
     }
-    .finderResultTextDescription {
-      display: -webkit-box;
+    .materialsCollectionItemTextDescription {
       font-size: 14px;
       line-height: 1.3;
-      overflow: hidden;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+      min-height: 80px;
     }
   }
   .previewLink {
@@ -220,9 +209,6 @@
       margin-top: 10px;
       text-align: center;
 
-      &.highadventuresci {
-        padding-left: 0;
-      }
       &.itsi {
         background: url(https://learn-resources.concord.org/images/itsi.png) no-repeat center top;
         background-size: 35px;
@@ -289,7 +275,7 @@
     }
   }
 
-  .finderResultStandards {
+  .materialsCollectionItemStandards {
     div div {
       margin-bottom: 30px;
     }
@@ -325,7 +311,7 @@
     }
   }
 
-  .finderResultFavorite {
+  .materialsCollectionItemFavorite {
     color: $col-lightgray;
     font-size: 20px;
     left: 157px;
@@ -333,7 +319,7 @@
     text-shadow: -1px 0 $col-darkgray-50, 0 1px $col-darkgray-50, 1px 0 $col-darkgray-50, 0 -1px $col-darkgray-50;
     top: 12px;
 
-    &.finderResultFavoriteActive {
+    &.materialsCollectionItemFavoriteActive {
       color: $col-gold;
       text-shadow: 0 0 transparent, 0 0 transparent, 0 0 transparent, 0 0 transparent;
     }

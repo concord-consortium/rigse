@@ -1,0 +1,314 @@
+body.member-visitor #content { overflow-y: hidden; overflow: unset; }
+body.guest-visitor .wrapper { width: auto !important; }
+
+#primary.wide { display: block; float: none; width: 100%; }
+#primary.wide #content { overflow-y: visible; overflow: unset; }
+.alert-banner {
+  background: #fee9aa;
+  color: #e16a3e;
+  margin: .5em 0 1.5em;
+  padding: .75em;
+  text-align: center; }
+  .alert-banner p {
+    margin-bottom: 0; }
+
+figcaption {
+  line-height: 1.25em;
+  margin-top: 5px;
+}
+h3 {
+  clear: both;
+}
+
+.portal-pages-collection-page-intro .tagline { display: block; }
+
+#teacher-resources {
+  background: #eee;
+  margin-bottom: 40px;
+  padding: 0 0 30px;
+}
+#teacher-resources h2 {
+  border-bottom: solid 5px #ccc;
+  color: #313131;
+  text-align: center;
+  margin: 0 auto 20px;
+  padding: 15px 10px 10px;
+  width: 92.75%;
+}
+#teacher-resources h3 {
+  margin-bottom: 20px;
+}
+#teacher-resources div.col-6:nth-of-type(1) {
+  line-height: 1.4;
+  margin-left: 2.63158%;
+}
+#teacher-resources div.col-6:nth-of-type(2) {
+  line-height: 1.4;
+  margin-left: 0;
+}
+#teacher-resources div.col-6 p {
+  font-size: 16px;
+  line-height: 1.4;
+}
+#teacher-resources div.col-6 p a {
+  font-weight: 500;
+}
+
+/* just remove skew class altogether? */
+.skew {
+  margin-top: 0;
+  padding-top: 30px;
+  transform: skewY(0deg);
+}
+.skew.gray {
+  background-color: #f5f5f5;
+}
+.skew.top-only {
+  margin-bottom: -100px;
+  padding-bottom: 165px;
+}
+.skew.top-only:after {
+  display: none;
+}
+.skew .skew-cancel {
+  transform: skewY(0deg);
+}
+
+.portal-pages-finder-materials-collection .portal-pages-finder-materials-collection-item .portal-pages-finder-materials-collection-item__title {
+  padding-top: 30px;
+}
+
+/* TABS
+----------------------------------*/
+.tabs-container {
+  clear: both;
+  height: auto;
+  margin-top: 0;
+  min-height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+ul.tabs {
+  border-bottom: solid 1px #999;
+  display: block;
+  margin: 0;
+  padding: 0;
+
+  li {
+    background: #ccc;
+    border: solid 1px #999;
+    border-bottom: none;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #313131;
+    cursor: pointer;
+    display: inline-block;
+    font-size:16px;
+    margin: 0 0 -1px;
+    padding: 5px 10px;
+
+    &.active {
+      background: #0592af;
+      background: #fff;
+      border-bottom: solid 1px #fff;
+      color: #313131;
+      font-weight: 700;
+    }
+  }
+  ul {
+    background: #fff;
+    margin: 0;
+    padding: 1em;
+    width: 59em;
+  }
+}
+.tab-content {
+  background: #fff;
+  border: solid 1px #999;
+  border-top: none;
+  display: none;
+  margin-bottom: 30px;
+  overflow: hidden;
+  padding: 0;
+
+  &.active {
+    display: block;
+
+    ul {
+      display: block;
+    }
+  }
+
+  h3 {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul {
+    display: none;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 30px;
+
+    ul {
+      background: #fff;
+      margin: 0;
+      padding: 1em;
+      width: 59em;
+
+      li {
+        clear: both;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+  .inner-content {
+    padding: 20px;
+  }
+}
+
+.portal-pages-finder-materials-collection-item {
+  overflow: hidden;
+}
+.portal-pages-finder-materials-collection-item-info {
+  border: solid 1px #ccc;
+}
+.portal-pages-finder-materials-collection-item-info__title {
+  padding-top: 30px;
+}
+
+/* Accordion
+----------------------------------*/
+.collapsible {
+  width: 98%;
+}
+
+h3.collapsible-toggle {
+  color: #0592af;
+  border-bottom: solid 5px rgba(49, 49, 49, 0.15);
+  display: block;
+  font-family: museo-sans,verdana,helvetica,sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 36px;
+  margin-bottom: 0;
+  padding: 30px 0;
+  width: 100%;
+}
+
+.collapsible-toggle:after {
+  background: #0592af;
+  border-radius: 50%;
+  color: #fff;
+  content: '+';
+  display: block;
+  float: right;
+  font-size: 16px;
+  font-weight: 700;
+  height: 17px;
+  line-height: 1;
+  margin: 5px 0 0;
+  padding: 0 2px;
+  text-align: center;
+  text-indent: 0;
+  width: 17px;
+}
+
+h3.collapsible-toggle:hover {
+  color: #999;
+}
+h3.collapsible-toggle:hover:after {
+  background: #999;
+}
+
+.collapsible-toggle.open:after {
+  animation: spin-toggle-open 0.5s normal forwards; }
+
+body.member-visitor .collapsible {
+  width: 97.5%;
+}
+
+body.member-visitor h3.collapsible-toggle {
+  width: 93%;
+}
+
+@keyframes spin-toggle-open {
+  100% {
+    transform: rotate(45deg);
+  }
+}
+
+.sign-up-box {
+  background: #fef7e0;
+  margin-bottom: 30px;
+  overflow: hidden;
+  text-align: center;
+  button {
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 22px;
+    margin: 0 auto;
+    padding: .5em 2em;
+  }
+  p {
+    font-size: 14px;
+    line-height: 23px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+}
+
+/* Interactions specific? Do these belong in Interactions page's code instead? */
+#simulations-tab {
+  padding-bottom: 2em;
+}
+
+#simulations-tab li {
+  background: #fff;
+  display: block;
+  float: left;
+  list-style: none;
+  height: auto;
+  margin: 1%;
+  min-height: 420px;
+  padding: 0;
+  width: 31%;
+}
+
+@media screen and (max-width: 750px) {
+  #simulations-tab li {
+    margin-bottom: 5%;
+    width: 98%;
+  } 
+}
+
+#simulations-tab li:nth-child(3n+1) {
+  clear: left; 
+}
+#simulations-tab li:hover {
+  background: #f6f6f6;
+}
+#simulations-tab li a {
+  color: #3f3f3f;
+  text-decoration: none;
+}
+#simulations-tab li h4 {
+  color: #0093b0;
+  font-size: .9em;
+  line-height: 1.4;
+  margin: 0;
+  padding: 20px;
+}
+#simulations-tab li img {
+  display: block;
+  height: auto;
+  max-height: 210px;
+  width: 100%;
+}
+#simulations-tab li p {
+  font-size: .8em;
+  padding: 0 20px 20px;
+}
