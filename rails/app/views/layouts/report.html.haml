@@ -17,6 +17,7 @@
     = render :partial => 'dynamic_scripts/all'
 
     != javascript_include_tag 'application'
+    != javascript_pack_tag 'application'
 
     / add the external css if defined
     = render :partial => "layouts/external_css"

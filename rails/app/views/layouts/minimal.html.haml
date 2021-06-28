@@ -33,6 +33,7 @@
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
     != javascript_include_tag 'application'
+    != javascript_pack_tag 'application'
 
     / add the external css if defined
     = render :partial => "layouts/external_css"
