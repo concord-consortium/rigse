@@ -90,7 +90,7 @@ describe Dataservice::ProcessExternalActivityDataJob do
   describe '#perform' do
     it 'perform' do
       _learner_id = 1
-      _content = '1'
+      _content = '[]'
       process_external_activity_data_job = described_class.new(_learner_id, _content)
       result = process_external_activity_data_job.perform
 
