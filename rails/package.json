@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@rails/webpacker": "5.4.0",
+    "core-js": "^3.15.1",
+    "regenerator-runtime": "^0.13.7",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12"
   },

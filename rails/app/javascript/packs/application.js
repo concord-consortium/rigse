@@ -1,4 +1,10 @@
 /* eslint no-console:0 */
+
+// These polyfills ensure that modern JS features (promises, async/await, arrow function expressions, and more)
+// are available on the browsers you intend to support, which is indicated by the .browserslistrc file.
+import "core-js/stable"
+import "regenerator-runtime/runtime"
+
 // This file is automatically compiled by Webpack, along with any other files
 // present in this directory. You're encouraged to place your actual application logic in
 // a relevant structure within app/javascript and only use these pack files to reference
