@@ -1,5 +1,14 @@
 FROM concordconsortium/docker-rails-base-private:ruby-2.7-rails-6.1.3.2
 
+#
+# Add package repo for yarn
+#
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+#
+# Update package list
+#
 RUN apt-get -o Acquire::Check-Valid-Until=false update
 
 #
@@ -23,6 +32,11 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 # Install shared mime info for mimemagic gem
 #
 RUN apt-get install -qq -y shared-mime-info
+
+#
+# Install yarn for webpacker
+#
+RUN apt install yarn
 
 #
 # Install wait-for-it to support docker-volume-sync

@@ -1,5 +1,10 @@
 FROM concordconsortium/docker-rails-base-private:ruby-2.7-rails-6.1.3.2
 
+# add package repo for yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# update package list
 RUN apt-get -o Acquire::Check-Valid-Until=false update
 
 # install nginx
@@ -13,6 +18,9 @@ RUN gem install foreman
 
 # install shared mime info for mimemagic gem
 RUN apt-get install -qq -y shared-mime-info
+
+# install yarn for webpacker
+RUN apt install yarn
 
 # if this is changed it also needs to be changed in nginx-sites.conf and unicorn.rb
 ENV APP_HOME /rigse
