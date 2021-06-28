@@ -144,9 +144,11 @@ const stemFinderResult = Component({
       ? '45 Minutes'
       : resource.material_type === 'Investigation'
         ? '2 Weeks'
-        : 'Varies'
+        : resource.material_type === 'Model'
+          ? 'Varies'
+          : null
 
-    if (timeRequired === '') {
+    if (timeRequired === null) {
       return
     }
     return (
@@ -158,6 +160,7 @@ const stemFinderResult = Component({
 
   renderLinks: function () {
     const resource = this.props.resource
+    const isCollection = resource.material_type === 'Collection'
     const isAssignWrapped = window.self !== window.top &&
       window.self.location.hostname === window.top.location.hostname
     const assignHandler = resource.links.assign_material && isAssignWrapped
@@ -165,13 +168,13 @@ const stemFinderResult = Component({
       : resource.links.assign_material
         ? `javascript: ${resource.links.assign_material.onclick}`
         : null
-    const assignLink = resource.links.assign_material
+    const assignLink = resource.links.assign_material && !isCollection
       ? <a href={assignHandler}>{resource.links.assign_material.text}</a>
       : null
-    const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher
+    const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher && !isCollection
       ? <a href={resource.links.copy_url} target='_blank'>Copy</a>
       : null
-    const printLink = resource.links.print_url
+    const printLink = resource.links.print_url && !isCollection
       ? <a href={resource.links.print_url} target='_blank'>Print</a>
       : null
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
@@ -184,8 +187,12 @@ const stemFinderResult = Component({
         {teacherEditionLink}
         {printLink}
         {copyLink}
-        <a href='#' className={css.moreLink} onClick={this.toggleResource}>More</a>
-        <a href='#' className={css.lessLink} onClick={this.toggleResource}>Less</a>
+        {!isCollection &&
+          <>
+            <a href='#' className={css.moreLink} onClick={this.toggleResource}>More</a>
+            <a href='#' className={css.lessLink} onClick={this.toggleResource}>Less</a>
+          </>
+        }
       </div>
     )
   },
@@ -248,7 +255,7 @@ const stemFinderResult = Component({
 
   renderRelatedResources: function (e) {
     const resource = this.props.resource
-    if (resource.related_materials.length === 0) {
+    if (resource.related_materials.length === 0 || resource.material_type === 'Collection') {
       return null
     }
 
@@ -277,7 +284,8 @@ const stemFinderResult = Component({
 
   render: function () {
     const resource = this.props.resource
-    const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open}` : css.finderResult
+    const resourceTypeClass = resource.material_type.toLowerCase()
+    const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open} ${css[resourceTypeClass]}` : `${css.finderResult} ${css[resourceTypeClass]}`
     // truncate title and/or description if they are too long for resource card height
     // const maxCharTitle = 180
     // const maxCharDesc = 135
@@ -305,10 +313,15 @@ const stemFinderResult = Component({
           </div>
         </div>
         <div className={css.previewLink}>
-          <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
-          <div className={`${css.projectLabel} ${css[projectClass]}`}>
-            {projectName}
-          </div>
+          {resource.material_type !== 'Collection'
+            ? <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
+            : <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>View</a>
+          }
+          {resource.material_type !== 'Collection' &&
+            <div className={`${css.projectLabel} ${css[projectClass]}`}>
+              {projectName}
+            </div>
+          }
         </div>
         {this.renderStandards()}
         {this.renderRelatedResources()}

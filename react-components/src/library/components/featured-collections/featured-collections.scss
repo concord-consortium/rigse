@@ -1,0 +1,29 @@
+@import '../../../shared/styles/variables/_variables.scss';
+
+.finderResultsFeatured {
+  background: $col-gold;
+  color: $col-darkgray;
+  margin: 0 0 20px;
+  padding: 10px 0 0;
+  width: 100%;
+
+  .finderResultsFeaturedHeader {
+    overflow: hidden;
+    padding: 0 1.31579%;
+
+    a, a:visited {
+      color: $col-darkgray;
+      font-size: 16px !important;
+    }
+    h3 {
+      color: $col-darkgray;
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+  }
+  .finderResultsFeaturedCards {
+    overflow: hidden;
+  }
+}

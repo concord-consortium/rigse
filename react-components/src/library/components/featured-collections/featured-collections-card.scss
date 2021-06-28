@@ -1,0 +1,63 @@
+@import '../../../shared/styles/variables/_variables.scss';
+
+.finderResultsFeaturedCard {
+  background: $white;
+  cursor: pointer;
+  font-size: 14px;
+  height: 194px;
+  margin: 20px;
+  overflow: hidden;
+  width: 285px;
+
+  .finderResultsFeaturedCardImagePreview {
+    height: 135px;
+    overflow: hidden;
+    position: relative;
+    img {
+      bottom: -300px;
+      height: auto;
+      left: -300px;
+      margin: auto;
+      max-width: 200%;
+      min-width: 100%;
+      pointer-events: none;
+      position: absolute;
+      right: -300px;
+      top: -300px;
+      width: 100%;
+    }
+  }
+
+  .finderResultsFeaturedCardName {
+    color: $col-blue;
+    font: 700 16px $font-museo-sans;
+    margin: 20px;
+  }
+  .finderResultsFeaturedCardDescription {
+    color: $white;
+    display: -webkit-box;
+    font: 300 16px $font-museo-sans;
+    margin: 0;
+    padding: 0 20px 20px;
+    overflow: hidden;
+    visibility: visible;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+  }
+
+  &:hover {
+    background: $col-blue;
+    color: $white;
+
+    .finderResultsFeaturedCardImagePreview {
+      display: none;
+    }
+    h3 {
+      color: $white;
+    }
+  }
+  a {
+    display: block;
+    height: 100%;
+  }
+}

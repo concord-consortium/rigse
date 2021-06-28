@@ -42,7 +42,7 @@ var ResourceFinderLightbox = Component({
               x
             </div>
             <div id='finderLightboxModal' className={css.portalPagesResourceFinderLightboxModal}>
-              <StemFinder />
+              <StemFinder hideFeatured />
             </div>
           </div>
         </div>

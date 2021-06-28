@@ -89,6 +89,7 @@
   }
   &.open {
     height: auto;
+    overflow: visible;
     padding: 0 0 10px;
 
     h2, label {
@@ -243,7 +244,7 @@
     padding: 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: calc(100% - 20px);
+    width: calc(100% - 34px);
   }
 }
 
@@ -276,6 +277,7 @@
       white-space: nowrap;
     }
     select {
+      background: $white;
       border-radius: 4px;
       font: 300 14px $font-museo-sans;
       margin: 0 0 0 5px;

@@ -78,6 +78,23 @@ h3 {
   padding-top: 30px;
 }
 
+/* BIN VIEW
+----------------------------------*/
+#bin-view {
+  clear: both;
+  margin-left: 1.31579%;
+  margin-right: 1.31579%;
+  width: 97.36842%;
+
+  .mb-column:nth-child(2) {
+    width: 810px;
+
+    .mb-material .mb-material-text {
+      width: 610px;
+    }
+  }
+}
+
 /* TABS
 ----------------------------------*/
 .tabs-container {

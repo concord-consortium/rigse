@@ -10,6 +10,7 @@ import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox
 import filters from '../helpers/filters'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
 import AutoSuggest from './search/auto-suggest'
+import FeaturedCollections from './featured-collections/featured-collections'
 
 import css from './stem-finder.scss'
 
@@ -18,6 +19,7 @@ const DISPLAY_LIMIT_INCREMENT = 6
 const StemFinder = Component({
 
   getInitialState: function () {
+    const hideFeatured = this.props.hideFeatured || false
     let subjectAreaKey = this.props.subjectAreaKey
     let gradeLevelKey = this.props.gradeLevelKey
     let projectId = this.props.projectId || null
@@ -86,6 +88,7 @@ const StemFinder = Component({
       gradeLevelsSelectedMap: gradeLevelsSelectedMap,
       projectsSelected: projectsSelected,
       sortOrder: sortOrder,
+      collections: [],
       resources: [],
       numTotalResources: 0,
       displayLimit: DISPLAY_LIMIT_INCREMENT,
@@ -95,7 +98,10 @@ const StemFinder = Component({
       noResourcesFound: false,
       lastSearchResultCount: 0,
       keyword: '',
-      searchInput: ''
+      searchInput: '',
+      initPage: true,
+      featuredCollections: [],
+      hideFeatured: hideFeatured
     }
   },
 
@@ -152,7 +158,6 @@ const StemFinder = Component({
 
   handlePageScroll: function (event) {
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    console.log(scrollTop)
     if (
       scrollTop > window.innerHeight / 2 &&
       !this.state.searching &&
@@ -165,7 +170,6 @@ const StemFinder = Component({
 
   handleLightboxScroll: function (event) {
     const scrollTop = event.srcElement.scrollTop
-    console.log(scrollTop)
     if (
       scrollTop > window.innerHeight / 3 &&
       !this.state.searching &&
@@ -200,7 +204,7 @@ const StemFinder = Component({
       '&sort_order=Alphabetical',
       '&include_official=1',
       '&model_types=All',
-      '&include_related=2',
+      '&include_related=0',
       '&investigation_page=',
       searchPage,
       '&activity_page=',
@@ -254,6 +258,7 @@ const StemFinder = Component({
       return
     }
 
+    let featuredCollections = incremental ? this.state.featuredCollections.slice(0) : []
     let resources = incremental ? this.state.resources.slice(0) : []
     let searchPage = incremental ? this.state.searchPage + 1 : 1
 
@@ -266,6 +271,7 @@ const StemFinder = Component({
       keyword,
       searching: true,
       noResourcesFound: false,
+      featuredCollections: featuredCollections,
       resources: resources
     })
 
@@ -282,11 +288,15 @@ const StemFinder = Component({
         result.materials.forEach(function (material) {
           portalObjectHelpers.processResource(material)
           resources.push(material)
+          if (material.material_type === 'Collection') {
+            featuredCollections.push(material)
+          }
           lastSearchResultCount++
         })
         numTotalResources += result.pagination.total_items
       })
 
+      featuredCollections.sort(sortByName)
       resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
@@ -295,6 +305,7 @@ const StemFinder = Component({
 
       this.setState({
         firstSearch: false,
+        featuredCollections: featuredCollections,
         resources: resources,
         numTotalResources: numTotalResources,
         searchPage: searchPage,
@@ -315,7 +326,20 @@ const StemFinder = Component({
   },
 
   scrollToFinder: function () {
-    document.getElementById('finderLightbox').scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    if (document.getElementById('finderLightbox')) {
+      document.getElementById('finderLightbox').scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    }
+  },
+
+  noOptionsSelected: function () {
+    if (
+      this.state.subjectAreasSelected.length === 0 &&
+      this.state.gradeLevelsSelected.length === 0
+    ) {
+      return true
+    } else {
+      return false
+    }
   },
 
   renderLogo: function (subjectArea) {
@@ -439,6 +463,7 @@ const StemFinder = Component({
   },
 
   toggleFilter: function (type, filter) {
+    this.setState({ initPage: false })
     const selectedKey = type + 'Selected'
     const selectedFilters = this.state[selectedKey].slice()
     const index = selectedFilters.indexOf(filter)
@@ -492,9 +517,11 @@ const StemFinder = Component({
     e.stopPropagation()
     this.search()
     this.scrollToFinder()
+    this.setState({ initPage: false })
   },
 
   handleAutoSuggestSubmit (searchInput) {
+    this.setState({ initPage: false })
     this.setState({ searchInput }, () => {
       this.search()
       this.scrollToFinder()
@@ -504,6 +531,7 @@ const StemFinder = Component({
   handleCollectionSelection (e) {
     e.preventDefault()
     e.stopPropagation()
+    this.setState({ initPage: false })
     this.setState({ projectsSelected: [e.target.value] }, () => {
       this.search()
     })
@@ -512,6 +540,7 @@ const StemFinder = Component({
   handleSortSelection (e) {
     e.preventDefault()
     e.stopPropagation()
+    this.setState({ initPage: false })
     this.setState({ sortOrder: e.target.value }, () => {
       this.search()
     })
@@ -520,12 +549,8 @@ const StemFinder = Component({
   renderSearch: function () {
     return (
       <div className={`${css.finderOptionsContainer} ${css.open}`}>
+        <h2 onClick={this.handleFilterHeaderClick}>Keywords</h2>
         <form onSubmit={this.handleSearchSubmit}>
-          <div className={'portal-pages-finder-form-search-title'}>
-            <label htmlFor={'search-terms'}>
-              Keywords
-            </label>
-          </div>
           <div className={'portal-pages-search-input-container'}>
             <AutoSuggest
               name={'search-terms'}
@@ -663,13 +688,19 @@ const StemFinder = Component({
         </div>
       )
     }
+
+    let featuredCollections = this.state.featuredCollections
+    featuredCollections = featuredCollections.sort(() => Math.random() - Math.random()).slice(0, 3)
     const resources = this.state.resources.slice(0, this.state.displayLimit)
     return (
       <>
+        {(!this.state.hideFeatured && this.state.initPage && this.noOptionsSelected() && featuredCollections.length > 0) &&
+          <FeaturedCollections featuredCollections={featuredCollections} />
+        }
         {this.renderResultsHeader()}
         <div className={css.finderResultsContainer}>
           {resources.map(function (resource, index) {
-            return stemFinderResult({ key: index, resource: resource })
+            return stemFinderResult({ key: `${index}-${resource.external_url}`, resource: resource })
           })}
         </div>
         {this.state.searching ? <div class={css.loading}>Loading</div> : null}
