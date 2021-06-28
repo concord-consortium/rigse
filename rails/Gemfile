@@ -68,6 +68,7 @@ gem 'uglifier'
 gem 'useragent' # detect browser types
 gem 'uuidtools',            '~> 2.1.2'
 gem 'virtus',               '~>1.0.3'
+gem 'webpacker'
 gem 'will_paginate'
 gem 'yui-compressor'
 
