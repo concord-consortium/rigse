@@ -333,6 +333,11 @@ class API::V1::ReportLearnersEsController < API::APIController
         :bool => {
           :filter => filters
         }
+      },
+      :sort => {
+        :created_at => {
+          :order => "asc"
+        }
       }
     }
 
