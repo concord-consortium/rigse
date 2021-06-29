@@ -108,7 +108,7 @@ class API::V1::ReportLearnersEsController < API::APIController
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
   #
   # @param query - (required) query from external_report_query_jwt
-  # @param page_size - (required) number of learners per page, hard-capped at 2000
+  # @param page_size - (required) number of learners per page, hard-capped at 5000
   # @param start_from - (optional) learner index to start from for the next page
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
@@ -119,8 +119,8 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     if (page_size == nil || page_size < 1)
       return error "param page_size must be a positive number", 400
-    elsif (page_size > 2000)
-      return error "param page_size may not be larger than 2000", 400
+    elsif (page_size > 5000)
+      return error "param page_size may not be larger than 5000", 400
     end
 
     query[:size_limit] = page_size
