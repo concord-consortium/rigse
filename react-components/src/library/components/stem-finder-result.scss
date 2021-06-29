@@ -125,16 +125,16 @@
   }
 
   &.collection {
-    .finderResultTextName {
+    .metaTags {
       &:after {
-        background: $col-gold;
-        color: $col-darkgray;
+        background: $light-gray;
+        color: $col-darkgray-75;
         content: "Curated Collection";
         display: inline-block;
         font-size: 12px;
         font-weight: 300;
-        margin: -5px 5px;
-        padding: 5px;
+        margin: 0;
+        padding: 2px 5px;
       }
     }
   }
@@ -158,12 +158,13 @@
     min-height: 80px;
     padding-bottom: 20px;
     position: relative;
-    width: 390px;
+    width: 380px;
 
     .finderResultTextName {
       font-size: 16px;
       font-weight: 700;
       line-height: 1;
+      overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -203,16 +204,16 @@
     }
   }
   .previewLink {
-    width: 120px;
+    width: 130px;
 
     .previewLinkButton {
       background: #fff;
       border: solid 2px $col-orange;
       color: $col-orange;
       display: block;
-      font: 700 15px/1 museo-sans, Arial, Helvetica, sans-serif;
+      font: 700 14px/1 museo-sans, Arial, Helvetica, sans-serif;
       line-height: .8;
-      padding: 10px 25px;
+      padding: 10px;
       text-align: center;
 
       &:hover {

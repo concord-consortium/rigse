@@ -131,7 +131,6 @@ export default class MaterialsBin extends React.Component {
               </MBMaterialsCategory>
             )
           } else if (cellDef.collections) {
-            console.log(cellDef)
             return <MBCollections
               key={rowIdx}
               visible={visible}

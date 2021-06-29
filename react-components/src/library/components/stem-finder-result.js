@@ -315,7 +315,7 @@ const stemFinderResult = Component({
         <div className={css.previewLink}>
           {resource.material_type !== 'Collection'
             ? <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
-            : <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>View</a>
+            : <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>View Collection</a>
           }
           {resource.material_type !== 'Collection' &&
             <div className={`${css.projectLabel} ${css[projectClass]}`}>

@@ -109,7 +109,7 @@
       line-height: 1;
       padding: 5px 10px 5px 37px;
       position: relative;
-      width: 100%;
+      width: calc(100% - 47px);
 
       &.selected {
         background: $col-blue;
@@ -284,7 +284,7 @@
       overflow: hidden;
       padding: 5px;
       white-space: nowrap;
-      width: 129px;
+      width: 155px;
     }
   }
 }

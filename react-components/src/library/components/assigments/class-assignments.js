@@ -34,6 +34,7 @@ export default class ClassAssignments extends React.Component {
   }
 
   closeLightbox (e) {
+    this.props.handleNewAssignment()
     Lightbox.close()
   }
 

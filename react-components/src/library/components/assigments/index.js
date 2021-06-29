@@ -73,6 +73,7 @@ export default class Assignments extends React.Component {
     this.onOfferingsReorder = this.onOfferingsReorder.bind(this)
     this.onOfferingUpdate = this.onOfferingUpdate.bind(this)
     this.requestOfferingDetails = this.requestOfferingDetails.bind(this)
+    this.handleNewAssignments = this.handleNewAssignments.bind(this)
   }
 
   componentDidMount () {
@@ -154,6 +155,10 @@ export default class Assignments extends React.Component {
     })
   }
 
+  handleNewAssignments () {
+    this.getClassData()
+  }
+
   render () {
     const { loading, clazz, offerings, offeringDetails } = this.state
     if (loading) {
@@ -161,7 +166,7 @@ export default class Assignments extends React.Component {
     }
     return (
       <div>
-        <ClassAssignments clazz={clazz} />
+        <ClassAssignments clazz={clazz} handleNewAssignment={this.handleNewAssignments} />
         <OfferingsTable offerings={offerings} offeringDetails={offeringDetails} clazz={clazz}
           onOfferingsReorder={this.onOfferingsReorder} onOfferingUpdate={this.onOfferingUpdate} requestOfferingDetails={this.requestOfferingDetails} />
       </div>

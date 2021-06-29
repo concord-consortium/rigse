@@ -5,9 +5,13 @@
   cursor: pointer;
   font-size: 14px;
   height: 194px;
-  margin: 20px;
+  margin: 0 0 10px 10px;
   overflow: hidden;
-  width: 285px;
+  width: 282px;
+
+  &:nth-child(3) {
+    margin-right: 10px;
+  }
 
   .finderResultsFeaturedCardImagePreview {
     height: 135px;
@@ -30,15 +34,15 @@
 
   .finderResultsFeaturedCardName {
     color: $col-blue;
-    font: 700 16px $font-museo-sans;
-    margin: 20px;
+    font: 700 16px/1.2 $font-museo-sans;
+    margin: 10px;
   }
   .finderResultsFeaturedCardDescription {
     color: $white;
     display: -webkit-box;
     font: 300 16px $font-museo-sans;
     margin: 0;
-    padding: 0 20px 20px;
+    padding: 0 10px;
     overflow: hidden;
     visibility: visible;
     -webkit-box-orient: vertical;

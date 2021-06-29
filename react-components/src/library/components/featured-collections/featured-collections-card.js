@@ -22,7 +22,7 @@ const FeaturedCollectionsCard = Component({
     const { featuredCollection } = this.props
     const hover = this.state.hover
     return (
-      <div key={featuredCollection.external_url} className={`${css.finderResultsFeaturedCard} col-4`} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+      <div key={featuredCollection.external_url} className={css.finderResultsFeaturedCard} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
         <a href={featuredCollection.external_url}>
           {!hover &&
             <div className={css.finderResultsFeaturedCardImagePreview}>
