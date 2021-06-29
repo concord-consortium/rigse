@@ -109,13 +109,16 @@ class API::V1::ReportLearnersEsController < API::APIController
   #
   # @param query - (required) query from external_report_query_jwt
   # @param page_size - (required) number of learners per page, hard-capped at 5000
-  # @param start_from - (optional) learner index to start from for the next page
+  # @param search_after - (optional) sorted document index to start from for the next page.
+  #       When this API is called, every doc returned by ES has a unique sort value. The last document's sort
+  #       value is returned by this API as `lastHitSortValue`. Passing this same value in as `search_after`
+  #       will resulting in fetching the next page of results. See the external-report-demo for an example.
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
 
     query = params["query"]
     page_size = params["page_size"].to_i
-    start_from = params["start_from"].to_i || 0
+    search_after = params["search_after"] || nil
 
     if (page_size == nil || page_size < 1)
       return error "param page_size must be a positive number", 400
@@ -127,13 +130,14 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     learner_selector = Report::Learner::Selector.new(query, current_user, {
       :include_runnable_and_learner => true,
-      :start_from => start_from
+      :search_after => search_after
     })
 
     response = {
       json: {
         version: "1",
-        learners: learner_selector.learners.map {|l| self.class.detailed_learner_info l}
+        learners: learner_selector.learners.map {|l| self.class.detailed_learner_info l},
+        lastHitSortValue: learner_selector.last_hit_sort_value
       }
     }
     render json: response.to_json
@@ -341,8 +345,8 @@ class API::V1::ReportLearnersEsController < API::APIController
       }
     }
 
-    if options[:start_from]
-      query[:from] = options[:start_from]
+    if options[:search_after]
+      query[:search_after] = options[:search_after]
     end
 
     logger.info "ES Query:"
