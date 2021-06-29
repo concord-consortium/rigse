@@ -150,7 +150,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    columnize (0.9.0)
     concurrent-ruby (1.1.8)
     connection_pool (2.2.2)
     crack (0.4.3)
@@ -178,6 +177,7 @@ GEM
       railties (>= 4.2, < 7)
     cucumber-tag_expressions (1.1.1)
     cucumber-wire (0.0.1)
+    daemons (1.1.9)
     database_cleaner (2.0.1)
       database_cleaner-active_record (~> 2.0.0)
     database_cleaner-active_record (2.0.1)
@@ -280,8 +280,6 @@ GEM
     kgio (2.10.0)
     launchy (2.4.3)
       addressable (~> 2.3)
-    linecache (0.46)
-      rbx-require-relative (> 0.0.4)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -414,7 +412,6 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rbx-require-relative (0.0.9)
     redcarpet (2.1.1)
     regexp_parser (2.1.1)
     remarkable (3.1.13)
@@ -456,11 +453,6 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
-    ruby-debug (0.10.4)
-      columnize (>= 0.1)
-      ruby-debug-base (~> 0.10.4.0)
-    ruby-debug-base (0.10.4)
-      linecache (>= 0.3)
     ruby_dep (1.5.0)
     rubyzip (1.2.3)
     safe_yaml (1.0.4)
@@ -583,6 +575,7 @@ DEPENDENCIES
   connection_pool
   cucumber
   cucumber-rails
+  daemons
   database_cleaner
   default_value_for
   delayed-web
@@ -660,4 +653,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   1.17.3
+   2.2.17
