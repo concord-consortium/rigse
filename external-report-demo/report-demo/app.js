@@ -139,23 +139,20 @@ function validateJSON(event) {
 async function fetchLearnerData(jwt, query, learnersApiUrl, pageSize) {
   const queryParams = {
     query,
-    page_size: pageSize,
-    start_from: 0
+    page_size: pageSize
   };
   const allLearners = [];
   let foundAllLearners = false;
-  let totalLearnersFound = 0;
 
   while (!foundAllLearners) {
     const res = await getLearnerDataWithJwt(learnersApiUrl, queryParams, jwt);
     if (res.json.learners) {
       allLearners.push(res.json.learners);
 
-      if (res.json.learners.length < pageSize) {
+      if (res.json.learners.length < pageSize && res.json.lastHitSortValue) {
         foundAllLearners = true;
       } else {
-        totalLearnersFound += res.json.learners.length;
-        queryParams.start_from = totalLearnersFound;
+        queryParams.search_after = res.json.lastHitSortValue;
       }
     } else {
       throw new Error("Malformed response from the portal: " + JSON.stringify(res));

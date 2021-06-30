@@ -82,6 +82,11 @@ describe API::V1::ReportLearnersEsController do
         "bool" => {
           "filter" => []
         }
+      },
+      "sort" => {
+        "created_at" => {
+          "order" => "asc"
+        }
       }
     }
   end
@@ -93,6 +98,11 @@ describe API::V1::ReportLearnersEsController do
       "query" => {
         "bool" => {
           "filter" => []
+        }
+      },
+      "sort" => {
+        "created_at" => {
+          "order" => "asc"
         }
       }
     }
