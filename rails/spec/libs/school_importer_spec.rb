@@ -50,7 +50,7 @@ RSpec.describe SchoolImporter do
       line = ''
       result = school_importer.add_csv_row(line)
 
-      expect(result).to be_nil
+      expect(result).to be 0
     end
   end
 

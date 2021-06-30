@@ -80,8 +80,8 @@ GEM
       activerecord (>= 5.0, < 6.2)
     acts_as_list (1.0.4)
       activerecord (>= 4.2)
-    addressable (2.5.2)
-      public_suffix (>= 2.0.2, < 4.0)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
     appsignal (2.11.0)
       rack
     arrayfields (4.7.4)
@@ -153,8 +153,8 @@ GEM
     columnize (0.9.0)
     concurrent-ruby (1.1.8)
     connection_pool (2.2.2)
-    crack (0.4.3)
-      safe_yaml (~> 1.0.0)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     cucumber (3.1.2)
       builder (>= 2.1.2)
@@ -178,6 +178,7 @@ GEM
       railties (>= 4.2, < 7)
     cucumber-tag_expressions (1.1.1)
     cucumber-wire (0.0.1)
+    daemons (1.1.9)
     database_cleaner (2.0.1)
       database_cleaner-active_record (~> 2.0.0)
     database_cleaner-active_record (2.0.1)
@@ -255,7 +256,7 @@ GEM
     haml (5.2.1)
       temple (>= 0.8.0)
       tilt
-    hashdiff (0.3.7)
+    hashdiff (1.0.1)
     hashie (2.0.3)
     highline (1.6.15)
     htmlentities (4.3.4)
@@ -280,8 +281,7 @@ GEM
     kgio (2.10.0)
     launchy (2.4.3)
       addressable (~> 2.3)
-    linecache (0.46)
-      rbx-require-relative (> 0.0.4)
+    linecache (1.3.1)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -369,7 +369,7 @@ GEM
     pry-byebug (3.6.0)
       byebug (~> 10.0)
       pry (~> 0.10)
-    public_suffix (3.0.3)
+    public_suffix (4.0.6)
     pundit (1.1.0)
       activesupport (>= 3.0.0)
     racc (1.5.2)
@@ -414,7 +414,6 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rbx-require-relative (0.0.9)
     redcarpet (2.1.1)
     regexp_parser (2.1.1)
     remarkable (3.1.13)
@@ -425,6 +424,7 @@ GEM
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
+    rexml (3.2.5)
     rollbar (3.1.2)
     rsolr (2.3.0)
       builder (>= 2.1.2)
@@ -463,7 +463,6 @@ GEM
       linecache (>= 0.3)
     ruby_dep (1.5.0)
     rubyzip (1.2.3)
-    safe_yaml (1.0.4)
     sanitize (5.2.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.8.0)
@@ -542,10 +541,10 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
-    webmock (3.4.2)
+    webmock (3.13.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-      hashdiff
+      hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.7.0)
     webrobots (0.1.2)
     websocket-driver (0.7.3)
@@ -583,6 +582,7 @@ DEPENDENCIES
   connection_pool
   cucumber
   cucumber-rails
+  daemons
   database_cleaner
   default_value_for
   delayed-web
@@ -660,4 +660,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.2.17
+   2.2.20
