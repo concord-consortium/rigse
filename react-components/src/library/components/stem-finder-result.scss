@@ -2,18 +2,7 @@
 @import '../../shared/styles/mixins/_mixins.scss';
 @import '../../shared/styles/variables/_variables.scss';
 
-@keyframe animateIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 100%;
-  }
-}
-
 .finderResult {
-  animation-name: animateIn;
-  animation-duration: 350ms;
   background: $white;
   border-radius: 4px;
   box-sizing: content-box;
@@ -24,7 +13,9 @@
   overflow: hidden;
   padding: 10px 10px 34px;
   position: relative;
-  transition: .3s;
+  transition-duration: .5s;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
 
   @for $i from 1 to 50 {
     &:nth-child(#{$i}) {

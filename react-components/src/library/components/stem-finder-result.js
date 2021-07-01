@@ -14,12 +14,13 @@ import css from './stem-finder-result.scss'
 let pageScrolling = false
 let touchInitialized = false
 
-const stemFinderResult = Component({
+const StemFinderResult = Component({
   getInitialState: function () {
     return {
       favorited: this.props.resource.is_favorite,
       hovering: false,
       isOpen: false,
+      isVisible: true,
       lightbox: false,
       showTeacherResourcesButton: false
     }
@@ -306,7 +307,7 @@ const stemFinderResult = Component({
   },
 
   render: function () {
-    const { resource } = this.props
+    const { resource, index } = this.props
     const resourceTypeClass = resource.material_type.toLowerCase()
     const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open} ${css[resourceTypeClass]}` : `${css.finderResult} ${css[resourceTypeClass]}`
     const resourceName = resource.name
@@ -314,9 +315,11 @@ const stemFinderResult = Component({
     const projectName = resource.projects[0] ? resource.projects[0].name : null
     const projectNameRegex = / |-|\./g
     const projectClass = projectName ? projectName.replace(projectNameRegex, '').toLowerCase() : null
+    const transitionDelay = 100 * index
+    const opacityVal = this.state.isVisible ? '1' : '0'
 
     return (
-      <div className={finderResultClasses}>
+      <div className={finderResultClasses} style={{ opacity: opacityVal, transitionDelay: transitionDelay + 'ms' }}>
         <div className={css.finderResultImagePreview}>
           <img alt={resource.name} src={resource.icon.url} />
         </div>
@@ -355,4 +358,4 @@ const stemFinderResult = Component({
   }
 })
 
-export default stemFinderResult
+export default StemFinderResult

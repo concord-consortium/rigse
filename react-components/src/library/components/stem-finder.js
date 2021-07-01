@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Component from '../helpers/component'
-import stemFinderResult from '../components/stem-finder-result'
+import StemFinderResult from '../components/stem-finder-result'
 import sortByName from '../helpers/sort-by-name'
 import sortResources from '../helpers/sort-resources'
 import fadeIn from '../helpers/fade-in'
@@ -718,6 +718,12 @@ const StemFinder = Component({
     // )
   },
 
+  showResource: function () {
+    console.log('show resource')
+    const selector = `${css.finderResults} [class^='finderResult--']`
+    document.querySelectorAll(selector).style.opacity = 1
+  },
+
   renderResults: function () {
     if (this.state.firstSearch) {
       return (
@@ -738,7 +744,7 @@ const StemFinder = Component({
         {this.renderResultsHeader()}
         <div className={css.finderResultsContainer}>
           {resources.map(function (resource, index) {
-            return stemFinderResult({ key: `${index}-${resource.external_url}`, resource: resource })
+            return <StemFinderResult key={resource.external_url} resource={resource} index={index} />
           })}
         </div>
         {this.state.searching ? <div class={css.loading}>Loading</div> : null}
