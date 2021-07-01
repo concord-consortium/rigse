@@ -152,7 +152,9 @@ const StemFinder = Component({
           }
           return collections
         }, [])
-        collections.sort(sortByName)
+        if (collections.length > 0) {
+          collections.sort(sortByName)
+        }
         this.setState({ collections: collections })
       }.bind(this))
     }.bind(this))
@@ -301,7 +303,9 @@ const StemFinder = Component({
         numTotalResources += result.pagination.total_items
       })
 
-      featuredCollections.sort(sortByName)
+      if (featuredCollections.length > 0) {
+        featuredCollections.sort(sortByName)
+      }
       resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
