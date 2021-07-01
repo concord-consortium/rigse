@@ -2,8 +2,8 @@ import React from 'react'
 
 import Component from '../helpers/component'
 import StemFinderResult from '../components/stem-finder-result'
-import sortByName from '../helpers/sort-by-name'
-import sortResources from '../helpers/sort-resources'
+// import sortByName from '../helpers/sort-by-name'
+// import sortResources from '../helpers/sort-resources'
 import fadeIn from '../helpers/fade-in'
 import pluralize from '../helpers/pluralize'
 import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox-to-close'
@@ -153,7 +153,7 @@ const StemFinder = Component({
           return collections
         }, [])
         if (collections.length > 0) {
-          collections.sort(sortByName)
+          // collections.sort(sortByName)
         }
         this.setState({ collections: collections })
       }.bind(this))
@@ -307,7 +307,7 @@ const StemFinder = Component({
       // if (featuredCollections.length > 1) {
       //   featuredCollections.sort(sortByName)
       // }
-      resources = sortResources(resources, this.state.sortOrder)
+      // resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
         fadeIn(this, 1000)
@@ -720,8 +720,10 @@ const StemFinder = Component({
 
   showResource: function () {
     console.log('show resource')
-    const selector = `${css.finderResults} [class^='finderResult--']`
-    document.querySelectorAll(selector).style.opacity = 1
+    const selector = `div[class^='finderResult--']`
+    if (document.querySelectorAll(selector)) {
+      document.querySelectorAll(selector).style.opacity = 1
+    }
   },
 
   renderResults: function () {
@@ -743,7 +745,7 @@ const StemFinder = Component({
         }
         {this.renderResultsHeader()}
         <div className={css.finderResultsContainer}>
-          {resources.map(function (resource, index) {
+          {resources.map((resource, index) => {
             return <StemFinderResult key={resource.external_url} resource={resource} index={index} />
           })}
         </div>

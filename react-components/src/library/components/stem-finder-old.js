@@ -3,7 +3,7 @@ import React from 'react'
 import Component from '../helpers/component'
 import StemFinderResult from '../components/stem-finder-result'
 import HeaderFilter from '../components/header-filter'
-import sortByName from '../helpers/sort-by-name'
+// import sortByName from '../helpers/sort-by-name'
 import fadeIn from '../helpers/fade-in'
 import pluralize from '../helpers/pluralize'
 import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox-to-close'
@@ -258,7 +258,7 @@ const StemFinder = Component({
         numTotalResources += result.pagination.total_items
       })
 
-      resources.sort(sortByName)
+      // resources.sort(sortByName)
 
       if (this.state.firstSearch) {
         fadeIn(this, 1000)
