@@ -15,6 +15,7 @@
   animation-name: animateIn;
   animation-duration: 350ms;
   background: $white;
+  border-radius: 4px;
   box-sizing: content-box;
   display: flex;
   flex-wrap: wrap;
@@ -125,6 +126,10 @@
   }
 
   &.collection {
+    padding-bottom: 10px;
+    &:after {
+      display: none;
+    }
     .metaTags {
       &:after {
         background: $light-gray;
@@ -209,6 +214,7 @@
     .previewLinkButton {
       background: #fff;
       border: solid 2px $col-orange;
+      border-radius: 4px;
       color: $col-orange;
       display: block;
       font: 700 14px/1 museo-sans, Arial, Helvetica, sans-serif;

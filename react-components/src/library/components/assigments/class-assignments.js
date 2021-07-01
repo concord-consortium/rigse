@@ -44,19 +44,19 @@ export default class ClassAssignments extends React.Component {
 
   handleAssignMaterialsOptionClick (e, collectionId) {
     this.setState({ showAssignOptions: false })
-
-    if (typeof collectionId !== 'undefined') {
-      const collectionLightbox = CollectionLightbox({
+    const lightboxOptions = collectionId === 'all' || typeof collectionId === 'undefined'
+      ? ResourceFinderLightbox({
         closeLightbox: this.closeLightbox,
-        collectionId: collectionId
+        collectionViews: this.state.collectionViews,
+        handleNav: this.handleAssignMaterialsOptionClick
       })
-      Lightbox.open(collectionLightbox)
-    } else {
-      const resourceFinderLightbox = ResourceFinderLightbox({
-        closeLightbox: this.closeLightbox
+      : CollectionLightbox({
+        closeLightbox: this.closeLightbox,
+        collectionId: collectionId,
+        collectionViews: this.state.collectionViews,
+        handleNav: this.handleAssignMaterialsOptionClick
       })
-      Lightbox.open(resourceFinderLightbox)
-    }
+    Lightbox.open(lightboxOptions)
   }
 
   handleAssignButtonMouseEnter (e) {
@@ -68,7 +68,7 @@ export default class ClassAssignments extends React.Component {
   }
 
   renderAssignOption () {
-    const collectionViews = this.state.collectionViews
+    const { collectionViews } = this.state
     return (
       collectionViews.map(collection => (
         <li onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</li>
@@ -77,10 +77,11 @@ export default class ClassAssignments extends React.Component {
   }
 
   renderAssignOptions () {
-    const recentCollectionItems = this.state.collectionViews.length > 0 ? this.renderAssignOption() : null
+    const { collectionViews } = this.state
+    const recentCollectionItems = collectionViews.length > 0 ? this.renderAssignOption() : null
     return (
       <ul>
-        <li onClick={(e) => this.handleAssignMaterialsOptionClick(e)}>Search All Resources</li>
+        <li onClick={(e) => this.handleAssignMaterialsOptionClick(e, 'all')}>All Resources</li>
         {recentCollectionItems}
       </ul>
     )
@@ -99,7 +100,8 @@ export default class ClassAssignments extends React.Component {
 
   render () {
     const { clazz } = this.props
-    const assignOptions = this.state.showAssignOptions ? this.renderAssignOptions() : null
+    const { showAssignOptions } = this.state
+    const assignOptions = showAssignOptions ? this.renderAssignOptions() : null
     return (
       <div className={css.classAssignments}>
         <header>

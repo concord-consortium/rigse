@@ -1,35 +1,37 @@
 import React from 'react'
 import Component from '../helpers/component'
+import LightboxNav from './lightbox-nav'
 
 import css from './collection-lightbox.scss'
 
 var CollectionLightbox = Component({
   getInitialState: function () {
     return {
-      collectionDescription: '',
+      // collectionDescription: '',
       collectionId: this.props.collectionId,
       collectionName: '',
+      collectionViews: this.props.collectionViews,
+      handleNav: this.props.handleNav,
       isLoaded: false,
       landingPageSlug: null
     }
   },
 
   componentDidMount: function () {
-    jQuery('html, body').css('overflow', 'hidden')
-    jQuery('.home-page-content').addClass('blurred')
-    document.querySelector(`.${css.portalPagesCollectionLightboxBackground}`).classList.add(css.visible)
-    document.querySelector(`.${css.portalPagesCollectionLightboxContainer}`).classList.add(css.visible)
-
     jQuery.ajax({
       url: '/api/v1/projects/' + this.state.collectionId,
       dataType: 'json',
       success: function (data) {
         this.setState({
           collectionName: data.name,
-          collectionDescription: data.project_card_description,
+          // collectionDescription: data.project_card_description,
           isLoaded: true,
           landingPageSlug: data.landing_page_slug
         })
+        jQuery('html, body').css('overflow', 'hidden')
+        jQuery('.home-page-content').addClass('blurred')
+        document.querySelector(`.${css.portalPagesCollectionLightboxBackground}`).classList.add(css.visible)
+        document.querySelector(`.${css.portalPagesCollectionLightboxContainer}`).classList.add(css.visible)
       }.bind(this)
     })
   },
@@ -51,10 +53,17 @@ var CollectionLightbox = Component({
     iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'
   },
 
+  handleSwitchSource: function (e) {
+    const { handleNav } = this.state
+    const collectionId = e.target.value
+    handleNav(e, collectionId)
+  },
+
   render: function () {
-    const collectionDescription = this.state.collectionDescription
-    const collectionName = this.state.collectionName
-    const collectionSlug = this.state.landingPageSlug
+    const { collectionName, collectionViews, isLoaded, landingPageSlug } = this.state
+    if (!isLoaded) {
+      return (null)
+    }
     return (
       <div>
         <div className={css.portalPagesCollectionLightboxBackground} />
@@ -64,13 +73,10 @@ var CollectionLightbox = Component({
               x
             </div>
             <div id='collectionLightboxModal' className={css.portalPagesCollectionLightboxModal}>
-              <div className={css.portalPagesCollectionLightboxHeading}>
-                <h1>{collectionName}</h1>
-                <div dangerouslySetInnerHTML={{ __html: collectionDescription }} />
-              </div>
+              <LightboxNav collectionName={collectionName} collectionViews={collectionViews} handleSwitchSource={(e) => this.handleSwitchSource(e)} />
               <div className={css.portalPagesCollectionLightboxCollection}>
                 <div id='collectionIframeLoading' className={css.loading}>loading</div>
-                {collectionSlug && <iframe id='collectionIframe' src={`/${collectionSlug}`} scrolling='no' onLoad={(e) => this.handleIframeResize(e)} />}
+                {landingPageSlug && <iframe id='collectionIframe' src={`/${landingPageSlug}`} scrolling='no' onLoad={(e) => this.handleIframeResize(e)} />}
               </div>
             </div>
           </div>

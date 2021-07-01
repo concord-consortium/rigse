@@ -4,13 +4,13 @@
   background: $white;
   cursor: pointer;
   font-size: 14px;
-  height: 194px;
-  margin: 0 0 10px 10px;
+  height: 195px;
+  margin: 0 10px 0 0;
   overflow: hidden;
-  width: 282px;
+  width: 285.33333px;
 
   &:nth-child(3) {
-    margin-right: 10px;
+    margin-right: 0;
   }
 
   .finderResultsFeaturedCardImagePreview {
@@ -39,7 +39,7 @@
   }
   .finderResultsFeaturedCardDescription {
     color: $white;
-    display: -webkit-box;
+    display: none;
     font: 300 16px $font-museo-sans;
     margin: 0;
     padding: 0 10px;
@@ -59,7 +59,11 @@
     h3 {
       color: $white;
     }
+    .finderResultsFeaturedCardDescription {
+      display: -webkit-box;
+    }
   }
+
   a {
     display: block;
     height: 100%;

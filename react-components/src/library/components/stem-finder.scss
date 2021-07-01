@@ -13,6 +13,8 @@
   }
   #finderResults {
     margin-left: 0;
+    position: relative;
+    z-index: 5;
 
     .loading {
       background: transparent url(../assets/loading.gif) no-repeat center top;
@@ -68,9 +70,9 @@
     font-family: $font-museo;
     font-size: 14px;
     font-weight: 700;
-    line-height: 1;
+    line-height: .8;
     margin: 0;
-    padding: 10px 10px 5px 29px;
+    padding: 10px 10px 10px 29px;
     position: relative;
     text-transform: uppercase;
 
@@ -106,9 +108,11 @@
     li {
       color: $col-darkgray;
       cursor: pointer;
+      font-size: 16px;
       line-height: 1;
       padding: 5px 10px 5px 37px;
       position: relative;
+      text-align: left;
       width: calc(100% - 47px);
 
       &.selected {
@@ -238,13 +242,14 @@
   }
   .collectionSelect {
     border-radius: 4px;
+    box-sizing: border-box;
     font: 300 14px $font-museo-sans;
     margin: 2px 10px 0 10px;
     overflow: hidden;
     padding: 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: calc(100% - 34px);
+    width: calc(100% - 20px);
   }
 }
 

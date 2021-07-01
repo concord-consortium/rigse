@@ -55,23 +55,25 @@ h3 {
 }
 
 /* just remove skew class altogether? */
-.skew {
-  margin-top: 0;
-  padding-top: 30px;
-  transform: skewY(0deg);
-}
-.skew.gray {
-  background-color: #f5f5f5;
-}
-.skew.top-only {
-  margin-bottom: -100px;
-  padding-bottom: 165px;
-}
-.skew.top-only:after {
-  display: none;
-}
-.skew .skew-cancel {
-  transform: skewY(0deg);
+.portal-pages-collection-resource-list {
+  .skew {
+    margin-top: 0;
+    padding-top: 30px;
+    transform: skewY(0deg);
+  }
+  .skew.gray {
+    background-color: #f5f5f5;
+  }
+  .skew.top-only {
+    margin-bottom: -100px;
+    padding-bottom: 165px;
+  }
+  .skew.top-only:after {
+    display: none;
+  }
+  .skew .skew-cancel {
+    transform: skewY(0deg);
+  }
 }
 
 .portal-pages-finder-materials-collection .portal-pages-finder-materials-collection-item .portal-pages-finder-materials-collection-item__title {

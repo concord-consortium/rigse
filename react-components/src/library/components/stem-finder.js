@@ -101,7 +101,9 @@ const StemFinder = Component({
       searchInput: '',
       initPage: true,
       featuredCollections: [],
-      hideFeatured: hideFeatured
+      hideFeatured: hideFeatured,
+      includeOfficial: true,
+      includeContributed: false
     }
   },
 
@@ -202,7 +204,10 @@ const StemFinder = Component({
     query = query.concat([
       '&skip_lightbox_reloads=true',
       '&sort_order=Alphabetical',
-      '&include_official=1',
+      '&include_official=',
+      this.state.includeOfficial,
+      '&include_contributed=',
+      this.state.includeContributed,
       '&model_types=All',
       '&include_related=0',
       '&investigation_page=',
@@ -343,8 +348,6 @@ const StemFinder = Component({
   },
 
   renderLogo: function (subjectArea) {
-    // console.log("INFO renderLogo", subjectArea);
-
     let className = 'portal-pages-finder-form-subject-areas-logo'
     const filterId = this.buildFilterId(subjectArea.key)
 
@@ -371,14 +374,15 @@ const StemFinder = Component({
       // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ subjectAreasSelected: subjectAreasSelected, subjectAreasSelectedMap: subjectAreasSelectedMap }, this.search)
       this.scrollToFinder()
+      this.setState({
+        hideFeatured: true,
+        initPage: false
+      })
     }.bind(this)
 
     return (
       <li key={subjectArea.key} id={css[filterId]} className={className} onClick={clicked}>
-        <div className={'portal-pages-finder-form-subject-areas-logo-inner'} />
-        <div className={'portal-pages-finder-form-subject-areas-logo-label'}>
-          {subjectArea.title}
-        </div>
+        {subjectArea.title}
       </li>
     )
   },
@@ -410,14 +414,15 @@ const StemFinder = Component({
       // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ gradeLevelsSelected: gradeLevelsSelected, gradeLevelsSelectedMap: gradeLevelsSelectedMap }, this.search)
       this.scrollToFinder()
+      this.setState({
+        hideFeatured: true,
+        initPage: false
+      })
     }.bind(this)
 
     return (
       <li key={gradeLevel.key} id={css[filterId]} className={className} onClick={clicked}>
-        <div className={'portal-pages-finder-form-filters-logo-inner'} />
-        <div className={'portal-pages-finder-form-filters-logo-label'}>
-          {gradeLevel.title}
-        </div>
+        {gradeLevel.title}
       </li>
     )
   },
@@ -446,6 +451,22 @@ const StemFinder = Component({
         </ul>
       </div>
     )
+  },
+
+  handleOfficialClick: function (e) {
+    e.currentTarget.classList.toggle(css.selected)
+    this.setState({
+      hideFeatured: true,
+      includeOfficial: !this.state.includeOfficial
+    }, this.search)
+  },
+
+  handleCommunityClick: function (e) {
+    e.currentTarget.classList.toggle(css.selected)
+    this.setState({
+      hideFeatured: true,
+      includeCommunity: !this.state.includeCommunity
+    }, this.search)
   },
 
   clearFilters: function () {
@@ -517,11 +538,17 @@ const StemFinder = Component({
     e.stopPropagation()
     this.search()
     this.scrollToFinder()
-    this.setState({ initPage: false })
+    this.setState({
+      hideFeatured: true,
+      initPage: false
+    })
   },
 
   handleAutoSuggestSubmit (searchInput) {
-    this.setState({ initPage: false })
+    this.setState({
+      hideFeatured: true,
+      initPage: false
+    })
     this.setState({ searchInput }, () => {
       this.search()
       this.scrollToFinder()
@@ -531,7 +558,10 @@ const StemFinder = Component({
   handleCollectionSelection (e) {
     e.preventDefault()
     e.stopPropagation()
-    this.setState({ initPage: false })
+    this.setState({
+      hideFeatured: true,
+      initPage: false
+    })
     this.setState({ projectsSelected: [e.target.value] }, () => {
       this.search()
     })
@@ -540,7 +570,10 @@ const StemFinder = Component({
   handleSortSelection (e) {
     e.preventDefault()
     e.stopPropagation()
-    this.setState({ initPage: false })
+    this.setState({
+      hideFeatured: true,
+      initPage: false
+    })
     this.setState({ sortOrder: e.target.value }, () => {
       this.search()
     })
@@ -590,8 +623,8 @@ const StemFinder = Component({
       <div className={css.finderOptionsContainer}>
         <h2 onClick={this.handleFilterHeaderClick}>Advanced</h2>
         <ul>
-          <li id={css.official}>Official</li>
-          <li id={css.community}>Community</li>
+          <li id={css.official} className={css.selected} onClick={(e) => this.handleOfficialClick(e)}>Official</li>
+          <li id={css.community} onClick={(e) => this.handleCommunityClick(e)}>Community</li>
         </ul>
       </div>
     )
@@ -636,7 +669,7 @@ const StemFinder = Component({
       return (
         <div className={css.finderHeader}>
           <div className={css.finderHeaderResourceCount}>
-            {this.state.noResourcesFound ? 'No Resources Found' : 'Searching...'}
+            {this.state.noResourcesFound ? 'No Resources Found' : ''}
           </div>
           {this.renderSortMenu()}
         </div>
@@ -688,6 +721,7 @@ const StemFinder = Component({
         </div>
       )
     }
+    console.log(this.state.hideFeatured)
 
     let featuredCollections = this.state.featuredCollections
     featuredCollections = featuredCollections.sort(() => Math.random() - Math.random()).slice(0, 3)

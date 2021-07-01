@@ -159,7 +159,7 @@ const stemFinderResult = Component({
   },
 
   renderLinks: function () {
-    const resource = this.props.resource
+    const { resource } = this.props
     const isCollection = resource.material_type === 'Collection'
     const isAssignWrapped = window.self !== window.top &&
       window.self.location.hostname === window.top.location.hostname
@@ -182,24 +182,47 @@ const stemFinderResult = Component({
       : null
 
     return (
-      <div className={css.finderResultLinks}>
+      <>
         {assignLink}
         {teacherEditionLink}
         {printLink}
         {copyLink}
-        {!isCollection &&
-          <>
-            <a href='#' className={css.moreLink} onClick={this.toggleResource}>More</a>
-            <a href='#' className={css.lessLink} onClick={this.toggleResource}>Less</a>
-          </>
-        }
-      </div>
+      </>
+    )
+  },
+
+  hasLongDescription: function () {
+    const { resource } = this.props
+    const hasDesc = resource.filteredShortDescription.length > 210
+    return hasDesc
+  },
+
+  hasStandards: function () {
+    const { resource } = this.props
+    return resource.standard_statements.length > 0
+  },
+
+  isCollection: function () {
+    const { resource } = this.props
+    return resource.material_type === 'Collection'
+  },
+
+  renderMoreToggle: function () {
+    if ((!this.hasLongDescription() && !this.hasStandards()) || this.isCollection()) {
+      return (null)
+    }
+
+    return (
+      <>
+        <a href='#' className={css.moreLink} onClick={this.toggleResource}>More</a>
+        <a href='#' className={css.lessLink} onClick={this.toggleResource}>Less</a>
+      </>
     )
   },
 
   renderStandards: function () {
-    const resource = this.props.resource
-    if (!resource.standard_statements || resource.standard_statements.length === 0) {
+    const { resource } = this.props
+    if (!this.hasStandards()) {
       return null
     }
 
@@ -283,12 +306,9 @@ const stemFinderResult = Component({
   },
 
   render: function () {
-    const resource = this.props.resource
+    const { resource } = this.props
     const resourceTypeClass = resource.material_type.toLowerCase()
     const finderResultClasses = this.state.isOpen ? `${css.finderResult} ${css.open} ${css[resourceTypeClass]}` : `${css.finderResult} ${css[resourceTypeClass]}`
-    // truncate title and/or description if they are too long for resource card height
-    // const maxCharTitle = 180
-    // const maxCharDesc = 135
     const resourceName = resource.name
     const shortDesc = resource.filteredShortDescription
     const projectName = resource.projects[0] ? resource.projects[0].name : null
@@ -325,7 +345,10 @@ const stemFinderResult = Component({
         </div>
         {this.renderStandards()}
         {this.renderRelatedResources()}
-        {this.renderLinks()}
+        <div className={css.finderResultLinks}>
+          {this.renderLinks()}
+          {this.renderMoreToggle()}
+        </div>
         {this.renderFavoriteStar()}
       </div>
     )

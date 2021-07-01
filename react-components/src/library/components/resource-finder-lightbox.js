@@ -1,15 +1,16 @@
 import React from 'react'
 import Component from '../helpers/component'
 import StemFinder from './stem-finder'
+import LightboxNav from './lightbox-nav'
 
 import css from './resource-finder-lightbox.scss'
 
 var ResourceFinderLightbox = Component({
   getInitialState: function () {
-    return null
-  },
-
-  getDefaultProps: function () {
+    return {
+      collectionViews: this.props.collectionViews,
+      handleNav: this.props.handleNav
+    }
   },
 
   componentDidMount: function () {
@@ -25,14 +26,21 @@ var ResourceFinderLightbox = Component({
   },
 
   handleClose: function (e) {
-    console.log()
     if (e.target.className === css.portalPagesResourceFinderLightboxBackgroundClose ||
         e.target.className === css.portalPagesResourceFinderLightbox) {
       this.props.closeLightbox(e)
     }
   },
 
+  handleSwitchSource: function (e) {
+    const { handleNav } = this.state
+    const collectionId = e.target.value
+    console.log('switch to ' + collectionId)
+    handleNav(e, collectionId)
+  },
+
   render: function () {
+    const { collectionViews } = this.state
     return (
       <div>
         <div className={css.portalPagesResourceFinderLightboxBackground} />
@@ -42,6 +50,7 @@ var ResourceFinderLightbox = Component({
               x
             </div>
             <div id='finderLightboxModal' className={css.portalPagesResourceFinderLightboxModal}>
+              <LightboxNav collectionViews={collectionViews} handleSwitchSource={(e) => this.handleSwitchSource(e)} />
               <StemFinder hideFeatured />
             </div>
           </div>
