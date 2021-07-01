@@ -303,9 +303,10 @@ const StemFinder = Component({
         numTotalResources += result.pagination.total_items
       })
 
-      if (featuredCollections.length > 0) {
-        featuredCollections.sort(sortByName)
-      }
+      console.log(featuredCollections)
+      // if (featuredCollections.length > 1) {
+      //   featuredCollections.sort(sortByName)
+      // }
       resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
@@ -725,7 +726,6 @@ const StemFinder = Component({
         </div>
       )
     }
-    console.log(this.state.hideFeatured)
 
     let featuredCollections = this.state.featuredCollections
     featuredCollections = featuredCollections.sort(() => Math.random() - Math.random()).slice(0, 3)
