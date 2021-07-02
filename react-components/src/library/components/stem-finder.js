@@ -2,8 +2,8 @@ import React from 'react'
 
 import Component from '../helpers/component'
 import StemFinderResult from '../components/stem-finder-result'
-// import sortByName from '../helpers/sort-by-name'
-// import sortResources from '../helpers/sort-resources'
+import sortByName from '../helpers/sort-by-name'
+import sortResources from '../helpers/sort-resources'
 import fadeIn from '../helpers/fade-in'
 import pluralize from '../helpers/pluralize'
 import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox-to-close'
@@ -153,7 +153,7 @@ const StemFinder = Component({
           return collections
         }, [])
         if (collections.length > 0) {
-          // collections.sort(sortByName)
+          collections.sort(sortByName)
         }
         this.setState({ collections: collections })
       }.bind(this))
@@ -206,10 +206,7 @@ const StemFinder = Component({
     query = query.concat([
       '&skip_lightbox_reloads=true',
       '&sort_order=Alphabetical',
-      '&include_official=',
-      this.state.includeOfficial,
-      '&include_contributed=',
-      this.state.includeContributed,
+      '&include_official=1',
       '&model_types=All',
       '&include_related=0',
       '&investigation_page=',
@@ -303,11 +300,10 @@ const StemFinder = Component({
         numTotalResources += result.pagination.total_items
       })
 
-      console.log(featuredCollections)
-      // if (featuredCollections.length > 1) {
-      //   featuredCollections.sort(sortByName)
-      // }
-      // resources = sortResources(resources, this.state.sortOrder)
+      if (featuredCollections.length > 1) {
+        featuredCollections.sort(sortByName)
+      }
+      resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
         fadeIn(this, 1000)
@@ -324,6 +320,8 @@ const StemFinder = Component({
         noResourcesFound: numTotalResources === 0,
         lastSearchResultCount: lastSearchResultCount
       })
+
+      this.showResources()
     }.bind(this))
   },
 
@@ -353,13 +351,9 @@ const StemFinder = Component({
   },
 
   renderLogo: function (subjectArea) {
-    let className = 'portal-pages-finder-form-subject-areas-logo'
     const filterId = this.buildFilterId(subjectArea.key)
-
-    var selected = this.state.subjectAreasSelectedMap[subjectArea.key]
-    if (selected) {
-      className += ' ' + css.selected
-    }
+    const selected = this.state.subjectAreasSelectedMap[subjectArea.key]
+    const className = selected ? css.selected : null
 
     const clicked = function () {
       const subjectAreasSelected = this.state.subjectAreasSelected.slice()
@@ -718,12 +712,13 @@ const StemFinder = Component({
     // )
   },
 
-  showResource: function () {
-    console.log('show resource')
-    const selector = `div[class^='finderResult--']`
-    if (document.querySelectorAll(selector)) {
-      document.querySelectorAll(selector).style.opacity = 1
-    }
+  showResources: function () {
+    setTimeout(function () {
+      console.log('show')
+      const resourceItems = document.querySelectorAll('.resourceItem')
+      resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1 })
+    }, 500)
+    // clearTimeout(timer)
   },
 
   renderResults: function () {
@@ -746,7 +741,7 @@ const StemFinder = Component({
         {this.renderResultsHeader()}
         <div className={css.finderResultsContainer}>
           {resources.map((resource, index) => {
-            return <StemFinderResult key={resource.external_url} resource={resource} index={index} />
+            return <StemFinderResult key={resource.external_url} resource={resource} index={index} showResources={this.showResources} />
           })}
         </div>
         {this.state.searching ? <div class={css.loading}>Loading</div> : null}

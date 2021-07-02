@@ -1,7 +1,7 @@
 import React from 'react'
 import Component from '../helpers/component'
 import fadeIn from '../helpers/fade-in'
-// import sortByName from '../helpers/sort-by-name'
+import sortByName from '../helpers/sort-by-name'
 import shuffleArray from '../helpers/shuffle-array'
 import waitForAutoShowingLightboxToClose from '../helpers/wait-for-auto-lightbox-to-close'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
@@ -31,7 +31,7 @@ const CollectionCards = Component({
         if (this.props.shuffle) {
           collections = shuffleArray(collections)
         } else {
-          // collections.sort(sortByName)
+          collections.sort(sortByName)
         }
 
         if (this.props.count) {

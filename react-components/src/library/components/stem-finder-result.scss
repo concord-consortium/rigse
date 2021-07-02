@@ -10,6 +10,7 @@
   flex-wrap: wrap;
   height: 100px;
   margin: 0 0 10px;
+  opacity: 0;
   overflow: hidden;
   padding: 10px 10px 34px;
   position: relative;
@@ -133,6 +134,10 @@
         padding: 2px 5px;
       }
     }
+  }
+
+  &.model, &.activity, &.sequence {
+    background: $white;
   }
 
   .finderResultImagePreview {
