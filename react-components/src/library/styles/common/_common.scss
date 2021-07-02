@@ -2,6 +2,10 @@
 @import "special_link";
 @import "forms";
 
+html, body {
+  overflow: visible !important;
+}
+
 body.member-visitor {
   #page-header {
     height: 70px;
