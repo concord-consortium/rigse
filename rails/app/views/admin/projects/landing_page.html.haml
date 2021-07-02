@@ -22,13 +22,16 @@
   }
 
   function cleanUpAssignViewAdjustment() {
-    if (document.getElementById('bin-view')) {
-      document.getElementById('bin-view').style.marginTop = '10px'
-      document.getElementById('bin-view').style.marginRight = '0'
-      document.getElementById('bin-view').style.marginLeft = '0'
-      document.getElementById('bin-view').style.width = '100%'
+    if (isAssignWrapped) {
+      if (document.getElementById('bin-view')) {
+        document.getElementById('bin-view').style.marginTop = '10px'
+        document.getElementById('bin-view').style.marginRight = '0'
+        document.getElementById('bin-view').style.marginLeft = '0'
+        document.getElementById('bin-view').style.width = '100%'
+      }
+      window.parent.document.getElementById('collectionIframe').style.height = document.body.scrollHeight + 'px';
+      window.parent.document.getElementById('collectionIframe').style.visibility = 'visible';
+      window.parent.document.getElementById('collectionIframeLoading').style.display = 'none';
     }
-    window.parent.document.getElementById('collectionIframe').style.height = document.body.scrollHeight + 'px';
-    window.parent.document.getElementById('collectionIframe').style.visibility = 'visible';
-    window.parent.document.getElementById('collectionIframeLoading').style.display = 'none';
+    jQuery(".resourceItem").animate({'opacity': 1}, 500);
   }
