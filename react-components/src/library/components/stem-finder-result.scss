@@ -8,11 +8,11 @@
   box-sizing: content-box;
   display: flex;
   flex-wrap: wrap;
-  height: 100px;
+  height: auto;
   margin: 0 0 10px;
   opacity: 0;
   overflow: hidden;
-  padding: 10px 10px 34px;
+  padding: 10px;
   position: relative;
   transition-duration: .5s;
   transition-property: opacity;
@@ -24,31 +24,17 @@
     }
   }
 
-  &:after {
-    background: $white;
-    bottom: 0;
-    content: ' ';
-    display: block;
-    height: 30px;
-    left: 0;
-    position: absolute;
-    width: 100%;
-    z-index: 1;
-  }
-
   .finderResultLinks {
-    bottom: 10px;
     font-size: 14px;
     line-height: 1;
-    position: absolute;
-    width: 100%;
-    z-index: 2;
+    padding: 0;
+    width: calc(100% - 20px);
 
     a {
       border-left: solid 1px $col-orange;
       display: inline-block;
       line-height: .9;
-      margin: 0 0 0 10px;
+      margin: 10px 0 0 10px;
       padding: 0 0 0 10px;
       text-transform: uppercase;
 
@@ -118,10 +104,6 @@
   }
 
   &.collection {
-    padding-bottom: 10px;
-    &:after {
-      display: none;
-    }
     .metaTags {
       &:after {
         background: $light-gray;
@@ -130,8 +112,9 @@
         display: inline-block;
         font-size: 12px;
         font-weight: 300;
+        line-height: 1;
         margin: 0;
-        padding: 2px 5px;
+        padding: 4px 5px;
       }
     }
   }
@@ -143,7 +126,7 @@
   .finderResultImagePreview {
     border: solid 1px $col-lightgray;
     height: 96px;
-    margin: 0 10px 15px 0;
+    margin: 0 10px 0 0;
     overflow: hidden;
     position: relative;
     width: 170px;
@@ -155,9 +138,8 @@
   }
   .finderResultText {
     flex-grow: 1;
-    margin: 0 10px 10px 0;
+    margin: 0 10px 0 0;
     min-height: 80px;
-    padding-bottom: 20px;
     position: relative;
     width: 380px;
 
@@ -170,6 +152,7 @@
       white-space: nowrap;
     }
     .metaTags {
+      line-height: 1;
       margin-bottom: 3px;
       width: 100%;
 
@@ -180,7 +163,7 @@
         font-size: 12px;
         line-height: 1;
         margin-right: 5px;
-        padding: 4px 5px 3px;
+        padding: 4px 5px;
 
         &.timeRequired {
 
@@ -188,11 +171,19 @@
             content: '\f017';
             font-family: "Font Awesome 5 Free";
             font-size: 15px;
+            line-height: .7;
             margin-right: 3px;
             opacity: .7;
             vertical-align: middle;
           }
         }
+      }
+      .assignedTo {
+        background: transparent;
+        color: $col-darkblue;
+        display: inline;
+        font-size: 12px;
+        padding: 0;
       }
     }
     .finderResultTextDescription {
@@ -232,7 +223,6 @@
     .projectLabel {
       font-size: 12px;
       font-weight: 500;
-      height: 40px;
       line-height: 1.2;
       margin-top: 10px;
       text-align: center;

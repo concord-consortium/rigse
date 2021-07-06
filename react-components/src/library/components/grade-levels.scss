@@ -1,5 +1,4 @@
 @import '../../shared/styles/mixins/_mixins.scss';
-@import '../../shared/styles/variables/_colors.scss';
 @import '../../shared/styles/variables/_variables.scss';
 
 .finderResultGradeLevels {
@@ -11,6 +10,7 @@
   color: $col-darkgray-75;
   display: inline-block;
   font-size: 12px;
+  line-height: 1;
   margin-right: 5px;
-  padding: 2px 5px;
+  padding: 4px 5px;
 }

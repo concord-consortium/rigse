@@ -35,7 +35,6 @@ var ResourceFinderLightbox = Component({
   handleSwitchSource: function (e) {
     const { handleNav } = this.state
     const collectionId = e.target.value
-    console.log('switch to ' + collectionId)
     handleNav(e, collectionId)
   },
 

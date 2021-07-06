@@ -159,6 +159,19 @@ const StemFinderResult = Component({
     )
   },
 
+  renderAssignedClasses: function () {
+    const { resource } = this.props
+    if (resource.assigned_classes.length < 1) {
+      return
+    }
+    const assignedClasses = resource.assigned_classes.join(', ')
+    return (
+      <div className={css.assignedTo}>
+        Assigned to {assignedClasses}
+      </div>
+    )
+  },
+
   renderLinks: function () {
     const { resource } = this.props
     const isCollection = resource.material_type === 'Collection'
@@ -192,24 +205,16 @@ const StemFinderResult = Component({
     )
   },
 
-  hasLongDescription: function () {
-    const { resource } = this.props
-    const hasDesc = resource.filteredShortDescription.length > 210
-    return hasDesc
-  },
-
   hasStandards: function () {
     const { resource } = this.props
     return resource.standard_statements.length > 0
   },
 
-  isCollection: function () {
-    const { resource } = this.props
-    return resource.material_type === 'Collection'
-  },
-
   renderMoreToggle: function () {
-    if ((!this.hasLongDescription() && !this.hasStandards()) || this.isCollection()) {
+    const { resource } = this.props
+    const needsMoreToggle = resource.filteredShortDescription.length > 210 || this.hasStandards()
+
+    if (!needsMoreToggle) {
       return (null)
     }
 
@@ -329,6 +334,7 @@ const StemFinderResult = Component({
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
             {this.renderTimeRequired()}
+            {this.renderAssignedClasses()}
           </div>
           <div className={css.finderResultTextDescription}>
             {shortDesc}
