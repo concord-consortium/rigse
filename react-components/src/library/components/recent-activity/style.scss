@@ -1,3 +1,5 @@
+@import '../../../shared/styles/variables/_variables.scss';
+
 .offering {
   padding: 15px;
 
@@ -27,4 +29,10 @@
   .reports {
     clear: both;
   }
+}
+
+.noActivity {
+  color: $col-orange;
+  font-weight: 700;
+  font-style: italic;
 }

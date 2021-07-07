@@ -210,7 +210,7 @@ const PageHeader = Component({
         </div>
         <nav className='concord-navigation cols no-collapse'>
           <div className='logo-contain col-3'>
-            <a href='/' title='Go to the Home Page'>
+            <a href={Portal.currentUser.homePath} title='Go to the Home Page'>
               <div className={logoClass}>
                 <div className='concord-logo__linktext'>
                   {logoText}
