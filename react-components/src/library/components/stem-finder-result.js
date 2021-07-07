@@ -229,7 +229,7 @@ const StemFinderResult = Component({
   renderStandards: function () {
     const { resource } = this.props
     if (!this.hasStandards()) {
-      return null
+      return (null)
     }
 
     const allStatements = resource.standard_statements

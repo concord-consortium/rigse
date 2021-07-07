@@ -26,3 +26,9 @@
     overflow: hidden;
   }
 }
+
+@media screen and (max-width: 950px) {
+  .finderResultsFeatured {
+    display: none;
+  }
+}

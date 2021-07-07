@@ -78,6 +78,11 @@
 
 body {
 
+  &.member-visitor {
+    .mobile-nav-contain {
+      margin-top: 21px;
+    }
+  }
   &[data-mobile-nav="closed"] {
     .mobile-nav-btn {
       .closer {

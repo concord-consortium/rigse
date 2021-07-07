@@ -293,3 +293,13 @@
     }
   }
 }
+
+@media screen and (max-width: 950px) {
+  .finderWrapper {
+    .finderForm {
+      margin-bottom: 30px;
+      position: relative;
+      top: 0;
+    }
+  }
+}

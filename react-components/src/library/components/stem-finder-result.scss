@@ -84,7 +84,8 @@
     .finderResultText {
       .finderResultTextDescription {
         display: block;
-        -webkit-line-clamp: none;
+        margin-bottom: 10px;
+        -webkit-line-clamp: initial;
       }
     }
 
@@ -100,6 +101,10 @@
     }
     .metaTags {
       bottom: -5px !important;
+    }
+
+    .collapsible {
+      display: block;
     }
   }
 
@@ -245,6 +250,7 @@
 
   .collapsible {
     background: $col-lightgray;
+    display: none;
     height: 34px;
     margin-bottom: 5px;
     overflow: hidden;
