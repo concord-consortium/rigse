@@ -226,8 +226,7 @@ class Portal::Learner < ActiveRecord::Base
 
     update_url = "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{self.id}/_update"
 
-    # try to update learner document in ES. We may throw an error trying to get a field (if, for example, we have
-    # a school without a district, or something), so wrap this in begin/rescue
+    # try to update learner document in ES. We may throw an error trying to get a field, so wrap this in begin/rescue
     begin
       # check to see if we can obtain the last run info
       if self.offering.internal_report?
@@ -274,10 +273,16 @@ class Portal::Learner < ActiveRecord::Base
         teachers_id: self.offering.clazz.teachers.map { |t| t.id },
         teachers_name: self.offering.clazz.teachers.map { |t| escape_comma(t.user.name) },
         teachers_district: self.offering.clazz.teachers.map { |t|
-          t.schools.map{ |s| escape_comma(s.district.name)}.join(", ")
+          t.schools
+           .select{ |s| s.district.present? }
+           .map{ |s| escape_comma(s.district.name)}
+           .join(", ")
         },
         teachers_state: self.offering.clazz.teachers.map { |t|
-          t.schools.map{ |s| escape_comma(s.district.state)}.join(", ")
+          t.schools
+           .select{ |s| s.district.present? }
+           .map{ |s| escape_comma(s.district.state)}
+           .join(", ")
         },
         teachers_email: self.offering.clazz.teachers.map { |t| escape_comma(t.user.email)},
         teachers_map: self.offering.clazz.teachers.map { |t| "#{t.id}: #{escape_comma(t.user.name)}"},
