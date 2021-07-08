@@ -122,7 +122,7 @@ var NgssHelper = function () {
           }
           return <>
             <h5>{s.notation}</h5>
-            {description}
+            <p>{description}</p>
           </>
         })}
       </div>
@@ -157,9 +157,7 @@ var NgssHelper = function () {
           }
           return <>
             <strong>{notation}</strong> {arrDesc[1]}
-            <br />
-            {arrDesc[2]}
-            <br />
+            <p>{arrDesc[2]}</p>
           </>
         })}
       </div>
@@ -187,7 +185,6 @@ var NgssHelper = function () {
             var statements = groupMap[title]
             return <>
               <strong>{title}</strong>
-              <br />
               {statements.map(function (s) {
                 var arrDesc = s.description
                 if (arrDesc.length < 3) { return null }
@@ -198,7 +195,7 @@ var NgssHelper = function () {
                     desc += ' '
                   }
                 }
-                return <>{desc}<br /></>
+                return <p>{desc}</p>
               })}
             </>
           })}

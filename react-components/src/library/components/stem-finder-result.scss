@@ -84,7 +84,6 @@
     .finderResultText {
       .finderResultTextDescription {
         display: block;
-        margin-bottom: 10px;
         -webkit-line-clamp: initial;
       }
     }
@@ -155,9 +154,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+
+      a {
+        color: $col-darkgray;
+      }
     }
     .metaTags {
       line-height: 1;
+      margin-top: 3px;
       margin-bottom: 3px;
       width: 100%;
 
@@ -252,6 +256,7 @@
     background: $col-lightgray;
     display: none;
     height: 34px;
+    margin-top: 10px;
     margin-bottom: 5px;
     overflow: hidden;
     padding: 0;

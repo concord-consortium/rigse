@@ -630,6 +630,7 @@ const StemFinder = Component({
   },
 
   renderForm: function () {
+    const isAdvancedUser = Portal.currentUser.isAdmin || Portal.currentUser.isAuthor || Portal.currentUser.isManager || Portal.currentUser.isResearcher
     return (
       <div className={'col-3 ' + css.finderForm}>
         <div className={'portal-pages-finder-form-inner'} style={{ opacity: this.state.opacity }}>
@@ -637,7 +638,7 @@ const StemFinder = Component({
           {this.renderCollections()}
           {this.renderSubjectAreas()}
           {this.renderGradeLevels()}
-          {this.renderAdvanced()}
+          {isAdvancedUser && this.renderAdvanced()}
         </div>
       </div>
     )

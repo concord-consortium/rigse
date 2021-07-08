@@ -316,6 +316,7 @@ const StemFinderResult = Component({
     const resourceTypeClass = resource.material_type.toLowerCase()
     const finderResultClasses = this.state.isOpen ? `resourceItem ${css.finderResult} ${css.open} ${css[resourceTypeClass]}` : `resourceItem ${css.finderResult} ${css[resourceTypeClass]}`
     const resourceName = resource.name
+    const resourceLink = resource.links.browse.url
     const shortDesc = resource.filteredShortDescription
     const projectName = resource.projects[0] ? resource.projects[0].name : null
     const projectNameRegex = / |-|\./g
@@ -329,7 +330,7 @@ const StemFinderResult = Component({
         </div>
         <div className={css.finderResultText}>
           <div className={css.finderResultTextName}>
-            {resourceName}
+            <a href={resourceLink} target='_blank' title={resourceName}>{resourceName}</a>
           </div>
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
