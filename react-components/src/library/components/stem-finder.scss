@@ -109,6 +109,7 @@
       color: $col-darkgray;
       cursor: pointer;
       font-size: 16px;
+      font-weight: 500;
       line-height: 1;
       padding: 5px 10px 5px 37px;
       position: relative;
@@ -122,7 +123,7 @@
       &:before {
         content: ' ';
         display: block;
-        font: 20px icomoon;
+        font: normal 20px "Font Awesome 5 Pro";
         left: 10px;
         line-height: 1;
         margin: 0 10px 0 0;
@@ -137,105 +138,65 @@
 
       &#chemistry {
         &:before {
-          content: "\e918";
+          content: "\f492";
         }
       }
       &#earthSpace {
         &:before {
-          content: "\e915";
+          content: "\e020";
         }
       }
       &#engineeringTech {
         &:before {
-          content: "\e916";
+          content: "\f013";
         }
       }
       &#lifeSciences {
         &:before {
-          content: "\e917";
+          content: "\f610";
         }
       }
       &#mathematics {
         &:before {
-          content: "\e914";
+          content: "\f697";
         }
       }
       &#physics {
         &:before {
-          content: "\e918";
+          content: "\f5d2";
         }
       }
 
       &#elementarySchool {
         &:before {
-          content: '\f1ae';
-          font-family: "Font Awesome 5 Free";
-          font-size: 18px;
-          font-weight: 900;
-          height: 22px;
-          opacity: .8;
-          text-align: center;
-          width: 22px;
+          content: '\f5d5';
+          margin-left: 1px;
         }
       }
       &#middleSchool {
         &:before {
-          content: '\f0f3';
-          font-family: "Font Awesome 5 Free";
-          font-size: 18px;
-          font-weight: 500;
-          height: 22px;
-          opacity: .8;
-          text-align: center;
-          width: 22px;
+          content: '\f5dd';
         }
       }
       &#highSchool {
         &:before {
           content: '\f19d';
-          font-family: "Font Awesome 5 Free";
-          font-size: 17px;
-          font-weight: 900;
-          height: 22px;
-          opacity: .8;
-          text-align: center;
-          width: 22px;
+          margin-left: -2px;
         }
       }
       &#higherEducation {
         &:before {
           content: '\f19c';
-          font-family: "Font Awesome 5 Free";
-          font-size: 18px;
-          font-weight: 900;
-          height: 22px;
-          opacity: .8;
-          text-align: center;
-          width: 22px;
         }
       }
       &#official {
         &:before {
           content: '\f0a3';
-          font-family: "Font Awesome 5 Free";
-          font-size: 18px;
-          font-weight: 900;
-          height: 22px;
-          opacity: .8;
-          text-align: center;
-          width: 22px;
         }
       }
       &#community {
         &:before {
           content: '\f0c0';
-          font-family: "Font Awesome 5 Free";
-          font-size: 16px;
-          font-weight: 900;
-          opacity: .8;
-          height: 22px;
-          text-align: center;
-          width: 22px;
         }
       }
     }
