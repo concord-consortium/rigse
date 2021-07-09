@@ -382,7 +382,8 @@ class API::V1::ReportLearnersEsController < API::APIController
       last_run: learner.last_run,
       run_remote_endpoint: learner.learner ? learner.learner.remote_endpoint_url : nil,
       runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil,
-      teachers: teachers
+      teachers: teachers,
+      created_at: learner.created_at
     }
   end
 end
