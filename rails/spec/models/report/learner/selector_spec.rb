@@ -15,26 +15,25 @@ describe Report::Learner::Selector do
   let(:permission_form_a)   { FactoryBot.create(:permission_form, permission_params_a) }
   let(:permission_params_b) { { name: "b" } }
   let(:permission_form_b)   { FactoryBot.create(:permission_form, permission_params_b) }
-  let(:learner)             { FactoryBot.create(:full_portal_learner) }
-  let(:report_learner)      { learner.report_learner                   }
-  let(:selector)            { Report::Learner::Selector.new(selector_opts, current_user )   }
-  let(:selector_opts)       { {} }
-  let(:students_p_forms)    { [] }
   let(:runnable)            { FactoryBot.create(:external_activity, {
                               :name      => "Some Activity",
                               :url       => "http://example.com",
                               :save_path => "/path/to/save",
                             } )  }
+  let(:offering)            { FactoryBot.create(:portal_offering, runnable: runnable) }
+  let(:learner)             { FactoryBot.create(:full_portal_learner, offering: offering) }
+  let(:report_learner)      { learner.report_learner                   }
+  let(:selector)            { Report::Learner::Selector.new(selector_opts, current_user )   }
+  let(:selector_opts)       { {} }
+  let(:students_p_forms)    { [] }
 
   before(:each) do
     es_response = {
           "hits" => {
             "hits" => [
               {
-                "_id" => report_learner.id,
-                "_source" => {
-                  "runnable_type_and_id" => "externalactivity_#{runnable.id}"
-                }
+                "_id" => learner.id,
+                "_source" => learner.elastic_search_learner_model
               }
             ]
           }
