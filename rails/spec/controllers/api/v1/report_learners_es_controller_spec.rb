@@ -84,7 +84,7 @@ describe API::V1::ReportLearnersEsController do
         }
       },
       "sort" => {
-        "created_at" => {
+        "created_at_and_id" => {
           "order" => "asc"
         }
       }
@@ -101,7 +101,7 @@ describe API::V1::ReportLearnersEsController do
         }
       },
       "sort" => {
-        "created_at" => {
+        "created_at_and_id" => {
           "order" => "asc"
         }
       }

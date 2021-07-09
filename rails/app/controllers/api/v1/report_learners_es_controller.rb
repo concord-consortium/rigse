@@ -339,7 +339,7 @@ class API::V1::ReportLearnersEsController < API::APIController
         }
       },
       :sort => {
-        :created_at => {
+        :created_at_and_id => {
           :order => "asc"
         }
       }

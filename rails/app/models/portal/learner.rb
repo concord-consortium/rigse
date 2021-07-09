@@ -234,6 +234,14 @@ class Portal::Learner < ActiveRecord::Base
       user_id:  self.student.user.id,
       remote_endpoint_url: self.remote_endpoint_url,
       created_at: self.created_at,
+      # The created_at_and_id field is used for sorting the restuls in ES
+      # The created_at is used so new learners are at the end of the results, this way
+      # when the results are loaded via paging. The last page should include the newest
+      # learners. So if loading the results takes a long time new learners will be less
+      # likely to be lost.
+      # The id is added to the end to keep the field unique since it is possible two learners
+      # get created at the same time.
+      created_at_and_id: "#{self.created_at.iso8601(3)}_ID#{self.id}",
       offering_id: self.offering.id,
       offering_name: self.offering.name,
       class_id: self.offering.clazz.id,
