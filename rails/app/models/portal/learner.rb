@@ -207,6 +207,74 @@ class Portal::Learner < ActiveRecord::Base
     end
   end
 
+  def elastic_search_learner_model
+    # check to see if we can obtain the last run info
+    if self.offering.internal_report?
+      last_run = calculate_last_run
+      answersMeta = update_answers
+      num_answerables = answersMeta[:num_answerables]
+      num_answered = answersMeta[:num_answered]
+      num_submitted = answersMeta[:num_submitted]
+      num_correct = answersMeta[:num_correct]
+      complete_percent = answersMeta[:complete_percent]
+    else
+      num_answerables = 0
+      num_answered = 0
+      num_submitted = 0
+      num_correct = 0
+      # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
+      complete_percent = 100
+      last_run = Time.now
+    end
+
+    {
+      learner_id: self.id,
+      report_learner_id: self.report_learner.id,
+      student_id: self.student.id,
+      user_id:  self.student.user.id,
+      remote_endpoint_url: self.remote_endpoint_url,
+      created_at: self.created_at,
+      offering_id: self.offering.id,
+      offering_name: self.offering.name,
+      class_id: self.offering.clazz.id,
+      class_name: self.offering.clazz.name,
+      last_run: last_run,
+      school_id: self.offering.clazz.school.id,
+      school_name: self.offering.clazz.school.name,
+      school_name_and_id: "#{self.offering.clazz.school.id}:#{self.offering.clazz.school.name}",
+      runnable_id: self.offering.runnable.id,
+      runnable_name: self.offering.runnable.name,
+      runnable_type: self.offering.runnable.class.to_s.downcase,
+      runnable_type_and_id: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}",
+      runnable_type_id_name: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}:#{self.offering.runnable.name}",
+      runnable_url: (self.offering.runnable.respond_to? 'url') ? self.offering.runnable.url : nil,
+      num_answerables: num_answerables,
+      num_answered: num_answered,
+      num_submitted: num_submitted,
+      num_correct: num_correct,
+      complete_percent: complete_percent,
+      teachers_id: self.offering.clazz.teachers.map { |t| t.id },
+      teachers_name: self.offering.clazz.teachers.map { |t| escape_comma(t.user.name) },
+      teachers_district: self.offering.clazz.teachers.map { |t|
+        t.schools
+         .select{ |s| s.district.present? }
+         .map{ |s| escape_comma(s.district.name)}
+         .join(", ")
+      },
+      teachers_state: self.offering.clazz.teachers.map { |t|
+        t.schools
+         .select{ |s| s.district.present? }
+         .map{ |s| escape_comma(s.district.state)}
+         .join(", ")
+      },
+      teachers_email: self.offering.clazz.teachers.map { |t| escape_comma(t.user.email)},
+      teachers_map: self.offering.clazz.teachers.map { |t| "#{t.id}: #{escape_comma(t.user.name)}"},
+      permission_forms: self.student.permission_forms.map { |p| escape_comma(p.fullname) },
+      permission_forms_id: self.student.permission_forms.map { |p| p.id },
+      permission_forms_map: self.student.permission_forms.map{ |p| "#{p.id}: #{escape_comma(p.fullname)}" }
+    }
+  end
+
   def update_report_model_cache(skip_report_learner_update = false)
     unless (skip_report_learner_update)
       # We need to keep this in for now, to keep the ReportLearner up-to-date for the built-in reports.
@@ -228,69 +296,6 @@ class Portal::Learner < ActiveRecord::Base
 
     # try to update learner document in ES. We may throw an error trying to get a field, so wrap this in begin/rescue
     begin
-      # check to see if we can obtain the last run info
-      if self.offering.internal_report?
-        last_run = calculate_last_run
-        answersMeta = update_answers
-        num_answerables = answersMeta[:num_answerables]
-        num_answered = answersMeta[:num_answered]
-        num_submitted = answersMeta[:num_submitted]
-        num_correct = answersMeta[:num_correct]
-        complete_percent = answersMeta[:complete_percent]
-      else
-        num_answerables = 0
-        num_answered = 0
-        num_submitted = 0
-        num_correct = 0
-        # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
-        complete_percent = 100
-        last_run = Time.now
-      end
-
-      elastic_search_learner_model = {
-        learner_id: self.id,
-        student_id: self.student.id,
-        user_id:  self.student.user.id,
-        created_at: self.created_at,
-        offering_id: self.offering.id,
-        offering_name: self.offering.name,
-        class_id: self.offering.clazz.id,
-        class_name: self.offering.clazz.name,
-        last_run: last_run,
-        school_id: self.offering.clazz.school.id,
-        school_name: self.offering.clazz.school.name,
-        school_name_and_id: "#{self.offering.clazz.school.id}:#{self.offering.clazz.school.name}",
-        runnable_id: self.offering.runnable.id,
-        runnable_name: self.offering.runnable.name,
-        runnable_type: self.offering.runnable.class.to_s.downcase,
-        runnable_type_and_id: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}",
-        runnable_type_id_name: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}:#{self.offering.runnable.name}",
-        num_answerables: num_answerables,
-        num_answered: num_answered,
-        num_submitted: num_submitted,
-        num_correct: num_correct,
-        complete_percent: complete_percent,
-        teachers_id: self.offering.clazz.teachers.map { |t| t.id },
-        teachers_name: self.offering.clazz.teachers.map { |t| escape_comma(t.user.name) },
-        teachers_district: self.offering.clazz.teachers.map { |t|
-          t.schools
-           .select{ |s| s.district.present? }
-           .map{ |s| escape_comma(s.district.name)}
-           .join(", ")
-        },
-        teachers_state: self.offering.clazz.teachers.map { |t|
-          t.schools
-           .select{ |s| s.district.present? }
-           .map{ |s| escape_comma(s.district.state)}
-           .join(", ")
-        },
-        teachers_email: self.offering.clazz.teachers.map { |t| escape_comma(t.user.email)},
-        teachers_map: self.offering.clazz.teachers.map { |t| "#{t.id}: #{escape_comma(t.user.name)}"},
-        permission_forms: self.student.permission_forms.map { |p| escape_comma(p.fullname) },
-        permission_forms_id: self.student.permission_forms.map { |p| p.id },
-        permission_forms_map: self.student.permission_forms.map{ |p| "#{p.id}: #{escape_comma(p.fullname)}" }
-      }
-
       # doc_as_upsert means update if exists, create if it doesn't
       HTTParty.post(update_url,
         :body => {

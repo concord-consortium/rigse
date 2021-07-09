@@ -41,16 +41,16 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     # Note that Report::Learner::Selector is a little helper that actually calls
     # API::V1::ReportLearnersEsController.query_es.
-    learner_selector = Report::Learner::Selector.new(params, current_user, {:include_runnable_and_learner => true})
+    learner_selector = Report::Learner::Selector.new(params, current_user, { skip_report_learners: true})
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     response = {
       type: "learners",
       version: "1.1",
-      learners: learner_selector.learners.map do |l|
+      learners: learner_selector.es_learners.map do |l|
         {
-          run_remote_endpoint: l.learner ? l.learner.remote_endpoint_url : nil,
+          run_remote_endpoint: l.remote_endpoint_url,
           class_id: l.class_id,
-          runnable_url: l.runnable && l.runnable.respond_to?(:url) ? l.runnable.url : nil
+          runnable_url: l.runnable_url
         }
       end,
       user: {
@@ -129,14 +129,14 @@ class API::V1::ReportLearnersEsController < API::APIController
     query[:size_limit] = page_size
 
     learner_selector = Report::Learner::Selector.new(query, current_user, {
-      :include_runnable_and_learner => true,
-      :search_after => search_after
+      skip_report_learners: true,
+      search_after: search_after
     })
 
     response = {
       json: {
         version: "1",
-        learners: learner_selector.learners.map {|l| self.class.detailed_learner_info l},
+        learners: learner_selector.es_learners.map {|l| self.class.detailed_learner_info l},
         lastHitSortValue: learner_selector.last_hit_sort_value
       }
     }
@@ -359,14 +359,14 @@ class API::V1::ReportLearnersEsController < API::APIController
   end
 
   def self.detailed_learner_info(learner)
-    teacherIds = learner.teachers_id ? learner.teachers_id.split(', ') : []
+    teacherIds = learner.teachers_id
     teachers = teacherIds.each_with_index.map do |id, i|
       {
         user_id: id,
-        name: learner.teachers_name ? learner.teachers_name.split(', ')[i] : nil,
-        district: learner.teachers_district ? learner.teachers_district.split(', ')[i] : nil,
-        state: learner.teachers_state ? learner.teachers_state.split(', ')[i] : nil,
-        email: learner.teachers_email ? learner.teachers_email.split(', ')[i] : nil,
+        name: learner.teachers_name[i],
+        district: learner.teachers_district[i],
+        state: learner.teachers_state[i],
+        email: learner.teachers_email[i],
       }
     end
     {
@@ -380,8 +380,8 @@ class API::V1::ReportLearnersEsController < API::APIController
       username: learner.username,
       student_name: learner.student_name,
       last_run: learner.last_run,
-      run_remote_endpoint: learner.learner ? learner.learner.remote_endpoint_url : nil,
-      runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil,
+      run_remote_endpoint: learner.remote_endpoint_url,
+      runnable_url: learner.runnable_url,
       teachers: teachers,
       created_at: learner.created_at
     }
