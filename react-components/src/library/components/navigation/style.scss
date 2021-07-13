@@ -24,12 +24,8 @@
   }
 
   .head {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    font-weight: 100;
-    justify-content: space-between;
     padding: 20px 20px 0;
+    position: relative;
 
     .greeting {
       color: #313131;
@@ -267,18 +263,20 @@
 
     .head {
       &.closed:after {
-        float: right;
-        color: #ea6d2f;
+        content: "\e905";
         font-family: 'icomoon';
         font-size: 1em;
-        content: "\e905";
+        position: absolute;
+        right: 20px;
+        top: 35px;
       }
       &.open:after {
-        float: right;
-        font-family: 'icomoon';
-        color: #ea6d2f;
-        font-size: 1em;
         content: "\e906";
+        font-family: 'icomoon';
+        font-size: 1em;
+        position: absolute;
+        right: 20px;
+        top: 35px;
       }
     }
   }
@@ -317,7 +315,14 @@
 }
 
 @media screen and (max-width: 950px) {
-  width: 100%;
+  .leftNavigation {
+    width: 100%;
+
+    &.closed {
+      height: 50px;
+      overflow: hidden;
+    }
+  }
 
   &.closed {
     ul {
@@ -328,19 +333,23 @@
   }
 
   .head {
+    cursor: pointer;
+  
     &.closed:after {
-      color: #ea6d2f;
       content: "\e905";
-      float: right;
       font-family: 'icomoon';
       font-size: 1em;
+      position: absolute;
+      right: 20px;
+      top: 35px;
     }
     &.open:after {
-      color: #ea6d2f;
       content: "\e906";
-      float: right;
       font-family: 'icomoon';
       font-size: 1em;
+      position: absolute;
+      right: 20px;
+      top: 35px;
     }
   }
 }

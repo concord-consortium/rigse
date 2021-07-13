@@ -186,16 +186,16 @@ const StemFinderResult = Component({
       ? <a href={assignHandler}>{resource.links.assign_material.text}</a>
       : null
     const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher && !isCollection
-      ? <a href={resource.links.copy_url} target='_blank'>Copy</a>
+      ? <a href={resource.links.copy_url} target='_blank' rel='noopener'>Copy</a>
       : null
     const printLink = resource.links.print_url && !isCollection
-      ? <a href={resource.links.print_url} target='_blank'>Print</a>
+      ? <a href={resource.links.print_url} target='_blank' rel='noopener'>Print</a>
       : null
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
-      ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank'>Teacher Edition</a>
+      ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank' rel='noopener'>Teacher Edition</a>
       : null
     const teacherGuideLink = resource.links.teacher_guide && Portal.currentUser.isTeacher
-      ? <a href={resource.links.teacher_guide.url} target='_blank'>{resource.links.teacher_guide.text}</a>
+      ? <a href={resource.links.teacher_guide.url} target='_blank' rel='noopener'>{resource.links.teacher_guide.text}</a>
       : null
     const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.assign_collection.url} target='_blank'>{resource.links.assign_collection.text}</a>

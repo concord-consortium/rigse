@@ -62,3 +62,10 @@
     display: inline;
   }
 }
+
+@media screen and (max-width: 950px) {
+  .portalPagesResourceFinderLightboxModal {
+    margin-left: -50%;
+    width: 100%;
+  }
+}

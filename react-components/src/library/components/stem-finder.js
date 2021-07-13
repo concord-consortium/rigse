@@ -86,6 +86,7 @@ const StemFinder = Component({
       includeContributed: false,
       includeMine: false,
       initPage: true,
+      isSmallScreen: window.innerWidth <= 768,
       keyword: '',
       lastSearchResultCount: 0,
       noResourcesFound: false,
@@ -168,6 +169,10 @@ const StemFinder = Component({
     } else {
       document.addEventListener('scroll', this.handlePageScroll)
     }
+
+    window.addEventListener('resize', () => {
+      this.setState({ isSmallScreen: window.innerWidth <= 768 })
+    })
   },
 
   componentWillUnmount: function () {
@@ -399,8 +404,9 @@ const StemFinder = Component({
   },
 
   renderSubjectAreas: function () {
+    const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`
     return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
+      <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Subject</h2>
         <ul>
           {filters.subjectAreas.map(function (subjectArea) {
@@ -412,8 +418,9 @@ const StemFinder = Component({
   },
 
   renderGradeLevels: function () {
+    const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`
     return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
+      <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Grade Level</h2>
         <ul>
           {filters.gradeFilters.map(function (gradeLevel) {
@@ -539,8 +546,9 @@ const StemFinder = Component({
   },
 
   renderSearch: function () {
+    const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`
     return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
+      <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Keywords</h2>
         <form onSubmit={this.handleSearchSubmit}>
           <div className={'portal-pages-search-input-container'}>

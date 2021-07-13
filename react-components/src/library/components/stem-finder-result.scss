@@ -1,4 +1,3 @@
-@import '../../shared/styles/variables/_colors.scss';
 @import '../../shared/styles/mixins/_mixins.scss';
 @import '../../shared/styles/variables/_variables.scss';
 
@@ -354,6 +353,47 @@
     &.finderResultFavoriteActive {
       color: $col-gold;
       text-shadow: 0 0 transparent, 0 0 transparent, 0 0 transparent, 0 0 transparent;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .finderResult {
+    .finderResultText {
+      width: 300px;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .finderResult {
+    width: calc(100% - 20px);
+  
+    .finderResultFavorite {
+      left: auto;
+      right: 18px;
+    }
+    .finderResultImagePreview {
+      height: 150px;
+      margin: 0;
+      width: 100%;
+    }
+    .finderResultLinks {
+      text-align: center;
+    }
+    .finderResultText {
+      margin: 20px 0 0;
+      width: 100%;
+
+      .assignedTo {
+        display: block;
+        margin: 10px 0;
+        width: 100%;
+      }
+    }
+    .previewLink {
+      margin: 20px 0 10px;
+      width: 100%;
     }
   }
 }
