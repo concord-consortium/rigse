@@ -194,13 +194,25 @@ const StemFinderResult = Component({
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
       ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank'>Teacher Edition</a>
       : null
+    const teacherGuideLink = resource.links.teacher_guide && Portal.currentUser.isTeacher
+      ? <a href={resource.links.teacher_guide.url} target='_blank'>{resource.links.teacher_guide.text}</a>
+      : null
+    const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+      ? <a href={resource.links.assign_collection.url} target='_blank'>{resource.links.assign_collection.text}</a>
+      : null
+    const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+      ? <a href={resource.links.edit.url} target='_blank'>Portal Settings</a>
+      : null
 
     return (
       <>
         {assignLink}
         {teacherEditionLink}
+        {teacherGuideLink}
         {printLink}
         {copyLink}
+        {assignCollectionLink}
+        {portalSettingsLink}
       </>
     )
   },

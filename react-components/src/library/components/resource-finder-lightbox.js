@@ -5,7 +5,7 @@ import LightboxNav from './lightbox-nav'
 
 import css from './resource-finder-lightbox.scss'
 
-var ResourceFinderLightbox = Component({
+const ResourceFinderLightbox = Component({
   getInitialState: function () {
     return {
       collectionViews: this.props.collectionViews,

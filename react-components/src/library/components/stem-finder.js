@@ -22,7 +22,6 @@ const StemFinder = Component({
     const hideFeatured = this.props.hideFeatured || false
     let subjectAreaKey = this.props.subjectAreaKey
     let gradeLevelKey = this.props.gradeLevelKey
-    let projectId = this.props.projectId || null
     let sortOrder = this.props.sortOrder || ''
 
     if (!subjectAreaKey && !gradeLevelKey) {
@@ -73,37 +72,32 @@ const StemFinder = Component({
       }
     }
 
-    let projectsSelected = []
-    if (projectId) {
-      projectsSelected.push(projectId)
-    }
-
     // console.log("INFO stem-finder initial subject areas: ", subjectAreasSelected);
 
     return {
-      opacity: 1,
-      subjectAreasSelected: subjectAreasSelected,
-      subjectAreasSelectedMap: subjectAreasSelectedMap,
+      collections: [],
+      displayLimit: DISPLAY_LIMIT_INCREMENT,
+      featuredCollections: [],
+      firstSearch: true,
       gradeLevelsSelected: gradeLevelsSelected,
       gradeLevelsSelectedMap: gradeLevelsSelectedMap,
-      projectsSelected: projectsSelected,
-      sortOrder: sortOrder,
-      collections: [],
-      resources: [],
-      numTotalResources: 0,
-      displayLimit: DISPLAY_LIMIT_INCREMENT,
-      searchPage: 1,
-      firstSearch: true,
-      searching: false,
-      noResourcesFound: false,
-      lastSearchResultCount: 0,
-      keyword: '',
-      searchInput: '',
-      initPage: true,
-      featuredCollections: [],
       hideFeatured: hideFeatured,
       includeOfficial: true,
-      includeContributed: false
+      includeContributed: false,
+      includeMine: false,
+      initPage: true,
+      keyword: '',
+      lastSearchResultCount: 0,
+      noResourcesFound: false,
+      numTotalResources: 0,
+      opacity: 1,
+      resources: [],
+      searching: false,
+      searchInput: '',
+      searchPage: 1,
+      sortOrder: sortOrder,
+      subjectAreasSelected: subjectAreasSelected,
+      subjectAreasSelectedMap: subjectAreasSelectedMap
     }
   },
 
@@ -141,22 +135,6 @@ const StemFinder = Component({
   UNSAFE_componentWillMount: function () {
     waitForAutoShowingLightboxToClose(function () {
       this.search()
-      jQuery.ajax({
-        url: '/api/v1/projects', // TODO: replace with Portal.API_V1 constant when available
-        dataType: 'json'
-      }).done(function (data) {
-        let collections = data.reduce(function (collections, collection) {
-          if (collection.landing_page_slug) {
-            collection.filteredDescription = portalObjectHelpers.textOfHtml(collection.project_card_description)
-            collections.push(collection)
-          }
-          return collections
-        }, [])
-        if (collections.length > 0) {
-          collections.sort(sortByName)
-        }
-        this.setState({ collections: collections })
-      }.bind(this))
     }.bind(this))
   },
 
@@ -206,7 +184,6 @@ const StemFinder = Component({
     query = query.concat([
       '&skip_lightbox_reloads=true',
       '&sort_order=Alphabetical',
-      '&include_official=1',
       '&model_types=All',
       '&include_related=0',
       '&investigation_page=',
@@ -240,13 +217,8 @@ const StemFinder = Component({
       // TODO: informal learning?
     })
 
-    // project
-    this.state.projectsSelected.forEach(function (project) {
-      if (project) {
-        query.push('&project_ids[]=')
-        query.push(encodeURIComponent(project))
-      }
-    })
+    const includedResources = this.state.includeMine ? '&include_mine=1' : '&include_official=1'
+    query.push(includedResources)
 
     return query.join('')
   },
@@ -554,18 +526,6 @@ const StemFinder = Component({
     })
   },
 
-  handleCollectionSelection (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    this.setState({
-      hideFeatured: true,
-      initPage: false
-    })
-    this.setState({ projectsSelected: [e.target.value] }, () => {
-      this.search()
-    })
-  },
-
   handleSortSelection (e) {
     e.preventDefault()
     e.stopPropagation()
@@ -599,43 +559,34 @@ const StemFinder = Component({
     )
   },
 
-  renderCollections: function () {
-    if (!this.state.collections || this.state.collections.length === 0) {
-      return
-    }
-    const collections = this.state.collections
-    return (
-      <div className={`${css.finderOptionsContainer} ${css.open}`}>
-        <h2 onClick={this.handleFilterHeaderClick}>Collections</h2>
-        <select name='collections' value={this.state.projectsSelected[0]} className={css.collectionSelect} onChange={this.handleCollectionSelection}>
-          <option value=''>Select one...</option>
-          {collections.map(function (collection, index) {
-            return <option value={collection.id}>{collection.name}</option>
-          })}
-        </select>
-      </div>
-    )
+  isAdvancedUser: function () {
+    const isAdvancedUser = Portal.currentUser.isAdmin || Portal.currentUser.isAuthor || Portal.currentUser.isManager || Portal.currentUser.isResearcher
+    return (isAdvancedUser)
   },
 
   renderAdvanced: function () {
     return (
-      <div className={css.finderOptionsContainer}>
-        <h2 onClick={this.handleFilterHeaderClick}>Advanced</h2>
-        <ul>
-          <li id={css.official} className={css.selected} onClick={(e) => this.handleOfficialClick(e)}>Official</li>
-          <li id={css.community} onClick={(e) => this.handleCommunityClick(e)}>Community</li>
-        </ul>
-      </div>
+      <>
+        <div className={css.finderOptionsContainer}>
+          <h2 onClick={this.handleFilterHeaderClick}>Advanced</h2>
+          <ul>
+            <li id={css.official} className={css.selected} onClick={(e) => this.handleOfficialClick(e)}>Official</li>
+            <li id={css.community} onClick={(e) => this.handleCommunityClick(e)}>Community</li>
+          </ul>
+        </div>
+        <div className={css.advancedSearchLink}>
+          <a href='/search' title='Advanced Search'>Advanced Search</a>
+        </div>
+      </>
     )
   },
 
   renderForm: function () {
-    const isAdvancedUser = Portal.currentUser.isAdmin || Portal.currentUser.isAuthor || Portal.currentUser.isManager || Portal.currentUser.isResearcher
+    const isAdvancedUser = this.isAdvancedUser()
     return (
       <div className={'col-3 ' + css.finderForm}>
         <div className={'portal-pages-finder-form-inner'} style={{ opacity: this.state.opacity }}>
           {this.renderSearch()}
-          {this.renderCollections()}
           {this.renderSubjectAreas()}
           {this.renderGradeLevels()}
           {isAdvancedUser && this.renderAdvanced()}
@@ -648,6 +599,19 @@ const StemFinder = Component({
     e.currentTarget.parentElement.classList.toggle(css.open)
   },
 
+  handleShowOnlyMine: function (e) {
+    this.setState({ includeMine: !this.state.includeMine }, this.search)
+  },
+
+  renderShowOnly: function () {
+    const { includeMine } = this.state
+    return (
+      <div className={css.showOnly}>
+        <label for='includeMine'><input type='checkbox' name='includeMine' value='true' id='includeMine' onChange={this.handleShowOnlyMine} defaultChecked={includeMine} /> Show only materials I authored</label>
+      </div>
+    )
+  },
+
   renderSortMenu: function () {
     const sortValues = ['Title', 'Less time required', 'More time required', 'Newest', 'Oldest']
 
@@ -657,7 +621,7 @@ const StemFinder = Component({
         <select name='sort' value={this.state.sortOrder} onChange={this.handleSortSelection}>
           <option value=''>Select one...</option>
           {sortValues.map(function (sortValue, index) {
-            return <option value={sortValue}>{sortValue}</option>
+            return <option key={`${sortValue}-${index}`} value={sortValue}>{sortValue}</option>
           })}
         </select>
       </div>
@@ -665,9 +629,13 @@ const StemFinder = Component({
   },
 
   renderResultsHeader: function () {
+    const finderHeaderClass = this.isAdvancedUser() ? `${css.finderHeader} ${css.advanced}` : css.finderHeader
+
     if (this.state.noResourcesFound || this.state.searching) {
       return (
-        <div className={css.finderHeader}>
+        <div className={finderHeaderClass}>
+          <h2>Activities List</h2>
+          {this.isAdvancedUser() && this.renderShowOnly()}
           <div className={css.finderHeaderResourceCount}>
             {this.state.noResourcesFound ? 'No Resources Found' : ''}
           </div>
@@ -681,8 +649,9 @@ const StemFinder = Component({
     const resourceCount = showingAll ? this.state.numTotalResources : this.state.displayLimit + ' of ' + this.state.numTotalResources
     jQuery('#portal-pages-finder').removeClass('loading')
     return (
-      <div className={css.finderHeader}>
+      <div className={finderHeaderClass}>
         <h2>Activities List</h2>
+        {this.isAdvancedUser() && this.renderShowOnly()}
         <div className={css.finderHeaderResourceCount}>
           {showingAll && multipleResources ? 'Showing All ' : 'Showing '}
           <strong>
@@ -715,7 +684,6 @@ const StemFinder = Component({
 
   showResources: function () {
     setTimeout(function () {
-      console.log('show')
       const resourceItems = document.querySelectorAll('.resourceItem')
       resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1 })
     }, 500)
@@ -725,7 +693,7 @@ const StemFinder = Component({
   renderResults: function () {
     if (this.state.firstSearch) {
       return (
-        <div class={css.loading}>
+        <div className={css.loading}>
           Loading
         </div>
       )
@@ -742,10 +710,10 @@ const StemFinder = Component({
         {this.renderResultsHeader()}
         <div className={css.finderResultsContainer}>
           {resources.map((resource, index) => {
-            return <StemFinderResult key={resource.external_url} resource={resource} index={index} showResources={this.showResources} />
+            return <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />
           })}
         </div>
-        {this.state.searching ? <div class={css.loading}>Loading</div> : null}
+        {this.state.searching ? <div className={css.loading}>Loading</div> : null}
         {this.renderLoadMore()}
       </>
     )

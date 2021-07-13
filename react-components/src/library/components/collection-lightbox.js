@@ -4,10 +4,9 @@ import LightboxNav from './lightbox-nav'
 
 import css from './collection-lightbox.scss'
 
-var CollectionLightbox = Component({
+const CollectionLightbox = Component({
   getInitialState: function () {
     return {
-      // collectionDescription: '',
       collectionId: this.props.collectionId,
       collectionName: '',
       collectionViews: this.props.collectionViews,
@@ -18,13 +17,13 @@ var CollectionLightbox = Component({
   },
 
   componentDidMount: function () {
+    const { collectionId } = this.state
     jQuery.ajax({
-      url: '/api/v1/projects/' + this.state.collectionId,
+      url: '/api/v1/projects/' + collectionId,
       dataType: 'json',
       success: function (data) {
         this.setState({
           collectionName: data.name,
-          // collectionDescription: data.project_card_description,
           isLoaded: true,
           landingPageSlug: data.landing_page_slug
         })
