@@ -83,11 +83,18 @@ describe API::V1::ReportLearnersEsController do
           "filter" => []
         }
       },
-      "sort" => {
-        "created_at_and_id" => {
-          "order" => "asc"
+      "sort" => [
+        {
+          "created_at" => {
+            "order" => "asc"
+          }
+        },
+        {
+          "learner_id" => {
+            "order" => "asc"
+          }
         }
-      }
+      ]
     }
   end
 
@@ -100,11 +107,18 @@ describe API::V1::ReportLearnersEsController do
           "filter" => []
         }
       },
-      "sort" => {
-        "created_at_and_id" => {
-          "order" => "asc"
+      "sort" => [
+        {
+          "created_at" => {
+            "order" => "asc"
+          }
+        },
+        {
+          "learner_id" => {
+            "order" => "asc"
+          }
         }
-      }
+      ]
     }
   end
 
