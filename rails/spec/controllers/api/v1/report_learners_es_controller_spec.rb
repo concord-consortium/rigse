@@ -83,11 +83,18 @@ describe API::V1::ReportLearnersEsController do
           "filter" => []
         }
       },
-      "sort" => {
-        "created_at" => {
-          "order" => "asc"
+      "sort" => [
+        {
+          "created_at" => {
+            "order" => "asc"
+          }
+        },
+        {
+          "learner_id" => {
+            "order" => "asc"
+          }
         }
-      }
+      ]
     }
   end
 
@@ -100,11 +107,18 @@ describe API::V1::ReportLearnersEsController do
           "filter" => []
         }
       },
-      "sort" => {
-        "created_at" => {
-          "order" => "asc"
+      "sort" => [
+        {
+          "created_at" => {
+            "order" => "asc"
+          }
+        },
+        {
+          "learner_id" => {
+            "order" => "asc"
+          }
         }
-      }
+      ]
     }
   end
 
@@ -114,22 +128,16 @@ describe API::V1::ReportLearnersEsController do
       hits: {
         hits: [
           {
-            _id: learner1.report_learner.id,
-            _source: {
-              runnable_type_and_id: 'externalactivity_1',
-            }
+            _id: learner1.id,
+            _source: learner1.elastic_search_learner_model
           },
           {
-            _id: learner2.report_learner.id,
-            _source: {
-              runnable_type_and_id: 'externalactivity_2',
-            }
+            _id: learner2.id,
+            _source: learner2.elastic_search_learner_model
           },
           {
-            _id: learner3.report_learner.id,
-            _source: {
-              runnable_type_and_id: 'externalactivity_2',
-            }
+            _id: learner3.id,
+            _source: learner3.elastic_search_learner_model
           }
         ]
       }
@@ -138,6 +146,9 @@ describe API::V1::ReportLearnersEsController do
 
 
   before (:each) do
+    # This silences warnings in the console when running
+    generate_default_settings_and_jnlps_with_mocks
+
     WebMock.stub_request(:post, /report_learners\/_search$/).
       to_return(:status => 200, :body => fake_response, :headers => { "Content-Type" => "application/json" })
   end
