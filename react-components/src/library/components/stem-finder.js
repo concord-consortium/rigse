@@ -637,7 +637,7 @@ const StemFinder = Component({
           <h2>Activities List</h2>
           {this.isAdvancedUser() && this.renderShowOnly()}
           <div className={css.finderHeaderResourceCount}>
-            {this.state.noResourcesFound ? 'No Resources Found' : ''}
+            {this.state.noResourcesFound ? 'No Resources Found' : 'Loading...'}
           </div>
           {this.renderSortMenu()}
         </div>

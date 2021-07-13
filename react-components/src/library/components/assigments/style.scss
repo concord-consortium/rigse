@@ -44,34 +44,14 @@
         padding: 0;
         position: absolute;
         right: 0;
+        text-align: left;
         z-index: 5;
 
-        li {
-          background: $col-blue;
-          color: $white;
-          cursor: pointer;
-          min-width: 150px;
-          padding: 14px 20px;
+        li button {
+          font-weight: 300;
           text-align: left;
           text-transform: none;
-
-          &:hover {
-            background: $col-darkblue;
-            color: $white;
-          }
-          &:active {
-            background: $col-lightblue;
-            color: $white;            
-          }
-
-          &.recentlySearchedHeading {
-            font-size: 12px;
-            padding: 0 20px;
-
-            &:hover {
-              background: $col-blue;
-            }
-          }
+          width: 100%;
         }
       }
     }

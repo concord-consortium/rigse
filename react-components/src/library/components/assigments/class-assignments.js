@@ -71,7 +71,7 @@ export default class ClassAssignments extends React.Component {
     const { collectionViews } = this.state
     return (
       collectionViews.map(collection => (
-        <li onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</li>
+        <li><button id={`assignMaterialsCollection${collection.id}`} onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</button></li>
       ))
     )
   }
@@ -81,7 +81,7 @@ export default class ClassAssignments extends React.Component {
     const recentCollectionItems = collectionViews.length > 0 ? this.renderAssignOption() : null
     return (
       <ul>
-        <li onClick={(e) => this.handleAssignMaterialsOptionClick(e, 'all')}>All Resources</li>
+        <li><button id='assignMaterialsAllResources' onClick={(e) => this.handleAssignMaterialsOptionClick(e, 'all')}>All Resources</button></li>
         {recentCollectionItems}
       </ul>
     )
@@ -107,7 +107,7 @@ export default class ClassAssignments extends React.Component {
         <header>
           <h1>Assignments for { clazz.name }</h1>
           <div className={css.assignMaterials}>
-            <button onClick={this.handleAssignMaterialsButtonClick}>Find More Resources</button>
+            <button id='assignMaterialsMoreResources' onClick={this.handleAssignMaterialsButtonClick}>Find More Resources</button>
             {assignOptions}
           </div>
         </header>
