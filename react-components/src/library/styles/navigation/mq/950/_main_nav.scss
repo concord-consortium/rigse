@@ -4,7 +4,7 @@
 
 .logo-contain {
   position: relative;
-  z-index: 101;
+  z-index: 45;
   margin: 30px 0;
 }
 
@@ -18,7 +18,7 @@
   .mobile-nav-btn {
     display: inline-block;
     position: relative;
-    z-index: 102;
+    z-index: 50;
     font-size: 30px;
     margin-left: 25px;
 
@@ -144,7 +144,7 @@ body {
       text-align: center;
       top: 75px;
       width: 100%;
-      z-index: 101;
+      z-index: 40;
 
       .portal-pages-main-nav-item {
         display: block;

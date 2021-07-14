@@ -43,6 +43,9 @@ export default class ClassAssignments extends React.Component {
   }
 
   handleAssignMaterialsOptionClick (e, collectionId) {
+    if (document.getElementById('portal-pages-lightbox-mount')) {
+      this.closeLightbox()
+    }
     this.setState({ showAssignOptions: false })
     const lightboxOptions = collectionId === 'all' || typeof collectionId === 'undefined'
       ? ResourceFinderLightbox({
@@ -71,7 +74,7 @@ export default class ClassAssignments extends React.Component {
     const { collectionViews } = this.state
     return (
       collectionViews.map(collection => (
-        <li><button id={`assignMaterialsCollection${collection.id}`} onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</button></li>
+        <li key={`assign-collection-${collection.id}`}><button id={`assignMaterialsCollection${collection.id}`} onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</button></li>
       ))
     )
   }

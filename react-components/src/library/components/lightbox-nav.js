@@ -17,7 +17,7 @@ const LightboxNav = Component({
     return (
       collectionViews.map(collection => (
         collectionName !== collection.name
-          ? <option value={collection.id}>{collection.name} Collection</option>
+          ? <option key={`collection-nav-${collection.id}-${collection.name}`} value={collection.id}>{collection.name} Collection</option>
           : null
       ))
     )
@@ -33,7 +33,7 @@ const LightboxNav = Component({
         You are viewing {collectionRef}. Switch to:
         <select name='resourceFinderSource' onChange={handleSwitchSource}>
           <option value=''>Select a collection...</option>
-          {collectionName !== 'all resources' && <option value='all'>All Resources</option>}
+          {collectionName !== 'all resources' && <option key={`collection-nav-all-resources`} value='all'>All Resources</option>}
           {this.collectionViewsOptions()}
         </select>
       </div>

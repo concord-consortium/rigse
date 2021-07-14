@@ -144,7 +144,7 @@
     margin: 0 10px 0 0;
     min-height: 80px;
     position: relative;
-    width: 380px;
+    width: 200px;
 
     .finderResultTextName {
       font-size: 16px;
@@ -357,10 +357,13 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 950px) {
+}
+
+@media screen and (max-width: 630px) {
   .finderResult {
-    .finderResultText {
-      width: 300px;
+    .finderResultImagePreview {
+      margin-bottom: 10px;
     }
   }
 }
@@ -374,7 +377,7 @@
       right: 18px;
     }
     .finderResultImagePreview {
-      height: 150px;
+      height: 200px;
       margin: 0;
       width: 100%;
     }

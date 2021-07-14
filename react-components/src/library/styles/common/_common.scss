@@ -2,6 +2,13 @@
 @import "special_link";
 @import "forms";
 
+/*
+ * Some of these rules are here to counteract rules set in 
+ * https://portal-pages.concord.org/site-redesign/site-redesign.css
+ * We should at some point reconcile the two sets of rules and 
+ * possibly do away with the site-redesign.css file.
+*/
+
 html, body {
   overflow: visible !important;
 }
@@ -10,7 +17,22 @@ body.member-visitor {
   #page-header {
     height: 70px;
   }
+  #page-introduction {
+    .portal-pages-hero {
+      h1 {
+        overflow: visible !important;
+        text-indent: 0 !important;
+        white-space: normal !important;
+
+        &:before {
+          content: '' !important;
+          display: none;
+        }
+      }
+    }
+  }
 }
+
 #portal-pages-finder {
   background: #ffc320 !important;
   background: #e2f4f8 !important;
@@ -64,6 +86,14 @@ body.member-visitor {
       font-weight: 300;
       text-align: left !important;
       text-transform: none !important;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  body.member-visitor {
+    #page-header {
+      margin-bottom: 30px !important;
     }
   }
 }
