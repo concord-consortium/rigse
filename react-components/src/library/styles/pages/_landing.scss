@@ -54,7 +54,7 @@ h3 {
   font-weight: 500;
 }
 
-/* just remove skew class altogether? */
+/* It would probably be best to remove skew class altogether, but for now... */
 .portal-pages-collection-resource-list {
   .skew {
     margin-top: 0;
@@ -197,7 +197,7 @@ ul.tabs {
   padding-top: 30px;
 }
 
-/* Accordion
+/* ACCORDION
 ----------------------------------*/
 .collapsible {
   width: 98%;
@@ -258,6 +258,8 @@ body.member-visitor h3.collapsible-toggle {
   }
 }
 
+/* SIGN UP BOX
+----------------------------------*/
 .sign-up-box {
   background: #fef7e0;
   margin-bottom: 30px;
@@ -330,4 +332,131 @@ body.member-visitor h3.collapsible-toggle {
 #simulations-tab li p {
   font-size: .8em;
   padding: 0 20px 20px;
+}
+
+/* ASSIGN LIGHTBOX WRAPPED
+ * These rules are used when a collection page's content appears
+ * within the assign lightbox on a classes Assignments page.
+----------------------------------*/
+.assign-wrapped {
+  background: #e2f4f8;
+
+  body {
+    background: #e2f4f8;
+  }
+
+  hr,
+  .breadcrumb-menu,
+  .footer-inner,
+  .portal-pages-collection-page-intro,
+  #footer,
+  #get-started,
+  #portal-pages-header {
+    display: none;
+  }
+
+  .collection-heading h2 {
+    margin-bottom: 20px;
+  }
+}
+
+.assign-wrapped-teacher-materials {
+  height: 50px;
+  overflow: hidden;
+
+  &.open {
+    height: auto;
+    overflow: visible;
+
+    &#teacher-resources, &#student-resources {
+      h2 {
+        margin-bottom: 20px;
+
+        &:after {
+          content: '\E906';
+        }
+      }
+    }
+  }
+
+  &#teacher-resources {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+    h2 {
+      background: $col-blue;
+      border-bottom: none;
+      color: $white;
+      cursor: pointer;
+      font: 700 18px $font-museo-sans;
+      margin: 0;
+      padding: 15px 20px;
+      position: relative;
+      text-align: left;
+      width: 100%;
+
+      &:after {
+        content: '\E905';
+        cursor: pointer;
+        font-family: 'icomoon';
+        font-size: 12px;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
+    }
+    .col-6 {
+      margin: 0 !important;
+      padding: 0 20px;
+      width: 50%;
+    }
+  }
+
+  &#student-resources {
+    background: #eee;
+    margin-bottom: 20px;
+
+    .collection-heading {
+      padding: 0 !important;
+
+      h2 {
+        background: $col-blue;
+        color: $white;
+        cursor: pointer;
+        font: 700 18px $font-museo-sans;
+        margin: 0 !important;
+        padding: 15px 20px;
+        position: relative;
+
+        &:after {
+          content: '\E905';
+          cursor: pointer;
+          font-family: 'icomoon';
+          font-size: 12px;
+          position: absolute;
+          right: 20px;
+          top: 20px;
+        }     
+      }
+    }
+
+    h3.collapsible-toggle {
+      font-size: 18px;
+      padding: 20px;
+      width: 100%;
+
+      &:after {
+        right: 17px;
+      }
+    }
+    .collapsible {
+      padding: 0 20px;
+      width: 100%;
+
+      li {
+        font-size: 16px;
+      }
+    }
+  }
 }

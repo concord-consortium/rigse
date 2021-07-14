@@ -262,13 +262,16 @@ const StemFinderResult = Component({
     }
 
     const unhelpedStandards = unhelped.map(function (statement) {
-      var description = statement.description
+      let description = statement.description
+      console.log(description)
       if (Array.isArray && Array.isArray(description)) {
-        var formatted = ''
-        for (var i = 0; i < description.length; i++) {
+        let formatted = ''
+        for (let i = 0; i < description.length; i++) {
           if (description[i].endsWith(':')) {
+            console.log('add " "')
             description[i] += ' '
           } else if (!description[i].endsWith('.')) {
+            console.log('add ". "')
             description[i] += '. '
           }
           formatted += description[i]

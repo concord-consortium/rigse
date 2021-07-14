@@ -11,6 +11,7 @@
   top: 0;
   transition: 1s;
   width: 100%;
+  z-index: 71;
 
   &.visible {
     display: block;
@@ -34,6 +35,7 @@
   top: 0;
   transition: 1s;
   width: 100%;
+  z-index: 70;
 
   &.visible {
     display: block;
@@ -95,6 +97,13 @@
     padding-top: 70px;
     text-align: center;
     text-transform: uppercase;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .portalPagesCollectionLightboxModal {
+    margin-left: -50%;
     width: 100%;
   }
 }

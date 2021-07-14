@@ -14,12 +14,15 @@
   });
 
   function assignViewAdjustment() {
-    jQuery("hr, #portal-pages-header, #footer, .footer-inner, .breadcrumb-menu, .portal-pages-collection-page-intro, #teacher-resources, #student-resources").hide();
+    jQuery("html").addClass("assign-wrapped");
     jQuery(".skew").removeClass("skew top-only gray");
     jQuery(".cols").removeClass("cols skew-cancel");
     jQuery(".col-12").removeClass("col-12");
-    jQuery("body").css({"background": "#e2f4f8"});
-  }
+    jQuery("#teacher-resources, #student-resources").addClass("assign-wrapped-teacher-materials");
+    jQuery("#teacher-resources h2, #student-resources h2").click(function() {
+      jQuery(this).closest(".assign-wrapped-teacher-materials").toggleClass("open");
+    });
+   }
 
   function cleanUpAssignViewAdjustment() {
     if (isAssignWrapped) {
@@ -34,4 +37,11 @@
       window.parent.document.getElementById('collectionIframeLoading').style.display = 'none';
     }
     jQuery(".resourceItem").animate({'opacity': 1}, 500);
+  }
+
+  function showResources() {
+    setTimeout(function () {
+      var resourceItems = document.querySelectorAll('.resourceItem');
+      resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1 });
+    }, 500);
   }
