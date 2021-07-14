@@ -21,17 +21,23 @@ class Report::Learner::Selector
     if (options.has_key?(:search_after))
       params['search_after'] = options[:search_after]
     end
+    # This will raise an ESError if the ES response is not successful
     esResponse = API::V1::ReportLearnersEsController.query_es(params, current_visitor)
+
     hits = esResponse['hits']['hits']
 
-    if hits && hits.size > 0
+    if hits
       ids = hits.map { |h| h['_source']['report_learner_id'] }
-      @learners = Report::Learner.find(ids) unless skip_report_learners
+      if hits.size > 0
+        @learners = Report::Learner.find(ids) unless skip_report_learners
+        # every returned document will have a unique 'sort' value. This returns the last one.
+        @last_hit_sort_value = hits.last['sort']
+      else
+        @learners = []
+      end
       @es_learners = hits.map { |h| OpenStruct.new(h['_source']) }
       @runnable_names = hits.map { |h| h['_source']['runnable_type_and_id'] }
       @runnable_names = @runnable_names.uniq
-      # every returned document will have a unique 'sort' value. This returns the last one.
-      @last_hit_sort_value = hits.last['sort']
     end
   end
 

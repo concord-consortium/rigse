@@ -2,6 +2,19 @@ require 'digest/md5'
 
 class API::V1::ReportLearnersEsController < API::APIController
 
+  class ESError < StandardError
+    attr_reader :details
+    def initialize(msg="Elastic Search Error", details=null)
+      @details = details
+      super(msg)
+    end
+  end
+
+  rescue_from ESError, with: :error_500
+  def error_500(e)
+    error(e.message, 500, e.details)
+  end
+
   public
 
   # Returns Elasticsearch query of report_learners, with filters and
@@ -362,6 +375,16 @@ class API::V1::ReportLearnersEsController < API::APIController
     esSearchResult = HTTParty.post(search_url,
       :body => query.to_json,
       :headers => { 'Content-Type' => 'application/json' } )
+
+    if !esSearchResult.success?
+      raise ESError.new("Elastic Search Error", {
+        response_body: esSearchResult.body,
+        response_headers: esSearchResult.headers,
+        request_url: search_url,
+        request_body: query
+      })
+    end
+
     return esSearchResult
   end
 

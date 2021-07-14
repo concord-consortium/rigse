@@ -100,14 +100,14 @@ class API::APIController < ApplicationController
   # NOTE: this approach requires you to return from the
   # method to prevent a double render problem. An easy way to do this:
   #  return error(...)
-  def error(message, status = 400)
-    render :json =>
-      {
-        :success => false,
-        :response_type => "ERROR",
-        :message => message
-      },
-      :status => status
+  def error(message, status = 400, details = nil)
+    error_body = {
+      :success => false,
+      :response_type => "ERROR",
+      :message => message,
+    }
+    error_body[:details] = details if details
+    render :json => error_body, :status => status
   end
 
   def pundit_user_not_authorized(exception)
