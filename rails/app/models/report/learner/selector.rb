@@ -9,6 +9,7 @@ class Report::Learner::Selector
 
 
   def initialize(params, current_visitor, options={})
+    @es_learners = []
     @learners = []
     @runnable_names = []
     @last_hit_sort_value = nil
@@ -26,18 +27,14 @@ class Report::Learner::Selector
 
     hits = esResponse['hits']['hits']
 
-    if hits
+    if hits && hits.size > 0
       ids = hits.map { |h| h['_source']['report_learner_id'] }
-      if hits.size > 0
-        @learners = Report::Learner.find(ids) unless skip_report_learners
-        # every returned document will have a unique 'sort' value. This returns the last one.
-        @last_hit_sort_value = hits.last['sort']
-      else
-        @learners = []
-      end
+      @learners = Report::Learner.find(ids) unless skip_report_learners
       @es_learners = hits.map { |h| OpenStruct.new(h['_source']) }
       @runnable_names = hits.map { |h| h['_source']['runnable_type_and_id'] }
       @runnable_names = @runnable_names.uniq
+      # every returned document will have a unique 'sort' value. This returns the last one.
+      @last_hit_sort_value = hits.last['sort']
     end
   end
 
