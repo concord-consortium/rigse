@@ -9,6 +9,7 @@ class Report::Learner::Selector
 
 
   def initialize(params, current_visitor, options={})
+    @es_learners = []
     @learners = []
     @runnable_names = []
     @last_hit_sort_value = nil
@@ -21,7 +22,9 @@ class Report::Learner::Selector
     if (options.has_key?(:search_after))
       params['search_after'] = options[:search_after]
     end
+    # This will raise an ESError if the ES response is not successful
     esResponse = API::V1::ReportLearnersEsController.query_es(params, current_visitor)
+
     hits = esResponse['hits']['hits']
 
     if hits && hits.size > 0

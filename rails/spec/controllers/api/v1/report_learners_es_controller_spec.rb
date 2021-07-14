@@ -462,6 +462,51 @@ describe API::V1::ReportLearnersEsController do
         end
 
       end
+
+      describe "GET external_report_learners_from_jwt with elastic search error" do
+        let(:fake_error_response) do
+          # This is a guess about what an ES error might look like
+          {
+            error: "Fake ES Error"
+          }.to_json
+        end
+
+        before(:each) do
+          WebMock.stub_request(:post, /report_learners\/_search$/).
+            to_return(:status => 500, :body => fake_error_response,
+              :headers => { "Content-Type" => "application/json" })
+        end
+
+        it "renders the error returned by ES" do
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          resp = JSON.parse(response.body)
+          expect(resp['message']).to eql("Elastic Search Error")
+          expect(resp['details']['response_body']).to eql(fake_error_response)
+          expect(response.status).to eql(500)
+        end
+
+      end
+
+      describe "GET external_report_learners_from_jwt with no hits" do
+        let(:fake_response) do
+          # This is a guess about what the response will look like with no matches
+          {
+            hits: {
+              hits: []
+            }
+          }.to_json
+        end
+
+        it "renders an empty list of learners" do
+          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          expect(response.status).to eql(200)
+          resp = JSON.parse(response.body)
+          filter = resp["json"]
+          expect(filter["learners"].length).to eq 0
+          expect(filter["lastHitSortValue"]).to eq nil
+        end
+
+      end
     end
 
     describe "manager access" do
