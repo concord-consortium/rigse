@@ -126,7 +126,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I uncheck "Sequence"
     And I check "Activity"
     When I enter search text "Geometry" on the search instructional materials page
-    And I press "GO"
+    And I press "Go"
     Then I should see "Geometry"
     And I should not see "Radioactivity"
     And I should not see "Geometry sequence"
@@ -134,7 +134,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
     And I uncheck "Activity"
     And I wait 1 second
     When I enter search text "Radioactivity" on the search instructional materials page
-    And I press "GO"
+    And I press "Go"
     And I wait 2 seconds
     Then I should see "Radioactivity sequence"
     And I should not see "smaller radioactive activity"
