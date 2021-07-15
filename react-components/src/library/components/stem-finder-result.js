@@ -3,10 +3,10 @@ import Component from '../helpers/component'
 import { MakeTeacherEditionLink } from '../helpers/make-teacher-edition-links'
 import ResourceLightbox from './resource-lightbox'
 import GradeLevels from './grade-levels'
+import StemFinderResultStandards from './stem-finder-result-standards'
 import RelatedResourceResult from './related-resource-result'
 import Lightbox from '../helpers/lightbox'
 // import portalObjectHelpers from '../helpers/portal-object-helpers'
-import StandardsHelpers from '../helpers/standards-helpers'
 
 import css from './stem-finder-result.scss'
 
@@ -27,6 +27,7 @@ const StemFinderResult = Component({
   },
 
   componentDidMount: function () {
+    this.setState({ hasLoaded: true })
     document.body.addEventListener('touchstart', this.handleTouchStart)
     document.body.addEventListener('touchmove', this.handleTouchMove)
     document.body.addEventListener('touchend', this.handleTouchEnd)
@@ -222,6 +223,18 @@ const StemFinderResult = Component({
     return resource.standard_statements.length > 0
   },
 
+  renderStandards: function () {
+    const { resource } = this.props
+    return (
+      <div className={`${css.collapsible} ${css.finderResultStandards}`}>
+        <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Standards</h2>
+        <div className={css.collapsibleBody}>
+          <StemFinderResultStandards standardStatements={resource.standard_statements} />
+        </div>
+      </div>
+    )
+  },
+
   renderMoreToggle: function () {
     const { resource } = this.props
     const needsMoreToggle = resource.filteredShortDescription.length > 210 || this.hasStandards()
@@ -235,65 +248,6 @@ const StemFinderResult = Component({
         <a href='#' className={css.moreLink} onClick={this.toggleResource}>More</a>
         <a href='#' className={css.lessLink} onClick={this.toggleResource}>Less</a>
       </>
-    )
-  },
-
-  renderStandards: function () {
-    const { resource } = this.props
-    if (!this.hasStandards()) {
-      return (null)
-    }
-
-    const allStatements = resource.standard_statements
-    let helpers = {}
-    let unhelped = []
-
-    helpers.NGSS = StandardsHelpers.getStandardsHelper('NGSS')
-
-    for (let i = 0; i < allStatements.length; i++) {
-      let statement = allStatements[i]
-      let helper = helpers[statement.type]
-
-      if (helper) {
-        helper.add(statement)
-      } else {
-        unhelped.push(statement)
-      }
-    }
-
-    const unhelpedStandards = unhelped.map(function (statement) {
-      let description = statement.description
-      console.log(description)
-      if (Array.isArray && Array.isArray(description)) {
-        let formatted = ''
-        for (let i = 0; i < description.length; i++) {
-          if (description[i].endsWith(':')) {
-            console.log('add " "')
-            description[i] += ' '
-          } else if (!description[i].endsWith('.')) {
-            console.log('add ". "')
-            description[i] += '. '
-          }
-          formatted += description[i]
-        }
-        description = formatted
-      }
-      return (
-        <div>
-          <h3>{statement.notation}</h3>
-          {description}
-        </div>
-      )
-    })
-
-    return (
-      <div className={`${css.collapsible} ${css.finderResultStandards}`}>
-        <h2 onClick={this.toggleCollapsible} className={css.collapsibleHeading}>Standards</h2>
-        <div className={css.collapsibleBody}>
-          {helpers.NGSS.getDiv()}
-          {unhelpedStandards}
-        </div>
-      </div>
     )
   },
 
@@ -367,7 +321,7 @@ const StemFinderResult = Component({
             </div>
           }
         </div>
-        {this.renderStandards()}
+        {this.hasStandards() && this.renderStandards()}
         {this.renderRelatedResources()}
         <div className={css.finderResultLinks}>
           {this.renderLinks()}
