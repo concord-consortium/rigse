@@ -31,8 +31,13 @@ describe('When I try to render materials-bin material', () => {
     const _material = Enzyme.shallow(<MBMaterial material={material} />);
     expect(_material.html()).toBe(pack(`
       <div class="mb-material">
-        <span class="mb-material-links"></span>
-        <span class="mb-material-name">material 1</span>
+        <div class="mb-material-thumbnail">
+          <img alt="material 1" src="http://example.com/icon"/>
+        </div>
+        <div class="mb-material-text">
+          <h4 class="mb-material-name">material 1</h4>
+          <div class="mb-material-links"></div>
+        </div>
       </div>
     `));
   });
