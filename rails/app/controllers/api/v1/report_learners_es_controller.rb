@@ -54,7 +54,7 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     # Note that Report::Learner::Selector is a little helper that actually calls
     # API::V1::ReportLearnersEsController.query_es.
-    learner_selector = Report::Learner::Selector.new(params, current_user, { skip_report_learners: true})
+    learner_selector = Report::Learner::Selector.new(params, current_user, { learner_type: :elasticsearch })
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     response = {
       type: "learners",
@@ -142,7 +142,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     query[:size_limit] = page_size
 
     learner_selector = Report::Learner::Selector.new(query, current_user, {
-      skip_report_learners: true,
+      learner_type: :elasticsearch,
       search_after: search_after
     })
 
@@ -407,8 +407,11 @@ class API::V1::ReportLearnersEsController < API::APIController
       school: learner.school_name,
       user_id: learner.user_id,
       permission_forms: learner.permission_forms,
-      username: learner.username,
-      student_name: learner.student_name,
+
+      # These two fields are not stored in ES, the Selector class looked up the user
+      username: learner.user.login,
+      student_name: learner.user.name,
+
       last_run: learner.last_run,
       run_remote_endpoint: learner.remote_endpoint_url,
       runnable_url: learner.runnable_url,

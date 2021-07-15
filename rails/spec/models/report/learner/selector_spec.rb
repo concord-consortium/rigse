@@ -23,7 +23,8 @@ describe Report::Learner::Selector do
   let(:offering)            { FactoryBot.create(:portal_offering, runnable: runnable) }
   let(:learner)             { FactoryBot.create(:full_portal_learner, offering: offering) }
   let(:report_learner)      { learner.report_learner                   }
-  let(:selector)            { Report::Learner::Selector.new(selector_opts, current_user )   }
+  let(:selector)            { Report::Learner::Selector.new(selector_params, current_user, selector_opts )   }
+  let(:selector_params)       { {} }
   let(:selector_opts)       { {} }
   let(:students_p_forms)    { [] }
 
@@ -52,6 +53,22 @@ describe Report::Learner::Selector do
     end
     it "should return the runnable when it finds a runnable type and id" do
       expect(selector.runnables_to_report_on).to include runnable
+    end
+    it "should not return es_leaners" do
+      expect(selector.es_learners).to be_empty
+    end
+    describe "when learner type is elasticsearch" do
+      let(:selector_opts) { {learner_type: :elasticsearch} }
+
+      it "should not report learners when it finds a learner id" do
+        expect(selector.learners).to be_empty
+      end
+
+      it "should return es_learners when it finds a learner id" do
+        expect(selector.es_learners.length).to eq(1)
+        expect(selector.es_learners[0].user_id).to eq(learner.user.id)
+        expect(selector.es_learners[0].user.id).to eq(learner.user.id)
+      end
     end
   end
 
