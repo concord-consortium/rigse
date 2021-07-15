@@ -42,31 +42,31 @@ Feature: Teacher can search instructional materials grouped by material type, so
     Then I should see "Assigned to Physics"
 
 
-  @javascript @search
-  @with_mysql_failures
-  Scenario: Teacher can see number classes to which investigations are assigned on the search page
-    When the external activity "differential calculus" is assigned to the class "Physics"
-    And the external activity "differential calculus" is assigned to the class "Geography"
-    And the external activity "differential calculus" is assigned to the class "Mathematics"
-    And I search for "differential calculus" on the search instructional materials page
-    And I wait 2 seconds
-    Then I should see "Used in 3 classes."
-    When I am on the browse materials page for "differential calculus"
-    Then I should see "Used in 3 classes."
+  # @javascript @search
+  # @with_mysql_failures
+  # Scenario: Teacher can see number classes to which investigations are assigned on the search page
+  #   When the external activity "differential calculus" is assigned to the class "Physics"
+  #   And the external activity "differential calculus" is assigned to the class "Geography"
+  #   And the external activity "differential calculus" is assigned to the class "Mathematics"
+  #   And I search for "differential calculus" on the search instructional materials page
+  #   And I wait 2 seconds
+  #   Then I should see "Used in 3 classes."
+  #   When I am on the browse materials page for "differential calculus"
+  #   Then I should see "Used in 3 classes."
 
 
-  @javascript @search
-  @with_mysql_failures
-  Scenario: Teacher can see number classes to which activities are assigned on the search page
-    When the external activity "Geometry" is assigned to the class "Physics"
-    When the external activity "parallel lines" is assigned to the class "Physics"
-    And the external activity "parallel lines" is assigned to the class "Geography"
-    And the external activity "parallel lines" is assigned to the class "Mathematics"
-    And I search for "parallel lines" on the search instructional materials page
-    And I wait 2 seconds
-    Then I should see "Used in 3 classes."
-    When I am on the browse materials page for "parallel lines"
-    Then I should see "Used in 3 classes."
+  # @javascript @search
+  # @with_mysql_failures
+  # Scenario: Teacher can see number classes to which activities are assigned on the search page
+  #   When the external activity "Geometry" is assigned to the class "Physics"
+  #   When the external activity "parallel lines" is assigned to the class "Physics"
+  #   And the external activity "parallel lines" is assigned to the class "Geography"
+  #   And the external activity "parallel lines" is assigned to the class "Mathematics"
+  #   And I search for "parallel lines" on the search instructional materials page
+  #   And I wait 2 seconds
+  #   Then I should see "Used in 3 classes."
+  #   When I am on the browse materials page for "parallel lines"
+  #   Then I should see "Used in 3 classes."
 
 
   @javascript @search
