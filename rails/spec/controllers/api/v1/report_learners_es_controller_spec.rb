@@ -441,6 +441,8 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"].length).to eq 3
           expect(filter["learners"][0]["student_id"].to_i).to be_an_instance_of(Fixnum)
           expect(filter["learners"][0]["learner_id"].to_i).to eq learner1.id
+          expect(filter["learners"][0]["student_name"]).to eq learner1.user.name
+          expect(filter["learners"][0]["username"]).to eq learner1.user.login
           expect(filter["learners"][0]["class_id"].to_i).to eq clazz1.id
           expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
           expect(filter["learners"][0]["teachers"].length).to eq 1

@@ -13,7 +13,7 @@ class Report::Learner::Selector
     @learners = []
     @runnable_names = []
     @last_hit_sort_value = nil
-    skip_report_learners = options.has_key?(:skip_report_learners) && options[:skip_report_learners]
+    learner_type = options.has_key?(:learner_type) ? options[:learner_type] : :report
 
     # include the learners in the results, this flag also disables the aggregrations
     # by default it includes up to 5000 learners, but this can overridden with the
@@ -28,9 +28,18 @@ class Report::Learner::Selector
     hits = esResponse['hits']['hits']
 
     if hits && hits.size > 0
-      ids = hits.map { |h| h['_source']['report_learner_id'] }
-      @learners = Report::Learner.find(ids) unless skip_report_learners
-      @es_learners = hits.map { |h| OpenStruct.new(h['_source']) }
+      if (learner_type == :report)
+        ids = hits.map { |h| h['_source']['report_learner_id'] }
+        @learners = Report::Learner.find(ids)
+      elsif (learner_type == :elasticsearch)
+        user_ids = hits.map { |h| h['_source']['user_id'] }.uniq
+        users = User.select(:id, :login, :first_name, :last_name).find(user_ids).index_by(&:id)
+        @es_learners = hits.map { |h|
+          es_learner = OpenStruct.new(h['_source'])
+          es_learner.user = users[es_learner.user_id]
+          es_learner
+        }
+      end
       @runnable_names = hits.map { |h| h['_source']['runnable_type_and_id'] }
       @runnable_names = @runnable_names.uniq
       # every returned document will have a unique 'sort' value. This returns the last one.
