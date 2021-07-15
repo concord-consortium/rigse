@@ -105,8 +105,8 @@ class Portal::Student < ActiveRecord::Base
   end
 
   def update_report_permissions(permission_form)
-    report_learners = Report::Learner.where(:student_id => self.id)
     report_learners.each { |l| l.update_permission_forms; l.save }
+    learners.each { |l| l.update_report_model_cache(true) }
   end
 
   ## TODO: fix with has_many finderSQL
