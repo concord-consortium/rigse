@@ -36,15 +36,9 @@
       width: 350px;
     }
   }
-  .search-form__button {
-    display: block;
-    float: left;
-    height: 42px;
-    margin-left: 10px;
-
-    input {
-      padding: 12px 20px 11px;
-    }
+  input[type="submit"] {
+    padding: 12px 20px 11px !important;
+    width: auto !important;
   }
 }
 
