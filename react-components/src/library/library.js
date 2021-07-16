@@ -42,6 +42,10 @@ import StudentRoster from './components/portal-classes/student-roster'
 import AutoSuggest from './components/search/auto-suggest'
 import EditEResourceOptions from './components/eresources/edit-options'
 import StandardsTable from './components/standards/standards-table'
+import StemFinderResultStandards from './components/stem-finder-result-standards'
+import ResourceRequirements from './components/resource-requirements'
+import ResourceLicense from './components/resource-license'
+import ResourceProjects from './components/resource-projects'
 import showTab from './helpers/tabs'
 
 // previously React and ReactDOM were set by the react-rails gem
@@ -285,6 +289,26 @@ window.PortalComponents = {
   StandardsTable: StandardsTable,
   renderStandardsTable: function (options, id) {
     render(React.createElement(StandardsTable, options), id)
+  },
+
+  StemFinderResultStandards: StemFinderResultStandards,
+  renderStemFinderResultStandards: function (options, id) {
+    render(React.createElement(StemFinderResultStandards, options), id)
+  },
+
+  ResourceRequirements: ResourceRequirements,
+  renderResourceRequirements: function (options, id) {
+    render(React.createElement(ResourceRequirements, options), id)
+  },
+
+  ResourceLicense: ResourceLicense,
+  renderResourceLicense: function (options, id) {
+    render(React.createElement(ResourceLicense, options), id)
+  },
+
+  ResourceProjects: ResourceProjects,
+  renderResourceProjects: function (options, id) {
+    render(React.createElement(ResourceProjects, options), id)
   },
 
   EditEResourceOptions: EditEResourceOptions,
