@@ -402,7 +402,6 @@ search_materials{
     }
   }
 }
-.related-materials { display: none; }
 
 
 .material_list_item.last {
@@ -523,18 +522,58 @@ vertical-align: middle;
   font-size: 12px;
 }
 
+.breadcrumb-menu {
+  margin-bottom: 20px;
+}
 .resource {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
-  .resource-data {
+  h1 {
+    width: 100%;
+  }
+  h2 {
+    color: #313131;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+  .resource-primary {
+    width: 66%;
+
+    hr {
+      border: dotted 1px #ebebeb;
+      height: 0;
+    }
     .action-items {
-      margin-top: 20px;
+      margin: 20px 0;
+      .button {
+        margin-bottom: 10px;
+      }
       .share_Button { display: none; }
     }
   }
 
-  .resource-image {
-    width: 600px;
+  .resource-secondary {
+    width: 33%;
+
+    ul {
+
+      li {
+        font-size: 14px;
+      }
+    }
+  }
+}
+.related-materials {
+  h2 {
+    color: #313131;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    text-transform: uppercase;
   }
 }
 

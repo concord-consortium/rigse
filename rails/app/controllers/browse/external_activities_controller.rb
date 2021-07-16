@@ -1,4 +1,5 @@
 class Browse::ExternalActivitiesController < ApplicationController
+  include Materials::DataHelpers
 
   # GET /browse/external_activities/1
   def show
@@ -15,6 +16,8 @@ class Browse::ExternalActivitiesController < ApplicationController
     @search_material = Search::SearchMaterial.new(material, current_visitor)
     @search_material.url = url_for(@search_material.url)
     @search_material.parent_material.url = url_for(@search_material.parent_material.url)
+
+    @material_data = materials_data([material], nil, 0).shift()
 
     page_meta = @search_material.get_page_title_and_meta_tags
     @page_title = page_meta[:title]
