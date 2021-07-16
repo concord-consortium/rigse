@@ -50,6 +50,8 @@ const processAPIData = data => {
     .sort((o1, o2) => o2.lastRun - o1.lastRun) // Sort by lastRun, DESC order
 }
 
+// Checks if the teacher has any classes.
+const anyClasses = data => data && data.length > 0
 // Checks if there is any data available.
 const anyData = data => data && data.length > 0
 // Checks if there are any students assigned to some offering.
@@ -60,6 +62,7 @@ export default class RecentActivity extends React.Component {
     super(props)
     this.state = {
       loading: !props.initialData,
+      anyClasses: null,
       anyData: anyData(props.initialData),
       anyStudents: anyStudents(props.initialData),
       offerings: processAPIData(props.initialData)
@@ -86,6 +89,18 @@ export default class RecentActivity extends React.Component {
   getPortalData () {
     const { dataUrl } = this.props
     jQuery.ajax({
+      url: '/api/v1/classes/mine',
+      success: data => {
+        this.setState({
+          anyClasses: anyClasses(data.classes)
+        })
+      },
+      error: () => {
+        console.error(`GET class data failed, can't render Recent Activity page`)
+      }
+    })
+
+    jQuery.ajax({
       url: appendOfferingApiQueryParams(dataUrl),
       success: data => {
         this.setState({
@@ -104,12 +119,14 @@ export default class RecentActivity extends React.Component {
   }
 
   render () {
-    const { loading, offerings, anyData, anyStudents } = this.state
+    const { loading, offerings, anyClasses, anyData, anyStudents } = this.state
     if (loading) {
       return null
     }
     return (
-      <Offerings anyData={anyData} anyStudents={anyStudents} offerings={offerings} />
+      <>
+        <Offerings anyClasses={anyClasses} anyData={anyData} anyStudents={anyStudents} offerings={offerings} />
+      </>
     )
   }
 }

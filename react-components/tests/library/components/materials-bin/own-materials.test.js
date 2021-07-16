@@ -53,17 +53,29 @@ describe('When I try to render materials-bin own materials', () => {
     const ownMaterials = Enzyme.mount(<MBOwnMaterials userId={1} name="Collection Name" visible={true} />);
     expect(ownMaterials.html()).toBe(pack(`
       <div class="mb-cell ">
-        <div class="mb-collection">
-          <div class="mb-collection-name">My activities</div>
+        <section class="mb-collection">
+          <header>
+            <h3 class="mb-collection-name">My activities</h3>
+          </header>
           <div class="mb-material">
-            <span class="mb-material-links"></span>
-            <span class="mb-material-name">material 1</span>
+            <div class="mb-material-thumbnail">
+              <img alt="material 1" src="http://example.com/icon">
+            </div>
+            <div class="mb-material-text">
+              <h4 class="mb-material-name">material 1</h4>
+              <div class="mb-material-links"></div>
+            </div>
           </div>
           <div class="mb-material">
-            <span class="mb-material-links"></span>
-            <span class="mb-material-name">material 2</span>
+            <div class="mb-material-thumbnail">
+              <img alt="material 2" src="http://example.com/icon">
+            </div>
+            <div class="mb-material-text">
+              <h4 class="mb-material-name">material 2</h4>
+              <div class="mb-material-links"></div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     `));
   });

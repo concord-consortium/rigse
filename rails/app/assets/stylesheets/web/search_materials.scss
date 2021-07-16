@@ -36,15 +36,9 @@
       width: 350px;
     }
   }
-  .search-form__button {
-    display: block;
-    float: left;
-    height: 42px;
-    margin-left: 10px;
-
-    input {
-      padding: 12px 20px 11px;
-    }
+  input[type="submit"] {
+    padding: 12px 20px 11px !important;
+    width: auto !important;
   }
 }
 
@@ -528,20 +522,61 @@ vertical-align: middle;
   font-size: 12px;
 }
 
-.browse_material_other_data{float:left;width:170px;}
-.browse_material_other_data .icon_image{text-align:center;padding-top:10px;}
-.browse_material_other_data .icon_image img{border:solid 1px #3f3f3f; width: 100px; }
-.browse_material_data{float:right;width:670px;}
+.breadcrumb-menu {
+  margin-bottom: 20px;
+}
+.resource {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 
-.browse_main_container{padding:10px 0px 10px 10px;margin:0;background-color:White;}
-.browse_main_container a{text-transform:none;}
-.browse_material_data .description{padding:3px 10px 3px 3px;}
-.browse_material_data .material_type{font-weight:bold;color:#222;text-transform:uppercase;}
-.browse_material_header{margin:0;padding:0;}
-.browse_material_header td{padding:3px 3px 3px 3px;text-align:left;vertical-align:top;}
-.browse_material_header .title{font-size:18px;font-weight:bold;color:#3A878B;padding-right:10px;}
-.browse_material_header a.button{white-space:nowrap;margin-top:5px;}
-.browse_material_header td.share{width:80px;}
+  h1 {
+    width: 100%;
+  }
+  h2 {
+    color: #313131;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+  .resource-primary {
+    width: 66%;
+
+    hr {
+      border: dotted 1px #ebebeb;
+      height: 0;
+    }
+    .action-items {
+      margin: 20px 0;
+      .button {
+        margin-bottom: 10px;
+      }
+      .share_Button { display: none; }
+    }
+  }
+
+  .resource-secondary {
+    width: 33%;
+
+    ul {
+
+      li {
+        font-size: 14px;
+      }
+    }
+  }
+}
+.related-materials {
+  h2 {
+    color: #313131;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+  }
+}
+
 
 .activity_list_header{font-size:16px;font-weight:bold;color:#222;}
 .activity_list_header span.investigation_name{text-transform:uppercase;}

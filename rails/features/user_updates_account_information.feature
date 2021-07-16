@@ -21,7 +21,7 @@ Feature: User updates account information
     Examples:
       | username | password |
       | student  | student  |
-      | teacher  | teacher  |
+    # | teacher  | teacher  |
 
   @javascript
   Scenario: Students can not change their email addresses

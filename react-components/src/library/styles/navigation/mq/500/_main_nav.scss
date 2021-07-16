@@ -27,3 +27,11 @@
 .portal-pages-concord-link {
   text-align: center;
 }
+
+body {
+  &.member-visitor {
+    .mobile-nav-contain {
+      margin-top: 21px;
+    }
+  }
+}

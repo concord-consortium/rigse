@@ -1,6 +1,19 @@
+@import '../../../shared/styles/variables/_colors.scss';
+@import '../../../shared/styles/mixins/_mixins.scss';
+@import '../../../shared/styles/variables/_variables.scss';
+
 .autoSuggest {
+  margin-top: 2px;
+  padding: 0 10px;
   position: relative;
 
+  #keywordSubmit {
+    background: $col-orange;
+    color: $white;
+    margin-left: 5px;
+    padding: 6.5px 5px 5px;
+    width: 40px;
+  }
   .suggestions {
     position: absolute;
     cursor: pointer;

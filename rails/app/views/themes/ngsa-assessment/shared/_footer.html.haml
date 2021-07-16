@@ -45,7 +45,7 @@
         = copyright_year
         \. All rights reserved.
         %br
-        #{link_to 'Privacy Policy','https://concord.org/privacy-policy', :id=>"privacy-policy-link", :target=>"_blank"}
+        #{link_to 'Privacy Policy','https://concord.org/privacy-policy', :id=>"privacy-policy-link", :target=>"_blank", :rel=>"noopener"}
         &middot;
         For technical assistance, contact:
         = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")

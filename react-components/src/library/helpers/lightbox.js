@@ -8,11 +8,11 @@ this object. The portal creates its own dom element and calls ReactDOM.render it
 So any functionality you add to this object will probably need to be copied there too.
 Code in ResourceLightbox is called in either case so it is better place to put things.
 */
-var Lightbox = {
+const Lightbox = {
   mountPointId: 'portal-pages-lightbox-mount',
 
   open: function (component) {
-    var mountPoint = document.getElementById(this.mountPointId)
+    let mountPoint = document.getElementById(this.mountPointId)
 
     if (!mountPoint) {
       mountPoint = document.createElement('DIV')
@@ -23,7 +23,7 @@ var Lightbox = {
   },
 
   close: function () {
-    var mountPoint = document.getElementById(this.mountPointId)
+    const mountPoint = document.getElementById(this.mountPointId)
 
     ReactDOM.unmountComponentAtNode(mountPoint)
   }

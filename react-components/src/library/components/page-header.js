@@ -191,6 +191,8 @@ const PageHeader = Component({
   },
 
   renderHeader: function () {
+    let wrapperClass = 'theme-' + this.state.theme
+    wrapperClass = this.state.loggedIn ? wrapperClass + ' logged-in' : wrapperClass
     let navLinks = ''
     if (this.state.windowWidth > 950 || !this.state.nav_menu_collapsed) {
       navLinks = this.renderNavLinks()
@@ -198,7 +200,7 @@ const PageHeader = Component({
     let logoClass = this.state.logo_class
     let logoText = 'Home'
     return (
-      <div className={'theme-' + this.state.theme}>
+      <div className={wrapperClass}>
         <div className='portal-pages-umbrella'>
           <div className='portal-pages-umbrella-contain cols'>
             <div className='portal-pages-concord-link col-12'>
@@ -208,7 +210,7 @@ const PageHeader = Component({
         </div>
         <nav className='concord-navigation cols no-collapse'>
           <div className='logo-contain col-3'>
-            <a href='/' title='Go to the Home Page'>
+            <a href={Portal.currentUser.homePath} title='Go to the Home Page'>
               <div className={logoClass}>
                 <div className='concord-logo__linktext'>
                   {logoText}

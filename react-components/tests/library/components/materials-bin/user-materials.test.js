@@ -77,18 +77,30 @@ describe('When I try to render materials-bin user materials', () => {
           <span class="mb-toggle-symbol">-</span> Collection Name
         </div>
         <div class="">
-          <div class="mb-collection">
-            <div class="mb-collection-name"></div>
+          <section class="mb-collection">
+            <header>
+              <h3 class="mb-collection-name"></h3>
+            </header>
             <div class="mb-material">
-              <span class="mb-material-links"></span>
-              <span class="mb-material-name">material 1</span>
+              <div class="mb-material-thumbnail">
+                <img alt="material 1" src="http://example.com/icon">
+              </div>
+              <div class="mb-material-text">
+                <h4 class="mb-material-name">material 1</h4>
+                <div class="mb-material-links"></div>
+              </div>
             </div>
-          <div class="mb-material">
-            <span class="mb-material-links"></span>
-            <span class="mb-material-name">material 2</span>
-          </div>
+            <div class="mb-material">
+              <div class="mb-material-thumbnail">
+                <img alt="material 2" src="http://example.com/icon">
+              </div>
+              <div class="mb-material-text">
+                <h4 class="mb-material-name">material 2</h4>
+                <div class="mb-material-links"></div>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
       </div>
     `));
   });

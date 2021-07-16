@@ -7,8 +7,6 @@
         SEARCH
       .search-form__field
         #auto-suggest-placeholder
-      .search-form__button.go_button.button
-        = submit_tag :GO, :name => '', :id => 'go-button'
     = render :partial=>"search/filters"
     = hidden_field_tag 'investigation_page', (@form_model.investigation_page rescue 1)
     = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)

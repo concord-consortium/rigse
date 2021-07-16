@@ -1,6 +1,8 @@
 import Component from '../helpers/component'
 import filters from '../helpers/filters'
 
+import css from './grade-levels.scss'
+
 const GradeLevels = Component({
 
   render: function () {
@@ -23,12 +25,12 @@ const GradeLevels = Component({
     }
 
     return (
-      <div className={this.props.className || 'portal-pages-finder-result-grade-levels'}>
+      <div className={this.props.className || css.finderResultGradeLevels}>
         {levels.map((level, index) => {
           if (level === 'Higher Education') {
             level = 'Higher Ed'
           }
-          return <div key={index} className='portal-pages-finder-result-grade-level'>{level}</div>
+          return <div key={index} className={css.finderResultGradeLevel}>{level}</div>
         })}
       </div>
     )

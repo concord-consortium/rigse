@@ -14,7 +14,6 @@ export default class ForgotPasswordModal extends React.Component {
     const login = loginData.user.login
     const data = { login_or_email: login }
     jQuery.post('/api/v1/passwords/reset_password', data).done(function (response) {
-      console.log(response)
       jQuery('.forgot-password-form p, .forgot-password-form dl, .forgot-password-form div').fadeOut(300)
       jQuery('.forgot-password-form footer').fadeOut(300, function () {
         jQuery('.forgot-password-form').append('<p>' + response.message + '</p>')

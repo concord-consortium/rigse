@@ -1,7 +1,7 @@
 import React from 'react'
 
 import MBMaterialsCategory from './materials-category'
-import MBCollections from './materials-collection'
+import MBCollections from './collections'
 import MBOwnMaterials from './own-materials'
 import MBMaterialsByAuthor from './materials-by-author'
 
