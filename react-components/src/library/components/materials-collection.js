@@ -3,7 +3,6 @@ import Component from '../helpers/component'
 import shuffleArray from '../helpers/shuffle-array'
 import stemFinderResult from './stem-finder-result'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
-// import ResourceType from './resource-type'
 
 const MaterialsCollection = Component({
   getInitialState: function () {

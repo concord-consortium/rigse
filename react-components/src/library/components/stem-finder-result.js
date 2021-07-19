@@ -6,7 +6,6 @@ import GradeLevels from './grade-levels'
 import StemFinderResultStandards from './stem-finder-result-standards'
 import RelatedResourceResult from './related-resource-result'
 import Lightbox from '../helpers/lightbox'
-// import portalObjectHelpers from '../helpers/portal-object-helpers'
 
 import css from './stem-finder-result.scss'
 
