@@ -6,6 +6,7 @@
   position: relative;
 
   .finderForm {
+    margin-bottom: 50px;
     position: sticky;
     top: 50px;
   }
@@ -203,7 +204,7 @@
   text-align: center;
 
   a {
-    color: $col-darkgray;
+    color: $col-darkgray !important;
   }
 }
 

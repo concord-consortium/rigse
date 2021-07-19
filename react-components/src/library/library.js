@@ -43,9 +43,10 @@ import AutoSuggest from './components/search/auto-suggest'
 import EditEResourceOptions from './components/eresources/edit-options'
 import StandardsTable from './components/standards/standards-table'
 import StemFinderResultStandards from './components/stem-finder-result-standards'
-import ResourceRequirements from './components/resource-requirements'
-import ResourceLicense from './components/resource-license'
-import ResourceProjects from './components/resource-projects'
+import BrowsePage from './components/browse-page/browse-page'
+import ResourceRequirements from './components/browse-page/resource-requirements'
+import ResourceLicense from './components/browse-page/resource-license'
+import ResourceProjects from './components/browse-page/resource-projects'
 import showTab from './helpers/tabs'
 
 // previously React and ReactDOM were set by the react-rails gem
@@ -143,6 +144,9 @@ window.PortalComponents = {
 
   HeaderFilter: HeaderFilter,
   renderHeaderFilter: renderComponentFn(HeaderFilter),
+
+  BrowsePage: BrowsePage,
+  renderBrowsePage: renderComponentFn(BrowsePage),
 
   ResourceLightbox: ResourceLightbox,
   renderResourceLightbox: renderComponentFn(ResourceLightbox),

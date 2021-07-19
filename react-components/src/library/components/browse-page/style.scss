@@ -1,0 +1,95 @@
+@import '../../../shared/styles/mixins/_mixins.scss';
+@import '../../../shared/styles/variables/_variables.scss';
+
+.resourceInfo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .resourcePrimaryInfo {
+    width: 66%;
+
+    h2 {
+      color: #313131;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+    hr {
+      border: dotted 1px #ebebeb;
+      height: 0;
+    }
+    .resourceActionButtons {
+      margin: 20px 0;
+      .button {
+        margin-bottom: 10px;
+      }
+    }
+  }
+  
+  .resourceSecondaryInfo {
+    width: 33%;
+
+    h2 {
+      color: #313131;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+
+    ul {
+
+      li {
+        font-size: 14px;
+      }
+    }
+    .resourcePreviewImage {
+      width: 100%;
+    }
+  }
+}
+
+.resourceSharing {
+
+  a {
+    background-color: $col-orange;
+    color: $white;
+    display: inline-block;
+    height: 30px;
+    margin: 0 10px 0 0;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    text-indent: 100%;
+    white-space: nowrap;
+    width: 30px;
+
+    &:visited {
+      color: $white;
+    }
+
+    &:before {
+      display: block;
+      font: 18px icomoon;
+      height: 100%;
+      margin: 6px 0 0 -24px;
+      position: absolute;
+      width: 100%;
+    }
+    &.resourceSharingFacebook:before {
+      content: "\e90e";
+      margin: 6px 0 0 -19px;
+    }
+    &.resourceSharingTwitter:before {
+      content: "\e910";
+    }
+    &.resourceSharingEmail:before {
+      content: "\e90a";
+    }
+    &.resourceSharingMore:before {
+      content: "\e90d";
+    }
+  }
+}

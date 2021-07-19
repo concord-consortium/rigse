@@ -186,6 +186,14 @@ const StemFinderResult = Component({
     const assignLink = resource.links.assign_material && !isCollection
       ? <a href={assignHandler}>{resource.links.assign_material.text}</a>
       : null
+    const editLinkUrl = resource.lara_activity_or_sequence && resource.links.external_lara_edit
+      ? resource.links.external_lara_edit.url
+      : resource.links.external_edit
+        ? resource.links.external_edit.url
+        : null
+    const editLink = editLinkUrl
+      ? <a href={editLinkUrl} target='_blank' rel='noopener'>Edit</a>
+      : null
     const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher && !isCollection
       ? <a href={resource.links.copy_url} target='_blank' rel='noopener'>Copy</a>
       : null
@@ -202,7 +210,7 @@ const StemFinderResult = Component({
       ? <a href={resource.links.assign_collection.url} target='_blank'>{resource.links.assign_collection.text}</a>
       : null
     const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
-      ? <a href={resource.links.edit.url} target='_blank'>Portal Settings</a>
+      ? <a href={resource.links.edit.url} target='_blank'>Settings</a>
       : null
 
     return (
@@ -211,6 +219,7 @@ const StemFinderResult = Component({
         {teacherEditionLink}
         {teacherGuideLink}
         {printLink}
+        {editLink}
         {copyLink}
         {assignCollectionLink}
         {portalSettingsLink}

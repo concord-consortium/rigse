@@ -12,69 +12,8 @@
 .breadcrumb-menu
   = link_to "&laquo; Find more educational resources".html_safe, "/", :class => "return_link", :title => "Browse more educational resources"
 
-.resource
-  %h1
-    = search_material.title
-  .resource-primary
-    .resource-description
-      = sanitize parent_material.long_description_for_current_user
-    .clazz_count{:id=>"material_clazz_count"}
-      %i
-        - if material.respond_to?(:archived?) && material.archived?
-          (archived)
-    .action-items
-      = render :partial => '/browse/preview', :locals => {:material => parent_material.material, :current_visitor => current_visitor}
-      - if current_visitor.portal_teacher && !(material.material_type == 'Collection')
-        = link_to parent_material.assign_btn_text, 'javascript:void(0)', :class=>"button secondary", :onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}', false)", :id=>"btn_Assign"
-      - elsif !(material.material_type == 'Collection') && !current_visitor.portal_student
-        = link_to parent_material.assign_btn_text, 'javascript:void(0)',:onclick=>"getDataForAssignToClassPopup('#{t('material').pluralize.capitalize}', true)", :id=>"btn_Assign", :class=>"button secondary"
-      - if current_visitor.portal_teacher && material.teacher_guide_url
-        = link_to "Teacher Guide", material.teacher_guide_url, :class=>"button secondary"
-      - if current_visitor.portal_teacher && material.has_teacher_edition
-        = link_to "Teacher Edition", "#{material.url}?mode=teacher-edition", :class=>"button secondary"
-      - if current_visitor.portal_teacher && material.teacher_resources_url
-        = link_to "Teacher Resources", material.teacher_resources_url, :class=>"button secondary"
-      -if external
-        - if material.author_url  && ((current_visitor.has_role? 'admin','manager') || (material.author_email == current_visitor.email && (current_visitor.has_role? 'author')))
-          = link_to "Edit", matedit_external_activity_url(material,:iFrame => false), :class=>"button secondary", :target => "_blank"
-      -if external
-        - if material.launch_url  && ((current_visitor.has_role? 'admin','manager') || (material.is_locked && (material.author_email == current_visitor.email && (current_visitor.has_role? 'author'))) || (!material.is_locked && (current_visitor.has_role? 'author')))
-          = link_to "Copy", copy_external_activity_url(material), :class=>"button secondary", :target => "_blank"
-      - if policy(material).edit?
-        = link_to "Settings", edit_polymorphic_url(material), :class=>"button secondary"
-      %a{:class => "button secondary share_Button Expand_Collapse_Link", :id => "ExpandCollapse_#{parent_material.model_name}#{parent_material.id}Share", :href => "javascript:void(0)", :onclick => "expandcollapseoptions(#{parent_material.id}, '#{parent_material.model_name}', 'Share')"}
-        Share &#9660;
-        .Expand_Collapse{:id => "#{parent_material.model_name}#{parent_material.id}Share", :style => "display:none", :class => "Expand_Collapse_share" }
-          = render :partial => '/browse/share', :locals => {:material_url => parent_material.url, :material_title => parent_material.title}
-
-    #requirements
-
-    - if @material_data && @material_data[:standard_statements].length > 0
-      #standards
-    - if @material_data && @material_data[:license_info]
-      #license
-    - if @material_data && @material_data[:projects].length > 0
-      #projects
-
-  .resource-secondary
-    = image_tag(parent_material.icon_image_url)
-    %h2
-      Subject Areas
-    %ul
-      - material.subject_area_list.each do |sa|
-        %li=sa
-    %h2
-      Grade Levels
-    %ul
-      - material.grade_level_list.each do |gl|
-        %li=gl
+#resource
 
 %script
   - if @material_data
-    PortalComponents.renderResourceRequirements({materialProperties: #{raw @material_data[:material_properties].to_json}, sensors: #{raw @material_data[:sensors]}}, "requirements");
-  - if @material_data && @material_data[:standard_statements].length > 0
-    PortalComponents.renderStemFinderResultStandards({standardsStatements: #{raw @material_data[:standard_statements].to_json}}, "standards");
-  - if @material_data && @material_data[:license_info]
-    PortalComponents.renderResourceLicense({resourceName: "#{search_material.title}", license_info: #{raw @material_data[:license_info].to_json}, credits: #{raw @material_data[:credits].to_json}}, "license");
-  - if @material_data && @material_data[:projects].length > 0
-    PortalComponents.renderResourceProjects({projects: #{raw @material_data[:projects].to_json}}, "projects");
+    PortalComponents.renderBrowsePage({resource: #{raw @material_data.to_json}}, "resource")

@@ -5,9 +5,9 @@ import portalObjectHelpers from '../helpers/portal-object-helpers'
 import StandardsHelpers from '../helpers/standards-helpers'
 import { MakeTeacherEditionLink } from '../helpers/make-teacher-edition-links'
 import ParseQueryString from '../helpers/parse-query-string'
-import ResourceRequirements from './resource-requirements'
-import ResourceLicense from './resource-license'
-import ResourceProjects from './resource-projects'
+import ResourceRequirements from './browse-page/resource-requirements'
+import ResourceLicense from './browse-page/resource-license'
+import ResourceProjects from './browse-page/resource-projects'
 
 var ResourceLightbox = Component({
   getInitialState: function () {
