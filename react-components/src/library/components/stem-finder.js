@@ -615,13 +615,13 @@ const StemFinder = Component({
     const { includeMine } = this.state
     return (
       <div className={css.showOnly}>
-        <label for='includeMine'><input type='checkbox' name='includeMine' value='true' id='includeMine' onChange={this.handleShowOnlyMine} defaultChecked={includeMine} /> Show only materials I authored</label>
+        <label htmlFor='includeMine'><input type='checkbox' name='includeMine' value='true' id='includeMine' onChange={this.handleShowOnlyMine} defaultChecked={includeMine} /> Show only materials I authored</label>
       </div>
     )
   },
 
   renderSortMenu: function () {
-    const sortValues = ['Title', 'Less time required', 'More time required', 'Newest', 'Oldest']
+    const sortValues = ['Alphabetical', 'Less time required', 'More time required', 'Newest', 'Oldest']
 
     return (
       <div className={css.sortMenu}>

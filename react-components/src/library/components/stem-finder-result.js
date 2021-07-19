@@ -146,7 +146,7 @@ const StemFinderResult = Component({
       ? '45 Minutes'
       : resource.material_type === 'Investigation'
         ? '2 Weeks'
-        : resource.material_type === 'Model'
+        : resource.material_type === 'Interactive'
           ? 'Varies'
           : null
 

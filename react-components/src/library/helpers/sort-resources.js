@@ -19,11 +19,13 @@ const sortByName = function (a, b) {
 }
 
 const sortByTimeRequiredAsc = function (a, b) {
-  return ((a.material_type > b.material_type) - (b.material_type > a.material_type))
+  const materialTypes = ['Interactive', 'Activity', 'Investigation', 'Collection']
+  return ((materialTypes.indexOf(a.material_type) > materialTypes.indexOf(b.material_type)) - (materialTypes.indexOf(b.material_type) > materialTypes.indexOf(a.material_type)))
 }
 
 const sortByTimeRequiredDesc = function (a, b) {
-  return ((b.material_type > a.material_type) - (a.material_type > b.material_type))
+  const materialTypes = ['Collection', 'Investigation', 'Activity', 'Interactive']
+  return ((materialTypes.indexOf(a.material_type) > materialTypes.indexOf(b.material_type)) - (materialTypes.indexOf(b.material_type) > materialTypes.indexOf(a.material_type)))
 }
 
 const sortByNewest = function (a, b) {
