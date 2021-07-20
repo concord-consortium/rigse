@@ -1,11 +1,9 @@
 import React from 'react'
 import Component from '../helpers/component'
 import { MakeTeacherEditionLink } from '../helpers/make-teacher-edition-links'
-import ResourceLightbox from './resource-lightbox'
 import GradeLevels from './grade-levels'
 import StemFinderResultStandards from './stem-finder-result-standards'
 import RelatedResourceResult from './related-resource-result'
-import Lightbox from '../helpers/lightbox'
 
 import css from './stem-finder-result.scss'
 
@@ -71,32 +69,6 @@ const StemFinderResult = Component({
       return
     }
     this.setState({ hovering: false })
-  },
-
-  toggleLightbox: function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    let lightbox = !this.state.lightbox
-
-    this.setState({
-      lightbox: lightbox,
-      hovering: false
-    })
-
-    // mount/unmount lightbox outside of homepage content
-    if (lightbox && pageScrolling === false) {
-      let resourceLightbox = ResourceLightbox({
-        resource: this.props.resource,
-        parentPage: window.location.pathname,
-        toggleLightbox: this.toggleLightbox
-      })
-      Lightbox.open(resourceLightbox)
-      ga('send', 'event', 'Home Page Resource Card', 'Click', this.props.resource.name)
-    } else {
-      Lightbox.close()
-      // reset touchInitialized for touch screen devices with mouse or trackpad
-      touchInitialized = false
-    }
   },
 
   toggleFavorite: function (e) {
@@ -172,6 +144,41 @@ const StemFinderResult = Component({
     )
   },
 
+  handlePreviewClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Resource Preview Button', 'Click', resource.name)
+  },
+
+  handleViewCollectionClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Resource View Collection Button', 'Click', resource.name)
+  },
+
+  handleTeacherEditionClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Resource Teacher Edition Button', 'Click', resource.name)
+  },
+
+  handleTeacherResourcesClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Resource Teacher Resources Button', 'Click', resource.name)
+  },
+
+  handleAssignClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Assign to Class Button', 'Click', resource.name)
+  },
+
+  handleTeacherGuideClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Teacher Guide Link', 'Click', resource.name)
+  },
+
+  handleAddToCollectionClick: function (e) {
+    const { resource } = this.props
+    ga('send', 'event', 'Add to Collection Button', 'Click', resource.name)
+  },
+
   renderLinks: function () {
     const { resource } = this.props
     const isCollection = resource.material_type === 'Collection'
@@ -183,7 +190,7 @@ const StemFinderResult = Component({
         ? `javascript: ${resource.links.assign_material.onclick}`
         : null
     const assignLink = resource.links.assign_material && !isCollection
-      ? <a href={assignHandler}>{resource.links.assign_material.text}</a>
+      ? <a href={assignHandler} onClick={this.handleAssignClick}>{resource.links.assign_material.text}</a>
       : null
     const editLinkUrl = resource.lara_activity_or_sequence && resource.links.external_lara_edit
       ? resource.links.external_lara_edit.url
@@ -200,13 +207,16 @@ const StemFinderResult = Component({
       ? <a href={resource.links.print_url} target='_blank' rel='noopener'>Print</a>
       : null
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
-      ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank' rel='noopener'>Teacher Edition</a>
+      ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank' rel='noopener' onClick={this.handleTeacherEditionClick}>Teacher Edition</a>
       : null
     const teacherGuideLink = resource.links.teacher_guide && Portal.currentUser.isTeacher
-      ? <a href={resource.links.teacher_guide.url} target='_blank' rel='noopener'>{resource.links.teacher_guide.text}</a>
+      ? <a href={resource.links.teacher_guide.url} target='_blank' rel='noopener' onClick={this.handleTeacherGuideClick}>{resource.links.teacher_guide.text}</a>
+      : null
+    const teacherResourcesLink = resource.links.teacher_resources && Portal.currentUser.isTeacher
+      ? <a href={resource.links.teacher_resources.url} target='_blank' rel='noopener' onClick={this.handleTeacherResourcesClick}>{resource.links.teacher_resources.text}</a>
       : null
     const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
-      ? <a href={resource.links.assign_collection.url} target='_blank'>{resource.links.assign_collection.text}</a>
+      ? <a href={resource.links.assign_collection.url} target='_blank' onClick={this.handleAddToCollectionClick}>{resource.links.assign_collection.text}</a>
       : null
     const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.edit.url} target='_blank'>Settings</a>
@@ -217,6 +227,7 @@ const StemFinderResult = Component({
         {assignLink}
         {teacherEditionLink}
         {teacherGuideLink}
+        {teacherResourcesLink}
         {printLink}
         {editLink}
         {copyLink}
@@ -320,8 +331,8 @@ const StemFinderResult = Component({
         </div>
         <div className={css.previewLink}>
           {resource.material_type !== 'Collection'
-            ? <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>{resource.links.preview.text}</a>
-            : <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank'>View Collection</a>
+            ? <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank' onClick={this.handlePreviewClick}>{resource.links.preview.text}</a>
+            : <a className={css.previewLinkButton} href={resource.links.preview.url} target='_blank' onClick={this.handleViewCollectionClick}>View Collection</a>
           }
           {resource.material_type !== 'Collection' &&
             <div className={`${css.projectLabel} ${css[projectClass]}`}>

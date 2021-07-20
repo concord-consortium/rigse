@@ -13,7 +13,9 @@ export default class ClassAssignments extends React.Component {
       showAssignOptions: false,
       collectionViews: []
     }
+    this.assignMaterialsRef = React.createRef()
     this.closeLightbox = this.closeLightbox.bind(this)
+    this.handleExternalClick = this.handleExternalClick.bind(this)
     this.handleAssignMaterialsButtonClick = this.handleAssignMaterialsButtonClick.bind(this)
     this.handleAssignMaterialsOptionClick = this.handleAssignMaterialsOptionClick.bind(this)
     this.handleAssignButtonMouseEnter = this.handleAssignButtonMouseEnter.bind(this)
@@ -31,6 +33,11 @@ export default class ClassAssignments extends React.Component {
         })
       }.bind(this)
     })
+    document.addEventListener('mousedown', this.handleExternalClick)
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('mousedown', this.handleExternalClick)
   }
 
   closeLightbox (e) {
@@ -40,6 +47,12 @@ export default class ClassAssignments extends React.Component {
 
   handleAssignMaterialsButtonClick (e) {
     this.setState({ showAssignOptions: !this.state.showAssignOptions })
+  }
+
+  handleExternalClick (e) {
+    if (this.assignMaterialsRef && !this.assignMaterialsRef.current.contains(e.target)) {
+      this.setState({ showAssignOptions: !this.state.showAssignOptions })
+    }
   }
 
   handleAssignMaterialsOptionClick (e, collectionId) {
@@ -109,7 +122,7 @@ export default class ClassAssignments extends React.Component {
       <div className={css.classAssignments}>
         <header>
           <h1>Assignments for { clazz.name }</h1>
-          <div className={css.assignMaterials}>
+          <div className={css.assignMaterials} ref={this.assignMaterialsRef}>
             <button id='assignMaterialsMoreResources' onClick={this.handleAssignMaterialsButtonClick}>Find More Resources</button>
             {assignOptions}
           </div>

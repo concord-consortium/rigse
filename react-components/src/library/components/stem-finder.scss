@@ -112,10 +112,15 @@
       font-size: 16px;
       font-weight: 500;
       line-height: 1;
+      margin-bottom: 1px;
       padding: 5px 10px 5px 37px;
       position: relative;
       text-align: left;
       width: calc(100% - 47px);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
 
       &.selected {
         background: $col-blue;
@@ -155,7 +160,7 @@
       }
       &#mathematics {
         &:before {
-          content: "\f698";
+          content: "\f697";
         }
       }
       &#physics {
@@ -171,7 +176,8 @@
       }
       &#middleSchool {
         &:before {
-          content: '\f5d5';
+          content: '\f0f3';
+          margin-left: 1px;
         }
       }
       &#highSchool {

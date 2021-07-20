@@ -439,6 +439,7 @@ const StemFinder = Component({
       hideFeatured: true,
       includeOfficial: !this.state.includeOfficial
     }, this.search)
+    ga('send', 'event', 'Home Page Filter', 'Click', 'Official')
   },
 
   handleCommunityClick: function (e) {
@@ -447,6 +448,7 @@ const StemFinder = Component({
       hideFeatured: true,
       includeContributed: !this.state.includeContributed
     }, this.search)
+    ga('send', 'event', 'Home Page Filter', 'Click', 'Community')
   },
 
   clearFilters: function () {
@@ -479,34 +481,6 @@ const StemFinder = Component({
     let state = {}
     state[selectedKey] = selectedFilters
     this.setState(state, this.search)
-  },
-
-  renderFilters: function (type, title) {
-    return (
-      <div className={'portal-pages-finder-form-filters'}>
-        <div className={'portal-pages-finder-form-filters-title'}>
-          {title}
-        </div>
-        <ul className={'portal-pages-finder-form-filters-options'}>
-          {filters[type].map(function (filter) {
-            const selectedKey = type + 'Selected'
-            const handleChange = function () {
-              this.scrollToFinder()
-              this.toggleFilter(type, filter)
-            }.bind(this)
-            const checked = this.state[selectedKey].indexOf(filter) !== -1
-            return (
-              <li key={filter.key} className={'portal-pages-finder-form-filters-option'}>
-                <input type={'checkbox'} id={filter.key} name={filter.key} onChange={handleChange} checked={checked} />
-                <label htmlFor={filter.key}>
-                  {filter.title}
-                </label>
-              </li>
-            )
-          }.bind(this))}
-        </ul>
-      </div>
-    )
   },
 
   handleSearchInputChange: function (searchInput) {
@@ -545,6 +519,8 @@ const StemFinder = Component({
     this.setState({ sortOrder: e.target.value }, () => {
       this.search()
     })
+
+    ga('send', 'event', 'Finder Sort', 'Selection', e.target.value)
   },
 
   renderSearch: function () {
@@ -629,7 +605,6 @@ const StemFinder = Component({
       <div className={css.sortMenu}>
         <label htmlFor='sort'>Sort by</label>
         <select name='sort' value={this.state.sortOrder} onChange={this.handleSortSelection}>
-          <option value=''>Select one...</option>
           {sortValues.map(function (sortValue, index) {
             return <option key={`${sortValue}-${index}`} value={sortValue}>{sortValue}</option>
           })}
@@ -674,22 +649,9 @@ const StemFinder = Component({
   },
 
   renderLoadMore: function () {
-    // const handleLoadAll = function () {
-    //   if (!this.state.searching) {
-    //     this.search(true)
-    //   }
-    //   ga('send', 'event', 'Load More Button', 'Click', this.state.displayLimit + ' resources displayed')
-    // }.bind(this)
     if ((this.state.resources.length === 0) || (this.state.displayLimit >= this.state.numTotalResources)) {
       return null
     }
-    // return (
-    //   <div className={'portal-pages-finder-load-all center'} onClick={handleLoadAll}>
-    //     <button>
-    //       {this.state.searching ? 'Loading...' : 'Load More'}
-    //     </button>
-    //   </div>
-    // )
   },
 
   showResources: function () {
@@ -697,7 +659,6 @@ const StemFinder = Component({
       const resourceItems = document.querySelectorAll('.resourceItem')
       resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1 })
     }, 500)
-    // clearTimeout(timer)
   },
 
   renderResults: function () {
