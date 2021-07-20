@@ -13,7 +13,8 @@ describe Portal::Learner do
     {
       :student        => student,
       :offering       => offering,
-      :report_learner => report_learner
+      :report_learner => report_learner,
+      :report_learner_only_id => report_learner
     }
   end
   subject           { Portal::Learner.create!(attributes) }
