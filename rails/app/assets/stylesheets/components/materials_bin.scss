@@ -53,6 +53,10 @@
       flex-grow: 1;
       font-size: 16px;
       text-align: right;
+
+      &:focus {
+        outline: 0;
+      }
     }
 
     h4.mb-collection-name {

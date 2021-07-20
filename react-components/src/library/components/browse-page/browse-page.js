@@ -251,9 +251,9 @@ const BrowsePage = Component({
             <ResourceLicense resourceName={resource.name} license={resource.license} credits={resource.cerdits} />
           </div>
           <div className={css.resourceSecondaryInfo}>
-            <div className={css.resourcePreviewImage}>
+            {resource.icon.url && <div className={css.resourcePreviewImage}>
               <img src={resource.icon.url} alt={resource.name} />
-            </div>
+            </div>}
             {this.renderSubjectAreas()}
             {this.renderGradeLevels()}
             <ResourceProjects projects={resource.projects} />
