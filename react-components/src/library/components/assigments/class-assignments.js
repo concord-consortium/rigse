@@ -51,7 +51,7 @@ export default class ClassAssignments extends React.Component {
 
   handleExternalClick (e) {
     if (this.assignMaterialsRef && !this.assignMaterialsRef.current.contains(e.target)) {
-      this.setState({ showAssignOptions: !this.state.showAssignOptions })
+      this.setState({ showAssignOptions: false })
     }
   }
 
