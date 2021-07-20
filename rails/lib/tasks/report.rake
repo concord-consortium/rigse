@@ -71,25 +71,32 @@ namespace :app do
 
     desc "Pushes all the Portal::Learner objects to the ElasticSearch database"
     task :update_elastic_search_learners => :environment do |t, args|
-      puts "#{Portal::Offering.count} offerings to process...\n"
+      learners_count = Portal::Learner.count
+      puts "#{learners_count} learners to process...\n"
       i = 0
-      Portal::Offering.includes(:runnable,
-                                :learners => [
-                                    :report_learner,
-                                    { :student => :user }
-                                ],
-                                :clazz => [
-                                  :teachers,
-                                  :course => :school
-                                ] ).find_each do |offering|
-        print ("\n%5d: " % i) if (i % 50 == 0)
-        offering.learners.each do |learner|
+
+      offering_includes = [
+        :runnable,
+        :clazz => [
+          :teachers,
+          :course => :school
+        ]
+      ]
+      learner_includes = [
+        :report_learner_only_id,
+        :student => [
+          :user,
+          :permission_forms
+        ]
+      ]
+      Portal::Offering.includes(offering_includes).find_each(batch_size: 100) do |offering|
+        offering.learners.includes(learner_includes).find_each do |learner|
           learner.update_report_model_cache(true)
+          i += 1
+          puts "#{i} of #{learners_count} learners processed" if (i % 100 == 0)
         end
-        print '.'
-        i += 1
       end
-      puts " done."
+      puts "Done: #{i} of #{learners_count} learners processed"
     end
 
     # NP 2019-05-24: Preparing to move to reporting service.
