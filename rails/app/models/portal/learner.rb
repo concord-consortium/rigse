@@ -54,6 +54,9 @@ class Portal::Learner < ActiveRecord::Base
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner",
     :foreign_key => "learner_id", :inverse_of => :learner
 
+  has_one :report_learner_only_id, -> { select "id, learner_id" }, :class_name => "Report::Learner",
+    :foreign_key => "learner_id", :inverse_of => :learner
+
   has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"
 
   default_value_for :secure_key do
@@ -229,7 +232,7 @@ class Portal::Learner < ActiveRecord::Base
 
     {
       learner_id: self.id,
-      report_learner_id: self.report_learner.id,
+      report_learner_id: self.report_learner_only_id.id,
       student_id: self.student.id,
       user_id:  self.student.user.id,
       remote_endpoint_url: self.remote_endpoint_url,
