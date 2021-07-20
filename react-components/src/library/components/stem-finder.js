@@ -222,7 +222,9 @@ const StemFinder = Component({
       // TODO: informal learning?
     })
 
-    const includedResources = this.state.includeMine ? '&include_mine=1' : '&include_official=1'
+    let includedResources = this.state.includeMine ? '&include_mine=1' : ''
+    includedResources += this.state.includeOfficial ? '&include_official=1' : ''
+    includedResources += this.state.includeContributed ? '&include_contributed=1' : ''
     query.push(includedResources)
 
     return query.join('')
@@ -443,7 +445,7 @@ const StemFinder = Component({
     e.currentTarget.classList.toggle(css.selected)
     this.setState({
       hideFeatured: true,
-      includeCommunity: !this.state.includeCommunity
+      includeContributed: !this.state.includeContributed
     }, this.search)
   },
 
