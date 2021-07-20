@@ -49,7 +49,7 @@ const CollectionLightbox = Component({
 
   handleIframeResize: function (e) {
     const iframe = e.target
-    iframe.style.height = iframe.contentWindow.document.documentElement.scrollHeight + 'px'
+    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px'
   },
 
   handleSwitchSource: function (e) {
