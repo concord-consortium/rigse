@@ -22,7 +22,7 @@
             Portal Admins
 
     - if @users
-      %p= rails_6_page_entries_info @users
+      %p= sanitize rails_6_page_entries_info @users
     %p.paginator
       = will_paginate @users
 .item_collection

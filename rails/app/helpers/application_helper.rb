@@ -636,24 +636,24 @@ module ApplicationHelper
     end
 
     if options.fetch(:html, true)
-      b, eb = '<b>', '</b>'
+      strong, estrong = '<strong>', '</strong>'
       sp = '&nbsp;'
     else
-      b = eb = ''
+      strong = estrong = ''
       sp = ' '
     end
 
     if collection.total_pages < 2
       case model_count
-      when 0 then "No #{model_name} found".html_safe
-      when 1 then "Displaying #{b}1#{eb} #{model_name}".html_safe
-      else "Displaying #{b}all#{sp}#{model_count}#{eb} #{model_name}".html_safe
+      when 0 then "No #{model_name} found."
+      when 1 then "Displaying #{strong}1#{estrong} #{model_name}."
+      else "Displaying #{strong}all#{sp}#{model_count}#{estrong} #{model_name}."
       end
     else
       from = collection.offset + 1
       to = collection.offset + collection.length
-      "Displaying #{model_name} #{b}#{from}#{sp}-#{sp}#{to}#{eb}" +
-      "of #{b}#{model_count}#{eb} in total".html_safe
+      "Displaying #{model_name} #{strong}#{from}#{sp}-#{sp}#{to}#{estrong}" +
+      " of #{strong}#{model_count}#{estrong} in total."
     end
   end
 end
