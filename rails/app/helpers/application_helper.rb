@@ -617,43 +617,4 @@ module ApplicationHelper
       getting_started_path
     end
   end
-
-  # Addresses issue in will_paginate / translate in rails: https://github.com/mislav/will_paginate/issues/618
-  # TODO: Remove this once Rails 6.1.4 is released.
-  def rails_6_page_entries_info(collection, options = {})
-    model = options[:model]
-    model = collection.first.class unless model || collection.empty?
-    model ||= 'entry'
-    # 5 here is for model_name.human pluralization call only
-    model_count = collection.total_pages > 1 ? 5 : collection.size
-
-    if model.respond_to? :model_name
-      model_name = model.model_name.human.pluralize(model_count)
-    else
-      name = model.to_s.tr('_', ' ')
-      raise "can't pluralize model name: #{model.inspect}" unless name.respond_to? :pluralize
-      model_name = name.pluralize(model_count)
-    end
-
-    if options.fetch(:html, true)
-      strong, estrong = '<strong>', '</strong>'
-      sp = '&nbsp;'
-    else
-      strong = estrong = ''
-      sp = ' '
-    end
-
-    if collection.total_pages < 2
-      case model_count
-      when 0 then "No #{model_name} found."
-      when 1 then "Displaying #{strong}1#{estrong} #{model_name}."
-      else "Displaying #{strong}all#{sp}#{collection.count}#{estrong} #{model_name}."
-      end
-    else
-      from = collection.offset + 1
-      to = collection.offset + collection.length
-      "Displaying #{model_name} #{strong}#{from}#{sp}-#{sp}#{to}#{estrong}" +
-      " of #{strong}#{collection.count}#{estrong} in total."
-    end
-  end
 end

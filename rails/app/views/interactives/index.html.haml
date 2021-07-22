@@ -20,7 +20,7 @@
             %td
 
       - if @interactives
-        %p= sanitize rails_6_page_entries_info @interactives
+        %p= page_entries_info @interactives
       %p.paginator
         = will_paginate @interactives
     .action_menu_header_right
