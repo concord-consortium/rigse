@@ -1,8 +1,5 @@
 class API::V1::ProjectsController < API::APIController
 
-  rescue_from ActionController::ParameterMissing, with: :parameter_missing
-  rescue_from ActiveRecord::RecordNotFound, :with => :project_not_found
-
   def index
     projects = Admin::Project.select {|p| policy(p).visible?}
     result = projects.map{ |p| {
@@ -25,13 +22,6 @@ class API::V1::ProjectsController < API::APIController
     render status: 400, json: {
       success: false,
       message: exception.message
-    }
-  end
-
-  def project_not_found(exception)
-    render status: 404, json: {
-      success: false,
-      message: "project not found"
     }
   end
 
