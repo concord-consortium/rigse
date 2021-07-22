@@ -647,13 +647,13 @@ module ApplicationHelper
       case model_count
       when 0 then "No #{model_name} found."
       when 1 then "Displaying #{strong}1#{estrong} #{model_name}."
-      else "Displaying #{strong}all#{sp}#{model_count}#{estrong} #{model_name}."
+      else "Displaying #{strong}all#{sp}#{collection.count}#{estrong} #{model_name}."
       end
     else
       from = collection.offset + 1
       to = collection.offset + collection.length
       "Displaying #{model_name} #{strong}#{from}#{sp}-#{sp}#{to}#{estrong}" +
-      " of #{strong}#{model_count}#{estrong} in total."
+      " of #{strong}#{collection.count}#{estrong} in total."
     end
   end
 end
