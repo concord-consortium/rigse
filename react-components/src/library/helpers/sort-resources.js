@@ -13,9 +13,15 @@ const sortResources = function (resources, sortMethod) {
 }
 
 const sortByName = function (a, b) {
-  const aName = a.name.toUpperCase()
-  const bName = b.name.toUpperCase()
-  return ((aName > bName) - (bName > aName))
+  const aName = a.name
+  const bName = b.name
+  if (aName === null || aName === '') {
+    return 1
+  }
+  if (bName === null || bName === '') {
+    return -1
+  }
+  return ((aName.toUpperCase() > bName.toUpperCase()) - (bName.toUpperCase() > aName.toUpperCase()))
 }
 
 const sortByTimeRequiredAsc = function (a, b) {
