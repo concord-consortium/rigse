@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-gem 'rails', '6.1.3.2'
+gem 'rails', '6.1.4'
 
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
