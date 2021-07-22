@@ -1,5 +1,5 @@
 import React from 'react'
-import Component from '../helpers/component'
+import Component from '../../helpers/component'
 
 const ResourceType = Component({
 

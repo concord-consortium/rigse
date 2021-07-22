@@ -16,6 +16,10 @@ module NavigationHelper
     is_teacher
   end
 
+  def show_search_link
+    is_teacher
+  end
+
   def is_student
     current_visitor.portal_student || false
   end
@@ -90,6 +94,21 @@ module NavigationHelper
         sort: 0,
         small: true
       }
+    end
+  end
+
+  def search_link_params
+    if is_teacher || show_admin_links
+      {
+        id: '/',
+        label: nav_label('find resources'),
+        url: '/',
+        iconName: 'icon-search',
+        sort: 1,
+        small: true
+      }
+    else
+      false
     end
   end
 
@@ -277,6 +296,7 @@ module NavigationHelper
     project_links.each { |link| service.add_item link}
 
     service.add_item preference_link_params if preference_link_params
+    service.add_item search_link_params if search_link_params
     service.add_item favorite_link_params if favorite_link_params
     # after all the links have been added
     # detect which link we are on.

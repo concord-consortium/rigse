@@ -234,6 +234,14 @@ export default class AutoSuggest extends React.Component {
           onChange={this.handleInputChange}
           onKeyDown={this.handleKeyDown}
         />
+        <input
+          id={css.keywordSubmit}
+          type='submit'
+          name='keywordSubmit'
+          value='Go'
+          onKeyDown={this.handleKeyDown}
+          onClick={this.handleKeyDown}
+        />
         {this.renderSuggestions()}
       </div>
     )

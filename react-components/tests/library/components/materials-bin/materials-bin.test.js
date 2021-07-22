@@ -79,6 +79,11 @@ const mockedJQuery = () => ({
   on: (message) => {}
 });
 mockedJQuery.trim = (s) => s.trim()
+mockedJQuery.ajax = jest.fn().mockImplementation(() => {
+  const fakeResponse = {
+      value: "anything you can imagine"
+  };
+});
 
 Enzyme.configure({adapter: new Adapter()})
 
@@ -109,11 +114,11 @@ describe('When I try to render materials-bin', () => {
           </div>
         </div>
         <div class="mb-column">
-          <div class="mb-collection">
-            <div class="mb-collection-name"></div>
+          <div class="mb-cell ">
+            <div class="loading">loading</div>
           </div>
-          <div class="mb-collection">
-            <div class="mb-collection-name"></div>
+          <div class="mb-cell mb-hidden">
+            <div class="loading">loading</div>
           </div>
         </div>
       </div>
@@ -147,11 +152,11 @@ describe('When I try to render materials-bin', () => {
           </div>
         </div>
         <div class="mb-column">
-          <div class="mb-collection">
-            <div class="mb-collection-name"></div>
+          <div class="mb-cell mb-hidden">
+            <div class="loading">loading</div>
           </div>
-          <div class="mb-collection">
-            <div class="mb-collection-name"></div>
+          <div class="mb-cell mb-hidden">
+          <div class="loading">loading</div>
           </div>
         </div>
       </div>

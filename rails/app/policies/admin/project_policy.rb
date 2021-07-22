@@ -65,7 +65,6 @@ class Admin::ProjectPolicy < ApplicationPolicy
     user.present? && user.has_role?('admin')
   end
 
-
   def not_anonymous?
     admin_or_project_admin?
   end
@@ -77,5 +76,9 @@ class Admin::ProjectPolicy < ApplicationPolicy
 
   def assign_to_material?
     admin? || user && user.is_project_admin?(record)
+  end
+
+  def api_show?
+    teacher? || admin?
   end
 end

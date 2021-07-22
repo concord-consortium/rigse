@@ -1,11 +1,13 @@
 import React from 'react'
 import Component from '../helpers/component'
 import RelatedResourceResult from './related-resource-result'
-import pluralize from '../helpers/pluralize'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
 import StandardsHelpers from '../helpers/standards-helpers'
 import { MakeTeacherEditionLink } from '../helpers/make-teacher-edition-links'
 import ParseQueryString from '../helpers/parse-query-string'
+import ResourceRequirements from './browse-page/resource-requirements'
+import ResourceLicense from './browse-page/resource-license'
+import ResourceProjects from './browse-page/resource-projects'
 
 var ResourceLightbox = Component({
   getInitialState: function () {
@@ -196,42 +198,6 @@ var ResourceLightbox = Component({
     )
   },
 
-  renderRequirements: function () {
-    const resource = this.state.resource
-    let requirementsOutput = <p>This activity runs entirely in a Web browser. Preferred browsers are: <a href='http://www.google.com/chrome/' title="Get Google\'s Chrome Web Browser">Google Chrome</a> (versions 30 and above) <a href='http://www.apple.com/safari/' title="Get Apple\'s Safari Web Browser">Safari</a> (versions 7 and above), <a href='http://www.firefox.com/' title='Get the Firefox Web Browser'>Firefox</a> (version 30 and above), <a href='http://www.microsoft.com/ie/' title="Get Microsoft\'s Internet Explorer Web Browser">Internet Explorer</a> (version 10 or higher), and <a href='https://www.microsoft.com/en-us/windows/microsoft-edge#f7x5cdShtkSvrROV.97' title="Get Microsoft\'s Edge Web Browser">Microsoft Edge</a>.</p>
-    let requirementsSensors = ''
-
-    if (resource.sensors !== undefined && resource.sensors.length > 0) {
-      let sensorTypes = ''
-      let sensorTerm = 'sensor'
-
-      if (resource.sensors.length === 1) {
-        sensorTypes = 'a ' + resource.sensors[0].toLowerCase()
-      } else {
-        sensorTerm = 'sensors'
-        for (let i = 0; i < resource.sensors.length; i++) {
-          if (i !== resource.sensors.length - 1) {
-            sensorTypes += resource.sensors[i].toLowerCase() + ', '
-          } else {
-            if (resource.sensors.length === 2) {
-              sensorTypes = sensorTypes.replace(/, $/, '') // prevents things like "motion, and temperature sensors"
-            }
-            sensorTypes += ' and ' + resource.sensors[i].toLowerCase()
-          }
-        }
-      }
-
-      requirementsSensors = <p>This resource requires the use of {sensorTypes} {sensorTerm}. You will also need the Concord Consortium's SensorConnector software installed. Learn more about supported sensors and download the SensorConnector from <a href='https://sensorconnector.concord.org/' target='_blank'>sensorconnector.concord.org</a>.</p>
-    }
-    return (
-      <div className='portal-pages-resource-lightbox-requirements'>
-        <h2>Requirements</h2>
-        {requirementsOutput}
-        {requirementsSensors}
-      </div>
-    )
-  },
-
   renderStandards: function () {
     const resource = this.state.resource
     if (!resource.standard_statements || resource.standard_statements.length === 0) {
@@ -283,89 +249,6 @@ var ResourceLightbox = Component({
         <h2>Standards</h2>
         {helpers.NGSS.getDiv()}
         {unhelpedStandards}
-      </div>
-    )
-  },
-
-  renderLicense: function () {
-    const resource = this.state.resource
-    if (!resource.license_info) {
-      return null
-    }
-
-    const license = resource.license_info
-
-    let attributionName = 'The Concord Consortium'
-    let attributionUrl = 'https://concord.org/'
-
-    // replace Concord Consortium with proper author credit
-    let licenseDescription
-    if (!resource.credits) {
-      licenseDescription = license.description
-    } else {
-      licenseDescription = license.description.replace('the Concord Consortium', resource.credits)
-    }
-
-    // alter attribution values when all material should be attributed to a specific project or partner
-    if (Portal.theme === 'ngss-assessment') {
-      attributionName = 'The Next Generation Science Assessment Project'
-      attributionUrl = 'http://nextgenscienceassessment.org/'
-      licenseDescription = license.description.replace('the Concord Consortium', attributionName)
-    }
-
-    let licenseAttribution = ''
-    // don't provide suggested attribution for public domain resources
-    if (license.code !== 'CC0') {
-      if (!resource.credits) {
-        licenseAttribution = <p>Suggested attribution: {resource.name} by <a href={attributionUrl}>{attributionName}</a> is licensed under <a href={license.deed}>{license.code}</a>.</p>
-      } else {
-        licenseAttribution = <p>Suggested attribution: {resource.name} by {resource.credits} is licensed under <a href={license.deed}>{license.code}</a>.</p>
-      }
-    }
-
-    return (
-      <div className='portal-pages-resource-lightbox-license'>
-        <hr />
-        <h2>License</h2>
-        <div>
-          <img src={license.image} alt={license.code} />
-        </div>
-        <h3>{license.code}</h3>
-        <p>{license.name}</p>
-        <p>{licenseDescription}</p>
-        <p><a href={license.deed}>{license.code} (human-readable summary)</a><br />
-          <a href={license.legal}>{license.code} (full license text)</a></p>
-        {licenseAttribution}
-      </div>
-    )
-  },
-
-  renderLearnMore: function () {
-    const resource = this.state.resource
-    if (resource.projects.length === 0) {
-      return null
-    }
-    const projects = resource.projects
-    const numProjects = projects.length
-
-    const projectsList = projects.map(function (project, index) {
-      return (
-        <span>
-          <strong>
-            {project.landing_page_url ? <a href={project.landing_page_url}>{project.name}</a> : project.name}
-          </strong>
-          {index !== numProjects - 1 ? ' and ' : ''}
-        </span>
-      )
-    })
-
-    return (
-      <div>
-        <hr />
-        <h2>Learn More</h2>
-        <div className='portal-pages-resource-lightbox-learn-more'>
-          This resource is part of the Concord Consortium&apos;s {projectsList} {pluralize(numProjects, ' project')}.
-        </div>
       </div>
     )
   },
@@ -458,12 +341,13 @@ var ResourceLightbox = Component({
   },
 
   renderAdditionalInfo: function () {
+    const resource = this.state.resource
     return (
       <div>
-        {this.renderRequirements()}
+        <ResourceRequirements materialProperties={resource.material_properties} sensors={resource.sensors} />
         {this.renderStandards()}
-        {this.renderLicense()}
-        {this.renderLearnMore()}
+        <ResourceLicense resourceName={resource.name} license={resource.license} credits={resource.cerdits} />
+        <ResourceProjects projects={resource.projects} />
       </div>
     )
   },

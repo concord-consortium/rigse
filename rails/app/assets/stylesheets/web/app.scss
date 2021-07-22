@@ -356,7 +356,6 @@ body#tinymce {
 #content {
   overflow: hidden;
   overflow-y: visible;
-  padding-right: 5px;
   //:position relative
 }
 
@@ -867,7 +866,7 @@ select {
   }
 
 input, textarea, select {
-  border: 2px solid #0592af;
+  border: 1.5px solid #0592af;
   }
 
 input {

@@ -143,7 +143,7 @@ describe NavigationHelper, type: :helper  do
       let(:projects)     { [itsi_project] }
 
       it "should have several links" do
-        expect(subject.links.size).to eq(24)
+        expect(subject.links.size).to eq(25)
       end
       it "should have several sections" do
         expect(subject.sections.size).to eq(6)
@@ -156,7 +156,7 @@ describe NavigationHelper, type: :helper  do
     describe "Not in any Projects" do
       let(:projects)     { [] }
       it "should have several links" do
-        expect(subject.links.size).to eq(17)
+        expect(subject.links.size).to eq(18)
       end
       it "should have several sections" do
         expect(subject.sections.size).to eq(5)

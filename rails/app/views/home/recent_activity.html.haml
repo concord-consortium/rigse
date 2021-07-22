@@ -1,5 +1,9 @@
-%h1=I18n.t('recent_activity.title')
-= render :partial => "notice"
+- if current_user.has_active_classes?
+  %h1=I18n.t('recent_activity.title')
+  = render :partial => "notice"
+- else
+  %h1=I18n.t('getting_started.title')
+
 #recent-activity
 
 :javascript

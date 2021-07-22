@@ -1,0 +1,73 @@
+@import '../../shared/styles/variables/_variables.scss';
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../styles/helpers/_modal.scss';
+
+.portalPagesResourceFinderLightboxContainer {
+  display: none;
+  height: 100%;
+  left: 0;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  transition: 1s;
+  width: 100%;
+  z-index: 71;
+
+  &.visible {
+    display: block;
+  }
+}
+.portalPagesResourceFinderLightbox {
+  box-sizing: content-box;
+  bottom: auto;
+  height: auto;
+  left: auto;
+  right: auto;
+  top: auto;
+}
+.portalPagesResourceFinderLightboxBackground {
+  background: $col-darkgray;
+  display: none;
+  height: 100%;
+  left: 0;
+  opacity: 0.85;
+  position: fixed;
+  top: 0;
+  transition: 1s;
+  width: 100%;
+  z-index: 70;
+
+  &.visible {
+    display: block;
+  }
+}
+.portalPagesResourceFinderLightboxBackgroundClose {
+  color: #fff;
+  cursor: pointer;
+  font-size: 48px;
+  position: fixed;
+  right: 20px;
+  top: -10px;
+}
+.portalPagesResourceFinderLightboxModal {
+  background: #e2f4f8;
+  bottom: auto;
+  height: auto;
+  left: 50%;
+  margin-left: -500px;
+  padding: 0 0 15px;
+  position: relative;
+  right: auto;
+  top: 50px;
+  width: 1000px;
+  a {
+    display: inline;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .portalPagesResourceFinderLightboxModal {
+    margin-left: -50%;
+    width: 100%;
+  }
+}
