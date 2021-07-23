@@ -9,6 +9,7 @@ describe Dataservice::V1::ProcessExternalActivityDataJob do
   let(:event)        { double() }
   before(:each) do
     allow(Portal::Learner).to receive_messages(:find => learner)
+    allow(learner).to receive_messages(:update_report_model_cache => true)
   end
 
   subject { Dataservice::V1::ProcessExternalActivityDataJob.new(23,json_content, Time.now())}

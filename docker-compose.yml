@@ -196,20 +196,6 @@ services:
     networks:
       - portal
       - default
-  logstash:
-    build:
-      context: logstash
-      dockerfile: Dockerfile
-    environment:
-      DB_HOST: mysql
-      DB_NAME: portal_development
-      DB_USER: root
-      DB_PASSWORD: xyzzy
-      ES_TYPE: local
-      ES_HOST: elasticsearch
-    volumes:
-      # override logstash output to use local elastic search
-      - ./logstash/logstash-output-dev.conf:/usr/share/logstash/pipeline/logstash-output.conf
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.1.1
 volumes:

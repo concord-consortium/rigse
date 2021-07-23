@@ -49,6 +49,9 @@ class Portal::Learner < ApplicationRecord
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner",
     :foreign_key => "learner_id", :inverse_of => :learner
 
+  has_one :report_learner_only_id, -> { select "id, learner_id" }, :class_name => "Report::Learner",
+    :foreign_key => "learner_id", :inverse_of => :learner
+
   has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"
 
   default_value_for :secure_key do
@@ -65,9 +68,7 @@ class Portal::Learner < ApplicationRecord
   [:name, :first_name, :last_name, :email].each { |m| delegate m, :to => :student }
 
   after_create do |learner|
-    # make the report learner now, so two parts of the code aren't trying to create it at the
-    # same time later
-    learner.report_learner.update_fields
+    learner.update_report_model_cache
   end
 
   # 2021-06-21 NP: We update last_run when the run button pressed
@@ -179,5 +180,122 @@ class Portal::Learner < ApplicationRecord
     else
       "#{APP_CONFIG[:site_url]}#{external_activity_return_path(id)}"
     end
+  end
+
+  def elastic_search_learner_model
+    # check to see if we can obtain the last run info
+    if self.offering.internal_report?
+      answersMeta = update_answers
+      num_answerables = answersMeta[:num_answerables]
+      num_answered = answersMeta[:num_answered]
+      num_submitted = answersMeta[:num_submitted]
+      num_correct = answersMeta[:num_correct]
+      complete_percent = answersMeta[:complete_percent]
+    else
+      num_answerables = 0
+      num_answered = 0
+      num_submitted = 0
+      num_correct = 0
+      # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
+      complete_percent = 100
+    end
+
+    {
+      learner_id: self.id,
+      report_learner_id: self.report_learner_only_id.id,
+      student_id: self.student.id,
+      user_id:  self.student.user.id,
+      remote_endpoint_url: self.remote_endpoint_url,
+      created_at: self.created_at,
+      offering_id: self.offering.id,
+      offering_name: self.offering.name,
+      class_id: self.offering.clazz.id,
+      class_name: self.offering.clazz.name,
+      last_run: self.last_run,
+      school_id: self.offering.clazz.school.id,
+      school_name: self.offering.clazz.school.name,
+      school_name_and_id: "#{self.offering.clazz.school.id}:#{self.offering.clazz.school.name}",
+      runnable_id: self.offering.runnable.id,
+      runnable_name: self.offering.runnable.name,
+      runnable_type: self.offering.runnable.class.to_s.downcase,
+      runnable_type_and_id: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}",
+      runnable_type_id_name: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}:#{self.offering.runnable.name}",
+      runnable_url: (self.offering.runnable.respond_to? 'url') ? self.offering.runnable.url : nil,
+      num_answerables: num_answerables,
+      num_answered: num_answered,
+      num_submitted: num_submitted,
+      num_correct: num_correct,
+      complete_percent: complete_percent,
+      teachers_id: self.offering.clazz.teachers.map { |t| t.id },
+      teachers_name: self.offering.clazz.teachers.map { |t| escape_comma(t.user.name) },
+      teachers_district: self.offering.clazz.teachers.map { |t|
+        t.schools
+         .select{ |s| s.district.present? }
+         .map{ |s| escape_comma(s.district.name)}
+         .join(", ")
+      },
+      teachers_state: self.offering.clazz.teachers.map { |t|
+        t.schools
+         .select{ |s| s.district.present? }
+         .map{ |s| escape_comma(s.district.state)}
+         .join(", ")
+      },
+      teachers_email: self.offering.clazz.teachers.map { |t| escape_comma(t.user.email)},
+      teachers_map: self.offering.clazz.teachers.map { |t| "#{t.id}: #{escape_comma(t.user.name)}"},
+      permission_forms: self.student.permission_forms.map { |p| escape_comma(p.fullname) },
+      permission_forms_id: self.student.permission_forms.map { |p| p.id },
+      permission_forms_map: self.student.permission_forms.map{ |p| "#{p.id}: #{escape_comma(p.fullname)}" }
+    }
+  end
+
+  def update_report_model_cache(skip_report_learner_update = false)
+    unless (skip_report_learner_update)
+      # We need to keep this in for now, to keep the ReportLearner up-to-date for the built-in reports.
+      # update_fields also updates the activity completion status as a side-effect, something that would
+      # be easy to re-add here if/when we remove ReportLearners
+      self.report_learner.update_fields
+    end
+
+    # mostly to stop spec tests from failing
+    unless (self.student && self.student.user && self.offering && self.offering.clazz && self.offering.clazz.teachers)
+      return
+    end
+
+    if !ENV['ELASTICSEARCH_URL']
+      return error("Elasticsearch endpoint url not set")
+    end
+
+    update_url = "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{self.id}/_update"
+
+    # try to update learner document in ES. We may throw an error trying to get a field, so wrap this in begin/rescue
+    begin
+      # doc_as_upsert means update if exists, create if it doesn't
+      HTTParty.post(update_url,
+        :body => {
+          :doc => elastic_search_learner_model,
+          :doc_as_upsert => true
+        }.to_json,
+        :headers => { 'Content-Type' => 'application/json' } )
+    rescue => e
+      Rails.logger.error("Error updating Elasticsearch learner document for learner #{self.id}: #{e.message}")
+    end
+  end
+
+  def update_answers
+    report_util = Report::UtilLearner.new(self)
+
+    answersMeta = {
+      :num_answerables => report_util.embeddables.size,
+      :num_answered => report_util.saveables.count { |s| s.answered? },
+      :num_submitted => report_util.saveables.count { |s| s.submitted? },
+      :num_correct => report_util.saveables.count { |s|
+          (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
+        },
+      :complete_percent => report_util.complete_percent
+    }
+  end
+
+  def escape_comma(string)
+    string&.gsub(',', ' ')
   end
 end
