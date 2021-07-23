@@ -79,10 +79,11 @@ exports.lambdaHandler = async (event, context) => {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log("Error occured:");
+      console.log(err.stack);
       response = {
         statusCode: 500,
-        body: `${err.toString()}\n\n${err.stack}`
+        body: err.stack
       }
     }
 
@@ -139,23 +140,23 @@ function validateJSON(event) {
 async function fetchLearnerData(jwt, query, learnersApiUrl, pageSize) {
   const queryParams = {
     query,
-    page_size: pageSize,
-    start_from: 0
+    page_size: pageSize
   };
   const allLearners = [];
   let foundAllLearners = false;
-  let totalLearnersFound = 0;
 
   while (!foundAllLearners) {
     const res = await getLearnerDataWithJwt(learnersApiUrl, queryParams, jwt);
     if (res.json.learners) {
+      console.log(`Recieved ${res.json.learners.length} learners`);
+      console.log(`  lastHitSortValue: ${res.json.lastHitSortValue}`);
+
       allLearners.push(res.json.learners);
 
-      if (res.json.learners.length < pageSize) {
+      if (res.json.learners.length < pageSize && res.json.lastHitSortValue) {
         foundAllLearners = true;
       } else {
-        totalLearnersFound += res.json.learners.length;
-        queryParams.start_from = totalLearnersFound;
+        queryParams.search_after = res.json.lastHitSortValue;
       }
     } else {
       throw new Error("Malformed response from the portal: " + JSON.stringify(res));
@@ -165,15 +166,43 @@ async function fetchLearnerData(jwt, query, learnersApiUrl, pageSize) {
 }
 
 async function getLearnerDataWithJwt(learnersApiUrl, queryParams, jwt) {
-  return axios.post(learnersApiUrl, queryParams,
-    {
-      headers: {
-        "Authorization": `Bearer/JWT ${jwt}`
+  try {
+    const res = await axios.post(learnersApiUrl, queryParams,
+      {
+        headers: {
+          "Authorization": `Bearer/JWT ${jwt}`
+        }
       }
-    }
-  ).then((res) => {
+    );
     return res.data;
-  }, (error) => {
-    throw error;
-  });
+  } catch (error) {
+    if (error.response) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      const details = JSON.stringify({
+        url: error.config.url,
+        method: error.config.method,
+        requestData: queryParams,
+        requestHeaders: error.config.headers,
+        responseStatus: error.response.status,
+        responseData: error.response.data
+      }, null, 2);
+      throw new Error(`Request failed, details: ${details}`);
+    } else if (error.request) {
+      // The request was made but no response was received
+      // `error.request` is an instance of http.ClientRequest in node.js
+      const details = JSON.stringify({
+        url: error.config.url,
+        method: error.config.method,
+        requestData: queryParams,
+        requestHeaders: error.config.headers,
+        clientRequest: error.request
+      }, null, 2);
+      throw new Error(`No response received, details: ${details}`);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      throw new Error(`Request setup error ${error.message}
+        config: ${JSON.stringify(error.config, null, 2)}`);
+    }
+  }
 }

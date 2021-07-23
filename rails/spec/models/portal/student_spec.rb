@@ -1,30 +1,28 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Student do
-  before(:each) do
-    @student = FactoryBot.create(:portal_student)
-  end
+  let(:student) { FactoryBot.create(:portal_student) }
 
   describe "when a clazz is added to a students list of clazzes" do
     it "the students clazz list increases by one if the student is not already enrolled in that class" do
       clazz = FactoryBot.create(:portal_clazz)
-      expect(@student.clazzes).to be_empty
-      @student.add_clazz(clazz)
-      @student.reload
-      expect(@student.clazzes).not_to be_empty
-      expect(@student.clazzes).to include(clazz)
-      expect(@student.clazzes.size).to eq(1)
+      expect(student.clazzes).to be_empty
+      student.add_clazz(clazz)
+      student.reload
+      expect(student.clazzes).not_to be_empty
+      expect(student.clazzes).to include(clazz)
+      expect(student.clazzes.size).to eq(1)
     end
 
     it "the students clazz list should stay the same if the same clazz is added multiple times" do
       clazz = FactoryBot.create(:portal_clazz)
-      expect(@student.clazzes).to be_empty
-      @student.add_clazz(clazz)
-      @student.add_clazz(clazz)
-      @student.reload
-      expect(@student.clazzes).not_to be_empty
-      expect(@student.clazzes).to include(clazz)
-      expect(@student.clazzes.size).to eq(1)
+      expect(student.clazzes).to be_empty
+      student.add_clazz(clazz)
+      student.add_clazz(clazz)
+      student.reload
+      expect(student.clazzes).not_to be_empty
+      expect(student.clazzes).to include(clazz)
+      expect(student.clazzes.size).to eq(1)
     end
   end
 
@@ -33,7 +31,7 @@ describe Portal::Student do
 
     first_name = "Nametest"
     last_name  = "Testuser"
-    @student.user = FactoryBot.create(:user, {
+    student.user = FactoryBot.create(:user, {
       :first_name => first_name,
       :last_name => last_name,
       :login => Portal::Student.generate_user_login(first_name, last_name),
@@ -41,11 +39,44 @@ describe Portal::Student do
       :password_confirmation => "password",
       :email => "test@test.com"
     })
-    expect(@student.user.login).to eq("ntestuser")
-    expect(Portal::Student.generate_user_login(@student.first_name, @student.last_name)).to eq(@student.user.login + "1")
+    expect(student.user.login).to eq("ntestuser")
+    expect(Portal::Student.generate_user_login(student.first_name, student.last_name)).to eq(student.user.login + "1")
   end
 
+  describe "when a permission form is added to a student" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:permission_form) { FactoryBot.create(:permission_form, project: project) }
+    let(:learner) { FactoryBot.create(:full_portal_learner) }
+    let(:student) { learner.student }
 
+    it "the report learner info of the student is updated" do
+
+      # In theory the following 'with' clause should work. It would be more concise and provides better
+      # error reporting:
+      #   .with(body: hash_including({doc: {learner_id: learner.id, permission_forms_id: []}}))
+      # But it didn't work.
+      stub = WebMock.stub_request(:post, "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{learner.id}/_update")
+        .with{ |request|
+          doc = JSON.parse(request.body)["doc"]
+          doc["learner_id"] == learner.id && doc["permission_forms_id"].empty?}
+        .to_return(status: 200, body: "", headers: {})
+      expect(learner.report_learner.permission_forms_id).to be_blank
+      expect(stub).to have_been_requested
+
+      # reset WebMock to make it easier to track down errors
+      WebMock.reset!
+      stub = WebMock.stub_request(:post, "#{ENV['ELASTICSEARCH_URL']}/report_learners/doc/#{learner.id}/_update")
+        .with{ |request|
+          doc = JSON.parse(request.body)["doc"]
+          doc["learner_id"] == learner.id && doc["permission_forms_id"] == [permission_form.id] }
+        .to_return(status: 200, body: "", headers: {})
+
+      student.permission_forms = [ permission_form ]
+      learner.report_learner.reload
+      expect(learner.report_learner.permission_forms_id).to eq(permission_form.id.to_s)
+      expect(stub).to have_been_requested
+    end
+  end
 
   # TODO: auto-generated
   describe '.generate_user_email' do

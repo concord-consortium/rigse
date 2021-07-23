@@ -4,21 +4,26 @@ The Portal Researcher report system uses Elasticsearch to find the student data 
 reported on. When a report is run it currently pulls data directly from the database
 not Elasticsearch.
 
-The Elasticsearch service is kept up-to-date using logstash.  Logstash periodically scans
-mysql for changes and then sends those changes to Elasticsearch.
+The Elasticsearch service is kept up-to-date by pushing learner objects to the database
+each time a learner is created or changes. There is also a rake task,
+app:report:update_elastic_search_learners, which will find all learners and push them
+to the database.
 
-The docker-compose.yml takes care of setting a docker container with elasticsearch and
-logstash locally. Additionally to help with debugging the Elasticsearch container includes
-Kibana. Kibana is a UI for searching and displaying data in Elasticsearch.  These 3
-components together are called the ELK stack.
+The docker-compose.yml takes care of setting a docker container with elasticsearch locally.
+Additionally to help with debugging the Elasticsearch container includes Kibana. Kibana is
+a UI for searching and displaying data in Elasticsearch.
+
+Typically a third application, Logstash, is used to pipe data from the Rails DB to the
+ES database, but because we are updating the ES DB by hand, this isn't needed. When
+Elasticsearch, Logstash and Kibana are used together this is called the ELK stack.
 
 When the portal is run in AWS. An AWS managed Elasticsearch domain is used instead of a
-docker container. Logstash is run as a docker container.
+docker container.
 
 If you don't want to use docker to manage all of this, below are some untested directions
-for setting the ELK stack locally.
+for setting the E(L)K stack locally.
 
-## Setting up the ELK stack locally
+## Setting up the E(L)K stack locally
 
 Prerequisits: Java
 
@@ -38,24 +43,3 @@ https://www.elastic.co/guide/en/elasticsearch/guide/current/running-elasticsearc
 2. `cd path/to/kibana-5.x.y`
    `bin/kibana`
 3. Test by navigating to http://localhost:5601
-
-### Logstash
-
-1. Download from https://www.elastic.co/downloads/logstash
-2. Copy the mysql-connector-java-5.1.41-bin.jar into `path/to/logstash-5.x.y/bin`, or
-   download new version from https://dev.mysql.com/downloads/connector/j/5.1.html
-3. `cd path/to/logstash-5.x.y`
-4. Install JDBC plugin: `bin/logstash-plugin install logstash-input-jdbc`
-5. Setup config file as described in `Running Logstash`
-6. Check config: `bin/logstash -f docker/logstash/logstash-dev.conf --config.test_and_exit`
-7. Start data pipe: `bin/logstash -f docker/logstash/logstash-dev.conf --config.reload.automatic`
-
-## Running Logstash
-
-Use one of the config files in, `docker/logstash` look at the readme in that folder to
-see the environment variables the configuration file requires.
-
-Run `bin/logstash -f docker/logstash/logstash-dev.conf --config.reload.automatic`
-
-From a fresh start, if you have a large local database it could take 10 minutes to move
-over the data. Running this in the future will only move over new or changed data.

@@ -2,6 +2,19 @@ require 'digest/md5'
 
 class API::V1::ReportLearnersEsController < API::APIController
 
+  class ESError < StandardError
+    attr_reader :details
+    def initialize(msg="Elastic Search Error", details=null)
+      @details = details
+      super(msg)
+    end
+  end
+
+  rescue_from ESError, with: :error_500
+  def error_500(e)
+    error(e.message, 500, e.details)
+  end
+
   public
 
   # Returns Elasticsearch query of report_learners, with filters and
@@ -41,16 +54,16 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     # Note that Report::Learner::Selector is a little helper that actually calls
     # API::V1::ReportLearnersEsController.query_es.
-    learner_selector = Report::Learner::Selector.new(params, current_user, {:include_runnable_and_learner => true})
+    learner_selector = Report::Learner::Selector.new(params, current_user, { learner_type: :elasticsearch })
     # In the future, we might want to extend this query format and add other filters, e.g. dates.
     response = {
       type: "learners",
       version: "1.1",
-      learners: learner_selector.learners.map do |l|
+      learners: learner_selector.es_learners.map do |l|
         {
-          run_remote_endpoint: l.learner ? l.learner.remote_endpoint_url : nil,
+          run_remote_endpoint: l.remote_endpoint_url,
           class_id: l.class_id,
-          runnable_url: l.runnable && l.runnable.respond_to?(:url) ? l.runnable.url : nil
+          runnable_url: l.runnable_url
         }
       end,
       user: {
@@ -108,8 +121,11 @@ class API::V1::ReportLearnersEsController < API::APIController
   # https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html
   #
   # @param query - (required) query from external_report_query_jwt
-  # @param page_size - (required) number of learners per page, hard-capped at 2000
-  # @param start_from - (optional) learner index to start from for the next page
+  # @param page_size - (required) number of learners per page, hard-capped at 5000
+  # @param search_after - (optional) sorted document index to start from for the next page.
+  #       When this API is called, every doc returned by ES has a unique sort value. The last document's sort
+  #       value is returned by this API as `lastHitSortValue`. Passing this same value in as `search_after`
+  #       will resulting in fetching the next page of results. See the external-report-demo for an example.
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
 
@@ -117,25 +133,26 @@ class API::V1::ReportLearnersEsController < API::APIController
     # see: https://github.com/rails/rails/issues/26569
     query = params["query"] || {}
     page_size = params["page_size"].to_i
-    start_from = params["start_from"].to_i || 0
+    search_after = params["search_after"] || nil
 
     if (page_size == nil || page_size < 1)
       return error "param page_size must be a positive number", 400
-    elsif (page_size > 2000)
-      return error "param page_size may not be larger than 2000", 400
+    elsif (page_size > 5000)
+      return error "param page_size may not be larger than 5000", 400
     end
 
     query[:size_limit] = page_size
 
     learner_selector = Report::Learner::Selector.new(query, current_user, {
-      :include_runnable_and_learner => true,
-      :start_from => start_from
+      learner_type: :elasticsearch,
+      search_after: search_after
     })
 
     response = {
       json: {
         version: "1",
-        learners: learner_selector.learners.map {|l| self.class.detailed_learner_info l}
+        learners: learner_selector.es_learners.map {|l| self.class.detailed_learner_info l},
+        lastHitSortValue: learner_selector.last_hit_sort_value
       }
     }
     render json: response.to_json
@@ -335,11 +352,23 @@ class API::V1::ReportLearnersEsController < API::APIController
         :bool => {
           :filter => filters
         }
-      }
+      },
+      :sort => [
+        {
+          :created_at => {
+            :order => "asc"
+          }
+        },
+        {
+          :learner_id => {
+            :order => "asc"
+          }
+        }
+      ]
     }
 
-    if options[:start_from]
-      query[:from] = options[:start_from]
+    if options[:search_after]
+      query[:search_after] = options[:search_after]
     end
 
     logger.info "ES Query:"
@@ -348,18 +377,28 @@ class API::V1::ReportLearnersEsController < API::APIController
     esSearchResult = HTTParty.post(search_url,
       :body => query.to_json,
       :headers => { 'Content-Type' => 'application/json' } )
+
+    if !esSearchResult.success?
+      raise ESError.new("Elastic Search Error", {
+        response_body: esSearchResult.body,
+        response_headers: esSearchResult.headers,
+        request_url: search_url,
+        request_body: query
+      })
+    end
+
     return esSearchResult
   end
 
   def self.detailed_learner_info(learner)
-    teacherIds = learner.teachers_id ? learner.teachers_id.split(', ') : []
+    teacherIds = learner.teachers_id
     teachers = teacherIds.each_with_index.map do |id, i|
       {
         user_id: id,
-        name: learner.teachers_name ? learner.teachers_name.split(', ')[i] : nil,
-        district: learner.teachers_district ? learner.teachers_district.split(', ')[i] : nil,
-        state: learner.teachers_state ? learner.teachers_state.split(', ')[i] : nil,
-        email: learner.teachers_email ? learner.teachers_email.split(', ')[i] : nil,
+        name: learner.teachers_name[i],
+        district: learner.teachers_district[i],
+        state: learner.teachers_state[i],
+        email: learner.teachers_email[i],
       }
     end
     {
@@ -370,12 +409,16 @@ class API::V1::ReportLearnersEsController < API::APIController
       school: learner.school_name,
       user_id: learner.user_id,
       permission_forms: learner.permission_forms,
-      username: learner.username,
-      student_name: learner.student_name,
+
+      # These two fields are not stored in ES, the Selector class looked up the user
+      username: learner.user.login,
+      student_name: learner.user.name,
+
       last_run: learner.last_run,
-      run_remote_endpoint: learner.learner ? learner.learner.remote_endpoint_url : nil,
-      runnable_url: learner.runnable && learner.runnable.respond_to?(:url) ? learner.runnable.url : nil,
-      teachers: teachers
+      run_remote_endpoint: learner.remote_endpoint_url,
+      runnable_url: learner.runnable_url,
+      teachers: teachers,
+      created_at: learner.created_at
     }
   end
 end

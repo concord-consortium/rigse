@@ -2,14 +2,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Learner do
   let(:learner)          { FactoryBot.create(:full_portal_learner) }
-  let(:attributes)  do
-    {
-      :student        => learner.student,
-      :offering       => learner.offering,
-      :report_learner => learner.report_learner
-    }
-  end
-  subject           { Portal::Learner.create!(attributes) }
+  subject                { learner }
 
   describe "a bare instance" do
     it "should be valid" do
@@ -119,6 +112,27 @@ describe Portal::Learner do
       expect(result).not_to be_nil
     end
   end
+
+  describe "update_report_model_cache" do
+    it "should call the ElasticSearch API with the approriate data" do
+      WebMock::RequestRegistry.instance.reset!
+
+      # by calling `subject` we trigger the Create method to be called for this test
+      subject
+
+      assert_requested(:post, /report_learners\/doc/,
+        times: 1) { |req|
+          req.headers == {'Content-Type' => 'application/json'}
+          body = JSON.parse(req.body)
+          body["doc"] != nil
+          body["doc"]["learner_id"].is_a? Integer
+          body["doc"]["student_id"].is_a? Integer
+          body["doc"]["user_id"].is_a? Integer
+          body["doc"]["offering_name"] =~ /test investigation/
+          body["doc_as_upsert"] == true
+      }
+    end
+  end 
 
   describe '#update_last_run' do
     it 'should modify the last_run with the current time' do

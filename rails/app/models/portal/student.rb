@@ -104,8 +104,8 @@ class Portal::Student < ApplicationRecord
   end
 
   def update_report_permissions(permission_form)
-    report_learners = Report::Learner.where(:student_id => self.id)
     report_learners.each { |l| l.update_permission_forms; l.save }
+    learners.each { |l| l.update_report_model_cache(true) }
   end
 
   ## TODO: fix with has_many finderSQL
@@ -179,7 +179,7 @@ class Portal::Student < ApplicationRecord
         if sa.offering.runnable == nca.runnable
           learner_to_update = Portal::Learner.find(sa.id)
           learner_to_update.update_attribute('offering_id', nca.id)
-          learner_to_update.report_learner.update_fields
+          learner_to_update.update_report_model_cache
           # add assignment to JSON for report API call
           assignments << {
             new_resource_link_id: nca.id.to_s,

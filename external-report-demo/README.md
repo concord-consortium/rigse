@@ -40,6 +40,12 @@ You can launch the service on a local server with
 sam local start-api
 ```
 
+Because of an [issue with sam local](https://github.com/aws/aws-lambda-runtime-interface-emulator/issues/15#issuecomment-792448261), it can be better to run this command instead:
+```bash
+sam local start-api 2>&1 | tr "\r" "\n"
+```
+Otherwise multiline message get squashed together. 
+
 ## Running tests
 
 Start the server running on port 3001: `sam local start-lambda`

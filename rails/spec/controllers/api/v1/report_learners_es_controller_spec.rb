@@ -10,7 +10,8 @@ describe API::V1::ReportLearnersEsController do
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
 
-  let(:mock_school)    { FactoryBot.create(:portal_school, {:district => nil}) }
+  let(:district)       { FactoryBot.create(:portal_district) }
+  let(:mock_school)    { FactoryBot.create(:portal_school, {:district => district}) }
   let(:teacher_user1)  { FactoryBot.create(:confirmed_user, login: "teacher_user1") }
   let(:teacher_user2)  { FactoryBot.create(:confirmed_user, login: "teacher_user2") }
   let(:teacher1)       { FactoryBot.create(:portal_teacher, user: teacher_user1, schools: [mock_school]) }
@@ -81,7 +82,19 @@ describe API::V1::ReportLearnersEsController do
         "bool" => {
           "filter" => []
         }
-      }
+      },
+      "sort" => [
+        {
+          "created_at" => {
+            "order" => "asc"
+          }
+        },
+        {
+          "learner_id" => {
+            "order" => "asc"
+          }
+        }
+      ]
     }
   end
 
@@ -93,7 +106,19 @@ describe API::V1::ReportLearnersEsController do
         "bool" => {
           "filter" => []
         }
-      }
+      },
+      "sort" => [
+        {
+          "created_at" => {
+            "order" => "asc"
+          }
+        },
+        {
+          "learner_id" => {
+            "order" => "asc"
+          }
+        }
+      ]
     }
   end
 
@@ -103,22 +128,16 @@ describe API::V1::ReportLearnersEsController do
       hits: {
         hits: [
           {
-            _id: learner1.report_learner.id,
-            _source: {
-              runnable_type_and_id: 'externalactivity_1',
-            }
+            _id: learner1.id,
+            _source: learner1.elastic_search_learner_model
           },
           {
-            _id: learner2.report_learner.id,
-            _source: {
-              runnable_type_and_id: 'externalactivity_2',
-            }
+            _id: learner2.id,
+            _source: learner2.elastic_search_learner_model
           },
           {
-            _id: learner3.report_learner.id,
-            _source: {
-              runnable_type_and_id: 'externalactivity_2',
-            }
+            _id: learner3.id,
+            _source: learner3.elastic_search_learner_model
           }
         ]
       }
@@ -126,6 +145,9 @@ describe API::V1::ReportLearnersEsController do
   end
 
   before (:each) do
+    # This silences warnings in the console when running
+    generate_default_settings_with_mocks
+
     WebMock.stub_request(:post, /report_learners\/_search$/).
       to_return(:status => 200, :body => fake_response, :headers => { "Content-Type" => "application/json" })
   end
@@ -419,6 +441,8 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"].length).to eq 3
           expect(filter["learners"][0]["student_id"].to_i).to be_an_instance_of(Integer)
           expect(filter["learners"][0]["learner_id"].to_i).to eq learner1.id
+          expect(filter["learners"][0]["student_name"]).to eq learner1.user.name
+          expect(filter["learners"][0]["username"]).to eq learner1.user.login
           expect(filter["learners"][0]["class_id"].to_i).to eq clazz1.id
           expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
           expect(filter["learners"][0]["teachers"].length).to eq 1
@@ -437,6 +461,51 @@ describe API::V1::ReportLearnersEsController do
         it "renders an error if page_size is too large" do
           get :external_report_learners_from_jwt, params: { query: {}, page_size: 10000 }
           expect(response.status).to eql(400)
+        end
+
+      end
+
+      describe "GET external_report_learners_from_jwt with elastic search error" do
+        let(:fake_error_response) do
+          # This is a guess about what an ES error might look like
+          {
+            error: "Fake ES Error"
+          }.to_json
+        end
+
+        before(:each) do
+          WebMock.stub_request(:post, /report_learners\/_search$/).
+            to_return(:status => 500, :body => fake_error_response,
+              :headers => { "Content-Type" => "application/json" })
+        end
+
+        it "renders the error returned by ES" do
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
+          resp = JSON.parse(response.body)
+          expect(resp['message']).to eql("Elastic Search Error")
+          expect(resp['details']['response_body']).to eql(fake_error_response)
+          expect(response.status).to eql(500)
+        end
+
+      end
+
+      describe "GET external_report_learners_from_jwt with no hits" do
+        let(:fake_response) do
+          # This is a guess about what the response will look like with no matches
+          {
+            hits: {
+              hits: []
+            }
+          }.to_json
+        end
+
+        it "renders an empty list of learners" do
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
+          expect(response.status).to eql(200)
+          resp = JSON.parse(response.body)
+          filter = resp["json"]
+          expect(filter["learners"].length).to eq 0
+          expect(filter["lastHitSortValue"]).to eq nil
         end
 
       end
@@ -492,7 +561,7 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
           expect(filter["learners"][0]["teachers"].length).to eq 1
           expect(filter["learners"][0]["teachers"][0]["user_id"].to_i).to eq teacher1.id
-          expect(filter["learners"][0]["teachers"][0]["district"]).to eq nil
+          expect(filter["learners"][0]["teachers"][0]["district"]).to eq "Rails Portal-district"
         end
       end
     end
