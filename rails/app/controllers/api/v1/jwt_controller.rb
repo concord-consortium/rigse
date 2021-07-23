@@ -31,6 +31,45 @@ class API::V1::JwtController < API::APIController
     end
   end
 
+  def can_access_user(user, target_user_id)
+    return false if user.blank?
+
+    return true if user.has_role?('manager','admin','researcher')
+
+    # Ideally the following logic would be used:
+    #
+    # If the user is a project admin
+    # - is the target user a teacher in one of the admin's cohort
+    # - is the target user a student of a teacher in one of the admin's cohorts
+
+    # If the user is a project researcher
+    # - is the target user a teacher in one of the researcher's cohort
+    # - is the target user a student with a permission from one of the researcher's projects
+
+    # However we only currently need to support students with permission forms so that is the
+    # only part of this logic we'll implement.
+    # So we need to get all of the projects the current user is a project admin or researcher of
+    # Then get all of their permission_forms
+    # Then see if the target_user has any of those permission forms.
+    # Hopefully we can do all of that in a single SQL query for the best performance
+    user_permission_form_students =
+      user.project_users.joins(project: {permission_forms: {portal_student_permission_forms: :portal_student}})
+    only_admin_or_researcher_projects =
+      user_permission_form_students.where("admin_project_users.is_admin = true OR admin_project_users.is_researcher = true")
+    return only_admin_or_researcher_projects.where(portal_students: {user_id: target_user_id}).exists?
+
+    # This active record turns into something like:
+    # SELECT  1 AS one
+    # FROM `admin_project_users`
+    # INNER JOIN `admin_projects` ON `admin_projects`.`id` = `admin_project_users`.`project_id`
+    # INNER JOIN `portal_permission_forms` ON `portal_permission_forms`.`project_id` = `admin_projects`.`id`
+    # INNER JOIN `portal_student_permission_forms` ON `portal_student_permission_forms`.`portal_permission_form_id` = `portal_permission_forms`.`id`
+    # INNER JOIN `portal_students` ON `portal_students`.`id` = `portal_student_permission_forms`.`portal_student_id`
+    # WHERE `admin_project_users`.`user_id` = 1
+    #   AND (admin_project_users.is_admin = true OR admin_project_users.is_researcher = true)
+    #   AND `portal_students`.`user_id` = 8 LIMIT 1
+  end
+
   def handle_initial_auth
     user, role = check_for_auth_token(params)
 
@@ -39,33 +78,55 @@ class API::V1::JwtController < API::APIController
       teacher = role[:teacher]
     end
 
-    offering_id = params[:resource_link_id]
-    if offering_id
-      if user.portal_student
-        # if there is a valid resource_link_id override any learner that has been
-        # found in the auth token
-        learner = user.portal_student.learners.where(offering_id: offering_id).first
-        if learner.blank?
-          raise StandardError, "current student does not have this resource_link_id"
-        end
-      elsif user.portal_teacher
-        # We check to make sure the resource_link_id is valid here
-        # For teachers the usage of it happens later in the code.
-        if user.portal_teacher.offerings.where(id: offering_id).exists?
-          teacher = user.portal_teacher
-        else
-          raise StandardError, "current teacher has not assigned this resource_link_id"
-        end
-      else
-        raise StandardError, "resource_link_id requires a student or teacher user"
-      end
-    end
-
     # FIXME: there is inconsiency here
     # When the user is a teacher, but the auth token (grant) doesn't have the teacher set,
     # the returned teacher here will be nil, unless a valid resource_link_id is passed in.
 
-    [ user, learner, teacher ]
+    resource_link_id = params[:resource_link_id]
+    if resource_link_id
+      if user.portal_student
+        # if there is a valid resource_link_id override any learner that has been
+        # found in the auth token
+        # FIXME: if this user is a student of this resource_link, but they haven't run it
+        # yet, they won't have a learner, but they should still have access to it
+        learner = user.portal_student.learners.where(offering_id: resource_link_id).first
+        if learner.blank?
+          raise StandardError, "current student does not have this resource_link_id"
+        end
+
+      elsif user.portal_teacher && user.portal_teacher.offerings.where(id: resource_link_id).exists?
+        # We check to make sure the resource_link_id is valid here
+        # We override the teacher from the auth token (if there even was one)
+        teacher = user.portal_teacher
+
+      else
+        # This case is really for only for firebase JWTs, there isn't a use case for admins or
+        # researchers needing portal JWTs for specific classes or students.
+
+        # This is a user that isn't a student or teacher of this offering, and they provided
+        # a resource_link_id
+        # In this case they also have to provide a target_user_id to indicate which
+        # student or teacher of resource_link they want access to.
+        # So we could call it target_user_id. In theory we could allow admins to use
+        # this to access teacher data associated with the resource_link_id. For example
+        # teacher report settings.
+        if params[:target_user_id].blank?
+          raise StandardError, "When the resource_link_id is sent and the user is not a" +
+            "student or teacher of this resource link, a target_user_id param is required."
+        end
+
+        if !can_access_user(user, params[:target_user_id])
+          raise StandardError, "Current user does not have permission to view target user."
+        end
+
+        # If the auth token included a teacher or student in it, we override them since
+        # we are going to use generic user access at this point
+        teacher = nil
+        learner = nil
+      end
+    end
+
+    [user, learner, teacher]
   end
 
   def jwt_user_id(user)
@@ -85,6 +146,8 @@ class API::V1::JwtController < API::APIController
         :user_type => "learner",
         :user_id => url_for(user),
         :learner_id => learner.id,
+        # Maybe this is needed by the portal report, which is why the resource_link_id
+        # is need on the portal tokens
         :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
         :offering_id => offering.id
       }
@@ -109,29 +172,36 @@ class API::V1::JwtController < API::APIController
 
     raise StandardError, "Missing firebase_app parameter" if params[:firebase_app].blank?
 
-    claims = {}
+    # Firebase auth rules expect all the claims to be in a sub-object named "claims".
+    # All the new properties should go there. Other apps can still read them.
+    sub_claims = {
+      platform_id: APP_CONFIG[:site_url],
+      platform_user_id: user.id,
+      user_id: jwt_user_id(user)
+    }
+    claims = {
+      claims: sub_claims
+    }
+
     if learner
       offering = learner.offering
-      claims = {
-        # Firebase auth rules expect all the claims to be in a sub-object named "claims".
-        # All the new properties should go there. Other apps can still read them.
-        :claims => {
-          :platform_id => APP_CONFIG[:site_url],
-          :platform_user_id => user.id,
-          :user_type => "learner",
-          :user_id => jwt_user_id(user),
-          :class_hash => offering.clazz.class_hash,
-          :offering_id => offering.id
-        },
-        # Depreciated, used by some CC client apps. Do not add more data here, it's better to add that to claims
-        # object above, as then Firebase auth rules can read these properties too.
-        :domain => root_url,
-        :externalId => learner.id,
-        :returnUrl => learner.remote_endpoint_url,
-        :logging => offering.clazz.logging || offering.runnable.logging,
-        :domain_uid => user.id,
-        :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
-      }
+
+      sub_claims.merge!({
+        user_type: "learner",
+        class_hash: offering.clazz.class_hash,
+        offering_id: offering.id
+      })
+
+      # Depreciated, used by some CC client apps. Do not add more data here, you should
+      # add it to sub_claims so the Firebase auth rules can read the properties.
+      claims.merge!({
+        domain: root_url,
+        externalId: learner.id,
+        returnUrl: learner.remote_endpoint_url,
+        logging: offering.clazz.logging || offering.runnable.logging,
+        domain_uid: user.id,
+        class_info_url: offering.clazz.class_info_url(request.protocol, request.host_with_port)
+      })
     elsif teacher
 
       # add a class_hash claim if a class_hash or resource_link_id param is present
@@ -144,40 +214,46 @@ class API::V1::JwtController < API::APIController
         end
         class_hash = params[:class_hash]
       elsif params[:resource_link_id].present?
-        # The resource_link_id param was already verified in the handle_initial_auth method
-        # The offering_id is not added to the claims because we don't want to restrict the
-        # teacher to just this one offering.
+        # The resource_link_id param was already verified in the handle_firebase_params method
         offering = Portal::Offering.find(params[:resource_link_id])
         class_hash = offering.clazz.class_hash
       end
 
-      claims = {
-        # Firebase auth rules expect all the claims to be in a sub-object named "claims".
-        # All the new properties should go there. Other apps can still read them.
-        :claims => {
-          :platform_id => APP_CONFIG[:site_url],
-          :platform_user_id => user.id,
-          :user_type => "teacher",
-          :user_id => jwt_user_id(user),
-          :class_hash => class_hash
-        },
-        # Depreciated, used by some CC client apps. Do not add more data here, it's better to add that to claims
-        # object above, as then Firebase auth rules can read these properties too.
-        :domain => root_url,
-        :domain_uid => user.id,
-      }
+      sub_claims.merge!({
+        user_type: "teacher",
+        class_hash: class_hash,
+        # The offering_id is not added to the claims because we don't want to restrict the
+        # teacher to just this one offering.
+      })
+
+      # Depreciated, used by some CC client apps. Do not add more data here, you should
+      # add it to sub_claims so the Firebase auth rules can read the properties.
+      claims.merge!({
+        domain: root_url,
+        domain_uid: user.id,
+      })
     else
-      claims = {
-        # Firebase auth rules expect all the claims to be in a sub-object named "claims".
-        # All the new properties should go there. Other apps can still read them.
-        :claims => {
-          :platform_id => APP_CONFIG[:site_url],
-          :platform_user_id => user.id,
-          :user_type => "user",
-          :user_id => jwt_user_id(user)
-        }
-      }
-      # since the generic user case was added after domain and domain_uid where deprecated they are not set here
+
+      sub_claims.merge!({
+        user_type: "user",
+      })
+
+      resource_link_id = params[:resource_link_id]
+      if resource_link_id
+        # The resource_link_id param was already verified in the handle_firebase_params method
+
+        offering = Portal::Offering.find(resource_link_id)
+        class_hash = offering.clazz.class_hash
+        sub_claims.merge!({
+          class_hash: class_hash,
+          offering_id: offering.id,
+          # Any systems granting access based on this target_user_id claim should scope it to the
+          # class_hash and or offering_id so the main user doesn't gain access to all of the target user's
+          # data. Our policies don't always restrict access like this, but they might change in the future.
+          target_user_id: params[:target_user_id].to_i
+        })
+      end
+
     end
 
     # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string

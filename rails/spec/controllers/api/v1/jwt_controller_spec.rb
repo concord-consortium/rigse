@@ -270,7 +270,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               end
             end
           end
-          context "and the user of the auth header token is not a teacher or student" do
+          context "and the user of the auth header token is not a teacher, student, reseracher, or admin" do
             it "returns a 400" do
               post :firebase,
                 {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
@@ -278,6 +278,61 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               expect(response.status).to eq(400)
             end
           end
+
+          shared_examples "valid jwt for target user" do
+            it "returns a valid JWT with teacher params, and a class_hash claim" do
+              decoded_token = decode_token()
+              expect(decoded_token[:data]).to include(
+                "uid" => uid
+              )
+              expect(decoded_token[:data]["claims"]).to include(
+                "user_type" => "user",
+                "user_id" => url_for_user,
+                "platform_id" => site_url,
+                "platform_user_id" => user.id,
+                "class_hash" => be_present,
+                "offering_id" => be_present,
+                "target_user_id" => be_present
+              )
+            end
+          end
+
+          context "and the user of the auth header token is a portal admin" do
+            let(:user) {
+              # instead of using FactoryBot.create(:admin_user)
+              # a teacher user is created since that is what will happen in practice
+              teacher = FactoryBot.create(:portal_teacher)
+              user = teacher.user
+              user.add_role('admin')
+              user
+            }
+            context "and the target_user_id is not sent" do
+              it "returns a 400" do
+                post :firebase,
+                  {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
+                  :format => :json
+                expect(response.status).to eq(400)
+              end
+            end
+            context "and a target_user_id is sent" do
+              before(:each){
+                post :firebase,
+                  { :firebase_app => "test app", :resource_link_id => offering.id.to_s, :target_user_id => 9999 },
+                  :format => :json
+              }
+
+              it_behaves_like "valid jwt for target user"
+
+            end
+
+            # TODO: handle all of the other cases
+          end
+          # context "and a target_user_id is sent" do
+          #
+          #   context "when the user is an admin" do
+          #
+          #   end
+          # end
         end
       end
 
