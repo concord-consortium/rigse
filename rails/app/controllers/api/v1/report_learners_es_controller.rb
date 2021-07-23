@@ -406,6 +406,7 @@ class API::V1::ReportLearnersEsController < API::APIController
       class: learner.class_name,
       school: learner.school_name,
       user_id: learner.user_id,
+      offering_id: learner.offering_id,
       permission_forms: learner.permission_forms,
 
       # These two fields are not stored in ES, the Selector class looked up the user
