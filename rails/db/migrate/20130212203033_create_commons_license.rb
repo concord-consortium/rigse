@@ -1,4 +1,4 @@
-class CreateCommonsLicense < ActiveRecord::Migration
+class CreateCommonsLicense < ActiveRecord::Migration[5.1]
   def up
     create_table :commons_licenses, :id => false do |t|
       t.string   :code, :uniqueness => true, :null => false, :primary_key => true
@@ -9,7 +9,7 @@ class CreateCommonsLicense < ActiveRecord::Migration
       t.string   :image
       t.timestamps
     end
-    execute "ALTER TABLE commons_licenses ADD PRIMARY KEY (code);"
+    # execute "ALTER TABLE commons_licenses ADD PRIMARY KEY (code);"
   end
 
   def down

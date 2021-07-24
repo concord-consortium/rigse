@@ -2,9 +2,9 @@
   #flash
     .padded_contents
       %div.flash{:class => flash['notice'] ? "notice" : "warning"}
-        - if flash['notice'] 
+        - if flash['notice']
           = flash['notice']
-        - else 
+        - else
           = flash['warning']
         %span.close
           %i.fa.fa-times
@@ -39,8 +39,8 @@
         margin-left: 15px
 
 :javascript
-jQuery(function() {
-    jQuery('.flash span.close').click(function(){
-        jQuery('.flash').hide();
-    });
-});
+  jQuery(function() {
+      jQuery('.flash span.close').click(function(){
+          jQuery('.flash').hide();
+      });
+  });

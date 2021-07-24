@@ -54,7 +54,7 @@ describe "when the user signs in with Schoology" do
     #   oauth_request_token - the token sent to schoology
     shared_examples "redirects correctly to schoology" do
       it "redirects to schoology" do
-        get url
+        get url, params: {}
         if callback_params
           full_callback_url = "#{callback_url}?#{callback_params}"
         else
@@ -139,7 +139,7 @@ describe "when the user signs in with Schoology" do
     }
     context "with a basic callback" do
       it "redirects to users normal page" do
-        get "/users/auth/schoology/callback"
+        get "/users/auth/schoology/callback", params: {}
 
         expect(token_stub).to have_been_requested
         expect(user_stub).to have_been_requested
@@ -152,7 +152,7 @@ describe "when the user signs in with Schoology" do
       let(:callback_params) { "after_sign_in_path=#{CGI.escape("/somewhere")}" }
 
       it "redirects to the after_sign_in_path" do
-        get "/users/auth/schoology/callback?#{callback_params}"
+        get "/users/auth/schoology/callback?#{callback_params}", params: {}
 
         expect(token_stub).to have_been_requested
         expect(user_stub).to have_been_requested
@@ -165,7 +165,7 @@ describe "when the user signs in with Schoology" do
       let(:callback_params) { "after_sign_in_path=#{CGI.escape(after_sign_in_path)}" }
 
       it "redirects to the after_sign_in_path" do
-        get "/users/auth/schoology/callback?#{callback_params}"
+        get "/users/auth/schoology/callback?#{callback_params}", params: {}
 
         expect(token_stub).to have_been_requested
         expect(user_stub).to have_been_requested

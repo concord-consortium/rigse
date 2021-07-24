@@ -1,4 +1,4 @@
-class MoveScoreToSavables < ActiveRecord::Migration
+class MoveScoreToSavables < ActiveRecord::Migration[5.1]
 
   def up
     add_column :saveable_external_link_urls, :score, :integer

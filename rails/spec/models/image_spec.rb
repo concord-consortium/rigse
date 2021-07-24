@@ -269,10 +269,11 @@ describe Image do
   # TODO: auto-generated
   describe '#check_image_presence' do
     it 'check_image_presence' do
-      image = described_class.new
-      result = image.check_image_presence
+      no_filename_image = described_class.new
+      expect { no_filename_image.check_image_presence }.to raise_error
 
-      expect(result).not_to be_nil
+      result = subject.check_image_presence
+      expect(result).to eq(true)
     end
   end
 

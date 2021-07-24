@@ -1,4 +1,4 @@
-class Image < ActiveRecord::Base
+class Image < ApplicationRecord
   attr_accessor :is_reprocessing
 
   belongs_to :user
@@ -87,7 +87,8 @@ class Image < ActiveRecord::Base
   def check_image_presence
     if self.image_file_name.blank?
       self.errors.add(:image, :blank)
-      return false
+      # in Rails 5 instead of returning false to terminate the chain you throw :abort
+      throw(:abort)
     end
     return true
   end

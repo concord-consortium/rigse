@@ -1,4 +1,4 @@
-class CreateSaveableExternalLinks < ActiveRecord::Migration
+class CreateSaveableExternalLinks < ActiveRecord::Migration[5.1]
   def change
     create_table :saveable_external_links do |t|
       t.integer :embeddable_id

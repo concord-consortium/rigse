@@ -50,7 +50,7 @@ class Admin::ExternalReportsController < ApplicationController
     authorize ExternalReport
     @report = ExternalReport.find(params[:id])
     new_params = params[:external_report]
-    saved_successfully = @report.update_attributes(external_report_strong_params(new_params))
+    saved_successfully = @report.update(external_report_strong_params(new_params))
     if saved_successfully && new_params[:default_report_for_source_type] != nil
       # Automatically ensure that only one report is selected as a default one for a given source type.
       ExternalReport

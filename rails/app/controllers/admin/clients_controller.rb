@@ -50,7 +50,7 @@ class Admin::ClientsController < ApplicationController
   def update
     authorize Client
     @client = Client.find(params[:id])
-    if @client.update_attributes(client_strong_params(params[:client]))
+    if @client.update(client_strong_params(params[:client]))
       flash['notice']= 'Client was successfully updated.'
       redirect_to action: :index
     else

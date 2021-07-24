@@ -1,4 +1,4 @@
-class AddMissingIndexes < ActiveRecord::Migration
+class AddMissingIndexes < ActiveRecord::Migration[5.1]
   def up
     add_index :investigations, [:is_featured, :publication_status], :name => 'featured_public'
     add_index :investigations, :publication_status, :name =>'pub_status'

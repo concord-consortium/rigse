@@ -97,9 +97,6 @@ class HomeController < ApplicationController
   render layout: 'minimal'
   end
 
-  def requirements
-  end
-
   def admin
     authorize :home, :admin?
   end
@@ -126,26 +123,8 @@ class HomeController < ApplicationController
     render :plain=> view_context.clipboard_object_name(params)
   end
 
-  def missing_installer
-    @os = params['os']
-  end
-
   def test_exception
     raise 'This is a test. This is only a test.'
-  end
-
-  def report
-    respond_to do |format|
-      # this method uses classes in app/pdfs to generate the pdf:
-      format.html {
-        output = ::HelloReport.new.to_pdf
-        send_data output, :filename => "hello1.pdf", :type => "application/pdf"
-      }
-      # this method uses the prawn-rails gem to render the view:
-      #   app/views/home/report.pdf.prawn
-      # see: https://github.com/Volundr/prawn-rails
-      format.pdf { render :layout => false }
-    end
   end
 
   # def index

@@ -1,4 +1,4 @@
-class ChangeGseFieldTypes < ActiveRecord::Migration
+class ChangeGseFieldTypes < ActiveRecord::Migration[5.1]
   def self.up
     [ :ri_gse_assessment_targets, 
       :ri_gse_big_ideas, 

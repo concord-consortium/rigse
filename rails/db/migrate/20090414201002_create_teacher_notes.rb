@@ -1,4 +1,4 @@
-class CreateTeacherNotes < ActiveRecord::Migration
+class CreateTeacherNotes < ActiveRecord::Migration[5.1]
   def self.up
     
     #primary table

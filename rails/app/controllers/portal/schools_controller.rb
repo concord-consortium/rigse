@@ -2,8 +2,8 @@ class Portal::SchoolsController < ApplicationController
 
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_manager
-  before_filter :states_and_provinces, :only => [:new, :edit, :create, :update]
+  before_action :admin_or_manager
+  before_action :states_and_provinces, :only => [:new, :edit, :create, :update]
 
   protected
 
@@ -87,7 +87,7 @@ class Portal::SchoolsController < ApplicationController
   def update
     cancel = params[:commit] == 'Cancel'
     @portal_school = Portal::School.find(params[:id])
-    if @portal_school.update_attributes(portal_school_strong_params(params[:portal_school]))
+    if @portal_school.update(portal_school_strong_params(params[:portal_school]))
       flash['notice'] = 'Portal::School was successfully updated.'
       redirect_to action: :index
     else

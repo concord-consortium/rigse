@@ -1,4 +1,4 @@
-class DropInstallerReports < ActiveRecord::Migration
+class DropInstallerReports < ActiveRecord::Migration[5.1]
   def self.up
     drop_table :installer_reports
   end

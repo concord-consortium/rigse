@@ -1,4 +1,4 @@
-class CreateImports < ActiveRecord::Migration
+class CreateImports < ActiveRecord::Migration[5.1]
   def up
     create_table :imports, :force => true do |t|
       t.integer    :job_id

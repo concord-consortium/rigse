@@ -1,4 +1,4 @@
-class CreateEmbeddableSoundGraphers < ActiveRecord::Migration
+class CreateEmbeddableSoundGraphers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :embeddable_sound_graphers do |t|
       t.integer   "user_id"

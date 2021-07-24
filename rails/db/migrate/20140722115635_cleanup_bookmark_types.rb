@@ -1,10 +1,10 @@
-class CleanupBookmarkTypes < ActiveRecord::Migration
+class CleanupBookmarkTypes < ActiveRecord::Migration[5.1]
 
-  class Portal::Bookmark < ActiveRecord::Base
+  class Portal::Bookmark < ApplicationRecord
     self.table_name = :portal_bookmarks
   end
 
-  class Admin::Project < ActiveRecord::Base
+  class Admin::Project < ApplicationRecord
     self.table_name = :admin_projects
   end
 

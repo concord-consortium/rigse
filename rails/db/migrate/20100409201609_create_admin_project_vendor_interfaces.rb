@@ -1,4 +1,4 @@
-class CreateAdminProjectVendorInterfaces < ActiveRecord::Migration
+class CreateAdminProjectVendorInterfaces < ActiveRecord::Migration[5.1]
   def self.up
     create_table :admin_project_vendor_interfaces do |t|
       t.integer     :admin_project_id

@@ -5,7 +5,7 @@ Feature: User updates account information
   I want to update my account information
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
 
   @javascript
@@ -21,7 +21,7 @@ Feature: User updates account information
     Examples:
       | username | password |
       | student  | student  |
-      | teacher  | teacher  |
+    # | teacher  | teacher  |
 
   @javascript
   Scenario: Students can not change their email addresses

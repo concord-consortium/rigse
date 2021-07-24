@@ -1,4 +1,4 @@
-class CreateExternalUserDomains < ActiveRecord::Migration
+class CreateExternalUserDomains < ActiveRecord::Migration[5.1]
   def self.up
     create_table :external_user_domains do |t|
       t.string :name

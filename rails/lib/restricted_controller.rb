@@ -17,10 +17,6 @@ module RestrictedController
          require_roles('admin')
        end
 
-       def admin_or_config
-          force_signin unless current_visitor.has_role?('admin') || request.format == :config
-       end
-
        def require_roles(*roles)
          force_signin unless (current_visitor != nil &&  current_visitor.has_role?(*roles))
        end

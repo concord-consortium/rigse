@@ -1,4 +1,4 @@
-class FirebaseApp < ActiveRecord::Base
+class FirebaseApp < ApplicationRecord
   self.table_name = :firebase_apps
 
   validates_presence_of :name, :message => "can't be blank"

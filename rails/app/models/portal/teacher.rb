@@ -1,4 +1,4 @@
-class Portal::Teacher < ActiveRecord::Base
+class Portal::Teacher < ApplicationRecord
   include Cohorts
 
   self.table_name = :portal_teachers
@@ -8,8 +8,6 @@ class Portal::Teacher < ActiveRecord::Base
   acts_as_taggable_on :subject_areas
 
   belongs_to :user, :class_name => "User", :foreign_key => "user_id", :inverse_of => :portal_teacher
-
-  has_many :offerings, :through => :clazzes
 
   has_many :grade_levels, :as => :has_grade_levels, :class_name => "Portal::GradeLevel"
   has_many :grades, :through => :grade_levels, :class_name => "Portal::Grade"
@@ -24,7 +22,7 @@ class Portal::Teacher < ActiveRecord::Base
 
 
   has_many :school_memberships, :dependent => :destroy , :as => :member, :class_name => "Portal::SchoolMembership"
-  has_many :schools, -> { uniq }, :through => :school_memberships, :class_name => "Portal::School"
+  has_many :schools, -> { distinct }, :through => :school_memberships, :class_name => "Portal::School"
 
   has_many :subjects, :dependent => :destroy, :class_name => "Portal::Subject", :foreign_key => "teacher_id"
 
@@ -33,7 +31,9 @@ class Portal::Teacher < ActiveRecord::Base
   # has_many :clazzes, :class_name => "Portal::Clazz", :foreign_key => "teacher_id", :source => :clazz
   has_many :teacher_clazzes, :dependent => :destroy, :class_name => "Portal::TeacherClazz", :foreign_key => "teacher_id"
   has_many :clazzes, :through => :teacher_clazzes, :class_name => "Portal::Clazz"
-  has_many :projects, -> { uniq }, :through => :cohorts, :class_name => "Admin::Project"
+  has_many :offerings, :through => :clazzes
+  
+  has_many :projects, -> { distinct }, :through => :cohorts, :class_name => "Admin::Project"
 
   has_many :teacher_project_views, :class_name => "TeacherProjectView"
   has_many :viewed_projects, :through => :teacher_project_views, :class_name => "Admin::Project"

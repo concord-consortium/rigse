@@ -15,15 +15,15 @@ const externalReportMapping = data => {
 
 const offeringMapping = data => {
   const lastRunDates = data.students
-    // Filer out offerings that have never been run.
+    // Filter out offerings that have never been run.
     .filter(s => s.last_run !== null)
     .map(s => new Date(s.last_run))
-  // Reportable offerings will have meaningful progress specified. Non-reportable offerings will have some progress
-  // specified too (99% or 100%), but it's safer to look at started_activity property.
-  const reportable = data.reportable
-  const notStartedStudents = data.students.filter(s => reportable ? s.total_progress === 0 : !s.started_activity)
-  const inProgressStudents = data.students.filter(s => reportable ? s.total_progress > 0 && s.total_progress < 100 : false)
-  const completedStudents = data.students.filter(s => reportable ? s.total_progress === 100 : s.started_activity)
+  const notStartedStudentsCount = data.students
+    .filter(s => !s.started_activity)
+    .length
+  const startedStudentsCount = data.students
+    .filter(s => s.started_activity)
+    .length
   return {
     id: data.id,
     clazz: data.clazz,
@@ -33,9 +33,8 @@ const offeringMapping = data => {
     activityUrl: data.activity_url,
     hasTeacherEdition: data.has_teacher_edition,
     lastRun: lastRunDates.length > 0 ? lastRunDates[0] : null,
-    notStartedStudentsCount: notStartedStudents.length,
-    inProgressStudentsCount: inProgressStudents.length,
-    completedStudentsCount: completedStudents.length,
+    notStartedStudentsCount,
+    startedStudentsCount,
     reportUrl: data.report_url,
     externalReports: data.external_reports && data.external_reports.map(r => externalReportMapping(r)),
     reportableActivities: data.reportable_activities && data.reportable_activities.map(a => reportableActivityMapping(a)),
@@ -51,6 +50,8 @@ const processAPIData = data => {
     .sort((o1, o2) => o2.lastRun - o1.lastRun) // Sort by lastRun, DESC order
 }
 
+// Checks if the teacher has any classes.
+const anyClasses = data => data && data.length > 0
 // Checks if there is any data available.
 const anyData = data => data && data.length > 0
 // Checks if there are any students assigned to some offering.
@@ -61,6 +62,7 @@ export default class RecentActivity extends React.Component {
     super(props)
     this.state = {
       loading: !props.initialData,
+      anyClasses: null,
       anyData: anyData(props.initialData),
       anyStudents: anyStudents(props.initialData),
       offerings: processAPIData(props.initialData)
@@ -87,6 +89,18 @@ export default class RecentActivity extends React.Component {
   getPortalData () {
     const { dataUrl } = this.props
     jQuery.ajax({
+      url: '/api/v1/classes/mine',
+      success: data => {
+        this.setState({
+          anyClasses: anyClasses(data.classes)
+        })
+      },
+      error: () => {
+        console.error(`GET class data failed, can't render Recent Activity page`)
+      }
+    })
+
+    jQuery.ajax({
       url: appendOfferingApiQueryParams(dataUrl),
       success: data => {
         this.setState({
@@ -105,12 +119,14 @@ export default class RecentActivity extends React.Component {
   }
 
   render () {
-    const { loading, offerings, anyData, anyStudents } = this.state
+    const { loading, offerings, anyClasses, anyData, anyStudents } = this.state
     if (loading) {
       return null
     }
     return (
-      <Offerings anyData={anyData} anyStudents={anyStudents} offerings={offerings} />
+      <>
+        <Offerings anyClasses={anyClasses} anyData={anyData} anyStudents={anyStudents} offerings={offerings} />
+      </>
     )
   }
 }

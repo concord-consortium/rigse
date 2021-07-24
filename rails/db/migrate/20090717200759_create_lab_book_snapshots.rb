@@ -1,4 +1,4 @@
-class CreateLabBookSnapshots < ActiveRecord::Migration
+class CreateLabBookSnapshots < ActiveRecord::Migration[5.1]
   def self.up
     create_table :lab_book_snapshots do |t|
       

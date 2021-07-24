@@ -1,4 +1,4 @@
-class CreateSchools < ActiveRecord::Migration
+class CreateSchools < ActiveRecord::Migration[5.1]
   def self.up
     create_table :portal_schools do |t|
 

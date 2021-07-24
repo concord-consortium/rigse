@@ -1,23 +1,8 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
 describe Portal::Learner do
-  let(:user)           { mock_model(User) }
-  let(:student)        { mock_model(Portal::Student, {:user => user, :permission_forms => []})     }
-  let(:offering)       { FactoryBot.create(:portal_offering)   }
-  let(:report_learner) { mock_model(Report::Learner,
-    :[]= => nil,
-    :save => true,
-    :update_fields => true
-  )}
-  let(:attributes)  do
-    {
-      :student        => student,
-      :offering       => offering,
-      :report_learner => report_learner,
-      :report_learner_only_id => report_learner
-    }
-  end
-  subject           { Portal::Learner.create!(attributes) }
+  let(:learner)          { FactoryBot.create(:full_portal_learner) }
+  subject                { learner }
 
   describe "a bare instance" do
     it "should be valid" do
@@ -88,30 +73,6 @@ describe Portal::Learner do
     end
   end
 
-  describe '#sessions' do
-    it 'sessions' do
-      result = subject.sessions
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  describe '#valid_loggers?' do
-    it 'valid_loggers?' do
-      result = subject.valid_loggers?
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  describe '#create_new_loggers' do
-    it 'create_new_loggers' do
-      result = subject.create_new_loggers
-
-      expect(result).not_to be_nil
-    end
-  end
-
   describe '#user' do
     xit 'user' do
       result = subject.user
@@ -170,6 +131,16 @@ describe Portal::Learner do
           body["doc"]["offering_name"] =~ /test investigation/
           body["doc_as_upsert"] == true
       }
+    end
+  end 
+
+  describe '#update_last_run' do
+    it 'should modify the last_run with the current time' do
+      now = Time.now
+      max_delta_seconds = 2
+      subject.update_last_run
+      elapsed_seconds = subject.last_run - now
+      expect(elapsed_seconds).to be < max_delta_seconds
     end
   end
 end

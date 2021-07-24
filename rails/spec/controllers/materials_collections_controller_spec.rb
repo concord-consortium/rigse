@@ -22,7 +22,7 @@ describe MaterialsCollectionsController do
   before(:each) do
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_visitor).and_return(@admin_user)
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
     login_admin
   end
 
@@ -33,28 +33,28 @@ describe MaterialsCollectionsController do
   describe "GET index" do
     it "assigns all materials_collections as @materials_collections" do
       materials_collection
-      get :index, {}
+      get :index
       expect(assigns(:materials_collections).to_a).to eq([materials_collection])
     end
   end
 
   describe "GET show" do
     it "assigns the requested materials_collection as @materials_collection" do
-      get :show, {:id => materials_collection.to_param}
+      get :show, params: { :id => materials_collection.to_param }
       expect(assigns(:materials_collection)).to eq(materials_collection)
     end
   end
 
   describe "GET new" do
     it "assigns a new materials_collection as @materials_collection" do
-      get :new, {}
+      get :new
       expect(assigns(:materials_collection)).to be_a_new(MaterialsCollection)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested materials_collection as @materials_collection" do
-      get :edit, {:id => materials_collection.to_param}
+      get :edit, params: { :id => materials_collection.to_param }
       expect(assigns(:materials_collection)).to eq(materials_collection)
     end
   end
@@ -63,19 +63,19 @@ describe MaterialsCollectionsController do
     describe "with valid params" do
       it "creates a new MaterialsCollection" do
         expect {
-          post :create, {:materials_collection => valid_attributes}
+          post :create, params: { :materials_collection => valid_attributes }
         }.to change(MaterialsCollection, :count).by(1)
       end
 
 
       it "assigns a newly created materials_collection as @materials_collection" do
-        post :create, {:materials_collection => valid_attributes}
+        post :create, params: { :materials_collection => valid_attributes }
         expect(assigns(:materials_collection)).to be_a(MaterialsCollection)
         expect(assigns(:materials_collection)).to be_persisted
       end
 
       it "redirects to the materials_collections index" do
-        post :create, {:materials_collection => valid_attributes}
+        post :create, params: { :materials_collection => valid_attributes }
         expect(response).to redirect_to(materials_collections_url)
       end
     end
@@ -84,7 +84,7 @@ describe MaterialsCollectionsController do
       it "assigns a newly created but unsaved materials_collection as @materials_collection" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(MaterialsCollection).to receive(:save).and_return(false)
-        post :create, {:materials_collection => valid_attributes}
+        post :create, params: { :materials_collection => valid_attributes }
         expect(assigns(:materials_collection)).to be_a(MaterialsCollection)
         expect(assigns(:materials_collection)).not_to be_persisted
         expect(assigns(:materials_collection)).to be_a_new(MaterialsCollection)
@@ -93,7 +93,7 @@ describe MaterialsCollectionsController do
       it "re-renders the 'new' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(MaterialsCollection).to receive(:save).and_return(false)
-        post :create, {:materials_collection => valid_attributes}
+        post :create, params: { :materials_collection => valid_attributes }
         expect(response).to render_template(:new)
       end
     end
@@ -104,19 +104,19 @@ describe MaterialsCollectionsController do
       it "updates the requested materials_collection" do
         # Assuming there are no other materials_collections in the database, this
         # specifies that the MaterialsCollection created on the previous line
-        # receives the :update_attributes message with whatever params are
+        # receives the :update message with whatever params are
         # submitted in the request.
-        expect_any_instance_of(MaterialsCollection).to receive(:update_attributes).with({'name' => 'new name'})
-        put :update, {:id => materials_collection.to_param, :materials_collection => {'name' => 'new name'}}
+        expect_any_instance_of(MaterialsCollection).to receive(:update).with(permit_params!({'name' => 'new name'}))
+        put :update, params: { :id => materials_collection.to_param, :materials_collection => {'name' => 'new name'} }
       end
 
       it "assigns the requested materials_collection as @materials_collection" do
-        put :update, {:id => materials_collection.to_param, :materials_collection => valid_attributes}
+        put :update, params: { :id => materials_collection.to_param, :materials_collection => valid_attributes }
         expect(assigns(:materials_collection)).to eq(materials_collection)
       end
 
       it "redirects to the materials_collection" do
-        put :update, {:id => materials_collection.to_param, :materials_collection => valid_attributes}
+        put :update, params: { :id => materials_collection.to_param, :materials_collection => valid_attributes }
         expect(response).to redirect_to(materials_collection)
       end
     end
@@ -125,14 +125,14 @@ describe MaterialsCollectionsController do
       it "assigns the materials_collection as @materials_collection" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(MaterialsCollection).to receive(:save).and_return(false)
-        put :update, {:id => materials_collection.to_param, :materials_collection => valid_attributes}
+        put :update, params: { :id => materials_collection.to_param, :materials_collection => valid_attributes }
         expect(assigns(:materials_collection)).to eq(materials_collection)
       end
 
       it "re-renders the 'edit' template" do
         # Trigger the behavior that occurs when invalid params are submitted
         allow_any_instance_of(MaterialsCollection).to receive(:save).and_return(false)
-        put :update, {:id => materials_collection.to_param, :materials_collection => valid_attributes}
+        put :update, params: { :id => materials_collection.to_param, :materials_collection => valid_attributes }
         expect(response).to render_template("edit")
       end
     end
@@ -142,12 +142,12 @@ describe MaterialsCollectionsController do
     it "destroys the requested materials_collection" do
       materials_collection
       expect {
-        delete :destroy, {:id => materials_collection.to_param}
+        delete :destroy, params: { :id => materials_collection.to_param }
       }.to change(MaterialsCollection, :count).by(-1)
     end
 
     it "redirects to the materials_collections list" do
-      delete :destroy, {:id => materials_collection.to_param}
+      delete :destroy, params: { :id => materials_collection.to_param }
       expect(response).to redirect_to(materials_collections_url)
     end
   end

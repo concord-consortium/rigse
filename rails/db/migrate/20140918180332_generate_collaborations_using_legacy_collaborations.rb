@@ -1,32 +1,32 @@
-class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration
-  class Portal::Student < ActiveRecord::Base
+class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration[5.1]
+  class Portal::Student < ApplicationRecord
     self.table_name = :portal_students
   end
-  class Portal::Learner < ActiveRecord::Base
+  class Portal::Learner < ApplicationRecord
     self.table_name = :portal_learners
     belongs_to :student, :class_name => "Portal::Student", :foreign_key => "student_id"
   end
-  class Dataservice::BundleLogger < ActiveRecord::Base
+  class Dataservice::BundleLogger < ApplicationRecord
     self.table_name = :dataservice_bundle_loggers
     has_one :learner, :class_name => "Portal::Learner"
   end
-  class Dataservice::BundleContent < ActiveRecord::Base
+  class Dataservice::BundleContent < ApplicationRecord
     self.table_name = :dataservice_bundle_contents
     belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id"
     has_many :legacy_collaborations, :dependent => :destroy, :class_name => "Portal::LegacyCollaboration", :foreign_key => "bundle_content_id"
     has_many :collaborators, :through => :legacy_collaborations, :class_name => "Portal::Student", :source => :student
   end
-    class Portal::LegacyCollaboration < ActiveRecord::Base
+    class Portal::LegacyCollaboration < ApplicationRecord
     self.table_name = :legacy_collaborations
     belongs_to :student, :class_name => "Portal::Student", :foreign_key => "student_id"
     belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"
   end
-  class Portal::CollaborationMembership < ActiveRecord::Base
+  class Portal::CollaborationMembership < ApplicationRecord
     self.table_name = :portal_collaboration_memberships
     belongs_to :collaboration, :class_name => "Portal::Collaboration"
     belongs_to :student, :class_name => "Portal::Student"
   end
-  class Portal::Collaboration < ActiveRecord::Base
+  class Portal::Collaboration < ApplicationRecord
     self.table_name = :portal_collaborations
     has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
     has_many :students, :through => :collaboration_memberships, :class_name => "Portal::Student"
@@ -55,7 +55,7 @@ class GenerateCollaborationsUsingLegacyCollaborations < ActiveRecord::Migration
        owner_id = bundle.bundle_logger.learner.student.id
        collaboration = Portal::Collaboration.create(:owner_id => owner_id)
        collaboration.students = collaborators
-       bundle.update_attributes!(:collaboration_id => collaboration.id)
+       bundle.update!(:collaboration_id => collaboration.id)
     end
   end
 

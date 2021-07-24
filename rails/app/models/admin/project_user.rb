@@ -1,4 +1,4 @@
-class Admin::ProjectUser < ActiveRecord::Base
+class Admin::ProjectUser < ApplicationRecord
   scope :is_admin, -> { where is_admin: true }
   scope :is_researcher, -> { where is_researcher: true }
   self.table_name = "admin_project_users"

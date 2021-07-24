@@ -1,4 +1,4 @@
-class ChangePublicationOfImage < ActiveRecord::Migration
+class ChangePublicationOfImage < ActiveRecord::Migration[5.1]
   def up
     change_column :images, :publication_status, :string, :default => "published"
   end

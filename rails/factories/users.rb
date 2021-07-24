@@ -21,7 +21,7 @@ end
 
 FactoryBot.define do
   factory :confirmed_user, :parent => :user do
-    after(:create) {|user| user.confirm!}
+    after(:create) {|user| user.confirm}
   end
 end
 
@@ -40,7 +40,7 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:admin_user) do
                                   :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:admin_role)]
                               })
     admin.save!
-    admin.confirm!
+    admin.confirm
     admin.add_role('admin')
   end
   admin
@@ -62,7 +62,7 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:researcher_user) do
                                        :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:researcher_role)]
                                    })
     researcher.save!
-    researcher.confirm!
+    researcher.confirm
     researcher.add_role('researcher')
   end
   researcher
@@ -84,7 +84,7 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:manager_user) do
                                     :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:manager_role)]
                                 })
     manager.save!
-    manager.confirm!
+    manager.confirm
     manager.add_role('manager')
   end
   manager
@@ -105,7 +105,7 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:author_user) do
                                    :roles => [FactoryBot.generate(:member_role), FactoryBot.generate(:author_role)]
                                })
     author.save!
-    author.confirm!
+    author.confirm
     author.add_role('author')
   end
   author
@@ -127,7 +127,7 @@ FactoryBot.register_sequence(FactoryBot::Sequence.new(:anonymous_user) do
                                    :roles => [FactoryBot.generate(:guest_role)]
                                })
       anon.save!
-      anon.confirm!
+      anon.confirm
       # clear any previous Anonymous user still cached as a class variable in the User class
       User.anonymous(true)
       anon.save!

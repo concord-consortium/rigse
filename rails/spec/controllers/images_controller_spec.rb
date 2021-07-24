@@ -7,6 +7,7 @@ describe ImagesController do
     "image_file_name" => "test.png", "image_file_size" => "1000", "license_code" => "MIT",
     "name" => "test image", "publication_status" => "published", "user_id" => user_id, "width" => "200"
   }}
+  let(:non_empty_image) {{rails_5_cannot_send_empty_object: "yep, so adding this so test doesn't break"}}
 
   def mock_image(stubs={})
     @mock_image ||= mock_model(Image, stubs)
@@ -37,7 +38,7 @@ describe ImagesController do
   describe "responding to GET show" do
     it "should expose the requested image as @image" do
       stub_users_scope(mock_image)
-      get :show, :id => "37"
+      get :show, params: { :id => "37" }
       expect(assigns[:image]).to equal(mock_image)
     end
 
@@ -59,7 +60,7 @@ describe ImagesController do
       img = mock_image
       expect(img).to receive(:changeable?).with(@logged_in_user).and_return(true)
       expect(Image).to receive(:find).with("37").and_return(img)
-      get :edit, :id => "37"
+      get :edit, params: { :id => "37" }
       expect(assigns[:image]).to equal(img)
     end
 
@@ -74,14 +75,14 @@ describe ImagesController do
         img = mock_image
         allow(img).to receive_messages(:save => true)
 
-        expect(Image).to receive(:new).with(image_params).and_return(img)
-        post :create, :image => image_params
+        expect(Image).to receive(:new).with(permit_params!(image_params)).and_return(img)
+        post :create, params: { :image => image_params }
         expect(assigns(:image)).to equal(img)
       end
 
       it "should redirect to the created image" do
         allow(Image).to receive(:new).and_return(mock_image(:save => true))
-        post :create, :image => {}
+        post :create, params: { :image => non_empty_image }
         expect(response).to redirect_to("/images/#{mock_image.id}")
       end
 
@@ -91,14 +92,14 @@ describe ImagesController do
       let (:user_id) { @logged_in_user.id.to_s }
 
       it "should expose a newly created but unsaved image as @image" do
-        allow(Image).to receive(:new).with(image_params).and_return(mock_image(:save => false))
-        post :create, :image => image_params
+        allow(Image).to receive(:new).with(permit_params!(image_params)).and_return(mock_image(:save => false))
+        post :create, params: { :image => image_params }
         expect(assigns(:image)).to equal(mock_image)
       end
 
       it "should re-render the 'new' template" do
         allow(Image).to receive(:new).and_return(mock_image(:save => false))
-        post :create, :image => {}
+        post :create, params: { :image => non_empty_image }
         expect(response).to render_template('new')
       end
 
@@ -110,24 +111,24 @@ describe ImagesController do
 
     describe "with valid params" do
       before(:each) do
-        @img = mock_image(:save => true, :update_attributes => true, :reload => true)
+        @img = mock_image(:save => true, :update => true, :reload => true)
         expect(@img).to receive(:changeable?).with(@logged_in_user).and_return(true)
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(mock_image).to receive(:update_attributes).with(image_params)
-        put :update, :id => "37", :image => image_params
+        expect(mock_image).to receive(:update).with(permit_params!(image_params))
+        put :update, params: { :id => "37", :image => image_params }
       end
 
       it "should expose the requested image as @image" do
         allow(Image).to receive(:find).and_return(@img)
-        put :update, :id => "1", :image => {}
+        put :update, params: { :id => "1", :image => {} }
         expect(assigns(:image)).to equal(@img)
       end
 
       it "should redirect to the image" do
         allow(Image).to receive(:find).and_return(@img)
-        put :update, :id => "1", :format => :html, :image => {}
+        put :update, params: { :id => "1", :format => :html, :image => non_empty_image }
         expect(response).to redirect_to(@img)
       end
 
@@ -135,24 +136,24 @@ describe ImagesController do
 
     describe "with invalid params" do
       before(:each) do
-        @img = mock_image(:save => false, :update_attributes => false, :reload => false)
+        @img = mock_image(:save => false, :update => false, :reload => false)
         expect(@img).to receive(:changeable?).with(@logged_in_user).and_return(true)
       end
       it "should update the requested image" do
         expect(Image).to receive(:find).with("37").and_return(@img)
-        expect(@img).to receive(:update_attributes).with(image_params)
-        put :update, :id => "37", :image => image_params
+        expect(@img).to receive(:update).with(permit_params!(image_params))
+        put :update, params: { :id => "37", :image => image_params }
       end
 
       it "should expose the image as @image" do
         allow(Image).to receive(:find).and_return(@img)
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(assigns(:image)).to equal(@img)
       end
 
       it "should re-render the 'edit' template" do
         allow(Image).to receive(:find).and_return(@img)
-        put :update, :id => "1"
+        put :update, params: { :id => "1" }
         expect(response).to render_template('edit')
       end
 
@@ -168,12 +169,12 @@ describe ImagesController do
     it "should destroy the requested image" do
       expect(Image).to receive(:find).with("37").and_return(@img)
       expect(mock_image).to receive(:destroy)
-      delete :destroy, :id => "37"
+      delete :destroy, params: { :id => "37" }
     end
 
     it "should redirect to the images list" do
       allow(Image).to receive(:find).and_return(@img)
-      delete :destroy, :id => "1"
+      delete :destroy, params: { :id => "1" }
       expect(response).to redirect_to(images_url)
     end
 

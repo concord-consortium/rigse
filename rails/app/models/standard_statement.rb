@@ -1,4 +1,4 @@
-class StandardStatement < ActiveRecord::Base
+class StandardStatement < ApplicationRecord
 
   serialize :description
   serialize :parents

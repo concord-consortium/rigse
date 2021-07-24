@@ -1,4 +1,4 @@
-class TeacherOnlyFlags < ActiveRecord::Migration
+class TeacherOnlyFlags < ActiveRecord::Migration[5.1]
   def self.up
     [:investigations,:activities,:sections,:pages].each do |table_name|
       add_column table_name, :teacher_only, :boolean, :default => 0

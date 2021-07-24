@@ -1,4 +1,4 @@
-class AddCourseNumberToPortalCourse < ActiveRecord::Migration
+class AddCourseNumberToPortalCourse < ActiveRecord::Migration[5.1]
   def self.up
     add_column :portal_courses, :course_number, :string 
     add_index  :portal_courses, :course_number

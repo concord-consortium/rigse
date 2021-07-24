@@ -21,13 +21,13 @@
       %meta{ :property => "og:#{key}", :content => value }
 
     != stylesheet_link_tag 'application', {'media' => 'screen, presentation'}
-    != themed_style_sheet_tag
     != stylesheet_link_tag 'print', {'media' => 'print'}
 
     / Include museo fonts.
-    %script{ :src => "https://use.typekit.com/juj7nhw.js"}
+    %script{:src => "https://use.typekit.com/juj7nhw.js"}
     %script
       try{Typekit.load({ async: true });}catch(e){}
+    %script{:src => "https://kit.fontawesome.com/32aedade6e.js", :crossorigin => "anonymous"}
 
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
@@ -57,9 +57,11 @@
     = render :partial => 'shared/analytics'
     = javascript_tag "jQuery(function(){jQuery('input[placeholder], textarea[placeholder]').placeholder();});"
 
-  - role_classes = current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }
-  - guest_classes = current_user.nil? ? ['main-nav-hidden'] : []
-  %body{:class => (guest_classes + role_classes).join(' ').squish, :'ng-app' => 'cc-portal'}
+  - body_classes = current_visitor.role_names.map{ |role_name| "#{role_name}-visitor" }
+  - body_classes.push('main-nav-hidden') if current_user.nil?
+  - body_classes.push(themed_body_class) #see theme_helper.rb
+
+  %body{:class => body_classes.join(' ').squish, :'ng-app' => 'cc-portal'}
 
     #note{:style=>"display: none;"}
     = content_for :lightboxes
@@ -74,7 +76,7 @@
           - if current_user.present?
             = render :partial => 'shared/left_menu'
 
-      #primary{ :class => @wide_content_layout ? "wide col-12" : "col-8"}
+      #primary{ :class => @wide_content_layout ? "wide col-12" : "col-9"}
         #content.main_content_colors
           #content_header.main_content_colors
             = content_for :content_header
@@ -83,6 +85,6 @@
 
           = content_for :layout
 
-    = render :partial => 'shared/footer'
+    = render_themed_partial 'shared/footer'
 
     = content_for :after_footer

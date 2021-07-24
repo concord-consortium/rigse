@@ -1,4 +1,4 @@
-class AddFirebaseApps < ActiveRecord::Migration
+class AddFirebaseApps < ActiveRecord::Migration[5.1]
   def change
     create_table :firebase_apps do |t|
       t.string :name

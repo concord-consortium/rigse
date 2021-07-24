@@ -1,4 +1,4 @@
-class CreateBiologicaStaticOrganisms < ActiveRecord::Migration
+class CreateBiologicaStaticOrganisms < ActiveRecord::Migration[5.1]
   def self.up
     create_table :biologica_static_organisms do |t|
       

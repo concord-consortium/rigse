@@ -1,4 +1,4 @@
-class CreateReportLearnerActivity < ActiveRecord::Migration
+class CreateReportLearnerActivity < ActiveRecord::Migration[5.1]
   def self.up
     create_table :report_learner_activity do |t|
       t.integer  :learner_id

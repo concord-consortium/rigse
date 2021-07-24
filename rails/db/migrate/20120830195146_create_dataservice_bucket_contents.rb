@@ -1,4 +1,4 @@
-class CreateDataserviceBucketContents < ActiveRecord::Migration
+class CreateDataserviceBucketContents < ActiveRecord::Migration[5.1]
   def change
     create_table :dataservice_bucket_contents do |t|
       t.integer :bucket_logger_id

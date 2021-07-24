@@ -1,4 +1,4 @@
-class Portal::SchoolMembership < ActiveRecord::Base
+class Portal::SchoolMembership < ApplicationRecord
   self.table_name = :portal_school_memberships
 
   acts_as_replicatable

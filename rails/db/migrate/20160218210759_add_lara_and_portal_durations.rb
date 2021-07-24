@@ -1,4 +1,4 @@
-class AddLaraAndPortalDurations < ActiveRecord::Migration
+class AddLaraAndPortalDurations < ActiveRecord::Migration[5.1]
   def up
     add_column :learner_processing_events, :lara_duration,   :integer
     add_column :learner_processing_events, :portal_duration, :integer

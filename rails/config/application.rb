@@ -5,8 +5,18 @@ require 'rails/all'
 require File.expand_path('../../lib/load_config', __FILE__)
 require File.expand_path('../../lib/bool_env', __FILE__)
 
+# load Rack::ResponseLogger for middleware configuration
+require File.expand_path("../../lib/rack/response_logger", __FILE__)
+
+# load Rack::ExpandB64Gzip for middleware configuration
+require File.expand_path("../../lib/rack/expand_b64_gzip", __FILE__)
+
 module RailsPortal
   class Application < Rails::Application
+    config.load_defaults 6.0
+    config.autoloader = :classic
+
+    config.assets.precompile << 'delayed/web/application.css'
     config.rails_lts_options = { default: :compatible }
     # Use RSpec when generating tests, not test_unit
     config.generators do |g|
@@ -33,28 +43,14 @@ module RailsPortal
 
     config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
     config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
+    config.autoload_paths += Dir["#{config.root}/app/helpers/"] # include app/helpers and all subdirectories
 
     config.filter_parameters << :password << :password_confirmation
 
-    # Subvert the cookies_only=true session policy for requests ending in ".config"
-    config.middleware.insert_before("ActionDispatch::Cookies", "Rack::ConfigSessionCookies")
-
-    # ExpandB64Gzip needs to be before ActionController::ParamsParser in the rack middleware stack:
-    #   $ rake middleware
-    #   (in /Users/stephen/dev/ruby/src/webapps/rigse2.git)
-    #   use Rack::Lock
-    #   use ActionController::Failsafe
-    #   use ActionController::Reloader
-    #   use ActiveRecord::ConnectionAdapters::ConnectionManagement
-    #   use ActiveRecord::QueryCache
-    #   use ActiveRecord::SessionStore, #<Proc:0x0192dfc8@(eval):8>
-    #   use Rack::ExpandB64Gzip
-    #   use ActionController::ParamsParser
-    #   use Rack::MethodOverride
-    #   use Rack::Head
-    #   run ActionController::Dispatcher.new
-
-    config.middleware.insert_before("ActionDispatch::ParamsParser", "Rack::ExpandB64Gzip")
+    # Expands posted content with a content-encoding of: 'b64gzip'
+    # NOTE: pre-Rails 5 this was inserted before ActionController::ParamsParser but that middleware
+    # was deprecated in Rails 5 so Rack::Head was chosen based on posts found online about compression middlewares
+    config.middleware.insert_before(Rack::Head, Rack::ExpandB64Gzip)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -95,22 +91,6 @@ module RailsPortal
     # Activate observers that should always be running
     # Please note that observers generated using script/generate observer need to have an _observer suffix
 
-    # ... observers are now started in config/initializers/observers.rb
-    # Nov 10 NP: This technique wasn't working, so, I figued we would just surround w/ begin / rescue
-    # if ActiveRecord::Base.connection_handler.connection_pools["ActiveRecord::Base"].connected?
-    if $PROGRAM_NAME =~ /rake/ && ARGV.grep(/^db:migrate/).length > 0
-      puts "Didn't start observers because you are running: rake db:migrate"
-    else
-        begin
-          config.active_record.observers = :"dataservice/bundle_content_observer", :"dataservice/periodic_bundle_content_observer"
-        rescue
-          # interestingly Rails::logger doesn't seem to be working here, so I am using ugly puts for now:
-          puts "Couldn't start observers #{$!} ... but continuing process anyway"
-          puts "This might be because you have not setup the appropriate database tables yet... "
-          puts "see config/initializers/observers.rb for more information."
-        end
-    end
-
     config.middleware.insert_before 0, Rack::Cors do
 
       allow do
@@ -145,7 +125,7 @@ module RailsPortal
     end
 
     # Add a middlewere to log more info about the response
-    config.middleware.insert_before 0, "Rack::ResponseLogger"
+    config.middleware.insert_before 0, Rack::ResponseLogger
 
     config.assets.enabled = true
     config.assets.precompile += %w(
@@ -164,16 +144,11 @@ module RailsPortal
       import_progress.js
       import_model_library.js
       jquery.placeholder.js
+      themes/all.scss
     )
 
     # pre-compile any fonts in the assets/ directory as well
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
-
-    # add in the current theme's application.css
-    # a proc is used here so the APP_CONFIG is available
-    config.assets.precompile << Proc.new do |path|
-      path.match(/\/themes\/.*\/all.s?css/) || path.match(/\/themes\/.*\/application.s?css/)
-    end
 
     # do not initialize on precompile so that the Dockerfile can run the precompile
     if BoolENV['DOCKER_NO_INIT_ON_PRECOMPILE']
@@ -183,9 +158,30 @@ module RailsPortal
     # use json format for serilized cookies
     config.action_dispatch.cookies_serializer = :hybrid
 
-    # propagate errors normally just like in other Active Record callbacks
-    # See https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#error-handling-in-transaction-callbacks
-    config.active_record.raise_in_transactional_callbacks = true
+
+
+    # To improve security, Rails now embeds the expiry information also in encrypted or signed cookies value.
+    # This new embed information make those cookies incompatible with versions of Rails older than 5.2.
+    # If you require your cookies to be read by 5.1 and older, or you are still validating your 5.2 deploy
+    # and want to allow you to rollback set Rails.application.config.action_dispatch.use_authenticated_cookie_encryption to false.
+    config.action_dispatch.use_authenticated_cookie_encryption = true
+
+
+    # To improve security, Rails embeds the purpose and expiry metadata inside encrypted or signed cookies value.
+    # This new embed metadata make those cookies incompatible with versions of Rails older than 6.0.
+    # If you require your cookies to be read by Rails 5.2 and older, or you are still validating your 6.0 deploy and want to be able
+    # to rollback set Rails.application.config.action_dispatch.use_cookies_with_metadata to false.
+    # Rails can then thwart attacks that attempt to copy the signed/encrypted value of a cookie and use it as the value of another cookie.
+    config.action_dispatch.use_cookies_with_metadata = true
+
+
+    # Specify cookies SameSite protection level: either :none, :lax, or :strict.
+    # When running tests, we want to use lax protection (breaks cucumber tests otherwise)
+    same_site_protection = (Rails.env.cucumber? || Rails.env.test? || Rails.env.feature_test?) ? :lax : :none
+    config.action_dispatch.cookies_same_site_protection = same_site_protection
+
+    # Allow requests from any domain (skips DNS rebinding attack guards)
+    config.hosts = nil
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

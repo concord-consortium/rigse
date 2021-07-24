@@ -1,4 +1,4 @@
-class ChangeEmbeddableMetaDefaults < ActiveRecord::Migration
+class ChangeEmbeddableMetaDefaults < ActiveRecord::Migration[5.1]
 
   def disable_all_feedback()
     execute "update portal_offering_embeddable_metadata set enable_text_feedback=false"

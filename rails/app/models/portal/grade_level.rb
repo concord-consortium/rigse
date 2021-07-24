@@ -1,4 +1,4 @@
-class Portal::GradeLevel < ActiveRecord::Base
+class Portal::GradeLevel < ApplicationRecord
   self.table_name = :portal_grade_levels
 
   acts_as_replicatable
@@ -13,7 +13,7 @@ class Portal::GradeLevel < ActiveRecord::Base
   delegate :name, :to => :grade
 
   include Changeable
-  
+
   ## suport for searching and pagination:
   self.extend SearchableModel
   @@searchable_attributes = %w{status}

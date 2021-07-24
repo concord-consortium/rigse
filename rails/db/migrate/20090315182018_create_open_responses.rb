@@ -1,4 +1,4 @@
-class CreateOpenResponses < ActiveRecord::Migration
+class CreateOpenResponses < ActiveRecord::Migration[5.1]
   def self.up
     create_table :open_responses do |t|
       t.integer     :user_id

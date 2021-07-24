@@ -1,4 +1,4 @@
-class OtmlCategoriesOtrunkImports < ActiveRecord::Migration
+class OtmlCategoriesOtrunkImports < ActiveRecord::Migration[5.1]
   def self.up
     create_table :otml_categories_otrunk_imports, :id => false do |t|
       t.integer :otml_category_id

@@ -16,7 +16,7 @@ Given /^the following teachers exist:$/ do |users_table|
       user = FactoryBot.create(:user, hash)
       user.add_role("member")
       user.save!
-      user.confirm!
+      user.confirm
 
 
       portal_teacher = FactoryBot.create(:portal_teacher, { :user => user })

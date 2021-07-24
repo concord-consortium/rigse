@@ -1,4 +1,4 @@
-class Portal::StudentPermissionForm < ActiveRecord::Base
+class Portal::StudentPermissionForm < ApplicationRecord
   # Todo someday in app/models/portal.rb?
   # module Portal
   #   def self.table_name_prefix

@@ -1,4 +1,4 @@
-class CreateExternalActivities < ActiveRecord::Migration
+class CreateExternalActivities < ActiveRecord::Migration[5.1]
   def self.up
     create_table :external_activities do |t|
       t.integer :user_id

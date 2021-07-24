@@ -1,4 +1,4 @@
-class Portal::Bookmark < ActiveRecord::Base
+class Portal::Bookmark < ApplicationRecord
   include Changeable
   self.table_name = :portal_bookmarks
 

@@ -12,4 +12,17 @@ class API::V1::ProjectsController < API::APIController
     render :json => result
   end
 
+  def show
+    project = Admin::Project.find(params[:id])
+    authorize project, :api_show?
+    render :json => project.to_json, :callback => params[:callback]
+  end
+
+  def parameter_missing(exception)
+    render status: 400, json: {
+      success: false,
+      message: exception.message
+    }
+  end
+
 end

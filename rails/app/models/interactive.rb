@@ -1,4 +1,4 @@
-class Interactive < ActiveRecord::Base
+class Interactive < ApplicationRecord
   include Cohorts
   include Publishable
   include SearchModelInterface

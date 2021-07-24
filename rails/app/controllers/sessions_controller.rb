@@ -5,7 +5,7 @@ class SessionsController < Devise::SessionsController
   # throw an exception. If it threw that exception then the login should stop and the
   # the user could see an error message.
   # In the meantime we'll disable the authenticity token check on login.
-  skip_before_filter :verify_authenticity_token, :only => [:create]
+  skip_before_action :verify_authenticity_token, :only => [:create]
 
   def new
     super

@@ -1,4 +1,4 @@
-class CreateAdminProjects < ActiveRecord::Migration
+class CreateAdminProjects < ActiveRecord::Migration[5.1]
   def self.up
     create_table :admin_projects do |t|
       t.integer :user_id

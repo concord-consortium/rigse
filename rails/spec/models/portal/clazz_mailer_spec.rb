@@ -17,7 +17,7 @@ describe Portal::ClazzMailer do
     if teacher.nil?
       FactoryBot.create(:user)
     else
-      teacher.user.update_attributes(first_name: "Cohort", last_name: "Teacher")
+      teacher.user.update(first_name: "Cohort", last_name: "Teacher")
       teacher.user
     end
   }
@@ -135,4 +135,20 @@ describe Portal::ClazzMailer do
 
   end
 
+  describe "mailer themed view template rendering" do
+    subject { Portal::ClazzMailer.clazz_assignment_notification(user, clazz, "Activity 1").message}
+    context "using the learn theme" do
+      before(:each) { set_theme_env('learn') }
+      it "renders the default template" do
+        expect(subject.body.encoded).to match /The Concord Consortium/
+        expect(subject.body.encoded).not_to match /NGSS Assessment/
+      end
+    end
+    context "using the ngsa-assessment theme" do
+      before(:each) { set_theme_env('ngsa-assessment') }
+      it "renders the NGSA template" do
+        expect(subject.body.encoded).to match /NGSS Assessment/
+      end
+    end
+  end
 end

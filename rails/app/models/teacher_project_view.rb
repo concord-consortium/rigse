@@ -1,4 +1,4 @@
-class TeacherProjectView < ActiveRecord::Base
+class TeacherProjectView < ApplicationRecord
   self.table_name = :teacher_project_views
 
   belongs_to :viewed_project, :class_name => "Admin::Project"

@@ -1,8 +1,8 @@
 class API::V1::SiteNoticesController < API::APIController
 
-  before_filter :authorized
+  before_action :authorized
 
-  # TODO: figure out why rspec is breaking and add authorization back (and remove before_filter)
+  # TODO: figure out why rspec is breaking and add authorization back (and remove before_action)
 
   protected
 
@@ -29,7 +29,7 @@ class API::V1::SiteNoticesController < API::APIController
 
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
-      @notice_html = '<p> </p>' #fix for IE 9
+      @notice_html = '<p> </p>'.html_safe #fix for IE 9
     end
 
     if error
@@ -56,7 +56,7 @@ class API::V1::SiteNoticesController < API::APIController
 
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
-      @notice_html = '<p> </p>' #fix for IE 9
+      @notice_html = '<p> </p>'.html_safe #fix for IE 9
     end
 
     if error

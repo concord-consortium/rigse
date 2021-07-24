@@ -1,7 +1,7 @@
 class Portal::Nces06DistrictsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_or_manager, :except => [ :index ]
+  before_action :admin_or_manager, :except => [ :index ]
   include RestrictedPortalController
 
   protected
@@ -112,7 +112,7 @@ class Portal::Nces06DistrictsController < ApplicationController
     # authorize @nces06_district
 
     respond_to do |format|
-      if @nces06_district.update_attributes(portal_nces06_district_strong_params(params[:nces06_district]))
+      if @nces06_district.update(portal_nces06_district_strong_params(params[:nces06_district]))
         flash['notice'] = 'Portal::Nces06District was successfully updated.'
         format.html { redirect_to(@nces06_district) }
         format.xml  { head :ok }

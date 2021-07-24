@@ -43,7 +43,7 @@ describe API::V1::CollaborationsController do
 
       it "creates a new collaboration" do
         expect(Portal::Collaboration.count).to eql(0)
-        post :create, params
+        post :create, params: params
         expect(response.status).to eq(201) # created
         expect(JSON.parse(response.body)["id"]).to eql(Portal::Collaboration.first.id)
         expect(Portal::Collaboration.first.owner.id).to eql(params['owner_id'])
@@ -53,7 +53,7 @@ describe API::V1::CollaborationsController do
     context "when no user is signed in" do
       it "returns an error" do
         expect(Portal::Collaboration.count).to eql(0)
-        post :create, params
+        post :create, params: params
         expect(response.status).to eq(403) # unauthorized
         expect(Portal::Collaboration.count).to eql(0)
       end
@@ -67,7 +67,7 @@ describe API::V1::CollaborationsController do
 
       it "returns an error" do
         expect(Portal::Collaboration.count).to eql(0)
-        post :create, params
+        post :create, params: params
         expect(response.status).to eq(403) # unauthorized
         expect(Portal::Collaboration.count).to eql(0)
       end
@@ -77,7 +77,7 @@ describe API::V1::CollaborationsController do
   describe "GET #available_collaborators" do
     context "when no user is signed in" do
       it "returns an error" do
-        get :available_collaborators, offering_id: offering.id
+        get :available_collaborators, params: { offering_id: offering.id }
         expect(response.status).to eq(403) # unauthorized
       end
     end
@@ -86,7 +86,7 @@ describe API::V1::CollaborationsController do
       before { sign_in student1.user }
 
       it "returns students list" do
-        get :available_collaborators, offering_id: offering.id
+        get :available_collaborators, params: { offering_id: offering.id }
         expect(response.status).to eq(200)
         # Note that we do not expect student1 in the list!
         expected_collaborators = [student2].map { |s| {'id' => s.id, 'name' => s.name} }
@@ -102,7 +102,7 @@ describe API::V1::CollaborationsController do
 
     before do
       sign_in student1.user
-      post :create, params
+      post :create, params: params
       expect(response.status).to eq(201)
       sign_out :user
       @collaboration_id = JSON.parse(response.body)["id"]
@@ -110,7 +110,7 @@ describe API::V1::CollaborationsController do
 
     context "when no authentication header token is sent" do
       it "returns an error" do
-        get :collaborators_data, id: @collaboration_id
+        get :collaborators_data, params: { id: @collaboration_id }
         expect(response.status).to eq(403) # unauthorized
       end
     end
@@ -120,7 +120,7 @@ describe API::V1::CollaborationsController do
 
       it "returns list of student data and endpoints" do
         set_auth_token(security_header_sent)
-        get :collaborators_data, {id: @collaboration_id}
+        get :collaborators_data, params: { id: @collaboration_id }
         expect(response.status).to eq(200)
       end
     end
@@ -130,7 +130,7 @@ describe API::V1::CollaborationsController do
 
       it "returns an error" do
         set_auth_token(security_header_sent)
-        get :collaborators_data, {id: @collaboration_id}
+        get :collaborators_data, params: { id: @collaboration_id }
         expect(response.status).to eq(403)
       end
     end

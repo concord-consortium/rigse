@@ -15,7 +15,7 @@ describe "/admin/tags/edit.html.haml" do
 
   it "renders the edit tags form" do
     render
-    assert_select("form[action=#{admin_tag_path(@admin_tag)}][method=post]") do
+    assert_select("form[action=\"#{admin_tag_path(@admin_tag)}\"][method=post]") do
       assert_select('input#admin_tag_scope[name=?]', "admin_tag[scope]")
       assert_select('input#admin_tag_tag[name=?]', "admin_tag[tag]")
     end

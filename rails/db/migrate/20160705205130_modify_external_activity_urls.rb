@@ -1,4 +1,4 @@
-class ModifyExternalActivityUrls < ActiveRecord::Migration
+class ModifyExternalActivityUrls < ActiveRecord::Migration[5.1]
   def up
     change_column :external_activities, :author_url, :text
     change_column :external_activities, :print_url, :text

@@ -85,7 +85,7 @@ class Portal::StudentClazzesController < ApplicationController
     @portal_student_clazz = Portal::StudentClazz.find(params[:id])
 
     respond_to do |format|
-      if @portal_student_clazz.update_attributes(portal_student_clazz_strong_params(params[:portal_student_clazz]))
+      if @portal_student_clazz.update(portal_student_clazz_strong_params(params[:portal_student_clazz]))
         flash['notice'] = 'Portal::StudentClazz was successfully updated.'
         format.html { redirect_to(@portal_student_clazz) }
         format.xml  { head :ok }

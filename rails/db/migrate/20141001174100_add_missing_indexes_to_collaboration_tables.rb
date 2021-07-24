@@ -1,4 +1,4 @@
-class AddMissingIndexesToCollaborationTables < ActiveRecord::Migration
+class AddMissingIndexesToCollaborationTables < ActiveRecord::Migration[5.1]
   def change
     add_index :portal_collaborations, :owner_id
     add_index :portal_collaborations, :offering_id

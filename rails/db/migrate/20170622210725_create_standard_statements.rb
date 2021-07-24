@@ -1,4 +1,4 @@
-class CreateStandardStatements < ActiveRecord::Migration
+class CreateStandardStatements < ActiveRecord::Migration[5.1]
   def change
     create_table :standard_statements do |t|
       t.string  :uri

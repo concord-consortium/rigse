@@ -1,4 +1,4 @@
-class AddMoreMissingIndexes < ActiveRecord::Migration
+class AddMoreMissingIndexes < ActiveRecord::Migration[5.1]
   def resilient_add_index(*arguments)
     begin
       add_index *arguments

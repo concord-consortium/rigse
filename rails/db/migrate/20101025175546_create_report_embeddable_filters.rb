@@ -1,4 +1,4 @@
-class CreateReportEmbeddableFilters < ActiveRecord::Migration
+class CreateReportEmbeddableFilters < ActiveRecord::Migration[5.1]
   def self.up
     create_table :report_embeddable_filters do |t|
       t.integer :offering_id

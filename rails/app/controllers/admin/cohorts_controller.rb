@@ -1,12 +1,12 @@
 class Admin::CohortsController < ApplicationController
   include RestrictedController
 
-  before_filter :check_for_project
+  before_action :check_for_project
 
   # Note that we have to assign @projects even for create and update
   # because they might render the edit or new templates (on validation error)
-  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
-  before_filter :find_cohort, only: ['show', 'edit', 'update', 'destroy']
+  before_action :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
+  before_action :find_cohort, only: ['show', 'edit', 'update', 'destroy']
 
   private
 
@@ -71,7 +71,7 @@ class Admin::CohortsController < ApplicationController
   # PUT /admin_cohorts/1
   def update
     authorize @admin_cohort
-    if @admin_cohort.update_attributes(admin_cohort_strong_params(params[:admin_cohort]))
+    if @admin_cohort.update(admin_cohort_strong_params(params[:admin_cohort]))
       redirect_to @admin_cohort, notice: 'Admin::Cohort was successfully updated.'
     else
       render action: 'edit'

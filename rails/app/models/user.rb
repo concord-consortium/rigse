@@ -1,9 +1,6 @@
 require 'digest/sha1'
 
-class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable and :omniauthable
+class User < ApplicationRecord
   has_many :authentications, :dependent => :delete_all
   has_many :access_grants, :dependent => :delete_all
 
@@ -36,6 +33,9 @@ class User < ActiveRecord::Base
   has_many :pages
   has_many :external_activities
   has_many :security_questions
+
+  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
+  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
 
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
   has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
@@ -151,10 +151,9 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password_confirmation
 
   # Relationships
-  has_and_belongs_to_many :roles, -> { uniq }, :join_table => "roles_users"
+  has_and_belongs_to_many :roles, -> { distinct }, :join_table => "roles_users"
 
-  has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
-  has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
+
   has_one :imported_user, :dependent => :destroy, :class_name => "Import::ImportedUser", :inverse_of => :user
 
   attr_accessor :updating_password
@@ -253,7 +252,7 @@ class User < ActiveRecord::Base
           password_confirmation: pw,
           skip_notifications: true
         )
-        user.confirm!
+        user.confirm
       end
 
       #
@@ -316,7 +315,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def confirm!
+  def confirm
     super
 
     # send MailChimp subscription data

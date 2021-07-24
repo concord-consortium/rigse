@@ -147,12 +147,12 @@ describe User do
   end
 
   it 'resets password' do
-    users(:quentin).update_attributes({:password => 'new password', :password_confirmation => 'new password'})
+    users(:quentin).update({:password => 'new password', :password_confirmation => 'new password'})
     expect(User.authenticate('quentin', 'new password')).to eq(users(:quentin))
   end
 
   it 'does not rehash password' do
-    users(:quentin).update_attributes({:login => 'quentin2'})
+    users(:quentin).update({:login => 'quentin2'})
     expect(User.authenticate('quentin2', 'monkey')).to eq(users(:quentin))
   end
 
@@ -214,7 +214,7 @@ describe User do
   it 'registers passive user' do
     user = create_user(:password => nil, :password_confirmation => nil)
     expect(user.state).to eq('passive')
-    user.update_attributes({:password => 'new password', :password_confirmation => 'new password'})
+    user.update({:password => 'new password', :password_confirmation => 'new password'})
     user.save!
     user.reload
     expect(user.state).to eq('pending')
@@ -828,8 +828,8 @@ protected
   # TODO: auto-generated
   describe '.authenticate' do
     it 'authenticate' do
-      login = double('login')
-      password = double('password')
+      login = 'login'
+      password = 'password'
       result = described_class.authenticate(login, password)
 
       expect(result).to be_nil
@@ -864,7 +864,7 @@ protected
       user = described_class.new
       result = user.active_for_authentication?
 
-      expect(result).to be_nil
+      expect(result).to be_falsey
     end
   end
 
@@ -881,10 +881,10 @@ protected
   end
 
   # TODO: auto-generated
-  describe '#confirm!' do
-    it 'confirm!' do
+  describe '#confirm' do
+    it 'confirm' do
       user = described_class.new
-      result = user.confirm!
+      result = user.confirm
 
       expect(result).not_to be_nil
     end
@@ -1265,7 +1265,7 @@ protected
   # TODO: auto-generated
   describe '#unsuspend!' do
     it 'unsuspend!' do
-      user = described_class.new
+      user = FactoryBot.create(:user)
       result = user.unsuspend!
 
       expect(result).not_to be_nil

@@ -123,10 +123,6 @@ class ApplicationPolicy
     user && (user.is_project_researcher? || manager_or_researcher?)
   end
 
-  def admin_or_config?
-    user && (user.has_role?('admin') || request.format == :config)
-  end
-
   def author?
     has_roles?('author')
   end

@@ -1,4 +1,4 @@
-class AddSectionToPortalClazz < ActiveRecord::Migration
+class AddSectionToPortalClazz < ActiveRecord::Migration[5.1]
   def self.up
     add_column :portal_clazzes, :section, :string
   end

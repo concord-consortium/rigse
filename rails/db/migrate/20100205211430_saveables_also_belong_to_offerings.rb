@@ -1,4 +1,4 @@
-class SaveablesAlsoBelongToOfferings < ActiveRecord::Migration
+class SaveablesAlsoBelongToOfferings < ActiveRecord::Migration[5.1]
   def self.up
     add_column :saveable_open_responses,              :offering_id, :integer 
     add_column :saveable_multiple_choices,            :offering_id, :integer 

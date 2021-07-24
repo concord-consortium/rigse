@@ -1,4 +1,4 @@
-class Portal::Learner < ActiveRecord::Base
+class Portal::Learner < ApplicationRecord
   include Rails.application.routes.url_helpers
 
   self.table_name = :portal_learners
@@ -10,11 +10,6 @@ class Portal::Learner < ActiveRecord::Base
   belongs_to :student, :class_name => "Portal::Student", :foreign_key => "student_id"
   belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id",
     :inverse_of => :learners
-
-  belongs_to :console_logger, :class_name => "Dataservice::ConsoleLogger", :foreign_key => "console_logger_id", :dependent => :destroy
-  belongs_to :bundle_logger, :class_name => "Dataservice::BundleLogger", :foreign_key => "bundle_logger_id", :dependent => :destroy
-  has_one    :periodic_bundle_logger, :class_name => "Dataservice::PeriodicBundleLogger", :foreign_key => "learner_id", :dependent => :destroy
-  has_one    :bucket_logger, :class_name => "Dataservice::BucketLogger", :foreign_key => "learner_id", :dependent => :destroy
 
   has_many :open_responses, :dependent => :destroy , :class_name => "Saveable::OpenResponse" do
     def answered
@@ -70,44 +65,25 @@ class Portal::Learner < ActiveRecord::Base
     super || create_report_learner!
   end
 
-  def sessions
-    self.bundle_logger.bundle_contents.length
-  end
-
   [:name, :first_name, :last_name, :email].each { |m| delegate m, :to => :student }
 
-  before_create do |learner|
-    learner.create_console_logger
-    learner.create_bundle_logger
-  end
-
   after_create do |learner|
-    # have to create this after so that the learner id can be stored in the new bundle logger
-    learner.create_periodic_bundle_logger
     learner.update_report_model_cache
   end
 
-  def valid_loggers?
-    console_logger && bundle_logger && periodic_bundle_logger
+  # 2021-06-21 NP: We update last_run when the run button pressed
+  # see offering_controller#show run_resource_html block
+  def update_last_run
+    self.report_learner.update_attribute('last_run', Time.now)
   end
 
-  def create_new_loggers
-    create_console_logger
-    create_bundle_logger
-    create_periodic_bundle_logger
+  # 2021-06-21 NP: method deligation because maybe report_learner will go away
+  def last_run
+    self.report_learner.last_run
   end
-
-  # validates_presence_of :console_logger, :message => "console_logger association not specified"
-  # validates_presence_of :bundle_logger,  :message => "bundle_logger association not specified"
 
   validates_presence_of :student,  :message => "student association not specified"
   validates_presence_of :offering, :message => "offering association not specified"
-
-  #
-  # before_save do |learner|
-  #   learner.console_logger = Dataservice::ConsoleLogger.create! unless learner.console_logger
-  #   learner.bundle_logger = Dataservice::BundleLogger.create! unless learner.bundle_logger
-  # end
 
   include Changeable
 
@@ -146,10 +122,6 @@ class Portal::Learner < ActiveRecord::Base
 
   def name
     user = student.user.name
-    # name = user.name
-    # login = user.login
-    # runnable_name = (offering ? offering.runnable.name : "invalid offering runnable")
-    # "#{user.login}: (#{user.name}), #{runnable_name}, #{self.bundle_logger.bundle_contents.count} sessions"
   end
 
   def saveable_count
@@ -213,7 +185,6 @@ class Portal::Learner < ActiveRecord::Base
   def elastic_search_learner_model
     # check to see if we can obtain the last run info
     if self.offering.internal_report?
-      last_run = calculate_last_run
       answersMeta = update_answers
       num_answerables = answersMeta[:num_answerables]
       num_answered = answersMeta[:num_answered]
@@ -227,7 +198,6 @@ class Portal::Learner < ActiveRecord::Base
       num_correct = 0
       # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
       complete_percent = 100
-      last_run = Time.now
     end
 
     {
@@ -241,7 +211,7 @@ class Portal::Learner < ActiveRecord::Base
       offering_name: self.offering.name,
       class_id: self.offering.clazz.id,
       class_name: self.offering.clazz.name,
-      last_run: last_run,
+      last_run: self.last_run,
       school_id: self.offering.clazz.school.id,
       school_name: self.offering.clazz.school.name,
       school_name_and_id: "#{self.offering.clazz.school.id}:#{self.offering.clazz.school.name}",
@@ -309,33 +279,6 @@ class Portal::Learner < ActiveRecord::Base
     rescue => e
       Rails.logger.error("Error updating Elasticsearch learner document for learner #{self.id}: #{e.message}")
     end
-  end
-
-  def calculate_last_run
-    bundle_logger = self.bundle_logger
-    pub_logger = self.periodic_bundle_logger
-    bucket_logger = self.bucket_logger
-    bundle_time = nil
-    pub_time = nil
-    bucket_time = nil
-
-    if bundle_logger && bundle_logger.last_non_empty_bundle_content
-      bundle_time = bundle_logger.last_non_empty_bundle_content.updated_at
-    end
-
-    if pub_logger && pub_logger.periodic_bundle_contents.last
-      pub_time = pub_logger.periodic_bundle_contents.last.updated_at
-    end
-
-    if bucket_logger && bucket_logger.bucket_contents.last
-      bucket_time = bucket_logger.bucket_contents.last.updated_at
-    end
-
-    times = [pub_time,bundle_time,bucket_time].compact.sort
-    if times.size > 0
-      last_run = times.last
-    end
-    last_run || Time.now
   end
 
   def update_answers

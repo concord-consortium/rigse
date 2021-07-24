@@ -1,5 +1,5 @@
 class NcesParser
-  
+
   def initialize(district_layout_file, school_layout_file, year, states_and_provinces=nil)
     ## @year_str gets inserted to the db table names
     @year_str = year.to_s[-2..-1]
@@ -8,18 +8,18 @@ class NcesParser
     puts "  #{@district_layout.size} variables retrieved from #{district_layout_file}"
     @school_layout = _get_school_layout(school_layout_file)
     puts "  #{@school_layout.size} variables retrieved from #{school_layout_file}"
-    
+
     @district_model = "Portal::Nces#{@year_str}District".constantize
     @school_model = "Portal::Nces#{@year_str}School".constantize
-    
+
     # states_and_provinces should either be nil to import data from ALL states and provinces
     # or equal to an array of state and province abbreviation strings.
     # The rake task that calls this class loads this value like this:
-    # states_and_provinces = APP_CONFIG[:states_and_provinces] 
+    # states_and_provinces = APP_CONFIG[:states_and_provinces]
     # which as an example might be equal to: ["RI", "MA"]
     @states_and_provinces = states_and_provinces
   end
-  
+
   def create_tables_migration
     migration = NcesMigrationGenerator.new(@district_layout, @school_layout, @year_str)
     migration.write_tables_migration
@@ -29,10 +29,10 @@ class NcesParser
     migration = NcesMigrationGenerator.new(@district_layout, @school_layout, @year_str)
     migration.write_indexes_migration
   end
-  
+
   def load_db(district_data_files, school_data_files)
     ## Delete all the entries first
-    ## Use the TRUNCATE cammand -- works in mysql to effectively empty the database and reset 
+    ## Use the TRUNCATE cammand -- works in mysql to effectively empty the database and reset
     ## the autogenerating primary key index ... not certain about other databases
     if @states_and_provinces && @states_and_provinces.empty?
       print "\nNot importing any schools -- states_and_provinces is an empty array []"
@@ -43,8 +43,8 @@ class NcesParser
       else
         puts "for all states and provinces ... this will take a while ..."
       end
-      ActiveRecord::Base.connection.delete("TRUNCATE `#{@district_model.table_name}`")
-      ActiveRecord::Base.connection.delete("TRUNCATE `#{@school_model.table_name}`")
+      ApplicationRecord.connection.delete("TRUNCATE `#{@district_model.table_name}`")
+      ApplicationRecord.connection.delete("TRUNCATE `#{@school_model.table_name}`")
       puts
       puts "Loading district data:"
       district_data_files.each do |fpath|
@@ -75,14 +75,14 @@ private
   # generating layouts and migrations
   #
   # NCES_DECIMAL_TYPE is a derived type meaning Decimal
-  # if the original NCES length value is suffixed with an '*' 
+  # if the original NCES length value is suffixed with an '*'
   # that means the field value has a decimal point
-  
+
   NCES_STRING_TYPE    = "AN"
   NCES_NUMBER_TYPE    = "N"
   NCES_DECIMAL_TYPE   = "D"
   ASTERISK_CHAR       = 42
-  
+
   def _get_school_layout(layout_file)
     columns = []
     File.open(layout_file, "r:iso-8859-1") do |file|
@@ -97,7 +97,7 @@ private
           # strip any whitespace from the field name and trim '+' prefix if it exists
           field_description[0].strip!
           field_description[0].gsub!(/^\+/, '')
-          # if the remaining field name is more than 3 chars in length 
+          # if the remaining field name is more than 3 chars in length
           # trim  any '06' suffix if it exists
           if field_description[0].length > 3
             field_description[0].gsub!(/06$/, '')
@@ -148,7 +148,7 @@ private
           # strip any whitespace from the field name and trim '+' prefix if it exists
           field_description[0].strip!
           field_description[0].gsub!(/^\+/, '')
-          # if the remaining field name is more than 3 chars in length 
+          # if the remaining field name is more than 3 chars in length
           # trim  any '06' suffix if it exists
           if field_description[0].length > 3
             field_description[0].gsub!(/06$/, '')
@@ -176,7 +176,7 @@ private
     end
     columns
   end
-  
+
   # Parses the data for either districts or schools
   #
   # Uses the gem ar-extensions to do faster importing.
@@ -226,14 +226,14 @@ private
     end
     if value_sets.length > 0
       model.import(field_names, value_sets, options)
-    end    
+    end
     puts "\n#{count} records processed from #{file.path}"
   end
-  
+
   # Creates the AR association: Nces06District 'has_many :nces_schools'
   # for the Nces06Schools
   #
-  # This uses find_by_sql to load shallow instance of the models -- only 
+  # This uses find_by_sql to load shallow instance of the models -- only
   # the attributes needed are loaded into memory.
   #
   # FIXME: the performance of nces_districts.detect becomes much slower as the
@@ -243,7 +243,7 @@ private
   def _parseDistrictSchoolAssociations
     nces_districts = @district_model.find_by_sql("SELECT id,LEAID from #{Portal::Nces06District.table_name}")
     district_id_and_leaid_array = nces_districts.collect { |d| [d.id, d.LEAID] }
-    
+
     nces_schools = @school_model.find_by_sql("SELECT id, nces_district_id, LEAID from #{Portal::Nces06School.table_name}")
     count = 0
     status = '.'
@@ -288,7 +288,7 @@ private
 end
 
 class NcesMigrationGenerator
-  
+
   def initialize(district_layout, school_layout, year_str)
     @year_str = year_str
     @district_layout = district_layout
@@ -299,9 +299,9 @@ class NcesMigrationGenerator
     @district_table_name = "portal_nces#{@year_str}_districts"
     @school_table_name = "portal_nces#{@year_str}_schools"
     @indexes_migration_file_name = "create_nces#{@year_str}_indexs.rb"
-    @indexes_migration_class_name = "CreateNces#{@year_str}Indexes"    
+    @indexes_migration_class_name = "CreateNces#{@year_str}Indexes"
   end
-  
+
   def write_tables_migration
     open(_get_file_path(@tables_migration_file_name), 'w') do |f|
       f.write(_getTablesText)
@@ -313,8 +313,8 @@ class NcesMigrationGenerator
       f.write(_getIndexesText)
     end
   end
-  
-private  
+
+private
 
   def _get_file_path(migration_file_name)
     timestamp = Time.now.gmtime.strftime('%Y%m%d%H%M%S')
@@ -339,13 +339,13 @@ private
   end
 
   def _getDistrictIndexs(index_fields, index_command)
-    index_fields.collect do |field_name| 
+    index_fields.collect do |field_name|
       _getIndexText(field_name, @district_layout, @district_table_name, index_command)
     end.join
   end
 
   def _getSchoolIndexs(index_fields, index_command)
-    index_fields.collect do |field_name| 
+    index_fields.collect do |field_name|
       _getIndexText(field_name, @school_layout, @school_table_name, index_command)
     end.join
   end

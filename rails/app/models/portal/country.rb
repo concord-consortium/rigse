@@ -1,6 +1,6 @@
 require 'csv'
 
-class Portal::Country < ActiveRecord::Base
+class Portal::Country < ApplicationRecord
     self.table_name = :portal_countries
     has_many :schools, :class_name => "Portal::School"
 
@@ -38,7 +38,7 @@ class Portal::Country < ActiveRecord::Base
         in_hash[:name] = adjust_country_name(in_hash[:name])
 
         existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
-        existing.update_attributes(in_hash)
+        existing.update(in_hash)
       end
     end
 

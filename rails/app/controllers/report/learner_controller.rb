@@ -2,7 +2,7 @@ class Report::LearnerController < ApplicationController
 
   require 'cgi'
 
-  before_filter :setup,
+  before_action :setup,
       :only => [
       :index,
       :update_learners
@@ -52,7 +52,7 @@ class Report::LearnerController < ApplicationController
         end
       end
     else
-      render :nothing => true
+      head :ok
     end
   end
 

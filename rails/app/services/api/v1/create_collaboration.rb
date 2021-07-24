@@ -70,7 +70,7 @@ class API::V1::CreateCollaboration
       external_activity_url = add_param(external_activity_url, 'domain', root_url(protocol: self.protocol,
                                                                                   host:     self.host_with_port))
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
-      
+
       external_activity_url = add_param(external_activity_url, 'logging', @offering.clazz.logging)
       result[:external_activity_url] = external_activity_url
     end
@@ -92,43 +92,15 @@ class API::V1::CreateCollaboration
     @collaboration.students = @student_objects
 
     setup_learners
-    setup_bundles unless @offering.external_activity?
     true
   end
 
   def setup_learners
     @owner_learner = @offering.find_or_create_learner(@owner)
     @learner_objects = @student_objects.map do |s|
-      @offering.find_or_create_learner(s)
+      l = @offering.find_or_create_learner(s)
+      l.update_last_run
     end
-  end
-
-  # Only for JNLP activities.
-  def setup_bundles
-    bundle_logger = @owner_learner.bundle_logger
-    bundle_logger.start_bundle
-    # Clear any in_progress_bundles for any of the collaborators, except for the current student.
-    learners_to_clear = @learner_objects - [@owner_learner]
-    learners_to_clear.each do |l|
-      if l.bundle_logger && l.bundle_logger.in_progress_bundle
-        l.bundle_logger.end_bundle({:body => ""})
-      end
-    end
-    # Set collaboration only in owner's bundle.
-    bundle_logger.in_progress_bundle.collaboration = @collaboration
-    bundle_logger.in_progress_bundle.save!
-    # Displays message visible for student, which is later updated (see controllers/portal/offerings_controller.rb).
-    setup_dataservice_event(bundle_logger.in_progress_bundle)
-  end
-
-  # Only for JNLP activities.
-  def setup_dataservice_event(bundle)
-    # This is used to display info for student and present progress of download and lunch process.
-    Dataservice::LaunchProcessEvent.create!(
-      :event_type => Dataservice::LaunchProcessEvent::TYPES[:session_started],
-      :event_details => "Learner session started. Requesting activity launcher...",
-      :bundle_content => bundle
-    )
   end
 
   def password_valid?(student_hash)

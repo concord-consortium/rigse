@@ -1,4 +1,4 @@
-class AddIndexesToPortalLearner < ActiveRecord::Migration
+class AddIndexesToPortalLearner < ActiveRecord::Migration[5.1]
   def self.up
     add_index :portal_learners, :offering_id
     add_index :portal_learners, :bundle_logger_id

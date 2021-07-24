@@ -805,7 +805,7 @@ module MockData
       user = FactoryBot.create(:user, user_info)
 
       user.save!
-      user.confirm!
+      user.confirm
 
       return_value[:created?] = true
       return_value[:user] = user

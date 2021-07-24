@@ -1,4 +1,4 @@
-class AccessGrant < ActiveRecord::Base
+class AccessGrant < ApplicationRecord
   belongs_to :user
   belongs_to :client
   belongs_to :learner, :class_name => "Portal::Learner"
@@ -14,7 +14,7 @@ class AccessGrant < ActiveRecord::Base
 
   def self.prune!
     # We need to delete tokens that have expired...
-    delete_all(["access_token_expires_at < ?", 1.minute.ago])
+    AccessGrant.where(["access_token_expires_at < ?", 1.minute.ago]).delete_all
   end
 
   def self.authenticate(code, client_id)

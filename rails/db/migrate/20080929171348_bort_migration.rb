@@ -1,4 +1,4 @@
-class BortMigration < ActiveRecord::Migration
+class BortMigration < ActiveRecord::Migration[5.1]
   def self.up
     # Create Sessions Table
     create_table :sessions do |t|

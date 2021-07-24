@@ -25,6 +25,7 @@ describe('When I try to render autosuggest', () => {
     expect(autoSuggest.html()).toBe(pack(`
       <div class="autoSuggest">
         <input type="text" autocomplete="off" value="">
+        <input id="keywordSubmit" type="submit" name="keywordSubmit" value="Go">
       </div>
     `));
   });
@@ -34,6 +35,7 @@ describe('When I try to render autosuggest', () => {
     expect(autoSuggest.html()).toBe(pack(`
       <div class="autoSuggest">
         <input type="text" autocomplete="off" value="test">
+        <input id="keywordSubmit" type="submit" name="keywordSubmit" value="Go">
         <div id="suggestions" class="suggestions" style="width: 0px;">
           <div class="suggestion">test 1</div>
           <div class="suggestion">test 2</div>
@@ -65,6 +67,7 @@ describe('When I try to render autosuggest', () => {
     expect(autoSuggest.html()).toBe(pack(`
       <div class="autoSuggest">
         <input type="text" autocomplete="off" value="test">
+        <input id="keywordSubmit" type="submit" name="keywordSubmit" value="Go">
         <div id="suggestions" class="suggestions" style="width: 100px;">
           <div class="suggestion">test 1</div>
           <div class="suggestion">test 2</div>

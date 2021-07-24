@@ -1,4 +1,4 @@
-class CreatePortalOfferingActivityFeedbacks < ActiveRecord::Migration
+class CreatePortalOfferingActivityFeedbacks < ActiveRecord::Migration[5.1]
   def change
     create_table :portal_offering_activity_feedbacks do |t|
       t.boolean :enable_text_feedback, default: false

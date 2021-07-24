@@ -1,4 +1,4 @@
-class AddStudentViewsCount < ActiveRecord::Migration
+class AddStudentViewsCount < ActiveRecord::Migration[5.1]
   def self.up
     create_table :student_views do |t|
       t.integer :user_id, :null => false

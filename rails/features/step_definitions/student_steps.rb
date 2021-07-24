@@ -6,7 +6,7 @@ Given /^the following students exist:$/ do |table|
       user = FactoryBot.create(:user, hash)
       user.add_role("member")
       user.save!
-      user.confirm!
+      user.confirm
 
       portal_student = FactoryBot.create(:full_portal_student, { :user => user })
       portal_student.save!

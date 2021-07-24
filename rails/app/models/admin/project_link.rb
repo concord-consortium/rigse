@@ -1,4 +1,4 @@
-class Admin::ProjectLink < ActiveRecord::Base
+class Admin::ProjectLink < ApplicationRecord
   self.table_name = "admin_project_links"
   belongs_to :project, :class_name => 'Admin::Project'
   validates :href, :name, :link_id, :presence => true

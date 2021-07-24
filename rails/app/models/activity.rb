@@ -1,7 +1,5 @@
-class Activity < ActiveRecord::Base
-  include Cohorts
-  include JnlpLaunchable
-  include HasEmbeddables
+class Activity < ApplicationRecord
+
   belongs_to :user
   belongs_to :investigation
   belongs_to :original
@@ -30,13 +28,16 @@ class Activity < ActiveRecord::Base
 
   has_many :page_elements, :through => :pages
 
-  include ResponseTypes
   acts_as_replicatable
   acts_as_list :scope => :investigation
+
   include Changeable
   include TreeNode
   include Publishable
   include Archiveable
+  include Cohorts
+  include ResponseTypes
+  include HasEmbeddables
 
   send_update_events_to :investigation
 
@@ -75,7 +76,7 @@ class Activity < ActiveRecord::Base
            'ON (external_activities.template_id = activities.id AND external_activities.template_type = "Activity")',
            'OR (external_activities.template_id = investigations.id AND external_activities.template_type = "Investigation")'])
         .where("external_activities.id IS #{v ? 'NOT' : ''} NULL")
-        .uniq
+        .distinct
   end
   # End scope weeding zone
 

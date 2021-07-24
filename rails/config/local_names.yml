@@ -1,9 +1,5 @@
 ---
 default:
-  Dataservice::BundleContent : BundleContent
-  Dataservice::BundleLogger : BundleLogger
-  Dataservice::ConsoleContent : ConsoleContent
-  Dataservice::ConsoleLogger : ConsoleLogger
   Embeddable::ImageQuestion : Image Question
   Embeddable::MultipleChoice : Multiple Choice Question
   Portal::Clazz : Class

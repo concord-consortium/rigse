@@ -1,4 +1,4 @@
-class CreateBookmarkVisits < ActiveRecord::Migration
+class CreateBookmarkVisits < ActiveRecord::Migration[5.1]
   def change
     create_table :bookmark_visits do |t|
       t.integer     :user_id

@@ -1,4 +1,4 @@
-class RecreateInvestigations < ActiveRecord::Migration
+class RecreateInvestigations < ActiveRecord::Migration[5.1]
   def self.up
     create_table :investigations do |t|
       t.integer :user_id

@@ -1,4 +1,4 @@
-class CreateOtrunkExampleOtrunkImports < ActiveRecord::Migration
+class CreateOtrunkExampleOtrunkImports < ActiveRecord::Migration[5.1]
   def self.up
     create_table :otrunk_example_otrunk_imports do |t|
       t.string :uuid

@@ -1,4 +1,4 @@
-class CreateReportLearner < ActiveRecord::Migration
+class CreateReportLearner < ActiveRecord::Migration[5.1]
   def self.up
     # this is de-normalized table, with some indexes
     # to speed up reporting. It will help with data filtering.

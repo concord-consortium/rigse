@@ -1,4 +1,4 @@
-class CreateOtrunkExampleOtmlFiles < ActiveRecord::Migration
+class CreateOtrunkExampleOtmlFiles < ActiveRecord::Migration[5.1]
   def self.up
     create_table :otrunk_example_otml_files do |t|
       t.string :uuid

@@ -1,6 +1,6 @@
 require 'fileutils'
 
-class Admin::Settings < ActiveRecord::Base
+class Admin::Settings < ApplicationRecord
   MinPubInterval     = 10   # 10 second update seems close to too fast.
   DefaultPubInterval = 300  # default is five minues
   self.table_name = "admin_settings"
@@ -39,7 +39,7 @@ class Admin::Settings < ActiveRecord::Base
     id.to_s
   end
 
-  def update_attributes(hashy)
+  def update(hashy)
     enabled_bookmark_types = hashy['enabled_bookmark_types']
     if enabled_bookmark_types
       enabled_bookmark_types = enabled_bookmark_types.map { |h| h.split(",") }
@@ -126,11 +126,6 @@ Portal::Teacher:  #{Portal::Teacher.count}
 Portal::Student:  #{Portal::Student.count}
 Portal::Offering: #{Portal::Offering.count}
 Portal::Learner:  #{Portal::Learner.count}
-
-Dataservice::BundleLogger:  #{Dataservice::BundleLogger.count}
-Dataservice::BundleContent: #{Dataservice::BundleContent.count}
-Dataservice::ConsoleLogger:  #{Dataservice::ConsoleLogger.count}
-Dataservice::ConsoleContent: #{Dataservice::ConsoleContent.count}
 
 There are #{Portal::Teacher.select {|t| t.user == nil}.size} Teachers without Users
 There are #{Portal::Student.select {|s| s.user == nil}.size} Students which no longer have Teachers

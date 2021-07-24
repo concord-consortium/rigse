@@ -1,14 +1,14 @@
 namespace :db do
-  desc "Dump the current database to a MySQL file" 
+  desc "Dump the current database to a MySQL file"
   task :dump => :environment do
-    db_config = ActiveRecord::Base.configurations[Rails.env]
+    db_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env)
     case db_config["adapter"]
     when 'mysql', 'mysql2'
       # make sure we can connect to the db...
       ActiveRecord::Base.establish_connection(db_config)
-      
+
       output_file = "db/#{Rails.env}_data.sql";
-      
+
       cmd = "mysqldump --lock-tables=false --add-drop-table --quick --extended-insert"
       if db_config["host"]
         cmd << " -h #{db_config["host"]}"
@@ -20,7 +20,7 @@ namespace :db do
         cmd << " -p'#{db_config["password"]}'"
       end
       cmd << " #{db_config["database"]}"
-      
+
       cmd << " > #{output_file}"
       # puts "Fetching database\n#{cmd}"
       puts "Saving database to: #{output_file}"
@@ -31,27 +31,27 @@ namespace :db do
         f << `sqlite3  #{db_config["database"]} .dump`
       end
     else
-      raise "Task not supported by '#{db_config['adapter']}'" 
+      raise "Task not supported by '#{db_config['adapter']}'"
     end
   end
-  
+
   require 'active_record'
-  class RemoveTables < ActiveRecord::Migration
+  class RemoveTables < ActiveRecord::Migration[5.1]
     def self.up
       ActiveRecord::Base.connection.tables.each do |table|
         drop_table(table)
       end
     end
-    
+
     def self.down
     end
   end
-  
+
   task :load => :environment do
-    db_config = ActiveRecord::Base.configurations[Rails.env]
-    
+    db_config = ActiveRecord::Base.configurations.configs_for(env_name: Rails.env)
+
     RemoveTables.up
-    
+
     case db_config["adapter"]
     when 'mysql', 'mysql2'
       cmd = "mysql"
@@ -74,7 +74,7 @@ namespace :db do
       ActiveRecord::Base.establish_connection(db_config)
       puts`sqlite3  #{db_config["database"]} < #{db_path}`
     else
-      raise "Task not supported by '#{db_config['adapter']}'" 
+      raise "Task not supported by '#{db_config['adapter']}'"
     end
   end
 end

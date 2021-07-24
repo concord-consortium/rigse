@@ -1,4 +1,4 @@
-class CreateSaveableMeasuringResistance < ActiveRecord::Migration
+class CreateSaveableMeasuringResistance < ActiveRecord::Migration[5.1]
   def self.up
     create_table :saveable_sparks_measuring_resistance do |t|
       t.integer     :learner_id

@@ -2,7 +2,7 @@ class API::V1::StudentsController < API::APIController
 
   # POST api/v1/students
   def create
-    registration = API::V1::StudentRegistration.new(params)
+    registration = API::V1::StudentRegistration.new(student_registration_strong_params(params))
 
     # This was added to allow for registering after logging in the first time with SSO
     # But it also occurs if a user is able to access the registration form while being
@@ -136,7 +136,7 @@ class API::V1::StudentsController < API::APIController
     if !user.save
       return error("Unable to save newly created user")
     end
-    user.confirm!
+    user.confirm
 
     if current_settings.allow_default_class || grade_level.nil?
       portal_student = Portal::Student.create(:user_id => user.id)
@@ -255,5 +255,10 @@ class API::V1::StudentsController < API::APIController
 
   def user_strong_params(params)
     params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation)
+  end
+
+  def student_registration_strong_params(params)
+    params && params.permit(:first_name, :last_name, :email, :login, :password, :password_confirmation,
+                            :email_subscribed, :sign_up_path, :asked_age, :have_consent, :class_word)
   end
 end

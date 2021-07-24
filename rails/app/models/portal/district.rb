@@ -1,4 +1,4 @@
-class Portal::District < ActiveRecord::Base
+class Portal::District < ApplicationRecord
   self.table_name = :portal_districts
 
   acts_as_replicatable

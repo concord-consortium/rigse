@@ -17,7 +17,7 @@ class Portal::OfferingPolicy < ApplicationPolicy
         teacher_scope = Pundit.policy_scope(user, Portal::Teacher)
         teacher_clazz_ids = teacher_scope
           .joins("INNER JOIN portal_teacher_clazzes __ptc_scope ON __ptc_scope.teacher_id = portal_teachers.id")
-          .uniq
+          .distinct
           .pluck("__ptc_scope.clazz_id")
         if teacher_clazz_ids.length > 0
           scope.where(clazz_id: teacher_clazz_ids)

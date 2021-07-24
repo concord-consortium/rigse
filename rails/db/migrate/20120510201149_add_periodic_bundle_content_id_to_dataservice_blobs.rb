@@ -1,4 +1,4 @@
-class AddPeriodicBundleContentIdToDataserviceBlobs < ActiveRecord::Migration
+class AddPeriodicBundleContentIdToDataserviceBlobs < ActiveRecord::Migration[5.1]
   def self.up
     add_column :dataservice_blobs, :periodic_bundle_content_id, :integer
     add_index  :dataservice_blobs, :periodic_bundle_content_id, :name => 'pbc_idx'

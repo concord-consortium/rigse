@@ -3,3 +3,49 @@
 
 .landing-page-content
   = raw(@landing_page_content)
+
+:javascript
+  var isAssignWrapped = window.self !== window.top
+                        && window.self.location.hostname === window.top.location.hostname;
+  jQuery(function() {
+    if (isAssignWrapped) {
+      assignViewAdjustment();
+    }
+  });
+
+  function assignViewAdjustment() {
+    jQuery("html").addClass("assign-wrapped");
+    jQuery(".skew").removeClass("skew top-only gray");
+    jQuery(".cols").removeClass("cols skew-cancel");
+    jQuery(".col-12").removeClass("col-12");
+    jQuery("#teacher-resources, #student-resources").addClass("assign-wrapped-teacher-materials");
+    jQuery("#teacher-resources h2, #student-resources h2").click(function() {
+      jQuery(this).closest(".assign-wrapped-teacher-materials").toggleClass("open");
+    });
+    if (document.getElementById('bin-view')) {
+      document.getElementById('bin-view').style.marginTop = '10px'
+      document.getElementById('bin-view').style.marginRight = '0'
+      document.getElementById('bin-view').style.marginLeft = '0'
+      document.getElementById('bin-view').style.width = '100%'
+    }
+   }
+
+  // This function should be called after a materials collection is fully loaded on a 
+  // landing page via PortalPages.renderMaterialsCollection(). In the case that the 
+  // collection page is embedded in a class's assign lightbox via an iframe, it ensures 
+  // that the iframe is resized to show the collection's entire contents.
+  function cleanUpAssignViewAdjustment() {
+    if (isAssignWrapped) {
+      window.parent.document.getElementById('collectionIframe').style.height = document.body.scrollHeight + 'px';
+      window.parent.document.getElementById('collectionIframe').style.visibility = 'visible';
+      window.parent.document.getElementById('collectionIframeLoading').style.display = 'none';
+    }
+    jQuery(".resourceItem").animate({'opacity': 1}, 500);
+  }
+
+  function showResources() {
+    setTimeout(function () {
+      var resourceItems = document.querySelectorAll('.resourceItem');
+      resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1 });
+    }, 500);
+  }

@@ -1,4 +1,4 @@
-class RedoGseTables < ActiveRecord::Migration
+class RedoGseTables < ActiveRecord::Migration[5.1]
   def self.up
     
     drop_table :expectation_stems_grade_span_expectations

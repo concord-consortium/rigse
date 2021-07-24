@@ -1,4 +1,4 @@
-class RenameNoticeUserDisplayStatus < ActiveRecord::Migration
+class RenameNoticeUserDisplayStatus < ActiveRecord::Migration[5.1]
   def up
     rename_table :notice_user_display_statuses, :admin_notice_user_display_statuses
   end

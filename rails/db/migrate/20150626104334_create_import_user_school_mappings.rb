@@ -1,4 +1,4 @@
-class CreateImportUserSchoolMappings < ActiveRecord::Migration
+class CreateImportUserSchoolMappings < ActiveRecord::Migration[5.1]
   def up
     create_table :import_user_school_mappings do |t|
       t.integer :school_id

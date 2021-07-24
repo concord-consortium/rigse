@@ -1,4 +1,4 @@
-class CreateAdminTags < ActiveRecord::Migration
+class CreateAdminTags < ActiveRecord::Migration[5.1]
   def self.up
     create_table :admin_tags do |t|
       t.string :scope

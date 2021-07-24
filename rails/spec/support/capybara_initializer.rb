@@ -28,6 +28,7 @@ class CapybaraInitializer
     # Register the driver
     Capybara.register_driver(:selenium) { |app| driver(app) }
     Capybara.javascript_driver = :selenium
+    Capybara.server = :webrick
   end
 
   def self.configure

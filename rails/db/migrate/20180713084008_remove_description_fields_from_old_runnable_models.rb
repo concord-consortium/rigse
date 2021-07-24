@@ -1,4 +1,4 @@
-class RemoveDescriptionFieldsFromOldRunnableModels < ActiveRecord::Migration
+class RemoveDescriptionFieldsFromOldRunnableModels < ActiveRecord::Migration[5.1]
   def up
     remove_column :activities, :description_for_teacher
     remove_column :investigations, :description_for_teacher

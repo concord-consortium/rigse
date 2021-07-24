@@ -1,4 +1,4 @@
-class CreateDataCollectors < ActiveRecord::Migration
+class CreateDataCollectors < ActiveRecord::Migration[5.1]
   def self.up
     create_table :data_collectors do |t|
       t.string      :name

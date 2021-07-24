@@ -1,4 +1,4 @@
-class UpdateReportLearnerFields < ActiveRecord::Migration
+class UpdateReportLearnerFields < ActiveRecord::Migration[5.1]
   def change
     add_column :report_learners, :teachers_map, :text
     rename_column :report_learners, :teacher_ids, :teachers_id

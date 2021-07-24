@@ -1,4 +1,4 @@
-class ChangeIsFeaturedToShowInFeaturedQuestionReport < ActiveRecord::Migration
+class ChangeIsFeaturedToShowInFeaturedQuestionReport < ActiveRecord::Migration[5.1]
   def up
     remove_column :embeddable_multiple_choices, :is_featured
     remove_column :embeddable_open_responses, :is_featured

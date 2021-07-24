@@ -1,4 +1,4 @@
-class CreateMwModelerPages < ActiveRecord::Migration
+class CreateMwModelerPages < ActiveRecord::Migration[5.1]
   def self.up
     create_table :mw_modeler_pages do |t|
       

@@ -29,7 +29,7 @@ RegexDeleteSuccess = /(.*) was deleted/
 describe Admin::ProjectsController do
   before(:each) do
     # not required, but prevents warning messages in console when running specs:
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
   end
   let(:project) { FactoryBot.create(:project, landing_page_slug: 'foo-proj', landing_page_content: '<h1>Foo</h1>') }
   let(:valid_attributes) { { name: "Some name" } }
@@ -42,28 +42,28 @@ describe Admin::ProjectsController do
     describe "#index" do
       it "assigns all projects as @projects" do
         project
-        get :index, {}
+        get :index
         expect(assigns(:projects).to_a).to eq([project])
       end
     end
 
     describe "#show" do
       it "assigns the requested project as @project" do
-        get :show, {:id => project.to_param}
+        get :show, params: { :id => project.to_param }
         expect(assigns(:project)).to eq(project)
       end
     end
 
     describe "#new" do
       it "assigns a new project as @project" do
-        get :new, {}
+        get :new
         expect(assigns(:project)).to be_a_new(Admin::Project)
       end
     end
 
     describe "#edit" do
       it "assigns the requested project as @project" do
-        get :edit, {:id => project.to_param}
+        get :edit, params: { :id => project.to_param }
         expect(assigns(:project)).to eq(project)
       end
     end
@@ -72,18 +72,18 @@ describe Admin::ProjectsController do
       describe "with valid params" do
         it "creates a new Admin::Project" do
           expect {
-            post :create, {:admin_project => valid_attributes}
+            post :create, params: { :admin_project => valid_attributes }
           }.to change(Admin::Project, :count).by(1)
         end
 
         it "assigns a newly created project as @project" do
-          post :create, {:admin_project => valid_attributes}
+          post :create, params: { :admin_project => valid_attributes }
           expect(assigns(:project)).to be_a(Admin::Project)
           expect(assigns(:project)).to be_persisted
         end
 
         it "redirects to the projects index" do
-          post :create, {:admin_project => valid_attributes}
+          post :create, params: { :admin_project => valid_attributes }
           expect(response).to redirect_to(admin_projects_url)
         end
       end
@@ -92,7 +92,7 @@ describe Admin::ProjectsController do
         it "assigns a newly created but unsaved project as @project" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
-          post :create, {:admin_project => valid_attributes}
+          post :create, params: { :admin_project => valid_attributes }
           expect(assigns(:project)).to be_a(Admin::Project)
           expect(assigns(:project)).not_to be_persisted
           expect(assigns(:project)).to be_a_new(Admin::Project)
@@ -101,7 +101,7 @@ describe Admin::ProjectsController do
         it "re-renders the 'new' template" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
-          post :create, {:admin_project => valid_attributes}
+          post :create, params: { :admin_project => valid_attributes }
           expect(response).to render_template(:new)
         end
       end
@@ -112,19 +112,19 @@ describe Admin::ProjectsController do
         it "updates the requested project" do
           # Assuming there are no other projects in the database, this
           # specifies that the Admin::Project created on the previous line
-          # receives the :update_attributes message with whatever params are
+          # receives the :update message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with({'name' => 'new name'})
-          put :update, {:id => project.to_param, :admin_project => {'name' => 'new name'}}
+          expect_any_instance_of(Admin::Project).to receive(:update).with(permit_params!({'name' => 'new name'}))
+          put :update, params: { :id => project.to_param, :admin_project => {'name' => 'new name'} }
         end
 
         it "assigns the requested project as @project" do
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(assigns(:project)).to eq(project)
         end
 
         it "redirects to the project" do
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(response).to redirect_to(project)
         end
       end
@@ -133,14 +133,14 @@ describe Admin::ProjectsController do
         it "assigns the project as @project" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(assigns(:project)).to eq(project)
         end
 
         it "re-renders the 'edit' template" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(response).to render_template("edit")
         end
       end
@@ -150,12 +150,12 @@ describe Admin::ProjectsController do
       it "destroys the requested project" do
         project
         expect {
-          delete :destroy, {:id => project.to_param}
+          delete :destroy, params: { :id => project.to_param }
         }.to change(Admin::Project, :count).by(-1)
       end
 
       it "redirects to the projects list" do
-        delete :destroy, {:id => project.to_param}
+        delete :destroy, params: { :id => project.to_param }
         expect(response).to redirect_to(admin_projects_url)
       end
     end
@@ -178,7 +178,7 @@ describe Admin::ProjectsController do
 
     describe "#index" do
       it "Only lists projects for which the user is a project admin" do
-        get :index, {}
+        get :index
         expect(assigns(:projects).to_a).to eq(users_projects)
       end
     end
@@ -187,7 +187,7 @@ describe Admin::ProjectsController do
       context 'the users projects' do
         it "assigns the requested project as @project" do
           users_projects.each do |proj|
-            get :show, { id: proj.id}
+            get :show, params: { id: proj.id }
             expect(assigns(:project)).to eq(proj)
           end
         end
@@ -196,7 +196,7 @@ describe Admin::ProjectsController do
       context 'other projects' do
         it "It will also show those" do
           other_projects.each do |proj|
-            get :show, { id:  proj.id }
+            get :show, params: { id:  proj.id }
             expect(assigns(:project)).to eq(proj)
           end
         end
@@ -205,7 +205,7 @@ describe Admin::ProjectsController do
 
     describe "#new" do
       it "is unavailable to project admins" do
-        get :new, {}
+        get :new
         expect(response).to have_http_status(:redirect)
         expect(request.flash['alert']).to match(RegexForAuthFailNew)
       end
@@ -215,7 +215,7 @@ describe Admin::ProjectsController do
       context "their own projects" do
         it "assigns the requested project as @project" do
           users_projects.each do |proj|
-            get :edit, {id: proj.id}
+            get :edit, params: { id: proj.id }
             expect(assigns(:project)).to eq(proj)
           end
         end
@@ -224,7 +224,7 @@ describe Admin::ProjectsController do
       context "other projects" do
         it "it won't let them edit" do
           other_projects.each do |proj|
-            get :edit, { id: proj.id }
+            get :edit, params: { id: proj.id }
             expect(response).to have_http_status(:redirect)
             expect(request.flash['alert']).to match(RegexForAuthFailEdit)
           end
@@ -236,12 +236,12 @@ describe Admin::ProjectsController do
       describe "with valid params" do
         it "wont let them" do
           expect {
-            post :create, {:admin_project => valid_attributes}
+            post :create, params: { :admin_project => valid_attributes }
           }.not_to change(Admin::Project, :count)
         end
 
         it "redirects with warning" do
-          post :create, {:admin_project => valid_attributes}
+          post :create, params: { :admin_project => valid_attributes }
           expect(response).to have_http_status(:redirect)
           expect(request.flash['alert']).to match(RegexForAuthFailNew)
         end
@@ -254,19 +254,19 @@ describe Admin::ProjectsController do
         it "updates the requested project" do
           # Assuming there are no other projects in the database, this
           # specifies that the Admin::Project created on the previous line
-          # receives the :update_attributes message with whatever params are
+          # receives the :update message with whatever params are
           # submitted in the request.
-          expect_any_instance_of(Admin::Project).to receive(:update_attributes).with({'name' => 'new name'})
-          put :update, {:id => project.id, :admin_project => {'name' => 'new name'}}
+          expect_any_instance_of(Admin::Project).to receive(:update).with(permit_params!({'name' => 'new name'}))
+          put :update, params: { :id => project.id, :admin_project => {'name' => 'new name'} }
         end
 
         it "assigns the requested project as @project" do
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(assigns(:project)).to eq(project)
         end
 
         it "redirects to the project" do
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(response).to redirect_to(project)
         end
       end
@@ -274,14 +274,14 @@ describe Admin::ProjectsController do
         it "assigns the project as @project" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(assigns(:project)).to eq(project)
         end
-  
+
         it "re-renders the 'edit' template" do
           # Trigger the behavior that occurs when invalid params are submitted
           allow_any_instance_of(Admin::Project).to receive(:save).and_return(false)
-          put :update, {:id => project.to_param, :admin_project => valid_attributes}
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
           expect(response).to render_template("edit")
         end
       end
@@ -293,12 +293,12 @@ describe Admin::ProjectsController do
         it "wont destroy the project" do
           project
           expect {
-            delete :destroy, {:id => project.id}
+            delete :destroy, params: { :id => project.id }
           }.not_to change(Admin::Project, :count)
         end
 
         it "redirects to the projects list" do
-          delete :destroy, {:id => project.id}
+          delete :destroy, params: { :id => project.id }
           expect(response).to have_http_status(:redirect)
           expect(request.flash['alert']).to match(RegexForAuthFailDestroy)
         end
@@ -310,7 +310,7 @@ describe Admin::ProjectsController do
     describe "#index" do
       it "redirects to the login page" do
         project
-        get :index, {}
+        get :index
         expect(response).to have_http_status(:redirect)
         expect(response.location).to include(auth_login_path)
       end
@@ -320,7 +320,7 @@ describe Admin::ProjectsController do
   describe "#landing page" do
     context "there is a project matching the slug" do
       it "renders landing page template" do
-        get :landing_page, {:landing_page_slug => project.landing_page_slug}
+        get :landing_page, params: { :landing_page_slug => project.landing_page_slug }
         expect(response).to render_template("landing_page")
       end
 
@@ -337,7 +337,7 @@ describe Admin::ProjectsController do
         # ApplicationController#pundit_user_not_authorized
         # which will in turn call back to 'humanize_action', and not_authorized_error_message
         it "does not allow access, the student is redirected to their home page" do
-          get :landing_page, {:landing_page_slug => project.landing_page_slug}
+          get :landing_page, params: { :landing_page_slug => project.landing_page_slug }
           expect(response).to redirect_to(controller.send(:after_sign_in_path_for, student_user))
         end
       end
@@ -345,7 +345,7 @@ describe Admin::ProjectsController do
 
     context "there is no project matching the slug" do
       it "renders 404" do
-        get :landing_page, {:landing_page_slug => "some-slug-which-doesnt-exist"}
+        get :landing_page, params: { :landing_page_slug => "some-slug-which-doesnt-exist" }
         expect(response.status).to eq(404)
       end
     end

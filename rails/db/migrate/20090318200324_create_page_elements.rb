@@ -1,4 +1,4 @@
-class CreatePageElements < ActiveRecord::Migration
+class CreatePageElements < ActiveRecord::Migration[5.1]
   def self.up
     create_table :page_elements do |t|
       t.integer     :page_id

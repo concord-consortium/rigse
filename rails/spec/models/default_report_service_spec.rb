@@ -26,25 +26,25 @@ describe DefaultReportService do
 
     describe "when default report attributes are incorrect" do
       it "returns nil when external activity source type is nil" do
-        external_activity.tool.update_attributes(source_type: nil)
-        @default_report.update_attributes(default_report_for_source_type: nil)
+        external_activity.tool.update(source_type: nil)
+        @default_report.update(default_report_for_source_type: nil)
         expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
       end
       it "returns nil when report is not allowed for students" do
-        @default_report.update_attributes(allowed_for_students: false)
+        @default_report.update(allowed_for_students: false)
         expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
       end
       it "returns nil when report has wrong type" do
-        @default_report.update_attributes(report_type: "class")
+        @default_report.update(report_type: "class")
         expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
       end
       it "returns nil when report source type doesn't match runnable source type" do
-        external_activity.tool.update_attributes(source_type: "NOT-LARA")
+        external_activity.tool.update(source_type: "NOT-LARA")
         expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
       end
       it "returns nil when external activity tool is nil" do
-        external_activity.update_attributes(tool_id: nil)
-        @default_report.update_attributes(default_report_for_source_type: nil)
+        external_activity.update(tool_id: nil)
+        @default_report.update(default_report_for_source_type: nil)
         expect(DefaultReportService.default_report_for_offering(offering)).to eql(nil)
       end
     end

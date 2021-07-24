@@ -1,4 +1,4 @@
-class CreateSaveableInteractives < ActiveRecord::Migration
+class CreateSaveableInteractives < ActiveRecord::Migration[5.1]
   def change
     create_table :saveable_interactives do |t|
       t.integer :embeddable_id

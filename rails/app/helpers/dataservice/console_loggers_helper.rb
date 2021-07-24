@@ -1,2 +1,0 @@
-module Dataservice::ConsoleLoggersHelper
-end

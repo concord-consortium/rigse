@@ -29,27 +29,6 @@
               You haven't started this yet.
             - percentage = student_status.complete_percent
             .run_graph{style: "display: #{student_status.never_run ? 'none' : 'block'}"}
-              %table.status_graphs
-                %tr.summary
-                  %td.disclosure_widget
-                    ▶
-                  %td.summary
-                    .graph
-                      = bar_graph(percentage)
-                  %td.label
-                    completion
-                - student_status.sub_sections.each_with_index do |activity,i|
-                  - css_classes = "graph"
-                  - css_classes << ' top_border' if i == 0
-                  - percentage = student_status.activity_complete_percent(activity)
-                  %tr.details
-                    %td
-                    %td{:class => css_classes}= bar_graph(percentage)
-                    - if (i == 0)
-                      %td.label.top_border= activity.name
-                    - else
-                      %td.label=activity.name
-
               - if student_status.display_report_link?
                 %span.lightbox_report_link
                   - if percentage > 99

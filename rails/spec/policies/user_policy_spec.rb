@@ -93,8 +93,8 @@ describe UserPolicy do
       active_user.add_role_for_project('admin', project_a)
       a_project_admin.add_role_for_project('admin', project_a)
       a_researcher.add_role_for_project('researcher', project_a)
-      a_teacher.projects(project_a)
-      a_student.projects(project_a)
+      a_teacher.reload.projects
+      a_student.reload.projects
     end
 
     it "the active user should be a project admin" do

@@ -1,6 +1,6 @@
 class MaterialsCollectionsController < ApplicationController
   include RestrictedController
-  before_filter :admin_only
+  before_action :admin_only
 
   # GET /materials_collections
   # GET /materials_collections.json
@@ -60,7 +60,7 @@ class MaterialsCollectionsController < ApplicationController
   def update
     @materials_collection = MaterialsCollection.find(params[:id])
     respond_to do |format|
-      if @materials_collection.update_attributes(materials_collection_strong_params(params[:materials_collection]))
+      if @materials_collection.update(materials_collection_strong_params(params[:materials_collection]))
         format.html { redirect_to @materials_collection, notice: 'Materials Collection was successfully updated.' }
         format.json { head :no_content }
       else

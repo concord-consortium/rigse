@@ -2,7 +2,7 @@
 # This is a denormalized class. Its used to store summary data for
 # learners as would be used in a report.
 
-class Report::Learner < ActiveRecord::Base
+class Report::Learner < ApplicationRecord
   self.table_name = "report_learners"
 
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",
@@ -62,39 +62,17 @@ class Report::Learner < ActiveRecord::Base
   end
 
   def self.build_last_run_string(last_run, opts={})
-    not_run_str = "not yet started" || opts[:not_run]
-    prefix      = "Last run"        || opts[:prefix]
-    format      = "%b %d, %Y"       || opts[:format]
+    not_run_str = "Not yet started"   || opts[:not_run]
+    prefix      = "Started, last run" || opts[:prefix]
+    format      = "%b %d, %Y"         || opts[:format]
 
     return not_run_str if !last_run
     return "#{prefix} #{last_run.strftime(format)}"
   end
 
   def calculate_last_run
-    bundle_logger = self.learner.bundle_logger
-    pub_logger = self.learner.periodic_bundle_logger
-    bucket_logger = self.learner.bucket_logger
-    bundle_time = nil
-    pub_time = nil
-    bucket_time = nil
-
-    if bundle_logger && bundle_logger.last_non_empty_bundle_content
-      bundle_time = bundle_logger.last_non_empty_bundle_content.updated_at
-    end
-
-    if pub_logger && pub_logger.periodic_bundle_contents.last
-      pub_time =pub_logger.periodic_bundle_contents.last.updated_at
-    end
-
-    if bucket_logger && bucket_logger.bucket_contents.last
-      bucket_time = bucket_logger.bucket_contents.last.updated_at
-    end
-
-    times = [pub_time,bundle_time,bucket_time].compact.sort
-    if times.size > 0
-      self.last_run = times.last
-    end
-
+    # RAILS6 TODO: figure out alternative? - this was using the now removed dataservice model update times
+    return self.last_run
   end
 
   def update_answers

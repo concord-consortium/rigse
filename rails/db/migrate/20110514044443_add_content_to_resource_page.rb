@@ -1,4 +1,4 @@
-class AddContentToResourcePage < ActiveRecord::Migration
+class AddContentToResourcePage < ActiveRecord::Migration[5.1]
   def self.up
     add_column :resource_pages, :content, :text
     # copy description to text

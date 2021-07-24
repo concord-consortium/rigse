@@ -1,4 +1,4 @@
-class AddResponseCountToSaveables < ActiveRecord::Migration
+class AddResponseCountToSaveables < ActiveRecord::Migration[5.1]
   def self.up
     add_column :saveable_open_responses,              :response_count, :integer, :default => 0
     add_column :saveable_multiple_choices,            :response_count, :integer, :default => 0

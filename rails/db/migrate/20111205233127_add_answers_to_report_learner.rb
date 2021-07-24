@@ -1,4 +1,4 @@
-class AddAnswersToReportLearner < ActiveRecord::Migration
+class AddAnswersToReportLearner < ActiveRecord::Migration[5.1]
   def self.up
     add_column :report_learners, :answers, :text
   end
