@@ -480,7 +480,7 @@ describe API::V1::ReportLearnersEsController do
         end
 
         it "renders the error returned by ES" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
           resp = JSON.parse(response.body)
           expect(resp['message']).to eql("Elastic Search Error")
           expect(resp['details']['response_body']).to eql(fake_error_response)
@@ -500,7 +500,7 @@ describe API::V1::ReportLearnersEsController do
         end
 
         it "renders an empty list of learners" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
           expect(response.status).to eql(200)
           resp = JSON.parse(response.body)
           filter = resp["json"]
