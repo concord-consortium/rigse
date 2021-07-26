@@ -31,27 +31,30 @@
   .resourceSecondaryInfo {
     width: 33%;
 
-    h2 {
-      color: #313131;
-      font-size: 13px;
-      font-weight: 700;
-      margin: 0 0 10px;
-      text-transform: uppercase;
-    }
-
-    ul {
-
-      li {
-        font-size: 14px;
-      }
-    }
     .resourcePreviewImage {
+      line-height: 1;
+      margin-bottom: 20px;
       width: 100%;
+    }
+    .resourceMetadataGroup {
+      margin-bottom: 20px;
+
+      h2 {
+        color: #313131;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 0 0 10px;
+        text-transform: uppercase;
+      }
+      p {
+        font-size: 12px;
+      }
     }
   }
 }
 
 .resourceSharing {
+  margin-bottom: 20px;
 
   a {
     background-color: $col-orange;

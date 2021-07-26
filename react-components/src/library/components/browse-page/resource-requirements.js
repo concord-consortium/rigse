@@ -34,6 +34,7 @@ const ResourceRequirements = Component({
     }
     return (
       <div className='portal-pages-resource-lightbox-requirements'>
+        <hr />
         <h2>Requirements</h2>
         {requirementsOutput}
         {requirementsSensors}

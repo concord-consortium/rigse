@@ -7,6 +7,8 @@ import ResourceRequirements from './resource-requirements'
 import ResourceLicense from './resource-license'
 import ResourceProjects from './resource-projects'
 import StemFinderResultStandards from '../stem-finder-result-standards'
+import SubjectAreas from '../subject-areas'
+import GradeLevels from '../grade-levels'
 
 import css from './style.scss'
 
@@ -164,36 +166,28 @@ const BrowsePage = Component({
 
   renderSubjectAreas: function () {
     const resource = this.state.resource
-    if (!resource.subject_areas) {
+    if (!resource.subject_areas || resource.subject_areas.length === 0) {
       return (null)
     }
 
     return (
-      <div className={css.resourceSubjectAreas}>
+      <div class={css.resourceMetadataGroup}>
         <h2>Subject Areas</h2>
-        <ul>
-          {resource.subject_areas.map((subject, index) =>
-            <li key={`subject-${subject}-${index}`}>{subject}</li>
-          )}
-        </ul>
+        <SubjectAreas subjectAreas={resource.subject_areas} />
       </div>
     )
   },
 
   renderGradeLevels: function () {
     const resource = this.state.resource
-    if (!resource.grade_levels) {
+    if (!resource.grade_levels || resource.grade_levels.length === 0) {
       return (null)
     }
 
     return (
-      <div className={css.resourceGradeLevels}>
+      <div class={css.resourceMetadataGroup}>
         <h2>Grade Levels</h2>
-        <ul>
-          {resource.grade_levels.map((grade, index) =>
-            <li key={`grade-${grade}-${index}`}>{grade}</li>
-          )}
-        </ul>
+        <GradeLevels resource={resource} />
       </div>
     )
   },
@@ -223,6 +217,21 @@ const BrowsePage = Component({
     )
   },
 
+  renderStandards: function () {
+    const resource = this.state.resource
+    if (!resource.standard_statements || resource.standard_statements.length === 0) {
+      return null
+    }
+
+    return (
+      <div class='portal-pages-resource-lightbox-standards'>
+        <hr />
+        <h2>Standards</h2>
+        <StemFinderResultStandards standardStatements={resource.standard_statements} />
+      </div>
+    )
+  },
+
   longDescription: function () {
     const resource = this.state.resource
     return { __html: resource.longDescription }
@@ -230,7 +239,6 @@ const BrowsePage = Component({
 
   renderResource: function () {
     const resource = this.state.resource
-    console.log(resource)
     const links = resource.links
 
     return (
@@ -247,7 +255,7 @@ const BrowsePage = Component({
             {resource.saves_student_data === false ? <div className='portal-pages-resource-lightbox-no-save-warning'><strong>PLEASE NOTE:</strong> This resource can be assigned, but student responses will not be saved.</div> : null}
             {this.renderIncludedActivities()}
             <ResourceRequirements materialProperties={resource.material_properties} sensors={resource.sensors} />
-            <StemFinderResultStandards standardStatements={resource.standard_statements} />
+            {this.renderStandards()}
             <ResourceLicense resourceName={resource.name} license={resource.license} credits={resource.cerdits} />
           </div>
           <div className={css.resourceSecondaryInfo}>
