@@ -7,22 +7,15 @@ const SubjectAreas = Component({
 
   render: function () {
     const resourceSubjectAreas = this.props.subjectAreas
-    const subjectAreas = filters.subjectAreas.reduce(function (subjectAcc, subjectArea) {
-      var matching = subjectArea.searchAreas.reduce(function (matchingAcc, subject) {
-        if (resourceSubjectAreas && resourceSubjectAreas.indexOf(subject) !== -1) {
-          matchingAcc.push(subject)
-        }
-        return matchingAcc
-      }, [])
-      if (matching.length > 0) {
-        subjectAcc.push(subjectArea.title)
-      }
-      return subjectAcc
-    }, [])
 
-    if (subjectAreas.length === 0) {
-      return null
-    }
+    let subjectAreas = []
+    filters.subjectAreas.forEach((subjectArea) => {
+      subjectArea.searchAreas.forEach((searchArea) => {
+        if (resourceSubjectAreas.indexOf(searchArea) !== -1) {
+          subjectAreas.push(subjectArea.title)
+        }
+      })
+    })
 
     return (
       <div className={this.props.className || css.finderResultSubjectAreas}>
