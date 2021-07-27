@@ -7,6 +7,8 @@ import ResourceRequirements from './resource-requirements'
 import ResourceLicense from './resource-license'
 import ResourceProjects from './resource-projects'
 import StemFinderResultStandards from '../stem-finder-result-standards'
+import SubjectAreas from '../subject-areas'
+import GradeLevels from '../grade-levels'
 
 import css from './style.scss'
 
@@ -162,42 +164,6 @@ const BrowsePage = Component({
     )
   },
 
-  renderSubjectAreas: function () {
-    const resource = this.state.resource
-    if (!resource.subject_areas) {
-      return (null)
-    }
-
-    return (
-      <div className={css.resourceSubjectAreas}>
-        <h2>Subject Areas</h2>
-        <ul>
-          {resource.subject_areas.map((subject, index) =>
-            <li key={`subject-${subject}-${index}`}>{subject}</li>
-          )}
-        </ul>
-      </div>
-    )
-  },
-
-  renderGradeLevels: function () {
-    const resource = this.state.resource
-    if (!resource.grade_levels) {
-      return (null)
-    }
-
-    return (
-      <div className={css.resourceGradeLevels}>
-        <h2>Grade Levels</h2>
-        <ul>
-          {resource.grade_levels.map((grade, index) =>
-            <li key={`grade-${grade}-${index}`}>{grade}</li>
-          )}
-        </ul>
-      </div>
-    )
-  },
-
   renderAssignableLinks: function () {
     const resource = this.state.resource
     const links = resource.links
@@ -223,6 +189,21 @@ const BrowsePage = Component({
     )
   },
 
+  renderStandards: function () {
+    const resource = this.state.resource
+    if (!resource.standard_statements || resource.standard_statements.length === 0) {
+      return null
+    }
+
+    return (
+      <div class='portal-pages-resource-lightbox-standards'>
+        <hr />
+        <h2>Standards</h2>
+        <StemFinderResultStandards standardStatements={resource.standard_statements} />
+      </div>
+    )
+  },
+
   longDescription: function () {
     const resource = this.state.resource
     return { __html: resource.longDescription }
@@ -230,8 +211,10 @@ const BrowsePage = Component({
 
   renderResource: function () {
     const resource = this.state.resource
-    console.log(resource)
     const links = resource.links
+    const previewLink = links.preview ? <a className='portal-pages-primary-button' href={links.preview.url} target='_blank' onClick={this.handlePreviewClick}>{links.preview.text}</a> : null
+    const prePostTestAvailable = resource.has_pretest ? <p className='portal-pages-resource-lightbox-description'>Pre- and Post-tests available</p> : null
+    const savesStudentData = resource.saves_student_data === false ? <div className='portal-pages-resource-lightbox-no-save-warning'><strong>PLEASE NOTE:</strong> This resource can be assigned, but student responses will not be saved.</div> : null
 
     return (
       <>
@@ -240,22 +223,28 @@ const BrowsePage = Component({
             <h1>{resource.name}</h1>
             <p className='portal-pages-resource-lightbox-description' dangerouslySetInnerHTML={this.longDescription()} />
             <div className='portal-pages-action-buttons'>
-              {links.preview ? <a className='portal-pages-primary-button' href={links.preview.url} target='_blank' onClick={this.handlePreviewClick}>{links.preview.text}</a> : null}
+              {previewLink}
               {this.renderAssignableLinks()}
             </div>
-            {resource.has_pretest ? <p className='portal-pages-resource-lightbox-description'>Pre- and Post-tests available</p> : null}
-            {resource.saves_student_data === false ? <div className='portal-pages-resource-lightbox-no-save-warning'><strong>PLEASE NOTE:</strong> This resource can be assigned, but student responses will not be saved.</div> : null}
+            {prePostTestAvailable}
+            {savesStudentData}
             {this.renderIncludedActivities()}
             <ResourceRequirements materialProperties={resource.material_properties} sensors={resource.sensors} />
-            <StemFinderResultStandards standardStatements={resource.standard_statements} />
+            {this.renderStandards()}
             <ResourceLicense resourceName={resource.name} license={resource.license} credits={resource.cerdits} />
           </div>
           <div className={css.resourceSecondaryInfo}>
             {resource.icon.url && <div className={css.resourcePreviewImage}>
               <img src={resource.icon.url} alt={resource.name} />
             </div>}
-            {this.renderSubjectAreas()}
-            {this.renderGradeLevels()}
+            {resource.subject_areas.length !== 0 && <div class={css.resourceMetadataGroup}>
+              <h2>Subject Areas</h2>
+              <SubjectAreas subjectAreas={resource.subject_areas} />
+            </div>}
+            {resource.grade_levels.length !== 0 && <div class={css.resourceMetadataGroup}>
+              <h2>Grade Levels</h2>
+              <GradeLevels resource={resource} />
+            </div>}
             <ResourceProjects projects={resource.projects} />
           </div>
         </div>

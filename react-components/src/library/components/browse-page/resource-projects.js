@@ -2,6 +2,8 @@ import React from 'react'
 import Component from '../../helpers/component'
 import pluralize from '../../helpers/pluralize'
 
+import css from './style.scss'
+
 const ResourceProjects = Component({
   render: function () {
     const projects = this.props.projects
@@ -22,12 +24,9 @@ const ResourceProjects = Component({
     })
 
     return (
-      <div>
-        <hr />
+      <div class={css.resourceMetadataGroup}>
         <h2>Learn More</h2>
-        <div className='portal-pages-resource-lightbox-learn-more'>
-          This resource is part of the Concord Consortium&apos;s {projectsList} {pluralize(numProjects, ' project')}.
-        </div>
+        <p>This resource is part of the Concord Consortium&apos;s {projectsList} {pluralize(numProjects, ' project')}.</p>
       </div>
     )
   }

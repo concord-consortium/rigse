@@ -6,9 +6,9 @@ import css from './grade-levels.scss'
 const GradeLevels = Component({
 
   render: function () {
-    var resource = this.props.resource
-    var levels = filters.gradeFilters.reduce(function (levelAcc, gradeFilter) {
-      var matching = gradeFilter.grades.reduce(function (matchingAcc, grade) {
+    const resource = this.props.resource
+    const levels = filters.gradeFilters.reduce(function (levelAcc, gradeFilter) {
+      const matching = gradeFilter.grades.reduce(function (matchingAcc, grade) {
         if (resource.grade_levels && resource.grade_levels.indexOf(grade) !== -1) {
           matchingAcc.push(grade)
         }
@@ -30,7 +30,7 @@ const GradeLevels = Component({
           if (level === 'Higher Education') {
             level = 'Higher Ed'
           }
-          return <div key={index} className={css.finderResultGradeLevel}>{level}</div>
+          return <div key={`gradeLevel-${index}`} className={css.finderResultGradeLevel}>{level}</div>
         })}
       </div>
     )
