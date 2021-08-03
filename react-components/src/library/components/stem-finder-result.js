@@ -201,10 +201,10 @@ const StemFinderResult = Component({
       ? <a href={editLinkUrl} target='_blank' rel='noopener'>Edit</a>
       : null
     const copyLink = resource.links.copy_url && Portal.currentUser.isTeacher && !isCollection
-      ? <a href={resource.links.copy_url} target='_blank' rel='noopener'>Copy</a>
+      ? <a href={resource.links.copy_url.url} target='_blank' rel='noopener'>Copy</a>
       : null
     const printLink = resource.links.print_url && !isCollection
-      ? <a href={resource.links.print_url} target='_blank' rel='noopener'>Print</a>
+      ? <a href={resource.links.print_url.url} target='_blank' rel='noopener'>Print</a>
       : null
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
       ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank' rel='noopener' onClick={this.handleTeacherEditionClick}>Teacher Edition</a>
