@@ -53,4 +53,4 @@
         = mail_to('info@nextgenscienceassessment.org', 'info@nextgenscienceassessment.org', :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
         %br
         Version:
-        = ENV['CC_PORTAL_VERSION']
+        = ENV['CC_PORTAL_IMAGE_VERSION'].present? ? ENV['CC_PORTAL_IMAGE_VERSION'] : ENV['CC_PORTAL_VERSION']

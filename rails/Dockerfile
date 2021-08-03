@@ -65,4 +65,10 @@ EXPOSE 80
 # the DejaVu-Sans font is provided by the docker image this one is built on
 ENV WATERMARK_FONT=DejaVu-Sans
 
+# pass in a version while building with --build-arg CC_PORTAL_VERSION=x.y.z
+ARG CC_PORTAL_VERSION
+ENV CC_PORTAL_IMAGE_VERSION=$CC_PORTAL_VERSION
+
+
+
 CMD ./docker/prod/run.sh
