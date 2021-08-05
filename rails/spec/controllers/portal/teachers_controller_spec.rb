@@ -5,7 +5,7 @@ describe Portal::TeachersController do
     render_views
 
     before(:each) do
-      generate_default_settings_and_jnlps_with_mocks
+      generate_default_settings_with_mocks
       generate_portal_resources_with_mocks
     end
 
@@ -33,7 +33,7 @@ describe Portal::TeachersController do
           }
         }
 
-        post :create, params
+        post :create, params: params
 
         expect(@response).to redirect_to(thanks_for_sign_up_url(:type=>'teacher',:login=>params[:user][:login]))
 
@@ -44,7 +44,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#show' do
     it 'GET show' do
-      get :show, id: FactoryBot.create(:portal_teacher).to_param
+      get :show, params: { id: FactoryBot.create(:portal_teacher).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -53,7 +53,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#destroy' do
     it 'DELETE destroy' do
-      delete :destroy, id: FactoryBot.create(:portal_teacher).to_param
+      delete :destroy, params: { id: FactoryBot.create(:portal_teacher).to_param }
 
       expect(response).to have_http_status(:redirect)
     end
@@ -62,7 +62,7 @@ describe Portal::TeachersController do
   # TODO: auto-generated
   describe '#new' do
     xit 'GET new' do
-      get :new, {}, {}
+      get :new
 
       expect(response).to have_http_status(:ok)
     end

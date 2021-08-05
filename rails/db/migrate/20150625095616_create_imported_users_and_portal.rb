@@ -1,4 +1,4 @@
-class CreateImportedUsersAndPortal < ActiveRecord::Migration
+class CreateImportedUsersAndPortal < ActiveRecord::Migration[5.1]
   def up
 
   	create_table :imported_users do |t|

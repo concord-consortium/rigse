@@ -1,4 +1,4 @@
-class CreateMavenJnlpIcons < ActiveRecord::Migration
+class CreateMavenJnlpIcons < ActiveRecord::Migration[5.1]
   def self.up
     create_table :maven_jnlp_icons do |t|
       t.string :uuid

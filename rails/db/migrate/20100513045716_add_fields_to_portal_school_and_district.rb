@@ -1,4 +1,4 @@
-class AddFieldsToPortalSchoolAndDistrict < ActiveRecord::Migration
+class AddFieldsToPortalSchoolAndDistrict < ActiveRecord::Migration[5.1]
   def self.up
     add_column :portal_districts, :state, :string, :limit => 2
     add_column :portal_districts, :leaid, :string, :limit => 7

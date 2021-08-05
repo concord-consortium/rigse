@@ -81,7 +81,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     }.to_json
   end
 
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
   rescue_from SignedJWT::Error, with: :error_500
 
   # returns a JWT containing the uuid of the requester, alongside the original query and some other parameters.
@@ -129,7 +129,9 @@ class API::V1::ReportLearnersEsController < API::APIController
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
 
-    query = params["query"]
+    # Empty hashes and arrays are removed from param list now
+    # see: https://github.com/rails/rails/issues/26569
+    query = params["query"] || {}
     page_size = params["page_size"].to_i
     search_after = params["search_after"] || nil
 
@@ -406,6 +408,7 @@ class API::V1::ReportLearnersEsController < API::APIController
       class: learner.class_name,
       school: learner.school_name,
       user_id: learner.user_id,
+      offering_id: learner.offering_id,
       permission_forms: learner.permission_forms,
 
       # These two fields are not stored in ES, the Selector class looked up the user

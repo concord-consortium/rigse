@@ -1,4 +1,4 @@
-class DeleteMultipleChoices < ActiveRecord::Migration
+class DeleteMultipleChoices < ActiveRecord::Migration[5.1]
   def self.up
     drop_table :multiple_choices
   end

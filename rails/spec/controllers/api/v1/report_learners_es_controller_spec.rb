@@ -144,10 +144,9 @@ describe API::V1::ReportLearnersEsController do
     }.to_json
   end
 
-
   before (:each) do
     # This silences warnings in the console when running
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
 
     WebMock.stub_request(:post, /report_learners\/_search$/).
       to_return(:status => 200, :body => fake_response, :headers => { "Content-Type" => "application/json" })
@@ -420,7 +419,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "wont allow external_report_learners_from_jwt, returns error 403" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           expect(response.status).to eql(403)
         end
       end
@@ -435,11 +434,12 @@ describe API::V1::ReportLearnersEsController do
       describe "GET external_report_learners_from_jwt" do
 
         it "renders response that includes learners" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
           resp = JSON.parse(response.body)
           filter = resp["json"]
           expect(filter["learners"].length).to eq 3
-          expect(filter["learners"][0]["student_id"].to_i).to be_an_instance_of(Fixnum)
+          expect(filter["learners"][0]["student_id"].to_i).to be_an_instance_of(Integer)
           expect(filter["learners"][0]["learner_id"].to_i).to eq learner1.id
           expect(filter["learners"][0]["student_name"]).to eq learner1.user.name
           expect(filter["learners"][0]["username"]).to eq learner1.user.login
@@ -455,11 +455,11 @@ describe API::V1::ReportLearnersEsController do
       describe "GET external_report_learners_from_jwt with incorrect page_size" do
 
         it "renders an error if page_size is missing" do
-          get :external_report_learners_from_jwt, {:query => {}}
+          get :external_report_learners_from_jwt, params: { query: {} }
           expect(response.status).to eql(400)
         end
         it "renders an error if page_size is too large" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 10000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 10000 }
           expect(response.status).to eql(400)
         end
 
@@ -480,7 +480,7 @@ describe API::V1::ReportLearnersEsController do
         end
 
         it "renders the error returned by ES" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
           resp = JSON.parse(response.body)
           expect(resp['message']).to eql("Elastic Search Error")
           expect(resp['details']['response_body']).to eql(fake_error_response)
@@ -500,7 +500,7 @@ describe API::V1::ReportLearnersEsController do
         end
 
         it "renders an empty list of learners" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
           expect(response.status).to eql(200)
           resp = JSON.parse(response.body)
           filter = resp["json"]
@@ -519,7 +519,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "allows external_report_learners_from_jwt" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           expect(response.status).to eql(200)
         end
       end
@@ -539,7 +539,7 @@ describe API::V1::ReportLearnersEsController do
 
       describe "GET external_report_learners_from_jwt" do
         it "allows external_report_learners_from_jwt" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: { query: {}, page_size: 1000 }
           expect(response.status).to eql(200)
         end
       end
@@ -554,7 +554,7 @@ describe API::V1::ReportLearnersEsController do
       describe "GET external_report_learners_from_jwt" do
 
         it "renders response that includes learners" do
-          get :external_report_learners_from_jwt, {:query => {}, :page_size => 1000}
+          get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
           resp = JSON.parse(response.body)
           filter = resp["json"]
           expect(filter["learners"].length).to eq 3

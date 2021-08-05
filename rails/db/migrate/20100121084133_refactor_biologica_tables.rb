@@ -1,4 +1,4 @@
-class RefactorBiologicaTables < ActiveRecord::Migration
+class RefactorBiologicaTables < ActiveRecord::Migration[5.1]
   def self.up
     rename_column :embeddable_biologica_chromosomes, :biologica_organism_id, :organism_id
     rename_column :embeddable_biologica_organisms, :biologica_world_id, :world_id

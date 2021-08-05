@@ -43,7 +43,7 @@ class Admin::CommonsLicensesController < ApplicationController
   def update
     authorize CommonsLicense
     @license = CommonsLicense.find(params[:code])
-    if @license.update_attributes(commons_license_strong_params(params[:commons_license]))
+    if @license.update(commons_license_strong_params(params[:commons_license]))
       flash['notice']= 'License was successfully updated.'
       redirect_to action: :index
     else

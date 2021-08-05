@@ -1,0 +1,16 @@
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../../shared/styles/variables/_variables.scss';
+
+.finderResultSubjectAreas {
+  display: inline-block;
+  pointer-events: none;
+}
+.finderResultSubjectArea {
+  background-color: $light-gray;
+  color: $col-darkgray-75;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1;
+  margin-right: 5px;
+  padding: 4px 5px;
+}

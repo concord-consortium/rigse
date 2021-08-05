@@ -1,4 +1,4 @@
-class Tool < ActiveRecord::Base
+class Tool < ApplicationRecord
   has_many :external_activities, dependent: :nullify
 
   def self.options_for_tool

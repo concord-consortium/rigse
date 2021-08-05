@@ -7,15 +7,15 @@ class Portal::ClazzesController < ApplicationController
 
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :teacher_admin_or_config, :only => [:class_list, :edit]
-  before_filter :student_teacher_admin_or_config, :only => [:show]
+  before_action :teacher_admin, :only => [:class_list, :edit]
+  before_action :student_teacher_admin, :only => [:show]
 
   #
   # Check that the current teacher owns the class they are
   # accessing.
   #
   include RestrictedTeacherController
-  before_filter :check_teacher_owns_clazz, :only => [   :roster,
+  before_action :check_teacher_owns_clazz, :only => [   :roster,
                                                         :materials,
                                                         :fullstatus ]
 
@@ -118,6 +118,13 @@ class Portal::ClazzesController < ApplicationController
     school_id = @object_params.delete(:school)
     grade_levels = @object_params.delete(:grade_levels)
 
+    if !valid_school_id_param?(school_id)
+      school_id = nil
+    end
+    if !valid_grade_levels_param?(grade_levels)
+      grade_levels = nil
+    end
+
     @portal_clazz = Portal::Clazz.new(portal_clazz_strong_params(@object_params))
 
     okToCreate = true
@@ -203,6 +210,9 @@ class Portal::ClazzesController < ApplicationController
 
     object_params = params[:portal_clazz]
     grade_levels = object_params.delete(:grade_levels)
+    if !valid_grade_levels_param?(grade_levels)
+      grade_levels = nil
+    end
     if grade_levels
       # This logic will attempt to prevent someone from removing all grade levels from a class.
       grades_to_add = []
@@ -233,7 +243,7 @@ class Portal::ClazzesController < ApplicationController
     }
 
     if request.xhr?
-      if @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
+      if @portal_clazz.update(portal_clazz_strong_params(object_params))
         update_teachers.call
       end
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
@@ -248,7 +258,7 @@ class Portal::ClazzesController < ApplicationController
           end
         end
 
-        if okToUpdate && @portal_clazz.update_attributes(portal_clazz_strong_params(object_params))
+        if okToUpdate && @portal_clazz.update(portal_clazz_strong_params(object_params))
           update_teachers.call
           flash['notice'] = 'Class was successfully updated.'
           format.html { redirect_to(url_for([:materials, @portal_clazz])) }
@@ -341,7 +351,7 @@ class Portal::ClazzesController < ApplicationController
     if current_visitor.portal_teacher
       params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
     end
-    render :nothing => true
+    head :ok
   end
 
   def fullstatus
@@ -408,9 +418,20 @@ class Portal::ClazzesController < ApplicationController
     redirect_to next_url
   end
 
+  private
+
   def portal_clazz_strong_params(params)
     params && params.permit(:class_hash, :class_word, :course_id, :default_class, :description, :end_time, :logging, :name,
                             :section, :semester_id, :start_time, :status, :teacher_id)
+  end
+
+  def valid_grade_levels_param?(grade_levels_param)
+    grade_levels_param.kind_of?(Array) || grade_levels_param.kind_of?(ActionController::Parameters)
+  end
+
+  def valid_school_id_param?(school_id_param)
+    # check if it is an integer
+    school_id_param.to_i.to_s == school_id_param
   end
 
 end

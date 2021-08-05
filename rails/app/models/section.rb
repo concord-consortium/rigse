@@ -1,5 +1,4 @@
-class Section < ActiveRecord::Base
-  include JnlpLaunchable
+class Section < ApplicationRecord
 
   belongs_to :activity
   belongs_to :user
@@ -22,17 +21,15 @@ class Section < ActiveRecord::Base
   # ORDER BY page_elements.position ASC, page_elements.id ASC, `pages`.`position` ASC
   has_many :page_elements, :through => :pages
 
-  include HasEmbeddables
-  include ResponseTypes
-
   acts_as_list :scope => :activity_id
   accepts_nested_attributes_for :pages, :allow_destroy => true
 
-  include Publishable
-
   acts_as_replicatable
 
+  include Publishable
   include Changeable
+  include HasEmbeddables
+  include ResponseTypes
 
   validates_presence_of :name, :on => :create, :message => "can't be blank"
 

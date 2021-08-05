@@ -1,4 +1,4 @@
-class Scoring < ActiveRecord::Migration
+class Scoring < ActiveRecord::Migration[5.1]
   def change
     add_column :saveable_external_links, :score, :integer
     add_column :saveable_image_questions, :score, :integer

@@ -1,4 +1,4 @@
-class CreateInnerPages < ActiveRecord::Migration
+class CreateInnerPages < ActiveRecord::Migration[5.1]
   def self.up
     create_table :inner_pages do |t|
       t.integer   :user_id

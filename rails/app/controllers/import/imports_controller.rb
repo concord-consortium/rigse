@@ -1,7 +1,7 @@
 class Import::ImportsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_only
+  before_action :admin_only
 
   def import_school_district_json
     # PUNDIT_REVIEW_AUTHORIZE
@@ -131,7 +131,7 @@ class Import::ImportsController < ApplicationController
     duplicate_users = Import::DuplicateUser.where(:import_id => user_import.id)
     if duplicate_users.length == 0
       flash['alert'] = "No duplicate users found in the import."
-      redirect_to :back
+      redirect_back(fallback_location: admin_path)
     else
       send_data duplicate_users.to_json,
         :filename => "duplicate_users.json",
@@ -203,7 +203,7 @@ class Import::ImportsController < ApplicationController
       import_activity = fetch_import_activity
       import_activity.destroy
     end
-    render :nothing => true
+    head :ok
   end
 
   def batch_import_status
@@ -301,7 +301,7 @@ class Import::ImportsController < ApplicationController
         :x_sendfile => true
     else
       flash['alert'] = "No failed imports."
-      redirect_to :back
+      redirect_back(fallback_location: { action: "batch_import_status" })
     end
   end
 

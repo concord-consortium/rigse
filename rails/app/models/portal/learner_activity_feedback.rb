@@ -1,4 +1,4 @@
-class Portal::LearnerActivityFeedback < ActiveRecord::Base
+class Portal::LearnerActivityFeedback < ApplicationRecord
   belongs_to :portal_learner, class_name: "Portal::Learner"
   belongs_to :activity_feedback, class_name: "Portal::OfferingActivityFeedback"
   self.table_name = :portal_learner_activity_feedbacks
@@ -19,6 +19,6 @@ class Portal::LearnerActivityFeedback < ActiveRecord::Base
 
   def self.update_feedback(learner_id, activity_feedback_id, attributes)
     open  = self.open_feedback_for(learner_id, activity_feedback_id)
-    open.update_attributes(attributes)
+    open.update(attributes)
   end
 end

@@ -1,5 +1,5 @@
-class RemoveIsMemberFromAdminProjectUser < ActiveRecord::Migration
-  class Admin::ProjectUser < ActiveRecord::Base
+class RemoveIsMemberFromAdminProjectUser < ActiveRecord::Migration[5.1]
+  class Admin::ProjectUser < ApplicationRecord
     self.table_name = 'admin_project_users'
   end
 

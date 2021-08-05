@@ -1,4 +1,4 @@
-class DropAdminSiteNoticesRolesTable < ActiveRecord::Migration
+class DropAdminSiteNoticesRolesTable < ActiveRecord::Migration[5.1]
   def up
     drop_table :admin_site_notice_roles
   end

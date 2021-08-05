@@ -220,12 +220,6 @@ body#tinymce {
   width: 235px;
   &.itsisu {
     background: transparent image-url("new/banners/itsisu.png") 0 0 no-repeat }
-  &.geniverse {
-    background: transparent image-url("banners/geniverse.png") 0 0 no-repeat; }
-  &.genigames {
-    background: transparent image-url("banners/genigames.png") 0 0 no-repeat;
-    a {
-      padding-top: 25px; } }
   &.interactions {
     background: transparent image-url("banners/interactions.png") 0 0 no-repeat; }
   &.inquiryspace {
@@ -362,7 +356,6 @@ body#tinymce {
 #content {
   overflow: hidden;
   overflow-y: visible;
-  padding-right: 5px;
   //:position relative
 }
 
@@ -523,15 +516,6 @@ p.note {
 
 .discouraged {
   opacity: 0.5; }
-
-.in_place_editor_field {
-  display: inline-block;
-  min-width: 5em !important;
-  width: auto !important;
-  min-height: 1em;
-  height: auto !important;
-  padding: 1px;
-  margin: 0px; }
 
 .item_collection {
   background-color: white;
@@ -882,7 +866,7 @@ select {
   }
 
 input, textarea, select {
-  border: 2px solid #0592af;
+  border: 1.5px solid #0592af;
   }
 
 input {

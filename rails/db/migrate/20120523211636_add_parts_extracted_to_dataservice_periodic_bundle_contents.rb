@@ -1,4 +1,4 @@
-class AddPartsExtractedToDataservicePeriodicBundleContents < ActiveRecord::Migration
+class AddPartsExtractedToDataservicePeriodicBundleContents < ActiveRecord::Migration[5.1]
   def self.up
     add_column :dataservice_periodic_bundle_contents, :parts_extracted, :boolean
 

@@ -6,6 +6,7 @@ import CollectionsPage from './components/collections-page'
 import CollectionCards from './components/collection-cards'
 import HeaderFilter from './components/header-filter'
 import ResourceLightbox from './components/resource-lightbox'
+import ResourceFinderLightbox from './components/resource-finder-lightbox'
 import StemFinderResult from './components/stem-finder-result'
 import StemFinder from './components/stem-finder'
 import PageHeader from './components/page-header'
@@ -41,6 +42,12 @@ import StudentRoster from './components/portal-classes/student-roster'
 import AutoSuggest from './components/search/auto-suggest'
 import EditEResourceOptions from './components/eresources/edit-options'
 import StandardsTable from './components/standards/standards-table'
+import StemFinderResultStandards from './components/stem-finder-result-standards'
+import BrowsePage from './components/browse-page/browse-page'
+import ResourceRequirements from './components/browse-page/resource-requirements'
+import ResourceLicense from './components/browse-page/resource-license'
+import ResourceProjects from './components/browse-page/resource-projects'
+import showTab from './helpers/tabs'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -138,8 +145,14 @@ window.PortalComponents = {
   HeaderFilter: HeaderFilter,
   renderHeaderFilter: renderComponentFn(HeaderFilter),
 
+  BrowsePage: BrowsePage,
+  renderBrowsePage: renderComponentFn(BrowsePage),
+
   ResourceLightbox: ResourceLightbox,
   renderResourceLightbox: renderComponentFn(ResourceLightbox),
+
+  ResourceFinderLightbox: ResourceFinderLightbox,
+  renderResourceFinderLightbox: renderComponentFn(ResourceFinderLightbox),
 
   StemFinderResult: StemFinderResult,
   renderStemFinderResult: renderComponentFn(StemFinderResult),
@@ -282,8 +295,30 @@ window.PortalComponents = {
     render(React.createElement(StandardsTable, options), id)
   },
 
+  StemFinderResultStandards: StemFinderResultStandards,
+  renderStemFinderResultStandards: function (options, id) {
+    render(React.createElement(StemFinderResultStandards, options), id)
+  },
+
+  ResourceRequirements: ResourceRequirements,
+  renderResourceRequirements: function (options, id) {
+    render(React.createElement(ResourceRequirements, options), id)
+  },
+
+  ResourceLicense: ResourceLicense,
+  renderResourceLicense: function (options, id) {
+    render(React.createElement(ResourceLicense, options), id)
+  },
+
+  ResourceProjects: ResourceProjects,
+  renderResourceProjects: function (options, id) {
+    render(React.createElement(ResourceProjects, options), id)
+  },
+
   EditEResourceOptions: EditEResourceOptions,
   renderEditEResourceOptions: function (options, id) {
     render(React.createElement(EditEResourceOptions, options), id)
-  }
+  },
+
+  showTab: showTab
 }

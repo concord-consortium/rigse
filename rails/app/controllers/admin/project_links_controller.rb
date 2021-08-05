@@ -1,9 +1,9 @@
 class Admin::ProjectLinksController < ApplicationController
   include RestrictedController
 
-  before_filter :check_for_project
-  before_filter :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
-  before_filter :find_project_link, only: ['show', 'edit', 'update', 'destroy']
+  before_action :check_for_project
+  before_action :get_scoped_projects, only: ['new', 'edit', 'create', 'update']
+  before_action :find_project_link, only: ['show', 'edit', 'update', 'destroy']
 
   private
 
@@ -77,7 +77,7 @@ class Admin::ProjectLinksController < ApplicationController
     # this also has the side effect that a invalid project will raise a record not found
     new_project = Admin::Project.find(params[:admin_project_link][:project_id])
     authorize new_project, :edit?
-    if @project_link.update_attributes(admin_project_link_strong_params(params[:admin_project_link]))
+    if @project_link.update(admin_project_link_strong_params(params[:admin_project_link]))
       redirect_to @project_link, notice: 'Admin::ProjectLink was successfully updated.'
     else
       render action: 'edit'

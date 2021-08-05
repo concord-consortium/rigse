@@ -1,4 +1,4 @@
-class Admin::Project < ActiveRecord::Base
+class Admin::Project < ApplicationRecord
   include Changeable
 
   self.table_name = 'admin_projects'
@@ -53,7 +53,7 @@ class Admin::Project < ActiveRecord::Base
   accepts_nested_attributes_for :links, :reject_if => lambda { |link| link[:name].blank? or link[:href].blank? }, :allow_destroy => true
 
   validates :name, presence: true
-  validates :landing_page_slug, uniqueness: true, allow_nil: true
+  validates :landing_page_slug, uniqueness: {case_sensitive: true}, allow_nil: true
   validates :landing_page_slug, format: { with: /\A[a-z0-9\-]*\z/,
                                           message: "only allows lower case letters, digits and '-' character" }
 

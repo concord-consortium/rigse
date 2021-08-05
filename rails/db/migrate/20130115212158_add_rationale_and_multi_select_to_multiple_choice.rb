@@ -1,4 +1,4 @@
-class AddRationaleAndMultiSelectToMultipleChoice < ActiveRecord::Migration
+class AddRationaleAndMultiSelectToMultipleChoice < ActiveRecord::Migration[5.1]
   def change
     add_column :embeddable_multiple_choices, :enable_rationale, :boolean, :default => false
     add_column :embeddable_multiple_choices, :rationale_prompt, :text

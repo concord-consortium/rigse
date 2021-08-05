@@ -1,10 +1,10 @@
-class SecurityQuestion < ActiveRecord::Base
+class SecurityQuestion < ApplicationRecord
     belongs_to :user
-    
+
     validates_presence_of :user_id
     validates_presence_of :question
     validates_presence_of :answer
-    
+
     QUESTIONS = [
       "What is your favorite color?",
       "What is your favorite food?",
@@ -15,39 +15,39 @@ class SecurityQuestion < ActiveRecord::Base
       "What is your favorite zoo animal?",
       "What is your favorite farm animal?"
     ]
-    
+
     ERROR_BLANK_ANSWER        = "Answers can't be blank."
     ERROR_TOO_FEW_QUESTIONS   = "You must select three questions."
     ERROR_DUPLICATE_QUESTIONS = "You can't use the same question twice."
-    
+
     def question_idx
       SecurityQuestion::QUESTIONS.index(self.question)
     end
-    
+
     def select_options
       options = []
       if self.question && !self.question.empty?
-        options << "<option value=\"current\" selected>#{self.question}</option>" unless self.id.nil?
+        options << "<option value=\"current\" selected>#{self.question}</option>".html_safe unless self.id.nil?
       else
-        options << "<option value=\"\">- Please select a question</option>"
+        options << "<option value=\"\">- Please select a question</option>".html_safe
       end
-      
+
       SecurityQuestion::QUESTIONS.each_with_index do |q, i|
         if q != self.question
-          options << "<option value=\"#{i}\">#{q}</option>"
+          options << "<option value=\"#{i}\">#{q}</option>".html_safe
         elsif self.id.nil?
-          options << "<option value=\"#{i}\" selected>#{q}</option>"
+          options << "<option value=\"#{i}\" selected>#{q}</option>".html_safe
         end
       end
-      
+
       options
     end
-    
+
     def self.fill_array(questions = [])
       questions += Array.new(3 - questions.size) { |i| SecurityQuestion.new } if questions.size < 3
       questions
     end
-    
+
     def self.make_questions_from_hash_and_user(hash, user = nil)
       hash = hash.with_indifferent_access
       (0..2).to_a.collect do |i|
@@ -66,7 +66,7 @@ class SecurityQuestion < ActiveRecord::Base
         SecurityQuestion.new({ :question => new_question, :answer => data[:answer] })
       end.compact
     end
-    
+
     # This method gets a bang because it will add errors to SecurityQuestions if necessary.
     # Return value here is negative: !errors_for_questions_list!() == OK, anything else == failure. -- Cantina-CMH 6/17/10
     def self.errors_for_questions_list!(questions = [])
@@ -92,8 +92,8 @@ class SecurityQuestion < ActiveRecord::Base
       end
       return errors
     end
-    
-    
+
+
     # def self.check_questions_list!(questions = [])
     #   valid = true
     #   questions.each do |q|

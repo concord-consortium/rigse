@@ -1,0 +1,402 @@
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../../shared/styles/variables/_variables.scss';
+
+.finderResult {
+  background: $white;
+  border-radius: 4px;
+  box-sizing: content-box;
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  margin: 0 0 10px;
+  opacity: 0;
+  overflow: hidden;
+  padding: 10px;
+  position: relative;
+  transition-duration: .5s;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+
+  @for $i from 1 to 50 {
+    &:nth-child(#{$i}) {
+      animation-delay: 100ms * $i;
+    }
+  }
+
+  .finderResultLinks {
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    width: calc(100% - 20px);
+
+    a {
+      border-left: solid 1px $col-orange;
+      display: inline-block;
+      line-height: .9;
+      margin: 10px 0 0 10px;
+      padding: 0 0 0 10px;
+      text-transform: uppercase;
+
+      &:first-child {
+        border-left: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      &.moreLink {
+        position: relative;
+        &:after {
+          content: "\2303";
+          display: inline-block;
+          font-size: 12px;
+          margin: 0;
+          position: absolute;
+          right: -12px;
+          top: -2px;
+          transform: rotate(180deg);
+        }
+      }
+
+      &.lessLink {
+        display: none;
+        position: relative;
+        &:after {
+          content: "\2303";
+          display: inline-block;
+          font-size: 12px;
+          margin: 0;
+          position: absolute;
+          right: -12px;
+          top: 2px;
+        }
+      }
+    }
+  }
+
+  &.open {
+    height: auto;
+
+    &:after {
+      display: none;
+    }
+
+    .finderResultText {
+      .finderResultTextDescription {
+        display: block;
+        -webkit-line-clamp: initial;
+      }
+    }
+
+    .finderResultLinks {
+      a {
+        &.lessLink {
+          display: inline-block;
+        }
+        &.moreLink {
+          display: none;
+        }
+      }
+    }
+    .metaTags {
+      bottom: -5px !important;
+    }
+
+    .collapsible {
+      display: block;
+    }
+  }
+
+  &.collection {
+    .metaTags {
+      &:after {
+        background: $light-gray;
+        color: $col-darkgray-75;
+        content: "Curated Collection";
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 1;
+        margin: 0;
+        padding: 4px 5px;
+      }
+    }
+  }
+
+  &.interactive, &.activity, &.sequence {
+    background: $white;
+  }
+
+  .finderResultImagePreview {
+    border: solid 1px $col-lightgray;
+    height: 96px;
+    margin: 0 10px 0 0;
+    overflow: hidden;
+    position: relative;
+    width: 170px;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .finderResultText {
+    flex-grow: 1;
+    margin: 0 10px 0 0;
+    min-height: 80px;
+    position: relative;
+    width: 200px;
+
+    .finderResultTextName {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      a {
+        color: $col-darkgray;
+      }
+    }
+    .metaTags {
+      line-height: 1;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      width: 100%;
+
+      .metaTag {
+        background-color: $light-gray;
+        color: $col-darkgray-75;
+        display: inline-block;
+        font-size: 12px;
+        line-height: 1;
+        margin-right: 5px;
+        padding: 4px 5px;
+
+        &.timeRequired {
+
+          &:before {
+            content: '\f017';
+            font-family: "Font Awesome 5 Pro";
+            font-size: 15px;
+            line-height: .7;
+            margin-right: 3px;
+            opacity: .7;
+            vertical-align: middle;
+          }
+        }
+      }
+      .assignedTo {
+        background: transparent;
+        color: $col-darkblue;
+        display: inline;
+        font-size: 12px;
+        padding: 0;
+      }
+    }
+    .finderResultTextDescription {
+      display: -webkit-box;
+      font-size: 14px;
+      line-height: 1.3;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+  }
+  .previewLink {
+    width: 130px;
+
+    .previewLinkButton {
+      background: #fff;
+      border: solid 2px $col-orange;
+      border-radius: 4px;
+      color: $col-orange;
+      display: block;
+      font: 700 14px/1 museo-sans, Arial, Helvetica, sans-serif;
+      line-height: .8;
+      padding: 10px;
+      text-align: center;
+
+      &:hover {
+        background: $col-orange;
+        color: $white;
+      }
+      &:active {
+        background: $col-gold;
+        border-color: $col-gold;
+        color: $white;
+      }
+    }
+
+    .projectLabel {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-top: 10px;
+      text-align: center;
+
+      &.highadventuresci {
+        padding-left: 0;
+      }
+      &.itsi {
+        background: url(https://learn-resources.concord.org/images/itsi.png) no-repeat center top;
+        background-size: 35px;
+        padding: 37px 0 0;
+      }
+      &.ngssassessment {
+        background: url(https://learn-resources.concord.org/images/ngss.png) no-repeat center top;
+        background-size: 35px;
+        padding: 37px 0 0;
+      }
+    }
+  }
+
+  .collapsible {
+    background: $col-lightgray;
+    display: none;
+    height: 34px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+
+    &:hover {
+      background: $col-mediumgray;
+    }
+
+    .collapsibleHeading {
+      color: $col-darkgray;
+      cursor: pointer;
+      font-family: $font-museo-sans;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 0;
+      padding: 10px 10px 10px 24px;
+      position: relative;
+      width: 100%;
+
+      &:before {
+        content: "\203A";
+        display: inline-block;
+        font-size: 22px;
+        left: 10px;
+        line-height: .45;
+        margin: 0;
+        position: absolute;
+        top: 10px;
+        transition: .1s;
+      }
+    }
+    .collapsibleBody {
+      font-size: 14px;
+      padding: 0 10px 10px;
+    }
+
+    &.collapsibleOpen {
+      height: auto;
+
+      .collapsibleHeading {
+
+        &:before {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+
+  .finderResultStandards {
+    div div {
+      margin-bottom: 30px;
+    }
+    h3 {
+      color: $col-darkgray;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h4 {
+      color: $col-darkgray;
+      font-size: 14px;
+      font-style: italic;
+      font-weight: 700;
+    }
+    h5 {
+      color: $col-darkgray;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    ul {
+      list-style: none;
+      margin: 0 0 20px;
+
+      li {
+        margin: 0;
+      }
+      &.coreIdeas {
+        li {
+          margin: 0 0 10px;
+        }
+      }
+    }
+  }
+
+  .finderResultFavorite {
+    color: $col-lightgray;
+    font-size: 20px;
+    left: 157px;
+    position: absolute;
+    text-shadow: -1px 0 $col-darkgray-50, 0 1px $col-darkgray-50, 1px 0 $col-darkgray-50, 0 -1px $col-darkgray-50;
+    top: 12px;
+
+    &.finderResultFavoriteActive {
+      color: $col-gold;
+      text-shadow: 0 0 transparent, 0 0 transparent, 0 0 transparent, 0 0 transparent;
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+}
+
+@media screen and (max-width: 630px) {
+  .finderResult {
+    .finderResultImagePreview {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .finderResult {
+    width: calc(100% - 20px);
+  
+    .finderResultFavorite {
+      left: auto;
+      right: 18px;
+    }
+    .finderResultImagePreview {
+      height: 200px;
+      margin: 0;
+      width: 100%;
+    }
+    .finderResultLinks {
+      text-align: center;
+    }
+    .finderResultText {
+      margin: 20px 0 0;
+      width: 100%;
+
+      .assignedTo {
+        display: block;
+        margin: 10px 0;
+        width: 100%;
+      }
+    }
+    .previewLink {
+      margin: 20px 0 10px;
+      width: 100%;
+    }
+  }
+}

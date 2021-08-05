@@ -35,7 +35,7 @@ describe HelpController, type: :controller do
       @post_params = {
           :preview_help_page_from_edit => '<b>help page<b>'
         }
-      post :preview_help_page, @post_params
+      post :preview_help_page, params: @post_params
       expect(assigns[:help_page_content]).to eq(@post_params[:preview_help_page_from_edit])
       expect(response).to render_template('preview_help_page')
     end
@@ -47,7 +47,7 @@ describe HelpController, type: :controller do
       @post_params = {
           :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
-      get :preview_help_page, @post_params
+      get :preview_help_page, params: @post_params
       expect(response).to render_template('help/no_help_page')
     end
     
@@ -59,7 +59,7 @@ describe HelpController, type: :controller do
       @post_params = {
           :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
-      get :preview_help_page, @post_params
+      get :preview_help_page, params: @post_params
       expect(response).to redirect_to 'www.concord.org'
     end
     
@@ -71,7 +71,7 @@ describe HelpController, type: :controller do
       @post_params = {
           :preview_help_page_from_summary_page => "#{@test_settings.id}"
         }
-      get :preview_help_page, @post_params
+      get :preview_help_page, params: @post_params
       expect(assigns[:help_page_content]).to eq('<b>Help page</b>')
       expect(response).to render_template('preview_help_page')
     end

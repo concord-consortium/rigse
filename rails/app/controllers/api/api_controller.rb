@@ -1,6 +1,7 @@
 class API::APIController < ApplicationController
 
   rescue_from ActionController::ParameterMissing, with: :parameter_missing
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
   def show
     return error("Show not configured for this resource")
@@ -119,6 +120,13 @@ class API::APIController < ApplicationController
 
   def parameter_missing(exception)
     render status: 400, json: {
+      success: false,
+      message: exception.message
+    }
+  end
+
+  def record_not_found(exception)
+    render status: 404, json: {
       success: false,
       message: exception.message
     }

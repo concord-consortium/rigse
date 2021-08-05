@@ -9,7 +9,7 @@ RSpec.describe API::V1::SessionsController, type: :controller do
     xit 'POST create' do
       @request.env["devise.mapping"] = Devise.mappings[:user]
 
-      post :create, user: { login: 'login' }
+      post :create, params: { user: { login: 'login' } }
 
       expect(response).to have_http_status(:ok)
     end

@@ -1,4 +1,4 @@
-class RenameBiologicaHabtmTables < ActiveRecord::Migration
+class RenameBiologicaHabtmTables < ActiveRecord::Migration[5.1]
   def self.up
     rename_table :biologica_chromosome_zooms_biologica_organisms,   :embeddable_biologica_chromosome_zooms_organisms
     rename_table :biologica_multiple_organisms_biologica_organisms, :embeddable_biologica_multiple_organisms_organisms

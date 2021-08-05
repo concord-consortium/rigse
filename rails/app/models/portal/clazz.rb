@@ -1,4 +1,4 @@
-class Portal::Clazz < ActiveRecord::Base
+class Portal::Clazz < ApplicationRecord
   self.table_name = :portal_clazzes
 
   acts_as_replicatable
@@ -28,7 +28,7 @@ class Portal::Clazz < ActiveRecord::Base
   before_validation :class_word_lowercase
   before_validation :class_word_strip
   validates_presence_of :class_word
-  validates_uniqueness_of :class_word
+  validates_uniqueness_of :class_word, :case_sensitive => false
   validates_presence_of :name
 
   before_save :generate_class_hash

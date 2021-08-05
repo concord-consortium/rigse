@@ -1,4 +1,4 @@
-class CreateNLogoModels < ActiveRecord::Migration
+class CreateNLogoModels < ActiveRecord::Migration[5.1]
   def self.up
     create_table :n_logo_models do |t|
       

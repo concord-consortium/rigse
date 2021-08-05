@@ -1,4 +1,4 @@
-class CreateExternalReports < ActiveRecord::Migration
+class CreateExternalReports < ActiveRecord::Migration[5.1]
   def change
     create_table :external_reports do |t|
       t.string :url
@@ -7,6 +7,5 @@ class CreateExternalReports < ActiveRecord::Migration
       t.references :client
       t.timestamps
     end
-    add_index :external_reports, :client_id
   end
 end

@@ -1,3 +1,9 @@
+# loads OmniAuth::Strategies::Schoology for omniauth configuration
+require File.expand_path("../../../lib/omni_auth/strategies/schoology", __FILE__)
+
+# loads OmniAuth::Strategies::PortalGoogle for omniauth configuration
+require File.expand_path("../../../lib/omni_auth/strategies/portal_google", __FILE__)
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -126,7 +132,8 @@ Devise.setup do |config|
   # Email regex used to validate email formats. It simply asserts that
   # an one (and only one) @ exists in the given string. This is mainly
   # to give user feedback and not to assert the e-mail validity.
-  # config.email_regexp = /\A[^@]+@[^@]+\z/
+  # RAILS 5: needed to set to remove deprecation warning.  This is the current behavior according to the warning.
+  config.email_regexp = /\A[^@\s]+@([^@\s]+\.)+[^@\W]+\z/
 
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
@@ -222,7 +229,7 @@ Devise.setup do |config|
     end
     config.omniauth 'schoology', ENV['SCHOOLOGY_CONSUMER_KEY'], ENV['SCHOOLOGY_CONSUMER_SECRET'],
       {
-        strategy_class: 'OmniAuth::Strategies::Schoology',
+        strategy_class: OmniAuth::Strategies::Schoology,
         scope: 'user',
         setup: SETUP_PROC
       }
@@ -234,7 +241,7 @@ Devise.setup do |config|
     config.omniauth 'google', ENV['GOOGLE_CLIENT_KEY'], ENV['GOOGLE_CLIENT_SECRET'],
       {
         name: 'google',
-        strategy_class: 'OmniAuth::Strategies::PortalGoogle',
+        strategy_class: OmniAuth::Strategies::PortalGoogle,
         scope: [ 'https://www.googleapis.com/auth/userinfo.profile',
                  'https://www.googleapis.com/auth/userinfo.email'    ]
       }

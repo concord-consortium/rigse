@@ -1,8 +1,6 @@
-class Dataservice::Blob < ActiveRecord::Base
+class Dataservice::Blob < ApplicationRecord
   self.table_name = :dataservice_blobs
 
-  belongs_to :bundle_content, :class_name => "Dataservice::BundleContent", :foreign_key => "bundle_content_id"
-  belongs_to :periodic_bundle_content, :class_name => "Dataservice::PeriodicBundleContent", :foreign_key => "periodic_bundle_content_id"
   # lightweight learners create blobs directly (without a bundle content...)
   belongs_to :lightweight_learner, :class_name => "Portal::Learner", :foreign_key => "learner_id"
   before_create :create_token
@@ -54,11 +52,11 @@ class Dataservice::Blob < ActiveRecord::Base
   def html_content(path_to_self)
     case self.mimetype
     when /image/
-      return "<img src='#{path_to_self}' />"
+      return "<img src='#{path_to_self}' />".html_safe
     when "application/octet-stream"
-      return "<div>Unknown binary content</div>"
+      return "<div>Unknown binary content</div>".html_safe
     end
-    return "<div>Unknown binary content</div>"
+    return "<div>Unknown binary content</div>".html_safe
   end
 
   def content=(new_content)

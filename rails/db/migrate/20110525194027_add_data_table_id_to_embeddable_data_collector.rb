@@ -1,4 +1,4 @@
-class AddDataTableIdToEmbeddableDataCollector < ActiveRecord::Migration
+class AddDataTableIdToEmbeddableDataCollector < ActiveRecord::Migration[5.1]
   def self.up
     add_column :embeddable_data_collectors, :data_table_id, :integer
     #

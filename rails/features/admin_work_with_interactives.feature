@@ -15,7 +15,7 @@ Feature: Admin can work with interactives
     And I wait 2 seconds
     And I follow "Interactives"
     Then I should be on the interactives index page
-    And I should see "Displaying all 15 models"
+    And I should see "Displaying all 15 models"
     And I should see "Create Interactive"
     And I should see "Export Interactives"
 
@@ -101,7 +101,7 @@ Feature: Admin can work with interactives
       And I uncheck "Sequence"
       And I uncheck "Interactive"
       And I check "Activity"
-      And I press "GO"
+      And I press "Go"
       And I wait 2 seconds
       Then I should see "Geometry"
       And I should not see "Radioactivity"
@@ -110,7 +110,7 @@ Feature: Admin can work with interactives
       And I check "Sequence"
       And I uncheck "Activity"
       And I uncheck "Interactive"
-      And I press "GO"
+      And I press "Go"
       And I wait 2 seconds
       Then I should see "Radioactivity"
       And I should not see "Geometry"
@@ -119,7 +119,7 @@ Feature: Admin can work with interactives
       And I uncheck "Sequence"
       And I uncheck "Activity"
       And I check "Interactive"
-      And I press "GO"
+      And I press "Go"
       And I wait 2 seconds
       Then I should see "Interactive"
       And I should not see "Geometry"

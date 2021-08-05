@@ -1,0 +1,29 @@
+@import '../../shared/styles/variables/_variables.scss';
+
+.resourceFinderLightboxModalNav {
+  background: #b7e2ec;
+  font-weight: 300;
+  margin-bottom: 15px;
+  padding: 10px;
+  text-align: center;
+
+  select {
+    background: #e2f4f8;
+    border: solid 1px #979797;
+    border-radius: 4px;
+    display: inline;
+    font-family: $font-museo-sans;
+    font-weight: 300;
+    margin: 0 0 0 5px;
+    padding: 5px;
+    width: 190px;
+
+    option {
+      font-weight: 300;
+    }
+  }
+
+  strong {
+    font-weight: 700;
+  }
+}

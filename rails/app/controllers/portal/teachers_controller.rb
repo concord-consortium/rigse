@@ -1,7 +1,7 @@
 class Portal::TeachersController < ApplicationController
   include RestrictedPortalController
   # PUNDIT_CHECK_FILTERS
-  before_filter :teacher_admin_or_manager, :except=> [:new, :create]
+  before_action :teacher_admin_or_manager, :except=> [:new, :create]
   public
 
   # GET /portal_teachers/1

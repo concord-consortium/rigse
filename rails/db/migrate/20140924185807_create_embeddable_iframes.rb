@@ -1,4 +1,4 @@
-class CreateEmbeddableIframes < ActiveRecord::Migration
+class CreateEmbeddableIframes < ActiveRecord::Migration[5.1]
   def change
     create_table :embeddable_iframes do |t|
       t.integer :user_id

@@ -1,4 +1,4 @@
-class AddMimetypeToDataserviceBlob < ActiveRecord::Migration
+class AddMimetypeToDataserviceBlob < ActiveRecord::Migration[5.1]
   def change
     add_column :dataservice_blobs, :mimetype, :string
     add_column :dataservice_blobs, :file_extension, :string

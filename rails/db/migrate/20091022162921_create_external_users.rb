@@ -1,4 +1,4 @@
-class CreateExternalUsers < ActiveRecord::Migration
+class CreateExternalUsers < ActiveRecord::Migration[5.1]
   def self.up
     add_column :users, :type, :string
     add_column :users, :external_user_domain_id, :integer

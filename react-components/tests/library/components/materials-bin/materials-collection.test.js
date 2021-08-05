@@ -39,35 +39,59 @@ describe('When I try to render materials-bin materials collection', () => {
   it("should render with default props", () => {
     const materialsCollection = Enzyme.shallow(<MBMaterialsCollection materials={materials} />);
     expect(materialsCollection.html()).toBe(pack(`
-      <div class="mb-collection">
-        <div class="mb-collection-name"></div>
+      <section class="mb-collection">
+        <header>
+          <h3 class="mb-collection-name"></h3>
+        </header>
         <div class="mb-material">
-          <span class="mb-material-links"></span>
-          <span class="mb-material-name">material 1</span>
+          <div class="mb-material-thumbnail">
+            <img alt="material 1" src="http://example.com/icon"/>
+          </div>
+          <div class="mb-material-text">
+            <h4 class="mb-material-name">material 1</h4>
+            <div class="mb-material-links"></div>
+          </div>
         </div>
         <div class="mb-material">
-          <span class="mb-material-links"></span>
-          <span class="mb-material-name">material 2</span>
+          <div class="mb-material-thumbnail">
+            <img alt="material 2" src="http://example.com/icon"/>
+          </div>
+          <div class="mb-material-text">
+            <h4 class="mb-material-name">material 2</h4>
+            <div class="mb-material-links"></div>
+          </div>
         </div>
-      </div>
+      </section>
     `));
   });
 
   it("should render with optional props", () => {
     const materialsCollection = Enzyme.shallow(<MBMaterialsCollection materials={materials} name="Collection" teacherGuideUrl="http://example.com/" />);
     expect(materialsCollection.html()).toBe(pack(`
-      <div class="mb-collection">
-        <div class="mb-collection-name">Collection</div>
-        <a href="http://example.com/" target="_blank">Teacher Guide</a>
+      <section class="mb-collection">
+        <header>
+          <h3 class="mb-collection-name">Collection</h3>
+          <a href="http://example.com/" target="_blank">Teacher Guide</a>
+        </header>
         <div class="mb-material">
-          <span class="mb-material-links"></span>
-          <span class="mb-material-name">material 1</span>
+          <div class="mb-material-thumbnail">
+            <img alt="material 1" src="http://example.com/icon"/>
+          </div>
+          <div class="mb-material-text">
+            <h4 class="mb-material-name">material 1</h4>
+            <div class="mb-material-links"></div>
+          </div>
         </div>
         <div class="mb-material">
-          <span class="mb-material-links"></span>
-          <span class="mb-material-name">material 2</span>
+          <div class="mb-material-thumbnail">
+            <img alt="material 2" src="http://example.com/icon"/>
+          </div>
+          <div class="mb-material-text">
+            <h4 class="mb-material-name">material 2</h4>
+            <div class="mb-material-links"></div>
+          </div>
         </div>
-      </div>
+      </section>
     `));
   });
 })

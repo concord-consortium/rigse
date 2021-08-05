@@ -1,4 +1,4 @@
-class CreateImportDuplicateUsers < ActiveRecord::Migration
+class CreateImportDuplicateUsers < ActiveRecord::Migration[5.1]
   def up
     create_table :import_duplicate_users do |t|
      t.string  :login

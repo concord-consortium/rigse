@@ -1,4 +1,4 @@
-class Saveable::ImageQuestion < ActiveRecord::Base
+class Saveable::ImageQuestion < ApplicationRecord
   self.table_name = "saveable_image_questions"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
@@ -11,7 +11,7 @@ class Saveable::ImageQuestion < ActiveRecord::Base
     :class_name => "Saveable::ImageQuestionAnswer"
 
 
-  [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question, :class_name => 'Embeddable::ImageQuestion' }
+  [:prompt, :name, :drawing_prompt].each { |m| delegate m, :to => :image_question }
 
   include Saveable::Saveable
 

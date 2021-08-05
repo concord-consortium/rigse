@@ -57,8 +57,6 @@ module NavigationHelpers
       preferences_user_path user
     when /the switch page/
       switch_user_path User.find_by_login(@cuke_current_username)
-    when /the requirements page/
-      "/requirements/"
     when /the about page/
       "/about"
     when /the admin create notice page/

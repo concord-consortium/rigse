@@ -1,7 +1,7 @@
 class API::V1::JwtController < API::APIController
 
   require 'digest/md5'
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   # use exceptions to return errors
   # instead of directly calling APIController#error

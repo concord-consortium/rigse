@@ -186,7 +186,7 @@ Given /^the following researchers exist:$/ do |users_table|
       user.add_role("member")
       user.add_role("researcher")
       user.save!
-      user.confirm!
+      user.confirm
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...
     end

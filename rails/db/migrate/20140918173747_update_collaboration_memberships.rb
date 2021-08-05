@@ -1,4 +1,4 @@
-class UpdateCollaborationMemberships < ActiveRecord::Migration
+class UpdateCollaborationMemberships < ActiveRecord::Migration[5.1]
   def up
     # It's not necessary, can be obtained from related user object instead.
     remove_column :collaboration_memberships, :access_token

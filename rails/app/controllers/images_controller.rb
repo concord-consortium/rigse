@@ -1,5 +1,5 @@
 class ImagesController < ApplicationController
-  before_filter :find_image, :only => [:edit, :update, :destroy]
+  before_action :find_image, :only => [:edit, :update, :destroy]
   # scale the text since most images will be displayed at around screen size
 
   protected
@@ -116,10 +116,10 @@ class ImagesController < ApplicationController
     img_params = {:image => image}
     # we're updating the image separately, to avoid having
     # stale attributions being attached to the image
-    if @image.update_attributes(image_strong_params(my_params))
+    if @image.update(image_strong_params(my_params))
       if @image.reload
         if image
-          return @image.update_attributes(img_params)
+          return @image.update(img_params)
         else
           return true
         end

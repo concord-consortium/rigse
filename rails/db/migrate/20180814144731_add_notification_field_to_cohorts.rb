@@ -1,4 +1,4 @@
-class AddNotificationFieldToCohorts < ActiveRecord::Migration
+class AddNotificationFieldToCohorts < ActiveRecord::Migration[5.1]
   def up
     add_column :admin_cohorts, :email_notifications_enabled, :boolean, :default => false
   end

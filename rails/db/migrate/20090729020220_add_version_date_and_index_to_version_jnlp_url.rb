@@ -1,4 +1,4 @@
-class AddVersionDateAndIndexToVersionJnlpUrl < ActiveRecord::Migration
+class AddVersionDateAndIndexToVersionJnlpUrl < ActiveRecord::Migration[5.1]
   def self.up
     add_column :maven_jnlp_versioned_jnlp_urls, :date_str, :string, :limit => 15
     add_index :maven_jnlp_versioned_jnlp_urls, :date_str

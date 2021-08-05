@@ -13,11 +13,11 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
     end_index = batch_size - 1
 
     import.update_attribute(:total_imports, total_imports_count)
-    
+
     0.upto(total_batches-1){|batch_index|
       start_index = batch_index * batch_size
       end_index = (batch_index == total_batches - 1)? (total_districts_count - 1) : (start_index + batch_size - 1)
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.transaction do
         start_index.upto(end_index){|index|
           district = content_hash[:districts][index]
           nces_district = nil
@@ -30,7 +30,7 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
             district_name = district[:name].titlecase.strip
             district_params = {}
             district_params[:name] = district_name
-            district_params[:state] = district[:state] if district[:state] 
+            district_params[:state] = district[:state] if district[:state]
             district_params[:leaid] = district[:leaid] if district[:leaid]
             existing_district = Portal::District.where(district_params).first
             new_district = existing_district || Portal::District.create(district_params)
@@ -47,18 +47,18 @@ class Import::ImportSchoolsAndDistricts < Struct.new(:import_id)
     }
 
     total_batches = (total_schools_count/batch_size.to_f).ceil
-    
+
     0.upto(total_batches-1){|batch_index|
       start_index = batch_index * batch_size
       end_index = (batch_index == total_batches - 1)? (total_schools_count - 1) : (start_index + batch_size - 1)
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.transaction do
         start_index.upto(end_index){|index|
           school = content_hash[:schools][index]
           nces_school= nil
           if school[:ncessch]
             nces_school = Portal::Nces06School.where(:NCESSCH => school[:ncessch]).first
           end
-          if nces_school  
+          if nces_school
             new_school = Portal::School.find_or_create_using_nces_school(nces_school)
           else
             school_name = school[:name].titlecase.strip

@@ -57,3 +57,12 @@ end
 def factory_create
   FactoryBot.create(subject_class_factory)
 end
+
+def permit_params!(params)
+  ActionController::Parameters.new(params).permit!
+end
+
+def set_theme_env(name)
+  allow(ENV).to receive(:[]).and_call_original # Let other ENV reqs to pass
+  allow(ENV).to receive(:[]).with(ThemeHelper::ENV_THEME_KEY).and_return(name)
+end

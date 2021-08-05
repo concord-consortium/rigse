@@ -1,4 +1,4 @@
-class BjMigration0 < ActiveRecord::Migration
+class BjMigration0 < ActiveRecord::Migration[5.1]
 
   def self.up
     create_table :bj_config, :primary_key => "bj_config_id", :force => true do |t|

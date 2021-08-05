@@ -45,14 +45,14 @@ describe API::V1::OfferingsController do
 
   before(:each) {
     # This silences warnings in the console when running
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
   }
 
   describe "GET #show (+ basic response structure tests)" do
 
     describe "when there is no offering with given ID" do
       it "returns 404" do
-        get :show, id: 123
+        get :show, params: { id: 123 }
         expect(response.status).to eq 404
       end
     end
@@ -62,7 +62,7 @@ describe API::V1::OfferingsController do
         logout_user
       end
       it "returns 403 error" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         expect(response.status).to eql(403)
       end
     end
@@ -72,7 +72,7 @@ describe API::V1::OfferingsController do
         sign_in manager_user
       end
       it "returns error 403" do
-        get :show, :id => offering.id
+        get :show, params: { :id => offering.id }
         expect(response.status).to eql(403)
       end
     end
@@ -82,7 +82,7 @@ describe API::V1::OfferingsController do
         sign_in admin_user
       end
       it "returns 200 and valid JSON response" do
-        get :show, :id => offering.id
+        get :show, params: { :id => offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         expect(json).not_to eq nil
@@ -96,7 +96,7 @@ describe API::V1::OfferingsController do
           sign_in other_teacher.user
         end
         it "returns error 403" do
-          get :show, :id => offering.id
+          get :show, params: { :id => offering.id }
           expect(response.status).to eq 403
         end
       end
@@ -106,7 +106,7 @@ describe API::V1::OfferingsController do
           sign_in teacher.user
         end
         it "returns 200 and valid JSON response" do
-          get :show, :id => offering.id
+          get :show, params: { :id => offering.id }
           expect(response.status).to eq 200
           json = JSON.parse(response.body)
           expect(json).not_to eq nil
@@ -124,7 +124,7 @@ describe API::V1::OfferingsController do
         FactoryBot.create(:default_lara_report)
       end
       it "returns an description of the activity and students list with 0 progress" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         json["id"] = offering.id
@@ -166,7 +166,7 @@ describe API::V1::OfferingsController do
         add_answer_for_student(student_a, offering, open_response_1, {answer: "Some answer"})
       end
       it "returns an description of the activity and students list with appropriate progress" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         student1 = json["students"][0]
@@ -198,7 +198,7 @@ describe API::V1::OfferingsController do
         add_answer_for_student(student_b, offering, open_response_4, {answer: "Some answer"})
       end
       it "returns an description of the activity and students list with appropriate progress" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         student1 = json["students"][0]
@@ -239,7 +239,7 @@ describe API::V1::OfferingsController do
         add_answer_for_student(student_b, offering, open_response_4, {answer: "Some answer"})
       end
       it "returns an description of the activity and students list with appropriate progress" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         student1 = json["students"][0]
@@ -273,7 +273,7 @@ describe API::V1::OfferingsController do
       end
 
       it "returns information about external report" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         expect(json["external_reports"][0]).not_to eq nil
@@ -290,7 +290,7 @@ describe API::V1::OfferingsController do
       end
 
       it "adds this report to the external_reports list" do
-        get :show, id: offering.id, add_external_report: external_report.id
+        get :show, params: { id: offering.id, add_external_report: external_report.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
         expect(json["external_reports"][0]).not_to eq nil
@@ -364,9 +364,9 @@ describe API::V1::OfferingsController do
         end
 
         it "should return list of own offerings only" do
-          get :show, id: offering.id
+          get :show, params: { id: offering.id }
           offering_1_json = JSON.parse(response.body)
-          get :show, id: offering_2.id
+          get :show, params: { id: offering_2.id }
           offering_2_json = JSON.parse(response.body)
 
           get :index
@@ -378,10 +378,10 @@ describe API::V1::OfferingsController do
         describe "when class_id param is provided" do
           describe "and teacher is an owner of given class" do
             it "should return list of his offerings for this class" do
-              get :show, id: offering.id
+              get :show, params: { id: offering.id }
               offering_json = JSON.parse(response.body)
 
-              get :index, class_id: clazz.id
+              get :index, params: { class_id: clazz.id }
               expect(response.status).to eql(200)
               json = JSON.parse(response.body)
               expect(json).to eq [offering_json]
@@ -390,7 +390,7 @@ describe API::V1::OfferingsController do
 
           describe "and teacher is not an owner of given class" do
             it "should return 403 error" do
-              get :index, class_id: clazz_b.id
+              get :index, params: { class_id: clazz_b.id }
               expect(response.status).to eql(403)
             end
           end
@@ -399,13 +399,13 @@ describe API::V1::OfferingsController do
         describe "when user_id param is provided" do
           describe "and teacher is a given user" do
             it "should return list of his all offerings" do
-              get :show, id: offering.id
+              get :show, params: { id: offering.id }
               offering_1_json = JSON.parse(response.body)
-              get :show, id: offering_2.id
+              get :show, params: { id: offering_2.id }
               offering_2_json = JSON.parse(response.body)
 
 
-              get :index, user_id: teacher.user.id
+              get :index, params: { user_id: teacher.user.id }
               expect(response.status).to eql(200)
               json = JSON.parse(response.body)
               expect(json).to eq [offering_1_json, offering_2_json]
@@ -414,7 +414,7 @@ describe API::V1::OfferingsController do
 
           describe "and teacher is not a given user" do
             it "should return 403 error" do
-              get :index, class_id: clazz_b.id
+              get :index, params: { class_id: clazz_b.id }
               expect(response.status).to eql(403)
             end
           end
@@ -429,11 +429,11 @@ describe API::V1::OfferingsController do
         end
 
         it "should return list of all the offerings" do
-          get :show, id: offering.id
+          get :show, params: { id: offering.id }
           offering_1_json = JSON.parse(response.body)
-          get :show, id: offering_2.id
+          get :show, params: { id: offering_2.id }
           offering_2_json = JSON.parse(response.body)
-          get :show, id: offering_b.id
+          get :show, params: { id: offering_b.id }
           offering_b_json = JSON.parse(response.body)
 
           get :index
@@ -444,10 +444,10 @@ describe API::V1::OfferingsController do
 
         describe "when class_id param is provided" do
           it "should return list of all the offerings for this class" do
-            get :show, id: offering.id
+            get :show, params: { id: offering.id }
             offering_json = JSON.parse(response.body)
 
-            get :index, class_id: clazz.id
+            get :index, params: { class_id: clazz.id }
             expect(response.status).to eql(200)
             json = JSON.parse(response.body)
             expect(json).to eq [offering_json]
@@ -456,12 +456,12 @@ describe API::V1::OfferingsController do
 
         describe "when user_id param is provided" do
           it "should return list of all user offerings" do
-            get :show, id: offering.id
+            get :show, params: { id: offering.id }
             offering_1_json = JSON.parse(response.body)
-            get :show, id: offering_2.id
+            get :show, params: { id: offering_2.id }
             offering_2_json = JSON.parse(response.body)
 
-            get :index, user_id: teacher.user.id
+            get :index, params: { user_id: teacher.user.id }
             expect(response.status).to eql(200)
             json = JSON.parse(response.body)
             expect(json).to eq [offering_1_json, offering_2_json]
@@ -482,7 +482,7 @@ describe API::V1::OfferingsController do
         add_answer_for_student(student_b, offering, open_response_4, {answer: "Some answer"})
       end
       it "returns response which has the same format as #show" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         show_json = JSON.parse(response.body)
 
         get :index
@@ -499,7 +499,7 @@ describe API::V1::OfferingsController do
         logout_user
       end
       it "returns 403 error" do
-        put :update, id: offering.id, active: false
+        put :update, params: { id: offering.id, active: false }
         expect(response.status).to eql(403)
       end
     end
@@ -509,7 +509,7 @@ describe API::V1::OfferingsController do
         sign_in student_a.user
       end
       it "returns 403 error" do
-        put :update, id: offering.id, active: false
+        put :update, params: { id: offering.id, active: false }
         expect(response.status).to eql(403)
       end
     end
@@ -519,7 +519,7 @@ describe API::V1::OfferingsController do
         logout_user
       end
       it "returns 403 error" do
-        put :update, id: offering.id, active: false
+        put :update, params: { id: offering.id, active: false }
         expect(response.status).to eql(403)
       end
     end
@@ -529,7 +529,7 @@ describe API::V1::OfferingsController do
         sign_in FactoryBot.create(:portal_teacher).user
       end
       it "returns 403 error" do
-        put :update, id: offering.id, active: false
+        put :update, params: { id: offering.id, active: false }
         expect(response.status).to eql(403)
       end
     end
@@ -541,13 +541,13 @@ describe API::V1::OfferingsController do
 
       it "should update basic params of the offering" do
         new_active = !offering.active
-        put :update, id: offering.id, active: new_active
+        put :update, params: { id: offering.id, active: new_active }
         expect(response.status).to eql(200)
         offering.reload
         expect(offering.active).to eq new_active
 
         new_locked = !offering.locked
-        put :update, id: offering.id, locked: new_locked
+        put :update, params: { id: offering.id, locked: new_locked }
         expect(response.status).to eql(200)
         offering.reload
         expect(offering.locked).to eq new_locked
@@ -561,17 +561,17 @@ describe API::V1::OfferingsController do
         it "should let user reorder them" do
           expect(clazz.offerings).to eq [ offering_1, offering_2, offering_3 ]
 
-          put :update, id: offering_1.id, position: 1
+          put :update, params: { id: offering_1.id, position: 1 }
           expect(response.status).to eql(200)
           clazz.reload
           expect(clazz.offerings).to eq [ offering_2, offering_1, offering_3 ]
 
-          put :update, id: offering_2.id, position: 2
+          put :update, params: { id: offering_2.id, position: 2 }
           expect(response.status).to eql(200)
           clazz.reload
           expect(clazz.offerings).to eq [ offering_1, offering_3, offering_2 ]
 
-          put :update, id: offering_3.id, position: 0
+          put :update, params: { id: offering_3.id, position: 0 }
           expect(response.status).to eql(200)
           clazz.reload
           expect(clazz.offerings).to eq [ offering_3, offering_1, offering_2 ]
@@ -599,26 +599,26 @@ describe API::V1::OfferingsController do
       end
 
       it "should return list of all the offerings for the same class" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         offering_1_json = JSON.parse(response.body)
-        get :show, id: offering_2.id
+        get :show, params: { id: offering_2.id }
         offering_2_json = JSON.parse(response.body)
-        get :show, id: offering_3.id
+        get :show, params: { id: offering_3.id }
         offering_3_json = JSON.parse(response.body)
 
-        get :for_class, id: offering.id
+        get :for_class, params: { id: offering.id }
         json = JSON.parse(response.body)
         expect(json).to eq [offering_1_json, offering_2_json]
 
-        get :for_class, id: offering_2.id
+        get :for_class, params: { id: offering_2.id }
         json = JSON.parse(response.body)
         expect(json).to eq [offering_1_json, offering_2_json]
 
-        get :for_class, id: offering_3.id
+        get :for_class, params: { id: offering_3.id }
         json = JSON.parse(response.body)
         expect(json).to eq [offering_3_json]
 
-        get :for_class, id: offering_b.id
+        get :for_class, params: { id: offering_b.id }
         expect(response.status).to eql(403) # Different class, no access!
       end
     end
@@ -641,20 +641,20 @@ describe API::V1::OfferingsController do
       end
 
       it "should return list of all the offerings for the owner of given offering (teacher)" do
-        get :show, id: offering.id
+        get :show, params: { id: offering.id }
         offering_1_json = JSON.parse(response.body)
-        get :show, id: offering_2.id
+        get :show, params: { id: offering_2.id }
         offering_2_json = JSON.parse(response.body)
 
-        get :for_teacher, id: offering.id
+        get :for_teacher, params: { id: offering.id }
         json = JSON.parse(response.body)
         expect(json).to eq [offering_1_json, offering_2_json]
 
-        get :for_teacher, id: offering_2.id
+        get :for_teacher, params: { id: offering_2.id }
         json = JSON.parse(response.body)
         expect(json).to eq [offering_1_json, offering_2_json]
 
-        get :for_teacher, id: offering_b.id
+        get :for_teacher, params: { id: offering_b.id }
         expect(response.status).to eql(403) # different class, no access!
       end
     end

@@ -1,5 +1,6 @@
 class UserMailer < Devise::Mailer
   default :from => "#{APP_CONFIG[:site_name]} <#{APP_CONFIG[:help_email]}>"
+  helper :theme
 
   def confirmation_instructions(record, token, opts={})
     @url = "#{APP_CONFIG[:site_url]}/activate/#{token}"
@@ -26,7 +27,7 @@ class UserMailer < Devise::Mailer
   protected
 
   def finish_email(user, subject)
-    # Need to set the theme because normally it gets set in a controller before_filter...
+    # Need to set the theme because normally it gets set in a controller before_action...
     mail(:to => "#{user.name} <#{user.email}>",
          :subject => subject,
          :date => Time.now)

@@ -111,8 +111,8 @@ describe Client do
   # TODO: auto-generated
   describe '.authenticate' do
     it 'authenticate' do
-      app_id = double('app_id')
-      app_secret = double('app_secret')
+      app_id = 'app_id'
+      app_secret = 'app_secret'
       result = described_class.authenticate(app_id, app_secret)
 
       expect(result).to be_nil

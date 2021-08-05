@@ -1,8 +1,8 @@
 class Admin::SiteNoticesController < ApplicationController
 
-  before_filter :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
+  before_action :admin_or_manager, :except => [:toggle_notice_display, :dismiss_notice]
 
-  # TODO: figure out why rspec is breaking and add authorization back (and remove before_filter)
+  # TODO: figure out why rspec is breaking and add authorization back (and remove before_action)
 
   protected
 
@@ -18,7 +18,7 @@ class Admin::SiteNoticesController < ApplicationController
     #authorize Admin::SiteNotice
     @action_type = 'Create Notice'
     @notice_role_ids = []
-    @notice_html = '<p> </p>' #fix for IE 9
+    @notice_html = '<p> </p>'.html_safe #fix for IE 9
   end
 
   def index
@@ -47,11 +47,11 @@ class Admin::SiteNoticesController < ApplicationController
 
     unless ActionController::Base.helpers.strip_tags(@notice_html).gsub('&nbsp;', ' ').strip =~ /\S+/
       error = "Notice text is blank"
-      @notice_html = '<p> </p>' #fix for IE 9
+      @notice_html = '<p> </p>'.html_safe #fix for IE 9
     end
 
     if @notice_role_ids.count == 0
-      error = error ? error + "<br>No role is selected</br>" : "" +  "No role is selected"
+      error = error ? error + "<br>No role is selected</br>".html_safe : "" +  "No role is selected"
     end
 
     if error

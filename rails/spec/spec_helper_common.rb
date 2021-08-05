@@ -18,7 +18,9 @@ WebMock.disable_net_connect!(allow_localhost: true, :allow =>
                                 [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
                                     'host.docker.internal:9515',
-                                    'chromedriver.storage.googleapis.com' ]
+                                    'chromedriver.storage.googleapis.com',
+                                    'collector.newrelic.com'
+                                ]
                             )
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
@@ -55,16 +57,16 @@ class ActiveRecord::Base
 
   def self.with_database(database)
     previous = current_database_configuration_name
-    establish_connection(database)
+    establish_connection(database.to_sym)
     set_shared_connection
     yield
   ensure
-    establish_connection(previous)
+    establish_connection(previous.to_sym)
     set_shared_connection
   end
 
   def self.current_database_configuration_name
-    configurations.find { |_k, v| v['database'] == connection.current_database }[0]
+    configurations.to_h.find { |_k, v| v['database'] == connection.current_database }[0]
   end
 end
 ActiveRecord::Base.set_shared_connection
@@ -87,7 +89,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
-    ActiveRecord::Base.with_database('feature_test') { example.run }
+    ApplicationRecord.with_database('feature_test') { example.run }
   end
 
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
@@ -96,7 +98,7 @@ RSpec.configure do |config|
   config.expose_current_running_example_as :example
 
   config.include Sprockets::Rails::Helper
-  config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include VerifyAndResetHelpers
   config.include FeatureHelper
 
@@ -116,7 +118,7 @@ rescue => exception
   puts "*** run: rake db:migrate; rake db:test:prepare; rake db:feature_test:prepare; RAILS_ENV=cucumber rake app:setup:create_default_data"
   puts "RAILS_ENV: #{ENV['RAILS_ENV']}"
   puts "Rails.env: #{Rails.env}"
-  puts "Database: #{ActiveRecord::Base.connection.current_database}"
+  puts "Database: #{ApplicationRecord.connection.current_database}"
   puts
   exit 1
 end

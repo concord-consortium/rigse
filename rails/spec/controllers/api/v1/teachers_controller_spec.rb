@@ -42,7 +42,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
     context "with valid teacher params" do
       it "creates a new teacher" do
         old_teachers_count = Portal::Teacher.count
-        post :create, teacher_params
+        post :create, params: teacher_params
         expect(response.status).to eq(201)
         expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
       end
@@ -56,9 +56,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         # include the warden authentiction info that comes from sign_in
         # normally sign_in sets up the default session so it isn't necessary
         # to pass it through to the post or get call
-        post :create, teacher_params, {
-          'warden.user.user.key'=> user_session_info,
-          'omniauth_email' => 'teacher@concord.org'}
+        post :create, params: teacher_params, session: { 'warden.user.user.key'=> user_session_info, 'omniauth_email' => 'teacher@concord.org' }
         expect(response.status).to eq(201)
         expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
       end
@@ -67,7 +65,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
     context "without school_id and without new school params" do
       it "returns an error" do
         old_teachers_count = Portal::Teacher.count
-        post :create, teacher_params.except(:school_id)
+        post :create, params: teacher_params.except(:school_id)
         expect(response.status).to eq(400)
         expect(Portal::Teacher.count).to eq(old_teachers_count)
       end
@@ -78,7 +76,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         it "creates a new teacher and a new school" do
           old_teachers_count = Portal::Teacher.count
           old_schools_count = Portal::School.count
-          post :create, teacher_and_new_school_params
+          post :create, params: teacher_and_new_school_params
           expect(response.status).to eq(201)
           expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
           expect(Portal::School.count).to eq(old_schools_count + 1)
@@ -89,7 +87,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         it "returns an error" do
           old_teachers_count = Portal::Teacher.count
           old_schools_count = Portal::School.count
-          post :create, teacher_and_new_school_params.except(:login)
+          post :create, params: teacher_and_new_school_params.except(:login)
           expect(response.status).to eq(400)
           expect(JSON.parse(response.body)['message']['login']).not_to be_nil
           expect(Portal::Teacher.count).to eq(old_teachers_count)
@@ -101,7 +99,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
         it "returns an error" do
           old_teachers_count = Portal::Teacher.count
           old_schools_count = Portal::School.count
-          post :create, teacher_and_new_school_params.except(:school_name)
+          post :create, params: teacher_and_new_school_params.except(:school_name)
           expect(response.status).to eq(400)
           expect(JSON.parse(response.body)['message']['school_id']).not_to be_nil
           expect(Portal::Teacher.count).to eq(old_teachers_count)
@@ -114,7 +112,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
           Portal::School.create! school_params
           old_teachers_count = Portal::Teacher.count
           old_schools_count = Portal::School.count
-          post :create, teacher_and_new_school_params
+          post :create, params: teacher_and_new_school_params
           expect(response.status).to eq(201)
           expect(Portal::Teacher.count).to eq(old_teachers_count + 1)
           expect(Portal::School.count).to eq(old_schools_count)
@@ -137,14 +135,14 @@ RSpec.describe API::V1::TeachersController, type: :controller do
       end
 
       it 'GET get_teacher_project_views' do
-        get :get_teacher_project_views, :id => @teacher.id
+        get :get_teacher_project_views, params: { :id => @teacher.id }
         expect(response.body).to include(@project1.name)
       end
     end
 
     context 'when an anonymous user tries to access a teacher\'s recent collections pages' do
       it 'GET get_teacher_project_views' do
-        get :get_teacher_project_views, :id => @teacher.id
+        get :get_teacher_project_views, params: { :id => @teacher.id }
         expect(response.body).to include('Not authorized')
       end
     end
@@ -153,7 +151,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
   # TODO: auto-generated
   describe '#email_available' do
     it 'GET email_available' do
-      get :email_available, {}, {}
+      get :email_available
 
       expect(response).to have_http_status(:ok)
     end
@@ -162,7 +160,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
   # TODO: auto-generated
   describe '#login_available' do
     it 'GET login_available' do
-      get :login_available, {}, {}
+      get :login_available
 
       expect(response).to have_http_status(:ok)
     end
@@ -171,7 +169,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
   # TODO: auto-generated
   describe '#login_valid' do
     it 'GET login_valid' do
-      get :login_valid, {}, {}
+      get :login_valid
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -180,7 +178,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
   # TODO: auto-generated
   describe '#name_valid' do
     it 'GET name_valid' do
-      get :name_valid, {}, {}
+      get :name_valid
 
       expect(response).to have_http_status(:bad_request)
     end
@@ -197,14 +195,14 @@ RSpec.describe API::V1::TeachersController, type: :controller do
       end
       describe '#get_enews_subscription' do
         it 'GET get_enews_subscription' do
-          get :get_enews_subscription, { id: teacher.id }
+          get :get_enews_subscription, params: { id: teacher.id }
           expect(response).to have_http_status(:ok)
         end
       end
   
       describe '#update_enews_subscription' do
         it 'GET update_enews_subscription' do
-          get :update_enews_subscription, { id: teacher.id, status: 'subbed' }
+          get :update_enews_subscription, params: { id: teacher.id, status: 'subbed' }
           expect(response).to have_http_status(:ok)
         end
       end

@@ -23,7 +23,7 @@ describe SecurityQuestionsController do
       @student.user.security_questions.create({ :question => "Test question 1", :answer => "test answer 1" })
       @student.user.security_questions.create({ :question => "Test question 2", :answer => "test answer 2" })
 
-      get :edit, {user_id: @student.user.id}
+      get :edit, params: { user_id: @student.user.id }
 
       @student.user.security_questions.each_with_index do |q, i|
         assert_select("select[name=?]", "security_questions[question#{i}][question_idx]") do
@@ -65,11 +65,11 @@ describe SecurityQuestionsController do
       allow(controller).to receive(:current_user).and_return @student.user
       expect(@student.user).to receive(:update_security_questions!)
 
-      put :update, @params_for_update
+      put :update, params: @params_for_update
     end
 
     it "redirects the user to their home page once they set their security questions" do
-      put :update, @params_for_update
+      put :update, params: @params_for_update
 
       expect(@response).to redirect_to(root_path)
     end
@@ -77,7 +77,7 @@ describe SecurityQuestionsController do
     it "does not accept invalid question values" do
       expect(SecurityQuestion).to receive(:errors_for_questions_list!).and_return(["Wicked bad errors!"])
 
-      put :update, @params_for_update
+      put :update, params: @params_for_update
 
       expect(flash['error']).to include("Wicked bad errors!")
       expect(response).to render_template("edit")

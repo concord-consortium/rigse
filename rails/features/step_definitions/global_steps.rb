@@ -86,7 +86,7 @@ Given /the following users exist:$/i do |users_table|
         user.add_role(role)
       end
       user.save!
-      user.confirm!
+      user.confirm
 
     rescue ActiveRecord::RecordInvalid
       # assume this user is already created...
@@ -188,7 +188,7 @@ Then /^the location should be "([^"]*)"$/ do |location|
 end
 
 Then /^I should see the button "([^"]*)"$/ do |locator|
-  find(:xpath, XPath::HTML.button(locator))
+  find_button(locator)
 end
 
 Then /^I should not see the button "([^"]*)"$/ do |button|

@@ -1,4 +1,4 @@
-class CreateNces06Indexes < ActiveRecord::Migration
+class CreateNces06Indexes < ActiveRecord::Migration[5.1]
   def self.up
     add_index     :portal_nces06_districts,   :LEAID      # NCES Local Education Agency ID.  The first two positions of this field are also the Federal Information Profesing Standards (FIPS) state code.
     add_index     :portal_nces06_districts,   :STID       # Stateís own ID for the education agency.

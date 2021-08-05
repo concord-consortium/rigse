@@ -5,11 +5,13 @@
 # material id of the material assigned.
 # - The clazz_id points to the class to which the material was assigned.
 #
-class Portal::Offering < ActiveRecord::Base
+class Portal::Offering < ApplicationRecord
   self.table_name = :portal_offerings
 
   acts_as_replicatable
-  before_destroy :can_be_deleted?
+
+  # in Rails 5 instead of returning false to terminate the chain you throw :abort
+  before_destroy :throw_abort_if_cant_be_deleted
 
   belongs_to :clazz, :class_name => "Portal::Clazz", :foreign_key => "clazz_id"
   belongs_to :runnable, :polymorphic => true, :counter_cache => "offerings_count"
@@ -55,10 +57,6 @@ class Portal::Offering < ActiveRecord::Base
   # create one of these on the fly as needed
   def report_embeddable_filter
     super || create_report_embeddable_filter(:embeddables => [])
-  end
-
-  def sessions
-    self.learners.inject(0) { |sum, l| sum + l.sessions }
   end
 
   def find_or_create_learner(student)
@@ -121,6 +119,12 @@ class Portal::Offering < ActiveRecord::Base
 
   def can_be_deleted?
     learners.empty?
+  end
+
+  def throw_abort_if_cant_be_deleted
+    if !can_be_deleted?
+      throw(:abort)
+    end
   end
 
   def run_format

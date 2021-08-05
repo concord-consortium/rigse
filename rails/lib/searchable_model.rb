@@ -59,10 +59,11 @@ module SearchableModel
       end
     end
 
-    conditions = [sql_conditions] + sql_parameters
-    # this results
-    # (user_id = ? or public = '1') and name like ? or description like ?, 1, %%, %%, 2
-    # debugger
+    conditions = []
+    # in Rails 5 passing [""] to where causes invalid SQL to be generated
+    if sql_conditions.length > 0
+      conditions = [sql_conditions] + sql_parameters
+    end
 
     per_page = self.per_page || 20
     if policy_scope

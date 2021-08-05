@@ -165,14 +165,14 @@ class InteractivesController < ApplicationController
     end
 
     if request.xhr?
-      if cancel || @interactive.update_attributes(interactive_strong_params(params[:interactive]))
+      if cancel || @interactive.update(interactive_strong_params(params[:interactive]))
         render 'show', :locals => { :interactive => @interactive }
       else
         render :xml => @interactive.errors, :status => :unprocessable_entity
       end
     else
       respond_to do |format|
-        if @interactive.update_attributes(interactive_strong_params(params[:interactive]))
+        if @interactive.update(interactive_strong_params(params[:interactive]))
           flash['notice'] = 'Interactive was successfully updated.'
           format.html { redirect_to(@interactive) }
           format.xml  { head :ok }

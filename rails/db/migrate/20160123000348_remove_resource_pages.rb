@@ -1,4 +1,4 @@
-class RemoveResourcePages < ActiveRecord::Migration
+class RemoveResourcePages < ActiveRecord::Migration[5.1]
   def up
     drop_table :resource_pages
     drop_table :student_views

@@ -1,7 +1,7 @@
 
-class UpdateCountries < ActiveRecord::Migration
+class UpdateCountries < ActiveRecord::Migration[5.1]
 
-  class PortalCountry < ActiveRecord::Base
+  class PortalCountry < ApplicationRecord
     self.table_name = :portal_countries
 
     @country_names_to_update = {
@@ -30,7 +30,7 @@ class UpdateCountries < ActiveRecord::Migration
     def self.fix_existing_names
       @country_names_to_update.each_pair do |key, value|
         if existing = self.where("lower(name) like ?", key.downcase).first
-          existing.update_attributes(:name => value)
+          existing.update(:name => value)
         end
       end
     end
@@ -69,7 +69,7 @@ class UpdateCountries < ActiveRecord::Migration
         in_hash[:name] = adjust_country_name(in_hash[:name])
 
         existing = self.where("lower(name) like ?", in_hash[:name].downcase).first || self.new()
-        existing.update_attributes(in_hash)
+        existing.update(in_hash)
       end
     end
 

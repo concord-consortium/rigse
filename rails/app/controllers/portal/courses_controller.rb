@@ -89,7 +89,7 @@ class Portal::CoursesController < ApplicationController
     # authorize @course
 
     respond_to do |format|
-      if @course.update_attributes(portal_course_strong_params(params[:portal_course]))
+      if @course.update(portal_course_strong_params(params[:portal_course]))
         flash['notice'] = 'Portal::Course was successfully updated.'
         format.html { redirect_to(@course) }
         format.xml  { head :ok }

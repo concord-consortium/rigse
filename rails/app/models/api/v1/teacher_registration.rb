@@ -29,7 +29,7 @@ class API::V1::TeacherRegistration < API::V1::UserRegistration
       user.add_role("author")
     end
 
-    # We need to send / receive confirmation email before: user.confirm!
+    # We need to send / receive confirmation email before: user.confirm
     return true
   end
 

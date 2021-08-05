@@ -1,4 +1,4 @@
-class Saveable::OpenResponse < ActiveRecord::Base
+class Saveable::OpenResponse < ApplicationRecord
   self.table_name = "saveable_open_responses"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
@@ -11,7 +11,7 @@ class Saveable::OpenResponse < ActiveRecord::Base
     :class_name => "Saveable::OpenResponseAnswer"
 
 
-  [:prompt, :name].each { |m| delegate m, :to => :open_response, :class_name => 'Embeddable::OpenResponse' }
+  [:prompt, :name].each { |m| delegate m, :to => :open_response }
 
   include Saveable::Saveable
 

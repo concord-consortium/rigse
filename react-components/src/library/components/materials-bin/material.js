@@ -24,7 +24,11 @@ export default class MBMaterial extends React.Component {
   }
 
   assignToClass (e) {
-    Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
+    const isAssignWrapped = window.self !== window.top &&
+      window.self.location.hostname === window.top.location.hostname
+    isAssignWrapped
+      ? window.parent.Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
+      : Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
     e.preventDefault()
   }
 
@@ -45,64 +49,36 @@ export default class MBMaterial extends React.Component {
     const data = this.props.material
     return (
       <div className='mb-material'>
-        <span className='mb-material-links'>
-          {this.props.assignToSpecificClass
-            ? <input type='checkbox' onChange={this.assignToSpecificClass} checked={this.state.assigned} /> : undefined}
-          {data.edit_url != null
-            ? <a className='mb-edit' href={data.edit_url} title='Edit this activity'>
-              <span className='mb-edit-text'>Edit</span>
-            </a> : undefined}
-          {data.copy_url != null
-            ? <a className='mb-copy' href={data.copy_url} title='Make your own version of this activity'>
-              <span className='mb-copy-text'>Copy</span>
-            </a> : undefined}
-          {this.hasShortDescription()
-            ? <a className='mb-toggle-info' href='' onClick={this.toggleDescription} title='View activity description'>
-              <span className='mb-toggle-info-text'>Info</span>
-            </a> : undefined}
-          {data.preview_url != null
-            ? <a className='mb-run' href={data.preview_url} title='Run this activity in the browser'>
-              <span className='mb-run-text'>Run</span>
-            </a> : undefined}
-          {!this.props.assignToSpecificClass && (data.assign_to_class_url != null)
-            ? <a className='mb-assign-to-class' href={data.assign_to_class_url} onClick={this.assignToClass} title='Assign this activity to a class'>
-              <span className='mb-assign-to-class-text'>Assign or Share</span>
-            </a> : undefined}
-          {data.assign_to_collection_url != null
-            ? <a className='mb-assign-to-collection' href={data.assign_to_collection_url} title='Assign this activity to a collection'>
-              <span className='mb-assign-to-collection-text'>Assign to collection</span>
-            </a> : undefined}
-        </span>
-        <span className='mb-material-name'>{data.name}</span>
-        {data.archive_url != null
-          ? <a className='mb-archive-link' onClick={this.archive} title='archive this'>(archive this)</a>
-          : undefined}
-        {this.hasShortDescription()
-          ? <MBMaterialDescription
-            description={data.short_description}
-            visible={this.state.descriptionVisible}
-          /> : undefined}
+        <div className='mb-material-thumbnail'>
+          <img alt={data.name} src={data.icon.url} />
+        </div>
+        <div className='mb-material-text'>
+          <h4 className='mb-material-name'>{data.name}</h4>
+          {this.hasShortDescription() &&
+            <div className='mb-material-description' dangerouslySetInnerHTML={{ __html: data.short_description }} />
+          }
+          <div className='mb-material-links'>
+            {data.preview_url != null
+              ? <a className='mb-edit' href={data.preview_url} title='Preview this activity'>Preview</a>
+              : undefined}
+            {data.edit_url != null
+              ? <a className='mb-edit' href={data.edit_url} title='Edit this activity'>Edit</a>
+              : undefined}
+            {data.copy_url != null
+              ? <a className='mb-copy' href={data.copy_url} title='Make your own version of this activity'>Copy</a>
+              : undefined}
+            {!this.props.assignToSpecificClass && (data.assign_to_class_url != null)
+              ? <a className='mb-assign-to-class' href={data.assign_to_class_url} onClick={this.assignToClass} title='Assign this activity to a class'>Assign</a>
+              : undefined}
+            {data.assign_to_collection_url != null
+              ? <a className='mb-assign-to-collection' href={data.assign_to_collection_url} title='Assign this activity to a collection'>Assign to collection</a>
+              : undefined}
+            {data.archive_url != null
+              ? <a className='mb-archive-link' onClick={this.archive} title='archive this'>(archive this)</a>
+              : undefined}
+          </div>
+        </div>
       </div>
-    )
-  }
-}
-
-// Helper components:
-
-class MBMaterialDescription extends React.Component {
-  getVisibilityClass () {
-    if (!this.props.visible) {
-      return 'mb-hidden'
-    } else {
-      return ''
-    }
-  }
-
-  render () {
-    return (
-      <div
-        className={`mb-material-description ${this.getVisibilityClass()}`}
-        dangerouslySetInnerHTML={{ __html: this.props.description }} />
     )
   }
 }

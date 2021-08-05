@@ -1,10 +1,10 @@
 class Admin::SettingsController < ApplicationController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :admin_only, :except => [:index, :edit, :update]
-  before_filter :admin_or_manager, :only => [:index, :edit, :update]
-  # before_filter :setup_object, :except => [:index]
-  # before_filter :render_scope, :only => [:show]
+  before_action :admin_only, :except => [:index, :edit, :update]
+  before_action :admin_or_manager, :only => [:index, :edit, :update]
+  # before_action :setup_object, :except => [:index]
+  # before_action :render_scope, :only => [:show]
 
   protected
 
@@ -91,7 +91,7 @@ class Admin::SettingsController < ApplicationController
   # PUT /admin/settings/1
   def update
     @admin_settings = Admin::Settings.find(params[:id])
-    if @admin_settings.update_attributes(admin_settings_strong_params(params[:admin_settings]))
+    if @admin_settings.update(admin_settings_strong_params(params[:admin_settings]))
       flash['notice'] = 'Admin::Settings was successfully updated.'
       redirect_to @admin_settings
     else
@@ -111,9 +111,9 @@ class Admin::SettingsController < ApplicationController
     params && params.permit(:about_page_content, :active, :allow_adhoc_schools, :allow_default_class, :anonymous_can_browse_materials,
                             :auto_set_teachers_as_authors, :custom_help_page_html, :custom_search_path, :default_cohort_id, :description,
                             :enable_grade_levels, :enable_member_registration, :external_url, :help_type,
-                            :home_page_content, :include_external_activities, :jnlp_cdn_hostname, :jnlp_url, :pub_interval,
+                            :home_page_content, :include_external_activities, :pub_interval,
                             :require_user_consent, :show_collections_menu, :teacher_home_path, :teachers_can_author, :use_bitmap_snapshots,
-                            :use_periodic_bundle_uploading, :use_student_security_questions, :user_id, :wrap_home_page_content,
+                            :use_student_security_questions, :user_id, :wrap_home_page_content,
                             # array value for this field
                             :enabled_bookmark_types => [])
   end

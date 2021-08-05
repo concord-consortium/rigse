@@ -1,4 +1,4 @@
-class SimplifySaveableInteractives < ActiveRecord::Migration
+class SimplifySaveableInteractives < ActiveRecord::Migration[5.1]
   def up
     add_column :saveable_interactives, :iframe_id, :integer
     remove_column :saveable_interactives, :embeddable_id

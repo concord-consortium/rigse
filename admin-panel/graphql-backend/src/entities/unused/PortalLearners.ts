@@ -1,8 +1,6 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Index("index_portal_learners_on_sec_key", ["secureKey"], { unique: true })
-@Index("index_portal_learners_on_bundle_logger_id", ["bundleLoggerId"], {})
-@Index("index_portal_learners_on_console_logger_id", ["consoleLoggerId"], {})
 @Index("index_portal_learners_on_offering_id", ["offeringId"], {})
 @Index("index_portal_learners_on_student_id", ["studentId"], {})
 @Entity("portal_learners", { schema: "portal_development" })
@@ -24,12 +22,6 @@ export class PortalLearners {
 
   @Column("datetime", { name: "updated_at" })
   updatedAt: Date;
-
-  @Column("int", { name: "bundle_logger_id", nullable: true })
-  bundleLoggerId: number | null;
-
-  @Column("int", { name: "console_logger_id", nullable: true })
-  consoleLoggerId: number | null;
 
   @Column("varchar", {
     name: "secure_key",

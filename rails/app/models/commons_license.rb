@@ -1,4 +1,4 @@
-class CommonsLicense < ActiveRecord::Base
+class CommonsLicense < ApplicationRecord
   self.primary_key = :code
   before_save :default_paths
 

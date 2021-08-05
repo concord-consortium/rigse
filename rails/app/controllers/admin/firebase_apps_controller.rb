@@ -65,7 +65,7 @@ class Admin::FirebaseAppsController < ApplicationController
     authorize @firebase_app
 
     respond_to do |format|
-      if @firebase_app.update_attributes(firebase_app_strong_params(params[:firebase_app]))
+      if @firebase_app.update(firebase_app_strong_params(params[:firebase_app]))
         format.html { redirect_to admin_firebase_apps_path, notice: 'Firebase app was successfully updated.' }
         format.json { head :no_content }
       else

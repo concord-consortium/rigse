@@ -15,7 +15,6 @@ development: &id003
   :theme: default
   :site_name: DEFAULT Investigations
   :site_url: http://localhost:3000
-  :runnables_use: otrunk_jnlp
   :runnable_mime_type:
   :top_level_container_name: investigation
   :site_school: DEFAULT Investigations-school
@@ -50,7 +49,6 @@ production:
   :theme: itsi-learn
   :site_name: DEFAULT Investigations
   :site_url: http://localhost:3000
-  :runnables_use: otrunk_jnlp
   :runnable_mime_type:
   :top_level_container_name: investigation
   :site_school: DEFAULT Investigations-school

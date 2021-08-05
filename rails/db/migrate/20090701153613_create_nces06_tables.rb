@@ -1,4 +1,4 @@
-class CreateNces06Tables < ActiveRecord::Migration
+class CreateNces06Tables < ActiveRecord::Migration[5.1]
 
   def self.up
     create_table :portal_nces06_districts do |t|

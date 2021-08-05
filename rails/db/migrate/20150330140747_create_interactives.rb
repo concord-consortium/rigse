@@ -1,4 +1,4 @@
-class CreateInteractives < ActiveRecord::Migration
+class CreateInteractives < ActiveRecord::Migration[5.1]
   def up
     create_table :interactives do |t|
       t.string :name

@@ -3,7 +3,7 @@ class Portal::StudentsController < ApplicationController
   include RestrictedPortalController
 
   # PUNDIT_CHECK_FILTERS
-  before_filter :manager_or_researcher, :only => [ :show ]
+  before_action :manager_or_researcher, :only => [ :show ]
 
   public
 
@@ -111,7 +111,8 @@ class Portal::StudentsController < ApplicationController
     end
     # Only do this check if the student is signing themselves up. Everything else will work silently if these values are not set.
     if current_settings.use_student_security_questions && params[:clazz] &&params[:clazz][:class_word]
-      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions])
+      # to_unsafe_hash is ok to use here as make_questions_from_hash_and_user validates the input
+      @security_questions = SecurityQuestion.make_questions_from_hash_and_user(params[:security_questions].to_unsafe_hash)
       sq_errors = SecurityQuestion.errors_for_questions_list!(@security_questions)
       if sq_errors && sq_errors.size > 0
         errors << [:security_questions, " have errors: #{sq_errors.join(',')}"]
@@ -137,7 +138,7 @@ class Portal::StudentsController < ApplicationController
       @user.save!
       user_created = @user.save
       if user_created
-        @user.confirm!
+        @user.confirm
         if current_settings.allow_default_class || @grade_level.nil?
           @portal_student = Portal::Student.create(:user_id => @user.id)
         else
@@ -192,7 +193,7 @@ class Portal::StudentsController < ApplicationController
   #   # authorize @student
   #   @portal_student = Portal::Student.find(params[:id])
   #   respond_to do |format|
-  #     if @portal_student.update_attributes(portal_student_strong_params(params[:portal_student]))
+  #     if @portal_student.update(portal_student_strong_params(params[:portal_student]))
   #       flash['notice'] = 'Portal::Student was successfully updated.'
   #       format.html { redirect_to(@portal_student) }
   #       format.xml  { head :ok }
@@ -277,7 +278,7 @@ class Portal::StudentsController < ApplicationController
     @portal_student = Portal::Student.find(params[:id])
     @portal_student.user.asked_age = true;
     @portal_student.save
-    if @portal_student.user.update_attributes(portal_student_strong_params(params[:user]))
+    if @portal_student.user.update(portal_student_strong_params(params[:user]))
       redirect_to root_path
     else
       render :action => "ask_consent"

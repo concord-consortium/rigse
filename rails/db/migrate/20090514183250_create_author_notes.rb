@@ -1,4 +1,4 @@
-class CreateAuthorNotes < ActiveRecord::Migration
+class CreateAuthorNotes < ActiveRecord::Migration[5.1]
   def self.up
     create_table :author_notes do |t|
       t.text        :body

@@ -1,4 +1,4 @@
-class AddUserIdToProbeCalibrations < ActiveRecord::Migration
+class AddUserIdToProbeCalibrations < ActiveRecord::Migration[5.1]
   def self.up
     add_column :probe_calibrations, :user_id, :integer
   end

@@ -1,4 +1,4 @@
-class AddIndexesForUsersEtc < ActiveRecord::Migration
+class AddIndexesForUsersEtc < ActiveRecord::Migration[5.1]
   def self.up
     add_index     :portal_teachers,        :user_id
     add_index     :portal_students,        :user_id

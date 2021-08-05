@@ -1,4 +1,4 @@
-class AddSavePathToExternalActivity < ActiveRecord::Migration
+class AddSavePathToExternalActivity < ActiveRecord::Migration[5.1]
   def self.up
     add_column :external_activities, :save_path, :string
     add_index :external_activities, :save_path

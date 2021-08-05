@@ -113,14 +113,12 @@ RailsPortal::Application.routes.draw do
       resources :learners do
         member do
           get :report
-          get :bundle_report
           get :activity_report
           get :authorize_show
           get :current_clazz
         end
       end
 
-      get 'offerings/:id/launch_status.:format' => 'offerings_metal#launch_status', :constraints => { :format => 'json' }, :as => :launch_status
       get 'offerings/:id/external_report/:report_id' => 'offerings#external_report', :as => :external_report
       resources :offerings do
         member do
@@ -207,9 +205,6 @@ RailsPortal::Application.routes.draw do
       end
       resource :security_questions, :only => [:edit, :update]
 
-      # this is added to prevent caching and reuse of jnlp files by other users
-      # this caching or saving of jnlps could still happen, but adding this eliminates
-      # one potential way it could be cached and reused
       namespace :portal do
         resources :offerings, :only => [:show]
       end
@@ -223,31 +218,7 @@ RailsPortal::Application.routes.draw do
     namespace :dataservice do
       # 2020-09-15 NP — I doubt that we actualy need create and update
       resources :blobs, only: [:show, :index, :create, :update]
-      # 2020-09-15 NP: Most dataservice routes have been removed.
-      # We maintain a few dataservice routes required by external apps like
-      # genigames. Metal routes (below) are used by these too.
-      resources :bucket_loggers, only: [:show]
     end
-
-    # metal routing
-    post '/dataservice/bundle_loggers/:id/bundle_contents.bundle' => 'dataservice/bundle_contents_metal#create', :constraints => { :format => 'bundle' }
-    post '/dataservice/console_loggers/:id/console_contents.bundle' => 'dataservice/console_contents_metal#create', :constraints => { :format => 'bundle' }
-    post '/dataservice/periodic_bundle_loggers/:id/periodic_bundle_contents.bundle' => 'dataservice/periodic_bundle_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_periodic_bundle_contents'
-    post '/dataservice/periodic_bundle_loggers/:id/session_end_notification.bundle' => 'dataservice/periodic_bundle_loggers_metal#session_end_notification', :constraints => { :format => 'bundle' }, :as => 'dataservice_periodic_bundle_logger_session_end_notification'
-
-    # bucket contents routes
-    post '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_learner'
-    get  '/dataservice/bucket_loggers/learner/:id/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_learner',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_learner'
-    post '/dataservice/bucket_loggers/name/:name/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create_by_name', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents_by_name'
-    get  '/dataservice/bucket_loggers/name/:name/bucket_contents(.:format)' => 'dataservice/bucket_loggers#show_by_name',   :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_by_name'
-    post '/dataservice/bucket_loggers/:id/bucket_contents(.:format)' => 'dataservice/bucket_contents_metal#create', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_contents'
-
-    # bucket log items routes
-    post '/dataservice/bucket_loggers/:id/bucket_log_items(.:format)'         => 'dataservice/bucket_log_items_metal#create',            :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items'
-    post '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_learner'
-    get  '/dataservice/bucket_loggers/learner/:id/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_learner', :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_learner'
-    post '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_log_items_metal#create_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_log_items_by_name'
-    get  '/dataservice/bucket_loggers/name/:name/bucket_log_items(.:format)' => 'dataservice/bucket_loggers#show_log_items_by_name',     :constraints => { :format => 'bundle' }, :as => 'dataservice_bucket_loggers_log_items_by_name'
 
     # external activity return url (:id_or_key refers learner's ID or key)
     # - key is a random UUID string, so it's impossible to guess somebody's else endpoint (more secure)
@@ -433,7 +404,6 @@ RailsPortal::Application.routes.draw do
         namespace :answers do
           get :student_answers
         end
-        resources :reports, only: [:show, :update]
 
         resources :offerings, only: [:show, :update, :index] do
           member do
@@ -543,7 +513,6 @@ RailsPortal::Application.routes.draw do
 
     get "api/v1/materials/:material_type/:id", to: "api/v1/materials#show"
 
-    get '/missing_installer/:os' => 'home#missing_installer', :as => :installer, :os => 'osx'
     get '/readme' => 'home#readme', :as => :readme
     get '/docs/:document' => 'home#doc', :as => :doc, :constraints => { :document => /\S+/ }
     get '/home'       => 'home#index', :as => :home
@@ -551,17 +520,14 @@ RailsPortal::Application.routes.draw do
     get '/recent_activity' => 'home#recent_activity', :as => :recent_activity
     get '/getting_started' => 'home#getting_started', :as => :getting_started
     get '/about' => 'home#about'
-    get '/report' => 'home#report', :as => :report
     get '/collections' => 'home#collections'
     get '/test_exception' => 'home#test_exception', :as => :test_exception
-    get '/requirements' => 'home#requirements', :as => :requirements
     get '/pick_signup' => 'home#pick_signup', :as => :pick_signup
     get '/admin' => 'home#admin', :as => :admin
     get '/name_for_clipboard_data' => 'home#name_for_clipboard_data', :as => :name_for_clipboard_data
     get 'authoring' => 'home#authoring', :as => :authoring
     get '/authoring_site_redirect/:id' => 'home#authoring_site_redirect', :as => :authoring_site_redirect
 
-    get '/banner' => 'misc#banner', :as => :banner
     get '/time' => 'misc_metal#time', :as => :time
     get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
     get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
@@ -569,9 +535,9 @@ RailsPortal::Application.routes.draw do
     get '/misc/preflight' => 'misc#preflight', :as => :preflight
     get '/misc/stats' => 'misc#stats', :as => :stats
 
-    get '/resources/:id(/:slug)' => 'home#stem_resources', :as => :stem_resources
+    get '/resources/:id(/:slug)' => 'browse/external_activities#show', :as => :stem_resources
 
-    get '/resources/:type/:id_or_filter_value(/:slug)' => 'home#stem_resources', :as => :redirect_stem_resources
+    get '/resources/:type/:id_or_filter_value(/:slug)' => 'browse/external_activities#show', :as => :redirect_stem_resources
 
     get 'robots.txt'    => 'robots#index'
     get 'sitemap.xml'   => 'robots#sitemap'
@@ -583,8 +549,9 @@ RailsPortal::Application.routes.draw do
 
     root :to => 'home#index'
   end
+
   # Web interface to show the delayed jobs for admins
-  match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post], :constraints => lambda { |request|
+  mount Delayed::Web::Engine, at: "/delayed_job", :constraints => lambda { |request|
     warden = request.env['warden']
     warden.user && warden.user.has_role?("admin")
   }

@@ -23,7 +23,7 @@ describe API::V1::MaterialsBinController do
         m.save!
       end
       # Set one material to be an assessment item.
-      materials[2].update_attributes!(is_assessment_item: true)
+      materials[2].update!(is_assessment_item: true)
       # Assign all materials to collection.
       materials.each do |m|
         FactoryBot.create(:materials_collection_item, material: m, materials_collection: collection)
@@ -32,7 +32,7 @@ describe API::V1::MaterialsBinController do
 
     context 'when user is an anonymous user not assigned to any cohorts' do
       it 'should return materials that are not assigned to any cohorts and are not marked as assessment items' do
-        get :collections, id: collection.id
+        get :collections, params: { id: collection.id }
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(1)
@@ -48,7 +48,7 @@ describe API::V1::MaterialsBinController do
       end
 
       it 'should return materials that are in the same cohort or materials not assigned to any cohort' do
-        get :collections, id: collection.id
+        get :collections, params: { id: collection.id }
         expect(response.status).to eql(200)
         results = JSON.parse(response.body)
         expect(results.length).to eql(1)
@@ -127,7 +127,7 @@ describe API::V1::MaterialsBinController do
     end
     let (:request_user) { user1 }
     let (:results) {
-      get :unofficial_materials, user_id: request_user.id
+      get :unofficial_materials, params: { user_id: request_user.id }
       raise "Non 200 response status: #{response.status}" if response.status != 200
       JSON.parse(response.body)
     }

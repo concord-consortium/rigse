@@ -24,8 +24,7 @@
       "Portal",
       "PortalComponents",
       "DayPickerOverlay",
-      "ga",
-      "OfferingRunStatus"
+      "ga"
     ]
   },
   "jest": {

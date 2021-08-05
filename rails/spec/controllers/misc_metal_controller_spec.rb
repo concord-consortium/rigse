@@ -7,7 +7,7 @@ RSpec.describe MiscMetalController, type: :controller do
   # TODO: auto-generated
   describe '#time' do
     it 'GET time' do
-      get :time, {}, {}
+      get :time
 
       expect(response).to have_http_status(:ok)
     end

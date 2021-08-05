@@ -30,6 +30,8 @@
     %script
       try{Typekit.load({ async: true });}catch(e){}
 
+    %script{:src => "https://kit.fontawesome.com/32aedade6e.js", :crossorigin => "anonymous"}
+
     / Include scripts that are based on rails data and need to be generated dynamically. They cannot be precompiled.
     = render :partial => 'dynamic_scripts/all'
     != javascript_include_tag 'application'
@@ -61,5 +63,5 @@
     #js_flash{:style=>"display: none;"}
     = render :partial=>"layouts/flashes"
     = content_for :layout
-    = render :partial => 'shared/footer'
+    = render_themed_partial 'shared/footer'
     = content_for :after_footer

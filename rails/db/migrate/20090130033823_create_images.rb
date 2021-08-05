@@ -1,4 +1,4 @@
-class CreateImages < ActiveRecord::Migration
+class CreateImages < ActiveRecord::Migration[5.1]
   def self.up
     create_table :images do |t|
       t.integer :parent_id

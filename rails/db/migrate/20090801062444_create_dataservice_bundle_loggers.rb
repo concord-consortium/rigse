@@ -1,4 +1,4 @@
-class CreateDataserviceBundleLoggers < ActiveRecord::Migration
+class CreateDataserviceBundleLoggers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :dataservice_bundle_loggers do |t|
             

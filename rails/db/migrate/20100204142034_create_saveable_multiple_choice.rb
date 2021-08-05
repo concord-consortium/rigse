@@ -1,4 +1,4 @@
-class CreateSaveableMultipleChoice < ActiveRecord::Migration
+class CreateSaveableMultipleChoice < ActiveRecord::Migration[5.1]
   def self.up
     create_table :saveable_multiple_choices do |t|
       t.integer     :learner_id

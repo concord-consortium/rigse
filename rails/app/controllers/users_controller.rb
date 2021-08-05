@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  after_filter :store_location, :only => [:index]
+  after_action :store_location, :only => [:index]
 
   protected
 
@@ -147,7 +147,7 @@ class UsersController < ApplicationController
         end
         params[:user].delete :enews_subscription
 
-        if @user.update_attributes(user_strong_params(params[:user]))
+        if @user.update(user_strong_params(params[:user]))
 
           # This update method is shared with admins using users/edit and users using users/preferences.
           # Since the values are checkboxes we can't use the absense of them to denote there are no
@@ -222,7 +222,7 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     authorize user
     if user.state != "active"
-      user.confirm!
+      user.confirm
       user.make_user_a_member
 
       # assume this type of user just activated someone from somewhere else in the app

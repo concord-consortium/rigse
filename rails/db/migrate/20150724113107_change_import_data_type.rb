@@ -1,4 +1,4 @@
-class ChangeImportDataType < ActiveRecord::Migration
+class ChangeImportDataType < ActiveRecord::Migration[5.1]
   def up
   	change_column :imports, :import_data, :text, :limit => 4294967295
   end

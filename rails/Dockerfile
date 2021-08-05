@@ -1,9 +1,5 @@
-FROM concordconsortium/docker-rails-base-private:2.3.7-4.2.11.17
+FROM concordconsortium/docker-rails-base-private:ruby-2.7-rails-6.1.3.2
 
-# Debian 8 (jessie) is no longer supported
-RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie main" >> /etc/apt/sources.list.d/jessie.list
-RUN echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list.d/jessie.list
-RUN sed -i '/deb http:\/\/deb.debian.org\/debian jessie.* main/d' /etc/apt/sources.list
 RUN apt-get -o Acquire::Check-Valid-Until=false update
 
 # install nginx
@@ -55,7 +51,12 @@ ENV RAILS_ENV=production
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
 RUN cp config/settings.sample.yml config/settings.yml
 ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
-RUN bundle exec rake assets:precompile
+
+
+ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
+# Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
+# Instead we need to fake some ENV Vars for the precompile ...
+RUN SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
 RUN cp docker/prod/config/settings.yml config/settings.yml
 
 EXPOSE 80

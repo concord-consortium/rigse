@@ -1,4 +1,4 @@
-class AddIsNumericToEmbeddableDataTable < ActiveRecord::Migration
+class AddIsNumericToEmbeddableDataTable < ActiveRecord::Migration[5.1]
   def self.up
     add_column :embeddable_data_tables, :is_numeric, :boolean, :default => true
   end

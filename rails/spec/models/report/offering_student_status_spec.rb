@@ -82,7 +82,7 @@ describe Report::OfferingStudentStatus do
     describe "last_run_string" do
       describe '#last_run_string' do
         subject { super().last_run_string }
-        it { is_expected.to eq("Last run Dec 23, 1970")}
+        it { is_expected.to eq("Started, last run Dec 23, 1970")}
       end
     end
   end
@@ -113,7 +113,7 @@ describe Report::OfferingStudentStatus do
     describe "last_run_string" do
       describe '#last_run_string' do
         subject { super().last_run_string }
-        it { is_expected.to eq("not yet started")}
+        it { is_expected.to eq("Not yet started")}
       end
     end
   end

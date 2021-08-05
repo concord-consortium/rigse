@@ -1,4 +1,4 @@
-class CreatePortalLearnerActivityFeedbacks < ActiveRecord::Migration
+class CreatePortalLearnerActivityFeedbacks < ActiveRecord::Migration[5.1]
   def change
     create_table :portal_learner_activity_feedbacks do |t|
       t.text :text_feedback
@@ -9,7 +9,6 @@ class CreatePortalLearnerActivityFeedbacks < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :portal_learner_activity_feedbacks, :portal_learner_id
-    add_index :portal_learner_activity_feedbacks, :activity_feedback_id
+
   end
 end

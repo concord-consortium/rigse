@@ -1,0 +1,313 @@
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../../shared/styles/variables/_variables.scss';
+
+.finderWrapper {
+  padding: 0;
+  position: relative;
+
+  .finderForm {
+    margin-bottom: 50px;
+    position: sticky;
+    top: 50px;
+  }
+  #finderResults {
+    margin: 0;
+    position: relative;
+    width: 73.68421%;
+    z-index: 5;
+
+    .loading {
+      background: transparent url(../assets/loading.gif) no-repeat center top;
+      background-size: 64px;
+      color: #999;
+      font-size: 14px;
+      font-weight: 500;
+      height: 90px;
+      padding-top: 70px;
+      text-align: center;
+      text-transform: uppercase;
+      width: 100%;
+    }
+  }
+}
+
+.finderOptionsContainer {
+  background: $white;
+  border-radius: 4px;
+  height: 28px;
+  margin: 0 0 10px;
+  overflow: hidden;
+  padding: 0 0 3px;
+
+  form {
+    margin: 0;
+    padding: 0;
+
+    input {
+      border-radius: 4px;
+      font: 300 14px $font-museo-sans;
+
+      &[type="text"] {
+        padding: 7px 5px 6px;
+        width: calc(100% - 59px);
+
+        &::-webkit-input-placeholder, 
+        &::-moz-placeholder,
+        &::placeholder {
+          color: #ff0000;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  h2 {
+    cursor: pointer;
+  }
+
+  h2, label {
+    color: $col-darkgray;
+    display: block;
+    font-family: $font-museo;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
+    padding: 10px 10px 10px 29px;
+    position: relative;
+    text-transform: uppercase;
+
+    &:before {
+      content: "\203A";
+      display: inline-block;
+      font-size: 23px;
+      font-weight: 500;
+      left: 13px;
+      line-height: .45;
+      margin: 0 12px 0 0;
+      position: absolute;
+      top: 10px;
+      transition: .1s;
+    }
+  }
+  &.open {
+    height: auto;
+    overflow: visible;
+    padding: 0 0 10px;
+
+    h2, label {
+      &:before {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      color: $col-darkgray;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: 1px;
+      padding: 5px 10px 5px 37px;
+      position: relative;
+      text-align: left;
+      width: calc(100% - 47px);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.selected {
+        background: $col-blue;
+        color: $white;
+      }
+      &:before {
+        content: ' ';
+        display: block;
+        font: normal 20px "Font Awesome 5 Pro";
+        left: 10px;
+        line-height: 1;
+        margin: 0 10px 0 0;
+        padding: 0;
+        position: absolute;
+        top: 4px;
+      }
+
+      &#chemistry {
+        &:before {
+          content: "\f492";
+        }
+      }
+      &#earthSpace {
+        &:before {
+          content: "\e020";
+        }
+      }
+      &#engineeringTech {
+        &:before {
+          content: "\f013";
+        }
+      }
+      &#lifeSciences {
+        &:before {
+          content: "\f610";
+        }
+      }
+      &#mathematics {
+        &:before {
+          content: "\f697";
+        }
+      }
+      &#physics {
+        &:before {
+          content: "\f5d2";
+        }
+      }
+
+      &#elementarySchool {
+        &:before {
+          content: '\f5dd';
+        }
+      }
+      &#middleSchool {
+        &:before {
+          content: '\f0f3';
+          margin-left: 1px;
+        }
+      }
+      &#highSchool {
+        &:before {
+          content: '\f19d';
+          margin-left: -2px;
+        }
+      }
+      &#higherEducation {
+        &:before {
+          content: '\f19c';
+        }
+      }
+      &#official {
+        &:before {
+          content: '\f0a3';
+        }
+      }
+      &#community {
+        &:before {
+          content: '\f0c0';
+        }
+      }
+    }
+  }
+}
+
+.advancedSearchLink {
+  font-size: 14px;
+  text-align: center;
+
+  a {
+    color: $col-darkgray !important;
+  }
+}
+
+.finderHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  &.advanced {
+    h2 {
+      width: 645px;
+    }
+  }
+
+  h2 {
+    color: $col-darkgray;
+    font-family: $font-museo;
+    font-size: 24px;
+    line-height: .8;
+    width: 100%;
+  }
+  .finderHeaderResourceCount {
+    align-self: center;
+    color: $col-darkgray;
+  }
+  .showOnly, .sortMenu {
+    display: flex;
+    font-size: 14px;
+    width: 217px;
+    
+    label {
+      align-self: center;
+      color: $col-darkgray;
+      font-size: 14px;
+      font-weight: 300;
+      text-transform: none;
+      white-space: nowrap;
+    }
+    select {
+      background: $white;
+      border-radius: 4px;
+      font: 300 14px $font-museo-sans;
+      margin: 0 0 0 5px;
+      overflow: hidden;
+      padding: 5px;
+      white-space: nowrap;
+      width: 155px;
+    }
+  }
+}
+
+@media(hover: hover) and (pointer: fine) {
+  .finderOptionsContainer { 
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  
+      li {
+        &:hover {
+          background: $col-gold;
+          color: $white;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .finderWrapper {
+    .finderForm {
+      margin-bottom: 30px;
+      position: relative;
+      top: 0;
+    }
+    #finderResults {
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .finderWrapper {
+    #finderResults {
+      .finderHeader {
+        justify-content: center;
+        text-align: center;
+        .finderHeaderResourceCount, .sortMenu {
+          justify-content: center;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+
+}

@@ -1,4 +1,4 @@
-class CreateEmbeddableVideoPlayers < ActiveRecord::Migration
+class CreateEmbeddableVideoPlayers < ActiveRecord::Migration[5.1]
   def self.up
     create_table :embeddable_video_players do |t|
       

@@ -1,4 +1,4 @@
-class AddSiteUrlToClient < ActiveRecord::Migration
+class AddSiteUrlToClient < ActiveRecord::Migration[5.1]
   def up
     add_column :clients, :site_url, :string
   end

@@ -1,4 +1,4 @@
-class RemoveDelegatedAttributes < ActiveRecord::Migration
+class RemoveDelegatedAttributes < ActiveRecord::Migration[5.1]
   def self.up
     remove_column :portal_teachers, :name
     remove_column :portal_teachers, :description

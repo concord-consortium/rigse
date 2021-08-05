@@ -12,7 +12,7 @@ RSpec.describe Admin::LearnerDetailsController, type: :controller do
   # TODO: auto-generated
   describe '#show' do
     xit 'GET show' do
-      get :show, {}, {}
+      get :show
 
       expect(response).to have_http_status(:ok)
     end

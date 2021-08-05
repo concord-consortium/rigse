@@ -1,4 +1,4 @@
-class AddProjectUserFlags < ActiveRecord::Migration
+class AddProjectUserFlags < ActiveRecord::Migration[5.1]
   def up
     # added primary key so the is_* attributes can be updated in the controller
     add_column :admin_project_users, :id, :primary_key

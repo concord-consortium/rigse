@@ -1,4 +1,4 @@
-class AddAllowDefaultClassToAdminProject < ActiveRecord::Migration
+class AddAllowDefaultClassToAdminProject < ActiveRecord::Migration[5.1]
   def self.up
     add_column :admin_projects, :allow_default_class, :boolean
   end

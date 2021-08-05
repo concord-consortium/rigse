@@ -85,7 +85,7 @@ class Portal::SubjectsController < ApplicationController
     # authorize @subject
 
     respond_to do |format|
-      if @subject.update_attributes(portal_subject_strong_params(params[:subject]))
+      if @subject.update(portal_subject_strong_params(params[:subject]))
         flash['notice'] = 'Portal::Subject was successfully updated.'
         format.html { redirect_to(@subject) }
         format.xml  { head :ok }

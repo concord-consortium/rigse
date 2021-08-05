@@ -8,7 +8,7 @@ describe "/portal/schools/show.html.haml" do
       zipcode: '01002'
     }
   }
-
+  
   before(:each) do
     power_user = stub_model(User, :has_role? => true)
     allow(view).to receive(:current_visitor).and_return(power_user)

@@ -1,4 +1,4 @@
-class Portal::Student < ActiveRecord::Base
+class Portal::Student < ApplicationRecord
   self.table_name = :portal_students
 
   acts_as_replicatable
@@ -17,15 +17,14 @@ class Portal::Student < ActiveRecord::Base
   has_many :student_clazzes, :dependent => :destroy, :class_name => "Portal::StudentClazz", :foreign_key => "student_id"
 
   has_many :clazzes, :through => :student_clazzes, :class_name => "Portal::Clazz"
-  has_many :teachers, -> { uniq }, :through => :clazzes, :class_name => "Portal::Teacher"
+  has_many :teachers, -> { distinct }, :through => :clazzes, :class_name => "Portal::Teacher"
   # students cohorts are infered from its teacher(s)
-  has_many :cohorts, -> { uniq }, :through => :teachers, :class_name => "Admin::Cohort"
-  has_many :projects, -> { uniq }, :through => :cohorts, :class_name => "Admin::Project"
+  has_many :cohorts, -> { distinct }, :through => :teachers, :class_name => "Admin::Cohort"
+  has_many :projects, -> { distinct }, :through => :cohorts, :class_name => "Admin::Project"
 
   has_many :own_collaborations, :class_name => "Portal::Collaboration", :foreign_key => "owner_id"
   has_many :collaboration_memberships, :class_name => "Portal::CollaborationMembership"
   has_many :collaborations, :through => :collaboration_memberships, :class_name => "Portal::Collaboration"
-  has_many :collaborative_bundles, :through => :collaborations, :class_name => "Dataservice::BundleContent", :source => :bundle_content
 
   has_many :portal_student_permission_forms, :dependent => :destroy, :class_name => "Portal::StudentPermissionForm", :foreign_key => "portal_student_id"
 
@@ -58,7 +57,7 @@ class Portal::Student < ActiveRecord::Base
     # Disable cache as we have higher chance to avoid race condition causing that the generated login
     # is not unique. Also it's needed when we actually handle that situation (see student_registration.rb),
     # as otherwise subsequent login generation could return the same result as previous call.
-    ActiveRecord::Base.uncached do
+    ApplicationRecord.uncached do
       while (User.login_exists? generated_login)
         counter = counter + 1
         generated_login = "#{suggested_login}#{counter}"

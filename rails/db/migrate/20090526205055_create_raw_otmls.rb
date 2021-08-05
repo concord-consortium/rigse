@@ -1,4 +1,4 @@
-class CreateRawOtmls < ActiveRecord::Migration
+class CreateRawOtmls < ActiveRecord::Migration[5.1]
   def self.up
     create_table :raw_otmls do |t|
       

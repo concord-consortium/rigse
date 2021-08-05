@@ -1,4 +1,4 @@
-class RenameCreatorIdToCreatedByOfSiteNotices < ActiveRecord::Migration
+class RenameCreatorIdToCreatedByOfSiteNotices < ActiveRecord::Migration[5.1]
   def self.up
     rename_column :site_notices, :creator_id, :created_by
   end

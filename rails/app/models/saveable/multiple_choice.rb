@@ -1,4 +1,4 @@
-class Saveable::MultipleChoice < ActiveRecord::Base
+class Saveable::MultipleChoice < ApplicationRecord
   self.table_name = "saveable_multiple_choices"
 
   belongs_to :learner,        :class_name => 'Portal::Learner'
@@ -15,7 +15,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
     :choices,
     :has_correct_answer?,
     :has_duplicate_choices?
-  ].each { |m| delegate m, :to => :multiple_choice, :class_name => 'Embeddable::MultipleChoice' }
+  ].each { |m| delegate m, :to => :multiple_choice }
 
   include Saveable::Saveable
 
@@ -25,7 +25,7 @@ class Saveable::MultipleChoice < ActiveRecord::Base
   #
   def answered?
 
-    if answers.length == 0 
+    if answers.length == 0
         return false
     end
 

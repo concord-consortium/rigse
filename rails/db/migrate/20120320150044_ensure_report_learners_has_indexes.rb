@@ -1,4 +1,4 @@
-class EnsureReportLearnersHasIndexes < ActiveRecord::Migration
+class EnsureReportLearnersHasIndexes < ActiveRecord::Migration[5.1]
   def self.up
     # remove them first, just in case they exist.
     # rescue errors, in case they don't.

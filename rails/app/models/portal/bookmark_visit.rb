@@ -1,4 +1,4 @@
-class Portal::BookmarkVisit < ActiveRecord::Base
+class Portal::BookmarkVisit < ApplicationRecord
   self.table_name = :portal_bookmark_visits
 
   belongs_to :user

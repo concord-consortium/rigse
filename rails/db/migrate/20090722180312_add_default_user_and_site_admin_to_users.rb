@@ -1,4 +1,4 @@
-class AddDefaultUserAndSiteAdminToUsers < ActiveRecord::Migration
+class AddDefaultUserAndSiteAdminToUsers < ActiveRecord::Migration[5.1]
   def self.up
     add_column :users, :default_user, :boolean, :default => false
     add_column :users, :site_admin, :boolean, :default => false

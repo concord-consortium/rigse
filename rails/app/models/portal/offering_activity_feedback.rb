@@ -1,4 +1,4 @@
-class Portal::OfferingActivityFeedback < ActiveRecord::Base
+class Portal::OfferingActivityFeedback < ApplicationRecord
   SCORE_AUTO   = "auto"
   SCORE_NONE   = "none"
   SCORE_MANUAL = "manual"
@@ -39,7 +39,7 @@ class Portal::OfferingActivityFeedback < ActiveRecord::Base
         opts.delete :score_type
       end
     end
-    self.update_attributes(opts)
+    self.update(opts)
   end
 
   def enable_score_feedback

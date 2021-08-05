@@ -96,7 +96,7 @@ describe API::V1::SearchController do
     describe "searching for materials" do
       let(:get_params) { {} }
       before(:each) do
-        get :search, get_params
+        get :search, params: get_params
       end
 
       describe "with no filter parameters" do
@@ -147,7 +147,7 @@ describe API::V1::SearchController do
         end
 
         it "should not return any activities" do
-          get :search, get_params
+          get :search, params: get_params
           expect(assigns[:search].results[Search::ActivityMaterial]).to be_nil
         end
       end
@@ -177,13 +177,13 @@ describe API::V1::SearchController do
 
   describe "GET search_suggestions" do
     it "should fail without a search_term parameter" do
-      get :search_suggestions, {}
+      get :search_suggestions
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing search_term parameter"}')
     end
 
     it "should succeed" do
-      get :search_suggestions, {search_term: "test"}
+      get :search_suggestions, params: { search_term: "test" }
       expect(response).to have_http_status(:ok)
       result = JSON.parse(response.body)
       expect(result["success"]).to eq(true)

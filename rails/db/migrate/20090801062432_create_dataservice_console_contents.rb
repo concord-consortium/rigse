@@ -1,4 +1,4 @@
-class CreateDataserviceConsoleContents < ActiveRecord::Migration
+class CreateDataserviceConsoleContents < ActiveRecord::Migration[5.1]
   def self.up
     create_table :dataservice_console_contents do |t|
       t.integer :console_logger_id

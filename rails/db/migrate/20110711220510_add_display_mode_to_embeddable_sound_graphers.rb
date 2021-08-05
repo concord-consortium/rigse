@@ -1,4 +1,4 @@
-class AddDisplayModeToEmbeddableSoundGraphers < ActiveRecord::Migration
+class AddDisplayModeToEmbeddableSoundGraphers < ActiveRecord::Migration[5.1]
   def self.up
     add_column :embeddable_sound_graphers, :max_frequency, :string
     add_column :embeddable_sound_graphers, :max_sample_time, :string

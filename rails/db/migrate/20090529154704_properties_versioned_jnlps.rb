@@ -1,4 +1,4 @@
-class PropertiesVersionedJnlps < ActiveRecord::Migration
+class PropertiesVersionedJnlps < ActiveRecord::Migration[5.1]
   def self.up
     create_table :properties_versioned_jnlps, :id => false do |t|
       t.integer :property_id

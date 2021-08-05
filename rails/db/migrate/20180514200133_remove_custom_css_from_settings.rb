@@ -1,4 +1,4 @@
-class RemoveCustomCssFromSettings < ActiveRecord::Migration
+class RemoveCustomCssFromSettings < ActiveRecord::Migration[5.1]
   def up
     remove_column :admin_settings, :custom_css
   end

@@ -4,7 +4,7 @@ namespace :db do
     # This is a subset of active-record/database.rake db:test:purge
     desc "Empty the feature_test database"
     task :purge => [:environment, 'db:load_config'] do
-      ActiveRecord::Tasks::DatabaseTasks.purge ActiveRecord::Base.configurations['feature_test']
+      ActiveRecord::Tasks::DatabaseTasks.purge :feature_test
     end
 
     desc "prepare db for feature and cucumber tests"
@@ -13,9 +13,9 @@ namespace :db do
       ActiveRecord::Base.logger.level = 1
 
       # This is copied from active-record/database.rake db:test:load_schema
-      # ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['feature_test'])
       ActiveRecord::Schema.verbose = false
-      ActiveRecord::Tasks::DatabaseTasks.load_schema_for ActiveRecord::Base.configurations['feature_test'], :ruby, ENV['SCHEMA']
+      db_config = ActiveRecord::Base.configurations.configs_for({env_name: 'feature_test'}).first
+      ActiveRecord::Tasks::DatabaseTasks.load_schema(db_config, :ruby, ENV['SCHEMA'])
       # end of db:test_load_schema copy
     end
 

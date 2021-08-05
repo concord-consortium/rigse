@@ -1,4 +1,4 @@
-class AddResourceLicense < ActiveRecord::Migration
+class AddResourceLicense < ActiveRecord::Migration[5.1]
   def up
     add_column :external_activities, :license_code, :string
     add_column :interactives, :license_code, :string
@@ -10,7 +10,7 @@ class AddResourceLicense < ActiveRecord::Migration
     defs = YAML::load_file(File.join(Rails.root,"config","licenses.yml"));
     defs['licenses'].each do |license_hash|
       license = CommonsLicense.find_or_create_by(license_hash)
-      license.update_attributes(license_hash)
+      license.update(license_hash)
       license.save
     end
 

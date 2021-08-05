@@ -59,7 +59,7 @@ class PasswordsController < ApplicationController
 
       if @user_reset_password.id == current_visitor.id
         #re-sign-in user
-        sign_in @user_reset_password, :bypass => true
+        bypass_sign_in @user_reset_password
       end
       redirect_to(session[:return_to] || root_path)
     else
@@ -71,7 +71,7 @@ class PasswordsController < ApplicationController
 
   def update
     @password = Password.find(params[:id])
-    if @password.update_attributes(password_strong_params(params[:password]))
+    if @password.update(password_strong_params(params[:password]))
       flash['notice'] = 'Password was successfully updated.'
       redirect_back_or activities_url
     else

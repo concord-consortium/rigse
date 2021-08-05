@@ -4,16 +4,16 @@ require 'csv'
 #
 #  * load portal_countries database columns from a CSV file
 #  * associate all existing schools with the USA.
-# 
+#
 #  Much DUPLICATED code here which reflects how the Portal::School and Portal::Country
 #  Classes existed in 2014-09 when this migration was made.
 
-class PortalSchool < ActiveRecord::Base
+class PortalSchool < ApplicationRecord
   self.table_name = :portal_schools
   belongs_to :country, :class_name => "PortalCountry", :foreign_key => "country_id"
 end
 
-class PortalCountry < ActiveRecord::Base
+class PortalCountry < ApplicationRecord
     self.table_name = :portal_countries
     has_many :schools, :class_name => "PortalSchool"
 
@@ -48,12 +48,12 @@ class PortalCountry < ActiveRecord::Base
 
     def self.from_hash(in_hash)
         existing = self.find_by_two_letter(in_hash[:two_letter]) || self.new()
-        existing.update_attributes(in_hash)
+        existing.update(in_hash)
     end
 end
 
 
-class PopulateSchoolCountries < ActiveRecord::Migration
+class PopulateSchoolCountries < ActiveRecord::Migration[5.1]
   def up
   	PortalCountry.from_csv_file
   	us = PortalCountry.find_by_two_letter("US")

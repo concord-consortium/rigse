@@ -7,8 +7,6 @@ def add_setting_tag(tag_name, setting, value)
   end
 end
 
-add_setting_tag('@lightweight', :use_jnlps, false)
-
 { adhoc_workgroups: :use_adhoc_workgroups
 }.each{|tag_name, setting|
     add_setting_tag("@enable_#{tag_name}", setting, true)

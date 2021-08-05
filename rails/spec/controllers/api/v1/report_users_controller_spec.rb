@@ -7,7 +7,7 @@ describe API::V1::ReportUsersController do
 
   before(:each) {
     # This silences warnings in the console when running
-    generate_default_settings_and_jnlps_with_mocks
+    generate_default_settings_with_mocks
   }
 
   describe "anonymous' access" do
@@ -48,7 +48,9 @@ describe API::V1::ReportUsersController do
 
   describe "admin access" do
     before (:each) do
-      @teacher1 = FactoryBot.create(:portal_teacher)
+      cc_school = FactoryBot.create(:portal_school, {name: 'concord consortium'})
+
+      @teacher1 = FactoryBot.create(:portal_teacher, {schools: [cc_school]})
       @teacher2 = FactoryBot.create(:portal_teacher)
       @teacher3 = FactoryBot.create(:portal_teacher)
       @teacher4 = FactoryBot.create(:portal_teacher)
@@ -76,32 +78,29 @@ describe API::V1::ReportUsersController do
     end
     describe "GET index" do
       it "allows index" do
-        get :index, {
-          teachers: "#{@teacher1.id},#{@teacher2.id}",
-          runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}",
-          cohorts: "#{@cohort1.id},#{@cohort2.id}",
-          start_date: "01/02/19",
-          end_date: "03/04/19"
-        }
+        get :index, params: { teachers: "#{@teacher1.id},#{@teacher2.id}", runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}", cohorts: "#{@cohort1.id},#{@cohort2.id}", start_date: "01/02/19", end_date: "03/04/19" }
         expect(response.status).to eql(200)
       end
-      it "gets totals" do
-        get :index, {
-          totals: "true",
-          remove_cc_teachers: true
-        }
+      it "gets totals with all teachers" do
+        get :index, params: { totals: "true" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json).to eql({"totals"=>{"cohorts"=>2, "runnables"=>3, "teachers"=>6}})
       end
+      it "gets totals without cc teachers" do
+        get :index, params: { totals: "true", remove_cc_teachers: true }
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json).to eql({"totals"=>{"cohorts"=>2, "runnables"=>3, "teachers"=>5}})
+      end
       it "gets all teachers" do
-        get :index, { load_all: "teachers" }
+        get :index, params: { load_all: "teachers" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["teachers"].length).to eql(6)
       end
       it "gets all cohorts" do
-        get :index, { load_all: "cohorts" }
+        get :index, params: { load_all: "cohorts" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["cohorts"].length).to eql(2)
@@ -110,7 +109,7 @@ describe API::V1::ReportUsersController do
         expect(json["hits"]["cohorts"][1]).to eql({"id"=>@cohort2.id, "label"=>"Project 1: test cohort"})
       end
       it "gets all runnables" do
-        get :index, { load_all: "runnables" }
+        get :index, params: { load_all: "runnables" }
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["runnables"].length).to eql(3)
@@ -131,13 +130,7 @@ describe API::V1::ReportUsersController do
         expect(response.status).to eql(200)
       end
       it "renders response that includes Log Manager query and signature" do
-        get :external_report_query, {
-          teachers: "#{@teacher1.id},#{@teacher2.id}",
-          runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}",
-          cohorts: "#{@cohort1.id},#{@cohort2.id}",
-          start_date: "01/02/19",
-          end_date: "03/04/19"
-        }
+        get :external_report_query, params: { teachers: "#{@teacher1.id},#{@teacher2.id}", runnables: "#{@runnable1.id},#{@runnable2.id},#{@runnable3.id}", cohorts: "#{@cohort1.id},#{@cohort2.id}", start_date: "01/02/19", end_date: "03/04/19" }
         resp = JSON.parse(response.body)
         filter = resp["json"]
         expect(filter["type"]).to eq "users"

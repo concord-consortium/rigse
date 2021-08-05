@@ -1,4 +1,4 @@
-class Admin::Cohort < ActiveRecord::Base
+class Admin::Cohort < ApplicationRecord
   self.table_name = 'admin_cohorts'
   belongs_to :project, :class_name => 'Admin::Project'
   has_many :items, :class_name => 'Admin::CohortItem', :foreign_key => "admin_cohort_id", :dependent => :destroy

@@ -1,4 +1,4 @@
-class Saveable::Interactive < ActiveRecord::Base
+class Saveable::Interactive < ApplicationRecord
   self.table_name = "saveable_interactives"
 
   belongs_to :learner,     :class_name => 'Portal::Learner'

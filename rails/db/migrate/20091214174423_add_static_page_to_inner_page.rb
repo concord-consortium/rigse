@@ -1,4 +1,4 @@
-class AddStaticPageToInnerPage < ActiveRecord::Migration
+class AddStaticPageToInnerPage < ActiveRecord::Migration[5.1]
   def self.up
     add_column :inner_pages, :static_page_id, :integer
   end

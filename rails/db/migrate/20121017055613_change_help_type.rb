@@ -1,4 +1,4 @@
-class ChangeHelpType < ActiveRecord::Migration
+class ChangeHelpType < ActiveRecord::Migration[5.1]
   def up
     change_column :admin_projects, :help_type, :string
   end

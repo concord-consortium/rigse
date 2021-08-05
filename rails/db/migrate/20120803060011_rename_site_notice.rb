@@ -1,4 +1,4 @@
-class RenameSiteNotice < ActiveRecord::Migration
+class RenameSiteNotice < ActiveRecord::Migration[5.1]
   def up
     rename_table :site_notices , :admin_site_notices
   end

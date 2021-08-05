@@ -1,4 +1,4 @@
-class CreateMavenJnlpNativeLibraries < ActiveRecord::Migration
+class CreateMavenJnlpNativeLibraries < ActiveRecord::Migration[5.1]
   def self.up
     create_table :maven_jnlp_native_libraries do |t|
       t.string :uuid

@@ -5,7 +5,7 @@ Feature: Admin can work with projects
   I need to work with project objects
 
   Background:
-    Given The default settings and jnlp resources exist using factories
+    Given The default settings exist using factories
     And the database has been seeded
     And I am logged in with the username admin
 

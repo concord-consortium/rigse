@@ -1,4 +1,4 @@
-class CreateLearnerProcessingEvents < ActiveRecord::Migration
+class CreateLearnerProcessingEvents < ActiveRecord::Migration[5.1]
   def change
     create_table :learner_processing_events do |t|
       t.references :learner
@@ -14,7 +14,6 @@ class CreateLearnerProcessingEvents < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :learner_processing_events, :learner_id
     add_index :learner_processing_events, :url
   end
 end

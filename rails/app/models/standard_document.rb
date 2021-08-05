@@ -1,4 +1,4 @@
-class StandardDocument < ActiveRecord::Base
+class StandardDocument < ApplicationRecord
   #
   # Populate database with default Standard Documents
   #
