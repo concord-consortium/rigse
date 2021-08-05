@@ -1,0 +1,35 @@
+# Build configuration for CodeBuild
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Docker Hub...
+      - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - REPOSITORY_URI=concordconsortium/rigse-railslts
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      # The BRANCH_NAME is set in the build step of the CodePipeline from the
+      # SourceVariables.BranchName
+      # If this build is run directly in CodeBuild BRANCH_NAME will be empty.
+      # In CodeBuild the CODEBUILD_SOURCE_VERSION should point to the branch name
+      - CC_PORTAL_VERSION=${BRANCH_NAME}-${COMMIT_HASH}
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG --build-arg CC_PORTAL_VERSION=$CC_PORTAL_VERSION rails
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions files...
+      - printf '[{"name":"App","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > app-imagedefinitions.json
+      - printf '[{"name":"Worker","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > worker-imagedefinitions.json
+      - printf '[{"name":"Report","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > report-imagedefinitions.json
+artifacts:
+  files:
+    - app-imagedefinitions.json
+    - worker-imagedefinitions.json
+    - report-imagedefinitions.json

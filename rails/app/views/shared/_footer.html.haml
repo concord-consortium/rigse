@@ -17,6 +17,6 @@
         = mail_to(APP_CONFIG[:help_email] || APP_CONFIG[:default_admin_user][:email], "Send us an email", :subject => "#{APP_CONFIG[:site_name]} question", :encode => "javascript")
         %br
         Version:
-        = ENV['CC_PORTAL_VERSION']
+        = ENV['CC_PORTAL_IMAGE_VERSION'].present? ? ENV['CC_PORTAL_IMAGE_VERSION'] : ENV['CC_PORTAL_VERSION']
         :javascript
           document.write("(React " + window.React.version + ")")
