@@ -115,9 +115,6 @@ class API::V1::JwtController < API::APIController
         # a resource_link_id
         # In this case they also have to provide a target_user_id to indicate which
         # student or teacher of resource_link they want access to.
-        # So we could call it target_user_id. In theory we could allow admins to use
-        # this to access teacher data associated with the resource_link_id. For example
-        # teacher report settings.
         if params[:target_user_id].blank?
           raise StandardError, "When the resource_link_id is sent and the user is not a" +
             "student or teacher of this resource link, a target_user_id param is required."
@@ -154,8 +151,6 @@ class API::V1::JwtController < API::APIController
         :user_type => "learner",
         :user_id => url_for(user),
         :learner_id => learner.id,
-        # Maybe this is needed by the portal report, which is why the resource_link_id
-        # is need on the portal tokens
         :class_info_url => offering.clazz.class_info_url(request.protocol, request.host_with_port),
         :offering_id => offering.id
       }
@@ -222,7 +217,7 @@ class API::V1::JwtController < API::APIController
         end
         class_hash = params[:class_hash]
       elsif params[:resource_link_id].present?
-        # The resource_link_id param was already verified in the handle_firebase_params method
+        # The resource_link_id param was already verified in the handle_initial_auth method
         offering = Portal::Offering.find(params[:resource_link_id])
         class_hash = offering.clazz.class_hash
       end
@@ -248,7 +243,7 @@ class API::V1::JwtController < API::APIController
 
       resource_link_id = params[:resource_link_id]
       if resource_link_id
-        # The resource_link_id param was already verified in the handle_firebase_params method
+        # The resource_link_id param was already verified in the handle_initial_auth method
 
         offering = Portal::Offering.find(resource_link_id)
         class_hash = offering.clazz.class_hash
@@ -257,7 +252,7 @@ class API::V1::JwtController < API::APIController
           offering_id: offering.id,
           # Any systems granting access based on this target_user_id claim should scope it to the
           # class_hash and or offering_id so the main user doesn't gain access to all of the target user's
-          # data. Our policies don't always restrict access like this, but they might change in the future.
+          # data. Our policies don't always restrict access like this, but they should when possible.
           target_user_id: params[:target_user_id].to_i
         })
       end
