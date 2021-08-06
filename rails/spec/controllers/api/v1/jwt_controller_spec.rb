@@ -306,30 +306,131 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
             context "and the target_user_id is not sent" do
               it "returns a 400" do
                 post :firebase,
-                  {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
-                  :format => :json
+                  params: {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
+                  session: {:format => :json}
                 expect(response.status).to eq(400)
               end
             end
             context "and a target_user_id is sent" do
               before(:each){
                 post :firebase,
-                  { :firebase_app => "test app", :resource_link_id => offering.id.to_s, :target_user_id => 9999 },
-                  :format => :json
+                  params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s, :target_user_id => 9999 },
+                  session: {:format => :json}
               }
 
               it_behaves_like "valid jwt for target user"
 
             end
 
-            # TODO: handle all of the other cases
+            # TODO: are there other cases for a portal admin?
           end
-          # context "and a target_user_id is sent" do
-          #
-          #   context "when the user is an admin" do
-          #
-          #   end
-          # end
+
+          context "and the user of the auth header is project staff" do
+            let(:staffs_project)         { FactoryBot.create(:project) }
+            let(:staffs_permission_form) { FactoryBot.create(:permission_form, project: staffs_project) }
+
+            # Might not need these
+            let(:runnable)               { FactoryBot.create(:external_activity) }
+            let(:offering)               { FactoryBot.create(:portal_offering, runnable: runnable) }
+
+            let(:staffs_student) {
+              FactoryBot.create(:full_portal_student,
+                permission_forms: [staffs_permission_form]
+              )
+            }
+
+            let(:staffs_learner) {
+              FactoryBot.create(:portal_learner, offering: offering, student: staffs_student)
+            }
+
+            let(:other_learner) {
+              FactoryBot.create(:full_portal_learner, offering: offering)
+            }
+
+            let(:other_project) { FactoryBot.create(:project) }
+            let(:other_permision_form) { FactoryBot.create(:permission_form, project: other_project) }
+
+            let(:other_project_student) {
+              FactoryBot.create(:full_portal_student,
+                permission_forms: [other_permision_form]
+              )
+            }
+
+            let(:other_project_learner) {
+              FactoryBot.create(:portal_learner, offering: offering, student: other_project_student)
+            }
+
+            let(:user) {
+              # instead of using FactoryBot.create(:admin_user)
+              # a teacher user is created since that is what will happen in practice
+              teacher = FactoryBot.create(:portal_teacher)
+              user = teacher.user
+
+              user.add_role_for_project(project_role, staffs_project)
+              user
+            }
+
+            before(:each) {
+              # create the learners
+              staffs_learner
+              other_learner
+              other_project_learner
+            }
+
+            shared_examples "a jwt for project staff" do
+              context "and the target_user_id is not sent" do
+                it "returns a 400" do
+                  post :firebase,
+                    params: {:firebase_app => "test app", :resource_link_id => offering.id.to_s},
+                    session: {:format => :json}
+                  expect(response.status).to eq(400)
+                end
+              end
+
+              # this need to check both for a target user the project admin has access too
+              # as well as one they don't have access to
+              context "and a target_user_id is sent" do
+                let(:target_user_id) { 9999 }
+                before(:each){
+                  post :firebase,
+                    params: { :firebase_app => "test app", :resource_link_id => offering.id.to_s, :target_user_id => target_user_id },
+                    session: {:format => :json}
+                }
+
+                context "and the target_user has a permision form in the staff's project" do
+                  let(:target_user_id) { staffs_learner.user.id }
+
+                  it_behaves_like "valid jwt for target user"
+                end
+
+                context "and the target_user has no permission form" do
+                  let(:target_user_id) { other_learner.user.id }
+                  it "returns a 400" do
+                    expect(response.status).to eq(400)
+                  end
+                end
+
+                context "and the target_user has a permission form in a different project" do
+                  let(:target_user_id) { other_project_learner.user.id }
+                  it "returns a 400" do
+                    expect(response.status).to eq(400)
+                  end
+                end
+              end
+            end
+
+            context "and the user is a project admin" do
+              let(:project_role) {'admin'}
+
+              it_behaves_like "a jwt for project staff"
+            end
+
+            context "and the user is a project researcher" do
+              let(:project_role) {'researcher'}
+
+              it_behaves_like "a jwt for project staff"
+            end
+          end
         end
       end
 

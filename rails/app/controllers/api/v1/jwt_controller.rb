@@ -41,21 +41,29 @@ class API::V1::JwtController < API::APIController
     # If the user is a project admin
     # - is the target user a teacher in one of the admin's cohort
     # - is the target user a student of a teacher in one of the admin's cohorts
-
+    #
     # If the user is a project researcher
-    # - is the target user a teacher in one of the researcher's cohort
+    # - is the target user a teacher in one of the researcher's cohorts
     # - is the target user a student with a permission from one of the researcher's projects
-
+    #
     # However we only currently need to support students with permission forms so that is the
     # only part of this logic we'll implement.
     # So we need to get all of the projects the current user is a project admin or researcher of
     # Then get all of their permission_forms
     # Then see if the target_user has any of those permission forms.
-    # Hopefully we can do all of that in a single SQL query for the best performance
+    # This is all done in a single SQL query to keep this fast since a lot of JWTs might be
+    # requested
+
+    # Find all students through the users's projects and then that project's permission_forms
     user_permission_form_students =
       user.project_users.joins(project: {permission_forms: {portal_student_permission_forms: :portal_student}})
+
+    # In practice project_users (admin_project_users table) is only used for project admins and researchers
+    # But to be safe we make sure the project_user is one of these two types
     only_admin_or_researcher_projects =
       user_permission_form_students.where("admin_project_users.is_admin = true OR admin_project_users.is_researcher = true")
+
+    # Finally check if there is a portal_student with the target_user_id
     return only_admin_or_researcher_projects.where(portal_students: {user_id: target_user_id}).exists?
 
     # This active record turns into something like:
