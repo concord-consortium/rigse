@@ -102,7 +102,7 @@ with this portal user. And then either:
     2. If your portal is not running at app.portal.docker set `PORTAL_HOST`
     3. If your portal is running on https set `PORTAL_PROTOCOL=https`
     4. If your lara host name is not app.lara.docker, then set `LARA_HOST`
-2. Stop you portal services if they are running, and update them with `docker-compose up`
+2. Stop your portal services if they are running, and update them with `docker-compose up`
 3. In the Portal, as an administrator, setup a new "Auth Client". Use the following settings:
 ```
 Name: 'localhost'
@@ -117,14 +117,14 @@ Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/c
     1. Append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
     2. Set `PORTAL_HOST` to `app.portal.docker` or whatever domain your local portal is
     3. Set `PORTAL_PROTOCOL=https` if your portal is using `https`
-5. Stop you Lara services if they are running, and update them with `docker-compose up`
+5. Stop your Lara services if they are running, and update them with `docker-compose up`
 6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
 
-Note: not all of these settings are necessary to just allow LARA to do SSO with the Portal.
-But they are necessary to support publishing LARA activities and sequences to the portal,
+Note: some of these settings are not necessary to allow LARA to do SSO with the Portal.
+But all of them are necessary to support publishing LARA activities and sequences to the portal,
 and copying LARA activities and sequences from the portal.
 
 #### Virtual host settings (currently used for automation)
