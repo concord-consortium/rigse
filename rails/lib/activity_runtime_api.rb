@@ -37,10 +37,10 @@ class ActivityRuntimeAPI
 
   private
 
-  def self.create_tool(source_type)
+  def self.create_tool(source_type, remote_duplicate_url, tool_id)
     tool = Tool.where(source_type: source_type).first
     return tool if tool
-    Tool.create(source_type: source_type, name: source_type)
+    Tool.create(source_type: source_type, name: source_type, remote_duplicate_url: remote_duplicate_url, tool_id: tool_id)
   end
 
   def self.find_tool(tool_id)

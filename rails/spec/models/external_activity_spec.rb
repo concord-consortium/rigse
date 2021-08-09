@@ -119,7 +119,8 @@ describe ExternalActivity do
                                   end
         )
       end
-
+      
+      activity.author_url = host + '/activity/1/edit'
       activity.template = template
       activity.material_property_list = ['material_prop1', 'material_prop2']
       activity.grade_level_list = ['gradel1', 'gradel2']
@@ -186,6 +187,8 @@ describe ExternalActivity do
       let(:secret) { 'secret' }
       let(:root_url) { 'http://portal.concord.org' }
       let(:clone) { activity.duplicate(user2, root_url) }
+      let(:tool_id) { host }
+      let(:remote_duplicate_url) { host + 'remote_duplicate' }
       let(:lara_response) do
         {
           'publication_data' => {
@@ -216,10 +219,10 @@ describe ExternalActivity do
       end
 
       before(:each) do
-        activity.create_tool(source_type: 'LARA')
+        activity.create_tool(source_type: 'LARA', remote_duplicate_url: remote_duplicate_url, tool_id: tool_id)
         activity.save
 
-        WebMock.stub_request(:post, activity.url + '/remote_duplicate')
+        WebMock.stub_request(:post, remote_duplicate_url)
           .to_return(:status => 200, :body => lara_response.to_json)
 
         FactoryBot.create(:client, site_url: host, app_secret: secret)
@@ -229,10 +232,11 @@ describe ExternalActivity do
         clone.reload
         expect(clone.thumbnail_url).to eq(lara_response['publication_data']['thumbnail_url'])
         expect(clone.template).not_to be_nil
-        expect(WebMock).to have_requested(:post, activity.url + '/remote_duplicate')
+        expect(WebMock).to have_requested(:post, remote_duplicate_url)
           .with(body: {
             user_email: user2.email,
-            add_to_portal: root_url
+            add_to_portal: root_url,
+            author_url: activity.author_url
           }.to_json)
           .with(headers: {
             'Authorization' => 'Bearer ' + secret,
@@ -420,11 +424,11 @@ describe ExternalActivity do
   end
 
   # TODO: auto-generated
-  describe '#duplicate_on_lara' do
-    xit 'duplicate_on_lara' do
+  describe '#duplicate_on_remote' do
+    xit 'duplicate_on_remote' do
       external_activity = described_class.new
       root_url = 'root_url'
-      result = external_activity.duplicate_on_lara(root_url)
+      result = external_activity.duplicate_on_remote(root_url)
 
       expect(result).not_to be_nil
     end

@@ -213,8 +213,8 @@ class ExternalActivity < ApplicationRecord
     # Do it as soon as possible, as it includes communication with external system. In case of failure,
     # we can cancel this action earlier, before we create bunch of intermediate objects that would need to be
     # cleaned up too.
-    if tool&.source_type === 'LARA'
-      unless clone.duplicate_on_lara(root_url)
+    if tool&.remote_duplicate_url.present?
+      unless clone.duplicate_on_remote(root_url)
         # If duplication on LARA fails, destroy clone and return nil.
         clone.destroy
         return nil
@@ -244,14 +244,16 @@ class ExternalActivity < ApplicationRecord
 
   # Duplicates external activity on LARA and updates URLs to point to the new external copy.
   # Returns self or nil in case of error.
-  def duplicate_on_lara(root_url)
+  def duplicate_on_remote(root_url)
     # %host% matcher ensures that site_url can start with protocol and end with optional `/`.
-    client = Client.where("site_url LIKE :ext_act_host", ext_act_host: "%#{URI.parse(url).host}%").first
+    client = Client.where("site_url LIKE :ext_act_host", ext_act_host: "%#{URI.parse(author_url).host}%").first
     auth_token = 'Bearer %s' % client.app_secret
-    response = HTTParty.post(url + '/remote_duplicate',
+    tool = Tool.where("tool_id LIKE :client_site_url", client_site_url: "%#{URI.parse(client.site_url).host}").first
+    response = HTTParty.post(tool.remote_duplicate_url,
       body: {
         user_email: user.email,
-        add_to_portal: root_url
+        add_to_portal: root_url,
+        author_url: author_url
       }.to_json,
       headers: {
         'Content-Type' => 'application/json',
