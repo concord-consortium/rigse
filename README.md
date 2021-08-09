@@ -70,9 +70,10 @@ for these new features.
 #### SSO Clients and LARA (authoring) integration
 
 These instructions assume that you are setting up LARA and Portal using
-docker-compose files. It also assumes that you are using something like Dori or Dinghy
-as an http-proxy dns container, so that the portal is available at `app.portal.docker`
-and lara is available at `app.lara.docker`
+docker-compose files. It also assumes some prerequisites:
+- You are using an http-proxy dns container: [Setup Dinghy on OSX](https://github.com/concord-consortium/lara/blob/master/README.md#setup-dinghy-on-os-x)
+- You are using https for LARA and the Portal: [Setup https for LARA and Portal](https://github.com/concord-consortium/lara/blob/master/README.md#enabling-ssl-for-dinghy-reverse-proxy-on-os-x)
+- You are logged into docker to gain access to our private images: [Logging into Docker](https://github.com/concord-consortium/lara/blob/master/README.md#getting-started)
 
 ##### Starting from scratch on a Mac
 
@@ -80,20 +81,11 @@ and lara is available at `app.lara.docker`
 2. start up the Portal: `docker-compose up`
 3. in LARA: `cp .env-osx-sample .env`
 4. start up LARA: `docker-compose up`
-5. in the Portal, as an administrator, setup a new "Auth Client". Use the following settings:
-```
-Name: 'localhost'
-App Id: 'localhost'
-App Secret: 'unsecure local secret'
-Client Type: confidential
-Site Url: 'https://app.lara.docker' *(use https if you are running it that way...)
-Allowed Domains: (leave blank)
-Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/callback'
-```
-6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
+5. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
+6. Additional setup is needed to view teacher and student reports of work from the LARA Runtime and AP Runtime.
 
 ##### Updating an existing setup
 
@@ -122,6 +114,7 @@ Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/c
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
+7. Additional setup is needed to view teacher and student reports of work from the LARA Runtime and AP Runtime.
 
 Note: some of these settings are not necessary to allow LARA to do SSO with the Portal.
 But all of them are necessary to support publishing LARA activities and sequences to the portal,
