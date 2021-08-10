@@ -8,25 +8,26 @@ end
 
 describe DataHelpersTestController, type: :controller do
   let(:sensor_names) { ["Temperature", "Light"] }
+  let(:host) { 'https://test.org' }
   let(:material_a) {
     FactoryBot.create(
       :external_activity,
       sensor_list: sensor_names,
-      launch_url: 'https://test.org/',
-      author_url: 'https://test.org/authoring',
-      print_url: 'https://test.org/print',
+      launch_url: host + '/activities/1/',
+      author_url: host + '/activities/1/edit',
+      print_url: host + '/print',
       is_locked: false,
-      teacher_resources_url: 'https://test.org/teacher-resources',
-      teacher_guide_url: 'https://test.org/teacher-guide'
+      teacher_resources_url: host + '/teacher-resources',
+      teacher_guide_url: host + '/teacher-guide'
     )
   }
   let(:materials)  { [material_a] }
-  let(:material_b) { FactoryBot.create(:external_activity, launch_url: '') }
+  let(:material_b) { FactoryBot.create(:external_activity, author_url: '') }
   let(:material_locked) {
     FactoryBot.create(
       :external_activity,
-      launch_url: 'https://test.org/',
-      author_url: 'https://test.org/authoring',
+      launch_url: host + '/activities/1/',
+      author_url: host + '/activities/1/edit',
       is_locked: true,
       author_email: 'author2@concord.org'
     )
@@ -43,6 +44,20 @@ describe DataHelpersTestController, type: :controller do
     ) }
   let(:teacher_user) { FactoryBot.create(:portal_teacher) }
   let(:guest) { FactoryBot.generate(:anonymous_user) }
+
+  before(:each) do
+    Client.create(
+      app_id: 'testing-client',
+      app_secret: 'xyzzy',
+      name: 'testing-client',
+      site_url: host
+    )
+    Tool.create(
+      source_type: 'testing-client',
+      remote_duplicate_url: host + '/remote_duplicate',
+      tool_id: host
+    )
+  end
 
   describe "#materials_data" do
     # materials_data is a private method so we need to use send to call it
@@ -61,7 +76,7 @@ describe DataHelpersTestController, type: :controller do
   end
 
   describe "#external_copyable" do
-    it "should return false if material does not have a launch URL" do
+    it "should return false if material does not have an authoring URL" do
       is_copyable = controller.send(:external_copyable, material_b)
       expect(is_copyable).to be(false)
     end
