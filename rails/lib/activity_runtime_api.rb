@@ -50,9 +50,12 @@ class ActivityRuntimeAPI
 
   def self.publish_activity(hash, user)
     external_activity = nil
+    source_type = hash["source_type"] || "LARA"
+    tool_id = URI.parse(hash["url"]).host
+    remote_duplicate_url = tool_id + '/remote_duplicate'
     Investigation.transaction do
       external_activity = ExternalActivity.create(
-        :tool                   => create_tool(hash["source_type"] || "LARA"),
+        :tool                   => create_tool(source_type, remote_duplicate_url, tool_id),
         :name                   => hash["name"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],
@@ -151,9 +154,12 @@ class ActivityRuntimeAPI
 
   def self.publish_sequence(hash, user)
     external_activity = nil # Why are we initializing this? For the transaction?
+    source_type = hash["source_type"] || "LARA"
+    tool_id = URI.parse(hash["url"]).host
+    remote_duplicate_url = tool_id + '/remote_duplicate'
     Investigation.transaction do
       external_activity = ExternalActivity.create(
-        :tool                   => create_tool(hash["source_type"] || "LARA"),
+        :tool                   => create_tool(source_type, remote_duplicate_url, tool_id),
         :name                   => hash["name"],
         :url                    => hash["url"],
         :thumbnail_url          => hash["thumbnail_url"],

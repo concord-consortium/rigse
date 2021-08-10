@@ -317,6 +317,10 @@ module Materials
       end
 
       client = Client.where("site_url LIKE :ext_act_host", ext_act_host: "%#{URI.parse(material.author_url).host}%").first
+      if client.nil?
+        return false;
+      end
+
       tool = Tool.where("tool_id LIKE :client_site_url", client_site_url: "%#{URI.parse(client.site_url).host}").first
       if tool.nil? || tool.remote_duplicate_url.blank?
         return false;
