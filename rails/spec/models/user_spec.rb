@@ -172,45 +172,6 @@ describe User do
   # Authentication
   #
 
-  it 'sets remember token' do
-    users(:quentin).remember_me!
-    expect(users(:quentin).remember_token).not_to be_nil
-    expect(users(:quentin).remember_created_at).not_to be_nil
-  end
-
-  it 'unsets remember token' do
-    users(:quentin).remember_me!
-    expect(users(:quentin).remember_token).not_to be_nil
-    users(:quentin).forget_me
-    expect(users(:quentin).remember_token).to be_nil
-  end
-
-  it 'remembers me for one week' do
-    before = 1.week.ago.utc
-    users(:quentin).remember_me_for 1.week
-    after = 1.week.from_now.utc
-    expect(users(:quentin).remember_token).not_to be_nil
-    expect(users(:quentin).remember_created_at).not_to be_nil
-    expect(users(:quentin).remember_created_at.between?(before, after)).to be_truthy
-  end
-
-  it 'remembers me until one week' do
-    time = 1.week.from_now.utc
-    users(:quentin).remember_me_until time
-    expect(users(:quentin).remember_token).not_to be_nil
-    expect(users(:quentin).remember_created_at).not_to be_nil
-    expect(users(:quentin).remember_created_at.utc.to_s(:db)).to eq(time.to_s(:db))
-  end
-
-  it 'remembers me default two weeks' do
-    before = 2.weeks.ago.utc
-    users(:quentin).remember_me!
-    after = 2.weeks.from_now.utc
-    expect(users(:quentin).remember_token).not_to be_nil
-    expect(users(:quentin).remember_created_at).not_to be_nil
-    expect(users(:quentin).remember_created_at.between?(before, after)).to be_truthy
-  end
-
   it 'registers passive user' do
     user = create_user(:password => nil, :password_confirmation => nil)
     expect(user.state).to eq('passive')
@@ -1195,38 +1156,6 @@ protected
     it 'only_a_student?' do
       user = described_class.new
       result = user.only_a_student?
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#remember_me_for' do
-    it 'remember_me_for' do
-      user = described_class.new
-      time = 2.days
-      result = user.remember_me_for(time)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#remember_me_until' do
-    it 'remember_me_until' do
-      user = described_class.new
-      time = Time.now
-      result = user.remember_me_until(time)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#forget_me' do
-    it 'forget_me' do
-      user = described_class.new
-      result = user.forget_me
 
       expect(result).to be_nil
     end
