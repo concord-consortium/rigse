@@ -328,7 +328,8 @@ module Materials
 
       return current_visitor.has_role?('admin','manager') ||
              (!material.is_locked && current_visitor.has_role?('author')) ||
-             material.author_email == current_visitor.email
+             material.author_email == current_visitor.email ||
+             (material.teacher_copyable && current_user.portal_teacher)
     end
 
     def links_for_material( material,

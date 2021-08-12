@@ -119,6 +119,9 @@
       .config
         = f.check_box :is_locked
         Do not allow to copy this activity.
+      .config
+        = f.check_box :teacher_copyable
+        Let teachers who are not authors copy this item so they can create a custom version.
     = field_set_tag 'Save Path' do
       = f.text_field :save_path
     = render :partial => 'shared/is_assessment_item', :locals => { :form => f }

@@ -18,7 +18,7 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def duplicate?
-    new_or_create?
+    new_or_create? || (teacher? && record.teacher_copyable)
   end
 
   def matedit?

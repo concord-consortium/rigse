@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_29_153107) do
+ActiveRecord::Schema.define(version: 2021_08_11_194422) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -369,6 +369,7 @@ ActiveRecord::Schema.define(version: 2021_07_29_153107) do
     t.integer "tool_id"
     t.boolean "has_teacher_edition", default: false
     t.text "teacher_resources_url"
+    t.boolean "teacher_copyable"
     t.index ["is_featured", "publication_status"], name: "featured_public"
     t.index ["publication_status"], name: "pub_status"
     t.index ["save_path"], name: "index_external_activities_on_save_path"
