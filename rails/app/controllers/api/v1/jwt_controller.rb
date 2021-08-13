@@ -242,8 +242,13 @@ class API::V1::JwtController < API::APIController
       })
 
       resource_link_id = params[:resource_link_id]
-      if resource_link_id
-        # The resource_link_id param was already verified in the handle_initial_auth method
+      target_user_id = params[:target_user_id]
+
+      # The resource_link_id and target_user_id params were already verified in the
+      # handle_initial_auth method
+      # If resource_link_id is set but target_user_id is not, the handle_initial_auth will 
+      # raise an exception
+      if resource_link_id && target_user_id
 
         offering = Portal::Offering.find(resource_link_id)
         class_hash = offering.clazz.class_hash
@@ -253,7 +258,7 @@ class API::V1::JwtController < API::APIController
           # Any systems granting access based on this target_user_id claim should scope it to the
           # class_hash and or offering_id so the main user doesn't gain access to all of the target user's
           # data. Our policies don't always restrict access like this, but they should when possible.
-          target_user_id: params[:target_user_id].to_i
+          target_user_id: target_user_id.to_i
         })
       end
 
