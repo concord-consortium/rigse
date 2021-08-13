@@ -424,17 +424,6 @@ describe ExternalActivity do
   end
 
   # TODO: auto-generated
-  describe '#duplicate_on_remote' do
-    xit 'duplicate_on_remote' do
-      external_activity = described_class.new
-      root_url = 'root_url'
-      result = external_activity.duplicate_on_remote(root_url)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#activities' do
     it 'activities' do
       external_activity = described_class.new
