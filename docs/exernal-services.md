@@ -146,9 +146,9 @@ Has a `default_report_for_source_type`. When an ExternalActivity has a tool with
 ExternalActivities can also have one or more ExternalReports directly associated with them. This makes it possible for an author or admin to set up a special report or dashboard for a specific resource.
 
 ## ExternalActivity
-Authors and admins can duplicate ExternalActivities. If the ExternalActivity#tool.source_type is "LARA" then the special `duplicate_on_lara` function is called. This sends a http request to `#{ExternalActivity#url}/remote_duplicate`. It expects LARA to copy the sequence or activity and then return the same kind of data that would normally be sent when an author "publishes" the sequence or activity to the Portal. Then the Portal does this publishing internally using the `ActivityRuntimeAPI`. This internal publishing happens as an 'update' operation not a 'create' operation. This is because the ExternalActivity already exists.
+Authors and admins can duplicate ExternalActivities. If the ExternalActivity has an `author_url` value and it's Tool has a `remote_duplicate_url` value, then the special `duplicate_on_remote` function is called. This sends a http request to `#{Tool.remote_duplicate_url}`. It expects the remote authoring system to copy the resource and then return the same kind of data that would normally be sent when an author "publishes" the resource to the Portal. Then the Portal does this publishing internally using the `ActivityRuntimeAPI`. This internal publishing happens as an 'update' operation not a 'create' operation. This is because the ExternalActivity already exists.
 
-When the ActivityRuntimeAPI is used to create or update an ExternalActivity, the `launch_url` is only set when it is created. Because of this the `duplicate_on_lara` code sets the `launch_url` first before doing the internal publish.
+When the ActivityRuntimeAPI is used to create or update an ExternalActivity, the `launch_url` is only set when it is created. Because of this the `duplicate_on_remote` code sets the `launch_url` first before doing the internal publish.
 
 When data_helpers.rb generates JSON from the activity it includes `lara_activity_or_sequence` which is based on whether the activity has `launch_url`. This seems be used to determine which links are shown to the user.
 

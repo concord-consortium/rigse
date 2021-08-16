@@ -3,7 +3,7 @@ require 'delorean'
 
 # Test authentication clients
 describe Client do
-  let(:domain_machers) { nil }
+  let(:domain_matchers) { nil }
   let(:redirect_uris) { nil }
   let(:client) do
     Client.create(
@@ -11,7 +11,7 @@ describe Client do
       app_secret: 'xyzzy',
       name: 'testing-client',
       site_url: 'http://localhost:8080/',
-      domain_matchers: domain_machers,
+      domain_matchers: domain_matchers,
       redirect_uris: redirect_uris
     )
   end
@@ -29,7 +29,7 @@ describe Client do
     end
   end
   context "a client that only works for foo.com or baz.com domains" do
-    let(:domain_machers) { "foo.com baz.com" }
+    let(:domain_matchers) { "foo.com baz.com" }
     it "should not validate for referers of blargonaut" do
       expect(client.valid_from_referer?("http://blargonaut.com/")).to be_falsey
       expect(client.valid_from_referer?("http://blargonaut.com/foo.com")).to be_falsey

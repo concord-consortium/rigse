@@ -16,6 +16,11 @@
           %br
           Used for the default reports.
         %li
+          = label_tag "remote_duplicate_url", "Remote Duplicate URL:"
+          = f.text_field :remote_duplicate_url
+          %br
+          The URI endpoint for an authoring system's duplication function.
+        %li
           = label_tag "tool_id", "Tool ID:"
           = f.text_area :tool_id, class: 'mceNoEditor', rows: 5
           Used for moving students between classes. It should be a URI.

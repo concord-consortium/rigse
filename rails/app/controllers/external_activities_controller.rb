@@ -285,7 +285,7 @@ class ExternalActivitiesController < ApplicationController
       redirect_to matedit_external_activity_url(clone.id)
     else
       flash['error'] = "Copying failed"
-      redirect_to :back
+      redirect_back(fallback_location: "/")
     end
   end
 
