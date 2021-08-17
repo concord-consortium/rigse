@@ -41,6 +41,7 @@ class Admin::Project < ApplicationRecord
   has_many :external_activities, through: :project_materials, source: :material, source_type: 'ExternalActivity'
   has_many :interactives, through: :project_materials, source: :material, source_type: 'Interactive'
   has_many :materials_collections
+  has_many :permission_forms, class_name: 'Portal::PermissionForm'
 
   has_many :project_users, class_name: 'Admin::ProjectUser'
   has_many :users, :through => :project_users
