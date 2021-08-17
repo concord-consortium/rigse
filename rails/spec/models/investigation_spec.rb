@@ -333,16 +333,6 @@ describe Investigation do
   end
 
   # TODO: auto-generated
-  describe '#add_author_role_to_use' do
-    it 'add_author_role_to_use' do
-      investigation = described_class.new
-      result = investigation.add_author_role_to_use
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#left_nav_panel_width' do
     it 'left_nav_panel_width' do
       investigation = described_class.new

@@ -17,6 +17,7 @@ describe DataHelpersTestController, type: :controller do
       author_url: host + '/activities/1/edit',
       print_url: host + '/print',
       is_locked: false,
+      teacher_copyable: true,
       teacher_resources_url: host + '/teacher-resources',
       teacher_guide_url: host + '/teacher-guide'
     )
@@ -29,6 +30,16 @@ describe DataHelpersTestController, type: :controller do
       launch_url: host + '/activities/1/',
       author_url: host + '/activities/1/edit',
       is_locked: true,
+      author_email: 'author2@concord.org'
+    )
+  }
+  let(:material_not_copyable) {
+    FactoryBot.create(
+      :external_activity,
+      launch_url: host + '/activities/1/',
+      author_url: host + '/activities/1/edit',
+      is_locked: false,
+      teacher_copyable: false,
       author_email: 'author2@concord.org'
     )
   }
@@ -114,7 +125,13 @@ describe DataHelpersTestController, type: :controller do
       expect(is_copyable).to be(true)
     end
 
-    it "should return false if current user is not an admin or manager, not the original author of the material, and not an author when the material is unlocked" do
+    it "should return false if current user is a teacher and material is not marked as copyable by teachers" do
+      sign_in teacher_user.user
+      is_copyable = controller.send(:external_copyable, material_not_copyable)
+      expect(is_copyable).to be(false)
+    end
+
+    it "should return false if current user is not an admin or manager, not the original author of the material, and not an author when the material is unlocked even if the material is set to be copyable by teachers" do
       sign_in guest
       is_copyable = controller.send(:external_copyable, material_a)
       expect(is_copyable).to be(false)

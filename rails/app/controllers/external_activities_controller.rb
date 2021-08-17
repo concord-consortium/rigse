@@ -360,7 +360,7 @@ class ExternalActivitiesController < ApplicationController
                             :is_official, :keywords, :launch_url, :license_code, :logging, :long_description,
                             :long_description_for_teacher, :material_type, :name, :offerings_count, :popup, :print_url,
                             :publication_status, :rubric_url, :save_path, :saves_student_data, :short_description,
-                            :student_report_enabled, :teacher_guide_url, :teacher_resources_url, :template_id, :template_type,
-                            :thumbnail_url, :tool_id, :url, :user_id)
+                            :student_report_enabled, :teacher_copyable, :teacher_guide_url, :teacher_resources_url, :template_id, 
+                            :template_type, :thumbnail_url, :tool_id, :url, :user_id)
   end
 end
