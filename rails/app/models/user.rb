@@ -7,7 +7,7 @@ class User < ApplicationRecord
   has_many :favorites
 
   devise :database_authenticatable, :registerable, :token_authenticatable, :confirmable, :bearer_token_authenticatable, :jwt_bearer_token_authenticatable,
-         :recoverable,:timeoutable, :rememberable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
+         :recoverable, :timeoutable, :trackable, :validatable,:encryptable, :encryptor => :restful_authentication_sha1
   devise :omniauthable, :omniauth_providers => Devise.omniauth_providers
 
   def apply_omniauth(omniauth)
@@ -517,20 +517,6 @@ class User < ApplicationRecord
 
   def only_a_student?
     portal_student and !has_role?('admin', 'manager', 'researcher', 'author') and portal_teacher.nil?
-  end
-
-  def remember_me_for(time)
-    self.remember_me_until time.from_now.utc
-  end
-
-  def remember_me_until(time)
-    self.remember_created_at = time
-    self.remember_token = self.class.remember_token
-    save(:validate => false)
-  end
-
-  def forget_me
-    self.forget_me!
   end
 
   def set_passive_users_as_pending
