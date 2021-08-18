@@ -75,50 +75,86 @@ docker-compose files. It also assumes some prerequisites:
 - You are using https for LARA and the Portal: [Setup https for LARA and Portal](https://github.com/concord-consortium/lara/blob/master/README.md#enabling-ssl-for-dinghy-reverse-proxy-on-os-x)
 - You are logged into docker to gain access to our private images: [Logging into Docker](https://github.com/concord-consortium/lara/blob/master/README.md#getting-started)
 
+With the following settings you can:
+- Log into LARA from the portal
+- Publish LARA activities and sequences to the portal
+- Copy LARA activities and sequences from the portal
+- View a teacher or student report (portal-report) for a local LARA activity or sequence
+
+**Note:** Student data and resource structure will be stored in the hosted Firestore database of report-service-dev. This is a used by the portal-report. Because of this, you must be online.
+
 ##### Starting from scratch on a Mac
 
 1. in the Portal: `cp .env-osx-sample .env`
-2. start up the Portal: `docker-compose up`
-3. in LARA: `cp .env-osx-sample .env`
-4. start up LARA: `docker-compose up`
-5. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
+2. in the Portal `.env` set `PORTAL_PROTOCOL=https`
+3. start up the Portal: `docker-compose up`
+4. in the Portal, as an administrator:
+    1. Add a Firebase App for report-service-dev, copy the values for the report-service-dev firebase app in learn.staging.concord.org
+    2. Add a new "Auth Client" for the portal-report:
+        ```
+        Name: 'Portal Report SPA'
+        App Id: 'portal-report'
+        App Secret: (leave default value, this isn't used)
+        Client Type: public
+        Site Url: 'https://portal-report.concord.org'
+        Allowed Domains: 'portal-report.concord.org'
+        Allowed URL Redirects: 'https://portal-report.concord.org/branch/master/index.html'
+        ```
+   3. Update the external report called DEFAULT_REPORT_SERVICE. It should have a URL of: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username **Replace `username` with the username on your local system. If you don't know your username, run `echo $USER`**.
+4. in LARA: `cp .env-osx-sample .env`
+5. in LARA `.env`:
+    1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    2. set `LARA_PROTOCOL=https`
+    3. set `PORTAL_PROTOCOL=https`
+6. start up LARA: `docker-compose up`
+7. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
-6. Additional setup is needed to view teacher and student reports of work from the LARA Runtime and AP Runtime.
+8. Additional setup is needed for Activity Player Runtime teacher and student reports.
 
 ##### Updating an existing setup
 
 1. In the **Portal**, edit `.env`:
     1. Append `docker/dev/docker-compose-lara-proxy.yml` to the `COMPOSE_FILE` var.
-    2. If your portal is not running at app.portal.docker set `PORTAL_HOST`
-    3. If your portal is running on https set `PORTAL_PROTOCOL=https`
+    2. If your local portal domain is not `app.portal.docker`, then set `PORTAL_HOST`
+    3. set `PORTAL_PROTOCOL=https`
     4. If your lara host name is not app.lara.docker, then set `LARA_HOST`
 2. Stop your portal services if they are running, and update them with `docker-compose up`
-3. In the Portal, as an administrator, setup a new "Auth Client". Use the following settings:
-```
-Name: 'localhost'
-App Id: 'localhost'
-App Secret: 'unsecure local secret'
-Client Type: confidential
-Site Url: 'https://app.lara.docker' *(use https if you are running it that way...)
-Allowed Domains: (leave blank)
-Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/callback'
-```
+3. In the Portal, as an administrator:
+    1. Create or update an "Auth Client". Using the following settings:
+        ```
+        Name: 'localhost'
+        App Id: 'localhost'
+        App Secret: 'unsecure local secret'
+        Client Type: confidential
+        Site Url: 'https://app.lara.docker'
+        Allowed Domains: (leave blank)
+        Allowed URL Redirects: 'https://app.lara.docker/users/auth/cc_portal_localhost/callback'
+        ```
+    2. Check the external report called `DEFAULT_REPORT_SERVICE`. It should have a URL of: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username **Replace `username` with the username on your local system. If you don't know your username, run `echo $USER`**. Note: this sourceKey param needs to match the value of LARA's REPORT_SERVICE_TOOL_ID environment variable. And by default this variable is configured to be `app.lara.docker.${USER}`.
+    3. Add a Firebase App for report-service-dev, copy the values for the report-service-dev firebase app in learn.staging.concord.org
+    4. Add a new "Auth Client" for the portal-report
+        ```
+        Name: 'Portal Report SPA'
+        App Id: 'portal-report'
+        App Secret: (leave default value, this isn't used)
+        Client Type: public
+        Site Url: 'https://portal-report.concord.org'
+        Allowed Domains: 'portal-report.concord.org'
+        Allowed URL Redirects: 'https://portal-report.concord.org/branch/master/index.html'
+        ```
 4. In **LARA**, edit `.env`:
     1. Append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
     2. Set `PORTAL_HOST` to `app.portal.docker` or whatever domain your local portal is
-    3. Set `PORTAL_PROTOCOL=https` if your portal is using `https`
+    3. Set `PORTAL_PROTOCOL=https`
+    4. Set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
 5. Stop your Lara services if they are running, and update them with `docker-compose up`
 6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
-7. Additional setup is needed to view teacher and student reports of work from the LARA Runtime and AP Runtime.
-
-Note: some of these settings are not necessary to allow LARA to do SSO with the Portal.
-But all of them are necessary to support publishing LARA activities and sequences to the portal,
-and copying LARA activities and sequences from the portal.
+7. Additional setup is needed for Activity Player Runtime teacher and student reports.
 
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
