@@ -291,8 +291,15 @@ class Search
   def search_by_authorship(search)
     return if !include_official && !include_contributed
     search.any_of do |c|
-      c.with(:is_official, true)  if include_official
-      c.with(:is_official, false) if include_contributed
+      # always show user's non-official work
+      c.all_of do |c2|
+        c2.with(:is_official, false)
+        c2.with(:user_id, self.user_id)
+      end
+      if include_official || include_contributed
+        c.with(:is_official, true)  if include_official
+        c.with(:is_official, false) if include_contributed
+      end
     end
   end
 

@@ -185,6 +185,19 @@
             vertical-align: middle;
           }
         }
+
+        &.private {
+
+          &:before {
+            content: '\f023';
+            font-family: "Font Awesome 5 Pro";
+            font-size: 13px;
+            line-height: .7;
+            margin-right: 3px;
+            opacity: .7;
+            vertical-align: middle;
+          }
+        }
       }
       .assignedTo {
         background: transparent;
@@ -371,7 +384,7 @@
 @media screen and (max-width: 500px) {
   .finderResult {
     width: calc(100% - 20px);
-  
+
     .finderResultFavorite {
       left: auto;
       right: 18px;
