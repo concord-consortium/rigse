@@ -69,8 +69,6 @@ class API::V1::ReportUsersController < API::APIController
 
     results = {}
 
-    lara_tool_ids = Tool.where(source_type: "LARA").pluck(:id)
-
     scopes = {
       teachers: Pundit.policy_scope(user, Portal::Teacher),
       cohorts: Pundit.policy_scope(user, Admin::Cohort),
