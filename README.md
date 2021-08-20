@@ -78,8 +78,10 @@ docker-compose files. It also assumes some prerequisites:
 With the following settings you can:
 - Log into LARA from the portal
 - Publish LARA activities and sequences to the portal
+- Publish Activity Player activities and sequences to the portal
 - Copy LARA activities and sequences from the portal
 - View a teacher or student report (portal-report) for a local LARA activity or sequence
+- View a teacher or student report (portal-report) for a local Activity Player activity or sequence
 
 **Note:** Student data and resource structure will be stored in the hosted Firestore database of report-service-dev. This is a used by the portal-report. Because of this, you must be online.
 
@@ -103,7 +105,8 @@ With the following settings you can:
    3. Update the external report called DEFAULT_REPORT_SERVICE. It should have a URL of: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username **Replace `username` with the username on your local system. If you don't know your username, run `echo $USER`**.
 4. in LARA: `cp .env-osx-sample .env`
 5. in LARA `.env`:
-    1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    1. set `REPORT_SERVICE_URL` (see the value in the .env-osx-sample file)
+    1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env-osx-sample file)
     2. set `LARA_PROTOCOL=https`
     3. set `PORTAL_PROTOCOL=https`
 6. start up LARA: `docker-compose up`
@@ -111,7 +114,29 @@ With the following settings you can:
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
-8. Additional setup is needed for Activity Player Runtime teacher and student reports.
+8. Setup Activity Player support
+    1. Add a Tool to the portal with:
+        ```
+        Name: ActivityPlayer
+        Source Type: ActivityPlayer
+        Tool ID: https://activity-player.concord.org
+        ```
+    2. Make an external report. In the Url field below replace the `username` in the sourceKey parameter with your local username:
+        ```
+        Name: AP Report
+        Url: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username&answersSourceKey=activity-player.concord.org
+        Launch text: AP Report
+        Client: DEFAULT_REPORT_SERVICE_CLIENT
+        Report Type: offering
+        Allowed For Students: true
+        Default Report For Source Type:
+        Report available for individual students: true
+        Report available for individual activities: true
+        Use Query JWT: false
+        Move Students API URL:
+        Move Students API Token:
+        ```
+    3. Add this AP Report external report to each AP resource you publish the portal from LARA.
 
 ##### Updating an existing setup
 
@@ -154,7 +179,32 @@ with this portal user. And then either:
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
-7. Additional setup is needed for Activity Player Runtime teacher and student reports.
+7. Setup Activity Player support
+    1. Add a Tool to the portal with:
+        ```
+        Name: ActivityPlayer
+        Source Type: ActivityPlayer
+        Tool ID: https://activity-player.concord.org
+        ```
+    2. Make an external report. In the Url field below replace the `username` in the sourceKey parameter with your local username:
+        ```
+        Name: AP Report
+        Url: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username&answersSourceKey=activity-player.concord.org
+        Launch text: AP Report
+        Client: DEFAULT_REPORT_SERVICE_CLIENT
+        Report Type: offering
+        Allowed For Students: true
+        Default Report For Source Type:
+        Report available for individual students: true
+        Report available for individual activities: true
+        Use Query JWT: false
+        Move Students API URL:
+        Move Students API Token:
+        ```
+    3. Add this AP Report external report to each AP resource you publish the portal from LARA.
+
+##### Troubleshooting
+
 
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
