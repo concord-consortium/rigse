@@ -204,6 +204,27 @@ with this portal user. And then either:
         ```
     3. Add this AP Report external report to each AP resource you publish the portal from LARA.
 
+##### Troubleshooting
+
+When you run the portal-report if you just see a spinner. Here are some steps to try:
+1. Verify the source is be added to firestore:
+    1. Go to the firebase console and open the report-service-dev firestore.
+    2. Look in the sources collection
+    3. You should see a `app.lara.docker.{$USER}` collection (USER is your local username)
+    4. If you don't see this collection then your LARA is not properly publishing the report structure to the report-service. In LARA check the values of `REPORT_SERVICE_TOKEN` and `REPORT_SERVICE_URL` (see above). A less common error would be a misconfigured `LARA_HOST` and `TOOL_ID` setup.
+    5. After fixing these values update your lara app so it picks up the variables with `docker-compose up`. And make a change to your activity so it republishes the structure to Firestore. Check that the `app.lara.docker.{$USER}` collection is there now.
+2. Verify the resource structure added to firestore has the right URL:
+    1. Go to the firebase console and open the report-service-dev firestore.
+    2. Inside of the `sources/app.lara.docker.{$USER}` collection will be a `resources` collection. Inside of this will be a document for each activity or sequence that you've published from LARA.
+    3. In these documents look at the `url` field. It needs to exactly matches what the portal-report is looking for. If it starts with `http:` instead of `https:` then you will see the spinner.
+    4. To know what the portal-report is looking for in firestore: when you run the portal-report look at the network dev tools and look for the offering info request it makes to the portal. This request's url will look something like: `https://app.rigse.docker/api/v1/offerings/[id]`.  Look at the response to this request and find the `activity_url` field.
+        - if this is an LARA runtime activity or sequence the activity_url will look like: https://app.lara.docker/activities/22
+    In this case, this string should exactly match what is in the `url` field in firestore.
+        - if this is a AP runtime activity the activity_url will look like: https://activity-player.concord.org/branch/master/?activity=https%3A%2F%2Fapp.lara.docker%2Fapi%2Fv1%2Factivities%2F22.json
+        In this case, you need to unescape the activity parameter. Then take the value of the activity param and remove the `/api/v1` and remove the `.json` at the end. The result of that transformation snould exactly match what is in `url` field in firestore.
+        - if this is a AP runtime sequence follow the directions for AP activity above except the parameter name is `sequence` instead of `activity`
+    5. To fix the `http:` instead of `https:` problem make sure your `LARA_PROTOCOL` is set to `https` in your lara `.env` file. Then update your lara container with `docker-compose up`. And then make a change to the LARA activity or sequence to republish it. Verify the `url` field in firestore has been updated.
+    
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
 1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker
