@@ -105,7 +105,6 @@ With the following settings you can:
    3. Update the external report called DEFAULT_REPORT_SERVICE. It should have a URL of: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username **Replace `username` with the username on your local system. If you don't know your username, run `echo $USER`**.
 4. in LARA: `cp .env-osx-sample .env`
 5. in LARA `.env`:
-    1. set `REPORT_SERVICE_URL` (see the value in the .env-osx-sample file)
     1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env-osx-sample file)
     2. set `LARA_PROTOCOL=https`
     3. set `PORTAL_PROTOCOL=https`
@@ -174,6 +173,7 @@ with this portal user. And then either:
     2. Set `PORTAL_HOST` to `app.portal.docker` or whatever domain your local portal is
     3. Set `PORTAL_PROTOCOL=https`
     4. Set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    5. set `REPORT_SERVICE_URL` (see the value in the .env-osx-sample file)
 5. Stop your Lara services if they are running, and update them with `docker-compose up`
 6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
