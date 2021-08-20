@@ -203,9 +203,6 @@ with this portal user. And then either:
         ```
     3. Add this AP Report external report to each AP resource you publish the portal from LARA.
 
-##### Troubleshooting
-
-
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
 1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker
