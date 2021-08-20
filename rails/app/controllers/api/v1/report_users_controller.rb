@@ -69,15 +69,12 @@ class API::V1::ReportUsersController < API::APIController
 
     results = {}
 
-    lara_tool_ids = Tool.where(source_type: "LARA").pluck(:id)
-
     scopes = {
       teachers: Pundit.policy_scope(user, Portal::Teacher),
       cohorts: Pundit.policy_scope(user, Admin::Cohort),
       runnables: Pundit.policy_scope(user, Portal::Offering)
                   .joins("INNER JOIN external_activities ON external_activities.id = portal_offerings.runnable_id")
-                  .where("portal_offerings.runnable_type = 'ExternalActivity' " +
-                         "AND external_activities.tool_id IN (?)", lara_tool_ids)
+                  .where("portal_offerings.runnable_type = 'ExternalActivity'")
     }
 
     cc_teacher_ids = []
