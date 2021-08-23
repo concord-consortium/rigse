@@ -282,7 +282,8 @@ class ExternalActivitiesController < ApplicationController
     authorize ExternalActivity
     clone = @external_activity.duplicate(current_visitor, root_url)
     if clone
-      redirect_to matedit_external_activity_url(clone.id)
+      edit_in_iframe = !current_visitor.has_role?('author') && !current_visitor.has_role?('admin')
+      redirect_to matedit_external_activity_url(clone.id, iFrame: edit_in_iframe)
     else
       flash['error'] = "Copying failed"
       redirect_back(fallback_location: "/")
