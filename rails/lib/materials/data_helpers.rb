@@ -369,14 +369,15 @@ module Materials
       }
 
       if external && material.author_url.present?
+        edit_in_iframe = !current_visitor.has_role?('author') && !current_visitor.has_role?('admin')
         if policy(material).matedit?
           links[:external_edit] = {
-            url: matedit_external_activity_url(material, iFrame: false),
+            url: matedit_external_activity_url(material, iFrame: edit_in_iframe),
             text: "Edit",
             target: '_blank'
           }
           links[:external_lara_edit] = {
-            url: matedit_external_activity_url(material, iFrame: true),
+            url: matedit_external_activity_url(material, iFrame: edit_in_iframe),
             text: "Edit",
             target: '_blank'
           }
