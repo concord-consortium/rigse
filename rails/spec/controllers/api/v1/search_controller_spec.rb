@@ -62,12 +62,21 @@ describe API::V1::SearchController do
                                         :is_official => false,
                                         :material_type => 'Activity' ) }
 
-  let(:all_investigations)    { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines, external_activity3]}
-  let(:official_activities)   { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
-  let(:contributed_activities){ [contributed_activity] }
-  let(:all_activities)        {  official_activities.concat(contributed_activities) }
-  let(:investigation_results) { [] }
-  let(:activity_results)      { [] }
+  let(:user_contributed_activity) { FactoryBot.create(:external_activity,
+                                        :name => "Copy of external_1",
+                                        :url => "http://concord.org",
+                                        :publication_status => 'published',
+                                        :is_official => false,
+                                        :material_type => 'Activity',
+                                        :user_id => teacher_user.id ) }
+
+  let(:all_investigations)          { [physics_investigation, chemistry_investigation, biology_investigation, mathematics_investigation, lines, external_activity3]}
+  let(:official_activities)         { [laws_of_motion_activity, fluid_mechanics_activity, thermodynamics_activity, parallel_lines, external_activity1, external_activity2]}
+  let(:contributed_activities)      { [contributed_activity] }
+  let(:user_contributed_activities) { [user_contributed_activity] }
+  let(:all_activities)              {  official_activities.concat(contributed_activities).concat(user_contributed_activities) }
+  let(:investigation_results)       { [] }
+  let(:activity_results)            { [] }
 
   let(:search_results) {{ Investigation => investigation_results, Activity => activity_results }}
   let(:mock_search)    { double('results', {:results => search_results})}
@@ -87,6 +96,7 @@ describe API::V1::SearchController do
     make all_investigations
     make official_activities
     make contributed_activities
+    make user_contributed_activities
     make all_activities
     Sunspot.commit_if_dirty
   end
@@ -108,7 +118,7 @@ describe API::V1::SearchController do
             expect(all_investigations).to include(investigation)
           end
           expect(assigns[:search].results[Search::ActivityMaterial]).not_to be_nil
-          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(3)
+          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(4)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             expect(all_activities).to include(activity)
           end
@@ -124,15 +134,23 @@ describe API::V1::SearchController do
             expect(all_investigations).to include(investigation)
           end
           expect(assigns[:search].results[Search::ActivityMaterial]).not_to be_nil
-          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(2)
+          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(3)  # 3 instead of 2 as we always show the user's own contributed activities
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             expect(official_activities).to include(activity)
           end
         end
 
-        it "should not return any contributed activities" do
+        it "should not return any non-user contributed activities" do
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             expect(contributed_activities).not_to include(activity)
+          end
+        end
+
+        it "should return user contributed activities" do
+          assigns[:search].results[Search::ActivityMaterial].each do |activity|
+            if !activity.is_official
+              expect(user_contributed_activities).to include(activity)
+            end
           end
         end
       end
@@ -159,7 +177,7 @@ describe API::V1::SearchController do
         end
         it "should return all activities" do
           expect(assigns[:search].results[Search::ActivityMaterial]).not_to be_nil
-          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(3)
+          expect(assigns[:search].results[Search::ActivityMaterial].length).to be(4)
           assigns[:search].results[Search::ActivityMaterial].each do |activity|
             expect(all_activities).to include(activity)
           end
@@ -167,7 +185,7 @@ describe API::V1::SearchController do
         describe "including contributed activities" do
           let(:get_params) {{ :material_types => ['Activity'], :include_contributed => 1 }}
           it "should include contributed activities" do
-            expect(assigns[:search].results[Search::ActivityMaterial].length).to eq(1)
+            expect(assigns[:search].results[Search::ActivityMaterial].length).to eq(2)
             expect(assigns[:search].results[Search::ActivityMaterial]).to include(contributed_activity)
           end
         end

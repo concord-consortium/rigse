@@ -131,6 +131,27 @@ const StemFinderResult = Component({
     )
   },
 
+  renderTags: function () {
+    const resource = this.props.resource
+
+    // show the private badge only for private community resources
+    if (!resource.is_official && (resource.publication_status === 'private')) {
+      return (
+        <div className={`${css.metaTag} ${css.private}`}>
+          Private
+        </div>
+      )
+    }
+    // show the community badge only for public community resources
+    if (!resource.is_official && (resource.publication_status === 'published')) {
+      return (
+        <div className={`${css.metaTag} ${css.community}`}>
+          Community
+        </div>
+      )
+    }
+  },
+
   renderAssignedClasses: function () {
     const { resource } = this.props
     if (resource.assigned_classes.length < 1) {
@@ -323,6 +344,7 @@ const StemFinderResult = Component({
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
             {this.renderTimeRequired()}
+            {this.renderTags()}
             {this.renderAssignedClasses()}
           </div>
           <div className={css.finderResultTextDescription}>
