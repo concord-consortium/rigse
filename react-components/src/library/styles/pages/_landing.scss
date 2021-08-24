@@ -1,4 +1,13 @@
-body.member-visitor #content { overflow-y: hidden; overflow: unset; }
+body.member-visitor {
+  .landing-page-content {
+    margin-top: 30px;
+  }
+  #content {
+    overflow-y: hidden;
+    overflow: unset;
+  }
+}
+
 body.guest-visitor .wrapper { width: auto !important; }
 
 #primary.wide { display: block; float: none; width: 100%; }
@@ -353,6 +362,12 @@ body.member-visitor h3.collapsible-toggle {
   #get-started,
   #portal-pages-header {
     display: none;
+  }
+
+  body.member-visitor {
+    .landing-page-content {
+      margin-top: 0;
+    }
   }
 
   .collection-heading h2 {

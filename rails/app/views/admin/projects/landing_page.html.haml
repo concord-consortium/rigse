@@ -10,6 +10,10 @@
   jQuery(function() {
     if (isAssignWrapped) {
       assignViewAdjustment();
+      var observer = new MutationObserver(function() {
+        setParentIframeHeight();
+      });
+      observer.observe(document.body, { childList: true, attributes: true, subtree: true });
     }
   });
 
@@ -22,11 +26,11 @@
     jQuery("#teacher-resources h2, #student-resources h2").click(function() {
       jQuery(this).closest(".assign-wrapped-teacher-materials").toggleClass("open");
     });
-    if (document.getElementById('bin-view')) {
-      document.getElementById('bin-view').style.marginTop = '10px'
-      document.getElementById('bin-view').style.marginRight = '0'
-      document.getElementById('bin-view').style.marginLeft = '0'
-      document.getElementById('bin-view').style.width = '100%'
+    if (jQuery('#bin-view').length > 0) {
+      jQuery('#bin-view').css({'margin-top': '10px'});
+      jQuery('#bin-view').css({'margin-right': '0'});
+      jQuery('#bin-view').css({'margin-left': '0'});
+      jQuery('#bin-view').css({'width': '100%'});
     }
    }
 
@@ -36,11 +40,15 @@
   // that the iframe is resized to show the collection's entire contents.
   function cleanUpAssignViewAdjustment() {
     if (isAssignWrapped) {
-      window.parent.document.getElementById('collectionIframe').style.height = document.body.scrollHeight + 'px';
-      window.parent.document.getElementById('collectionIframe').style.visibility = 'visible';
-      window.parent.document.getElementById('collectionIframeLoading').style.display = 'none';
+      setParentIframeHeight();
+      jQuery('#collectionIframe', window.parent.document).css({'visibility': 'visible'});
+      jQuery('#collectionIframeLoading', window.parent.document).css({'display': 'none'});
     }
     jQuery(".resourceItem").animate({'opacity': 1}, 500);
+  }
+
+  function setParentIframeHeight() {
+    jQuery('#collectionIframe', window.parent.document).css({'height': document.body.scrollHeight + 'px'});
   }
 
   function showResources() {

@@ -71,7 +71,24 @@
     font-size: 26px;
   }
 }
-  
+
+.portalPagesCollectionLightboxReturnButton {
+  background: transparent;
+  border: none;
+  color: #ea6d2f;
+  display: inline ;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+
+  &:hover {
+    background: transparent;
+    border: none;
+    color: #ffc320;
+  }
+}
+
 .portalPagesCollectionLightboxCollection {
   padding: 0 10px 15px;
 

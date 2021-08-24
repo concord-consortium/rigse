@@ -12,7 +12,9 @@ const CollectionLightbox = Component({
       collectionViews: this.props.collectionViews,
       handleNav: this.props.handleNav,
       isLoaded: false,
-      landingPageSlug: null
+      landingPageSlug: null,
+      returnPath: null,
+      returnLinkText: null
     }
   },
 
@@ -47,9 +49,29 @@ const CollectionLightbox = Component({
     }
   },
 
+  handleIframeOnload: function (e) {
+    this.handleIframeResize(e)
+    this.handleIframeSourceChange(e)
+  },
+
   handleIframeResize: function (e) {
     const iframe = e.target
     iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px'
+  },
+
+  handleIframeSourceChange: function (e) {
+    const { landingPageSlug } = this.state
+    const iframe = e.target
+    const iframePath = iframe.contentWindow.location.pathname.replace('/', '')
+    if (iframePath !== landingPageSlug) {
+      this.setState({
+        returnPath: landingPageSlug
+      })
+    } else {
+      this.setState({
+        returnPath: null
+      })
+    }
   },
 
   handleSwitchSource: function (e) {
@@ -58,8 +80,27 @@ const CollectionLightbox = Component({
     handleNav(e, collectionId)
   },
 
+  handleReturnButtonClick: function () {
+    const { returnPath } = this.state
+    this.setState({
+      returnPath: null
+    })
+    document.getElementById('collectionIframe').style.visibility = 'hidden'
+    document.getElementById('collectionIframeLoading').style.display = 'block'
+    document.getElementById('collectionIframe').src = '/' + returnPath
+  },
+
+  renderReturnButton: function () {
+    const { collectionName } = this.state
+    return (
+      <>
+        <button onClick={this.handleReturnButtonClick} className={css.portalPagesCollectionLightboxReturnButton}>&laquo; Return to {collectionName} Collection Overview</button>
+      </>
+    )
+  },
+
   render: function () {
-    const { collectionName, collectionViews, isLoaded, landingPageSlug } = this.state
+    const { collectionName, collectionViews, isLoaded, landingPageSlug, returnPath } = this.state
     if (!isLoaded) {
       return (null)
     }
@@ -73,9 +114,10 @@ const CollectionLightbox = Component({
             </div>
             <div id='collectionLightboxModal' className={css.portalPagesCollectionLightboxModal}>
               <LightboxNav collectionName={collectionName} collectionViews={collectionViews} handleSwitchSource={(e) => this.handleSwitchSource(e)} />
+              {returnPath !== null && this.renderReturnButton()}
               <div className={css.portalPagesCollectionLightboxCollection}>
                 <div id='collectionIframeLoading' className={css.loading}>loading</div>
-                {landingPageSlug && <iframe id='collectionIframe' src={`/${landingPageSlug}`} scrolling='no' onLoad={(e) => this.handleIframeResize(e)} />}
+                {landingPageSlug && <iframe id='collectionIframe' src={`/${landingPageSlug}`} scrolling='no' onLoad={(e) => this.handleIframeOnload(e)} />}
               </div>
             </div>
           </div>
