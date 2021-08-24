@@ -198,6 +198,19 @@
             vertical-align: middle;
           }
         }
+
+        &.community {
+
+          &:before {
+            content: '\f0c0';
+            font-family: "Font Awesome 5 Pro";
+            font-size: 13px;
+            line-height: .7;
+            margin-right: 3px;
+            opacity: .7;
+            vertical-align: middle;
+          }
+        }
       }
       .assignedTo {
         background: transparent;

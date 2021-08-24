@@ -142,6 +142,14 @@ const StemFinderResult = Component({
         </div>
       )
     }
+    // show the community badge only for public community resources
+    if (!resource.is_official && (resource.publication_status === 'published')) {
+      return (
+        <div className={`${css.metaTag} ${css.community}`}>
+          Community
+        </div>
+      )
+    }
   },
 
   renderAssignedClasses: function () {
