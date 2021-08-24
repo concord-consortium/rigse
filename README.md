@@ -78,8 +78,10 @@ docker-compose files. It also assumes some prerequisites:
 With the following settings you can:
 - Log into LARA from the portal
 - Publish LARA activities and sequences to the portal
+- Publish Activity Player activities and sequences to the portal
 - Copy LARA activities and sequences from the portal
 - View a teacher or student report (portal-report) for a local LARA activity or sequence
+- View a teacher or student report (portal-report) for a local Activity Player activity or sequence
 
 **Note:** Student data and resource structure will be stored in the hosted Firestore database of report-service-dev. This is a used by the portal-report. Because of this, you must be online.
 
@@ -103,7 +105,7 @@ With the following settings you can:
    3. Update the external report called DEFAULT_REPORT_SERVICE. It should have a URL of: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username **Replace `username` with the username on your local system. If you don't know your username, run `echo $USER`**.
 4. in LARA: `cp .env-osx-sample .env`
 5. in LARA `.env`:
-    1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env-osx-sample file)
     2. set `LARA_PROTOCOL=https`
     3. set `PORTAL_PROTOCOL=https`
 6. start up LARA: `docker-compose up`
@@ -111,7 +113,29 @@ With the following settings you can:
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
-8. Additional setup is needed for Activity Player Runtime teacher and student reports.
+8. Setup Activity Player support
+    1. Add a Tool to the portal with:
+        ```
+        Name: ActivityPlayer
+        Source Type: ActivityPlayer
+        Tool ID: https://activity-player.concord.org
+        ```
+    2. Make an external report. In the Url field below replace the `username` in the sourceKey parameter with your local username:
+        ```
+        Name: AP Report
+        Url: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username&answersSourceKey=activity-player.concord.org
+        Launch text: AP Report
+        Client: DEFAULT_REPORT_SERVICE_CLIENT
+        Report Type: offering
+        Allowed For Students: true
+        Default Report For Source Type:
+        Report available for individual students: true
+        Report available for individual activities: true
+        Use Query JWT: false
+        Move Students API URL:
+        Move Students API Token:
+        ```
+    3. Add this AP Report external report to each AP resource you publish the portal from LARA.
 
 ##### Updating an existing setup
 
@@ -148,14 +172,59 @@ with this portal user. And then either:
     1. Append `docker/dev/docker-compose-portal-proxy.yml` to the `COMPOSE_FILE` var.
     2. Set `PORTAL_HOST` to `app.portal.docker` or whatever domain your local portal is
     3. Set `PORTAL_PROTOCOL=https`
-    4. Set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    4. set `LARA_PROTOCOL=https`
+    5. Set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    6. set `REPORT_SERVICE_URL` (see the value in the .env-osx-sample file)
 5. Stop your Lara services if they are running, and update them with `docker-compose up`
 6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
 with this portal user. And then either:
     - use the rails console in LARA to set the `is_admin` flag of the newly created user.
     - use an existing admin in LARA to make the new user an admin.
-7. Additional setup is needed for Activity Player Runtime teacher and student reports.
+7. Setup Activity Player support
+    1. Add a Tool to the portal with:
+        ```
+        Name: ActivityPlayer
+        Source Type: ActivityPlayer
+        Tool ID: https://activity-player.concord.org
+        ```
+    2. Make an external report. In the Url field below replace the `username` in the sourceKey parameter with your local username:
+        ```
+        Name: AP Report
+        Url: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username&answersSourceKey=activity-player.concord.org
+        Launch text: AP Report
+        Client: DEFAULT_REPORT_SERVICE_CLIENT
+        Report Type: offering
+        Allowed For Students: true
+        Default Report For Source Type:
+        Report available for individual students: true
+        Report available for individual activities: true
+        Use Query JWT: false
+        Move Students API URL:
+        Move Students API Token:
+        ```
+    3. Add this AP Report external report to each AP resource you publish the portal from LARA.
 
+##### Troubleshooting
+
+When you run the portal-report if you just see a spinner. Here are some steps to try:
+1. Verify the source is be added to firestore:
+    1. Go to the firebase console and open the report-service-dev firestore.
+    2. Look in the sources collection
+    3. You should see a `app.lara.docker.{$USER}` collection (USER is your local username)
+    4. If you don't see this collection then your LARA is not properly publishing the report structure to the report-service. In LARA check the values of `REPORT_SERVICE_TOKEN` and `REPORT_SERVICE_URL` (see above). A less common error would be a misconfigured `LARA_HOST` and `TOOL_ID` setup.
+    5. After fixing these values update your lara app so it picks up the variables with `docker-compose up`. And make a change to your activity so it republishes the structure to Firestore. Check that the `app.lara.docker.{$USER}` collection is there now.
+2. Verify the resource structure added to firestore has the right URL:
+    1. Go to the firebase console and open the report-service-dev firestore.
+    2. Inside of the `sources/app.lara.docker.{$USER}` collection will be a `resources` collection. Inside of this will be a document for each activity or sequence that you've published from LARA.
+    3. In these documents look at the `url` field. It needs to exactly matches what the portal-report is looking for. If it starts with `http:` instead of `https:` then you will see the spinner.
+    4. To know what the portal-report is looking for in firestore: when you run the portal-report look at the network dev tools and look for the offering info request it makes to the portal. This request's url will look something like: `https://app.rigse.docker/api/v1/offerings/[id]`.  Look at the response to this request and find the `activity_url` field.
+        - if this is an LARA runtime activity or sequence the activity_url will look like: https://app.lara.docker/activities/22
+    In this case, this string should exactly match what is in the `url` field in firestore.
+        - if this is a AP runtime activity the activity_url will look like: https://activity-player.concord.org/branch/master/?activity=https%3A%2F%2Fapp.lara.docker%2Fapi%2Fv1%2Factivities%2F22.json
+        In this case, you need to unescape the activity parameter. Then take the value of the activity param and remove the `/api/v1` and remove the `.json` at the end. The result of that transformation snould exactly match what is in `url` field in firestore.
+        - if this is a AP runtime sequence follow the directions for AP activity above except the parameter name is `sequence` instead of `activity`
+    5. To fix the `http:` instead of `https:` problem make sure your `LARA_PROTOCOL` is set to `https` in your lara `.env` file. Then update your lara container with `docker-compose up`. And then make a change to the LARA activity or sequence to republish it. Verify the `url` field in firestore has been updated.
+    
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
 1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker
