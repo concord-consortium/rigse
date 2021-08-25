@@ -59,19 +59,19 @@ export default class MBMaterial extends React.Component {
           }
           <div className='mb-material-links'>
             {data.preview_url != null
-              ? <a className='mb-edit' href={data.preview_url} title='Preview this activity'>Preview</a>
+              ? <a className='mb-edit' href={data.preview_url} title='Preview this activity' target='_blank' rel='noopener'>Preview</a>
               : undefined}
             {data.edit_url != null
-              ? <a className='mb-edit' href={data.edit_url} title='Edit this activity'>Edit</a>
+              ? <a className='mb-edit' href={data.edit_url} title='Edit this activity' target='_blank' rel='noopener'>Edit</a>
               : undefined}
             {data.copy_url != null
-              ? <a className='mb-copy' href={data.copy_url} title='Make your own version of this activity'>Copy</a>
+              ? <a className='mb-copy' href={data.copy_url} title='Make your own version of this activity' target='_blank' rel='noopener'>Copy</a>
               : undefined}
             {!this.props.assignToSpecificClass && (data.assign_to_class_url != null)
               ? <a className='mb-assign-to-class' href={data.assign_to_class_url} onClick={this.assignToClass} title='Assign this activity to a class'>Assign</a>
               : undefined}
             {data.assign_to_collection_url != null
-              ? <a className='mb-assign-to-collection' href={data.assign_to_collection_url} title='Assign this activity to a collection'>Assign to collection</a>
+              ? <a className='mb-assign-to-collection' href={data.assign_to_collection_url} title='Assign this activity to a collection' target='_blank' rel='noopener'>Assign to collection</a>
               : undefined}
             {data.archive_url != null
               ? <a className='mb-archive-link' onClick={this.archive} title='archive this'>(archive this)</a>
