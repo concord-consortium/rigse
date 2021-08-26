@@ -32,6 +32,7 @@ class Search
   attr_accessor :available_grade_level_groups
   attr_accessor :available_projects
   attr_accessor :available_sensors
+  attr_accessor :number_authored_resources
 
   attr_accessor :searchable_models
 
@@ -119,6 +120,7 @@ class Search
     self.available_projects          = []
     self.available_sensors           = []
     self.available_grade_level_groups = { 'K-2' => 0,'3-4' => 0,'5-6' => 0,'7-8' => 0,'9-12' => 0, 'Higher Ed' => 0 }
+    self.number_authored_resources   = 0
 
     self.results        = {}
     self.hits           = {}
@@ -172,6 +174,7 @@ class Search
         end
       end
       s.facet :project_ids
+      s.facet :user_id, :only => [self.user_id]
     end
     results.facet(:subject_areas).rows.each do |facet|
       self.available_subject_areas << facet.value
@@ -191,6 +194,11 @@ class Search
       self.available_sensors << facet.value
     end
     available_sensors.uniq!
+    # Although the user_id facet will only ever return zero or one rows, the below 
+    # seems like the most concise way to get the number of authored resources.
+    results.facet(:user_id).rows.each do |facet|
+      self.number_authored_resources += facet.count
+    end
   end
 
   def search

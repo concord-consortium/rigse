@@ -11,6 +11,8 @@ describe API::V1::SearchController do
 
   let(:teacher_user)    { FactoryBot.create(:confirmed_user, :login => "teacher_user") }
   let(:teacher)         { FactoryBot.create(:portal_teacher, :user => teacher_user, :schools => [mock_school]) }
+  let(:teacher_user_2)  { FactoryBot.create(:confirmed_user, :login => "teacher_user_2") }
+  let(:teacher_2)       { FactoryBot.create(:portal_teacher, :user => teacher_user_2, :schools => [mock_school]) }
   let(:admin_user)      { FactoryBot.generate(:admin_user) }
   let(:author_user)     { FactoryBot.generate(:author_user) }
   let(:manager_user)    { FactoryBot.generate(:manager_user) }
@@ -123,6 +125,10 @@ describe API::V1::SearchController do
             expect(all_activities).to include(activity)
           end
         end
+
+        it "should return a count of the user's contributed activities" do
+          expect(assigns[:search].number_authored_resources).to be(contributed_activities.count)
+        end
       end
 
       describe "searching only official materials" do
@@ -188,6 +194,16 @@ describe API::V1::SearchController do
             expect(assigns[:search].results[Search::ActivityMaterial].length).to eq(2)
             expect(assigns[:search].results[Search::ActivityMaterial]).to include(contributed_activity)
           end
+        end
+      end
+
+      describe "searching as a teacher who did not contribute any activities" do
+        let(:get_params) { {} }
+        it "should return a count of user contributed activities that equals zero" do
+          sign_out :user
+          sign_in teacher_user_2
+          get :search, params: get_params
+          expect(assigns[:search].number_authored_resources).to be(0)
         end
       end
     end

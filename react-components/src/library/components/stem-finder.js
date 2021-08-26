@@ -98,7 +98,8 @@ const StemFinder = Component({
       searchPage: 1,
       sortOrder: sortOrder,
       subjectAreasSelected: subjectAreasSelected,
-      subjectAreasSelectedMap: subjectAreasSelectedMap
+      subjectAreasSelectedMap: subjectAreasSelectedMap,
+      usersAuthoredResourcesCount: 0
     }
   },
 
@@ -265,6 +266,7 @@ const StemFinder = Component({
     }).done(function (result) {
       let numTotalResources = 0
       const results = result.results
+      const usersAuthoredResourcesCount = result.filters.number_authored_resources
       let lastSearchResultCount = 0
 
       results.forEach(function (result) {
@@ -297,7 +299,8 @@ const StemFinder = Component({
         displayLimit: displayLimit,
         searching: false,
         noResourcesFound: numTotalResources === 0,
-        lastSearchResultCount: lastSearchResultCount
+        lastSearchResultCount: lastSearchResultCount,
+        usersAuthoredResourcesCount: usersAuthoredResourcesCount
       })
 
       this.showResources()
@@ -593,7 +596,7 @@ const StemFinder = Component({
     const { includeMine } = this.state
     return (
       <div className={css.showOnly}>
-        <label htmlFor='includeMine'><input type='checkbox' name='includeMine' value='true' id='includeMine' onChange={this.handleShowOnlyMine} defaultChecked={includeMine} /> Show only materials I authored</label>
+        <label htmlFor='includeMine'><input type='checkbox' name='includeMine' value='true' id='includeMine' onChange={this.handleShowOnlyMine} defaultChecked={includeMine} /> Show only resources I authored</label>
       </div>
     )
   },
@@ -614,29 +617,30 @@ const StemFinder = Component({
   },
 
   renderResultsHeader: function () {
-    const finderHeaderClass = this.isAdvancedUser() ? `${css.finderHeader} ${css.advanced}` : css.finderHeader
+    const { displayLimit, noResourcesFound, numTotalResources, searching, usersAuthoredResourcesCount } = this.state
+    const finderHeaderClass = this.isAdvancedUser() || usersAuthoredResourcesCount > 0 ? `${css.finderHeader} ${css.advanced}` : css.finderHeader
 
-    if (this.state.noResourcesFound || this.state.searching) {
+    if (noResourcesFound || searching) {
       return (
         <div className={finderHeaderClass}>
           <h2>Activities List</h2>
-          {this.isAdvancedUser() && this.renderShowOnly()}
+          {(this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
           <div className={css.finderHeaderResourceCount}>
-            {this.state.noResourcesFound ? 'No Resources Found' : 'Loading...'}
+            {noResourcesFound ? 'No Resources Found' : 'Loading...'}
           </div>
           {this.renderSortMenu()}
         </div>
       )
     }
 
-    const showingAll = this.state.displayLimit >= this.state.numTotalResources
-    const multipleResources = this.state.numTotalResources > 1
-    const resourceCount = showingAll ? this.state.numTotalResources : this.state.displayLimit + ' of ' + this.state.numTotalResources
+    const showingAll = displayLimit >= numTotalResources
+    const multipleResources = numTotalResources > 1
+    const resourceCount = showingAll ? numTotalResources : displayLimit + ' of ' + numTotalResources
     jQuery('#portal-pages-finder').removeClass('loading')
     return (
       <div className={finderHeaderClass}>
         <h2>Activities List</h2>
-        {this.isAdvancedUser() && this.renderShowOnly()}
+        {(this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
         <div className={css.finderHeaderResourceCount}>
           {showingAll && multipleResources ? 'Showing All ' : 'Showing '}
           <strong>

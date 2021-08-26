@@ -6,7 +6,7 @@ class API::V1::SearchController < API::APIController
     begin
       @search = Search.new(opts)
       # Return query string, so the response can be identified by the client code.
-      render json: {query: request.query_string, results: search_results_data}
+      render json: {query: request.query_string, filters: search_filters_data, results: search_results_data}
     rescue => e
       ExceptionNotifier::Notifier.exception_notification(request.env, e).deliver
       return error('Search unavailable')
@@ -62,4 +62,12 @@ class API::V1::SearchController < API::APIController
       }
     }
   end
+
+  def search_filters_data
+    filters = {}
+    filters[:number_authored_resources] = @search.number_authored_resources
+    filters
+  end
+
+
 end
