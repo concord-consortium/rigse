@@ -617,29 +617,30 @@ const StemFinder = Component({
   },
 
   renderResultsHeader: function () {
-    const finderHeaderClass = this.isAdvancedUser() || this.state.usersAuthoredResourcesCount > 0 ? `${css.finderHeader} ${css.advanced}` : css.finderHeader
+    const { displayLimit, noResourcesFound, numTotalResources, searching, usersAuthoredResourcesCount } = this.state
+    const finderHeaderClass = this.isAdvancedUser() || usersAuthoredResourcesCount > 0 ? `${css.finderHeader} ${css.advanced}` : css.finderHeader
 
-    if (this.state.noResourcesFound || this.state.searching) {
+    if (noResourcesFound || searching) {
       return (
         <div className={finderHeaderClass}>
           <h2>Activities List</h2>
-          {(this.isAdvancedUser() || this.state.usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
+          {(this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
           <div className={css.finderHeaderResourceCount}>
-            {this.state.noResourcesFound ? 'No Resources Found' : 'Loading...'}
+            {noResourcesFound ? 'No Resources Found' : 'Loading...'}
           </div>
           {this.renderSortMenu()}
         </div>
       )
     }
 
-    const showingAll = this.state.displayLimit >= this.state.numTotalResources
-    const multipleResources = this.state.numTotalResources > 1
-    const resourceCount = showingAll ? this.state.numTotalResources : this.state.displayLimit + ' of ' + this.state.numTotalResources
+    const showingAll = displayLimit >= numTotalResources
+    const multipleResources = numTotalResources > 1
+    const resourceCount = showingAll ? numTotalResources : displayLimit + ' of ' + numTotalResources
     jQuery('#portal-pages-finder').removeClass('loading')
     return (
       <div className={finderHeaderClass}>
         <h2>Activities List</h2>
-        {(this.isAdvancedUser() || this.state.usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
+        {(this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly()}
         <div className={css.finderHeaderResourceCount}>
           {showingAll && multipleResources ? 'Showing All ' : 'Showing '}
           <strong>
