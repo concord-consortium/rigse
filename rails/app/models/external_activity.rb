@@ -268,7 +268,10 @@ class ExternalActivity < ApplicationRecord
       # launch_url needs to be set manually, as that's the only thing (together with url) that is set only during
       # initial publishing, but not during republishing. Since activity instance already exists, the call below
       # will be considered as republishing.
-      self.launch_url = pub_data['launch_url'] || pub_data["create_url"]
+      # Note that only LARA runtime external activities should have a launch URL
+      if self.tool.source_type == "LARA"
+        self.launch_url = pub_data['launch_url'] || pub_data["create_url"]
+      end
       self.save
       # Then, publish provided data.
       return !!ActivityRuntimeAPI.publish2(pub_data, user)

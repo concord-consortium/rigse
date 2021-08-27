@@ -60,7 +60,7 @@ class Portal::OfferingsController < ApplicationController
          external_activity = @offering.runnable
          if external_activity.launch_url.present?
            uri = URI.parse(external_activity.launch_url)
-           query = {
+           uri.query = {
              :externalId => learner.id,
              :returnUrl => learner.remote_endpoint_url,
              :logging => @offering.clazz.logging || @offering.runnable.logging,
@@ -77,7 +77,6 @@ class Portal::OfferingsController < ApplicationController
              :platform_user_id => current_visitor.id,
              :resource_link_id => @offering.id
            }.to_query
-           uri.query = [uri.query, query].join("&")
            redirect_to(uri.to_s)
          else
            redirect_to(@offering.runnable.url(learner, root_url))
