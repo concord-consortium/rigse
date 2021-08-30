@@ -293,10 +293,10 @@ describe ExternalActivity do
     let(:lara_activity) { ExternalActivity.create!(lara_attributes)}
     let(:ap_activity) { ExternalActivity.create!(ap_attributes)}
 
-    it "activities with LARA as its tool should return true for lara_activity?" do
+    it "activities with LARA as its tool should return true for lara_activity_or_sequence?" do
       expect(lara_activity.lara_activity_or_sequence?).to be true
     end
-    it "activities with something other than LARA as a tool should return false for lara_activity?" do
+    it "activities with something other than LARA as a tool should return false for lara_activity_or_sequence?" do
       expect(ap_activity.lara_activity_or_sequence?).to be false
     end
   end

@@ -296,8 +296,7 @@ class ExternalActivity < ApplicationRecord
   end
 
   def lara_activity_or_sequence?
-    tool = Tool.where(id: self.tool_id).first
-    if tool && tool.source_type == 'LARA'
+    if self.tool && self.tool.source_type == 'LARA'
       return true
     else
       return false
