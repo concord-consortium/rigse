@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_11_194422) do
+ActiveRecord::Schema.define(version: 2021_08_30_143935) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -339,7 +339,6 @@ ActiveRecord::Schema.define(version: 2021_08_11_194422) do
     t.boolean "append_survey_monkey_uid"
     t.integer "template_id"
     t.string "template_type"
-    t.string "launch_url"
     t.boolean "is_official", default: false
     t.boolean "student_report_enabled", default: true
     t.string "teacher_guide_url"

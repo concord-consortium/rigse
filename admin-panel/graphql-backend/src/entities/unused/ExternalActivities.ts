@@ -80,9 +80,6 @@ export class ExternalActivities {
   @Column("varchar", { name: "template_type", nullable: true, length: 255 })
   templateType: string | null;
 
-  @Column("varchar", { name: "launch_url", nullable: true, length: 255 })
-  launchUrl: string | null;
-
   @Column("tinyint", {
     name: "is_official",
     nullable: true,

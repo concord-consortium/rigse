@@ -3,8 +3,7 @@ Feature: External Activities can support a REST api
     Given the following external REST activity:
       | name        | Cool Thing |
       | url         | http://activities.com/activity/1 |
-      | launch_url  | http://activities.com/activity/1/sessions/ |
-    And "activities.com/activity/1/sessions/" handles a GET with query:
+    And "activities.com/activity/1" handles a GET with query:
       | domain            | http://www.example.com/      |
       | domain_uid        | domain_uid of 'student'      |
       | externalId        | 999                          |
@@ -15,7 +14,7 @@ Feature: External Activities can support a REST api
       | platform_id       | site_url                     |
       | platform_user_id  | domain_uid of 'student'      |
       | resource_link_id  | offering.id                  |
-    And "activities.com/activity/1/sessions/" GET responds with
+    And "activities.com/activity/1" GET responds with
       """
       HTTP/1.1 200 OK
       Content-Type: text/plain
@@ -33,13 +32,13 @@ Feature: External Activities can support a REST api
   @mechanize
   Scenario: External REST activity is run the first time
     When a student first runs the external activity "Cool Thing"
-    Then the browser should send a GET to "activities.com/activity/1/sessions/"
+    Then the browser should send a GET to "activities.com/activity/1"
 
   @mechanize
   Scenario: External REST activity is run the second time
     Given the student ran the external REST activity "Cool Thing" before
     When the student runs the external activity "Cool Thing" again
-    Then the browser should send a GET to "activities.com/activity/1/sessions/"
+    Then the browser should send a GET to "activities.com/activity/1"
 
   @mechanize
   Scenario: External REST activity sends data back to the portal

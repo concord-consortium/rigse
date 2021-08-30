@@ -7,7 +7,6 @@ describe ExternalActivitiesController do
   let(:description) { name }
   let(:url )        { "http://activity.com/activity/1" }
   let(:author_url)  { "#{url}/edit" }
-  let(:launch_url)  { "#{url}/1/sessions/" }
   let(:tool)        { "LARA" }
 
   let(:activity_hash) do
@@ -15,7 +14,6 @@ describe ExternalActivitiesController do
       "name" => name,
       "url" => url,
       "author_url" => author_url,
-      "launch_url" => launch_url,
       "tool" => tool,
       "sections" => [
         {
@@ -80,7 +78,6 @@ describe ExternalActivitiesController do
       "description" => sequence_desc,
       "url" => sequence_url,
       "author_url" => "#{sequence_url}/edit",
-      "launch_url" => sequence_url,
       "activities" => [activity2_hash]
     }
   end

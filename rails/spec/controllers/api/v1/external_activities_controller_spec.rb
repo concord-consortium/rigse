@@ -165,7 +165,6 @@ describe API::V1::ExternalActivitiesController do
         "name" => "Cool Activity",
         "url" => url,
         "author_url" => "#{url}/edit",
-        "launch_url" => "#{url}/1/sessions/",
         "student_report_enabled" => true,
         "thumbnail_url" => "/path/to/thumbnail",
         "is_locked" => false,

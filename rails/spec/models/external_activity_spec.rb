@@ -114,7 +114,6 @@ describe ExternalActivity do
       attrs.each_with_index do |attr, idx|
         activity.send("#{attr}=", case attr
                                     when 'url' then host + '/activity/1'
-                                    when 'launch_url' then host + '/activity/1'
                                     else idx
                                   end
         )
@@ -194,7 +193,6 @@ describe ExternalActivity do
           'publication_data' => {
             'type' => 'Activity',
             'url' => valid_attributes[:url],
-            'launch_url' => valid_attributes[:url],
             'thumbnail_url' => 'http://image.com',
             "sections" => [
               {
@@ -258,25 +256,48 @@ describe ExternalActivity do
   end
 
   describe "external" do
-    let(:lara_launch_url_attributes) { {
+    let(:lara_tool) { Tool.create!(
+      :id => 1,
+      :name => "LARA",
+      :source_type => "LARA",
+      :tool_id => "http://lara.url/"
+    )}
+    let(:ap_tool) { Tool.create!(
+      :id => 2,
+      :name => "Activity Player",
+      :source_type => "Activity Player",
+      :tool_id => "http://activityplayer.url/"
+    )}
+    let(:lara_attributes) { {
         :user_id => 1,
         :uuid => "value for uuid",
         :name => "value for name",
         :long_description => "value for description",
         :publication_status => "value for publication_status",
         :is_official => true,
-        :url => "http://www.concord.org/",
+        :url => "http://www.concord.org/lara",
         :template_type => "Activity",
-        :launch_url => "http://authoring.concord.org/"
+        :tool_id => lara_tool.id
     } }
-    let(:activity) { ExternalActivity.create!(lara_launch_url_attributes)}
+    let(:ap_attributes) { {
+        :user_id => 1,
+        :uuid => "value for uuid",
+        :name => "value for name",
+        :long_description => "value for description",
+        :publication_status => "value for publication_status",
+        :is_official => true,
+        :url => "http://www.concord.org/ap",
+        :template_type => "Activity",
+        :tool_id => ap_tool.id
+    } }
+    let(:lara_activity) { ExternalActivity.create!(lara_attributes)}
+    let(:ap_activity) { ExternalActivity.create!(ap_attributes)}
 
-    it "activities with launch urls should return true for lara_activity?" do
-      expect(activity.lara_activity?).to be true
+    it "activities with LARA as its tool should return true for lara_activity?" do
+      expect(lara_activity.lara_activity_or_sequence?).to be true
     end
-    it "activities wihtout launch urls should return false for lara_activity?" do
-      activity.launch_url = nil
-      expect(activity.lara_activity?).to be false
+    it "activities with something other than LARA as a tool should return false for lara_activity?" do
+      expect(ap_activity.lara_activity_or_sequence?).to be false
     end
   end
 
@@ -458,36 +479,6 @@ describe ExternalActivity do
     it 'run_format' do
       external_activity = described_class.new
       result = external_activity.run_format
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#has_launch_url?' do
-    it 'has_launch_url?' do
-      external_activity = described_class.new
-      result = external_activity.has_launch_url?
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#lara_activity?' do
-    it 'lara_activity?' do
-      external_activity = described_class.new
-      result = external_activity.lara_activity?
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#lara_sequence?' do
-    it 'lara_sequence?' do
-      external_activity = described_class.new
-      result = external_activity.lara_sequence?
 
       expect(result).not_to be_nil
     end

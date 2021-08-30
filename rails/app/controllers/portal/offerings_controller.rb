@@ -58,8 +58,9 @@ class Portal::OfferingsController < ApplicationController
            # session[:put_path] = nil
          end
          external_activity = @offering.runnable
-         if external_activity.launch_url.present?
-           uri = URI.parse(external_activity.launch_url)
+         tool = Tool.where(id: external_activity.tool_id).first
+         if tool && tool.source_type == 'LARA'
+           uri = URI.parse(external_activity.url)
            uri.query = {
              :externalId => learner.id,
              :returnUrl => learner.remote_endpoint_url,

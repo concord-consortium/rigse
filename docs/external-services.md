@@ -18,7 +18,7 @@ When a student views the class they can launch offerings. The way the launch hap
 
 In all cases the launch sends the student's browser to the external runtime environment. It might be in a new tab or the same tab.  The portal takes the `ExternalActivities` properties and adds additional parameters to it in order to perform this launch.
 
-If the `ExternalActivity#launch_url` of the ExternalActivity is set, then the Portal will use a LARA specific launch. The added parameters can be seen here: https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/controllers/portal/offerings_controller.rb#L62
+If the `ExternalActivity#tool_id` value matches the ID of a tool with a source type of 'LARA', then the Portal will use a LARA specific launch. The added parameters can be seen here: https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/controllers/portal/offerings_controller.rb#L62
 
 Otherwise, the `ExternalActivity#url` is used. The added parameters can be seen here:
 https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/models/external_activity.rb#L162

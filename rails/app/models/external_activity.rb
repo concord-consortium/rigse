@@ -265,13 +265,6 @@ class ExternalActivity < ApplicationRecord
       pub_data = response['publication_data']
       # First, update URLs so the ActivityRuntimeAPI.publish2 can find correct instance (this one) and update it.
       self.url = pub_data['url']
-      # launch_url needs to be set manually, as that's the only thing (together with url) that is set only during
-      # initial publishing, but not during republishing. Since activity instance already exists, the call below
-      # will be considered as republishing.
-      # Note that only LARA runtime external activities should have a launch URL
-      if self.tool.source_type == "LARA"
-        self.launch_url = pub_data['launch_url'] || pub_data["create_url"]
-      end
       self.save
       # Then, publish provided data.
       return !!ActivityRuntimeAPI.publish2(pub_data, user)
@@ -302,20 +295,13 @@ class ExternalActivity < ApplicationRecord
     :run_resource_html
   end
 
-  def has_launch_url?
-    !launch_url.blank?
-  end
-
-  def lara_activity?
-    material_type == 'Activity' && has_launch_url?
-  end
-
-  def lara_sequence?
-    material_type == 'Investigation' && has_launch_url?
-  end
-
   def lara_activity_or_sequence?
-    lara_activity? || lara_sequence?
+    tool = Tool.where(id: self.tool_id).first
+    if tool && tool.source_type == 'LARA'
+      return true
+    else
+      return false
+    end
   end
 
   def options_for_external_report
