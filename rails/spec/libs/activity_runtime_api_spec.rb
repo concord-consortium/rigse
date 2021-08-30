@@ -113,7 +113,6 @@ describe ActivityRuntimeAPI do
   let(:url )        { "http://activity.com/activity/1" }
   let(:page_1_url ) { "http://activity.com/activity/1/pages/5" }
   let(:author_url)  { "#{url}/edit" }
-  let(:launch_url)  { "#{url}/1/sessions/" }
   let(:existing_url){ nil }
   let(:student_report_enabled){true}
 
@@ -122,7 +121,6 @@ describe ActivityRuntimeAPI do
       "name" => name,
       "url" => url,
       "author_url" => author_url,
-      "launch_url" => launch_url,
       "student_report_enabled" => student_report_enabled,
       "description" => 'LARA might still send description, but Portal should ignore it',
       "sections" => [
@@ -217,7 +215,6 @@ describe ActivityRuntimeAPI do
       "type" => "Sequence",
       "name" => sequence_name,
       "url" => sequence_url,
-      "launch_url" => sequence_url,
       "print_url" => sequence_print_url,
       "author_url" => sequence_author_url,
       "activities" => [act2, act1],

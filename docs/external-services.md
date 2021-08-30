@@ -18,7 +18,7 @@ When a student views the class they can launch offerings. The way the launch hap
 
 In all cases the launch sends the student's browser to the external runtime environment. It might be in a new tab or the same tab.  The portal takes the `ExternalActivities` properties and adds additional parameters to it in order to perform this launch.
 
-If the `ExternalActivity#launch_url` of the ExternalActivity is set, then the Portal will use a LARA specific launch. The added parameters can be seen here: https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/controllers/portal/offerings_controller.rb#L62
+If the `ExternalActivity#tool_id` value matches the ID of a tool with a source type of 'LARA', then the Portal will use a LARA specific launch. The added parameters can be seen here: https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/controllers/portal/offerings_controller.rb#L62
 
 Otherwise, the `ExternalActivity#url` is used. The added parameters can be seen here:
 https://github.com/concord-consortium/rigse/blob/d81d5a1da69253418abde7e0aa7baac4a1831a66/rails/app/models/external_activity.rb#L162
@@ -128,7 +128,7 @@ Additionally if the user is a teacher then the teacher object is added to the ac
 # From a Modeling Point of View
 
 ## Tool
-In the portal there is a `tools` model. This model has a `tool_id` (url), `source_type`, and `name`. An ExternalActivity can be associated with a single Tool.
+In the portal there is a `tools` model. This model has a `tool_id` (url), `source_type`, `remote_duplicate_url`, and `name`. An ExternalActivity can be associated with a single Tool.
 
 The source_type of the ExternalActivity#tool is used to find an ExternalReport configured with a default_report_for_source_type.
 
@@ -148,9 +148,7 @@ ExternalActivities can also have one or more ExternalReports directly associated
 ## ExternalActivity
 Authors and admins can duplicate ExternalActivities. If the ExternalActivity has an `author_url` value and it's Tool has a `remote_duplicate_url` value, then the special `duplicate_on_remote` function is called. This sends a http request to `#{Tool.remote_duplicate_url}`. It expects the remote authoring system to copy the resource and then return the same kind of data that would normally be sent when an author "publishes" the resource to the Portal. Then the Portal does this publishing internally using the `ActivityRuntimeAPI`. This internal publishing happens as an 'update' operation not a 'create' operation. This is because the ExternalActivity already exists.
 
-When the ActivityRuntimeAPI is used to create or update an ExternalActivity, the `launch_url` is only set when it is created. Because of this the `duplicate_on_remote` code sets the `launch_url` first before doing the internal publish.
-
-When data_helpers.rb generates JSON from the activity it includes `lara_activity_or_sequence` which is based on whether the activity has `launch_url`. This seems be used to determine which links are shown to the user.
+When data_helpers.rb generates JSON from the activity it includes `lara_activity_or_sequence` which is based on whether the activity has a tool with a `source_type` of "LARA". This is used to determine which links are shown to the user.
 
 ## Client
 Clients are used for authentication. When the Portal creates an AccessGrant to provide a token to an external service, it generally has an associated Client. The Client is used to verify requests with the token. If the client specifies `domain_matchers` then only requests from those domains are accepted.

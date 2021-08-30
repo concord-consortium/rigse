@@ -8,25 +8,40 @@ describe Portal::OfferingsController do
       allow(Admin::Settings).to receive(:default_settings).and_return(@mock_settings)
 
       # this seems like it would all be better with some factories for clazz, runnable, offering, and learner
-      @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false)
+      @clazz = mock_model(Portal::Clazz, :is_student? => true, :is_teacher? => false, :class_info_url => "http://test.host", :class_hash => "abc123")
       @runnable_opts = {
         :name      => "Some Activity",
         :url       => "http://example.com",
-        :save_path => "/path/to/save",
+        :save_path => "/path/to/save"
       }
       @runnable = FactoryBot.create(:external_activity, @runnable_opts )
-      @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz)
+      @offering = mock_model(Portal::Offering, :runnable => @runnable, :clazz => @clazz, :domain => 'http://test.host/', :logging => false, :resource_link_id => 1)
       @user = FactoryBot.create(:confirmed_user, :email => "test@test.com", :password => "password", :password_confirmation => "password")
-      @portal_student = mock_model(Portal::Student)
-      @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student)
+      @portal_student = mock_model(Portal::Student, :user_id => @user.id, :domain_id => 1, :platform_id => 1)
+      @learner = mock_model(Portal::Learner, :id => 34, :offering => @offering, :student => @portal_student, :remote_endpoint_url => "http://example.com/activities/1")
       allow(@learner).to receive(:update_last_run)
       allow(controller).to receive(:setup_portal_student).and_return(@learner)
       allow(Portal::Offering).to receive(:find).and_return(@offering)
       sign_in @user
     end
 
-    it "saves learner data in the cookie" do
+    it "saves learner data in the cookie and redirects to URL with additional params" do
       @runnable.append_learner_id_to_url = false
+      @runnable_url = URI.parse(@runnable_opts[:url])
+      @runnable_url.query = {
+        :class_info_url => @clazz.class_info_url,
+        :context_id => @offering.clazz.class_hash,
+        :domain => @offering.domain,
+        :domain_uid => @portal_student.user_id,
+        :externalId => @learner.id,
+        :logging => @offering.logging,
+        :platform_id => APP_CONFIG[:site_url],
+        :platform_user_id => @portal_student.user_id,
+        :resource_link_id => @offering.id,
+        :returnUrl => @learner.remote_endpoint_url
+      }.to_query
+      @redirect_url = @runnable_url.to_s
+      
       get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response.cookies["save_path"]).to eq(@offering.runnable.save_path)
       expect(response.cookies["learner_id"]).to eq(@learner.id.to_s)
@@ -34,14 +49,39 @@ describe Portal::OfferingsController do
       expect(response.cookies["activity_name"]).to eq(@offering.runnable.name)
       expect(response.cookies["class_id"]).to eq(@clazz.id.to_s)
 
-      expect(response).to redirect_to(@runnable_opts[:url])
+      expect(response).to redirect_to(@redirect_url)
     end
 
-    it "appends the learner id to the url" do
+    it "appends the learner id to the url for resources without a tool" do
       @runnable.append_learner_id_to_url = true
+      @runnable.tool_id = nil
       # @runnable.stub!(:append_learner_id_to_url).and_return(true)
       get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response).to redirect_to(@runnable_opts[:url] + "?learner=#{@learner.id}")
+    end
+
+    it "redirects to the url for Activity Player activities" do
+      @ap_tool_opts = {
+        :id => 2,
+        :name => "Activity Player",
+        :source_type => "Activity Player",
+        :tool_id => "http://activityplayer.url/"
+      }
+      @ap_tool = FactoryBot.create(:tool, @ap_tool_opts)
+      @ap_runnable_opts = {
+        :name      => "Some Activity",
+        :url       => "http://example.com",
+        :save_path => "/path/to/save",
+        :tool_id   => @ap_tool.id
+      }
+      @ap_runnable = FactoryBot.create(:external_activity, @ap_runnable_opts)
+      @ap_offering = mock_model(Portal::Offering, :runnable => @ap_runnable, :clazz => @clazz)
+      @ap_learner = mock_model(Portal::Learner, :id => 35, :offering => @ap_offering, :student => @portal_student)
+      allow(@ap_learner).to receive(:update_last_run)
+      allow(controller).to receive(:setup_portal_student).and_return(@ap_learner)
+      allow(Portal::Offering).to receive(:find).and_return(@ap_offering)
+      get :show, params: { :id => @ap_offering.id, :format => 'run_resource_html' }
+      expect(response).to redirect_to(@ap_runnable_opts[:url])
     end
   end
 

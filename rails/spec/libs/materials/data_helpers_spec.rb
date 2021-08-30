@@ -13,7 +13,6 @@ describe DataHelpersTestController, type: :controller do
     FactoryBot.create(
       :external_activity,
       sensor_list: sensor_names,
-      launch_url: host + '/activities/1/',
       author_url: host + '/activities/1/edit',
       print_url: host + '/print',
       is_locked: false,
@@ -27,7 +26,6 @@ describe DataHelpersTestController, type: :controller do
   let(:material_locked) {
     FactoryBot.create(
       :external_activity,
-      launch_url: host + '/activities/1/',
       author_url: host + '/activities/1/edit',
       is_locked: true,
       author_email: 'author2@concord.org'
@@ -36,7 +34,6 @@ describe DataHelpersTestController, type: :controller do
   let(:material_not_copyable) {
     FactoryBot.create(
       :external_activity,
-      launch_url: host + '/activities/1/',
       author_url: host + '/activities/1/edit',
       is_locked: false,
       teacher_copyable: false,

@@ -45,10 +45,6 @@
       = f.select :license_code, CommonsLicense.for_select, include_blank: 'none'
     = field_set_tag 'URL' do
       = f.text_field :url, :size => 60
-    = field_set_tag 'Launch URL' do
-      = f.text_field :launch_url, :size => 60
-      %br
-      = t('authoring.launch_url_description')
     = field_set_tag 'Authoring URL' do
       = f.text_field :author_url, :size => 60
       %br
