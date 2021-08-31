@@ -13,11 +13,6 @@
         "javascript:void(0)",
         :onclick=>"PortalComponents.renderAssignToClassModal({material_id: #{@external_activity.id}, material_type: '#{@external_activity.class.to_s}', lightbox_material_text: null, skip_reload: true, anonymous: false})",
         :class=>"button"
-      = link_to t("matedit.edit_options"),
-        "javascript:void(0)",
-        :onclick=>"PortalComponents.renderEditEResourceOptions(#{eresources_edit_options_props('edit_eresource_options', @external_activity).to_json}, 'edit_eresource_options')",
-        :class=>"button"
-      #edit_eresource_options
 
   -#messgeedit This is edit lara activity page
   %h3.menu
