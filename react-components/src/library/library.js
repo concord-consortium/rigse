@@ -40,7 +40,6 @@ import EditMaterialsCollectionList from './components/materials-collection/edit-
 import JoinClass from './components/portal-students/join-class'
 import StudentRoster from './components/portal-classes/student-roster'
 import AutoSuggest from './components/search/auto-suggest'
-import EditEResourceOptions from './components/eresources/edit-options'
 import StandardsTable from './components/standards/standards-table'
 import StemFinderResultStandards from './components/stem-finder-result-standards'
 import BrowsePage from './components/browse-page/browse-page'
@@ -313,11 +312,6 @@ window.PortalComponents = {
   ResourceProjects: ResourceProjects,
   renderResourceProjects: function (options, id) {
     render(React.createElement(ResourceProjects, options), id)
-  },
-
-  EditEResourceOptions: EditEResourceOptions,
-  renderEditEResourceOptions: function (options, id) {
-    render(React.createElement(EditEResourceOptions, options), id)
   },
 
   showTab: showTab
