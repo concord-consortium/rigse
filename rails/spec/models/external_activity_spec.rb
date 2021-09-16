@@ -103,6 +103,8 @@ describe ExternalActivity do
     let(:standard_statement) { FactoryBot.create(:standard_statement, material_id: activity.id) }
     let(:cohort) { FactoryBot.create(:admin_cohort) }
     let(:host) { "http://some.test.url.com" }
+    let(:report_a) { ExternalReport.create() }
+    let(:report_b) { ExternalReport.create() }
 
     before(:each) do
       user1.add_role_for_project('admin', project1)
@@ -122,6 +124,7 @@ describe ExternalActivity do
       activity.author_url = host + '/activity/1/edit'
       activity.template = template
       activity.material_property_list = ['material_prop1', 'material_prop2']
+      activity.external_reports = [report_a, report_b]
       activity.grade_level_list = ['gradel1', 'gradel2']
       activity.subject_area_list = ['sa1', 'sa2']
       activity.sensor_list = ['sensor1', 'sensor2']
@@ -157,6 +160,7 @@ describe ExternalActivity do
 
     it "should copy tags" do
       expect(clone.material_property_list).to eq(activity.material_property_list)
+      expect(clone.external_reports).to eq(activity.external_reports)
       expect(clone.grade_level_list).to eq(activity.grade_level_list)
       expect(clone.subject_area_list).to eq(activity.subject_area_list)
       expect(clone.sensor_list).to eq(activity.sensor_list)

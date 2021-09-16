@@ -223,6 +223,7 @@ class ExternalActivity < ApplicationRecord
 
     # Copy rest of the activity properties.
     clone.material_property_list = material_property_list
+    clone.external_reports = external_reports
     clone.grade_level_list = grade_level_list
     clone.subject_area_list = subject_area_list
     clone.sensor_list = sensor_list
