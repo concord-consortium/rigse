@@ -18,6 +18,11 @@ namespace :app do
 
     desc "add report service firebase app"
     task :add_report_service_firebase_app => :environment do
+      if (FirebaseApp.where(name: "report-service-dev").exists?)
+        # we skip the rest of this if the firebase app already exists
+        next
+      end
+
       # this separator stuff is so a multiline string can be pasted into
       # the highline ask command
       old_sep = $/
@@ -92,7 +97,26 @@ namespace :app do
       # The convention is the source_type is ActivityPlayer.
     end
 
-    task :local_setup => [:create_default_external_reports, :add_report_service_firebase_app, 'sso:add_dev_client']
+    desc "create default tools"
+    task :create_default_tools => :environment do
+      lara_domain = ENV['LARA_DOMAIN'].blank? ? 'app.lara.docker' : ENV['LARA_DOMAIN']
+
+      Tool.where(name: "LARA").first_or_create(
+        name: "LARA",
+        source_type: "LARA",
+        tool_id: "https://#{lara_domain}",
+        remote_duplicate_url: "https://#{lara_domain}/remote_duplicate"
+      )
+
+      Tool.where(name: "ActivityPlayer").first_or_create(
+        name: "ActivityPlayer",
+        source_type: "ActivityPlayer",
+        tool_id: "https://activity-player.concord.org",
+        remote_duplicate_url: "https://#{lara_domain}/remote_duplicate"
+      )
+    end
+
+    task :local_setup => [:create_default_external_reports, :add_report_service_firebase_app, :create_default_tools, 'sso:add_dev_client']
 
     #######################################################################
     #
