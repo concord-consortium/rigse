@@ -24,9 +24,24 @@ class API::V1::ExternalActivitiesController < API::APIController
       return error("Invalid url", 422)
     end
 
+    type = params.require(:type)
+    case type
+    when "Activity"
+      material_type = "Activity"
+    when "Investigation", "Sequence"
+      material_type = "Investigation"
+    else
+      material_type = nil
+    end
+
+    if !material_type
+      return error("Invalid material type", 422)
+    end
+
     external_activity = ExternalActivity.create(
       :name                   => name,
       :url                    => url,
+      :material_type          => material_type,
       :publication_status     => params[:publication_status] || "published",
       :user                   => user,
       :append_auth_token      => params[:append_auth_token] || false,
