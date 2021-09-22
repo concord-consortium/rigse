@@ -90,52 +90,30 @@ With the following settings you can:
 1. in the Portal: `cp .env-osx-sample .env`
 2. in the Portal `.env` set `PORTAL_PROTOCOL=https`
 3. start up the Portal: `docker-compose up`
-4. in the Portal, as an administrator:
-    1. Add a Firebase App for report-service-dev, copy the values for the report-service-dev firebase app in learn.staging.concord.org
-    2. Add a new "Auth Client" for the portal-report:
-        ```
-        Name: 'Portal Report SPA'
-        App Id: 'portal-report'
-        App Secret: (leave default value, this isn't used)
-        Client Type: public
-        Site Url: 'https://portal-report.concord.org'
-        Allowed Domains: 'portal-report.concord.org'
-        Allowed URL Redirects: 'https://portal-report.concord.org/branch/master/index.html'
-        ```
-   3. Update the external report called DEFAULT_REPORT_SERVICE. It should have a URL of: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username **Replace `username` with the username on your local system. If you don't know your username, run `echo $USER`**.
-4. in LARA: `cp .env-osx-sample .env`
-5. in LARA `.env`:
+4. Add a Firebase App for report-service-dev with `docker-compose exec app bundle exec app:setup:add_report_service_firebase_app`, it will ask for the "private_key", paste in the private key from report-service-dev firebase app in learn.staging.concord.org
+5. in LARA: `cp .env-osx-sample .env`
+6. in LARA `.env`:
     1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env-osx-sample file)
     2. set `LARA_PROTOCOL=https`
     3. set `PORTAL_PROTOCOL=https`
-6. start up LARA: `docker-compose up`
-7. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
-with this portal user. And then either:
-    - use the rails console in LARA to set the `is_admin` flag of the newly created user.
-    - use an existing admin in LARA to make the new user an admin.
-8. Setup Activity Player support
-    1. Add a Tool to the portal with:
-        ```
-        Name: ActivityPlayer
-        Source Type: ActivityPlayer
-        Tool ID: https://activity-player.concord.org
-        ```
-    2. Make an external report. In the Url field below replace the `username` in the sourceKey parameter with your local username:
-        ```
-        Name: AP Report
-        Url: https://portal-report.concord.org/branch/master/index.html?sourceKey=app.lara.docker.username&answersSourceKey=activity-player.concord.org
-        Launch text: AP Report
-        Client: DEFAULT_REPORT_SERVICE_CLIENT
-        Report Type: offering
-        Allowed For Students: true
-        Default Report For Source Type:
-        Report available for individual students: true
-        Report available for individual activities: true
-        Use Query JWT: false
-        Move Students API URL:
-        Move Students API Token:
-        ```
-    3. Add this AP Report external report to each AP resource you publish the portal from LARA.
+7. start up LARA: `docker-compose up`
+8. Setup admin access to LARA using a portal SSO login:
+    1. Go to https://app.lara.docker
+    2. Click log in, and choose "localhost"
+    3. This will take you to the portal (app.portal.docker)
+    4. Log in with `admin`, `password`
+    5. You are no logged in with admin@concord.org in LARA, however this user is not actually an admin in LARA
+    6. Run the following command in terminal in the LARA folder: `docker-compose exec app bundle exec rake lightweight:admin_last_user`
+
+Notes:
+- LARA runtime activities published to the portal will automatically have report buttons for teachers and students
+- AP runtime activities published to the portal will not have report buttons for teachers and students. You must add
+  external reports in the "portal settings" of the portal for the newly published resource
+- The "show my work" button in the AP will not work by default when running locally like this. It will not
+  add a correct sourceKey parameter for the portal-report URL it generates. Hopefully this will be fixed soon.
+- The portal will not be configured with the same settings as learn.concord.org for the home page.
+  To see this locally you should look at the settings on learn.staging.concord.org and copy those settings
+  to your local portal settings.
 
 ##### Updating an existing setup
 
@@ -224,7 +202,7 @@ When you run the portal-report if you just see a spinner. Here are some steps to
         In this case, you need to unescape the activity parameter. Then take the value of the activity param and remove the `/api/v1` and remove the `.json` at the end. The result of that transformation snould exactly match what is in `url` field in firestore.
         - if this is a AP runtime sequence follow the directions for AP activity above except the parameter name is `sequence` instead of `activity`
     5. To fix the `http:` instead of `https:` problem make sure your `LARA_PROTOCOL` is set to `https` in your lara `.env` file. Then update your lara container with `docker-compose up`. And then make a change to the LARA activity or sequence to republish it. Verify the `url` field in firestore has been updated.
-    
+
 #### Virtual host settings (currently used for automation)
 If you want to change the portal url from "app.portal.docker" to "learn.dev.docker", please follow the below steps:
 1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker

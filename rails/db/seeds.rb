@@ -147,24 +147,11 @@ def create_settings
 end
 
 
-def create_spa_report_client
-  Client.where(name: "Portal Report SPA").first_or_create(
-    name: "Portal Report SPA",
-    app_id: "portal-report",
-    app_secret: SecureRandom.uuid(),
-    client_type: "public",
-    site_url: "https://portal-report.concord.org",
-    domain_matchers: "portal-report.concord.org",
-    redirect_uris: "https://portal-report.concord.org/branch/master/index.html"
-  )
-end
-
 create_district_school
 create_roles
 create_default_users
 create_grades
 create_settings
-create_spa_report_client
 
 # populate Countries table
 Portal::Country.from_csv_file

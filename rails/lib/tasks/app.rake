@@ -48,8 +48,18 @@ namespace :app do
         client_type: "public"
       )
 
+      Client.where(name: "Portal Report SPA").first_or_create(
+        name: "Portal Report SPA",
+        app_id: "portal-report",
+        app_secret: SecureRandom.uuid(),
+        client_type: "public",
+        site_url: "https://portal-report.concord.org",
+        domain_matchers: "portal-report.concord.org",
+        redirect_uris: "https://portal-report.concord.org/branch/master/index.html"
+      )
+
       ExternalReport.where(name: "DEFAULT_REPORT_SERVICE").first_or_create(
-        url: "http://portal-report.concord.org/branch/master/index.html?sourceKey=#{lara_tool_id}",
+        url: "https://portal-report.concord.org/branch/master/index.html?sourceKey=#{lara_tool_id}",
         launch_text: "Report",
         client_id: auth_client.id,
         report_type: "offering",
@@ -61,7 +71,7 @@ namespace :app do
       )
 
       ExternalReport.where(name: "Class Dashboard").first_or_create(
-        url: "http://portal-report.concord.org/branch/master/index.html?portal-dashboard&sourceKey=#{lara_tool_id}",
+        url: "https://portal-report.concord.org/branch/master/index.html?portal-dashboard&sourceKey=#{lara_tool_id}",
         launch_text: "Class Dashboard",
         client_id: auth_client.id,
         report_type: "offering",
@@ -72,7 +82,7 @@ namespace :app do
       )
 
       ExternalReport.where(name: "AP Class Dashboard").first_or_create(
-        url: "http://portal-report.concord.org/branch/master/index.html?portal-dashboard&sourceKey=#{lara_tool_id}&answersSourceKey=activity-player.concord.org",
+        url: "https://portal-report.concord.org/branch/master/index.html?portal-dashboard&sourceKey=#{lara_tool_id}&answersSourceKey=activity-player.concord.org",
         launch_text: "Class Dashboard",
         client_id: auth_client.id,
         report_type: "offering",
@@ -83,7 +93,7 @@ namespace :app do
       )
 
       ExternalReport.where(name: "AP Report").first_or_create(
-        url: "http://portal-report.concord.org/branch/master/index.html?sourceKey=#{lara_tool_id}&answersSourceKey=activity-player.concord.org",
+        url: "https://portal-report.concord.org/branch/master/index.html?sourceKey=#{lara_tool_id}&answersSourceKey=activity-player.concord.org",
         launch_text: "Report",
         client_id: auth_client.id,
         report_type: "offering",
@@ -116,7 +126,7 @@ namespace :app do
       )
     end
 
-    task :local_setup => [:create_default_external_reports, :add_report_service_firebase_app, :create_default_tools, 'sso:add_dev_client']
+    task :local_setup => [:create_default_external_reports, :create_default_tools, 'sso:add_dev_client']
 
     #######################################################################
     #
