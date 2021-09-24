@@ -102,7 +102,7 @@ With the following settings you can:
     2. Click log in, and choose "localhost"
     3. This will take you to the portal (app.portal.docker)
     4. Log in with `admin`, `password`
-    5. You are no logged in with admin@concord.org in LARA, however this user is not actually an admin in LARA
+    5. You are now logged in with admin@concord.org in LARA, however this user is not actually an admin in LARA
     6. Run the following command in terminal in the LARA folder: `docker-compose exec app bundle exec rake lightweight:admin_last_user`
 
 Notes:
