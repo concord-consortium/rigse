@@ -11,13 +11,14 @@ namespace :sso do
 
   desc "add a new single signon dev test client"
   task :add_dev_client => :environment do
-    Client.create(
-        :name       => 'localhost',
-        :app_id     => 'localhost',
+    lara_domain = ENV['LARA_DOMAIN'].blank? ? 'app.lara.docker' : ENV['LARA_DOMAIN']
+    Client.where(name: 'authoring').first_or_create(
+        :name       => 'authoring',
+        :app_id     => 'authoring',
         :app_secret => 'unsecure local secret',
-        :site_url   => 'https://app.lara.docker',
+        :site_url   => "https://#{lara_domain}",
         :client_type => 'confidential',
-        :redirect_uris => 'https://app.lara.docker/users/auth/cc_portal_localhost/callback'
+        :redirect_uris => "https://#{lara_domain}/users/auth/cc_portal_localhost/callback"
     )
   end
 

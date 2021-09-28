@@ -139,6 +139,11 @@ services:
 
       VIRTUAL_HOST: "${PORTAL_HOST:-app.portal.docker}"
 
+      # These are used for initialization code which creates external reports, and auth clients
+      # They aren't needed at runtime
+      LARA_DOMAIN: "${LARA_DOMAIN:-app.lara.docker}"
+      LARA_TOOL_ID: "${LARA_DOMAIN:-app.lara.docker}.${USER}"
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
