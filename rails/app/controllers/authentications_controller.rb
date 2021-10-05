@@ -78,7 +78,12 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
       @user.require_portal_user_type = !current_visitor.has_portal_user_type?
       sign_in_and_redirect @user, :event => :authentication
     rescue => e
-      set_flash_message :alert, :failure, kind: OmniAuth::Utils.camelize(env["omniauth.strategy"].name), reason: "a user with that email from that provider already exists. #{e.message}"
+      # Record this exception so we can figure out what is going wrong
+      ExceptionNotifier.notify_exception(
+        e,
+        env: request.env
+      )
+      set_flash_message :alert, :failure, kind: OmniAuth::Utils.camelize(request.env["omniauth.strategy"].name), reason: "a user with that email from that provider already exists. #{e.message}"
       redirect_to after_omniauth_failure_path_for(resource_name)
     end
   end
