@@ -79,6 +79,7 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, :event => :authentication
     rescue => e
       # Record this exception so we can figure out what is going wrong
+      auth = omniauth
       extra_first_name = auth&.extra&.first_name
       info_first_name = auth&.info&.first_name
       extra_last_name = auth&.extra&.last_name
