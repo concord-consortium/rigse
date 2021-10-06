@@ -87,12 +87,14 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
         e,
         env: request.env,
         data: {
-          extra_first_name: extra_first_name, 
+          extra_first_name: extra_first_name,
           info_first_name: info_first_name,
           extra_last_name: extra_last_name,
           info_last_name: info_last_name,
           first_name_64: Base64.encode64(extra_first_name  || info_first_name || ''),
-          last_name_64: Base64.encode64(extra_last_name || info_last_name || '')
+          last_name_64: Base64.encode64(extra_last_name || info_last_name || ''),
+          provider: auth&.provider,
+          uid: auth&.uid
         }
       )
       set_flash_message :alert, :failure, kind: OmniAuth::Utils.camelize(request.env["omniauth.strategy"].name), reason: "a user with that email from that provider already exists. #{e.message}"
