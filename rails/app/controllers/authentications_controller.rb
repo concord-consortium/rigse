@@ -79,9 +79,21 @@ class AuthenticationsController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, :event => :authentication
     rescue => e
       # Record this exception so we can figure out what is going wrong
+      extra_first_name = auth&.extra&.first_name
+      info_first_name = auth&.info&.first_name
+      extra_last_name = auth&.extra&.last_name
+      info_last_name = auth&.info&.last_name
       ExceptionNotifier.notify_exception(
         e,
-        env: request.env
+        env: request.env,
+        data: {
+          extra_first_name: extra_first_name, 
+          info_first_name: info_first_name,
+          extra_last_name: extra_last_name,
+          info_last_name: info_last_name,
+          first_name_64: Base64.encode64(extra_first_name  || info_first_name || ''),
+          last_name_64: Base64.encode64(extra_last_name || info_last_name || '')
+        }
       )
       set_flash_message :alert, :failure, kind: OmniAuth::Utils.camelize(request.env["omniauth.strategy"].name), reason: "a user with that email from that provider already exists. #{e.message}"
       redirect_to after_omniauth_failure_path_for(resource_name)
