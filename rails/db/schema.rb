@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_30_143935) do
+ActiveRecord::Schema.define(version: 2021_10_07_152345) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1961,6 +1961,7 @@ ActiveRecord::Schema.define(version: 2021_08_30_143935) do
     t.boolean "can_add_teachers_to_cohorts", default: false
     t.datetime "reset_password_sent_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email"
     t.index ["id"], name: "index_users_on_id_and_type"
     t.index ["login"], name: "index_users_on_login", unique: true
   end
