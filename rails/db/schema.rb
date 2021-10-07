@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_07_152345) do
+ActiveRecord::Schema.define(version: 2021_10_07_180858) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2021_10_07_152345) do
     t.datetime "updated_at", null: false
     t.integer "learner_id"
     t.integer "teacher_id"
+    t.index ["access_token"], name: "index_access_grants_on_access_token"
     t.index ["client_id"], name: "index_access_grants_on_client_id"
     t.index ["learner_id"], name: "index_access_grants_on_learner_id"
     t.index ["teacher_id"], name: "index_access_grants_on_teacher_id"
@@ -187,6 +188,7 @@ ActiveRecord::Schema.define(version: 2021_10_07_152345) do
     t.string "uid"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_authentications_on_provider_and_uid"
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
 
