@@ -246,8 +246,13 @@ class User < ApplicationRecord
         user = User.create!(
           login:        login,
           email:        email,
-          first_name:   auth.extra.first_name   || auth.info.first_name,
-          last_name:    auth.extra.last_name    || auth.info.last_name,
+          # Some schools are leaving their students first or last names blank.
+          # The portal and reports assume a student has both names, so we are using
+          # Unknown in this case.
+          # In the future we might want to change our systems to support the case of a
+          # blank name.
+          first_name:   auth.extra.first_name   || auth.info.first_name || 'Unknown',
+          last_name:    auth.extra.last_name    || auth.info.last_name || 'Unknown',
           password: pw,
           password_confirmation: pw,
           skip_notifications: true
