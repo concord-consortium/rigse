@@ -448,7 +448,7 @@ describe User do
         expect(new_user.first_name).to eq("Fake")
         expect(new_user.last_name).to eq("Name")
       end
-      context "when the provided user has no last name" do
+      context "when the provided user has no first name" do
         let(:mock_auth) {
           double(provider: "fake_provider", uid: "fake_uid",
             info: double(email: "fake_email@example.com", first_name: nil),
@@ -460,7 +460,7 @@ describe User do
           expect(new_user.last_name).to eq("Name")
         end
       end
-      context "when the provided user has no first name" do
+      context "when the provided user has no last name" do
         let(:mock_auth) {
           double(provider: "fake_provider", uid: "fake_uid",
             info: double(email: "fake_email@example.com", last_name: nil),
