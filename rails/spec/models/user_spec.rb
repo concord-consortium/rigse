@@ -448,6 +448,30 @@ describe User do
         expect(new_user.first_name).to eq("Fake")
         expect(new_user.last_name).to eq("Name")
       end
+      context "when the provided user has no first name" do
+        let(:mock_auth) {
+          double(provider: "fake_provider", uid: "fake_uid",
+            info: double(email: "fake_email@example.com", first_name: nil),
+            extra: double(first_name: nil, last_name: "Name"))
+        }
+        it "creates a new user" do
+          new_user = User.find_for_omniauth(mock_auth)
+          expect(new_user.first_name).to eq("Unknown")
+          expect(new_user.last_name).to eq("Name")
+        end
+      end
+      context "when the provided user has no last name" do
+        let(:mock_auth) {
+          double(provider: "fake_provider", uid: "fake_uid",
+            info: double(email: "fake_email@example.com", last_name: nil),
+            extra: double(first_name: "Fake", last_name: nil))
+        }
+        it "creates a new user" do
+          new_user = User.find_for_omniauth(mock_auth)
+          expect(new_user.first_name).to eq("Fake")
+          expect(new_user.last_name).to eq("Unknown")
+        end
+      end
     end
 
   end
