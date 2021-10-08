@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_07_180858) do
+ActiveRecord::Schema.define(version: 2021_10_08_153150) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -25,7 +25,9 @@ ActiveRecord::Schema.define(version: 2021_10_07_180858) do
     t.integer "learner_id"
     t.integer "teacher_id"
     t.index ["access_token"], name: "index_access_grants_on_access_token"
+    t.index ["access_token_expires_at"], name: "index_access_grants_on_access_token_expires_at"
     t.index ["client_id"], name: "index_access_grants_on_client_id"
+    t.index ["code", "client_id"], name: "index_access_grants_on_code_and_client_id"
     t.index ["learner_id"], name: "index_access_grants_on_learner_id"
     t.index ["teacher_id"], name: "index_access_grants_on_teacher_id"
     t.index ["user_id"], name: "index_access_grants_on_user_id"
@@ -1748,6 +1750,7 @@ ActiveRecord::Schema.define(version: 2021_10_07_180858) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "iframe_id"
+    t.index ["learner_id"], name: "index_saveable_interactives_on_learner_id"
   end
 
   create_table "saveable_multiple_choice_answers", id: :integer, charset: "utf8", force: :cascade do |t|
