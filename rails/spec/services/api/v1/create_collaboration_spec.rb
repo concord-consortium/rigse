@@ -80,22 +80,52 @@ describe API::V1::CreateCollaboration do
     end
 
     context "when offering is an external activity" do
-      before do
-        offering.runnable = FactoryBot.create(:external_activity)
-        offering.save!
+      context "without append_auth_token set" do
+        before do
+          offering.runnable = FactoryBot.create(:external_activity)
+          offering.save!
+        end
+
+        it "should also generate external activity URL" do
+          create_collaboration = API::V1::CreateCollaboration.new(params)
+          result = create_collaboration.call
+          ea_url = result[:external_activity_url]
+          expect(ea_url).not_to be_nil
+          uri = URI.parse(ea_url)
+          query = URI.decode_www_form(uri.query)
+          data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
+          domain_param = ['domain', domain]
+          logging_param = ["logging", "false"]
+          expect(query).to match_array([data_url_param, domain_param, logging_param])
+        end
       end
 
-      it "should also generate external activity URL" do
-        create_collaboration = API::V1::CreateCollaboration.new(params)
-        result = create_collaboration.call
-        ea_url = result[:external_activity_url]
-        expect(ea_url).not_to be_nil
-        uri = URI.parse(ea_url)
-        query = URI.decode_www_form(uri.query)
-        data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
-        domain_param = ['domain', domain]
-        logging_param = ["logging", "false"]
-        expect(query).to match_array([data_url_param, domain_param, logging_param])
+      context "with append_auth_token set" do
+        before do
+          offering.runnable = FactoryBot.create(:external_activity, {:append_auth_token => true})
+          offering.save!
+        end
+
+        it "should also generate external activity URL with token and domain_uid" do
+          create_collaboration = API::V1::CreateCollaboration.new(params)
+          result = create_collaboration.call
+          ea_url = result[:external_activity_url]
+          expect(ea_url).not_to be_nil
+          uri = URI.parse(ea_url)
+          query = URI.decode_www_form(uri.query)
+
+          # since the token value is dynamic test directly and remove from match_array test below
+          # this assumes the token is the last parameter in the url
+          token_param, token = query.pop()
+          expect(token_param).to eq("token")
+          expect(token).not_to be_nil
+
+          data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
+          domain_param = ['domain', domain]
+          logging_param = ["logging", "false"]
+          domain_uid_param = ["domain_uid", "#{student1.user.id}"]
+          expect(query).to match_array([data_url_param, domain_param, logging_param, domain_uid_param])
+        end
       end
     end
 

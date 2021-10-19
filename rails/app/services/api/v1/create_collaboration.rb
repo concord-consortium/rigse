@@ -72,6 +72,16 @@ class API::V1::CreateCollaboration
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
 
       external_activity_url = add_param(external_activity_url, 'logging', @offering.clazz.logging)
+
+      # append authentication token info if needed
+      if @offering.runnable.append_auth_token
+        AccessGrant.prune!
+        token = @owner_learner.user.create_access_token_with_learner_valid_for(3.minutes, @owner_learner)
+        # add domain_uid first so we can pop the token off in the tests
+        external_activity_url = add_param(external_activity_url, 'domain_uid', @owner_learner.user.id)
+        external_activity_url = add_param(external_activity_url, 'token', token)
+      end
+
       result[:external_activity_url] = external_activity_url
     end
     result
