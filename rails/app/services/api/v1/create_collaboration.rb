@@ -69,6 +69,9 @@ class API::V1::CreateCollaboration
       # Domain is needed by LARA to authenticate correctly.
       external_activity_url = add_param(external_activity_url, 'domain', root_url(protocol: self.protocol,
                                                                                   host:     self.host_with_port))
+      # add domain_uid for both AP launches and future SSO implementations
+      external_activity_url = add_param(external_activity_url, 'domain_uid', @owner_learner.user.id)
+
       external_activity_url = add_param(external_activity_url, 'collaborators_data_url', collaborators_data_url)
 
       external_activity_url = add_param(external_activity_url, 'logging', @offering.clazz.logging)
@@ -77,8 +80,6 @@ class API::V1::CreateCollaboration
       if @offering.runnable.append_auth_token
         AccessGrant.prune!
         token = @owner_learner.user.create_access_token_with_learner_valid_for(3.minutes, @owner_learner)
-        # add domain_uid first so we can pop the token off in the tests
-        external_activity_url = add_param(external_activity_url, 'domain_uid', @owner_learner.user.id)
         external_activity_url = add_param(external_activity_url, 'token', token)
       end
 

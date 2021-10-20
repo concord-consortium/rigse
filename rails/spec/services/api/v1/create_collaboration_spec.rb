@@ -95,8 +95,9 @@ describe API::V1::CreateCollaboration do
           query = URI.decode_www_form(uri.query)
           data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
           domain_param = ['domain', domain]
+          domain_uid_param = ["domain_uid", "#{student1.user.id}"]
           logging_param = ["logging", "false"]
-          expect(query).to match_array([data_url_param, domain_param, logging_param])
+          expect(query).to match_array([data_url_param, domain_param, domain_uid_param, logging_param])
         end
       end
 
@@ -106,7 +107,7 @@ describe API::V1::CreateCollaboration do
           offering.save!
         end
 
-        it "should also generate external activity URL with token and domain_uid" do
+        it "should also generate external activity URL with a token" do
           create_collaboration = API::V1::CreateCollaboration.new(params)
           result = create_collaboration.call
           ea_url = result[:external_activity_url]
@@ -122,9 +123,9 @@ describe API::V1::CreateCollaboration do
 
           data_url_param = ['collaborators_data_url', result[:collaborators_data_url]]
           domain_param = ['domain', domain]
-          logging_param = ["logging", "false"]
           domain_uid_param = ["domain_uid", "#{student1.user.id}"]
-          expect(query).to match_array([data_url_param, domain_param, logging_param, domain_uid_param])
+          logging_param = ["logging", "false"]
+          expect(query).to match_array([data_url_param, domain_param, domain_uid_param, logging_param])
         end
       end
     end
