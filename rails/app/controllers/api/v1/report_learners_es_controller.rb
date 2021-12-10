@@ -126,6 +126,7 @@ class API::V1::ReportLearnersEsController < API::APIController
   #       When this API is called, every doc returned by ES has a unique sort value. The last document's sort
   #       value is returned by this API as `lastHitSortValue`. Passing this same value in as `search_after`
   #       will resulting in fetching the next page of results. See the external-report-demo for an example.
+  # @param endpoint_only (optional): don't return full learner records, just the endpoints
   def external_report_learners_from_jwt
     authorize Portal::PermissionForm
 
@@ -134,6 +135,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     query = params["query"] || {}
     page_size = params["page_size"].to_i
     search_after = params["search_after"] || nil
+    endpoint_only = params["endpoint_only"] || false
 
     if (page_size == nil || page_size < 1)
       return error "param page_size must be a positive number", 400
@@ -143,15 +145,33 @@ class API::V1::ReportLearnersEsController < API::APIController
 
     query[:size_limit] = page_size
 
-    learner_selector = Report::Learner::Selector.new(query, current_user, {
-      learner_type: :elasticsearch,
-      search_after: search_after
-    })
-
+    learners = []
+    # endpoint_only doesn't include all the learner data, just the remote endpoint.
+    # should result in a faster response. Used for learner logs usually.
+    if endpoint_only
+      learner_selector = Report::Learner::Selector.new(query, current_user, {
+        learner_type: :endpoint_only,
+        search_after: search_after
+      })
+      learners = learner_selector.es_learners.map do |l|
+        {
+          learner_id: l.learner_id,
+          run_remote_endpoint: l.remote_endpoint,
+          runnable_url: l.runnable_url
+        }
+      end
+    # Response should include learner metadata (names, schools, email ...)
+    else
+      learner_selector = Report::Learner::Selector.new(query, current_user, {
+        learner_type: :elasticsearch,
+        search_after: search_after
+      })
+      learners = learner_selector.es_learners.map {|l| self.class.detailed_learner_info l}
+    end
     response = {
       json: {
         version: "1",
-        learners: learner_selector.es_learners.map {|l| self.class.detailed_learner_info l},
+        learners: learners,
         lastHitSortValue: learner_selector.last_hit_sort_value
       }
     }

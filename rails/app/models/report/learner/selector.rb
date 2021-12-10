@@ -39,6 +39,14 @@ class Report::Learner::Selector
           es_learner.user = users[es_learner.user_id]
           es_learner
         }
+      elsif (learner_type == :endpoint_only)
+        @es_learners = hits.map do |h|
+          OpenStruct.new({
+            learner_id: h['_source']['learner_id'],
+            remote_endpoint_url: h['_source']['remote_endpoint_url'],
+            runnable_url: h['_source']['runnable_url']
+          })
+        end
       end
       @runnable_names = hits.map { |h| h['_source']['runnable_type_and_id'] }
       @runnable_names = @runnable_names.uniq
