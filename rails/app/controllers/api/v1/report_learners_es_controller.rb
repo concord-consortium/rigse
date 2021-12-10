@@ -156,7 +156,7 @@ class API::V1::ReportLearnersEsController < API::APIController
       learners = learner_selector.es_learners.map do |l|
         {
           learner_id: l.learner_id,
-          run_remote_endpoint: l.remote_endpoint,
+          run_remote_endpoint: l.remote_endpoint_url,
           runnable_url: l.runnable_url
         }
       end

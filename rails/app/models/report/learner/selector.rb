@@ -34,11 +34,11 @@ class Report::Learner::Selector
       elsif (learner_type == :elasticsearch)
         user_ids = hits.map { |h| h['_source']['user_id'] }.uniq
         users = User.select(:id, :login, :first_name, :last_name).find(user_ids).index_by(&:id)
-        @es_learners = hits.map { |h|
+        @es_learners = hits.map do |h|
           es_learner = OpenStruct.new(h['_source'])
           es_learner.user = users[es_learner.user_id]
           es_learner
-        }
+        end
       elsif (learner_type == :endpoint_only)
         @es_learners = hits.map do |h|
           OpenStruct.new({
