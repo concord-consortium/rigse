@@ -467,6 +467,7 @@ describe API::V1::ReportLearnersEsController do
               expect(learner).not_to include("class_id")
               expect(learner).to include("learner_id")
               expect(learner).to include("run_remote_endpoint")
+              expect(learner).to include("runnable_url")
             end
           end
         end
