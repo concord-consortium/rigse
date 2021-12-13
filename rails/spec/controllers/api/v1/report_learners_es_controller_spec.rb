@@ -450,6 +450,28 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"][1]["teachers"][0]["user_id"].to_i).to eq teacher2.id
           expect(filter["learners"][1]["teachers"][1]["user_id"].to_i).to eq teacher1.id
         end
+
+        describe "with `endpoint_only` parameter passed in" do
+          it "renders a smaller response that does not include names or teachers" do
+            get :external_report_learners_from_jwt,
+              params: {:query => {}, :page_size => 1000, :endpoint_only => true}
+            resp = JSON.parse(response.body)
+            filter = resp["json"]
+            learners = filter["learners"]
+            expect(learners.length).to eq 3
+            learners.each do |learner|
+              expect(learner["learner_id"].to_i).to be_an_instance_of(Integer)
+              expect(learner).not_to include("student_name")
+              expect(learner).not_to include("username")
+              expect(learner).not_to include("teachers")
+              expect(learner).not_to include("class_id")
+              expect(learner).to include("learner_id")
+              expect(learner).to include("run_remote_endpoint")
+              expect(learner).to include("runnable_url")
+              expect(learner["run_remote_endpoint"]).not_to eq nil
+            end
+          end
+        end
       end
 
       describe "GET external_report_learners_from_jwt with incorrect page_size" do
