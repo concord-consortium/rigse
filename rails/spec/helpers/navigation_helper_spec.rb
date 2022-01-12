@@ -95,6 +95,7 @@ describe NavigationHelper, type: :helper  do
     subject { JSON.pretty_generate(helper.navigation_service(params).to_hash) }
 
     it "should include class links" do
+      fake_teacher.reload
       fake_clazzes.each do |clazz|
         expect(subject).to match %r{"url": "/portal/classes/#{clazz.id}"}
       end

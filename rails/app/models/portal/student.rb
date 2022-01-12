@@ -152,6 +152,13 @@ class Portal::Student < ApplicationRecord
     self.clazzes.detect { |cl| cl.id == clazz.id }
   end
 
+  def active_clazzes
+    Portal::Clazz
+      .joins(:student_clazzes, :teacher_clazzes)
+      .where(teacher_clazzes: { active: true })
+      .where(student_clazzes: { student_id: id })
+  end
+
   def add_clazz(clazz)
     unless self.has_clazz?(clazz)
       self.clazzes << clazz

@@ -145,7 +145,7 @@ module NavigationHelper
   end
 
   def clazz_links_for_student
-    clazzes = current_visitor.portal_student.clazzes
+    clazzes = current_visitor.portal_student.active_clazzes
     clazz_links = []
     clazzes.each do |clazz|
       clazz_links << {
