@@ -1,7 +1,7 @@
 - content_for :lightboxes do
   = render :partial => 'shared/lightbox_report'
 - unless current_visitor.anonymous?
-  %h3 Classes and Offerings:
+  %h3 Classes and Offerings
   = render :partial => 'portal/clazzes/list_for_student', :locals => { :portal_student => portal_student }
   - # note: there is a default value for the poll interval in the javascript
   - #       timestamp is generated on server, as it more reliable
