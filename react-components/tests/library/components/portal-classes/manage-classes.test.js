@@ -21,21 +21,21 @@ describe('When I try to render manage classes', () => {
       name: "test class 1",
       classWord: "test_class_1",
       description: "this is a test class 1",
-      active: true,
+      is_archived: false,
     },
     {
       id: 2,
       name: "test class 2",
       classWord: "test_class_2",
       description: "this is a test class 2",
-      active: false
+      is_archived: true
     },
     {
       id: 3,
       name: "test class 3",
       classWord: "test_class_3",
       description: "this is a test class 3",
-      active: true
+      is_archived: false
     }
   ]
 
