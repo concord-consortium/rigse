@@ -38,16 +38,16 @@ export default class ManageClasses extends React.Component {
 
   handleActiveToggle (clazz) {
     const toggle = () => {
-      clazz.active = !clazz.active
+      clazz.is_archived = !clazz.is_archived
       this.setState({ classes: this.state.classes })
     }
 
     toggle()
-    this.apiCall('activeToggle', { clazz, data: { active: clazz.active } })
+    this.apiCall('activeToggle', { clazz, data: { is_archived: clazz.is_archived } })
       .catch(err => {
         // retoggle back on error
         toggle()
-        this.showError(err, 'Unable to toggle active state of the class!')
+        this.showError(err, 'Unable to toggle archived state of the class!')
       })
   }
 
@@ -73,15 +73,16 @@ export default class ManageClasses extends React.Component {
   }
 
   apiCall (action, options) {
-    const basePath = '/api/v1/teacher_classes'
+    const teacherClassesBasePath = '/api/v1/teacher_classes'
+    const classesBasePath = '/api/v1/classes'
     let { clazz, data, onSuccess } = options
 
     clazz = clazz || { id: 0 }
 
     const { url, type } = {
-      copy: { url: `${basePath}/${clazz.id}/copy`, type: 'POST' },
-      sort: { url: `${basePath}/sort`, type: 'POST' },
-      activeToggle: { url: `${basePath}/${clazz.id}/set_active`, type: 'POST' }
+      copy: { url: `${teacherClassesBasePath}/${clazz.id}/copy`, type: 'POST' },
+      sort: { url: `${teacherClassesBasePath}/sort`, type: 'POST' },
+      activeToggle: { url: `${classesBasePath}/${clazz.id}/set_is_archived`, type: 'POST' }
     }[action]
 
     return Promise.resolve(
@@ -112,7 +113,7 @@ export default class ManageClasses extends React.Component {
 
   render () {
     const { classes, copyClazz, saving } = this.state
-    const numActiveClasses = classes.filter(c => c.active).length
+    const numActiveClasses = classes.filter(c => c.is_archived === false).length
     const shouldCancelStart = shouldCancelSorting([ css.sortIcon, css.manageClassName ])
 
     return (

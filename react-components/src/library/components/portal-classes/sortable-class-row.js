@@ -13,10 +13,10 @@ class UnsortableClassRow extends React.Component {
       <div className={css.manageClassRow}>
         <span className={css.iconCell}><span className={`${css.sortIcon} icon-sort`} /></span>
         <span className={css.manageClassName}>
-          {clazz.active ? clazz.name : <strike>{clazz.name}</strike>}
+          {clazz.is_archived ? <strike>{clazz.name}</strike> : clazz.name}
         </span>
         <span className={css.manageClassButtons}>
-          <button className={'textButton'} onClick={handleActiveToggle}>{clazz.active ? 'Archive' : 'Unarchive'}</button>
+          <button className={'textButton'} onClick={handleActiveToggle}>{clazz.is_archived ? 'Unarchive' : 'Archive'}</button>
           <button className={'textButton'} onClick={handleCopy}>Copy</button>
         </span>
       </div>

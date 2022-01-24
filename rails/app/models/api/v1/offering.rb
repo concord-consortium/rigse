@@ -84,6 +84,7 @@ class API::V1::Offering
   attribute :clazz_hash, String
   attribute :clazz_id, Integer
   attribute :clazz_info_url, String
+  attribute :clazz_is_archived, Boolean
   attribute :activity, String
   attribute :activity_url, String
   attribute :material_type, String
@@ -115,6 +116,7 @@ class API::V1::Offering
     self.clazz_hash = offering.clazz.class_hash
     self.clazz_id = offering.clazz.id
     self.clazz_info_url = offering.clazz.class_info_url(protocol, host_with_port)
+    self.clazz_is_archived = offering.clazz.is_archived
     self.activity = offering.name
     self.activity_url = runnable.respond_to?(:url) ? runnable.url : nil
     self.material_type = runnable.material_type

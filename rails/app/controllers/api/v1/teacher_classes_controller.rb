@@ -40,21 +40,6 @@ class API::V1::TeacherClassesController < API::APIController
     render_ok
   end
 
-  def set_active
-    auth = auth_teacher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
-
-    class_ownership = verify_teacher_class_ownership(user, params)
-    return error(class_ownership[:error]) if class_ownership[:error]
-    teacher_clazz = class_ownership[:teacher_clazz]
-
-    teacher_clazz.active = ActiveModel::Type::Boolean.new.cast(params[:active])
-    teacher_clazz.save!
-
-    render_ok
-  end
-
   def copy
     auth = auth_teacher(params)
     return error(auth[:error]) if auth[:error]
