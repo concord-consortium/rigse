@@ -16,11 +16,11 @@ describe NavigationHelper, type: :helper  do
   end
   let(:itsi_project) { double(links: itsi_links)}
   let(:fake_clazzes) { FactoryBot.create_list(:portal_clazz, 3)}
-  let(:fake_inactive_clazz) { FactoryBot.create(:portal_clazz)}
+  let(:fake_inactive_clazz) { FactoryBot.create(:portal_clazz, is_archived: true)}
   let(:fake_student) { FactoryBot.create(:full_portal_student, clazzes: fake_clazzes) }
   let(:fake_teacher) {
     teacher = FactoryBot.create(:portal_teacher, clazzes: fake_clazzes)
-    teacher.teacher_clazzes.create(clazz: fake_inactive_clazz, active: false)
+    teacher.teacher_clazzes.create(clazz: fake_inactive_clazz)
     teacher
   }
   let(:fake_visitor) { fake_student.user }
@@ -41,7 +41,13 @@ describe NavigationHelper, type: :helper  do
         expect(fake_teacher.teacher_clazzes.count).to eq(4)
       end
       it "should have 3 active teacher_clazzes" do
-        expect(fake_teacher.teacher_clazzes.where(active: true).count).to eq(3)
+        active_classes_count = 0;
+        fake_teacher.teacher_clazzes.each do |tc|
+          if !tc.clazz.is_archived
+            active_classes_count = active_classes_count + 1
+          end
+        end
+        expect(active_classes_count).to eq(3)
       end
     end
   end

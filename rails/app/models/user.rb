@@ -562,7 +562,7 @@ class User < ApplicationRecord
   end
 
   def has_active_classes?
-    portal_teacher && (portal_teacher.teacher_clazzes.select{|tc| tc.active }).count > 0
+    portal_teacher && (portal_teacher.clazzes.select{|c| c.is_archived == false }).count > 0
   end
 
   def has_portal_user_type?

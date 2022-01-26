@@ -10,5 +10,5 @@
     #manage-classes-component
     :javascript
       PortalComponents.renderManageClasses({
-        classes: #{@teacher.teacher_clazzes.includes(:clazz).map {|c| {id: c.id, name: c.name, active: c.active, classWord: c.clazz.class_word, description: c.clazz.description}}.to_json}
+        classes: #{@teacher.clazzes.map {|c| {id: c.id, name: c.name, is_archived: c.is_archived, classWord: c.class_word, description: c.description}}.to_json}
       }, 'manage-classes-component');

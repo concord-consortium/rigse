@@ -10,6 +10,9 @@ describe API::V1::ClassesController do
   let(:runnable_c)          { FactoryBot.create(:external_activity, name: 'Test Sequence 2') }
   let(:offering_c)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_c}) }
 
+  let(:other_teacher)       { FactoryBot.create(:portal_teacher) }
+  let(:other_clazz)         { FactoryBot.create(:portal_clazz, name: 'other class', teachers: [other_teacher]) }
+
   describe "GET #show" do
     before (:each) do
       # initialize the clazz
@@ -34,6 +37,29 @@ describe API::V1::ClassesController do
     end
   end
 
+  describe "#set_is_archived" do
+    before :each do
+      sign_in teacher.user
+    end
+
+    it "should fail when id is a class that the teacher doesn't own" do
+      post :set_is_archived, params: { id: other_clazz.id }
+      expect(response).to have_http_status(:bad_request)
+      expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of the requested class"
+    end
+
+    it "should succeed when the id is a class the teacher owns" do
+      post :set_is_archived, params: { id: clazz.id, is_archived: false }
+      clazz.reload
+      expect(response).to have_http_status(:ok)
+      expect(clazz.is_archived).to eq false
+
+      post :set_is_archived, params: { id: clazz.id, is_archived: true }
+      clazz.reload
+      expect(response).to have_http_status(:ok)
+      expect(clazz.is_archived).to eq true
+    end
+  end
 
   # TODO: auto-generated
   describe '#mine' do

@@ -184,10 +184,10 @@ describe Portal::Student do
   end
 
   describe "#active_clazzes" do
-    let!(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash') }
-    let!(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash') }
-    let(:teacher_clazz_1) { FactoryBot.create(:portal_teacher_clazz, clazz: clazz_1, active: true) }
-    let(:teacher_clazz_2) { FactoryBot.create(:portal_teacher_clazz, clazz: clazz_2, active: false) }
+    let!(:clazz_1) { FactoryBot.create(:portal_clazz, class_hash: 'class1hash', is_archived: false) }
+    let!(:clazz_2) { FactoryBot.create(:portal_clazz, class_hash: 'class2hash', is_archived: true) }
+    let(:teacher_clazz_1) { FactoryBot.create(:portal_teacher_clazz, clazz: clazz_1) }
+    let(:teacher_clazz_2) { FactoryBot.create(:portal_teacher_clazz, clazz: clazz_2) }
     let!(:student) { FactoryBot.create(:full_portal_student, clazzes: [clazz_1, clazz_2]) }
 
     it "should return a list of classes the student belongs to that have not been archived by their teacher" do

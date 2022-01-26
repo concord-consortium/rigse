@@ -154,8 +154,8 @@ class Portal::Student < ApplicationRecord
 
   def active_clazzes
     Portal::Clazz
-      .joins(:student_clazzes, :teacher_clazzes)
-      .where(teacher_clazzes: { active: true })
+      .joins(:student_clazzes)
+      .where(is_archived: false )
       .where(student_clazzes: { student_id: id })
       .uniq
   end

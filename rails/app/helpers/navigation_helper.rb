@@ -158,7 +158,7 @@ module NavigationHelper
   end
 
   def clazz_links_for_teacher
-    clazzes = current_visitor.portal_teacher.teacher_clazzes.where(active: true).map { |c| c.clazz }
+    clazzes = current_visitor.portal_teacher.clazzes.where(is_archived: false)
     clazz_links = [
       {
         id: "/classes",

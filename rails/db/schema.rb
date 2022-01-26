@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_08_153150) do
+ActiveRecord::Schema.define(version: 2022_01_21_215039) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -642,6 +642,7 @@ ActiveRecord::Schema.define(version: 2021_10_08_153150) do
     t.boolean "default_class", default: false
     t.boolean "logging", default: false
     t.string "class_hash", limit: 48
+    t.boolean "is_archived", default: false
     t.index ["class_word"], name: "index_portal_clazzes_on_class_word", unique: true
   end
 
@@ -1580,7 +1581,6 @@ ActiveRecord::Schema.define(version: 2021_10_08_153150) do
     t.integer "teacher_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "active", default: true
     t.integer "position", default: 0
     t.index ["clazz_id"], name: "index_portal_teacher_clazzes_on_clazz_id"
     t.index ["teacher_id"], name: "index_portal_teacher_clazzes_on_teacher_id"

@@ -83,6 +83,21 @@ class API::V1::ClassesController < API::APIController
     }
   end
 
+  def set_is_archived
+    auth = auth_teacher(params)
+    return error(auth[:error]) if auth[:error]
+    user = auth[:user]
+
+    class_ownership = verify_teacher_class_ownership(user, params)
+    return error(class_ownership[:error]) if class_ownership[:error]
+
+    clazz = Portal::Clazz.find_by_id(params[:id])
+    clazz.is_archived = ActiveModel::Type::Boolean.new.cast(params[:is_archived])
+    clazz.save!
+
+    render_ok
+  end
+
   private
 
   def render_info(clazz)
@@ -135,6 +150,23 @@ class API::V1::ClassesController < API::APIController
         }
       },
     }
+  end
+
+  def verify_teacher_class_ownership(user, params)
+    clazz = Portal::Clazz.find(params[:id])
+    if !clazz
+      return {error: 'The requested class was not found'}
+    end
+
+    if !clazz.is_teacher?(user)
+      return {error: 'You are not a teacher of the requested class'}
+    end
+
+    return {clazz: clazz}
+  end
+
+  def render_ok
+    render :json => { success: true }, :status => :ok
   end
 
 end

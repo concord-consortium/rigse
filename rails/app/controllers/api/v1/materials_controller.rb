@@ -362,7 +362,7 @@ class API::V1::MaterialsController < API::APIController
     @material = [ExternalActivity.find(params[:material_id])]
 
     teacher_clazzes = current_visitor.portal_teacher.teacher_clazzes.sort{|a,b| a.position <=> b.position}
-    teacher_clazzes = teacher_clazzes.select{|item| item.active == true}
+    teacher_clazzes = teacher_clazzes.select{|item| item.clazz.is_archived == false}
     teacher_clazz_ids = teacher_clazzes.map{|item| item.clazz_id}
 
     teacher_offerings = Portal::Offering.where(:runnable_id=>params[:material_id], :runnable_type=>params[:material_type], :clazz_id=>teacher_clazz_ids)

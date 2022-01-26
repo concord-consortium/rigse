@@ -47,9 +47,9 @@ describe API::V1::TeacherClassesController do
     end
   end
 
-  describe "#sort #set_active #copy" do
+  describe "#sort #copy" do
 
-    [:sort, :set_active, :copy].each do |action|
+    [:sort, :copy].each do |action|
       it "should fail as anonymous" do
         post action, params: {id: 1}
         expect(response).to have_http_status(:bad_request)
@@ -107,30 +107,6 @@ describe API::V1::TeacherClassesController do
       expect(teacher_clazz2.position).to eq 1
       expect(teacher_clazz3.position).to eq 2
       expect(teacher_clazz.position).to eq 3
-    end
-  end
-
-  describe "#set_active" do
-    before :each do
-      sign_in teacher.user
-    end
-
-    it "should fail when id is a class that the teacher doesn't own" do
-      post :set_active, params: { id: other_teacher_clazz.id }
-      expect(response).to have_http_status(:bad_request)
-      expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of the requested class"
-    end
-
-    it "should succeed when the id is a class the teacher owns" do
-      post :set_active, params: { id: teacher_clazz.id, active: true }
-      teacher_clazz.reload
-      expect(response).to have_http_status(:ok)
-      expect(teacher_clazz.active).to eq true
-
-      post :set_active, params: { id: teacher_clazz.id, active: false }
-      teacher_clazz.reload
-      expect(response).to have_http_status(:ok)
-      expect(teacher_clazz.active).to eq false
     end
   end
 

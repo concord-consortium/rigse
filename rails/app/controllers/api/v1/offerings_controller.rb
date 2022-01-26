@@ -63,7 +63,9 @@ class API::V1::OfferingsController < API::APIController
 
     # Apply filtering.
     if class_ids.length > 0
-      offerings = offerings.where(clazz_id: class_ids)
+      include_archived = params[:include_archived].present? || params[:class_id].present?
+      filtered_class_ids = include_archived ? class_ids : Portal::Clazz.where({ id: class_ids, is_archived: false }).uniq
+      offerings = offerings.where(clazz_id: filtered_class_ids)
     end
 
     filtered_offerings = offerings.reject { |o| o.archived? }

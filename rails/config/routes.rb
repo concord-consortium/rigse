@@ -417,6 +417,7 @@ RailsPortal::Application.routes.draw do
         resources :classes, only: [:show] do
           member do
             get :log_links
+            post :set_is_archived
           end
         end
         namespace :classes do
@@ -429,7 +430,6 @@ RailsPortal::Application.routes.draw do
             post :sort
           end
           member do
-            post :set_active
             post :copy
           end
         end
