@@ -1,0 +1,15 @@
+# This is a docker-compose overlay with changes necessary to support GitHub Codespaces.
+# As of June 21, 2022, it only publishes the app port. More changes might be necessary in the future.
+
+# A convient way to overlay this file is to add a `.env` file with the contents:
+#  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-gh-codespaces.yml
+# You can also do it manually when you run docker-compose each time with
+# docker-compose -f docker-compose.yml -f docker/dev/docker-compose-random-ports.yml
+# if you are making changes to docker-compose.yml or this file it is useful to
+# run `docker-compose config` which shows how the two files get merged together
+
+version: '3'
+services:
+  app:
+    ports:
+      - "3000:3000"
