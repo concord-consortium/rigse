@@ -208,10 +208,71 @@ If you want to change the portal url from "app.portal.docker" to "learn.dev.dock
 1. In the Portal, edit '.env' file and update PORTAL_HOST as learn.dev.docker
 2. In the Portal, edit '.env' file and update PORTAL_PROTOCOL as https for automation
 3. In the Portal, as an administrator, edit the Auth Client settings:
-```   
+```
     Site Url: 'https://learn.dev.docker'
     Allowed URL Redirects: 'https://learn.dev.docker/users/auth/cc_portal_localhost/callback'
 ```
+
+#### GitHub Codespaces
+
+Github Codespaces is a cloud-based development environment. We are currently using it to do development work on LARA and
+Portal since it’s proven difficult to do local development on those codebases on M1 MacBooks.
+
+Github’s documentation for Codespaces can be found at [here](docs.github.com/en/codespaces).
+
+You will need to set up separate codespaces for LARA and the Portal.
+
+Use of Codespaces incurs an hourly cost. The amount is not a lot, but it should be kept in mind. Codespaces will shut themselves down
+automatically after a period of inactivity, but it would be best to manually shut them down when you’re done working in order to
+minimize cost.
+
+You can use Codespaces in web browser or you can connect to selected machine from desktop Visual Studio Code if you
+install a Codespaces extension.
+
+##### Basic setup
+
+- Your GitHub account needs to have Codespaces activated by the organization admin.
+- Go to the github.com page for the repository you will be working on.
+- Click on the Code button, then click the Codespaces tab, and then click the “Create codespace on master” button.
+- Portal requires 4-core machine because of memory (MySQL server tends to fail randomly on 2-core variant)
+
+Once machine is up and running, most of the steps described for local development are still valid for GH Codespaces.
+The main difference is that you should copy `.env-gh-codespaces-sample` to `.env` (instead of `.env-osx-sample`),
+there's no need for Dinghy setup, and LARA and Portal host will be significantly different (impossible to guess
+until you make their ports visible in Visual Studio Code).
+
+Run:
+```
+  cp .env-gh-codespaces-sample .env
+  docker login
+  docker-compose up
+```
+
+Once the app has started, open "Ports" tab in Visual Studio Code. Find a process that uses port 3000 and change its
+visibility to public (right click on "Private" -> Port Visibility -> Public). You should see an updated address in
+"Local Address" column. You can open this URL in the web browser and LARA should load. It seems it's necessary to do it
+each time you run `docker-compose up`.
+
+Copy this randomly generated host and open `.env` file. Find `[PORTAL-RANDOM-GH-CODESPACES-HOST]` and replace it with the
+copied value. Note that you have to do it only once, as this host will stay the same in the future, even if you
+shut down and restart your Codespaces machine.
+
+Once you setup LARA and make its port public, you should open `.env` file again, find `[LARA-RANDOM-GH-CODESPACES-HOST]`,
+and replace it with the randomly generated host for LARA.
+
+Each time `.env` file is updated, you need stop docker-compose and start it again using `docker-compose up`.
+
+#### Setting up Auth Clients and Firebase Apps
+
+Open Portal, login as `admin` (password: `password`), and go to Admin tab.
+
+1. Go to Auth Clients and edit "authoring". Change Site URL to `https://[LARA-RANDOM-GH-CODESPACES-HOST].githubpreview.dev/`,
+and Allowed redirect URIs to `https://[LARA-RANDOM-GH-CODESPACES-HOST].githubpreview.dev/users/auth/cc_portal_localhost/callback`.
+2. Go to Firebase Apps and create two new apps:
+  - report-service-dev
+  - token-service
+
+    Client emails and private keys can be copied from learn.staging.concord.org.
 
 ### Theme support & Rolling your own theme:
 
