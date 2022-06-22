@@ -238,41 +238,37 @@ install a Codespaces extension.
 
 Once machine is up and running, most of the steps described for local development are still valid for GH Codespaces.
 The main difference is that you should copy `.env-gh-codespaces-sample` to `.env` (instead of `.env-osx-sample`),
-there's no need for Dinghy setup, and LARA and Portal host will be significantly different (impossible to guess
-until you make their ports visible in Visual Studio Code).
+there's no need for Dinghy setup, and LARA and Portal hosts will be significantly different. However, everything
+you need to do in practice is described below.
 
-Run:
-```
-  cp .env-gh-codespaces-sample .env
-  docker login
-  docker-compose up
-```
+1. Run:
+    ```
+      cp .env-gh-codespaces-sample .env
+    ```
 
-Once the app has started, open "Ports" tab in Visual Studio Code. Find a process that uses port 3000 and change its
+2. Open LARA GitHub Codespace, run `echo ${CODESPACE_NAME}` in terminal, and set `LARA_CODESPACE_NAME` variable
+in Portal's `.env` file.
+
+3. Run
+    ```
+      docker login
+      docker-compose up
+    ```
+
+4.  Once the app has started, open "Ports" tab in Visual Studio Code. Find a process that uses port 3000 and change its
 visibility to public (right click on "Private" -> Port Visibility -> Public). You should see an updated address in
-"Local Address" column. You can open this URL in the web browser and LARA should load. It seems it's necessary to do it
+"Local Address" column. You can open this URL in the web browser and Portal should load. It seems it's necessary to do it
 each time you run `docker-compose up`.
 
-Copy this randomly generated host and open `.env` file. Find `[PORTAL-RANDOM-GH-CODESPACES-HOST]` and replace it with the
-copied value. Note that you have to do it only once, as this host will stay the same in the future, even if you
-shut down and restart your Codespaces machine.
+5. Open Portal, login as `admin` (password: `password`), and go to Admin tab.
 
-Once you setup LARA and make its port public, you should open `.env` file again, find `[LARA-RANDOM-GH-CODESPACES-HOST]`,
-and replace it with the randomly generated host for LARA.
-
-Each time `.env` file is updated, you need stop docker-compose and start it again using `docker-compose up`.
-
-#### Setting up Auth Clients and Firebase Apps
-
-Open Portal, login as `admin` (password: `password`), and go to Admin tab.
-
-1. Go to Auth Clients and edit "authoring". Change Site URL to `https://[LARA-RANDOM-GH-CODESPACES-HOST].githubpreview.dev/`,
-and Allowed redirect URIs to `https://[LARA-RANDOM-GH-CODESPACES-HOST].githubpreview.dev/users/auth/cc_portal_localhost/callback`.
-2. Go to Firebase Apps and create two new apps:
-  - report-service-dev
-  - token-service
+    Go to Firebase Apps and create two new apps:
+      - report-service-dev
+      - token-service
 
     Client emails and private keys can be copied from learn.staging.concord.org.
+
+Now, your Portal instance should work with LARA, Activity Player and basic reports.
 
 ### Theme support & Rolling your own theme:
 
