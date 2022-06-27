@@ -1,5 +1,4 @@
 # This is a docker-compose overlay with changes necessary to support GitHub Codespaces.
-# As of June 21, 2022, it only publishes the app port. More changes might be necessary in the future.
 
 # A convient way to overlay this file is to add a `.env` file with the contents:
 #  COMPOSE_FILE=docker-compose.yml:docker/dev/docker-compose-gh-codespaces.yml
@@ -13,3 +12,5 @@ services:
   app:
     ports:
       - "3000:3000"
+    environment:
+      LARA_TOOL_ID: "${LARA_DOMAIN}" # default value from docker-compose.yml appends USER
