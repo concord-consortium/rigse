@@ -4,6 +4,7 @@ import Component from '../helpers/component'
 import fadeIn from '../helpers/fade-in'
 import Tooltip from '../helpers/tooltip'
 import ItemTooltip from './tooltip'
+import SitewideAlert from './sitewide-alert'
 
 const PageHeader = Component({
 
@@ -18,7 +19,8 @@ const PageHeader = Component({
       oauthProviders: this.props.oauthProviders || Portal.oauthProviders || {},
       theme: this.props.theme || Portal.theme || 'default',
       homePath: this.props.homePath || Portal.currentUser.homePath || '/',
-      isStudent: this.props.isStudent || Portal.currentUser.isStudent || false
+      isStudent: this.props.isStudent || Portal.currentUser.isStudent || false,
+      sitewideAlert: this.props.sitewideAlert
     }
   },
 
@@ -199,6 +201,8 @@ const PageHeader = Component({
     }
     let logoClass = this.state.logo_class
     let logoText = 'Home'
+    const sitewideAlertContent = this.state.sitewideAlert
+    const sitewideAlertBanner = sitewideAlertContent ? <SitewideAlert content={sitewideAlertContent} /> : undefined
     return (
       <div className={wrapperClass}>
         <div className='portal-pages-umbrella'>
@@ -208,6 +212,7 @@ const PageHeader = Component({
             </div>
           </div>
         </div>
+        {sitewideAlertBanner}
         <nav className='concord-navigation cols no-collapse'>
           <div className='logo-contain col-3'>
             <a href={Portal.currentUser.homePath} title='Go to the Home Page'>

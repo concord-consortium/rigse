@@ -84,6 +84,12 @@
         Description
       = f.text_area :description, :id => dom_id_for(admin_settings, :item, :textarea), :class => 'tinymce_textarea'
     %p
+      %b
+        Sitewide Alert Message
+      %br
+      (This content will be displayed in a banner at the top of every page of the website.)
+      = f.text_area :sitewide_alert, :id => dom_id_for(admin_settings, :item, :textarea), :class => 'mceNoEditor'
+    %p
       = render :partial => "home_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
     %p
       = render :partial => "about_page_content_field", :locals => { :admin_settings => admin_settings, :f => f }
