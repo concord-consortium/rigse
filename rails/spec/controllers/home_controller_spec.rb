@@ -38,6 +38,7 @@ describe HomeController do
     allow(@test_settings).to receive(:enable_member_registration?).and_return(false)
     allow(@test_settings).to receive(:wrap_home_page_content?).and_return(true)
     allow(@test_settings).to receive(:teacher_home_path).and_return(nil)
+    allow(@test_settings).to receive(:sitewide_alert).and_return(nil)
     allow(controller).to receive(:before_render) {
       allow(response.template).to receive(:current_settings).and_return(@test_settings)
     }
