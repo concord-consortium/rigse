@@ -15,6 +15,7 @@ describe SecurityQuestionsController do
     allow(@test_settings).to receive(:show_collections_menu).and_return(false)
     allow(@test_settings).to receive(:auto_set_teachers_as_authors).and_return(false)
     allow(@test_settings).to receive(:teacher_home_path).and_return(nil)
+    allow(@test_settings).to receive(:sitewide_alert).and_return(nil)
     allow(Admin::Settings).to receive(:default_settings).and_return(@test_settings)
   end
 
