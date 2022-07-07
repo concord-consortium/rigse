@@ -65,7 +65,6 @@ describe Dataservice::ProcessExternalActivityDataJob do
       it "should record a name exception when performing" do
         expect(subject.content).to eq(bad_content)
         expect(Rails.logger).to receive :info
-        expect(NewRelic::Agent).to receive :notice_error
         expect(subject).to receive :internal_process_multiple_choice
         subject.perform
       end
@@ -75,7 +74,6 @@ describe Dataservice::ProcessExternalActivityDataJob do
       it "should not record any exceptions when performing" do
         expect(subject.content).to eq(good_content)
         expect(Rails.logger).not_to receive :info
-        expect(NewRelic::Agent).not_to receive :notice_error
         expect(subject).to receive :internal_process_open_response
         expect(subject).to receive :internal_process_multiple_choice
         expect(subject).to receive :internal_process_image_question
