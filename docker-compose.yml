@@ -73,6 +73,11 @@ services:
       DYNAMIC_ROBOTS_TXT:
 
       #
+      # Set to true to enable a robots.txt that disallows all useragents
+      #
+      DISALLOW_ALL_ROBOTS_TXT:
+
+      #
       # When PORTAL_FEATURES has "allow_cors" set this to a list of
       # origins, or * for all.
       #

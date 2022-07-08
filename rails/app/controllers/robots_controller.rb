@@ -7,7 +7,19 @@ class RobotsController < ApplicationController
   # Generate a robots.txt file
   #
   def index
-    if ENV['DYNAMIC_ROBOTS_TXT'] == 'true'
+    if ENV['DISALLOW_ALL_ROBOTS_TXT'] == 'true'
+
+        lines = [
+            "#",
+            "# This file is dynamically generated to disallow all indexing.",
+            "#",
+            "User-Agent: *",
+            "Disallow: /"
+        ]
+
+        render :plain => lines.join("\n")
+        return
+    elsif ENV['DYNAMIC_ROBOTS_TXT'] == 'true'
 
         lines = []
 
