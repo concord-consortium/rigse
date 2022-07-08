@@ -8,21 +8,20 @@ const SitewideAlert = Component({
   getInitialState: function () {
     return {
       alertDismissed: false,
-      content: this.props.content
+      content: this.props.content,
+      cookieName: cookieHelpers.setCookieName(this.props.content)
     }
   },
 
   componentWillMount: function () {
-    const alertDismissed = !!cookieHelpers.readCookie('sitewideAlertDismissed')
+    const { cookieName } = this.state
+    const alertDismissed = !!cookieHelpers.readCookie(cookieName)
     this.setState({ alertDismissed: alertDismissed })
   },
 
-  handleAlertClose: function (e) {
-    // TODO: Make the cookie name unique to specific alert messages
-    // and then drop the number of days option so people can
-    // permanently dismiss specific alerts but be shown new ones
-    // later on.
-    cookieHelpers.createCookie('sitewideAlertDismissed', 'true', 30)
+  handleAlertClose: function () {
+    const { cookieName } = this.state
+    cookieHelpers.createCookie(cookieName, 'true', 30)
     this.setState({ alertDismissed: true })
   },
 

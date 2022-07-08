@@ -1,3 +1,12 @@
+const setCookieName = (content) => {
+  let cookieKey = ''
+  for (let i = 0; i < content.length; i++) {
+    cookieKey = Math.imul(31, cookieKey) + content.charCodeAt(i) | 0
+  }
+  const cookieName = `dismissed-alert${cookieKey.toString(16)}`
+  return cookieName
+}
+
 const createCookie = (name, value, days) => {
   let expires = ''
   if (days) {
@@ -28,6 +37,7 @@ const eraseCookie = (name) => {
 }
 
 export default {
+  setCookieName: setCookieName,
   createCookie: createCookie,
   readCookie: readCookie,
   eraseCookie: eraseCookie
