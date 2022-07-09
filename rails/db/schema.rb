@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_21_215039) do
+ActiveRecord::Schema.define(version: 2022_07_05_175206) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -155,6 +155,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_215039) do
     t.string "custom_search_path", default: "/search"
     t.string "teacher_home_path", default: "/getting_started"
     t.text "about_page_content", size: :medium
+    t.text "sitewide_alert"
   end
 
   create_table "admin_site_notice_users", id: :integer, charset: "utf8", force: :cascade do |t|

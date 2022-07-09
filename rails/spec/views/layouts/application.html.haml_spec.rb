@@ -2,11 +2,13 @@ require 'spec_helper'
 
 describe "rendering application.html.haml" do
   let(:fake_visitor) { FactoryBot.create(:user, {id: 101}) }
+  let(:fake_admin_settings) { FactoryBot.create(:admin_settings, {sitewide_alert: nil}) }
   let(:roles) {['first-role']}
 
   before do
     allow(view).to receive(:current_visitor).and_return(fake_visitor)
     allow(view).to receive(:current_user).and_return(fake_visitor)
+    allow(view).to receive(:current_settings).and_return(fake_admin_settings)
     allow(fake_visitor).to receive(:authenticate).and_return(true)
     allow(fake_visitor).to receive(:role_names).and_return(roles)
   end

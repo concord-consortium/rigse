@@ -46,7 +46,6 @@ hudson/*
 spec/reports
 .rvmrc
 .ruby-gemset
-config/newrelic.yml
 public/system/attachments/*
 public/system/images/*
 *.swp

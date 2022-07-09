@@ -3,6 +3,8 @@
 - options = {}
 - if @after_sign_in_path
   - options[:afterSigninPath] = @after_sign_in_path
+- if current_settings && current_settings.sitewide_alert
+  - options[:sitewideAlert] = current_settings.sitewide_alert
 - if local_assigns[:extra_options]
   - options.merge!(extra_options)
 

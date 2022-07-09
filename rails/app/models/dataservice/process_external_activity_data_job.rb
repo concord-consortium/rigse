@@ -120,7 +120,6 @@ class Dataservice::ProcessExternalActivityDataJob
   protected
   def log_exception(exception, learner_id, response)
     Rails.logger.info("ProcessExternalActivityDataJob swallowing exception: #{exception}\n #{exception.backtrace}")
-    NewRelic::Agent.notice_error(exception, {custom_params: {learner_id: learner_id, response:response}} )
   end
 
 end

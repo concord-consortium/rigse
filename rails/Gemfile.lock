@@ -322,7 +322,6 @@ GEM
     net-http-digest_auth (1.4.1)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
-    newrelic_rpm (7.0.0)
     nio4r (2.5.7)
     nokogiri (1.11.7)
       mini_portile2 (~> 2.5.0)
@@ -610,7 +609,6 @@ DEPENDENCIES
   launchy
   mimemagic (= 0.3.10)
   mysql2
-  newrelic_rpm
   nokogiri
   oj
   omniauth

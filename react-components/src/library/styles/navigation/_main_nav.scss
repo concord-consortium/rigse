@@ -228,7 +228,8 @@
 
 .logged-in.theme-learn {
   background: #f1f1f1;
-  height: 70px;
+  max-height: 132.5px;
+  min-height: 70px;
   overflow: hidden;
 
   .portal-pages-umbrella {
@@ -239,7 +240,7 @@
     .concord-logo {
       background: url(./assets/banners/concord-logo-small.png) no-repeat center top;
       background-size: 100%;
-      height: 70px;
+      height: 58px;
     }
   }
   .portal-pages-main-nav-contain {

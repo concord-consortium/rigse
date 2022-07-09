@@ -38,7 +38,6 @@ gem 'jquery-fileupload-rails'
 gem 'mimemagic', '0.3.10'
 gem 'mysql2', platforms: [:ruby, :mingw]
 
-gem 'newrelic_rpm'
 gem 'nokogiri'
 gem 'oj'
 gem 'omniauth'

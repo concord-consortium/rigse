@@ -1,0 +1,56 @@
+@import '../../shared/styles/mixins/_mixins.scss';
+@import '../../shared/styles/variables/_variables.scss';
+
+.alertBarContain {
+  background: $gold;
+  color: $dark-gray;
+  font-weight: 600;
+  padding: 20px 0;
+  position: relative;
+  width: 100%;
+
+  strong {
+    font-weight: 900;
+  }
+}
+
+.alertBar__Text {
+  font-size: 15px;
+  font-family: $font-museo-sans;
+  max-width: 1170px;
+  margin: 0 auto;
+  padding: 0 15px;
+  a { color: #444; }
+  a:hover { opacity: .8; }
+
+  span {
+    display: inline-block;
+    padding: 0 60px 0 20px;
+  }
+}
+
+.alertBar__Close {
+  float: right;
+  margin-right: 40px;
+  transition: .2s;
+  &:hover {
+    opacity: .8;
+    transition: .2s;
+    cursor: pointer;
+  }
+  &::after {
+    content: "\ea0d";
+    font-family: $font-icon;
+    font-size: 25px;
+    margin: -8px 0 0 0;
+    position: absolute;
+  }
+  &:hover:after {
+    opacity: .8;
+  }
+}
+
+body[data-mobile-nav="open"] .alertBarContain,
+.alertBarContain.closed {
+  display: none;
+}
