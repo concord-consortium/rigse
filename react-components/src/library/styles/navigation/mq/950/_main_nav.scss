@@ -12,7 +12,7 @@
   display: block;
   float: right;
   line-height: 30px;
-  margin-top: 65px;
+  margin-top: 60px;
 
   .mobile-search,
   .mobile-nav-btn {
@@ -78,9 +78,11 @@
 
 body {
 
-  &.member-visitor {
-    .mobile-nav-contain {
-      margin-top: 21px;
+  &.member-visitor, &.admin-visitor {
+    .logged-in.theme-learn {
+      .mobile-nav-contain {
+        margin-top: 23px;
+      }
     }
   }
   &[data-mobile-nav="closed"] {

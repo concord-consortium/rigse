@@ -16,7 +16,7 @@
 }
 
 .mobile-nav-contain {
-  margin-top: 48px;
+  margin-top: 50px;
 }
 
 .portal-pages-umbrella-contain.cols {
@@ -28,10 +28,17 @@
   text-align: center;
 }
 
+
+
 body {
-  &.member-visitor {
-    .mobile-nav-contain {
-      margin-top: 21px;
+  &.member-visitor, &.admin-visitor {
+    .logged-in.theme-learn {
+      .logo-contain .concord-logo {
+        height: 46px;
+      }
+      .mobile-nav-contain {
+        margin-top: 17px;
+      }
     }
   }
 }
