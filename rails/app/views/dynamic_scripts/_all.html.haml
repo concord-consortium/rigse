@@ -15,6 +15,7 @@
   Portal.oauthProviders = #{raw providers.to_json};
   Portal.theme = "#{theme_name}"; // see theme_helper.rb
   Portal.enewsSubscriptionEnabled = #{ENV['ENEWS_API_KEY'].present?};
+  Portal.sitewideAlert = "#{current_settings ? current_settings.sitewide_alert : ''}"
 
 = render :partial => 'dynamic_scripts/api_paths'
 = render :partial => 'dynamic_scripts/current_user'
