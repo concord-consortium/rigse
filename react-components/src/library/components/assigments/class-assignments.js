@@ -50,7 +50,7 @@ export default class ClassAssignments extends React.Component {
   }
 
   handleExternalClick (e) {
-    if (this.assignMaterialsRef && !this.assignMaterialsRef.current.contains(e.target)) {
+    if (this.assignMaterialsRef.current && !this.assignMaterialsRef.current.contains(e.target)) {
       this.setState({ showAssignOptions: false })
     }
   }
@@ -103,6 +103,20 @@ export default class ClassAssignments extends React.Component {
     )
   }
 
+  renderFindMoreResources () {
+    if (Portal.theme === 'ngss-assessment') {
+      return
+    }
+    const { showAssignOptions } = this.state
+    const assignOptions = showAssignOptions ? this.renderAssignOptions() : null
+    return (
+      <div className={css.assignMaterials} ref={this.assignMaterialsRef}>
+        <button id='assignMaterialsMoreResources' onClick={this.handleAssignMaterialsButtonClick}>Find More Resources</button>
+        {assignOptions}
+      </div>
+    )
+  }
+
   get assignMaterialsPath () {
     const { clazz } = this.props
     if (Portal.theme === 'itsi-learn') {
@@ -116,16 +130,11 @@ export default class ClassAssignments extends React.Component {
 
   render () {
     const { clazz } = this.props
-    const { showAssignOptions } = this.state
-    const assignOptions = showAssignOptions ? this.renderAssignOptions() : null
     return (
       <div className={css.classAssignments}>
         <header>
           <h1>Assignments for { clazz.name }</h1>
-          <div className={css.assignMaterials} ref={this.assignMaterialsRef}>
-            <button id='assignMaterialsMoreResources' onClick={this.handleAssignMaterialsButtonClick}>Find More Resources</button>
-            {assignOptions}
-          </div>
+          {this.renderFindMoreResources()}
         </header>
         <table className={css.classInfo}>
           <tbody>
