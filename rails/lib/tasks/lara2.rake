@@ -103,4 +103,71 @@ namespace :lara2 do
     end
   end
 
+  desc "migrates external report urls"
+  task :migrate_external_report_urls do
+    # "Class Dashboard" is the existing LARA class dashboard an should be changed to "Activity Player Dashboard"
+
+    begin
+      ap_tool = Tool.find_by_name("ActivityPlayer")
+      raise "No ActivityPlayer tool found" if ap_tool.nil?
+
+      ap_report = ExternalReport.find_by_name("Activity Player Report")
+      raise "No 'Activity Player Report' external report found" if ap_report.nil?
+
+      lara_dashboard_report = ExternalReport.find_by_name("Class Dashboard")
+      raise "No 'Class Dashboard' external report found" if lara_dashboard_report.nil?
+
+      ap_dashboard_report = ExternalReport.find_by_name("Activity Player Dashboard")
+      raise "No 'Activity Player Dashboard' external report found" if ap_dashboard_report.nil?
+
+      puts "Are you sure you want to PERMANENTLY migrate the external activity reports for AP activities? Enter 'YES' to confirm:"
+      if STDIN.gets.chomp == "YES"
+        puts "Migrating reports"
+
+        # first set the default report type for AP activities to be the "Activity Player Report"
+        ap_report.default_report_for_source_type = ap_tool.source_type
+        ap_report.save!
+
+        # and then make sure no other default report type is set for AP activities
+        ExternalReport
+          .where('id != ? AND default_report_for_source_type = ?', ap_report.id, ap_tool.source_type)
+          .update_all(default_report_for_source_type: nil)        
+
+        migrated_count = 0
+        total_count = 0
+  
+        ActiveRecord::Base.transaction do
+          ExternalActivity.includes(:external_reports).where(:tool_id => ap_tool.id).find_each(batch_size: 1000) do |ea|
+
+            migrated = false
+
+            # remove the lara dashboard report
+            if ea.external_reports.exists?(lara_dashboard_report.id)
+              ea.external_reports.delete(lara_dashboard_report.id)
+              migrated = true
+            end
+
+            # add the ap dashboard report
+            if !ea.external_reports.exists?(ap_dashboard_report.id)
+              ea.external_reports << ap_dashboard_report
+              migrated = true
+            end
+            
+            if migrated and ea.valid?
+              ea.save!
+              migrated_count = migrated_count + 1
+            end
+            
+            total_count = total_count + 1
+          end
+
+          puts "Migrated external reports in #{migrated_count} out of #{total_count} AP activities found"
+        end
+      else 
+        raise "Aborting migrating reports"
+      end    
+    rescue => e
+      puts "ERROR: #{e.to_s}"
+    end
+  end
 end
