@@ -205,15 +205,17 @@ describe "lara2:migrate_external_report_urls" do
   let (:lara_dashboard_report) { FactoryBot.create(:external_report, name: "Class Dashboard")}
   let (:ap_dashboard_report) { FactoryBot.create(:external_report, name: "Activity Player Dashboard")}
 
-  let (:starting_default_ap_report) { FactoryBot.create(:external_report, name: "Starting Default Report", default_report_for_source_type: ap_tool.source_type)}
+  let (:other_ap_report) { FactoryBot.create(:external_report, name: "Other AP Report")}
 
   let (:lara_activity) { FactoryBot.create(:external_activity, url: "https://ap.url/123", tool: lara_tool)}
 
   let (:ap_activity_with_no_reports) { FactoryBot.create(:external_activity, url: "https://ap.url/123", tool: ap_tool)}
   let (:ap_activity_with_lara_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
   let (:ap_activity_with_ap_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
-  let (:ap_activity_with_lara_and_ap_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
-  let (:ap_activity_with_lara_and_ap_report_and_other_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
+  let (:ap_activity_with_ap_dashboard_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
+  let (:ap_activity_with_both_ap_reports) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
+  let (:ap_activity_with_lara_and_ap_dashboard_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
+  let (:ap_activity_with_lara_and_ap_dashboard_report_and_other_report) { FactoryBot.create(:external_activity, url: "https://ap.url/456", tool: ap_tool)}
   
   let (:invoke_task) { 
     Rake.application.invoke_task "lara2:migrate_external_report_urls"
@@ -261,26 +263,6 @@ describe "lara2:migrate_external_report_urls" do
     expect { invoke_task }.to output(/ERROR: Aborting migrating reports/).to_stdout
   end
 
-  it "migrates the default report for AP activities" do
-    ap_tool
-    ap_report
-    lara_dashboard_report
-    ap_dashboard_report
-    starting_default_ap_report
-
-    expect(ap_report.default_report_for_source_type).to eq(nil)
-    expect(starting_default_ap_report.default_report_for_source_type).to eq(ap_tool.source_type)
-
-    allow(STDIN).to receive(:gets).and_return("YES")
-    expect { invoke_task }.to output(/Migrated external reports in 0 out of 0 AP activities found/).to_stdout
-
-    ap_report.reload
-    starting_default_ap_report.reload
-
-    expect(ap_report.default_report_for_source_type).to eq(ap_tool.source_type)
-    expect(starting_default_ap_report.default_report_for_source_type).to eq(nil)
-  end  
-
   it "migrates the reports for the AP activities" do
     ap_tool
     ap_report
@@ -296,43 +278,57 @@ describe "lara2:migrate_external_report_urls" do
     ap_activity_with_lara_report.save!
     ap_activity_with_lara_report.reload
 
-    ap_activity_with_ap_report.external_reports << ap_dashboard_report
+    ap_activity_with_ap_report.external_reports << ap_report
     ap_activity_with_ap_report.save!
     ap_activity_with_ap_report.reload
 
-    ap_activity_with_lara_and_ap_report.external_reports << lara_dashboard_report
-    ap_activity_with_lara_and_ap_report.external_reports << ap_dashboard_report
-    ap_activity_with_lara_and_ap_report.save!
-    ap_activity_with_lara_and_ap_report.reload
+    ap_activity_with_ap_dashboard_report.external_reports << ap_dashboard_report
+    ap_activity_with_ap_dashboard_report.save!
+    ap_activity_with_ap_dashboard_report.reload
 
-    ap_activity_with_lara_and_ap_report_and_other_report.external_reports << lara_dashboard_report
-    ap_activity_with_lara_and_ap_report_and_other_report.external_reports << ap_dashboard_report
-    ap_activity_with_lara_and_ap_report_and_other_report.external_reports << starting_default_ap_report
-    ap_activity_with_lara_and_ap_report_and_other_report.save!
-    ap_activity_with_lara_and_ap_report_and_other_report.reload
+    ap_activity_with_both_ap_reports.external_reports << ap_report
+    ap_activity_with_both_ap_reports.external_reports << ap_dashboard_report
+    ap_activity_with_both_ap_reports.save!
+    ap_activity_with_both_ap_reports.reload
+
+    ap_activity_with_lara_and_ap_dashboard_report.external_reports << lara_dashboard_report
+    ap_activity_with_lara_and_ap_dashboard_report.external_reports << ap_dashboard_report
+    ap_activity_with_lara_and_ap_dashboard_report.save!
+    ap_activity_with_lara_and_ap_dashboard_report.reload
+
+    ap_activity_with_lara_and_ap_dashboard_report_and_other_report.external_reports << lara_dashboard_report
+    ap_activity_with_lara_and_ap_dashboard_report_and_other_report.external_reports << ap_dashboard_report
+    ap_activity_with_lara_and_ap_dashboard_report_and_other_report.external_reports << other_ap_report
+    ap_activity_with_lara_and_ap_dashboard_report_and_other_report.save!
+    ap_activity_with_lara_and_ap_dashboard_report_and_other_report.reload
 
     # the one AP activity that only has the ap_dashboard_report should be skipped
     allow(STDIN).to receive(:gets).and_return("YES")
-    expect { invoke_task }.to output(/Migrated external reports in 4 out of 5 AP activities found/).to_stdout
+    expect { invoke_task }.to output(/Migrated external reports in 6 out of 7 AP activities found/).to_stdout
 
     lara_activity.reload
     ap_activity_with_no_reports.reload
     ap_activity_with_lara_report.reload
     ap_activity_with_ap_report.reload
-    ap_activity_with_lara_and_ap_report.reload
-    ap_activity_with_lara_and_ap_report_and_other_report.reload
+    ap_activity_with_ap_dashboard_report.reload
+    ap_activity_with_both_ap_reports.reload
+    ap_activity_with_lara_and_ap_dashboard_report.reload
+    ap_activity_with_lara_and_ap_dashboard_report_and_other_report.reload
 
     # LARA activities should not be changed
     expect(lara_activity.external_reports).to eq([lara_dashboard_report])
 
     # all AP activities should be changed
-    expect(ap_activity_with_no_reports.external_reports).to eq([ap_dashboard_report])
-    expect(ap_activity_with_lara_report.external_reports).to eq([ap_dashboard_report])
-    expect(ap_activity_with_ap_report.external_reports).to eq([ap_dashboard_report])
-    expect(ap_activity_with_lara_and_ap_report.external_reports).to eq([ap_dashboard_report])
-    expect(ap_activity_with_lara_and_ap_report_and_other_report.external_reports).to eq([
+    expect(ap_activity_with_no_reports.external_reports).to eq([ap_report, ap_dashboard_report])
+    expect(ap_activity_with_lara_report.external_reports).to eq([ap_report, ap_dashboard_report])
+    expect(ap_activity_with_ap_report.external_reports).to eq([ap_report, ap_dashboard_report])
+    expect(ap_activity_with_ap_dashboard_report.external_reports).to eq([ap_report, ap_dashboard_report])
+    expect(ap_activity_with_both_ap_reports.external_reports).to eq([ap_report, ap_dashboard_report])
+    expect(ap_activity_with_lara_and_ap_dashboard_report.external_reports).to eq([ap_report, ap_dashboard_report])
+    expect(ap_activity_with_lara_and_ap_dashboard_report_and_other_report.external_reports).to eq([
+      ap_report,
       ap_dashboard_report,
-      starting_default_ap_report
+      other_ap_report
     ])
   end    
 end

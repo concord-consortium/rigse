@@ -124,15 +124,6 @@ namespace :lara2 do
       if STDIN.gets.chomp == "YES"
         puts "Migrating reports"
 
-        # first set the default report type for AP activities to be the "Activity Player Report"
-        ap_report.default_report_for_source_type = ap_tool.source_type
-        ap_report.save!
-
-        # and then make sure no other default report type is set for AP activities
-        ExternalReport
-          .where('id != ? AND default_report_for_source_type = ?', ap_report.id, ap_tool.source_type)
-          .update_all(default_report_for_source_type: nil)        
-
         migrated_count = 0
         total_count = 0
   
@@ -141,6 +132,12 @@ namespace :lara2 do
 
             migrated = false
 
+            # add the ap report
+            if !ea.external_reports.exists?(ap_report.id)
+              ea.external_reports << ap_report
+              migrated = true
+            end
+            
             # remove the lara dashboard report
             if ea.external_reports.exists?(lara_dashboard_report.id)
               ea.external_reports.delete(lara_dashboard_report.id)
