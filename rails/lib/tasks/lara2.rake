@@ -24,9 +24,10 @@ namespace :lara2 do
       total_count = 0
 
       ActiveRecord::Base.transaction do
-        ExternalActivity.where(:tool_id => lara_tool.id).find_each(batch_size: 1000) do |ea|
+        ExternalActivity.where(tool_id: lara_tool.id).or(ExternalActivity.where.not(legacy_lara_url: nil)).find_each(batch_size: 1000) do |ea|
           # make sure this is an activity or sequence from LARA
-          activity_uri = URI.parse(ea.url)
+          lara_url = ea.legacy_lara_url.blank? ? ea.url : ea.legacy_lara_url
+          activity_uri = URI.parse(lara_url)
           match = /^\/(activities|sequences)\/(\d+)/.match(activity_uri.path)
           if match != nil
 
@@ -42,7 +43,9 @@ namespace :lara2 do
             ap_uri = URI.parse(raw_ap_url)
             ap_uri.query = URI.encode_www_form(URI.decode_www_form(ap_uri.query || '') << query_param)
 
-            ea.legacy_lara_url = ea.url
+            if ea.legacy_lara_url.blank?
+              ea.legacy_lara_url = ea.url
+            end
             ea.url = ap_uri.to_s
             ea.tool_id = ap_tool.id
             ea.append_auth_token = true
