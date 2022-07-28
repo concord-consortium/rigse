@@ -45,6 +45,7 @@ namespace :lara2 do
             ea.legacy_lara_url = ea.url
             ea.url = ap_uri.to_s
             ea.tool_id = ap_tool.id
+            ea.append_auth_token = true
             ea.save!
 
             migrate_count = migrate_count + 1
