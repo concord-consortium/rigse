@@ -108,7 +108,7 @@ namespace :lara2 do
   end
 
   desc "migrates external report urls"
-  task :migrate_external_report_urls do
+  task :migrate_external_report_urls => :environment do
     # "Class Dashboard" is the existing LARA class dashboard an should be changed to "Activity Player Dashboard"
 
     begin
