@@ -32,8 +32,8 @@ const SitewideAlert = Component({
     }
     return (
       <div className={css.alertBarContain}>
-        <div className={css.alertBar__Text} onClick={this.handleAlertClose}>
-          <div className={css.alertBar__Close} />
+        <div className={css.alertBar__Text}>
+          <div className={css.alertBar__Close} onClick={this.handleAlertClose} />
           <span dangerouslySetInnerHTML={{ __html: content }} />
         </div>
       </div>
