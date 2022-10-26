@@ -104,6 +104,7 @@ class API::V1::ReportLearnersEsController < API::APIController
           id: url_for(current_user),
           email: current_user.email
         },
+        portal_url: root_url,
         learnersApiUrl: external_report_learners_from_jwt_api_v1_report_learners_es_url
       }
     }

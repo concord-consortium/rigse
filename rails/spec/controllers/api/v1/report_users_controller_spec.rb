@@ -117,6 +117,8 @@ describe API::V1::ReportUsersController do
       end
     end
     describe "GET external_report_query" do
+      let(:url_for_user) { "http://test.host/users/#{admin_user.id}" } # can't use url_for(user) helper in specs
+
       before(:each) do
         @old_configuration = APP_CONFIG[:site_url]
         APP_CONFIG[:site_url] = 'http://example.com'
@@ -137,6 +139,9 @@ describe API::V1::ReportUsersController do
         expect(filter["type"]).to eq "users"
         expect(filter["version"]).to eq "1.0"
         expect(filter["domain"]).to eq "example.com"
+        expect(filter["user"]["id"]).to eq url_for_user
+        expect(filter["user"]["email"]).to eq admin_user.email
+        expect(filter["portal_url"]).to eq "http://test.host/"
         expect(filter["users"].length).to eq 5
         expect(filter["runnables"].length).to eq 3
         expect(filter["start_date"]).to eq "01/02/19"
