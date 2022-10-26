@@ -50,6 +50,11 @@ class API::V1::ReportUsersController < API::APIController
       type: "users",
       version: "1.0",
       domain: URI.parse(APP_CONFIG[:site_url]).host,
+      user: {
+        id: url_for(current_user),
+        email: current_user.email
+      },
+      portal_url: root_url,
       users: users,
       runnables: runnables,
       start_date: params[:start_date],

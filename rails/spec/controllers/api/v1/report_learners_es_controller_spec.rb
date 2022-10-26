@@ -10,6 +10,8 @@ describe API::V1::ReportLearnersEsController do
   let(:simple_user)       { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:manager_user)      { FactoryBot.generate(:manager_user)   }
 
+  let(:url_for_admin_user) { "http://test.host/users/#{admin_user.id}" } # can't use url_for(user) helper in specs
+
   let(:district)       { FactoryBot.create(:portal_district) }
   let(:mock_school)    { FactoryBot.create(:portal_school, {:district => district}) }
   let(:teacher_user1)  { FactoryBot.create(:confirmed_user, login: "teacher_user1") }
@@ -211,8 +213,6 @@ describe API::V1::ReportLearnersEsController do
       end
     end
     describe "GET external_report_query" do
-      let(:url_for_user) { "http://test.host/users/#{admin_user.id}" } # can't use url_for(user) helper in specs
-
       it "allows index" do
         get :external_report_query
         expect(response.status).to eql(200)
@@ -238,7 +238,7 @@ describe API::V1::ReportLearnersEsController do
         expect(filter["learners"][1]["run_remote_endpoint"]).to eq learner2.remote_endpoint_url
         expect(filter["learners"][1]["class_id"]).to eq learner2.offering.clazz_id
         expect(filter["learners"][2]["runnable_url"]).to eq nil  # nil because it is in investigation
-        expect(filter["user"]["id"]).to eq url_for_user
+        expect(filter["user"]["id"]).to eq url_for_admin_user
         expect(filter["user"]["email"]).to eq admin_user.email
 
         expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
@@ -350,13 +350,16 @@ describe API::V1::ReportLearnersEsController do
         sign_in admin_user
       end
       describe "GET external_report_jwt_query" do
-
         it "renders response that includes Log Manager query and JWT" do
           get :external_report_query_jwt
           resp = JSON.parse(response.body)
           filter = resp["json"]
           expect(filter["type"]).to eq "learners"
+          expect(filter["version"]).to eq "2"
           expect(filter["query"]).not_to eq nil
+          expect(filter["user"]["id"]).to eq url_for_admin_user
+          expect(filter["user"]["email"]).to eq admin_user.email
+          expect(filter["portal_url"]).to eq "http://test.host/"
           expect(filter["learnersApiUrl"]).to eq "http://test.host/api/v1/report_learners_es/external_report_learners_from_jwt"
           expect(resp["token"]).to be_an_instance_of(String)
           expect(resp["signature"]).to eq nil
