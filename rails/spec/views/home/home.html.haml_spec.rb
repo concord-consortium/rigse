@@ -65,7 +65,7 @@ describe "/home/home.html.haml" do
     end
 
     describe "with the ngss theme" do
-      let(:theme) { "ngsa-assessment" }
+      let(:theme) { "ngss-assessment" }
 
       it "should include text from the learn project_info partial" do
         render
