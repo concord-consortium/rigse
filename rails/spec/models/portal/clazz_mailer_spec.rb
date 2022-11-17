@@ -144,8 +144,8 @@ describe Portal::ClazzMailer do
         expect(subject.body.encoded).not_to match /NGSS Assessment/
       end
     end
-    context "using the ngsa-assessment theme" do
-      before(:each) { set_theme_env('ngsa-assessment') }
+    context "using the ngss-assessment theme" do
+      before(:each) { set_theme_env('ngss-assessment') }
       it "renders the NGSA template" do
         expect(subject.body.encoded).to match /NGSS Assessment/
       end
