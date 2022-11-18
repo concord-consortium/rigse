@@ -226,19 +226,37 @@ class Portal::ClazzesController < ApplicationController
     new_teacher_ids = (object_params.delete(:current_teachers) || '').split(',').map {|id| id.to_i}
 
     update_teachers = -> {
+      update_report_model_cache = false
+
       current_teacher_ids = @portal_clazz.teachers.map {|t| t.id}
       new_teacher_ids.each do |new_teacher_id|
         if !current_teacher_ids.include?(new_teacher_id)
           teacher = Portal::Teacher.find_by_id(new_teacher_id)
-          teacher.add_clazz(@portal_clazz) if teacher
+          if teacher
+            teacher.add_clazz(@portal_clazz)
+            update_report_model_cache = true
+          end
         end
       end
       current_teacher_ids.each do |current_teacher_id|
         if !new_teacher_ids.include?(current_teacher_id)
           teacher = Portal::Teacher.find_by_id(current_teacher_id)
-          teacher.remove_clazz(@portal_clazz) if teacher
+          if teacher
+            teacher.remove_clazz(@portal_clazz)
+            update_report_model_cache = true
+          end
         end
       end
+
+      # if the teachers change we need to update the report model cache so they are reported correctly
+      if update_report_model_cache
+        @portal_clazz.offerings.each do |offering|
+          offering.learners.each do |learner|
+            learner.update_report_model_cache()
+          end
+        end
+      end
+
       @portal_clazz.reload
     }
 
