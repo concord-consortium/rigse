@@ -1234,13 +1234,24 @@ ul.quiet_list {
   a { border-bottom: dotted 1px #479492; }
   .footer-inner {
     margin: 0 auto;
+    &.ngsa-footer {
+      text-align: center;
+    }
     p {
       font-family: museo-sans, verdana, helvetica, sans-serif;
       padding: 0;
 
       &.ngsa-partners {
+        margin: 10px 0 0 0;
         text-align: center;
       }
+    }
+    .ngsa-partners-images {
+      margin-top: 5px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
     }
   }
   #share-it {
