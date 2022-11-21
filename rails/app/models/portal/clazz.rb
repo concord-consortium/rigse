@@ -297,4 +297,11 @@ class Portal::Clazz < ApplicationRecord
       .sort{ |r1, r2| r1.launch_text <=> r2.launch_text }
   end
 
+  def update_report_model_cache
+    self.offerings.each do |offering|
+      offering.learners.each do |learner|
+        learner.update_report_model_cache()
+      end
+    end
+  end
 end
