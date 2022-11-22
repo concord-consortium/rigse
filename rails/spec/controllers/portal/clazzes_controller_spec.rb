@@ -330,6 +330,9 @@ describe Portal::ClazzesController do
 
       sign_in @authorized_teacher_user
 
+      # the change of class name should trigger an update of the report model cache of the class
+      expect_any_instance_of(Portal::Clazz).to receive(:update_report_model_cache)
+
       put :update, params: @post_params
 
       expect(Portal::Clazz.find(@mock_clazz.id).name).to eq('New Test Class')
@@ -340,10 +343,35 @@ describe Portal::ClazzesController do
         @authorized_teacher, @another_authorized_teacher
       ])
       sign_in @authorized_teacher_user
+
+      # without a name change the change of teachers should trigger an update of the report model cache of the class
+      original_name = @mock_clazz.name
+      @post_params[:portal_clazz][:name] = @mock_clazz.name
+      expect_any_instance_of(Portal::Clazz).to receive(:update_report_model_cache)
+
       put :update, params: @post_params
       expect(Portal::Clazz.find(@mock_clazz.id).teachers).to eq([
         @authorized_teacher, @teacher2, @teacher3
       ])
+
+      expect(Portal::Clazz.find(@mock_clazz.id).name).to eq(original_name)
+    end
+
+    it "should not trigger a report model cache update when the name or teachers do not change" do
+      expect(Portal::Clazz.find(@mock_clazz.id).teachers).to eq([
+        @authorized_teacher, @another_authorized_teacher
+      ])
+      sign_in @authorized_teacher_user
+
+      # remove the name and teacher updates to ensure the report model cache update is skipped
+      original_name = @mock_clazz.name
+      @post_params[:portal_clazz][:name] = @mock_clazz.name
+      @post_params[:portal_clazz][:current_teachers] = @mock_clazz.teachers.map {|t| t.id}.join(",")
+      expect_any_instance_of(Portal::Clazz).not_to receive(:update_report_model_cache)
+
+      put :update, params: @post_params
+
+      expect(Portal::Clazz.find(@mock_clazz.id).name).to eq(original_name)
     end
   end
 

@@ -223,46 +223,9 @@ class Portal::ClazzesController < ApplicationController
       object_params[:grades] = grades_to_add if !grades_to_add.empty?
     end
 
-    new_teacher_ids = (object_params.delete(:current_teachers) || '').split(',').map {|id| id.to_i}
-
-    update_teachers = -> {
-      update_report_model_cache = false
-
-      current_teacher_ids = @portal_clazz.teachers.map {|t| t.id}
-      new_teacher_ids.each do |new_teacher_id|
-        if !current_teacher_ids.include?(new_teacher_id)
-          teacher = Portal::Teacher.find_by_id(new_teacher_id)
-          if teacher
-            teacher.add_clazz(@portal_clazz)
-            update_report_model_cache = true
-          end
-        end
-      end
-      current_teacher_ids.each do |current_teacher_id|
-        if !new_teacher_ids.include?(current_teacher_id)
-          teacher = Portal::Teacher.find_by_id(current_teacher_id)
-          if teacher
-            teacher.remove_clazz(@portal_clazz)
-            update_report_model_cache = true
-          end
-        end
-      end
-
-      # if the teachers change we need to update the report model cache so they are reported correctly
-      if update_report_model_cache
-        @portal_clazz.offerings.each do |offering|
-          offering.learners.each do |learner|
-            learner.update_report_model_cache()
-          end
-        end
-      end
-
-      @portal_clazz.reload
-    }
-
     if request.xhr?
-      if @portal_clazz.update(portal_clazz_strong_params(object_params))
-        update_teachers.call
+      if update_class_and_teachers(@portal_clazz, object_params)
+        @portal_clazz.reload
       end
       render :partial => 'show', :locals => { :portal_clazz => @portal_clazz }
     else
@@ -276,8 +239,8 @@ class Portal::ClazzesController < ApplicationController
           end
         end
 
-        if okToUpdate && @portal_clazz.update(portal_clazz_strong_params(object_params))
-          update_teachers.call
+        if okToUpdate && update_class_and_teachers(@portal_clazz, object_params)
+          @portal_clazz.reload
           flash['notice'] = 'Class was successfully updated.'
           format.html { redirect_to(url_for([:materials, @portal_clazz])) }
           format.xml  { head :ok }
@@ -452,4 +415,40 @@ class Portal::ClazzesController < ApplicationController
     school_id_param.to_i.to_s == school_id_param
   end
 
+  def update_class_and_teachers(portal_clazz, object_params)
+    updated_class = portal_clazz.update(portal_clazz_strong_params(object_params))
+    if updated_class
+      class_name_changed = portal_clazz.saved_change_to_attribute?(:name)
+
+      updated_teachers = false
+      new_teacher_ids = (object_params.delete(:current_teachers) || '').split(',').map {|id| id.to_i}
+
+      current_teacher_ids = @portal_clazz.teachers.map {|t| t.id}
+      new_teacher_ids.each do |new_teacher_id|
+        if !current_teacher_ids.include?(new_teacher_id)
+          teacher = Portal::Teacher.find_by_id(new_teacher_id)
+          if teacher
+            teacher.add_clazz(@portal_clazz)
+            updated_teachers = true
+          end
+        end
+      end
+      current_teacher_ids.each do |current_teacher_id|
+        if !new_teacher_ids.include?(current_teacher_id)
+          teacher = Portal::Teacher.find_by_id(current_teacher_id)
+          if teacher
+            teacher.remove_clazz(@portal_clazz)
+            updated_teachers = true
+          end
+        end
+      end
+
+      # update the report model cache when the class name or the teacher list changes so the reports reflect the new settings
+      if class_name_changed || updated_teachers
+        portal_clazz.update_report_model_cache
+      end
+    end
+
+    return updated_class
+  end
 end
