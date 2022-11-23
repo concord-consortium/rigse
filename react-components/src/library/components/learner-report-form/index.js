@@ -20,7 +20,7 @@ export default class LearnerReportForm extends React.Component {
       // the current values of the filters
       schools: [],
       teachers: [],
-      runnables: [],
+      resources: [],
       permission_forms: [],
       start_date: '',
       end_date: '',
@@ -29,13 +29,13 @@ export default class LearnerReportForm extends React.Component {
       filterables: {
         schools: [],
         teachers: [],
-        runnables: [],
+        resources: [],
         permission_forms: []
       },
       // waiting for results
       waitingFor_schools: false,
       waitingFor_teachers: false,
-      waitingFor_runnables: false,
+      waitingFor_resources: false,
       waitingFor_permission_forms: false,
       externalReportButtonDisabled: true,
       queryParams: {}
@@ -109,7 +109,7 @@ export default class LearnerReportForm extends React.Component {
               students: aggs.count_students.value,
               classes: aggs.count_classes.value,
               teachers: aggs.count_teachers.value,
-              runnables: aggs.count_runnables.value
+              resources: aggs.count_resources.value
             }
           }
         }
@@ -133,7 +133,7 @@ export default class LearnerReportForm extends React.Component {
 
   getQueryParams () {
     const params = {}
-    for (var filter of ['schools', 'teachers', 'runnables', 'permission_forms']) {
+    for (var filter of ['schools', 'teachers', 'resources', 'permission_forms']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         params[filter] = this.state[filter].map(v => v.value).sort().join(',')
       }
@@ -159,7 +159,7 @@ export default class LearnerReportForm extends React.Component {
     this.query(params)
     this.query(params, 'schools')
     this.query(params, 'teachers')
-    this.query(params, 'runnables')
+    this.query(params, 'resources')
     this.query(params, 'permission_forms')
   }
 
@@ -306,7 +306,7 @@ export default class LearnerReportForm extends React.Component {
       <form method='get'>
         {this.renderInput('schools')}
         {this.renderInput('teachers')}
-        {this.renderInput('runnables')}
+        {this.renderInput('resources')}
         {this.renderInput('permission_forms')}
 
         {this.renderDatePicker('start_date')}
