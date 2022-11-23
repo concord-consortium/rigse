@@ -18,19 +18,19 @@ export default class UserReportForm extends React.Component {
       // the current values of the filters
       teachers: [],
       cohorts: [],
-      runnables: [],
+      resources: [],
       start_date: '',
       end_date: '',
       // all possible values for each pulldown
       filterables: {
         teachers: [],
         cohorts: [],
-        runnables: []
+        resources: []
       },
       // waiting for results
       waitingFor_teachers: false,
       waitingFor_cohorts: false,
-      waitingFor_runnables: false,
+      waitingFor_resources: false,
       totals: {},
       // checkbox options
       removeCCTeachers: false,
@@ -114,7 +114,7 @@ export default class UserReportForm extends React.Component {
 
   getQueryParams () {
     const params = { remove_cc_teachers: this.state.removeCCTeachers }
-    for (var filter of ['teachers', 'cohorts', 'runnables']) {
+    for (var filter of ['teachers', 'cohorts', 'resources']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         params[filter] = this.state[filter].map(v => v.value).sort().join(',')
       }
@@ -137,7 +137,7 @@ export default class UserReportForm extends React.Component {
     this.query(params)
     this.query(params, 'teachers')
     this.query(params, 'cohorts')
-    this.query(params, 'runnables')
+    this.query(params, 'resources')
   }
 
   renderInput (name) {
@@ -242,7 +242,7 @@ export default class UserReportForm extends React.Component {
           <input type='checkbox' checked={this.state.removeCCTeachers} onChange={handleRemoveCCTeachers} /> Remove Concord Consortium Teachers? *
         </div>
         {this.renderInput('cohorts')}
-        {this.renderInput('runnables')}
+        {this.renderInput('resources')}
 
         {this.renderDatePicker('start_date')}
         {this.renderDatePicker('end_date')}
