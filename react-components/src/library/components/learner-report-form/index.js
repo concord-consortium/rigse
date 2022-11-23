@@ -8,6 +8,7 @@ import Select from 'react-select'
 import jQuery from 'jquery'
 
 const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
+const devStr = "DEVELOPER";
 
 const queryCache = {}
 
@@ -287,13 +288,21 @@ export default class LearnerReportForm extends React.Component {
     )
   }
 
-  renderForm () {
-    const { externalReports } = this.props
-    const { queryParams, externalReportButtonDisabled } = this.state
+  renderReportButtons (reportType) {
+    const { externalReports } = this.props;
+    const { queryParams, externalReportButtonDisabled } = this.state;
     // ...LEARNER_QUERY is the renamed ...REPORT_QUERY, use a fallback to wait for the portal to update
-    const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
-    const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT
+    const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY;
+    const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT;
+    const filterFunc = (lr) => reportType === devStr ? lr.name.contains(devStr) : !lr.name.contains(devStr);
 
+    return externalReports.filter(filterFunc(lr)).sort((a, b) => a.label - b.label).map(lr => {
+        const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl;
+        return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
+      });
+  }
+
+  renderForm () {
     return (
       <form method='get'>
         {this.renderInput('schools')}
@@ -306,16 +315,12 @@ export default class LearnerReportForm extends React.Component {
 
         {this.renderCheck('hide_names')}
 
-        {this.renderButton('Usage Report')}
-        {this.renderButton('Details Report')}
-        {this.renderButton('Arg Block Report')}
-
-        {
-          externalReports.map(lr => {
-            const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl
-            return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
-          })
-        }
+        {this.renderReportButtons("")}
+        {Portal.currentUser.isAdmin &&
+          <div>
+            <p>For developers only:</p>
+            {this.renderReportButtons(devStr)}
+          </div>}
       </form>
     )
   }
@@ -337,5 +342,5 @@ export default class LearnerReportForm extends React.Component {
 }
 
 LearnerReportForm.defaultProps = {
-  externalReports: []
+  externalReports: [],
 }
