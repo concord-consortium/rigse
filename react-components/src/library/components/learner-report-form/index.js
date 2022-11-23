@@ -294,9 +294,8 @@ export default class LearnerReportForm extends React.Component {
     // ...LEARNER_QUERY is the renamed ...REPORT_QUERY, use a fallback to wait for the portal to update
     const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY;
     const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT;
-    const filterFunc = (lr) => reportType === devStr ? lr.name.contains(devStr) : !lr.name.contains(devStr);
 
-    return externalReports.filter(filterFunc(lr)).sort((a, b) => a.label - b.label).map(lr => {
+    return externalReports.filter((lr) => reportType === devStr ? lr.name.contains(devStr) : !lr.name.contains(devStr)).sort((a, b) => a.label - b.label).map(lr => {
         const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl;
         return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
       });
