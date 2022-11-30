@@ -20,7 +20,7 @@ export default class LearnerReportForm extends React.Component {
       // the current values of the filters
       schools: [],
       teachers: [],
-      resources: [],
+      runnables: [],
       permission_forms: [],
       start_date: '',
       end_date: '',
@@ -29,13 +29,13 @@ export default class LearnerReportForm extends React.Component {
       filterables: {
         schools: [],
         teachers: [],
-        resources: [],
+        runnables: [],
         permission_forms: []
       },
       // waiting for results
       waitingFor_schools: false,
       waitingFor_teachers: false,
-      waitingFor_resources: false,
+      waitingFor_runnables: false,
       waitingFor_permission_forms: false,
       externalReportButtonDisabled: true,
       queryParams: {}
@@ -109,7 +109,7 @@ export default class LearnerReportForm extends React.Component {
               students: aggs.count_students.value,
               classes: aggs.count_classes.value,
               teachers: aggs.count_teachers.value,
-              resources: aggs.count_resources.value
+              runnables: aggs.count_runnables.value
             }
           }
         }
@@ -133,7 +133,7 @@ export default class LearnerReportForm extends React.Component {
 
   getQueryParams () {
     const params = {}
-    for (var filter of ['schools', 'teachers', 'resources', 'permission_forms']) {
+    for (var filter of ['schools', 'teachers', 'runnables', 'permission_forms']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         params[filter] = this.state[filter].map(v => v.value).sort().join(',')
       }
@@ -159,7 +159,7 @@ export default class LearnerReportForm extends React.Component {
     this.query(params)
     this.query(params, 'schools')
     this.query(params, 'teachers')
-    this.query(params, 'resources')
+    this.query(params, 'runnables')
     this.query(params, 'permission_forms')
   }
 
@@ -295,18 +295,21 @@ export default class LearnerReportForm extends React.Component {
     const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY;
     const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT;
 
-    return externalReports.filter((lr) => reportType === devStr ? lr.name.contains(devStr) : !lr.name.contains(devStr)).sort((a, b) => a.label - b.label).map(lr => {
+    externalReports.map((lr) => console.log("lr.name", lr.name));
+
+    return externalReports.sort((a, b) => a.label - b.label).map(lr => {
         const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl;
         return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
       });
   }
 
   renderForm () {
+    console.log("WOW I AM RENDERFORM");
     return (
       <form method='get'>
         {this.renderInput('schools')}
         {this.renderInput('teachers')}
-        {this.renderInput('resources')}
+        {this.renderInput('runnables')}
         {this.renderInput('permission_forms')}
 
         {this.renderDatePicker('start_date')}
