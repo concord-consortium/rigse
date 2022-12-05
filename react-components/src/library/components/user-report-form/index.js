@@ -140,7 +140,7 @@ export default class UserReportForm extends React.Component {
     this.query(params, 'runnables')
   }
 
-  renderInput (name) {
+  renderInput (name, titleOverride) {
     if (!this.state.filterables[name]) { return }
 
     const hits = this.state.filterables[name]
@@ -179,7 +179,7 @@ export default class UserReportForm extends React.Component {
 
     return (
       <div style={{ marginTop: '6px' }}>
-        <span>{`${title(name)}${titleCounts}`}{loadAllLink}</span>
+        <span>{`${titleOverride || title(name)}${titleCounts}`}{loadAllLink}</span>
         <Select
           name={name}
           options={options}
@@ -235,6 +235,16 @@ export default class UserReportForm extends React.Component {
       })
     }
 
+    externalReports.sort((a, b) => a.label.localeCompare(b.label))
+    const adminOnlyExternalReports = externalReports.filter(r => r.name.indexOf('[DEV]') !== -1)
+    const nonAdminExternalReports = externalReports.filter(r => adminOnlyExternalReports.indexOf(r) === -1)
+
+    const renderExternalReports = (reports) => {
+      return reports.map(lr =>
+        <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} portalToken={portalToken} />
+      )
+    }
+
     return (
       <form method='get' style={{ minHeight: 700 }}>
         {this.renderInput('teachers')}
@@ -242,19 +252,30 @@ export default class UserReportForm extends React.Component {
           <input type='checkbox' checked={this.state.removeCCTeachers} onChange={handleRemoveCCTeachers} /> Remove Concord Consortium Teachers? *
         </div>
         {this.renderInput('cohorts')}
-        {this.renderInput('runnables')}
+        {this.renderInput('runnables', 'Resources')}
 
         {this.renderDatePicker('start_date')}
         {this.renderDatePicker('end_date')}
 
         <div style={{ marginTop: '12px' }}>
-          {externalReports.map(lr =>
-            <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} portalToken={portalToken} />
-          )}
+          {renderExternalReports(nonAdminExternalReports)}
         </div>
+        {Portal.currentUser.isAdmin && adminOnlyExternalReports.length > 0 && (
+          <>
+            <div style={{ marginTop: '12px' }}>
+              <strong>For Developers Only:</strong>
+            </div>
+            <div>
+              {renderExternalReports(adminOnlyExternalReports)}
+            </div>
+          </>
+        )}
 
         <div style={{ marginTop: '24px' }}>
           * Concord Consortium Teachers belong to schools named "Concord Consortium".
+        </div>
+        <div style={{ marginTop: '24px' }}>
+          Need help?  Read the <a target='_blank' href='https://docs.google.com/document/d/1jNKjSworR_1ARdSPT8vq6PElKqZ-7zw8BFanZiVcxPs/edit'>Researcher Reports &amp; Logs User Guide</a>.
         </div>
       </form>
     )
@@ -262,7 +283,7 @@ export default class UserReportForm extends React.Component {
 
   render () {
     return (
-      <div className={css.learnerReportForm}>
+      <div className={css.userReportForm}>
         {this.renderForm()}
         {/* Spacer element is added so there's some space for the date picker element. Portal footer doesn't
             work too well with this form otherwise. */}

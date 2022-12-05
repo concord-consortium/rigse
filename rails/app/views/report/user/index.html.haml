@@ -10,7 +10,7 @@
 
 #form-container
 
-- external_reports = ExternalReport.where(report_type: ExternalReport::ResearcherUserReport).map { |r| {url: "#{r.url}", label: "#{r.launch_text}"} }.to_json
+- external_reports = ExternalReport.where(report_type: ExternalReport::ResearcherUserReport).map { |r| {url: "#{r.url}", name: "#{r.name}", label: "#{r.launch_text}"} }.to_json
 - portal_token = SignedJWT::create_portal_token(current_user, {domain: root_url})
 
 :javascript
