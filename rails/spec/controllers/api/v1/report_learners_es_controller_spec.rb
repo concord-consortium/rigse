@@ -449,6 +449,10 @@ describe API::V1::ReportLearnersEsController do
           expect(filter["learners"][0]["class_id"].to_i).to eq clazz1.id
           expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
           expect(filter["learners"][0]["teachers"].length).to eq 1
+          expect(filter["learners"][0]["teachers"][0]["name"]).not_to eq ""
+          expect(filter["learners"][0]["teachers"][0]["district"]).not_to eq ""
+          expect(filter["learners"][0]["teachers"][0]["state"]).not_to eq ""
+          expect(filter["learners"][0]["teachers"][0]["email"]).not_to eq ""
           expect(filter["learners"][1]["teachers"].length).to eq 2    # learner2's class has two teachers
           expect(filter["learners"][1]["teachers"][0]["user_id"].to_i).to eq teacher2.id
           expect(filter["learners"][1]["teachers"][1]["user_id"].to_i).to eq teacher1.id
@@ -473,6 +477,41 @@ describe API::V1::ReportLearnersEsController do
               expect(learner).to include("runnable_url")
               expect(learner["run_remote_endpoint"]).not_to eq nil
             end
+          end
+        end
+
+        describe "with incomplete teacher info" do
+          let(:fake_response_source) do
+            source = learner1.elastic_search_learner_model
+            source[:teachers_name] = nil
+            source[:teachers_district] = nil
+            source[:teachers_state] = nil
+            source[:teachers_email] = nil
+            source
+          end
+          let(:fake_response) do
+            {
+              hits: {
+                hits: [
+                  {
+                    _id: learner1.id,
+                    _source: fake_response_source
+                  },
+                ]
+              }
+            }.to_json
+          end
+          it "renders an empty string for the missing data" do
+            get :external_report_learners_from_jwt, params: {:query => {}, :page_size => 1000}
+            resp = JSON.parse(response.body)
+            filter = resp["json"]
+            expect(filter["learners"].length).to eq 1
+            expect(filter["learners"][0]["teachers"]).to be_an_instance_of(Array)
+            expect(filter["learners"][0]["teachers"].length).to eq 1
+            expect(filter["learners"][0]["teachers"][0]["name"]).to eq ""
+            expect(filter["learners"][0]["teachers"][0]["district"]).to eq ""
+            expect(filter["learners"][0]["teachers"][0]["state"]).to eq ""
+            expect(filter["learners"][0]["teachers"][0]["email"]).to eq ""
           end
         end
       end
