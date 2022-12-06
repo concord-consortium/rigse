@@ -111,6 +111,7 @@ const StemFinderResult = Component({
     )
   },
 
+// This function no longer called. Leaving here in case we want to restore call with different return value. 
   renderTimeRequired: function () {
     const resource = this.props.resource
     const timeRequired = resource.material_type === 'Activity'
@@ -343,7 +344,6 @@ const StemFinderResult = Component({
           </div>
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />
-            {this.renderTimeRequired()}
             {this.renderTags()}
             {this.renderAssignedClasses()}
           </div>
