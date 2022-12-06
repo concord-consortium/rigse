@@ -416,10 +416,10 @@ class API::V1::ReportLearnersEsController < API::APIController
     teachers = teacherIds.each_with_index.map do |id, i|
       {
         user_id: id,
-        name: learner.teachers_name[i],
-        district: learner.teachers_district[i],
-        state: learner.teachers_state[i],
-        email: learner.teachers_email[i],
+        name: learner.teachers_name.present? ? learner.teachers_name[i] : "",
+        district: learner.teachers_district.present? ? learner.teachers_district[i] : "",
+        state: learner.teachers_state.present? ? learner.teachers_state[i] : "",
+        email: learner.teachers_email.present? ? learner.teachers_email[i] : "",
       }
     end
     {
