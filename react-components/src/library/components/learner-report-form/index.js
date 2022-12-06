@@ -176,7 +176,7 @@ export default class LearnerReportForm extends React.Component {
     }
   }
 
-  renderInput (name) {
+  renderInput (name, titleOverride) {
     if (!this.state.filterables[name]) { return }
     const agg = this.state.filterables[name]
 
@@ -215,7 +215,7 @@ export default class LearnerReportForm extends React.Component {
 
     return (
       <div style={{ marginTop: '6px' }}>
-        <span>{title(name)}</span>
+        <span>{titleOverride || title(name)}</span>
         <Select
           name={name}
           options={options}
@@ -245,7 +245,7 @@ export default class LearnerReportForm extends React.Component {
     }
 
     return (
-      <div>
+      <div style={{ marginTop: '6px' }}>
         <div>{label}</div>
         <DayPickerInput
           inputProps={{ name: name }}
@@ -294,11 +294,22 @@ export default class LearnerReportForm extends React.Component {
     const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
     const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT
 
+    externalReports.sort((a, b) => a.label.localeCompare(b.label))
+    const adminOnlyExternalReports = externalReports.filter(r => r.name.indexOf('[DEV]') !== -1)
+    const nonAdminExternalReports = externalReports.filter(r => adminOnlyExternalReports.indexOf(r) === -1)
+
+    const renderExternalReports = (reports) => {
+      return reports.map(lr => {
+        const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl
+        return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
+      })
+    }
+
     return (
       <form method='get'>
         {this.renderInput('schools')}
         {this.renderInput('teachers')}
-        {this.renderInput('runnables')}
+        {this.renderInput('runnables', 'Resources')}
         {this.renderInput('permission_forms')}
 
         {this.renderDatePicker('start_date')}
@@ -306,16 +317,22 @@ export default class LearnerReportForm extends React.Component {
 
         {this.renderCheck('hide_names')}
 
-        {this.renderButton('Usage Report')}
-        {this.renderButton('Details Report')}
-        {this.renderButton('Arg Block Report')}
-
-        {
-          externalReports.map(lr => {
-            const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl
-            return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
-          })
-        }
+        <div style={{ marginTop: '12px' }}>
+          {renderExternalReports(nonAdminExternalReports)}
+        </div>
+        {Portal.currentUser.isAdmin && adminOnlyExternalReports.length > 0 && (
+          <>
+            <div style={{ marginTop: '12px' }}>
+              <strong>For Developers Only:</strong>
+            </div>
+            <div>
+              {renderExternalReports(adminOnlyExternalReports)}
+            </div>
+          </>
+        )}
+        <div style={{ marginTop: '24px' }}>
+          Need help?  Read the <a target='_blank' href='https://docs.google.com/document/d/1jNKjSworR_1ARdSPT8vq6PElKqZ-7zw8BFanZiVcxPs/edit'>Researcher Reports &amp; Logs User Guide</a>.
+        </div>
       </form>
     )
   }
