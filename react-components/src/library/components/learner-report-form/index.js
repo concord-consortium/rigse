@@ -165,12 +165,16 @@ export default class LearnerReportForm extends React.Component {
   renderTopInfo () {
     const { counts } = this.state
     if ((Object.keys(counts)).length > 0) {
-      return Object.keys(counts).map(k => (
-        <span key={k} style={{ paddingLeft: 12 }}>
-          <span style={{ fontWeight: 'bold' }}>{k}</span>
-          <span style={{ paddingLeft: 6 }}>{this.state.counts[k]}</span>
-        </span>
-      ))
+      return Object.keys(counts).map(k => {
+        // rename runnables to resources
+        const label = k === 'runnables' ? 'resources' : k
+        return (
+          <span key={k} style={{ paddingLeft: 12 }}>
+            <span style={{ fontWeight: 'bold' }}>{label}</span>
+            <span style={{ paddingLeft: 6 }}>{this.state.counts[k]}</span>
+          </span>
+        )
+      })
     } else {
       return <i className='wait-icon fa fa-spinner fa-spin' />
     }
