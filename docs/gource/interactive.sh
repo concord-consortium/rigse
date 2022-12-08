@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 gource --user-image-dir .git/avatar/ --highlight-all-users --user-scale 3.0 --font-size 24 \
 --title 'Rails Portal: http://github.com/concord-consortium/rigse' --git-branch rails3.0 \
 --file-filter 'vendor|public\/javascripts\/.+\/.+' --file-idle-time 10 --key --highlight-dirs \
