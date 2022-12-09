@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script is intended to be run inside of a development Docker container.
 # In the production environment a different script is used:

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -ev
 
 cp config/database.travis.yml config/database.yml

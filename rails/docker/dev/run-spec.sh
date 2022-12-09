@@ -1,5 +1,5 @@
-#!/bin/bash
-#
+#!/usr/bin/env bash
+
 # Run rspec tests in docker environment:
 #   – Execute like this: `docker-compose run --rm app ./docker/dev/run-spec.sh`
 #   – Or make an alias `alias dspec='docker-compose run --rm app ./docker/dev/run-spec.sh'`

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 gource --user-image-dir .git/avatar/ --highlight-all-users --user-scale 3.0 --font-size 24 \
 --file-filter 'vendor|public\/javascripts\/.+\/.+' --file-idle-time 4 --key --highlight-dirs \
 --camera-mode track --bloom-intensity 0.2 --max-files 300 \
