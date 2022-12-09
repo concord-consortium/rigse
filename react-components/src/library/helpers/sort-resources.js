@@ -3,11 +3,7 @@ const sortResources = function (resources, sortMethod) {
     ? resources.sort(sortByNewest)
     : sortMethod === 'Oldest'
       ? resources.sort(sortByOldest)
-      : sortMethod === 'Less time required'
-        ? resources.sort(sortByTimeRequiredAsc)
-        : sortMethod === 'More time required'
-          ? resources.sort(sortByTimeRequiredDesc)
-          : resources.sort(sortByName)
+      : resources.sort(sortByName)
 
   return sortedResources
 }
@@ -24,6 +20,10 @@ const sortByName = function (a, b) {
   return ((aName.toUpperCase() > bName.toUpperCase()) - (bName.toUpperCase() > aName.toUpperCase()))
 }
 
+/*
+
+Keep these in case we eventually get the time required synced by Lara
+
 const sortByTimeRequiredAsc = function (a, b) {
   const materialTypes = ['Interactive', 'Activity', 'Investigation', 'Collection']
   return ((materialTypes.indexOf(a.material_type) > materialTypes.indexOf(b.material_type)) - (materialTypes.indexOf(b.material_type) > materialTypes.indexOf(a.material_type)))
@@ -33,6 +33,7 @@ const sortByTimeRequiredDesc = function (a, b) {
   const materialTypes = ['Collection', 'Investigation', 'Activity', 'Interactive']
   return ((materialTypes.indexOf(a.material_type) > materialTypes.indexOf(b.material_type)) - (materialTypes.indexOf(b.material_type) > materialTypes.indexOf(a.material_type)))
 }
+*/
 
 const sortByNewest = function (a, b) {
   return ((b.created_at > a.created_at) - (a.created_at > b.created_at))
