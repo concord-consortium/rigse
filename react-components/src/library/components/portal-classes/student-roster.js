@@ -164,7 +164,7 @@ export default class StudentRoster extends React.Component {
 
     return (
       <>
-        {canEdit ? <StudentRosterHeader allowDefaultClass={allowDefaultClass} otherStudents={otherStudents} onAddStudent={this.handleAddStudent} onRegisterStudent={this.handleToggleRegisterStudentModal} /> : undefined}
+        {/* {canEdit ? <StudentRosterHeader allowDefaultClass={allowDefaultClass} otherStudents={otherStudents} onAddStudent={this.handleAddStudent} onRegisterStudent={this.handleToggleRegisterStudentModal} /> : undefined} */}
         {this.renderStudents(canEdit)}
         {showRegisterStudentModal ? <RegisterStudentModal onSubmit={this.handleRegisterStudent} onCancel={this.handleToggleRegisterStudentModal} /> : undefined }
         {showRegisterAnotherStudentModal ? this.renderRegisterAnotherModal() : undefined}
