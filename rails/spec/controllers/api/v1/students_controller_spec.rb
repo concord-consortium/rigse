@@ -102,22 +102,22 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
   end
 
-  describe "#register and #add_to_class" do
+  # describe "#register and #add_to_class" do
 
-    [:register, :add_to_class].each do |action|
-      it 'should fail without a clazz_id parameter' do
-        post action
-        expect(response).to have_http_status(:bad_request)
-        expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing clazz_id parameter"}')
-      end
+  #   [:register, :add_to_class].each do |action|
+  #     it 'should fail without a clazz_id parameter' do
+  #       post action
+  #       expect(response).to have_http_status(:bad_request)
+  #       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing clazz_id parameter"}')
+  #     end
 
-      it 'should fail with an invalid clazz_id parameter' do
-        post action, params: { clazz_id: 0 }
-        expect(response).to have_http_status(:bad_request)
-        expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id: 0"}')
-      end
-    end
-  end
+  #     it 'should fail with an invalid clazz_id parameter' do
+  #       post action, params: { clazz_id: 0 }
+  #       expect(response).to have_http_status(:bad_request)
+  #       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid clazz_id: 0"}')
+  #     end
+  #   end
+  # end
 
   describe '#register' do
     let (:password_confirmation) { "testtest" }
@@ -193,35 +193,35 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
   end
 
-  describe '#add_to_class' do
-    it 'should fail without a student_id parameter' do
-      post :add_to_class, params: { clazz_id: clazz.id }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id parameter"}')
-    end
+  # describe '#add_to_class' do
+  #   it 'should fail without a student_id parameter' do
+  #     post :add_to_class, params: { clazz_id: clazz.id }
+  #     expect(response).to have_http_status(:bad_request)
+  #     expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Missing student_id parameter"}')
+  #   end
 
-    it 'should fail with and invalid student_id parameter' do
-      post :add_to_class, params: { clazz_id: clazz.id, student_id: 0 }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_id: 0"}')
-    end
+  #   it 'should fail with and invalid student_id parameter' do
+  #     post :add_to_class, params: { clazz_id: clazz.id, student_id: 0 }
+  #     expect(response).to have_http_status(:bad_request)
+  #     expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Invalid student_id: 0"}')
+  #   end
 
-    it 'should fail when the teacher is not in the class' do
-      sign_in teacher_user
-      post :add_to_class, params: { clazz_id: clazz2.id, student_id: student.id }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to add students"}')
-    end
+  #   it 'should fail when the teacher is not in the class' do
+  #     sign_in teacher_user
+  #     post :add_to_class, params: { clazz_id: clazz2.id, student_id: student.id }
+  #     expect(response).to have_http_status(:bad_request)
+  #     expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a teacher of the class to add students"}')
+  #   end
 
-    it 'should succeed' do
-      sign_in teacher_user
-      expect(clazz.students.include? student).to eq false
-      post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
-      expect(response).to have_http_status(:ok)
-      expect(response.body).to eq('{"success":true}')
-      expect(clazz.students.include? student).to eq true
-    end
-  end
+  #   it 'should succeed' do
+  #     sign_in teacher_user
+  #     expect(clazz.students.include? student).to eq false
+  #     post :add_to_class, params: { clazz_id: clazz.id, student_id: student.id }
+  #     expect(response).to have_http_status(:ok)
+  #     expect(response.body).to eq('{"success":true}')
+  #     expect(clazz.students.include? student).to eq true
+  #   end
+  # end
 
   describe '#remove_from_class' do
     it 'should fail without a student_clazz_id parameter' do
