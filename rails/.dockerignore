@@ -2,7 +2,7 @@
 db/*.sqlite3
 db/*.sqlite3-journal
 log/*
-tmp/*
+tmp/
 config/app_environment_variables.rb
 config/aws_s3.yml
 config/settings.yml
@@ -17,3 +17,5 @@ solr/production
 solr/development
 solr/test
 solr/default
+# Ignore the Docker ignore file itself
+.dockerignore

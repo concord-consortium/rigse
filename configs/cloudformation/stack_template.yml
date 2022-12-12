@@ -1,0 +1,1237 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: portal ecs stack
+Parameters:
+  Environment:
+    Type: String
+    Default: qa
+    AllowedValues: [qa, staging, production]
+    Description: Enter staging or production. Default is qa.
+  ShortName:
+    Type: String
+    Description: 12 character or less name to use for naming created resources
+    MaxLength: "12"
+  SSLCertificateName:
+    Type: String
+    AllowedValues:
+      [
+        star.concord.org,
+        star.portal.concord.org,
+        star.staging.concord.org,
+        star.concordqa.org,
+      ]
+    Description:
+      Certificates registered with AWS. Choose which one to use for the
+      load balancer
+  DatabaseSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description:
+      Select security group of the RDS database. This security group will
+      be modified to allow access by the EC2 instances in this stack
+  DomainName:
+    Type: String
+    Description:
+      The DNS name that will be created or updated to point at the load
+      balancer
+  ReportDomainName:
+    Type: String
+    Description:
+      The DNS name of a secondary server that is configured to only handle reports
+      the main server will redirect users to this secondary server. This host will be accessed
+      with https so the name needs to work with the selected SSL certificate.
+
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Default: Z2P4W3M7MDAUV6
+    Description:
+      The Route53 hosted zone for the DNS entries for the portal and report portal.
+      This should be concord.org for the production AWS account and concordqa.org for the
+      QA AWS account.
+
+  ClusterStackName:
+    Type: String
+    Description:
+      The name of the CloudFormation stack that manages the cluster you want
+      this application deployed in.  The cluster security group will be added to the
+      database security group to allow the app to access the database. Vpc and subnets will be used by resources in this stack.
+
+  DbHost:
+    Type: String
+    Description: The hostname of the database. Template assumes database name is portal.
+  LogStashDbHost:
+    Type: String
+    Description:
+      The hostname of a logstash db host. If this is blank then logstash will not
+      be deployed. If it is set, it can be the same as the main DbHost or it can be a
+      read-only copy of the main database.
+      The template assumes database name is portal.
+  DbPassword:
+    Type: String
+    Description: The password of the database.
+  DbUserName:
+    Type: String
+    Default: master
+  NewRelicAppName:
+    Type: String
+    Description: App name to show in NewRelic
+  NewRelicLicenseKey:
+    Type: String
+
+  CloudWatchLogGroup:
+    Type: String
+    Description: logging group in cloud watch where the aws logs will be sent
+  MaxNumWebTasks:
+    Type: String
+    Description: maxium number of Portal Web tasks the autoscaler will spin up
+  MinNumWebTasks:
+    Type: String
+    Description: minimum number of Portal Web tasks the autoscaler will spin up
+  PortalDockerImage:
+    Type: String
+    Description: docker image to use for the web container and worker container
+
+  AdminEmail:
+    Type: String
+    Description: email address used as from address for some automated messages
+    Default: learn-help@concord.org
+  AuthoringSiteURL:
+    Type: String
+    Description:
+      URL to the authoring site, this is used for importing activities and a
+      convience link.
+    Default: https://authoring.staging.concord.org
+  HelpEmail:
+    Type: String
+    Description: email address added to various pages so users can contact us
+    Default: learn-help@concord.org
+  PadletPassword:
+    Type: String
+  PadletUser:
+    Type: String
+  PortalFeatures:
+    Type: String
+    Description: list of rails engines to load to support exstra features
+  PortalReportVersion:
+    Type: String
+    Description:
+      version of portal report used to construct the REPORT_VIEW_URL using the
+      pattern https://portal-report.concord.org/[PortalReportVersion]/ For example 'version/v1.0.0'
+  S3AccessKeyId:
+    Type: String
+  S3SecreateAccessKey:
+    Type: String
+  S3Bucket:
+    Type: String
+    Description: name of the bucket not including any region identifiers
+  SchoologyConsumerKey:
+    Type: String
+  SchoologyConsumerSecret:
+    Type: String
+  SiteKey:
+    Type: String
+  SiteName:
+    Type: String
+  SiteURL:
+    Type: String
+    Description:
+      this is used in places where we need to provide URLs back to this app.
+      These references are minimized to only where they are necessary. Examples are in the
+      automated email messages, and when providing return urls to external activities.
+  SMTPUser:
+    Type: String
+  SMTPPassword:
+    Type: String
+  Theme:
+    Type: String
+  JWTHMACSecret:
+    Type: String
+    Description: JWT HMAC Secret
+  PortalPagesLibraryVersion:
+    Type: String
+    Description:
+      the version or branch path to the portal pages javascript and css that
+      will be added to all web pages of the portal. This path will be added to URL should
+      be versioned so there are no issues with caching. For example 'version/v1.1.0' or
+      'branch/master'
+  ExternalCSSURL:
+    Type: String
+    Description:
+      location of an additional css file that will be added to every page
+      in the Portal.
+  ASNAPIKey:
+    Type: String
+    Description: key to access the ASN apis for searching standards
+  GoogleAnalyticsAccount:
+    Type: String
+    Description: key for Google Analytics
+  GoogleOptimizerAccount:
+    Type: String
+    Description: key for Google Optimize
+  GoogleClientKey:
+    Type: String
+    Description: key for Google SSO OAuth2
+  GoogleClientSecret:
+    Type: String
+    Description: secret for Google SSO OAuth2
+  RestartToggle:
+    Type: String
+    Description:
+      change this value to cause a rolling restart of the containers running
+      portal code. This is necessary after running migrations.
+  DynamicRobotsTxt:
+    Type: String
+    Description:
+      set to true to have portal generate robots.txt otherwise the default
+      robots.txt will be used which denies all access
+    Default: false
+    AllowedValues:
+      - true
+      - false
+  OpenGraphTitle:
+    Type: String
+    Description: OpenGraph title property used for home page
+  OpenGraphDescription:
+    Type: String
+    Description: OpenGraph description property used for home page and other
+      pages without their own Description
+
+  OpenGraphImageURL:
+    Type: String
+    Description: OpenGraph image property used for home page ad other pages
+      without their own description
+
+  RollbarAccessToken:
+    Type: String
+    Description: token for server side error messages sent to Rollbar
+  RollbarClientAccessToken:
+    Type: String
+    Description: token for client side error messages sent to Rollbar
+
+  AppSignalPushAPIKey:
+    Type: String
+    Description: API Key for appsignal service
+  AppSignalAppName:
+    Type: String
+    Description: Name of app in the appsignal dashboard
+
+  EnewsAPIKey:
+    Type: String
+    Description: mailchimp API key to register for enews
+  EnewsAPIListID:
+    Type: String
+    Description: mailchimp list id for enews
+  CreateLoadBalancerHTTPRedirect:
+    Type: String
+    Description:
+      create a the load balancer listener to redirect http traffic. This is
+      temporary. The stack can't be created when an existing port 80 listener is defined.
+      And the previous version of this stack has one defined in a nested template. This
+      nested template doesn't get cleaned up until after the new template tries to create
+      the new port 80 listener.
+    AllowedValues: ["true", "false"]
+  DeviseSecretKey:
+    Type: String
+    Description:
+      this key is used to generate random tokens for password reset and
+      signup.
+  RailsSecretKeyBase:
+    Type: String
+    Description:
+      Secret key base for cookie signing.  Used as the input secret to Rail's key generator,
+      which in turn is used to create all MessageVerifiers/MessageEncryptors, including the ones that
+      sign and encrypt cookies. To generate use `rake secret`, which generates a 128 character hex string.
+
+  NestedTemplatesFolder:
+    Type: String
+    Default: https://s3.amazonaws.com/concord-devops/cloud-formation/v3
+
+  ElasticSearchSubnetId:
+    Type: String
+    # QA Value: 'subnet-13a1133d'
+    Default: "subnet-7fb16326"
+
+  LoggerUri:
+    Type: String
+    Default: https://logger.concord.org/logs
+    Description: Protocol relative uri for log manager api endpoint. Default is https://logger.concord.org/logs.
+
+Conditions:
+  PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
+  CreateLoadBalancerHTTPRedirectCond:
+    !Equals [!Ref CreateLoadBalancerHTTPRedirect, "true"]
+  CreateLogStashCond: !Not [!Equals [!Ref LogStashDbHost, ""]]
+
+Resources:
+  LoadBalancerStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${NestedTemplatesFolder}/ecs-load-balancer.yml"
+      Parameters:
+        LoadBalancerIdleTimeout: "180"
+        DomainName: !Ref "DomainName"
+        ClusterSecurityGroupId:
+          {
+            "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSecurityGroupId",
+          }
+        VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
+        Subnets:
+          { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSubnets" }
+        HostedZoneId: !Ref "HostedZoneId"
+
+  AppService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - AppListener443
+    Properties:
+      Role: ecsServiceRole
+      TaskDefinition: !Ref AppTaskDefinition
+      DesiredCount: !Ref MinNumWebTasks
+      LoadBalancers:
+        - TargetGroupArn: !Ref AppTargetGroup
+          ContainerPort: "3000"
+          ContainerName: App
+      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+
+  AppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: "30"
+      HealthCheckProtocol: HTTP
+      HealthyThresholdCount: "2"
+      UnhealthyThresholdCount: "3"
+      HealthCheckTimeoutSeconds: "5"
+      # even though this is set to 80 the actual port will
+      # be overriden by each of the containers that is added
+      # to the target group
+      Port: "80"
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: "120"
+      VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
+      # Use this name property to force the TargetGroup to be recreated whenever the load
+      # balancer is recreated. Otherwise CloudFormation tries to add the TargetGroup
+      # to the new load balancer before removing it from the old one. And that results
+      # in an error.
+      Name: !Sub "${ShortName}App-${LoadBalancerStack.Outputs.LoadBalancerEndingId}"
+
+  AppListener443:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn:
+            !FindInMap [SSLCertificateMap, !Ref "SSLCertificateName", Id]
+      DefaultActions:
+        - TargetGroupArn: !Ref AppTargetGroup
+          Type: forward
+      LoadBalancerArn: !GetAtt LoadBalancerStack.Outputs.LoadBalancer
+      Port: "443"
+      Protocol: HTTPS
+
+  AppListener80:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Condition: CreateLoadBalancerHTTPRedirectCond
+    Properties:
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Host: "#{host}"
+            Path: "/#{path}"
+            Port: "443"
+            Protocol: "HTTPS"
+            Query: "#{query}"
+            StatusCode: HTTP_301
+      LoadBalancerArn: !GetAtt LoadBalancerStack.Outputs.LoadBalancer
+      Port: "80"
+      Protocol: HTTP
+
+  ElasticSearchStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${NestedTemplatesFolder}/elastic-search.yml"
+      Parameters:
+        ClusterSecurityGroupId:
+          {
+            "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSecurityGroupId",
+          }
+        VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
+        SubnetIds: !Ref ElasticSearchSubnetId
+
+  # Notes from 2017-11-14:
+  # Based on usage over 4 weeks there are multiple spikes up to 1500 CPU units
+  # Changing this value requires consideration of both the cluster autoscaler and
+  # the service autoscaler. The cluster is autoscaled based on CPU reservation
+  # so a larger value here will cause more EC2 instances to be added to the cluster
+  # The service autoscaler is based on the percentage of CPU used out of this reserved
+  # amount. So to keep the same kind of service scaling pattern the service autoscaler
+  # is adjusted when this number is changed.
+  # The learn portal was often bumping into the reserved memory amount of 1200mb.
+  # Memory is increased to 1400mb.  This is necessary because the cluster is scaled by CPU
+  # reservation only so if the Memory reservation is too high then the cluster won't
+  # be scaled and new service won't fit in the cluster
+  #
+  # Notes from 2019-04-03:
+  # The cluster has been changed to use the M series of EC2 instances so we have much
+  # more memory to play with. Also on average over many weeks the average portal app
+  # CPU Utilization is only getting up to 18%. I've learned that it is fine for tasks to
+  # spike well above their Cpu requirement. So I think it is better to adjust their Cpu
+  # requirement to be pretty close to their average. This helps cluster scale correctly.
+  # So I'm going set the Cpu requirment 384 this should bump the average usage up to 48%.
+  # We could probably lower this further, but I'd like to be conservative with the
+  # adjustments. I'm going to leave the memory the same.
+  #
+  # Notes from 2020-12-09:
+  # With the Cpu of 384, and the Cpu scaling alarm of 93, the app service was not scaling
+  # soon enough. The p95 response time was getting up to 3 seconds and the number of tasks
+  # was not scaling. I'm trying reducing the Cpu to 256 and the Cpu scaling alarm to 90.
+  # This should trigger a scale event much sooner and hopefully keep the overall response
+  # time down. The maximum number of app tasks (set as a parameter) is also increased to
+  # 20.
+  AppTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${AWS::StackName}-App"
+      ContainerDefinitions:
+        - Name: App
+          Image: !Ref PortalDockerImage
+          Cpu: "256"
+          PortMappings:
+            - ContainerPort: "3000"
+          Memory: "1400"
+          Essential: "true"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref CloudWatchLogGroup
+              awslogs-stream-prefix: portal
+          Environment:
+            - Name: ADMIN_EMAIL
+              Value: !Ref AdminEmail
+            - Name: APPSIGNAL_PUSH_API_KEY
+              Value: !Ref AppSignalPushAPIKey
+            - Name: APPSIGNAL_APP_NAME
+              Value: !Ref AppSignalAppName
+            - Name: APPSIGNAL_APP_ENV
+              Value: !Ref Environment
+            # this is to help appsignal track revisions
+            - Name: APP_REVISION
+              Value: !Select [1, !Split [":", !Ref PortalDockerImage]]
+            - Name: AUTHORING_SITE_URL
+              Value: !Ref AuthoringSiteURL
+            - Name: DB_HOST
+              Value: !Ref DbHost
+            - Name: DB_NAME
+              Value: portal
+            - Name: DB_PASSWORD
+              Value: !Ref DbPassword
+            - Name: DB_USER
+              Value: !Ref DbUserName
+            - Name: DEVISE_SECRET_KEY
+              Value: !Ref DeviseSecretKey
+            - Name: HELP_EMAIL
+              Value: !Ref HelpEmail
+            - Name: NEW_RELIC_APP_NAME
+              Value: !Ref NewRelicAppName
+            - Name: NEW_RELIC_LICENSE_KEY
+              Value: !Ref NewRelicLicenseKey
+            - Name: NUM_UNICORN_PROCESSES
+              Value: "2"
+            - Name: PADLET_PASSWORD
+              Value: !Ref PadletPassword
+            - Name: PADLET_USER
+              Value: !Ref PadletUser
+            - Name: PORTAL_FEATURES
+              Value: !Ref PortalFeatures
+            - Name: RAILS_STDOUT_LOGGING
+              Value: "true"
+            - Name: REPORT_DOMAINS
+              Value: portal-report.concord.org concord-consortium.github.io
+            - Name: REPORT_VIEW_URL
+              Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
+            - Name: S3_ACCESS_KEY_ID
+              Value: !Ref S3AccessKeyId
+            - Name: S3_BUCKET
+              Value: !Ref S3Bucket
+            - Name: S3_SECRET_ACCESS_KEY
+              Value: !Ref S3SecreateAccessKey
+            - Name: SCHOOLOGY_CONSUMER_KEY
+              Value: !Ref SchoologyConsumerKey
+            - Name: SCHOOLOGY_CONSUMER_SECRET
+              Value: !Ref SchoologyConsumerSecret
+            - Name: SITE_KEY
+              Value: !Ref SiteKey
+            - Name: SITE_NAME
+              Value: !Ref SiteName
+            - Name: SITE_URL
+              Value: !Ref SiteURL
+            - Name: SMTP_PASS
+              Value: !Ref SMTPPassword
+            - Name: SMTP_USER
+              Value: !Ref SMTPUser
+            - Name: SOLR_HOST
+              Value: !GetAtt InternalLoadBalancerStack.Outputs.ELBDNSName # this should refer to the solr
+            - Name: SOLR_PORT
+              Value: "80"
+            - Name: THEME
+              Value: !Ref Theme
+            - Name: TOP_LEVEL_CONTAINER_NAME
+              Value: activity
+            - Name: RESEARCHER_REPORT_HOST
+              Value: !Sub "https://${ReportDomainName}"
+            - Name: JWT_HMAC_SECRET
+              Value: !Ref JWTHMACSecret
+            - !If
+              - PortalPagesLibraryDefined
+              - Name: PORTAL_PAGES_LIBRARY_URL
+                Value: !Sub "https://portal-pages.concord.org/${PortalPagesLibraryVersion}/library"
+              - !Ref "AWS::NoValue"
+            - Name: EXTERNAL_CSS_URL
+              Value: !Ref ExternalCSSURL
+            - Name: ASN_API_KEY
+              Value: !Ref ASNAPIKey
+            - Name: GOOGLE_ANALYTICS_ACCOUNT
+              Value: !Ref GoogleAnalyticsAccount
+            - Name: GOOGLE_OPTIMIZER_ACCOUNT
+              Value: !Ref GoogleOptimizerAccount
+            - Name: GOOGLE_CLIENT_KEY
+              Value: !Ref GoogleClientKey
+            - Name: GOOGLE_CLIENT_SECRET
+              Value: !Ref GoogleClientSecret
+            - Name: RESTART_TOGGLE
+              Value: !Ref RestartToggle
+            - Name: DYNAMIC_ROBOTS_TXT
+              Value: !Ref DynamicRobotsTxt
+            - Name: CC_PORTAL_VERSION
+              Value: !Join
+                - ", "
+                - - !Join [
+                      "-",
+                      [
+                        "portal",
+                        !Select [1, !Split [":", !Ref PortalDockerImage]],
+                      ],
+                    ]
+                  - !If
+                    - PortalPagesLibraryDefined
+                    - !Join [
+                        "-",
+                        [
+                          "pages",
+                          !Select [
+                            1,
+                            !Split ["/", !Ref PortalPagesLibraryVersion],
+                          ],
+                        ],
+                      ]
+                    - !Ref "AWS::NoValue"
+                  - !Join [
+                      "-",
+                      [
+                        "report",
+                        !Select [1, !Split ["/", !Ref PortalReportVersion]],
+                      ],
+                    ]
+            - Name: OG_TITLE
+              Value: !Ref OpenGraphTitle
+            - Name: OG_DESCRIPTION
+              Value: !Ref OpenGraphDescription
+            - Name: OG_IMAGE_URL
+              Value: !Ref OpenGraphImageURL
+            - Name: ROLLBAR_ACCESS_TOKEN
+              Value: !Ref RollbarAccessToken
+            - Name: ROLLBAR_CLIENT_ACCESS_TOKEN
+              Value: !Ref RollbarClientAccessToken
+            - Name: ENEWS_API_KEY
+              Value: !Ref EnewsAPIKey
+            - Name: ENEWS_API_LISTID
+              Value: !Ref EnewsAPIListID
+            - Name: ENEWS_API_URI
+              Value: "https://us2.api.mailchimp.com/3.0/lists"
+            - Name: ELASTICSEARCH_URL
+              Value: !Sub "https://${ElasticSearchStack.Outputs.DomainEndpoint}"
+            - Name: RAILS_SECRET_KEY_BASE
+              Value: !Ref RailsSecretKeyBase
+            - Name: LOGGER_URI
+              Value: !Ref LoggerUri
+
+  # Notes from 2017-11-14:
+  # Values where changed to match the changed made to the CPU reservation value for the
+  # App service:
+  #   ScaleUpStepBoundary 13
+  #   ScaleUpAlarmThreshold 35
+  #   ScaleDownAlarmThreshold 18
+
+  # Notes from 2019-04-03:
+  # The CPU reservation of the App service was adjusted from 1024 to 384 so several of the
+  # values need to multiplyed by 2.66 (1024/384).
+  #   ScaleUpStepBoundary 35
+  #   ScaleUpAlarmThreshold 93
+  #   ScaleDownAlarmThreshold 47
+
+  # Notes from 2020-12-09:
+  # The CPU reservation of the app service was adjusted from 384 to 256. The app was not
+  # scaling soon enough, with this CPU decrease the average CPU metric will be 1.5 times
+  # larger. So the scale up alarm doesn't need to be adjusted drastically. To err on the
+  # side of caution I've decreased the thresholds to keep the number of tasks higher.
+  #  ScaleUpStepBoundary 35
+  #  ScaleUpAlarmThreshold 80
+  #  ScaleDownAlarmThreshold 35
+  AppScalingStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      # Change to location of scaling Template
+      TemplateURL: !Sub "${NestedTemplatesFolder}/task-autoscale-2-step-up.yml"
+      Parameters:
+        ServiceName: !GetAtt AppService.Name
+        ClusterName:
+          { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+        MaxNumTasks: !Ref MaxNumWebTasks
+        MinNumTasks: !Ref MinNumWebTasks
+        # we are using a longer alarm evaluation period to deal with the cooldown
+        # period. There might be a better way to handle this.
+        ScaleUpCooldown: "0"
+        ScaleUpStepBoundary: "35"
+        ScaleUpStepAdjustment1: "100"
+        ScaleUpStepAdjustment2: "200"
+        ScaleUpAlarmThreshold: "80"
+        # this 2 minute evaluation period helps with an initial spike
+        # when a new container is started, and it also helps the CPUUtilization start
+        # to reflect the change in capacity. This is also the point of the Cooldown setting
+        # but in that case I think it prevents more scaling up if we aren't able to keep up
+        # with demand.
+        ScaleUpAlarmEvaluationPeriods: "2"
+        ScaleUpAlarmPeriod: "60"
+        ScaleDownCooldown: "300"
+        ScaleDownStepAdjustment: "-1"
+        ScaleDownAlarmThreshold: "35"
+        # this uses 5 periods of 1 minute instead of 1 period of 5 minutes
+        # this approach helps offset a running average affecting the responsiveness.
+        # If the CPU is at 49%, but 5 minutes ago it started at 1% then a 5 minute average
+        # could be below 35%. However with 5 evaluation periods, then the 49% will cancel
+        # the alarm.
+        ScaleDownAlarmEvaluationPeriods: "5"
+        ScaleDownAlarmPeriod: "60"
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref CloudWatchLogGroup
+
+  DBIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref "DatabaseSecurityGroupId"
+      IpProtocol: tcp
+      FromPort: "3306"
+      ToPort: "3306"
+      SourceSecurityGroupId:
+        { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSecurityGroupId" }
+
+  LogStashExecutionRole:
+    Type: AWS::IAM::Role
+    Condition: CreateLogStashCond
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ["ecs-tasks.amazonaws.com"]
+            Action: ["sts:AssumeRole"]
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonESFullAccess
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+  LogStashTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Condition: CreateLogStashCond
+    Properties:
+      Family: !Sub "${AWS::StackName}-LogStash"
+      # specifiy a execution role that provides access to elastic search
+      ExecutionRoleArn: !GetAtt [LogStashExecutionRole, Arn]
+      ContainerDefinitions:
+        - Name: LogStash
+          Image: concordconsortium/rigse-logstash:logstash-v1.1.3
+          Cpu: "256"
+          # if you adjust the memory you should also adjust the -Xmx setting below
+          Memory: "2500"
+          Essential: "true"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref CloudWatchLogGroup
+              awslogs-stream-prefix: portal
+          Environment:
+            - Name: DB_NAME
+              Value: portal
+            - Name: DB_HOST
+              Value: !Ref LogStashDbHost
+            - Name: DB_PASSWORD
+              Value: !Ref DbPassword
+            - Name: DB_USER
+              Value: !Ref DbUserName
+            - Name: ES_HOST
+              Value: !GetAtt ElasticSearchStack.Outputs.DomainEndpoint
+            - Name: AWS_REGION
+              Value: us-east-1
+            - Name: LOGSTASH_SCHEDULE
+              Value: "*/30 * * * *"
+            - Name: LS_JAVA_OPTS
+              Value: "-Xmx2g"
+
+  LogStashService:
+    Type: AWS::ECS::Service
+    Condition: CreateLogStashCond
+    Properties:
+      TaskDefinition: !Ref LogStashTaskDefinition
+      DesiredCount: "1"
+      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+
+  # 2019-04-04
+  # Most of the time the report task is just sitting around. So it doesn't need to
+  # reserve a lot of Cpu. A much better approach would be look again at the parts of the
+  # reporting that are slow and move them into worker, then we can get rid of this report
+  # task. But in the meantime we an set the Cpu low, and just let it spike up to use as
+  # much of the available CPU as it can, when someone decides to use it.
+  # So we'll move the Cpu down from 512 to 128.
+  # Looking at the memory usage of learn the report service is maxing out around 40%
+  # So I'll decrease the memory reservation to 1400 which is the same as the app task
+  ReportTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${AWS::StackName}-Report"
+      ContainerDefinitions:
+        - Name: Report
+          Image: !Ref PortalDockerImage
+          Cpu: "128"
+          PortMappings:
+            - ContainerPort: "3000"
+          Memory: "1400"
+          Essential: "true"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref CloudWatchLogGroup
+              awslogs-stream-prefix: portal
+          Environment:
+            - Name: ADMIN_EMAIL
+              Value: !Ref AdminEmail
+            - Name: APPSIGNAL_PUSH_API_KEY
+              Value: !Ref AppSignalPushAPIKey
+            - Name: APPSIGNAL_APP_NAME
+              Value: !Ref AppSignalAppName
+            - Name: APPSIGNAL_APP_ENV
+              Value: !Ref Environment
+            # this is to help appsignal track revisions
+            - Name: APP_REVISION
+              Value: !Select [1, !Split [":", !Ref PortalDockerImage]]
+            - Name: AUTHORING_SITE_URL
+              Value: !Ref AuthoringSiteURL
+            - Name: DB_HOST
+              Value: !Ref DbHost
+            - Name: DB_NAME
+              Value: portal
+            - Name: DB_PASSWORD
+              Value: !Ref DbPassword
+            - Name: DB_USER
+              Value: !Ref DbUserName
+            - Name: DEVISE_SECRET_KEY
+              Value: !Ref DeviseSecretKey
+            - Name: HELP_EMAIL
+              Value: !Ref HelpEmail
+            - Name: NEW_RELIC_APP_NAME
+              Value: !Ref NewRelicAppName
+            - Name: NEW_RELIC_LICENSE_KEY
+              Value: !Ref NewRelicLicenseKey
+            - Name: NUM_UNICORN_PROCESSES
+              Value: "2"
+            - Name: PADLET_PASSWORD
+              Value: !Ref PadletPassword
+            - Name: PADLET_USER
+              Value: !Ref PadletUser
+            - Name: PORTAL_FEATURES
+              Value: !Ref PortalFeatures
+            - Name: RAILS_STDOUT_LOGGING
+              Value: "true"
+            - Name: REPORT_DOMAINS
+              Value: portal-report.concord.org concord-consortium.github.io
+            - Name: REPORT_VIEW_URL
+              Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
+            - Name: S3_ACCESS_KEY_ID
+              Value: !Ref S3AccessKeyId
+            - Name: S3_BUCKET
+              Value: !Ref S3Bucket
+            - Name: S3_SECRET_ACCESS_KEY
+              Value: !Ref S3SecreateAccessKey
+            - Name: SCHOOLOGY_CONSUMER_KEY
+              Value: !Ref SchoologyConsumerKey
+            - Name: SCHOOLOGY_CONSUMER_SECRET
+              Value: !Ref SchoologyConsumerSecret
+            - Name: SITE_KEY
+              Value: !Ref SiteKey
+            - Name: SITE_NAME
+              Value: !Ref SiteName
+            - Name: SITE_URL
+              Value: !Ref SiteURL
+            - Name: SMTP_PASS
+              Value: !Ref SMTPPassword
+            - Name: SMTP_USER
+              Value: !Ref SMTPUser
+            - Name: SOLR_HOST
+              Value: !GetAtt InternalLoadBalancerStack.Outputs.ELBDNSName # this should refer to the solr
+            - Name: SOLR_PORT
+              Value: "80"
+            - Name: THEME
+              Value: !Ref Theme
+            - Name: TOP_LEVEL_CONTAINER_NAME
+              Value: activity
+            - Name: JWT_HMAC_SECRET
+              Value: !Ref JWTHMACSecret
+            - !If
+              - PortalPagesLibraryDefined
+              - Name: PORTAL_PAGES_LIBRARY_URL
+                Value: !Sub "https://portal-pages.concord.org/${PortalPagesLibraryVersion}/library"
+              - !Ref "AWS::NoValue"
+            - Name: EXTERNAL_CSS_URL
+              Value: !Ref ExternalCSSURL
+            - Name: RESEARCHER_REPORT_ONLY
+              Value: "true"
+            - Name: UNICORN_TIMEOUT
+              Value: "300"
+            - Name: GOOGLE_ANALYTICS_ACCOUNT
+              Value: !Ref GoogleAnalyticsAccount
+            - Name: GOOGLE_OPTIMIZER_ACCOUNT
+              Value: !Ref GoogleOptimizerAccount
+            - Name: GOOGLE_CLIENT_KEY
+              Value: !Ref GoogleClientKey
+            - Name: GOOGLE_CLIENT_SECRET
+              Value: !Ref GoogleClientSecret
+            - Name: ROLLBAR_ACCESS_TOKEN
+              Value: !Ref RollbarAccessToken
+            - Name: ROLLBAR_CLIENT_ACCESS_TOKEN
+              Value: !Ref RollbarClientAccessToken
+            - Name: RESTART_TOGGLE
+              Value: !Ref RestartToggle
+            - Name: CC_PORTAL_VERSION
+              Value: !Join
+                - ", "
+                - - !Join [
+                      "-",
+                      [
+                        "portal",
+                        !Select [1, !Split [":", !Ref PortalDockerImage]],
+                      ],
+                    ]
+                  - !If
+                    - PortalPagesLibraryDefined
+                    - !Join [
+                        "-",
+                        [
+                          "pages",
+                          !Select [
+                            1,
+                            !Split ["/", !Ref PortalPagesLibraryVersion],
+                          ],
+                        ],
+                      ]
+                    - !Ref "AWS::NoValue"
+                  - !Join [
+                      "-",
+                      [
+                        "report",
+                        !Select [1, !Split ["/", !Ref PortalReportVersion]],
+                      ],
+                    ]
+            - Name: ELASTICSEARCH_URL
+              Value: !Sub "https://${ElasticSearchStack.Outputs.DomainEndpoint}"
+            - Name: RAILS_SECRET_KEY_BASE
+              Value: !Ref RailsSecretKeyBase
+
+  # Need ECS Service definition
+  ReportTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckProtocol: HTTP
+      # even though this is set to 80 the actual port will
+      # be overriden by each of the containers that is added
+      # to the target group
+      Port: "80"
+      Protocol: HTTP
+      VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
+      TargetGroupAttributes:
+        # The report is only used by admins, and if their connections get killed off during
+        # an update that is OK
+        - Key: deregistration_delay.timeout_seconds
+          Value: "20"
+      # Use this name property to force the TargetGroup to be recreated whenever the load
+      # balancer is recreated. Otherwise CloudFormation tries to add the TargetGroup
+      # to the new load balancer before removing it from the old one. And that results
+      # in an error.
+      Name: !Sub "ReportTarget-${LoadBalancerStack.Outputs.LoadBalancerEndingId}"
+
+  ReportDNS:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName: !GetAtt LoadBalancerStack.Outputs.ELBDNSName
+        HostedZoneId: !GetAtt LoadBalancerStack.Outputs.CanonicalHostedZoneID
+      # HostedZoneName: concord.org.
+      HostedZoneId: !Ref "HostedZoneId"
+      Name: !Ref ReportDomainName
+      Type: A
+
+  ReportService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - AppListener443
+    # The docs recommend adding a dependency on the load balancer listener hear
+    # but I don't see why that is necessary so were are trying without it...
+    Properties:
+      Role: ecsServiceRole
+      TaskDefinition: !Ref ReportTaskDefinition
+      DesiredCount: "1"
+      LoadBalancers:
+        - TargetGroupArn: !Ref ReportTargetGroup
+          ContainerPort: "3000"
+          ContainerName: Report
+      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+
+  # Send all requests to the report domain name to the report target group
+  ReportListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref AppListener443
+      Actions:
+        - TargetGroupArn: !Ref ReportTargetGroup
+          Type: forward
+      Conditions:
+        - Field: host-header
+          Values:
+            - !Ref ReportDomainName
+      Priority: "1"
+
+  # Notes from Nov 14, 2017
+  # Reviewing data over 4 weeks of usage
+  # several CPU spikes up to 768 CPU and one spike up to 1024.
+  # Since we are running on CPU rich Servers it is safe to reserve as much as the spikes
+  # the workers never used more than 270mb of memory. That number is an average of the
+  # workers in each service. So individual workers might have spiked higher.
+  # This number of 600 provides quite a lot of padding
+  #
+  # Notes from March 21, 2019
+  # looking at 3 months of usage with a worker/task of 1, cpu:1024, memory:600
+  # CPU maxing out at 65% with some spikes during deploment (it seems)
+  # Memory maxing out at 50%
+  # I'm trying two changes to use resources better and trigger more autoscaling:
+  # Cpu: 512, Memory: 384
+  # what we really need for autoscaling though is a queue depth metric so we can get a
+  # rough sense of how far behind we are getting on our queue
+  #
+  # Notes from March 26, 2019
+  # The worker was running around 60% CPU usage under load. Then when a few more tasks
+  # came in, the processing time increased probably because of a delayed queue. So I'm
+  # decreasing the Cpu limit to 384 this will cause the percent usage to be  80% which
+  # will trigger an autoscale event
+  # note: this change was not deployed until March 28
+
+  WorkerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${AWS::StackName}-Worker"
+      ContainerDefinitions:
+        - Name: Worker
+          Image: !Ref PortalDockerImage
+          Cpu: "384"
+          EntryPoint:
+            - script/delayed_job
+          Command:
+            - run
+          Memory: "384"
+          Essential: "true"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref CloudWatchLogGroup
+              awslogs-stream-prefix: portal
+          Environment:
+            - Name: ADMIN_EMAIL
+              Value: !Ref AdminEmail
+            - Name: APPSIGNAL_PUSH_API_KEY
+              Value: !Ref AppSignalPushAPIKey
+            - Name: APPSIGNAL_APP_NAME
+              Value: !Ref AppSignalAppName
+            - Name: APPSIGNAL_APP_ENV
+              Value: !Ref Environment
+            # this is to help appsignal track revisions
+            - Name: APP_REVISION
+              Value: !Select [1, !Split [":", !Ref PortalDockerImage]]
+            - Name: AUTHORING_SITE_URL
+              Value: !Ref AuthoringSiteURL
+            - Name: DB_HOST
+              Value: !Ref DbHost
+            - Name: DB_NAME
+              Value: portal
+            - Name: DB_PASSWORD
+              Value: !Ref DbPassword
+            - Name: DB_USER
+              Value: !Ref DbUserName
+            - Name: DEVISE_SECRET_KEY
+              Value: !Ref DeviseSecretKey
+            - Name: HELP_EMAIL
+              Value: !Ref HelpEmail
+            - Name: NEW_RELIC_APP_NAME
+              Value: !Ref NewRelicAppName
+            - Name: NEW_RELIC_LICENSE_KEY
+              Value: !Ref NewRelicLicenseKey
+            - Name: NUM_UNICORN_PROCESSES
+              Value: "2"
+            - Name: PADLET_PASSWORD
+              Value: !Ref PadletPassword
+            - Name: PADLET_USER
+              Value: !Ref PadletUser
+            - Name: PORTAL_FEATURES
+              Value: !Ref PortalFeatures
+            - Name: RAILS_STDOUT_LOGGING
+              Value: "true"
+            - Name: REPORT_DOMAINS
+              Value: portal-report.concord.org concord-consortium.github.io
+            - Name: REPORT_VIEW_URL
+              Value: !Sub "https://portal-report.concord.org/${PortalReportVersion}/"
+            - Name: S3_ACCESS_KEY_ID
+              Value: !Ref S3AccessKeyId
+            - Name: S3_BUCKET
+              Value: !Ref S3Bucket
+            - Name: S3_SECRET_ACCESS_KEY
+              Value: !Ref S3SecreateAccessKey
+            - Name: SCHOOLOGY_CONSUMER_KEY
+              Value: !Ref SchoologyConsumerKey
+            - Name: SCHOOLOGY_CONSUMER_SECRET
+              Value: !Ref SchoologyConsumerSecret
+            - Name: SITE_KEY
+              Value: !Ref SiteKey
+            - Name: SITE_NAME
+              Value: !Ref SiteName
+            - Name: SITE_URL
+              Value: !Ref SiteURL
+            - Name: SMTP_PASS
+              Value: !Ref SMTPPassword
+            - Name: SMTP_USER
+              Value: !Ref SMTPUser
+            - Name: SOLR_HOST
+              Value: !GetAtt InternalLoadBalancerStack.Outputs.ELBDNSName # this should refer to the solr
+            - Name: SOLR_PORT
+              Value: "80"
+            - Name: THEME
+              Value: !Ref Theme
+            - Name: TOP_LEVEL_CONTAINER_NAME
+              Value: activity
+            - Name: JWT_HMAC_SECRET
+              Value: !Ref JWTHMACSecret
+            - !If
+              - PortalPagesLibraryDefined
+              - Name: PORTAL_PAGES_LIBRARY_URL
+                Value: !Sub "https://portal-pages.concord.org/${PortalPagesLibraryVersion}/library"
+              - !Ref "AWS::NoValue"
+            - Name: EXTERNAL_CSS_URL
+              Value: !Ref ExternalCSSURL
+            - Name: ASN_API_KEY
+              Value: !Ref ASNAPIKey
+            - Name: GOOGLE_ANALYTICS_ACCOUNT
+              Value: !Ref GoogleAnalyticsAccount
+            - Name: GOOGLE_OPTIMIZER_ACCOUNT
+              Value: !Ref GoogleOptimizerAccount
+            - Name: GOOGLE_CLIENT_KEY
+              Value: !Ref GoogleClientKey
+            - Name: GOOGLE_CLIENT_SECRET
+              Value: !Ref GoogleClientSecret
+            - Name: ROLLBAR_ACCESS_TOKEN
+              Value: !Ref RollbarAccessToken
+            - Name: ROLLBAR_CLIENT_ACCESS_TOKEN
+              Value: !Ref RollbarClientAccessToken
+            - Name: RESTART_TOGGLE
+              Value: !Ref RestartToggle
+            - Name: ENEWS_API_KEY
+              Value: !Ref EnewsAPIKey
+            - Name: ENEWS_API_LISTID
+              Value: !Ref EnewsAPIListID
+            - Name: ENEWS_API_URI
+              Value: "https://us2.api.mailchimp.com/3.0/lists"
+            - Name: ELASTICSEARCH_URL
+              Value: !Sub "https://${ElasticSearchStack.Outputs.DomainEndpoint}"
+            - Name: RAILS_SECRET_KEY_BASE
+              Value: !Ref RailsSecretKeyBase
+            - Name: LOGGER_URI
+              Value: !Ref LoggerUri
+
+  WorkerService:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition: !Ref WorkerTaskDefinition
+      DesiredCount: 1
+      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+
+  WorkerScalingStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      # Change to location of scaling Template
+      TemplateURL: !Sub "${NestedTemplatesFolder}/task-autoscale-2-step-up.yml"
+      Parameters:
+        ServiceName: !GetAtt WorkerService.Name
+        ClusterName:
+          { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+        MaxNumTasks: "10"
+        MinNumTasks: "1"
+        ScaleUpCooldown: "240"
+        ScaleUpStepBoundary: "25"
+        ScaleUpStepAdjustment1: "100"
+        ScaleUpStepAdjustment2: "200"
+        # March 21, 2019 - decreasing this to 70 to trigger more scaling
+        ScaleUpAlarmThreshold: "70"
+        ScaleUpAlarmEvaluationPeriods: "1"
+        ScaleUpAlarmPeriod: "60"
+        ScaleDownCooldown: "300"
+        ScaleDownStepAdjustment: "-1"
+        # March 22, 2019 changing from 35 to 20 to prevent cycling up and down
+        ScaleDownAlarmThreshold: "20"
+        # this uses 5 periods of 1 minute instead of 1 period of 5 minutes
+        # this approach helps offset a running average affecting the responsiveness.
+        # If the CPU is at 49%, but 5 minutes ago it started at 1% then a 5 minute average
+        # could be below 35%. However with 5 evaluation periods, then the 49% will cancel
+        # the alarm.
+        ScaleDownAlarmEvaluationPeriods: "5"
+        ScaleDownAlarmPeriod: "60"
+
+  # This would probably be better if it was an external stack so it could be shared
+  # by all internal microservices. In that scenario we'd have to use dns entries pointing
+  # at this load balancer and listener rules to redirect to the right microservice
+  InternalLoadBalancerStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${NestedTemplatesFolder}/ecs-load-balancer.yml"
+      Parameters:
+        ELBScheme: internal
+        DomainName: ""
+        LoadBalancerIdleTimeout: "180"
+        HostedZoneId: !Ref "HostedZoneId"
+        ClusterSecurityGroupId:
+          {
+            "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSecurityGroupId",
+          }
+        VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
+        Subnets:
+          { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterSubnets" }
+
+  SolrService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - SolrListener80
+    Properties:
+      Role: ecsServiceRole
+      TaskDefinition: !Ref "SolrTaskDefinition"
+      DesiredCount: "1"
+      # For consitency we need to make sure that only one task can run in the solr service
+      # at a time.  Otherwise the portal might update a search document in the old solr
+      # task while a new one is starting up. This will result in lost search results.
+      # this approach of only one a time also helps with the automatic reindexing that
+      # is triggered when the new solr instance starts up
+      DeploymentConfiguration:
+        MaximumPercent: "100"
+        MinimumHealthyPercent: "0"
+      LoadBalancers:
+        - TargetGroupArn: !Ref SolrTargetGroup
+          ContainerPort: "8983"
+          ContainerName: Solr
+      Cluster: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterName" }
+
+  SolrTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: "30"
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: "/solr/production/admin/ping"
+      HealthyThresholdCount: "2"
+      UnhealthyThresholdCount: "3"
+      HealthCheckTimeoutSeconds: "5"
+      Port: "80"
+      Protocol: HTTP
+      TargetGroupAttributes:
+        # there should be very few long running connections to solr so it should be OK
+        # to keep this value small
+        - Key: deregistration_delay.timeout_seconds
+          Value: "5"
+      VpcId: { "Fn::ImportValue": !Sub "${ClusterStackName}-ClusterVpcId" }
+      Name: !Sub "${ShortName}Solr-${InternalLoadBalancerStack.Outputs.LoadBalancerEndingId}"
+
+  SolrListener80:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref SolrTargetGroup # !Ref 'ELBTargetGroup'
+          Type: forward
+      LoadBalancerArn: !GetAtt InternalLoadBalancerStack.Outputs.LoadBalancer # !Ref 'ELBv2'
+      Port: "80"
+      Protocol: HTTP
+
+  # 2019-04-04:
+  # Looking at more than 4 weeks of data Solr is only using 10% of its alocated CPU
+  # So we'll decrease it to 32 CPU Units which ought to bring it up to 40% usage.
+  # Memory is running at 60% usage so the current value of 600 seems good.
+  SolrTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub "${AWS::StackName}-Solr"
+      ContainerDefinitions:
+        - Name: Solr
+          Image: concordconsortium/docker-solr-portal:v1.0.0
+          # based on reviewing the data the solr service over 4 weeks
+          # normally it requries very little CPU only about 4 units
+          # during a reindex though it can spike up to 512 units ECS
+          # will allow it go way over the value of 128 here so this seems
+          # like a good compromise
+          Cpu: "32"
+          PortMappings:
+            - ContainerPort: "8983"
+          Command:
+            - bash
+            - /opt/solr/rigse-solr-docker/start-solr.sh
+          # looking at data over 4 weeks. It seems that internal Solr is limiting its
+          # memory usage to 475mb. I'll give it a little more just incase it needs it.
+          Memory: "600"
+          Essential: "true"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Ref CloudWatchLogGroup
+              awslogs-stream-prefix: portal
+          Environment:
+            # Solr will send a request to this endpoint once it gets a successful ping response
+            - Name: SERVICE_API_ENDPOINT
+              Value: !Sub "${SiteURL}/api/v1/service/solr_initialized"
+            # URL to ping
+            - Name: SOLR_PING_URL
+              Value: http://localhost:8983/solr/production/admin/ping
+
+Mappings:
+  SSLCertificateMap:
+    star.concord.org:
+      Id: arn:aws:acm:us-east-1:612297603577:certificate/2b62511e-ccc8-434b-ba6c-a8c33bbd509e
+    star.portal.concord.org:
+      Id: arn:aws:acm:us-east-1:612297603577:certificate/288ef1b9-a7c9-4385-bc65-675a9eb785b3
+    star.staging.concord.org:
+      Id: arn:aws:acm:us-east-1:612297603577:certificate/9c26b1e0-4ba7-4016-babc-34b3e13e8c21
+    star.concordqa.org:
+      Id: arn:aws:acm:us-east-1:816253370536:certificate/7b8bb00e-7aa4-4b9f-a722-f49c828af83c
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "App Config"
+        Parameters:
+          - PortalDockerImage
+          - PortalPagesLibraryVersion
+          - PortalReportVersion

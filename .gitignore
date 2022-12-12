@@ -91,9 +91,7 @@ public/system/images/*
 capybara-*.html
 config/tag_defaults.yml
 public/activities/
-.bundle/
 local_files
-.bundle/
 public/sparks-content/
 public/stylesheets/*.css
 bin/
@@ -128,3 +126,4 @@ certs
 .env
 *.DS_Store
 coverage
+secrets.env

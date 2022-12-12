@@ -1,0 +1,44 @@
+version: '3.8' # Docker Engine 19.03.0+
+
+services:
+  database:
+    image: docker.io/mariadb:10.10
+    network_mode: host
+    environment:
+      MARIADB_USER: portal
+      MARIADB_PASSWORD: password123
+      MARIADB_DATABASE: portal
+      MARIADB_ROOT_PASSWORD: password123
+      #MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes # Allow the container to be started with a blank password for the root user
+  solr:
+    image: docker.io/solr
+  app:
+    # image: rigse:dev
+    image: ghcr.io/concord-consortium/rigse:github-actions
+    # build:
+    #   context: ./rails/
+    # env_file: ./.env
+    network_mode: host
+    volumes:
+      - /home/me/git/github.com/concord-consortium/rigse/rails/config/:/rigse/config/
+    environment:
+      DB_HOST: 127.0.0.1
+      DB_USER: portal
+      DB_NAME: portal
+      DB_PASSWORD: password123
+      DISABLE_DATABASE_ENVIRONMENT_CHECK: 1
+      RAILS_ENV: production
+      SOLR_HOST: solr
+      SOLR_PORT: 8983
+      SITE_URL: http://app.rigseprod.docker
+      SITE_NAME: Test Portal
+      AUTHORING_SITE_URL: https://authoring.staging.concord.org
+      THEME: learn
+      HELP_EMAIL: help@concord.org
+      ADMIN_EMAIL: admin@concord.org
+      TOP_LEVEL_CONTAINER_NAME: Sequence
+      SITE_KEY: 123456
+      RAILS_STDOUT_LOGGING: true
+
+volumes:
+  db-data:
