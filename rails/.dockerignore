@@ -17,3 +17,5 @@ solr/production
 solr/development
 solr/test
 solr/default
+# Ignore the Docker ignore file itself
+.dockerignore

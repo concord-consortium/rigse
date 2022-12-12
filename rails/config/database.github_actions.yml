@@ -1,0 +1,14 @@
+---
+test: &test
+  encoding: utf8
+  adapter: mysql2
+  username: root
+  database: rigse_test
+  password: password123
+  host: "127.0.0.1"
+  port: 3306
+cucumber: &cucumber
+  <<: *test
+  database: feature_test
+development: *test
+feature_test: *cucumber

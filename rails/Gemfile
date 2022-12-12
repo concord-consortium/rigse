@@ -72,7 +72,7 @@ gem 'will_paginate'
 gem 'yui-compressor'
 
 group :production do
-  gem 'unicorn'
+  gem 'puma'
 end
 
 group :development do
@@ -84,6 +84,7 @@ group :development do
 end
 
 group :test, :cucumber do
+  gem 'bullet'
   gem 'capybara'
   gem 'capybara-mechanize'
   gem 'capybara-screenshot'
