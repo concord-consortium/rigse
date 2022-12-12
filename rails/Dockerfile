@@ -24,12 +24,13 @@ RUN apk add \
   # See: https://github.com/rails/execjs#execjs
   nodejs \
   # "/usr/local/bundle/gems/tzinfo-2.0.4/lib/tzinfo/data_source.rb:159:in
-  # `rescue in create_default_data_source': tzinfo-data is not present. Please add gem 'tzinfo-data' 
+  # `rescue in create_default_data_source': tzinfo-data is not present. Please add gem 'tzinfo-data'
   # to your Gemfile and run bundle install (TZInfo::DataSourceNotFound)"
   tzdata \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
   openjdk8-jre
 
+# If this is changed it also needs to be changed in unicorn.rb
 ENV APP_HOME /rigse/
 
 RUN adduser -D -u 13000 app
@@ -49,20 +50,11 @@ COPY --chown=app ./ $APP_HOME
 RUN \
   cp ./config/database.sample.yml ./config/database.yml \
   && cp ./config/settings.sample.yml ./config/settings.yml \
-  && cp ./docker/prod/config/mailer.yml ./config/ \
-  && cp ./docker/prod/config/aws_s3.yml ./config/ \
   && cp ./config/app_environment_variables.sample.rb app_environment_variables.rb \
-  && cp -r ./docker/prod/config/initializers/ ./config/
+  && cp ./docker/prod/config/mailer.yml ./config/mailer.yml
 
 # Set production
 ENV RAILS_ENV=production
-# compile the assets - NOTE: DOCKER_NO_INIT_ON_PRECOMPILE MUST be set to true for this to work
-# otherwise somewhere in the initializers it tries to connect to the database which will fail
-ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
-# Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
-# Instead we need to fake some ENV Vars for the precompile ...
-# Run precompile rake task in order to at least generate the manifest file
-RUN SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
 
 # This font is used by imagemagick to add attribution to the images in the image library
 # the DejaVu-Sans font is provided by the docker image this one is built on
