@@ -11,8 +11,8 @@ ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbg
 
 # LOGGER_URI:
 # Log manager logging endpoint
-# ENV['LOGGER_URI'] ||= '//logger.concord.org/logs'    # production
-# ENV['LOGGER_URI'] ||= '//logger.concordqa.org/logs'  # staging / development
+# ENV['LOGGER_URI'] ||= 'https://logger.concord.org/logs'    # production
+# ENV['LOGGER_URI'] ||= 'https://logger.concordqa.org/logs'  # staging / development
 
 # Researcher report link can point to a different portal instance to avoid overloading the main server.
 # ENV['RESEARCHER_REPORT_HOST'] ||= 'https://research-report-portal.concord.org'

@@ -134,7 +134,7 @@ services:
       #
       # Log manager endpoint (defaults to staging)
       #
-      LOGGER_URI: "${LOGGER_URI:-//logger.concordqa.org/logs}"
+      LOGGER_URI: "${LOGGER_URI:-https://logger.concordqa.org/logs}"
       THEME: "${THEME:-learn}"
 
       VIRTUAL_HOST: "${PORTAL_HOST:-app.portal.docker}"
