@@ -1,5 +1,5 @@
-#!/bin/bash
-#
+#!/usr/bin/env bash
+
 # This should be executed from within a docker container running
 # a solr-test environment.
 #

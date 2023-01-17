@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # the first time you use this you probably want to bring up the unison container
 # first by doing `docker-compose up unison` then run this file to start the sync

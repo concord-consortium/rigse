@@ -1,0 +1,11 @@
+version: '3.8' # Docker Engine 19.03.0+
+
+services:
+  database:
+    image: docker.io/mariadb:10.10
+    network_mode: host
+    environment:
+      MARIADB_ROOT_PASSWORD: xyzzy
+
+volumes:
+  db-data:

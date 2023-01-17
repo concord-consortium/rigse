@@ -602,7 +602,7 @@ const StemFinder = Component({
   },
 
   renderSortMenu: function () {
-    const sortValues = ['Alphabetical', 'Less time required', 'More time required', 'Newest', 'Oldest']
+    const sortValues = ['Alphabetical', 'Newest', 'Oldest']
 
     return (
       <div className={css.sortMenu}>

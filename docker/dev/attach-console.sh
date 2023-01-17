@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # this is a simple script to attach a console to the running app container
 # it is useful for debugging the app. Another requirement for debugging is to enable
