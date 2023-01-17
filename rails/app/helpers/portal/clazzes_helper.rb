@@ -45,8 +45,7 @@ module Portal::ClazzesHelper
         id: portal_clazz.id,
         name: portal_clazz.name
       },
-      students: students,
-      otherStudents: other_students
+      students: students
     }
   end
 

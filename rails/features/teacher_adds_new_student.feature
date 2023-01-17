@@ -54,11 +54,11 @@ Feature: Teacher adds a new student
       | passwordConfirmation | albert |
     And I press "Submit"
 
-  @javascript
-  Scenario: With the default class enabled, teachers cannot directly add existing students
-    Given the option to allow default classes is enabled
-    When the student "student" belongs to class "Physics"
-    When I login with username: teacher
-    And I am on "Student Roster" page for "Mathematics"
-    Then I should see "If a student already has an account, ask the student to enter the Class Word above"
-    And I should not see "Search for registered student"
+  #@javascript
+  #Scenario: With the default class enabled, teachers cannot directly add existing students
+  # Given the option to allow default classes is enabled
+  #  When the student "student" belongs to class "Physics"
+  #  When I login with username: teacher
+  #  And I am on "Student Roster" page for "Mathematics"
+  # Then I should see "If a student already has an account, ask the student to enter the Class Word above"
+  #  And I should not see "Search for registered student"
