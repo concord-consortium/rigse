@@ -225,9 +225,9 @@ const StemFinderResult = Component({
     const copyLink = resource.links.external_copy && !isCollection
       ? <a href={resource.links.external_copy.url} target='_blank' rel='noopener'>{resource.links.external_copy.text}</a>
       : null
-    const printLink = resource.links.print_url && !isCollection
-      ? <a href={resource.links.print_url.url} target='_blank' rel='noopener'>{resource.links.print_url.text}</a>
-      : null
+    // const printLink = resource.links.print_url && !isCollection
+    //   ? <a href={resource.links.print_url.url} target='_blank' rel='noopener'>{resource.links.print_url.text}</a>
+    //   : null
     const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
       ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank' rel='noopener' onClick={this.handleTeacherEditionClick}>Teacher Edition</a>
       : null
@@ -250,7 +250,6 @@ const StemFinderResult = Component({
         {teacherEditionLink}
         {teacherGuideLink}
         {teacherResourcesLink}
-        {printLink}
         {editLink}
         {copyLink}
         {assignCollectionLink}
