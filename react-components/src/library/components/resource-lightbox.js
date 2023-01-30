@@ -313,10 +313,7 @@ var ResourceLightbox = Component({
     const resource = this.state.resource
     const links = resource.links
 
-    const makeIcon = (type, link) => {
-      return link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null;
-    }
-
+    const makeIcon = (type, link) => link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null;
     // let printIcon = links.print_url ? <a className='print' href={links.print_url.url}>print</a> : null
     let copyIcon = makeIcon('copy', links.external_copy);
     let settingsIcon = makeIcon('settings', links.edit);
