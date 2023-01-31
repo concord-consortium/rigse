@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -ev
-
-RAILS_ENV=test ./bin/rake sunspot:solr:stop
-./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$TEST_SUITE.json"
-ls coverage/
-aws s3 sync coverage/ "s3://$ARTIFACTS_BUCKET/coverage/$TRAVIS_BUILD_NUMBER"

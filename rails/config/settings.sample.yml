@@ -85,30 +85,79 @@ staging:
   :theme: <%= ENV["THEME"] || 'learn' %>
 
 production:
-  :site_name: Rails Portal
-  :site_url: http://rails-portal.concord.org
-  :authoring_site_url: //authoring.staging.concord.org
-  :codap_url: http://codap.concord.org/releases/latest/
-  :log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di
-  :description: ""
-  :default_admin_user: *default_admin_user
-  :states_and_provinces: *states_and_provinces
-  :active_school_levels: *active_school_levels
-  :active_grades: *active_grades
-  :site_district: Rails Portal-district
-  :site_school: Rails Portal-school
-  :help_email: rails-portal@concord.org
-  :admin_email: npaessel@concord.org
-  :allow_drafts_in_assignments: false
-  :dont_sanitize_xhtml: true
-  :tiny_mce:
-    :buttons1:
+  # :site_name: Rails Portal
+  # :site_url: http://rails-portal.concord.org
+  # :authoring_site_url: //authoring.staging.concord.org
+  # :codap_url: http://codap.concord.org/releases/latest/
+  # :log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di
+  # :description: ""
+  # :default_admin_user: *default_admin_user
+  # :states_and_provinces: *states_and_provinces
+  # :active_school_levels: *active_school_levels
+  # :active_grades: *active_grades
+  # :site_district: Rails Portal-district
+  # :site_school: Rails Portal-school
+  # :help_email: rails-portal@concord.org
+  # :admin_email: npaessel@concord.org
+  # :allow_drafts_in_assignments: false
+  # :dont_sanitize_xhtml: true
+  # :tiny_mce:
+  #   :buttons1:
+  #     - bold,italic,underline
+  #     - sup,sub
+  #     - bullist,numlist
+  #     - link,image
+  #     - pastext, pasteword,selectall
+  #     - justifyleft,justifycenter,justifyright
+  #     - code
+  # :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
+  # :theme: <%= ENV["THEME"] || 'learn' %>
+
+  password_for_default_users: ccpassword
+  site_name: <%= ENV["SITE_NAME"] || 'Rails Portal' %>
+  site_url: <%= ENV["SITE_URL"] || 'http://learn.concord.org' %>
+  authoring_site_url: <%= ENV["AUTHORING_SITE_URL"] || '//authoring.staging.concord.org' %>
+  theme: <%= ENV["THEME"] || 'learn' %>
+  admin_email: <%= ENV["ADMIN_EMAIL"] || 'npaessel@concord.org' %>
+  help_email: <%= ENV["HELP_EMAIL"] || 'rails-portal@concord.org' %>
+  use_adhoc_workgroups: true
+  site_school: <%= ENV["SITE_NAME"] || 'site_name' %>-school
+  site_district: <%= ENV["SITE_NAME"] || 'site_district' %>-district
+  active_school_levels:
+    - "2"
+    - "3"
+    - "4"
+  active_grades:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+    - "Higher Ed"
+  tiny_mce:
+    buttons1:
       - bold,italic,underline
       - sup,sub
       - bullist,numlist
       - link,image
       - pastext, pasteword,selectall
-      - justifyleft,justifycenter,justifyright
       - code
-  :pepper: 7ed5d246-cc1a-11e1-81dd-0800270eb79b
-  :theme: <%= ENV["THEME"] || 'learn' %>
+  dont_sanitize_xhtml: false
+  default_admin_user:
+    first_name: Noah
+    login: knowuh
+    last_name: Paessel
+    email: npaessel@concord.org
+  states_and_provinces: all
+  runnable_mime_type:
+  top_level_container_name: <%= ENV["TOP_LEVEL_CONTAINER_NAME"] || 'top-level-container-name' %>
+  pepper: <%= ENV["SITE_KEY"] || '7ed5d246-cc1a-11e1-81dd-0800270eb79b' %>
+  codap_url: http://codap.concord.org/releases/latest/
+  log_manager_data_interactive_url: //cc-log-manager.herokuapp.com/di

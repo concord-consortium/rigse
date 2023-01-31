@@ -1,0 +1,169 @@
+name: CI
+on: push
+
+jobs:
+  changes:
+    name: Filter jobs based on changes
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'rails/**'
+      - if: steps.changes.outputs.backend  == 'true'
+        run: echo ${{ steps.changes.outputs.backend }}
+
+  lint:
+    name: Lint source code
+    runs-on: ubuntu-latest
+    needs: changes
+    #if: ${{ needs.changes.outputs.backend == 'true' }}
+    steps:
+      - uses: actions/checkout@v3
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs: lint
+    #if: ${{ needs.changes.outputs.backend == 'true' }}
+    strategy:
+      matrix:
+        include:
+          - test_suite: spec_without_webdriver
+            env: test
+          - test_suite: spec_with_webdriver
+            env: test
+          - test_suite: cucumber_without_javascript
+            env: cucumber
+          - test_suite: cucumber_javascript
+            env: cucumber
+          - test_suite: cucumber_search
+            env: cucumber
+    services:
+      # Label used to access the service container
+      database:
+        image: mariadb:10.10
+        ports:
+          - 3306:3306 # Map TCP port from service container to runner host
+        env:
+          MARIADB_USER: actions
+          MARIADB_PASSWORD: password123
+          MARIADB_ROOT_PASSWORD: password123
+          MARIADB_DATABASE: ${{ github.event.repository.name }}_test
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes # Allow the container to be started with a blank password for the root user
+      solr:
+        image: concordconsortium/docker-solr-portal
+        ports:
+          - 8981:8983
+        env:
+          TEST_SOLR_PORT: 8981
+    env:
+      RAILS_ENV: ${{ matrix.env }}
+    defaults:
+      run:
+        working-directory: ./rails/
+    steps:
+      - uses: actions/checkout@v3
+      - name: Print $RAILS_ENV
+        run: echo $RAILS_ENV
+      - uses: ruby/setup-ruby@v1
+        name: Setup Ruby
+        with:
+          bundler-cache: true # use Actions cache to significantly speed up subsequent runs
+          working-directory: ./rails/
+
+      - run: cp -v ./config/database.github_actions.yml ./config/database.yml
+      - run: cp -v ./config/app_environment_variables.sample.rb ./config/app_environment_variables.rb
+      - run: cp -v ./config/settings.sample.yml ./config/settings.yml
+
+      # See: https://github.com/concord-consortium/rigse/blob/master/rails/script/travis_before_script#L17-L20
+      - run: bundle exec rake db:create
+        env:
+          RAILS_ENV: test
+      - run: bundle exec rake db:create
+        env:
+          RAILS_ENV: cucumber
+      - run: bundle exec rake db:schema:load
+      - run: bundle exec rake db:migrate
+      - run: bundle exec rake db:test:prepare
+      - run: bundle exec rake db:feature_test:prepare
+      - run: bundle exec rake app:setup:create_default_data
+        env:
+          RAILS_ENV: cucumber
+      - run: bundle exec rake assets:precompile
+        name: Precompile assets
+        env:
+          RAILS_GROUPS: assets
+
+      - run: bundle exec rake ci:${{ matrix.test_suite }}
+        name: Run Rake ci:${{ matrix.test_suite }} task
+
+  build:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      # See: https://github.com/docker/login-action#github-container-registry
+      - name: Login to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      ## See: https://github.com/docker/login-action#docker-hub
+      #- name: Login to Docker Hub
+      #  uses: docker/login-action@v2
+      #  if: ${{ secrets.DOCKER_HUB_USERNAME != '' && secrets.DOCKER_HUB_TOKEN != '' && env.DOCKER_HUB_IMAGE }}
+      #  with:
+      #    username: ${{ secrets.DOCKER_HUB_USERNAME }}
+      #    password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      #- name: Extract metadata for Docker
+      #  id: docker_metadata
+      #  uses: docker/metadata-action@v4
+      #  env:
+      #    DOCKER_HUB_IMAGE: concordconsortium/portal
+      #  with:
+      #    images: |-
+      #      ${{ env.REGISTRY }}/${{ github.repository }}
+      - name: Build & push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          #context: '{{defaultContext}}:rails'
+          context: ./rails/
+          push: ${{ env.ACT != 'true' }} # Don't attempt to publish a GitHub package when running Actions locally using "act"
+          # Use GitHub Actions cache (see https://docs.docker.com/build/building/cache/backends/gha/#using-dockerbuild-push-action)
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          #labels: ${{ steps.docker_metadata.outputs.labels }}
+          #tags: ${{ steps.docker_metadata.outputs.tags }}
+          build-args: |-
+            CC_PORTAL_VERSION=${{ github.ref_name }}
+          tags: ghcr.io/concord-consortium/rigse:${{ github.ref_name }}
+
+  deploy:
+    name: Deploy application
+    needs: build
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@6901756
+        with:
+          name: learn-ecs-staging
+          template: ./configs/cloudformation/stack_template.yml
+          parameter-overrides: >-
+            PortalDockerImage=TODO,
