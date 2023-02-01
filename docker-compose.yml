@@ -168,7 +168,7 @@ services:
       - ./rails:/rigse
     command: /bin/bash ./start-solr.sh
   mysql:
-    image: mysql:5.6
+    image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD:
     command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
