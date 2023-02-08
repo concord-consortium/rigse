@@ -312,8 +312,11 @@ var ResourceLightbox = Component({
   renderIcons: function () {
     const resource = this.state.resource
     const links = resource.links
-    let printIcon = links.print_url ? <a className='print' href={links.print_url.url}>print</a> : null
-    let copyIcon = links.external_copy ? <a className='copy' href={links.external_copy.url}>copy</a> : null
+
+    const makeIcon = (type, link) => link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null;
+    // let printIcon = makeIcon('print', links.print_url);
+    let copyIcon = makeIcon('copy', links.external_copy);
+    let settingsIcon = makeIcon('settings', links.edit);
     let editLink = null
     if (resource.lara_activity_or_sequence && links.external_lara_edit) {
       editLink = links.external_lara_edit.url
@@ -322,16 +325,13 @@ var ResourceLightbox = Component({
     }
 
     let editIcon = editLink ? <a className='edit' href={editLink}>edit</a> : null
-
-    let settingsIcon = links.edit ? <a className='settings' href={links.edit.url}>settings</a> : null
-
-    const icons = [printIcon, copyIcon, editIcon, settingsIcon]
+    const icons = [copyIcon, editIcon, settingsIcon]
     let iconIndex = 0
     const iconsListItems = icons.map((icon) => {
       return icon !== null ? <li key={'utility-icon-' + iconIndex++}>{icon}</li> : null
     })
 
-    if (printIcon || copyIcon || editIcon || settingsIcon) {
+    if (copyIcon || editIcon || settingsIcon) {
       return (
         <ul>{iconsListItems}</ul>
       )
