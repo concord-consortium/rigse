@@ -23,7 +23,7 @@
     "ra-data-graphql-simple": "^3.5.5",
     "ra-data-json-server": "^3.5.5",
     "react": "^16.13.1",
-    "react-admin": "^3.5.5",
+    "react-admin": "^3.19.12",
     "react-apollo": "^3.1.5",
     "react-dom": "^16.13.1",
     "react-scripts": "^3.4.1"
