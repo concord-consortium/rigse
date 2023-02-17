@@ -2,7 +2,7 @@ import React from 'react'
 
 import RegisterStudentModal from './register-student-modal'
 import StudentRosterRow from './student-roster-row'
-import StudentRosterHeader from './student-roster-header'
+// import StudentRosterHeader from './student-roster-header'
 import ModalDialog from '../shared/modal-dialog'
 
 import api from '../../helpers/api'
@@ -160,7 +160,7 @@ export default class StudentRoster extends React.Component {
 
   render () {
     const { showRegisterStudentModal, showRegisterAnotherStudentModal } = this.state
-    const { otherStudents, allowDefaultClass, canEdit } = this.props
+    const { canEdit } = this.props
 
     return (
       <>
