@@ -313,10 +313,10 @@ var ResourceLightbox = Component({
     const resource = this.state.resource
     const links = resource.links
 
-    const makeIcon = (type, link) => link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null;
+    const makeIcon = (type, link) => link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null
     // let printIcon = makeIcon('print', links.print_url);
-    let copyIcon = makeIcon('copy', links.external_copy);
-    let settingsIcon = makeIcon('settings', links.edit);
+    let copyIcon = makeIcon('copy', links.external_copy)
+    let settingsIcon = makeIcon('settings', links.edit)
     let editLink = null
     if (resource.lara_activity_or_sequence && links.external_lara_edit) {
       editLink = links.external_lara_edit.url
