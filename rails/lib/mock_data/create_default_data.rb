@@ -863,44 +863,6 @@ module MockData
     end
   end # end of self.add_response
 
-
-  def self.add_multichoice_answer(learner,question,answer_text, data)
-    answer = question.choices.detect{ |c| c.choice == answer_text}
-
-    new_answer_by_uuid = Saveable::MultipleChoice.find_by_uuid(data[:saveable_multiple_choices_uuid])
-    if new_answer_by_uuid
-      new_answer = new_answer_by_uuid
-      new_answer.learner = learner
-      new_answer.offering = learner.offering
-      new_answer.multiple_choice = question
-      new_answer.save!
-
-      saveable_answer = Saveable::MultipleChoiceAnswer.where(uuid: data[:saveable_multiple_choice_answers_uuid]).first_or_create
-      saveable_answer.multiple_choice = new_answer
-      saveable_answer.save!
-
-      saveable_mc_rationale_choice = Saveable::MultipleChoiceRationaleChoice.where(uuid: data[:saveable_multiple_choice_rationale_choices_uuid]).first_or_create
-      saveable_mc_rationale_choice.choice = answer
-      saveable_mc_rationale_choice.answer = saveable_answer
-      saveable_mc_rationale_choice.save!
-    else
-      info = {
-        :learner => learner,
-        :offering => learner.offering,
-        :multiple_choice => question,
-        :uuid => data[:saveable_multiple_choices_uuid]
-      }
-      new_answer = Saveable::MultipleChoice.create!(info)
-      saveable_answer = Saveable::MultipleChoiceAnswer.create!(:multiple_choice => new_answer, :uuid => data[:saveable_multiple_choice_answers_uuid])
-      Saveable::MultipleChoiceRationaleChoice.create(
-        :choice => answer,
-        :answer => saveable_answer,
-        :uuid   => data[:saveable_multiple_choice_rationale_choices_uuid]
-      )
-    end
-
-  end #end of add_multichoice_answer
-
   def self.create_default_materials_collections
     puts
     puts

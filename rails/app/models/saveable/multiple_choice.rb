@@ -6,10 +6,6 @@ class Saveable::MultipleChoice < ApplicationRecord
 
   belongs_to :multiple_choice,  :class_name => 'Embeddable::MultipleChoice'
 
-  has_many :answers, -> { order :position },
-    :dependent => :destroy,
-    :class_name => "Saveable::MultipleChoiceAnswer"
-
   [ :prompt,
     :name,
     :choices,
@@ -17,69 +13,7 @@ class Saveable::MultipleChoice < ApplicationRecord
     :has_duplicate_choices?
   ].each { |m| delegate m, :to => :multiple_choice }
 
-  include Saveable::Saveable
-
-  #
-  # Override #answered? to ensure last answer was not the user
-  # resetting the selection to the default un-selected state.
-  #
-  def answered?
-
-    if answers.length == 0
-        return false
-    end
-
-    if answers.last.rationale_choices.size > 0
-
-        #
-        # The last answer is a list containing only one item, and it
-        # does not contain a key for :choice_id. This is the answer we
-        # generated in the case of unselecting a previous selection.
-        # I.e. user is resetting to the default unselected state.
-        # {:answer=>"not answered"}
-        #
-
-        return true
-    end
-
-    return false
-
-  end
-
-
   def embeddable
     multiple_choice
   end
-
-  # TODO:  We shouldn't need to special case this. But we do.
-  # We should use saveable.rb#answer, but because we are sending
-  # an array of answers, it doesn't work.
-  def answer
-    if answered?
-      answers.last.answer
-    else
-      [{:answer => "not answered"}]
-    end
-  end
-
-  def submitted_answer
-    if submitted?
-      answers.last.answer
-    elsif answered?
-      [{:answer => "not submitted"}]
-    else
-      [{:answer => "not answered"}]
-    end
-  end
-
-  def answered_correctly?
-    if submitted?
-      answers.last.answered_correctly?
-    else
-      false
-    end
-  end
-
-
-
 end

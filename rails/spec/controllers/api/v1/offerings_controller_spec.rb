@@ -36,13 +36,6 @@ describe API::V1::OfferingsController do
     runnable.save
   end
 
-  def add_answer(offering, student, question)
-    learner = Portal::Learner.where(offering_id: offering.id, student_id: student.id ).first_or_create
-    add_answer_for_learner(learner, question, {answer: "Some answer"})
-    learner.report_learner.update_answers
-    learner.report_learner.save!
-  end
-
   before(:each) {
     # This silences warnings in the console when running
     generate_default_settings_with_mocks
@@ -153,113 +146,6 @@ describe API::V1::OfferingsController do
         expect(student2["last_run"]).to eq nil
         expect(student2["total_progress"]).to eq 0
         expect(student2["detailed_progress"]).to eq nil
-      end
-    end
-
-    describe "when some students have run an offering - case 1" do
-      before (:each) do
-        sign_in teacher.user
-        setup_activity(activity_1, [open_response_1, open_response_2])
-        setup_activity(activity_2, [open_response_3, open_response_4])
-        setup_runnable(runnable, [activity_1, activity_2])
-        # Just one answer to the first question (out of 4). It means that the student made 25% progress.
-        add_answer_for_student(student_a, offering, open_response_1, {answer: "Some answer"})
-      end
-      it "returns an description of the activity and students list with appropriate progress" do
-        get :show, params: { id: offering.id }
-        expect(response.status).to eq 200
-        json = JSON.parse(response.body)
-        student1 = json["students"][0]
-        expect(student1["started_activity"]).to eq true
-        expect(student1["last_run"]).not_to eq nil
-        expect(student1["total_progress"]).to eq 25
-        expect(student1["detailed_progress"][0]["activity_name"]).to eq activity_1.name
-        expect(student1["detailed_progress"][0]["progress"]).to eq 50
-        expect(student1["detailed_progress"][1]["activity_name"]).to eq activity_2.name
-        expect(student1["detailed_progress"][1]["progress"]).to eq 0
-
-        student2 = json["students"][1]
-        expect(student2["started_activity"]).to eq false
-        expect(student2["last_run"]).to eq nil
-        expect(student2["total_progress"]).to eq 0
-        expect(student2["detailed_progress"]).to eq nil
-      end
-    end
-
-    describe "when some students have run an offering - case 2" do
-      before (:each) do
-        sign_in teacher.user
-        setup_activity(activity_1, [open_response_1, open_response_2])
-        setup_activity(activity_2, [open_response_3, open_response_4])
-        setup_runnable(runnable, [activity_1, activity_2])
-
-        add_answer_for_student(student_a, offering, open_response_1, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_3, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_4, {answer: "Some answer"})
-      end
-      it "returns an description of the activity and students list with appropriate progress" do
-        get :show, params: { id: offering.id }
-        expect(response.status).to eq 200
-        json = JSON.parse(response.body)
-        student1 = json["students"][0]
-        expect(student1["started_activity"]).to eq true
-        expect(student1["last_run"]).not_to eq nil
-        expect(student1["total_progress"]).to eq 25
-        expect(student1["detailed_progress"][0]["activity_name"]).to eq activity_1.name
-        expect(student1["detailed_progress"][0]["progress"]).to eq 50
-        expect(student1["detailed_progress"][1]["activity_name"]).to eq activity_2.name
-        expect(student1["detailed_progress"][1]["progress"]).to eq 0
-
-        student2 = json["students"][1]
-        expect(student2["started_activity"]).to eq true
-        expect(student2["last_run"]).not_to eq nil
-        expect(student2["total_progress"]).to eq 50
-        expect(student2["detailed_progress"][0]["activity_name"]).to eq activity_1.name
-        expect(student2["detailed_progress"][0]["progress"]).to eq 0
-        expect(student2["detailed_progress"][1]["activity_name"]).to eq activity_2.name
-        expect(student2["detailed_progress"][1]["progress"]).to eq 100
-      end
-    end
-
-    describe "when all students completed an offering" do
-      before (:each) do
-        sign_in teacher.user
-        setup_activity(activity_1, [open_response_1, open_response_2])
-        setup_activity(activity_2, [open_response_3, open_response_4])
-        setup_runnable(runnable, [activity_1, activity_2])
-
-        add_answer_for_student(student_a, offering, open_response_1, {answer: "Some answer"})
-        add_answer_for_student(student_a, offering, open_response_2, {answer: "Some answer"})
-        add_answer_for_student(student_a, offering, open_response_3, {answer: "Some answer"})
-        add_answer_for_student(student_a, offering, open_response_4, {answer: "Some answer"})
-
-        add_answer_for_student(student_b, offering, open_response_1, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_2, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_3, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_4, {answer: "Some answer"})
-      end
-      it "returns an description of the activity and students list with appropriate progress" do
-        get :show, params: { id: offering.id }
-        expect(response.status).to eq 200
-        json = JSON.parse(response.body)
-        student1 = json["students"][0]
-        expect(student1["started_activity"]).to eq true
-        expect(student1["last_run"]).not_to eq nil
-        expect(student1["total_progress"]).to eq 100
-        expect(student1["detailed_progress"][0]["activity_name"]).to eq activity_1.name
-        expect(student1["detailed_progress"][0]["progress"]).to eq 100
-        expect(student1["detailed_progress"][1]["activity_name"]).to eq activity_2.name
-        expect(student1["detailed_progress"][1]["progress"]).to eq 100
-
-
-        student2 = json["students"][1]
-        expect(student2["started_activity"]).to eq true
-        expect(student2["last_run"]).not_to eq nil
-        expect(student2["total_progress"]).to eq 100
-        expect(student2["detailed_progress"][0]["activity_name"]).to eq activity_1.name
-        expect(student2["detailed_progress"][0]["progress"]).to eq 100
-        expect(student2["detailed_progress"][1]["activity_name"]).to eq activity_2.name
-        expect(student2["detailed_progress"][1]["progress"]).to eq 100
       end
     end
 
@@ -467,28 +353,6 @@ describe API::V1::OfferingsController do
             expect(json).to eq [offering_1_json, offering_2_json]
           end
         end
-      end
-    end
-
-    describe "when some students have run an offering" do
-      before (:each) do
-        sign_in teacher.user
-        setup_activity(activity_1, [open_response_1, open_response_2])
-        setup_activity(activity_2, [open_response_3, open_response_4])
-        setup_runnable(runnable, [activity_1, activity_2])
-
-        add_answer_for_student(student_a, offering, open_response_1, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_3, {answer: "Some answer"})
-        add_answer_for_student(student_b, offering, open_response_4, {answer: "Some answer"})
-      end
-      it "returns response which has the same format as #show" do
-        get :show, params: { id: offering.id }
-        show_json = JSON.parse(response.body)
-
-        get :index
-        expect(response.status).to eql(200)
-        own_json = JSON.parse(response.body)
-        expect(own_json).to eq [ show_json ]
       end
     end
   end

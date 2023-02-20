@@ -34,27 +34,9 @@ def add_response(learner,prompt_text,answer_text)
   puts "No Question found for #{prompt_text}" if question.nil?
   return if question.nil?
   case question.class.name
-  when "Embeddable::MultipleChoice"
-    return add_multichoice_answer(learner,question, answer_text)
   when "Embeddable::OpenResponse"
     return add_openresponse_answer(learner,question, answer_text)
   end
-end
-
-def add_multichoice_answer(learner,question,answer_text)
-  answer = question.choices.detect{ |c| c.choice == answer_text}
-  new_answer = Saveable::MultipleChoice.create(
-    :learner => learner,
-    :offering => learner.offering,
-    :multiple_choice => question
-  )
-  saveable_answer = Saveable::MultipleChoiceAnswer.create(
-    :multiple_choice => new_answer
-  )
-  Saveable::MultipleChoiceRationaleChoice.create(
-    :choice          => answer,
-    :answer          => saveable_answer
-  )
 end
 
 def add_openresponse_answer(learner,question,answer_text)

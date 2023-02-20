@@ -53,7 +53,7 @@ Given /^"([^"]*)" handles a (POST|GET) with query:$/ do |address, method, table|
   query_data["externalId"] = query_data["externalId"].sub(/999/,"#{@learner.id}")
   query_data["returnUrl"] = query_data["returnUrl"].sub(/site_url/,APP_CONFIG[:site_url])
   query_data["returnUrl"] = query_data["returnUrl"].sub(/key/,"#{@learner.secure_key}")
-  
+
   query_data["resource_link_id"] = query_data["resource_link_id"].sub(/offering.id/,@learner.offering.id.to_s)
   # replace domain_uid by user id if it has the pattern "domain_uid of 'login'"
   if /domain_uid of '(.*)'/ =~ query_data["domain_uid"]
@@ -119,42 +119,4 @@ When /^the student runs the external activity "([^"]*)" again$/ do |activity_nam
   within(".offering_for_student:contains('#{activity_name}')") do
     find(".solo.button").click
   end
-end
-
-When /^the browser returns the following data to the portal$/ do |string|
-  login_as('student')
-  path = @learner.remote_endpoint_path
-  expect(Delayed::Job).to receive(:enqueue)
-  post_with_bearer_token(path, {:content => string})
-  # delayed_job doesn't work in tests, so force running the job
-  Dataservice::ProcessExternalActivityDataJob.new(@learner.id, string).perform
-end
-
-Then /^the portal should create an open response saveable with the answer "([^"]*)"$/ do |answer|
-  ors = Saveable::OpenResponse.all
-  expect(ors.count).to eq(1)
-  expect(ors.first.answer).to eq(answer)
-end
-
-Then /^the portal should create an image question saveable with the answer "([^"]*)"$/ do |answer|
-  iqs = Saveable::ImageQuestion.all
-  expect(iqs.count).to eq(1)
-  a = iqs.first.answer
-  expect(a[:note]).to eq(answer)
-  expect(a[:blob]).not_to be_nil
-end
-
-
-Then /^the portal should create a multiple choice saveable with the answer "([^"]*)"$/ do |answer|
-  multiple_choices = Saveable::MultipleChoice.all
-  matching = multiple_choices.select {|mcs| mcs.answer.first[:answer] == answer}
-  expect(matching.size).to be >= 1
-end
-
-# Only test that the report_learner is upadted
-# TODO: Test the actual report learner content
-Then /the student's progress bars should be updated/ do
-  @learner.reload
-  expect(@learner.report_learner.complete_percent).to be > 0.0
-  expect(@learner.report_learner.last_run).not_to be_nil
 end
