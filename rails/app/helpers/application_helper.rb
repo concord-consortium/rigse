@@ -319,16 +319,6 @@ module ApplicationHelper
     'n/a'
   end
 
-  def learner_specific_stats(learner)
-    reportUtil = Report::Util.factory(learner.offering)
-    or_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::OpenResponse).size
-    or_total = reportUtil.embeddables(:type => Embeddable::OpenResponse).size
-    mc_answered = reportUtil.saveables(:answered => true, :learner => learner, :type => Embeddable::MultipleChoice).size
-    mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => Embeddable::MultipleChoice).size
-    mc_total = reportUtil.embeddables(:type => Embeddable::MultipleChoice).size
-    "sessions: n/a, open response: #{or_answered}/#{or_total}, multiple choice:  #{mc_answered}/#{mc_correct}/#{mc_total}"
-  end
-
   def report_details_for_learner(learner, opts = {})
     options = { :omit_delete => true, :omit_edit => true, :hide_component_name => true, :type => :open_responses, :correctable => false }
     options.update(opts)
@@ -336,18 +326,11 @@ module ApplicationHelper
       haml_tag :div, :class => 'action_menu' do
         haml_tag :div, :class => 'action_menu_header_left' do
           haml_concat title_for_component(learner, options)
-          haml_concat learner_specific_stats(learner)
         end
       end
     end
   end
 
-  def report_correct_count_for_learner(learner, opts = {} )
-    options = {:type => Embeddable::MultipleChoice}
-    options.update(opts)
-    reportUtil = Report::Util.factory(learner.offering)
-    mc_correct = reportUtil.saveables(:answered => true, :correct => true, :learner => learner, :type => options[:type]).size
-  end
 
   def percent(count,max,precision = 1)
     return 0 if max < 1

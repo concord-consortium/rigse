@@ -312,27 +312,9 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#learner_specific_stats' do
-    xit 'works' do
-      result = helper.learner_specific_stats(FactoryBot.create(:portal_learner))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#report_details_for_learner' do
     xit 'works' do
       result = helper.report_details_for_learner(FactoryBot.create(:portal_learner))
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#report_correct_count_for_learner' do
-    xit 'works' do
-      result = helper.report_correct_count_for_learner(FactoryBot.create(:portal_learner))
 
       expect(result).not_to be_nil
     end
