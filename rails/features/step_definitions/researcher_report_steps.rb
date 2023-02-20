@@ -38,8 +38,6 @@ def add_response(learner,prompt_text,answer_text)
     return add_multichoice_answer(learner,question, answer_text)
   when "Embeddable::OpenResponse"
     return add_openresponse_answer(learner,question, answer_text)
-  when "Embeddable::ImageQuestion"
-    return add_image_question_answer(learner,question, answer_text)
   end
 end
 
@@ -71,23 +69,6 @@ def add_openresponse_answer(learner,question,answer_text)
   new_answer.answers << saveable_answer
 end
 
-
-def add_image_question_answer(learner,question,answer_text)
-  return nil if (answer_text.nil? || answer_text.strip.empty?)
-  new_answer = Saveable::ImageQuestion.create(
-    :learner => learner,
-    :offering => learner.offering,
-    :image_question => question
-  )
-  # TODO: Maybe slurp in some image and encode it for the blob?
-  saveable_answer = Saveable::ImageQuestionAnswer.create(
-    :blob => Dataservice::Blob.create(
-      :content => answer_text,
-      :token => answer_text
-    )
-  )
-  new_answer.answers << saveable_answer
-end
 
 def find_bloblinks_in_spreadheet(spreadsheet,num)
   structure = YAML::dump(spreadsheet)

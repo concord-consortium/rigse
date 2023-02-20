@@ -860,8 +860,6 @@ module MockData
     case question.class.name
     when "Embeddable::MultipleChoice"
       return add_multichoice_answer(learner,question, answer_text, data)
-    when "Embeddable::ImageQuestion"
-      return add_image_question_answer(learner,question, answer_text, data)
     end
   end # end of self.add_response
 
@@ -902,53 +900,6 @@ module MockData
     end
 
   end #end of add_multichoice_answer
-
-
-  def self.add_image_question_answer(learner,question,answer_text,data)
-    return nil if (answer_text.nil? || answer_text.strip.empty?)
-
-    new_answer_by_uuid = Saveable::ImageQuestion.find_by_uuid(data[:saveable_image_question_uuid])
-    if new_answer_by_uuid
-      new_answer = new_answer_by_uuid
-      new_answer.learner = learner
-      new_answer.offering = learner.offering
-      new_answer.image_question = question
-      new_answer.save!
-
-      blob = Dataservice::Blob.where(uuid: data[:dataservice_blob_uuid]).first_or_create
-      blob.content = answer_text
-      blob.token = answer_text
-      blob.save!
-
-      saveable_answer = Saveable::ImageQuestionAnswer.where(uuid: data[:saveable_image_question_answer_uuid]).first_or_create
-      saveable_answer.blob = blob
-      saveable_answer.save!
-
-      new_answer.answers << saveable_answer
-    else
-      info = {
-               :learner => learner,
-               :offering => learner.offering,
-               :image_question => question,
-               :uuid => data[:saveable_image_question_uuid]
-             }
-
-      new_answer = Saveable::ImageQuestion.create!(info)
-
-      info = {
-               :content => answer_text,
-               :token => answer_text,
-               :uuid => data[:dataservice_blob_uuid]
-             }
-      blob = Dataservice::Blob.create!(info)
-
-      info = {
-               :blob => blob,
-               :uuid => data[:saveable_image_question_answer_uuid]
-             }
-      saveable_answer = Saveable::ImageQuestionAnswer.create!(info)
-    end
-  end # end add_image_question_answer
 
   def self.create_default_materials_collections
     puts
