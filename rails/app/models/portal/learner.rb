@@ -281,20 +281,6 @@ class Portal::Learner < ApplicationRecord
     end
   end
 
-  def update_answers
-    report_util = Report::UtilLearner.new(self)
-
-    answersMeta = {
-      :num_answerables => report_util.embeddables.size,
-      :num_answered => report_util.saveables.count { |s| s.answered? },
-      :num_submitted => report_util.saveables.count { |s| s.submitted? },
-      :num_correct => report_util.saveables.count { |s|
-          (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
-        },
-      :complete_percent => report_util.complete_percent
-    }
-  end
-
   def escape_comma(string)
     string&.gsub(',', ' ')
   end

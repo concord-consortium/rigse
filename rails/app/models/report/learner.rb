@@ -8,7 +8,6 @@ class Report::Learner < ApplicationRecord
   belongs_to   :learner, :class_name => "Portal::Learner", :foreign_key => "learner_id",
     :inverse_of => :report_learner
   belongs_to   :student, :class_name => "Portal::Student"
-  serialize    :answers, Hash
   belongs_to   :runnable, :polymorphic => true
 
   scope :after,  lambda         { |date|         where("last_run > ?", date)  }
@@ -73,52 +72,6 @@ class Report::Learner < ApplicationRecord
   def calculate_last_run
     # RAILS6 TODO: figure out alternative? - this was using the now removed dataservice model update times
     return self.last_run
-  end
-
-  def update_answers
-    report_util = Report::UtilLearner.new(self.learner)
-
-    # We need to populate these field
-    self.num_answerables = report_util.embeddables.size
-    self.num_answered = report_util.saveables.count { |s| s.answered? }
-    self.num_submitted = report_util.saveables.count { |s| s.submitted? }
-    self.num_correct = report_util.saveables.count { |s|
-      (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
-    }
-    self.complete_percent = report_util.complete_percent
-
-    update_activity_completion_status(report_util)
-
-    # We might also want to gather 'saveables' in An associated model?
-    # AU: We'll use a serialized column to store a hash, for now
-    answers_hash = {}
-    report_util.saveables.each do |s|
-      # feedbacks = s.answers.map do |ans|
-      # TOOD: Eventually we want all answers.... Or answers with feedback...
-      # this has been simplified here because for performance reasons.
-      feedbacks = [s.answers.last].compact.map do |ans|
-        {
-            answer: serialize_blob_answer(ans.answer),
-            answer_key: Report::Learner.encode_answer_key(ans),
-            score: ans.respond_to?(:score) ? ans.score  : nil,
-            feedback: ans.respond_to?(:feedback) ? ans.feedback : nil,
-            has_been_reviewed: ans.respond_to?(:has_been_reviewed?) ? (ans.has_been_reviewed?||false) : nil
-        }
-      end
-      hash = {
-          answer: serialize_blob_answer(s.answer),
-          answer_type: s.answer_type,
-          feedbacks: feedbacks,
-          answered: s.answered?,
-          submitted: s.submitted?,
-          question_required: s.embeddable.is_required
-      }
-      if s.respond_to?("has_correct_answer?") && s.has_correct_answer? && s.respond_to?("answered_correctly?")
-        hash[:is_correct] = s.answered_correctly?
-      end
-      answers_hash[ Report::Learner.encode_answer_key(s.embeddable)] = hash
-    end
-    self.answers = answers_hash
   end
 
   def self.encode_answer_key(item)
@@ -224,27 +177,4 @@ class Report::Learner < ApplicationRecord
       pfs.map{ |p| "#{p.id}: #{escape_comma(p.fullname)}" }.join(",")
     end
   end
-
-  def update_activity_completion_status(report_util)
-    offering = self.learner.offering
-    assignable = offering.runnable
-    if assignable.is_a?(::ExternalActivity) && assignable.template
-      assignable = assignable.template
-    end
-
-    activities = []
-    if assignable.is_a? ::Investigation
-      activities = assignable.activities
-    elsif assignable.is_a? ::Activity
-      activities = [assignable]
-    end
-
-    activities.each do|activity|
-      complete_percent = report_util.complete_percent(activity)
-      report_learner_activity = Report::LearnerActivity.where(learner_id: self.learner.id, activity_id: activity.id).first_or_create
-      report_learner_activity.complete_percent = complete_percent
-      report_learner_activity.save!
-    end
-  end
-
 end

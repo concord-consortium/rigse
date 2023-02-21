@@ -275,17 +275,4 @@ describe Report::Learner do
       expect(result).not_to be_nil
     end
   end
-
-  # TODO: auto-generated
-  describe '#update_activity_completion_status' do
-    xit 'update_activity_completion_status' do
-      learner = described_class.new
-      report_util = double('report_util')
-      result = learner.update_activity_completion_status(report_util)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-
 end
