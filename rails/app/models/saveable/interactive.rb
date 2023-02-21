@@ -13,8 +13,6 @@ class Saveable::Interactive < ApplicationRecord
   delegate :width, :to => :iframe
   delegate :height, :to => :iframe
 
-  include Saveable::Saveable
-
   def embeddable
     iframe
   end
