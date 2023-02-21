@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_21_115604) do
+ActiveRecord::Schema.define(version: 2023_02_21_124756) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1737,23 +1737,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_115604) do
     t.index ["learner_id"], name: "index_saveable_open_responses_on_learner_id"
     t.index ["offering_id"], name: "index_saveable_open_responses_on_offering_id"
     t.index ["open_response_id"], name: "index_saveable_open_responses_on_open_response_id"
-  end
-
-  create_table "saveable_sparks_measuring_resistance", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "offering_id"
-    t.index ["learner_id"], name: "index_saveable_sparks_measuring_resistance_on_learner_id"
-    t.index ["offering_id"], name: "index_saveable_sparks_measuring_resistance_on_offering_id"
-  end
-
-  create_table "saveable_sparks_measuring_resistance_reports", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "measuring_resistance_id"
-    t.integer "position"
-    t.text "content", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "sections", id: :integer, charset: "utf8", force: :cascade do |t|

@@ -122,7 +122,6 @@
         - pdf prawn
         - rjs
         - run_html haml
-        - run_sparks_html haml
         - text erb
       2. I checked each extension and looked in the code to see how they were used.  I left a comment in the PT story (https://www.pivotaltracker.com/story/show/177670542/comments/223360555) asking Scott if he had any insight into the extensions I don't have any experience with.  I'm going to leave this PT story open for now.
     2. Rails Controller Testing (https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#rails-controller-testing)

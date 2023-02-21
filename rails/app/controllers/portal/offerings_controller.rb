@@ -34,14 +34,6 @@ class Portal::OfferingsController < ApplicationController
         @learner = setup_portal_student
         render :show, :layout => "layouts/run"
       }
-      format.run_sparks_html   {
-        if learner = setup_portal_student
-          session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
-        else
-          session[:put_path] = nil
-        end
-        render 'pages/show', :layout => "layouts/run"
-      }
 
       format.run_resource_html   {
          if learner = setup_portal_student
@@ -53,7 +45,6 @@ class Portal::OfferingsController < ApplicationController
            cookies[:class_id] = learner.offering.clazz.id
            cookies[:student_id] = learner.student.id
            cookies[:runnable_id] = @offering.runnable.id
-           # session[:put_path] = saveable_sparks_measuring_resistance_url(:format => :json)
          else
            # session[:put_path] = nil
          end

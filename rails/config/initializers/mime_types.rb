@@ -6,7 +6,6 @@
 
 Mime::Type.register "text/html", :run_html
 Mime::Type.register "text/html", :run_resource_html
-Mime::Type.register "text/html", :run_sparks_html
 
 # for blobs
 Mime::Type.register "application/octet-stream", :blob
