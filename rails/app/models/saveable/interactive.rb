@@ -6,10 +6,6 @@ class Saveable::Interactive < ApplicationRecord
 
   belongs_to :iframe,  :class_name => 'Embeddable::Iframe'
 
-  has_many :answers, -> { order :position },
-    :dependent => :destroy,
-    :class_name => "Saveable::InteractiveState"
-
   delegate :name, :to => :iframe
 
   # Interactive can be displayed in an iframe in teacher report.
@@ -21,19 +17,5 @@ class Saveable::Interactive < ApplicationRecord
 
   def embeddable
     iframe
-  end
-
-  def submitted_answer
-    if submitted?
-      answers.last.answer
-    elsif answered?
-      'not submitted'
-    else
-      'not answered'
-    end
-  end
-
-  def submitted?
-    true
   end
 end
