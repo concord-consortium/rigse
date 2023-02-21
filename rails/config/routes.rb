@@ -394,9 +394,6 @@ RailsPortal::Application.routes.draw do
           get :search
           get :search_suggestions
         end
-        namespace :answers do
-          get :student_answers
-        end
 
         resources :offerings, only: [:show, :update, :index] do
           member do
