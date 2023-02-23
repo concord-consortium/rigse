@@ -131,19 +131,6 @@ class Portal::Offering < ApplicationRecord
     runnable.run_format
   end
 
-  def internal_report?
-    klass = runnable.class
-
-    # handle ExernalActivities that are backed by a reportable template
-    if klass == ExternalActivity
-      if runnable.template
-        klass = runnable.template.class
-      end
-    end
-
-    return [Investigation, Activity, Page].include? klass
-  end
-
   def has_default_report?
     DefaultReportService::default_report_for_offering(self) != nil
   end

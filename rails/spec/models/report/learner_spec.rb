@@ -27,7 +27,6 @@ describe Report::Learner do
       :runnable => @runnable,
       :clazz    => @class,
       :name     => "offering",
-      :internal_report? => true,
       :report_embeddable_filter => nil,
       :reload => nil
     )
@@ -188,16 +187,6 @@ describe Report::Learner do
     xit 'calculate_last_run' do
       learner = described_class.new
       result = learner.calculate_last_run
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#update_answers' do
-    xit 'update_answers' do
-      learner = described_class.new
-      result = learner.update_answers
 
       expect(result).not_to be_nil
     end

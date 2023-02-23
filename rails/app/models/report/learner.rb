@@ -123,19 +123,8 @@ class Report::Learner < ApplicationRecord
 
     update_permission_forms
 
-    # check to see if we can obtain the last run info
-    if self.learner.offering.internal_report?
-      calculate_last_run
-      update_answers
-    else
-      self.num_answerables = 0
-      self.num_answered = 0
-      self.num_submitted = 0
-      self.num_correct = 0
-      # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
-      self.complete_percent = 100
-      self.last_run = Time.now
-    end
+    calculate_last_run
+
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end
