@@ -30,4 +30,3 @@ FactoryBot.define do
     teacher.clazzes {[FactoryBot.create(:nces_portal_clazz)]}
   end
 end
-

@@ -35,4 +35,3 @@
       - ✔ rails/app/views/portal/clazz_mailer/clazz_creation_notification.html.erb:11
       - ✔ rails/app/views/user_mailer/confirmation_instructions.html.erb:11
     ✔  Find all `RAILS6` comments and address them
-

@@ -367,4 +367,3 @@ Rico.Corner = {
    _isBottomRounded: function() { return this._hasString(this.options.corners, "all", "bottom", "bl", "br"); },
    _hasSingleTextChild: function(el) { return el.childNodes.length == 1 && el.childNodes[0].nodeType == 3; }
 }
-

@@ -176,4 +176,3 @@ describe API::V1::TeacherClassesController do
     end
   end
 end
-

@@ -63,4 +63,3 @@ Files to remove, update, or review:
 * views/shared/_embeddable_container.html.haml
 
 # Failing tests & new items to address:
-

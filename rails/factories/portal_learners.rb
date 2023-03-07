@@ -12,4 +12,3 @@ FactoryBot.define do
     after(:create) {|learner| learner.offering.clazz.students << learner.student}
   end
 end
-

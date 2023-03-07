@@ -102,4 +102,3 @@ RSpec.describe Publishable do
     end
   end
 end
-

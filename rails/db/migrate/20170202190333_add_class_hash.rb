@@ -12,4 +12,3 @@ class AddClassHash < ActiveRecord::Migration[5.1]
     remove_column :portal_clazzes, :class_hash
   end
 end
-

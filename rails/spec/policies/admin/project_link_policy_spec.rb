@@ -94,4 +94,3 @@ RSpec.describe Admin::ProjectLinkPolicy do
 
   end
 end
-

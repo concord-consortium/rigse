@@ -3,4 +3,3 @@ FactoryBot.define do
     association :grade
   end
 end
-

@@ -864,4 +864,3 @@ var handleHistoryChange = function(pageId, pageData) {
 window.onload = function() {
         dhtmlHistory.initialize(handleHistoryChange);
 };
-

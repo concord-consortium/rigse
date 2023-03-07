@@ -3,4 +3,3 @@ FactoryBot.define do
     f.name {'9'}
   end
 end
-

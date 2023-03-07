@@ -49,4 +49,3 @@ Generating an mpeg4 video of the gource output (*ffmpeg required*):
 Generating an webm video of the gource output (*ffmpeg required*):
 
     $ ./docs/gource/generate-webm.sh
-

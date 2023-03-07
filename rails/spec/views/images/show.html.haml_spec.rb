@@ -18,4 +18,3 @@ describe "/images/show.html.haml" do
     expect(rendered).to match /my secret image/
   end
 end
-

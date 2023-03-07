@@ -3,4 +3,3 @@ FactoryBot.define do
     sequence(:NAME) {|n| "factory generated nces district ##{n}"}
   end
 end
-
