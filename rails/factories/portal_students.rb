@@ -9,4 +9,3 @@ FactoryBot.define do
     f.association :grade_level, :factory => :portal_grade_level
   end
 end
-

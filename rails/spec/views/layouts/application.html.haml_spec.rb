@@ -47,4 +47,3 @@ describe "rendering application.html.haml" do
     expect(rendered).to have_selector("body.foo-theme-styles")
   end
 end
-

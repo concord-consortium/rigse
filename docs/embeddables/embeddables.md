@@ -12,6 +12,3 @@ Responses are processed asynchronously by the process_external_activity_data_job
 
 
 See also: `lib/saveable_extraction.rb`
-
-
-

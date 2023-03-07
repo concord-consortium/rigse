@@ -40,4 +40,3 @@ When /^I assign the ([^"]+) "([^"]*)" to the class "([^"]*)"$/ do |assignable_ty
   # We don't do an interactive version of this because its tested elsewhere.
   polymorphic_assign(assignable_type, assignable_name, class_name)
 end
-

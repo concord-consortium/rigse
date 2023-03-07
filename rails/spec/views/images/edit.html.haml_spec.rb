@@ -30,5 +30,3 @@ describe "/images/edit.html.haml" do
     render
   end
 end
-
-

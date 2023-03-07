@@ -44,4 +44,3 @@ describe('When I try to render materials-bin material', () => {
 
   // TODO: add more tests...
 })
-

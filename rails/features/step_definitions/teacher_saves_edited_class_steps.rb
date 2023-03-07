@@ -69,4 +69,3 @@ Then /^"([^"]*)" should( not)? be a teacher option$/ do |value, negate|
   expectation = negate ? :should_not : :should
   find("#teacher_id_selector").first(:xpath, ".//option[text() = '#{value}']").send(expectation, be_present)
 end
-

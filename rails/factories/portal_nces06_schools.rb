@@ -15,4 +15,3 @@ FactoryBot.define do
     association :nces_district, :factory => :portal_nces06_district
   end
 end
-

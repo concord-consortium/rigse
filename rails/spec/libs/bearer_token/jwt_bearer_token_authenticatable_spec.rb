@@ -75,4 +75,3 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   end
 
 end
-

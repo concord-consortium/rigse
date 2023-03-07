@@ -88,5 +88,3 @@ class DefaultRunnable
     end
   end
 end
-
-

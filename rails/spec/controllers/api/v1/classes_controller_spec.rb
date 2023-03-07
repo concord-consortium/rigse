@@ -88,4 +88,3 @@ describe API::V1::ClassesController do
     end
   end
 end
-

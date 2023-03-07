@@ -28,4 +28,3 @@ window.CreateStatus = CreateStatus;
 document.observe("dom:loaded", () => $$(".create_button").each(function(item) {
   new CreateStatus(item);
 }));
-
