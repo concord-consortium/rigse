@@ -27,7 +27,6 @@ describe Report::Learner do
       :runnable => @runnable,
       :clazz    => @class,
       :name     => "offering",
-      :internal_report? => true,
       :report_embeddable_filter => nil,
       :reload => nil
     )
@@ -194,16 +193,6 @@ describe Report::Learner do
   end
 
   # TODO: auto-generated
-  describe '#update_answers' do
-    xit 'update_answers' do
-      learner = described_class.new
-      result = learner.update_answers
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '.encode_answer_key' do
     it 'encode_answer_key' do
       item = described_class.new
@@ -275,17 +264,4 @@ describe Report::Learner do
       expect(result).not_to be_nil
     end
   end
-
-  # TODO: auto-generated
-  describe '#update_activity_completion_status' do
-    xit 'update_activity_completion_status' do
-      learner = described_class.new
-      report_util = double('report_util')
-      result = learner.update_activity_completion_status(report_util)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-
 end

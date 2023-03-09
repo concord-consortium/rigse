@@ -6,7 +6,7 @@ class Report::OfferingStatus
   attr_accessor :requester
 
   # this has an offering
-  # and it constructs the statuses for all the students 
+  # and it constructs the statuses for all the students
   def initialize(_offering, _requester=nil)
     self.offering = _offering
     self.requester = _requester
@@ -31,7 +31,7 @@ class Report::OfferingStatus
   def student_status_for(student)
     student_status_map[student]
   end
-  
+
   # it might make more sense for this to return an offering_student_status object
   def complete_percent(student)
     student_status_map[student].complete_percent

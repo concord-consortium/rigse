@@ -183,22 +183,11 @@ class Portal::Learner < ApplicationRecord
   end
 
   def elastic_search_learner_model
-    # check to see if we can obtain the last run info
-    if self.offering.internal_report?
-      answersMeta = update_answers
-      num_answerables = answersMeta[:num_answerables]
-      num_answered = answersMeta[:num_answered]
-      num_submitted = answersMeta[:num_submitted]
-      num_correct = answersMeta[:num_correct]
-      complete_percent = answersMeta[:complete_percent]
-    else
-      num_answerables = 0
-      num_answered = 0
-      num_submitted = 0
-      num_correct = 0
-      # Offering is not reportable, so return 100% progress, as it's been started. That's the only information available.
-      complete_percent = 100
-    end
+    num_answerables = 0
+    num_answered = 0
+    num_submitted = 0
+    num_correct = 0
+    complete_percent = 0
 
     {
       learner_id: self.id,
@@ -279,20 +268,6 @@ class Portal::Learner < ApplicationRecord
     rescue => e
       Rails.logger.error("Error updating Elasticsearch learner document for learner #{self.id}: #{e.message}")
     end
-  end
-
-  def update_answers
-    report_util = Report::UtilLearner.new(self)
-
-    answersMeta = {
-      :num_answerables => report_util.embeddables.size,
-      :num_answered => report_util.saveables.count { |s| s.answered? },
-      :num_submitted => report_util.saveables.count { |s| s.submitted? },
-      :num_correct => report_util.saveables.count { |s|
-          (s.respond_to? 'answered_correctly?') ? s.answered_correctly? : false
-        },
-      :complete_percent => report_util.complete_percent
-    }
   end
 
   def escape_comma(string)
