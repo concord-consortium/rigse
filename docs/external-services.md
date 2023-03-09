@@ -189,7 +189,6 @@ This client of the Tool can be used by the Portal when generating tokens during 
 
 If we take this approach it means we'll need to make Tools for all external activities which make connections back to the Portal. Currently this list probably is:
 - CLUE
-- sparks-activities
 - tt.concord.org
 
 ## Improve Move students between classes

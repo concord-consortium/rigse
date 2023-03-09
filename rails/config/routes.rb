@@ -50,13 +50,6 @@ RailsPortal::Application.routes.draw do
   end
 
   constraints :id => /\d+/ do
-    namespace :saveable do
-      namespace :sparks do
-        resources :measuring_resistances
-        resources :measuring_resistance_reports
-      end
-    end
-
     namespace :browse do
       resources :external_activities, path: 'eresources' do
         member do
