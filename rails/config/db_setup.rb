@@ -56,6 +56,3 @@ if File.exists?(db_config_path)
 else
   puts " couldn't find the database config file: #{db_config_path}"
 end
-
-
-

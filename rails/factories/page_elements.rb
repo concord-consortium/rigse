@@ -3,4 +3,3 @@ FactoryBot.define do
     f.association :embeddable, :factory => :open_response
   end
 end
-

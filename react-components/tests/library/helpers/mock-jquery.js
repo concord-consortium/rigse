@@ -23,4 +23,3 @@ export const mockJquery = (mock) => {
     global.jQuery = realJQuery;
   })
 }
-

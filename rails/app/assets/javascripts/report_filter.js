@@ -104,4 +104,3 @@ function showMessagePopup(messageText)
     
     return;
 }
-

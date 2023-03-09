@@ -39,4 +39,3 @@ end
 When(/^I select "(.*?)" under "(.*?)" filter$/) do |filter, filter_header|
   select filter, :from => filter_header.downcase.tr(" ","_")
 end
-

@@ -54,4 +54,3 @@ window.poll_to_update_student_data_percentages = function(options) {
   // wait for the initial poll
   setTimeout(poll, poll_interval);
 };
-

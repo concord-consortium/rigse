@@ -10,5 +10,3 @@ class CreatePortalStudentPermissionForms < ActiveRecord::Migration[5.1]
     add_index :portal_student_permission_forms, :portal_permission_form_id, :name => "p_s_p_form_id"
   end
 end
-
-

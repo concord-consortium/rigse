@@ -118,4 +118,3 @@ class LearnerDetail
     return token
   end
 end
-

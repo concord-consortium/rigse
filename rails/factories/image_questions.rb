@@ -3,4 +3,3 @@ FactoryBot.define do
     f.prompt {"Choose something from your lab book"}
   end
 end
-

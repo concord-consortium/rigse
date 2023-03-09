@@ -31,4 +31,3 @@ describe StatusGraphHelper, type: :helper do
     end
   end
 end
-

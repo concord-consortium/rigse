@@ -17,4 +17,3 @@ describe "/images/index.html.haml" do
     render
   end
 end
-

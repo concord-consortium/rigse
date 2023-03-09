@@ -49,4 +49,3 @@ Then /^the offering named "(.+)" should be the first on the list on the class su
                               ")
   raise 'Offering is not the first on the list' if result == false
 end
-

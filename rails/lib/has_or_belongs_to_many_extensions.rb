@@ -7,4 +7,3 @@ module HasOrBelongsToManyExtensions
     end
   end
 end
-

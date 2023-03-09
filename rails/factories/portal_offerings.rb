@@ -4,4 +4,3 @@ FactoryBot.define do
     f.association :clazz, :factory => :portal_clazz
   end
 end
-
