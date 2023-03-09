@@ -725,8 +725,6 @@ module MockData
 
         res.delete(:investigation)
 
-        record_student_answer(res, 'Investigation')
-
         investigation_index = investigation_index + 1
         count += 1
         print '.'
@@ -748,8 +746,6 @@ module MockData
         res[:index] = activity_index
 
         res.delete(:activity)
-
-        record_student_answer(res, 'Activity')
 
         activity_index = activity_index + 1
         count += 1
@@ -824,44 +820,6 @@ module MockData
 
     return_value
   end
-
-
-  def self.record_student_answer(data, runnable_type)
-    index = data.delete(:index)
-    first_date = DateTime.now - data.length
-    student = data[:student]
-    clazz = data[:class]
-    assignable = data[:assignable]
-    offering = Portal::Offering.find_by_clazz_id_and_runnable_id_and_runnable_type(clazz.id, assignable.id, runnable_type)
-    if offering
-      learner = offering.find_or_create_learner(student)
-      learner.uuid = data[:learner_uuid]
-      learner.save!
-
-      add_response(learner,data)
-
-      report_learner = learner.report_learner
-      # need to make sure the last_run is sequencial inorder for some tests to work
-      report_learner.last_run = first_date + index
-      report_learner.update_fields
-    end
-  end # end of record_student_answer
-
-
-  def self.add_response(learner,data)
-    prompts = @default_mcq + @default_image_question
-    prompt_text = data[:question_prompt]
-    answer_text = data[:answer]
-
-    question = prompts.find{|q| q.prompt == prompt_text}
-
-    puts "No Question found for #{prompt_text}" if question.nil?
-    return if question.nil?
-    case question.class.name
-    when "Embeddable::MultipleChoice"
-      return add_multichoice_answer(learner,question, answer_text, data)
-    end
-  end # end of self.add_response
 
   def self.create_default_materials_collections
     puts

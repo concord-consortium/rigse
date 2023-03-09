@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_20_185540) do
+ActiveRecord::Schema.define(version: 2023_02_21_115604) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1678,19 +1678,6 @@ ActiveRecord::Schema.define(version: 2022_07_20_185540) do
     t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
   end
 
-  create_table "saveable_external_link_urls", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "external_link_id"
-    t.integer "position"
-    t.text "url"
-    t.boolean "is_final"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "feedback"
-    t.boolean "has_been_reviewed", default: false
-    t.integer "score"
-    t.index ["external_link_id"], name: "index_saveable_external_link_urls_on_external_link_id"
-  end
-
   create_table "saveable_external_links", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "embeddable_id"
     t.string "embeddable_type"
@@ -1702,21 +1689,6 @@ ActiveRecord::Schema.define(version: 2022_07_20_185540) do
     t.index ["embeddable_id", "embeddable_type"], name: "svbl_xtrn_links_poly"
     t.index ["learner_id"], name: "index_saveable_external_links_on_learner_id"
     t.index ["offering_id"], name: "index_saveable_external_links_on_offering_id"
-  end
-
-  create_table "saveable_image_question_answers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "image_question_id"
-    t.integer "blob_id"
-    t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "note", size: :medium
-    t.string "uuid", limit: 36
-    t.boolean "is_final"
-    t.text "feedback"
-    t.boolean "has_been_reviewed", default: false
-    t.integer "score"
-    t.index ["image_question_id", "position"], name: "i_q_id_and_position_index"
   end
 
   create_table "saveable_image_questions", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -1732,19 +1704,6 @@ ActiveRecord::Schema.define(version: 2022_07_20_185540) do
     t.index ["offering_id"], name: "index_saveable_image_questions_on_offering_id"
   end
 
-  create_table "saveable_interactive_states", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "interactive_id"
-    t.integer "position"
-    t.text "state", size: :long
-    t.boolean "is_final"
-    t.text "feedback"
-    t.boolean "has_been_reviewed", default: false
-    t.integer "score"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["interactive_id", "position"], name: "inter_id_and_position_index"
-  end
-
   create_table "saveable_interactives", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "offering_id"
@@ -1753,30 +1712,6 @@ ActiveRecord::Schema.define(version: 2022_07_20_185540) do
     t.datetime "updated_at", null: false
     t.integer "iframe_id"
     t.index ["learner_id"], name: "index_saveable_interactives_on_learner_id"
-  end
-
-  create_table "saveable_multiple_choice_answers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "multiple_choice_id"
-    t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "uuid", limit: 36
-    t.boolean "is_final"
-    t.text "feedback"
-    t.boolean "has_been_reviewed", default: false
-    t.integer "score"
-    t.index ["multiple_choice_id", "position"], name: "m_c_id_and_position_index"
-  end
-
-  create_table "saveable_multiple_choice_rationale_choices", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "choice_id"
-    t.integer "answer_id"
-    t.string "rationale"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "uuid", limit: 36
-    t.index ["answer_id"], name: "index_saveable_multiple_choice_rationale_choices_on_answer_id"
-    t.index ["choice_id"], name: "index_saveable_multiple_choice_rationale_choices_on_choice_id"
   end
 
   create_table "saveable_multiple_choices", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -1790,19 +1725,6 @@ ActiveRecord::Schema.define(version: 2022_07_20_185540) do
     t.index ["learner_id"], name: "index_saveable_multiple_choices_on_learner_id"
     t.index ["multiple_choice_id"], name: "index_saveable_multiple_choices_on_multiple_choice_id"
     t.index ["offering_id"], name: "index_saveable_multiple_choices_on_offering_id"
-  end
-
-  create_table "saveable_open_response_answers", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "open_response_id"
-    t.integer "position"
-    t.text "answer", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_final"
-    t.text "feedback"
-    t.boolean "has_been_reviewed", default: false
-    t.integer "score"
-    t.index ["open_response_id", "position"], name: "o_r_id_and_position_index"
   end
 
   create_table "saveable_open_responses", id: :integer, charset: "utf8", force: :cascade do |t|
