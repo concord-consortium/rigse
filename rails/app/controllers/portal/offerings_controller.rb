@@ -145,8 +145,6 @@ class Portal::OfferingsController < ApplicationController
         params[:questions].each do |dom_id, value|
           # translate the dom id into an actual Embeddable
           embeddable = parse_embeddable(dom_id)
-          # create saveable
-          create_saveable(embeddable, @offering, learner, value) if embeddable
         end
         learner.report_learner.last_run = DateTime.now
         learner.update_report_model_cache
@@ -219,42 +217,6 @@ class Portal::OfferingsController < ApplicationController
       return klass.find($2.to_i) if klass
     end
     nil
-  end
-
-  def create_saveable(embeddable, offering, learner, answer)
-    case embeddable
-    when Embeddable::OpenResponse
-      saveable_open_response = Saveable::OpenResponse
-                                   .where(learning_id: learner.id,
-                                          offering_id: offering.id,
-                                          open_response_id: embeddable.id)
-                                   .first_or_create
-      if saveable_open_response.response_count == 0 || saveable_open_response.answers.last.answer != answer
-        saveable_open_response.answers.create(:answer => answer)
-      end
-    when Embeddable::MultipleChoice
-      choice = parse_embeddable(answer)
-      answer = choice ? choice.choice : ""
-      if embeddable && choice
-        saveable = Saveable::MultipleChoice
-                       .where(learning_id: learner.id,
-                              offering_id: offering.id,
-                              multiple_choice_id: embeddable.id)
-                       .first_or_create
-        if saveable.answers.empty? || saveable.answers.last.answer.first[:answer] != answer
-          saveable_answer = saveable.answers.create()
-          Saveable::MultipleChoiceRationaleChoice.create(:choice_id => choice.id, :answer_id => saveable_answer.id)
-        end
-      else
-        if ! choice
-          logger.error("Missing Embeddable::MultipleChoiceChoice id: #{choice_id}")
-        elsif ! embeddable
-          logger.error("Missing Embeddable::MultipleChoice id: #{choice.multiple_choice_id}")
-        end
-      end
-    else
-      nil
-    end
   end
 
   def portal_offering_strong_params(params)
