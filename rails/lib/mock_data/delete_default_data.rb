@@ -52,16 +52,6 @@ module MockData
 
     HEREDOC
 
-    investigations = Investigation.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
-    investigations.each do |i|
-      i.destroy
-    end
-
-    activities = Activity.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
-    activities.each do |a|
-      a.destroy
-    end
-
     external_activities = ExternalActivity.where('uuid LIKE :prefix', :prefix => UUID_LIKE_PATTERN)
     external_activities.each do |e|
       e.destroy

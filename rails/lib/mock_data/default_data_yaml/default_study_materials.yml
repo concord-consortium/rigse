@@ -1,89 +1,3 @@
-mult_cho_questions:
-  mcq_1:
-    prompt: a
-    answers: a,b,c,d
-    correct_answer: a
-    uuid: 00000000-0000-0000-0000-000000000049
-  
-  mcq_2:
-    prompt: b
-    answers: a,b,c,d
-    correct_answer: a
-    uuid: 00000000-0000-0000-0000-000000000050
-  
-  mcq_3: 
-    prompt: c
-    answers: a,b,c,d
-    correct_answer: a
-    uuid: 00000000-0000-0000-0000-000000000051
-    
-  mcq_4:
-    prompt: d
-    answers: a,b,c,d
-    correct_answer: a
-    uuid: 00000000-0000-0000-0000-000000000052
-      
-  mcq_5: 
-    prompt: e
-    answers: a,b,c,d
-    correct_answer: a
-    uuid: 00000000-0000-0000-0000-000000000053
-      
-  mcq_6:
-    prompt: f
-    answers: a,b,c,d
-    correct_answer: a
-    uuid: 00000000-0000-0000-0000-000000000054
-
-
-image_questions:
-  imgq_1:
-    prompt: image_q
-    uuid: 00000000-0000-0000-0000-000000000055
-
-pages:
-  page_1:
-    name: My Page
-    user: teacher
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000129
-    
-    
-linked_investigations:
-  l_inv_1:
-    name: WithLinksInv
-    user: author
-    offerings_count: 5
-    created_at: <%= Wed Jan 25 12:00:00 -0500 2011 %>
-    publication_status: published
-    uuid: 00000000-0000-0000-0000-000000000130
-    activity_uuid: 00000000-0000-0000-0000-000000000131
-    page_uuid: 00000000-0000-0000-0000-000000000132
-    open_response_uuid: 00000000-0000-0000-0000-000000000133
-
-mcq_activities:
-  mcq_activity_1:
-    name: Algebra
-    sections:
-      section_1:
-        name: section a
-        uuid: 00000000-0000-0000-0000-000000000178
-        pages:
-          page_1:
-            name: page 6
-            uuid: 00000000-0000-0000-0000-000000000179
-    multiple_choices:
-      mcq_1:
-        prompt: f
-        uuid: 00000000-0000-0000-0000-000000000054
-    image_questions:
-      imgq_1:
-        prompt: image_q
-        uuid: 00000000-0000-0000-0000-000000000055
-    user: teacher
-    activity_teacher_only: false
-    uuid: 00000000-0000-0000-0000-000000000180
-
 external_activities:
   ext_activity_1:
     name: My Activity
@@ -105,14 +19,14 @@ external_activities:
     url: http://fake-lara.com/mock_html/test-external-activity3.html
     author_url: http://fake-lara.com/mock_html/test-external-activity3.html/edit
     uuid: 00000000-0000-0000-0000-000000000165
-    
+
   ext_activity_4:
     name: Diagram
     user: author
     url: http://fake-lara.com/mock_html/test-external-activity4.html
     author_url: http://fake-lara.com/mock_html/test-external-activity4.html/edit
     uuid: 00000000-0000-0000-0000-000000000166
-  
+
   ext_activity_5:
     name: operations on sets
     user: author
@@ -126,7 +40,7 @@ external_activities:
     url: http://fake-lara.com/mock_html/test-external-activity6.html
     author_url: http://fake-lara.com/mock_html/test-external-activity6.html/edit
     uuid: 00000000-0000-0000-0000-000000000168
-    
+
   ext_activity_7:
     name: Circular Motion
     user: author
@@ -317,9 +231,7 @@ external_activities:
     url: http://fake-lara.com/mock_html/test-external-activity30.html
     author_url: http://fake-lara.com/mock_html/test-external-activity30.html/edit
     uuid: 00000000-0000-0000-0000-000000001030
-    activities:
-      - Curvey shapes
-      - Polygons
+    material_type: Investigation
 
   ext_activity_31:
     name: Radioactivity sequence
@@ -328,9 +240,7 @@ external_activities:
     url: http://fake-lara.com/mock_html/test-external-activity31.html
     author_url: http://fake-lara.com/mock_html/test-external-activity31.html/edit
     uuid: 00000000-0000-0000-0000-000000001031
-    activities:
-      - Plutonium
-      - Uranium
+    material_type: Investigation
 
   ext_activity_32:
     name: testing fast cars
@@ -339,9 +249,7 @@ external_activities:
     url: http://fake-lara.com/mock_html/test-external-activity32.html
     author_url: http://fake-lara.com/mock_html/test-external-activity32.html/edit
     uuid: 00000000-0000-0000-0000-000000001032
-    activities:
-      - Porsche
-      - VW Bug
+    material_type: Investigation
 
 materials_collections:
   collection_1:
