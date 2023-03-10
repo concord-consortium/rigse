@@ -8,24 +8,11 @@ describe Admin::Project do
     Admin::Project.create!(valid_attributes)
   end
 
-  it "should be linked to activities" do
-    act = FactoryBot.create(:activity)
-    project.activities << act
-    expect(project.activities.count).to eql(1)
-  end
-
-  it "should be linked to investigations" do
-    inv = FactoryBot.create(:investigation)
-    project.investigations << inv
-    expect(project.investigations.count).to eql(1)
-  end
-
   it "should be linked to external activities" do
     ext_act = FactoryBot.create(:external_activity)
     project.external_activities << ext_act
     expect(project.external_activities.count).to eql(1)
   end
-
 
   describe "#name" do
     it "should be required" do

@@ -2,6 +2,11 @@ class API::V1::ExternalActivitiesController < API::APIController
 
   skip_before_action :verify_authenticity_token
 
+  def find_tool(tool_id)
+    return nil if tool_id.nil?
+    tool = Tool.where(tool_id: tool_id).first
+  end
+
   def create
     authorize [:api, :v1, :external_activity]
 
@@ -47,7 +52,7 @@ class API::V1::ExternalActivitiesController < API::APIController
       :append_auth_token      => params[:append_auth_token] || false,
       :author_url             => params[:author_url],
       :print_url              => params[:print_url],
-      :tool                   => ActivityRuntimeAPI.find_tool(params[:tool_id]),
+      :tool                   => find_tool(params[:tool_id]),
       :thumbnail_url          => params[:thumbnail_url],
       :author_email           => params[:author_email],
       :is_locked              => params[:is_locked],

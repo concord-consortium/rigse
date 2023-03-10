@@ -68,16 +68,6 @@ class Report::OfferingStatus
     @runnable
   end
 
-  def student_activities
-    if runnable.is_a? ::Investigation
-      runnable.activities.student_only
-    elsif runnable.is_a? ::Activity
-      [runnable]
-    else
-      []
-    end
-  end
-
   def show_score?
     if runnable.respond_to? :show_score
       runnable.show_score

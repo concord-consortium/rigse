@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe Changeable do
 
-  let(:object) { FactoryBot.create(:activity) }
-  
+  let(:object) { FactoryBot.create(:grade) }
+
   # TODO: auto-generated
   describe '#changeable?' do
     it 'changeable?' do

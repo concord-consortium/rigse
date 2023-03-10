@@ -68,33 +68,6 @@ describe Portal::Offering do
     end
   end
 
-  describe '#answered' do
-    it 'answered for open responses' do
-      offering = described_class.new
-      result = offering.open_responses.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered' do
-    it 'answered for multiple_choices' do
-      offering = described_class.new
-      result = offering.multiple_choices.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered_correctly' do
-    it 'answered for multiple_choices' do
-      offering = described_class.new
-      result = offering.multiple_choices.answered_correctly
-
-      expect(result).to be_empty
-    end
-  end
-
   describe '#for_embeddable' do
     it 'answered for metadata' do
       offering = described_class.new
@@ -102,15 +75,6 @@ describe Portal::Offering do
       result = offering.metadata.for_embeddable(dummy)
 
       expect(result).to be_nil
-    end
-  end
-
-  describe '#saveables' do
-    it 'saveables' do
-      offering = described_class.new
-      result = offering.saveables
-
-      expect(result).to be_empty
     end
   end
 

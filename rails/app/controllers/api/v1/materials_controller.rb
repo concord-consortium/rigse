@@ -73,33 +73,18 @@ class API::V1::MaterialsController < API::APIController
   #
   def own
     # Filter out template objects.
-    materials = current_visitor.external_activities +
-                current_visitor.activities.is_template(false) +
-                current_visitor.investigations.is_template(false)
-    materials.reject! { |m| m.archived? }
+    materials = current_visitor.external_activities.reject { |m| m.archived? }
     render json: materials_data(materials, params[:assigned_to_class])
   end
 
   # GET /api/v1/materials/featured
   def featured
-    materials =
-      Investigation.published.where(:is_featured => true).includes([:activities, :user]).to_a +
-      ExternalActivity.published.where(:is_featured => true).includes([:template, :user]).to_a +
-      Activity.investigation.published.where(:is_featured => true).includes(:investigation).to_a
+    materials = ExternalActivity.published.where(:is_featured => true).includes([:template, :user]).to_a
 
     if params[:prioritize].present?
       prioritize = params[:prioritize].split(',').map { |p| p.to_i rescue 0 }
       type = params[:priority_type].presence || "investigation"
-      typeKlass = case type.downcase
-                    when "investigation", "sequence"
-                      Investigation
-                    when "activity"
-                      Activity
-                    when "external_activity"
-                      ExternalActivity
-                    else
-                      Investigation
-                  end
+      typeKlass = ExternalActivity
 
       first_up = materials.select { |m| m.is_a?(typeKlass) && prioritize.include?(m.id) }.sort_by { |a| prioritize.index(a.id) }
       the_rest = (materials - first_up).shuffle

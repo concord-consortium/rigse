@@ -194,7 +194,7 @@ class Search
       self.available_sensors << facet.value
     end
     available_sensors.uniq!
-    # Although the user_id facet will only ever return zero or one rows, the below 
+    # Although the user_id facet will only ever return zero or one rows, the below
     # seems like the most concise way to get the number of authored resources.
     results.facet(:user_id).rows.each do |facet|
       self.number_authored_resources += facet.count

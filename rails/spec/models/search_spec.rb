@@ -103,14 +103,8 @@ describe Search do
       :is_assessment_item => true, :publication_status => "published"
     }}
 
-    let(:external_seq) { external_base.merge({ :template => private_investigations.first})}
-    let(:external_act) { external_base.merge({ :template => private_activities.first})}
-
-    # Activities and Sequence should no longer show up in search results.
-    let(:public_investigations) { collection(:investigation, 2, public_opts) }
-    let(:private_investigations){ collection(:investigation, 2, private_opts)}
-    let(:public_activities)     { collection(:activity, 2, public_opts)      }
-    let(:private_activities)    { collection(:activity, 2, private_opts)     }
+    let(:external_seq) { external_base.merge({ material_type: "Investigation" }) }
+    let(:external_act) { external_base.merge({ material_type: "Activity" }) }
 
     let(:public_ext_act)        { collection(:external_activity, 2, external_act.merge(public_opts).merge(official))  }
     let(:private_ext_act)       { collection(:external_activity, 2, external_act.merge(private_opts).merge(official)) }
@@ -124,8 +118,8 @@ describe Search do
     end
 
     context "with existing collections" do
-      let(:private_items) { [private_investigations, private_activities, private_ext_act, private_ext_seq].flatten}
-      let(:public_items)  { [public_investigations,  public_activities, public_ext_act,  public_ext_seq].flatten}
+      let(:private_items) { [private_ext_act, private_ext_seq].flatten}
+      let(:public_items)  { [public_ext_act,  public_ext_seq].flatten}
       let(:materials)     { [public_items, private_items].flatten }
 
       describe "searching for materials with tricky names" do
@@ -228,22 +222,6 @@ describe Search do
         end
 
       end
-      describe "template items should not be included in results by default" do
-        let(:template_ivs)  { collection(:investigation_template, 2, public_opts) }
-        let(:template_acts) { collection(:activity_template, 2, public_opts) }
-        let(:materials)     { [public_items, template_ivs, template_acts].flatten }
-        it "results should not include any of the template activities" do
-          template_acts.each do |act|
-            expect(subject.results[:all]).not_to include act
-          end
-        end
-
-        it "results should not include any of the template investigations" do
-          template_ivs.each do |inv|
-            expect(subject.results[:all]).not_to include inv
-          end
-        end
-      end
 
       describe "searching public items" do
         let(:search_opts) { {:private => false } }
@@ -300,20 +278,10 @@ describe Search do
         let(:external_activity){FactoryBot.create(:external_activity)}
         let(:materials) do
             [
-              collection(:investigation, 2, factory_opts),
-              collection(:activity, 2, factory_opts),
+              collection(:external_activity, 2, factory_opts),
               external_activity
             ].flatten
           end
-
-        describe "when the template type is an Investigation" do
-          let(:external_activity){FactoryBot.create(:external_activity, external_seq.merge(public_opts).merge(official))}
-          it "should be listed in the investigations results" do
-            expect(subject.results[Search::InvestigationMaterial]).to include(external_activity)
-            expect(subject.results[Search::ActivityMaterial]).not_to include(external_activity)
-
-          end
-        end
 
         describe "When the template type is an Activity" do
 
@@ -578,8 +546,8 @@ describe Search do
           let(:factory_opts){ {:publication_status => "published"}         }
           let(:materials) do
             [
-              collection_with_rand_mod_time(:investigation, 6, factory_opts),
-              collection_with_rand_mod_time(:activity, 6, factory_opts)
+              collection_with_rand_mod_time(:external_activity, 6, factory_opts),
+              collection_with_rand_mod_time(:external_activity, 6, factory_opts)
             ].flatten
           end
 
@@ -604,13 +572,13 @@ describe Search do
           let(:factory_opts){ {:publication_status => "published"}         }
           let(:materials) do
             [
-              collection(:investigation, 5, factory_opts) do |o|
+              collection(:external_activity, 5, factory_opts) do |o|
                 o[:offerings_count] = rand(0..10)
               end,
               collection(:external_activity, 5, external_seq.merge(public_opts)) do |o|
                 o[:offerings_count] = rand(0..10)
               end,
-              collection(:activity, 3, factory_opts) do |o|
+              collection(:external_activity, 3, factory_opts) do |o|
                 o[:offerings_count] = rand(0..10)
               end,
               collection(:external_activity, 3, external_act.merge(public_opts)) do |o|

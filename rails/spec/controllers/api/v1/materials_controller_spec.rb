@@ -48,8 +48,6 @@ describe API::V1::MaterialsController do
       # Materials defined below should NOT be listed:
       e1 = FactoryBot.create(:external_activity)
       e2 = FactoryBot.create(:external_activity)
-      FactoryBot.create(:activity, user: user, external_activities: [e1]) # template
-      FactoryBot.create(:investigation, user: user, external_activities: [e2]) # template
     end
 
     it 'should return own materials, but filter out all templates' do
@@ -74,8 +72,6 @@ describe API::V1::MaterialsController do
         # Materials defined below should NOT be listed:
         e1 = FactoryBot.create(:external_activity)
         e2 = FactoryBot.create(:external_activity)
-        FactoryBot.create(:activity, user: user, external_activities: [e1]) # template
-        FactoryBot.create(:investigation, user: user, external_activities: [e2]) # template
       end
 
       # TODO: auto-generated

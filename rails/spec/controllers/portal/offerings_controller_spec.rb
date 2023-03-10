@@ -41,7 +41,7 @@ describe Portal::OfferingsController do
         :returnUrl => @learner.remote_endpoint_url
       }.to_query
       @redirect_url = @runnable_url.to_s
-      
+
       get :show, params: { :id => @offering.id, :format => 'run_resource_html' }
       expect(response.cookies["save_path"]).to eq(@offering.runnable.save_path)
       expect(response.cookies["learner_id"]).to eq(@learner.id.to_s)
@@ -152,8 +152,6 @@ describe Portal::OfferingsController do
 
   describe "GET report" do
     let(:external_activity) { FactoryBot.create(:external_activity) }
-    let(:investigation) { FactoryBot.create(:investigation) }
-    let(:activity) { FactoryBot.create(:activity) }
 
     let(:offering) { FactoryBot.create(
         :portal_offering,
@@ -168,9 +166,6 @@ describe Portal::OfferingsController do
 
     before(:each) do
       sign_in user
-      investigation.activities << activity
-      external_activity.template = investigation
-      external_activity.save!
     end
 
     describe "When the teacher of the class requests the default report" do
@@ -194,10 +189,6 @@ describe Portal::OfferingsController do
         it "should include an authentication token parameter" do
           get :report, params: post_params
           expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
-        end
-        it "should convert activity_id param into activityIndex" do
-          get :report, params: { id: offering.id, activity_id: activity.id }
-          expect(response.location).to match(/activityIndex=0/)
         end
       end
     end
@@ -291,18 +282,6 @@ describe Portal::OfferingsController do
       expect(response).to have_http_status(:redirect)
     end
   end
-
-  # TODO: auto-generated
-  describe '#answers' do
-    it 'GET answers' do
-      admin = FactoryBot.generate :admin_user
-      sign_in admin
-      get :answers, params: { id: FactoryBot.create(:portal_offering).to_param, questions: [] }
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
 
   # TODO: auto-generated
   describe '#student_report' do

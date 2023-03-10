@@ -26,11 +26,7 @@ class User < ApplicationRecord
   NO_EMAIL_STRING = 'no-email-'
   NO_EMAIL_DOMAIN = 'concord.org'
 
-  has_many :investigations
-  has_many :activities
   has_many :interactives
-  has_many :sections
-  has_many :pages
   has_many :external_activities
   has_many :security_questions
 
@@ -38,7 +34,6 @@ class User < ApplicationRecord
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
 
   has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
-  has_many :multiple_choices, :class_name => 'Embeddable::MultipleChoice'
 
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
@@ -274,18 +269,6 @@ class User < ApplicationRecord
 
       user
     end
-  end
-
-
-
-  def removed_investigation
-    unless self.has_investigations?
-      self.remove_role('author')
-    end
-  end
-
-  def has_investigations?
-    investigations.length > 0
   end
 
   # we will lazy load the anonymous user later

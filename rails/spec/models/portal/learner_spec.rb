@@ -25,54 +25,6 @@ describe Portal::Learner do
     end
   end
 
-  describe '#answered' do
-    it 'answered for open responses' do
-      result = subject.open_responses.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered' do
-    it 'answered for image_questions' do
-      result = subject.image_questions.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered' do
-    it 'answered for external_links' do
-      result = subject.external_links.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered' do
-    it 'answered for interactives' do
-      result = subject.interactives.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered' do
-    it 'answered for multiple_choices' do
-      result = subject.multiple_choices.answered
-
-      expect(result).to be_empty
-    end
-  end
-
-  describe '#answered_correctly' do
-    it 'answered for multiple_choices' do
-      result = subject.multiple_choices.answered_correctly
-
-      expect(result).to be_empty
-    end
-  end
-
   describe '#user' do
     xit 'user' do
       result = subject.user
@@ -97,22 +49,6 @@ describe Portal::Learner do
     end
   end
 
-  describe '#saveable_count' do
-    it 'saveable_count' do
-      result = subject.saveable_count
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  describe '#saveable_answered' do
-    it 'saveable_answered' do
-      result = subject.saveable_answered
-
-      expect(result).not_to be_nil
-    end
-  end
-
   describe "update_report_model_cache" do
     it "should call the ElasticSearch API with the approriate data" do
       WebMock::RequestRegistry.instance.reset!
@@ -132,7 +68,7 @@ describe Portal::Learner do
           body["doc_as_upsert"] == true
       }
     end
-  end 
+  end
 
   describe '#update_last_run' do
     it 'should modify the last_run with the current time' do

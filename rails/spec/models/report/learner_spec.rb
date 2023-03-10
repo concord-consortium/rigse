@@ -1,6 +1,5 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_answer : stub_all_reportables
 
 describe Report::Learner do
   before(:each) do
@@ -13,10 +12,7 @@ describe Report::Learner do
       :permission_forms => []
     )
 
-    @runnable = mock_model(Activity,
-      :reportable_elements => [],
-      :page_elements => []
-    )
+    @runnable = mock_model(ExternalActivity)
 
     @class    = mock_model(Portal::Clazz,
       :school   => mock_model(Portal::School, :name => "my school"),

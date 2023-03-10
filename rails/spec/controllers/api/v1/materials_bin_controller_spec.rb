@@ -69,8 +69,7 @@ describe API::V1::MaterialsBinController do
   let (:official_activity) { FactoryBot.create(:external_activity, user: user3, is_official: true, publication_status: 'published') }
   let (:cohort_activity) { FactoryBot.create(:external_activity, user: user3, publication_status: 'published') }
   let (:user3_private_activity) { FactoryBot.create(:external_activity, user: user3, publication_status: 'private') }
-  # investigation is considered to be always official
-  let (:inv) { FactoryBot.create(:investigation, user: user3, publication_status: 'published') }
+  let (:inv) { FactoryBot.create(:external_activity, material_type: "Investigation", is_official: true, user: user3, publication_status: 'published') }
   # user with an archived and private activity
   let (:user4_archived_activity) { FactoryBot.create(:external_activity, user: user4, is_archived: true) }
   let (:user4_private_activity) { FactoryBot.create(:external_activity, user: user4, publication_status: 'private') }

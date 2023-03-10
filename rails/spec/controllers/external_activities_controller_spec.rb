@@ -87,10 +87,7 @@ describe ExternalActivitiesController do
       :long_description   => description,
       :url                => url,
       :author_url         => author_url,
-      :publication_status => 'published',
-      :template           => FactoryBot.create(:activity, {
-        :investigation => FactoryBot.create(:investigation)
-      })
+      :publication_status => 'published'
     })}
 
   let (:another) { FactoryBot.create(:external_activity, {
@@ -133,104 +130,6 @@ describe ExternalActivitiesController do
       get :show, params: { :id => existing.id }
       result = assigns(:external_activity)
       expect(result.name).to eq(existing.name)
-    end
-  end
-
-  describe "#publish" do
-
-    context "when no version information is in the request" do
-      describe "when no existing external_activity exists" do
-        it "should create a new activity" do
-          post :publish, params: {}, body: activity_hash.to_json
-          created = assigns(:external_activity)
-          expect(created).not_to be_nil
-          expect(created.name).to eq(name)
-          expect(created.url).to  eq(url)
-          expect(created.id).not_to eq(existing.id)
-        end
-      end
-
-      describe "when an existing external_activity does exist" do
-        it "should update the existing activity" do
-          existing
-          post :publish, params: {}, body: activity_hash.to_json
-          created = assigns(:external_activity)
-          expect(created).not_to be_nil
-          expect(created.name).to eq(name)
-          expect(created.url).to  eq(url)
-          expect(created.id).to   eq(existing.id)
-          # See spec/lib/activity_runtime_api_spec.rb for more update tests
-          expect(created.template.sections.size).to eq(1)
-          expect(created.template.pages.size).to eq(1)
-          expect(created.template.open_responses.size).to eq(1)
-          expect(created.template.multiple_choices.size).to eq(1)
-        end
-      end
-    end
-
-    context "when version 2 of the API is requested" do
-
-      let (:existing_sequence) { FactoryBot.create(:external_activity, {
-          :name => sequence_name,
-          :long_description => sequence_desc,
-          :url => sequence_url,
-          :template => FactoryBot.create(:investigation)
-        }) }
-
-      describe "when there is no existing external_activity" do
-        it "should create a new activity" do
-          post :publish, params: { :version => 'v2' }, body: activity2_hash.to_json
-          created = assigns(:external_activity)
-          expect(created).not_to be_nil
-          expect(created.name).to eq(name)
-          expect(created.url).to  eq(url)
-          expect(created.id).not_to eq(existing.id)
-          expect(created.template).to be_an_instance_of(Activity)
-        end
-      end
-
-      describe "when there is already an existing external_activity" do
-        it "should update the existing activity" do
-          existing
-          post :publish, params: { :version => 'v2' }, body: activity2_hash.to_json
-          created = assigns(:external_activity)
-          expect(created).not_to be_nil
-          expect(created.name).to eq(name)
-          expect(created.url).to  eq(url)
-          expect(created.id).to   eq(existing.id)
-          # See spec/lib/activity_runtime_api_spec.rb for more update tests
-          expect(created.template.sections.size).to eq(1)
-          expect(created.template.pages.size).to eq(1)
-          expect(created.template.open_responses.size).to eq(1)
-          expect(created.template.multiple_choices.size).to eq(1)
-        end
-      end
-
-      describe "when no external_activity exists for the sequence" do
-        it 'should create a new external activity with an investigation template' do
-          sequence_hash['url'] = 'http://activity.org/sequence/2'
-          post :publish, params: { :version => 'v2' }, body: sequence_hash.to_json
-          created = assigns(:external_activity)
-          expect(created).not_to be_nil
-          expect(created.name).to eq(sequence_name)
-          expect(created.url).to  eq('http://activity.org/sequence/2')
-          expect(created.id).not_to eq(existing_sequence.id)
-          expect(created.template).to be_an_instance_of(Investigation)
-        end
-      end
-
-      describe "when an external_activity already exists for the sequence" do
-        it 'should update the existing external_activity' do
-          existing_sequence
-          post :publish, params: { :version => 'v2' }, body: sequence_hash.to_json
-          updated = assigns(:external_activity)
-          expect(updated).not_to be_nil
-          expect(updated.name).to eq(sequence_name)
-          expect(updated.url).to  eq(sequence_url)
-          expect(updated.id).to   eq(existing_sequence.id)
-          # More about the updated sequence?
-        end
-      end
     end
   end
 
@@ -383,15 +282,6 @@ describe ExternalActivitiesController do
       delete :destroy, params: { id: FactoryBot.create(:external_activity).to_param }
 
       expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#republish' do
-    it 'GET republish' do
-      get :republish, params: {version: 'v1'}
-
-      expect(response).to have_http_status(:unauthorized)
     end
   end
 

@@ -59,7 +59,6 @@ describe API::V1::CreateCollaboration do
       result = create_collaboration.call
       expect(result[:id]).not_to be_nil
       expect(result[:collaborators_data_url]).not_to be_nil
-      expect(result[:external_activity_url]).to be_nil
       expect(create_collaboration.collaboration).to_not be_nil
     end
 

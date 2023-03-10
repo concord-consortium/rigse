@@ -211,36 +211,6 @@ class ExternalActivitiesController < ApplicationController
     end
   end
 
-  def publish
-    authorize ExternalActivity
-    json = JSON.parse(request.body.read)
-    begin
-      if params[:version].present? and params[:version] == 'v2'
-        @external_activity = ActivityRuntimeAPI.publish2(json, current_visitor)
-      else
-        @external_activity = ActivityRuntimeAPI.publish(json, current_visitor)
-      end
-      head :created, :location => @external_activity
-      response.body = {:activity_id => @external_activity.id}.to_json
-    rescue StandardError => e
-      json_error(e.inspect)
-    end
-  end
-
-  # If we have an authentication token from the authoring client
-  # then we can republish without concern for current user.
-  def republish
-    authorize ExternalActivity
-    json = JSON.parse(request.body.read)
-    begin
-      @external_activity = ActivityRuntimeAPI.republish(json)
-      head :created, :location => @external_activity
-      response.body = {:activity_id => @external_activity.id}.to_json
-    rescue StandardError => e
-      json_error(e.inspect)
-    end
-  end
-
   def matedit
     authorize @external_activity
     @uri = ssl_if_we_are(URI.parse(@external_activity.author_url))
@@ -358,10 +328,10 @@ class ExternalActivitiesController < ApplicationController
     params && params.permit(:allow_collaboration, :append_auth_token, :append_learner_id_to_url, :append_survey_monkey_uid,
                             :archive_date, :archived_description, :author_email, :author_url, :credits, :enable_sharing,
                             :has_pretest, :has_teacher_edition, :is_archived, :is_assessment_item, :is_featured, :is_locked,
-                            :is_official, :keywords, :license_code, :logging, :long_description, :long_description_for_teacher, 
-                            :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url, 
-                            :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_copyable, 
-                            :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id, 
+                            :is_official, :keywords, :license_code, :logging, :long_description, :long_description_for_teacher,
+                            :material_type, :name, :offerings_count, :popup, :print_url, :publication_status, :rubric_url,
+                            :save_path, :saves_student_data, :short_description, :student_report_enabled, :teacher_copyable,
+                            :teacher_guide_url, :teacher_resources_url, :template_id, :template_type, :thumbnail_url, :tool_id,
                             :url, :user_id)
   end
 end

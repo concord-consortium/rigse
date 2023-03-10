@@ -19,8 +19,6 @@ class Portal::Offering < ApplicationRecord
   has_many :learners, :dependent => :destroy, :class_name => "Portal::Learner", :foreign_key => "offering_id",
     :inverse_of => :offering
 
-  has_one :report_embeddable_filter, :dependent => :destroy, :class_name => "Report::EmbeddableFilter", :foreign_key => "offering_id"
-
   has_many :teacher_full_status, :dependent => :destroy, :class_name => "Portal::TeacherFullStatus", :foreign_key => "offering_id"
 
   has_many :collaborations, :class_name => "Portal::Collaboration"
@@ -29,30 +27,11 @@ class Portal::Offering < ApplicationRecord
 
   [:name, :short_description, :long_description, :long_description_for_teacher, :icon_image].each { |m| delegate m, :to => :runnable }
 
-  has_many :open_responses, :dependent => :destroy, :class_name => "Saveable::OpenResponse", :foreign_key => "offering_id" do
-    def answered
-      where({ answered: true })
-    end
-  end
-
-  has_many :multiple_choices, :dependent => :destroy, :class_name => "Saveable::MultipleChoice", :foreign_key => "offering_id" do
-    def answered
-      where({ answered: true })
-    end
-
-    def answered_correctly
-      # all.select { |question| question.answered? }.select{ |item| item.answered_correctly? }
-      where({ answered: true, answered_correctly: true })
-    end
-  end
-
   has_many :metadata, :class_name => "Portal::OfferingEmbeddableMetadata" do
     def for_embeddable(embeddable)
       where(embeddable_type: embeddable.class.name, embeddable_id: embeddable.id).first
     end
   end
-
-  attr_reader :saveable_objects
 
   # create one of these on the fly as needed
   def report_embeddable_filter
@@ -61,10 +40,6 @@ class Portal::Offering < ApplicationRecord
 
   def find_or_create_learner(student)
     learners.find_by_student_id(student) || learners.create(:student_id => student.id)
-  end
-
-  def saveables
-    multiple_choices + open_responses
   end
 
   def external_activity?
@@ -184,33 +159,4 @@ class Portal::Offering < ApplicationRecord
     num_not_started = 0
     num_not_started = self.clazz.students.length - (completed_students_count + inprogress_students_count)
   end
-  # def saveable_count
-  #   @saveable_count ||= begin
-  #     runnable = self.runnable
-  #     @saveable_objects = {}
-  #     runnable.saveable_types.inject(0) do |count, @saveable_object|
-  #       saveable_association = saveable_class.to_s.demodulize.tableize
-  #       @saveable_objects[@saveable_object] = runnable.send(saveable_association)
-  #       count + @saveable_objects[@saveable_object].length
-  #     end
-  #   end
-  # end
-  #
-  # def saveable_objects
-  #   @saveable_objects || begin
-  #     saveable_count
-  #     @saveable_objects
-  #   end
-  # end
-  #
-  # def saveable_answered
-  #   @saveable_answered ||= begin
-  #     saveable_objects
-  #     runnable = self.offering.runnable
-  #     runnable.saveable_types.inject(0) do |count, saveable_class|
-  #       saveable_association = saveable_class.to_s.demodulize.tableize
-  #       count + self.send(saveable_association).send(:answered).length
-  #     end
-  # end
-
 end

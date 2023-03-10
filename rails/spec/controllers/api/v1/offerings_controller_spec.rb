@@ -1,5 +1,4 @@
 require 'spec_helper'
-include ReportLearnerSpecHelper
 
 
 describe API::V1::OfferingsController do
@@ -7,34 +6,13 @@ describe API::V1::OfferingsController do
   let(:admin_user)        { FactoryBot.generate(:admin_user) }
   let(:manager_user)      { FactoryBot.generate(:manager_user) }
   let(:teacher)           { FactoryBot.create(:portal_teacher) }
-  let(:open_response_1)   { FactoryBot.create(:open_response) }
-  let(:open_response_2)   { FactoryBot.create(:open_response) }
-  let(:open_response_3)   { FactoryBot.create(:open_response) }
-  let(:open_response_4)   { FactoryBot.create(:open_response) }
-  let(:activity_1)        { FactoryBot.create(:activity, name: 'Activity 1') }
-  let(:activity_2)        { FactoryBot.create(:activity, name: 'Activity 2') }
+  let(:activity_1)        { FactoryBot.create(:external_activity, name: 'Activity 1') }
+  let(:activity_2)        { FactoryBot.create(:external_activity, name: 'Activity 2') }
   let(:runnable)          { FactoryBot.create(:external_activity, name: 'Test Sequence') }
   let(:clazz)             { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher], students:[student_a, student_b]) }
   let(:student_a)         { FactoryBot.create(:full_portal_student) }
   let(:student_b)         { FactoryBot.create(:full_portal_student) }
   let(:offering)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
-
-  def setup_activity(activity, embeddables)
-    section = FactoryBot.create(:section)
-    page = FactoryBot.create(:page)
-    embeddables.each { |e| page.add_embeddable(e) }
-    section.pages << page
-    activity.sections << section
-    activity.save
-  end
-
-  def setup_runnable(runnable, activities)
-    investigation = FactoryBot.create(:investigation)
-    activities.each { |a| investigation.activities << a }
-    investigation.save
-    runnable.template = investigation
-    runnable.save
-  end
 
   before(:each) {
     # This silences warnings in the console when running
@@ -110,9 +88,6 @@ describe API::V1::OfferingsController do
     describe "when no students have run an offering" do
       before (:each) do
         sign_in teacher.user
-        setup_activity(activity_1, [open_response_1, open_response_2])
-        setup_activity(activity_2, [open_response_3])
-        setup_runnable(runnable, [activity_1, activity_2])
         # Ensure that default report is available.
         FactoryBot.create(:default_lara_report)
       end

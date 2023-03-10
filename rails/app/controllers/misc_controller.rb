@@ -24,10 +24,6 @@ class MiscController < ActionController::Base
     stats[:users] = User.count
     stats[:learners] = Portal::Learner.count
     stats[:offerings] = Portal::Offering.count
-    stats[:investigations] = Investigation.count
-    stats[:activities] = Activity.count
-    stats[:sections] = Section.count
-    stats[:pages] = Page.count
     stats[:external_activities] = ExternalActivity.count
 
     # this sql was created because using the active record query language didn't generate the correct distinct ordering

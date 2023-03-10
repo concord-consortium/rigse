@@ -11,40 +11,7 @@ class Portal::Learner < ApplicationRecord
   belongs_to :offering, :class_name => "Portal::Offering", :foreign_key => "offering_id",
     :inverse_of => :learners
 
-  has_many :open_responses, :dependent => :destroy , :class_name => "Saveable::OpenResponse" do
-    def answered
-      all.select { |question| question.answered? }
-    end
-  end
-
   has_many :learner_activities, :dependent => :destroy , :class_name => "Report::LearnerActivity"
-
-  has_many :image_questions, :dependent => :destroy, :class_name => "Saveable::ImageQuestion" do
-    def answered
-      all.select { |question| question.answered? }
-    end
-  end
-
-  has_many :multiple_choices, :dependent => :destroy, :class_name => "Saveable::MultipleChoice" do
-    def answered
-      all.select { |question| question.answered? }
-    end
-    def answered_correctly
-      all.select { |question| question.answered? }.select{ |item| item.answered_correctly? }
-    end
-  end
-
-  has_many :external_links, :dependent => :destroy , :class_name => "Saveable::ExternalLink" do
-    def answered
-      all.select { |question| question.answered? }
-    end
-  end
-
-  has_many :interactives, :dependent => :destroy , :class_name => "Saveable::Interactive" do
-    def answered
-      all.select { |question| question.answered? }
-    end
-  end
 
   has_one :report_learner, :dependent => :destroy, :class_name => "Report::Learner",
     :foreign_key => "learner_id", :inverse_of => :learner
@@ -122,24 +89,6 @@ class Portal::Learner < ApplicationRecord
 
   def name
     user = student.user.name
-  end
-
-  def saveable_count
-    runnable = self.offering.runnable
-    runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
-    runnable.saveable_types.inject(0) do |count, saveable_class|
-      saveable_association = saveable_class.to_s.demodulize.tableize
-      count + self.send(saveable_association).length
-    end
-  end
-
-  def saveable_answered
-    runnable = self.offering.runnable
-    runnable = runnable.template if runnable.is_a?(ExternalActivity) && runnable.template
-    runnable.saveable_types.inject(0) do |count, saveable_class|
-      saveable_association = saveable_class.to_s.demodulize.tableize
-      count + self.send(saveable_association).send(:answered).length
-    end
   end
 
   def refresh_saveable_response_objects

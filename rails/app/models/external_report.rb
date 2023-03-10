@@ -61,11 +61,6 @@ class ExternalReport < ApplicationRecord
       # New reports expect ID of the User model (not ID of the Student model).
       params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id
     end
-    if additional_params[:activity_id]
-      # New reports only support activity INDEX (within investigation) instead of the internal activity ID.
-      activity = Activity.find(additional_params[:activity_id])
-      params[:activityIndex] = activity.investigation.activities.index(activity)
-    end
     params
   end
 

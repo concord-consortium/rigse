@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-include ReportLearnerSpecHelper # defines : saveable_for : answers_for : add_answer : stub_all_reportables
-
 describe Report::Learner::Selector do
 
   # assign the student permission_form_b to complicate the tests

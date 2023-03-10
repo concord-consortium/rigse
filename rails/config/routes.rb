@@ -72,7 +72,6 @@ RailsPortal::Application.routes.draw do
           post :edit_offerings
           get :roster
           get :materials
-          get :fullstatus
           get :current_clazz
         end
 

@@ -54,7 +54,7 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
-    @portal_clazz = Portal::Clazz.where(id: params[:id]).includes([:teachers, { :offerings => [:learners, :open_responses, :multiple_choices] }]).first
+    @portal_clazz = Portal::Clazz.where(id: params[:id]).includes([:teachers, { :offerings => [:learners] }]).first
     @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_settings.allow_default_class
@@ -333,24 +333,6 @@ class Portal::ClazzesController < ApplicationController
       params[:clazz_offerings].each_with_index{|id,idx| Portal::Offering.update(id, :position => (idx + 1))}
     end
     head :ok
-  end
-
-  def fullstatus
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-
-
-    @portal_clazz = Portal::Clazz.find(params[:id]);
-
-    @portal_clazz = Portal::Clazz.find_by_id(params[:id])
-
-    # Save the left pane sub-menu item
-    Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['FULL_STATUS'])
   end
 
   # this is used by the iSENSE interactive and app inorder to get information
