@@ -8,14 +8,6 @@ class MiscController < ActionController::Base
   # so if a session does not already exist *it will not be created*
   # unless you action accesses session[].
 
-  def learner_proc_stats
-    render json: LearnerProcessingEvent.histogram(12), :callback => params['callback']
-  end
-
-  def learner_proc
-    # will render misc/learner_proc.html.haml
-  end
-
   def stats
     stats = {}
     stats[:teachers] = Portal::Teacher.count

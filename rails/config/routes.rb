@@ -395,12 +395,6 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :offerings, only: [:show, :update, :index] do
-          member do
-            # DEPRECIATED
-            get :for_class
-            # DEPRECIATED
-            get :for_teacher
-          end
         end
 
         resources :classes, only: [:show] do
@@ -518,8 +512,6 @@ RailsPortal::Application.routes.draw do
     get '/authoring_site_redirect/:id' => 'home#authoring_site_redirect', :as => :authoring_site_redirect
 
     get '/time' => 'misc_metal#time', :as => :time
-    get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
-    get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
 
     get '/misc/preflight' => 'misc#preflight', :as => :preflight
     get '/misc/stats' => 'misc#stats', :as => :stats
