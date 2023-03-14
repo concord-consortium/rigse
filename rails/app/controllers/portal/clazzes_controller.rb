@@ -55,7 +55,6 @@ class Portal::ClazzesController < ApplicationController
     # PUNDIT_CHECK_AUTHORIZE (did not find instance)
     # authorize @clazz
     @portal_clazz = Portal::Clazz.where(id: params[:id]).includes([:teachers, { :offerings => [:learners] }]).first
-    @portal_clazz.refresh_saveable_response_objects
     @teacher = @portal_clazz.parent
     if current_settings.allow_default_class
       @offerings = @portal_clazz.offerings_with_default_classes(current_visitor)

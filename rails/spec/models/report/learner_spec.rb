@@ -48,7 +48,6 @@ describe Report::Learner do
       expect(report.last_run).to be_nil
       now = DateTime.now
       report.last_run = now
-      report.calculate_last_run
       expect(report.last_run).to eq(now)
     end
   end
@@ -146,17 +145,6 @@ describe Report::Learner do
   end
 
   # TODO: auto-generated
-  describe '#serialize_blob_answer' do
-    it 'serialize_blob_answer' do
-      learner = described_class.new
-      answer = double('answer')
-      result = learner.serialize_blob_answer(answer)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#last_run_string' do
     it 'last_run_string' do
       learner = described_class.new
@@ -173,16 +161,6 @@ describe Report::Learner do
       last_run = Time.now
       opts = {}
       result = described_class.build_last_run_string(last_run, opts)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#calculate_last_run' do
-    xit 'calculate_last_run' do
-      learner = described_class.new
-      result = learner.calculate_last_run
 
       expect(result).not_to be_nil
     end

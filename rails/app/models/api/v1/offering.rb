@@ -5,7 +5,7 @@ class API::V1::Offering
 
   # Optimize SQL queries based on API::V1::Offering structure.
   INCLUDES_DEF = {
-      learners: [:report_learner, {learner_activities: :activity, student: :user}],
+      learners: [:report_learner, {student: :user}],
       clazz: {students: :user}
       # TODO when we only support external activity runnables then the following
       # line can be used to optimize the database requests
@@ -41,16 +41,6 @@ class API::V1::Offering
       self.total_progress = learner ? learner.report_learner.complete_percent : 0
       self.last_run = learner ? learner.report_learner.last_run : nil
       self.learner_report_url = learner && learner.reportable? ? report_portal_learner_url(learner, protocol: protocol, host: host_with_port) : nil
-      if learner && learner.learner_activities.count > 0
-        self.detailed_progress = learner.learner_activities.map do |la|
-          {
-              activity_id: la.activity.id,
-              activity_name: la.activity.name,
-              progress: la.complete_percent,
-              learner_activity_report_url: learner.reportable? ? portal_learners_report_url(learner, la.activity, protocol: protocol, host: host_with_port) : nil,
-          }
-        end
-      end
     end
   end
 

@@ -1,6 +1,4 @@
-- offering_status = Report::OfferingStatus.new(offering)
-- student_status = offering_status.student_status_for(@portal_student)
-/ TODO move the above outside of the view.
+- student_status = Report::OfferingStudentStatus.get_for_offering_and_student(offering, @portal_student)
 .offering_container
   %table
     %tr

@@ -3,6 +3,15 @@ class Report::OfferingStudentStatus
   attr_accessor :student
   attr_accessor :offering
 
+  def self.get_for_offering_and_student(offering, student)
+    learners = offering.learners.includes(:report_learner)
+    student_status = Report::OfferingStudentStatus.new
+    student_status.student = student
+    student_status.learner = learners.find{ |learner| learner.student_id == student.id }
+    student_status.offering = offering
+    student_status
+  end
+
   # loosely based on offering_status.rb#student_activities
   def sub_sections
     runnable = offering.runnable

@@ -49,11 +49,6 @@ class Portal::Offering < ApplicationRecord
 
   end
 
-  def refresh_saveable_response_objects
-    self.learners.each { |l| l.refresh_saveable_response_objects }
-  end
-
-
   def active?
     active
   end
