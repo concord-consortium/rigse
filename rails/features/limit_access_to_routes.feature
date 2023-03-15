@@ -16,27 +16,6 @@ In NO case should the system allow:
     Given The default settings exist using factories
     And the database has been seeded
 
-  Scenario Outline: Anonymous user can't access dataservice routes
-    Given I am not logged in
-    When I visit the route <route>
-    Then I should be on the signin page
-
-    Examples:
-      | route                         |
-      | /dataservice/blobs            |
-
-  Scenario Outline: Admin user can accesss dataservice routes
-    Given the following users exist:
-      | login       | password       | roles                 |
-      | admin_login | admin_password | admin, member, author |
-    And I am logged in with the username admin_login
-    When I visit the route <route>
-    Then I should be on <route>
-
-    Examples:
-      | route                         |
-      | /dataservice/blobs            |
-
   Scenario Outline: Anonymous user can't access portal listing routes:
     Given I am not logged in
     When I visit the route <route>

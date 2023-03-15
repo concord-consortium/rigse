@@ -17,8 +17,6 @@ class Portal::Learner < ApplicationRecord
   has_one :report_learner_only_id, -> { select "id, learner_id" }, :class_name => "Report::Learner",
     :foreign_key => "learner_id", :inverse_of => :learner
 
-  has_many :lightweight_blobs, :dependent => :destroy, :class_name => "Dataservice::Blob"
-
   default_value_for :secure_key do
     UUIDTools::UUID.random_create.to_s
   end

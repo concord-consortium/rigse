@@ -10,21 +10,6 @@ describe Portal::Learner do
     end
   end
 
-  describe "associated lightweight blobs used to store images &etc." do
-    it "should return lightweight blobs when they already exist" do
-      blob = Dataservice::Blob.create(:learner_id => subject.id)
-      subject.reload
-      expect(subject.lightweight_blobs).to include(blob)
-    end
-    it "should return an empty set when no blobs exist" do
-      expect(subject.lightweight_blobs).to be_empty
-    end
-    it "should allow for creating a new blob" do
-      subject.lightweight_blobs.create
-      expect(subject.lightweight_blobs).not_to be_empty
-    end
-  end
-
   describe '#user' do
     xit 'user' do
       result = subject.user
