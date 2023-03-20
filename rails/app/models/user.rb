@@ -33,8 +33,6 @@ class User < ApplicationRecord
   has_one :portal_teacher, :dependent => :destroy, :class_name => "Portal::Teacher", :inverse_of => :user
   has_one :portal_student, :dependent => :destroy, :class_name => "Portal::Student", :inverse_of => :user
 
-  has_many :open_responses, :class_name => 'Embeddable::OpenResponse'
-
   has_many :created_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'created_by'
   has_many :updated_notices, :dependent => :destroy, :class_name => 'Admin::SiteNotice', :foreign_key => 'updated_by'
 
