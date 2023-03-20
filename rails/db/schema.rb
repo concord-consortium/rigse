@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_15_111527) do
+ActiveRecord::Schema.define(version: 2023_03_20_192316) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1411,14 +1411,9 @@ ActiveRecord::Schema.define(version: 2023_03_15_111527) do
     t.integer "runnable_id"
     t.string "runnable_name"
     t.integer "school_id"
-    t.integer "num_answerables"
-    t.integer "num_answered"
-    t.integer "num_correct"
-    t.text "answers", size: :long
     t.string "runnable_type"
     t.float "complete_percent"
     t.text "permission_forms", size: :medium
-    t.integer "num_submitted"
     t.string "teachers_district"
     t.string "teachers_state"
     t.string "teachers_email"
