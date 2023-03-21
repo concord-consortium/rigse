@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_21_124756) do
+ActiveRecord::Schema.define(version: 2023_03_13_172341) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -31,30 +31,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_124756) do
     t.index ["learner_id"], name: "index_access_grants_on_learner_id"
     t.index ["teacher_id"], name: "index_access_grants_on_teacher_id"
     t.index ["user_id"], name: "index_access_grants_on_user_id"
-  end
-
-  create_table "activities", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "description", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "position"
-    t.integer "investigation_id"
-    t.integer "original_id"
-    t.boolean "teacher_only", default: false
-    t.string "publication_status"
-    t.integer "offerings_count", default: 0
-    t.boolean "student_report_enabled", default: true
-    t.boolean "show_score", default: false
-    t.string "teacher_guide_url"
-    t.string "thumbnail_url"
-    t.boolean "is_featured", default: false
-    t.boolean "is_assessment_item", default: false
-    t.index ["investigation_id", "position"], name: "index_activities_on_investigation_id_and_position"
-    t.index ["is_featured", "publication_status"], name: "featured_public"
-    t.index ["publication_status"], name: "pub_status"
   end
 
   create_table "admin_cohort_items", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -256,78 +232,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_124756) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "embeddable_iframes", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.string "description"
-    t.integer "width"
-    t.integer "height"
-    t.text "url"
-    t.string "external_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "display_in_iframe", default: false
-    t.boolean "is_required", default: false
-    t.boolean "show_in_featured_question_report", default: true
-  end
-
-  create_table "embeddable_image_questions", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "prompt", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "external_id"
-    t.text "drawing_prompt", size: :medium
-    t.boolean "is_required", default: false, null: false
-    t.boolean "show_in_featured_question_report", default: true
-  end
-
-  create_table "embeddable_multiple_choice_choices", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.text "choice", size: :medium
-    t.integer "multiple_choice_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_correct"
-    t.string "external_id"
-    t.index ["multiple_choice_id"], name: "index_embeddable_multiple_choice_choices_on_multiple_choice_id"
-  end
-
-  create_table "embeddable_multiple_choices", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "description", size: :medium
-    t.text "prompt", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "enable_rationale", default: false
-    t.text "rationale_prompt", size: :medium
-    t.boolean "allow_multiple_selection", default: false
-    t.string "external_id"
-    t.boolean "is_required", default: false, null: false
-    t.boolean "show_in_featured_question_report", default: true
-  end
-
-  create_table "embeddable_open_responses", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "description", size: :medium
-    t.text "prompt", size: :medium
-    t.string "default_response"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "rows", default: 5
-    t.integer "columns", default: 32
-    t.integer "font_size", default: 12
-    t.string "external_id"
-    t.boolean "is_required", default: false, null: false
-    t.boolean "show_in_featured_question_report", default: true
-  end
-
   create_table "external_activities", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "uuid"
@@ -503,29 +407,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_124756) do
     t.integer "external_activity_id"
   end
 
-  create_table "investigations", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "description", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "teacher_only", default: false
-    t.string "publication_status"
-    t.integer "offerings_count", default: 0
-    t.boolean "student_report_enabled", default: true
-    t.boolean "allow_activity_assignment", default: true
-    t.boolean "show_score", default: false
-    t.string "teacher_guide_url"
-    t.string "thumbnail_url"
-    t.boolean "is_featured", default: false
-    t.text "abstract", size: :medium
-    t.string "author_email"
-    t.boolean "is_assessment_item", default: false
-    t.index ["is_featured", "publication_status"], name: "featured_public"
-    t.index ["publication_status"], name: "pub_status"
-  end
-
   create_table "learner_processing_events", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "learner_id"
     t.datetime "portal_end"
@@ -563,37 +444,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_124756) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_materials_collections_on_project_id"
-  end
-
-  create_table "page_elements", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "page_id"
-    t.integer "embeddable_id"
-    t.string "embeddable_type"
-    t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.index ["embeddable_id", "embeddable_type"], name: "index_page_elements_on_embeddable_id_and_embeddable_type"
-    t.index ["embeddable_id"], name: "index_page_elements_on_embeddable_id"
-    t.index ["page_id"], name: "index_page_elements_on_page_id"
-    t.index ["position"], name: "index_page_elements_on_position"
-  end
-
-  create_table "pages", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "section_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "description", size: :medium
-    t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "teacher_only", default: false
-    t.string "publication_status"
-    t.integer "offerings_count", default: 0
-    t.text "url"
-    t.index ["position"], name: "index_pages_on_position"
-    t.index ["section_id", "position"], name: "index_pages_on_section_id_and_position"
   end
 
   create_table "passwords", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -1606,15 +1456,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_124756) do
     t.index ["user_id"], name: "index_portal_teachers_on_user_id"
   end
 
-  create_table "report_embeddable_filters", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "offering_id"
-    t.text "embeddables", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "ignore"
-    t.index ["offering_id"], name: "index_report_embeddable_filters_on_offering_id"
-  end
-
   create_table "report_learner_activity", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "learner_id"
     t.integer "activity_id"
@@ -1676,82 +1517,6 @@ ActiveRecord::Schema.define(version: 2023_02_21_124756) do
     t.integer "user_id"
     t.index ["role_id", "user_id"], name: "index_roles_users_on_role_id_and_user_id"
     t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
-  end
-
-  create_table "saveable_external_links", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "embeddable_id"
-    t.string "embeddable_type"
-    t.integer "learner_id"
-    t.integer "offering_id"
-    t.integer "response_count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["embeddable_id", "embeddable_type"], name: "svbl_xtrn_links_poly"
-    t.index ["learner_id"], name: "index_saveable_external_links_on_learner_id"
-    t.index ["offering_id"], name: "index_saveable_external_links_on_offering_id"
-  end
-
-  create_table "saveable_image_questions", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.integer "offering_id"
-    t.integer "image_question_id"
-    t.integer "response_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "uuid", limit: 36
-    t.index ["image_question_id"], name: "index_saveable_image_questions_on_image_question_id"
-    t.index ["learner_id"], name: "index_saveable_image_questions_on_learner_id"
-    t.index ["offering_id"], name: "index_saveable_image_questions_on_offering_id"
-  end
-
-  create_table "saveable_interactives", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.integer "offering_id"
-    t.integer "response_count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "iframe_id"
-    t.index ["learner_id"], name: "index_saveable_interactives_on_learner_id"
-  end
-
-  create_table "saveable_multiple_choices", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.integer "multiple_choice_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "offering_id"
-    t.integer "response_count", default: 0
-    t.string "uuid", limit: 36
-    t.index ["learner_id"], name: "index_saveable_multiple_choices_on_learner_id"
-    t.index ["multiple_choice_id"], name: "index_saveable_multiple_choices_on_multiple_choice_id"
-    t.index ["offering_id"], name: "index_saveable_multiple_choices_on_offering_id"
-  end
-
-  create_table "saveable_open_responses", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.integer "open_response_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "offering_id"
-    t.integer "response_count", default: 0
-    t.index ["learner_id"], name: "index_saveable_open_responses_on_learner_id"
-    t.index ["offering_id"], name: "index_saveable_open_responses_on_offering_id"
-    t.index ["open_response_id"], name: "index_saveable_open_responses_on_open_response_id"
-  end
-
-  create_table "sections", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "activity_id"
-    t.string "uuid", limit: 36
-    t.string "name"
-    t.text "description", size: :medium
-    t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "teacher_only", default: false
-    t.string "publication_status"
-    t.index ["activity_id", "position"], name: "index_sections_on_activity_id_and_position"
-    t.index ["position"], name: "index_sections_on_position"
   end
 
   create_table "security_questions", id: :integer, charset: "utf8", force: :cascade do |t|

@@ -114,22 +114,6 @@ class ExternalActivity < ApplicationRecord
     attributes['material_type']
   end
 
-  #
-  # Ensure changes to the template_type update the material_type
-  #
-  before_validation :if => :template_type_changed? do |ea|
-    ea.material_type = template_type
-  end
-
-  #
-  # Ensure changes to the template update the material_type
-  #
-  alias_method :original_template=, :template=
-  def template=(t)
-    self.original_template 	= t
-    self.material_type  	= t.class.name
-  end
-
   validate :valid_url
 
   def valid_url
@@ -193,95 +177,11 @@ class ExternalActivity < ApplicationRecord
   end
   # end methods to mimic Activity
 
-  # Duplicates external activity both locally and on the external authoring system (e.g. LARA).
-  # New activity will have a new owner and publication status set to private.
-  # Returns a new activity or nil in case of error.
-  def duplicate(new_owner, root_url = nil)
-    # Copy all the attributes except ones listed here.
-    duplicated_attrs =  attributes.except('id', 'uuid', 'created_at', 'updated_at', 'template_id', 'template_type',
-      'is_official', 'is_featured', 'logging')
-    clone = ExternalActivity.new(duplicated_attrs)
-    clone.name = "Copy of #{name}"
-    clone.user = new_owner
-    clone.publication_status = 'private'
-    admin_or_proj_admin = new_owner.has_role?('admin') || projects.any? { |p| new_owner.is_project_admin?(p) }
-    # Logging is copied only if the new owner is an admin or a project admin for given material.
-    clone.logging = admin_or_proj_admin ? logging : false
-    clone.save
-
-    # This section triggers remote duplication if necessary.
-    # Do it as soon as possible, as it includes communication with external system. In case of failure,
-    # we can cancel this action earlier, before we create bunch of intermediate objects that would need to be
-    # cleaned up too.
-    if tool&.remote_duplicate_url.present?
-      unless clone.duplicate_on_remote(root_url)
-        # If duplication on LARA fails, destroy clone and return nil.
-        clone.destroy
-        return nil
-      end
-    end
-
-    # Copy rest of the activity properties.
-    clone.material_property_list = material_property_list
-    clone.external_reports = external_reports
-    clone.grade_level_list = grade_level_list
-    clone.subject_area_list = subject_area_list
-    clone.sensor_list = sensor_list
-    # Copy projects. Limit projects to ones that can be assigned by the new author.
-    allowed_projects = Admin::Project.where(id: project_ids).select { |p|
-      Admin::ProjectPolicy.new(new_owner, p).assign_to_material?
-    }.map(&:id)
-    clone.project_ids = allowed_projects
-    clone.save
-    # Copy standard statements assigned to this activity.
-    material_type = self.class.name.underscore
-    StandardStatement.where(material_type: material_type, material_id: id).each do |s|
-      s.duplicate_and_assign_to(material_type, clone.id)
-    end
-    # Cohorts are skipped intentionally, since that would mean any copies would show up automatically to cohort teachers.
-
-    clone
-  end
-
-  # Duplicates external activity on LARA and updates URLs to point to the new external copy.
-  # Returns self or nil in case of error.
-  def duplicate_on_remote(root_url)
-    # %host% matcher ensures that site_url can start with protocol and end with optional `/`.
-    client = Client.where("site_url LIKE :ext_act_host", ext_act_host: "%#{URI.parse(author_url).host}%").first
-    auth_token = 'Bearer %s' % client.app_secret
-    tool = Tool.where("tool_id LIKE :client_site_url", client_site_url: "%#{URI.parse(client.site_url).host}").first
-    response = HTTParty.post(tool.remote_duplicate_url,
-      body: {
-        user_email: user.email,
-        add_to_portal: root_url,
-        author_url: author_url
-      }.to_json,
-      headers: {
-        'Content-Type' => 'application/json',
-        'Authorization' => auth_token
-      },
-      format: :json)
-
-    if response.code == 200 # successful
-      pub_data = response['publication_data']
-      # First, update URLs so the ActivityRuntimeAPI.publish2 can find correct instance (this one) and update it.
-      self.url = pub_data['url']
-      self.save
-      # Then, publish provided data.
-      return !!ActivityRuntimeAPI.publish2(pub_data, user)
-    end
-    # Return false in case of error.
-    false
-  end
-
   # methods required by Search::SearchMaterial
   def full_title
     name
   end
 
-  def activities
-    template.activities if template_type == 'Investigation'
-  end
   # end methods required by Search::SearchMaterial
 
   def left_nav_panel_width

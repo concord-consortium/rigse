@@ -69,7 +69,9 @@ class Admin::Settings < ApplicationRecord
         if settings
           logger.warn("No active settings found for using the first settings")
         else
-          logger.warn("No settings found")
+          if ENV["RAILS_ENV"] != "test" && ENV["RAILS_ENV"] != "cucumber"
+            logger.warn("No settings found")
+          end
         end
       end
       settings

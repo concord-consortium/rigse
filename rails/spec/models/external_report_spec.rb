@@ -31,20 +31,12 @@ describe ExternalReport do
 
       describe "when extra params are provided" do
         let(:external_activity) { FactoryBot.create(:external_activity) }
-        let(:investigation) { FactoryBot.create(:investigation) }
-        let(:activity) { FactoryBot.create(:activity) }
         let(:offering) { FactoryBot.create(:portal_offering, {runnable: external_activity}) }
         let(:learner) { FactoryBot.create(:full_portal_learner, {offering: offering }) }
-        let(:extra_params) { {activity_id: activity.id, student_id: learner.student.id} }
-
-        before(:each) do
-          investigation.activities << activity
-          external_activity.template = investigation
-          external_activity.save!
-        end
+        let(:extra_params) { {student_id: learner.student.id} }
 
         it "should include the correct parameters" do
-          expect(subject).to include('activityIndex=0', "studentId=#{learner.user.id}")
+          expect(subject).to include("studentId=#{learner.user.id}")
         end
       end
     end

@@ -11,11 +11,7 @@ class Report::OfferingStudentStatus
       runnable = runnable.template
     end
 
-    if runnable.is_a? ::Investigation
-      runnable.activities.student_only
-    else
-      [runnable]
-    end
+    [runnable]
   end
 
   def display_report_link?

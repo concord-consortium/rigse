@@ -31,8 +31,8 @@
       = f.text_area :keywords, :cols => 80, :rows => 3, :class => 'mceNoEditor'
     = field_set_tag t('authoring.material_type_label') do
       = f.select :material_type,
-        [ [ Activity.display_name,       Activity.name       ],
-          [ Investigation.display_name,  Investigation.name  ],
+        [ [ "Activity", "Activity"       ],
+          [ "Sequence",  "Investigation"  ],
           [ t(:collection).titleize, 'Collection' ],
           [ Interactive.display_name,    Interactive.name    ] ]
       %br

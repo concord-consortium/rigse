@@ -89,13 +89,6 @@ const NAV_SPEC = {
       {
         'type': 'LINK',
         'sort': 5,
-        'id': '/classes/6846/status',
-        'label': 'Full Status',
-        'url': '#/portal/classes/6846/fullstatus'
-      },
-      {
-        'type': 'LINK',
-        'sort': 5,
         'id': '/classes/6846/links',
         'label': 'Links',
         'url': '#/portal/classes/6846/bookmarks'
@@ -131,13 +124,6 @@ const NAV_SPEC = {
       {
         'type': 'LINK',
         'sort': 5,
-        'id': '/classes/6847/status',
-        'label': 'Full Status',
-        'url': '#/portal/classes/6847/fullstatus'
-      },
-      {
-        'type': 'LINK',
-        'sort': 5,
         'id': '/classes/6847/links',
         'label': 'Links',
         'url': '#/portal/classes/6847/bookmarks'
@@ -169,13 +155,6 @@ const NAV_SPEC = {
         'id': '/classes/6848/setup',
         'label': 'Class Setup',
         'url': '#/portal/classes/6848/edit'
-      },
-      {
-        'type': 'LINK',
-        'sort': 5,
-        'id': '/classes/6848/status',
-        'label': 'Full Status',
-        'url': '#/portal/classes/6848/fullstatus'
       },
       {
         'type': 'LINK',

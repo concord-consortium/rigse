@@ -112,7 +112,6 @@ describe NavigationHelper, type: :helper  do
         expect(subject).not_to match %r{"url": "/portal/classes/#{clazz.id}/materials"}
         expect(subject).not_to match %r{"url": "/portal/classes/#{clazz.id}/roster"}
         expect(subject).not_to match %r{"url": "/portal/classes/#{clazz.id}/edit"}
-        expect(subject).not_to match %r{"url": "/portal/classes/#{clazz.id}/fullstatus"}
         expect(subject).not_to match %r{"section": "classes/#{clazz.name}"}
       end
       expect(subject).not_to match %r{"url": "/admin}

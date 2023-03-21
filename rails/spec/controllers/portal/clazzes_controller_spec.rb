@@ -508,26 +508,6 @@ describe Portal::ClazzesController do
     end
   end
 
-  describe "GET fullstatus" do
-    before(:each) do
-      @params = {
-        :id => @mock_clazz.id
-      }
-    end
-    it "should not allow access for anonymous user" do
-      sign_out :user
-      get :fullstatus, params: @params
-      expect(response).not_to be_successful
-    end
-    it "should retrieve the class when user is not anonymous user" do
-      sign_in @authorized_teacher_user
-      get :fullstatus, params: @params
-      expect(assigns[:portal_clazz]).to eq(@mock_clazz)
-      expect(response).to be_successful
-      expect(response).to render_template("fullstatus")
-    end
-  end
-
   # TODO: auto-generated
   describe '#current_clazz' do
     it 'GET current_clazz' do

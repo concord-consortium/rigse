@@ -237,7 +237,7 @@ describe API::V1::ReportLearnersEsController do
         expect(filter["learners"][0]["runnable_url"]).to eq external_activity.url # not nil because it is an external activity
         expect(filter["learners"][1]["run_remote_endpoint"]).to eq learner2.remote_endpoint_url
         expect(filter["learners"][1]["class_id"]).to eq learner2.offering.clazz_id
-        expect(filter["learners"][2]["runnable_url"]).to eq nil  # nil because it is in investigation
+        expect(filter["learners"][2]["runnable_url"]).not_to eq nil # not nil because it is an external activity
         expect(filter["user"]["id"]).to eq url_for_admin_user
         expect(filter["user"]["email"]).to eq admin_user.email
 

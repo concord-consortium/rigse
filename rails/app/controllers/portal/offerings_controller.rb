@@ -126,27 +126,6 @@ class Portal::OfferingsController < ApplicationController
     redirect_to :back
   end
 
-  def answers
-    @offering = Portal::Offering.find(params[:id])
-    authorize @offering
-    if @offering
-      learner = setup_portal_student
-      if learner && params[:questions]
-        # create saveables
-        params[:questions].each do |dom_id, value|
-          # translate the dom id into an actual Embeddable
-          embeddable = parse_embeddable(dom_id)
-        end
-        learner.report_learner.last_run = DateTime.now
-        learner.update_report_model_cache
-      end
-      flash['notice'] = "Your answers have been saved."
-      redirect_to :root
-    else
-      render :plain => 'problem loading offering', :status => 500
-    end
-  end
-
   def offering_collapsed_status
     if current_visitor.portal_teacher.nil?
       head :ok
@@ -200,15 +179,6 @@ class Portal::OfferingsController < ApplicationController
   end
 
   private
-
-  def parse_embeddable(dom_id)
-    # make sure to support at least Embeddable::OpenResponse, Embeddable::MultipleChoice, and Embeddable::MultipleChoiceChoice
-    if dom_id =~ /embeddable__([^\d]+)_(\d+)$/
-      klass = "Embeddable::#{$1.classify}".constantize
-      return klass.find($2.to_i) if klass
-    end
-    nil
-  end
 
   def portal_offering_strong_params(params)
     params && params.permit(:active, :anonymous_report,:clazz_id, :default_offering, :locked, :position, :runnable_id, :runnable_type, :status)

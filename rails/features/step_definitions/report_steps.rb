@@ -24,16 +24,6 @@ When /^Report page (should|should not) have content "(.*)"$/ do |present, conten
   end
 end
 
-When /^(?:|I )apply filter for the question "(.*)" in the report page$/ do |question|
-  step 'I wait 2 seconds'
-  page.driver.browser.switch_to.window page.driver.browser.window_handles.last do
-    within(:xpath,"//div[@class='report_embeddable' and contains(.,'#{question}')]") do
-      check('filter[Embeddable::MultipleChoice][]')
-    end
-  step 'I press "Show selected"'
-  end
-end
-
 Then /^(?:|I )should see question "(.*)" checked when all question is displayed in the report page$/ do |question|
   step 'I wait 2 seconds'
   page.driver.browser.switch_to.window page.driver.browser.window_handles.last do

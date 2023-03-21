@@ -58,13 +58,6 @@ describe RunnablesHelper, type: :helper  do
         end
       end
 
-      describe "when the external activity template is an investigation" do
-        let(:runnable) { mock_model(ExternalActivity, :template_type => "Investigation", :material_type => "Investigation" )}
-        it "should include the word investigation (or sequence)" do
-          expect(subject).to eq(t('activerecord.models.Investigation'))
-        end
-      end
-
       describe "when the external activity template is an activity" do
         let(:runnable) { mock_model(ExternalActivity, :template_type => "Activity", :material_type => "Activity" )}
         it "should include the word investigation (or sequence)" do
@@ -72,28 +65,6 @@ describe RunnablesHelper, type: :helper  do
         end
       end
     end
-
-    describe "for an investigation offering" do
-      let(:runnable) { mock_model(Investigation)}
-      it "should include the word investigation (or sequence)" do
-        expect(subject).to eq(t('activerecord.models.Investigation'))
-      end
-    end
-
-    describe "for an activity offering" do
-      let(:runnable) { mock_model(Activity)}
-      it "should include the word Activity" do
-        expect(subject).to eq(t('activerecord.models.Activity'))
-      end
-    end
-
-    describe "for an activity runnable" do
-      let(:offering) { mock_model(Activity)}
-      it "should include the word Activity" do
-        expect(subject).to eq(t('activerecord.models.Activity'))
-      end
-    end
-
   end
 
   # TODO: auto-generated

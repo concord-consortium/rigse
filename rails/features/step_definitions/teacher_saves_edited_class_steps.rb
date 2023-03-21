@@ -44,14 +44,14 @@ end
 
 And /^the following offerings exist$/ do |offering_table|
     offering_table.hashes.each do |hash|
-      investigation = FactoryBot.create(:investigation)
+      investigation = FactoryBot.create(:external_activity)
       investigation.name = hash['name']
       investigation.save!
       myclazz = Portal::Clazz.find_by_name('My Class')
       @offering = Portal::Offering.new
       @offering.runnable_id = investigation.id
       @offering.clazz_id = myclazz.id
-      @offering.runnable_type = 'Investigation'
+      @offering.runnable_type = 'ExternalActivity'
       @offering.save!
     end
 end

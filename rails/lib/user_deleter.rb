@@ -22,11 +22,9 @@ class UserDeleter
       knowuh ehazzard freichsman stephen cstaudt nkimball abean
       manager teacher student anonymous guest admin].split
 
-
     self.keep_list = User.where("login in (?)", save_these_logins)
     concord_users =  User.where("email like '%concord.org'")
     no_email_users = User.where("email like 'no-email%'")
-    published_authors = Investigation.published.map { |i| i.user }
 
     # new_users = User.where("created_at > '#{new_date}'")
     admin_users =  User.with_role('admin')
@@ -40,7 +38,6 @@ class UserDeleter
     self.keep_list = self.keep_list + admin_users
     self.keep_list = self.keep_list + team_users
     self.keep_list = self.keep_list + concord_users
-    self.keep_list = self.keep_list + published_authors
 
     # build a remove list:
     self.keep_list = self.keep_list - report_users
@@ -64,15 +61,7 @@ class UserDeleter
     end
   end
 
-  def reown_investigations(user)
-    user.investigations.each { |i|
-      i.deep_set_user(self.default_owner)
-      Rails.logger.info "I"
-    }
-  end
-
   def delete_user(user)
-    reown_investigations(user)
     delete_clazzes(user)
     delete_student(user)
     user.destroy

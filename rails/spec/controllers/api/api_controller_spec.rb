@@ -65,7 +65,7 @@ RSpec.describe API::APIController, type: :controller do
       let(:uid)             { Digest::MD5.hexdigest(url_for_user) }
       let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
       let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
-      let(:runnable)        { FactoryBot.create(:activity, runnable_opts)    }
+      let(:runnable)        { FactoryBot.create(:external_activity, runnable_opts)    }
       let(:offering)        { FactoryBot.create(:portal_offering, offering_opts)    }
       let(:clazz)           { FactoryBot.create(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
       let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }

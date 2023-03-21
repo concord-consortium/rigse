@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Report::OfferingStatus do
-  
+
   let(:offering) { FactoryBot.create(:portal_offering) }
   let(:requester) { FactoryBot.create(:user) }
   let(:offering_status) { described_class.new(offering, requester) }
@@ -12,7 +12,7 @@ RSpec.describe Report::OfferingStatus do
   # TODO: auto-generated
   describe '#student_status_for' do
     it 'student_status_for' do
-      
+
       result = offering_status.student_status_for(student)
 
       expect(result).to be_nil
@@ -76,15 +76,6 @@ RSpec.describe Report::OfferingStatus do
   end
 
   # TODO: auto-generated
-  describe '#student_activities' do
-    it 'student_activities' do
-      result = offering_status.student_activities
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#show_score?' do
     it 'show_score?' do
       result = offering_status.show_score?
@@ -92,14 +83,4 @@ RSpec.describe Report::OfferingStatus do
       expect(result).not_to be_nil
     end
   end
-
-  # TODO: auto-generated
-  describe '#number_of_scorables' do
-    it 'number_of_scorables' do
-      result = offering_status.number_of_scorables
-
-      expect(result).not_to be_nil
-    end
-  end
-
 end

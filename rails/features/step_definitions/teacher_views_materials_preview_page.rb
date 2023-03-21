@@ -32,32 +32,6 @@ When /^the check box for the activity "(.+)" (should|should not) be checked$/ do
   end
 end
 
-When /^(?:|I )should be able to share (investigation|activity) "(.+)"$/ do |material, material_name|
-    case material
-      when "investigation"
-        material_id = Investigation.find_by_name(material_name).id
-        element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-fb sharelink']")
-        expect(element).to be_visible
-        element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-tw sharelink']")
-        expect(element).to be_visible
-        element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-li sharelink']")
-        expect(element).to be_visible
-        element = page.find(:xpath, "//div[@id='Investigation#{material_id}Share']/div[@class='ss-po sharelink']")
-        expect(element).to be_visible
-      when "activity"
-        material_id = Activity.find_by_name(material_name).id
-        element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-fb sharelink']")
-        expect(element).to be_visible
-        element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-tw sharelink']")
-        expect(element).to be_visible
-        element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-li sharelink']")
-        expect(element).to be_visible
-        element = page.find(:xpath, "//div[@id='Activity#{material_id}Share']/div[@class='ss-po sharelink']")
-        expect(element).to be_visible
-    end
-end
-
-
 When(/^I should see the preview button for "(.*?)"$/) do |arg1|
   selector = "a[href*=\".run_resource_html\"]"
   element = page.find(selector)

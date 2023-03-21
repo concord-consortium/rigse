@@ -19,16 +19,16 @@ describe SearchController do
   let(:student_user)    { FactoryBot.create(:confirmed_user, :login => "authorized_student") }
   let(:student)         { FactoryBot.create(:portal_student, :user_id => student_user.id) }
 
-  let(:physics_investigation)     { FactoryBot.create(:investigation, :name => 'physics_inv', :user => author_user, :publication_status => 'published') }
-  let(:chemistry_investigation)   { FactoryBot.create(:investigation, :name => 'chemistry_inv', :user => author_user, :publication_status => 'published') }
-  let(:biology_investigation)     { FactoryBot.create(:investigation, :name => 'mathematics_inv', :user => author_user, :publication_status => 'published') }
-  let(:mathematics_investigation) { FactoryBot.create(:investigation, :name => 'biology_inv', :user => author_user, :publication_status => 'published') }
-  let(:lines)                     { FactoryBot.create(:investigation, :name => 'lines_inv', :user => author_user, :publication_status => 'published') }
+  let(:physics_investigation)     { FactoryBot.create(:external_activity, :name => 'physics_inv', :user => author_user, :publication_status => 'published') }
+  let(:chemistry_investigation)   { FactoryBot.create(:external_activity, :name => 'chemistry_inv', :user => author_user, :publication_status => 'published') }
+  let(:biology_investigation)     { FactoryBot.create(:external_activity, :name => 'mathematics_inv', :user => author_user, :publication_status => 'published') }
+  let(:mathematics_investigation) { FactoryBot.create(:external_activity, :name => 'biology_inv', :user => author_user, :publication_status => 'published') }
+  let(:lines)                     { FactoryBot.create(:external_activity, :name => 'lines_inv', :user => author_user, :publication_status => 'published') }
 
-  let(:laws_of_motion_activity)  { FactoryBot.create(:activity, :name => 'laws_of_motion_activity' ,:investigation_id => physics_investigation.id, :user => author_user) }
-  let(:fluid_mechanics_activity) { FactoryBot.create(:activity, :name => 'fluid_mechanics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
-  let(:thermodynamics_activity)  { FactoryBot.create(:activity, :name => 'thermodynamics_activity' , :investigation_id => physics_investigation.id, :user => author_user) }
-  let(:parallel_lines)           { FactoryBot.create(:activity, :name => 'parallel_lines' , :investigation_id => lines.id, :user => author_user) }
+  let(:laws_of_motion_activity)  { FactoryBot.create(:external_activity, :name => 'laws_of_motion_activity', :user => author_user) }
+  let(:fluid_mechanics_activity) { FactoryBot.create(:external_activity, :name => 'fluid_mechanics_activity', :user => author_user) }
+  let(:thermodynamics_activity)  { FactoryBot.create(:external_activity, :name => 'thermodynamics_activity',  :user => author_user) }
+  let(:parallel_lines)           { FactoryBot.create(:external_activity, :name => 'parallel_lines', :user => author_user) }
 
   let(:external_activity1)   { FactoryBot.create(:external_activity, :name => 'external_1', :url => "http://concord.org", :publication_status => 'published', :is_official => true) }
   let(:external_activity2)   { FactoryBot.create(:external_activity, :name => 'a_study_in_lines_and_curves', :url => "http://github.com", :publication_status => 'published', :is_official => true) }

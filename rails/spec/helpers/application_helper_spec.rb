@@ -348,17 +348,6 @@ describe ApplicationHelper, type: :helper do
   end
 
   # TODO: auto-generated
-  describe '#lara_report_link' do
-    it 'works' do
-      result = helper.lara_report_link(FactoryBot.build(:portal_offering))
-
-      expect(result).to be_nil
-    end
-  end
-
-
-
-  # TODO: auto-generated
   describe '#link_button' do
     it 'works when we stub out the compute_asset_path method' do
       # 2021-06-01 -- This doesn't work any more because the asset packaging

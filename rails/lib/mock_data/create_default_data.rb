@@ -496,126 +496,8 @@ module MockData
 
 
   def self.create_default_study_materials
-    # this method creates -
-    # multiple choice questions, image questions
-    #default investigations, activities, pages and external activities
-
-    default_investigations = []
-    default_activities = []
     default_external_activities = []
-    @default_investigations = default_investigations
-    @default_activities = default_activities
     @default_external_activities = default_external_activities
-    # pages
-    puts
-    puts
-    create_count = 0
-    update_count = 0
-    DEFAULT_DATA[:pages].each do |key, p|
-      user_name = p.delete(:user)
-      user = @default_users.find{|u| u.login == user_name}
-      if user
-        default_page = nil
-        page_by_uuid = Page.find_by_uuid(p[:uuid])
-        if page_by_uuid
-          default_page = page_by_uuid
-          default_page.name = p[:name]
-          default_page.user = user
-          default_page.publication_status = p[:publication_status]
-          update_count += 1
-          print '+'
-        else
-          p[:user_id] = user.id
-          Page.create!(p)
-          create_count += 1
-          print '.'
-        end
-      end
-    end
-    puts
-    puts "Generated #{create_count} and updated #{update_count} Pages"
-
-
-    # Multiple Choice questions
-    puts
-    puts
-    create_count = 0
-    update_count = 0
-    author = @default_users.find{|u| u.login == 'author'}
-    if author
-      default_mcq = []
-      @default_mcq = default_mcq
-
-      DEFAULT_DATA[:mult_cho_questions].each do |key,mcq|
-        choices = mcq.delete(:answers)
-        choices = choices.split(',')
-        choices.map!{|c| c.strip}
-        correct = mcq.delete(:correct_answer)
-
-        multi_ch_que = nil
-        mcq_by_uuid =  Embeddable::MultipleChoice.find_by_uuid(mcq[:uuid])
-
-        if mcq_by_uuid
-          multi_ch_que = mcq_by_uuid
-          multi_ch_que.prompt = mcq[:prompt]
-          multi_ch_que.save!
-          update_count += 1
-          print "+"
-        else
-          mcq[:user_id] = author.id
-          multi_ch_que = Embeddable::MultipleChoice.create!(mcq)
-
-          choices.map! { |c| Embeddable::MultipleChoiceChoice.create(
-            :choice => c,
-            :multiple_choice_id => multi_ch_que.id,
-            :is_correct => (c == correct)
-          )}
-
-          multi_ch_que.choices = choices
-
-          print '.'
-          create_count += 1
-        end
-        default_mcq << multi_ch_que
-      end
-      puts
-      puts "Generated #{create_count} and updated #{update_count} Multiple Choice questions"
-    end
-
-
-    puts
-    puts
-    create_count = 0
-    update_count = 0
-    if author
-      # Image Questions
-      default_image_question = []
-      @default_image_question = default_image_question
-
-      DEFAULT_DATA[:image_questions].each do |key, imgq|
-        image_que = nil
-        imgq_by_uuid = Embeddable::ImageQuestion.find_by_uuid(imgq[:uuid])
-        if imgq_by_uuid
-          image_que = imgq_by_uuid
-          image_que.user_id = author.id
-          image_que.prompt = imgq[:uuid]
-          image_que.save!
-          update_count += 1
-          print '+'
-        else
-          imgq[:user_id] = author.id
-          image_que = Embeddable::ImageQuestion.create!(imgq)
-          create_count += 1
-          print '.'
-        end
-
-        default_image_question << image_que
-      end
-      puts
-      puts "Generated #{create_count} and updated #{update_count} Image questions"
-    end
-
-
 
     # External Activity
     puts
@@ -644,20 +526,10 @@ module MockData
           act[:user_id] = user.id
           act[:author_email] = user.email
           default_ext_act = ExternalActivity.create!(act)
-          default_ext_act.template = FactoryBot.create(:activity,
+          default_ext_act.template = FactoryBot.create(:external_activity,
             name: default_ext_act.name,
-            description: default_ext_act.long_description
+            long_description: default_ext_act.long_description
           )
-          if(sub_activities)
-            investigation = FactoryBot.create(:investigation,
-              name: default_ext_act.name,
-              description: default_ext_act.long_description
-            )
-            acts = sub_activities.each do |a|
-              investigation.activities.create(name: a)
-            end
-            default_ext_act.template = investigation
-          end
           default_ext_act.publish
           default_ext_act.is_official = true
           default_ext_act.save!
@@ -705,57 +577,6 @@ module MockData
     end
 
   end # end of create_assignments
-
-  puts
-  puts
-  def self.record_learner_data
-    # record investigation answers
-    count = 0
-    puts
-    investigation_index = 0
-    DEFAULT_DATA[:student_answers_investigations].each do |key, res|
-      clazz = @default_classes.find{|c| c.name == res[:class]}
-      student = @default_students.find{|s| s.user.login == res[:student]}
-      investigation = @default_investigations.find{|i| i.name == res[:investigation]}
-      if clazz && student && investigation
-        res[:class] = clazz
-        res[:student] = student
-        res[:assignable] = investigation
-        res[:index] = investigation_index
-
-        res.delete(:investigation)
-
-        investigation_index = investigation_index + 1
-        count += 1
-        print '.'
-      end
-
-    end
-
-    # record activity answers
-
-    activity_index = 0
-    DEFAULT_DATA[:student_answers_activities].each do |key, res|
-      clazz = @default_classes.find{|c| c.name == res[:class]}
-      student = @default_students.find{|s| s.user.login == res[:student]}
-      activity = @default_activities.find{|i| i.name == res[:activity]}
-      if clazz && student && activity
-        res[:class] = clazz
-        res[:student] = student
-        res[:assignable] = activity
-        res[:index] = activity_index
-
-        res.delete(:activity)
-
-        activity_index = activity_index + 1
-        count += 1
-        print '.'
-      end
-    end
-
-    puts
-    puts "Generated/updated #{count} student responses"
-  end # end of record_learner_data
 
   # helper methods
 

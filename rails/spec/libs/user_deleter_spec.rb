@@ -29,18 +29,6 @@ RSpec.describe UserDeleter do
   end
 
   # TODO: auto-generated
-  describe '#reown_investigations' do
-    xit 'reown_investigations' do
-      options = double('options')
-      user_deleter = described_class.new(options)
-      user = double('user')
-      result = user_deleter.reown_investigations(user)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#delete_user' do
     xit 'delete_user' do
       options = double('options')

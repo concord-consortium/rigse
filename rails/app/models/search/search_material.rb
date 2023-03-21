@@ -51,26 +51,6 @@ class Search::SearchMaterial
 
 
     self.activity_list_title = self.title
-
-    if material.is_a? ::Investigation
-
-      self.url = {:only_path => false, :controller => 'investigations', :action => 'show', :id => self.id}
-
-    elsif material.is_a? ::Activity
-
-      self.url = {:only_path => false, :controller => 'activities', :action => 'show', :id => self.id}
-
-      if material.parent
-        parent_material = Search::SearchMaterial.new(material.parent, user)
-
-        parent_material.selected_activities = [self.material.id]
-        parent_material.assign_btn_text = "Assign Individual Activities"
-
-        self.parent_material = parent_material
-
-      end
-
-    end
   end
 
 

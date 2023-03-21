@@ -39,40 +39,39 @@ namespace :app do
     #
     # Create default users, roles, district, school, course, and class, and greade_levels
     #
-    #######################################################################   
+    #######################################################################
     desc "Create default users and roles"
     task :create_default_users => :environment do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
       puts 'Generating default data from default data ymls'
       MockData.create_default_users
     end
-    
+
     desc "Create default classes, teacher class mapping and student class mapping"
     task :create_default_classes => [:environment, :create_default_users] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
       MockData.create_default_clazzes
     end
-    
+
     desc "Create default study materials"
     task :create_default_study_materials => [:environment, :create_default_classes] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
       MockData.create_default_study_materials
       MockData.create_default_interactives
     end
-    
+
     desc "Create default assignments for classes"
     task :create_default_assignments_for_class => [:environment, :create_default_study_materials] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
       MockData.create_default_assignments_for_class
       MockData.create_default_materials_collections
     end
-    
+
     desc "This task creats default learners."
     task :create_default_learners_and_learner_attempts => [:environment, :create_default_assignments_for_class] do
       require File.expand_path('../../mock_data/create_default_data.rb', __FILE__)
-      MockData.record_learner_data
     end
-    
+
     desc "Create default data. It is a blank task that calls other task to create default data."
     task :create_default_data => [:environment, :load_factory_bot, :create_default_learners_and_learner_attempts] do
     end
@@ -80,14 +79,14 @@ namespace :app do
     task :load_factory_bot do
       FactoryBot.find_definitions
     end
-    
+
     desc "Deletes the default data"
     task :delete_default_data => :environment do
       puts 'Deleting default data'
       require File.expand_path('../../mock_data/delete_default_data.rb', __FILE__)
       MockData.delete_default_data
     end
-    
+
     desc "Resets the default data"
     task :reset_default_data => :environment do
       Rake::Task['app:setup:delete_default_data'].invoke

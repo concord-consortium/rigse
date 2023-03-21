@@ -791,26 +791,6 @@ protected
   end
 
   # TODO: auto-generated
-  describe '#removed_investigation' do
-    it 'removed_investigation' do
-      user = described_class.new
-      result = user.removed_investigation
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#has_investigations?' do
-    it 'has_investigations?' do
-      user = described_class.new
-      result = user.has_investigations?
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '.authenticate' do
     it 'authenticate' do
       login = 'login'

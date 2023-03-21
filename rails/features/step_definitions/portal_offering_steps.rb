@@ -14,22 +14,22 @@ end
 
 And /^the following offerings exist in the classes:$/ do |offering_list|
     offering_list.hashes.each do |hash|
-      investigation = FactoryBot.create(:investigation)
+      investigation = FactoryBot.create(:external_activity)
       investigation.name = hash['name']
 
       investigation.save!
-      
+
       myclazz = Portal::Clazz.find_by_name(hash['class'])
       offering = Portal::Offering.new
       offering.runnable = investigation
       offering.clazz = myclazz
       offering.save!
-    end 
+    end
 end
 
 Given /^the following default class offerings exist$/ do |offering_list|
     offering_list.hashes.each do |hash|
-      investigation = FactoryBot.create(:investigation, :publication_status => "published")
+      investigation = FactoryBot.create(:external_activity, :publication_status => "published")
       investigation.name = hash['name']
 
       investigation.save!

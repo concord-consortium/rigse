@@ -3,12 +3,10 @@ Given /^The materials have been indexed$/ do
 end
 
 Given /"(.+)" has been updated recently/ do |name|
-  inv = Investigation.find_by_name(name)
-  act = Activity.find_by_name(name)
   external_act = ExternalActivity.find_by_name(name)
-  [inv,act, external_act].compact.each do |mat|
-    mat.touch
-    puts "updating #{mat.class.name} #{name}"
+  if external_act
+    external_act.touch
+    puts "updating #{external_act.class.name} #{name}"
   end
 end
 
@@ -21,22 +19,6 @@ When /^the following activities for the above investigations exist:$/ do |activi
     hash[:user] = User.find_by_login(hash[:user])
     activity = Activity.create(hash)
 end
-end
-
-Then /^(?:|I )should preview investigation "(.+)" on the search instructional materials page$/ do |investigation_name|
-    investigation_id = Investigation.find_by_name(investigation_name).id
-    within(:xpath,"//div[@id = 'search_investigation_#{investigation_id}']") do
-      step 'I follow "Preview"'
-    end
-    step 'I receive a file for download with a filename like "_investigation_"'
-end
-
-Then /^(?:|I )should preview activity "(.+)" on the search instructional materials page$/ do |activity_name|
-    activity_id = Activity.find_by_name(activity_name).id
-    within(:xpath,"//div[@id = 'search_activity_#{activity_id}']") do
-      step 'I follow "Preview"'
-    end
-    step 'I receive a file for download with a filename like "_activity_"'
 end
 
 When /^(?:|I )search for "(.+)" on the search instructional materials page$/ do |search_text|
