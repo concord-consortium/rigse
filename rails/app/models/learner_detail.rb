@@ -16,7 +16,6 @@ class LearnerDetail
   attr_accessor :last_report
   attr_accessor :updated_at
   attr_accessor :completed
-  attr_accessor :num_submissions
   attr_accessor :activity_url
   attr_accessor :token
   attr_accessor :token_expires
@@ -32,7 +31,6 @@ class LearnerDetail
     self.ip              = lookup "student.user.last_sign_in_ip"
     self.last_sign_in    = lookup "student.user.last_sign_in_at"
     self.completed       = lookup "report_learner.complete_percent"
-    self.num_submissions = lookup "report_learner.num_submitted"
     self.last_run        = lookup "report_learner.last_run"
     self.updated_at      = lookup "report_learner.last_run"
     self.last_report     = lookup "report_learner.last_report"
@@ -71,15 +69,15 @@ class LearnerDetail
       student_name student_login ip last_sign_in
       valid_token token_expires token
       activity_name activity_url completed
-      num_submissions last_run updated_at ]
+      last_run updated_at ]
   end
 
   def values
-    self.feilds.map do |field| 
+    self.feilds.map do |field|
       { name: field, value: self.send(field.to_sym)}
     end
   end
-  
+
   def to_hash
     hash = {}
     values.each { |v| hash[v[:name]] = v[:value] }

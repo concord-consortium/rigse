@@ -112,12 +112,6 @@ class Portal::Learner < ApplicationRecord
   end
 
   def elastic_search_learner_model
-    num_answerables = 0
-    num_answered = 0
-    num_submitted = 0
-    num_correct = 0
-    complete_percent = 0
-
     {
       learner_id: self.id,
       report_learner_id: self.report_learner_only_id.id,
@@ -139,11 +133,6 @@ class Portal::Learner < ApplicationRecord
       runnable_type_and_id: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}",
       runnable_type_id_name: "#{self.offering.runnable.class.to_s.downcase}_#{self.offering.runnable.id}:#{self.offering.runnable.name}",
       runnable_url: (self.offering.runnable.respond_to? 'url') ? self.offering.runnable.url : nil,
-      num_answerables: num_answerables,
-      num_answered: num_answered,
-      num_submitted: num_submitted,
-      num_correct: num_correct,
-      complete_percent: complete_percent,
       teachers_id: self.offering.clazz.teachers.map { |t| t.id },
       teachers_name: self.offering.clazz.teachers.map { |t| escape_comma(t.user.name) },
       teachers_district: self.offering.clazz.teachers.map { |t|

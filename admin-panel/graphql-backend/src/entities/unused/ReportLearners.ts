@@ -65,18 +65,6 @@ export class ReportLearners {
   @Column("int", { name: "school_id", nullable: true })
   schoolId: number | null;
 
-  @Column("int", { name: "num_answerables", nullable: true })
-  numAnswerables: number | null;
-
-  @Column("int", { name: "num_answered", nullable: true })
-  numAnswered: number | null;
-
-  @Column("int", { name: "num_correct", nullable: true })
-  numCorrect: number | null;
-
-  @Column("longtext", { name: "answers", nullable: true })
-  answers: string | null;
-
   @Column("varchar", { name: "runnable_type", nullable: true, length: 255 })
   runnableType: string | null;
 
@@ -85,9 +73,6 @@ export class ReportLearners {
 
   @Column("mediumtext", { name: "permission_forms", nullable: true })
   permissionForms: string | null;
-
-  @Column("int", { name: "num_submitted", nullable: true })
-  numSubmitted: number | null;
 
   @Column("varchar", { name: "teachers_district", nullable: true, length: 255 })
   teachersDistrict: string | null;

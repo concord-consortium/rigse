@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_13_172341) do
+ActiveRecord::Schema.define(version: 2023_03_20_192316) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -203,20 +203,6 @@ ActiveRecord::Schema.define(version: 2023_03_13_172341) do
     t.index ["code"], name: "index_commons_licenses_on_code"
   end
 
-  create_table "dataservice_blobs", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.binary "content", size: :medium
-    t.string "token"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "uuid", limit: 36
-    t.string "mimetype"
-    t.string "file_extension"
-    t.integer "learner_id"
-    t.string "checksum"
-    t.index ["checksum"], name: "index_dataservice_blobs_on_checksum"
-    t.index ["learner_id"], name: "index_dataservice_blobs_on_learner_id"
-  end
-
   create_table "delayed_jobs", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "priority", default: 0
     t.integer "attempts", default: 0
@@ -407,25 +393,6 @@ ActiveRecord::Schema.define(version: 2023_03_13_172341) do
     t.integer "external_activity_id"
   end
 
-  create_table "learner_processing_events", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "learner_id"
-    t.datetime "portal_end"
-    t.datetime "portal_start"
-    t.datetime "lara_end"
-    t.datetime "lara_start"
-    t.integer "elapsed_seconds"
-    t.string "duration"
-    t.string "login"
-    t.string "teacher"
-    t.string "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "lara_duration"
-    t.integer "portal_duration"
-    t.index ["learner_id"], name: "index_learner_processing_events_on_learner_id"
-    t.index ["url"], name: "index_learner_processing_events_on_url"
-  end
-
   create_table "materials_collection_items", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "materials_collection_id"
     t.string "material_type"
@@ -587,19 +554,6 @@ ActiveRecord::Schema.define(version: 2023_03_13_172341) do
     t.boolean "active", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "portal_learner_activity_feedbacks", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.text "text_feedback"
-    t.integer "score", default: 0
-    t.boolean "has_been_reviewed", default: false
-    t.integer "portal_learner_id"
-    t.integer "activity_feedback_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "rubric_feedback"
-    t.index ["activity_feedback_id"], name: "index_portal_learner_activity_feedbacks_on_activity_feedback_id"
-    t.index ["portal_learner_id"], name: "index_portal_learner_activity_feedbacks_on_portal_learner_id"
   end
 
   create_table "portal_learners", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -1296,30 +1250,6 @@ ActiveRecord::Schema.define(version: 2023_03_13_172341) do
     t.index ["nces_district_id"], name: "index_portal_nces06_schools_on_nces_district_id"
   end
 
-  create_table "portal_offering_activity_feedbacks", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.boolean "enable_text_feedback", default: false
-    t.integer "max_score", default: 10
-    t.string "score_type", default: "none"
-    t.integer "activity_id"
-    t.integer "portal_offering_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "use_rubric"
-    t.text "rubric"
-  end
-
-  create_table "portal_offering_embeddable_metadata", id: :integer, charset: "utf8", force: :cascade do |t|
-    t.integer "offering_id"
-    t.integer "embeddable_id"
-    t.string "embeddable_type"
-    t.boolean "enable_score", default: false
-    t.integer "max_score"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "enable_text_feedback", default: false
-    t.index ["offering_id", "embeddable_id", "embeddable_type"], name: "index_portal_offering_metadata", unique: true
-  end
-
   create_table "portal_offerings", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "status"
@@ -1481,14 +1411,9 @@ ActiveRecord::Schema.define(version: 2023_03_13_172341) do
     t.integer "runnable_id"
     t.string "runnable_name"
     t.integer "school_id"
-    t.integer "num_answerables"
-    t.integer "num_answered"
-    t.integer "num_correct"
-    t.text "answers", size: :long
     t.string "runnable_type"
     t.float "complete_percent"
     t.text "permission_forms", size: :medium
-    t.integer "num_submitted"
     t.string "teachers_district"
     t.string "teachers_state"
     t.string "teachers_email"
