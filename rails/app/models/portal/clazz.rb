@@ -191,10 +191,6 @@ class Portal::Clazz < ApplicationRecord
     nil
   end
 
-  def refresh_saveable_response_objects
-    self.offerings.each { |o| o.refresh_saveable_response_objects }
-  end
-
   def class_word_lowercase
     self.class_word.downcase! if self.class_word
   end

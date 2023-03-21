@@ -68,16 +68,6 @@ describe Portal::Offering do
     end
   end
 
-  describe '#for_embeddable' do
-    it 'answered for metadata' do
-      offering = described_class.new
-      dummy = offering
-      result = offering.metadata.for_embeddable(dummy)
-
-      expect(result).to be_nil
-    end
-  end
-
   describe '#completed_students_count' do
     it 'completed_students_count' do
       offering = described_class.new

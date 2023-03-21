@@ -75,21 +75,6 @@ class API::V1::OfferingsController < API::APIController
     render :json => filtered_offerings.to_json, :callback => params[:callback]
   end
 
-  # DEPRECIATED
-  # This route is still used directly by https://github.com/concord-consortium/sharinator
-  def for_class
-    offering =  Portal::Offering.find(params[:id])
-    params[:class_id] = offering.clazz.id
-    index
-  end
-
-  # DEPRECIATED
-  def for_teacher
-    offering =  Portal::Offering.find(params[:id])
-    params[:user_id] = offering.clazz.teacher.user.id
-    index
-  end
-
   def portal_offering_strong_params(params)
     params && params.permit(:active, :locked)
   end

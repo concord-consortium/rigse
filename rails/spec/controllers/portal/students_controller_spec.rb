@@ -300,16 +300,6 @@ describe Portal::StudentsController do
   end
 
   # TODO: auto-generated
-  describe '#status' do
-    it 'GET status' do
-      params = {id: FactoryBot.create(:portal_student).to_param}
-      get :status, params: params, format: :json
-
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
-  # TODO: auto-generated
   describe '#index' do
     it 'GET index' do
       get :index

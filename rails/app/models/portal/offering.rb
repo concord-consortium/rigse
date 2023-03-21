@@ -23,15 +23,7 @@ class Portal::Offering < ApplicationRecord
 
   has_many :collaborations, :class_name => "Portal::Collaboration"
 
-  has_many :activity_feedbacks, class_name: "Portal::OfferingActivityFeedback", foreign_key: "portal_offering_id"
-
   [:name, :short_description, :long_description, :long_description_for_teacher, :icon_image].each { |m| delegate m, :to => :runnable }
-
-  has_many :metadata, :class_name => "Portal::OfferingEmbeddableMetadata" do
-    def for_embeddable(embeddable)
-      where(embeddable_type: embeddable.class.name, embeddable_id: embeddable.id).first
-    end
-  end
 
   # create one of these on the fly as needed
   def report_embeddable_filter
@@ -56,11 +48,6 @@ class Portal::Offering < ApplicationRecord
     end
 
   end
-
-  def refresh_saveable_response_objects
-    self.learners.each { |l| l.refresh_saveable_response_objects }
-  end
-
 
   def active?
     active

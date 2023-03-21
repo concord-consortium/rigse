@@ -38,24 +38,6 @@ class Report::Learner < ApplicationRecord
     return true
   end
 
-  def serialize_blob_answer(answer)
-    if answer.is_a? Hash
-      blob = answer[:blob]
-      if blob
-        # Return a serialized hash of the blob
-        return {
-            :type => "Dataservice::Blob",
-            :id => blob.id,
-            :token => blob.token,
-            :file_extension => blob.file_extension,
-            :note => answer[:note]
-        }
-      end
-    end
-    # Otherwise don't change it
-    return answer
-  end
-
   def last_run_string(opts={})
     return Report::Learner.build_last_run_string(last_run, opts)
   end
@@ -67,11 +49,6 @@ class Report::Learner < ApplicationRecord
 
     return not_run_str if !last_run
     return "#{prefix} #{last_run.strftime(format)}"
-  end
-
-  def calculate_last_run
-    # RAILS6 TODO: figure out alternative? - this was using the now removed dataservice model update times
-    return self.last_run
   end
 
   def self.encode_answer_key(item)
@@ -122,8 +99,6 @@ class Report::Learner < ApplicationRecord
     update_teacher_info_fields
 
     update_permission_forms
-
-    calculate_last_run
 
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save

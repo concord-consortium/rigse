@@ -1,2 +1,0 @@
-class Report::User
-end

@@ -99,17 +99,6 @@ describe Portal::Student do
   end
 
   # TODO: auto-generated
-  describe '#status' do
-    it 'status' do
-      student = described_class.new
-      offerings_updated_after = Time.now
-      result = student.status(offerings_updated_after)
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#update_report_permissions' do
     it 'update_report_permissions' do
       student = described_class.new

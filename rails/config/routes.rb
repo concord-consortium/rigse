@@ -207,11 +207,6 @@ RailsPortal::Application.routes.draw do
     resources :passwords, :only => [:update]
     post '/passwords/update_users_password' => 'passwords#update_users_password'
 
-    namespace :dataservice do
-      # 2020-09-15 NP — I doubt that we actualy need create and update
-      resources :blobs, only: [:show, :index, :create, :update]
-    end
-
     # external activity return url (:id_or_key refers learner's ID or key)
     # - key is a random UUID string, so it's impossible to guess somebody's else endpoint (more secure)
     # - we still need to support basic ID, as LARA might store this form of URLs
@@ -222,10 +217,6 @@ RailsPortal::Application.routes.draw do
     post '/dataservice/external_activity_data/:id_or_key/protocol_version/:version' => 'dataservice/external_activity_data#create_by_protocol_version',
          :as => 'external_activity_versioned_return',
          :constraints => {:version => /[0-9]+/}
-
-    # A prettier version of the blob w/ token url
-    get 'dataservice/blobs/:id/:token.:format' => 'dataservice/blobs#show', :as => :dataservice_blob_raw_pretty, :constraints => { :token => /[a-zA-Z0-9]{32}/ }
-    get 'dataservice/blobs/:id.blob/:token'    => 'dataservice/blobs#show', :as => :dataservice_blob_raw,        :constraints => { :token => /[a-zA-Z0-9]{32}/ }, :format => 'blob'
 
     namespace :admin do
       resources :settings
@@ -395,12 +386,6 @@ RailsPortal::Application.routes.draw do
         end
 
         resources :offerings, only: [:show, :update, :index] do
-          member do
-            # DEPRECIATED
-            get :for_class
-            # DEPRECIATED
-            get :for_teacher
-          end
         end
 
         resources :classes, only: [:show] do
@@ -518,8 +503,6 @@ RailsPortal::Application.routes.draw do
     get '/authoring_site_redirect/:id' => 'home#authoring_site_redirect', :as => :authoring_site_redirect
 
     get '/time' => 'misc_metal#time', :as => :time
-    get '/learner_proc_stats' => 'misc#learner_proc_stats', :as => :learner_proc_stats
-    get '/learner_proc' => 'misc#learner_proc', :as => :learner_proc
 
     get '/misc/preflight' => 'misc#preflight', :as => :preflight
     get '/misc/stats' => 'misc#stats', :as => :stats

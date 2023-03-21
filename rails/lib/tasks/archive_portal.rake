@@ -1,28 +1,8 @@
 namespace :archive_portal do
 
-  desc "displays blob and teacher stats"
+  desc "displays teacher stats"
   task :get_stats => :environment do
-    puts "Total Blobs: #{Dataservice::Blob.where("token != '' and content is not null").count()}"
     puts "Total Teachers: #{Portal::Teacher.count()}"
-  end
-
-  desc "extract blob images from database and upload to s3"
-  task :extract_and_upload_images => :environment do
-    s3_config = load_task_config()['s3']
-    Aws.config.update({
-      region: s3_config['region'],
-      credentials: Aws::Credentials.new(s3_config['access_key_id'], s3_config['secret_access_key'])
-    })
-    s3 = Aws::S3::Resource.new
-    bucket = s3.bucket(s3_config['images_bucket'])
-    Dataservice::Blob.where("token != '' and content is not null").where(get_where()).find_in_batches(batch_size: 10) do |batch|
-      batch.each do |blob|
-        path = "#{s3_config['images_bucket_prefix']}/blobs/#{blob.id}/#{blob.token}.#{blob.file_extension}"
-        puts "uploading #{path}"
-        obj = bucket.object(path)
-        obj.put(body: blob.content, acl: 'public-read', content_type: blob.mimetype)
-      end
-    end
   end
 
   desc "generates learner details reports for all teachers and uploads them to s3"
