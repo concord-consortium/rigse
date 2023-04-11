@@ -100,6 +100,9 @@ class Report::Learner < ApplicationRecord
 
     update_permission_forms
 
+    self.complete_percent = 100
+    self.last_run = Time.now
+
     Rails.logger.debug("Updated Report Learner: #{self.student_name}")
     self.save
   end
