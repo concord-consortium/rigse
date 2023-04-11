@@ -38,9 +38,9 @@ describe Report::Learner do
   end
 
   describe "with a learner" do
-    it "the last_run time should be nil" do
+    it "the last_run time should not be nil" do
       report = Report::Learner.create(:learner => @learner)
-      expect(report.last_run).to be_nil
+      expect(report.last_run).not_to be_nil
     end
 
     it "the last_run time should be preserved" do
