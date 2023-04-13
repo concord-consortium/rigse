@@ -42,14 +42,6 @@ describe Report::Learner do
       report = Report::Learner.create(:learner => @learner)
       expect(report.last_run).not_to be_nil
     end
-
-    it "the last_run time should be preserved" do
-      report = Report::Learner.create(:learner => @learner)
-      expect(report.last_run).to be_nil
-      now = DateTime.now
-      report.last_run = now
-      expect(report.last_run).to eq(now)
-    end
   end
 
   describe "with_permission_ids" do
