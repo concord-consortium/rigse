@@ -756,10 +756,6 @@ class API::V1::MaterialsController < API::APIController
                     :subject_areas,
                     :grade_levels   ]
 
-      if rubyclass == ExternalActivity
-        includes.push :template
-      end
-
       item = rubyclass.includes(includes).find(id)
 
       if item
