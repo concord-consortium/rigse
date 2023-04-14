@@ -12,17 +12,6 @@ class Report::OfferingStudentStatus
     student_status
   end
 
-  # loosely based on offering_status.rb#student_activities
-  def sub_sections
-    runnable = offering.runnable
-
-    if runnable.is_a?(::ExternalActivity) && runnable.template
-      runnable = runnable.template
-    end
-
-    [runnable]
-  end
-
   def display_report_link?
     (offering && offering.student_report_enabled? && offering_reportable?)
   end
@@ -42,21 +31,6 @@ class Report::OfferingStudentStatus
         # Offering is not reportable, but it has been started. Return 100%.
         100
       end
-    else
-      0
-    end
-  end
-
-  # the runnable is passed because in somecases we want the progress for a sub part of the
-  # this learners runnable
-  def activity_complete_percent(activity)
-    if learner
-      # this is not efficient it has to do queries for each activity
-      learner_activity = learner.learner_activities.find{|la| la.activity_id == activity.id}
-
-      # Since there is a learner for this it actually has been started so perhaps
-      # we shouldn't return 0 here
-      learner_activity ? learner_activity.complete_percent : 0
     else
       0
     end
