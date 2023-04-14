@@ -79,7 +79,7 @@ class API::V1::MaterialsController < API::APIController
 
   # GET /api/v1/materials/featured
   def featured
-    materials = ExternalActivity.published.where(:is_featured => true).includes([:template, :user]).to_a
+    materials = ExternalActivity.published.where(:is_featured => true).includes([:user]).to_a
 
     if params[:prioritize].present?
       prioritize = params[:prioritize].split(',').map { |p| p.to_i rescue 0 }
@@ -102,7 +102,7 @@ class API::V1::MaterialsController < API::APIController
   #
   def all
 
-    materials = ExternalActivity.includes(:user, :template).to_a +
+    materials = ExternalActivity.includes(:user).to_a +
                 Interactive.all.to_a
 
     render json: materials_data(materials)
@@ -248,7 +248,7 @@ class API::V1::MaterialsController < API::APIController
     end
 
     if type_ids_map['ExternalActivity']
-      materials += ExternalActivity.includes(:template, :user, :subject_areas, :grade_levels).find(type_ids_map['ExternalActivity'])
+      materials += ExternalActivity.includes(:user, :subject_areas, :grade_levels).find(type_ids_map['ExternalActivity'])
     end
 
     if type_ids_map['Interactive']
