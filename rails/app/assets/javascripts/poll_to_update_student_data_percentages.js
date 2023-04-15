@@ -24,15 +24,9 @@ window.poll_to_update_student_data_percentages = function(options) {
   const update_percentages = (status) => {
     if (status != null) {
       for (var report_learner of status.report_learners) {
-        const $offering = jQuery(`.offering_for_student[data-offering_id='${report_learner.offering_id}']`);
+        const $offering = jQuery(`.offering_for_student[data-offering-id='${report_learner.offering_id}']`);
         if ($offering && report_learner.last_run) {
           $offering.find('.last_run').html(report_learner.last_run);
-          $offering.find('.status_graphs .not_run').hide();
-          $offering.find('.status_graphs .summary .progress').css({width: `${report_learner.complete_percent}%`});
-          $offering.find('.status_graphs .details .progress').each(function(idx) {
-            jQuery(this).css({width: `${report_learner.subsection_complete_percent[idx]}%`});
-          });
-          $offering.find('.status_graphs .run_graph').show();
         }
       }
     }

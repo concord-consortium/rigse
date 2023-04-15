@@ -7,6 +7,21 @@ class Portal::StudentsController < ApplicationController
 
   public
 
+  def status
+    # PUNDIT_REVIEW_AUTHORIZE
+    # PUNDIT_CHOOSE_AUTHORIZE
+    # no authorization needed ...
+    # authorize Portal::Student
+    # authorize @student
+    # authorize Portal::Student, :new_or_create?
+    # authorize @student, :update_edit_or_destroy?
+    result = Portal::Student.find(params[:id]).status(params[:offerings_updated_after] || 0)
+    respond_to do |format|
+      format.xml { render :xml => result }
+      format.json { render :json => result }
+    end
+  end
+
   def index
     # PUNDIT_REVIEW_AUTHORIZE
     # PUNDIT_CHECK_AUTHORIZE

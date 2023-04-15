@@ -71,16 +71,6 @@ describe Report::OfferingStudentStatus do
   end
 
   # TODO: auto-generated
-  describe '#sub_sections' do
-    xit 'sub_sections' do
-      offering_student_status = described_class.new
-      result = offering_student_status.sub_sections
-
-      expect(result).not_to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#display_report_link?' do
     it 'display_report_link?' do
       offering_student_status = described_class.new
