@@ -48,9 +48,14 @@ const PageHeader = Component({
     e.preventDefault()
     console.log('INFO calling renderLoginModal()')
     PortalComponents.renderLoginModal(
-      { oauthProviders: this.state.oauthProviders,
-        afterSigninPath: this.props.afterSigninPath })
-    ga('send', 'event', 'Login', 'Form', 'Opened')
+      {
+        oauthProviders: this.state.oauthProviders,
+        afterSigninPath: this.props.afterSigninPath
+      })
+    gtag('event', 'click', {
+      'category': 'User Authentication',
+      'label': 'User login button clicked',
+    });
   },
 
   handleRegisterButton: function (e) {
@@ -59,7 +64,10 @@ const PageHeader = Component({
       { oauthProviders: this.state.oauthProviders, closeable: true },
       'signup-default-modal'
     )
-    ga('send', 'event', 'User Registration', 'Form', 'Opened')
+    gtag('event', 'click', {
+      'category': 'User Registration',
+      'label': 'User register button clicked',
+    });
   },
 
   handleNavMenuToggle: function (e) {

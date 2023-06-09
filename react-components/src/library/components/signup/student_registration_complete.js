@@ -3,16 +3,20 @@ import Formsy from 'formsy-react'
 import TextInput from './text_input'
 
 export default class StudentRegistrationComplete extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.submit = this.submit.bind(this)
   }
 
-  componentDidMount () {
-    ga('send', 'event', 'User Registration', 'Form', 'Final Step Completed - Student')
+  componentDidMount() {
+    gtag('event', 'click', {
+      'category': 'User Registration',
+      'label': 'Form',
+      'action': 'Final Step Completed - Student',
+    });
   }
 
-  submit (data) {
+  submit(data) {
     if (this.props.afterSigninPath) {
       data.after_sign_in_path = this.props.afterSigninPath
     }
@@ -35,7 +39,7 @@ export default class StudentRegistrationComplete extends React.Component {
     })
   }
 
-  render () {
+  render() {
     const { anonymous, data } = this.props
     const { login } = data
 

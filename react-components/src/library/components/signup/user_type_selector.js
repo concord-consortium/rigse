@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default class UserTypeSelector extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       userType: null
@@ -10,24 +10,35 @@ export default class UserTypeSelector extends React.Component {
     this.handleLoginClick = this.handleLoginClick.bind(this)
   }
 
-  handleClick (event) {
+  handleClick(event) {
     const value = event.currentTarget.value
     console.log('INFO changing type', value)
-    ga('send', 'event', 'User Registration', 'Form', 'Step 1 Completed - ' + value.charAt(0).toUpperCase() + value.slice(1))
+    gtag('event', 'click', {
+      'category': 'User Registration',
+      'label': 'Step 1 Completed - ' + value.charAt(0).toUpperCase() + value.slice(1),
+    });
+
     this.props.onUserTypeSelect(value)
   }
 
-  handleLoginClick (event) {
+  handleLoginClick(event) {
     event.preventDefault()
-    ga('send', 'event', 'User Registration', 'Form', 'Step 1 Log in Link Clicked')
+    gtag('event', 'click', {
+      'category': 'User Registration',
+      'label': 'Step 1 Log in Link Clicked',
+    });
+
     PortalComponents.renderLoginModal({
       oauthProviders: this.state.oauthProviders,
       afterSigninPath: this.props.afterSigninPath
     })
-    ga('send', 'event', 'Login', 'Form', 'Opened')
+    gtag('event', 'click', {
+      'category': 'Login',
+      'label': 'Login form opened',
+    });
   }
 
-  render () {
+  render() {
     console.log('INFO UserTypeSelector rendering')
 
     return (
