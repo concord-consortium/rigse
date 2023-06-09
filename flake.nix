@@ -32,13 +32,14 @@
 
           SITE_URL = "http://app.rigseprod.docker";
           SITE_NAME = "Test Portal";
-          AUTHORING_SITE_URL= "https://authoring.staging.concord.org";
+          AUTHORING_SITE_URL = "https://authoring.staging.concord.org";
           THEME = "learn";
           HELP_EMAIL = "help@concord.org";
           ADMIN_EMAIL = "admin@concord.org";
           TOP_LEVEL_CONTAINER_NAME = "Sequence";
           SITE_KEY = "123456";
           RAILS_STDOUT_LOGGING = "true";
+          GOOGLE_ANALYTICS_MEASUREMENT_ID = "G-G4ZNE5X0T6";
 
           packages = with pkgs; [
             ruby_2_7
