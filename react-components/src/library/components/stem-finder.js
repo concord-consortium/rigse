@@ -248,7 +248,7 @@ const StemFinder = Component({
 
     let keyword = jQuery.trim(this.state.searchInput)
     if (keyword !== '') {
-      gtag('event', 'click', {
+      gtag('event', 'search', {
         'category': 'Home Page Search',
         'action': 'search',
         'label': keyword,
@@ -543,9 +543,8 @@ const StemFinder = Component({
       this.search()
     })
 
-    gtag('event', 'click', {
+    gtag('event', 'selection', {
       'category': 'Finder Sort',
-      'action': 'Selection',
       'label': e.target.value,
     });
   },
