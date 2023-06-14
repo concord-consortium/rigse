@@ -250,7 +250,6 @@ const StemFinder = Component({
     if (keyword !== '') {
       gtag('event', 'search', {
         'category': 'Home Page Search',
-        'action': 'search',
         'label': keyword,
       });
     }

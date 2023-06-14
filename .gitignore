@@ -24,6 +24,7 @@ certs
 pems
 .env
 *.DS_Store
+rails/config/credentials.yml.enc
 
 react-components/dist
 react-components/coverage
