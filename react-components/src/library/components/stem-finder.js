@@ -248,7 +248,10 @@ const StemFinder = Component({
 
     let keyword = jQuery.trim(this.state.searchInput)
     if (keyword !== '') {
-      ga('send', 'event', 'Home Page Search', 'Search', keyword)
+      gtag('event', 'search', {
+        'category': 'Home Page Search',
+        'label': keyword,
+      });
     }
 
     this.setState({
@@ -346,7 +349,11 @@ const StemFinder = Component({
         subjectAreasSelectedMap[subjectArea.key] = subjectArea
         subjectAreasSelected.push(subjectArea)
         jQuery('#' + css[filterId]).addClass(css.selected)
-        ga('send', 'event', 'Home Page Filter', 'Click', subjectArea.title)
+        gtag('event', 'click', {
+          'category': 'Home Page Filter',
+          'label': subjectArea.title,
+        });
+
       } else {
         subjectAreasSelectedMap[subjectArea.key] = undefined
         subjectAreasSelected.splice(index, 1)
@@ -386,7 +393,10 @@ const StemFinder = Component({
         gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel
         gradeLevelsSelected.push(gradeLevel)
         jQuery('#' + css[filterId]).addClass(css.selected)
-        ga('send', 'event', 'Home Page Filter', 'Click', gradeLevel.title)
+        gtag('event', 'click', {
+          'category': 'Home Page Filter',
+          'label': gradeLevel.title,
+        });
       } else {
         gradeLevelsSelectedMap[gradeLevel.key] = undefined
         gradeLevelsSelected.splice(index, 1)
@@ -442,7 +452,10 @@ const StemFinder = Component({
       hideFeatured: true,
       includeOfficial: !this.state.includeOfficial
     }, this.search)
-    ga('send', 'event', 'Home Page Filter', 'Click', 'Official')
+    gtag('event', 'click', {
+      'category': 'Home Page Filter',
+      'label': 'Official',
+    });
   },
 
   handleCommunityClick: function (e) {
@@ -451,7 +464,10 @@ const StemFinder = Component({
       hideFeatured: true,
       includeContributed: !this.state.includeContributed
     }, this.search)
-    ga('send', 'event', 'Home Page Filter', 'Click', 'Community')
+    gtag('event', 'click', {
+      'category': 'Home Page Filter',
+      'label': 'Community',
+    });
   },
 
   clearFilters: function () {
@@ -476,7 +492,10 @@ const StemFinder = Component({
     if (index === -1) {
       selectedFilters.push(filter)
       jQuery('#' + filter.key).addClass(css.selected)
-      ga('send', 'event', 'Home Page Filter', 'Click', filter.title)
+      gtag('event', 'click', {
+        'category': 'Home Page Filter',
+        'label': filter.title,
+      });
     } else {
       selectedFilters.splice(index, 1)
       jQuery('#' + filter.key).removeClass(css.selected)
@@ -490,7 +509,7 @@ const StemFinder = Component({
     this.setState({ searchInput })
   },
 
-  handleSearchSubmit (e) {
+  handleSearchSubmit(e) {
     e.preventDefault()
     e.stopPropagation()
     this.search()
@@ -501,7 +520,7 @@ const StemFinder = Component({
     })
   },
 
-  handleAutoSuggestSubmit (searchInput) {
+  handleAutoSuggestSubmit(searchInput) {
     this.setState({
       hideFeatured: true,
       initPage: false
@@ -512,7 +531,7 @@ const StemFinder = Component({
     })
   },
 
-  handleSortSelection (e) {
+  handleSortSelection(e) {
     e.preventDefault()
     e.stopPropagation()
     this.setState({
@@ -523,7 +542,10 @@ const StemFinder = Component({
       this.search()
     })
 
-    ga('send', 'event', 'Finder Sort', 'Selection', e.target.value)
+    gtag('event', 'selection', {
+      'category': 'Finder Sort',
+      'label': e.target.value,
+    });
   },
 
   renderSearch: function () {

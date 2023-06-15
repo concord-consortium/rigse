@@ -47,9 +47,9 @@ ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbg
 # E.g. EXTERNAL_CSS_URL=http://localhost:10000/site-redesign/site-redesign.css
 #
 
-# GOOGLE_ANALYTICS_ACCOUNT
+# GOOGLE_ANALYTICS_MEASUREMENT_ID
 #
-# Key for the GA account.
+# Key for the GA measurement ID.
 
 # SCHOOLOGY_CONSUMER_KEY
 # SCHOOLOGY_CONSUMER_SECRET

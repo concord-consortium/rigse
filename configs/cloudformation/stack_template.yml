@@ -489,8 +489,8 @@ Resources:
               Value: !Ref ExternalCSSURL
             - Name: ASN_API_KEY
               Value: !Ref ASNAPIKey
-            - Name: GOOGLE_ANALYTICS_ACCOUNT
-              Value: !Ref GoogleAnalyticsAccount
+            - Name: GOOGLE_ANALYTICS_MEASUREMENT_ID
+              Value: !Ref GoogleAnalyticsMeasurementID
             - Name: GOOGLE_OPTIMIZER_ACCOUNT
               Value: !Ref GoogleOptimizerAccount
             - Name: GOOGLE_CLIENT_KEY
@@ -800,10 +800,8 @@ Resources:
               Value: "true"
             - Name: UNICORN_TIMEOUT
               Value: "300"
-            - Name: GOOGLE_ANALYTICS_ACCOUNT
-              Value: !Ref GoogleAnalyticsAccount
-            - Name: GOOGLE_OPTIMIZER_ACCOUNT
-              Value: !Ref GoogleOptimizerAccount
+            - Name: GOOGLE_ANALYTICS_MEASUREMENT_ID
+              Value: !Ref GoogleAnalyticsMeasurementID
             - Name: GOOGLE_CLIENT_KEY
               Value: !Ref GoogleClientKey
             - Name: GOOGLE_CLIENT_SECRET
@@ -1039,8 +1037,8 @@ Resources:
               Value: !Ref ExternalCSSURL
             - Name: ASN_API_KEY
               Value: !Ref ASNAPIKey
-            - Name: GOOGLE_ANALYTICS_ACCOUNT
-              Value: !Ref GoogleAnalyticsAccount
+            - Name: GOOGLE_ANALYTICS_MEASUREMENT_ID
+              Value: !Ref GoogleAnalyticsMeasurementID
             - Name: GOOGLE_OPTIMIZER_ACCOUNT
               Value: !Ref GoogleOptimizerAccount
             - Name: GOOGLE_CLIENT_KEY

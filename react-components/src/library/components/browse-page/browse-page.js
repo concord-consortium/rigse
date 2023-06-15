@@ -38,32 +38,50 @@ const BrowsePage = Component({
 
   handlePreviewClick: function (e) {
     const resource = this.state.resource
-    ga('send', 'event', 'Browse Page - Resource Preview Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Browse Page - Resource Preview Button',
+      'resource': resource.name,
+    });
   },
 
   handleTeacherEditionClick: function (e) {
     const resource = this.state.resource
-    ga('send', 'event', 'Browse Page - Resource Teacher Edition Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Browse Page - Resource Teacher Edition Button',
+      'resource': resource.name,
+    });
   },
 
   handleTeacherResourcesClick: function (e) {
     const resource = this.state.resource
-    ga('send', 'event', 'Browse Page - Resource Teacher Resources Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'browse page - resource teacher resources button',
+      'resource': resource.name,
+    });
   },
 
   handleAssignClick: function (e) {
     const resource = this.state.resource
-    ga('send', 'event', 'Browse Page - Assign to Class Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Browse Page - Assign to Class Button',
+      'resource': resource.name,
+    });
   },
 
   handleTeacherGuideClick: function (e) {
     const resource = this.state.resource
-    ga('send', 'event', 'Browse Page - Teacher Guide Link', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Browse Page - Teacher Guide Link',
+      'resource': resource.name,
+    });
   },
 
   handleAddToCollectionClick: function (e) {
     const resource = this.state.resource
-    ga('send', 'event', 'Browse Page - Add to Collection Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Browse Page - Add to Collection Button',
+      'resource': resource.name,
+    });
   },
 
   handleSocialMediaShare: function (e) {
@@ -74,12 +92,15 @@ const BrowsePage = Component({
     const top = (jQuery(window).height() - height) / 2
     const url = e.target.href
     const opts = 'status=1' +
-               ',width=' + width +
-               ',height=' + height +
-               ',top=' + top +
-               ',left=' + left
+      ',width=' + width +
+      ',height=' + height +
+      ',top=' + top +
+      ',left=' + left
     window.open(url, 'social-media-share', opts)
-    ga('send', 'event', 'Browse Page - Resource ' + e.target.text + ' Button', 'Click', this.props.resource.name)
+    gtag('event', 'click', {
+      'category': 'Browse Page - Resource ',
+      'resource': this.props.resource.name,
+    });
   },
 
   renderIncludedActivities: function () {

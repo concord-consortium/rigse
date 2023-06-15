@@ -94,10 +94,16 @@ const StemFinderResult = Component({
     }.bind(this)
     if (resource.is_favorite) {
       jQuery.post('/api/v1/materials/remove_favorite', { favorite_id: resource.favorite_id }, done)
-      ga('send', 'event', 'Favorite Button', 'Click', `${resource.name} removed from favorites`)
+      gtag('event', 'click', {
+        'category': 'Favorite Button',
+        'resource': `${resource.name} removed from favorites`,
+      });
     } else {
       jQuery.post('/api/v1/materials/add_favorite', { id: resource.id, material_type: resource.class_name_underscored }, done)
-      ga('send', 'event', 'Favorite Button', 'Click', `${resource.name} added to favorites`)
+      gtag('event', 'click', {
+        'category': 'Favorite Button',
+        'resource': `${resource.name} added to favorites`,
+      });
     }
   },
 
@@ -168,37 +174,58 @@ const StemFinderResult = Component({
 
   handlePreviewClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Resource Preview Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Resource Preview Button',
+      'resource': resource.name,
+    });
   },
 
   handleViewCollectionClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Resource View Collection Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Resource View Collection Button',
+      'resource': resource.name,
+    });
   },
 
   handleTeacherEditionClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Resource Teacher Edition Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Resource Teacher Edition Button',
+      'resource': resource.name,
+    });
   },
 
   handleTeacherResourcesClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Resource Teacher Resources Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Resource Teacher Resources Button',
+      'resource': resource.name,
+    });
   },
 
   handleAssignClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Assign to Class Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Assign to Class Button',
+      'resource': resource.name,
+    });
   },
 
   handleTeacherGuideClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Teacher Guide Link', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Teacher Guide Link',
+      'resource': resource.name,
+    });
   },
 
   handleAddToCollectionClick: function (e) {
     const { resource } = this.props
-    ga('send', 'event', 'Add to Collection Button', 'Click', resource.name)
+    gtag('event', 'click', {
+      'category': 'Add to Collection Button',
+      'resource': resource.name,
+    });
   },
 
   renderLinks: function () {

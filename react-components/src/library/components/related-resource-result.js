@@ -15,7 +15,10 @@ const RelatedResourceResult = Component({
     e.preventDefault()
     e.stopPropagation()
     this.props.replaceResource(this.props.resource)
-    ga('send', 'event', 'Related Resource Card', 'Click', this.props.resource.name)
+    gtag('event', 'click', {
+      'category': 'Related Resource Card',
+      'resource': this.props.resource.name,
+    });
   },
 
   render: function () {
