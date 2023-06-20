@@ -160,9 +160,9 @@ Parameters:
   ASNAPIKey:
     Type: String
     Description: key to access the ASN apis for searching standards
-  GoogleAnalyticsAccount:
+  GoogleAnalyticsMeasurementID:
     Type: String
-    Description: key for Google Analytics
+    Description: Measurement ID for Google Analytics Property
   GoogleOptimizerAccount:
     Type: String
     Description: key for Google Optimize
