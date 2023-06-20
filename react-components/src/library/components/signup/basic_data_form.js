@@ -17,7 +17,7 @@ const enableAuthProviders = true
 const nameValidator = (value) => jQuery.get(Portal.API_V1.NAME_VALID + '?name=' + value)
 
 export default class BasicDataForm extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       canSubmit: false,
@@ -30,34 +30,34 @@ export default class BasicDataForm extends React.Component {
     this.submit = this.submit.bind(this)
   }
 
-  onChange(model) {
+  onChange (model) {
     this.setState({
       password: model.password
     })
   }
 
-  onBasicFormValid() {
+  onBasicFormValid () {
     const anonymous = this.props.anonymous
     this.setState({
       canSubmit: !anonymous || (this.refs.firstName.isValidAsync() && this.refs.lastName.isValidAsync())
     })
   }
 
-  onBasicFormInvalid() {
+  onBasicFormInvalid () {
     this.setState({
       canSubmit: false
     })
   }
 
-  submit(model) {
+  submit (model) {
     gtag('event', 'click', {
       'category': 'User Registration',
-      'label': 'Form step 2 completed',
-    });
+      'label': 'Form step 2 completed'
+    })
     this.props.onSubmit(model)
   }
 
-  render() {
+  render () {
     const anonymous = this.props.anonymous
 
     const firstNameValidator = asyncValidator({

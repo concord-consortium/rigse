@@ -8,7 +8,7 @@ import { pack } from "../../helpers/pack"
 
 Enzyme.configure({adapter: new Adapter()})
 
-window.ga = jest.fn()
+window.gtag = jest.fn()
 
 describe('When I try to render signup teacher registration complete', () => {
 

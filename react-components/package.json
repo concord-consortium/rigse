@@ -24,7 +24,7 @@
       "Portal",
       "PortalComponents",
       "DayPickerOverlay",
-      "ga"
+      "gtag"
     ]
   },
   "jest": {

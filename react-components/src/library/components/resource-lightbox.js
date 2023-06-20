@@ -110,48 +110,48 @@ var ResourceLightbox = Component({
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Resource Preview Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherEditionClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Resource Teacher Edition Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherResourcesClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Resource Teacher Resources Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleAssignClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Assign to Class Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherGuideClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Teacher Guide Link',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleAddToCollectionClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Add to Collection Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleClose: function (e) {
@@ -186,8 +186,8 @@ var ResourceLightbox = Component({
     window.open(url, 'social-media-share', opts)
     gtag('event', 'click', {
       'category': 'Resource Lightbox ' + e.target.text + ' Button',
-      'resource': this.props.resource.name,
-    });
+      'resource': this.props.resource.name
+    })
   },
 
   renderIncludedActivities: function () {
