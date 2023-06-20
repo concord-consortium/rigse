@@ -3,6 +3,8 @@ ARG RUBY_VERSION=2.7
 # See: https://github.com/docker-library/ruby/issues/351#issue-940462153
 FROM docker.io/ruby:${RUBY_VERSION}-alpine3.12
 
+RUN true
+
 RUN apk add \
   # The Ruby Gem "delayed-web" has a transitive depdency for "racc" which builds
   # native extensions and requires a C toolchain (it attempts to use gcc):
@@ -24,7 +26,7 @@ RUN apk add \
   # See: https://github.com/rails/execjs#execjs
   nodejs \
   # "/usr/local/bundle/gems/tzinfo-2.0.4/lib/tzinfo/data_source.rb:159:in
-  # `rescue in create_default_data_source': tzinfo-data is not present. Please add gem 'tzinfo-data' 
+  # `rescue in create_default_data_source': tzinfo-data is not present. Please add gem 'tzinfo-data'
   # to your Gemfile and run bundle install (TZInfo::DataSourceNotFound)"
   tzdata \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
