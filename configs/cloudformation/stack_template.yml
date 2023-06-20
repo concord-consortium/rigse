@@ -18,6 +18,7 @@ Parameters:
         star.portal.concord.org,
         star.staging.concord.org,
         star.concordqa.org,
+        star.portal.staging.concord.org,
       ]
     Description:
       Certificates registered with AWS. Choose which one to use for the
@@ -1223,6 +1224,8 @@ Mappings:
       Id: arn:aws:acm:us-east-1:612297603577:certificate/9c26b1e0-4ba7-4016-babc-34b3e13e8c21
     star.concordqa.org:
       Id: arn:aws:acm:us-east-1:816253370536:certificate/7b8bb00e-7aa4-4b9f-a722-f49c828af83c
+    star.portal.staging.concord.org:
+      Id: arn:aws:acm:us-east-1:612297603577:certificate/5ee467e7-ace6-4a8d-8016-5eb72c254dfa
 
 Metadata:
   AWS::CloudFormation::Interface:
