@@ -96,14 +96,14 @@ const StemFinderResult = Component({
       jQuery.post('/api/v1/materials/remove_favorite', { favorite_id: resource.favorite_id }, done)
       gtag('event', 'click', {
         'category': 'Favorite Button',
-        'resource': `${resource.name} removed from favorites`,
-      });
+        'resource': `${resource.name} removed from favorites`
+      })
     } else {
       jQuery.post('/api/v1/materials/add_favorite', { id: resource.id, material_type: resource.class_name_underscored }, done)
       gtag('event', 'click', {
         'category': 'Favorite Button',
-        'resource': `${resource.name} added to favorites`,
-      });
+        'resource': `${resource.name} added to favorites`
+      })
     }
   },
 
@@ -176,56 +176,56 @@ const StemFinderResult = Component({
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Resource Preview Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleViewCollectionClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Resource View Collection Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherEditionClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Resource Teacher Edition Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherResourcesClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Resource Teacher Resources Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleAssignClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Assign to Class Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherGuideClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Teacher Guide Link',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleAddToCollectionClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
       'category': 'Add to Collection Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   renderLinks: function () {

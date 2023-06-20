@@ -40,48 +40,48 @@ const BrowsePage = Component({
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Resource Preview Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherEditionClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Resource Teacher Edition Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherResourcesClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'browse page - resource teacher resources button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleAssignClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Assign to Class Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleTeacherGuideClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Teacher Guide Link',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleAddToCollectionClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Add to Collection Button',
-      'resource': resource.name,
-    });
+      'resource': resource.name
+    })
   },
 
   handleSocialMediaShare: function (e) {
@@ -99,8 +99,8 @@ const BrowsePage = Component({
     window.open(url, 'social-media-share', opts)
     gtag('event', 'click', {
       'category': 'Browse Page - Resource ',
-      'resource': this.props.resource.name,
-    });
+      'resource': this.props.resource.name
+    })
   },
 
   renderIncludedActivities: function () {

@@ -250,8 +250,8 @@ const StemFinder = Component({
     if (keyword !== '') {
       gtag('event', 'search', {
         'category': 'Home Page Search',
-        'label': keyword,
-      });
+        'label': keyword
+      })
     }
 
     this.setState({
@@ -351,9 +351,8 @@ const StemFinder = Component({
         jQuery('#' + css[filterId]).addClass(css.selected)
         gtag('event', 'click', {
           'category': 'Home Page Filter',
-          'label': subjectArea.title,
-        });
-
+          'label': subjectArea.title
+        })
       } else {
         subjectAreasSelectedMap[subjectArea.key] = undefined
         subjectAreasSelected.splice(index, 1)
@@ -395,8 +394,8 @@ const StemFinder = Component({
         jQuery('#' + css[filterId]).addClass(css.selected)
         gtag('event', 'click', {
           'category': 'Home Page Filter',
-          'label': gradeLevel.title,
-        });
+          'label': gradeLevel.title
+        })
       } else {
         gradeLevelsSelectedMap[gradeLevel.key] = undefined
         gradeLevelsSelected.splice(index, 1)
@@ -454,8 +453,8 @@ const StemFinder = Component({
     }, this.search)
     gtag('event', 'click', {
       'category': 'Home Page Filter',
-      'label': 'Official',
-    });
+      'label': 'Official'
+    })
   },
 
   handleCommunityClick: function (e) {
@@ -466,8 +465,8 @@ const StemFinder = Component({
     }, this.search)
     gtag('event', 'click', {
       'category': 'Home Page Filter',
-      'label': 'Community',
-    });
+      'label': 'Community'
+    })
   },
 
   clearFilters: function () {
@@ -494,8 +493,8 @@ const StemFinder = Component({
       jQuery('#' + filter.key).addClass(css.selected)
       gtag('event', 'click', {
         'category': 'Home Page Filter',
-        'label': filter.title,
-      });
+        'label': filter.title
+      })
     } else {
       selectedFilters.splice(index, 1)
       jQuery('#' + filter.key).removeClass(css.selected)
@@ -509,7 +508,7 @@ const StemFinder = Component({
     this.setState({ searchInput })
   },
 
-  handleSearchSubmit(e) {
+  handleSearchSubmit (e) {
     e.preventDefault()
     e.stopPropagation()
     this.search()
@@ -520,7 +519,7 @@ const StemFinder = Component({
     })
   },
 
-  handleAutoSuggestSubmit(searchInput) {
+  handleAutoSuggestSubmit (searchInput) {
     this.setState({
       hideFeatured: true,
       initPage: false
@@ -531,7 +530,7 @@ const StemFinder = Component({
     })
   },
 
-  handleSortSelection(e) {
+  handleSortSelection (e) {
     e.preventDefault()
     e.stopPropagation()
     this.setState({
@@ -544,8 +543,8 @@ const StemFinder = Component({
 
     gtag('event', 'selection', {
       'category': 'Finder Sort',
-      'label': e.target.value,
-    });
+      'label': e.target.value
+    })
   },
 
   renderSearch: function () {

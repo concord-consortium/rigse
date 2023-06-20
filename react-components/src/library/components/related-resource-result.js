@@ -17,8 +17,8 @@ const RelatedResourceResult = Component({
     this.props.replaceResource(this.props.resource)
     gtag('event', 'click', {
       'category': 'Related Resource Card',
-      'resource': this.props.resource.name,
-    });
+      'resource': this.props.resource.name
+    })
   },
 
   render: function () {

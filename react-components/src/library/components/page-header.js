@@ -54,8 +54,8 @@ const PageHeader = Component({
       })
     gtag('event', 'click', {
       'category': 'User Authentication',
-      'label': 'User login button clicked',
-    });
+      'label': 'User login button clicked'
+    })
   },
 
   handleRegisterButton: function (e) {
@@ -66,8 +66,8 @@ const PageHeader = Component({
     )
     gtag('event', 'click', {
       'category': 'User Registration',
-      'label': 'User register button clicked',
-    });
+      'label': 'User register button clicked'
+    })
   },
 
   handleNavMenuToggle: function (e) {
