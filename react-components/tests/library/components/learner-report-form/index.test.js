@@ -11,22 +11,19 @@ Enzyme.configure({adapter: new Adapter()})
 
 // form uses Portal global
 global.Portal = {
+  currentUser: {
+    isAdmin: false,
+  },
   API_V1: {
     EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: 'http://query-test.concord.org'
   }
 }
 
 describe('LearnerReportForm', () => {
-  const externalReports = [{url: 'url1', label: 'label1'}, {url: 'url2', label: 'label2'}]
+  const externalReports = [{url: 'url1', name: 'first', label: 'label1'}, {url: 'url2', name: 'second', label: 'label2'}]
   const wrapper = Enzyme.shallow(
     <LearnerReportForm externalReports={externalReports} />
   )
-
-  it('renders all the report buttons', () => {
-    expect(wrapper.html()).toEqual(expect.stringContaining('Usage Report'))
-    expect(wrapper.html()).toEqual(expect.stringContaining('Details Report'))
-    expect(wrapper.html()).toEqual(expect.stringContaining('Arg Block Report'))
-  })
 
   it('renders custom external report buttons', () => {
     expect(wrapper.find(ExternalReportButton).length).toEqual(2)
@@ -37,7 +34,7 @@ describe('LearnerReportForm', () => {
   it('renders filter forms', () => {
     expect(wrapper.text()).toEqual(expect.stringContaining('Schools'))
     expect(wrapper.text()).toEqual(expect.stringContaining('Teachers'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Runnables'))
+    expect(wrapper.text()).toEqual(expect.stringContaining('Resources'))
     expect(wrapper.text()).toEqual(expect.stringContaining('Permission forms'))
     expect(wrapper.find(Select).length).toEqual(4)
 

@@ -11,13 +11,16 @@ Enzyme.configure({adapter: new Adapter()})
 
 // form uses Portal global
 global.Portal = {
+  currentUser: {
+    isAdmin: false,
+  },
   API_V1: {
     EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: 'http://query-test.concord.org'
   }
 }
 
 describe('UserReportForm', () => {
-  const externalReports = [{url: 'url1', label: 'label1'}, {url: 'url2', label: 'label2'}]
+  const externalReports = [{url: 'url1', name: 'first', label: 'label1'}, {url: 'url2', name: 'second', label: 'label2'}]
   const wrapper = Enzyme.shallow(
     <UserReportForm externalReports={externalReports} />
   )
@@ -31,7 +34,7 @@ describe('UserReportForm', () => {
   it('renders filter forms', () => {
     expect(wrapper.text()).toEqual(expect.stringContaining('Teachers'))
     expect(wrapper.text()).toEqual(expect.stringContaining('Cohorts'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Runnables'))
+    expect(wrapper.text()).toEqual(expect.stringContaining('Resources'))
     expect(wrapper.find(Select).length).toEqual(3)
 
     expect(wrapper.text()).toEqual(expect.stringContaining('Earliest date'))

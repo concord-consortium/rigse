@@ -33,6 +33,9 @@ export default class SMaterialInfo extends React.Component {
     if (material.links.teacher_guide) {
       links.push(material.links.teacher_guide)
     }
+    if (material.links.rubric_doc) {
+      links.push(material.links.rubric_doc)
+    }
     if (material.material_type !== 'Collection') {
       if (material.links.assign_material) {
         links.push(material.links.assign_material)

@@ -202,6 +202,9 @@ export class ExternalActivities {
   @Column("varchar", { name: "rubric_url", nullable: true, length: 255 })
   rubricUrl: string | null;
 
+  @Column("varchar", { name: "rubric_doc_url", nullable: true, length: 255 })
+  rubricDocUrl: string | null;
+
   @Column("tinyint", {
     name: "saves_student_data",
     nullable: true,

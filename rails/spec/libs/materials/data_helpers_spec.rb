@@ -18,7 +18,8 @@ describe DataHelpersTestController, type: :controller do
       is_locked: false,
       teacher_copyable: true,
       teacher_resources_url: host + '/teacher-resources',
-      teacher_guide_url: host + '/teacher-guide'
+      teacher_guide_url: host + '/teacher-guide',
+      rubric_doc_url: host + '/rubric-doc'
     )
   }
   let(:materials)  { [material_a] }
@@ -159,22 +160,26 @@ describe DataHelpersTestController, type: :controller do
       expect(external_edit_iframe[:url]).not_to be_empty
     end
 
-    it "should return values for teacher resource and teacher guide if a teacher is logged in" do
+    it "should return values for teacher resource, teacher guide and rubric if a teacher is logged in" do
       sign_in teacher_user.user
       links = controller.send(:links_for_material, material_a)
       teacher_resources = links[:teacher_resources]
       teacher_guide = links[:teacher_guide]
+      rubric_doc = links[:rubric_doc]
       expect(teacher_resources).not_to be_empty
       expect(teacher_guide).not_to be_empty
+      expect(rubric_doc).not_to be_empty
     end
 
-    it "should not return values for teacher resource and teacher guide to guests" do
+    it "should not return values for teacher resource, teacher guide and rubric to guests" do
       sign_in guest
       links = controller.send(:links_for_material, material_a)
       teacher_resources = links[:teacher_resources]
       teacher_guide = links[:teacher_guide]
+      rubric_doc = links[:rubric_doc]
       expect(teacher_resources).to be_nil
       expect(teacher_guide).to be_nil
+      expect(rubric_doc).to be_nil
     end
   end
 

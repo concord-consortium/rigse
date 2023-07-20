@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_20_192316) do
+ActiveRecord::Schema.define(version: 2023_07_20_110611) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -265,6 +265,7 @@ ActiveRecord::Schema.define(version: 2023_03_20_192316) do
     t.text "teacher_resources_url"
     t.boolean "teacher_copyable"
     t.text "legacy_lara_url"
+    t.string "rubric_doc_url"
     t.index ["is_featured", "publication_status"], name: "featured_public"
     t.index ["publication_status"], name: "pub_status"
     t.index ["save_path"], name: "index_external_activities_on_save_path"

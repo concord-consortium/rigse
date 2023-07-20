@@ -67,7 +67,8 @@ en:
     external_report_label: External Reporting
     external_report_description: Specify additional report links to be shown to teachers in the offering view. Unless you know what you are doing selecting none is recommended.
     report_client: Report Auth Client
-    rubric_url_label: Rubric (URL)
+    rubric_url_label: Rubric JSON (URL)
+    rubric_doc_url_label: Rubric Document (URL)
     short_description_description: Shown in search results, student listings, and used as a fallback for long descrption. It is recommended that every activity has this value provided.
     long_description_description: Shown in places where activity details are vible (e.g. STEM Resource finder lightbox). Uses Short Description as a fallback.
     long_description_for_teachers_description: Variant of Long Description visible only for teachers. Uses Long Description as a fallback.

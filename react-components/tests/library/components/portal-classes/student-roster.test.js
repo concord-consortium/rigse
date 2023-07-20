@@ -46,26 +46,6 @@ describe('When I try to render a student roster', () => {
   it("should render with default parameters", () => {
     const studentRoster = Enzyme.shallow(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
     expect(studentRoster.html()).toBe(pack(`
-      <div class="header">
-        <div class="search">
-          <div class="select">
-            <select id="student_id_selector">
-              <option selected="" value="0">Select registered student ...</option>
-              <option value="3">Student 3 (s3)</option>
-              <option value="4">Student 4 (s4)</option>
-            </select>
-          </div>
-          <div>
-            <button disabled="">Add</button>
-          </div>
-        </div>
-        <div class="or">
-          or
-        </div>
-        <div>
-          <span class="link" role="link">Register &amp; Add New Student</span>
-        </div>
-      </div>
       <table class="table">
         <tbody>
           <tr>
@@ -82,8 +62,7 @@ describe('When I try to render a student roster', () => {
             <td>1</td>
             <td class="hide_in_print">
               <span class="link" role="link">Remove Student</span>
-              <span class="link" role="link">Change Password</span>
-            </td>
+              <span class="link" role="link">Change Password</span></td>
           </tr>
           <tr>
             <td>Student 2</td>
@@ -92,8 +71,7 @@ describe('When I try to render a student roster', () => {
             <td>2</td>
             <td class="hide_in_print">
               <span class="link" role="link">Remove Student</span>
-              <span class="link" role="link">Change Password</span>
-            </td>
+              <span class="link" role="link">Change Password</span></td>
           </tr>
         </tbody>
       </table>

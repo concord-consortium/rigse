@@ -61,8 +61,14 @@
         - else
           = f.check_box :has_teacher_edition, :disabled => true
         This activity has a teacher edition.
+    = field_set_tag t('authoring.rubric_doc_url_label') do
+      = f.text_field :rubric_doc_url, :size => 60
+      %br
+      This is the URL to the human-readable rubric document.
     = field_set_tag t('authoring.rubric_url_label') do
       = f.text_field :rubric_url, :size => 60
+      %br
+      This is the URL to the machine-readable rubric data.
     = field_set_tag 'Thumbnail image URL (300 x 250 px)' do
       = f.text_field :thumbnail_url, :size => 60
     = field_set_tag 'Feature On Landing Page' do

@@ -427,6 +427,16 @@ module Materials
         end
       end
 
+      if material.respond_to?(:rubric_doc_url) && !material.rubric_doc_url.blank?
+        if current_visitor.portal_teacher || current_visitor.has_role?('admin','manager')
+          links[:rubric_doc] = {
+            text: "Rubric",
+            target: "_blank",
+            url: material.rubric_doc_url
+          }
+        end
+      end
+
       if policy(material).edit?
         links[:edit] = {
           text: "(portal settings)",
