@@ -5,7 +5,7 @@
 %br
 Clear everything from this editor and save the settings to reset the content to default.)
 - about_page_text_area_id = dom_id_for(admin_settings, :about_page_content, :textarea)
-= f.text_area :about_page_content, :id => about_page_text_area_id, :class => 'mceNoEditor'
+= f.text_area :about_page_content, :id => about_page_text_area_id, :class => 'mceNoEditor htmlContentEditor'
 %input{:type=>"button", :value=>"Preview About Page", :onclick=>"preview_about_page('#{about_page_text_area_id}', null);", :class=>"button", :style=>"margin-top: 10px; font-size: 13px"}
 %br
 %br
