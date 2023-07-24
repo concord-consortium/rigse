@@ -8,7 +8,7 @@
     No help link
   %br
   (This option will remove the help link from the menu.)
-%br  
+%br
   - help_external_url_id = "help_external_url_for_settings_#{admin_settings.id}"
   = f.radio_button :help_type,"external url",:id=> "#{help_external_url_id}",:style=>"margin-top:10px"
   %label{:for=>"#{help_external_url_id}", :style=>"margin-left : 10px"}
@@ -26,6 +26,6 @@
   %br
   (This option will display a custom help page to users. Enter the custom HTML for the help page below.)
   - custom_help_page_html_textarea_id = "custom_help_page_html_textarea_for_settings_#{admin_settings.id}"
-  = f.text_area :custom_help_page_html, :id => "#{custom_help_page_html_textarea_id}", :class => 'mceNoEditor'
+  = f.text_area :custom_help_page_html, :id => "#{custom_help_page_html_textarea_id}", :class => 'mceNoEditor htmlContentEditor'
   %input{:type=>"button", :value=>"Preview Custom Help Page", :onclick=>"openPreviewHelpPage(false, '#{custom_help_page_html_textarea_id}', true, '')", :class=>"button" , :style=>"margin-top: 10px; font-size: 13px"}
-  
+

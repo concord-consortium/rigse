@@ -34,15 +34,19 @@
     }
    }
 
-  // This function should be called after a materials collection is fully loaded on a 
-  // landing page via PortalPages.renderMaterialsCollection(). In the case that the 
-  // collection page is embedded in a class's assign lightbox via an iframe, it ensures 
+  // This function should be called after a materials collection is fully loaded on a
+  // landing page via PortalPages.renderMaterialsCollection(). In the case that the
+  // collection page is embedded in a class's assign lightbox via an iframe, it ensures
   // that the iframe is resized to show the collection's entire contents.
-  function cleanUpAssignViewAdjustment() {
+  function cleanUpAssignViewAdjustment(options) {
     if (isAssignWrapped) {
       setParentIframeHeight();
       jQuery('#collectionIframe', window.parent.document).css({'visibility': 'visible'});
       jQuery('#collectionIframeLoading', window.parent.document).css({'display': 'none'});
+    }
+    if (options && options.skipAnimation) {
+      jQuery(".resourceItem").css('transition', 'none').css('opacity', 1);
+      return;
     }
     jQuery(".resourceItem").animate({'opacity': 1}, 500);
   }

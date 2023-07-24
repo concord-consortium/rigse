@@ -47,6 +47,7 @@ import ResourceRequirements from './components/browse-page/resource-requirements
 import ResourceLicense from './components/browse-page/resource-license'
 import ResourceProjects from './components/browse-page/resource-projects'
 import showTab from './helpers/tabs'
+import { loadMaterialsCollections } from './helpers/materials-collection-cache'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
@@ -200,6 +201,13 @@ window.PortalComponents = {
   renderSignupForm: signupFunctions.renderSignupForm,
 
   MaterialsCollection: MaterialsCollection,
+
+  // this loads a set of materials collections in a single AJAX call and caches them for use
+  // in a later call to renderMaterialsCollection
+  loadMaterialsCollections: function (ids, callback) {
+    loadMaterialsCollections(ids, callback)
+  },
+
   // this is a different format to match to existing project pages which had 2 formats itself
   renderMaterialsCollection: function (collectionId, selectorOrElement, limitOrOptions) {
     let options = limitOrOptions || {}
