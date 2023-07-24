@@ -6,6 +6,7 @@
 import React from 'react'
 
 import SMaterialsList from '../search/materials-list'
+import { loadMaterialsCollection } from '../../helpers/materials-collection-cache'
 
 const shuffle = function (a) {
   let idx = a.length
@@ -32,21 +33,15 @@ export default class MaterialsCollection extends React.Component {
   componentDidMount () {
     this.mounted = true
     const { randomize, onDataLoad } = this.props
-    jQuery.ajax({
-      url: Portal.API_V1.MATERIALS_BIN_COLLECTIONS,
-      data: { id: this.props.collection },
-      dataType: 'json',
-      success: data => {
-        let { materials } = data[0]
-        if (randomize) {
-          materials = shuffle(materials)
-        }
-        if (onDataLoad) {
-          onDataLoad(materials)
-        }
-        if (this.mounted) {
-          this.setState({ materials })
-        }
+    loadMaterialsCollection(this.props.collection, ({ materials }) => {
+      if (randomize) {
+        materials = shuffle(materials)
+      }
+      if (onDataLoad) {
+        onDataLoad(materials)
+      }
+      if (this.mounted) {
+        this.setState({ materials })
       }
     })
   }

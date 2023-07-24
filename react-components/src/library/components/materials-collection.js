@@ -3,11 +3,13 @@ import Component from '../helpers/component'
 import shuffleArray from '../helpers/shuffle-array'
 import stemFinderResult from './stem-finder-result'
 import portalObjectHelpers from '../helpers/portal-object-helpers'
+import { loadMaterialsCollection } from '../helpers/materials-collection-cache'
 
 const MaterialsCollection = Component({
   getInitialState: function () {
     return {
-      materials: []
+      materials: [],
+      loadedData: false
     }
   },
 
@@ -18,34 +20,39 @@ const MaterialsCollection = Component({
   },
 
   UNSAFE_componentWillMount: function () {
-    jQuery.ajax({
-      url: Portal.API_V1.MATERIALS_BIN_COLLECTIONS,
-      data: { id: this.props.collection,
-        skip_lightbox_reloads: true
-      },
-      dataType: 'json',
-      success: function (data) {
-        let materials = data[0].materials
-        if (this.props.randomize) {
-          materials = shuffleArray(materials)
+    loadMaterialsCollection(this.props.collection, function (data) {
+      let materials = data.materials
+      if (this.props.randomize) {
+        materials = shuffleArray(materials)
+      }
+      if (this.props.featured) {
+        // props.featured is the ID of the material we
+        // wish to insert at the start of the list
+        let featuredID = this.props.featured
+        let sortFeatured = function (a, b) {
+          if (a.id === featuredID) return -1
+          if (b.id === featuredID) return 1
+          return 0
         }
-        if (this.props.featured) {
-          // props.featured is the ID of the material we
-          // wish to insert at the start of the list
-          let featuredID = this.props.featured
-          let sortFeatured = function (a, b) {
-            if (a.id === featuredID) return -1
-            if (b.id === featuredID) return 1
-            return 0
-          }
-          materials.sort(sortFeatured)
-        }
-        this.setState({ materials: materials })
-        if (this.props.onDataLoad) {
-          this.props.onDataLoad(materials)
-        }
-      }.bind(this)
-    })
+        materials.sort(sortFeatured)
+      }
+      this.setState({ materials: materials, loadedData: true })
+    }.bind(this))
+  },
+
+  componentDidMount: function () {
+    const checkForDataLoaded = () => {
+      if (!this.props.onDataLoad) {
+        return
+      }
+      if (this.state.loadedData) {
+        this.props.onDataLoad(this.state.materials)
+      } else {
+        setTimeout(checkForDataLoaded, 10)
+      }
+    }
+
+    checkForDataLoaded()
   },
 
   render: function () {
