@@ -85,6 +85,10 @@ describe('When I try to render search material info', () => {
           url: "http://example.com/teacher_guide",
           text: "teacher_guide text"
         },
+        rubric_doc: {
+          url: "http://example.com/rubric_doc",
+          text: "rubric_doc text"
+        },
         assign_material: {
           url: "http://example.com/assign_material",
           text: "assign_material text"
@@ -133,6 +137,9 @@ describe('When I try to render search material info', () => {
                     </div>
                     <div style="float:right;margin-right:5px">
                       <a href="http://example.com/teacher_guide" class="button">teacher_guide text</a>
+                    </div>
+                    <div style="float:right;margin-right:5px">
+                      <a href="http://example.com/rubric_doc" class="button">rubric_doc text</a>
                     </div>
                     <div style="float:right;margin-right:5px">
                       <a href="http://example.com/assign_material" class="button">assign_material text</a>

@@ -76,6 +76,14 @@ const BrowsePage = Component({
     })
   },
 
+  handleRubricDocClick: function (e) {
+    const resource = this.state.resource
+    gtag('event', 'click', {
+      'category': 'Browse Page - Rubric Doc Link',
+      'resource': resource.name
+    })
+  },
+
   handleAddToCollectionClick: function (e) {
     const resource = this.state.resource
     gtag('event', 'click', {
@@ -199,6 +207,7 @@ const BrowsePage = Component({
       <>
         {links.assign_material ? <a id={'assign-button'} className='portal-pages-secondary-button' href={`javascript: ${links.assign_material.onclick}`} onClick={this.handleAssignClick}>{links.assign_material.text}</a> : null}
         {Portal.currentUser.isTeacher && resource.has_teacher_edition ? <a className='teacherEditionLink portal-pages-secondary-button' href={MakeTeacherEditionLink(resource.external_url)} target='_blank' onClick={this.handleTeacherEditionClick}>Teacher Edition</a> : null}
+        {links.rubric_doc ? <a className='portal-pages-secondary-button' href={links.rubric_doc.url} target='_blank' onClick={this.handleRubricDocClick}>{links.rubric_doc.text}</a> : null}
         {links.teacher_resources ? <a className='teacherResourcesLink portal-pages-secondary-button' href={links.teacher_resources.url} target='_blank' onClick={this.handleTeacherResourcesClick}>{links.teacher_resources.text}</a> : null}
         {links.assign_collection ? <a className='portal-pages-secondary-button' href={`${links.assign_collection.url}`} onClick={this.handleAddToCollectionClick} target='_blank'>{links.assign_collection.text}</a> : null}
         {links.teacher_guide ? <a className='portal-pages-secondary-button' href={links.teacher_guide.url} target='_blank' onClick={this.handleTeacherGuideClick}>{links.teacher_guide.text}</a> : null}

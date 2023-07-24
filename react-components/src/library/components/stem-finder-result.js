@@ -204,6 +204,14 @@ const StemFinderResult = Component({
     })
   },
 
+  handleRubricDocClick: function (e) {
+    const { resource } = this.props
+    gtag('event', 'click', {
+      'category': 'Resource Rubric Doc Button',
+      'resource': resource.name
+    })
+  },
+
   handleAssignClick: function (e) {
     const { resource } = this.props
     gtag('event', 'click', {
@@ -264,6 +272,9 @@ const StemFinderResult = Component({
     const teacherResourcesLink = resource.links.teacher_resources && Portal.currentUser.isTeacher
       ? <a href={resource.links.teacher_resources.url} target='_blank' rel='noopener' onClick={this.handleTeacherResourcesClick}>{resource.links.teacher_resources.text}</a>
       : null
+    const rubricDocLink = resource.links.rubric_doc && Portal.currentUser.isTeacher
+      ? <a href={resource.links.rubric_doc.url} target='_blank' rel='noopener' onClick={this.handleRubricDocClick}>{resource.links.rubric_doc.text}</a>
+      : null
     const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.assign_collection.url} target='_blank' onClick={this.handleAddToCollectionClick}>{resource.links.assign_collection.text}</a>
       : null
@@ -275,6 +286,7 @@ const StemFinderResult = Component({
       <>
         {assignLink}
         {teacherEditionLink}
+        {rubricDocLink}
         {teacherGuideLink}
         {teacherResourcesLink}
         {editLink}
