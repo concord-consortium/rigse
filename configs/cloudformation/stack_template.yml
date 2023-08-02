@@ -262,6 +262,14 @@ Conditions:
   CreateLogStashCond: !Not [!Equals [!Ref LogStashDbHost, ""]]
 
 Resources:
+  # CloudWatch log group for the SSH logs of ECS "container instances" (confusing term for the EC2
+  # instances that run the container runtime and host ECS OCI containers)
+  SSHLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /ecs/container-instance-ssh-logs
+      RetentionInDays: 7
+
   LoadBalancerStack:
     Type: AWS::CloudFormation::Stack
     Properties:
