@@ -38,7 +38,7 @@ gem 'jquery-fileupload-rails'
 gem 'mimemagic', '0.3.10'
 gem 'mysql2', platforms: [:ruby, :mingw]
 
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.8', '>= 1.8.2'
 gem 'oj'
 gem 'omniauth'
 gem 'omniauth-google-oauth2' # For google login integration.
