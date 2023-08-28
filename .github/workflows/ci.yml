@@ -144,7 +144,7 @@ jobs:
             type=semver,pattern={{major}}
             type=ref,event=branch
             type=ref,event=pr
-            type=sha
+            type=sha,prefix=git-
       - name: Build & push Docker image
         uses: docker/build-push-action@v3
         with:
