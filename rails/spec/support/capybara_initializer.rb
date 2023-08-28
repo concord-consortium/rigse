@@ -25,6 +25,11 @@ class CapybaraInitializer
       Capybara.server_port = '43447'
     end
 
+    # ChromeDriver version shipped with GitHub Actions: https://github.com/actions/runner-images/blob/d5d4c565dffff750a33f0f7d020bc12a4a896d90/images/linux/Ubuntu2204-Readme.md?plain=1#L158
+    # Latest ChromeDriver version available for download: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+    # See: https://github.com/hitobito/hitobito/blob/c5a459a95feefc32f7caa4c3bd5b36c7cb149916/spec/spec_helper.rb#L190-L196
+    Webdrivers::Chromedriver.required_version = '114.0.5735.90' # Pin ChromeDriver version
+
     # Register the driver
     Capybara.register_driver(:selenium) { |app| driver(app) }
     Capybara.javascript_driver = :selenium
