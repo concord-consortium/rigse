@@ -85,7 +85,7 @@ jobs:
       # Install Google Chrome browser (that matches ChromeDriver version from previous Actions step)
       - name: Install Google Chrome
         run: |
-          curl -o /tmp/google_chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROMEDRIVER_VERSION}-1_amd64.deb
+          wget -O /tmp/google_chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROMEDRIVER_VERSION}-1_amd64.deb
           sudo dpkg -i /tmp/google_chrome.deb
 
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml
