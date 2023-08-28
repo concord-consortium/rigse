@@ -1,3 +1,5 @@
+require 'open-uri'
+
 $original_sunspot_session = Sunspot.session
 Sunspot.session = Sunspot::Rails::StubSessionProxy.new($original_sunspot_session)
 
@@ -20,7 +22,7 @@ module SolrSpecHelper
   end
 
   def test_solr_server
-    open("http://#{SOLR_HOST}:#{SOLR_PORT}/")
+    URI.open("http://#{SOLR_HOST}:#{SOLR_PORT}/")
   end
 
   def solr_setup
