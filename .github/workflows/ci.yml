@@ -64,6 +64,7 @@ jobs:
           TEST_SOLR_PORT: 8981
     env:
       RAILS_ENV: ${{ matrix.env }}
+      CHROMEDRIVER_VERSION: '114.0.5735.90'
     defaults:
       run:
         working-directory: ./rails/
@@ -76,6 +77,16 @@ jobs:
         with:
           bundler-cache: true # use Actions cache to significantly speed up subsequent runs
           working-directory: ./rails/
+      # Install ChromeDriver (wiping out whatever version was previously installed on Actions Runner)
+      - name: Install ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: ${{ env.CHROMEDRIVER_VERSION }}
+      # Install Google Chrome browser (that matches ChromeDriver version from previous Actions step)
+      - name: Install Google Chrome
+        run: |
+          wget -O /tmp/google_chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROMEDRIVER_VERSION}-1_amd64.deb
+          sudo dpkg -i /tmp/google_chrome.deb
 
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml
       - run: cp -v ./config/app_environment_variables.sample.rb ./config/app_environment_variables.rb
@@ -146,7 +157,7 @@ jobs:
             type=ref,event=pr
             type=sha,prefix=git-
       - name: Build & push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           #context: '{{defaultContext}}:rails'
           context: ./rails/
