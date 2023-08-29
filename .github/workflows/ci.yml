@@ -131,14 +131,20 @@ jobs:
       #  with:
       #    username: ${{ secrets.DOCKER_HUB_USERNAME }}
       #    password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      #- name: Extract metadata for Docker
-      #  id: docker_metadata
-      #  uses: docker/metadata-action@v4
-      #  env:
-      #    DOCKER_HUB_IMAGE: concordconsortium/portal
-      #  with:
-      #    images: |-
-      #      ${{ env.REGISTRY }}/${{ github.repository }}
+      - name: Extract metadata for Docker image tagging
+        id: docker_metadata
+        uses: docker/metadata-action@v4
+        with:
+          images: |-
+            ${{ env.REGISTRY }}/${{ github.repository }}
+          # "refs/tags/v1.2.3" --> "1.2.3" (drop "v" prefix just like official Docker Hub images)
+          tags: |-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=git-
       - name: Build & push Docker image
         uses: docker/build-push-action@v3
         with:
@@ -148,11 +154,10 @@ jobs:
           # Use GitHub Actions cache (see https://docs.docker.com/build/building/cache/backends/gha/#using-dockerbuild-push-action)
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          #labels: ${{ steps.docker_metadata.outputs.labels }}
-          #tags: ${{ steps.docker_metadata.outputs.tags }}
+          labels: ${{ steps.docker_metadata.outputs.labels }}
+          tags: ${{ steps.docker_metadata.outputs.tags }}
           build-args: |-
             CC_PORTAL_VERSION=${{ github.ref_name }}
-          tags: ghcr.io/concord-consortium/rigse:${{ github.ref_name }}
 
   deploy:
     name: Deploy application
