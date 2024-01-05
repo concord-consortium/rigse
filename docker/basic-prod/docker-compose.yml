@@ -14,7 +14,7 @@ services:
     image: docker.io/solr
   app:
     # image: rigse:dev
-    image: ghcr.io/concord-consortium/rigse:github-actions
+    image: ghcr.io/concord-consortium/rigse
     # build:
     #   context: ./rails/
     # env_file: ./.env

@@ -6,7 +6,7 @@ phases:
     commands:
       - echo Logging in to Docker Hub...
       - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      - REPOSITORY_URI=concordconsortium/rigse-railslts
+      - REPOSITORY_URI=ghcr.io/concord-consortium/rigse
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       # The BRANCH_NAME is set in the build step of the CodePipeline from the
