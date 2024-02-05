@@ -22,18 +22,8 @@ env:
 
 jobs:
   deploy:
-    name: 🚀 Deploy to '${{ inputs.environment }}'
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ inputs.environment }}
-      url: https://${{ inputs.environment }}
-    steps:
-      - name: 📥 Checkout project source
-        uses: actions/checkout@v4
-      - name: 🚀 Deploy Rails App
-        uses: concord-consortium/lara/.github/workflows/actions/deploy-rails-app-to-aws@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-          cf-stack-name: ${{ vars.CF_STACK_NAME }}
+    uses: ${{ github.repository_owner }}/lara/.github/workflows/deploy_backend_to_aws.yml
+    with:
+      environment: ${{ inputs.environment }}
+      version: ${{ inputs.version }}
+    secrets: inherit
