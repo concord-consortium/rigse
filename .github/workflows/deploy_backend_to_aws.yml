@@ -22,7 +22,7 @@ env:
 
 jobs:
   deploy:
-    uses: ${{ github.repository_owner }}/lara/.github/workflows/deploy_backend_to_aws.yml
+    uses: ${{ github.repository_owner }}/lara/.github/workflows/deploy_backend_to_aws.yml@v2
     with:
       environment: ${{ inputs.environment }}
       version: ${{ inputs.version }}
