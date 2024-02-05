@@ -26,4 +26,5 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       version: ${{ inputs.version }}
+      docker-image-template-key-prefix: Portal
     secrets: inherit
