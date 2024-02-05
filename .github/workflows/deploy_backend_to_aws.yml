@@ -1,0 +1,30 @@
+name: 🚀 Deploy Web Backend to AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        default: 'learn.portal.staging.concord.org'
+        description: CloudFormation stack to deploy to
+        required: true
+      version:
+        default: ''
+        type: string
+        description: >-
+          Application version to deploy (defaults to latest pre-release/release version depending on if stack is a
+          staging or production environment)
+
+env:
+  CONTAINER_IMAGE: ghcr.io/${{ github.repository }}
+  # To use GitHub CLI in a GitHub Actions workflow, set the GH_TOKEN environment variable.
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  deploy:
+    uses: ${{ github.repository_owner }}/lara/.github/workflows/deploy_backend_to_aws.yml@v2
+    with:
+      environment: ${{ inputs.environment }}
+      version: ${{ inputs.version }}
+      docker-image-template-key-prefix: Portal
+    secrets: inherit
