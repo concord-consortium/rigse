@@ -274,6 +274,18 @@
         background-size: 35px;
         padding: 37px 0 0;
       }
+      &.fables {
+        background: url(https://ngss-assessment-resources.concord.org/Fables-logo.png) no-repeat center top;
+        background-size: 95px;
+        padding-top: 60px;
+        font-size: 0;  /* to hide label */
+      }
+      &.understandingprogressinscience {
+        background: url(https://ngss-assessment-resources.concord.org/understaind-progress-in-science-logo.png) no-repeat center top;
+        background-size: 95px;
+        padding-top: 60px;
+        font-size: 0;  /* to hide label */
+      }
     }
   }
 
