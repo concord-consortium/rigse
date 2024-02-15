@@ -91,7 +91,7 @@ describe User do
     ['foo@bar.com', 'foo@newskool-tld.museum', 'foo@twoletter-tld.de', 'foo@nonexistant-tld.qq',
      'r@a.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail.com',
      'hello.-_there@funnychar.com', 'uucp%addr@gmail.com', 'hello+routing-str@gmail.com',
-     'domain@can.haz.many.sub.doma.in', 'student.name@university.edu'
+     'domain@can.haz.many.sub.doma.in', 'student.name@university.edu', 'foo@anytld.xxx', 'foo@longtld.abcdefg', 'teacher@some.school'
     ].each do |email_str|
       it "'#{email_str}'" do
         expect do
@@ -103,7 +103,7 @@ describe User do
   end
 
   describe 'disallows illegitimate emails' do
-    ['!!@nobadchars.com', 'foo@no-rep-dots..com', 'foo@badtld.xxx', 'foo@toolongtld.abcdefg',
+    ['!!@nobadchars.com', 'foo@no-rep-dots..com', 'needdomain@', 'needtld@example', '@.com', '@example.com', 'oneletterltd@example.x',
      'Iñtërnâtiônàlizætiøn@hasnt.happened.to.email', 'need.domain.and.tld@de',
      'r@.wk', '1234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890-234567890@gmail2.com',
      # these are technically allowed but not seen in practice:
