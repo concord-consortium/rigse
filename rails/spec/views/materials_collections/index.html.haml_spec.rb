@@ -10,6 +10,8 @@ describe "materials_collections/index" do
 
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_user).and_return(@admin_user)
+
+    @projects = []
   end
 
   it "renders a list of materials_collections" do

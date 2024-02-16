@@ -1,10 +1,8 @@
 class API::V1::MaterialsCollectionsController < API::APIController
-  include RestrictedController
-  before_action :admin_only
+
+  before_action :find_and_authorize_material_collection
 
   def sort_materials
-    materials_collection = MaterialsCollection.find(params[:id])
-
     item_ids = params['item_ids']
     if !item_ids
       return error("Missing item_ids parameter")
@@ -13,7 +11,7 @@ class API::V1::MaterialsCollectionsController < API::APIController
     items = item_ids.map { |i| MaterialsCollectionItem.find(i) }
     position = 0
     items.each do |item|
-      if item.materials_collection_id == materials_collection.id
+      if item.materials_collection_id == @materials_collection.id
         item.position = position
         position = position + 1
         item.save
@@ -23,15 +21,12 @@ class API::V1::MaterialsCollectionsController < API::APIController
   end
 
   def remove_material
-    id = params[:id]
-    materials_collection = MaterialsCollection.find(id)
-
     item_id = params[:item_id]
     if !item_id
       return error("Missing item_id parameter")
     end
 
-    item = MaterialsCollectionItem.where(id: item_id, materials_collection_id: id).first
+    item = MaterialsCollectionItem.where(id: item_id, materials_collection_id: @materials_collection.id).first
     if !item
       error("Invalid item id: #{item_id}")
     elsif !item.destroy
@@ -45,5 +40,10 @@ class API::V1::MaterialsCollectionsController < API::APIController
 
   def render_ok
     render :json => { success: true }, :status => :ok
+  end
+
+  def find_and_authorize_material_collection
+    @materials_collection = MaterialsCollection.find(params[:id])
+    authorize @materials_collection
   end
 end

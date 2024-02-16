@@ -460,7 +460,7 @@ module Materials
         }
       end
 
-      if current_visitor.has_role?('admin') && material.respond_to?(:materials_collections)
+      if (current_visitor.has_role?('admin') || current_visitor.is_project_admin?()) && material.respond_to?(:materials_collections)
         links[:assign_collection] = {
           text: "Add to Collection",
           target: "_blank",
