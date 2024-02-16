@@ -263,7 +263,7 @@ class ExternalActivitiesController < ApplicationController
   def edit_collections
     authorize @external_activity
 
-    @collections = MaterialsCollection.includes(:materials_collection_items).order(:name).all
+    @collections = policy_scope(MaterialsCollection).includes(:materials_collection_items).order(:name).all
 
     @material = [@external_activity]
     @assigned_collections = @collections.select{|c| c.has_materials(@material) }

@@ -42,6 +42,7 @@
         %li= link_to 'Permission Forms', admin_permission_forms_path
       - if is_admin_or_project_admin
         %li= link_to 'Projects', admin_projects_path
+        %li= link_to 'Materials Collections', materials_collections_path
         %li= link_to 'Users', users_path
 
     - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?

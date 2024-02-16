@@ -1,12 +1,15 @@
 class MaterialsCollectionsController < ApplicationController
-  include RestrictedController
-  before_action :admin_only
+
+  before_action :find_and_authorize_material_collection, only: ['show', 'edit', 'update', 'destroy']
+  before_action :load_projects
 
   # GET /materials_collections
   # GET /materials_collections.json
   def index
-    filtered = params[:project_id].to_s.length > 0 ? MaterialsCollection.where({project_id: params[:project_id]}) : MaterialsCollection
-    @materials_collections = filtered.search(params[:search], params[:page], nil)
+    authorize MaterialsCollection
+    search_scope = policy_scope(MaterialsCollection)
+    search_scope = search_scope.where(project_id: params[:project_id]) if params[:project_id].to_s.length > 0
+    @materials_collections = MaterialsCollection.search(params[:search], params[:page], nil, nil, search_scope)
     respond_to do |format|
       format.html # index.html.haml
       format.json { render json: @materials_collections }
@@ -16,7 +19,6 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections/1
   # GET /materials_collections/1.json
   def show
-    @materials_collection = MaterialsCollection.find(params[:id])
     respond_to do |format|
       format.html # show.html.haml
       format.json { render json: @materials_collection }
@@ -26,6 +28,7 @@ class MaterialsCollectionsController < ApplicationController
   # GET /materials_collections/new
   # GET /materials_collections/new.json
   def new
+    authorize MaterialsCollection
     @materials_collection = MaterialsCollection.new
     respond_to do |format|
       format.html # new.html.haml
@@ -35,7 +38,6 @@ class MaterialsCollectionsController < ApplicationController
 
   # GET /materials_collections/1/edit
   def edit
-    @materials_collection = MaterialsCollection.find(params[:id])
     # renders edit.html.haml
   end
 
@@ -58,7 +60,6 @@ class MaterialsCollectionsController < ApplicationController
   # PATCH/PUT /materials_collections/1
   # PATCH/PUT /materials_collections/1.json
   def update
-    @materials_collection = MaterialsCollection.find(params[:id])
     respond_to do |format|
       if @materials_collection.update(materials_collection_strong_params(params[:materials_collection]))
         format.html { redirect_to @materials_collection, notice: 'Materials Collection was successfully updated.' }
@@ -73,7 +74,6 @@ class MaterialsCollectionsController < ApplicationController
   # DELETE /materials_collections/1
   # DELETE /materials_collections/1.json
   def destroy
-    @materials_collection = MaterialsCollection.find(params[:id])
     @materials_collection.destroy
     respond_to do |format|
       format.html { redirect_to materials_collections_url }
@@ -84,4 +84,16 @@ class MaterialsCollectionsController < ApplicationController
   def materials_collection_strong_params(params)
     params && params.permit(:description, :name, :project_id)
   end
+
+  private
+
+  def find_and_authorize_material_collection
+    @materials_collection = MaterialsCollection.find(params[:id])
+    authorize @materials_collection
+  end
+
+  def load_projects
+    @projects = policy_scope(Admin::Project)
+  end
+
 end

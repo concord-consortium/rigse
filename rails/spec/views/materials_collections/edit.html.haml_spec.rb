@@ -10,6 +10,8 @@ describe "materials_collections/edit" do
 
     @admin_user = FactoryBot.generate(:admin_user)
     allow(controller).to receive(:current_user).and_return(@admin_user)
+
+    @projects = []
   end
 
   it "renders the edit materials_collection form" do

@@ -74,11 +74,11 @@ class ExternalActivityPolicy < ApplicationPolicy
   end
 
   def edit_collections?
-    admin?
+    admin_or_project_admin?
   end
 
   def update_collections?
-    admin?
+    admin_or_project_admin?
   end
 
 end

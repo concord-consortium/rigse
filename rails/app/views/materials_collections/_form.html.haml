@@ -9,7 +9,7 @@
           =f.text_field :name
         %li
           Project:
-          =f.collection_select :project_id, Admin::Project.order("name ASC"), :id, :name, :prompt => "Select project..."
+          =f.collection_select :project_id, @projects, :id, :name, :prompt => "Select project..."
         %li
           Description:
           =f.text_area :description
