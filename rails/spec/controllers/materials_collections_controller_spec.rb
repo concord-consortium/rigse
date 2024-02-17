@@ -27,8 +27,9 @@ describe MaterialsCollectionsController do
       login_admin
     end
 
-    let(:materials_collection) { FactoryBot.create(:materials_collection) }
-    let(:project) { FactoryBot.create(:project) }
+    let(:project) { FactoryBot.create(:project, name: "z project") }
+    let(:project2) { FactoryBot.create(:project, name: "a project") }
+    let(:materials_collection) { FactoryBot.create(:materials_collection, project_id: project.id) }
     let(:valid_attributes)     { { name: "Some name", description: "Some description", project_id: project.id } }
 
     describe "GET index" do
@@ -36,6 +37,20 @@ describe MaterialsCollectionsController do
         materials_collection
         get :index
         expect(assigns(:materials_collections).to_a).to eq([materials_collection])
+      end
+
+      it "assigns all sorted projects as @projects" do
+        project # create "z project" first
+        project2 # create "a project" second
+        materials_collection
+        get :index
+        # make sure project was created before project2
+        expect(project.id).to be < project2.id
+        # make sure the projects are sorted by name
+        ids = assigns(:projects).map {|p| p.id}
+        names = assigns(:projects).map {|p| p.name}
+        expect(ids).to eq([project2.id, project.id])
+        expect(names).to eq(["a project", "z project"])
       end
     end
 
