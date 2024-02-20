@@ -93,7 +93,7 @@ class MaterialsCollectionsController < ApplicationController
   end
 
   def load_projects
-    @projects = policy_scope(Admin::Project)
+    @projects = policy_scope(Admin::Project).order(:name)
   end
 
 end
