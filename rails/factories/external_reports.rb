@@ -19,5 +19,6 @@ FactoryBot.define do
     f.individual_student_reportable {true}
     f.individual_activity_reportable {true}
     f.use_query_jwt {false}
+    f.supports_researchers {false}
   end
 end

@@ -9,7 +9,8 @@ const externalReportMapping = data => {
   }
   return {
     url: data.url,
-    launchText: data.launch_text
+    launchText: data.launch_text,
+    supportsResearchers: data.supports_researchers
   }
 }
 
