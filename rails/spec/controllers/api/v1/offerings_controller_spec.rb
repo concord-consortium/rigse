@@ -124,12 +124,13 @@ describe API::V1::OfferingsController do
       end
     end
 
-    describe "when offering has an external report" do
-      let (:external_report) { FactoryBot.create(:external_report) }
+    describe "when offering has external reports" do
+      let(:external_report_1) { FactoryBot.create(:external_report, name: 'External Report 1', supports_researchers: true) }
+      let(:external_report_2) { FactoryBot.create(:external_report, name: 'External Report 2', supports_researchers: false) }
 
       before (:each) do
         sign_in teacher.user
-        runnable.external_reports = [ external_report ]
+        runnable.external_reports = [ external_report_1, external_report_2 ]
         runnable.save
       end
 
@@ -137,9 +138,17 @@ describe API::V1::OfferingsController do
         get :show, params: { id: offering.id }
         expect(response.status).to eq 200
         json = JSON.parse(response.body)
-        expect(json["external_reports"][0]).not_to eq nil
-        expect(json["external_reports"][0]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report.id, host: 'test.host')
-        expect(json["external_reports"][0]["launch_text"]).to eq external_report.launch_text
+        expect(json["external_reports"].length).to eq 2
+
+        expect(json["external_reports"][0]["name"]).to eq "External Report 1"
+        expect(json["external_reports"][0]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report_1.id, host: 'test.host')
+        expect(json["external_reports"][0]["launch_text"]).to eq external_report_1.launch_text
+        expect(json["external_reports"][0]["supports_researchers"]).to eq true
+
+        expect(json["external_reports"][1]["name"]).to eq "External Report 2"
+        expect(json["external_reports"][1]["url"]).to eq portal_external_report_url(id: offering.id, report_id: external_report_2.id, host: 'test.host')
+        expect(json["external_reports"][1]["launch_text"]).to eq external_report_2.launch_text
+        expect(json["external_reports"][1]["supports_researchers"]).to eq false
       end
     end
 

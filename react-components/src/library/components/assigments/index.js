@@ -28,7 +28,8 @@ const externalReportMapping = data => {
   return {
     name: data.name,
     launchText: data.launch_text,
-    url: data.url
+    url: data.url,
+    supportsResearchers: data.supports_researchers
   }
 }
 

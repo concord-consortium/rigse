@@ -73,6 +73,13 @@
             (Learner researcher reports only.)
         %li
           %label
+            = f.check_box :supports_researchers
+            Support anonymized researcher views
+          %br
+          %p
+            Show report in researcher assignments table. If unchecked, the report will not be available to researchers.
+        %li
+          %label
             Move Students API URL
           %br
           = f.text_field :move_students_api_url, style: "width: 95%;"

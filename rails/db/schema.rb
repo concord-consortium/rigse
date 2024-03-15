@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_07_20_110611) do
+ActiveRecord::Schema.define(version: 2024_03_13_184118) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -295,6 +295,7 @@ ActiveRecord::Schema.define(version: 2023_07_20_110611) do
     t.text "move_students_api_url"
     t.string "move_students_api_token"
     t.boolean "use_query_jwt", default: false
+    t.boolean "supports_researchers", default: false
     t.index ["client_id"], name: "index_external_reports_on_client_id"
   end
 

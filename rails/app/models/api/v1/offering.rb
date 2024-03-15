@@ -71,7 +71,8 @@ class API::V1::Offering
       id: report.id,
       name: report.name,
       url: portal_external_report_url(id: offering.id, report_id: report.id, protocol: protocol, host: host_with_port),
-      launch_text: report.launch_text
+      launch_text: report.launch_text,
+      supports_researchers: report.supports_researchers
     }
   end
 
