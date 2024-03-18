@@ -251,7 +251,6 @@ in Portal's `.env` file.
 
 3. Run
     ```
-      docker login
       docker-compose up
     ```
 
