@@ -26,15 +26,17 @@ class API::V1::TeacherClassesController < API::APIController
     # and we need the order preserved so we can update the position based on the id order
     ids.each do |id|
       begin
-        teacher_clazz = Portal::TeacherClazz.find(id)
+        clazz = Portal::Clazz.find(id)
       rescue ActiveRecord::RecordNotFound => e
-        return error("Invalid teacher class id: #{id}") if !teacher_clazz
+        return error("Invalid class id: #{id}")
       end
-      return error("You are not a teacher of class: #{id}") if !teacher_clazz.clazz.is_teacher?(user)
+      return error("You are not a teacher of class: #{id}") if !clazz.is_teacher?(user)
     end
 
     ids.each_with_index do |id,idx|
-      Portal::TeacherClazz.update(id, :position => (idx + 1))
+      teacher_clazz = Portal::TeacherClazz.where(:clazz_id => id, :teacher_id => user.portal_teacher.id).first
+      return error("TeacherClazz not found") if !teacher_clazz
+      teacher_clazz.update(:position => idx + 1)
     end
 
     render_ok
@@ -45,11 +47,10 @@ class API::V1::TeacherClassesController < API::APIController
     return error(auth[:error]) if auth[:error]
     user = auth[:user]
 
-    class_ownership = verify_teacher_class_ownership(user, params)
+    class_ownership = verify_class_ownership(user, params)
     return error(class_ownership[:error]) if class_ownership[:error]
-    teacher_clazz = class_ownership[:teacher_clazz]
+    class_to_copy = class_ownership[:clazz]
 
-    class_to_copy = teacher_clazz.clazz
     new_clazz = Portal::Clazz.new(
       :name => params[:name],
       :class_word => params[:classWord],
@@ -93,6 +94,19 @@ class API::V1::TeacherClassesController < API::APIController
         position: teacher_clazz.position
       }
     }, :status => :ok
+  end
+
+  def verify_class_ownership(user, params)
+    clazz = Portal::Clazz.find(params[:id])
+    if !clazz
+      return {error: 'The requested class was not found'}
+    end
+
+    if !clazz.is_teacher?(user)
+      return {error: 'You are not a teacher of the requested class'}
+    end
+
+    return {clazz: clazz}
   end
 
   def verify_teacher_class_ownership(user, params)
