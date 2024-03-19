@@ -38,6 +38,10 @@ module NavigationHelper
     current_visitor.is_project_researcher?
   end
 
+  def show_researcher_classes_links
+    current_visitor.is_project_researcher?
+  end
+
   def show_switch_user_link
     @original_user && @original_user != current_visitor
   end
@@ -241,6 +245,31 @@ module NavigationHelper
     }
   end
 
+  def researcher_class_links
+    if current_visitor.researcher_for_projects.empty?
+      return []
+    end
+
+    links = [{
+      id: '/researcher_classes',
+      label: nav_label('researcher_classes'),
+      type: NavigationService::SECTION_TYPE,
+      sort: 4
+    }]
+
+    projects = current_visitor.researcher_for_projects
+
+    projects.each do |project|
+      links << {
+        id: "/researcher_classes/#{project.id}",
+        label: project.name,
+        url: url_for(project)
+      }
+    end
+
+    links
+  end
+
   def project_links
     links = []
     if current_visitor.has_role?('admin', 'manager', 'researcher') || current_visitor.portal_teacher
@@ -290,6 +319,10 @@ module NavigationHelper
 
     if show_switch_user_link
       service.add_item switch_user_link
+    end
+
+    if show_researcher_classes_links
+      researcher_class_links.each {|clazz_link| service.add_item clazz_link}
     end
 
     clazz_links.each {|clazz_link| service.add_item clazz_link}
