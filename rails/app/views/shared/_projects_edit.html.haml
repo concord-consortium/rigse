@@ -8,12 +8,12 @@
         -# Hidden field handles a case when all checkboxes are unchecked.
         = hidden_field_tag prop_name
         - project_assigned = Hash[object.projects.map { |p| [p.id, true ] }]
-        - Admin::Project.all.each do |project|
+        - Admin::Project.all.sort_by(&:name).each do |project|
           - if policy(project).assign_to_material?
             %li
               - label_str = "project_#{project.id}"
-              = label_tag label_str, project.name
               = check_box_tag prop_name, project.id, project_assigned[project.id], id: label_str
+              = label_tag label_str, project.name
           - elsif project_assigned[project.id]
             -# This is necessary to keep hidden projects still assigned to the material.
             = hidden_field_tag prop_name, project.id

@@ -4,8 +4,8 @@
     .aligned
       = hidden_field_tag :update_material_properties, "true"
       %ul.menu_h
-        - Admin::Tag.where(scope: "material_properties").each do |admin_tag|
+        - Admin::Tag.where(scope: "material_properties").sort_by {|sub| sub[:tag].downcase}.each do |admin_tag|
           %li
             - label_str = "material_properties_#{admin_tag.tag.underscore}"
-            = label_tag label_str, admin_tag.tag
             = check_box_tag "material_properties[]", admin_tag.tag, object.material_property_list.include?(admin_tag.tag), :id => label_str
+            = label_tag label_str, admin_tag.tag
