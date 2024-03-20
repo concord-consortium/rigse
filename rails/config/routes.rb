@@ -224,6 +224,9 @@ RailsPortal::Application.routes.draw do
       resources :projects do
         resources :cohorts
         resources :project_links
+        member do
+          get :classes
+        end
       end
       resources :cohorts
       resources :project_links

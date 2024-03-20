@@ -263,7 +263,7 @@ module NavigationHelper
       links << {
         id: "/researcher_projects/#{project.id}",
         label: project.name,
-        url: url_for(project),
+        url: url_for([:classes, project]),
       }
     end
 

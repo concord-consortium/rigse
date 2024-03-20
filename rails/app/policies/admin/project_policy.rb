@@ -81,4 +81,8 @@ class Admin::ProjectPolicy < ApplicationPolicy
   def api_show?
     teacher? || admin?
   end
+
+  def classes?
+    update_or_edit? || user.is_project_researcher?(record)
+  end
 end
