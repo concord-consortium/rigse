@@ -18,6 +18,11 @@ describe NavigationHelper, type: :helper  do
   let(:fake_clazzes) { FactoryBot.create_list(:portal_clazz, 3)}
   let(:fake_inactive_clazz) { FactoryBot.create(:portal_clazz, is_archived: true)}
   let(:fake_student) { FactoryBot.create(:full_portal_student, clazzes: fake_clazzes) }
+  let(:fake_researcher) {
+    researcher = FactoryBot.generate(:researcher_user)
+    researcher.researcher_for_projects << FactoryBot.create(:project)
+    researcher
+  }
   let(:fake_teacher) {
     teacher = FactoryBot.create(:portal_teacher, clazzes: fake_clazzes)
     teacher.teacher_clazzes.create(clazz: fake_inactive_clazz)
@@ -119,6 +124,19 @@ describe NavigationHelper, type: :helper  do
 
     it "should not include favorites links" do
       expect(subject).not_to match %r{"label": "Favorites"}
+    end
+
+    it "should not include researcher project links" do
+      expect(subject).not_to match %r{"label": "Researcher Projects"}
+    end
+  end
+
+  describe "researcher links" do
+    let(:fake_visitor) { fake_researcher }
+    subject { JSON.pretty_generate(helper.navigation_service(params).to_hash) }
+
+    it "should include researcher project links" do
+      expect(subject).to match %r{"label": "Researcher Projects"}
     end
   end
 
