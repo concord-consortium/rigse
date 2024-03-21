@@ -7,5 +7,5 @@
         - Admin::Tag.where(scope: "subject_areas").sort_by {|sub| sub[:tag].downcase}.each do |admin_tag|
           %li
             - label_str = "subject_areas_#{admin_tag.tag.underscore}"
-            = label_tag label_str, admin_tag.tag
             = check_box_tag "subject_areas[]", admin_tag.tag, object.subject_area_list.include?(admin_tag.tag), :id => label_str
+            = label_tag label_str, admin_tag.tag
