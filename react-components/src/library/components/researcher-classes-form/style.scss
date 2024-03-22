@@ -1,0 +1,37 @@
+.researcherClassesForm {
+  input[type="submit"] {
+    margin: 10px 10px 0 0;
+  }
+
+  input[type="checkbox"] {
+    margin: 15px 10px 0 0;
+  }
+}
+
+.researcherClassesTable {
+  hr {
+    background-color: #444;
+  }
+
+  table {
+    width: 100%;
+    border: 1px solid #444;
+
+    th {
+      background-color: #cdcdcd;
+      text-align: left;
+    }
+    tr:nth-child(even) {
+      background-color: #efefef;
+    }
+    tr:nth-child(odd) {
+      background-color: #fff;
+    }
+    td {
+      text-align: left;
+    }
+    td + td, th + th {
+      border-left: 1px solid #444;
+    }
+  }
+}

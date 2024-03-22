@@ -1,2 +1,7 @@
 %div
   %h1 Research Classes: #{@project.name}
+
+  #form-container
+
+  :javascript
+    PortalComponents.renderResearcherClassesForm({projectId: #{@project.id}}, "form-container")
