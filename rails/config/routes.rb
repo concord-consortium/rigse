@@ -445,6 +445,8 @@ RailsPortal::Application.routes.draw do
           end
         end
 
+        resources :researcher_classes, only: [:index]
+
         resources :site_notices do
           member do
             delete :remove_notice
