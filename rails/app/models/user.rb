@@ -424,6 +424,18 @@ class User < ApplicationRecord
     is_project_admin?(project) || is_project_researcher?(project) || is_project_cohort_member?(project)
   end
 
+  def is_researcher_for_clazz?(clazz)
+    # check if class has teacher in a cohort of a project the user is a researcher of using a explicit join to avoid a
+    # bunch of unneeded object instantiation
+    researcher_for_projects
+      .joins("INNER JOIN admin_cohorts __ac ON __ac.project_id = admin_projects.id")
+      .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = __ac.id AND __aci.item_type = 'Portal::Teacher'")
+      .joins("INNER JOIN portal_teachers __pt ON __pt.id = __aci.item_id")
+      .joins("INNER JOIN portal_teacher_clazzes __ptc ON __ptc.teacher_id = __pt.id")
+      .where("__ptc.clazz_id = ?", clazz.id)
+      .count > 0
+  end
+
   def add_role_for_project(role, project)
     role_attribute = "is_#{role}"
     project_user = project_users.find_by_project_id project.id

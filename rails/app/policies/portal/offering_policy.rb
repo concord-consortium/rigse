@@ -1,7 +1,7 @@
 class Portal::OfferingPolicy < ApplicationPolicy
   # Used by API::V1::OfferingsController:
   def api_show?
-    class_teacher_or_admin? || class_student?
+    class_teacher_or_admin? || class_student? || class_researcher?
   end
 
   def api_index?
@@ -102,5 +102,9 @@ class Portal::OfferingPolicy < ApplicationPolicy
 
   def class_teacher_or_admin?
     class_teacher? || admin?
+  end
+
+  def class_researcher?
+    user && record && user.is_researcher_for_clazz?(record.clazz)
   end
 end
