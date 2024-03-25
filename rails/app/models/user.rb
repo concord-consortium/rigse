@@ -436,6 +436,18 @@ class User < ApplicationRecord
       .count > 0
   end
 
+  def role_in_clazz(clazz)
+    # NOTE: these checks are set so only one of these can be true and teacher access is checked before researcher access
+    student_in_class = portal_student && portal_student.has_clazz?(clazz)
+    teacher_in_class = !student_in_class && (portal_teacher && portal_teacher.has_clazz?(clazz))
+    researcher_in_class = !teacher_in_class && is_researcher_for_clazz?(clazz)
+    {
+      student: student_in_class,
+      teacher: teacher_in_class,
+      researcher: researcher_in_class
+    }
+  end
+
   def add_role_for_project(role, project)
     role_attribute = "is_#{role}"
     project_user = project_users.find_by_project_id project.id

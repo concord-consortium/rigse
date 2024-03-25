@@ -5,6 +5,10 @@
 class API::V1::OfferingsController < API::APIController
 
   def show
+    auth = auth_student_or_teacher_or_researcher(params)
+    return error(auth[:error]) if auth[:error]
+    user = auth[:user]
+
     offering = Portal::Offering
                    .where(id: params[:id])
                    .includes(API::V1::Offering::INCLUDES_DEF)
@@ -12,8 +16,15 @@ class API::V1::OfferingsController < API::APIController
     unless offering
       return error('offering not found', 404)
     end
-    authorize offering, :api_show?
-    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report])
+
+    role_in_clazz = user.role_in_clazz(offering.clazz)
+
+    if (!role_in_clazz[:student] && !role_in_clazz[:teacher] && !role_in_clazz[:researcher])
+      return error('You are not a student or teacher or researcher of the requested offerings class')
+    end
+
+    anonymize_students = role_in_clazz[:researcher]
+    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report], anonymize_students)
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 

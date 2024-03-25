@@ -15,9 +15,7 @@ class Portal::ClazzesController < ApplicationController
   # accessing.
   #
   include RestrictedTeacherController
-  before_action :check_teacher_owns_clazz, :only => [   :roster,
-                                                        :materials,
-                                                        :fullstatus ]
+  before_action :check_teacher_owns_clazz, :only => [ :roster ]
 
   def current_clazz
     # PUNDIT_REVIEW_AUTHORIZE
@@ -303,20 +301,12 @@ class Portal::ClazzesController < ApplicationController
   end
 
   def materials
-    # PUNDIT_REVIEW_AUTHORIZE
-    # PUNDIT_CHOOSE_AUTHORIZE
-    # no authorization needed ...
-    # authorize Portal::Clazz
-    # authorize @clazz
-    # authorize Portal::Clazz, :new_or_create?
-    # authorize @clazz, :update_edit_or_destroy?
-
-
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
+
+    authorize @portal_clazz, :materials?
 
     # Save the left pane sub-menu item
     Portal::Teacher.save_left_pane_submenu_item(current_visitor, Portal::Teacher.LEFT_PANE_ITEM['MATERIALS'])
-
   end
 
 

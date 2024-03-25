@@ -28,10 +28,10 @@ class API::V1::Offering
     attribute :total_progress, Float
     attribute :detailed_progress, Array
 
-    def initialize(student, offering, protocol, host_with_port)
+    def initialize(student, offering, protocol, host_with_port, anonymize = false)
       self.name = student.user.name
-      self.first_name = student.user.first_name
-      self.last_name = student.user.last_name
+      self.first_name = anonymize ? student.anonymized_first_name : student.user.first_name
+      self.last_name = anonymize ? student.anonymized_last_name : student.user.last_name
       self.username = student.user.login
       self.user_id = student.user.id
       learner = offering.learners.find { |l| l.student_id === student.id }
@@ -76,7 +76,7 @@ class API::V1::Offering
     }
   end
 
-  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id)
+  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id, anonymize_students = false)
     runnable = offering.runnable
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
@@ -111,6 +111,6 @@ class API::V1::Offering
       end
     end
 
-    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port) }
+    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, anonymize_students) }
   end
 end

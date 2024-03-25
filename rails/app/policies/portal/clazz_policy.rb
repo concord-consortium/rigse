@@ -19,4 +19,18 @@ class Portal::ClazzPolicy < ApplicationPolicy
       end
     end
   end
+
+  def materials?
+    class_teacher? || class_researcher? || admin?
+  end
+
+  private
+
+  def class_teacher?
+    user && record && record.is_teacher?(user)
+  end
+
+  def class_researcher?
+    user && record && user.is_researcher_for_clazz?(record)
+  end
 end
