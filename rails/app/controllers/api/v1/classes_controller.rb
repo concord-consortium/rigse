@@ -2,23 +2,26 @@ class API::V1::ClassesController < API::APIController
 
   # GET api/v1/classes/:id
   def show
-    auth = auth_student_or_teacher(params)
+    auth = auth_student_or_teacher_or_researcher(params)
     return error(auth[:error]) if auth[:error]
     user = auth[:user]
+    role = auth[:role]
 
     clazz = Portal::Clazz.find_by_id(params[:id])
     if !clazz
       return error('The requested class was not found')
     end
 
+    # NOTE: these checks are set so only one of these can be true and researcher access is checked before teacher access
     student_in_class = user.portal_student && user.portal_student.has_clazz?(clazz)
     teacher_in_class = !student_in_class || (user.portal_teacher && user.portal_teacher.has_clazz?(clazz))
+    researcher_in_class = !teacher_in_class || (role[:is_project_researcher] && user.is_researcher_for_clazz?(clazz))
 
-    if (!student_in_class && !teacher_in_class)
-      return error('You are not a student or teacher of the requested class')
+    if (!student_in_class && !teacher_in_class && !researcher_in_class)
+      return error('You are not a student or teacher or researcher of the requested class')
     end
 
-    render_info clazz
+    render_info(clazz, researcher_in_class)
   end
 
   # GET api/v1/classes/mine
@@ -49,7 +52,7 @@ class API::V1::ClassesController < API::APIController
       return error('The requested class was not found')
     end
 
-    render_info clazz
+    render_info(clazz, true)
   end
 
   def log_links
@@ -100,7 +103,7 @@ class API::V1::ClassesController < API::APIController
 
   private
 
-  def render_info(clazz)
+  def render_info(clazz, anonymize)
     state = nil
     if school = clazz.school
       state = school.state
@@ -128,8 +131,8 @@ class API::V1::ClassesController < API::APIController
           :id => url_for(student.user),
           :user_id => student.user.id,
           :email => student.user.email,
-          :first_name => student.user.first_name,
-          :last_name => student.user.last_name
+          :first_name => anonymize ? "Student" : student.user.first_name,
+          :last_name => anonymize ? "#{student.id}" : student.user.last_name
         }
       },
       :offerings => clazz.teacher_visible_offerings.map { |offering|
