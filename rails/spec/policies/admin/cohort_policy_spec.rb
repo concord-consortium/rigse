@@ -29,8 +29,8 @@ RSpec.describe Admin::CohortPolicy do
         user.add_role_for_project('researcher', @project)
       end
 
-      it 'does not allow access to any cohorts' do
-        expect(scope.to_a.length).to eq 0
+      it 'allows access to project cohorts' do
+        expect(scope.to_a).to match_array([@cohort1])
       end
     end
 
