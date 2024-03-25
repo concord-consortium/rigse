@@ -24,6 +24,7 @@ import UnitTestExample from './components/unit-test-example'
 import RunWithCollaborators from './components/run-with-collaborators'
 import LearnerReportForm from './components/learner-report-form'
 import UserReportForm from './components/user-report-form'
+import ResearcherClassesForm from './components/researcher-classes-form'
 import SiteNotices from './components/site-notices'
 import SiteNoticesNewForm from './components/site-notices/new'
 import SiteNoticesEditForm from './components/site-notices/edit'
@@ -107,6 +108,11 @@ window.PortalComponents = {
   UserReportForm: UserReportForm,
   renderUserReportForm: function (options, id) {
     render(React.createElement(UserReportForm, options), id)
+  },
+
+  ResearcherClassesForm: ResearcherClassesForm,
+  renderResearcherClassesForm: function (options, id) {
+    render(React.createElement(ResearcherClassesForm, options), id)
   },
 
   Navigation: Navigation,
