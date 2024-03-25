@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 describe API::V1::ClassesController do
-  let(:teacher)           { FactoryBot.create(:portal_teacher) }
+  let(:cohort)          { FactoryBot.create(:admin_cohort) }
+  let(:teacher)           { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
   let(:clazz)             { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher]) }
   let(:runnable_a)          { FactoryBot.create(:external_activity, name: 'Test Sequence') }
   let(:offering_a)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_a}) }
@@ -9,9 +10,17 @@ describe API::V1::ClassesController do
   let(:offering_b)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_b}) }
   let(:runnable_c)          { FactoryBot.create(:external_activity, name: 'Test Sequence 2') }
   let(:offering_c)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable_c}) }
+  let(:learner)              { FactoryBot.create(:full_portal_learner, { offering: offering_a }) }
 
   let(:other_teacher)       { FactoryBot.create(:portal_teacher) }
   let(:other_clazz)         { FactoryBot.create(:portal_clazz, name: 'other class', teachers: [other_teacher]) }
+
+  let(:project)         { FactoryBot.create(:project, cohorts: [cohort]) }
+  let(:researcher_user) {
+    researcher = FactoryBot.generate(:researcher_user)
+    researcher.researcher_for_projects << project
+    researcher
+  }
 
   describe "GET #show" do
     before (:each) do
@@ -20,20 +29,49 @@ describe API::V1::ClassesController do
       offering_a
       offering_b
       offering_c
-      sign_in teacher.user
     end
 
-    it "returns a 200 code for a valid class" do
-      get :show, params: { id: clazz.id }
-      expect(response.status).to eql(200)
+    describe "as a teacher" do
+      before (:each) do
+        learner
+        clazz.reload
+        sign_in teacher.user
+      end
+
+      it "returns a 200 code for a valid class with non-anonymized student info" do
+        get :show, params: { id: clazz.id }
+        expect(response.status).to eql(200)
+        expect(JSON.parse(response.body)["students"].length).to eq 1
+        expect(JSON.parse(response.body)["students"][0]["first_name"]).to eq learner.student.first_name
+        expect(JSON.parse(response.body)["students"][0]["last_name"]).to eq learner.student.last_name
+      end
+
+      it "returns only non archived offerings" do
+        get :show, params: { id: clazz.id }
+        json = JSON.parse(response.body)
+        expect(json['offerings'].size).to eq 2
+        expect(json['offerings'][0]['id']).to eq offering_a.id
+        expect(json['offerings'][1]['id']).to eq offering_c.id
+      end
     end
 
-    it "returns only non archived offerings" do
-      get :show, params: { id: clazz.id }
-      json = JSON.parse(response.body)
-      expect(json['offerings'].size).to eq 2
-      expect(json['offerings'][0]['id']).to eq offering_a.id
-      expect(json['offerings'][1]['id']).to eq offering_c.id
+    describe "as a researcher" do
+      before (:each) do
+        researcher_user
+        project
+        learner
+        clazz.reload
+        researcher_user.reload
+        sign_in researcher_user
+      end
+
+      it "returns a 200 code for a valid class with anonymized student info" do
+        get :show, params: { id: clazz.id }
+        expect(response.status).to eql(200)
+        expect(JSON.parse(response.body)["students"].length).to eq 1
+        expect(JSON.parse(response.body)["students"][0]["first_name"]).to eq "Student"
+        expect(JSON.parse(response.body)["students"][0]["last_name"]).to eq "#{learner.student.id}"
+      end
     end
   end
 
