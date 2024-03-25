@@ -12,7 +12,7 @@ class API::V1::ClassesController < API::APIController
       return error('The requested class was not found')
     end
 
-    # NOTE: these checks are set so only one of these can be true and researcher access is checked before teacher access
+    # NOTE: these checks are set so only one of these can be true and teacher access is checked before researcher access
     student_in_class = user.portal_student && user.portal_student.has_clazz?(clazz)
     teacher_in_class = !student_in_class || (user.portal_teacher && user.portal_teacher.has_clazz?(clazz))
     researcher_in_class = !teacher_in_class || (role[:is_project_researcher] && user.is_researcher_for_clazz?(clazz))
