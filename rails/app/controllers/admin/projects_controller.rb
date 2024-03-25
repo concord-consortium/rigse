@@ -69,11 +69,11 @@ class Admin::ProjectsController < ApplicationController
     # renders edit.html.haml
   end
 
-  # GET /admin/projects/1/classes
-  def classes
+  # GET /admin/projects/1/research_classes
+  def research_classes
     @project = Admin::Project.find(params[:id])
     authorize @project
-    # renders classes.html.haml
+    # renders research_classes.html.haml
   end
 
   # POST /admin/projects

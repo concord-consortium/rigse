@@ -38,7 +38,7 @@ module NavigationHelper
     current_visitor.is_project_researcher?
   end
 
-  def show_researcher_projects_links
+  def show_research_projects_links
     current_visitor.is_project_researcher?
   end
 
@@ -251,8 +251,8 @@ module NavigationHelper
     end
 
     links = [{
-      id: '/researcher_projects',
-      label: nav_label('researcher_projects'),
+      id: '/research_projects',
+      label: nav_label('research_projects'),
       type: NavigationService::SECTION_TYPE,
       sort: 4
     }]
@@ -261,9 +261,9 @@ module NavigationHelper
 
     projects.each do |project|
       links << {
-        id: "/researcher_projects/#{project.id}",
+        id: "/research_projects/#{project.id}",
         label: project.name,
-        url: url_for([:classes, project]),
+        url: url_for([:research_classes, project]),
       }
     end
 
@@ -321,7 +321,7 @@ module NavigationHelper
       service.add_item switch_user_link
     end
 
-    if show_researcher_projects_links
+    if show_research_projects_links
       researcher_project_links.each {|clazz_link| service.add_item clazz_link}
     end
 

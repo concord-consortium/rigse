@@ -221,7 +221,7 @@ RSpec.describe Admin::ProjectPolicy do
           allow(user).to receive(:is_project_researcher?).with(project).and_return(true)
         end
         it 'should permit access to classses page' do
-          expect(policy.classes?).to be true
+          expect(policy.research_classes?).to be true
         end
       end
     end

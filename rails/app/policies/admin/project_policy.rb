@@ -82,7 +82,7 @@ class Admin::ProjectPolicy < ApplicationPolicy
     teacher? || admin?
   end
 
-  def classes?
+  def research_classes?
     update_or_edit? || user.is_project_researcher?(record)
   end
 end
