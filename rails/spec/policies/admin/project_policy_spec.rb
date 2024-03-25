@@ -191,10 +191,10 @@ RSpec.describe Admin::ProjectPolicy do
       end
     end
 
-    describe 'classes' do
+    describe 'research_classes' do
       describe 'a regular user' do
         it 'should not permit access to classes page' do
-          expect(policy.classes?).to be false
+          expect(policy.research_classes?).to be false
         end
       end
 
@@ -203,7 +203,7 @@ RSpec.describe Admin::ProjectPolicy do
           allow(user).to receive(:has_role?).with('admin').and_return(true)
         end
         it 'should permit access to classses page' do
-          expect(policy.classes?).to be true
+          expect(policy.research_classes?).to be true
         end
       end
 
@@ -212,7 +212,7 @@ RSpec.describe Admin::ProjectPolicy do
           allow(user).to receive(:is_project_admin?).with(project).and_return(true)
         end
         it 'should permit access to classses page' do
-          expect(policy.classes?).to be true
+          expect(policy.research_classes?).to be true
         end
       end
 
@@ -221,7 +221,7 @@ RSpec.describe Admin::ProjectPolicy do
           allow(user).to receive(:is_project_researcher?).with(project).and_return(true)
         end
         it 'should permit access to classses page' do
-          expect(policy.classes?).to be true
+          expect(policy.research_classes?).to be true
         end
       end
     end

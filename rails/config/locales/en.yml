@@ -167,7 +167,7 @@ en:
     full_status: Full Status
     links: Links
     switch_back: Switch back
-    researcher_projects: Researcher Projects
+    research_projects: Research Projects
 
 'en-HAS':
   activerecord:

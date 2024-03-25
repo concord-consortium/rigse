@@ -126,8 +126,8 @@ describe NavigationHelper, type: :helper  do
       expect(subject).not_to match %r{"label": "Favorites"}
     end
 
-    it "should not include researcher project links" do
-      expect(subject).not_to match %r{"label": "Researcher Projects"}
+    it "should not include research project links" do
+      expect(subject).not_to match %r{"label": "Research Projects"}
     end
   end
 
@@ -135,8 +135,8 @@ describe NavigationHelper, type: :helper  do
     let(:fake_visitor) { fake_researcher }
     subject { JSON.pretty_generate(helper.navigation_service(params).to_hash) }
 
-    it "should include researcher project links" do
-      expect(subject).to match %r{"label": "Researcher Projects"}
+    it "should include research project links" do
+      expect(subject).to match %r{"label": "Research Projects"}
     end
   end
 
