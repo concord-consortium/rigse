@@ -257,7 +257,7 @@ module NavigationHelper
       sort: 4
     }]
 
-    projects = current_visitor.researcher_for_projects
+    projects = current_visitor.researcher_for_projects.sort_by(&:name)
 
     projects.each do |project|
       links << {
