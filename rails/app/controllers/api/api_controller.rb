@@ -157,32 +157,4 @@ class API::APIController < ApplicationController
 
     return auth
   end
-
-  def auth_student_or_teacher(params)
-    auth = auth_not_anonymous(params)
-    return auth if auth[:error]
-    user = auth[:user]
-
-    if !user.portal_student && !user.portal_teacher
-      auth[:error] = 'You must be logged in as a student or teacher to use this endpoint'
-    end
-
-    return auth
-  end
-
-  def auth_student_or_teacher_or_researcher(params)
-    auth = auth_not_anonymous(params)
-    return auth if auth[:error]
-    user = auth[:user]
-
-    # Check if the user is a researcher of ANY project - the controller will check for a specific resource
-    auth[:role] ||= {}
-    auth[:role][:is_project_researcher] = user && user.is_project_researcher?
-
-    if !user.portal_student && !user.portal_teacher && !auth[:role][:is_project_researcher]
-      auth[:error] = 'You must be logged in as a student or teacher or researcher to use this endpoint'
-    end
-
-    return auth
-  end
 end
