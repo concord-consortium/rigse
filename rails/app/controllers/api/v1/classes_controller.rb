@@ -2,32 +2,24 @@ class API::V1::ClassesController < API::APIController
 
   # GET api/v1/classes/:id
   def show
-    auth = auth_student_or_teacher_or_researcher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
-
     clazz = Portal::Clazz.find_by_id(params[:id])
     if !clazz
       return error('The requested class was not found')
     end
 
-    role_in_clazz = user.role_in_clazz(clazz)
+    authorize clazz, :api_show?
 
-    if (!role_in_clazz[:student] && !role_in_clazz[:teacher] && !role_in_clazz[:researcher])
-      return error('You are not a student or teacher or researcher of the requested class')
-    end
+    anonymize_students = !current_user.has_full_access_to_student_data?(clazz)
 
-    render_info(clazz, role_in_clazz[:researcher])
+    render_info(clazz, anonymize_students)
   end
 
   # GET api/v1/classes/mine
   # lists the users classes
   def mine
-    auth = auth_student_or_teacher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
+    authorize Portal::Clazz, :mine?
 
-    user_with_clazzes = user.portal_student || user.portal_teacher
+    user_with_clazzes = current_user.portal_student || current_user.portal_teacher
 
     render :json => {
       classes: user_with_clazzes.clazzes.map do |clazz|
@@ -52,13 +44,12 @@ class API::V1::ClassesController < API::APIController
   end
 
   def log_links
-    # allow only admins for now
-    return error('You must be an admin to use this endpoint') unless current_user && current_user.has_role?("admin")
-
     clazz = Portal::Clazz.find_by_id(params[:id])
     if !clazz
       return error('The requested class was not found')
     end
+
+    authorize clazz, :log_links?
 
     base_report_url = ENV["BASE_LOG_REPORT_URL"] || "https://log-puller.herokuapp.com"
 
@@ -83,14 +74,10 @@ class API::V1::ClassesController < API::APIController
   end
 
   def set_is_archived
-    auth = auth_teacher(params)
-    return error(auth[:error]) if auth[:error]
-    user = auth[:user]
-
-    class_ownership = verify_teacher_class_ownership(user, params)
-    return error(class_ownership[:error]) if class_ownership[:error]
-
     clazz = Portal::Clazz.find_by_id(params[:id])
+
+    authorize clazz, :set_is_archived?
+
     clazz.is_archived = ActiveModel::Type::Boolean.new.cast(params[:is_archived])
     clazz.save!
 
@@ -149,19 +136,6 @@ class API::V1::ClassesController < API::APIController
         }
       },
     }
-  end
-
-  def verify_teacher_class_ownership(user, params)
-    clazz = Portal::Clazz.find(params[:id])
-    if !clazz
-      return {error: 'The requested class was not found'}
-    end
-
-    if !clazz.is_teacher?(user)
-      return {error: 'You are not a teacher of the requested class'}
-    end
-
-    return {clazz: clazz}
   end
 
   def render_ok

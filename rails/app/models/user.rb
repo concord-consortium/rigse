@@ -436,16 +436,26 @@ class User < ApplicationRecord
       .count > 0
   end
 
-  def role_in_clazz(clazz)
-    # NOTE: these checks are set so only one of these can be true and teacher access is checked before researcher access
-    student_in_class = portal_student && portal_student.has_clazz?(clazz)
-    teacher_in_class = !student_in_class && (portal_teacher && portal_teacher.has_clazz?(clazz))
-    researcher_in_class = !teacher_in_class && is_researcher_for_clazz?(clazz)
-    {
-      student: student_in_class,
-      teacher: teacher_in_class,
-      researcher: researcher_in_class
-    }
+  def is_project_admin_for_clazz?(clazz)
+    # check if class has teacher in a cohort of a project the user is a admin of using a explicit join to avoid a
+    # bunch of unneeded object instantiation
+    admin_for_projects
+      .joins("INNER JOIN admin_cohorts __ac ON __ac.project_id = admin_projects.id")
+      .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = __ac.id AND __aci.item_type = 'Portal::Teacher'")
+      .joins("INNER JOIN portal_teachers __pt ON __pt.id = __aci.item_id")
+      .joins("INNER JOIN portal_teacher_clazzes __ptc ON __ptc.teacher_id = __pt.id")
+      .where("__ptc.clazz_id = ?", clazz.id)
+      .count > 0
+  end
+
+  def has_full_access_to_student_data?(clazz)
+    # Only admins, class students, teachers and project admins have full access to student data. Start checks from
+    # the "cheapest" queries so we don't need to execute complex queries if not necessary (e.g. is_project_admin_for_clazz).
+    return true if has_role?('admin')
+    return true if portal_student&.has_clazz?(clazz)
+    return true if portal_teacher&.has_clazz?(clazz)
+    return true if is_project_admin_for_clazz?(clazz)
+    false
   end
 
   def add_role_for_project(role, project)
