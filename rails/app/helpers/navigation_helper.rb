@@ -195,12 +195,6 @@ module NavigationHelper
         label: nav_label("class_setup"),
         url: url_for([:edit, clazz])
       }
-      # TODO: Delete this one, its not used any more:
-      # clazz_links << {
-      #   id: "#{section_id}/status",
-      #   label: nav_label("full_status"),
-      #   url: url_for([:fullstatus, clazz])
-      # }
       clazz_links << {
         id: "#{section_id}/links",
         label: nav_label("links"),

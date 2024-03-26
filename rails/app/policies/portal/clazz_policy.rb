@@ -19,4 +19,44 @@ class Portal::ClazzPolicy < ApplicationPolicy
       end
     end
   end
+
+  # Used by API::V1::ClassesController:
+  def api_show?
+    class_teacher_or_admin? || class_student? || class_researcher?
+  end
+
+  def mine?
+    teacher? || student?
+  end
+
+  def log_links?
+    admin?
+  end
+
+  def set_is_archived?
+    class_teacher_or_admin?
+  end
+
+  # Used by Portal::ClazzesController:
+  def materials?
+    class_teacher? || class_researcher? || admin?
+  end
+
+  private
+
+  def class_student?
+    user && record && record.is_student?(user)
+  end
+
+  def class_teacher?
+    user && record && record.is_teacher?(user)
+  end
+
+  def class_teacher_or_admin?
+    class_teacher? || admin?
+  end
+
+  def class_researcher?
+    user && record && user.is_researcher_for_clazz?(record)
+  end
 end

@@ -12,8 +12,12 @@ class API::V1::OfferingsController < API::APIController
     unless offering
       return error('offering not found', 404)
     end
+
     authorize offering, :api_show?
-    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report])
+
+    anonymize_students = !current_user.has_full_access_to_student_data?(offering.clazz)
+
+    offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report], anonymize_students)
     render :json => offering_api.to_json, :callback => params[:callback]
   end
 

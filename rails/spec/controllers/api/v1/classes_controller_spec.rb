@@ -44,8 +44,8 @@ describe API::V1::ClassesController do
 
     it "should fail when id is a class that the teacher doesn't own" do
       post :set_is_archived, params: { id: other_clazz.id }
-      expect(response).to have_http_status(:bad_request)
-      expect(JSON.parse(response.body)["message"]).to eq "You are not a teacher of the requested class"
+      expect(response).to have_http_status(:forbidden)
+      expect(JSON.parse(response.body)["message"]).to eq "Not authorized"
     end
 
     it "should succeed when the id is a class the teacher owns" do
@@ -66,7 +66,7 @@ describe API::V1::ClassesController do
     it 'GET mine' do
       get :mine
 
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
