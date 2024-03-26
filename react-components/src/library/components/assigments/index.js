@@ -161,6 +161,7 @@ export default class Assignments extends React.Component {
   }
 
   render () {
+    const { readOnly } = this.props
     const { loading, clazz, offerings, offeringDetails } = this.state
     if (loading) {
       return null
@@ -168,8 +169,15 @@ export default class Assignments extends React.Component {
     return (
       <div>
         <ClassAssignments clazz={clazz} handleNewAssignment={this.handleNewAssignments} />
-        <OfferingsTable offerings={offerings} offeringDetails={offeringDetails} clazz={clazz}
-          onOfferingsReorder={this.onOfferingsReorder} onOfferingUpdate={this.onOfferingUpdate} requestOfferingDetails={this.requestOfferingDetails} />
+        <OfferingsTable
+          offerings={offerings}
+          offeringDetails={offeringDetails}
+          clazz={clazz}
+          readOnly={readOnly}
+          requestOfferingDetails={this.requestOfferingDetails}
+          onOfferingsReorder={this.onOfferingsReorder}
+          onOfferingUpdate={this.onOfferingUpdate}
+        />
       </div>
     )
   }
@@ -178,6 +186,8 @@ export default class Assignments extends React.Component {
 Assignments.defaultProps = {
   // classDataUrl is pretty much required. It can be set to any default value, as it depends on the current class.
   classDataUrl: null,
+  // When user is not a class teacher, but e.g. a researcher, this component should be read-only.
+  readOnly: false,
   // If initialData is not provided, component will use API (dataUrl) to get it.
   initialClassData: null
 }

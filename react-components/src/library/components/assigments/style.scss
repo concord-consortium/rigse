@@ -1,6 +1,7 @@
 @import '../../../shared/styles/mixins/_mixins.scss';
 @import '../../../shared/styles/variables/_colors.scss';
 @import '../../../shared/styles/variables/_variables.scss';
+
 .classAssignments {
 
   header {
@@ -32,7 +33,7 @@
         &:active {
           background: $col-lightblue;
           border-color: $col-lightblue;
-          color: $white;            
+          color: $white;
         }
       }
       ul {
@@ -132,6 +133,10 @@
   cursor: move;
   display: inline-block;
   vertical-align: middle;
+}
+
+.readOnly .activityNameCell {
+  cursor: default;
 }
 
 .checkboxCell {
