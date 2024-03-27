@@ -44,14 +44,25 @@ describe API::V1::JwtController, :type => :controller do
   let(:uid)             { Digest::MD5.hexdigest(url_for_user) }
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
   let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
+  let(:researcher_token) { addToken(researcher, client, expires) }
   let(:runnable)        { FactoryBot.create(:external_activity, runnable_opts)    }
   let(:offering)        { FactoryBot.create(:portal_offering, offering_opts)    }
   let(:clazz)           { FactoryBot.create(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
+  let(:other_clazz)     { FactoryBot.create(:portal_clazz, teachers: [other_class_teacher], students:[other_student], logging: true, class_hash: "other") }
   let(:offering_opts)   { {clazz: clazz, runnable: runnable}  }
-  let(:runnable_opts)   { {name: 'the activity'}              }
-  let(:class_teacher)   { FactoryBot.create(:portal_teacher)     }
+  let(:runnable_opts)   { {name: 'the activity'} }
+  let(:cohort)          { FactoryBot.create(:admin_cohort) }
+  let(:class_teacher)   { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+  let(:other_class_teacher)  { FactoryBot.create(:portal_teacher) }
   let(:student)         { FactoryBot.create(:full_portal_student) }
+  let(:other_student)   { FactoryBot.create(:full_portal_student) }
   let(:learner)         { Portal::Learner.where(offering_id: offering.id, student_id: student.id ).first_or_create }
+  let(:project)         { FactoryBot.create(:project, cohorts: [cohort]) }
+  let(:researcher)      {
+    researcher = FactoryBot.generate(:researcher_user)
+    researcher.researcher_for_projects << project
+    researcher
+  }
   let(:domain_matchers) { "http://x.y.z" }   # don't know why this is required
   let(:client)          { Client.create(
          :name       => "test_api_client",
@@ -498,6 +509,52 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
 
               expect(decoded_token[:data]["claims"]).to include(
+                "class_hash" => clazz.class_hash
+              )
+            end
+          end
+        end
+      end
+
+      context "and the params has the researcher flag" do
+        before(:each) {
+          set_auth_token(researcher_token)
+          FirebaseApp.create!(firebase_app_attributes)
+        }
+
+        context "and there is no class hash" do
+          it "returns 400" do
+            post :firebase, params: {:firebase_app => "test app", :researcher => "true"}, session: { :format => :json }
+            expect(response.body).to match(/A class_hash is required for researcher access/)
+            expect(response.status).to eq(400)
+          end
+        end
+
+        context "and there is a class hash" do
+          context "and the class hash is invalid" do
+            it "returns 400" do
+              post :firebase, params: { :firebase_app => "test app", :class_hash => "invalid", :researcher => "true" }, session: { :format => :json }
+              expect(response.body).to match(/A class with the requested class_hash does not exist/)
+              expect(response.status).to eq(400)
+            end
+          end
+
+          context "and the class hash is valid but the researcher does not have access via the cohort" do
+            it "returns 400" do
+              post :firebase, params: { :firebase_app => "test app", :class_hash => other_clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+              expect(response.body).to match(/As a researcher you do not have access to the requested class_hash/)
+              expect(response.status).to eq(400)
+            end
+          end
+
+          context "and the class_hash is for a class of the researcher" do
+            it "returns a valid JWT with this class hash" do
+
+              post :firebase, params: {:firebase_app => "test app", :class_hash => clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+              decoded_token = decode_token()
+
+              expect(decoded_token[:data]["claims"]).to include(
+                "user_type" => "researcher",
                 "class_hash" => clazz.class_hash
               )
             end

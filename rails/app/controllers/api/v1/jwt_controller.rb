@@ -186,7 +186,27 @@ class API::V1::JwtController < API::APIController
       claims: sub_claims
     }
 
-    if learner
+    if params[:researcher] == "true"
+      if !params[:class_hash].present?
+        raise StandardError, "A class_hash is required for researcher access"
+      end
+      clazz = Portal::Clazz.find_by_class_hash(params[:class_hash])
+      if !clazz
+        raise StandardError, "A class with the requested class_hash does not exist"
+      end
+      if !user.is_researcher_for_clazz?(clazz)
+        raise StandardError, "As a researcher you do not have access to the requested class_hash"
+      end
+      class_hash = params[:class_hash]
+
+      sub_claims.merge!({
+        user_type: "researcher",
+        class_hash: class_hash,
+        # The offering_id is not added to the claims because we don't want to restrict the
+        # researcher to just this one offering in the class.
+      })
+
+    elsif learner
       offering = learner.offering
 
       sub_claims.merge!({
@@ -246,7 +266,7 @@ class API::V1::JwtController < API::APIController
 
       # The resource_link_id and target_user_id params were already verified in the
       # handle_initial_auth method
-      # If resource_link_id is set but target_user_id is not, the handle_initial_auth will 
+      # If resource_link_id is set but target_user_id is not, the handle_initial_auth will
       # raise an exception
       if resource_link_id && target_user_id
 
