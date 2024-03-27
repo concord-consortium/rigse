@@ -57,14 +57,14 @@ class ExternalReport < ApplicationRecord
       token:          grant.access_token,
       username:       user.login
     }
-    if additional_params[:student_id]
-      # New reports expect ID of the User model (not ID of the Student model).
-      params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id
-    end
+    # New reports expect ID of the User model (not ID of the Student model).
+    params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id if additional_params[:student_id]
+    params[:activityId] = additional_params[:activity_id] if additional_params[:activity_id]
+    params[:researcher] = 'true' if additional_params[:researcher]
     params
   end
 
-  def url_for_class(clazz, user, protocol, host)
+  def url_for_class(clazz, user, protocol, host, additional_params = {})
     class_id = clazz.id
     grant = client.updated_grant_for(user, ReportTokenValidFor)
     routes = Rails.application.routes.url_helpers
@@ -76,9 +76,8 @@ class ExternalReport < ApplicationRecord
       token:          grant.access_token,
       username:       user.login
     }
-    if clazz.logging
-      params[:logging] = 'true'
-    end
+    params[:logging] = 'true' if clazz.logging
+    params[:researcher] = 'true' if additional_params[:researcher]
     add_query_params(url, params)
   end
 

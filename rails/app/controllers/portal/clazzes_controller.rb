@@ -365,8 +365,11 @@ class Portal::ClazzesController < ApplicationController
 
   def external_report
     portal_clazz = Portal::Clazz.find(params[:id])
+    authorize portal_clazz
     report = ExternalReport.find(params[:report_id])
-    next_url = report.url_for_class(portal_clazz, current_visitor, request.protocol, request.host_with_port)
+    additional_params = {}
+    additional_params[:researcher] = 'true' unless user.has_full_access_to_student_data?(offering.clazz)
+    next_url = report.url_for_class(portal_clazz, current_visitor, request.protocol, request.host_with_port, additional_params)
     redirect_to next_url
   end
 
