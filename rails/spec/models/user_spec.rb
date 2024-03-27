@@ -1044,6 +1044,38 @@ protected
     end
   end
 
+  describe "is_researcher_for_clazz?" do
+    let(:cohort)          { FactoryBot.create(:admin_cohort) }
+    let(:teacher)         { FactoryBot.create(:portal_teacher, cohorts: [cohort]) }
+    let(:clazz)           { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher]) }
+    let(:project)         { FactoryBot.create(:project, cohorts: [cohort]) }
+    let(:user)            { FactoryBot.create(:user) }
+
+    subject { user.is_researcher_for_clazz?(clazz) }
+
+    context "when the user is not a researcher for the class" do
+      it { is_expected.to be false}
+    end
+
+    context "when the user is a researcher for the class" do
+      let(:user) {
+        researcher = FactoryBot.generate(:researcher_user)
+        researcher.researcher_for_projects << project
+        researcher
+      }
+      it { is_expected.to be true}
+    end
+
+    context "when the user is a researcher but not for the class" do
+      let(:user) {
+        researcher = FactoryBot.generate(:researcher_user)
+        researcher.researcher_for_projects << FactoryBot.create(:project, cohorts: [])
+        researcher
+      }
+      it { is_expected.to be false}
+    end
+  end
+
   # TODO: auto-generated
   describe '#is_project_researcher?' do
     it 'is_project_researcher?' do
