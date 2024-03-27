@@ -76,7 +76,7 @@ class API::V1::Offering
     }
   end
 
-  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id, anonymize_students = false)
+  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id, researcher_data = false)
     runnable = offering.runnable
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
@@ -100,7 +100,13 @@ class API::V1::Offering
     end
     self.external_reports = []
     if runnable.respond_to?(:external_reports) && runnable.external_reports
-      runnable.external_reports.each do |report|
+      # Filter `external_reports` if `researcher_data` is present.
+      external_reports = if researcher_data
+                           runnable.external_reports.where(supports_researchers: true)
+                         else
+                           runnable.external_reports
+                         end
+      external_reports.each do |report|
         self.external_reports << report_attributes(report, offering, protocol, host_with_port)
       end
     end
@@ -111,6 +117,6 @@ class API::V1::Offering
       end
     end
 
-    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, anonymize_students) }
+    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, researcher_data) }
   end
 end

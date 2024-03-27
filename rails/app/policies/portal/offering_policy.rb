@@ -65,11 +65,11 @@ class Portal::OfferingPolicy < ApplicationPolicy
   end
 
   def report?
-    class_teacher_or_admin?
+    class_teacher_or_admin? || class_researcher?
   end
 
   def external_report?
-    if class_teacher_or_admin?
+    if class_teacher_or_admin? || class_researcher?
       true
     else
       class_student? &&

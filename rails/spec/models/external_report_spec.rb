@@ -29,21 +29,32 @@ describe ExternalReport do
         expect(query_hash['class']).to start_with('https://')
       end
 
+      describe "when extra params are not provided" do
+        it "should not researcher=true and other additional params" do
+          expect(subject).not_to include("studentId=")
+          expect(subject).not_to include("activityId=123")
+          expect(subject).not_to include('studentId=')
+        end
+      end
+
       describe "when extra params are provided" do
         let(:external_activity) { FactoryBot.create(:external_activity) }
         let(:offering) { FactoryBot.create(:portal_offering, {runnable: external_activity}) }
         let(:learner) { FactoryBot.create(:full_portal_learner, {offering: offering }) }
-        let(:extra_params) { {student_id: learner.student.id} }
+        let(:extra_params) { {student_id: learner.student.id, activity_id: 123, researcher: true } }
 
         it "should include the correct parameters" do
           expect(subject).to include("studentId=#{learner.user.id}")
+          expect(subject).to include("activityId=123")
+          expect(subject).to include("researcher=true")
         end
       end
     end
   end
 
   describe "#url_for_class" do
-    subject { external_report.url_for_class(offering.clazz, portal_teacher.user, 'https', 'perfect.host.com') }
+    let(:extra_params)    { {} }
+    subject { external_report.url_for_class(offering.clazz, portal_teacher.user, 'https', 'perfect.host.com', extra_params) }
 
     it "should handle report urls with parameters" do
       expect(subject.scan('?').size).to eq(1)
@@ -73,6 +84,20 @@ describe ExternalReport do
 
       it "should include the logging parameter" do
         expect(subject).to include('logging=true')
+      end
+    end
+
+    describe "when extra params are not provided" do
+      it "should not include the researcher parameter" do
+        expect(subject).not_to include('researcher=')
+      end
+    end
+
+    describe "when extra params are provided" do
+      let(:extra_params) { {researcher: true } }
+
+      it "should include the correct parameters" do
+        expect(subject).to include("researcher=true")
       end
     end
   end
