@@ -67,6 +67,14 @@ class Portal::Student < ApplicationRecord
     return generated_login
   end
 
+  def anonymized_first_name
+    "Student"
+  end
+
+  def anonymized_last_name
+    id.to_s
+  end
+
   def status(offerings_updated_after=0)
     # If offerings_updated_after is provided, all the offerings that haven't been updated
     # after this timestamp will be filtered out from the results (performance optimization).

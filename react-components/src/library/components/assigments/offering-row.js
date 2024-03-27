@@ -21,7 +21,9 @@ export default class OfferingRow extends React.Component {
 
   onCheckboxUpdate (name, event) {
     const { offering, onOfferingUpdate } = this.props
-    onOfferingUpdate(offering, name, event.target.checked)
+    if (onOfferingUpdate) {
+      onOfferingUpdate(offering, name, event.target.checked)
+    }
   }
 
   onDetailsToggle () {
@@ -36,14 +38,15 @@ export default class OfferingRow extends React.Component {
 
   render () {
     const { detailsVisible } = this.state
-    const { offering, offeringDetails, clazz } = this.props
+    const { offering, offeringDetails, clazz, readOnly } = this.props
+
     return (
       <div className={css.offering}>
         <div>
-          <span className={css.iconCell}><span className={`${css.sortIcon} icon-sort`} /></span>
+          { !readOnly && <span className={css.iconCell}><span className={`${css.sortIcon} icon-sort`} /></span> }
           <span className={css.activityNameCell}>{ offering.name }</span>
-          <span className={css.checkboxCell}><input type='checkbox' checked={offering.active} onChange={this.onActiveUpdate} /></span>
-          <span className={css.checkboxCell}><input type='checkbox' checked={offering.locked} onChange={this.onLockedUpdate} /></span>
+          <span className={css.checkboxCell}><input type='checkbox' disabled={readOnly} checked={offering.active} onChange={this.onActiveUpdate} /></span>
+          <span className={css.checkboxCell}><input type='checkbox' disabled={readOnly} checked={offering.locked} onChange={this.onLockedUpdate} /></span>
           <span className={css.detailsCell}><button className={'textButton adminOption'} onClick={this.onDetailsToggle}>{ this.detailsLabel }</button></span>
         </div>
         {
