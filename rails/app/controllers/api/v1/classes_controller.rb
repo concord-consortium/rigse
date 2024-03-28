@@ -9,9 +9,9 @@ class API::V1::ClassesController < API::APIController
 
     authorize clazz, :api_show?
 
-    resaercher_access = !current_user.has_full_access_to_student_data?(clazz)
+    anonymize_students = !current_user.has_full_access_to_student_data?(clazz)
 
-    render_info(clazz, resaercher_access)
+    render_info(clazz, anonymize_students)
   end
 
   # GET api/v1/classes/mine
@@ -86,7 +86,7 @@ class API::V1::ClassesController < API::APIController
 
   private
 
-  def render_info(clazz, researcher_access)
+  def render_info(clazz, anonymize)
     state = nil
     if school = clazz.school
       state = school.state
@@ -114,8 +114,8 @@ class API::V1::ClassesController < API::APIController
           :id => url_for(student.user),
           :user_id => student.user.id,
           :email => student.user.email,
-          :first_name => researcher_access ? student.anonymized_first_name : student.user.first_name,
-          :last_name => researcher_access ? student.anonymized_last_name : student.user.last_name
+          :first_name => anonymize ? student.anonymized_first_name : student.user.first_name,
+          :last_name => anonymize ? student.anonymized_last_name : student.user.last_name
         }
       },
       :offerings => clazz.teacher_visible_offerings.map { |offering|
@@ -127,7 +127,7 @@ class API::V1::ClassesController < API::APIController
           :url => api_v1_offering_url(offering.id)
         }
       },
-      :external_class_reports => clazz.external_class_reports(researcher_access).map { |external_report|
+      :external_class_reports => clazz.external_class_reports.map { |external_report|
         {
             :id => external_report.id,
             :name => external_report.name,

@@ -32,7 +32,6 @@ describe ExternalReport do
       describe "when extra params are not provided" do
         it "should not researcher=true and other additional params" do
           expect(subject).not_to include("studentId=")
-          expect(subject).not_to include("activityId=123")
           expect(subject).not_to include('studentId=')
         end
       end
@@ -41,11 +40,10 @@ describe ExternalReport do
         let(:external_activity) { FactoryBot.create(:external_activity) }
         let(:offering) { FactoryBot.create(:portal_offering, {runnable: external_activity}) }
         let(:learner) { FactoryBot.create(:full_portal_learner, {offering: offering }) }
-        let(:extra_params) { {student_id: learner.student.id, activity_id: 123, researcher: true } }
+        let(:extra_params) { {student_id: learner.student.id, researcher: true } }
 
         it "should include the correct parameters" do
           expect(subject).to include("studentId=#{learner.user.id}")
-          expect(subject).to include("activityId=123")
           expect(subject).to include("researcher=true")
         end
       end

@@ -39,7 +39,11 @@ class Portal::ClazzPolicy < ApplicationPolicy
 
   # Used by Portal::ClazzesController:
   def materials?
-    class_teacher_or_admin? || class_researcher?
+    if params[:researcher]
+      class_teacher_or_admin? || class_researcher?
+    else
+      class_teacher_or_admin?
+    end
   end
 
   def external_report?

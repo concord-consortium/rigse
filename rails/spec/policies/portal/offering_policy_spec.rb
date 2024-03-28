@@ -258,15 +258,21 @@ RSpec.describe Portal::OfferingPolicy do
         it { is_expected.to be_truthy }
       end
     end
-    context 'user is a researcher, but nof for this clazz' do
+    context 'user is a researcher, but not for this clazz' do
+      before(:each) {
+        context.params[:researcher] = true
+      }
       let(:user) { FactoryBot.generate(:researcher_user) }
       it { is_expected.to be_falsy }
     end
-    context 'user is a researcher for this clazz' do
+    context 'user is a researcher for this clazz and researcher=true param is provided' do
       let(:project) { FactoryBot.create(:project, cohorts: [cohort]) }
       let(:cohort)  { FactoryBot.create(:admin_cohort) }
       let(:teacher) { FactoryBot.create(:portal_teacher, clazzes: [offering.clazz], cohorts: [cohort]) }
-      before(:each) { teacher } # make sure teacher is actually created
+      before(:each) {
+        teacher # make sure teacher is actually created
+        context.params[:researcher] = true
+      }
       let(:user) {
         researcher = FactoryBot.generate(:researcher_user)
         researcher.researcher_for_projects << project
@@ -274,6 +280,21 @@ RSpec.describe Portal::OfferingPolicy do
       }
 
       it { is_expected.to be_truthy }
+    end
+    context 'user is a researcher for this clazz but researcher=true param is not provided' do
+      let(:project) { FactoryBot.create(:project, cohorts: [cohort]) }
+      let(:cohort)  { FactoryBot.create(:admin_cohort) }
+      let(:teacher) { FactoryBot.create(:portal_teacher, clazzes: [offering.clazz], cohorts: [cohort]) }
+      before(:each) {
+        teacher # make sure teacher is actually created
+      }
+      let(:user) {
+        researcher = FactoryBot.generate(:researcher_user)
+        researcher.researcher_for_projects << project
+        researcher
+      }
+
+      it { is_expected.to be_falsy }
     end
   end
 

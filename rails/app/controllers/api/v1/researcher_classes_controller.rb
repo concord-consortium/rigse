@@ -258,7 +258,7 @@ class API::V1::ResearcherClassesController < API::APIController
         hash[:name] = c.name
         hash[:teacher_names] = c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", ")
         hash[:cohort_names] = c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", ")
-        hash[:class_url] = materials_portal_clazz_url(c.id)
+        hash[:class_url] = materials_portal_clazz_url(c.id, researcher: true)
         hash
       end
   end

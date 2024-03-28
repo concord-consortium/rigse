@@ -69,7 +69,9 @@ class Portal::OfferingPolicy < ApplicationPolicy
   end
 
   def external_report?
-    if class_teacher_or_admin? || class_researcher?
+    if class_teacher_or_admin?
+      true
+    elsif params[:researcher] && class_researcher?
       true
     else
       class_student? &&

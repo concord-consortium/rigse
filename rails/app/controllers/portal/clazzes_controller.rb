@@ -301,6 +301,10 @@ class Portal::ClazzesController < ApplicationController
   end
 
   def materials
+    # This param is used by the materials.haml view to determine if the user is a researcher, and whether to show the
+    # read-only view of the materials page.
+    @researcher = params[:researcher]
+
     @portal_clazz = Portal::Clazz.includes(:offerings => :learners, :students => :user).find(params[:id])
 
     authorize @portal_clazz, :materials?
@@ -367,8 +371,7 @@ class Portal::ClazzesController < ApplicationController
     portal_clazz = Portal::Clazz.find(params[:id])
     authorize portal_clazz
     report = ExternalReport.find(params[:report_id])
-    additional_params = {}
-    additional_params[:researcher] = 'true' unless user.has_full_access_to_student_data?(offering.clazz)
+    additional_params = { researcher: params[:researcher] }
     next_url = report.url_for_class(portal_clazz, current_visitor, request.protocol, request.host_with_port, additional_params)
     redirect_to next_url
   end

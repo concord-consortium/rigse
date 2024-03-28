@@ -59,7 +59,6 @@ class ExternalReport < ApplicationRecord
     }
     # New reports expect ID of the User model (not ID of the Student model).
     params[:studentId] = Portal::Student.find(additional_params[:student_id]).user.id if additional_params[:student_id]
-    params[:activityId] = additional_params[:activity_id] if additional_params[:activity_id]
     params[:researcher] = 'true' if additional_params[:researcher]
     params
   end

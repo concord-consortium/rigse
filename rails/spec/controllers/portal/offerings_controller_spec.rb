@@ -254,9 +254,10 @@ describe Portal::OfferingsController do
       end
     end
 
-    describe "when the current user is a researcher with access to this offering" do
+    describe "when the current user is a researcher with access to this offering and researcher=true param is passed" do
       let(:user) { researcher }
-      it "should include researcher=true parameter" do
+      let(:post_params) { { id: offering.id, report_id: external_report.id, researcher: true } }
+      it "should include researcher=true parameter in the final URL" do
         get :external_report, params: post_params
         expect(response.location).to include("researcher=true")
       end

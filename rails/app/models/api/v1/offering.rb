@@ -29,7 +29,7 @@ class API::V1::Offering
     attribute :detailed_progress, Array
 
     def initialize(student, offering, protocol, host_with_port, anonymize = false)
-      self.name = student.user.name
+      self.name = anonymize ? "#{student.anonymized_first_name} #{student.anonymized_last_name}" : student.user.name
       self.first_name = anonymize ? student.anonymized_first_name : student.user.first_name
       self.last_name = anonymize ? student.anonymized_last_name : student.user.last_name
       self.username = student.user.login
@@ -76,7 +76,7 @@ class API::V1::Offering
     }
   end
 
-  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id, researcher_data = false)
+  def initialize(offering, protocol, host_with_port, current_user, additional_external_report_id, anonymize_students = false)
     runnable = offering.runnable
     self.id = offering.id
     self.teacher = offering.clazz.teacher.name
@@ -100,13 +100,7 @@ class API::V1::Offering
     end
     self.external_reports = []
     if runnable.respond_to?(:external_reports) && runnable.external_reports
-      # Filter `external_reports` if `researcher_data` is present.
-      external_reports = if researcher_data
-                           runnable.external_reports.where(supports_researchers: true)
-                         else
-                           runnable.external_reports
-                         end
-      external_reports.each do |report|
+      runnable.external_reports.each do |report|
         self.external_reports << report_attributes(report, offering, protocol, host_with_port)
       end
     end
@@ -117,6 +111,6 @@ class API::V1::Offering
       end
     end
 
-    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, researcher_data) }
+    self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, anonymize_students) }
   end
 end

@@ -158,26 +158,24 @@ class Portal::OfferingsController < ApplicationController
   # This is in fact a default external report.
   def report
     offering_id = params[:id]
-    activity_id = params[:activity_id] # Might be null
+    researcher = params[:researcher] # Might be null
     offering = Portal::Offering.find(offering_id)
     authorize offering
     report = DefaultReportService::default_report_for_offering(offering)
     raise ActionController::RoutingError.new('Default Report Not Found') unless report
-    additional_params = { activity_id: activity_id }
-    additional_params[:researcher] = 'true' unless current_user.has_full_access_to_student_data?(offering.clazz)
+    additional_params = { researcher: researcher }
     next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, additional_params)
     redirect_to next_url
   end
 
   def external_report
     offering_id = params[:id]
-    activity_id = params[:activity_id] # Might be null
+    researcher = params[:researcher] # Might be null
     offering = Portal::Offering.find(offering_id)
     authorize offering
     report_id = params[:report_id]
     report = ExternalReport.find(report_id)
-    additional_params = { activity_id: activity_id }
-    additional_params[:researcher] = 'true' unless current_user.has_full_access_to_student_data?(offering.clazz)
+    additional_params = { researcher: researcher }
     next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, additional_params)
     redirect_to next_url
   end
