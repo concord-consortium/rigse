@@ -8,7 +8,7 @@ import css from './style.scss'
 const SortableOffering = SortableElement(OfferingRow)
 
 const SortableOfferings = SortableContainer(({ readOnly, offerings, offeringDetails, onOfferingUpdate, requestOfferingDetails, clazz }) => {
-  const RowComponent = readOnly ? SortableOffering : OfferingRow
+  const RowComponent = readOnly ? OfferingRow : SortableOffering
   return (
     <div className={`${css.offeringsTable} ${readOnly ? css.readOnly : ''}`}>
       <div className={css.headers}>
