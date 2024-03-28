@@ -7,6 +7,12 @@ import { arrayMove } from 'react-sortable-hoc'
 
 import { appendOfferingApiQueryParams } from '../../url-params'
 
+const addQueryParam = (url, param, value) => {
+  const urlObj = new URL(url)
+  urlObj.searchParams.append(param, value)
+  return urlObj.toString()
+}
+
 const teachersMapping = data => {
   return data.map(teacher => `${teacher.first_name} ${teacher.last_name}`).join(', ')
 }
@@ -21,19 +27,25 @@ const offeringsListMapping = data => {
   }))
 }
 
-const externalReportMapping = data => {
+const externalReportMapping = (data, researcher) => {
   if (!data) {
     return null
   }
   return {
     name: data.name,
     launchText: data.launch_text,
-    url: data.url,
-    supportsResearchers: data.supports_researchers
+    url: researcher ? addQueryParam(data.url, 'researcher', 'true') : data.url
   }
 }
 
-const classMapping = data => {
+const externalReportsArrayMapping = (data, researcher) => {
+  if (!data) {
+    return []
+  }
+  return (researcher ? data.filter(r => r.supports_researchers) : data).map(r => externalReportMapping(r, researcher))
+}
+
+const classMapping = (data, researcher) => {
   return data && {
     id: data.id,
     name: data.name,
@@ -42,11 +54,11 @@ const classMapping = data => {
     teachers: teachersMapping(data.teachers),
     editPath: data.edit_path,
     assignMaterialsPath: data.assign_materials_path,
-    externalClassReports: data.external_class_reports.map(r => externalReportMapping(r))
+    externalClassReports: externalReportsArrayMapping(data.external_class_reports, researcher)
   }
 }
 
-const offeringDetailsMapping = data => {
+const offeringDetailsMapping = (data, researcher) => {
   return {
     id: data.id,
     activityName: data.activity,
@@ -54,7 +66,7 @@ const offeringDetailsMapping = data => {
     activityUrl: data.activity_url,
     hasTeacherEdition: data.has_teacher_edition,
     reportUrl: data.report_url,
-    externalReports: data.external_reports && data.external_reports.map(r => externalReportMapping(r)),
+    externalReports: externalReportsArrayMapping(data.external_reports, researcher),
     reportableActivities: data.reportable_activities && data.reportable_activities.map(a => reportableActivityMapping(a)),
     students: data.students.map(s => studentMapping(s)).sort(sortByName)
   }
@@ -140,11 +152,13 @@ export default class Assignments extends React.Component {
   }
 
   requestOfferingDetails (offering) {
+    const { researcher } = this.props
+
     jQuery.ajax({
       type: 'GET',
       url: appendOfferingApiQueryParams(offering.apiUrl),
       success: data => {
-        const newData = offeringDetailsMapping(data)
+        const newData = offeringDetailsMapping(data, researcher)
         const { offeringDetails } = this.state
         this.setState({
           offeringDetails: Object.assign({}, offeringDetails, { [offering.id]: newData })
@@ -161,7 +175,7 @@ export default class Assignments extends React.Component {
   }
 
   render () {
-    const { readOnly } = this.props
+    const { researcher } = this.props
     const { loading, clazz, offerings, offeringDetails } = this.state
     if (loading) {
       return null
@@ -173,7 +187,7 @@ export default class Assignments extends React.Component {
           offerings={offerings}
           offeringDetails={offeringDetails}
           clazz={clazz}
-          readOnly={readOnly}
+          readOnly={researcher}
           requestOfferingDetails={this.requestOfferingDetails}
           onOfferingsReorder={this.onOfferingsReorder}
           onOfferingUpdate={this.onOfferingUpdate}
@@ -186,8 +200,8 @@ export default class Assignments extends React.Component {
 Assignments.defaultProps = {
   // classDataUrl is pretty much required. It can be set to any default value, as it depends on the current class.
   classDataUrl: null,
-  // When user is not a class teacher, but e.g. a researcher, this component should be read-only.
-  readOnly: false,
+  // When user is a researcher, this component should be read-only.
+  researcher: false,
   // If initialData is not provided, component will use API (dataUrl) to get it.
   initialClassData: null
 }

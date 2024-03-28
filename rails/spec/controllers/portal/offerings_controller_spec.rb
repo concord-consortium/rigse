@@ -190,6 +190,10 @@ describe Portal::OfferingsController do
           get :report, params: post_params
           expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
         end
+        it "should not include researcher=true parameter" do
+          get :report, params: post_params
+          expect(response.location).not_to include("researcher=")
+        end
       end
     end
 
@@ -197,6 +201,72 @@ describe Portal::OfferingsController do
       let(:user) { teacher_b.user }
       it "should redirect the user to /recent_activity" do
         get :report, params: post_params
+        expect(response).to redirect_to :recent_activity
+      end
+    end
+  end
+
+  describe "GET external_report" do
+    let(:external_activity) { FactoryBot.create(:external_activity) }
+    let(:offering) { FactoryBot.create(
+        :portal_offering,
+        runnable_id: external_activity.id,
+        runnable_type: 'ExternalActivity',
+        clazz: clazz)}
+    let(:project)     { FactoryBot.create(:project, cohorts: [cohort]) }
+    let(:cohort)      { FactoryBot.create(:admin_cohort) }
+    let(:clazz)       { FactoryBot.create :portal_clazz, teachers: [teacher] }
+    let(:teacher)     { FactoryBot.create(:teacher, cohorts: [cohort]) }
+    let(:teacher_b)   { FactoryBot.create :teacher }
+    let(:researcher) {
+      researcher = FactoryBot.generate(:researcher_user)
+      researcher.researcher_for_projects << project
+      researcher
+    }
+    let(:report_url)  { "https://concord-consortium.github.io/portal-report/" }
+    let(:external_report) { FactoryBot.create(:external_report, url: report_url) }
+    let(:post_params) { { id: offering.id, report_id: external_report.id } }
+
+    before(:each) do
+      sign_in user
+    end
+
+    describe "When the teacher of the class requests external report" do
+      let(:user)        { teacher.user }
+
+      describe "when offering report is used" do
+        it "should redirect to the default reporting service" do
+          get :external_report, params: post_params
+          expect(response.location).to match(/#{report_url}/)
+        end
+        it "should include an authentication token parameter" do
+          get :external_report, params: post_params
+          expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
+        end
+        it "should include an authentication token parameter" do
+          get :external_report, params: post_params
+          expect(response.location).to match(/token=([0-9]|[a-f]){32}/)
+        end
+        it "should not include researcher=true parameter" do
+          get :external_report, params: post_params
+          expect(response.location).not_to include("researcher=")
+        end
+      end
+    end
+
+    describe "when the current user is a researcher with access to this offering and researcher=true param is passed" do
+      let(:user) { researcher }
+      let(:post_params) { { id: offering.id, report_id: external_report.id, researcher: true } }
+      it "should include researcher=true parameter in the final URL" do
+        get :external_report, params: post_params
+        expect(response.location).to include("researcher=true")
+      end
+    end
+
+    describe "when the current user is a teacher without access to this offering" do
+      let(:user) { teacher_b.user }
+      it "should redirect the user to /recent_activity" do
+        get :external_report, params: post_params
         expect(response).to redirect_to :recent_activity
       end
     end
@@ -230,6 +300,10 @@ describe Portal::OfferingsController do
         it "should provide studentId" do
           get :student_report, params: post_params
           expect(response.location).to include("studentId=#{student.user.id}")
+        end
+        it "should not include researcher=true parameter" do
+          get :report, params: post_params
+          expect(response.location).not_to include("researcher=")
         end
       end
     end

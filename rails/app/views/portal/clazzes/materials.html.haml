@@ -3,5 +3,5 @@
 :javascript
   PortalComponents.renderAssignments({
     classDataUrl: Portal.API_V1.class("#{@portal_clazz.id}"),
-    readOnly: #{!current_user.has_full_access_to_student_data?(@portal_clazz)},
+    researcher: #{@researcher ? 'true' : 'false'},
   }, 'assignments-page')

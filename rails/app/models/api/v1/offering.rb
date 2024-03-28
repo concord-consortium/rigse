@@ -29,7 +29,7 @@ class API::V1::Offering
     attribute :detailed_progress, Array
 
     def initialize(student, offering, protocol, host_with_port, anonymize = false)
-      self.name = student.user.name
+      self.name = anonymize ? "#{student.anonymized_first_name} #{student.anonymized_last_name}" : student.user.name
       self.first_name = anonymize ? student.anonymized_first_name : student.user.first_name
       self.last_name = anonymize ? student.anonymized_last_name : student.user.last_name
       self.username = student.user.login
