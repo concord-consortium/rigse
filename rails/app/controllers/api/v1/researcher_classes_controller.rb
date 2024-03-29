@@ -42,14 +42,6 @@ class API::V1::ResearcherClassesController < API::APIController
       ids[:project_id] = options[:project_id].to_i
     end
 
-    # Filter by project_id if provided. It happens on Resaercher Classes page.
-    if ids.has_key?(:project_id)
-      scopes[:teachers] = filter_teachers_by_project_id(scopes[:teachers], ids[:project_id])
-      scopes[:cohorts] = filter_cohorts_by_project_id(scopes[:cohorts], ids[:project_id])
-      scopes[:runnables] = filter_runnables_by_project_id(scopes[:runnables], ids[:project_id])
-      scopes[:classes] = filter_classes_by_project_id(scopes[:classes], ids[:project_id])
-    end
-
     totals = ActiveModel::Type::Boolean.new.cast(options[:totals])
     if totals
       results[:totals] = {
@@ -85,151 +77,64 @@ class API::V1::ResearcherClassesController < API::APIController
       end
     end
 
+    classes_subquery = classes_query(options, user, scopes, ids)
+    classes_ids_subbquery = classes_subquery.select(:id)
+
     if options[:load_all]
       case options[:load_all]
       when "teachers"
-        results[:hits] = {teachers: teacher_query(options, user, scopes, {})}
+        results[:hits] = {teachers: teacher_query(options, user, scopes, classes_ids_subbquery)}
       when "cohorts"
-        results[:hits] = {cohorts: cohorts_query(options, user, scopes, {})}
+        results[:hits] = {cohorts: cohorts_query(options, user, scopes, classes_ids_subbquery)}
       when "runnables"
-        results[:hits] = {runnables: runnables_query(options, user, scopes, {})}
+        results[:hits] = {runnables: runnables_query(options, user, scopes, classes_ids_subbquery)}
       end
     elsif (ids.has_key?(:teachers) || ids.has_key?(:cohorts) || ids.has_key?(:runnables))
       results[:hits] = {
-        teachers: teacher_query(options, user, scopes, ids),
-        cohorts: cohorts_query(options, user, scopes, ids),
-        runnables: runnables_query(options, user, scopes, ids),
-        classes: classes_query(options, user, scopes, ids)
+        teachers: teacher_query(options, user, scopes, classes_ids_subbquery),
+        cohorts: cohorts_query(options, user, scopes, classes_ids_subbquery),
+        runnables: runnables_query(options, user, scopes, classes_ids_subbquery),
+        classes: classes_mapping(classes_subquery)
       }
     end
 
     return results
   end
 
-  def filter_teachers_by_project_id(teachers_scope, project_id)
-    teachers_scope
-      .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.item_id = portal_teachers.id")
-      .joins("INNER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
-      .where("admin_cohort_items.item_type = 'Portal::Teacher' AND admin_cohorts.project_id = ?", project_id)
-  end
-
-  def filter_cohorts_by_project_id(cohorts_scope, project_id)
-    cohorts_scope
-      .where("admin_cohorts.project_id = ?", project_id)
-  end
-
-  def filter_runnables_by_project_id(runnables_scope, project_id)
-    runnables_scope
-      .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_offerings.clazz_id = ptc2.clazz_id")
-      .joins("INNER JOIN admin_cohort_items aci ON aci.item_id = ptc2.teacher_id")
-      .joins("INNER JOIN admin_cohorts ON admin_cohorts.id = aci.admin_cohort_id")
-      .where("aci.item_type = 'Portal::Teacher' AND admin_cohorts.project_id = ?", project_id)
-  end
-
-  def filter_classes_by_project_id(classes_scope, project_id)
-    classes_scope
-      .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_clazzes.id = ptc2.clazz_id")
-      .joins("INNER JOIN admin_cohort_items aci ON aci.item_id = ptc2.teacher_id")
-      .joins("INNER JOIN admin_cohorts ON admin_cohorts.id = aci.admin_cohort_id")
-      .where("aci.item_type = 'Portal::Teacher' AND admin_cohorts.project_id = ?", project_id)
-  end
-
-  def teacher_query(options, user, scopes, ids)
-    if query_not_limited?(options, ids)
-      return []
-    end
-
-    query_scope = scopes[:teachers]
-    if ids.has_key?(:teachers)
-      query_scope = query_scope.where("portal_teachers.id IN (?)", ids[:teachers])
-    end
-
-    if ids.has_key?(:cohorts)
-      query_scope = query_scope
-        .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.item_id = portal_teachers.id")
-        .where("admin_cohort_items.item_type = 'Portal::Teacher' AND admin_cohort_items.admin_cohort_id IN (?)", ids[:cohorts])
-    end
-
-    if ids.has_key?(:runnables)
-      query_scope = query_scope
-        .joins("INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id")
-        .joins("INNER JOIN portal_offerings ON portal_offerings.clazz_id = portal_teacher_clazzes.clazz_id")
-        .where("portal_offerings.runnable_type = 'ExternalActivity' AND portal_offerings.runnable_id IN (?)", ids[:runnables])
-    end
-
-    query_scope
+  def teacher_query(options, user, scopes, clazz_ids_subquery)
+    scopes[:teachers]
+      .joins("INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id")
+      .where(portal_teacher_clazzes: { clazz_id: clazz_ids_subquery })
       .distinct
       .joins(:user)
       .select("portal_teachers.id, CONCAT(users.first_name, ' ', users.last_name, ' (', users.login ,')') AS label")
   end
 
-  def cohorts_query(options, user, scopes, ids)
-    if query_not_limited?(options, ids)
-      return []
-    end
-
-    query_scope = scopes[:cohorts]
-    if ids.has_key?(:cohorts)
-      query_scope = query_scope.where("admin_cohorts.id IN (?)", ids[:cohorts])
-    end
-
-    if ids.has_key?(:teachers)
-      query_scope = query_scope
-        .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.admin_cohort_id = admin_cohorts.id")
-        .where("admin_cohort_items.item_type = 'Portal::Teacher' AND admin_cohort_items.item_id IN (?)", ids[:teachers])
-    end
-
-    if ids.has_key?(:runnables)
-      # NOTE: the aci2 alias is required as admin_cohort_items is also joined if there are teachers ids
-      query_scope = query_scope
-        .joins("INNER JOIN admin_cohort_items aci2 ON aci2.admin_cohort_id = admin_cohorts.id")
-        .where("aci2.item_type = 'Portal::Teacher'")
-        .joins("INNER JOIN portal_teacher_clazzes ptc2 ON aci2.item_id = ptc2.teacher_id")
-        .joins("INNER JOIN portal_offerings ON portal_offerings.clazz_id = ptc2.clazz_id")
-        .where("portal_offerings.runnable_type = 'ExternalActivity' AND portal_offerings.runnable_id IN (?)", ids[:runnables])
-    end
-
-    query_scope
+  def cohorts_query(options, user, scopes, clazz_ids_subquery)
+    scopes[:cohorts]
+      .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.item_type = 'Portal::Teacher' AND admin_cohort_items.admin_cohort_id = admin_cohorts.id")
+      .joins("INNER JOIN portal_teacher_clazzes ON admin_cohort_items.item_id = portal_teacher_clazzes.teacher_id")
+      .where(portal_teacher_clazzes: { clazz_id: clazz_ids_subquery })
       .joins("LEFT OUTER JOIN admin_projects ON admin_projects.id = admin_cohorts.project_id")
       .distinct
       .select("admin_cohorts.id, CONCAT(COALESCE(admin_projects.name,'No Project'), ': ', admin_cohorts.name) as label")
       .order("label")
   end
 
-  def runnables_query(options, user, scopes, ids)
-    if query_not_limited?(options, ids)
-      return []
-    end
-
-    query_scope = scopes[:runnables]
-    if ids.has_key?(:runnables)
-      query_scope = query_scope.where("runnable_type = 'ExternalActivity' AND runnable_id IN (?)", ids[:runnables])
-    end
-
-    if ids.has_key?(:cohorts)
-      query_scope = query_scope
-        .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_offerings.clazz_id = ptc2.clazz_id")
-        .joins("INNER JOIN admin_cohort_items aci ON aci.item_id = ptc2.teacher_id")
-        .where("aci.item_type = 'Portal::Teacher' AND aci.admin_cohort_id IN (?)", ids[:cohorts])
-    end
-
-    if ids.has_key?(:teachers)
-      query_scope = query_scope
-        .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_offerings.clazz_id = ptc2.clazz_id")
-        .where("ptc2.teacher_id IN (?)", ids[:teachers])
-    end
-
-    query_scope
+  def runnables_query(options, user, scopes, clazz_ids_subquery)
+    scopes[:runnables]
+      .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_offerings.clazz_id = ptc2.clazz_id")
+      .where(portal_teacher_clazzes: { clazz_id: clazz_ids_subquery })
       .distinct
       .select("external_activities.id, external_activities.name as label")
   end
 
   def classes_query(options, user, scopes, ids)
-    if query_not_limited?(options, ids)
-      return []
-    end
-
     query_scope = scopes[:classes]
+      .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_clazzes.id = ptc2.clazz_id")
+      .joins("INNER JOIN admin_cohort_items aci ON aci.item_id = ptc2.teacher_id")
+      .joins("INNER JOIN admin_cohorts ON admin_cohorts.id = aci.admin_cohort_id")
+      .where("aci.item_type = 'Portal::Teacher' AND admin_cohorts.project_id = ?", ids[:project_id])
 
     if ids.has_key?(:cohorts)
       query_scope = query_scope
@@ -250,17 +155,19 @@ class API::V1::ResearcherClassesController < API::APIController
         .where("portal_offerings.runnable_type = 'ExternalActivity' AND portal_offerings.runnable_id IN (?)", ids[:runnables])
     end
 
-    query_scope
-      .distinct
-      .map do |c|
-        hash = {}
-        hash[:label] = c.name # required by JS code, fix it?
-        hash[:name] = c.name
-        hash[:teacher_names] = c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", ")
-        hash[:cohort_names] = c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", ")
-        hash[:class_url] = materials_portal_clazz_url(c.id, researcher: true)
-        hash
-      end
+    query_scope.distinct
+  end
+
+  def classes_mapping(classes_query)
+    classes_query.map do |c|
+      hash = {}
+      hash[:label] = c.name # required by JS code, fix it?
+      hash[:name] = c.name
+      hash[:teacher_names] = c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", ")
+      hash[:cohort_names] = c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", ")
+      hash[:class_url] = materials_portal_clazz_url(c.id, researcher: true)
+      hash
+    end
   end
 
   def query_not_limited?(options, ids)
