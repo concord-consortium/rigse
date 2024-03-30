@@ -7,6 +7,7 @@ import 'react-day-picker/lib/style.css'
 import css from './style.scss'
 
 const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
+const pluralize = (count, singular, plural) => count === 1 ? `${count} ${singular}` : `${count} ${plural}`
 
 const queryCache = {}
 
@@ -22,80 +23,65 @@ export default class ResearcherClassesForm extends React.Component {
       filterables: {
         teachers: [],
         cohorts: [],
-        runnables: [],
-        classes: []
+        runnables: []
       },
+      classes: [],
+      stats: null,
       // waiting for results
       waitingFor_teachers: false,
       waitingFor_cohorts: false,
       waitingFor_runnables: false,
-      waitingFor_classes: false,
-      totals: {},
       // checkbox options
-      removeCCTeachers: false,
-      queryParams: {}
+      removeCCTeachers: false
     }
   }
 
-  // eslint-disable-next-line
-  UNSAFE_componentWillMount () {
-    this.getTotals()
+  noFilterSelected () {
+    return this.state.teachers.length === 0 && this.state.cohorts.length === 0 && this.state.runnables.length === 0
   }
 
-  getTotals () {
-    jQuery.ajax({
-      url: '/api/v1/researcher_classes',
-      type: 'GET',
-      data: { totals: true, remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }
-    }).then(data => {
-      if (data.error) {
-        window.alert(data.error)
-      }
-      if (data.totals) {
-        this.setState({ totals: data.totals })
-      }
-    })
-  }
-
-  query (_params, _fieldName, searchString) {
+  // If we pass a field name, the filter box for that field will *not* be
+  // updated, but all others will. This lets us find all possible values
+  // for a dropdown given all the other filters.
+  query (_params, _fieldName) {
+    const params = jQuery.extend({}, _params) // clone
     if (_fieldName) {
       this.setState({ [`waitingFor_${_fieldName}`]: true })
+      params.load_only = _fieldName
     }
-    const params = jQuery.extend({}, _params) // clone
+
     if (_fieldName) {
       // we remove the value of each field from the filter query for that
       // dropdown, as we want to know all possible values for that dropdown
       // given only the other filters
       delete params[_fieldName]
     }
-    if (searchString) {
-      params[_fieldName] = searchString
-    }
 
     const cacheKey = JSON.stringify(params)
 
-    const handleResponse = (fieldName => {
-      return data => {
-        let newState = { filterables: this.state.filterables }
-
-        queryCache[cacheKey] = data
-
-        let hits = data.hits && data.hits[fieldName] ? data.hits[fieldName] : []
-        if (searchString) {
-          // merge results and remove dups
-          let merged = (newState.filterables[fieldName] || []).concat(hits)
-          newState.filterables[fieldName] = merged.filter((str, i) => merged.indexOf(str) === i)
+    const handleResponse = data => {
+      queryCache[cacheKey] = data
+      this.setState(prevState => {
+        const hits = data.hits
+        const newState = {}
+        if (!_fieldName) {
+          newState.stats = {
+            cohorts: hits.cohorts.length,
+            teachers: hits.teachers.length,
+            runnables: hits.runnables.length,
+            classes: hits.classes.length
+          }
+          newState.classes = hits.classes
         } else {
-          newState.filterables[fieldName] = hits
+          newState.filterables = { ...prevState.filterables }
+          newState.filterables[_fieldName] = hits[_fieldName]
+          newState[`waitingFor_${_fieldName}`] = false
         }
+        return newState
+      })
 
-        newState.filterables[fieldName].sort((a, b) => a.label.localeCompare(b.label))
-
-        newState[`waitingFor_${_fieldName}`] = false
-        this.setState(newState)
-        return data
-      }
-    })(_fieldName)
+      return data
+    }
 
     if ((queryCache[cacheKey] != null ? queryCache[cacheKey].then : undefined)) { // already made a Promise that is still pending
       queryCache[cacheKey].then(handleResponse) // chain a new Then
@@ -121,12 +107,25 @@ export default class ResearcherClassesForm extends React.Component {
   }
 
   updateFilters () {
+    if (this.noFilterSelected()) {
+      // Avoid making biggest query possibly and instead reset everything. Once user selects a filter, we will make
+      // the query to fill this first dropdown.
+      this.setState({
+        classes: [],
+        stats: null,
+        filterables: {
+          teachers: [],
+          cohorts: [],
+          runnables: []
+        }
+      })
+      return
+    }
     const params = this.getQueryParams()
     this.query(params)
     this.query(params, 'teachers')
     this.query(params, 'cohorts')
     this.query(params, 'runnables')
-    this.query(params, 'classes')
   }
 
   renderInput (name, titleOverride) {
@@ -135,39 +134,27 @@ export default class ResearcherClassesForm extends React.Component {
     const hits = this.state.filterables[name]
 
     const isLoading = this.state[`waitingFor_${name}`]
-    const placeholder = !isLoading ? (hits.length === 0 ? 'Search...' : 'Select or search...') : 'Loading ...'
+    const placeholder = !isLoading ? 'Select or search...' : 'Loading ...'
 
     const options = hits.map(hit => {
       return { value: hit.id, label: hit.label }
     })
 
-    const handleSelectInputChange = value => {
-      if (value.length === 4) {
-        const params = this.getQueryParams()
-        this.query(params, name, value)
-      }
-    }
-
     const handleSelectChange = value => {
-      this.setState({ [name]: value }, () => {
+      this.setState({ [name]: value || [] }, () => {
         this.updateFilters()
       })
     }
 
-    const handleLoadAll = e => {
-      e.preventDefault()
-      this.query({ load_all: name, remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }, name)
-    }
-
-    const titleCounts = this.state.totals.hasOwnProperty(name) ? ` (${hits.length} of ${this.state.totals[name]})` : ''
-    let loadAllLink
-    if ((this.state.totals[name] > 0) && (hits.length !== this.state.totals[name])) {
-      loadAllLink = <a href='#' onClick={handleLoadAll} style={{ marginLeft: 10 }}>load all</a>
+    const handleLoadAll = () => {
+      if (this.noFilterSelected()) {
+        this.query({ load_only: name, remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }, name)
+      }
     }
 
     return (
       <div style={{ marginTop: '6px' }}>
-        <span>{`${titleOverride || title(name)}${titleCounts}`}{loadAllLink}</span>
+        <span>{`${titleOverride || title(name)}`}</span>
         <Select
           name={name}
           options={options}
@@ -175,8 +162,9 @@ export default class ResearcherClassesForm extends React.Component {
           placeholder={placeholder}
           isLoading={isLoading}
           value={this.state[name]}
-          onInputChange={handleSelectInputChange}
+          onMenuOpen={handleLoadAll}
           onChange={handleSelectChange}
+          maxMenuHeight={200}
         />
       </div>
     )
@@ -185,7 +173,6 @@ export default class ResearcherClassesForm extends React.Component {
   renderForm () {
     const handleRemoveCCTeachers = e => {
       this.setState({ removeCCTeachers: e.target.checked }, () => {
-        this.getTotals()
         this.updateFilters()
       })
     }
@@ -194,28 +181,61 @@ export default class ResearcherClassesForm extends React.Component {
       <form method='get'>
         {this.renderInput('cohorts')}
         {this.renderInput('teachers')}
-        <div style={{ marginTop: '6px' }}>
+        <div>
           <input type='checkbox' checked={this.state.removeCCTeachers} onChange={handleRemoveCCTeachers} /> Remove Concord Consortium Teachers? *
         </div>
-        {this.renderInput('runnables', 'Resources')}
-
-        <div style={{ marginTop: '24px' }}>
+        <div style={{ fontSize: '0.8em' }}>
           * Concord Consortium Teachers belong to schools named "Concord Consortium".
         </div>
+        {this.renderInput('runnables', 'Resources')}
       </form>
     )
   }
 
+  // Render summary of the filters that lists all of the filter counts.
+  renderSummary () {
+    if (!this.state.stats) {
+      return null
+    }
+    const { cohorts, teachers, runnables, classes } = this.state.stats
+
+    // Use the pluralize function for each filterable entity
+    const cohortsCount = pluralize(cohorts, 'cohort', 'cohorts')
+    const teachersCount = pluralize(teachers, 'teacher', 'teachers')
+    const resourcesCount = pluralize(runnables, 'resource', 'resources')
+    const classesCount = pluralize(classes, 'class', 'classes')
+
+    const handleResetAllFilters = () => {
+      this.setState({
+        teachers: [],
+        cohorts: [],
+        runnables: []
+      }, () => {
+        this.updateFilters()
+      })
+    }
+
+    return (
+      <div className={css.summary}>
+        <div>Your filter matches: {cohortsCount}, {teachersCount}, {resourcesCount}, {classesCount}.</div>
+        <button onClick={handleResetAllFilters}>Reset All</button>
+      </div>
+    )
+  }
+
   render () {
-    const classes = this.state.filterables.classes
+    const classes = this.state.classes
 
     return (
       <div className={css.researcherClassesForm}>
         {this.renderForm()}
-        {
-          classes.length > 0 &&
-          <ResearcherClassesTable classes={classes} />
-        }
+        <div className={css.bottom}>
+          {this.renderSummary()}
+          {
+            classes.length > 0 &&
+            <ResearcherClassesTable classes={classes} />
+          }
+        </div>
       </div>
     )
   }

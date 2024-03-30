@@ -11,7 +11,7 @@ export default class ResearcherClassesTable extends React.Component {
     return (
       <div className={css.researcherClassesTable}>
         <hr />
-        <div>Results</div>
+        <div className={css.resultsLabel}>Results</div>
 
         <table>
           <thead>
