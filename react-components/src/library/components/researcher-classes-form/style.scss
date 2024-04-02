@@ -33,9 +33,51 @@
         width: 100%;
         border: 1px solid #444;
 
+        th, td {
+          padding: 0 5px;
+        }
+
         th {
-          background-color: #cdcdcd;
-          text-align: left;
+          $bgColor: #cdcdcd;
+          background-color: $bgColor;
+
+          .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+
+            .sortIcon {
+              font-size: 0.85em;
+              position: relative;
+
+              &.desc {
+                margin-top: -7px;
+                &::after {
+                  content: "";
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 50%;
+                  background: $bgColor;
+                }
+              }
+
+              &.asc {
+                margin-top: 7px;
+                &::after {
+                  content: "";
+                  position: absolute;
+                  top: 50%;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: $bgColor;
+                  }
+              }
+            }
+          }
         }
         tr:nth-child(even) {
           background-color: #efefef;
