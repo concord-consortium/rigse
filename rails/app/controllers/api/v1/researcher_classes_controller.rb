@@ -127,6 +127,7 @@ class API::V1::ResearcherClassesController < API::APIController
         name: c.name,
         teacher_names: c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", "),
         cohort_names: c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", "),
+        school_name: c.school ? c.school.name : "",
         class_url: materials_portal_clazz_url(c.id, researcher: true)
       }
     end
