@@ -9,7 +9,8 @@ export default class ResearcherClassesTable extends React.Component {
       sortedClasses: props.classes,
       // Default sort by id in descending order - this will show the most recent classes first
       sortBy: 'id',
-      sortDirection: 'desc'
+      sortDirection: 'desc',
+      showSchoolName: false
     }
   }
 
@@ -50,15 +51,24 @@ export default class ResearcherClassesTable extends React.Component {
     }, () => this.sortClasses())
   }
 
+  handleShowSchoolNameChange (e) {
+    this.setState({ showSchoolName: e.target.checked })
+  }
+
   render () {
-    const { sortedClasses } = this.state
+    const { sortedClasses, showSchoolName } = this.state
     if (sortedClasses.length === 0) {
       return null
     }
     return (
       <div className={css.researcherClassesTable}>
         <hr />
-        <div className={css.resultsLabel}>Results</div>
+        <div className={css.top}>
+          <div className={css.resultsLabel}>Results</div>
+          <span>
+            <input type='checkbox' checked={showSchoolName} onChange={this.handleShowSchoolNameChange.bind(this)} /> Show School Name
+          </span>
+        </div>
 
         <table>
           <thead>
@@ -78,6 +88,14 @@ export default class ResearcherClassesTable extends React.Component {
                   Class <span className={`${css.sortIcon} ${this.fieldSortIcon('name')} icon-sort`} />
                 </span>
               </th>
+              {
+                showSchoolName &&
+                <th onClick={this.handleHeaderClick.bind(this, 'school_name')}>
+                  <span className={css.header}>
+                    School <span className={`${css.sortIcon} ${this.fieldSortIcon('school_name')} icon-sort`} />
+                  </span>
+                </th>
+              }
               <th />
             </tr>
           </thead>
@@ -88,7 +106,8 @@ export default class ResearcherClassesTable extends React.Component {
                   <td>{c.cohort_names}</td>
                   <td>{c.teacher_names}</td>
                   <td>{c.name}</td>
-                  <td><a href={c.class_url} target='_blank'>View Class</a></td>
+                  { showSchoolName && <td>{c.school_name}</td> }
+                  <td className={css.linkCell}><a href={c.class_url} target='_blank'>View Class</a></td>
                 </tr>
               ))
             }

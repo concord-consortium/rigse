@@ -25,9 +25,17 @@
         background-color: #444;
       }
 
-      .resultsLabel {
-        font-weight: bold;
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .resultsLabel {
+          font-weight: bold;
+        }
       }
+
+
 
       table {
         width: 100%;
@@ -90,6 +98,10 @@
         }
         td + td, th + th {
           border-left: 1px solid #444;
+        }
+
+        .linkCell {
+          white-space: nowrap;
         }
       }
     }
