@@ -19,15 +19,15 @@ export default class ResearcherClassesTable extends React.Component {
 
   componentDidUpdate (prevProps) {
     if (this.props.classes !== prevProps.classes) {
-      this.sortClasses()
+      this.sortClasses(this.props.classes)
     }
   }
 
-  sortClasses () {
+  sortClasses (classesToSort = this.state.sortedClasses) {
     const fieldName = this.state.sortBy
     const direction = this.state.sortDirection
     this.setState({
-      sortedClasses: this.state.sortedClasses.slice().sort((a, b) => {
+      sortedClasses: classesToSort.slice().sort((a, b) => {
         // Using localeCompare for a more natural sort order
         const comparison = a[fieldName].toString().localeCompare(b[fieldName].toString(), 'en', { sensitivity: 'base' })
         return direction === 'asc' ? comparison : -comparison
