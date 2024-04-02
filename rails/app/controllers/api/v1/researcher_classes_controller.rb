@@ -122,13 +122,13 @@ class API::V1::ResearcherClassesController < API::APIController
 
   def classes_mapping(classes_query)
     classes_query.map do |c|
-      hash = {}
-      hash[:label] = c.name # required by JS code, fix it?
-      hash[:name] = c.name
-      hash[:teacher_names] = c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", ")
-      hash[:cohort_names] = c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", ")
-      hash[:class_url] = materials_portal_clazz_url(c.id, researcher: true)
-      hash
+      {
+        id: c.id,
+        name: c.name,
+        teacher_names: c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", "),
+        cohort_names: c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", "),
+        class_url: materials_portal_clazz_url(c.id, researcher: true)
+      }
     end
   end
 end

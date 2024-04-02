@@ -83,6 +83,6 @@ class Admin::ProjectPolicy < ApplicationPolicy
   end
 
   def research_classes?
-    update_or_edit? || user.is_project_researcher?(record)
+    update_or_edit? || user && user.is_project_researcher?(record)
   end
 end
