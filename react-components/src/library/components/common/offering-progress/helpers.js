@@ -24,9 +24,11 @@ const detailedProgressMapping = data => ({
   feedback: data.feedback && feedbackMapping(data.feedback)
 })
 
-export const studentMapping = data => ({
+export const studentMapping = (data, researcher = false) => ({
   id: data.user_id,
-  name: data.last_name + ', ' + data.first_name,
+  // In the researcher view (anonymized), the .name is presented in a more readable and anonymized format,
+  // e.g., "Student 123" instead of "123, Student".
+  name: researcher ? data.name : data.last_name + ', ' + data.first_name,
   lastRun: data.last_run && new Date(data.last_run),
   totalProgress: data.total_progress,
   startedActivity: data.started_activity,
