@@ -15,7 +15,9 @@ class API::V1::OfferingsController < API::APIController
 
     authorize offering, :api_show?
 
-    anonymize_students = !current_user.has_full_access_to_student_data?(offering.clazz)
+    researcher_view = params[:researcher].present? && params[:researcher] != 'false'
+
+    anonymize_students = researcher_view || !current_user.has_full_access_to_student_data?(offering.clazz)
 
     offering_api = API::V1::Offering.new(offering, request.protocol, request.host_with_port, current_user, params[:add_external_report], anonymize_students)
     render :json => offering_api.to_json, :callback => params[:callback]

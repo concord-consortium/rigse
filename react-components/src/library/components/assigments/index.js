@@ -156,7 +156,7 @@ export default class Assignments extends React.Component {
 
     jQuery.ajax({
       type: 'GET',
-      url: appendOfferingApiQueryParams(offering.apiUrl),
+      url: appendOfferingApiQueryParams(offering.apiUrl, researcher ? { researcher: true } : {}),
       success: data => {
         const newData = offeringDetailsMapping(data, researcher)
         const { offeringDetails } = this.state
