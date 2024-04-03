@@ -92,7 +92,7 @@ export default class ResearcherClassesForm extends React.Component {
       handleResponse(queryCache[cacheKey]) // use it directly
     } else {
       queryCache[cacheKey] = jQuery.ajax({ // make req and add new Promise to cache
-        url: '/api/v1/researcher_classes',
+        url: '/api/v1/research_classes',
         type: 'GET',
         data: params
       }).then(handleResponse)

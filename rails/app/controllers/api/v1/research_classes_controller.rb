@@ -1,4 +1,4 @@
-class API::V1::ResearcherClassesController < API::APIController
+class API::V1::ResearchClassesController < API::APIController
   include Rails.application.routes.url_helpers
 
   public
