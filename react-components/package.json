@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Concord Portal React Components",
   "main": "server/index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-serve",
     "start:prod": "cross-env NODE_ENV=production webpack-serve",
