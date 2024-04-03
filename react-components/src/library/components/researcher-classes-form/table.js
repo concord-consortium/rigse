@@ -55,6 +55,16 @@ export default class ResearcherClassesTable extends React.Component {
     this.setState({ showSchoolName: e.target.checked })
   }
 
+  renderHeader (label, fieldName) {
+    return (
+      <th onClick={this.handleHeaderClick.bind(this, fieldName)}>
+        <span className={css.header}>
+          {label} <span className={`${css.sortIcon} ${this.fieldSortIcon(fieldName)} icon-sort`} />
+        </span>
+      </th>
+    )
+  }
+
   render () {
     const { sortedClasses, showSchoolName } = this.state
     if (sortedClasses.length === 0) {
@@ -73,29 +83,10 @@ export default class ResearcherClassesTable extends React.Component {
         <table>
           <thead>
             <tr>
-              <th onClick={this.handleHeaderClick.bind(this, 'cohort_names')}>
-                <span className={css.header}>
-                  Cohort <span className={`${css.sortIcon} ${this.fieldSortIcon('cohort_names')} icon-sort`} />
-                </span>
-              </th>
-              <th onClick={this.handleHeaderClick.bind(this, 'teacher_names')}>
-                <span className={css.header}>
-                  Teacher <span className={`${css.sortIcon} ${this.fieldSortIcon('teacher_names')} icon-sort`} />
-                </span>
-              </th>
-              <th onClick={this.handleHeaderClick.bind(this, 'name')}>
-                <span className={css.header}>
-                  Class <span className={`${css.sortIcon} ${this.fieldSortIcon('name')} icon-sort`} />
-                </span>
-              </th>
-              {
-                showSchoolName &&
-                <th onClick={this.handleHeaderClick.bind(this, 'school_name')}>
-                  <span className={css.header}>
-                    School <span className={`${css.sortIcon} ${this.fieldSortIcon('school_name')} icon-sort`} />
-                  </span>
-                </th>
-              }
+              { this.renderHeader('Cohort', 'cohort_names') }
+              { this.renderHeader('Teacher', 'teacher_names') }
+              { this.renderHeader('Class', 'name') }
+              { showSchoolName && this.renderHeader('School', 'school_name') }
               <th />
             </tr>
           </thead>
