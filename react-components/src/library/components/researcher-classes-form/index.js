@@ -63,14 +63,17 @@ export default class ResearcherClassesForm extends React.Component {
       queryCache[cacheKey] = data
       this.setState(prevState => {
         const hits = data.hits
+        const totals = data.totals
         const newState = {}
-        if (!_fieldName) {
+        if (totals) {
           newState.stats = {
-            cohorts: hits.cohorts.length,
-            teachers: hits.teachers.length,
-            runnables: hits.runnables.length,
-            classes: hits.classes.length
+            cohorts: totals.cohorts,
+            teachers: totals.teachers,
+            runnables: totals.runnables,
+            classes: totals.classes
           }
+        }
+        if (hits.classes) {
           newState.classes = hits.classes
         } else {
           newState.filterables = { ...prevState.filterables }
