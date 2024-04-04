@@ -61,7 +61,7 @@ class API::V1::JwtController < API::APIController
     # In practice project_users (admin_project_users table) is only used for project admins and researchers
     # But to be safe we make sure the project_user is one of these two types
     only_admin_or_researcher_projects =
-      user_permission_form_students.where("admin_project_users.is_admin = true OR admin_project_users.is_researcher = true")
+      user_permission_form_students.where("admin_project_users.is_admin = true OR (admin_project_users.is_researcher = true AND (expiration_date IS NULL OR expiration_date > ?))", Date.today)
 
     # Finally check if there is a portal_student with the target_user_id
     return only_admin_or_researcher_projects.where(portal_students: {user_id: target_user_id}).exists?
