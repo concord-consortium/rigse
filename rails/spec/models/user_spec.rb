@@ -318,6 +318,26 @@ describe User do
         expect(user.admin_for_projects.size).to eq(1)
       end
     end
+
+    describe "when expriation date for researcher role is set and it's not expired" do
+      before(:each) do
+        user.add_role_for_project('researcher', project, Time.now + 1.day)
+      end
+      it "should be a project researcher for the project now " do
+        expect(user.is_project_researcher?(project)).to eq true
+        expect(user.is_project_researcher?(project, true)).to eq true # allow_expired=true
+      end
+    end
+
+    describe "when expriation date for researcher role is set and it's expired" do
+      before(:each) do
+        user.add_role_for_project('researcher', project, Time.now - 1.day)
+      end
+      it "should not be a project researcher for the project now " do
+        expect(user.is_project_researcher?(project)).to eq false
+        expect(user.is_project_researcher?(project, true)).to eq true # allow_expired=true
+      end
+    end
   end
 
   describe "remove_role_for_project" do

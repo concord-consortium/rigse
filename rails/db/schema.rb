@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_03_13_184118) do
+ActiveRecord::Schema.define(version: 2024_04_03_132757) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -84,6 +84,8 @@ ActiveRecord::Schema.define(version: 2024_03_13_184118) do
     t.integer "user_id"
     t.boolean "is_admin", default: false
     t.boolean "is_researcher", default: false
+    t.date "expiration_date"
+    t.index ["is_researcher", "expiration_date"], name: "index_project_users_on_researcher_and_expiration"
     t.index ["project_id", "user_id"], name: "admin_proj_user_uniq_idx", unique: true
     t.index ["project_id"], name: "index_admin_project_users_on_project_id"
     t.index ["user_id"], name: "index_admin_project_users_on_user_id"

@@ -159,12 +159,14 @@ class UsersController < ApplicationController
             end
             if params[:user][:has_projects_in_form]
               all_projects = Admin::Project.all
-              @user.set_role_for_projects('admin', all_projects, params[:user][:admin_project_ids] || [])
-              @user.set_role_for_projects('researcher', all_projects, params[:user][:researcher_project_ids] || [])
+              expiration_dates = params[:user][:project_expiration_dates] || {}
+              @user.set_role_for_projects('admin', all_projects, params[:user][:admin_project_ids] || [], expiration_dates)
+              @user.set_role_for_projects('researcher', all_projects, params[:user][:researcher_project_ids] || [], expiration_dates)
             end
           elsif current_visitor.is_project_admin?
             if params[:user][:has_projects_in_form]
-              @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+              expiration_dates = params[:user][:project_expiration_dates] || {}
+              @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [], expiration_dates)
             end
           end
 
