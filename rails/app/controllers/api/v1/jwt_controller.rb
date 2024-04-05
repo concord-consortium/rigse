@@ -31,7 +31,7 @@ class API::V1::JwtController < API::APIController
     end
   end
 
-  def can_access_user(user, target_user_id)
+  def can_access_user(user, target_user_id, resource_link_id)
     return false if user.blank?
 
     return true if user.has_role?('manager','admin','researcher')
@@ -64,8 +64,7 @@ class API::V1::JwtController < API::APIController
       user_permission_form_students.where("admin_project_users.is_admin = true OR (admin_project_users.is_researcher = true AND (expiration_date IS NULL OR expiration_date > ?))", Date.today)
 
     # Finally check if there is a portal_student with the target_user_id
-    return only_admin_or_researcher_projects.where(portal_students: {user_id: target_user_id}).exists?
-
+    return true if only_admin_or_researcher_projects.where(portal_students: {user_id: target_user_id}).exists?
     # This active record turns into something like:
     # SELECT  1 AS one
     # FROM `admin_project_users`
@@ -76,6 +75,12 @@ class API::V1::JwtController < API::APIController
     # WHERE `admin_project_users`.`user_id` = 1
     #   AND (admin_project_users.is_admin = true OR admin_project_users.is_researcher = true)
     #   AND `portal_students`.`user_id` = 8 LIMIT 1
+
+    # A user is allowed access if they are a project researcher linked to the student via a specific path:
+    # Project -> Cohort -> Teacher -> Class -> Offering -> Student.
+    return true if Portal::Offering.find_by(id: resource_link_id)&.clazz&.then do |clazz|
+      user.is_researcher_for_clazz?(clazz) && clazz.students.exists?(user_id: target_user_id)
+    end
   end
 
   def handle_initial_auth
@@ -120,7 +125,7 @@ class API::V1::JwtController < API::APIController
             "student or teacher of this resource link, a target_user_id param is required."
         end
 
-        if !can_access_user(user, params[:target_user_id])
+        if !can_access_user(user, params[:target_user_id], resource_link_id)
           raise StandardError, "Current user does not have permission to view target user."
         end
 
