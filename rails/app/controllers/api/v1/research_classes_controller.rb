@@ -101,7 +101,7 @@ class API::V1::ResearchClassesController < API::APIController
   def runnables_query(options, user, scope, clazz_ids_subquery, count_only = false)
     scope = scope
       .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_offerings.clazz_id = ptc2.clazz_id")
-      .where(portal_teacher_clazzes: { clazz_id: clazz_ids_subquery })
+      .where("ptc2.clazz_id": clazz_ids_subquery)
       .distinct
 
     if count_only
