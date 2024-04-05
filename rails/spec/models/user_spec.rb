@@ -319,7 +319,7 @@ describe User do
       end
     end
 
-    describe "when expriation date for researcher role is set and it's not expired" do
+    describe "when expiration date for researcher role is set and it's not expired" do
       before(:each) do
         user.add_role_for_project('researcher', project, Time.now + 1.day)
       end
@@ -329,7 +329,7 @@ describe User do
       end
     end
 
-    describe "when expriation date for researcher role is set and it's expired" do
+    describe "when expiration date for researcher role is set and it's expired" do
       before(:each) do
         user.add_role_for_project('researcher', project, Time.now - 1.day)
       end
