@@ -44,11 +44,14 @@ class User < ApplicationRecord
   has_many :project_users, class_name: 'Admin::ProjectUser', :dependent => :destroy
 
   has_many :_project_user_admins, -> { is_admin }, :class_name => 'Admin::ProjectUser'
-  has_many :_project_user_researchers, -> { is_researcher }, :class_name => 'Admin::ProjectUser'
+
+  has_many :_project_user_researchers, -> { is_researcher.where("expiration_date IS NULL OR expiration_date > ?", Date.today) }, class_name: 'Admin::ProjectUser'
+  has_many :_project_user_researchers_inc_expired, -> { is_researcher }, class_name: 'Admin::ProjectUser'
 
   has_many :admin_for_projects, :through => :_project_user_admins, :class_name => 'Admin::Project', :source => :project
 
   has_many :researcher_for_projects, :through => :_project_user_researchers, :class_name => 'Admin::Project', :source => :project
+  has_many :researcher_for_projects_inc_expired, :through => :_project_user_researchers_inc_expired, :class_name => 'Admin::Project', :source => :project
 
   # has_many :researcher_for_projects, -> { where is_researcher: true }, :through => :project_users, :class_name => 'Admin::Project', :source => :project
 
@@ -404,12 +407,19 @@ class User < ApplicationRecord
     end
   end
 
-  def is_project_researcher?(project=nil)
+  def is_project_researcher?(project=nil, allow_expired=false)
+    target_association = allow_expired ? researcher_for_projects_inc_expired : researcher_for_projects
+
     if project
-      self.researcher_for_projects.include? project
+      target_association.include? project
     else
-      self.researcher_for_projects.length > 0
+      target_association.length > 0
     end
+  end
+
+  def expiration_date_for_project(project)
+    project_user = self.project_users.where(project_id: project.id, is_researcher: true).first
+    project_user&.expiration_date
   end
 
   def is_project_cohort_member?(project=nil)
@@ -458,11 +468,12 @@ class User < ApplicationRecord
     false
   end
 
-  def add_role_for_project(role, project)
+  def add_role_for_project(role, project, expiration_date=nil)
     role_attribute = "is_#{role}"
     project_user = project_users.find_by_project_id project.id
     project_user ||= Admin::ProjectUser.create!(project_id: project.id, user_id: self.id)
     project_user[role_attribute] = true
+    project_user.expiration_date = expiration_date
     project_user.save
   end
 
@@ -470,14 +481,15 @@ class User < ApplicationRecord
     if project_user = project_users.find_by_project_id(project.id)
       role_attribute = "is_#{role}"
       project_user[role_attribute] = false
+      project_user.expiration_date = nil
       project_user.save
     end
   end
 
-  def set_role_for_projects(role, possible_projects, selected_project_ids)
+  def set_role_for_projects(role, possible_projects, selected_project_ids, expiration_dates={})
     possible_projects.each do |project|
       if selected_project_ids.find { |id| id.to_i == project.id }
-        add_role_for_project(role,project)
+        add_role_for_project(role,project, expiration_dates[project.id.to_s])
       else
         remove_role_for_project(role,project)
       end

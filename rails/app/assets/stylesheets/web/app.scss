@@ -778,6 +778,20 @@ form {
         margin-bottom: 5px;
         min-height: 20px;
 
+        .inline-fields {
+          display: flex;
+          align-items: center;
+          justify-self: flex-start;
+
+          input[type="date"] {
+            margin-left: 20px;
+          }
+
+          label {
+            width: auto;
+          }
+        }
+
         input[type="checkbox"] {
           clear: left;
           display: inline-block;

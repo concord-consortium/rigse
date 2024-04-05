@@ -4,9 +4,29 @@
     Researcher for Projects
   %ul.options-list
     - projects = projects.sort_by &:name
-    - projects.each_with_index do |p, i|
-      - checkbox_id = "project-" + i.to_s + "-researcher"
+    - projects.each_with_index do |project, i|
+      - checkbox_id = "project-#{i}-researcher"
+      - expiration_date = @user.expiration_date_for_project(project)
+      - is_researcher = @user.researcher_for_projects_inc_expired.include?(project)
       %li
-        = check_box_tag "user[researcher_project_ids][]", p.id, @user.researcher_for_projects.include?(p), id: checkbox_id
-        = label_tag checkbox_id do
-          = p.name
+        .inline-fields
+          = check_box_tag "user[researcher_project_ids][]", project.id, is_researcher, id: checkbox_id, class: 'project-checkbox'
+          = label_tag checkbox_id do
+            = project.name
+          = date_field_tag "user[project_expiration_dates][#{project.id}]", expiration_date, placeholder: 'Expiration Date', class: 'date-input', style: ('display:none;' unless is_researcher)
+
+:javascript
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.project-checkbox').forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        // Find the date input related to this checkbox. Assuming it's always the following sibling after the next (after the label).
+        var dateInput = this.parentNode.querySelector('.date-input');
+        if (this.checked) {
+          dateInput.style.display = 'inline-block'; // Use inline-block or block depending on your layout needs
+        } else {
+          dateInput.style.display = 'none';
+        }
+      });
+    });
+  });
+
