@@ -255,7 +255,8 @@ class UsersController < ApplicationController
       authorize @user
       respond_to do |format|
         if params[:user][:has_projects_in_form]
-          @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [])
+          expiration_dates = params[:user][:project_expiration_dates] || {}
+          @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [], expiration_dates)
         end
         if @user.portal_teacher && params[:user][:has_cohorts_in_form] && policy(@current_user).add_teachers_to_cohorts?
           @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])
