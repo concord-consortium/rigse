@@ -26,10 +26,10 @@ class Admin::ProjectPolicy < ApplicationPolicy
     def resolve
       if user.has_role?('admin')
         all
-      elsif user.is_project_admin?
-        user.admin_for_projects
-      elsif user.is_project_researcher?
-        user.researcher_for_projects
+      elsif user.is_project_admin? || user.is_project_researcher?
+        admin_project_ids = user.admin_for_projects.select(:id)
+        researcher_project_ids = user.researcher_for_projects.select(:id)
+        scope.where(id: admin_project_ids).or(scope.where(id: researcher_project_ids))
       else
         none
       end
