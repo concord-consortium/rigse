@@ -48,20 +48,20 @@ class API::V1::ResearchClassesController < API::APIController
       # Load results just for one field and no totals
       case options[:load_only]
       when "teachers"
-        results[:hits] = {teachers: teacher_query(options, user, teachers, classes_ids_subquery)}
+        results[:hits] = {teachers: teacher_query(options, user, teachers, classes_ids_subquery, ids[:project_id])}
       when "cohorts"
-        results[:hits] = {cohorts: cohorts_query(options, user, cohorts, classes_ids_subquery)}
+        results[:hits] = {cohorts: cohorts_query(options, user, cohorts, classes_ids_subquery, ids[:project_id])}
       when "runnables"
-        results[:hits] = {runnables: runnables_query(options, user, runnables, classes_ids_subquery)}
+        results[:hits] = {runnables: runnables_query(options, user, runnables, classes_ids_subquery, ids[:project_id])}
       end
     else
       results[:hits] = {
         classes: classes_mapping(classes_subquery)
       }
       results[:totals] = {
-        teachers: teacher_query(options, user, teachers, classes_ids_subquery, true),
-        cohorts: cohorts_query(options, user, cohorts, classes_ids_subquery, true),
-        runnables: runnables_query(options, user, runnables, classes_ids_subquery, true),
+        teachers: teacher_query(options, user, teachers, classes_ids_subquery, ids[:project_id], true),
+        cohorts: cohorts_query(options, user, cohorts, classes_ids_subquery, ids[:project_id], true),
+        runnables: runnables_query(options, user, runnables, classes_ids_subquery, ids[:project_id], true),
         classes: results[:hits][:classes].count
       }
     end
@@ -69,10 +69,16 @@ class API::V1::ResearchClassesController < API::APIController
     return results
   end
 
-  def teacher_query(options, user, scope, clazz_ids_subquery, count_only = false)
+  def teacher_query(options, user, scope, clazz_ids_subquery, project_id, count_only = false)
     scope = scope
       .joins("INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.teacher_id = portal_teachers.id")
       .where(portal_teacher_clazzes: { clazz_id: clazz_ids_subquery })
+      # Note that we still need to filter by project_id, as one class might belong to two projects if
+      # it has two teachers, each belonging to a different project.
+      .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.item_id = portal_teachers.id AND admin_cohort_items.item_type = 'Portal::Teacher'")
+      .joins("INNER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
+      .joins("INNER JOIN admin_projects ON admin_projects.id = admin_cohorts.project_id")
+      .where(admin_projects: { id: project_id })
       .distinct
 
     if count_only
@@ -84,12 +90,15 @@ class API::V1::ResearchClassesController < API::APIController
     end
   end
 
-  def cohorts_query(options, user, scope, clazz_ids_subquery, count_only = false)
+  def cohorts_query(options, user, scope, clazz_ids_subquery, project_id, count_only = false)
     scope = scope
       .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.item_type = 'Portal::Teacher' AND admin_cohort_items.admin_cohort_id = admin_cohorts.id")
       .joins("INNER JOIN portal_teacher_clazzes ON admin_cohort_items.item_id = portal_teacher_clazzes.teacher_id")
       .where(portal_teacher_clazzes: { clazz_id: clazz_ids_subquery })
-      .joins("LEFT OUTER JOIN admin_projects ON admin_projects.id = admin_cohorts.project_id")
+      # Note that we still need to filter by project_id, as one class might belong to two projects if
+      # it has two teachers, each belonging to a different project.
+      .joins("INNER JOIN admin_projects ON admin_projects.id = admin_cohorts.project_id")
+      .where(admin_projects: { id: project_id })
       .distinct
 
     if count_only
@@ -101,10 +110,16 @@ class API::V1::ResearchClassesController < API::APIController
     end
   end
 
-  def runnables_query(options, user, scope, clazz_ids_subquery, count_only = false)
+  def runnables_query(options, user, scope, clazz_ids_subquery, project_id, count_only = false)
     scope = scope
-      .joins("INNER JOIN portal_teacher_clazzes ptc2 ON portal_offerings.clazz_id = ptc2.clazz_id")
-      .where("ptc2.clazz_id": clazz_ids_subquery)
+      .where(clazz_id: clazz_ids_subquery)
+      # Note that we still need to filter by project_id, as one class might belong to two projects if
+      # it has two teachers, each belonging to a different project.
+      .joins("INNER JOIN portal_teacher_clazzes ON portal_teacher_clazzes.clazz_id = portal_offerings.clazz_id")
+      .joins("INNER JOIN admin_cohort_items ON admin_cohort_items.item_id = portal_teacher_clazzes.teacher_id AND admin_cohort_items.item_type = 'Portal::Teacher'")
+      .joins("INNER JOIN admin_cohorts ON admin_cohorts.id = admin_cohort_items.admin_cohort_id")
+      .joins("INNER JOIN admin_projects ON admin_projects.id = admin_cohorts.project_id")
+      .where(admin_projects: { id: project_id })
       .distinct
 
     if count_only
