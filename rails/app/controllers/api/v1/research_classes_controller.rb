@@ -16,8 +16,8 @@ class API::V1::ResearchClassesController < API::APIController
     teachers = Pundit.policy_scope(user, Portal::Teacher)
     cohorts = Pundit.policy_scope(user, Admin::Cohort)
     runnables = Pundit.policy_scope(user, Portal::Offering)
-                .joins("INNER JOIN external_activities ON external_activities.id = portal_offerings.runnable_id")
-                .where("portal_offerings.runnable_type = 'ExternalActivity'")
+                .joins("INNER JOIN external_activities ON external_activities.id = portal_offerings.runnable_id AND portal_offerings.runnable_type = 'ExternalActivity'")
+                .where(external_activities: { is_archived: false })
     classes = Pundit.policy_scope(user, Portal::Clazz)
 
     cc_teacher_ids = []
