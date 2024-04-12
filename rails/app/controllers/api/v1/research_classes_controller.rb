@@ -28,7 +28,10 @@ class API::V1::ResearchClassesController < API::APIController
         .where("member_type = 'Portal::Teacher' AND school_id IN (?)", cc_school_ids)
         .pluck("member_id")
       if cc_teacher_ids && cc_teacher_ids.length > 0
-        teachers = teachers.where("portal_teachers.id NOT IN (?)", cc_teacher_ids)
+        # Filter teachers
+        teachers = teachers.where.not(id: cc_teacher_ids)
+        # Filter classes owned by those teachers
+        classes = classes.joins(:teacher_clazzes).where.not(portal_teacher_clazzes: { teacher_id: cc_teacher_ids })
       end
     end
 
@@ -149,7 +152,7 @@ class API::V1::ResearchClassesController < API::APIController
         name: c.name,
         teacher_names: c.teachers.map { |t| "#{t.user.first_name} #{t.user.last_name}" }.join(", "),
         cohort_names: c.teachers.map { |t| t.cohorts.map(&:name) }.flatten.uniq.join(", "),
-        school_name: c.school ? c.school.name : "",
+        school_name: c.teacher_school ? c.teacher_school.name : "",
         class_url: materials_portal_clazz_url(c.id, researcher: true)
       }
     end

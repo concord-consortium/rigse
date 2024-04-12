@@ -152,6 +152,13 @@ class Portal::Clazz < ApplicationRecord
     return nil
   end
 
+  def teacher_school
+    if teacher
+      return teacher.school
+    end
+    return nil
+  end
+
   # HACK: to support transitioning to multiple teachers.
   def teacher
     self.teachers.first
