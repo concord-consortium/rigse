@@ -8,7 +8,10 @@ describe API::V1::ResearchClassesController do
   }
 
   before (:each) do
-    @teacher1 = FactoryBot.create(:portal_teacher)
+    @cc_school = FactoryBot.create(:portal_school, {name: 'concord consortium'})
+
+    @teacher1 = FactoryBot.create(:portal_teacher, schools: [@cc_school])
+
     @teacher2 = FactoryBot.create(:portal_teacher)
 
     @project1 = FactoryBot.create(:project, name: 'Project 1')
@@ -146,6 +149,21 @@ describe API::V1::ResearchClassesController do
         json = JSON.parse(response.body)
         expect(response.status).to eql(200)
         expect(json["hits"]["runnables"].length).to eql(0)
+      end
+      it "filters out CC teachers from teachers results (when requested)" do
+        params[:load_only] = "teachers"
+        params[:remove_cc_teachers] = "true"
+        get :index, params: params
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json["hits"]["teachers"].length).to eql(0)
+      end
+      it "filters out CC teachers from classes results (when requested)" do
+        params[:remove_cc_teachers] = "true"
+        get :index, params: params
+        json = JSON.parse(response.body)
+        expect(response.status).to eql(200)
+        expect(json["hits"]["classes"].length).to eql(0)
       end
     end
   end
