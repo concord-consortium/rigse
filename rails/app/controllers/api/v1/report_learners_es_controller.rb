@@ -233,12 +233,22 @@ class API::V1::ReportLearnersEsController < API::APIController
       end
     end
     if options[:runnables] && !options[:runnables].empty?
-      runnables = options[:runnables].split(',')
-      filters << {
-        :terms => {
-          "runnable_type_and_id.keyword" => runnables
+      # Look specifically for externalactivity_1,externalactivity_2,etc., as ExternalActivity is currently
+      # the only type supported by Portal. More generic regexp could conflict with string-based search.
+      if /\A(externalactivity_\d+,*)+\z/.match(options[:runnables])
+        runnables = options[:runnables].split(',')
+        filters << {
+          :terms => {
+            "runnable_type_and_id.keyword" => runnables
+          }
         }
-      }
+      else
+        filters << {
+          :prefix => {
+            :runnable_type_id_name => options[:runnables].downcase
+          }
+        }
+      end
     end
 
     # If we don't have all_access privilages:
