@@ -307,8 +307,7 @@ class API::V1::ReportLearnersEsController < API::APIController
       hits = options[:show_learners]
       aggs = {}
     else
-      largeAggSize = 1000
-      smallAggSize = 500
+      aggSize = 1000
       aggs = {
         :count_students => {
           :cardinality => {
@@ -333,19 +332,19 @@ class API::V1::ReportLearnersEsController < API::APIController
         :schools => {
           :terms => {
             :field => "school_name_and_id.keyword",
-            :size => largeAggSize
+            :size => aggSize
           }
         },
         :teachers => {
           :terms => {
             :field => "teachers_map.keyword",
-            :size => smallAggSize
+            :size => aggSize
           }
         },
         :runnables => {
           :terms => {
             :field => "runnable_type_id_name.keyword",
-            :size => largeAggSize
+            :size => aggSize
           }
         },
         # The permission form buckets returned here may include forms the current user
@@ -356,13 +355,13 @@ class API::V1::ReportLearnersEsController < API::APIController
         :permission_forms => {
           :terms => {
             :field => "permission_forms_map.keyword",
-            :size => largeAggSize
+            :size => aggSize
           },
         },
         :permission_forms_ids => {
           :terms => {
             :field => "permission_forms_id",
-            :size => largeAggSize,
+            :size => aggSize,
           }
         }
       }

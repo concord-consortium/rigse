@@ -5,6 +5,7 @@ import { formatDate, parseDate } from 'react-day-picker/moment'
 import 'react-day-picker/lib/style.css'
 import css from './style.scss'
 import Select from 'react-select'
+import { debounce } from 'throttle-debounce'
 import jQuery from 'jquery'
 
 const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
@@ -36,6 +37,17 @@ export default class LearnerReportForm extends React.Component {
       waitingFor_teachers: false,
       waitingFor_runnables: false,
       waitingFor_permission_forms: false,
+      // too many results to display in the dropdown
+      tooManyResults_schools: false,
+      tooManyResults_teachers: false,
+      tooManyResults_runnables: false,
+      tooManyResults_permission_forms: false,
+      // state of the text input within the dropdown
+      textInput_schools: '',
+      textInput_teachers: '',
+      textInput_runnables: '',
+      textInput_permission_forms: '',
+
       externalReportButtonDisabled: true,
       queryParams: {}
     }
@@ -54,32 +66,33 @@ export default class LearnerReportForm extends React.Component {
   // All requests are cached, and if we make a duplicate request as one that
   // is still pending, the new callback is added as a chained promise, so that
   // no new request is made.
-  query (_params, _fieldName, searchString) {
-    if (_fieldName) {
-      this.setState({ [`waitingFor_${_fieldName}`]: true })
+  query (_params, fieldName, searchString) {
+    if (fieldName) {
+      this.setState({ [`waitingFor_${fieldName}`]: true })
     }
     const params = jQuery.extend({}, _params) // clone
-    if (_fieldName) {
+    if (fieldName) {
       // we remove the value of each field from the filter query for that
       // dropdown, as we want to know all possible values for that dropdown
       // given only the other filters
-      delete params[_fieldName]
+      delete params[fieldName]
     }
     if (searchString) {
-      params[_fieldName] = searchString
+      params[fieldName] = searchString
     }
 
     const cacheKey = JSON.stringify(params)
 
-    const handleResponse = (fieldName => {
-      return data => {
-        let newState
-        queryCache[cacheKey] = data
-        const aggs = data.aggregations
-        if (fieldName) {
-          newState = { filterables: this.state.filterables }
-          let { buckets } = aggs[fieldName]
-          const idsField = `${fieldName}_ids`
+    const handleResponse = data => {
+      let newState
+      queryCache[cacheKey] = data
+      const aggs = data.aggregations
+      if (fieldName) {
+        newState = { filterables: this.state.filterables }
+        let { buckets, sum_other_doc_count: overLimitCount } = aggs[fieldName]
+        const idsField = `${fieldName}_ids`
+
+        if (overLimitCount === 0) {
           if (aggs[idsField]) {
             // some fields have a separate id aggregration that is filtered
             // based on the access of the current user
@@ -93,31 +106,33 @@ export default class LearnerReportForm extends React.Component {
             buckets = buckets.filter(b => filteredIds.indexOf(b.key.match(/\d+/)[0]) !== -1)
           }
 
-          if (searchString) {
-            // merge results
-            if (newState.filterables[fieldName] == null) { newState.filterables[fieldName] = [] } // aggs[fieldName].buckets
-            newState.filterables[fieldName] = newState.filterables[fieldName].concat(buckets)
-          } else {
-            newState.filterables[fieldName] = buckets
-          }
-          newState[`waitingFor_${_fieldName}`] = false
+          newState[`tooManyResults_${fieldName}`] = false
+          newState.filterables[fieldName] = buckets
         } else {
-          newState = {
-            counts: {
-              learners: data.hits.total,
-              students: aggs.count_students.value,
-              classes: aggs.count_classes.value,
-              teachers: aggs.count_teachers.value,
-              runnables: aggs.count_runnables.value
-            }
+          // ElasticSearch returns sum_other_doc_count (named overLimitCount here) if the number of buckets is over
+          // a certain limit specified in the query. If this is the case, we don't display the results in the dropdown
+          // and ask the user to refine their search.
+          newState[`tooManyResults_${fieldName}`] = true
+          newState.filterables[fieldName] = []
+        }
+
+        newState[`waitingFor_${fieldName}`] = false
+      } else {
+        newState = {
+          counts: {
+            learners: data.hits.total,
+            students: aggs.count_students.value,
+            classes: aggs.count_classes.value,
+            teachers: aggs.count_teachers.value,
+            runnables: aggs.count_runnables.value
           }
         }
-        this.setState(newState)
-        return data
       }
-    })(_fieldName)
+      this.setState(newState)
+      return data
+    }
 
-    if ((queryCache[cacheKey] != null ? queryCache[cacheKey].then : undefined)) { // already made a Promise that is still pending
+    if (queryCache[cacheKey]?.then) { // already made a Promise that is still pending
       queryCache[cacheKey].then(handleResponse) // chain a new Then
     } else if (queryCache[cacheKey]) { // have data that has already returned
       handleResponse(queryCache[cacheKey]) // use it directly
@@ -202,13 +217,21 @@ export default class LearnerReportForm extends React.Component {
     // rm messed-up ES values
     options = options.filter(o => o.value.indexOf('%{') < 0)
 
-    const handleSelectInputChange = value => {
-      if (value.length === 4) {
-        const params = this.getQueryParams()
-        this.query(params, name, value)
-        return value
+    // average keystroke delay is 100-200ms
+    const debouncedHandleTextInputChange = debounce(350, (value) => {
+      const previousValue = this.state[`textInput_${name}`]
+      this.setState({ [`textInput_${name}`]: value })
+
+      if (value.startsWith(previousValue) && !this.state[`tooManyResults_${name}`]) {
+        // Nothing to do, as the user keeps narrowing the search in a way that doesn't require querying the server.
+        // Filtering will be done on the client side by the React Select component.
+        return
       }
-    }
+      // In any other scenario, such as the user deleting a character, completely clearing the search box, or changing
+      // the search text, we need to query the server to obtain a new list of options. It's likely that some of these
+      // queries are already cached.
+      this.query(this.getQueryParams(), name, value)
+    })
 
     const handleSelectChange = value => {
       this.setState({ [name]: value }, () => {
@@ -217,17 +240,25 @@ export default class LearnerReportForm extends React.Component {
       })
     }
 
+    const noOptionsMessage = ({ inputValue }) => {
+      if (this.state[`tooManyResults_${name}`]) {
+        return 'Too many results. Please refine your search to narrow down the list.'
+      }
+      return 'No results found.'
+    }
+
     return (
       <div style={{ marginTop: '6px' }}>
         <span>{titleOverride || title(name)}</span>
         <Select
           name={name}
           options={options}
+          value={this.state[name]}
+          isLoading={isLoading}
           isMulti
           placeholder={placeholder}
-          isLoading={isLoading}
-          value={this.state[name]}
-          onInputChange={handleSelectInputChange}
+          noOptionsMessage={noOptionsMessage}
+          onInputChange={debouncedHandleTextInputChange}
           onChange={handleSelectChange}
         />
       </div>

@@ -64,7 +64,7 @@ describe API::V1::ReportLearnersEsController do
           }
         }, "teachers" => {
           "terms" => {
-            "field" => "teachers_map.keyword", "size" => 500
+            "field" => "teachers_map.keyword", "size" => 1000
           }
         }, "runnables" => {
           "terms" => {
