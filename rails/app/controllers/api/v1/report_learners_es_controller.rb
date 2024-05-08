@@ -206,7 +206,7 @@ class API::V1::ReportLearnersEsController < API::APIController
         }
       else
         filters << {
-          :prefix => {
+          :match_phrase_prefix => {
             :school_name => options[:schools].downcase
           }
         }
@@ -226,7 +226,7 @@ class API::V1::ReportLearnersEsController < API::APIController
         }
       else
         filters << {
-          :prefix => {
+          :match_phrase_prefix => {
             :teachers_map => options[:teachers].downcase
           }
         }
@@ -244,7 +244,7 @@ class API::V1::ReportLearnersEsController < API::APIController
         }
       else
         filters << {
-          :prefix => {
+          :match_phrase_prefix => {
             :runnable_type_id_name => options[:runnables].downcase
           }
         }
