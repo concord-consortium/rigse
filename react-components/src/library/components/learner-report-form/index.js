@@ -10,6 +10,13 @@ import jQuery from 'jquery'
 
 const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
 
+// This param is used mostly for testing purposes. It allows to set a custom limit for the number of results,
+// so staging environments can test how the dropdowns behave when the number of results is too high.
+const getQueryLimitParam = () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  return urlParams.get('queryLimit')
+}
+
 const queryCache = {}
 
 export default class LearnerReportForm extends React.Component {
@@ -154,6 +161,10 @@ export default class LearnerReportForm extends React.Component {
     }
     for (filter of ['start_date', 'end_date']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) { params[filter] = this.state[filter] }
+    }
+    const customQueryLimit = getQueryLimitParam()
+    if (customQueryLimit) {
+      params.query_limit = customQueryLimit
     }
     return params
   }
