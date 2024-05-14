@@ -1,8 +1,10 @@
 import React from 'react'
-import { SortableContainer } from 'react-sortable-hoc'
+// import { SortableContainer } from 'react-sortable-hoc'
 import css from './style.scss'
 
 import SortableBookmarkRow from './sortable-bookmark-row'
+
+const SortableContainer = (Element) => Element
 
 class Bookmarks extends React.Component {
   render () {

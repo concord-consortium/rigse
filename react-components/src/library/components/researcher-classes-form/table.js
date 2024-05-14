@@ -1,5 +1,5 @@
 import React from 'react'
-import 'react-day-picker/lib/style.css'
+// import 'react-day-picker/style.css'
 import css from './style.scss'
 
 export default class ResearcherClassesTable extends React.Component {

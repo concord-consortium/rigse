@@ -1,9 +1,12 @@
 import React from 'react'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc'
+// import { SortableContainer, SortableElement } from 'react-sortable-hoc'
 import OfferingRow from './offering-row'
 import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 
 import css from './style.scss'
+
+const SortableContainer = (Element) => Element
+const SortableElement = (Element) => Element
 
 const SortableOffering = SortableElement(OfferingRow)
 

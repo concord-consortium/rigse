@@ -1,8 +1,9 @@
 import React from 'react'
-import { SortableContainer } from 'react-sortable-hoc'
+// import { SortableContainer } from 'react-sortable-hoc'
+import SortableMaterialsCollectionListRow from './sortable-materials-collection-list-row'
 import css from './style.scss'
 
-import SortableMaterialsCollectionListRow from './sortable-materials-collection-list-row'
+const SortableContainer = (Element) => Element
 
 class MaterialsCollectionList extends React.Component {
   render () {

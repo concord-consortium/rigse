@@ -1,8 +1,8 @@
 import React from 'react'
 import ExternalReportButton from '../common/external-report-button'
-import DayPickerInput from 'react-day-picker/DayPickerInput'
-import { formatDate, parseDate } from 'react-day-picker/moment'
-import 'react-day-picker/lib/style.css'
+// import DayPickerInput from 'react-day-picker/DayPickerInput'
+// import { formatDate, parseDate } from 'react-day-picker/moment'
+// import 'react-day-picker/style.css'
 import css from './style.scss'
 import Select from 'react-select'
 import { debounce } from 'throttle-debounce'
@@ -18,6 +18,10 @@ const getQueryLimitParam = () => {
 }
 
 const queryCache = {}
+
+const DayPickerInput = () => 'TODO: DayPickerInput'
+const parseDate = () => 'TODO: parseDate'
+const formatDate = () => 'TODO: formatDate'
 
 export default class LearnerReportForm extends React.Component {
   constructor (props) {

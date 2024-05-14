@@ -1,6 +1,8 @@
 import React from 'react'
-import { SortableElement } from 'react-sortable-hoc'
+// import { SortableElement } from 'react-sortable-hoc'
 import css from './style.scss'
+
+const SortableElement = (Element) => Element
 
 class MaterialsCollectionListRow extends React.Component {
   render () {
