@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from '../../helpers/react-render'
 import SignupModal from './signup_modal'
 import Signup from './signup'
 import LoginModal from './login_modal'
@@ -25,7 +25,7 @@ export const renderSignupForm = (properties, selectorOrElement) => {
   if (properties == null) {
     properties = {}
   }
-  ReactDOM.render(<Signup {...properties} />, jQuery(selectorOrElement)[0])
+  render(<Signup {...properties} />, jQuery(selectorOrElement)[0])
 }
 
 const openModal = (type, properties = {}, closeFunc) => {
@@ -40,10 +40,8 @@ const openModal = (type, properties = {}, closeFunc) => {
     properties.closeable = true
   }
 
-  ReactDOM.unmountComponentAtNode(modalContainer[0])
   console.log('INFO creating modal with props', properties)
-  var comp = React.createElement(type, properties)
-  ReactDOM.render(comp, modalContainer[0])
+  render(React.createElement(type, properties), modalContainer[0])
 
   return Modal.showModal(modalContainerSelector,
     undefined,

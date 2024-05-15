@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 
 import './library.scss'
 import CollectionsPage from './components/collections-page'
@@ -49,14 +49,11 @@ import ResourceLicense from './components/browse-page/resource-license'
 import ResourceProjects from './components/browse-page/resource-projects'
 import showTab from './helpers/tabs'
 import { loadMaterialsCollections } from './helpers/materials-collection-cache'
+import { render } from './helpers/react-render'
 
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
 window.ReactDOM = ReactDOM
-
-const render = function (component, id) {
-  ReactDOM.render(component, document.getElementById(id))
-}
 
 const renderComponentFn = function (ComponentClass) {
   return function (options, id) {
@@ -221,7 +218,7 @@ window.PortalComponents = {
       options = { limit: limitOrOptions }
     }
     options.collection = collectionId
-    ReactDOM.render(MaterialsCollection(options), jQuery(selectorOrElement)[0])
+    render(MaterialsCollection(options), jQuery(selectorOrElement)[0])
   },
 
   Tooltip: Tooltip,
@@ -236,26 +233,22 @@ window.PortalComponents = {
     if (query[0] === '?') {
       query = query.slice(1)
     }
-    ReactDOM.render(React.createElement(FeaturedMaterials, { queryString: query }), jQuery(selectorOrElement)[0])
+    render(React.createElement(FeaturedMaterials, { queryString: query }), jQuery(selectorOrElement)[0])
   },
 
-  // NOTE: the search results renders re-render into the same div so it is required to call unmountComponentAtNode
-  //       (as these methods do) before each re-render to avoid a warning message and a potential memory leak
   SearchResults: SearchResults,
   renderSearchResults: function (results, selectorOrElement) {
     const element = jQuery(selectorOrElement)[0]
-    ReactDOM.unmountComponentAtNode(element)
-    ReactDOM.render(React.createElement(SearchResults, { results }), element)
+    render(React.createElement(SearchResults, { results }), element)
   },
   renderSearchMessage: function (message, selectorOrElement) {
     const element = jQuery(selectorOrElement)[0]
-    ReactDOM.unmountComponentAtNode(element)
-    ReactDOM.render(<span>{message}</span>, element)
+    render(<span>{message}</span>, element)
   },
 
   SMaterialsList: SMaterialsList,
   renderMaterialsList: function (materials, selectorOrElement) {
-    ReactDOM.render(React.createElement(SMaterialsList, { materials }), jQuery(selectorOrElement)[0])
+    render(React.createElement(SMaterialsList, { materials }), jQuery(selectorOrElement)[0])
   },
 
   MaterialsBin: MaterialsBin,
@@ -265,7 +258,7 @@ window.PortalComponents = {
     }
     const matches = queryString.match(/assign_to_class=(\d+)/)
     const assignToSpecificClass = matches ? matches[1] : null
-    ReactDOM.render(React.createElement(MaterialsBin, { materials: definition, assignToSpecificClass }), jQuery(selectorOrElement)[0])
+    render(React.createElement(MaterialsBin, { materials: definition, assignToSpecificClass }), jQuery(selectorOrElement)[0])
   },
 
   PortalClassSetupForm: PortalClassSetupForm,

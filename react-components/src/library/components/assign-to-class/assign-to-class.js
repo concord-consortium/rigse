@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from '../../helpers/react-render'
 import Modal from '../../helpers/modal'
 import AssignModal from './assign-modal'
 
@@ -16,9 +16,7 @@ const openModal = (type, properties = {}, closeFunc) => {
     properties.closeable = true
   }
 
-  ReactDOM.unmountComponentAtNode(modalContainer[0])
-  var comp = React.createElement(type, properties)
-  ReactDOM.render(comp, modalContainer[0])
+  render(React.createElement(type, properties), modalContainer[0])
 
   return Modal.showModal(modalContainerSelector,
     undefined,
