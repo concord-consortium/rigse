@@ -1,10 +1,13 @@
 import React from 'react'
-import { arrayMove } from 'react-sortable-hoc'
+// import { arrayMove } from 'react-sortable-hoc'
 import SortableClasses from './sortable-classes'
 import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 import CopyDialog from './copy-dialog'
 
 import css from './style.scss'
+
+// TODO 2024: replace sortable implementation
+const arrayMove = () => { /* noop */ }
 
 export default class ManageClasses extends React.Component {
   constructor (props) {

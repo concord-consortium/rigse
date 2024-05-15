@@ -1,8 +1,10 @@
 import React from 'react'
-import { SortableContainer } from 'react-sortable-hoc'
+// import { SortableContainer } from 'react-sortable-hoc'
+import SortableClassRow from './sortable-class-row'
 import css from './style.scss'
 
-import SortableClassRow from './sortable-class-row'
+// TODO 2024: replace sortable implementation
+const SortableContainer = (Element) => Element
 
 class UnsortableSortableClasses extends React.Component {
   render () {

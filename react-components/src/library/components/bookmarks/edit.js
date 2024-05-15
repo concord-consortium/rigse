@@ -1,10 +1,12 @@
 import React from 'react'
-import { arrayMove } from 'react-sortable-hoc'
-
+// import { arrayMove } from 'react-sortable-hoc'
 import SortableBookmarks from './sortable-bookmarks'
 import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 
 import css from './style.scss'
+
+// TODO 2024: replace sortable implementation
+const arrayMove = () => { /* noop */ }
 
 export class EditBookmarks extends React.Component {
   constructor (props) {

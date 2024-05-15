@@ -3,9 +3,12 @@ import ClassAssignments from './class-assignments'
 import { reportableActivityMapping, studentMapping } from '../common/offering-progress/helpers'
 import sortByName from '../../helpers/sort-by-name'
 import OfferingsTable from './offerings-table'
-import { arrayMove } from 'react-sortable-hoc'
 
 import { appendOfferingApiQueryParams } from '../../url-params'
+// import { arrayMove } from 'react-sortable-hoc'
+
+// TODO 2024: replace sortable implementation
+const arrayMove = () => { /* noop */ }
 
 const addQueryParam = (url, param, value) => {
   const urlObj = new URL(url)

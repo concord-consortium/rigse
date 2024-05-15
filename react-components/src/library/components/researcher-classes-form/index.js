@@ -3,7 +3,7 @@ import Select from 'react-select'
 import jQuery from 'jquery'
 import ResearcherClassesTable from './table'
 
-import 'react-day-picker/lib/style.css'
+// import 'react-day-picker/style.css'
 import css from './style.scss'
 
 const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
