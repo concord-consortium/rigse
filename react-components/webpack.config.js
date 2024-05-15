@@ -69,12 +69,9 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-        loader: 'url-loader',
-        options: {
-          // set limit to a very large number so that all assets are bundled into the css file
-          // TODO: newer webpack versions allow for false to disable the limit
-          limit: 1000000
-        }
+        // All assets are bundled into the JS file. This is currently required because of the Rails pipeline and
+        // the build system of this package.
+        type: 'asset/inline',
       }
     ]
   },
