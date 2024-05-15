@@ -1,9 +1,6 @@
 import React from 'react'
 // import { arrayMove } from 'react-sortable-hoc'
 import SortableBookmarks from './sortable-bookmarks'
-import shouldCancelSorting from '../../helpers/should-cancel-sorting'
-
-import css from './style.scss'
 
 // TODO 2024: replace sortable implementation
 const arrayMove = () => { /* noop */ }
@@ -152,8 +149,6 @@ export class EditBookmarks extends React.Component {
   }
 
   render () {
-    const shouldCancelStart = shouldCancelSorting([ css.sortIcon, css.editBookmarkName ])
-
     return (
       <>
         <SortableBookmarks
@@ -161,7 +156,6 @@ export class EditBookmarks extends React.Component {
           handleUpdate={this.handleUpdate}
           handleDelete={this.handleDelete}
           handleVisibilityToggle={this.handleVisibilityToggle}
-          shouldCancelStart={shouldCancelStart}
           onSortEnd={this.handleSortEnd}
           distance={3}
         />

@@ -1,7 +1,6 @@
 import React from 'react'
 // import { arrayMove } from 'react-sortable-hoc'
 import SortableClasses from './sortable-classes'
-import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 import CopyDialog from './copy-dialog'
 
 import css from './style.scss'
@@ -117,7 +116,6 @@ export default class ManageClasses extends React.Component {
   render () {
     const { classes, copyClazz, saving } = this.state
     const numActiveClasses = classes.filter(c => c.is_archived === false).length
-    const shouldCancelStart = shouldCancelSorting([ css.sortIcon, css.manageClassName ])
 
     return (
       <>
@@ -129,7 +127,6 @@ export default class ManageClasses extends React.Component {
           classes={classes}
           handleCopy={this.handleCopy}
           handleActiveToggle={this.handleActiveToggle}
-          shouldCancelStart={shouldCancelStart}
           onSortEnd={this.handleSortEnd}
           distance={3}
         />
