@@ -3,6 +3,7 @@ import React from 'react'
 import SortableClassRow from './sortable-class-row'
 import css from './style.scss'
 
+// TODO 2024: replace sortable implementation
 const SortableContainer = (Element) => Element
 
 class UnsortableSortableClasses extends React.Component {

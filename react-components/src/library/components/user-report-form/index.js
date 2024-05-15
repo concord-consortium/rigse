@@ -11,6 +11,7 @@ const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, 
 
 const queryCache = {}
 
+// TODO 2024: replace DayPicker implementation
 const DayPickerInput = () => 'TODO: DayPickerInput'
 const parseDate = () => 'TODO: parseDate'
 const formatDate = () => 'TODO: formatDate'

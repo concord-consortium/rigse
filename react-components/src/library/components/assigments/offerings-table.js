@@ -5,7 +5,9 @@ import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 
 import css from './style.scss'
 
+// TODO 2024: replace sortable implementation
 const SortableContainer = (Element) => Element
+// TODO 2024: replace sortable implementation
 const SortableElement = (Element) => Element
 
 const SortableOffering = SortableElement(OfferingRow)

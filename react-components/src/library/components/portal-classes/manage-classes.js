@@ -6,6 +6,7 @@ import CopyDialog from './copy-dialog'
 
 import css from './style.scss'
 
+// TODO 2024: replace sortable implementation
 const arrayMove = () => { /* noop */ }
 
 export default class ManageClasses extends React.Component {

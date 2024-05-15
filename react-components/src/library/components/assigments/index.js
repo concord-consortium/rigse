@@ -7,6 +7,7 @@ import OfferingsTable from './offerings-table'
 import { appendOfferingApiQueryParams } from '../../url-params'
 // import { arrayMove } from 'react-sortable-hoc'
 
+// TODO 2024: replace sortable implementation
 const arrayMove = () => { /* noop */ }
 
 const addQueryParam = (url, param, value) => {

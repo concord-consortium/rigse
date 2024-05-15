@@ -5,6 +5,7 @@ import shouldCancelSorting from '../../helpers/should-cancel-sorting'
 
 import css from './style.scss'
 
+// TODO 2024: replace sortable implementation
 const arrayMove = () => { /* noop */ }
 
 export class EditBookmarks extends React.Component {

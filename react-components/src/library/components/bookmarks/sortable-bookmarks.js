@@ -1,9 +1,9 @@
 import React from 'react'
 // import { SortableContainer } from 'react-sortable-hoc'
+import SortableBookmarkRow from './sortable-bookmark-row'
 import css from './style.scss'
 
-import SortableBookmarkRow from './sortable-bookmark-row'
-
+// TODO 2024: replace sortable implementation
 const SortableContainer = (Element) => Element
 
 class Bookmarks extends React.Component {

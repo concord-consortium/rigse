@@ -3,6 +3,7 @@ import React from 'react'
 import SortableMaterialsCollectionList from './sortable-materials-collection-list'
 import css from './style.scss'
 
+// TODO 2024: replace sortable implementation
 const arrayMove = () => { /* noop */ }
 
 // TODO: use helper once https://github.com/concord-consortium/rigse/pull/781 is merged
