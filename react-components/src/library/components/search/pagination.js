@@ -1,14 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { createRef } from 'react'
 
 export default class SPagination extends React.Component {
+  divRef = createRef(null)
+
   componentDidMount () {
     if (this.props.info.total_pages < 2) {
       // don't display pagination if there's only 1 page
       return
     }
 
-    const node = jQuery(ReactDOM.findDOMNode(this))
+    const node = jQuery(this.divRef.current)
     node.paging(this.props.info.total_items, {
       format: '<  . (qq -) nnncnnn (- pp) >',
       perpage: this.props.info.per_page,
@@ -65,6 +66,6 @@ export default class SPagination extends React.Component {
   }
 
   render () {
-    return <div className='pagination' />
+    return <div ref={this.divRef} className='pagination' />
   }
 }
