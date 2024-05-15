@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom'
+import { render, unmount } from './react-render'
 
 var Tooltip = {
   mountPointId: 'portal-pages-tooltip-mount',
@@ -11,13 +11,13 @@ var Tooltip = {
       mountPoint.id = this.mountPointId
       document.body.appendChild(mountPoint)
     }
-    ReactDOM.render(component, mountPoint)
+    render(component, mountPoint)
   },
 
   close: function () {
     var mountPoint = document.getElementById(this.mountPointId)
 
-    ReactDOM.unmountComponentAtNode(mountPoint)
+    unmount(mountPoint)
   }
 
 }
