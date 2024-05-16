@@ -1,11 +1,7 @@
 import React from 'react'
-// import { SortableElement } from 'react-sortable-hoc'
 import css from './style.scss'
 
-// TODO 2024: replace sortable implementation
-const SortableElement = (Element) => Element
-
-class UnsortableClassRow extends React.Component {
+class ClassRow extends React.Component {
   render () {
     const { clazz } = this.props
 
@@ -27,6 +23,4 @@ class UnsortableClassRow extends React.Component {
   }
 }
 
-const SortableClassRow = SortableElement(UnsortableClassRow)
-
-export default SortableClassRow
+export default ClassRow
