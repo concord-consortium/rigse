@@ -1,12 +1,11 @@
 import React from 'react'
-import ExternalReportButton from '../common/external-report-button'
-// import DayPickerInput from 'react-day-picker/DayPickerInput'
-// import { formatDate, parseDate } from 'react-day-picker/moment'
-// import 'react-day-picker/style.css'
-import css from './style.scss'
 import Select from 'react-select'
 import { debounce } from 'throttle-debounce'
 import jQuery from 'jquery'
+import ExternalReportButton from '../common/external-report-button'
+import { formatInputDateToMMDDYYYY } from '../../helpers/format-date'
+
+import css from './style.scss'
 
 const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
 
@@ -18,11 +17,6 @@ const getQueryLimitParam = () => {
 }
 
 const queryCache = {}
-
-// TODO 2024: replace DayPicker implementation
-const DayPickerInput = () => 'TODO: DayPickerInput'
-const parseDate = () => 'TODO: parseDate'
-const formatDate = () => 'TODO: formatDate'
 
 export default class LearnerReportForm extends React.Component {
   constructor (props) {
@@ -165,7 +159,9 @@ export default class LearnerReportForm extends React.Component {
       }
     }
     for (filter of ['start_date', 'end_date']) {
-      if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) { params[filter] = this.state[filter] }
+      if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
+        params[filter] = formatInputDateToMMDDYYYY(this.state[filter])
+      }
     }
     const customQueryLimit = getQueryLimitParam()
     if (customQueryLimit) {
@@ -284,12 +280,13 @@ export default class LearnerReportForm extends React.Component {
   renderDatePicker (name) {
     const label = name === 'start_date' ? 'Earliest date of last run' : 'Latest date of last run'
 
-    const handleChange = value => {
+    const handleChange = (event) => {
+      const { value } = event.target
       if (!value) {
         // Incorrect date.
         return
       }
-      this.setState({ [name]: formatDate(value) }, () => {
+      this.setState({ [name]: value }, () => {
         this.updateFilters()
         this.updateQueryParams()
       })
@@ -298,14 +295,11 @@ export default class LearnerReportForm extends React.Component {
     return (
       <div style={{ marginTop: '6px' }}>
         <div>{label}</div>
-        <DayPickerInput
-          inputProps={{ name: name }}
-          placeholder={'MM/DD/YYYY'}
-          format={'MM/DD/YYYY'}
-          parseDate={parseDate}
-          formatDate={formatDate}
-          selectedDay={this.state[name]}
-          onDayChange={handleChange}
+        <input
+          type='date'
+          name={name}
+          value={this.state[name]}
+          onChange={handleChange}
         />
       </div>
     )

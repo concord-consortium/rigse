@@ -7,3 +7,13 @@ function formatDate (dateString) {
 }
 
 export default formatDate
+
+// Date provided by the <input type="date"> element is in the format 'YYYY-MM-DD'.
+// This function converts it to 'MM/DD/YYYY'.
+export const formatInputDateToMMDDYYYY = (inputDateString) => {
+  if (!inputDateString) {
+    return ''
+  }
+  const [year, month, day] = inputDateString.split('-')
+  return `${month}/${day}/${year}`
+}
