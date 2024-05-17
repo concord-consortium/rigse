@@ -1,12 +1,9 @@
 import React from 'react'
-// import { arrayMove } from 'react-sortable-hoc'
+import { arrayMove } from '@dnd-kit/sortable'
 import SortableClasses from './sortable-classes'
 import CopyDialog from './copy-dialog'
 
 import css from './style.scss'
-
-// TODO 2024: replace sortable implementation
-const arrayMove = () => { /* noop */ }
 
 export default class ManageClasses extends React.Component {
   constructor (props) {
@@ -128,7 +125,6 @@ export default class ManageClasses extends React.Component {
           handleCopy={this.handleCopy}
           handleActiveToggle={this.handleActiveToggle}
           onSortEnd={this.handleSortEnd}
-          distance={3}
         />
 
         {copyClazz ? <CopyDialog clazz={copyClazz} saving={saving} handleSave={this.handleSaveCopy} handleCancel={this.handleCopyCancel} /> : undefined}
