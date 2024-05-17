@@ -1,34 +1,60 @@
 import React from 'react'
-// import { SortableContainer } from 'react-sortable-hoc'
-import SortableBookmarkRow from './sortable-bookmark-row'
+import BookmarkRow from './bookmark-row'
+import { SortableContainer, SortableItem } from '../shared/sortable-helpers'
 import css from './style.scss'
-
-// TODO 2024: replace sortable implementation
-const SortableContainer = (Element) => Element
 
 class Bookmarks extends React.Component {
   render () {
     const { bookmarks } = this.props
 
-    // NOTE: we can't exit early if bookmarks.length === 0 as SortableContainer expects an element
-    // and generates an error which causes it to break if no element exists
     return (
       <div className={css.editBookmarksTable}>
-        {bookmarks.map((bookmark, index) => (
-          <SortableBookmarkRow
-            key={bookmark.id}
-            index={index}
-            bookmark={bookmark}
-            handleUpdate={this.props.handleUpdate}
-            handleDelete={this.props.handleDelete}
-            handleVisibilityToggle={this.props.handleVisibilityToggle}
-          />
-        ))}
+        {
+          bookmarks.map((bookmark, index) => (
+            <SortableItem key={bookmark.id} id={bookmark.id} className={css.sortableItem}>
+              <BookmarkRow
+                key={bookmark.id}
+                index={index}
+                bookmark={bookmark}
+                handleUpdate={this.props.handleUpdate}
+                handleDelete={this.props.handleDelete}
+                handleVisibilityToggle={this.props.handleVisibilityToggle}
+              />
+            </SortableItem>
+          ))
+        }
       </div>
     )
   }
 }
 
-const SortableBookmarks = SortableContainer(Bookmarks)
+const SortableBookmarks = ({ bookmarks, handleUpdate, handleDelete, handleVisibilityToggle, onSortEnd }) => {
+  const renderDragPreview = itemId => {
+    const bookmark = bookmarks.find(bookmark => bookmark.id === itemId)
+    return (
+      <BookmarkRow
+        bookmark={bookmark}
+        handleUpdate={handleUpdate}
+        handleDelete={handleDelete}
+        handleVisibilityToggle={handleVisibilityToggle}
+      />
+    )
+  }
+
+  return (
+    <SortableContainer
+      items={bookmarks.map(bookmark => bookmark.id)}
+      renderDragPreview={renderDragPreview}
+      onReorder={onSortEnd}
+    >
+      <Bookmarks
+        bookmarks={bookmarks}
+        handleUpdate={handleUpdate}
+        handleDelete={handleDelete}
+        handleVisibilityToggle={handleVisibilityToggle}
+      />
+    </SortableContainer>
+  )
+}
 
 export default SortableBookmarks

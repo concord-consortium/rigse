@@ -9,7 +9,7 @@ class API::V1::MaterialsCollectionsController < API::APIController
     end
 
     items = item_ids.map { |i| MaterialsCollectionItem.find(i) }
-    position = 0
+    position = 1
     items.each do |item|
       if item.materials_collection_id == @materials_collection.id
         item.position = position

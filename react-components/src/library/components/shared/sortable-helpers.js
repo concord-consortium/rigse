@@ -5,6 +5,7 @@ import { CSS } from '@dnd-kit/utilities'
 
 const isInteractiveElement = (element) => {
   const interactiveElements = [
+    'a',
     'button',
     'input',
     'textarea',
