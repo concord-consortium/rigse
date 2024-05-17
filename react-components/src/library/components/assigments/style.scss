@@ -111,6 +111,7 @@
   div:first-child {
     display: flex;
     flex-flow: row nowrap;
+    align-items: center;
   }
   .loading {
     margin-top: 10px;

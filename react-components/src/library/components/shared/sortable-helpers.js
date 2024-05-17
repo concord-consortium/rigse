@@ -92,12 +92,15 @@ export const SortableContainer = ({ items, onReorder, renderDragPreview, childre
 }
 
 export const SortableItem = ({ id, disabled, className, children }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id, disabled })
+  const { attributes, listeners, setNodeRef, transform, transition, active } = useSortable({ id, disabled })
 
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    touchAction: 'none' // important, otherwise dragging won't work on mobile (bubbling event causes scrolling)
+    // hide the original item while dragging, as we use a custom drag preview
+    visibility: active?.id === id ? 'hidden' : 'visible',
+    // important, otherwise dragging won't work on mobile (bubbling event causes scrolling)
+    touchAction: 'none'
   }
 
   return (

@@ -1,22 +1,6 @@
 import React from 'react'
-// import { arrayMove } from 'react-sortable-hoc'
+import { arrayMove } from '@dnd-kit/sortable'
 import SortableMaterialsCollectionList from './sortable-materials-collection-list'
-import css from './style.scss'
-
-// TODO 2024: replace sortable implementation
-const arrayMove = () => { /* noop */ }
-
-// TODO: use helper once https://github.com/concord-consortium/rigse/pull/781 is merged
-const shouldCancelSorting = e => {
-  // Only HTML elements with selected classes can be used to reorder offerings.
-  const classList = e.target.classList
-  for (const cl of [ css.sortIcon, css.editMaterialsCollectionsListRowName ]) {
-    if (classList.contains(cl)) {
-      return false
-    }
-  }
-  return true
-}
 
 export class EditMaterialsCollectionList extends React.Component {
   constructor (props) {
@@ -113,9 +97,7 @@ export class EditMaterialsCollectionList extends React.Component {
       <SortableMaterialsCollectionList
         items={items}
         handleDelete={this.handleDelete}
-        shouldCancelStart={shouldCancelSorting}
         onSortEnd={this.handleSortEnd}
-        distance={3}
       />
     )
   }

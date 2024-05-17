@@ -1,9 +1,5 @@
 import React from 'react'
-// import { SortableElement } from 'react-sortable-hoc'
 import css from './style.scss'
-
-// TODO 2024: replace sortable implementation
-const SortableElement = (Element) => Element
 
 class MaterialsCollectionListRow extends React.Component {
   render () {
@@ -32,6 +28,4 @@ class MaterialsCollectionListRow extends React.Component {
   }
 }
 
-const SortableMaterialsCollectionListRow = SortableElement(MaterialsCollectionListRow)
-
-export default SortableMaterialsCollectionListRow
+export default MaterialsCollectionListRow
