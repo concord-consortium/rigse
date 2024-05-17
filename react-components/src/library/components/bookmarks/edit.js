@@ -1,9 +1,6 @@
 import React from 'react'
-// import { arrayMove } from 'react-sortable-hoc'
+import { arrayMove } from '@dnd-kit/sortable'
 import SortableBookmarks from './sortable-bookmarks'
-
-// TODO 2024: replace sortable implementation
-const arrayMove = () => { /* noop */ }
 
 export class EditBookmarks extends React.Component {
   constructor (props) {
@@ -157,7 +154,6 @@ export class EditBookmarks extends React.Component {
           handleDelete={this.handleDelete}
           handleVisibilityToggle={this.handleVisibilityToggle}
           onSortEnd={this.handleSortEnd}
-          distance={3}
         />
         <div>
           <button onClick={this.handleCreate}>Create Link</button>

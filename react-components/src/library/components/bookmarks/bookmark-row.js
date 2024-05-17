@@ -1,9 +1,5 @@
 import React from 'react'
-// import { SortableElement } from 'react-sortable-hoc'
 import css from './style.scss'
-
-// TODO 2024: replace sortable implementation
-const SortableElement = (Element) => Element
 
 class BookmarkRow extends React.Component {
   constructor (props) {
@@ -76,6 +72,4 @@ class BookmarkRow extends React.Component {
   }
 }
 
-const SortableBookmarkRow = SortableElement(BookmarkRow)
-
-export default SortableBookmarkRow
+export default BookmarkRow
