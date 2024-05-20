@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { withFormsy } from 'formsy-react'
+import { debounce } from 'throttle-debounce'
 
 const TIMEOUT = 350
 
@@ -8,100 +9,42 @@ class TextInput extends React.Component {
     super(props)
 
     this.state = {
-      inputVal: '',
-      _asyncValidationPassed: true
+      inputVal: ''
     }
 
     this.onChange = this.onChange.bind(this)
     this.inputRef = React.createRef()
   }
 
-  // With the change from React 15 mixins for Formsy to React 16 HOCs the async validation needed
-  // to change as the HOC wraps this inner TextInput class and thus the form components that use
-  // this component could not "reach in" and check isValidAsync(). This code adds the functions
-  // that used to be accessible via the mixin to the `withFormsy` wrapper.  The wrapper is
-  // set in the form render functions using asyncValidator() and wrapper is null on the initial
-  // render which is why we check for it to go from null to non-null before adding the functions.
-  //
-  // While this is a little convoluted this was the change needed internally to minimize the
-  // changes needed in the callers
-  // eslint-disable-next-line
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (nextProps.wrapper && !this.props.wrapper) {
-      const wrapper = nextProps.wrapper
-      const self = this
-
-      wrapper.setValidations([
-        () => self.state._asyncValidationPassed ? true : self.props.asyncValidationError
-      ])
-
-      wrapper.isValidAsync = () => {
-        return this.props.isValid && this.state._asyncValidationPassed
-      }
-
-      wrapper.validateAsync = (value) => {
-        if (!this.props.asyncValidation) {
-          return
-        }
-        this.setState({
-          _asyncValidationPassed: true
-        })
-        if (this._asyncValidationTimeoutID) {
-          window.clearTimeout(this._asyncValidationTimeoutID)
-        }
-        if (value.length > 0) {
-          this._asyncValidationTimeoutID = window.setTimeout(() => {
-            this.props.asyncValidation(value).done(() => {
-              self.setState({
-                _asyncValidationPassed: true
-              })
-              wrapper.context.validate(wrapper)
-            }).fail(function () {
-              self.setState({
-                _asyncValidationPassed: false
-              })
-              wrapper.setState({
-                isValid: false,
-                validationError: [self.props.asyncValidationError]
-              })
-            })
-          }, this.props.asyncValidationTimeout)
-        }
-      }
-    }
-  }
-
   onChange (event) {
     const cursor = event.target.selectionStart
     let newVal = event.currentTarget.value
-    this.setState({ _asyncValidationPassed: true }, () => {
-      const delay = this.props.isValidValue(newVal) ? 0 : TIMEOUT
+    const delay = this.props.isValidValue(newVal) ? 0 : TIMEOUT
 
-      this.setState({
-        inputVal: newVal
-      }, () => {
-        // Reset the cursor in case the user was not appending text.
-        // NOTE: while unintuitive the selectionEnd is set to the selectionStart to collapse the cursor.
-        // This works for both unselected text and multiple character selections.
-        // More info here: https://stackoverflow.com/a/54811848
-        if (this.inputRef.current != null) {
-          this.inputRef.current.selectionEnd = cursor
-        }
-      })
-
-      if (this.timeoutID) {
-        window.clearTimeout(this.timeoutID)
-      }
-      this.timeoutID = window.setTimeout(() => {
-        if (this.props.processValue) {
-          newVal = this.props.processValue(newVal)
-        }
-        this.props.setValue(newVal)
-      }, delay)
-      if (this.props.isValidValue(newVal) && this.props.wrapper) {
-        this.props.wrapper.validateAsync(newVal)
+    this.setState({
+      inputVal: newVal
+    }, () => {
+      // Reset the cursor in case the user was not appending text.
+      // NOTE: while unintuitive the selectionEnd is set to the selectionStart to collapse the cursor.
+      // This works for both unselected text and multiple character selections.
+      // More info here: https://stackoverflow.com/a/54811848
+      if (this.inputRef.current != null) {
+        this.inputRef.current.selectionEnd = cursor
       }
     })
+
+    if (this.timeoutID) {
+      window.clearTimeout(this.timeoutID)
+    }
+    this.timeoutID = window.setTimeout(() => {
+      if (this.props.processValue) {
+        newVal = this.props.processValue(newVal)
+      }
+      this.props.setValue(newVal)
+      if (this.props.onChangeWithValidationResult) {
+        this.props.onChangeWithValidationResult(newVal, this.props.isValidValue(newVal))
+      }
+    }, delay)
   }
 
   render () {
@@ -114,7 +57,7 @@ class TextInput extends React.Component {
     if (this.props.showError) {
       className += ' error'
     }
-    if (this.props.wrapper && this.props.wrapper.isValidAsync()) {
+    if (this.props.isValid && !this.props.isPristine) {
       className += ' valid'
     }
     if (disabled) {
@@ -140,18 +83,76 @@ class TextInput extends React.Component {
 }
 
 TextInput.defaultProps = {
-  type: 'text',
-  asyncValidationTimeout: 500,
-  asyncValidationError: 'Async validation failed'
+  type: 'text'
 }
 
-export const asyncValidator = (options) => {
-  const { validator, error, ref } = options
-  return {
-    asyncValidation: validator,
-    asyncValidationError: error,
-    wrapper: ref
+const FormsyTextInput = withFormsy(TextInput)
+
+// A copy of method from https://github.com/formsy/formsy-react/blob/master/src/withFormsy.ts
+const convertValidationsToObject = (validations) => {
+  if (typeof validations === 'string') {
+    return validations.split(/,(?![^{[]*[}\]])/g).reduce((validationsAccumulator, validation) => {
+      let args = validation.split(':')
+      const validateMethod = args.shift()
+
+      args = args.map((arg) => {
+        try {
+          return JSON.parse(arg)
+        } catch (e) {
+          return arg // It is a string if it can not parse it
+        }
+      })
+
+      if (args.length > 1) {
+        throw new Error(
+          'Formsy does not support multiple args on string validations. Use object format of validations instead.'
+        )
+      }
+
+      // Avoid parameter reassignment
+      const validationsAccumulatorCopy = { ...validationsAccumulator }
+      validationsAccumulatorCopy[validateMethod] = args.length ? args[0] : true
+      return validationsAccumulatorCopy
+    }, {})
   }
+
+  return validations || {}
 }
 
-export default withFormsy(TextInput)
+const TextInputWithAsyncValidationSupport = (props) => {
+  const { asyncValidation, asyncValidationError, validations, ...innerProps } = props
+  const [asyncValidationPassed, setAsyncValidationPassed] = useState(true)
+
+  if (!asyncValidation) {
+    return <FormsyTextInput {...innerProps} validations={validations} />
+  }
+
+  // Async validation support will modify the validations object to include a customValidationAsyncResult function.
+  const modifiedValidations = typeof validations === 'string' ? convertValidationsToObject(validations) : (validations ?? {})
+  if (!asyncValidationPassed) {
+    // This will trigger formsy re-validation and set the error to asyncValidationError.
+    modifiedValidations.customValidationAsyncResult = () => {
+      return asyncValidationError || 'Async validation failed'
+    }
+  }
+
+  const debouncedAsyncValidation = useCallback(debounce(TIMEOUT, (newValue) => {
+    asyncValidation(newValue).done(() => {
+      setAsyncValidationPassed(true)
+    }).fail(() => {
+      setAsyncValidationPassed(false)
+    })
+  }), [])
+
+  const handleChangeWithValidationResult = (newValue, isValid) => {
+    // Delay first async validation until field meets basic validation rules.
+    // If async validation fails, it will be re-run on every change, as long as that happens.
+    if (isValid || !asyncValidationPassed) {
+      debouncedAsyncValidation(newValue)
+    }
+  }
+
+  return <FormsyTextInput {...innerProps} validations={modifiedValidations} onChangeWithValidationResult={handleChangeWithValidationResult} />
+}
+
+export default TextInputWithAsyncValidationSupport

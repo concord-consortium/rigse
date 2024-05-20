@@ -1,5 +1,5 @@
 import React from 'react'
-import TextInput, { asyncValidator } from './text_input'
+import TextInput from './text_input'
 import PrivacyPolicy from './privacy_policy'
 import Formsy from 'formsy-react'
 
@@ -21,7 +21,7 @@ export default class StudentForm extends React.Component {
 
   onBasicFormValid () {
     this.setState({
-      canSubmit: this.refs.classWord.isValidAsync()
+      canSubmit: true
     })
   }
 
@@ -45,14 +45,8 @@ export default class StudentForm extends React.Component {
   }
 
   render () {
-    const validator = asyncValidator({
-      validator: classWordValidator,
-      error: INVALID_CLASS_WORD,
-      ref: this.refs.classWord
-    })
     return (
       <Formsy
-        ref='form'
         onValidSubmit={this.submit}
         onValid={this.onBasicFormValid}
         onInvalid={this.onBasicFormInvalid}
@@ -61,11 +55,11 @@ export default class StudentForm extends React.Component {
           <dt>Class Word</dt>
           <dd>
             <TextInput
-              ref='classWord'
               name='class_word'
               placeholder='Class Word (not case sensitive)'
               required
-              {...validator}
+              asyncValidation={classWordValidator}
+              asyncValidationError={INVALID_CLASS_WORD}
             />
           </dd>
         </dl>
