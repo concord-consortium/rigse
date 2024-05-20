@@ -1,7 +1,7 @@
 import React from 'react'
 import Formsy from 'formsy-react'
 
-import TextInput, { asyncValidator } from './text_input'
+import TextInput from './text_input'
 import CheckboxInput from './checkbox_input'
 import SelectInput from './select_input'
 import SchoolInput from './school_input'
@@ -49,15 +49,8 @@ export default class TeacherForm extends React.Component {
   }
 
   onBasicFormValid () {
-    let valid = true
-    if (this.refs.login && !this.refs.login.isValidAsync()) {
-      valid = false
-    }
-    if (this.refs.email && !this.refs.email.isValidAsync()) {
-      valid = false
-    }
     this.setState({
-      canSubmit: valid
+      canSubmit: true
     })
   }
 
@@ -95,7 +88,7 @@ export default class TeacherForm extends React.Component {
     const countryId = currentValues.country_id?.value
     const zipcode = currentValues.zipcode
     const { currentZipcode, registerNewSchool } = this.state
-    const zipcodeValid = this.refs.zipcode && this.refs.zipcode.isValidValue(zipcode)
+    const zipcodeValid = this.zipcodeValidation([], zipcode)
 
     this.setState({
       currentCountry: countryId,
@@ -153,23 +146,12 @@ export default class TeacherForm extends React.Component {
   }
 
   renderAnonymous (showEnewsSubscription) {
-    const loginValidator = asyncValidator({
-      validator: loginValidValidator,
-      error: LOGIN_INVALID,
-      ref: this.refs.login
-    })
-    const emailValidator = asyncValidator({
-      validator: emailAvailableValidator,
-      error: EMAIL_TAKEN,
-      ref: this.refs.email
-    })
     return (
       <div>
         <dl>
           <dt>Username</dt>
           <dd>
             <TextInput
-              ref='login'
               name='login'
               placeholder=''
               // eslint-disable-next-line
@@ -180,13 +162,13 @@ export default class TeacherForm extends React.Component {
               validationErrors={{
                 minLength: LOGIN_TOO_SHORT
               }}
-              {...loginValidator}
+              asyncValidation={loginValidValidator}
+              asyncValidationError={LOGIN_INVALID}
             />
           </dd>
           <dt>Email</dt>
           <dd>
             <TextInput
-              ref='email'
               name='email'
               placeholder=''
               // eslint-disable-next-line
@@ -197,13 +179,13 @@ export default class TeacherForm extends React.Component {
               validationErrors={{
                 isEmail: EMAIL_REGEXP
               }}
-              {...emailValidator}
+              asyncValidation={emailAvailableValidator}
+              asyncValidationError={EMAIL_TAKEN}
             />
           </dd>
           {showEnewsSubscription
             ? <dd>
               <CheckboxInput
-                ref='email_subscribed'
                 name='email_subscribed'
                 required={false}
                 defaultChecked='true'
@@ -222,7 +204,6 @@ export default class TeacherForm extends React.Component {
         <dd>
           <div>
             <TextInput
-              ref='zipcode'
               name='zipcode'
               placeholder={'School / Institution ' + (this.zipOrPostal())}
               // eslint-disable-next-line
@@ -250,7 +231,6 @@ export default class TeacherForm extends React.Component {
 
     return (
       <Formsy
-        ref='form'
         onValidSubmit={this.submit}
         onValid={this.onBasicFormValid}
         onInvalid={this.onBasicFormInvalid}
@@ -309,7 +289,6 @@ export default class TeacherForm extends React.Component {
         {!anonymous && showEnewsSubscription
           ? <div className='signup-form-enews-optin-standalone'>
             <CheckboxInput
-              ref='email_subscribed'
               name='email_subscribed'
               required={false}
               defaultChecked

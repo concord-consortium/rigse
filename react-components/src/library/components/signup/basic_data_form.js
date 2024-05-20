@@ -1,6 +1,6 @@
 import React from 'react'
 import Formsy from 'formsy-react'
-import TextInput, { asyncValidator } from './text_input'
+import TextInput from './text_input'
 
 let INVALID_FIRST_NAME
 let INVALID_LAST_NAME
@@ -37,9 +37,8 @@ export default class BasicDataForm extends React.Component {
   }
 
   onBasicFormValid () {
-    const anonymous = this.props.anonymous
     this.setState({
-      canSubmit: !anonymous || (this.refs.firstName.isValidAsync() && this.refs.lastName.isValidAsync())
+      canSubmit: true
     })
   }
 
@@ -60,17 +59,6 @@ export default class BasicDataForm extends React.Component {
   render () {
     const anonymous = this.props.anonymous
 
-    const firstNameValidator = asyncValidator({
-      validator: nameValidator,
-      error: INVALID_FIRST_NAME,
-      ref: this.refs.firstName
-    })
-    const lastNameValidator = asyncValidator({
-      validator: nameValidator,
-      error: INVALID_LAST_NAME,
-      ref: this.refs.lastName
-    })
-
     const providerComponents = []
     if (enableAuthProviders && this.props.oauthProviders) {
       const providers = this.props.oauthProviders
@@ -81,8 +69,6 @@ export default class BasicDataForm extends React.Component {
             <p>Sign up with:</p>
           )
         }
-        // console.log("INFO adding provider direct path " + providers[i].directPath);
-        // console.log("INFO adding provider auth check path " + providers[i].authCheckPath);
 
         providerComponents.push(
           <a className='badge' id={providers[i].name} href={providers[i].directPath}>Sign up with {providers[i].display_name}</a>
@@ -110,11 +96,11 @@ export default class BasicDataForm extends React.Component {
           <div>
             <dl>
               <dt className='two-col'>First Name</dt>
-              <dd className='name_wrapper first-name-wrapper two-col'><TextInput ref='firstName' name='first_name' placeholder='' required {...firstNameValidator} /></dd>
+              <dd className='name_wrapper first-name-wrapper two-col'><TextInput name='first_name' placeholder='' required asyncValidation={nameValidator} asyncValidationError={INVALID_FIRST_NAME} /></dd>
               <dt className='two-col'>Last Name</dt>
-              <dd className='name_wrapper last-name-wrapper two-col'><TextInput ref='lastName' name='last_name' placeholder='' required {...lastNameValidator} /></dd>
+              <dd className='name_wrapper last-name-wrapper two-col'><TextInput name='last_name' placeholder='' required asyncValidation={nameValidator} asyncValidationError={INVALID_LAST_NAME} /></dd>
               <dt>Password</dt>
-              <dd><TextInput name='password' placeholder='' type='password' required validations='minLength:6' validationError={PASS_TOO_SHORT} /></dd>
+              <dd><TextInput name='password' placeholder='' type='password' required validations={'minLength:6,maxLength:10'} validationError={PASS_TOO_SHORT} /></dd>
               <dt>Confirm Password</dt>
               <dd><TextInput name='password_confirmation' placeholder='' type='password' required validations={'equals:' + this.state.password} validationError={PASS_NOT_MATCH} /></dd>
             </dl>

@@ -16,7 +16,6 @@ class RadioInput extends React.Component {
   }
 
   changeValue (e) {
-    console.log('INFO RadioInput changeValue', e)
     if (this.props.handleChange) {
       this.props.handleChange(e)
     }
