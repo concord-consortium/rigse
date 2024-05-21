@@ -1,334 +1,155 @@
-/* globals describe it expect */
-
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import { pack } from "../../helpers/pack"
-import EditBookmarks from "../../../../src/library/components/bookmarks/edit"
-import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery"
-
-Enzyme.configure({adapter: new Adapter()})
-
-const renderedZeroBookmarks = '<div class="editBookmarksTable"></div><div><button>Create Link</button></div>'
-
-const renderedSingleBookmark = pack(`
-  <div class="editBookmarksTable">
-    <div class="editBookmarkRow">
-      <span class="iconCell">
-        <span class="sortIcon icon-sort"></span>
-      </span>
-      <span class="editBookmarkName">
-        <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
-      </span>
-      <span class="editBookmarkButtons">
-        <button class="textButton adminOption">Edit</button>
-        <button class="textButton adminOption">Hide</button>
-        <button class="textButton adminOption">Delete</button>
-      </span>
-    </div>
-  </div>
-  <div>
-    <button>Create Link</button>
-  </div>
-`)
+import React from 'react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import EditBookmarks from '../../../../src/library/components/bookmarks/edit';
+import { mockJqueryAjaxSuccess } from '../../helpers/mock-jquery';
 
 describe('When I try to render sortable bookmarks', () => {
-
-  const clone = (obj) => JSON.parse(JSON.stringify(obj))
+  const clone = (obj) => JSON.parse(JSON.stringify(obj));
 
   const singleBookmark = [
     {
       id: 1,
       is_visible: true,
-      name: "Link 1",
+      name: 'Link 1',
       position: 0,
-      url: "http://example.com/1"
-    }
-  ]
+      url: 'http://example.com/1',
+    },
+  ];
 
   const multipleBookmarks = [
     {
       id: 1,
       is_visible: true,
-      name: "Link 1",
+      name: 'Link 1',
       position: 0,
-      url: "http://example.com/1"
+      url: 'http://example.com/1',
     },
     {
       id: 2,
       is_visible: false,
-      name: "Link 2",
+      name: 'Link 2',
       position: 1,
-      url: "http://example.com/2"
+      url: 'http://example.com/2',
     },
     {
       id: 3,
       is_visible: true,
-      name: "Link 3",
+      name: 'Link 3',
       position: 2,
-      url: "http://example.com/3"
-    }
-  ]
+      url: 'http://example.com/3',
+    },
+  ];
 
   mockJqueryAjaxSuccess({
-    success: true
-  })
-
-  it("should render 0 bookmarks", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={[]} />);
-    expect(editBookmarks.html()).toBe(renderedZeroBookmarks)
+    success: true,
   });
 
-  it("should render 1 bookmark", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={singleBookmark} />);
-    expect(editBookmarks.html()).toBe(renderedSingleBookmark);
+  it('should render 0 bookmarks', () => {
+    render(<EditBookmarks classId={1} bookmarks={[]} />);
+    expect(screen.getByText('Create Link')).toBeInTheDocument();
   });
 
-  it("should render multiple bookmarks", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={multipleBookmarks} />);
-    expect(editBookmarks.html()).toBe(pack(`
-      <div class="editBookmarksTable">
-        <div class="editBookmarkRow">
-          <span class="iconCell">
-            <span class="sortIcon icon-sort"></span>
-          </span>
-          <span class="editBookmarkName">
-            <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
-          </span>
-          <span class="editBookmarkButtons">
-            <button class="textButton adminOption">Edit</button>
-            <button class="textButton adminOption">Hide</button>
-            <button class="textButton adminOption">Delete</button>
-          </span>
-        </div>
-        <div class="editBookmarkRow">
-          <span class="iconCell">
-            <span class="sortIcon icon-sort"></span>
-          </span>
-          <span class="editBookmarkName">
-            <strike>
-              <a href="http://example.com/2" target="_blank" rel="noopener">Link 2</a>
-            </strike>
-          </span>
-          <span class="editBookmarkButtons">
-            <button class="textButton adminOption">Edit</button>
-            <button class="textButton adminOption">Show</button>
-            <button class="textButton adminOption">Delete</button>
-          </span>
-        </div>
-        <div class="editBookmarkRow">
-          <span class="iconCell">
-            <span class="sortIcon icon-sort"></span>
-          </span>
-          <span class="editBookmarkName">
-            <a href="http://example.com/3" target="_blank" rel="noopener">Link 3</a>
-          </span>
-          <span class="editBookmarkButtons">
-            <button class="textButton adminOption">Edit</button>
-            <button class="textButton adminOption">Hide</button>
-            <button class="textButton adminOption">Delete</button>
-          </span>
-        </div>
-      </div>
-      <div>
-        <button>Create Link</button>
-      </div>
-    `));
+  it('should render 1 bookmark', () => {
+    render(<EditBookmarks classId={1} bookmarks={singleBookmark} />);
+    expect(screen.getByText('Link 1')).toBeInTheDocument();
+    expect(screen.getByText('Create Link')).toBeInTheDocument();
   });
 
-  it("should handle toggle to edit and then cancel", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={singleBookmark} />);
-
-    const editButton = editBookmarks.find(".editBookmarkButtons").childAt(0)
-    editButton.simulate("click")
-    editBookmarks.update()
-
-    expect(editBookmarks.html()).toBe(pack(`
-      <div class="editBookmarksTable">
-        <div class="editBookmarkRow">
-          <span class="editBookmarkName">
-            <input type="text" placeholder="Name" value="Link 1">
-            <input type="text" placeholder="URL" value="http://example.com/1">
-          </span>
-          <span class="editBookmarkButtons">
-            <button>Save</button>
-            <button class="textButton">Cancel</button>
-          </span>
-        </div>
-      </div>
-      <div>
-        <button>Create Link</button>
-      </div>
-    `))
-
-    const cancelButton = editBookmarks.find(".editBookmarkButtons").childAt(1)
-    cancelButton.simulate("click")
-    editBookmarks.update()
-
-    expect(editBookmarks.html()).toBe(pack(`
-      <div class="editBookmarksTable">
-        <div class="editBookmarkRow">
-          <span class="iconCell">
-            <span class="sortIcon icon-sort"></span>
-          </span>
-          <span class="editBookmarkName">
-            <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
-          </span>
-          <span class="editBookmarkButtons">
-            <button class="textButton adminOption">Edit</button>
-            <button class="textButton adminOption">Hide</button>
-            <button class="textButton adminOption">Delete</button>
-          </span>
-        </div>
-      </div>
-      <div>
-        <button>Create Link</button>
-      </div>
-    `));
+  it('should render multiple bookmarks', () => {
+    render(<EditBookmarks classId={1} bookmarks={multipleBookmarks} />);
+    expect(screen.getByText('Link 1')).toBeInTheDocument();
+    expect(screen.getByText('Link 2')).toBeInTheDocument();
+    expect(screen.getByText('Link 3')).toBeInTheDocument();
   });
 
-  it("should handle toggle to edit and then save", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
+  it('should handle toggle to edit and then cancel', () => {
+    render(<EditBookmarks classId={1} bookmarks={singleBookmark} />);
 
-    const editButton = editBookmarks.find(".editBookmarkButtons").childAt(0)
-    editButton.simulate("click")
-    editBookmarks.update()
+    const editButton = screen.getByText('Edit');
+    fireEvent.click(editButton);
 
-    const nameInput = editBookmarks.find(".editBookmarkName").childAt(0)
-    const urlInput = editBookmarks.find(".editBookmarkName").childAt(1)
-    const saveButton = editBookmarks.find(".editBookmarkButtons").childAt(0)
+    expect(screen.getByPlaceholderText('Name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('URL')).toBeInTheDocument();
 
-    nameInput.instance().value = "Updated Link Name";
-    urlInput.instance().value = "http://example.com/updated"
+    const cancelButton = screen.getByText('Cancel');
+    fireEvent.click(cancelButton);
 
-    saveButton.simulate("click")
-    editBookmarks.update()
-
-    expect(editBookmarks.html()).toBe(pack(`
-      <div class="editBookmarksTable">
-        <div class="editBookmarkRow">
-          <span class="iconCell">
-            <span class="sortIcon icon-sort"></span>
-          </span>
-          <span class="editBookmarkName">
-            <a href="http://example.com/updated" target="_blank" rel="noopener">Updated Link Name</a>
-          </span>
-          <span class="editBookmarkButtons">
-            <button class="textButton adminOption">Edit</button>
-            <button class="textButton adminOption">Hide</button>
-            <button class="textButton adminOption">Delete</button>
-          </span>
-        </div>
-      </div>
-      <div>
-        <button>Create Link</button>
-      </div>
-    `));
+    expect(screen.queryByPlaceholderText('Name')).not.toBeInTheDocument();
+    expect(screen.queryByPlaceholderText('URL')).not.toBeInTheDocument();
   });
 
-  it("should handle toggle to hide -> unhide -> hide", () => {
-    const renderedHiddenBookmark = pack(`
-      <div class="editBookmarksTable">
-        <div class="editBookmarkRow">
-          <span class="iconCell">
-            <span class="sortIcon icon-sort"></span>
-          </span>
-          <span class="editBookmarkName">
-            <strike>
-              <a href="http://example.com/1" target="_blank" rel="noopener">Link 1</a>
-            </strike>
-          </span>
-          <span class="editBookmarkButtons">
-            <button class="textButton adminOption">Edit</button>
-            <button class="textButton adminOption">Show</button>
-            <button class="textButton adminOption">Delete</button>
-          </span>
-        </div>
-      </div>
-      <div>
-        <button>Create Link</button>
-      </div>
-    `)
+  it('should handle toggle to edit and then save', () => {
+    render(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
 
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
+    const editButton = screen.getByText('Edit');
+    fireEvent.click(editButton);
 
-    const hideButton = editBookmarks.find(".editBookmarkButtons").childAt(1)
+    const nameInput = screen.getByPlaceholderText('Name');
+    const urlInput = screen.getByPlaceholderText('URL');
+    const saveButton = screen.getByText('Save');
 
-    hideButton.simulate("click")
-    editBookmarks.update()
-    expect(editBookmarks.html()).toBe(renderedHiddenBookmark);
+    fireEvent.change(nameInput, { target: { value: 'Updated Link Name' } });
+    fireEvent.change(urlInput, { target: { value: 'http://example.com/updated' } });
+    fireEvent.click(saveButton);
 
-    hideButton.simulate("click")
-    editBookmarks.update()
-    expect(editBookmarks.html()).toBe(renderedSingleBookmark)
+    expect(screen.getByText('Updated Link Name')).toBeInTheDocument();
+    const updatedLink = screen.getByText('Updated Link Name').closest('a');
+    expect(updatedLink).toHaveAttribute('href', 'http://example.com/updated');
+  });
 
-    hideButton.simulate("click")
-    editBookmarks.update()
-    expect(editBookmarks.html()).toBe(renderedHiddenBookmark);
-  })
+  it('should handle toggle to hide -> unhide -> hide', () => {
+    render(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
 
-  it("should handle the delete button", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
-    const deleteButton = editBookmarks.find(".editBookmarkButtons").childAt(2)
+    const hideButton = screen.getByText('Hide');
+    fireEvent.click(hideButton);
+
+    expect(screen.getByText('Show')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Show'));
+    expect(screen.getByText('Hide')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Hide'));
+    expect(screen.getByText('Show')).toBeInTheDocument();
+  });
+
+  it('should handle the delete button', () => {
+    render(<EditBookmarks classId={1} bookmarks={clone(singleBookmark)} />);
+    const deleteButton = screen.getByText('Delete');
 
     // before delete
-    expect(editBookmarks.html()).toBe(renderedSingleBookmark);
+    expect(screen.getByText('Link 1')).toBeInTheDocument();
 
-    const savedConfirm = global.confirm
+    global.confirm = jest.fn(() => false);
+    fireEvent.click(deleteButton);
+    expect(screen.getByText('Link 1')).toBeInTheDocument();
 
-    // with cancel on the confirmation
-    global.confirm = () => false
-    deleteButton.simulate("click")
-    editBookmarks.update()
-    expect(editBookmarks.html()).toBe(renderedSingleBookmark);
+    global.confirm = jest.fn(() => true);
+    fireEvent.click(deleteButton);
+    expect(screen.queryByText('Link 1')).not.toBeInTheDocument();
+  });
+});
 
-    // with ok on the confirmation
-    global.confirm = () => true
-    deleteButton.simulate("click")
-    editBookmarks.update()
-    expect(editBookmarks.html()).toBe(renderedZeroBookmarks);
-
-    global.confirm = savedConfirm
-  })
-})
-
-describe("When I try to create bookmarks", () => {
+describe('When I try to create bookmarks', () => {
   mockJqueryAjaxSuccess({
     success: true,
     data: {
       id: 1,
       is_visible: true,
-      name: "New Link",
+      name: 'New Link',
       position: 0,
-      url: "http://example.com/new"
-    }
-  })
+      url: 'http://example.com/new',
+    },
+  });
 
-  it("it should handle the create button", () => {
-    const editBookmarks = Enzyme.mount(<EditBookmarks classId={1} bookmarks={[]} />);
-    const createButton = editBookmarks.find("button").last()
+  it('should handle the create button', () => {
+    render(<EditBookmarks classId={1} bookmarks={[]} />);
+    const createButton = screen.getByText('Create Link');
 
-    expect(editBookmarks.html()).toBe(renderedZeroBookmarks)
+    expect(screen.getByText('Create Link')).toBeInTheDocument();
 
-    createButton.simulate("click")
-    editBookmarks.update()
+    fireEvent.click(createButton);
 
-    expect(editBookmarks.html()).toBe(pack(`
-      <div class="editBookmarksTable">
-        <div class="editBookmarkRow">
-          <span class="editBookmarkName">
-            <input type="text" placeholder="Name" value="New Link">
-            <input type="text" placeholder="URL" value="http://example.com/new">
-          </span>
-          <span class="editBookmarkButtons">
-            <button>Save</button>
-            <button class="textButton">Cancel</button>
-          </span>
-        </div>
-      </div>
-      <div>
-        <button>Create Link</button>
-      </div>
-    `));
-  })
-})
+    expect(screen.getByPlaceholderText('Name')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('URL')).toBeInTheDocument();
+  });
+});

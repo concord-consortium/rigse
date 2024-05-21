@@ -1,7 +1,6 @@
 import React from 'react'
 import createReactClass from 'create-react-class'
 
-//
 // This was converted from a React 15 mixin to a high-order component (HOC)
 //
 // Fetches remote data when component is visible (when @props.visible == true).

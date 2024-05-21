@@ -1,110 +1,133 @@
-/* globals jest describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import ExternalReportButton from 'components/common/external-report-button'
-import {generateJQueryForm} from 'components/common/external-report-button'
-import nock from 'nock'
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import ExternalReportButton, { generateJQueryForm } from 'components/common/external-report-button';
+import nock from 'nock';
 
 describe('ExternalReportButton', () => {
-  const queryParams = { teachers: 1, otherParam: 'abc' }
-  const isDisabled = false
-  const postToUrlMock = jest.fn()
-  const queryUrl = 'http://query-test.concord.org'
-  const queryJson = {fakeQueryJson: true}
-  const querySignature = 'fakeQueryHMACSignature'
+  const queryParams = { teachers: 1, otherParam: 'abc' };
+  const isDisabled = false;
+  const postToUrlMock = jest.fn();
+  const queryUrl = 'http://query-test.concord.org';
+  const queryJson = { fakeQueryJson: true };
+  const querySignature = 'fakeQueryHMACSignature';
 
-  const reportUrl = 'http://log-puller-test.concord.org'
+  const reportUrl = 'http://log-puller-test.concord.org';
 
-  const wrapper = Enzyme.shallow(
-    <ExternalReportButton label='test label' reportUrl={reportUrl} queryUrl={queryUrl} isDisabled={isDisabled} queryParams={queryParams} postToUrl={postToUrlMock} />
-  )
+  beforeEach(() => {
+    postToUrlMock.mockClear();
+  });
 
   it('displays the label', () => {
-    expect(wrapper.html()).toEqual(expect.stringContaining('test label'))
-  })
+    render(
+      <ExternalReportButton
+        label='test label'
+        reportUrl={reportUrl}
+        queryUrl={queryUrl}
+        isDisabled={isDisabled}
+        queryParams={queryParams}
+        postToUrl={postToUrlMock}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: 'test label' })).toBeInTheDocument();
+  });
 
   it('does not disable the button when there are query params', () => {
-    expect(wrapper.find('input').html()).toEqual('<input type="submit" style="margin-right:10px" value="test label"/>');
-  })
+    render(
+      <ExternalReportButton
+        label='test label'
+        reportUrl={reportUrl}
+        queryUrl={queryUrl}
+        isDisabled={isDisabled}
+        queryParams={queryParams}
+        postToUrl={postToUrlMock}
+      />
+    );
+
+    const button = screen.getByRole('button', { name: 'test label' });
+    expect(button).not.toBeDisabled();
+  });
 
   describe('when there are no query params', () => {
-    const queryParams = {}
-    const isDisabled = true
-    const wrapper = Enzyme.shallow(
-      <ExternalReportButton label='test disabled' reportUrl={reportUrl} queryUrl={queryUrl} isDisabled={isDisabled} queryParams={queryParams} postToUrl={postToUrlMock} />
-    )
-
     it('disables the button', () => {
-      expect(wrapper.find('input').html()).toEqual('<input type="submit" style="margin-right:10px" disabled="" value="test disabled"/>');
-    })
-  })
+      render(
+        <ExternalReportButton
+          label='test disabled'
+          reportUrl={reportUrl}
+          queryUrl={queryUrl}
+          isDisabled={true}
+          queryParams={{}}
+          postToUrl={postToUrlMock}
+        />
+      );
+
+      const button = screen.getByRole('button', { name: 'test disabled' });
+      expect(button).toBeDisabled();
+    });
+  });
 
   describe('when clicked', () => {
-    it('issues request to queryURL, gets a signed query and finally posts to the report URL', (done) => {
+    it('issues request to queryURL, gets a signed query and finally posts to the report URL', async () => {
       const logsQueryRequest = nock(queryUrl)
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get('/')
         .query(queryParams)
-        .reply(200, {json: queryJson, signature: querySignature})
+        .reply(200, { json: queryJson, signature: querySignature });
 
-      const postToUrlMock = jest.fn()
-      const wrapper = Enzyme.shallow(
-        <ExternalReportButton label='test label' reportUrl={reportUrl} queryUrl={queryUrl} isDisabled={isDisabled} queryParams={queryParams} postToUrl={postToUrlMock} />
-      )
+      render(
+        <ExternalReportButton
+          label='test label'
+          reportUrl={reportUrl}
+          queryUrl={queryUrl}
+          isDisabled={isDisabled}
+          queryParams={queryParams}
+          postToUrl={postToUrlMock}
+        />
+      );
 
-      const eventMock = { preventDefault: jest.fn() }
-      wrapper.simulate('click', eventMock)
+      const button = screen.getByRole('button', { name: 'test label' });
+      fireEvent.click(button);
 
-      expect(eventMock.preventDefault).toBeCalled()
+      await waitFor(() => expect(logsQueryRequest.isDone()).toBeTruthy());
+      expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined, undefined);
+    });
 
-      setTimeout(() => {
-        // This will ensure that logsQueryRequest has been done.
-        logsQueryRequest.done()
-        // Note that it's impossible to use Nock to check second POST request, because JSDOM doesn't implement
-        // form.submit() function. That's browser navigation and JSODM doesn't seem to handle it.
-        expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined, undefined)
-        done()
-      }, 100)
-    })
-
-    it('includes the portal token in the post to the report URL if it exists', (done) => {
-      const postToUrlMock = jest.fn()
-      const portalToken = "testtoken"
-      const wrapper = Enzyme.shallow(
-        <ExternalReportButton label='test label' reportUrl={reportUrl} queryUrl={queryUrl} isDisabled={isDisabled} queryParams={queryParams} postToUrl={postToUrlMock} portalToken={portalToken} />
-      )
-
+    it('includes the portal token in the post to the report URL if it exists', async () => {
+      const portalToken = 'testtoken';
       const logsQueryRequest = nock(queryUrl)
         .defaultReplyHeaders({ 'access-control-allow-origin': '*' })
         .get('/')
         .query(queryParams)
-        .reply(200, {json: queryJson, signature: querySignature, portalToken})
+        .reply(200, { json: queryJson, signature: querySignature, portalToken });
 
-      const eventMock = { preventDefault: jest.fn() }
-      wrapper.simulate('click', eventMock)
+      render(
+        <ExternalReportButton
+          label='test label'
+          reportUrl={reportUrl}
+          queryUrl={queryUrl}
+          isDisabled={isDisabled}
+          queryParams={queryParams}
+          postToUrl={postToUrlMock}
+          portalToken={portalToken}
+        />
+      );
 
-      expect(eventMock.preventDefault).toBeCalled()
+      const button = screen.getByRole('button', { name: 'test label' });
+      fireEvent.click(button);
 
-      setTimeout(() => {
-        // This will ensure that logsQueryRequest has been done.
-        logsQueryRequest.done()
-        // Note that it's impossible to use Nock to check second POST request, because JSDOM doesn't implement
-        // form.submit() function. That's browser navigation and JSODM doesn't seem to handle it.
-        expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined, portalToken)
-        done()
-      }, 100)
-    })
-  })
+      await waitFor(() => expect(logsQueryRequest.isDone()).toBeTruthy());
+      expect(postToUrlMock).toBeCalledWith(reportUrl, queryJson, querySignature, undefined, portalToken);
+    });
+  });
 
   describe('when the query contains a value that includes a single quote', () => {
     it('escapes the generated form correctly', () => {
-      const json = {query: "What's up doc?"}
-      const portalToken = "testtoken"
+      const json = { query: "What's up doc?" };
+      const portalToken = 'testtoken';
       const form = generateJQueryForm(reportUrl, json, querySignature, portalToken);
-      expect(form.html()).toBe("<input type=\"hidden\" name=\"allowDebug\" value=\"1\"><input type=\"hidden\" name=\"json\" value=\"{&quot;query&quot;:&quot;What's up doc?&quot;}\"><input type=\"hidden\" name=\"signature\" value=\"fakeQueryHMACSignature\"><input type=\"hidden\" name=\"jwt\" value=\"testtoken\">");
-    })
-  })
-})
+      expect(form.html()).toBe(
+        `<input type="hidden" name="allowDebug" value="1"><input type="hidden" name="json" value="{&quot;query&quot;:&quot;What's up doc?&quot;}"><input type="hidden" name="signature" value="fakeQueryHMACSignature"><input type="hidden" name="jwt" value="testtoken">`
+      );
+    });
+  });
+});
