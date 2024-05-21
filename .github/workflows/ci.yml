@@ -82,11 +82,15 @@ jobs:
         uses: nanasess/setup-chromedriver@v2
         with:
           chromedriver-version: ${{ env.CHROMEDRIVER_VERSION }}
+      # Remove existing Google Chrome as ChromeDriver will default to it (setup-chrome installs under /opt/hostedtoolcache/setup-chrome/)
+      - name: Remove Existing Google Chrome (so ChromeDriver doesn't use it instead of manually installed version)
+        run: sudo apt-get remove google-chrome-stable
       # Install Google Chrome browser (that matches ChromeDriver version from previous Actions step)
       - name: Install Google Chrome
-        run: |
-          wget -O /tmp/google_chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROMEDRIVER_VERSION}-1_amd64.deb
-          sudo dpkg -i /tmp/google_chrome.deb
+        id: install-chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: ${{ env.CHROMEDRIVER_VERSION }}
 
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml
       - run: cp -v ./config/app_environment_variables.sample.rb ./config/app_environment_variables.rb
