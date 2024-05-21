@@ -16,6 +16,13 @@ const getQueryLimitParam = () => {
   return urlParams.get('queryLimit')
 }
 
+const hasAtLeastTwoAlphanumeric = (str) => {
+  // This regular expression matches alphanumeric characters
+  const matches = str.match(/[a-zA-Z0-9]/g)
+  // Check if there are at least two alphanumeric characters
+  return matches && matches.length >= 2
+}
+
 const queryCache = {}
 
 export default class LearnerReportForm extends React.Component {
@@ -76,6 +83,7 @@ export default class LearnerReportForm extends React.Component {
     if (fieldName) {
       this.setState({ [`waitingFor_${fieldName}`]: true })
     }
+
     const params = jQuery.extend({}, _params) // clone
     if (fieldName) {
       // we remove the value of each field from the filter query for that
@@ -83,7 +91,11 @@ export default class LearnerReportForm extends React.Component {
       // given only the other filters
       delete params[fieldName]
     }
-    if (searchString) {
+    // Ignore any search string that doesn't have at least two alphanumeric characters. The API uses Elasticsearch's
+    // match_prefix_query filter, and it doesn't really work well with special characters. As long as they're surrounded
+    // by alphanumeric characters, things work predictably. However, queries like "?", "!", or "??" will usually return
+    // empty results, even if there are matches in the index.
+    if (searchString && hasAtLeastTwoAlphanumeric(searchString)) {
       params[fieldName] = searchString
     }
 
