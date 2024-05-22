@@ -63,7 +63,7 @@ RailsPortal::Application.configure do
   config.assets.compile = true
 
   # Minify/uglify/compress assets from the pipeline
-  config.assets.js_compressor = Uglifier.new(harmony: true)
+  config.assets.js_compressor = :terser
   config.assets.css_compressor = :yui
 
   # Generate digests for assets' URLs.

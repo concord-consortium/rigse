@@ -61,7 +61,7 @@ gem 'test-unit',            '~> 3.0'
 gem 'tinymce-rails',        '~>3.5.6'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'sprockets', '~> 3'
-gem 'uglifier'
+gem 'terser'
 # 2021-06-24 NP: We could / should probably get rid of this.
 # We currently do use 'useragent' to detect older browsers. But maybe we
 # shouldn't be doing that anymore...
