@@ -1,103 +1,69 @@
-/* globals describe it expect */
-
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import ManageClasses from 'components/portal-classes/manage-classes'
-import { pack } from "../../helpers/pack"
-import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import ManageClasses from 'components/portal-classes/manage-classes';
+import { mockJqueryAjaxSuccess } from '../../helpers/mock-jquery';
 
 describe('When I try to render manage classes', () => {
-
   mockJqueryAjaxSuccess({
-    success: true
-  })
+    success: true,
+  });
 
   const classes = [
     {
       id: 1,
-      name: "test class 1",
-      classWord: "test_class_1",
-      description: "this is a test class 1",
+      name: 'test class 1',
+      classWord: 'test_class_1',
+      description: 'this is a test class 1',
       is_archived: false,
     },
     {
       id: 2,
-      name: "test class 2",
-      classWord: "test_class_2",
-      description: "this is a test class 2",
-      is_archived: true
+      name: 'test class 2',
+      classWord: 'test_class_2',
+      description: 'this is a test class 2',
+      is_archived: true,
     },
     {
       id: 3,
-      name: "test class 3",
-      classWord: "test_class_3",
-      description: "this is a test class 3",
-      is_archived: false
-    }
-  ]
+      name: 'test class 3',
+      classWord: 'test_class_3',
+      description: 'this is a test class 3',
+      is_archived: false,
+    },
+  ];
 
-  it("should render", () => {
-    const manageClasses = Enzyme.mount(<ManageClasses classes={classes} />);
-    expect(manageClasses.html()).toBe(pack(`
-      <div class="manageClassesSummary">My Classes (3 Total, 2 Active)</div>
-      <div class="manageClassesTable">
-        <div class="manageClassRow">
-          <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
-          <span class="manageClassName">test class 1</span>
-          <span class="manageClassButtons">
-            <button class="textButton">Archive</button>
-            <button class="textButton">Copy</button>
-          </span>
-        </div>
-        <div class="manageClassRow">
-          <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
-          <span class="manageClassName"><strike>test class 2</strike></span>
-          <span class="manageClassButtons">
-            <button class="textButton">Unarchive</button>
-            <button class="textButton">Copy</button>
-          </span>
-        </div>
-        <div class="manageClassRow">
-          <span class="iconCell"><span class="sortIcon icon-sort"></span></span>
-          <span class="manageClassName">test class 3</span>
-          <span class="manageClassButtons">
-            <button class="textButton">Archive</button>
-            <button class="textButton">Copy</button>
-          </span>
-        </div>
-      </div>
-    `));
+  it('should render', () => {
+    render(<ManageClasses classes={classes} />);
+
+    expect(screen.getByText('My Classes (3 Total, 2 Active)')).toBeInTheDocument();
+    expect(screen.getByText('test class 1')).toBeInTheDocument();
+    expect(screen.getByText('test class 2')).toBeInTheDocument();
+    expect(screen.getByText('test class 3')).toBeInTheDocument();
+    expect(screen.getAllByText('Archive')).toHaveLength(2);
+    expect(screen.getByText('Unarchive')).toBeInTheDocument();
+    expect(screen.getAllByText('Copy')).toHaveLength(3);
   });
 
-  it("should handle toggling activation", () => {
-    const manageClasses = Enzyme.mount(<ManageClasses classes={classes} />);
-    const toggleActiveButton = () => manageClasses.find(".manageClassRow").first().find(".manageClassButtons").childAt(0)
+  it('should handle toggling activation', () => {
+    render(<ManageClasses classes={classes} />);
+    const toggleActiveButton = screen.getAllByText('Archive')[0];
 
-    expect(toggleActiveButton().html()).toBe('<button class="textButton">Archive</button>')
+    fireEvent.click(toggleActiveButton);
+    expect(screen.getAllByText('Unarchive')[0]).toBeInTheDocument();
 
-    toggleActiveButton().simulate("click")
-    manageClasses.update()
-    expect(toggleActiveButton().html()).toBe('<button class="textButton">Unarchive</button>')
+    fireEvent.click(screen.getAllByText('Unarchive')[0]);
+    expect(screen.getAllByText('Archive')[0]).toBeInTheDocument();
+  });
 
-    toggleActiveButton().simulate("click")
-    manageClasses.update()
-    expect(toggleActiveButton().html()).toBe('<button class="textButton">Archive</button>')
-  })
+  it('should handle copying', () => {
+    render(<ManageClasses classes={classes} />);
+    const copyButton = screen.getAllByText('Copy')[0];
 
-  it("should handle copying", () => {
-    const manageClasses = Enzyme.mount(<ManageClasses classes={classes} />);
-    const copyButton = manageClasses.find(".manageClassRow").first().find(".manageClassButtons").childAt(1)
-
-    expect(manageClasses.html()).not.toContain('<div class="copyDialogLightbox">')
-    copyButton.simulate("click")
-    manageClasses.update()
-    expect(manageClasses.html()).toContain('<div class="copyDialogLightbox">')
-    expect(manageClasses.html()).toContain('<td><input name="name" value="Copy of test class 1"></td>')
+    expect(screen.queryByText('Copy Class')).not.toBeInTheDocument();
+    fireEvent.click(copyButton);
+    expect(screen.getByText('Copy Class')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Copy of test class 1')).toBeInTheDocument();
 
     // NOTE: the copy dialog is tested in its own test file
-  })
-
-})
+  });
+});

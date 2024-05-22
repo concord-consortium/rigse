@@ -22,7 +22,7 @@ export default class ClassSetupForm extends React.Component {
   renderLabelCell (label, field) {
     return (
       <td className='title'>
-        <label className='right' htmlFor={field.htmlFor} style={{ whiteSpace: 'nowrap' }}>{label}:</label>
+        <label className='right' htmlFor={field.id} style={{ whiteSpace: 'nowrap' }}>{label}:</label>
       </td>
     )
   }
@@ -117,7 +117,7 @@ export default class ClassSetupForm extends React.Component {
                                 const checked = portalClassGrades.indexOf(grade) !== -1
                                 return (
                                   <td key={grade} style={{ textAlign: 'left', whiteSpace: 'nowrap', width: `${gradeLevelWidth}%` }}>
-                                    <input type='checkbox' name={name} value='1' defaultChecked={checked} /> <label htmlFor={name}>{grade}</label>
+                                    <input type='checkbox' id={name} name={name} value='1' defaultChecked={checked} /> <label htmlFor={name}>{grade}</label>
                                   </td>
                                 )
                               })}

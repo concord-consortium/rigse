@@ -1,12 +1,7 @@
-/* globals describe it expect */
-
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import StudentRosterRow from 'components/portal-classes/student-roster-row'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import StudentRosterRow from 'components/portal-classes/student-roster-row';
 
 describe('When I try to render a student roster row', () => {
 
@@ -17,71 +12,52 @@ describe('When I try to render a student roster row', () => {
     assignments_started: 2,
     can_remove: false,
     can_reset_password: false
-  }
+  };
 
   it("should render with default parameters", () => {
-    const studentRosterRow = Enzyme.shallow(<StudentRosterRow student={student} />);
-    expect(studentRosterRow.html()).toBe(pack(`
-      <tr>
-        <td>Test Testerson</td>
-        <td>tester</td>
-        <td>Last Tuesday</td>
-        <td>2</td>
-      </tr>
-    `));
+    render(<table><tbody><StudentRosterRow student={student} /></tbody></table>);
+    expect(screen.getByText('Test Testerson')).toBeInTheDocument();
+    expect(screen.getByText('tester')).toBeInTheDocument();
+    expect(screen.getByText('Last Tuesday')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
   });
 
   it("should render in edit mode with no permissions", () => {
-    const studentRosterRow = Enzyme.shallow(<StudentRosterRow student={student} canEdit={true} />);
-    expect(studentRosterRow.html()).toBe(pack(`
-      <tr>
-        <td>Test Testerson</td>
-        <td>tester</td>
-        <td>Last Tuesday</td>
-        <td>2</td>
-        <td class="hide_in_print"></td>
-      </tr>
-    `));
+    render(<table><tbody><StudentRosterRow student={student} canEdit={true} /></tbody></table>);
+    expect(screen.getByText('Test Testerson')).toBeInTheDocument();
+    expect(screen.getByText('tester')).toBeInTheDocument();
+    expect(screen.getByText('Last Tuesday')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: '' })).toHaveClass('hide_in_print');
   });
-
 
   it("should render in edit mode with permissions", () => {
-    const clonedStudent = JSON.parse(JSON.stringify(student))
-    clonedStudent.can_remove = true
-    clonedStudent.can_reset_password = true
+    const clonedStudent = { ...student, can_remove: true, can_reset_password: true };
 
-    const removeStudent = jest.fn()
-    const changePassword = jest.fn()
+    const removeStudent = jest.fn();
+    const changePassword = jest.fn();
 
-    const studentRosterRow = Enzyme.shallow(<StudentRosterRow student={clonedStudent} canEdit={true} onRemoveStudent={removeStudent} onChangePassword={changePassword} />);
-    expect(studentRosterRow.html()).toBe(pack(`
-      <tr>
-        <td>Test Testerson</td>
-        <td>tester</td>
-        <td>Last Tuesday</td>
-        <td>2</td>
-        <td class="hide_in_print">
-          <span class="link" role="link">Remove Student</span>
-          <span class="link" role="link">Change Password</span>
-        </td>
-      </tr>
-    `));
+    render(<table><tbody><StudentRosterRow student={clonedStudent} canEdit={true} onRemoveStudent={removeStudent} onChangePassword={changePassword} /></tbody></table>);
 
-    expect(removeStudent).not.toHaveBeenCalled()
-    expect(changePassword).not.toHaveBeenCalled()
+    expect(screen.getByText('Test Testerson')).toBeInTheDocument();
+    expect(screen.getByText('tester')).toBeInTheDocument();
+    expect(screen.getByText('Last Tuesday')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: /Remove Student/i })).toHaveClass('hide_in_print');
+    expect(screen.getByRole('cell', { name: /Change Password/i })).toHaveClass('hide_in_print');
 
-    const removeStudentLink = studentRosterRow.find("span.link").at(0)
-    const changePasswordLink = studentRosterRow.find("span.link").at(1)
+    const removeStudentLink = screen.getByText('Remove Student');
+    const changePasswordLink = screen.getByText('Change Password');
 
-    removeStudentLink.simulate("click")
-    expect(removeStudent).toHaveBeenCalledWith(clonedStudent)
-    expect(changePassword).not.toHaveBeenCalled()
+    fireEvent.click(removeStudentLink);
+    expect(removeStudent).toHaveBeenCalledWith(clonedStudent);
+    expect(changePassword).not.toHaveBeenCalled();
 
-    removeStudent.mockReset()
+    removeStudent.mockReset();
 
-    changePasswordLink.simulate("click")
-    expect(removeStudent).not.toHaveBeenCalled()
-    expect(changePassword).toHaveBeenCalledWith(clonedStudent)
+    fireEvent.click(changePasswordLink);
+    expect(removeStudent).not.toHaveBeenCalled();
+    expect(changePassword).toHaveBeenCalledWith(clonedStudent);
   });
 
-})
+});

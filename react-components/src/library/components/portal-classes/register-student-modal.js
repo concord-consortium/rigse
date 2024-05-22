@@ -50,19 +50,19 @@ export default class RegisterStudentModal extends React.Component {
             <tbody>
               <tr>
                 <td><label htmlFor='firstName'>First Name</label></td>
-                <td><input name='firstName' ref={this.firstNameRef} /></td>
+                <td><input id='firstName' name='firstName' ref={this.firstNameRef} /></td>
               </tr>
               <tr>
                 <td><label htmlFor='lastName'>Last Name</label></td>
-                <td><input name='lastName' ref={this.lastNameRef} /></td>
+                <td><input id='lastName' name='lastName' ref={this.lastNameRef} /></td>
               </tr>
               <tr>
                 <td><label htmlFor='password'>Password</label></td>
-                <td><input type='password' name='password' ref={this.passwordRef} /></td>
+                <td><input id='password' type='password' name='password' ref={this.passwordRef} /></td>
               </tr>
               <tr>
                 <td><label htmlFor='passwordConfirmation'>Password Again</label></td>
-                <td><input type='password' name='passwordConfirmation' ref={this.passwordConfirmationRef} /></td>
+                <td><input id='passwordConfirmation' type='password' name='passwordConfirmation' ref={this.passwordConfirmationRef} /></td>
               </tr>
               <tr>
                 <td colSpan='2' className={modalDialogCSS.buttons}>

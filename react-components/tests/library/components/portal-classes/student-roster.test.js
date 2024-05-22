@@ -1,15 +1,9 @@
-/* globals describe it expect */
-
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import StudentRoster from 'components/portal-classes/student-roster'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import StudentRoster from 'components/portal-classes/student-roster';
 
 describe('When I try to render a student roster', () => {
-
   const students = [
     {
       student_id: 1,
@@ -30,6 +24,7 @@ describe('When I try to render a student roster', () => {
       can_reset_password: true
     }
   ];
+
   const otherStudents = [
     {
       id: 3,
@@ -44,67 +39,39 @@ describe('When I try to render a student roster', () => {
   ];
 
   it("should render with default parameters", () => {
-    const studentRoster = Enzyme.shallow(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
-    expect(studentRoster.html()).toBe(pack(`
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Last Login</th>
-            <th>Assignments Started</th>
-            <th class="hide_in_print"></th>
-          </tr>
-          <tr>
-            <td>Student 1</td>
-            <td>s1</td>
-            <td>Last Tuesday</td>
-            <td>1</td>
-            <td class="hide_in_print">
-              <span class="link" role="link">Remove Student</span>
-              <span class="link" role="link">Change Password</span></td>
-          </tr>
-          <tr>
-            <td>Student 2</td>
-            <td>s2</td>
-            <td>Never</td>
-            <td>2</td>
-            <td class="hide_in_print">
-              <span class="link" role="link">Remove Student</span>
-              <span class="link" role="link">Change Password</span></td>
-          </tr>
-        </tbody>
-      </table>
-    `));
+    render(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
+
+    students.forEach(student => {
+      expect(screen.getByText(student.name)).toBeInTheDocument();
+      expect(screen.getByText(student.username)).toBeInTheDocument();
+      expect(screen.getByText(student.last_login)).toBeInTheDocument();
+      expect(screen.getByText(student.assignments_started.toString())).toBeInTheDocument();
+    });
+
+    const removeButtons = screen.getAllByText('Remove Student');
+    const changePasswordButtons = screen.getAllByText('Change Password');
+
+    expect(removeButtons.length).toBe(2);
+    expect(changePasswordButtons.length).toBe(2);
   });
 
   it("should render the register another modal", () => {
-    const savedLocation = window.location
-    delete global.window.location
+    const savedLocation = window.location;
+    delete global.window.location;
     global.window.location = {
       hash: "#registered_student"
-    }
+    };
 
-    const studentRoster = Enzyme.mount(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
-    expect(studentRoster.html()).toContain(pack(`
-      <div class="modal">
-        <div class="background"></div>
-        <div class="dialog">
-          <div class="title">Success! The student was registered and added to the class</div>
-          <p>
-            Do you wish to register and add another student?
-          </p>
-          <p class="buttons">
-            <button>Add Another Student</button>
-            <button>Cancel</button>
-          </p>
-        </div>
-      </div>
-    `))
+    render(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
 
-    global.window.location = savedLocation
-  })
+    expect(screen.getByText('Success! The student was registered and added to the class')).toBeInTheDocument();
+    expect(screen.getByText('Do you wish to register and add another student?')).toBeInTheDocument();
+    expect(screen.getByText('Add Another Student')).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
+
+    global.window.location = savedLocation;
+  });
 
   // NOTE: the header and the rows are tested fully in their own component tests
 
-})
+});

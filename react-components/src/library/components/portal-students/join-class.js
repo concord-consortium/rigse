@@ -102,7 +102,7 @@ export class JoinClass extends React.Component {
           <li>
             <label htmlFor='classWord'>New Class Word: </label>
             <p>Not case sensitive</p>
-            <input type='text' live='false' name='classWord' ref={this.classWordRef} size={30} disabled={confirmingClassWord} />
+            <input type='text' live='false' id='classWord' name='classWord' ref={this.classWordRef} size={30} disabled={confirmingClassWord} />
           </li>
           <li>
             <input type='submit' disabled={confirmingClassWord} value={confirmingClassWord ? 'Submitting ...' : 'Submit'} />
@@ -134,7 +134,7 @@ export class JoinClass extends React.Component {
         </p>
         <p>
           <input type='submit' disabled={joiningClass} value={joiningClass ? 'Joining ...' : 'Join'} />
-          <button onClick={this.handleCancelJoin}>Cancel</button>
+          <button name='Cancel' onClick={this.handleCancelJoin}>Cancel</button>
         </p>
       </>
     )
