@@ -294,11 +294,9 @@ export default class LearnerReportForm extends React.Component {
     const label = name === 'start_date' ? 'Earliest date of last run' : 'Latest date of last run'
 
     const handleChange = value => {
-      if (!value) {
-        // Incorrect date.
-        return
-      }
-      this.setState({ [name]: formatDate(value) }, () => {
+      // allow clearing of the date
+      const dateValue = value ? formatDate(value) : ''
+      this.setState({ [name]: dateValue }, () => {
         this.updateFilters()
         this.updateQueryParams()
       })
