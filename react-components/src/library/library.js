@@ -20,7 +20,6 @@ import * as signupFunctions from './components/signup/signup_functions'
 import RecentActivity from './components/recent-activity'
 import Assignments from './components/assigments'
 import Navigation from './components/navigation'
-import UnitTestExample from './components/unit-test-example'
 import RunWithCollaborators from './components/run-with-collaborators'
 import LearnerReportForm from './components/learner-report-form'
 import UserReportForm from './components/user-report-form'
@@ -115,11 +114,6 @@ window.PortalComponents = {
   Navigation: Navigation,
   renderNavigation: function (options, id) {
     render(React.createElement(Navigation, options), id)
-  },
-
-  UnitTestExample: UnitTestExample,
-  renderUnitTestExample: function (options, id) {
-    render(React.createElement(UnitTestExample, options), id)
   },
 
   SiteNotices: SiteNotices,

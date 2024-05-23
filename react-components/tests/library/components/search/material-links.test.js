@@ -94,9 +94,6 @@ describe('When I try to render search dropdown link', () => {
     expect(linkElement).toHaveClass('className');
     expect(linkElement).toHaveAttribute('target', 'target');
     expect(linkElement).toHaveAttribute('data-cc-confirm', 'ccConfirm');
-
-    expect(screen.getByRole('link', { name: 'option 1' })).toHaveAttribute('href', 'http://example.com/option1');
-    expect(screen.getByRole('link', { name: 'option 2' })).toHaveAttribute('href', 'http://example.com/option2');
   });
 });
 

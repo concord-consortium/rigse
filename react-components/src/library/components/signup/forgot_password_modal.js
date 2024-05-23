@@ -43,7 +43,7 @@ export default class ForgotPasswordModal extends React.Component {
   render () {
     return (
       <div className='forgot-password-default-modal-content'>
-        <Formsy className='forgot-password-form' onValidSubmit={this.submit}>
+        <Formsy className='forgot-password-form' onValidSubmit={this.submit} role='form' aria-roledescription='form'>
 
           <h2><strong>Forgot</strong> your login information?</h2>
 

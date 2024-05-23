@@ -87,8 +87,8 @@ export default class BasicDataForm extends React.Component {
     }
 
     return (
-      <Formsy onValidSubmit={this.submit} onValid={this.onBasicFormValid} onInvalid={this.onBasicFormInvalid} onChange={this.onChange}>
-        <div className='third-party-login-options testy'>
+      <Formsy onValidSubmit={this.submit} onValid={this.onBasicFormValid} onInvalid={this.onBasicFormInvalid} onChange={this.onChange} role='form' aria-roledescription='form'>
+        <div className='third-party-login-options testy' data-testid='third-party-login-options'>
           {providerComponents}
         </div>
         {

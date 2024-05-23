@@ -18,7 +18,7 @@ export default class StudentRegistrationCompleteSideInfo extends React.Component
         <div className='side-info-header'>
           Sign In
         </div>
-        <form method='post' action='/users/sign_in' className='ng-pristine ng-valid'>
+        <form method='post' action='/users/sign_in' className='ng-pristine ng-valid' role='form' aria-roledescription='form'>
           <dl>
             <dt>Username</dt>
             <dd>

@@ -1,45 +1,29 @@
 /* globals describe it expect */
 import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import { render, screen } from '@testing-library/react'
 import TextPreview, { PREVIEW_LENGTH } from 'components/standards/text-preview'
-
-Enzyme.configure({adapter: new Adapter()})
 
 const text = "this is a long string of text"
 
 describe('When I try to render text preview', () => {
-  let textPreview;
-
   it('exports PREVIEW_LENGTH', () => {
     expect(PREVIEW_LENGTH).toBe(17);
     expect(text.length).toBeGreaterThan(PREVIEW_LENGTH);
-  })
+  });
 
   describe('with preview=false', () => {
-    beforeEach(() => {
-      textPreview = Enzyme.mount(<TextPreview config={{
-        text,
-        preview: false
-      }} />)
-    })
-
     it("should not add an ellipsis", () => {
-      expect(textPreview.html()).toBe(`<div style="cursor: default;">${text}</div>`);
+      render(<TextPreview config={{ text, preview: false }} />);
+      expect(screen.getByText(text)).toBeInTheDocument();
+      expect(screen.queryByText(`${text.substring(0, PREVIEW_LENGTH)} ...`)).not.toBeInTheDocument();
     });
   });
 
   describe('with preview=true', () => {
-    beforeEach(() => {
-      textPreview = Enzyme.mount(<TextPreview config={{
-        text,
-        preview: true
-      }} />)
-    })
-
     it("should add an ellipsis", () => {
-      expect(textPreview.html()).toBe(`<div style="cursor: default;">${text.substring(0, PREVIEW_LENGTH) + " ..."}</div>`);
+      render(<TextPreview config={{ text, preview: true }} />);
+      expect(screen.getByText(`${text.substring(0, PREVIEW_LENGTH)} ...`)).toBeInTheDocument();
+      expect(screen.queryByText(text)).not.toBeInTheDocument();
     });
   });
-
-})
+});
