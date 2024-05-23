@@ -1,11 +1,6 @@
-/* globals describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import SMaterialHeader from 'components/search/material-header'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import SMaterialHeader from 'components/search/material-header';
 
 describe('When I try to render search material header', () => {
 
@@ -15,16 +10,10 @@ describe('When I try to render search material header', () => {
       publication_status: "published",
       links: {}
     }
-    const materialHeader = Enzyme.shallow(<SMaterialHeader material={material} />);
-    expect(materialHeader.html()).toBe(pack(`
-      <span class="material_header">
-        <span class="material_meta_data">
-          <span class="RunsInBrowser">Runs in browser</span>
-          <span class="is_community">Community</span>
-        </span>
-        <br/>
-      </span>
-    `));
+    render(<SMaterialHeader material={material} />);
+
+    expect(screen.getByText('Runs in browser')).toBeInTheDocument();
+    expect(screen.getByText('Community')).toBeInTheDocument();
   });
 
   it("should render with optional props", () => {
@@ -47,25 +36,14 @@ describe('When I try to render search material header', () => {
         }
       }
     }
-    const materialHeader = Enzyme.shallow(<SMaterialHeader material={material} />);
-    expect(materialHeader.html()).toBe(pack(`
-      <span class="material_header">
-        <span class="material_meta_data">
-          <span class="RequiresDownload">Requires download</span>
-          <span class="is_official">Official</span>
-          <span class="publication_status">draft</span>
-        </span>
-        <br/>
-        <a href="http://example.com/browse">material name</a>
-        <span class="superTiny">
-          <a href="http://example.com/edit" class="button">edit text</a>
-        </span>
-        <span class="superTiny">
-          <a href="http://example.com/external_edit_iframe" class="button">external_edit_iframe text</a>
-        </span>
-      </span>
-    `));
+    render(<SMaterialHeader material={material} />);
+
+    expect(screen.getByText('Requires download')).toBeInTheDocument();
+    expect(screen.getByText('Official')).toBeInTheDocument();
+    expect(screen.getByText('draft')).toBeInTheDocument();
+    expect(screen.getByText('material name')).toBeInTheDocument();
+    expect(screen.getByText('edit text')).toBeInTheDocument();
+    expect(screen.getByText('external_edit_iframe text')).toBeInTheDocument();
   });
 
-
-})
+});

@@ -1,11 +1,7 @@
 /* globals describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import SMaterialsList from 'components/search/materials-list'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import SMaterialsList from 'components/search/materials-list';
 
 describe('When I try to render search materials list', () => {
   it("should render with default props", () => {
@@ -25,90 +21,27 @@ describe('When I try to render search materials list', () => {
       links: {},
       material_properties: "",
       activities: []
-    }]
-    const materialsList = Enzyme.shallow(<SMaterialsList materials={materials} />);
-    expect(materialsList.html()).toBe(pack(`
-      <div class="material_list">
-        <div class="material_list_item" data-material_id="1" id="search_undefined_1">
-          <div class="main-part">
-            <div class="material_icon" style="border:0px">
-              <a class="thumb_link"><img src="http://example.com/icon" width="100%"/></a>
-              <div class="legacy-favorite">★</div>
-              <div class="legacy-favorite legacy-favorite-outline" style="color:#CCCCCC">☆</div>
-            </div>
-            <div>
-              <div style="overflow:hidden">
-                <table width="100%">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><span class="material_header"><span class="material_meta_data"><span class="RunsInBrowser">Runs in browser</span><span class="is_community">Community</span><span class="publication_status"></span></span><br/></span></td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="material_body"></div>
-          </div>
-          <div class="toggle-details">
-            <i class="toggle-details-icon fa fa-chevron-down"></i><i class="toggle-details-icon fa fa-chevron-up" style="display:none"></i>
-            <div class="material-details" style="display:none">
-              <div class="material-description one-col">
-                <h3>Description</h3>
-                <div></div>
-              </div>
-              <div class="material-activities"></div>
-            </div>
-          </div>
-        </div>
-        <div class="material_list_item" data-material_id="2" id="search_undefined_2">
-          <div class="main-part">
-            <div class="material_icon" style="border:0px">
-              <a class="thumb_link"><img src="http://example.com/icon" width="100%"/></a>
-              <div class="legacy-favorite">★</div>
-              <div class="legacy-favorite legacy-favorite-outline" style="color:#CCCCCC">☆</div>
-            </div>
-            <div>
-              <div style="overflow:hidden">
-                <table width="100%">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div></div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td><span class="material_header"><span class="material_meta_data"><span class="RunsInBrowser">Runs in browser</span><span class="is_community">Community</span><span class="publication_status"></span></span><br/></span></td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="material_body"></div>
-          </div>
-          <div class="toggle-details">
-            <i class="toggle-details-icon fa fa-chevron-down"></i><i class="toggle-details-icon fa fa-chevron-up" style="display:none"></i>
-            <div class="material-details" style="display:none">
-              <div class="material-description one-col">
-                <h3>Description</h3>
-                <div></div>
-              </div>
-              <div class="material-activities"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `));
-  });
+    }];
 
+    render(<SMaterialsList materials={materials} />);
+
+    const images = screen.getAllByRole('img', { name: '' });
+    expect(images).toHaveLength(2);
+    images.forEach(img => expect(img).toHaveAttribute('src', 'http://example.com/icon'));
+
+    const headers = screen.getAllByText('Runs in browser');
+    expect(headers).toHaveLength(2);
+
+    const communityTexts = screen.getAllByText('Community');
+    expect(communityTexts).toHaveLength(2);
+
+    const favoriteButtons = screen.getAllByText('★');
+    expect(favoriteButtons).toHaveLength(2);
+
+    const outlineFavoriteButtons = screen.getAllByText('☆');
+    expect(outlineFavoriteButtons).toHaveLength(2);
+
+    const descriptions = screen.getAllByText('Description');
+    expect(descriptions).toHaveLength(2);
+  });
 });

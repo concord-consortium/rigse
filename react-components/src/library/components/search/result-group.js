@@ -87,8 +87,8 @@ export default class SearchResultGroup extends React.Component {
     }
 
     return (
-      <div id={`${group.type}_bookmark`} className={`materials_container ${group.type}`}>
-        <div className='material_list_header'>{group.header}</div>
+      <div id={`${group.type}_bookmark`} className={`materials_container ${group.type}`} data-testid='materials-container'>
+        <div className='material_list_header' data-testid='material-list-header'>{group.header}</div>
         {this.state.loading ? this.renderLoading() : this.renderResults()}
       </div>
     )

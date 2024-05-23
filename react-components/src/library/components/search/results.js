@@ -27,7 +27,8 @@ export default class SearchResults extends React.Component {
   }
 
   renderSearchTerm () {
-    if (jQuery('#search_term').val().length > 0) {
+    const searchTerm = jQuery('#search_term')
+    if (searchTerm.length > 0 && searchTerm.val().length > 0) {
       return ` search term "${jQuery('#search_term').val()}" and`
     } else {
       return ''
@@ -36,14 +37,14 @@ export default class SearchResults extends React.Component {
 
   render () {
     return (
-      <div id='offering_list'>
+      <div id='offering_list' data-testid='offering-list'>
         <p style={{ fontWeight: 'bold' }}>
           {this.renderMessage()}
           {' matching '}
           {this.renderSearchTerm()}
           {' selected criteria'}
         </p>
-        <div className='results_container'>
+        <div className='results_container' data-testid='results-container'>
           {this.renderAllResults()}
         </div>
       </div>
