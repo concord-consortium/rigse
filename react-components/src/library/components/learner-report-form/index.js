@@ -164,7 +164,9 @@ export default class LearnerReportForm extends React.Component {
   }
 
   getQueryParams () {
-    const params = {}
+    const params = {
+      hide_names: this.state['hide_names']
+    }
     for (var filter of ['schools', 'teachers', 'runnables', 'permission_forms']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         params[filter] = this.state[filter].map(v => v.value).sort().join(',')
@@ -292,13 +294,9 @@ export default class LearnerReportForm extends React.Component {
   renderDatePicker (name) {
     const label = name === 'start_date' ? 'Earliest date of last run' : 'Latest date of last run'
 
-    const handleChange = (event) => {
-      const { value } = event.target
-      if (!value) {
-        // Incorrect date.
-        return
-      }
-      this.setState({ [name]: value }, () => {
+    const handleChange = value => {
+      // allow clearing of the date
+      this.setState({ [name]: value || '' }, () => {
         this.updateFilters()
         this.updateQueryParams()
       })
@@ -321,7 +319,9 @@ export default class LearnerReportForm extends React.Component {
 
   renderCheck (name) {
     const handleChange = evt => {
-      this.setState({ [name]: evt.target.checked })
+      this.setState({ [name]: evt.target.checked }, () => {
+        this.updateQueryParams()
+      })
     }
     return (
       <div>
