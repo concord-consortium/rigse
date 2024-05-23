@@ -1,13 +1,7 @@
 /* globals jest describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import UserReportForm from 'components/user-report-form'
-import ExternalReportButton from 'components/common/external-report-button'
-import Select from 'react-select'
-import DayPickerInput from 'react-day-picker/DayPickerInput'
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import UserReportForm from 'components/user-report-form';
 
 // form uses Portal global
 global.Portal = {
@@ -20,25 +14,29 @@ global.Portal = {
 }
 
 describe('UserReportForm', () => {
-  const externalReports = [{url: 'url1', name: 'first', label: 'label1'}, {url: 'url2', name: 'second', label: 'label2'}]
-  const wrapper = Enzyme.shallow(
-    <UserReportForm externalReports={externalReports} />
-  )
+  const externalReports = [
+    { url: 'url1', name: 'first', label: 'label1' },
+    { url: 'url2', name: 'second', label: 'label2' }
+  ];
 
   it('renders custom external report buttons', () => {
-    expect(wrapper.find(ExternalReportButton).length).toEqual(2)
-    expect(wrapper.find({reportUrl: 'url1', label: 'label1'}).length).toEqual(1)
-    expect(wrapper.find({reportUrl: 'url2', label: 'label2'}).length).toEqual(1)
-  })
+    render(<UserReportForm externalReports={externalReports} />);
+
+    const externalReportButtons = screen.getAllByRole('button');
+    expect(externalReportButtons).toHaveLength(2);
+    expect(screen.getByText('label1')).toBeInTheDocument();
+    expect(screen.getByText('label2')).toBeInTheDocument();
+  });
 
   it('renders filter forms', () => {
-    expect(wrapper.text()).toEqual(expect.stringContaining('Teachers'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Cohorts'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Resources'))
-    expect(wrapper.find(Select).length).toEqual(3)
+    render(<UserReportForm externalReports={externalReports} />);
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('Earliest date'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Latest date'))
-    expect(wrapper.find(DayPickerInput).length).toEqual(2)
-  })
-})
+    expect(screen.getByText('Teachers')).toBeInTheDocument();
+    expect(screen.getByText('Cohorts')).toBeInTheDocument();
+    expect(screen.getByText('Resources')).toBeInTheDocument();
+    expect(screen.getAllByText('Search...')).toHaveLength(3);
+
+    expect(screen.getByText('Earliest date')).toBeInTheDocument();
+    expect(screen.getByText('Latest date')).toBeInTheDocument();
+  });
+});

@@ -48,7 +48,7 @@ class TextInput extends React.Component {
   }
 
   render () {
-    const { type, placeholder, disabled } = this.props
+    const { type, placeholder, disabled, name } = this.props
 
     let className = 'text-input ' + this.props.name
     if (this.props.showRequired && !this.props.isPristine) {
@@ -69,6 +69,7 @@ class TextInput extends React.Component {
         <input
           ref={this.inputRef}
           type={type}
+          name={name}
           onChange={this.onChange}
           value={this.state.inputVal}
           placeholder={placeholder}
