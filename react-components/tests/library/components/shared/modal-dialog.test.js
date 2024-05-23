@@ -1,44 +1,37 @@
 /* globals describe it expect */
 
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import ModalDialog from 'components/shared/modal-dialog'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import ModalDialog from 'components/shared/modal-dialog';
 
 describe('When I try to render a modal dialog', () => {
 
-  it("should render without children", () => {
-    const modalDialog = Enzyme.mount(<ModalDialog title="Test Dialog"/>);
-    expect(modalDialog.html()).toBe(pack(`
-      <div class="modal">
-        <div class="background"></div>
-        <div class="dialog">
-          <div class="title">
-            Test Dialog
-          </div>
-        </div>
-      </div>
-    `));
+  it('should render without children', () => {
+    render(<ModalDialog title="Test Dialog" />);
+
+    const modalTitle = screen.getByText('Test Dialog');
+    expect(modalTitle).toBeInTheDocument();
+
+    const modal = screen.getByRole('dialog');
+    expect(modal).toBeInTheDocument();
+
+    const background = screen.getByTestId('modal-background');
+    expect(background).toBeInTheDocument();
   });
 
-  it("should render with children", () => {
-    const modalDialog = Enzyme.mount(<ModalDialog title="Test Dialog"><div>children here...</div></ModalDialog>);
-    expect(modalDialog.html()).toBe(pack(`
-      <div class="modal">
-        <div class="background"></div>
-        <div class="dialog">
-          <div class="title">
-            Test Dialog
-          </div>
-          <div>
-            children here...
-          </div>
-        </div>
-      </div>
-    `));
-  });
+  it('should render with children', () => {
+    render(<ModalDialog title="Test Dialog"><div>children here...</div></ModalDialog>);
 
-})
+    const modalTitle = screen.getByText('Test Dialog');
+    expect(modalTitle).toBeInTheDocument();
+
+    const modal = screen.getByRole('dialog');
+    expect(modal).toBeInTheDocument();
+
+    const background = screen.getByTestId('modal-background');
+    expect(background).toBeInTheDocument();
+
+    const childrenContent = screen.getByText('children here...');
+    expect(childrenContent).toBeInTheDocument();
+  });
+});

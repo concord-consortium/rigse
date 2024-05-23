@@ -15,11 +15,27 @@ export const mockJqueryAjaxSuccess = (result) => {
 export const mockJquery = (mock) => {
   const realJQuery = global.jQuery;
 
+  global.jQuery = mock;
+
   beforeEach(() => {
     global.jQuery = mock;
   });
 
   afterEach(() => {
     global.jQuery = realJQuery;
+  })
+}
+
+export const mockJqueryAjax = () => {
+  const realJQueryAjax = global.jQuery.ajax;
+
+  global.jQuery.ajax = jest.fn().mockImplementation(() => {
+    const fakeResponse = {
+        value: "anything you can imagine"
+    };
+  });
+
+  afterEach(() => {
+    global.jQuery.ajax = realJQueryAjax;
   })
 }

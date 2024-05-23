@@ -1,113 +1,76 @@
-/* globals describe it expect */
-
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import CopyDialog from 'components/portal-classes/copy-dialog'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import CopyDialog from 'components/portal-classes/copy-dialog';
 
 describe('When I try to render class copy dialog', () => {
-
   const clazz = {
-    name: "test class",
-    classWord: "test_class",
-    description: "this is a test class"
-  }
+    name: 'test class',
+    classWord: 'test_class',
+    description: 'this is a test class',
+  };
 
-  it("should render", () => {
-    const copyDialog = Enzyme.mount(<CopyDialog clazz={clazz} />);
-    expect(copyDialog.html()).toBe(pack(`
-      <div class="copyDialogLightbox">
-        <div class="copyDialogBackground"></div>
-        <div class="copyDialog">
-          <div class="copyTitle">Copy Class</div>
-          <form>
-            <table>
-              <tbody>
-                <tr>
-                  <td><label for="name">Name</label></td>
-                  <td><input name="name" value="Copy of test class"></td>
-                </tr>
-                <tr>
-                  <td><label for="class_word">Class Word</label></td>
-                  <td><input name="class_word" value="Copy of test_class"></td>
-                </tr>
-                <tr>
-                  <td class="description"><label for="description">Description</label></td>
-                  <td><textarea name="description">this is a test class</textarea></td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="buttons"><button>Save</button><button>Cancel</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
-        </div>
-      </div>
-    `));
+  it('should render', () => {
+    render(<CopyDialog clazz={clazz} />);
+
+    expect(screen.getByText('Copy Class')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Copy of test class')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Copy of test_class')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('this is a test class')).toBeInTheDocument();
+    expect(screen.getByText('Save')).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
   });
 
-  it("should handle cancel", () => {
-    const handleCancel = jest.fn()
-    const copyDialog = Enzyme.mount(<CopyDialog clazz={clazz} handleCancel={handleCancel} />);
-    const cancelButton = copyDialog.find(".buttons").childAt(1)
+  it('should handle cancel', () => {
+    const handleCancel = jest.fn();
+    render(<CopyDialog clazz={clazz} handleCancel={handleCancel} />);
+    const cancelButton = screen.getByText('Cancel');
 
-    cancelButton.simulate("click")
-    copyDialog.update()
-    expect(handleCancel).toHaveBeenCalled()
+    fireEvent.click(cancelButton);
+    expect(handleCancel).toHaveBeenCalled();
   });
 
-  it("should disable saving when name is whitespace", () => {
-    const copyDialog = Enzyme.mount(<CopyDialog clazz={clazz} />);
-    const nameInput = copyDialog.find("input[name='name']").first()
-    // this needs to be a function so we re-find after the update
-    const saveButton = () => copyDialog.find(".buttons").childAt(0)
+  it('should disable saving when name is whitespace', () => {
+    render(<CopyDialog clazz={clazz} />);
+    const nameInput = screen.getByDisplayValue('Copy of test class');
+    const saveButton = screen.getByText('Save');
 
-    expect(saveButton().prop('disabled')).toBe(false)
-    expect(nameInput.instance().value).toBe("Copy of test class")
+    expect(saveButton).not.toBeDisabled();
+    expect(nameInput).toHaveValue('Copy of test class');
 
-    nameInput.prop("onChange")({target: {value: '   '}})
-    copyDialog.update()
-    expect(saveButton().prop('disabled')).toBe(true)
+    fireEvent.change(nameInput, { target: { value: '   ' } });
+    expect(saveButton).toBeDisabled();
   });
 
-  it("should disable saving when classWord is whitespace", () => {
-    const copyDialog = Enzyme.mount(<CopyDialog clazz={clazz} />);
-    const classWordInput = copyDialog.find("input[name='class_word']").first()
-    // this needs to be a function so we re-find after the update
-    const saveButton = () => copyDialog.find(".buttons").childAt(0)
+  it('should disable saving when classWord is whitespace', () => {
+    render(<CopyDialog clazz={clazz} />);
+    const classWordInput = screen.getByDisplayValue('Copy of test_class');
+    const saveButton = screen.getByText('Save');
 
-    expect(saveButton().prop('disabled')).toBe(false)
-    expect(classWordInput.instance().value).toBe("Copy of test_class")
+    expect(saveButton).not.toBeDisabled();
+    expect(classWordInput).toHaveValue('Copy of test_class');
 
-    classWordInput.prop("onChange")({target: {value: '   '}})
-    copyDialog.update()
-    expect(saveButton().prop('disabled')).toBe(true)
+    fireEvent.change(classWordInput, { target: { value: '   ' } });
+    expect(saveButton).toBeDisabled();
   });
 
-  it("should handle save", () => {
-    const handleSave = jest.fn()
-    const copyDialog = Enzyme.mount(<CopyDialog clazz={clazz} handleSave={handleSave} />);
-    const saveButton = copyDialog.find(".buttons").childAt(0)
+  it('should handle save', () => {
+    const handleSave = jest.fn();
+    render(<CopyDialog clazz={clazz} handleSave={handleSave} />);
+    const saveButton = screen.getByText('Save');
 
-    expect(saveButton.html()).toBe('<button>Save</button>')
-
-    saveButton.simulate("click")
-    copyDialog.update()
+    fireEvent.click(saveButton);
 
     expect(handleSave).toHaveBeenCalledWith({
-      name: "Copy of test class",
-      classWord: "Copy of test_class",
-      description: "this is a test class"
-    })
+      name: 'Copy of test class',
+      classWord: 'Copy of test_class',
+      description: 'this is a test class',
+    });
   });
 
-  it("should updating the save button text", () => {
-    const copyDialog = Enzyme.mount(<CopyDialog clazz={clazz} saving={true} />);
-    const saveButton = copyDialog.find(".buttons").childAt(0)
-    expect(saveButton.html()).toBe('<button disabled="">Saving ...</button>')
-  });
+  it('should update the save button text', () => {
+    render(<CopyDialog clazz={clazz} saving={true} />);
+    const saveButton = screen.getByText('Saving ...');
 
-})
+    expect(saveButton).toBeDisabled();
+  });
+});

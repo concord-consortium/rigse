@@ -1,121 +1,43 @@
-/* globals describe it expect */
-
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import { pack } from "../../helpers/pack"
-import JoinClass, { JOIN_CLASS } from "../../../../src/library/components/portal-students/join-class"
-import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import JoinClass from 'components/portal-students/join-class';
+import { mockJqueryAjaxSuccess } from '../../helpers/mock-jquery';
 
 describe('When I try to render join class', () => {
-
-  const renderedEnterClassword = pack(`
-    <form class="form">
-      <fieldset>
-        <legend>Class Word</legend>
-        <ul>
-          <li>
-            <label for="classWord">New Class Word: </label>
-            <p>
-              Not case sensitive
-            </p>
-            <input type="text" live="false" name="classWord" size="30">
-          </li>
-          <li>
-            <input type="submit" value="Submit">
-          </li>
-        </ul>
-        <p>
-          A Class Word is created by a Teacher when he or she creates a new class. If you have been given the Class Word you can enter that word here to become a member of that class.
-        </p>
-      </fieldset>
-    </form>
-  `)
-
-  const renderedEnterClasswordError = pack(`
-    <form class="form">
-      <fieldset>
-        <p class="error">Invalid class word!</p>
-        <legend>Class Word</legend>
-        <ul>
-          <li>
-            <label for="classWord">New Class Word: </label>
-            <p>
-              Not case sensitive
-            </p>
-            <input type="text" live="false" name="classWord" size="30">
-          </li>
-          <li>
-            <input type="submit" value="Submit">
-          </li>
-        </ul>
-        <p>
-          A Class Word is created by a Teacher when he or she creates a new class. If you have been given the Class Word you can enter that word here to become a member of that class.
-        </p>
-      </fieldset>
-    </form>
-  `)
-
-  const renderedJoinClass = pack(`
-    <form class="form">
-      <fieldset>
-        <legend>Class Word</legend>
-        <p>
-          The teacher of this class is Teacher Teacherson. Is this the class you want to join?
-        </p>
-        <p>
-          Click 'Join' to continue registering for this class.
-        </p>
-        <p>
-          <input type="submit" value="Join">
-          <button>Cancel</button>
-        </p>
-      </fieldset>
-    </form>
-  `)
-
-  it("should render enter classword dy default", () => {
-    const joinClass = Enzyme.mount(<JoinClass />);
-    expect(joinClass.html()).toBe(renderedEnterClassword)
+  it("should render enter classword by default", () => {
+    render(<JoinClass />);
+    expect(screen.getByText('Class Word')).toBeInTheDocument();
+    expect(screen.getByLabelText('New Class Word:')).toBeInTheDocument();
+    expect(screen.getByText('Not case sensitive')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument();
+    expect(screen.getByText('A Class Word is created by a Teacher when he or she creates a new class. If you have been given the Class Word you can enter that word here to become a member of that class.')).toBeInTheDocument();
   });
 
   describe("with an invalid class word", () => {
     mockJqueryAjaxSuccess({
       success: false,
       message: "Invalid class word!"
-    })
+    });
 
-    it("should render an error message when checking the classword", () => {
-      const joinClass = Enzyme.mount(<JoinClass />);
-      const classWordInput = joinClass.find("input[name='classWord']").first()
-      const form = joinClass.find("form").first()
+    it("should render an error message when checking the classword", async () => {
+      render(<JoinClass />);
+      fireEvent.change(screen.getByLabelText('New Class Word:'), { target: { value: 'test' } });
+      fireEvent.submit(screen.getByRole('button', { name: 'Submit' }));
 
-      expect(joinClass.html()).toBe(renderedEnterClassword)
+      expect(await screen.findByText('Invalid class word!')).toBeInTheDocument();
+    });
 
-      classWordInput.instance().value = "test"
-      form.prop("onSubmit")({preventDefault: () => undefined})
+    it("should render an error message when joining", async () => {
+      const afterJoin = jest.fn();
+      render(<JoinClass afterJoin={afterJoin} />);
+      fireEvent.change(screen.getByLabelText('New Class Word:'), { target: { value: 'test' } });
+      fireEvent.submit(screen.getByRole('button', { name: 'Submit' }));
 
-      joinClass.update()
-      expect(joinClass.html()).toBe(renderedEnterClasswordError)
-    })
-
-    it("should render an error message when joining", () => {
-      const afterJoin = jest.fn()
-      const joinClass = Enzyme.mount(<JoinClass afterJoin={afterJoin} />);
-      joinClass.setState({ formState: JOIN_CLASS, classWord: "test", teacherName: "Teacher Teacherson" })
-      const form = joinClass.find("form").first()
-
-      expect(joinClass.html()).toBe(renderedJoinClass)
-
-      form.prop("onSubmit")({preventDefault: () => undefined})
-
-      joinClass.update()
-      expect(joinClass.html()).toBe(renderedEnterClasswordError)
-      expect(afterJoin).not.toHaveBeenCalled()
-    })
-  })
+      expect(await screen.findByText('Invalid class word!')).toBeInTheDocument();
+      expect(afterJoin).not.toHaveBeenCalled();
+    });
+  });
 
   describe("with a valid class word", () => {
     mockJqueryAjaxSuccess({
@@ -123,46 +45,35 @@ describe('When I try to render join class', () => {
       data: {
         teacher_name: "Teacher Teacherson"
       }
-    })
+    });
 
-    it("should render the join form after checking the classword", () => {
-      const joinClass = Enzyme.mount(<JoinClass />);
-      const classWordInput = joinClass.find("input[name='classWord']").first()
-      const form = joinClass.find("form").first()
+    it("should render the join form after checking the classword", async () => {
+      render(<JoinClass />);
+      fireEvent.change(screen.getByLabelText('New Class Word:'), { target: { value: 'test' } });
+      fireEvent.submit(screen.getByRole('button', { name: 'Submit' }));
 
-      expect(joinClass.html()).toBe(renderedEnterClassword)
+      expect(await screen.findByText('The teacher of this class is Teacher Teacherson. Is this the class you want to join?')).toBeInTheDocument();
+    });
 
-      classWordInput.instance().value = "test"
-      form.prop("onSubmit")({preventDefault: () => undefined})
+    it("should handle the cancel button in the join form", async () => {
+      const afterJoin = jest.fn();
+      render(<JoinClass afterJoin={afterJoin} />);
+      fireEvent.change(screen.getByLabelText('New Class Word:'), { target: { value: 'test' } });
+      fireEvent.submit(screen.getByRole('button', { name: 'Submit' }));
 
-      joinClass.update()
-      expect(joinClass.html()).toBe(renderedJoinClass)
-    })
+      expect(await screen.findByText('The teacher of this class is Teacher Teacherson. Is this the class you want to join?')).toBeInTheDocument();
+      expect(await screen.findByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    });
 
-    it("should handle the cancel button in the join form", () => {
-      const joinClass = Enzyme.mount(<JoinClass />);
-      joinClass.setState({ formState: JOIN_CLASS, classWord: "test", teacherName: "Teacher Teacherson" })
-      const cancelButton = joinClass.find("button").first()
+    it("should redirect after joining a class", async () => {
+      const afterJoin = jest.fn();
+      render(<JoinClass afterJoin={afterJoin} />);
+      fireEvent.change(screen.getByLabelText('New Class Word:'), { target: { value: 'test' } });
+      fireEvent.submit(screen.getByRole('button', { name: 'Submit' }));
 
-      expect(joinClass.html()).toBe(renderedJoinClass)
+      fireEvent.submit(await screen.findByRole('button', { name: 'Join' }));
 
-      cancelButton.simulate("click")
-      joinClass.update()
-
-      expect(joinClass.html()).toBe(renderedEnterClassword)
-    })
-
-    it("should redirect after joining a class", () => {
-      const afterJoin = jest.fn()
-      const joinClass = Enzyme.mount(<JoinClass afterJoin={afterJoin} />);
-      joinClass.setState({ formState: JOIN_CLASS, classWord: "test", teacherName: "Teacher Teacherson" })
-      const form = joinClass.find("form").first()
-
-      expect(joinClass.html()).toBe(renderedJoinClass)
-
-      form.prop("onSubmit")({preventDefault: () => undefined})
-
-      expect(afterJoin).toHaveBeenCalled()
-    })
-  })
-})
+      expect(afterJoin).toHaveBeenCalled();
+    });
+  });
+});

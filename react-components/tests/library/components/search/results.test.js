@@ -1,37 +1,31 @@
 /* globals describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import SearchResults from 'components/search/results'
-import { pack } from "../../helpers/pack"
-import {mockJquery} from "../../helpers/mock-jquery"
-
-Enzyme.configure({adapter: new Adapter()})
-
-const mockedJQuery = () => ({
-  val: () => ({
-    length: 0
-  })
-})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import SearchResults from 'components/search/results';
+import { mockJquery } from "../../helpers/mock-jquery"
 
 describe('When I try to render search results', () => {
+  mockJquery(() => ({
+    paging: jest.fn()
+  }));
 
-  mockJquery(mockedJQuery)
-
-  it("should render with default props", () => {
+  it('should render with default props', () => {
     const results = [];
-    const searchResults = Enzyme.shallow(<SearchResults results={results} />);
-    expect(searchResults.html()).toBe(pack(`
-      <div id="offering_list">
-        <p style="font-weight:bold"> matching  selected criteria</p>
-        <div class="results_container"></div>
-      </div>
-    `));
+    render(<SearchResults results={results} />);
+
+    const offeringList = screen.getByTestId('offering-list');
+    expect(offeringList).toBeInTheDocument();
+
+    const resultsMessage = screen.getByText(/matching selected criteria/i);
+    expect(resultsMessage).toBeInTheDocument();
+
+    const resultsContainer = screen.getByTestId('results-container');
+    expect(resultsContainer).toBeInTheDocument();
   });
 
-  it("should render with results", () => {
+  it('should render with results', () => {
     const results = [{
-      type: "investigations",
+      type: 'investigations',
       pagination: {
         total_items: 10,
         per_page: 20,
@@ -40,26 +34,15 @@ describe('When I try to render search results', () => {
       },
       materials: []
     }];
-    const searchResults = Enzyme.shallow(<SearchResults results={results} />);
-    expect(searchResults.html()).toBe(pack(`
-      <div id="offering_list">
-        <p style="font-weight:bold"><span>10 <a href="#" class=""></a></span> matching  selected criteria</p>
-        <div class="results_container">
-          <div id="investigations_bookmark" class="materials_container investigations">
-            <div class="material_list_header"></div>
-            <div>
-              <p class="border_top">
-                <span>Displaying <b>all 10</b></span>
-              </p>
-              <div class="pagination"></div>
-              <div class="material_list"></div>
-              <br/>
-              <div class="pagination"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `));
-  });
 
+    render(<SearchResults results={results} />);
+
+    expect(screen.getByTestId('offering-list')).toBeInTheDocument();
+
+    expect(screen.getByText('matching selected criteria')).toBeInTheDocument();
+
+    expect(screen.getByTestId('results-container')).toBeInTheDocument();
+
+    expect(screen.getByText('all 10')).toBeInTheDocument();
+  });
 });

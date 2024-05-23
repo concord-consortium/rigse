@@ -1,11 +1,8 @@
 /* globals describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import { SMaterialLinks, SGenericLink, SMaterialLink, SMaterialDropdownLink } from 'components/search/material-links'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { SMaterialLinks, SGenericLink, SMaterialLink, SMaterialDropdownLink } from 'components/search/material-links';
 
 describe('When I try to render search generic link', () => {
   it("should render with default props", () => {
@@ -13,10 +10,9 @@ describe('When I try to render search generic link', () => {
       url: "http://example.com/url",
       text: "text"
     }
-    const genericLink = Enzyme.shallow(<SGenericLink link={link} />);
-    expect(genericLink.html()).toBe(pack(`
-      <a href="http://example.com/url" class="button">text</a>
-    `));
+    render(<SGenericLink link={link} />);
+    expect(screen.getByRole('link', { name: 'text' })).toHaveAttribute('href', 'http://example.com/url');
+    expect(screen.getByRole('link', { name: 'text' })).toHaveClass('button');
   });
 
   it("should render with optional props", () => {
@@ -27,10 +23,12 @@ describe('When I try to render search generic link', () => {
       ccConfirm: "ccConfirm",
       text: "text"
     }
-    const genericLink = Enzyme.shallow(<SGenericLink link={link} />);
-    expect(genericLink.html()).toBe(pack(`
-      <a href="http://example.com/url" class="className" target="target" data-cc-confirm="ccConfirm">text</a>
-    `));
+    render(<SGenericLink link={link} />);
+    const linkElement = screen.getByRole('link', { name: 'text' });
+    expect(linkElement).toHaveAttribute('href', 'http://example.com/url');
+    expect(linkElement).toHaveClass('className');
+    expect(linkElement).toHaveAttribute('target', 'target');
+    expect(linkElement).toHaveAttribute('data-cc-confirm', 'ccConfirm');
   });
 });
 
@@ -40,12 +38,10 @@ describe('When I try to render search material link', () => {
       url: "http://example.com/url",
       text: "text"
     }
-    const materialLink = Enzyme.shallow(<SMaterialLink link={link} />);
-    expect(materialLink.html()).toBe(pack(`
-      <div style="float:right;margin-right:5px">
-        <a href="http://example.com/url" class="button">text</a>
-      </div>
-    `));
+    render(<SMaterialLink link={link} />);
+    const linkElement = screen.getByRole('link', { name: 'text' });
+    expect(linkElement).toHaveAttribute('href', 'http://example.com/url');
+    expect(linkElement).toHaveClass('button');
   });
 
   it("should render with optional props", () => {
@@ -57,12 +53,12 @@ describe('When I try to render search material link', () => {
       ccConfirm: "ccConfirm",
       text: "text"
     }
-    const materialLink = Enzyme.shallow(<SMaterialLink link={link} />);
-    expect(materialLink.html()).toBe(pack(`
-      <div style="float:right;margin-right:5px">
-        <a href="http://example.com/url" class="className" target="target" data-cc-confirm="ccConfirm">text</a>
-      </div>
-    `));
+    render(<SMaterialLink link={link} />);
+    const linkElement = screen.getByRole('link', { name: 'text' });
+    expect(linkElement).toHaveAttribute('href', 'http://example.com/url');
+    expect(linkElement).toHaveClass('className');
+    expect(linkElement).toHaveAttribute('target', 'target');
+    expect(linkElement).toHaveAttribute('data-cc-confirm', 'ccConfirm');
   });
 });
 
@@ -73,13 +69,10 @@ describe('When I try to render search dropdown link', () => {
       text: "text",
       options: []
     }
-    const dropdownLink = Enzyme.shallow(<SMaterialDropdownLink link={link} />);
-    expect(dropdownLink.html()).toBe(pack(`
-      <div style="float:right">
-        <a href="http://example.com/url" class="button">text</a>
-        <div class="Expand_Collapse Expand_Collapse_preview" style="display:none"></div>
-      </div>
-    `));
+    render(<SMaterialDropdownLink link={link} />);
+    const linkElement = screen.getByRole('link', { name: 'text' });
+    expect(linkElement).toHaveAttribute('href', 'http://example.com/url');
+    expect(linkElement).toHaveClass('button');
   });
 
   it("should render with optional props", () => {
@@ -91,24 +84,19 @@ describe('When I try to render search dropdown link', () => {
       ccConfirm: "ccConfirm",
       text: "text",
       options: [
-        {url: "http://example.com/option1", text: "option 1"},
-        {url: "http://example.com/option2", text: "option 2"}
+        { url: "http://example.com/option1", text: "option 1" },
+        { url: "http://example.com/option2", text: "option 2" }
       ]
     }
-    const dropdownLink = Enzyme.shallow(<SMaterialDropdownLink link={link} />);
-    expect(dropdownLink.html()).toBe(pack(`
-      <div style="float:right">
-        <a href="http://example.com/url" class="className" target="target" data-cc-confirm="ccConfirm">text</a>
-        <div class="Expand_Collapse Expand_Collapse_preview" style="display:none">
-          <div class="preview_link">
-            <a href="http://example.com/option1" class="button">option 1</a>
-          </div>
-          <div class="preview_link">
-            <a href="http://example.com/option2" class="button">option 2</a>
-          </div>
-        </div>
-      </div>
-    `));
+    render(<SMaterialDropdownLink link={link} />);
+    const linkElement = screen.getByRole('link', { name: 'text' });
+    expect(linkElement).toHaveAttribute('href', 'http://example.com/url');
+    expect(linkElement).toHaveClass('className');
+    expect(linkElement).toHaveAttribute('target', 'target');
+    expect(linkElement).toHaveAttribute('data-cc-confirm', 'ccConfirm');
+
+    expect(screen.getByRole('link', { name: 'option 1' })).toHaveAttribute('href', 'http://example.com/option1');
+    expect(screen.getByRole('link', { name: 'option 2' })).toHaveAttribute('href', 'http://example.com/option2');
   });
 });
 
@@ -121,40 +109,34 @@ describe('When I try to render search material links', () => {
         className: "className",
         target: "target",
         ccConfirm: "ccConfirm",
-        text: "text"
+        text: "text1"
       },
       {
         type: "dropdown",
         key: "key2",
-        url: "http://example.com/url",
+        url: "http://example.com/url2",
         className: "className",
         target: "target",
         ccConfirm: "ccConfirm",
-        text: "text",
+        text: "text2",
         options: [
-          {url: "http://example.com/option1", text: "option 1"},
-          {url: "http://example.com/option2", text: "option 2"}
+          { url: "http://example.com/option1", text: "option 1" },
+          { url: "http://example.com/option2", text: "option 2" }
         ]
       }
     ]
-    const materialsLinks = Enzyme.shallow(<SMaterialLinks links={links} />);
-    expect(materialsLinks.html()).toBe(pack(`
-      <div>
-        <div style="float:right;margin-right:5px">
-          <a href="http://example.com/url" class="className" target="target" data-cc-confirm="ccConfirm">text</a>
-        </div>
-        <div style="float:right">
-          <a href="http://example.com/url" class="className" target="target" data-cc-confirm="ccConfirm">text</a>
-          <div class="Expand_Collapse Expand_Collapse_preview" style="display:none">
-            <div class="preview_link">
-              <a href="http://example.com/option1" class="button">option 1</a>
-            </div>
-            <div class="preview_link">
-              <a href="http://example.com/option2" class="button">option 2</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    `));
+    render(<SMaterialLinks links={links} />);
+
+    const firstLink = screen.getByRole('link', { name: 'text1' });
+    expect(firstLink).toHaveAttribute('href', 'http://example.com/url');
+    expect(firstLink).toHaveClass('className');
+    expect(firstLink).toHaveAttribute('target', 'target');
+    expect(firstLink).toHaveAttribute('data-cc-confirm', 'ccConfirm');
+
+    const dropdownLink = screen.getByRole('link', { name: 'text2' });
+    expect(dropdownLink).toHaveAttribute('href', 'http://example.com/url2');
+    expect(dropdownLink).toHaveClass('className');
+    expect(dropdownLink).toHaveAttribute('target', 'target');
+    expect(dropdownLink).toHaveAttribute('data-cc-confirm', 'ccConfirm');
   });
 });

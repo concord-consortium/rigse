@@ -1,11 +1,6 @@
-/* globals describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import SMaterialIcon from 'components/search/material-icon'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import SMaterialIcon from 'components/search/material-icon';
 
 describe('When I try to render search material icon', () => {
 
@@ -17,17 +12,14 @@ describe('When I try to render search material icon', () => {
       links: {}
     }
     const configuration = {};
-    const materialIcon = Enzyme.shallow(<SMaterialIcon material={material} configuration={configuration} />);
-    expect(materialIcon.html()).toBe(pack(`
-      <div class="material_icon" style="border:0px">
-        <a class="thumb_link">
-          <img src="http://example.com/icon" width="100%"/>
-        </a>
-      </div>
-    `));
+    render(<SMaterialIcon material={material} configuration={configuration} />);
+
+    const image = screen.getByRole('img');
+    expect(image).toHaveAttribute('src', 'http://example.com/icon');
+    expect(image).toHaveAttribute('width', '100%');
   });
 
-  it("should render with unstarred favorties props", () => {
+  it("should render with unstarred favorites props", () => {
     const material = {
       icon: {
         url: "http://example.com/icon"
@@ -40,27 +32,30 @@ describe('When I try to render search material icon', () => {
     }
     const configuration = {
       enableFavorites: true,
-      favoriteClassMap:   {
-        true:  "legacy-favorite-active",
+      favoriteClassMap: {
+        true: "legacy-favorite-active",
         false: "legacy-favorite"
       },
       favoriteOutlineClass: "legacy-favorite-outline",
       width: 100,
       height: 200
     };
-    const materialIcon = Enzyme.shallow(<SMaterialIcon material={material} configuration={configuration} />);
-    expect(materialIcon.html()).toBe(pack(`
-      <div class="material_icon" style="border:0px;width:100px;height:200px">
-        <a class="thumb_link" href="http://example.com/browse">
-          <img src="http://example.com/icon" width="100%"/>
-        </a>
-        <div class="legacy-favorite">★</div>
-        <div class="legacy-favorite legacy-favorite-outline" style="color:#CCCCCC">☆</div>
-      </div>
-    `));
+    render(<SMaterialIcon material={material} configuration={configuration} />);
+
+    const image = screen.getByRole('img');
+    expect(image).toHaveAttribute('src', 'http://example.com/icon');
+    expect(image).toHaveAttribute('width', '100%');
+
+    const thumbLink = screen.getByRole('link');
+    expect(thumbLink).toHaveAttribute('href', 'http://example.com/browse');
+
+    const favorite = screen.getByText('★');
+    const favoriteOutline = screen.getByText('☆');
+    expect(favorite).toHaveClass('legacy-favorite');
+    expect(favoriteOutline).toHaveClass('legacy-favorite legacy-favorite-outline');
   });
 
-  it("should render with starred favorties props", () => {
+  it("should render with starred favorites props", () => {
     const material = {
       icon: {
         url: "http://example.com/icon"
@@ -74,23 +69,25 @@ describe('When I try to render search material icon', () => {
     }
     const configuration = {
       enableFavorites: true,
-      favoriteClassMap:   {
-        true:  "legacy-favorite-active",
+      favoriteClassMap: {
+        true: "legacy-favorite-active",
         false: "legacy-favorite"
       },
       favoriteOutlineClass: "legacy-favorite-outline",
       width: 100,
       height: 200
     };
-    const materialIcon = Enzyme.shallow(<SMaterialIcon material={material} configuration={configuration} />);
-    expect(materialIcon.html()).toBe(pack(`
-      <div class="material_icon" style="border:0px;width:100px;height:200px">
-        <a class="thumb_link" href="http://example.com/browse">
-          <img src="http://example.com/icon" width="100%"/>
-        </a>
-        <div class="legacy-favorite legacy-favorite-active">★</div>
-      </div>
-    `));
+    render(<SMaterialIcon material={material} configuration={configuration} />);
+
+    const image = screen.getByRole('img');
+    expect(image).toHaveAttribute('src', 'http://example.com/icon');
+    expect(image).toHaveAttribute('width', '100%');
+
+    const thumbLink = screen.getByRole('link');
+    expect(thumbLink).toHaveAttribute('href', 'http://example.com/browse');
+
+    const favorite = screen.getByText('★');
+    expect(favorite).toHaveClass('legacy-favorite legacy-favorite-active');
   });
 
-})
+});

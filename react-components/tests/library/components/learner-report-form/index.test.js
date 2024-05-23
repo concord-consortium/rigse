@@ -1,13 +1,6 @@
-/* globals jest describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import LearnerReportForm from 'components/learner-report-form'
-import ExternalReportButton from 'components/common/external-report-button'
-import Select from 'react-select'
-import DayPickerInput from 'react-day-picker/DayPickerInput'
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import LearnerReportForm from 'components/learner-report-form';
 
 // form uses Portal global
 global.Portal = {
@@ -15,34 +8,53 @@ global.Portal = {
     isAdmin: false,
   },
   API_V1: {
-    EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: 'http://query-test.concord.org'
-  }
-}
+    EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: 'http://query-test.concord.org',
+  },
+};
 
 describe('LearnerReportForm', () => {
-  const externalReports = [{url: 'url1', name: 'first', label: 'label1'}, {url: 'url2', name: 'second', label: 'label2'}]
-  const wrapper = Enzyme.shallow(
-    <LearnerReportForm externalReports={externalReports} />
-  )
+  const externalReports = [
+    { url: 'url1', name: 'first', label: 'label1' },
+    { url: 'url2', name: 'second', label: 'label2' },
+  ];
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('renders custom external report buttons', () => {
-    expect(wrapper.find(ExternalReportButton).length).toEqual(2)
-    expect(wrapper.find({reportUrl: 'url1', label: 'label1'}).length).toEqual(1)
-    expect(wrapper.find({reportUrl: 'url2', label: 'label2'}).length).toEqual(1)
-  })
+    render(<LearnerReportForm externalReports={externalReports} />);
+
+    const externalReportButtons = screen.getAllByRole('button', { name: /label/ });
+    expect(externalReportButtons).toHaveLength(2);
+
+    const button1 = screen.getByRole('button', { name: 'label1' });
+    const button2 = screen.getByRole('button', { name: 'label2' });
+
+    expect(button1).toBeInTheDocument();
+    expect(button2).toBeInTheDocument();
+  });
 
   it('renders filter forms', () => {
-    expect(wrapper.text()).toEqual(expect.stringContaining('Schools'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Teachers'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Resources'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Permission forms'))
-    expect(wrapper.find(Select).length).toEqual(4)
+    render(<LearnerReportForm externalReports={externalReports} />);
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('Earliest date of last run'))
-    expect(wrapper.text()).toEqual(expect.stringContaining('Latest date of last run'))
-    expect(wrapper.find(DayPickerInput).length).toEqual(2)
+    expect(screen.getByText('Schools')).toBeInTheDocument();
+    expect(screen.getByText('Teachers')).toBeInTheDocument();
+    expect(screen.getByText('Resources')).toBeInTheDocument();
+    expect(screen.getByText('Permission forms')).toBeInTheDocument();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('Hide names'))
-    expect(wrapper.find('input[type="checkbox"]').length).toEqual(1)
-  })
-})
+    const selects = screen.getAllByRole('combobox');
+    expect(selects).toHaveLength(4);
+
+    expect(screen.getByText('Earliest date of last run')).toBeInTheDocument();
+    expect(screen.getByText('Latest date of last run')).toBeInTheDocument();
+
+    const earliestDateInput = screen.getByLabelText('Earliest date of last run');
+    const latestDateInput = screen.getByLabelText('Latest date of last run');
+    expect(earliestDateInput).toBeInTheDocument();
+    expect(latestDateInput).toBeInTheDocument();
+
+    expect(screen.getByLabelText('Hide names')).toBeInTheDocument();
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+});

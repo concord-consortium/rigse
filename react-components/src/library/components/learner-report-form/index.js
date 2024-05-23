@@ -306,13 +306,15 @@ export default class LearnerReportForm extends React.Component {
 
     return (
       <div style={{ marginTop: '6px' }}>
-        <div>{label}</div>
-        <input
-          type='date'
-          name={name}
-          value={this.state[name]}
-          onChange={handleChange}
-        />
+        <label>
+          <div>{label}</div>
+          <input
+            type='date'
+            name={name}
+            value={this.state[name]}
+            onChange={handleChange}
+          />
+        </label>
       </div>
     )
   }
@@ -323,13 +325,15 @@ export default class LearnerReportForm extends React.Component {
     }
     return (
       <div>
-        <input
-          name={name}
-          type='checkbox'
-          checked={this.state[name]}
-          onChange={handleChange}
-        />
-        {title(name)}
+        <label>
+          <input
+            name={name}
+            type='checkbox'
+            checked={this.state[name]}
+            onChange={handleChange}
+          />
+          {title(name)}
+        </label>
       </div>
     )
   }

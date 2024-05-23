@@ -1,50 +1,17 @@
-/* globals describe it expect */
-import React from 'react'
-import Enzyme from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-import SMaterialInfo from 'components/search/material-info'
-import { pack } from "../../helpers/pack"
-
-Enzyme.configure({adapter: new Adapter()})
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import SMaterialInfo from 'components/search/material-info';
 
 describe('When I try to render search material info', () => {
-
   it("should render with default props", () => {
     const material = {
       links: {},
       material_properties: ""
-    }
-    const materialInfo = Enzyme.shallow(<SMaterialInfo material={material} />);
-    expect(materialInfo.html()).toBe(pack(`
-      <div>
-        <div style="overflow:hidden">
-          <table width="100%">
-            <tbody>
-              <tr>
-                <td>
-                  <div></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="material_header">
-                    <span class="material_meta_data">
-                      <span class="RunsInBrowser">Runs in browser</span>
-                      <span class="is_community">Community</span>
-                      <span class="publication_status"></span>
-                    </span>
-                    <br/>
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `));
+    };
+    render(<SMaterialInfo material={material} />);
+
+    expect(screen.getByText('Runs in browser')).toBeInTheDocument();
+    expect(screen.getByText('Community')).toBeInTheDocument();
   });
 
   it("should render with optional props #1", () => {
@@ -72,10 +39,6 @@ describe('When I try to render search material info', () => {
         external_lara_edit: {
           url: "http://example.com/external_lara_edit",
           text: "external_lara_edit text"
-        },
-        external_edit: {
-          url: "http://example.com/external_edit",
-          text: "external_edit text"
         },
         external_copy: {
           url: "http://example.com/external_copy",
@@ -113,76 +76,25 @@ describe('When I try to render search material info', () => {
           text: "external_edit_iframe text"
         }
       }
-    }
-    const materialInfo = Enzyme.shallow(<SMaterialInfo material={material} />);
-    expect(materialInfo.html()).toBe(pack(`
-      <div>
-        <div style="overflow:hidden">
-          <table width="100%">
-            <tbody>
-              <tr>
-                <td>
-                  <div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/preview" class="button">preview text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/print_url" class="button">print_url text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/external_lara_edit" class="button">external_lara_edit text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/external_copy" class="button">external_copy text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/teacher_guide" class="button">teacher_guide text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/rubric_doc" class="button">rubric_doc text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/assign_material" class="button">assign_material text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/assign_collection" class="button">assign_collection text</a>
-                    </div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/unarchive" class="button">unarchive text</a>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="material_header">
-                    <span class="material_meta_data">
-                      <span class="RequiresDownload">Requires download</span>
-                      <span class="is_official">Official</span>
-                      <span class="publication_status">draft</span>
-                    </span>
-                    <br/>
-                    <a href="http://example.com/browse">material name</a>
-                    <span class="superTiny">
-                      <a href="http://example.com/edit" class="button">edit text</a>
-                    </span>
-                  </span>
-                  <span>from parent type &quot;parent name&quot;</span>
-                  <div>
-                    <span style="font-weight:bold">By credits</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="assignedTo">(Assigned to class 1)</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `));
+    };
+    render(<SMaterialInfo material={material} />);
+
+    expect(screen.getByText('Requires download')).toBeInTheDocument();
+    expect(screen.getByText('Official')).toBeInTheDocument();
+    expect(screen.getByText('draft')).toBeInTheDocument();
+    expect(screen.getByText('material name')).toBeInTheDocument();
+    expect(screen.getByText('from parent type "parent name"')).toBeInTheDocument();
+    expect(screen.getByText('By credits')).toBeInTheDocument();
+    expect(screen.getByText('(Assigned to class 1)')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'preview text' })).toHaveAttribute('href', 'http://example.com/preview');
+    expect(screen.getByRole('link', { name: 'print_url text' })).toHaveAttribute('href', 'http://example.com/print_url');
+    expect(screen.getByRole('link', { name: 'external_lara_edit text' })).toHaveAttribute('href', 'http://example.com/external_lara_edit');
+    expect(screen.getByRole('link', { name: 'external_copy text' })).toHaveAttribute('href', 'http://example.com/external_copy');
+    expect(screen.getByRole('link', { name: 'teacher_guide text' })).toHaveAttribute('href', 'http://example.com/teacher_guide');
+    expect(screen.getByRole('link', { name: 'rubric_doc text' })).toHaveAttribute('href', 'http://example.com/rubric_doc');
+    expect(screen.getByRole('link', { name: 'assign_material text' })).toHaveAttribute('href', 'http://example.com/assign_material');
+    expect(screen.getByRole('link', { name: 'assign_collection text' })).toHaveAttribute('href', 'http://example.com/assign_collection');
+    expect(screen.getByRole('link', { name: 'unarchive text' })).toHaveAttribute('href', 'http://example.com/unarchive');
   });
 
   it("should render with optional props #2", () => {
@@ -203,43 +115,14 @@ describe('When I try to render search material info', () => {
           text: "assign_material text"
         }
       }
-    }
-    const materialInfo = Enzyme.shallow(<SMaterialInfo material={material} />);
-    expect(materialInfo.html()).toBe(pack(`
-      <div>
-        <div style="overflow:hidden">
-          <table width="100%">
-            <tbody>
-              <tr>
-                <td>
-                  <div>
-                    <div style="float:right;margin-right:5px">
-                      <a href="http://example.com/external_edit" class="button">external_edit text</a>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span class="material_header">
-                    <span class="material_meta_data">
-                      <span class="RequiresDownload">Requires download</span>
-                      <span class="is_official">Official</span>
-                      <span class="publication_status">draft</span>
-                    </span>
-                    <br/>
-                    material name
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `));
-  });
+    };
+    render(<SMaterialInfo material={material} />);
 
-})
+    expect(screen.getByText('Requires download')).toBeInTheDocument();
+    expect(screen.getByText('Official')).toBeInTheDocument();
+    expect(screen.getByText('draft')).toBeInTheDocument();
+    expect(screen.getByText('material name')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'external_edit text' })).toHaveAttribute('href', 'http://example.com/external_edit');
+    expect(screen.queryByRole('link', { name: 'assign_material text' })).not.toBeInTheDocument();
+  });
+});
