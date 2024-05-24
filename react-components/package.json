@@ -20,16 +20,6 @@
     "copy-files": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-test-globals.js ../rails/app/assets/javascripts/",
     "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
-  "standard": {
-    "parser": "babel-eslint",
-    "globals": [
-      "jQuery",
-      "Portal",
-      "PortalComponents",
-      "DayPickerOverlay",
-      "gtag"
-    ]
-  },
   "jest": {
     "moduleNameMapper": {
       "\\.(css|less|scss)$": "identity-obj-proxy"
@@ -56,9 +46,6 @@
   },
   "homepage": "https://github.com/concord-consortium/portal-pages#readme",
   "devDependencies": {
-    "@babel/core": "^7.24.5",
-    "@babel/preset-env": "^7.24.5",
-    "@babel/preset-react": "^7.24.1",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@types/jest": "^29.5.12",
@@ -68,12 +55,22 @@
     "@types/react-modal": "^3.16.3",
     "@types/throttle-debounce": "^5.0.2",
     "@types/uuid": "^9.0.8",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^29.7.0",
-    "babel-loader": "^9.1.3",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
     "copy-webpack-plugin": "^12.0.2",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.1",
+    "eslint": "^8.57.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^28.5.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-testing-library": "^6.2.2",
+    "eslint-webpack-plugin": "^4.1.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
     "identity-obj-proxy": "^3.0.0",
@@ -85,7 +82,6 @@
     "react-select": "^5.8.0",
     "sass": "^1.77.2",
     "sass-loader": "^14.2.1",
-    "standard": "^12.0.1",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "ts-migrate": "^0.1.35",
