@@ -59,11 +59,10 @@ export class EditMaterialsCollectionList extends React.Component<any, any> {
     const { collection } = this.props;
     const { data } = options;
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-    const { url, type } = {
+    const { url, type } = ({
       remove_material: { url: `${basePath}/${collection.id}/remove_material`, type: "POST" },
       sort_materials: { url: `${basePath}/${collection.id}/sort_materials`, type: "POST" }
-    }[action];
+    } as any)[action];
 
     return new Promise((resolve, reject) => {
       jQuery.ajax({

@@ -1,10 +1,8 @@
 const setCookieName = (content: any) => {
-  let cookieKey = "";
+  let cookieKey: number = 0;
   for (let i = 0; i < content.length; i++) {
-    // @ts-expect-error TS(2322): Type 'number' is not assignable to type 'string'.
     cookieKey = Math.imul(31, cookieKey) + content.charCodeAt(i) || 0;
   }
-  // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
   const cookieName = `dismissed-alert${cookieKey.toString(16)}`;
   return cookieName;
 };
@@ -14,8 +12,7 @@ const createCookie = (name: any, value: any, days: any) => {
   if (days) {
     const date = new Date();
     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-    // @ts-expect-error TS(2551): Property 'toGMTString' does not exist on type 'Dat... Remove this comment to see the full error message
-    expires = "; expires=" + date.toGMTString();
+    expires = "; expires=" + date.toUTCString();
   }
   document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
 };

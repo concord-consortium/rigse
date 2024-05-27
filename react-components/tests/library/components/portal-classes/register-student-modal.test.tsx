@@ -16,12 +16,17 @@ describe("When I try to render a register student modal", () => {
   });
 
   it("should support the cancel button", () => {
+    const savedAlert = window.alert;
+    window.alert = jest.fn();
+
     const cancel = jest.fn();
     render(<RegisterStudentModal onCancel={cancel} />);
     const cancelButton = screen.getByText("Cancel");
 
     fireEvent.click(cancelButton);
     expect(cancel).toHaveBeenCalled();
+
+    window.alert = savedAlert;
   });
 
   it("should not submit without the fields being filled", () => {

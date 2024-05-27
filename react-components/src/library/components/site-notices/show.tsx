@@ -57,8 +57,7 @@ export default class ShowSiteNotices extends React.Component<any, any> {
       jQuery.ajax({
         url: dismissUrl,
         type: "post",
-        // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
-        data: "authenticity_token=" + encodeURIComponent(authToken),
+        data: "authenticity_token=" + encodeURIComponent(authToken || ""),
         success: (data) => {
           this.getPortalData();
         },

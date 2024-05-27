@@ -5,16 +5,14 @@ import AssignModal from "./assign-modal";
 
 import css from "./style.scss";
 
-const openModal = (type: any, properties = {}, closeFunc: any) => {
+const openModal = (type: any, properties: any = {}, closeFunc: any) => {
   const modalContainerSelector = "#" + css.assignModal;
   let modalContainer = jQuery(modalContainerSelector);
   if (modalContainer.length === 0) {
     modalContainer = jQuery("<div id=" + css.assignModal + ">").appendTo("body");
   }
 
-  // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
   if (properties.closeable == null) {
-    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable = true;
   }
 
@@ -24,16 +22,14 @@ const openModal = (type: any, properties = {}, closeFunc: any) => {
     undefined,
     undefined,
     closeFunc,
-    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable);
 };
 
 export default function openAssignToClassModal (properties: any) {
-  const materialTypes = {
+  const materialTypes: any = {
     ExternalActivity: "external_activity",
     Interactive: "interactive"
   };
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const materialType = materialTypes[properties.material_type];
   properties.closeFunc = Modal.hideModal;
   const data = {
@@ -52,7 +48,7 @@ export default function openAssignToClassModal (properties: any) {
     .fail(function (err) {
       if (err?.responseText) {
         const response = jQuery.parseJSON(err.responseText);
-        console.log(response.message);
+        console.error(response.message);
       }
     });
 }

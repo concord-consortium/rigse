@@ -2,6 +2,10 @@ import React from "react";
 import css from "./style.scss";
 
 export default class ResearcherClassesTable extends React.Component<any, any> {
+  static defaultProps = {
+    classes: []
+  };
+
   constructor (props: any) {
     super(props);
     this.state = {
@@ -106,8 +110,3 @@ export default class ResearcherClassesTable extends React.Component<any, any> {
     );
   }
 }
-
-// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
-ResearcherClassesTable.defaultProps = {
-  classes: []
-};

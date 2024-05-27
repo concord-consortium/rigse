@@ -5,8 +5,6 @@ const SiteNoticesEditForm = ({
   notice
 }: any) => {
   useEffect(() => {
-    // See: app/helpers/tiny_mce_helper.rb
-    // @ts-expect-error TS(2339): Property 'initTinyMCE' does not exist on type 'Win... Remove this comment to see the full error message
     window.initTinyMCE();
   }, [notice]);
 

@@ -187,10 +187,8 @@ const ResourceLightbox = Component({
     e.preventDefault();
     const width = 575;
     const height = 400;
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-    const left = (jQuery(window).width() - width) / 2;
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-    const top = (jQuery(window).height() - height) / 2;
+    const left = ((jQuery(window).width() ?? 0) - width) / 2;
+    const top = ((jQuery(window).height() ?? 0) - height) / 2;
     const url = e.target.href;
     const opts = "status=1" +
       ",width=" + width +
@@ -414,9 +412,6 @@ const ResourceLightbox = Component({
     const isCollection = resource.material_type === "Collection";
     const previewButtonText = isCollection ? "View Collection" : links.preview.text;
 
-    // console.log("[DEBUG] resource-lightbox links.assign_material.onclick", links.assign_material.onclick);
-    // console.log("[DEBUG] resource-lightbox links.assign_collection.onclick", links.assign_collection.onclick);
-
     return (
       <div className="portal-pages-resource-lightbox-modal-content">
         <div className="portal-pages-resource-lightbox-modal-content-top">
@@ -445,8 +440,6 @@ const ResourceLightbox = Component({
 
   render () {
     const resource = this.state.resource;
-
-    // console.log("[DEBUG] render resource", resource);
 
     return (
       <div>

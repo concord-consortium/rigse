@@ -7,7 +7,6 @@ export default class StandardsTable extends React.Component<any, any> {
   search: any;
   constructor (props: any) {
     super(props);
-    // @ts-expect-error TS(2339): Property 'searchASN' does not exist on type 'Windo... Remove this comment to see the full error message
     this.search = this.props.search || window.searchASN;
     this.paginateUp = this.paginateUp.bind(this);
     this.paginateDown = this.paginateDown.bind(this);

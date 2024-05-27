@@ -23,16 +23,12 @@ export default class LoginModal extends React.Component<any, any> {
     }
 
     jQuery.post("/api/v1/users/sign_in", data).done(function (response) {
-      // console.log("INFO login success", response);
       if (response.redirect_path) {
         window.location = response.redirect_path;
       } else {
-        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
-        window.location.reload(true);
+        window.location.reload();
       }
     }).fail(function (err) {
-      // console.log("INFO login error", err);
-      // console.log("INFO login error responseText", err.responseText);
       if (err?.responseText) {
         const response = jQuery.parseJSON(err.responseText);
         let message = response.message;

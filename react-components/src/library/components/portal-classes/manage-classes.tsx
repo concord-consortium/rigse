@@ -84,12 +84,11 @@ export default class ManageClasses extends React.Component<any, any> {
 
     clazz = clazz || { id: 0 };
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-    const { url, type } = {
+    const { url, type } = ({
       copy: { url: `${teacherClassesBasePath}/${clazz.id}/copy`, type: "POST" },
       sort: { url: `${teacherClassesBasePath}/sort`, type: "POST" },
       activeToggle: { url: `${classesBasePath}/${clazz.id}/set_is_archived`, type: "POST" }
-    }[action];
+    } as any)[action];
 
     return Promise.resolve(
       jQuery.ajax({

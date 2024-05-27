@@ -12,19 +12,13 @@ export default class MaterialsBin extends React.Component<any, any> {
 
     // it is usually very bad form in React to modify props but we will look the other way this time
     // otherwise we need to clone the array just to add the slug
-    // @ts-expect-error TS(7023): 'addSlugs' implicitly has return type 'any' becaus... Remove this comment to see the full error message
-    const addSlugs = (list: any) => {
-      // @ts-expect-error TS(7024): Function implicitly has return type 'any' because ... Remove this comment to see the full error message
+    const addSlugs = (list: any): any => {
       return (() => {
         const result = [];
-        for (const item of Array.from(list)) {
-          // @ts-expect-error TS(2571): Object is of type 'unknown'.
+        for (const item of Array.from(list) as any[]) {
           if (item.category) {
-            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             item.slug = this.generateSlug(item.category);
-            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             if (item.children) {
-              // @ts-expect-error TS(2571): Object is of type 'unknown'.
               result.push(addSlugs(item.children));
             } else {
               result.push(undefined);
@@ -106,7 +100,7 @@ export default class MaterialsBin extends React.Component<any, any> {
     const columns: any = [];
     // Adds all elements of `array` to column `columnIdx` and marks them as `visible`.
     // Note that the array is @params.materials at the beginning and then its child elements recursively.
-    const fillColumns = (array: any, columnIdx: any, visible: any) => {
+    const fillColumns = (array: any, columnIdx?: any, visible?: any) => {
       if (columnIdx == null) {
         columnIdx = 0;
       }
@@ -157,7 +151,6 @@ export default class MaterialsBin extends React.Component<any, any> {
       });
     };
 
-    // @ts-expect-error TS(2554): Expected 3 arguments, but got 1.
     fillColumns(this.props.materials);
     return columns;
   }

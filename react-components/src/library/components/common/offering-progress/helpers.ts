@@ -24,8 +24,7 @@ const detailedProgressMapping = (data: any) => ({
   feedback: data.feedback && feedbackMapping(data.feedback)
 });
 
-// @ts-expect-error TS(7006): Parameter 'data' implicitly has an 'any' type.
-export const studentMapping = (data, researcher = false) => ({
+export const studentMapping = (data: any, researcher = false) => ({
   id: data.user_id,
 
   // In the researcher view (anonymized), the .name is presented in a more readable and anonymized format,

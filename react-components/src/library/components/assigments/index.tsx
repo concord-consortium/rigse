@@ -26,7 +26,7 @@ const offeringsListMapping = (data: any) => {
   }));
 };
 
-const externalReportMapping = (data: any, researcher: any) => {
+const externalReportMapping = (data: any, researcher?: any) => {
   if (!data) {
     return null;
   }
@@ -37,14 +37,14 @@ const externalReportMapping = (data: any, researcher: any) => {
   };
 };
 
-const externalReportsArrayMapping = (data: any, researcher: any) => {
+const externalReportsArrayMapping = (data: any, researcher?: any) => {
   if (!data) {
     return [];
   }
   return (researcher ? data.filter((r: any) => r.supports_researchers) : data).map((r: any) => externalReportMapping(r, researcher));
 };
 
-const classMapping = (data: any, researcher: any) => {
+const classMapping = (data: any, researcher?: any) => {
   return data && {
     id: data.id,
     name: data.name,
@@ -72,11 +72,19 @@ const offeringDetailsMapping = (data: any, researcher: any) => {
 };
 
 export default class Assignments extends React.Component<any, any> {
+  static defaultProps = {
+    // classDataUrl is pretty much required. It can be set to any default value, as it depends on the current class.
+    classDataUrl: null,
+    // When user is a researcher, this component should be read-only.
+    researcher: false,
+    // If initialData is not provided, component will use API (dataUrl) to get it.
+    initialClassData: null
+  };
+
   constructor (props: any) {
     super(props);
     this.state = {
       loading: !props.initialClassData,
-      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       clazz: classMapping(props.initialClassData),
       // List of offering metadata.
       offerings: props.initialClassData ? offeringsListMapping(props.initialClassData.offerings) : [],
@@ -103,7 +111,6 @@ export default class Assignments extends React.Component<any, any> {
       success: data => {
         this.setState({
           loading: false,
-          // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
           clazz: classMapping(data),
           offerings: offeringsListMapping(data.offerings)
         });
@@ -200,13 +207,3 @@ export default class Assignments extends React.Component<any, any> {
     );
   }
 }
-
-// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
-Assignments.defaultProps = {
-  // classDataUrl is pretty much required. It can be set to any default value, as it depends on the current class.
-  classDataUrl: null,
-  // When user is a researcher, this component should be read-only.
-  researcher: false,
-  // If initialData is not provided, component will use API (dataUrl) to get it.
-  initialClassData: null
-};

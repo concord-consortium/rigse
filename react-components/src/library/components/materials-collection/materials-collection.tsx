@@ -21,6 +21,14 @@ const shuffle = function (a: any) {
 };
 
 export default class MaterialsCollection extends React.Component<any, any> {
+  static defaultProps = {
+    randomize: false,
+    limit: Infinity,
+    header: null,
+    // Optional callback executed when materials collection is downloaded
+    onDataLoad: null
+  };
+
   mounted: any;
   constructor (props: any) {
     super(props);
@@ -90,12 +98,3 @@ export default class MaterialsCollection extends React.Component<any, any> {
     );
   }
 }
-
-// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
-MaterialsCollection.defaultProps = {
-  randomize: false,
-  limit: Infinity,
-  header: null,
-  // Optional callback executed when materials collection is downloaded
-  onDataLoad: null
-};

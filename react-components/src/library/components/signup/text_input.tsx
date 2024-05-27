@@ -5,6 +5,10 @@ import { debounce } from "throttle-debounce";
 const TIMEOUT = 350;
 
 class TextInput extends React.Component<any, any> {
+  static defaultProps = {
+    type: "text"
+  };
+
   inputRef: any;
   timeoutID: any;
   constructor (props: any) {
@@ -85,11 +89,6 @@ class TextInput extends React.Component<any, any> {
   }
 }
 
-// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
-TextInput.defaultProps = {
-  type: "text"
-};
-
 const FormsyTextInput = withFormsy(TextInput);
 
 // A copy of method from https://github.com/formsy/formsy-react/blob/master/src/withFormsy.ts
@@ -97,7 +96,7 @@ const convertValidationsToObject = (validations: any) => {
   if (typeof validations === "string") {
     return validations.split(/,(?![^{[]*[}\]])/g).reduce((validationsAccumulator, validation) => {
       let args = validation.split(":");
-      const validateMethod = args.shift();
+      const validateMethod = args.shift() as string;
 
       args = args.map((arg) => {
         try {
@@ -114,8 +113,7 @@ const convertValidationsToObject = (validations: any) => {
       }
 
       // Avoid parameter reassignment
-      const validationsAccumulatorCopy = { ...validationsAccumulator };
-      // @ts-expect-error TS(2538): Type 'undefined' cannot be used as an index type.
+      const validationsAccumulatorCopy: any = { ...validationsAccumulator };
       validationsAccumulatorCopy[validateMethod] = args.length ? args[0] : true;
       return validationsAccumulatorCopy;
     }, {});

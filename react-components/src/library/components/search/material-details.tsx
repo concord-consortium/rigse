@@ -8,12 +8,10 @@ export default class SMaterialDetails extends React.Component<any, any> {
   }
 
   toggle (event: any) {
-    // @ts-expect-error TS(2339): Property 'toggleDetails' does not exist on type 'W... Remove this comment to see the full error message
     window.toggleDetails(jQuery(event.target));
   }
 
   toggleFromChild (event: any) {
-    // @ts-expect-error TS(2339): Property 'toggleDetails' does not exist on type 'W... Remove this comment to see the full error message
     window.toggleDetails(jQuery(event.target.parentElement));
   }
 

@@ -23,9 +23,13 @@ const hasAtLeastTwoAlphanumeric = (str: any) => {
   return matches && matches.length >= 2;
 };
 
-const queryCache = {};
+const queryCache: any = {};
 
 export default class LearnerReportForm extends React.Component<any, any> {
+  static defaultProps = {
+    externalReports: []
+  };
+
   constructor (props: any) {
     super(props);
     this.state = {
@@ -78,7 +82,7 @@ export default class LearnerReportForm extends React.Component<any, any> {
   // All requests are cached, and if we make a duplicate request as one that
   // is still pending, the new callback is added as a chained promise, so that
   // no new request is made.
-  query (_params: any, fieldName: any, searchString: any) {
+  query (_params: any, fieldName?: any, searchString?: any) {
     if (fieldName) {
       this.setState({ [`waitingFor_${fieldName}`]: true });
     }
@@ -101,8 +105,7 @@ export default class LearnerReportForm extends React.Component<any, any> {
     const cacheKey = JSON.stringify(params);
 
     const handleResponse = (data: any) => {
-      let newState;
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+      let newState: any;
       queryCache[cacheKey] = data;
       const aggs = data.aggregations;
       if (fieldName) {
@@ -123,19 +126,16 @@ export default class LearnerReportForm extends React.Component<any, any> {
             buckets = buckets.filter((b: any) => filteredIds.indexOf(b.key.match(/\d+/)[0]) !== -1);
           }
 
-          // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           newState[`tooManyResults_${fieldName}`] = false;
           newState.filterables[fieldName] = buckets;
         } else {
           // ElasticSearch returns sum_other_doc_count (named overLimitCount here) if the number of buckets is over
           // a certain limit specified in the query. If this is the case, we don't display the results in the dropdown
           // and ask the user to refine their search.
-          // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           newState[`tooManyResults_${fieldName}`] = true;
           newState.filterables[fieldName] = [];
         }
 
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         newState[`waitingFor_${fieldName}`] = false;
       } else {
         newState = {
@@ -152,16 +152,11 @@ export default class LearnerReportForm extends React.Component<any, any> {
       return data;
     };
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     if (queryCache[cacheKey]?.then) { // already made a Promise that is still pending
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey].then(handleResponse); // chain a new Then
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     } else if (queryCache[cacheKey]) { // have data that has already returned
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       handleResponse(queryCache[cacheKey]); // use it directly
     } else {
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = jQuery.ajax({ // make req and add new Promise to cache
         url: "/api/v1/report_learners_es",
         type: "GET",
@@ -171,24 +166,21 @@ export default class LearnerReportForm extends React.Component<any, any> {
   }
 
   getQueryParams () {
-    const params = {
+    const params: any = {
       hide_names: this.state.hide_names
     };
     for (const filter of ["schools", "teachers", "runnables", "permission_forms"]) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         params[filter] = this.state[filter].map((v: any) => v.value).sort().join(",");
       }
     }
     for (const filter of ["start_date", "end_date"]) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         params[filter] = formatInputDateToMMDDYYYY(this.state[filter]);
       }
     }
     const customQueryLimit = getQueryLimitParam();
     if (customQueryLimit) {
-      // @ts-expect-error TS(2339): Property 'query_limit' does not exist on type '{ h... Remove this comment to see the full error message
       params.query_limit = customQueryLimit;
     }
     return params;
@@ -206,15 +198,10 @@ export default class LearnerReportForm extends React.Component<any, any> {
     // them all separately, as each dropdown may require a different query,
     // depending on the other filters. If the queries are the same, however,
     // no additional requests are made over the network
-    // @ts-expect-error TS(2554): Expected 3 arguments, but got 1.
     this.query(params);
-    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, "schools");
-    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, "teachers");
-    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, "runnables");
-    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, "permission_forms");
   }
 
@@ -430,8 +417,3 @@ export default class LearnerReportForm extends React.Component<any, any> {
     );
   }
 }
-
-// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
-LearnerReportForm.defaultProps = {
-  externalReports: []
-};

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { CSSProperties, useState, PointerEvent } from "react";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -20,13 +20,11 @@ const isInteractiveElement = (element: any) => {
 
 // This is a custom sensor that prevents dragging if the pointer is over an interactive element like a button or input.
 // This way, we don't need to provide custom drag handles. Usually, we can just wrap the whole item in a draggable element.
-// @ts-expect-error TS(2417): Class static side 'typeof PointerSensorWithoutInte... Remove this comment to see the full error message
 class PointerSensorWithoutInteractiveElements extends PointerSensor {
   static activators = [
     {
-      eventName: "onPointerDown",
-      // @ts-expect-error TS(7031): Binding element 'event' implicitly has an 'any' ty... Remove this comment to see the full error message
-      handler: ({ nativeEvent: event }) => {
+      eventName: "onPointerDown" as const,
+      handler: ({ nativeEvent: event }: PointerEvent) => {
         if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
           return false;
         }
@@ -65,7 +63,6 @@ export const SortableContainer = ({
   };
 
   const sensors = useSensors(
-    // @ts-expect-error TS(2345): Argument of type 'typeof PointerSensorWithoutInter... Remove this comment to see the full error message
     useSensor(PointerSensorWithoutInteractiveElements),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
@@ -108,7 +105,7 @@ export const SortableItem = ({
 }: any) => {
   const { attributes, listeners, setNodeRef, transform, transition, active } = useSortable({ id, disabled });
 
-  const style = {
+  const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
     // hide the original item while dragging, as we use a custom drag preview
@@ -118,7 +115,6 @@ export const SortableItem = ({
   };
 
   return (
-    // @ts-expect-error TS(2322): Type '{ transform: string | undefined; transition:... Remove this comment to see the full error message
     <div ref={setNodeRef} className={className} style={style} {...attributes} {...listeners}>
       { children }
     </div>

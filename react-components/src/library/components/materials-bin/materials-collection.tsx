@@ -3,15 +3,17 @@ import MBMaterial from "./material";
 
 export default class MBMaterialsCollection extends React.Component<any, any> {
   componentDidMount () {
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
-    const isAssignWrapped = window.self !== window.top && window.self.location.hostname === window.top.location.hostname;
+    const isAssignWrapped = window.self !== window.top && window.self.location.hostname === window.top?.location.hostname;
     if (isAssignWrapped) {
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      window.parent.document.getElementById("collectionIframe").style.height = document.body.scrollHeight + "px";
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      window.parent.document.getElementById("collectionIframe").style.visibility = "visible";
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      window.parent.document.getElementById("collectionIframeLoading").style.display = "none";
+      const iframe = window.parent.document.getElementById("collectionIframe");
+      if (iframe) {
+        iframe.style.height = document.body.scrollHeight + "px";
+        iframe.style.visibility = "visible";
+      }
+      const iframeLoading = window.parent.document.getElementById("collectionIframeLoading");
+      if (iframeLoading) {
+        iframeLoading.style.display = "none";
+      }
     }
   }
 

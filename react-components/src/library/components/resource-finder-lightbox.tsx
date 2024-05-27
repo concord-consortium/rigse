@@ -16,10 +16,8 @@ const ResourceFinderLightbox = Component({
   componentDidMount () {
     jQuery("html, body").css("overflow", "hidden");
     jQuery(".home-page-content").addClass("blurred");
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.querySelector(`.${css.portalPagesResourceFinderLightboxBackground}`).classList.add(css.visible);
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.querySelector(`.${css.portalPagesResourceFinderLightboxContainer}`).classList.add(css.visible);
+    document.querySelector(`.${css.portalPagesResourceFinderLightboxBackground}`)?.classList.add(css.visible);
+    document.querySelector(`.${css.portalPagesResourceFinderLightboxContainer}`)?.classList.add(css.visible);
   },
 
   componentWillUnmount () {

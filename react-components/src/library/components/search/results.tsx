@@ -5,8 +5,7 @@ import SearchResultGroup from "./result-group";
 
 export default class SearchResults extends React.Component<any, any> {
   generateScrollTo (type: any) {
-    // @ts-expect-error TS(2339): Property 'offsetTop' does not exist on type 'JQuer... Remove this comment to see the full error message
-    return (event: any) => window.scrollTo(0, jQuery(`${type}_bookmark`).offsetTop);
+    return () => window.scrollTo(0, jQuery(`${type}_bookmark`)[0].offsetTop);
   }
 
   renderMessage () {
@@ -29,8 +28,7 @@ export default class SearchResults extends React.Component<any, any> {
 
   renderSearchTerm () {
     const searchTerm = jQuery("#search_term");
-    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
-    if (searchTerm.length > 0 && searchTerm.val().length > 0) {
+    if (searchTerm.length > 0 && (searchTerm.val() as string).length > 0) {
       return ` search term "${jQuery("#search_term").val()}" and`;
     } else {
       return "";

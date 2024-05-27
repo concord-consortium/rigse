@@ -74,7 +74,6 @@ export default class TeacherForm extends React.Component<any, any> {
 
     return registerTeacher(params)
       .done(_data => {
-        console.log("INFO Registered teacher.", _data);
         return onRegistration(_data);
       })
       .fail(err => {

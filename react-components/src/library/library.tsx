@@ -65,6 +65,10 @@ declare global {
     PortalPages: any;
     PortalComponents: any;
     gtag: any;
+    toggleDetails: (jqueryElement: any) => void; // defined in search_materials_expand.js
+    hideSharelinks: () => void; // defined in share_material.js
+    initTinyMCE: () => void; // defined in tiny_mce_helper.rb
+    searchASN: () => void; // defined in _standards_edit.html.haml
   }
 }
 

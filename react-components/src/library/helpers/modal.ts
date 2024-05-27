@@ -23,11 +23,8 @@ const showOverlay = function (clickHandler: any, modalId: any, fixedPosition: an
 };
 
 const showModal = function (modalId: any, specialMsg: any, fixedPosition: any, closeFunc: any, modalCloseable: any) {
-  console.log("INFO showModal", modalId, specialMsg, fixedPosition, closeFunc, modalCloseable);
-
   let _closeFunc = hideModal;
   if (closeFunc) {
-    console.log("INFO Modal using custom close function.");
     _closeFunc = closeFunc;
   }
 

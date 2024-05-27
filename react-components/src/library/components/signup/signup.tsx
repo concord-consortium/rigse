@@ -75,8 +75,6 @@ export default class SignUp extends React.Component<any, any> {
   getStepNumber () {
     const { basicData, studentData, teacherData } = this.state;
 
-    // console.log("INFO getStepNumber", this.props, basicData);
-
     if (!this.props.omniauth && !basicData) {
       return 1;
     }
@@ -87,8 +85,6 @@ export default class SignUp extends React.Component<any, any> {
   }
 
   render () {
-    console.log("INFO rendering signup", this.props);
-
     const { signupText, oauthProviders, anonymous, omniauthOrigin } = this.props;
     const { userType, basicData, studentData, teacherData } = this.state;
 
@@ -98,7 +94,6 @@ export default class SignUp extends React.Component<any, any> {
     // For omniauth final step, simply redirect to omniauth_origin
     //
     if ((studentData || teacherData) && this.props.omniauth) {
-      console.log("INFO omniauth final step, redirect.", this.props);
       const data = this.state.studentData ? this.state.studentData : this.state.teacherData;
       window.location.href = data.omniauth_origin;
       return null;
@@ -128,8 +123,6 @@ export default class SignUp extends React.Component<any, any> {
         />;
       }
     } else if (!userType) {
-      // console.log("INFO signup form creating type selector step");
-
       // studentReg: this.onStudentRegistration,
       // teacherReg: this.onTeacherRegistration,
       form = <UserTypeSelector
@@ -150,7 +143,6 @@ export default class SignUp extends React.Component<any, any> {
         />;
       }
     } else {
-      // console.log("INFO signup form creating basic data selector step");
       form = <BasicDataForm
         anonymous={anonymous}
         userType={userType}

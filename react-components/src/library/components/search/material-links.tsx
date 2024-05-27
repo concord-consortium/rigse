@@ -87,7 +87,6 @@ export class SMaterialDropdownLink extends React.Component<any, any> {
   }
 
   handleClick (event: any) {
-    // @ts-expect-error TS(2339): Property 'hideSharelinks' does not exist on type '... Remove this comment to see the full error message
     window.hideSharelinks();
     if (!event.target.nextSibling.visible()) {
       event.target.nextSibling.show();

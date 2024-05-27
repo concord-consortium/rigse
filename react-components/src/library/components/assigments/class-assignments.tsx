@@ -41,7 +41,7 @@ export default class ClassAssignments extends React.Component<any, any> {
     document.removeEventListener("mousedown", this.handleExternalClick);
   }
 
-  closeLightbox (e: any) {
+  closeLightbox () {
     this.props.handleNewAssignment();
     Lightbox.close();
   }
@@ -58,7 +58,6 @@ export default class ClassAssignments extends React.Component<any, any> {
 
   handleAssignMaterialsOptionClick (e: any, collectionId: any) {
     if (document.getElementById("portal-pages-lightbox-mount")) {
-      // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
       this.closeLightbox();
     }
     this.setState({ showAssignOptions: false });

@@ -38,15 +38,14 @@ class SelectInput extends React.Component<any, any> {
     return (
       <div className={className}>
         <Select
-          placeholder={placeholder}
-          // @ts-expect-error TS(2322): Type '{ placeholder: any; loading: any; options: a... Remove this comment to see the full error message
-          loading={loading}
-          options={options}
-          isSearchable
-          disabled={disabled}
           value={this.props.value || ""}
           onChange={this.changeValue}
-          clearable={false}
+          placeholder={placeholder}
+          options={options}
+          isLoading={loading}
+          isSearchable={true}
+          isClearable={false}
+          isDisabled={disabled}
         />
         { this.props.errorMessage ? <div className="input-error">{ this.props.errorMessage }</div> : undefined }
       </div>

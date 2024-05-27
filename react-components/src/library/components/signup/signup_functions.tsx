@@ -9,13 +9,10 @@ import Modal from "../../helpers/modal";
 //
 // Map modal to CSS classes
 //
-const modalClasses = {};
-// @ts-expect-error TS(2538): Type 'typeof LoginModal' cannot be used as an inde... Remove this comment to see the full error message
-modalClasses[LoginModal] = "login-default-modal";
-// @ts-expect-error TS(2538): Type 'typeof SignupModal' cannot be used as an ind... Remove this comment to see the full error message
-modalClasses[SignupModal] = "signup-default-modal";
-// @ts-expect-error TS(2538): Type 'typeof ForgotPasswordModal' cannot be used a... Remove this comment to see the full error message
-modalClasses[ForgotPasswordModal] = "forgot-password-modal";
+const modalClasses: any = {};
+modalClasses[LoginModal.toString()] = "login-default-modal";
+modalClasses[SignupModal.toString()] = "signup-default-modal";
+modalClasses[ForgotPasswordModal.toString()] = "forgot-password-modal";
 
 //
 // Render signup form with the specified properties to the specified DOM id.
@@ -31,48 +28,39 @@ export const renderSignupForm = (properties: any, selectorOrElement: any) => {
   render(<Signup {...properties} />, jQuery(selectorOrElement)[0]);
 };
 
-const openModal = (type: any, properties = {}, closeFunc: any) => {
-  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-  const modalContainerId = modalClasses[type];
+const openModal = (type: any, properties: any = {}, closeFunc?: any) => {
+  const modalContainerId = modalClasses[type.toString()];
   const modalContainerSelector = "#" + modalContainerId;
   let modalContainer = jQuery(modalContainerSelector);
   if (modalContainer.length === 0) {
     modalContainer = jQuery("<div id='" + modalContainerId + "'>").appendTo("body");
   }
 
-  // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
   if (properties.closeable == null) {
-    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable = true;
   }
 
-  console.log("INFO creating modal with props", properties);
   render(React.createElement(type, properties), modalContainer[0]);
 
   return Modal.showModal(modalContainerSelector,
     undefined,
     undefined,
     closeFunc,
-    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable);
 };
 
 export const openLoginModal = (properties: any) => {
-  // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
   openModal(LoginModal, properties);
 };
 
 export const openForgotPasswordModal = (properties: any) => {
-  // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
   openModal(ForgotPasswordModal, properties);
 };
 
 export const openSignupModal = (properties: any) => {
-  console.log("INFO modal props", properties);
   let closeFunc = null;
   if (properties.omniauth) {
     closeFunc = function () {
-      console.log("INFO closeFunc closing registration modal.");
       let redirectPath = null;
       if (properties.omniauth && properties.omniauth_origin) {
         redirectPath = properties.omniauth_origin;
@@ -87,28 +75,19 @@ export const openSignupModal = (properties: any) => {
 // Log out the current user
 //
 const logout = (successFunc: any, failFunc: any, redirectAfter: any) => {
-  console.log("INFO logout() logging out...");
-
   jQuery.get("/api/v1/users/sign_out").done(function (data) {
-    console.log("INFO logout success", data);
-
     if (successFunc) {
       successFunc();
     }
-
     if (redirectAfter) {
-      console.log("INFO redirecting to " + redirectAfter);
       window.location.href = redirectAfter;
     } else {
-      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
-      window.location.reload(true);
+      window.location.reload();
     }
   }).fail(function (err) {
-    console.log("ERROR logout error", err);
-
     if (err.responseText) {
       const response = jQuery.parseJSON(err.responseText);
-      console.log("ERROR logout error responseText", response.message);
+      console.error("ERROR logout error responseText", response.message);
     }
 
     if (failFunc) {

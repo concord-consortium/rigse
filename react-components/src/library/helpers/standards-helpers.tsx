@@ -30,17 +30,13 @@ const NgssHelper = function () {
   // Add a statement to the NGSS groupings.
   //
   this.add = function (statement: any) {
-    // console.log("[DEBUG] NGSS Helper adding", statement);
     const descArr = statement.description;
 
-    const arrMap = {};
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    const arrMap: any = {};
     arrMap[DCI] = this.dci;
 
-    const subGroup = {};
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    const subGroup: any = {};
     subGroup[PRACTICES] = this.practicesGroup;
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     subGroup[CONCEPTS] = this.conceptsGroup;
 
     //
@@ -50,13 +46,11 @@ const NgssHelper = function () {
     //
     if (descArr.length > 0 && descArr[0]) {
       const group = descArr[0];
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       const sub = subGroup[group];
       if (sub) {
         //
         // This is a practice or a crosscutting concept
         //
-        // console.log("[DEBUG] NGSS Helper finding map", group, sub);
         if (descArr.length > 1 && descArr[1]) {
           const title = descArr[1];
           if (!sub[title]) {
@@ -69,14 +63,10 @@ const NgssHelper = function () {
         //
         // This is a DCI, or a PE.
         //
-        // console.log("[DEBUG] NGSS Helper finding array", group, arrMap);
         let arr = this.pe;
-        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         if (arrMap[group]) {
-          // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           arr = arrMap[group];
         }
-        // console.log("[DEBUG] NGSS Helper pushing", statement);
         arr.push(statement);
       }
     }
@@ -86,13 +76,10 @@ const NgssHelper = function () {
   // Return a div with NGSS statements grouped for display.
   //
   this.getDiv = function () {
-    // console.log("[DEBUG] NGSS Helper getDiv()");
-
     if (this.pe.length === 0 &&
-            this.dci.length === 0 &&
-            Object.keys(this.practicesGroup).length === 0 &&
-            Object.keys(this.conceptsGroup).length === 0) {
-      // console.log("[DEBUG] Nothing to display.");
+        this.dci.length === 0 &&
+        Object.keys(this.practicesGroup).length === 0 &&
+        Object.keys(this.conceptsGroup).length === 0) {
       return null;
     }
 
@@ -107,8 +94,6 @@ const NgssHelper = function () {
     // three types.) Display notation and full concat description.
     //
     if (this.pe.length > 0) {
-      // console.log("[DEBUG] Displaying PEs", this.pe);
-
       peDiv = (
         <div className="standards-ngss-pe">
           <h4>{ PE }</h4>
@@ -142,8 +127,6 @@ const NgssHelper = function () {
     // leaf grade level and parent notation
     //
     if (this.dci.length > 0) {
-      // console.log("[DEBUG] Displaying DCIs", this.dci);
-
       //
       // For each statement display:
       //
@@ -156,7 +139,6 @@ const NgssHelper = function () {
         <div className="standards-ngss-dci">
           <h4>{ DCI }</h4>
           { this.dci.map((s: any) => {
-            // console.log("[DEBUG] Displaying DCI", s);
             const arrDesc = s.description;
             if (arrDesc.length < 3) { return null; }
             let notation = "";
@@ -182,8 +164,6 @@ const NgssHelper = function () {
     //
     const getGroupedDiv = function (groupMap: any, heading: any) {
       if (Object.keys(groupMap).length > 0) {
-        // console.log("[DEBUG] Displaying group", groupMap);
-
         //
         // For each statement display:
         //
@@ -308,8 +288,9 @@ const NgssHelper = function () {
  *
  */
 const getStandardsHelper = function (standardType: any) {
-  // @ts-expect-error TS(7009): 'new' expression, whose target lacks a construct s... Remove this comment to see the full error message
-  if (standardType === "NGSS") { return new NgssHelper(); }
+  if (standardType === "NGSS") {
+    return new (NgssHelper as any)();
+  }
 };
 
 export default {

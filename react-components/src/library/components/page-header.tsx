@@ -45,7 +45,6 @@ const PageHeader = Component({
 
   handleLoginButton (e: any) {
     e.preventDefault();
-    console.log("INFO calling renderLoginModal()");
     PortalComponents.renderLoginModal(
       {
         oauthProviders: this.state.oauthProviders,

@@ -9,7 +9,6 @@ export default class UserTypeSelector extends React.Component<any, any> {
 
   handleClick (event: any) {
     const value = event.currentTarget.value;
-    console.log("INFO changing type", value);
     gtag("event", "click", {
       "category": "User Registration",
       "label": "Step 1 Completed - " + value.charAt(0).toUpperCase() + value.slice(1)
@@ -36,8 +35,6 @@ export default class UserTypeSelector extends React.Component<any, any> {
   }
 
   render () {
-    console.log("INFO UserTypeSelector rendering");
-
     return (
       <div className="user-type-select">
         <button onClick={this.handleClick} name="type" value="teacher">

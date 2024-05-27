@@ -4,8 +4,7 @@ import css from "./style.scss";
 
 const SiteNoticesNewForm = () => {
   useEffect(() => {
-    // See: app/helpers/tiny_mce_helper.rb
-    (window as any).initTinyMCE();
+    window.initTinyMCE();
   }, []);
 
   const authToken = jQuery('meta[name="csrf-token"]').attr("content");

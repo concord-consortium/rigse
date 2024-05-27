@@ -80,14 +80,13 @@ export default class AutoSuggest extends React.Component<any, any> {
   }
 
   search (query: any) {
-    const setSuggestions = (suggestions: any, callback: any) => {
+    const setSuggestions = (suggestions: any, callback?: any) => {
       const showSuggestions = suggestions.length > 0;
       this.setState({ suggestions, selectedSuggestionIndex: -1, showSuggestions }, callback);
     };
     const trimmedQuery = query.trim();
     this.currentQuery = trimmedQuery;
     if (trimmedQuery.length === 0) {
-      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       setSuggestions([]);
     } else {
       const { getQueryParams } = this.props;
@@ -95,7 +94,6 @@ export default class AutoSuggest extends React.Component<any, any> {
       const data = `search_term=${encodeURIComponent(trimmedQuery)}${queryParams.length > 0 ? `&${queryParams}` : ""}`;
 
       if (this.queryCache[data]) {
-        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         setSuggestions(this.queryCache[data]);
       } else {
         setSuggestions([], () => {
@@ -106,7 +104,6 @@ export default class AutoSuggest extends React.Component<any, any> {
             success: results => {
               this.queryCache[results.search_term] = results.suggestions;
               if (results.search_term === this.currentQuery) {
-                // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
                 setSuggestions(results.suggestions);
               }
             },

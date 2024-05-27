@@ -237,16 +237,14 @@ const StemFinderResult = Component({
     const { resource } = this.props;
     const isCollection = resource.material_type === "Collection";
     const isAssignWrapped = window.self !== window.top &&
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      window.self.location.hostname === window.top.location.hostname;
+      window.self.location.hostname === window.top?.location.hostname;
     const assignHandler = resource.links.assign_material && isAssignWrapped
       ? `javascript: window.parent.${resource.links.assign_material.onclick}`
       : resource.links.assign_material
         ? `javascript: ${resource.links.assign_material.onclick}`
         : null;
     const assignLink = resource.links.assign_material && !isCollection
-      // @ts-expect-error TS(2322): Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message
-      ? <a href={assignHandler} onClick={this.handleAssignClick}>{ resource.links.assign_material.text }</a>
+      ? <a href={assignHandler || ""} onClick={this.handleAssignClick}>{ resource.links.assign_material.text }</a>
       : null;
     const editLinkUrl = resource.lara_activity_or_sequence && resource.links.external_lara_edit
       ? resource.links.external_lara_edit.url

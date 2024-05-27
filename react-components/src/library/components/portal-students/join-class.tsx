@@ -66,11 +66,10 @@ export class JoinClass extends React.Component<any, any> {
     const basePath = "/api/v1/students";
     const { data, onSuccess, onError } = options;
 
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-    const { url, type } = {
+    const { url, type } = ({
       confirm: { url: `${basePath}/confirm_class_word`, type: "POST" },
       join: { url: `${basePath}/join_class`, type: "POST" }
-    }[action];
+    } as any)[action];
 
     jQuery.ajax({
       url,

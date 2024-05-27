@@ -72,8 +72,6 @@ const StemFinder = Component({
       }
     }
 
-    // console.log("INFO stem-finder initial subject areas: ", subjectAreasSelected);
-
     return {
       collections: [],
       displayLimit: DISPLAY_LIMIT_INCREMENT,
@@ -109,7 +107,7 @@ const StemFinder = Component({
   // pairs.
   //
   getFiltersFromURL () {
-    const ret = {};
+    const ret: any = {};
 
     let path = window.location.pathname;
     if (!path.startsWith("/")) { path = "/" + path; }
@@ -117,7 +115,6 @@ const StemFinder = Component({
     const parts = path.split("/");
 
     if (parts.length >= 4 && parts[1] === "resources") {
-      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       ret[parts[2]] = parts[3];
     }
 
@@ -167,8 +164,7 @@ const StemFinder = Component({
 
   componentDidMount () {
     if (document.getElementById("pprfl")) {
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      document.getElementById("pprfl").addEventListener("scroll", this.handleLightboxScroll);
+      document.getElementById("pprfl")?.addEventListener("scroll", this.handleLightboxScroll);
     } else {
       document.addEventListener("scroll", this.handlePageScroll);
     }
@@ -180,8 +176,7 @@ const StemFinder = Component({
 
   componentWillUnmount () {
     if (document.getElementById("pprfl")) {
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      document.getElementById("pprfl").removeEventListener("scroll", this.handleLightboxScroll);
+      document.getElementById("pprfl")?.removeEventListener("scroll", this.handleLightboxScroll);
     } else {
       document.removeEventListener("scroll", this.handlePageScroll);
     }
@@ -293,8 +288,7 @@ const StemFinder = Component({
       resources = sortResources(resources, this.state.sortOrder);
 
       if (this.state.firstSearch) {
-        // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
-        fadeIn(this, 1000);
+        fadeIn(this);
       }
 
       this.setState({
@@ -324,8 +318,7 @@ const StemFinder = Component({
 
   scrollToFinder () {
     if (document.getElementById("finderLightbox")) {
-      // @ts-expect-error TS(2531): Object is possibly 'null'.
-      document.getElementById("finderLightbox").scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+      document.getElementById("finderLightbox")?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     }
   },
 
@@ -363,7 +356,6 @@ const StemFinder = Component({
         subjectAreasSelected.splice(index, 1);
         jQuery("#" + css[filterId]).removeClass(css.selected);
       }
-      // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ subjectAreasSelected, subjectAreasSelectedMap }, this.search);
       this.scrollToFinder();
       this.setState({
@@ -406,7 +398,6 @@ const StemFinder = Component({
         gradeLevelsSelected.splice(index, 1);
         jQuery("#" + css[filterId]).removeClass(css.selected);
       }
-      // console.log("INFO subject areas", subjectAreasSelected);
       this.setState({ gradeLevelsSelected, gradeLevelsSelectedMap }, this.search);
       this.scrollToFinder();
       this.setState({
@@ -504,8 +495,7 @@ const StemFinder = Component({
       selectedFilters.splice(index, 1);
       jQuery("#" + filter.key).removeClass(css.selected);
     }
-    const state = {};
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+    const state: any = {};
     state[selectedKey] = selectedFilters;
     this.setState(state, this.search);
   },
@@ -688,8 +678,7 @@ const StemFinder = Component({
   showResources () {
     setTimeout(function () {
       const resourceItems = document.querySelectorAll(".resourceItem");
-      // @ts-expect-error TS(2339): Property 'style' does not exist on type 'Element'.
-      resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1; });
+      resourceItems.forEach((resourceItem) => { (resourceItem as HTMLElement).style.opacity = "1"; });
     }, 500);
   },
 
@@ -723,7 +712,6 @@ const StemFinder = Component({
   },
 
   render () {
-    // console.log("INFO stem-finder render()");
     return (
       <div className={"cols " + css.finderWrapper}>
         { this.renderForm() }

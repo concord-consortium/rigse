@@ -47,8 +47,7 @@ export default class AssignModal extends React.Component<any, any> {
     const textItemId = "#" + css.shareUrl;
     const temp = jQuery("<input>");
     jQuery("body").append(temp);
-    // @ts-expect-error TS(2345): Argument of type 'string | number | string[] | und... Remove this comment to see the full error message
-    temp.val(jQuery(textItemId).val()).select();
+    temp.val(jQuery(textItemId).val() || "").select();
     document.execCommand("copy");
     temp.remove();
 
@@ -165,8 +164,7 @@ export default class AssignModal extends React.Component<any, any> {
 
   handleLoginClick (e: any) {
     e.preventDefault();
-    // @ts-expect-error TS(2345): Argument of type 'Location' is not assignable to p... Remove this comment to see the full error message
-    const currentUrl = new URL(window.location);
+    const currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set("openAssign", "true");
     const assignPath = currentUrl.pathname + currentUrl.search;
     PortalComponents.renderLoginModal({

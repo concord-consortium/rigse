@@ -85,12 +85,15 @@ const CollectionLightbox = Component({
     this.setState({
       returnPath: null
     });
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.getElementById("collectionIframe").style.visibility = "hidden";
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.getElementById("collectionIframeLoading").style.display = "block";
-    // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.getElementById("collectionIframe").src = "/" + returnPath;
+    const frame = document.getElementById("collectionIframe") as HTMLIFrameElement;
+    if (frame) {
+      frame.style.visibility = "hidden";
+      frame.src = "/" + returnPath;
+    }
+    const frameLoading = document.getElementById("collectionIframeLoading");
+    if (frameLoading) {
+      frameLoading.style.display = "block";
+    }
   },
 
   renderReturnButton () {

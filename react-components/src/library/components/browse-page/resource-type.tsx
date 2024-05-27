@@ -5,13 +5,12 @@ const ResourceType = Component({
 
   render () {
     const resource = this.props.resource;
-    const materialTypeLabels = {
+    const materialTypeLabels: any = {
       "Interactive": "model",
       "Activity": "activity",
       "Investigation": "sequence",
       "Collection": "collection"
     };
-    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const resourceType = materialTypeLabels[resource.material_type];
 
     if (resourceType === "activity" || !resourceType) {
