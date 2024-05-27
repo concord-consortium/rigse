@@ -1,50 +1,43 @@
+declare global {
+  interface Window {
+    jQuery: any;
+  }
+}
+
 export const mockJqueryAjaxSuccess = (result: any) => {
-  // @ts-expect-error TS(2304): Cannot find name 'global'.
-  const realJQuery = global.jQuery;
+  const realJQuery = window.jQuery;
 
   mockJquery({
     ajax: jest.fn().mockImplementation((options) => {
-      options.success(result)
+      options.success(result);
     })
   });
 
   afterEach(() => {
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    global.jQuery = realJQuery;
-  })
-}
+    window.jQuery = realJQuery;
+  });
+};
 
 export const mockJquery = (mock: any) => {
-  // @ts-expect-error TS(2304): Cannot find name 'global'.
-  const realJQuery = global.jQuery;
+  const realJQuery = window.jQuery;
 
-  // @ts-expect-error TS(2304): Cannot find name 'global'.
-  global.jQuery = mock;
+  window.jQuery = mock;
 
   beforeEach(() => {
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    global.jQuery = mock;
+    window.jQuery = mock;
   });
 
   afterEach(() => {
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    global.jQuery = realJQuery;
-  })
-}
+    window.jQuery = realJQuery;
+  });
+};
 
 export const mockJqueryAjax = () => {
-  // @ts-expect-error TS(2304): Cannot find name 'global'.
-  const realJQueryAjax = global.jQuery.ajax;
+  const realJQueryAjax = window.jQuery.ajax;
 
-  // @ts-expect-error TS(2304): Cannot find name 'global'.
-  global.jQuery.ajax = jest.fn().mockImplementation(() => {
-    const fakeResponse = {
-        value: "anything you can imagine"
-    };
-  });
+  window.jQuery.ajax = jest.fn();
 
   afterEach(() => {
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    global.jQuery.ajax = realJQueryAjax;
-  })
-}
+    window.jQuery.ajax = realJQueryAjax;
+  });
+};

@@ -9,10 +9,10 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-serve",
     "start:prod": "cross-env NODE_ENV=production webpack-serve",
-    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:fix": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:style": "eslint -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\"",
-    "lint:style:fix": "eslint --fix -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
+    "lint:style": "eslint -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
+    "lint:style:fix": "eslint --fix -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
     "build": "npm run lint:style:fix && npm run build-library && npm run copy-files",
     "dev:build": "npm run dev:build-library && npm run copy-files",
     "build-library": "cross-env NODE_ENV=production webpack",
@@ -25,7 +25,7 @@
   "jest": {
     "preset": "ts-jest/presets/js-with-ts",
     "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.js"
+      "<rootDir>/setupTests.ts"
     ],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
@@ -43,7 +43,7 @@
       "/node_modules/"
     ],
     "moduleNameMapper": {
-      "\\.(css|less|sass)$": "identity-obj-proxy"
+      "\\.(css|scss|sass)$": "identity-obj-proxy"
     },
     "moduleFileExtensions": [
       "ts",
@@ -68,6 +68,7 @@
     "@testing-library/react": "^15.0.7",
     "@types/jest": "^29.5.12",
     "@types/jquery": "^3.5.30",
+    "@types/node": "^20.12.12",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-modal": "^3.16.3",

@@ -1,10 +1,9 @@
 /* globals describe it expect */
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/search/material' or... Remove this comment to see the full error message
-import SMaterial from 'components/search/material';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import SMaterial from "../../../../src/library/components/search/material";
 
-describe('When I try to render search material', () => {
+describe("When I try to render search material", () => {
   it("should render with default props", () => {
     const material = {
       icon: {
@@ -13,15 +12,15 @@ describe('When I try to render search material', () => {
       links: {},
       material_properties: "",
       activities: []
-    }
+    };
     render(<SMaterial material={material} />);
 
-    expect(screen.getByRole('img', { name: '' })).toHaveAttribute('src', 'http://example.com/icon');
-    expect(screen.getByText('Runs in browser')).toBeInTheDocument();
-    expect(screen.getByText('Community')).toBeInTheDocument();
-    expect(screen.getByText('★')).toBeInTheDocument();
-    expect(screen.getByText('☆')).toBeInTheDocument();
-    expect(screen.getByText('Description')).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "" })).toHaveAttribute("src", "http://example.com/icon");
+    expect(screen.getByText("Runs in browser")).toBeInTheDocument();
+    expect(screen.getByText("Community")).toBeInTheDocument();
+    expect(screen.getByText("★")).toBeInTheDocument();
+    expect(screen.getByText("☆")).toBeInTheDocument();
+    expect(screen.getByText("Description")).toBeInTheDocument();
   });
 
   // TODO: add test for archive click

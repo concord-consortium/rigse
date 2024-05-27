@@ -1,10 +1,9 @@
 /* globals describe it expect */
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/search/materials-li... Remove this comment to see the full error message
-import SMaterialsList from 'components/search/materials-list';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import SMaterialsList from "../../../../src/library/components/search/materials-list";
 
-describe('When I try to render search materials list', () => {
+describe("When I try to render search materials list", () => {
   it("should render with default props", () => {
     const materials = [{
       id: 1,
@@ -26,23 +25,23 @@ describe('When I try to render search materials list', () => {
 
     render(<SMaterialsList materials={materials} />);
 
-    const images = screen.getAllByRole('img', { name: '' });
+    const images = screen.getAllByRole("img", { name: "" });
     expect(images).toHaveLength(2);
-    images.forEach(img => expect(img).toHaveAttribute('src', 'http://example.com/icon'));
+    images.forEach(img => expect(img).toHaveAttribute("src", "http://example.com/icon"));
 
-    const headers = screen.getAllByText('Runs in browser');
+    const headers = screen.getAllByText("Runs in browser");
     expect(headers).toHaveLength(2);
 
-    const communityTexts = screen.getAllByText('Community');
+    const communityTexts = screen.getAllByText("Community");
     expect(communityTexts).toHaveLength(2);
 
-    const favoriteButtons = screen.getAllByText('★');
+    const favoriteButtons = screen.getAllByText("★");
     expect(favoriteButtons).toHaveLength(2);
 
-    const outlineFavoriteButtons = screen.getAllByText('☆');
+    const outlineFavoriteButtons = screen.getAllByText("☆");
     expect(outlineFavoriteButtons).toHaveLength(2);
 
-    const descriptions = screen.getAllByText('Description');
+    const descriptions = screen.getAllByText("Description");
     expect(descriptions).toHaveLength(2);
   });
 });

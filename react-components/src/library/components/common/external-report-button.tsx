@@ -4,7 +4,7 @@ import jQuery from "jquery";
 // changed from string based form generation to using jQuery to fix issue with single quoted
 // values in json field (it was delimited with single quotes and would break if the json
 // contained values with single quotes)
-export const generateJQueryForm = (url: any, json: any, signature: any, jwtFromReportController: any, portalToken: any) => {
+export const generateJQueryForm = (url: any, json: any, signature: any, jwtFromReportController: any, portalToken?: any) => {
   const form = jQuery("<form>", { action: url, method: "POST", target: "_blank" })
     .append(jQuery("<input>", { type: "hidden", name: "allowDebug", value: "1" }))
     .append(jQuery("<input>", { type: "hidden", name: "json", value: JSON.stringify(json) }))

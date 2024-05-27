@@ -1,10 +1,9 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-// @ts-expect-error TS(2307): Cannot find module 'components/portal-classes/stud... Remove this comment to see the full error message
-import StudentRosterHeader from 'components/portal-classes/student-roster-header';
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import StudentRosterHeader from "../../../../src/library/components/portal-classes/student-roster-header";
 
-describe('When I try to render a student roster header', () => {
+describe("When I try to render a student roster header", () => {
 
   it("should render with default parameters", () => {
     render(<StudentRosterHeader />);

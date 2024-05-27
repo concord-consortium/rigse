@@ -1,10 +1,9 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
-// @ts-expect-error TS(2307): Cannot find module 'components/portal-classes/stud... Remove this comment to see the full error message
-import StudentRoster from 'components/portal-classes/student-roster';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import StudentRoster from "../../../../src/library/components/portal-classes/student-roster";
 
-describe('When I try to render a student roster', () => {
+describe("When I try to render a student roster", () => {
   const students = [
     {
       student_id: 1,
@@ -49,8 +48,8 @@ describe('When I try to render a student roster', () => {
       expect(screen.getByText(student.assignments_started.toString())).toBeInTheDocument();
     });
 
-    const removeButtons = screen.getAllByText('Remove Student');
-    const changePasswordButtons = screen.getAllByText('Change Password');
+    const removeButtons = screen.getAllByText("Remove Student");
+    const changePasswordButtons = screen.getAllByText("Change Password");
 
     expect(removeButtons.length).toBe(2);
     expect(changePasswordButtons.length).toBe(2);
@@ -58,22 +57,19 @@ describe('When I try to render a student roster', () => {
 
   it("should render the register another modal", () => {
     const savedLocation = window.location;
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    delete global.window.location;
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    global.window.location = {
+    delete (window as any).location;
+    (window as any).location = {
       hash: "#registered_student"
     };
 
     render(<StudentRoster canEdit={true} students={students} otherStudents={otherStudents} />);
 
-    expect(screen.getByText('Success! The student was registered and added to the class')).toBeInTheDocument();
-    expect(screen.getByText('Do you wish to register and add another student?')).toBeInTheDocument();
-    expect(screen.getByText('Add Another Student')).toBeInTheDocument();
-    expect(screen.getByText('Cancel')).toBeInTheDocument();
+    expect(screen.getByText("Success! The student was registered and added to the class")).toBeInTheDocument();
+    expect(screen.getByText("Do you wish to register and add another student?")).toBeInTheDocument();
+    expect(screen.getByText("Add Another Student")).toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
 
-    // @ts-expect-error TS(2304): Cannot find name 'global'.
-    global.window.location = savedLocation;
+    (window as any).location = savedLocation;
   });
 
   // NOTE: the header and the rows are tested fully in their own component tests

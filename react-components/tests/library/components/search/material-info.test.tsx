@@ -1,9 +1,8 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/search/material-inf... Remove this comment to see the full error message
-import SMaterialInfo from 'components/search/material-info';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import SMaterialInfo from "../../../../src/library/components/search/material-info";
 
-describe('When I try to render search material info', () => {
+describe("When I try to render search material info", () => {
   it("should render with default props", () => {
     const material = {
       links: {},
@@ -11,8 +10,8 @@ describe('When I try to render search material info', () => {
     };
     render(<SMaterialInfo material={material} />);
 
-    expect(screen.getByText('Runs in browser')).toBeInTheDocument();
-    expect(screen.getByText('Community')).toBeInTheDocument();
+    expect(screen.getByText("Runs in browser")).toBeInTheDocument();
+    expect(screen.getByText("Community")).toBeInTheDocument();
   });
 
   it("should render with optional props #1", () => {
@@ -80,22 +79,22 @@ describe('When I try to render search material info', () => {
     };
     render(<SMaterialInfo material={material} />);
 
-    expect(screen.getByText('Requires download')).toBeInTheDocument();
-    expect(screen.getByText('Official')).toBeInTheDocument();
-    expect(screen.getByText('draft')).toBeInTheDocument();
-    expect(screen.getByText('material name')).toBeInTheDocument();
+    expect(screen.getByText("Requires download")).toBeInTheDocument();
+    expect(screen.getByText("Official")).toBeInTheDocument();
+    expect(screen.getByText("draft")).toBeInTheDocument();
+    expect(screen.getByText("material name")).toBeInTheDocument();
     expect(screen.getByText('from parent type "parent name"')).toBeInTheDocument();
-    expect(screen.getByText('By credits')).toBeInTheDocument();
-    expect(screen.getByText('(Assigned to class 1)')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'preview text' })).toHaveAttribute('href', 'http://example.com/preview');
-    expect(screen.getByRole('link', { name: 'print_url text' })).toHaveAttribute('href', 'http://example.com/print_url');
-    expect(screen.getByRole('link', { name: 'external_lara_edit text' })).toHaveAttribute('href', 'http://example.com/external_lara_edit');
-    expect(screen.getByRole('link', { name: 'external_copy text' })).toHaveAttribute('href', 'http://example.com/external_copy');
-    expect(screen.getByRole('link', { name: 'teacher_guide text' })).toHaveAttribute('href', 'http://example.com/teacher_guide');
-    expect(screen.getByRole('link', { name: 'rubric_doc text' })).toHaveAttribute('href', 'http://example.com/rubric_doc');
-    expect(screen.getByRole('link', { name: 'assign_material text' })).toHaveAttribute('href', 'http://example.com/assign_material');
-    expect(screen.getByRole('link', { name: 'assign_collection text' })).toHaveAttribute('href', 'http://example.com/assign_collection');
-    expect(screen.getByRole('link', { name: 'unarchive text' })).toHaveAttribute('href', 'http://example.com/unarchive');
+    expect(screen.getByText("By credits")).toBeInTheDocument();
+    expect(screen.getByText("(Assigned to class 1)")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "preview text" })).toHaveAttribute("href", "http://example.com/preview");
+    expect(screen.getByRole("link", { name: "print_url text" })).toHaveAttribute("href", "http://example.com/print_url");
+    expect(screen.getByRole("link", { name: "external_lara_edit text" })).toHaveAttribute("href", "http://example.com/external_lara_edit");
+    expect(screen.getByRole("link", { name: "external_copy text" })).toHaveAttribute("href", "http://example.com/external_copy");
+    expect(screen.getByRole("link", { name: "teacher_guide text" })).toHaveAttribute("href", "http://example.com/teacher_guide");
+    expect(screen.getByRole("link", { name: "rubric_doc text" })).toHaveAttribute("href", "http://example.com/rubric_doc");
+    expect(screen.getByRole("link", { name: "assign_material text" })).toHaveAttribute("href", "http://example.com/assign_material");
+    expect(screen.getByRole("link", { name: "assign_collection text" })).toHaveAttribute("href", "http://example.com/assign_collection");
+    expect(screen.getByRole("link", { name: "unarchive text" })).toHaveAttribute("href", "http://example.com/unarchive");
   });
 
   it("should render with optional props #2", () => {
@@ -119,11 +118,11 @@ describe('When I try to render search material info', () => {
     };
     render(<SMaterialInfo material={material} />);
 
-    expect(screen.getByText('Requires download')).toBeInTheDocument();
-    expect(screen.getByText('Official')).toBeInTheDocument();
-    expect(screen.getByText('draft')).toBeInTheDocument();
-    expect(screen.getByText('material name')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'external_edit text' })).toHaveAttribute('href', 'http://example.com/external_edit');
-    expect(screen.queryByRole('link', { name: 'assign_material text' })).not.toBeInTheDocument();
+    expect(screen.getByText("Requires download")).toBeInTheDocument();
+    expect(screen.getByText("Official")).toBeInTheDocument();
+    expect(screen.getByText("draft")).toBeInTheDocument();
+    expect(screen.getByText("material name")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "external_edit text" })).toHaveAttribute("href", "http://example.com/external_edit");
+    expect(screen.queryByRole("link", { name: "assign_material text" })).not.toBeInTheDocument();
   });
 });

@@ -1,20 +1,19 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/search/material-hea... Remove this comment to see the full error message
-import SMaterialHeader from 'components/search/material-header';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import SMaterialHeader from "../../../../src/library/components/search/material-header";
 
-describe('When I try to render search material header', () => {
+describe("When I try to render search material header", () => {
 
   it("should render with default props", () => {
     const material = {
       material_properties: "",
       publication_status: "published",
       links: {}
-    }
+    };
     render(<SMaterialHeader material={material} />);
 
-    expect(screen.getByText('Runs in browser')).toBeInTheDocument();
-    expect(screen.getByText('Community')).toBeInTheDocument();
+    expect(screen.getByText("Runs in browser")).toBeInTheDocument();
+    expect(screen.getByText("Community")).toBeInTheDocument();
   });
 
   it("should render with optional props", () => {
@@ -36,15 +35,15 @@ describe('When I try to render search material header', () => {
           text: "external_edit_iframe text"
         }
       }
-    }
+    };
     render(<SMaterialHeader material={material} />);
 
-    expect(screen.getByText('Requires download')).toBeInTheDocument();
-    expect(screen.getByText('Official')).toBeInTheDocument();
-    expect(screen.getByText('draft')).toBeInTheDocument();
-    expect(screen.getByText('material name')).toBeInTheDocument();
-    expect(screen.getByText('edit text')).toBeInTheDocument();
-    expect(screen.getByText('external_edit_iframe text')).toBeInTheDocument();
+    expect(screen.getByText("Requires download")).toBeInTheDocument();
+    expect(screen.getByText("Official")).toBeInTheDocument();
+    expect(screen.getByText("draft")).toBeInTheDocument();
+    expect(screen.getByText("material name")).toBeInTheDocument();
+    expect(screen.getByText("edit text")).toBeInTheDocument();
+    expect(screen.getByText("external_edit_iframe text")).toBeInTheDocument();
   });
 
 });

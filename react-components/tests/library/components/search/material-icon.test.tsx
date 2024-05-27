@@ -1,9 +1,8 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/search/material-ico... Remove this comment to see the full error message
-import SMaterialIcon from 'components/search/material-icon';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import SMaterialIcon from "../../../../src/library/components/search/material-icon";
 
-describe('When I try to render search material icon', () => {
+describe("When I try to render search material icon", () => {
 
   it("should render with default props", () => {
     const material = {
@@ -11,13 +10,13 @@ describe('When I try to render search material icon', () => {
         url: "http://example.com/icon"
       },
       links: {}
-    }
+    };
     const configuration = {};
     render(<SMaterialIcon material={material} configuration={configuration} />);
 
-    const image = screen.getByRole('img');
-    expect(image).toHaveAttribute('src', 'http://example.com/icon');
-    expect(image).toHaveAttribute('width', '100%');
+    const image = screen.getByRole("img");
+    expect(image).toHaveAttribute("src", "http://example.com/icon");
+    expect(image).toHaveAttribute("width", "100%");
   });
 
   it("should render with unstarred favorites props", () => {
@@ -30,7 +29,7 @@ describe('When I try to render search material icon', () => {
           url: "http://example.com/browse"
         }
       }
-    }
+    };
     const configuration = {
       enableFavorites: true,
       favoriteClassMap: {
@@ -43,17 +42,17 @@ describe('When I try to render search material icon', () => {
     };
     render(<SMaterialIcon material={material} configuration={configuration} />);
 
-    const image = screen.getByRole('img');
-    expect(image).toHaveAttribute('src', 'http://example.com/icon');
-    expect(image).toHaveAttribute('width', '100%');
+    const image = screen.getByRole("img");
+    expect(image).toHaveAttribute("src", "http://example.com/icon");
+    expect(image).toHaveAttribute("width", "100%");
 
-    const thumbLink = screen.getByRole('link');
-    expect(thumbLink).toHaveAttribute('href', 'http://example.com/browse');
+    const thumbLink = screen.getByRole("link");
+    expect(thumbLink).toHaveAttribute("href", "http://example.com/browse");
 
-    const favorite = screen.getByText('★');
-    const favoriteOutline = screen.getByText('☆');
-    expect(favorite).toHaveClass('legacy-favorite');
-    expect(favoriteOutline).toHaveClass('legacy-favorite legacy-favorite-outline');
+    const favorite = screen.getByText("★");
+    const favoriteOutline = screen.getByText("☆");
+    expect(favorite).toHaveClass("legacy-favorite");
+    expect(favoriteOutline).toHaveClass("legacy-favorite legacy-favorite-outline");
   });
 
   it("should render with starred favorites props", () => {
@@ -67,7 +66,7 @@ describe('When I try to render search material icon', () => {
         }
       },
       is_favorite: true
-    }
+    };
     const configuration = {
       enableFavorites: true,
       favoriteClassMap: {
@@ -80,15 +79,15 @@ describe('When I try to render search material icon', () => {
     };
     render(<SMaterialIcon material={material} configuration={configuration} />);
 
-    const image = screen.getByRole('img');
-    expect(image).toHaveAttribute('src', 'http://example.com/icon');
-    expect(image).toHaveAttribute('width', '100%');
+    const image = screen.getByRole("img");
+    expect(image).toHaveAttribute("src", "http://example.com/icon");
+    expect(image).toHaveAttribute("width", "100%");
 
-    const thumbLink = screen.getByRole('link');
-    expect(thumbLink).toHaveAttribute('href', 'http://example.com/browse');
+    const thumbLink = screen.getByRole("link");
+    expect(thumbLink).toHaveAttribute("href", "http://example.com/browse");
 
-    const favorite = screen.getByText('★');
-    expect(favorite).toHaveClass('legacy-favorite legacy-favorite-active');
+    const favorite = screen.getByText("★");
+    expect(favorite).toHaveClass("legacy-favorite legacy-favorite-active");
   });
 
 });

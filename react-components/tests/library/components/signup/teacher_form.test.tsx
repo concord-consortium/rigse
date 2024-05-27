@@ -1,12 +1,10 @@
 /* globals describe it expect */
-import React from 'react'
-import { render, screen } from '@testing-library/react'
-// @ts-expect-error TS(2307): Cannot find module 'components/signup/teacher_form... Remove this comment to see the full error message
-import TeacherForm from 'components/signup/teacher_form'
-import { mockJquery } from "../../helpers/mock-jquery"
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import TeacherForm from "../../../../src/library/components/signup/teacher_form";
+import { mockJquery } from "../../helpers/mock-jquery";
 
-// @ts-expect-error TS(2304): Cannot find name 'global'.
-global.Portal = {
+window.Portal = {
   enewsSubscriptionEnabled: true,
   API_V1: {
     LOGIN_VALID: "http://example.com/login_valid",
@@ -14,7 +12,7 @@ global.Portal = {
     COUNTRIES: "http://example.com/countries",
     TEACHERS: "http://example.com/teachers",
   }
-}
+};
 
 const mockedJQuery = {
   get: () => ({
@@ -23,30 +21,30 @@ const mockedJQuery = {
       { id: 2, name: "Mexico" }
     ]
   })
-}
+};
 
-describe('When I try to render signup user type selector', () => {
+describe("When I try to render signup user type selector", () => {
 
-  mockJquery(mockedJQuery)
+  mockJquery(mockedJQuery);
 
   it("should render", () => {
     render(<TeacherForm />);
 
-    expect(screen.getByText('Country')).toBeInTheDocument();
-    expect(screen.getByText('Send me updates about educational technology resources.')).toBeInTheDocument();
-    expect(screen.getByText('By clicking Register!, you agree to our')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Register!' })).toBeInTheDocument();
+    expect(screen.getByText("Country")).toBeInTheDocument();
+    expect(screen.getByText("Send me updates about educational technology resources.")).toBeInTheDocument();
+    expect(screen.getByText("By clicking Register!, you agree to our")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Register!" })).toBeInTheDocument();
   });
 
   it("should render with anonymous prop", () => {
     render(<TeacherForm anonymous={true} />);
 
-    expect(screen.getByText('Username')).toBeInTheDocument();
-    expect(screen.getByText('Email')).toBeInTheDocument();
-    expect(screen.getByText('Send me updates about educational technology resources.')).toBeInTheDocument();
-    expect(screen.getByText('Country')).toBeInTheDocument();
-    expect(screen.getByText('By clicking Register!, you agree to our')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Register!' })).toBeInTheDocument();
+    expect(screen.getByText("Username")).toBeInTheDocument();
+    expect(screen.getByText("Email")).toBeInTheDocument();
+    expect(screen.getByText("Send me updates about educational technology resources.")).toBeInTheDocument();
+    expect(screen.getByText("Country")).toBeInTheDocument();
+    expect(screen.getByText("By clicking Register!, you agree to our")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Register!" })).toBeInTheDocument();
   });
 
 });

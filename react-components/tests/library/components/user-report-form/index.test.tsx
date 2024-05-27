@@ -1,44 +1,41 @@
-/* globals jest describe it expect */
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/user-report-form' o... Remove this comment to see the full error message
-import UserReportForm from 'components/user-report-form';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import UserReportForm from "../../../../src/library/components/user-report-form";
 
 // form uses Portal global
-// @ts-expect-error TS(2304): Cannot find name 'global'.
-global.Portal = {
+window.Portal = {
   currentUser: {
     isAdmin: false,
   },
   API_V1: {
-    EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: 'http://query-test.concord.org'
+    EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY: "http://query-test.concord.org"
   }
-}
+};
 
-describe('UserReportForm', () => {
+describe("UserReportForm", () => {
   const externalReports = [
-    { url: 'url1', name: 'first', label: 'label1' },
-    { url: 'url2', name: 'second', label: 'label2' }
+    { url: "url1", name: "first", label: "label1" },
+    { url: "url2", name: "second", label: "label2" }
   ];
 
-  it('renders custom external report buttons', () => {
+  it("renders custom external report buttons", () => {
     render(<UserReportForm externalReports={externalReports} />);
 
-    const externalReportButtons = screen.getAllByRole('button');
+    const externalReportButtons = screen.getAllByRole("button");
     expect(externalReportButtons).toHaveLength(2);
-    expect(screen.getByText('label1')).toBeInTheDocument();
-    expect(screen.getByText('label2')).toBeInTheDocument();
+    expect(screen.getByText("label1")).toBeInTheDocument();
+    expect(screen.getByText("label2")).toBeInTheDocument();
   });
 
-  it('renders filter forms', () => {
+  it("renders filter forms", () => {
     render(<UserReportForm externalReports={externalReports} />);
 
-    expect(screen.getByText('Teachers')).toBeInTheDocument();
-    expect(screen.getByText('Cohorts')).toBeInTheDocument();
-    expect(screen.getByText('Resources')).toBeInTheDocument();
-    expect(screen.getAllByText('Search...')).toHaveLength(3);
+    expect(screen.getByText("Teachers")).toBeInTheDocument();
+    expect(screen.getByText("Cohorts")).toBeInTheDocument();
+    expect(screen.getByText("Resources")).toBeInTheDocument();
+    expect(screen.getAllByText("Search...")).toHaveLength(3);
 
-    expect(screen.getByText('Earliest date')).toBeInTheDocument();
-    expect(screen.getByText('Latest date')).toBeInTheDocument();
+    expect(screen.getByText("Earliest date")).toBeInTheDocument();
+    expect(screen.getByText("Latest date")).toBeInTheDocument();
   });
 });

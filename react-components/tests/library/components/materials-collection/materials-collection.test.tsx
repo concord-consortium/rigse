@@ -1,13 +1,11 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-// @ts-expect-error TS(2307): Cannot find module 'components/materials-collectio... Remove this comment to see the full error message
-import MaterialsCollection from 'components/materials-collection/materials-collection';
-import { mockJqueryAjaxSuccess } from '../../helpers/mock-jquery';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import MaterialsCollection from "../../../../src/library/components/materials-collection/materials-collection";
+import { mockJqueryAjaxSuccess } from "../../helpers/mock-jquery";
 
-// @ts-expect-error TS(2304): Cannot find name 'global'.
-global.Portal = {
+window.Portal = {
   API_V1: {
-    MATERIALS_BIN_COLLECTIONS: 'http://fake-url',
+    MATERIALS_BIN_COLLECTIONS: "http://fake-url",
   },
 };
 
@@ -15,31 +13,29 @@ const materials = [
   {
     id: 1,
     icon: {
-      url: 'http://example.com/icon',
+      url: "http://example.com/icon",
     },
     links: {},
-    material_properties: '',
+    material_properties: "",
     activities: [],
   },
   {
     id: 2,
     icon: {
-      url: 'http://example.com/icon',
+      url: "http://example.com/icon",
     },
     links: {},
-    material_properties: '',
+    material_properties: "",
     activities: [],
   },
 ];
 
 mockJqueryAjaxSuccess([{ materials }]);
 
-describe('When I try to render materials collection', () => {
-  let materialsCollection;
-
-  describe('with required props', () => {
+describe("When I try to render materials collection", () => {
+  describe("with required props", () => {
     beforeEach(() => {
-      materialsCollection = render(
+      render(
         <MaterialsCollection
           materials={materials}
           collection={1}
@@ -47,24 +43,23 @@ describe('When I try to render materials collection', () => {
       );
     });
 
-    it('should call the ajax request', () => {
-      // @ts-expect-error TS(2304): Cannot find name 'global'.
-      expect(global.jQuery.ajax).toHaveBeenCalled();
+    it("should call the ajax request", () => {
+      expect(window.jQuery.ajax).toHaveBeenCalled();
     });
 
-    it('should render the default props', () => {
-      const materialItems = screen.getAllByRole('img');
+    it("should render the default props", () => {
+      const materialItems = screen.getAllByRole("img");
       expect(materialItems).toHaveLength(2);
-      expect(materialItems[0]).toHaveAttribute('src', 'http://example.com/icon');
-      expect(materialItems[1]).toHaveAttribute('src', 'http://example.com/icon');
+      expect(materialItems[0]).toHaveAttribute("src", "http://example.com/icon");
+      expect(materialItems[1]).toHaveAttribute("src", "http://example.com/icon");
     });
   });
 
-  describe('with optional props', () => {
+  describe("with optional props", () => {
     const onDataLoad = jest.fn();
 
     beforeEach(() => {
-      materialsCollection = render(
+      render(
         <MaterialsCollection
           materials={materials}
           collection={1}
@@ -75,18 +70,18 @@ describe('When I try to render materials collection', () => {
       );
     });
 
-    it('should call onDataLoad', () => {
+    it("should call onDataLoad", () => {
       expect(onDataLoad).toHaveBeenCalledWith(materials);
     });
 
-    it('should render the optional props', () => {
-      const header = screen.getByRole('heading', { level: 1 });
-      expect(header).toHaveTextContent('this is the header');
+    it("should render the optional props", () => {
+      const header = screen.getByRole("heading", { level: 1 });
+      expect(header).toHaveTextContent("this is the header");
 
-      const materialItems = screen.getAllByRole('img');
+      const materialItems = screen.getAllByRole("img");
       expect(materialItems).toHaveLength(2);
-      expect(materialItems[0]).toHaveAttribute('src', 'http://example.com/icon');
-      expect(materialItems[1]).toHaveAttribute('src', 'http://example.com/icon');
+      expect(materialItems[0]).toHaveAttribute("src", "http://example.com/icon");
+      expect(materialItems[1]).toHaveAttribute("src", "http://example.com/icon");
     });
   });
 });
