@@ -1,8 +1,10 @@
 import React from 'react'
 import css from './style.scss'
 
-export default class TeacherProjectViews extends React.Component {
-  constructor (props) {
+export default class TeacherProjectViews extends React.Component<any, any> {
+  timerHandle: any;
+  timerHandler: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       loaded: false,
@@ -28,14 +30,14 @@ export default class TeacherProjectViews extends React.Component {
   }
 
   getTeacherProjectViews () {
-    if (!Portal.API_V1.GET_TEACHER_PROJECT_VIEWS) {
+        if (!Portal.API_V1.GET_TEACHER_PROJECT_VIEWS) {
       // This can happen if this component is rendered by someone other than a teacher
       return
     }
     jQuery.ajax({
-      url: Portal.API_V1.GET_TEACHER_PROJECT_VIEWS,
+            url: Portal.API_V1.GET_TEACHER_PROJECT_VIEWS,
       dataType: 'json',
-      success: function (data) {
+      success: function (data: any) {
         this.setState({
           teacherProjectViews: data,
           loaded: true

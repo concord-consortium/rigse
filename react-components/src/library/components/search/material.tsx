@@ -5,7 +5,7 @@ import SMaterialInfo from './material-info'
 import SMaterialBody from './material-body'
 import SMaterialDetails from './material-details'
 
-export default class SMaterial extends React.Component {
+export default class SMaterial extends React.Component<any, any> {
   render () {
     const { material } = this.props
 

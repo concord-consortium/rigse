@@ -1,8 +1,10 @@
 import React from 'react'
 import css from './style.scss'
 
-class BookmarkRow extends React.Component {
-  constructor (props) {
+class BookmarkRow extends React.Component<any, any> {
+  nameRef: any;
+  urlRef: any;
+  constructor (props: any) {
     super(props)
     const { bookmark } = props
 
@@ -59,7 +61,7 @@ class BookmarkRow extends React.Component {
         <div className={css.editBookmarkRow}>
           <span className={css.iconCell}><span className={`${css.sortIcon} icon-sort`} /></span>
           <span className={css.editBookmarkName}>
-            {bookmark.is_visible ? link : <strike>{link}</strike>}
+            {bookmark.is_visible ? link : <del>{link}</del>}
           </span>
           <span className={css.editBookmarkButtons}>
             <button className={'textButton adminOption'} onClick={handleToggleEdit}>Edit</button>

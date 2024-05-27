@@ -3,7 +3,7 @@ import React from 'react'
 import { SMaterialLinks } from './material-links'
 import SMaterialHeader from './material-header'
 
-export default class SMaterialInfo extends React.Component {
+export default class SMaterialInfo extends React.Component<any, any> {
   renderLinks () {
     const { material } = this.props
     for (let key of Object.keys(material.links || {})) {

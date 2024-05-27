@@ -6,8 +6,9 @@ import Lightbox from '../../helpers/lightbox'
 import css from './style.scss'
 import commonCss from '../../styles/common-css-modules.scss'
 
-export default class ClassAssignments extends React.Component {
-  constructor (props) {
+export default class ClassAssignments extends React.Component<any, any> {
+  assignMaterialsRef: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       showAssignOptions: false,
@@ -25,9 +26,9 @@ export default class ClassAssignments extends React.Component {
 
   componentDidMount () {
     jQuery.ajax({
-      url: Portal.API_V1.GET_TEACHER_PROJECT_VIEWS,
+            url: Portal.API_V1.GET_TEACHER_PROJECT_VIEWS,
       dataType: 'json',
-      success: function (data) {
+      success: function (data: any) {
         this.setState({
           collectionViews: data
         })
@@ -40,23 +41,24 @@ export default class ClassAssignments extends React.Component {
     document.removeEventListener('mousedown', this.handleExternalClick)
   }
 
-  closeLightbox (e) {
+  closeLightbox (e: any) {
     this.props.handleNewAssignment()
     Lightbox.close()
   }
 
-  handleAssignMaterialsButtonClick (e) {
+  handleAssignMaterialsButtonClick (e: any) {
     this.setState({ showAssignOptions: !this.state.showAssignOptions })
   }
 
-  handleExternalClick (e) {
+  handleExternalClick (e: any) {
     if (this.assignMaterialsRef.current && !this.assignMaterialsRef.current.contains(e.target)) {
       this.setState({ showAssignOptions: false })
     }
   }
 
-  handleAssignMaterialsOptionClick (e, collectionId) {
+  handleAssignMaterialsOptionClick (e: any, collectionId: any) {
     if (document.getElementById('portal-pages-lightbox-mount')) {
+      // @ts-expect-error TS(2554): Expected 1 arguments, but got 0.
       this.closeLightbox()
     }
     this.setState({ showAssignOptions: false })
@@ -75,21 +77,17 @@ export default class ClassAssignments extends React.Component {
     Lightbox.open(lightboxOptions)
   }
 
-  handleAssignButtonMouseEnter (e) {
+  handleAssignButtonMouseEnter (e: any) {
     this.setState({ showAssignOptions: true })
   }
 
-  handleAssignButtonMouseLeave (e) {
+  handleAssignButtonMouseLeave (e: any) {
     this.setState({ showAssignOptions: false })
   }
 
   renderAssignOption () {
     const { collectionViews } = this.state
-    return (
-      collectionViews.map(collection => (
-        <li key={`assign-collection-${collection.id}`}><button id={`assignMaterialsCollection${collection.id}`} onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</button></li>
-      ))
-    )
+    return collectionViews.map((collection: any) => <li key={`assign-collection-${collection.id}`}><button id={`assignMaterialsCollection${collection.id}`} onClick={(e) => this.handleAssignMaterialsOptionClick(e, collection.id)}>{collection.name} Collection</button></li>);
   }
 
   renderAssignOptions () {
@@ -104,7 +102,7 @@ export default class ClassAssignments extends React.Component {
   }
 
   renderFindMoreResources () {
-    if (Portal.theme === 'ngss-assessment') {
+        if (Portal.theme === 'ngss-assessment') {
       return
     }
     const { showAssignOptions } = this.state
@@ -119,10 +117,10 @@ export default class ClassAssignments extends React.Component {
 
   get assignMaterialsPath () {
     const { clazz } = this.props
-    if (Portal.theme === 'itsi-learn') {
+        if (Portal.theme === 'itsi-learn') {
       return `/itsi?assign_to_class=${clazz.id}`
     }
-    if (Portal.theme === 'ngss-assessment') {
+        if (Portal.theme === 'ngss-assessment') {
       return `/about`
     }
     return clazz.assignMaterialsPath
@@ -148,10 +146,10 @@ export default class ClassAssignments extends React.Component {
         </table>
         <div className={css.reports}>
           {
-            clazz.externalClassReports.map(r => <a key={r.url} href={r.url} target='_blank' className={commonCss.smallButton} title={r.name}>{ r.launchText }</a>)
+            clazz.externalClassReports.map((r: any) => <a key={r.url} href={r.url} target='_blank' className={commonCss.smallButton} title={r.name}>{ r.launchText }</a>)
           }
         </div>
       </div>
-    )
+    );
   }
 }

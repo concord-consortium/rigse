@@ -4,13 +4,13 @@ export const PREVIEW_LENGTH = 17
 
 const isArray = Array.isArray || (o => ({}).toString.call(o) === '[object Array]')
 
-export default class TextPreview extends React.Component {
-  constructor (props) {
+export default class TextPreview extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.togglePreview = this.togglePreview.bind(this)
   }
 
-  togglePreview (e) {
+  togglePreview (e: any) {
     const { config } = this.props
     config.preview = !config.preview
     this.setState({ config })

@@ -4,8 +4,8 @@ import DeleteIcon from '../icons/delete-icon'
 
 import css from './style.scss'
 
-export default class Notice extends React.Component {
-  constructor (props) {
+export default class Notice extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.handleDelete = this.handleDelete.bind(this)
   }
@@ -18,6 +18,7 @@ export default class Notice extends React.Component {
       jQuery.ajax({
         url: deleteUrl,
         type: 'delete',
+        // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
         data: 'authenticity_token=' + encodeURIComponent(authToken),
         success: (data) => {
           this.props.getPortalData()

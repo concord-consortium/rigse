@@ -4,8 +4,10 @@ import { debounce } from 'throttle-debounce'
 
 const TIMEOUT = 350
 
-class TextInput extends React.Component {
-  constructor (props) {
+class TextInput extends React.Component<any, any> {
+  inputRef: any;
+  timeoutID: any;
+  constructor (props: any) {
     super(props)
 
     this.state = {
@@ -16,7 +18,7 @@ class TextInput extends React.Component {
     this.inputRef = React.createRef()
   }
 
-  onChange (event) {
+  onChange (event: any) {
     const cursor = event.target.selectionStart
     let newVal = event.currentTarget.value
     const delay = this.props.isValidValue(newVal) ? 0 : TIMEOUT
@@ -83,6 +85,7 @@ class TextInput extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 TextInput.defaultProps = {
   type: 'text'
 }
@@ -90,7 +93,7 @@ TextInput.defaultProps = {
 const FormsyTextInput = withFormsy(TextInput)
 
 // A copy of method from https://github.com/formsy/formsy-react/blob/master/src/withFormsy.ts
-const convertValidationsToObject = (validations) => {
+const convertValidationsToObject = (validations: any) => {
   if (typeof validations === 'string') {
     return validations.split(/,(?![^{[]*[}\]])/g).reduce((validationsAccumulator, validation) => {
       let args = validation.split(':')
@@ -112,15 +115,16 @@ const convertValidationsToObject = (validations) => {
 
       // Avoid parameter reassignment
       const validationsAccumulatorCopy = { ...validationsAccumulator }
+      // @ts-expect-error TS(2538): Type 'undefined' cannot be used as an index type.
       validationsAccumulatorCopy[validateMethod] = args.length ? args[0] : true
       return validationsAccumulatorCopy
-    }, {})
+    }, {});
   }
 
   return validations || {}
 }
 
-const TextInputWithAsyncValidationSupport = (props) => {
+const TextInputWithAsyncValidationSupport = (props: any) => {
   const { asyncValidation, asyncValidationError, validations, ...innerProps } = props
   const [asyncValidationPassed, setAsyncValidationPassed] = useState(true)
 
@@ -145,7 +149,7 @@ const TextInputWithAsyncValidationSupport = (props) => {
     })
   }), [])
 
-  const handleChangeWithValidationResult = (newValue, isValid) => {
+  const handleChangeWithValidationResult = (newValue: any, isValid: any) => {
     // Delay first async validation until field meets basic validation rules.
     // If async validation fails, it will be re-run on every change, as long as that happens.
     if (isValid || !asyncValidationPassed) {

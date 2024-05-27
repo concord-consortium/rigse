@@ -6,7 +6,7 @@
 // Close button and overlay will be automatically added.
 // Related styles are in modal.scss file.
 
-var showOverlay = function (clickHandler, modalId, fixedPosition) {
+var showOverlay = function (clickHandler: any, modalId: any, fixedPosition: any) {
   jQuery('.portal-pages-modal').hide()
   jQuery(modalId).addClass('portal-pages-modal')
   if (fixedPosition) {
@@ -22,7 +22,7 @@ var showOverlay = function (clickHandler, modalId, fixedPosition) {
   jQuery('#portal-pages-modal-overlay').css({ 'height': jQuery(document).height() + 'px' }).fadeIn('fast')
 }
 
-var showModal = function (modalId, specialMsg, fixedPosition, closeFunc, modalCloseable) {
+var showModal = function (modalId: any, specialMsg: any, fixedPosition: any, closeFunc: any, modalCloseable: any) {
   console.log('INFO showModal', modalId, specialMsg, fixedPosition, closeFunc, modalCloseable)
 
   var _closeFunc = hideModal

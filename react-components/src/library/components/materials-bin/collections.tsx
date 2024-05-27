@@ -4,7 +4,8 @@ import createFactory from '../../helpers/create-factory'
 import MBFetchDataHOC from './fetch-data-hoc'
 import MBMaterialsCollection from './materials-collection'
 
-class _MBCollections extends React.Component {
+class _MBCollections extends React.Component<any, any> {
+  archive: any;
   getVisibilityClass () {
     if (!this.props.visible) {
       return 'mb-hidden'
@@ -18,7 +19,7 @@ class _MBCollections extends React.Component {
     return (
       <div className={className}>
         {this.props.collectionsData != null
-          ? this.props.collectionsData.map((collection, idx) =>
+          ? this.props.collectionsData.map((collection: any, idx: any) =>
             <MBMaterialsCollection
               key={idx}
               name={collection.name}
@@ -30,7 +31,7 @@ class _MBCollections extends React.Component {
             />)
           : <div className='loading'>loading</div>}
       </div>
-    )
+    );
   }
 }
 
@@ -38,16 +39,16 @@ const MBCollections = createFactory(MBFetchDataHOC(_MBCollections, () => ({
 
   dataStateKey: 'collectionsData',
 
-  dataUrl: Portal.API_V1.MATERIALS_BIN_COLLECTIONS,
+    dataUrl: Portal.API_V1.MATERIALS_BIN_COLLECTIONS,
 
   requestParams () {
     if (this.props.assignToSpecificClass) {
       return {
-        id: this.props.collections.map(c => c.id),
+        id: this.props.collections.map((c: any) => c.id),
         assigned_to_class: this.props.assignToSpecificClass
-      }
+      };
     } else {
-      return { id: this.props.collections.map(c => c.id) }
+      return { id: this.props.collections.map((c: any) => c.id) };
     }
   }
 })))

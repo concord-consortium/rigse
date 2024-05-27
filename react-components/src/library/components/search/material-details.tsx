@@ -1,17 +1,19 @@
 import React from 'react'
 
-export default class SMaterialDetails extends React.Component {
-  constructor (props) {
+export default class SMaterialDetails extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.toggle = this.toggle.bind(this)
     this.toggleFromChild = this.toggleFromChild.bind(this)
   }
 
-  toggle (event) {
+  toggle (event: any) {
+    // @ts-expect-error TS(2339): Property 'toggleDetails' does not exist on type 'W... Remove this comment to see the full error message
     window.toggleDetails(jQuery(event.target))
   }
 
-  toggleFromChild (event) {
+  toggleFromChild (event: any) {
+    // @ts-expect-error TS(2339): Property 'toggleDetails' does not exist on type 'W... Remove this comment to see the full error message
     window.toggleDetails(jQuery(event.target.parentElement))
   }
 
@@ -25,11 +27,11 @@ export default class SMaterialDetails extends React.Component {
 
   renderActivities () {
     const activities = (this.props.material.activities || [])
-    return activities.map(function (activity) {
+    return activities.map(function (activity: any) {
       if (activity != null) {
         return <li key={activity.id}>{activity.name}</li>
       }
-    })
+    });
   }
 
   render () {

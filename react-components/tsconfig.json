@@ -3,30 +3,22 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "commonjs",
-    "esModuleInterop": true,
+    "noImplicitThis": false,
+    "module": "esnext",
+    "moduleResolution": "node",
     "target": "es2018",
     "allowJs": true,
-    "declaration": true,
-    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
-    "strictNullChecks": true,
-    "types": [
-      "jest"
-    ],
+    "importHelpers": true,
+    "strict": true,
+    "types": [],
     "jsx": "react",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es5",
-      "es2015",
-      "es2017",
-      "es2018"
-    ]
+    "lib": ["dom", "dom.iterable", "es2018"]
   },
   "include": [
     "./src/**/*",
-    "./test/**/*"
+    "./global.d.ts"
   ]
 }

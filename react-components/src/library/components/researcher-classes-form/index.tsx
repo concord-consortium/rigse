@@ -3,16 +3,15 @@ import Select from 'react-select'
 import jQuery from 'jquery'
 import ResearcherClassesTable from './table'
 
-// import 'react-day-picker/style.css'
 import css from './style.scss'
 
-const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
-const pluralize = (count, singular, plural) => count === 1 ? `${count} ${singular}` : `${count} ${plural}`
+const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
+const pluralize = (count: any, singular: any, plural: any) => count === 1 ? `${count} ${singular}` : `${count} ${plural}`
 
 const queryCache = {}
 
-export default class ResearcherClassesForm extends React.Component {
-  constructor (props) {
+export default class ResearcherClassesForm extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       // the current values of the filters
@@ -43,7 +42,7 @@ export default class ResearcherClassesForm extends React.Component {
   // If we pass a field name, the filter box for that field will *not* be
   // updated, but all others will. This lets us find all possible values
   // for a dropdown given all the other filters.
-  query (_params, _fieldName) {
+  query (_params: any, _fieldName: any) {
     const params = jQuery.extend({}, _params) // clone
     if (_fieldName) {
       this.setState({ [`waitingFor_${_fieldName}`]: true })
@@ -59,13 +58,15 @@ export default class ResearcherClassesForm extends React.Component {
 
     const cacheKey = JSON.stringify(params)
 
-    const handleResponse = data => {
+    const handleResponse = (data: any) => {
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = data
-      this.setState(prevState => {
+      this.setState((prevState: any) => {
         const hits = data.hits
         const totals = data.totals
         const newState = {}
         if (totals) {
+          // @ts-expect-error TS(2339): Property 'stats' does not exist on type '{}'.
           newState.stats = {
             cohorts: totals.cohorts,
             teachers: totals.teachers,
@@ -74,10 +75,14 @@ export default class ResearcherClassesForm extends React.Component {
           }
         }
         if (hits.classes) {
+          // @ts-expect-error TS(2339): Property 'classes' does not exist on type '{}'.
           newState.classes = hits.classes
         } else {
+          // @ts-expect-error TS(2339): Property 'filterables' does not exist on type '{}'... Remove this comment to see the full error message
           newState.filterables = { ...prevState.filterables }
+          // @ts-expect-error TS(2339): Property 'filterables' does not exist on type '{}'... Remove this comment to see the full error message
           newState.filterables[_fieldName] = hits[_fieldName]
+          // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           newState[`waitingFor_${_fieldName}`] = false
         }
         return newState
@@ -86,11 +91,16 @@ export default class ResearcherClassesForm extends React.Component {
       return data
     }
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     if ((queryCache[cacheKey] != null ? queryCache[cacheKey].then : undefined)) { // already made a Promise that is still pending
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey].then(handleResponse) // chain a new Then
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     } else if (queryCache[cacheKey]) { // have data that has already returned
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       handleResponse(queryCache[cacheKey]) // use it directly
     } else {
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = jQuery.ajax({ // make req and add new Promise to cache
         url: '/api/v1/research_classes',
         type: 'GET',
@@ -103,7 +113,8 @@ export default class ResearcherClassesForm extends React.Component {
     const params = { remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }
     for (var filter of ['teachers', 'cohorts', 'runnables']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
-        params[filter] = this.state[filter].map(v => v.value).sort().join(',')
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(',')
       }
     }
     return params
@@ -125,13 +136,14 @@ export default class ResearcherClassesForm extends React.Component {
       return
     }
     const params = this.getQueryParams()
+    // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
     this.query(params)
     this.query(params, 'teachers')
     this.query(params, 'cohorts')
     this.query(params, 'runnables')
   }
 
-  renderInput (name, titleOverride) {
+  renderInput (name: any, titleOverride?: any) {
     if (!this.state.filterables[name]) { return }
 
     const hits = this.state.filterables[name]
@@ -139,11 +151,11 @@ export default class ResearcherClassesForm extends React.Component {
     const isLoading = this.state[`waitingFor_${name}`]
     const placeholder = !isLoading ? 'Select or search...' : 'Loading ...'
 
-    const options = hits.map(hit => {
+    const options = hits.map((hit: any) => {
       return { value: hit.id, label: hit.label }
     })
 
-    const handleSelectChange = value => {
+    const handleSelectChange = (value: any) => {
       this.setState({ [name]: value || [] }, () => {
         this.updateFilters()
       })
@@ -174,7 +186,7 @@ export default class ResearcherClassesForm extends React.Component {
   }
 
   renderForm () {
-    const handleRemoveCCTeachers = e => {
+    const handleRemoveCCTeachers = (e: any) => {
       this.setState({ removeCCTeachers: e.target.checked }, () => {
         this.updateFilters()
       })
@@ -244,6 +256,7 @@ export default class ResearcherClassesForm extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 ResearcherClassesForm.defaultProps = {
   projectId: ''
 }

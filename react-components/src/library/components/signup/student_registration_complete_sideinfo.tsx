@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class StudentRegistrationCompleteSideInfo extends React.Component {
+export default class StudentRegistrationCompleteSideInfo extends React.Component<any, any> {
   componentDidMount () {
     const authToken = jQuery('meta[name="csrf-token"]').attr('content')
     jQuery('form[method="post"]').each(() => {

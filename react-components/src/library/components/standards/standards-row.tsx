@@ -1,8 +1,8 @@
 import React from 'react'
 import TextPreview from './text-preview'
 
-export default class StandardsRow extends React.Component {
-  constructor (props) {
+export default class StandardsRow extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       updating: false
@@ -10,9 +10,9 @@ export default class StandardsRow extends React.Component {
     this.handleButton = this.handleButton.bind(this)
   }
 
-  handleButton (e) {
+  handleButton (e: any) {
     const { statement, material, afterChange, skipModal } = this.props
-    let apiUrl = null
+    let apiUrl: any = null
     let add = false
 
     const params = {

@@ -4,7 +4,8 @@ import createFactory from '../../helpers/create-factory'
 import MBFetchDataHOC from './fetch-data-hoc'
 import MBMaterialsCollection from './materials-collection'
 
-class _MBUserMaterialsContainer extends React.Component {
+class _MBUserMaterialsContainer extends React.Component<any, any> {
+  archive: any;
   getVisibilityClass () {
     if (!this.props.visible) {
       return 'mb-hidden'

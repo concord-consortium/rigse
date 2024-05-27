@@ -6,12 +6,14 @@ import { formatInputDateToMMDDYYYY } from '../../helpers/format-date'
 
 import css from './style.scss'
 
-const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
+const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
 
-const queryCache = {}
+const queryCache: any = {}
 
-export default class UserReportForm extends React.Component {
-  constructor (props) {
+export default class UserReportForm extends React.Component<any, any> {
+  static defaultProps: { externalReports: never[] }
+
+  constructor (props: any) {
     super(props)
     this.state = {
       // the current values of the filters
@@ -58,7 +60,7 @@ export default class UserReportForm extends React.Component {
     })
   }
 
-  query (_params, _fieldName, searchString) {
+  query (_params: any, _fieldName?: any, searchString?: any) {
     if (_fieldName) {
       this.setState({ [`waitingFor_${_fieldName}`]: true })
     }
@@ -76,8 +78,8 @@ export default class UserReportForm extends React.Component {
     const cacheKey = JSON.stringify(params)
 
     const handleResponse = (fieldName => {
-      return data => {
-        let newState = { filterables: this.state.filterables }
+      return (data: any) => {
+        let newState: any = { filterables: this.state.filterables }
 
         queryCache[cacheKey] = data
 
@@ -85,17 +87,17 @@ export default class UserReportForm extends React.Component {
         if (searchString) {
           // merge results and remove dups
           let merged = (newState.filterables[fieldName] || []).concat(hits)
-          newState.filterables[fieldName] = merged.filter((str, i) => merged.indexOf(str) === i)
+          newState.filterables[fieldName] = merged.filter((str: any, i: any) => merged.indexOf(str) === i)
         } else {
           newState.filterables[fieldName] = hits
         }
 
-        newState.filterables[fieldName].sort((a, b) => a.label.localeCompare(b.label))
+        newState.filterables[fieldName].sort((a: any, b: any) => a.label.localeCompare(b.label))
 
         newState[`waitingFor_${_fieldName}`] = false
         this.setState(newState)
         return data
-      }
+      };
     })(_fieldName)
 
     if ((queryCache[cacheKey] != null ? queryCache[cacheKey].then : undefined)) { // already made a Promise that is still pending
@@ -112,10 +114,10 @@ export default class UserReportForm extends React.Component {
   }
 
   getQueryParams () {
-    const params = { remove_cc_teachers: this.state.removeCCTeachers }
+    const params: any = { remove_cc_teachers: this.state.removeCCTeachers }
     for (var filter of ['teachers', 'cohorts', 'runnables']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
-        params[filter] = this.state[filter].map(v => v.value).sort().join(',')
+        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(',')
       }
     }
     for (filter of ['start_date', 'end_date']) {
@@ -141,7 +143,7 @@ export default class UserReportForm extends React.Component {
     this.query(params, 'runnables')
   }
 
-  renderInput (name, titleOverride) {
+  renderInput (name: any, titleOverride?: any) {
     if (!this.state.filterables[name]) { return }
 
     const hits = this.state.filterables[name]
@@ -149,25 +151,25 @@ export default class UserReportForm extends React.Component {
     const isLoading = this.state[`waitingFor_${name}`]
     const placeholder = !isLoading ? (hits.length === 0 ? 'Search...' : 'Select or search...') : 'Loading ...'
 
-    const options = hits.map(hit => {
+    const options = hits.map((hit: any) => {
       return { value: hit.id, label: hit.label }
     })
 
-    const handleSelectInputChange = value => {
+    const handleSelectInputChange = (value: any) => {
       if (value.length === 4) {
         const params = this.getQueryParams()
         this.query(params, name, value)
       }
     }
 
-    const handleSelectChange = value => {
+    const handleSelectChange = (value: any) => {
       this.setState({ [name]: value }, () => {
         this.updateFilters()
         this.updateQueryParams()
       })
     }
 
-    const handleLoadAll = e => {
+    const handleLoadAll = (e: any) => {
       e.preventDefault()
       this.query({ load_all: name, remove_cc_teachers: this.state.removeCCTeachers }, name)
     }
@@ -195,10 +197,10 @@ export default class UserReportForm extends React.Component {
     )
   }
 
-  renderDatePicker (name) {
+  renderDatePicker (name: any) {
     const label = name === 'start_date' ? 'Earliest date' : 'Latest date'
 
-    const handleChange = (event) => {
+    const handleChange = (event: any) => {
       const { value } = event.target
       if (!value) {
         // Incorrect date.
@@ -227,29 +229,30 @@ export default class UserReportForm extends React.Component {
     const { queryParams, externalReportButtonDisabled } = this.state
     const queryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_USER_QUERY
 
-    const handleRemoveCCTeachers = e => {
+    const handleRemoveCCTeachers = (e: any) => {
       this.setState({ removeCCTeachers: e.target.checked }, () => {
         this.getTotals()
         this.updateFilters()
       })
     }
 
-    externalReports.sort((a, b) => a.label.localeCompare(b.label))
-    const adminOnlyExternalReports = externalReports.filter(r => r.name.indexOf('[DEV]') !== -1)
-    const nonAdminExternalReports = externalReports.filter(r => adminOnlyExternalReports.indexOf(r) === -1)
+    externalReports.sort((a: any, b: any) => a.label.localeCompare(b.label))
+    const adminOnlyExternalReports = externalReports.filter((r: any) => r.name.indexOf('[DEV]') !== -1)
+    const nonAdminExternalReports = externalReports.filter((r: any) => adminOnlyExternalReports.indexOf(r) === -1)
 
-    const renderExternalReports = (reports) => {
-      return reports.map(lr =>
-        <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} portalToken={portalToken} />
-      )
+    const renderExternalReports = (reports: any) => {
+      return reports.map((lr: any) => <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} portalToken={portalToken} />
+      );
     }
 
     return (
       <form method='get' style={{ minHeight: 700 }}>
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         {this.renderInput('teachers')}
         <div style={{ marginTop: '6px' }}>
           <input type='checkbox' checked={this.state.removeCCTeachers} onChange={handleRemoveCCTeachers} /> Remove Concord Consortium Teachers? *
         </div>
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         {this.renderInput('cohorts')}
         {this.renderInput('runnables', 'Resources')}
 

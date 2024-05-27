@@ -10,8 +10,11 @@ import Modal from '../../helpers/modal'
 // Map modal to CSS classes
 //
 const modalClasses = {}
+// @ts-expect-error TS(2538): Type 'typeof LoginModal' cannot be used as an inde... Remove this comment to see the full error message
 modalClasses[LoginModal] = 'login-default-modal'
+// @ts-expect-error TS(2538): Type 'typeof SignupModal' cannot be used as an ind... Remove this comment to see the full error message
 modalClasses[SignupModal] = 'signup-default-modal'
+// @ts-expect-error TS(2538): Type 'typeof ForgotPasswordModal' cannot be used a... Remove this comment to see the full error message
 modalClasses[ForgotPasswordModal] = 'forgot-password-modal'
 
 //
@@ -21,14 +24,15 @@ modalClasses[ForgotPasswordModal] = 'forgot-password-modal'
 //  properties          - The properties
 //  selectorOrElement   - DOM element selector
 //
-export const renderSignupForm = (properties, selectorOrElement) => {
+export const renderSignupForm = (properties: any, selectorOrElement: any) => {
   if (properties == null) {
     properties = {}
   }
   render(<Signup {...properties} />, jQuery(selectorOrElement)[0])
 }
 
-const openModal = (type, properties = {}, closeFunc) => {
+const openModal = (type: any, properties = {}, closeFunc: any) => {
+  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const modalContainerId = modalClasses[type]
   const modalContainerSelector = '#' + modalContainerId
   let modalContainer = jQuery(modalContainerSelector)
@@ -36,7 +40,9 @@ const openModal = (type, properties = {}, closeFunc) => {
     modalContainer = jQuery("<div id='" + modalContainerId + "'>").appendTo('body')
   }
 
+  // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
   if (properties.closeable == null) {
+    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable = true
   }
 
@@ -47,18 +53,21 @@ const openModal = (type, properties = {}, closeFunc) => {
     undefined,
     undefined,
     closeFunc,
+    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable)
 }
 
-export const openLoginModal = (properties) => {
+export const openLoginModal = (properties: any) => {
+  // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
   openModal(LoginModal, properties)
 }
 
-export const openForgotPasswordModal = (properties) => {
+export const openForgotPasswordModal = (properties: any) => {
+  // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
   openModal(ForgotPasswordModal, properties)
 }
 
-export const openSignupModal = (properties) => {
+export const openSignupModal = (properties: any) => {
   console.log('INFO modal props', properties)
   let closeFunc = null
   if (properties.omniauth) {
@@ -77,7 +86,7 @@ export const openSignupModal = (properties) => {
 //
 // Log out the current user
 //
-const logout = (successFunc, failFunc, redirectAfter) => {
+const logout = (successFunc: any, failFunc: any, redirectAfter: any) => {
   console.log('INFO logout() logging out...')
 
   jQuery.get('/api/v1/users/sign_out').done(function (data) {
@@ -91,6 +100,7 @@ const logout = (successFunc, failFunc, redirectAfter) => {
       console.log('INFO redirecting to ' + redirectAfter)
       window.location.href = redirectAfter
     } else {
+      // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
       window.location.reload(true)
     }
   }).fail(function (err) {

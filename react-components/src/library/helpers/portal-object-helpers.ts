@@ -1,6 +1,6 @@
-let filterDiv = null
+let filterDiv: any = null
 
-const shortenText = (text, length, breakOnSpace) => {
+const shortenText = (text: any, length: any, breakOnSpace: any) => {
   let shortenedText = text
   length = (typeof length !== 'undefined') ? length : 350
   if (!text) {
@@ -20,7 +20,7 @@ const shortenText = (text, length, breakOnSpace) => {
   }
 }
 
-const textOfHtml = (text) => {
+const textOfHtml = (text: any) => {
   if (!filterDiv) {
     filterDiv = document.createElement('DIV')
   }
@@ -29,7 +29,7 @@ const textOfHtml = (text) => {
   return filterDiv.innerText
 }
 
-const processResource = (resource) => {
+const processResource = (resource: any) => {
   if (resource == null || resource._processed) {
     return
   }

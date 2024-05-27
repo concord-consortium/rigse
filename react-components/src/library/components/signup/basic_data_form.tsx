@@ -2,10 +2,10 @@ import React from 'react'
 import Formsy from 'formsy-react'
 import TextInput from './text_input'
 
-let INVALID_FIRST_NAME
-let INVALID_LAST_NAME
-let PASS_NOT_MATCH
-let PASS_TOO_SHORT
+let INVALID_FIRST_NAME: any
+let INVALID_LAST_NAME: any
+let PASS_NOT_MATCH: any
+let PASS_TOO_SHORT: any
 
 PASS_TOO_SHORT = 'Password is too short'
 PASS_NOT_MATCH = 'Passwords do not match'
@@ -14,10 +14,10 @@ INVALID_LAST_NAME = 'Invalid last name. Use only letters and numbers.'
 
 const enableAuthProviders = true
 
-const nameValidator = (value) => jQuery.get(Portal.API_V1.NAME_VALID + '?name=' + value)
+const nameValidator = (value: any) => jQuery.get(Portal.API_V1.NAME_VALID + '?name=' + value)
 
-export default class BasicDataForm extends React.Component {
-  constructor (props) {
+export default class BasicDataForm extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       canSubmit: false,
@@ -30,7 +30,7 @@ export default class BasicDataForm extends React.Component {
     this.submit = this.submit.bind(this)
   }
 
-  onChange (model) {
+  onChange (model: any) {
     this.setState({
       password: model.password
     })
@@ -48,8 +48,8 @@ export default class BasicDataForm extends React.Component {
     })
   }
 
-  submit (model) {
-    gtag('event', 'click', {
+  submit (model: any) {
+        gtag('event', 'click', {
       'category': 'User Registration',
       'label': 'Form step 2 completed'
     })
@@ -62,7 +62,7 @@ export default class BasicDataForm extends React.Component {
     const providerComponents = []
     if (enableAuthProviders && this.props.oauthProviders) {
       const providers = this.props.oauthProviders
-      providers.sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0) }) // sort providers alphabetically by name
+      providers.sort(function (a: any, b: any) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0) }) // sort providers alphabetically by name
       for (let i = 0; i < providers.length; i++) {
         if (i === 0) {
           providerComponents.push(

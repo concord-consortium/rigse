@@ -8,7 +8,7 @@ import React from 'react'
 import SMaterialsList from '../search/materials-list'
 import { loadMaterialsCollection } from '../../helpers/materials-collection-cache'
 
-const shuffle = function (a) {
+const shuffle = function (a: any) {
   let idx = a.length
   while (--idx > 0) {
     const j = ~~(Math.random() * (idx + 1))
@@ -19,8 +19,9 @@ const shuffle = function (a) {
   return a
 }
 
-export default class MaterialsCollection extends React.Component {
-  constructor (props) {
+export default class MaterialsCollection extends React.Component<any, any> {
+  mounted: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       materials: [],
@@ -33,7 +34,9 @@ export default class MaterialsCollection extends React.Component {
   componentDidMount () {
     this.mounted = true
     const { randomize, onDataLoad } = this.props
-    loadMaterialsCollection(this.props.collection, ({ materials }) => {
+    loadMaterialsCollection(this.props.collection, ({
+      materials
+    }: any) => {
       if (randomize) {
         materials = shuffle(materials)
       }
@@ -46,7 +49,7 @@ export default class MaterialsCollection extends React.Component {
     })
   }
 
-  toggle (e) {
+  toggle (e: any) {
     this.setState({ truncated: !this.state.truncated })
     e.preventDefault()
   }
@@ -87,6 +90,7 @@ export default class MaterialsCollection extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 MaterialsCollection.defaultProps = {
   randomize: false,
   limit: Infinity,

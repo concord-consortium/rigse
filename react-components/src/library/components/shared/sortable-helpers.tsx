@@ -3,7 +3,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-const isInteractiveElement = (element) => {
+const isInteractiveElement = (element: any) => {
   const interactiveElements = [
     'a',
     'button',
@@ -20,10 +20,12 @@ const isInteractiveElement = (element) => {
 
 // This is a custom sensor that prevents dragging if the pointer is over an interactive element like a button or input.
 // This way, we don't need to provide custom drag handles. Usually, we can just wrap the whole item in a draggable element.
+// @ts-expect-error TS(2417): Class static side 'typeof PointerSensorWithoutInte... Remove this comment to see the full error message
 class PointerSensorWithoutInteractiveElements extends PointerSensor {
   static activators = [
     {
       eventName: 'onPointerDown',
+      // @ts-expect-error TS(7031): Binding element 'event' implicitly has an 'any' ty... Remove this comment to see the full error message
       handler: ({ nativeEvent: event }) => {
         if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
           return false
@@ -38,15 +40,20 @@ class PointerSensorWithoutInteractiveElements extends PointerSensor {
 // - `onReorder` is a function that will be called with the `oldIndex` and `newIndex` of the item that was moved.
 // - `renderDragPreview` is a function that will be called with the `dragPreviewId` of the item being dragged. Note that
 //   the drag preview cannot use the `useSortable` hook - it needs to be just a view component without dragging functionality.
-export const SortableContainer = ({ items, onReorder, renderDragPreview, children }) => {
+export const SortableContainer = ({
+  items,
+  onReorder,
+  renderDragPreview,
+  children
+}: any) => {
   const [dragPreviewId, setDragPreviewId] = useState(null)
 
-  const handleDragStart = (event) => {
+  const handleDragStart = (event: any) => {
     const { active } = event
     setDragPreviewId(active.id)
   }
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: any) => {
     const { active, over } = event
     if (active.id !== over.id) {
       const oldIndex = items.indexOf(active.id)
@@ -58,13 +65,14 @@ export const SortableContainer = ({ items, onReorder, renderDragPreview, childre
   }
 
   const sensors = useSensors(
+    // @ts-expect-error TS(2345): Argument of type 'typeof PointerSensorWithoutInter... Remove this comment to see the full error message
     useSensor(PointerSensorWithoutInteractiveElements),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
     })
   )
 
-  const renderDragPreviewWithBg = (dragPreviewId) => {
+  const renderDragPreviewWithBg = (dragPreviewId: any) => {
     return (
       <div style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.35)', backgroundColor: 'white' }}>
         { renderDragPreview(dragPreviewId) }
@@ -92,7 +100,12 @@ export const SortableContainer = ({ items, onReorder, renderDragPreview, childre
   )
 }
 
-export const SortableItem = ({ id, disabled, className, children }) => {
+export const SortableItem = ({
+  id,
+  disabled,
+  className,
+  children
+}: any) => {
   const { attributes, listeners, setNodeRef, transform, transition, active } = useSortable({ id, disabled })
 
   const style = {
@@ -105,6 +118,7 @@ export const SortableItem = ({ id, disabled, className, children }) => {
   }
 
   return (
+    // @ts-expect-error TS(2322): Type '{ transform: string | undefined; transition:... Remove this comment to see the full error message
     <div ref={setNodeRef} className={className} style={style} {...attributes} {...listeners}>
       { children }
     </div>

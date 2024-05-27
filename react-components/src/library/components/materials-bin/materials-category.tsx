@@ -1,13 +1,13 @@
 import React from 'react'
 
-export default class MBMaterialsCategory extends React.Component {
-  constructor (props) {
+export default class MBMaterialsCategory extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
   }
 
   hideForAnonymous () {
-    return this.props.loginRequired && Portal.currentUser.isAnonymous
+        return this.props.loginRequired && Portal.currentUser.isAnonymous
   }
 
   getVisibilityClass () {

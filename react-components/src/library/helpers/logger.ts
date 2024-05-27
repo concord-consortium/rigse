@@ -11,14 +11,14 @@ export const getDefaultData = () => {
   }
 }
 
-export const logEvent = function (data) {
+export const logEvent = function (data: any) {
   if (typeof (data) === 'string') {
     data = { event: data }
   }
   return postLogEvent(data)
 }
 
-export const postLogEvent = function (data) {
+export const postLogEvent = function (data: any) {
   const processedData = jQuery.extend(true, {}, getDefaultData(), { time: Date.now() }, data)
   jQuery.ajax({
     url: Portal.API_V1.getLogManagerUrl(),

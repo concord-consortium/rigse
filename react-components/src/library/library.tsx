@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-import './library.scss'
 import CollectionsPage from './components/collections-page'
 import CollectionCards from './components/collection-cards'
 import HeaderFilter from './components/header-filter'
@@ -13,7 +12,7 @@ import PageHeader from './components/page-header'
 import PageFooter from './components/page-footer'
 import MaterialsCollection from './components/materials-collection'
 import GradeLevels from './components/grade-levels'
-import Tooltip from './components/tooltip.js'
+import Tooltip from './components/tooltip'
 import ParseQueryString from './helpers/parse-query-string'
 import { MakeTeacherEditionLinks } from './helpers/make-teacher-edition-links'
 import * as signupFunctions from './components/signup/signup_functions'
@@ -50,19 +49,37 @@ import showTab from './helpers/tabs'
 import { loadMaterialsCollections } from './helpers/materials-collection-cache'
 import { render } from './helpers/react-render'
 
+import './library.scss'
+
+declare global {
+  const Portal: any;
+  const PortalComponents: any;
+  const gtag: any;
+
+  interface Window {
+    React: any;
+    ReactDOM: any;
+    Portal: any;
+    loadAppliedStandards: any;
+    updateSearchUrl: any;
+    PortalPages: any;
+    PortalComponents: any;
+    gtag: any;
+  }
+}
+
 // previously React and ReactDOM were set by the react-rails gem
 window.React = React
 window.ReactDOM = ReactDOM
 
-const renderComponentFn = function (ComponentClass) {
-  return function (options, id) {
+const renderComponentFn = function (ComponentClass: any) {
+  return function (options: any, id: any) {
     render(ComponentClass(options), id)
-  }
+  };
 }
 
 // to ease the transition from portal-pages maintain both namespaces
-window.PortalPages =
-window.PortalComponents = {
+window.PortalPages = window.PortalComponents = {
   settings: {}, // default to empty, used to set flags from portal templates
 
   // The URL of the page will change as the user opens resource lightboxes. This
@@ -78,17 +95,17 @@ window.PortalComponents = {
   renderCollectionsPage: renderComponentFn(CollectionsPage),
 
   RecentActivity: RecentActivity,
-  renderRecentActivity: function (options, id) {
+  renderRecentActivity: function (options: any, id: any) {
     render(React.createElement(RecentActivity, options), id)
   },
 
   Assignments: Assignments,
-  renderAssignments: function (options, id) {
+  renderAssignments: function (options: any, id: any) {
     render(React.createElement(Assignments, options), id)
   },
 
   LearnerReportForm: LearnerReportForm,
-  renderLearnerReportForm: function (options, id) {
+  renderLearnerReportForm: function (options: any, id: any) {
     render(React.createElement(LearnerReportForm, options), id)
   },
 
@@ -97,42 +114,42 @@ window.PortalComponents = {
   // NOTE: this should be removed once the user report work in the portal is in production
   //       and no other code references this export.
   ResearcherReportForm: LearnerReportForm,
-  renderResearcherReportForm: function (options, id) {
+  renderResearcherReportForm: function (options: any, id: any) {
     render(React.createElement(LearnerReportForm, options), id)
   },
 
   UserReportForm: UserReportForm,
-  renderUserReportForm: function (options, id) {
+  renderUserReportForm: function (options: any, id: any) {
     render(React.createElement(UserReportForm, options), id)
   },
 
   ResearcherClassesForm: ResearcherClassesForm,
-  renderResearcherClassesForm: function (options, id) {
+  renderResearcherClassesForm: function (options: any, id: any) {
     render(React.createElement(ResearcherClassesForm, options), id)
   },
 
   Navigation: Navigation,
-  renderNavigation: function (options, id) {
+  renderNavigation: function (options: any, id: any) {
     render(React.createElement(Navigation, options), id)
   },
 
   SiteNotices: SiteNotices,
-  renderSiteNotices: function (options, id) {
+  renderSiteNotices: function (options: any, id: any) {
     render(React.createElement(SiteNotices, options), id)
   },
 
   SiteNoticesNewForm: SiteNoticesNewForm,
-  renderSiteNoticesNewForm: function (options, id) {
+  renderSiteNoticesNewForm: function (options: any, id: any) {
     render(React.createElement(SiteNoticesNewForm, options), id)
   },
 
   SiteNoticesEditForm: SiteNoticesEditForm,
-  renderSiteNoticesEditForm: function (options, id) {
+  renderSiteNoticesEditForm: function (options: any, id: any) {
     render(React.createElement(SiteNoticesEditForm, options), id)
   },
 
   ShowSiteNotices: ShowSiteNotices,
-  renderShowSiteNotices: function (options, id) {
+  renderShowSiteNotices: function (options: any, id: any) {
     render(React.createElement(ShowSiteNotices, options), id)
   },
 
@@ -175,16 +192,16 @@ window.PortalComponents = {
   // Params
   //    properties  - A properties object. E.g. { oauthProviders: [ ... ] }
   //
-  renderSignupModal: function (properties) {
+  renderSignupModal: function (properties: any) {
     signupFunctions.openSignupModal(properties)
   },
-  renderLoginModal: function (properties) {
+  renderLoginModal: function (properties: any) {
     signupFunctions.openLoginModal(properties)
   },
-  renderForgotPasswordModal: function (properties) {
+  renderForgotPasswordModal: function (properties: any) {
     signupFunctions.openForgotPasswordModal(properties)
   },
-  renderAssignToClassModal: function (properties) {
+  renderAssignToClassModal: function (properties: any) {
     openAssignToClassModal(properties)
   },
 
@@ -201,12 +218,12 @@ window.PortalComponents = {
 
   // this loads a set of materials collections in a single AJAX call and caches them for use
   // in a later call to renderMaterialsCollection
-  loadMaterialsCollections: function (ids, callback) {
+  loadMaterialsCollections: function (ids: any, callback: any) {
     loadMaterialsCollections(ids, callback)
   },
 
   // this is a different format to match to existing project pages which had 2 formats itself
-  renderMaterialsCollection: function (collectionId, selectorOrElement, limitOrOptions) {
+  renderMaterialsCollection: function (collectionId: any, selectorOrElement: any, limitOrOptions: any) {
     let options = limitOrOptions || {}
     if (typeof limitOrOptions === 'number') {
       options = { limit: limitOrOptions }
@@ -222,7 +239,7 @@ window.PortalComponents = {
   renderRunWithCollaborators: renderComponentFn(RunWithCollaborators),
 
   FeaturedMaterials: FeaturedMaterials,
-  renderFeaturedMaterials: function (selectorOrElement) {
+  renderFeaturedMaterials: function (selectorOrElement: any) {
     let query = window.location.search
     if (query[0] === '?') {
       query = query.slice(1)
@@ -231,22 +248,22 @@ window.PortalComponents = {
   },
 
   SearchResults: SearchResults,
-  renderSearchResults: function (results, selectorOrElement) {
+  renderSearchResults: function (results: any, selectorOrElement: any) {
     const element = jQuery(selectorOrElement)[0]
     render(React.createElement(SearchResults, { results }), element)
   },
-  renderSearchMessage: function (message, selectorOrElement) {
+  renderSearchMessage: function (message: any, selectorOrElement: any) {
     const element = jQuery(selectorOrElement)[0]
     render(<span>{message}</span>, element)
   },
 
   SMaterialsList: SMaterialsList,
-  renderMaterialsList: function (materials, selectorOrElement) {
+  renderMaterialsList: function (materials: any, selectorOrElement: any) {
     render(React.createElement(SMaterialsList, { materials }), jQuery(selectorOrElement)[0])
   },
 
   MaterialsBin: MaterialsBin,
-  renderMaterialsBin: function (definition, selectorOrElement, queryString = null) {
+  renderMaterialsBin: function (definition: any, selectorOrElement: any, queryString: any = null) {
     if (queryString === null) {
       queryString = window.location.search
     }
@@ -256,62 +273,62 @@ window.PortalComponents = {
   },
 
   PortalClassSetupForm: PortalClassSetupForm,
-  renderPortalClassSetupForm: function (options, id) {
+  renderPortalClassSetupForm: function (options: any, id: any) {
     render(React.createElement(PortalClassSetupForm, options), id)
   },
 
   EditBookmarks: EditBookmarks,
-  renderEditBookmarks: function (options, id) {
+  renderEditBookmarks: function (options: any, id: any) {
     render(React.createElement(EditBookmarks, options), id)
   },
 
   ManageClasses: ManageClasses,
-  renderManageClasses: function (options, id) {
+  renderManageClasses: function (options: any, id: any) {
     render(React.createElement(ManageClasses, options), id)
   },
 
   EditMaterialsCollectionList: EditMaterialsCollectionList,
-  renderEditMaterialsCollectionList: function (options, id) {
+  renderEditMaterialsCollectionList: function (options: any, id: any) {
     render(React.createElement(EditMaterialsCollectionList, options), id)
   },
 
   JoinClass: JoinClass,
-  renderJoinClass: function (options, id) {
+  renderJoinClass: function (options: any, id: any) {
     render(React.createElement(JoinClass, options), id)
   },
 
   StudentRoster: StudentRoster,
-  renderStudentRoster: function (options, id) {
+  renderStudentRoster: function (options: any, id: any) {
     render(React.createElement(StudentRoster, options), id)
   },
 
   AutoSuggest: AutoSuggest,
-  renderAutoSuggest: function (options, id) {
+  renderAutoSuggest: function (options: any, id: any) {
     render(React.createElement(AutoSuggest, options), id)
   },
 
   StandardsTable: StandardsTable,
-  renderStandardsTable: function (options, id) {
+  renderStandardsTable: function (options: any, id: any) {
     render(React.createElement(StandardsTable, options), id)
   },
 
   StemFinderResultStandards: StemFinderResultStandards,
-  renderStemFinderResultStandards: function (options, id) {
+  renderStemFinderResultStandards: function (options: any, id: any) {
     render(React.createElement(StemFinderResultStandards, options), id)
   },
 
   ResourceRequirements: ResourceRequirements,
-  renderResourceRequirements: function (options, id) {
+  renderResourceRequirements: function (options: any, id: any) {
     render(React.createElement(ResourceRequirements, options), id)
   },
 
   ResourceLicense: ResourceLicense,
-  renderResourceLicense: function (options, id) {
+  renderResourceLicense: function (options: any, id: any) {
     render(React.createElement(ResourceLicense, options), id)
   },
 
   ResourceProjects: ResourceProjects,
-  renderResourceProjects: function (options, id) {
+  renderResourceProjects: function (options: any, id: any) {
     render(React.createElement(ResourceProjects, options), id)
   },
 

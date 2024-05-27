@@ -2,12 +2,6 @@ import React from 'react'
 import css from './style.scss'
 import TeacherProjectViews from './teacher-project-views'
 
-const defaultNavProps = {
-  greeting: 'Welcome,',
-  name: 'Guest',
-  links: []
-}
-
 const ROOT_SELECTION = '__ROOT__'
 const SECTION_TYPE = 'SECTION'
 
@@ -15,8 +9,15 @@ const SECTION_TYPE = 'SECTION'
 * See `README.md` in this folder
 * for the complete netsed structure of the Navigation props.
 */
-export default class Navigation extends React.Component {
-  constructor (props = defaultNavProps) {
+export default class Navigation extends React.Component<any, any> {
+  static defaultProps = {
+    greeting: 'Welcome,',
+    name: 'Guest',
+    links: []
+  }
+
+  closeTimeout: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       opened: true,
@@ -33,7 +34,7 @@ export default class Navigation extends React.Component {
 
   renderHead () {
     const { greeting, name } = this.props
-    const clickHeader = (e) => {
+    const clickHeader = (e: any) => {
       this.setState({ opened: !this.state.opened })
       if (this.closeTimeout) {
         window.clearTimeout(this.closeTimeout)
@@ -52,7 +53,7 @@ export default class Navigation extends React.Component {
     )
   }
 
-  getLinkClasses (linkDef) {
+  getLinkClasses (linkDef: any) {
     const classes = (linkDef.classNames && linkDef.classNames.split()) || []
     if (linkDef.small) {
       classes.push('small')
@@ -63,7 +64,7 @@ export default class Navigation extends React.Component {
     return classes
   }
 
-  renderLink (linkDef) {
+  renderLink (linkDef: any) {
     const { popOut, iconName, label, url, onClick } = linkDef
     const { location } = this.state
     const target = popOut ? '_blank' : '_self'
@@ -74,10 +75,10 @@ export default class Navigation extends React.Component {
       classNames.push('selected')
     }
     const linkStyles = classNames
-      .map((name) => css[name] || name)
+      .map((name: any) => css[name] || name)
       .join(' ')
       .replace(/^\s+|\s+$/g, '')
-    const clickHandler = (e) => {
+    const clickHandler = (e: any) => {
       // don't trigger the event in parents.
       e.stopPropagation()
       if (onClick) {
@@ -95,7 +96,7 @@ export default class Navigation extends React.Component {
     )
   }
 
-  isInSection (openSection, thisSection) {
+  isInSection (openSection: any, thisSection: any) {
     const _sections = openSection.split('/')
     const _thisSections = thisSection.split('/')
     let found = true
@@ -110,12 +111,12 @@ export default class Navigation extends React.Component {
     return false
   }
 
-  renderSection (section) {
+  renderSection (section: any) {
     const { openedSection, location } = this.state
     const inSection = this.isInSection(openedSection, section.id)
     const inLocation = location.match(section.id)
     const inRoot = section.id === ROOT_SELECTION
-    const children = section.children.map(i => this.renderItem(i))
+    const children = section.children.map((i: any) => this.renderItem(i))
     const classNames = [css.section]
     if (inSection && (!inRoot)) { classNames.push(css.open) }
     if (inLocation && (!inRoot)) { classNames.push('in-selection') }
@@ -131,7 +132,7 @@ export default class Navigation extends React.Component {
     parentPathTree.pop()
     // const parentId = parentPathTree.join('/') || ROOT_SELECTION
 
-    const clickHandler = (e) => {
+    const clickHandler = (e: any) => {
       e.stopPropagation()
       if (inSection && !inRoot) {
         if (section.id === inSection) {
@@ -157,7 +158,7 @@ export default class Navigation extends React.Component {
     )
   }
 
-  renderItem (item) {
+  renderItem (item: any) {
     if (item.type === SECTION_TYPE) {
       return this.renderSection(item)
     } else {
@@ -165,14 +166,14 @@ export default class Navigation extends React.Component {
     }
   }
 
-  sortLinks (links) {
-    links.forEach((item) => {
+  sortLinks (links: any) {
+    links.forEach((item: any) => {
       if (item.children) {
         item.children = this.sortLinks(item.children)
       }
     })
 
-    return links.sort((a, b) => {
+    return links.sort((a: any, b: any) => {
       if (a.sort < b.sort) {
         return -1
       }
@@ -180,12 +181,12 @@ export default class Navigation extends React.Component {
         return 1
       }
       return 0
-    })
+    });
   }
 
   render () {
     const items = this.sortLinks(this.props.links)
-    const rendered = items.map(item => this.renderItem(item))
+    const rendered = items.map((item: any) => this.renderItem(item))
     const head = this.renderHead()
     const classNames = [css.leftNavigation]
 
@@ -202,9 +203,8 @@ export default class Navigation extends React.Component {
         <ul>
           {rendered}
         </ul>
-        { Portal.currentUser.isTeacher && <TeacherProjectViews /> }
+                { Portal.currentUser.isTeacher && <TeacherProjectViews /> }
       </div>
     )
   }
 }
-Navigation.defaultProps = defaultNavProps

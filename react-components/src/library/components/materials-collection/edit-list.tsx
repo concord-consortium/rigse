@@ -2,8 +2,8 @@ import React from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 import SortableMaterialsCollectionList from './sortable-materials-collection-list'
 
-export class EditMaterialsCollectionList extends React.Component {
-  constructor (props) {
+export class EditMaterialsCollectionList extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       items: props.items
@@ -13,7 +13,7 @@ export class EditMaterialsCollectionList extends React.Component {
     this.handleSortEnd = this.handleSortEnd.bind(this)
   }
 
-  handleDelete (item) {
+  handleDelete (item: any) {
     if (window.confirm(`Remove ${item.name} from "${this.props.collection.name}"?`)) {
       const { items } = this.state
       const index = items.indexOf(item)
@@ -30,12 +30,15 @@ export class EditMaterialsCollectionList extends React.Component {
     }
   }
 
-  handleSortEnd ({ oldIndex, newIndex }) {
+  handleSortEnd ({
+    oldIndex,
+    newIndex
+  }: any) {
     let { items } = this.state
     items = arrayMove(items, oldIndex, newIndex)
     this.setState({ items })
 
-    const itemIds = items.map(item => item.id)
+    const itemIds = items.map((item: any) => item.id)
     this.apiCall('sort_materials', { data: { item_ids: itemIds } })
       .catch(err => {
         this.setState({ items: arrayMove(items, newIndex, oldIndex) })
@@ -43,7 +46,7 @@ export class EditMaterialsCollectionList extends React.Component {
       })
   }
 
-  showError (err, message) {
+  showError (err: any, message: any) {
     if (err.message) {
       window.alert(`${message}\n${err.message}`)
     } else {
@@ -51,11 +54,12 @@ export class EditMaterialsCollectionList extends React.Component {
     }
   }
 
-  apiCall (action, options) {
+  apiCall (action: any, options: any) {
     const basePath = '/api/v1/materials_collections'
     const { collection } = this.props
     const { data } = options
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const { url, type } = {
       remove_material: { url: `${basePath}/${collection.id}/remove_material`, type: 'POST' },
       sort_materials: { url: `${basePath}/${collection.id}/sort_materials`, type: 'POST' }

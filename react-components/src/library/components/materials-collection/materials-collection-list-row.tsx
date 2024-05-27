@@ -1,11 +1,11 @@
 import React from 'react'
 import css from './style.scss'
 
-class MaterialsCollectionListRow extends React.Component {
+class MaterialsCollectionListRow extends React.Component<any, any> {
   render () {
     const { item } = this.props
 
-    const handleDelete = (e) => {
+    const handleDelete = (e: any) => {
       e.preventDefault()
       this.props.handleDelete(item)
     }

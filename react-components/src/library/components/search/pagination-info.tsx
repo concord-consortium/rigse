@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class SPaginationInfo extends React.Component {
+export default class SPaginationInfo extends React.Component<any, any> {
   render () {
     const { info } = this.props
     if (info.total_items <= info.per_page) {

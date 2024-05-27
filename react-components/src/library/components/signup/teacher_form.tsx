@@ -14,17 +14,17 @@ const EMAIL_TAKEN = 'Email belongs to an existing user'
 const CANT_FIND_SCHOOL = 'I can\'t find my school in the list.'
 const GO_BACK_TO_LIST = 'Go back to the school list.'
 
-const newSchoolWarning = (zipOrPostal) => `You are adding a new school / institution. Please make sure that the ${zipOrPostal} and school / institution name are correct!`
-const invalidZipcode = (zipOrPostal) => `Incorrect ${zipOrPostal}`
+const newSchoolWarning = (zipOrPostal: any) => `You are adding a new school / institution. Please make sure that the ${zipOrPostal} and school / institution name are correct!`
+const invalidZipcode = (zipOrPostal: any) => `Incorrect ${zipOrPostal}`
 
-const loginValidValidator = (value) => jQuery.get(Portal.API_V1.LOGIN_VALID + '?username=' + value)
-const emailAvailableValidator = (value) => jQuery.get(Portal.API_V1.EMAILS + '?email=' + value)
+const loginValidValidator = (value: any) => jQuery.get(Portal.API_V1.LOGIN_VALID + '?username=' + value)
+const emailAvailableValidator = (value: any) => jQuery.get(Portal.API_V1.EMAILS + '?email=' + value)
 const getCountries = () => jQuery.get(Portal.API_V1.COUNTRIES)
-const registerTeacher = (params) => jQuery.post(Portal.API_V1.TEACHERS, params)
-const isUS = (name) => name === 'United States' || name === 'US' || name === 'USA'
+const registerTeacher = (params: any) => jQuery.post(Portal.API_V1.TEACHERS, params)
+const isUS = (name: any) => name === 'United States' || name === 'US' || name === 'USA'
 
-export default class TeacherForm extends React.Component {
-  constructor (props) {
+export default class TeacherForm extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       canSubmit: false,
@@ -60,7 +60,7 @@ export default class TeacherForm extends React.Component {
     })
   }
 
-  submit (data, resetForm, invalidateForm) {
+  submit (data: any, resetForm: any, invalidateForm: any) {
     const { basicData, onRegistration } = this.props
     const params = jQuery.extend({}, basicData, data)
     // the updated react-select element uses {label, value} as the value so pull the value (id) from it
@@ -84,7 +84,7 @@ export default class TeacherForm extends React.Component {
       })
   }
 
-  onChange (currentValues) {
+  onChange (currentValues: any) {
     const countryId = currentValues.country_id?.value
     const zipcode = currentValues.zipcode
     const { currentZipcode, registerNewSchool } = this.state
@@ -97,9 +97,9 @@ export default class TeacherForm extends React.Component {
     })
   }
 
-  getCountries (callback) {
+  getCountries (callback: any) {
     getCountries().done(data => {
-      callback(data.map(country => ({
+      callback(data.map((country: any) => ({
         label: country.name,
         value: country.id
       })))
@@ -124,17 +124,17 @@ export default class TeacherForm extends React.Component {
     })
   }
 
-  checkIfUS (option) {
+  checkIfUS (option: any) {
     this.setState({
       isUSSelected: isUS(option.label)
     })
   }
 
-  zipcodeValidation (values, value) {
+  zipcodeValidation (values: any, value: any) {
     if (!this.state.isUSSelected) {
       return true
     }
-    return value && value.match(/\d{5}/)
+    return value && value.match(/\d{5}/);
   }
 
   zipOrPostal () {
@@ -145,7 +145,7 @@ export default class TeacherForm extends React.Component {
     }
   }
 
-  renderAnonymous (showEnewsSubscription) {
+  renderAnonymous (showEnewsSubscription: any) {
     return (
       <div>
         <dl>
@@ -214,12 +214,12 @@ export default class TeacherForm extends React.Component {
               validationErrors={{
                 zipcode: invalidZipcode(this.zipOrPostal())
               }}
-              processValue={(val) => val.replace(/\s/g, '')}
+              processValue={(val: any) => val.replace(/\s/g, '')}
             />
           </div>
         </dd>
       </dl>
-    )
+    );
   }
 
   render () {

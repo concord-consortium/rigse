@@ -3,7 +3,7 @@ import Offering from './offering'
 
 import css from './style.scss'
 
-export default class Offerings extends React.Component {
+export default class Offerings extends React.Component<any, any> {
   render () {
     const { anyClasses, offerings, anyData, anyStudents } = this.props
     if (!anyClasses) {
@@ -40,10 +40,8 @@ export default class Offerings extends React.Component {
         </>
       )
     }
-    return (
-      <>
-        { offerings.map(offering => <Offering key={offering.id} offering={offering} />) }
-      </>
-    )
+    return <>
+      { offerings.map((offering: any) => <Offering key={offering.id} offering={offering} />) }
+    </>;
   }
 }

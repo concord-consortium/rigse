@@ -2,7 +2,7 @@ import React from 'react'
 
 import css from './modal.scss'
 
-export default class Modal extends React.Component {
+export default class Modal extends React.Component<any, any> {
   render () {
     const { children } = this.props
 

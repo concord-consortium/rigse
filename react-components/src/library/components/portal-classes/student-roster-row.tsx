@@ -2,8 +2,8 @@ import React from 'react'
 
 import css from './student-roster.scss'
 
-export default class StudentRosterRow extends React.Component {
-  constructor (props) {
+export default class StudentRosterRow extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.handleRemoveStudent = this.handleRemoveStudent.bind(this)
     this.handleChangePassword = this.handleChangePassword.bind(this)

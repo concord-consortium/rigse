@@ -3,9 +3,11 @@ import StandardsRow from './standards-row'
 
 export const PAGE_SIZE = 10
 
-export default class StandardsTable extends React.Component {
-  constructor (props) {
+export default class StandardsTable extends React.Component<any, any> {
+  search: any;
+  constructor (props: any) {
     super(props)
+    // @ts-expect-error TS(2339): Property 'searchASN' does not exist on type 'Windo... Remove this comment to see the full error message
     this.search = this.props.search || window.searchASN
     this.paginateUp = this.paginateUp.bind(this)
     this.paginateDown = this.paginateDown.bind(this)
@@ -74,9 +76,9 @@ export default class StandardsTable extends React.Component {
             <th className='asn_results_th'>Leaf</th>
             <th className='asn_results_th_right'>Action</th>
           </tr>
-          {statements.map(statement => <StandardsRow key={statement.uri} statement={statement} material={material} afterChange={afterChange} skipModal={skipModal} />)}
+          {statements.map((statement: any) => <StandardsRow key={statement.uri} statement={statement} material={material} afterChange={afterChange} skipModal={skipModal} />)}
         </tbody>
       </table>
-    )
+    );
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 import { withFormsy } from 'formsy-react'
 
-class CheckboxInput extends React.Component {
-  constructor (props) {
+class CheckboxInput extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.changeValue = this.changeValue.bind(this)
   }
@@ -11,7 +11,7 @@ class CheckboxInput extends React.Component {
     this.props.setValue(this.props.defaultChecked)
   }
 
-  changeValue (event) {
+  changeValue (event: any) {
     this.props.setValue(event.target.checked)
   }
 

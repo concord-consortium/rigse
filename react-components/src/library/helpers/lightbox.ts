@@ -11,7 +11,7 @@ Code in ResourceLightbox is called in either case so it is better place to put t
 const Lightbox = {
   mountPointId: 'portal-pages-lightbox-mount',
 
-  open: function (component) {
+  open: function (component: any) {
     let mountPoint = document.getElementById(this.mountPointId)
 
     if (!mountPoint) {

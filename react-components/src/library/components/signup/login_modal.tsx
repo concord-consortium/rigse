@@ -4,8 +4,12 @@ import Formsy from 'formsy-react'
 
 let enableAuthProviders = true
 
-export default class LoginModal extends React.Component {
-  constructor (props) {
+export default class LoginModal extends React.Component<any, any> {
+  static defaultProps = {
+    siteName: (window.Portal && window.Portal.siteName) || 'Portal'
+  }
+
+  constructor (props: any) {
     super(props)
 
     this.submit = this.submit.bind(this)
@@ -13,7 +17,7 @@ export default class LoginModal extends React.Component {
     this.handleRegister = this.handleRegister.bind(this)
   }
 
-  submit (data) {
+  submit (data: any) {
     if (this.props.afterSigninPath) {
       data.after_sign_in_path = this.props.afterSigninPath
     }
@@ -23,6 +27,7 @@ export default class LoginModal extends React.Component {
       if (response.redirect_path) {
         window.location = response.redirect_path
       } else {
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
         window.location.reload(true)
       }
     }).fail(function (err) {
@@ -43,14 +48,14 @@ export default class LoginModal extends React.Component {
     })
   }
 
-  handleForgotPassword (e) {
+  handleForgotPassword (e: any) {
     e.preventDefault()
-    PortalComponents.renderForgotPasswordModal({ oauthProviders: this.props.oauthProviders })
+        PortalComponents.renderForgotPasswordModal({ oauthProviders: this.props.oauthProviders })
   }
 
-  handleRegister (e) {
+  handleRegister (e: any) {
     e.preventDefault()
-    PortalComponents.renderSignupModal({ oauthProviders: this.props.oauthProviders })
+        PortalComponents.renderSignupModal({ oauthProviders: this.props.oauthProviders })
   }
 
   render () {
@@ -58,7 +63,7 @@ export default class LoginModal extends React.Component {
 
     if (enableAuthProviders && this.props.oauthProviders) {
       const providers = this.props.oauthProviders
-      providers.sort(function (a, b) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0) }) // sort providers alphabetically by name
+      providers.sort(function (a: any, b: any) { return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0) }) // sort providers alphabetically by name
       for (let i = 0; i < providers.length; i++) {
         let directPath = providers[i].directPath
         if (this.props.afterSigninPath) {
@@ -130,8 +135,4 @@ export default class LoginModal extends React.Component {
       </div>
     )
   }
-}
-
-LoginModal.defaultProps = {
-  siteName: (window.Portal && window.Portal.siteName) || 'Portal'
 }

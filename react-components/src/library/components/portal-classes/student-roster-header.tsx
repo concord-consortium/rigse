@@ -2,8 +2,8 @@ import React from 'react'
 
 import css from './student-roster.scss'
 
-export default class StudentRosterHeader extends React.Component {
-  constructor (props) {
+export default class StudentRosterHeader extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       selectedStudent: undefined
@@ -19,31 +19,29 @@ export default class StudentRosterHeader extends React.Component {
     }
   }
 
-  handleSelectChanged (e) {
+  handleSelectChanged (e: any) {
     const id = parseInt(e.target.value, 10)
-    const selectedStudent = this.props.otherStudents.find(s => s.id === id)
+    const selectedStudent = this.props.otherStudents.find((s: any) => s.id === id)
     this.setState({ selectedStudent })
   }
 
-  renderSelect (otherStudents) {
+  renderSelect (otherStudents: any) {
     const { selectedStudent } = this.state
     const { allowDefaultClass } = this.props
     const addDisabled = !selectedStudent
 
     if (!allowDefaultClass) {
-      return (
-        <>
-          <div className={css.select}>
-            <select id='student_id_selector' onChange={this.handleSelectChanged} value={selectedStudent ? selectedStudent.id : '0'}>
-              <option value='0'>Select registered student ...</option>
-              {otherStudents.map(s => <option key={s.id} value={s.id}>{s.name} ({s.username})</option>)}
-            </select>
-          </div>
-          <div>
-            <button disabled={addDisabled} onClick={this.handleAddClicked}>Add</button>
-          </div>
-        </>
-      )
+      return <>
+        <div className={css.select}>
+          <select id='student_id_selector' onChange={this.handleSelectChanged} value={selectedStudent ? selectedStudent.id : '0'}>
+            <option value='0'>Select registered student ...</option>
+            {otherStudents.map((s: any) => <option key={s.id} value={s.id}>{s.name} ({s.username})</option>)}
+          </select>
+        </div>
+        <div>
+          <button disabled={addDisabled} onClick={this.handleAddClicked}>Add</button>
+        </div>
+      </>;
     }
 
     return 'If a student already has an account, ask the student to enter the Class Word above'

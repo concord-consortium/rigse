@@ -2,8 +2,8 @@ import React from 'react'
 import { arrayMove } from '@dnd-kit/sortable'
 import SortableBookmarks from './sortable-bookmarks'
 
-export class EditBookmarks extends React.Component {
-  constructor (props) {
+export class EditBookmarks extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       bookmarks: this.sortBookmarks(props.bookmarks)
@@ -16,13 +16,13 @@ export class EditBookmarks extends React.Component {
     this.handleSortEnd = this.handleSortEnd.bind(this)
   }
 
-  sortBookmarks (bookmarks) {
-    bookmarks.sort((a, b) => a.position - b.position)
+  sortBookmarks (bookmarks: any) {
+    bookmarks.sort((a: any, b: any) => a.position - b.position)
     return bookmarks
   }
 
   handleCreate () {
-    this.apiCall('create', { onSuccess: (bookmark) => {
+    this.apiCall('create', { onSuccess: (bookmark: any) => {
       const { bookmarks } = this.state
       bookmark.editing = true
       bookmarks.push(bookmark)
@@ -32,11 +32,11 @@ export class EditBookmarks extends React.Component {
       .catch(err => this.showError(err, 'Unable to create link!'))
   }
 
-  handleUpdate (bookmark, fields) {
+  handleUpdate (bookmark: any, fields: any) {
     const { name, url } = fields
     const { name: oldName, url: oldUrl } = bookmark
 
-    const update = (newName, newUrl) => {
+    const update = (newName: any, newUrl: any) => {
       bookmark.name = newName
       bookmark.url = newUrl
       this.setState({ bookmarks: this.state.bookmarks })
@@ -51,7 +51,7 @@ export class EditBookmarks extends React.Component {
       })
   }
 
-  handleDelete (bookmark) {
+  handleDelete (bookmark: any) {
     if (window.confirm(`Are you sure you want to delete this link?\n\n${bookmark.name} -> ${bookmark.url}`)) {
       const { bookmarks } = this.state
       const index = bookmarks.indexOf(bookmark)
@@ -68,7 +68,7 @@ export class EditBookmarks extends React.Component {
     }
   }
 
-  handleVisibilityToggle (bookmark) {
+  handleVisibilityToggle (bookmark: any) {
     const toggle = () => {
       bookmark.is_visible = !bookmark.is_visible
       this.setState({ bookmarks: this.state.bookmarks })
@@ -83,12 +83,15 @@ export class EditBookmarks extends React.Component {
       })
   }
 
-  handleSortEnd ({ oldIndex, newIndex }) {
+  handleSortEnd ({
+    oldIndex,
+    newIndex
+  }: any) {
     let { bookmarks } = this.state
     bookmarks = arrayMove(bookmarks, oldIndex, newIndex)
     this.setState({ bookmarks })
 
-    const ids = bookmarks.map(bookmark => bookmark.id)
+    const ids = bookmarks.map((bookmark: any) => bookmark.id)
     this.apiCall('sort', { data: { ids } })
       .catch(err => {
         this.setState({ bookmarks: arrayMove(bookmarks, newIndex, oldIndex) })
@@ -96,7 +99,7 @@ export class EditBookmarks extends React.Component {
       })
   }
 
-  showError (err, message) {
+  showError (err: any, message: any) {
     if (err.message) {
       window.alert(`${message}\n${err.message}`)
     } else {
@@ -104,13 +107,14 @@ export class EditBookmarks extends React.Component {
     }
   }
 
-  apiCall (action, options) {
+  apiCall (action: any, options: any) {
     const basePath = '/api/v1/bookmarks'
     const { onSuccess } = options
     let { bookmark, data } = options
 
     bookmark = bookmark || { id: 0 }
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const { url, type } = {
       create: { url: basePath, type: 'POST' },
       update: { url: `${basePath}/${bookmark.id}`, type: 'PUT' },

@@ -1,7 +1,7 @@
 import React from 'react'
 import css from './style.scss'
 
-class ClassRow extends React.Component {
+class ClassRow extends React.Component<any, any> {
   render () {
     const { clazz } = this.props
 
@@ -12,7 +12,7 @@ class ClassRow extends React.Component {
       <div className={css.manageClassRow}>
         <span className={css.iconCell}><span className={`${css.sortIcon} icon-sort`} /></span>
         <span className={css.manageClassName}>
-          {clazz.is_archived ? <strike>{clazz.name}</strike> : clazz.name}
+          {clazz.is_archived ? <del>{clazz.name}</del> : clazz.name}
         </span>
         <span className={css.manageClassButtons}>
           <button className={'textButton'} onClick={handleActiveToggle}>{clazz.is_archived ? 'Unarchive' : 'Archive'}</button>

@@ -9,9 +9,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-serve",
     "start:prod": "cross-env NODE_ENV=production webpack-serve",
-    "lint": "standard \"src/**/*.js\"",
-    "lint:fix": "standard --fix \"src/**/*.js\"",
-    "build": "npm run lint && npm run build-library && npm run copy-files",
+    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "build": "npm run build-library && npm run copy-files",
     "dev:build": "npm run dev:build-library && npm run copy-files",
     "build-library": "cross-env NODE_ENV=production webpack",
     "dev:build-library": "cross-env NODE_ENV=development webpack",

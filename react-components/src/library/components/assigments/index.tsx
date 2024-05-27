@@ -6,27 +6,27 @@ import OfferingsTable from './offerings-table'
 import { arrayMove } from '@dnd-kit/sortable'
 import { appendOfferingApiQueryParams } from '../../url-params'
 
-const addQueryParam = (url, param, value) => {
+const addQueryParam = (url: any, param: any, value: any) => {
   const urlObj = new URL(url)
   urlObj.searchParams.append(param, value)
   return urlObj.toString()
 }
 
-const teachersMapping = data => {
-  return data.map(teacher => `${teacher.first_name} ${teacher.last_name}`).join(', ')
+const teachersMapping = (data: any) => {
+  return data.map((teacher: any) => `${teacher.first_name} ${teacher.last_name}`).join(', ');
 }
 
-const offeringsListMapping = data => {
-  return data.map(offering => ({
+const offeringsListMapping = (data: any) => {
+  return data.map((offering: any) => ({
     id: offering.id,
     name: offering.name,
     apiUrl: offering.url,
     locked: offering.locked,
     active: offering.active
-  }))
+  }));
 }
 
-const externalReportMapping = (data, researcher) => {
+const externalReportMapping = (data: any, researcher: any) => {
   if (!data) {
     return null
   }
@@ -37,14 +37,14 @@ const externalReportMapping = (data, researcher) => {
   }
 }
 
-const externalReportsArrayMapping = (data, researcher) => {
+const externalReportsArrayMapping = (data: any, researcher: any) => {
   if (!data) {
     return []
   }
-  return (researcher ? data.filter(r => r.supports_researchers) : data).map(r => externalReportMapping(r, researcher))
+  return (researcher ? data.filter((r: any) => r.supports_researchers) : data).map((r: any) => externalReportMapping(r, researcher));
 }
 
-const classMapping = (data, researcher) => {
+const classMapping = (data: any, researcher: any) => {
   return data && {
     id: data.id,
     name: data.name,
@@ -57,7 +57,7 @@ const classMapping = (data, researcher) => {
   }
 }
 
-const offeringDetailsMapping = (data, researcher) => {
+const offeringDetailsMapping = (data: any, researcher: any) => {
   return {
     id: data.id,
     activityName: data.activity,
@@ -66,16 +66,17 @@ const offeringDetailsMapping = (data, researcher) => {
     hasTeacherEdition: data.has_teacher_edition,
     reportUrl: data.report_url,
     externalReports: externalReportsArrayMapping(data.external_reports, researcher),
-    reportableActivities: data.reportable_activities && data.reportable_activities.map(a => reportableActivityMapping(a)),
-    students: data.students.map(s => studentMapping(s, researcher)).sort(sortByName)
-  }
+    reportableActivities: data.reportable_activities && data.reportable_activities.map((a: any) => reportableActivityMapping(a)),
+    students: data.students.map((s: any) => studentMapping(s, researcher)).sort(sortByName)
+  };
 }
 
-export default class Assignments extends React.Component {
-  constructor (props) {
+export default class Assignments extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       loading: !props.initialClassData,
+      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       clazz: classMapping(props.initialClassData),
       // List of offering metadata.
       offerings: props.initialClassData ? offeringsListMapping(props.initialClassData.offerings) : [],
@@ -102,6 +103,7 @@ export default class Assignments extends React.Component {
       success: data => {
         this.setState({
           loading: false,
+          // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
           clazz: classMapping(data),
           offerings: offeringsListMapping(data.offerings)
         })
@@ -112,7 +114,10 @@ export default class Assignments extends React.Component {
     })
   }
 
-  onOfferingsReorder ({ oldIndex, newIndex }) {
+  onOfferingsReorder ({
+    oldIndex,
+    newIndex
+  }: any) {
     if (oldIndex === newIndex) {
       return
     }
@@ -132,7 +137,7 @@ export default class Assignments extends React.Component {
     })
   }
 
-  onOfferingUpdate (offering, prop, value) {
+  onOfferingUpdate (offering: any, prop: any, value: any) {
     const { offerings } = this.state
     const newOffering = Object.assign({}, offering, { [prop]: value })
     const newOfferings = offerings.slice()
@@ -150,7 +155,7 @@ export default class Assignments extends React.Component {
     })
   }
 
-  requestOfferingDetails (offering) {
+  requestOfferingDetails (offering: any) {
     const { researcher } = this.props
 
     jQuery.ajax({
@@ -196,6 +201,7 @@ export default class Assignments extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 Assignments.defaultProps = {
   // classDataUrl is pretty much required. It can be set to any default value, as it depends on the current class.
   classDataUrl: null,

@@ -12,7 +12,7 @@ const ResourceProjects = Component({
       return null
     }
 
-    const projectsList = projects.map(function (project, index) {
+    const projectsList = projects.map(function (project: any, index: any) {
       return (
         <span key={project.landing_page_url}>
           <strong>
@@ -24,8 +24,10 @@ const ResourceProjects = Component({
     })
 
     return (
+      // @ts-expect-error TS(2322): Type '{ children: Element[]; class: any; }' is not... Remove this comment to see the full error message
       <div class={css.resourceMetadataGroup}>
         <h2>Learn More</h2>
+        // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
         <p>This resource is part of the Concord Consortium&apos;s {projectsList} {pluralize(numProjects, ' project')}.</p>
       </div>
     )

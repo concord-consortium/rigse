@@ -20,7 +20,7 @@ const MaterialsCollection = Component({
   },
 
   UNSAFE_componentWillMount: function () {
-    loadMaterialsCollection(this.props.collection, function (data) {
+    loadMaterialsCollection(this.props.collection, function (data: any) {
       let materials = data.materials
       if (this.props.randomize) {
         materials = shuffleArray(materials)
@@ -29,7 +29,7 @@ const MaterialsCollection = Component({
         // props.featured is the ID of the material we
         // wish to insert at the start of the list
         let featuredID = this.props.featured
-        let sortFeatured = function (a, b) {
+        let sortFeatured = function (a: any, b: any) {
           if (a.id === featuredID) return -1
           if (b.id === featuredID) return 1
           return 0
@@ -64,12 +64,12 @@ const MaterialsCollection = Component({
 
     return (
       <div className={'portal-pages-finder-materials-collection'}>
-        {this.state.materials.map(function (material, i) {
+        {this.state.materials.map(function (material: any, i: any) {
           portalObjectHelpers.processResource(material)
           return stemFinderResult({ key: i, resource: material, showTeacherResourcesButton: showTeacherResourcesButton })
         })}
       </div>
-    )
+    );
   }
 })
 

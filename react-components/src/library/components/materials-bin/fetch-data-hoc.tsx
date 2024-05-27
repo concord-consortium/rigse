@@ -12,10 +12,10 @@ import createReactClass from 'create-react-class'
 //  - .requestParams property (hash), argument of jQuery.ajax
 //  - .processData() (method), it can process raw AJAX response before state is updated
 
-export default function MBFetchDataHOC (WrappedComponent, optionsFn) {
+export default function MBFetchDataHOC (WrappedComponent: any, optionsFn: any) {
   return createReactClass({
     getInitialState () {
-      const state = {}
+      const state: any = {}
       const { dataStateKey } = optionsFn()
       state[dataStateKey] = null
       return state
@@ -33,7 +33,7 @@ export default function MBFetchDataHOC (WrappedComponent, optionsFn) {
       this.mounted = false
     },
 
-    UNSAFE_componentWillReceiveProps (nextProps) {
+    UNSAFE_componentWillReceiveProps (nextProps: any) {
       // Download data only if component is going to be visibile.
       if (nextProps.visible) {
         this.fetchData()
@@ -54,7 +54,7 @@ export default function MBFetchDataHOC (WrappedComponent, optionsFn) {
         dataType: 'json',
         success: data => {
           if (this.mounted) {
-            const newState = {}
+            const newState: any = {}
             // Use processData method if defined.
             newState[dataStateKey] = (processData != null) ? processData.call(this, data) : data
             this.setState(newState)
@@ -63,7 +63,7 @@ export default function MBFetchDataHOC (WrappedComponent, optionsFn) {
       })
     },
 
-    archive (materialId, archiveUrl) {
+    archive (materialId: any, archiveUrl: any) {
       if (!this.state.collectionsData) {
         return
       }
@@ -71,17 +71,18 @@ export default function MBFetchDataHOC (WrappedComponent, optionsFn) {
       return jQuery.ajax({
         url: archiveUrl,
         success: data => {
-          const newState = this.state.collectionsData.map(function (d) {
+          const newState = this.state.collectionsData.map(function (d: any) {
+            // @ts-expect-error TS(2339): Property 'clone' does not exist on type 'ObjectCon... Remove this comment to see the full error message
             const copy = Object.clone(d)
-            copy.materials = d.materials.filter(m => m.id !== materialId)
+            copy.materials = d.materials.filter((m: any) => m.id !== materialId)
             return copy
           })
           return this.setState({ collectionsData: newState })
         }
-      })
+      });
     },
 
-    archiveSingle (materialId, archiveUrl) {
+    archiveSingle (materialId: any, archiveUrl: any) {
       if (!this.state.materials) {
         return
       }
@@ -89,15 +90,15 @@ export default function MBFetchDataHOC (WrappedComponent, optionsFn) {
       return jQuery.ajax({
         url: archiveUrl,
         success: data => {
-          const newState = this.state.materials.filter(m => m.id !== materialId)
+          const newState = this.state.materials.filter((m: any) => m.id !== materialId)
           return this.setState({ materials: newState })
         }
-      })
+      });
     },
 
     render: function () {
       // Use JSX spread syntax to pass all props and state down automatically.
       return <WrappedComponent {...this.props} {...this.state} archive={this.archive} archiveSingle={this.archiveSingle} />
     }
-  })
+  });
 }

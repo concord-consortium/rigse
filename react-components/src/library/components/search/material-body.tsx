@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class SMaterialBody extends React.Component {
+export default class SMaterialBody extends React.Component<any, any> {
   renderMaterialUsage () {
     const classCount = this.props.material.class_count
     if (classCount != null) {

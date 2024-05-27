@@ -3,7 +3,14 @@ import OfferingRow from './offering-row'
 import { SortableContainer, SortableItem } from '../shared/sortable-helpers'
 import css from './style.scss'
 
-const Offerings = ({ readOnly, offerings, offeringDetails, onOfferingUpdate, requestOfferingDetails, clazz }) => {
+const Offerings = ({
+  readOnly,
+  offerings,
+  offeringDetails,
+  onOfferingUpdate,
+  requestOfferingDetails,
+  clazz
+}: any) => {
   return (
     <div className={`${css.offeringsTable} ${readOnly ? css.readOnly : ''}`}>
       <div className={css.headers}>
@@ -15,7 +22,7 @@ const Offerings = ({ readOnly, offerings, offeringDetails, onOfferingUpdate, req
         <span className={css.detailsCell} />
       </div>
       {
-        offerings.map((offering, idx) =>
+        offerings.map((offering: any, idx: any) =>
           <SortableItem key={offering.id} id={offering.id} className={css.sortableItem} disabled={readOnly}>
             <OfferingRow
               index={idx}
@@ -29,18 +36,18 @@ const Offerings = ({ readOnly, offerings, offeringDetails, onOfferingUpdate, req
         )
       }
     </div>
-  )
+  );
 }
 
-const OfferingsTable = (props) => {
+const OfferingsTable = (props: any) => {
   const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, requestOfferingDetails, clazz, readOnly } = props
 
   if (offerings.length === 0) {
     return <div className={css.noMaterials}>No materials have been assigned to this class.</div>
   }
 
-  const renderDragPreview = itemId => {
-    const offering = offerings.find(offering => offering.id === itemId)
+  const renderDragPreview = (itemId: any) => {
+    const offering = offerings.find((offering: any) => offering.id === itemId)
     return (
       <OfferingRow
         offering={offering}
@@ -54,7 +61,7 @@ const OfferingsTable = (props) => {
 
   return (
     <SortableContainer
-      items={offerings.map(offering => offering.id)}
+      items={offerings.map((offering: any) => offering.id)}
       renderDragPreview={renderDragPreview}
       onReorder={onOfferingsReorder}
     >
@@ -67,7 +74,7 @@ const OfferingsTable = (props) => {
         requestOfferingDetails={requestOfferingDetails}
       />
     </SortableContainer>
-  )
+  );
 }
 
 export default OfferingsTable

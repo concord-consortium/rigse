@@ -23,7 +23,7 @@ const CollectionLightbox = Component({
     jQuery.ajax({
       url: '/api/v1/projects/' + collectionId,
       dataType: 'json',
-      success: function (data) {
+      success: function (data: any) {
         this.setState({
           collectionName: data.name,
           isLoaded: true,
@@ -31,8 +31,8 @@ const CollectionLightbox = Component({
         })
         jQuery('html, body').css('overflow', 'hidden')
         jQuery('.home-page-content').addClass('blurred')
-        document.querySelector(`.${css.portalPagesCollectionLightboxBackground}`).classList.add(css.visible)
-        document.querySelector(`.${css.portalPagesCollectionLightboxContainer}`).classList.add(css.visible)
+        document.querySelector(`.${css.portalPagesCollectionLightboxBackground}`)?.classList.add(css.visible)
+        document.querySelector(`.${css.portalPagesCollectionLightboxContainer}`)?.classList.add(css.visible)
       }.bind(this)
     })
   },
@@ -42,24 +42,24 @@ const CollectionLightbox = Component({
     jQuery('.home-page-content').removeClass('blurred')
   },
 
-  handleClose: function (e) {
+  handleClose: function (e: any) {
     if (e.target.className === css.portalPagesCollectionLightboxBackgroundClose ||
         e.target.className === css.portalPagesCollectionLightbox) {
       this.props.closeLightbox(e)
     }
   },
 
-  handleIframeOnload: function (e) {
+  handleIframeOnload: function (e: any) {
     this.handleIframeResize(e)
     this.handleIframeSourceChange(e)
   },
 
-  handleIframeResize: function (e) {
+  handleIframeResize: function (e: any) {
     const iframe = e.target
     iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px'
   },
 
-  handleIframeSourceChange: function (e) {
+  handleIframeSourceChange: function (e: any) {
     const { landingPageSlug } = this.state
     const iframe = e.target
     const iframePath = iframe.contentWindow.location.pathname.replace('/', '')
@@ -74,7 +74,7 @@ const CollectionLightbox = Component({
     }
   },
 
-  handleSwitchSource: function (e) {
+  handleSwitchSource: function (e: any) {
     const { handleNav } = this.state
     const collectionId = e.target.value
     handleNav(e, collectionId)
@@ -85,8 +85,11 @@ const CollectionLightbox = Component({
     this.setState({
       returnPath: null
     })
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.getElementById('collectionIframe').style.visibility = 'hidden'
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.getElementById('collectionIframeLoading').style.display = 'block'
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.getElementById('collectionIframe').src = '/' + returnPath
   },
 
@@ -113,7 +116,7 @@ const CollectionLightbox = Component({
               x
             </div>
             <div id='collectionLightboxModal' className={css.portalPagesCollectionLightboxModal}>
-              <LightboxNav collectionName={collectionName} collectionViews={collectionViews} handleSwitchSource={(e) => this.handleSwitchSource(e)} />
+              <LightboxNav collectionName={collectionName} collectionViews={collectionViews} handleSwitchSource={(e: any) => this.handleSwitchSource(e)} />
               {returnPath !== null && this.renderReturnButton()}
               <div className={css.portalPagesCollectionLightboxCollection}>
                 <div id='collectionIframeLoading' className={css.loading}>loading</div>
@@ -123,7 +126,7 @@ const CollectionLightbox = Component({
           </div>
         </div>
       </div>
-    )
+    );
   }
 })
 

@@ -16,7 +16,9 @@ const ResourceFinderLightbox = Component({
   componentDidMount: function () {
     jQuery('html, body').css('overflow', 'hidden')
     jQuery('.home-page-content').addClass('blurred')
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.querySelector(`.${css.portalPagesResourceFinderLightboxBackground}`).classList.add(css.visible)
+    // @ts-expect-error TS(2531): Object is possibly 'null'.
     document.querySelector(`.${css.portalPagesResourceFinderLightboxContainer}`).classList.add(css.visible)
   },
 
@@ -25,14 +27,14 @@ const ResourceFinderLightbox = Component({
     jQuery('.home-page-content').removeClass('blurred')
   },
 
-  handleClose: function (e) {
+  handleClose: function (e: any) {
     if (e.target.className === css.portalPagesResourceFinderLightboxBackgroundClose ||
         e.target.className === css.portalPagesResourceFinderLightbox) {
       this.props.closeLightbox(e)
     }
   },
 
-  handleSwitchSource: function (e) {
+  handleSwitchSource: function (e: any) {
     const { handleNav } = this.state
     const collectionId = e.target.value
     handleNav(e, collectionId)
@@ -49,13 +51,13 @@ const ResourceFinderLightbox = Component({
               x
             </div>
             <div id='finderLightboxModal' className={css.portalPagesResourceFinderLightboxModal}>
-              <LightboxNav collectionViews={collectionViews} handleSwitchSource={(e) => this.handleSwitchSource(e)} />
+              <LightboxNav collectionViews={collectionViews} handleSwitchSource={(e: any) => this.handleSwitchSource(e)} />
               <StemFinder hideFeatured />
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 })
 

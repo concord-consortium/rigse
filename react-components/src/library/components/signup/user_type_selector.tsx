@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default class UserTypeSelector extends React.Component {
-  constructor (props) {
+export default class UserTypeSelector extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       userType: null
@@ -10,10 +10,10 @@ export default class UserTypeSelector extends React.Component {
     this.handleLoginClick = this.handleLoginClick.bind(this)
   }
 
-  handleClick (event) {
+  handleClick (event: any) {
     const value = event.currentTarget.value
     console.log('INFO changing type', value)
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'User Registration',
       'label': 'Step 1 Completed - ' + value.charAt(0).toUpperCase() + value.slice(1)
     })
@@ -21,9 +21,9 @@ export default class UserTypeSelector extends React.Component {
     this.props.onUserTypeSelect(value)
   }
 
-  handleLoginClick (event) {
+  handleLoginClick (event: any) {
     event.preventDefault()
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'User Registration',
       'label': 'Step 1 Log in Link Clicked'
     })
@@ -32,7 +32,7 @@ export default class UserTypeSelector extends React.Component {
       oauthProviders: this.state.oauthProviders,
       afterSigninPath: this.props.afterSigninPath
     })
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Login',
       'label': 'Login form opened'
     })

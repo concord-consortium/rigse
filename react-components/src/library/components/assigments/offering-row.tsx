@@ -3,8 +3,10 @@ import OfferingDetails from './offering-details'
 
 import css from './style.scss'
 
-export default class OfferingRow extends React.Component {
-  constructor (props) {
+export default class OfferingRow extends React.Component<any, any> {
+  onActiveUpdate: any;
+  onLockedUpdate: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       detailsVisible: false
@@ -19,7 +21,7 @@ export default class OfferingRow extends React.Component {
     return detailsVisible ? '- HIDE DETAIL' : '+ SHOW DETAIL'
   }
 
-  onCheckboxUpdate (name, event) {
+  onCheckboxUpdate (name: any, event: any) {
     const { offering, onOfferingUpdate } = this.props
     if (onOfferingUpdate) {
       onOfferingUpdate(offering, name, event.target.checked)

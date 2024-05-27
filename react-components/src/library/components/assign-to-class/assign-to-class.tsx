@@ -5,14 +5,16 @@ import AssignModal from './assign-modal'
 
 import css from './style.scss'
 
-const openModal = (type, properties = {}, closeFunc) => {
+const openModal = (type: any, properties = {}, closeFunc: any) => {
   const modalContainerSelector = '#' + css.assignModal
   let modalContainer = jQuery(modalContainerSelector)
   if (modalContainer.length === 0) {
     modalContainer = jQuery('<div id=' + css.assignModal + '>').appendTo('body')
   }
 
+  // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
   if (properties.closeable == null) {
+    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable = true
   }
 
@@ -22,14 +24,16 @@ const openModal = (type, properties = {}, closeFunc) => {
     undefined,
     undefined,
     closeFunc,
+    // @ts-expect-error TS(2339): Property 'closeable' does not exist on type '{}'.
     properties.closeable)
 }
 
-export default function openAssignToClassModal (properties) {
+export default function openAssignToClassModal (properties: any) {
   const materialTypes = {
     ExternalActivity: 'external_activity',
     Interactive: 'interactive'
   }
+  // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
   const materialType = materialTypes[properties.material_type]
   properties.closeFunc = Modal.hideModal
   const data = {
@@ -37,7 +41,7 @@ export default function openAssignToClassModal (properties) {
     material_type: materialType,
     include_related: '0'
   }
-  jQuery.post(Portal.API_V1.MATERIAL_SHOW, data)
+    jQuery.post(Portal.API_V1.MATERIAL_SHOW, data)
     .done(response => {
       properties.resourceTitle = response.name
       properties.previewUrl = response.preview_url

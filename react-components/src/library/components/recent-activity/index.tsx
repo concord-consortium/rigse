@@ -3,7 +3,7 @@ import Offerings from './offerings'
 import { reportableActivityMapping, studentMapping } from '../common/offering-progress/helpers'
 import { appendOfferingApiQueryParams } from '../../url-params'
 
-const externalReportMapping = data => {
+const externalReportMapping = (data: any) => {
   if (!data) {
     return null
   }
@@ -14,16 +14,16 @@ const externalReportMapping = data => {
   }
 }
 
-const offeringMapping = data => {
+const offeringMapping = (data: any) => {
   const lastRunDates = data.students
     // Filter out offerings that have never been run.
-    .filter(s => s.last_run !== null)
-    .map(s => new Date(s.last_run))
+    .filter((s: any) => s.last_run !== null)
+    .map((s: any) => new Date(s.last_run))
   const notStartedStudentsCount = data.students
-    .filter(s => !s.started_activity)
+    .filter((s: any) => !s.started_activity)
     .length
   const startedStudentsCount = data.students
-    .filter(s => s.started_activity)
+    .filter((s: any) => s.started_activity)
     .length
   return {
     id: data.id,
@@ -37,29 +37,40 @@ const offeringMapping = data => {
     notStartedStudentsCount,
     startedStudentsCount,
     reportUrl: data.report_url,
-    externalReports: data.external_reports && data.external_reports.map(r => externalReportMapping(r)),
-    reportableActivities: data.reportable_activities && data.reportable_activities.map(a => reportableActivityMapping(a)),
-    students: data.students.map(s => studentMapping(s))
-  }
+    externalReports: data.external_reports && data.external_reports.map((r: any) => externalReportMapping(r)),
+    reportableActivities: data.reportable_activities && data.reportable_activities.map((a: any) => reportableActivityMapping(a)),
+    students: data.students.map((s: any) => studentMapping(s))
+  };
 }
 
-const processAPIData = data => {
+const processAPIData = (data: any) => {
   return data && data
-    .map(offering => offeringMapping(offering))
+    .map((offering: any) => offeringMapping(offering))
     // Show only offerings that has been started by at least one student.
-    .filter(offering => offering.lastRun !== null)
-    .sort((o1, o2) => o2.lastRun - o1.lastRun) // Sort by lastRun, DESC order
+    .filter((offering: any) => offering.lastRun !== null)
+    .sort((o1: any, o2: any) => o2.lastRun - o1.lastRun); // Sort by lastRun, DESC order
 }
 
 // Checks if the teacher has any classes.
-const anyClasses = data => data && data.length > 0
+const anyClasses = (data: any) => data && data.length > 0
 // Checks if there is any data available.
-const anyData = data => data && data.length > 0
+const anyData = (data: any) => data && data.length > 0
 // Checks if there are any students assigned to some offering.
-const anyStudents = data => data && data.map(o => o.students.length).filter(count => count > 0).length > 0
+const anyStudents = (data: any) => data && data.map((o: any) => o.students.length).filter((count: any) => count > 0).length > 0
 
-export default class RecentActivity extends React.Component {
-  constructor (props) {
+export default class RecentActivity extends React.Component<any, any> {
+  static defaultProps = {
+    // This path will return all the offerings for logged in user. Portal will probably explicitly limit scope
+    // of offerings by providing custom path with user_id param.
+    dataUrl: Portal.API_V1.OFFERING,
+    // If initialData is not provided, component will use API (dataUrl) to get it.
+    initialData: null,
+    // Set updateInterval to null to disable updates at all.
+    updateInterval: 300000 // ms
+  }
+
+  intervalId: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       loading: !props.initialData,
@@ -130,14 +141,4 @@ export default class RecentActivity extends React.Component {
       </>
     )
   }
-}
-
-RecentActivity.defaultProps = {
-  // This path will return all the offerings for logged in user. Portal will probably explicitly limit scope
-  // of offerings by providing custom path with user_id param.
-  dataUrl: Portal.API_V1.OFFERING,
-  // If initialData is not provided, component will use API (dataUrl) to get it.
-  initialData: null,
-  // Set updateInterval to null to disable updates at all.
-  updateInterval: 300000 // ms
 }

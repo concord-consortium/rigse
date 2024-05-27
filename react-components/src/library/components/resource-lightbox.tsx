@@ -71,7 +71,7 @@ var ResourceLightbox = Component({
       // from a collection page, the initialPath will be the collection page and
       // the parentPage will be the collection page, so then we can just update
       // the URL and close the lightbox.
-      if (this.state.parentPage !== '/' && this.state.parentPage !== PortalComponents.initialPath) {
+            if (this.state.parentPage !== '/' && this.state.parentPage !== PortalComponents.initialPath) {
         jQuery('.landing-container').css('opacity', 0)
         window.location.href = this.state.parentPage
       } else {
@@ -84,7 +84,7 @@ var ResourceLightbox = Component({
     } catch (e) { }
   },
 
-  replaceResource: function (resource) {
+  replaceResource: function (resource: any) {
     let params = ParseQueryString()
     let openAssign = params.openAssign
 
@@ -106,7 +106,7 @@ var ResourceLightbox = Component({
     })
   },
 
-  handlePreviewClick: function (e) {
+  handlePreviewClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Resource Preview Button',
@@ -114,7 +114,7 @@ var ResourceLightbox = Component({
     })
   },
 
-  handleTeacherEditionClick: function (e) {
+  handleTeacherEditionClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Resource Teacher Edition Button',
@@ -122,7 +122,7 @@ var ResourceLightbox = Component({
     })
   },
 
-  handleTeacherResourcesClick: function (e) {
+  handleTeacherResourcesClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Resource Teacher Resources Button',
@@ -130,7 +130,7 @@ var ResourceLightbox = Component({
     })
   },
 
-  handleAssignClick: function (e) {
+  handleAssignClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Assign to Class Button',
@@ -138,7 +138,7 @@ var ResourceLightbox = Component({
     })
   },
 
-  handleTeacherGuideClick: function (e) {
+  handleTeacherGuideClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Teacher Guide Link',
@@ -146,7 +146,7 @@ var ResourceLightbox = Component({
     })
   },
 
-  handleRubricDocClick: function (e) {
+  handleRubricDocClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Rubric Doc Link',
@@ -154,15 +154,15 @@ var ResourceLightbox = Component({
     })
   },
 
-  handleAddToCollectionClick: function (e) {
+  handleAddToCollectionClick: function (e: any) {
     const resource = this.state.resource
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Add to Collection Button',
       'resource': resource.name
     })
   },
 
-  handleClose: function (e) {
+  handleClose: function (e: any) {
     if (jQuery(e.target).is('.portal-pages-resource-lightbox') ||
       jQuery(e.target).is('.portal-pages-resource-lightbox-background-close')) {
       // only close lightbox if lightbox wrapper or X is clicked
@@ -179,11 +179,13 @@ var ResourceLightbox = Component({
     }
   },
 
-  handleSocialMediaShare: function (e) {
+  handleSocialMediaShare: function (e: any) {
     e.preventDefault()
     const width = 575
     const height = 400
+    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     const left = (jQuery(window).width() - width) / 2
+    // @ts-expect-error TS(2532): Object is possibly 'undefined'.
     const top = (jQuery(window).height() - height) / 2
     const url = e.target.href
     const opts = 'status=1' +
@@ -205,7 +207,7 @@ var ResourceLightbox = Component({
     }
     const activities = resource.activities
 
-    const includedActivities = activities.map(function (activity, index) {
+    const includedActivities = activities.map(function (activity: any, index: any) {
       return (
         <span>
           <em>
@@ -234,7 +236,7 @@ var ResourceLightbox = Component({
     }
 
     const allStatements = resource.standard_statements
-    let helpers = {}
+    let helpers: any = {}
     let unhelped = []
 
     helpers.NGSS = StandardsHelpers.getStandardsHelper('NGSS')
@@ -288,7 +290,7 @@ var ResourceLightbox = Component({
       return null
     }
 
-    const relatedResources = resource.related_materials.map(function (resource, i) {
+    const relatedResources = resource.related_materials.map(function (resource: any, i: any) {
       if (i < 2) {
         return RelatedResourceResult({ key: i, resource: resource, replaceResource: this.replaceResource })
       }
@@ -342,7 +344,7 @@ var ResourceLightbox = Component({
     const resource = this.state.resource
     const links = resource.links
 
-    const makeIcon = (type, link) => link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null
+    const makeIcon = (type: any, link: any) => link ? <a className={type} href={type === 'settings' ? link.url : link}>{type}</a> : null
     // let printIcon = makeIcon('print', links.print_url);
     let copyIcon = makeIcon('copy', links.external_copy)
     let settingsIcon = makeIcon('settings', links.edit)

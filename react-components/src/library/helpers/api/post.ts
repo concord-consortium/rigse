@@ -1,13 +1,13 @@
 import apiAlert from './alert'
 
-const apiPost = (url, options) => {
+const apiPost = (url: any, options: any) => {
   const { onSuccess, errorMessage } = options
   let { type, data, onError } = options
 
   type = type || 'POST'
   data = data || {}
 
-  onError = onError || ((err) => apiAlert(err, errorMessage))
+  onError = onError || ((err: any) => apiAlert(err, errorMessage))
 
   jQuery.ajax({
     url,

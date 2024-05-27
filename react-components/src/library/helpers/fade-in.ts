@@ -1,4 +1,4 @@
-var fadeIn = function (component) {
+var fadeIn = function (component: any) {
   var fadeInDuration = component.props.fadeIn || 0
   if (isNaN(fadeInDuration) || !fadeInDuration) {
     component.setState({ opacity: 1 })

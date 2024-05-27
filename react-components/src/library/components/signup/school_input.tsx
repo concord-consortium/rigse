@@ -4,10 +4,11 @@ import { withFormsy } from 'formsy-react'
 
 var TIMEOUT = 500
 
-const getSchools = (country, zipcode) => jQuery.get(Portal.API_V1.SCHOOLS + '?country_id=' + country + '&zipcode=' + zipcode)
+const getSchools = (country: any, zipcode: any) => jQuery.get(Portal.API_V1.SCHOOLS + '?country_id=' + country + '&zipcode=' + zipcode)
 
-class SchoolInput extends React.Component {
-  constructor (props) {
+class SchoolInput extends React.Component<any, any> {
+  timeoutID: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       isLoading: false,
@@ -22,7 +23,7 @@ class SchoolInput extends React.Component {
     this.updateOptions()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps: any) {
     const { country, zipcode } = this.props
     if (prevProps.country !== country || prevProps.zipcode !== zipcode) {
       this.props.setValue('')
@@ -34,13 +35,16 @@ class SchoolInput extends React.Component {
     return <div className='new-school-link' onClick={this.props.onAddNewSchool}>Add a new school</div>
   }
 
-  changeValue (option) {
+  changeValue (option: any) {
     this.props.setValue(option)
   }
 
-  setOptions (country, zipcode) {
+  setOptions (country: any, zipcode: any) {
     getSchools(country, zipcode).done((data) => {
-      const options = data.map(school => ({ label: school.name, value: school.id }))
+      const options = data.map((school: any) => ({
+        label: school.name,
+        value: school.id
+      }))
       options.push({
         label: this.newSchoolLink(),
         disabled: true
@@ -75,7 +79,7 @@ class SchoolInput extends React.Component {
       className += ' valid'
     }
 
-    const noResultsText = <div><div>No schools found</div>{this.newSchoolLink()}</div>
+    const noResultsText: any = <div><div>No schools found</div>{this.newSchoolLink()}</div>
 
     return (
       <div className={className}>
@@ -83,15 +87,14 @@ class SchoolInput extends React.Component {
           placeholder={placeholder}
           options={options}
           isLoading={isLoading}
-          disabled={disabled}
+          isDisabled={disabled}
           value={this.props.value || ''}
           onChange={this.changeValue}
-          clearable={false}
-          noResultsText={noResultsText}
+          noOptionsMessage={noResultsText}
         >
-          <div className='input-error'>
+          {/* <div className='input-error'>
             {this.props.errorMessage}
-          </div>
+          </div> */}
         </Select>
       </div>
     )

@@ -3,8 +3,15 @@ import formatDate from '../../helpers/format-date'
 
 import css from './style.scss'
 
-export default class ShowSiteNotices extends React.Component {
-  constructor (props) {
+export default class ShowSiteNotices extends React.Component<any, any> {
+  static defaultProps = {
+    // This path will return all site notices for logged in user.
+    dataUrl: Portal.API_V1.GET_NOTICES_FOR_USER,
+    // If initialData is not provided, component will use API (dataUrl) to get it.
+    initialData: null
+  }
+
+  constructor (props: any) {
     super(props)
     this.state = {
       notices: [],
@@ -43,13 +50,14 @@ export default class ShowSiteNotices extends React.Component {
     })
   }
 
-  handleDelete (notice) {
+  handleDelete (notice: any) {
     const dismissUrl = '/api/v1/site_notices/' + notice.id + '/dismiss_notice'
     const authToken = jQuery('meta[name="csrf-token"]').attr('content')
     if (window.confirm('Are you sure you want to dismiss this notice?')) {
       jQuery.ajax({
         url: dismissUrl,
         type: 'post',
+        // @ts-expect-error TS(2345): Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
         data: 'authenticity_token=' + encodeURIComponent(authToken),
         success: (data) => {
           this.getPortalData()
@@ -87,7 +95,7 @@ export default class ShowSiteNotices extends React.Component {
     )
   }
 
-  renderTable (notices) {
+  renderTable (notices: any) {
     return (
       <table className={css.siteNoticesList} id={css.all_notice_to_render}>
         <tbody>
@@ -97,7 +105,7 @@ export default class ShowSiteNotices extends React.Component {
     )
   }
 
-  renderRow (notice) {
+  renderRow (notice: any) {
     let noticeRowId = 'admin__site_notice_' + notice.id
     return (
       <tr key={notice.id} id={noticeRowId}>
@@ -139,11 +147,4 @@ export default class ShowSiteNotices extends React.Component {
       </div>
     )
   }
-}
-
-ShowSiteNotices.defaultProps = {
-  // This path will return all site notices for logged in user.
-  dataUrl: Portal.API_V1.GET_NOTICES_FOR_USER,
-  // If initialData is not provided, component will use API (dataUrl) to get it.
-  initialData: null
 }

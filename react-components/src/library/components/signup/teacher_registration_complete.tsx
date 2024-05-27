@@ -1,8 +1,8 @@
 import React from 'react'
 
-export default class TeacherRegistrationComplete extends React.Component {
+export default class TeacherRegistrationComplete extends React.Component<any, any> {
   componentDidMount () {
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'User Registration',
       'label': 'Final Step Completed - Teacher'
     })

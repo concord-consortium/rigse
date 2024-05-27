@@ -6,7 +6,7 @@ import createFactory from '../../../../src/library/helpers/create-factory';
 
 const fetchedData = ['foo', 'bar', 'baz'];
 
-class Wrapped extends React.Component {
+class Wrapped extends React.Component<any, any> {
   constructor(props) {
     super(props);
     this.state = {

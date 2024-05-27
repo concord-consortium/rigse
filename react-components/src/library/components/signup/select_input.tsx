@@ -2,8 +2,9 @@ import React from 'react'
 import Select from 'react-select'
 import { withFormsy } from 'formsy-react'
 
-class SelectInput extends React.Component {
-  constructor (props) {
+class SelectInput extends React.Component<any, any> {
+  options: any;
+  constructor (props: any) {
     super(props)
     this.changeValue = this.changeValue.bind(this)
     this.state = {
@@ -13,7 +14,7 @@ class SelectInput extends React.Component {
   }
 
   componentDidMount () {
-    this.props.loadOptions((options) => {
+    this.props.loadOptions((options: any) => {
       this.setState({
         loading: false,
         options: options
@@ -21,7 +22,7 @@ class SelectInput extends React.Component {
     })
   }
 
-  changeValue (option) {
+  changeValue (option: any) {
     this.props.setValue(option)
     this.props.onChange(option)
   }
@@ -38,6 +39,7 @@ class SelectInput extends React.Component {
       <div className={className}>
         <Select
           placeholder={placeholder}
+          // @ts-expect-error TS(2322): Type '{ placeholder: any; loading: any; options: a... Remove this comment to see the full error message
           loading={loading}
           options={options}
           isSearchable

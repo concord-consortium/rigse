@@ -1,4 +1,4 @@
-const filters = {
+const filters: any = {
   subjectAreas: [
     { key: 'chemistry', title: 'Chemistry', searchAreas: ['Chemistry'] },
     { key: 'earth-space', title: 'Earth & Space', searchAreas: ['Earth and Space Science'] },

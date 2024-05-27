@@ -3,8 +3,8 @@ import ReactModal from 'react-modal'
 
 import css from './style.scss'
 
-export default class AssignModal extends React.Component {
-  constructor (props) {
+export default class AssignModal extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
 
     this.state = {
@@ -27,12 +27,12 @@ export default class AssignModal extends React.Component {
   }
 
   componentDidMount () {
-    if (!Portal.currentUser.isAnonymous) {
+        if (!Portal.currentUser.isAnonymous) {
       const data = {
         material_id: this.props.material_id,
         material_type: this.props.material_type
       }
-      jQuery.post(Portal.API_V1.MATERIAL_UNASSIGNED_CLASSES, data).done(response => {
+            jQuery.post(Portal.API_V1.MATERIAL_UNASSIGNED_CLASSES, data).done(response => {
         this.setState({ classesLoaded: true, classes: response })
       }).fail(function (err) {
         if (err && err.responseText) {
@@ -43,11 +43,12 @@ export default class AssignModal extends React.Component {
     }
   }
 
-  copyToClipboard (e) {
+  copyToClipboard (e: any) {
     e.preventDefault()
     const textItemId = '#' + css.shareUrl
     const temp = jQuery('<input>')
     jQuery('body').append(temp)
+    // @ts-expect-error TS(2345): Argument of type 'string | number | string[] | und... Remove this comment to see the full error message
     temp.val(jQuery(textItemId).val()).select()
     document.execCommand('copy')
     temp.remove()
@@ -73,7 +74,7 @@ export default class AssignModal extends React.Component {
           material_type: this.props.material_type,
           authenticity_token: authToken
         }
-        jQuery.post(Portal.API_V1.ASSIGN_MATERIAL_TO_CLASS, params)
+                jQuery.post(Portal.API_V1.ASSIGN_MATERIAL_TO_CLASS, params)
           .done(response => {
             this.setState({ resourceAssigned: true, showModal: true })
           })
@@ -109,13 +110,13 @@ export default class AssignModal extends React.Component {
             <div className={css.classListContainer + ' webkit_scrollbars'}>
               <ul>
                 {
-                  assignedClasses.map(ac => <li key={ac.id}>{ac.name}</li>)
+                  assignedClasses.map((ac: any) => <li key={ac.id}>{ac.name}</li>)
                 }
               </ul>
             </div>
           </div>
         </div>
-      )
+      );
     }
   }
 
@@ -127,16 +128,16 @@ export default class AssignModal extends React.Component {
           <div className={css.classListContainer + ' webkit_scrollbars'}>
             <ul>
               {
-                unassignedClasses.map(uac => <li key={uac.id}><input className='unassigned_activity_class' id={'clazz_' + uac.id} name='clazz_id[]' type='checkbox' value={uac.id} onChange={this.updateClassList} /><label className='clazz_name' htmlFor={'clazz_' + uac.id}>{ uac.name }</label></li>)
+                unassignedClasses.map((uac: any) => <li key={uac.id}><input className='unassigned_activity_class' id={'clazz_' + uac.id} name='clazz_id[]' type='checkbox' value={uac.id} onChange={this.updateClassList} /><label className='clazz_name' htmlFor={'clazz_' + uac.id}>{ uac.name }</label></li>)
               }
             </ul>
           </div>
         </form>
-      )
+      );
     }
   }
 
-  updateClassList (e) {
+  updateClassList (e: any) {
     let assignedClassIds = this.state.assignedClassIds
     let classId = e.target.value
     if (e.target.checked) {
@@ -148,21 +149,22 @@ export default class AssignModal extends React.Component {
     this.setState({ assignedClassIds: assignedClassIds })
   }
 
-  handleRegisterClick (e) {
+  handleRegisterClick (e: any) {
     e.preventDefault()
-    PortalComponents.renderSignupModal({
-      oauthProviders: Portal.oauthProviders,
+        PortalComponents.renderSignupModal({
+            oauthProviders: Portal.oauthProviders,
       closeable: true
     })
   }
 
-  handleLoginClick (e) {
+  handleLoginClick (e: any) {
     e.preventDefault()
+    // @ts-expect-error TS(2345): Argument of type 'Location' is not assignable to p... Remove this comment to see the full error message
     const currentUrl = new URL(window.location)
     currentUrl.searchParams.set('openAssign', 'true')
     const assignPath = currentUrl.pathname + currentUrl.search
-    PortalComponents.renderLoginModal({
-      oauthProviders: Portal.oauthProviders,
+        PortalComponents.renderLoginModal({
+            oauthProviders: Portal.oauthProviders,
       closeable: true,
       afterSigninPath: assignPath
     })
@@ -247,7 +249,7 @@ export default class AssignModal extends React.Component {
       <div className={css.assignModalContent}>
         <div className={css.assignShareCol} id={css.assignCol}>
           <h2>Assign<span>…</span></h2>
-          {Portal.currentUser.isAnonymous ? this.contentForAnonymous() : this.contentForTeacher()}
+                    {Portal.currentUser.isAnonymous ? this.contentForAnonymous() : this.contentForTeacher()}
         </div>
         <div className={css.assignShareCol} id={css.shareCol}>
           <h2><span>or</span> Share</h2>

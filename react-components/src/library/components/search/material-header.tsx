@@ -2,7 +2,7 @@ import React from 'react'
 
 import { SGenericLink } from './material-links'
 
-export default class SMaterialHeader extends React.Component {
+export default class SMaterialHeader extends React.Component<any, any> {
   renderMaterialProperties () {
     const reqDownload = this.props.material.material_properties.indexOf('Requires download') !== -1
     const className = reqDownload ? 'RequiresDownload' : 'RunsInBrowser'

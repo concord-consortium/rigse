@@ -4,7 +4,7 @@ import Modal from './modal'
 
 import css from './modal-dialog.scss'
 
-export default class ModalDialog extends React.Component {
+export default class ModalDialog extends React.Component<any, any> {
   render () {
     const { title, children } = this.props
 

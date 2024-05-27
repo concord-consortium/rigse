@@ -44,7 +44,7 @@ const StemFinder = Component({
     }
 
     let subjectAreasSelected = []
-    let subjectAreasSelectedMap = {}
+    let subjectAreasSelectedMap: any = {}
     let i
 
     if (subjectAreaKey) {
@@ -59,7 +59,7 @@ const StemFinder = Component({
     }
 
     let gradeLevelsSelected = []
-    let gradeLevelsSelectedMap = {}
+    let gradeLevelsSelectedMap: any = {}
 
     if (gradeLevelKey) {
       let gradeLevels = filters.gradeLevels
@@ -117,13 +117,14 @@ const StemFinder = Component({
     let parts = path.split('/')
 
     if (parts.length >= 4 && parts[1] === 'resources') {
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       ret[parts[2]] = parts[3]
     }
 
     return ret
   },
 
-  mapSubjectArea: function (subjectArea) {
+  mapSubjectArea: function (subjectArea: any) {
     switch (subjectArea) {
       case 'biology':
       case 'life-science':
@@ -140,7 +141,7 @@ const StemFinder = Component({
     }.bind(this))
   },
 
-  handlePageScroll: function (event) {
+  handlePageScroll: function (event: any) {
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     if (
       scrollTop > window.innerHeight / 2 &&
@@ -152,7 +153,7 @@ const StemFinder = Component({
     }
   },
 
-  handleLightboxScroll: function (event) {
+  handleLightboxScroll: function (event: any) {
     const scrollTop = event.srcElement.scrollTop
     if (
       scrollTop > window.innerHeight / 3 &&
@@ -166,6 +167,7 @@ const StemFinder = Component({
 
   componentDidMount: function () {
     if (document.getElementById('pprfl')) {
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       document.getElementById('pprfl').addEventListener('scroll', this.handleLightboxScroll)
     } else {
       document.addEventListener('scroll', this.handlePageScroll)
@@ -178,13 +180,14 @@ const StemFinder = Component({
 
   componentWillUnmount: function () {
     if (document.getElementById('pprfl')) {
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       document.getElementById('pprfl').removeEventListener('scroll', this.handleLightboxScroll)
     } else {
       document.removeEventListener('scroll', this.handlePageScroll)
     }
   },
 
-  getQueryParams: function (incremental, keyword) {
+  getQueryParams: function (incremental: any, keyword: any) {
     const searchPage = incremental ? this.state.searchPage + 1 : 1
     let query = keyword !== undefined ? ['search_term=', encodeURIComponent(keyword)] : []
     query = query.concat([
@@ -205,17 +208,17 @@ const StemFinder = Component({
     ])
 
     // subject areas
-    this.state.subjectAreasSelected.forEach(function (subjectArea) {
-      subjectArea.searchAreas.forEach(function (searchArea) {
+    this.state.subjectAreasSelected.forEach(function (subjectArea: any) {
+      subjectArea.searchAreas.forEach(function (searchArea: any) {
         query.push('&subject_areas[]=')
         query.push(encodeURIComponent(searchArea))
       })
     })
 
     // grade
-    this.state.gradeLevelsSelected.forEach(function (gradeFilter) {
+    this.state.gradeLevelsSelected.forEach(function (gradeFilter: any) {
       if (gradeFilter.searchGroups) {
-        gradeFilter.searchGroups.forEach(function (searchGroup) {
+        gradeFilter.searchGroups.forEach(function (searchGroup: any) {
           query.push('&grade_level_groups[]=')
           query.push(encodeURIComponent(searchGroup))
         })
@@ -231,7 +234,7 @@ const StemFinder = Component({
     return query.join('')
   },
 
-  search: function (incremental) {
+  search: function (incremental: any) {
     let displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT
 
     // short circuit further incremental searches when all data has been downloaded
@@ -248,7 +251,7 @@ const StemFinder = Component({
 
     let keyword = jQuery.trim(this.state.searchInput)
     if (keyword !== '') {
-      gtag('event', 'search', {
+            gtag('event', 'search', {
         'category': 'Home Page Search',
         'label': keyword
       })
@@ -263,17 +266,17 @@ const StemFinder = Component({
     })
 
     jQuery.ajax({
-      url: Portal.API_V1.SEARCH,
+            url: Portal.API_V1.SEARCH,
       data: this.getQueryParams(incremental, keyword),
       dataType: 'json'
-    }).done(function (result) {
+    }).done(function (result: any) {
       let numTotalResources = 0
       const results = result.results
       const usersAuthoredResourcesCount = result.filters.number_authored_resources
       let lastSearchResultCount = 0
 
-      results.forEach(function (result) {
-        result.materials.forEach(function (material) {
+      results.forEach(function (result: any) {
+        result.materials.forEach(function (material: any) {
           portalObjectHelpers.processResource(material)
           resources.push(material)
           if (material.material_type === 'Collection') {
@@ -290,6 +293,7 @@ const StemFinder = Component({
       resources = sortResources(resources, this.state.sortOrder)
 
       if (this.state.firstSearch) {
+        // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
         fadeIn(this, 1000)
       }
 
@@ -310,7 +314,7 @@ const StemFinder = Component({
     }.bind(this))
   },
 
-  buildFilterId: function (filterKey) {
+  buildFilterId: function (filterKey: any) {
     const filterKeyWords = filterKey.split('-')
     const filterId = filterKeyWords.length > 1
       ? filterKeyWords[0] + filterKeyWords[1].charAt(0).toUpperCase() + filterKeyWords[1].slice(1)
@@ -320,6 +324,7 @@ const StemFinder = Component({
 
   scrollToFinder: function () {
     if (document.getElementById('finderLightbox')) {
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       document.getElementById('finderLightbox').scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
     }
   },
@@ -335,7 +340,7 @@ const StemFinder = Component({
     }
   },
 
-  renderLogo: function (subjectArea) {
+  renderLogo: function (subjectArea: any) {
     const filterId = this.buildFilterId(subjectArea.key)
     const selected = this.state.subjectAreasSelectedMap[subjectArea.key]
     const className = selected ? css.selected : null
@@ -349,7 +354,7 @@ const StemFinder = Component({
         subjectAreasSelectedMap[subjectArea.key] = subjectArea
         subjectAreasSelected.push(subjectArea)
         jQuery('#' + css[filterId]).addClass(css.selected)
-        gtag('event', 'click', {
+                gtag('event', 'click', {
           'category': 'Home Page Filter',
           'label': subjectArea.title
         })
@@ -374,7 +379,7 @@ const StemFinder = Component({
     )
   },
 
-  renderGLLogo: function (gradeLevel) {
+  renderGLLogo: function (gradeLevel: any) {
     let className = 'portal-pages-finder-form-filters-logo'
     const filterId = this.buildFilterId(gradeLevel.key)
 
@@ -392,7 +397,7 @@ const StemFinder = Component({
         gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel
         gradeLevelsSelected.push(gradeLevel)
         jQuery('#' + css[filterId]).addClass(css.selected)
-        gtag('event', 'click', {
+                gtag('event', 'click', {
           'category': 'Home Page Filter',
           'label': gradeLevel.title
         })
@@ -423,12 +428,12 @@ const StemFinder = Component({
       <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Subject</h2>
         <ul>
-          {filters.subjectAreas.map(function (subjectArea) {
+          {filters.subjectAreas.map(function (subjectArea: any) {
             return this.renderLogo(subjectArea)
           }.bind(this))}
         </ul>
       </div>
-    )
+    );
   },
 
   renderGradeLevels: function () {
@@ -437,33 +442,33 @@ const StemFinder = Component({
       <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Grade Level</h2>
         <ul>
-          {filters.gradeFilters.map(function (gradeLevel) {
+          {filters.gradeFilters.map(function (gradeLevel: any) {
             return this.renderGLLogo(gradeLevel)
           }.bind(this))}
         </ul>
       </div>
-    )
+    );
   },
 
-  handleOfficialClick: function (e) {
+  handleOfficialClick: function (e: any) {
     e.currentTarget.classList.toggle(css.selected)
     this.setState({
       hideFeatured: true,
       includeOfficial: !this.state.includeOfficial
     }, this.search)
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Home Page Filter',
       'label': 'Official'
     })
   },
 
-  handleCommunityClick: function (e) {
+  handleCommunityClick: function (e: any) {
     e.currentTarget.classList.toggle(css.selected)
     this.setState({
       hideFeatured: true,
       includeContributed: !this.state.includeContributed
     }, this.search)
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Home Page Filter',
       'label': 'Community'
     })
@@ -483,7 +488,7 @@ const StemFinder = Component({
     this.setState({ keyword: '', searchInput: '' }, () => this.search())
   },
 
-  toggleFilter: function (type, filter) {
+  toggleFilter: function (type: any, filter: any) {
     this.setState({ initPage: false })
     const selectedKey = type + 'Selected'
     const selectedFilters = this.state[selectedKey].slice()
@@ -491,7 +496,7 @@ const StemFinder = Component({
     if (index === -1) {
       selectedFilters.push(filter)
       jQuery('#' + filter.key).addClass(css.selected)
-      gtag('event', 'click', {
+            gtag('event', 'click', {
         'category': 'Home Page Filter',
         'label': filter.title
       })
@@ -500,15 +505,16 @@ const StemFinder = Component({
       jQuery('#' + filter.key).removeClass(css.selected)
     }
     let state = {}
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     state[selectedKey] = selectedFilters
     this.setState(state, this.search)
   },
 
-  handleSearchInputChange: function (searchInput) {
+  handleSearchInputChange: function (searchInput: any) {
     this.setState({ searchInput })
   },
 
-  handleSearchSubmit (e) {
+  handleSearchSubmit (e: any) {
     e.preventDefault()
     e.stopPropagation()
     this.search()
@@ -519,7 +525,7 @@ const StemFinder = Component({
     })
   },
 
-  handleAutoSuggestSubmit (searchInput) {
+  handleAutoSuggestSubmit (searchInput: any) {
     this.setState({
       hideFeatured: true,
       initPage: false
@@ -530,7 +536,7 @@ const StemFinder = Component({
     })
   },
 
-  handleSortSelection (e) {
+  handleSortSelection (e: any) {
     e.preventDefault()
     e.stopPropagation()
     this.setState({
@@ -541,7 +547,7 @@ const StemFinder = Component({
       this.search()
     })
 
-    gtag('event', 'selection', {
+        gtag('event', 'selection', {
       'category': 'Finder Sort',
       'label': e.target.value
     })
@@ -570,7 +576,7 @@ const StemFinder = Component({
   },
 
   isAdvancedUser: function () {
-    const isAdvancedUser = Portal.currentUser.isAdmin || Portal.currentUser.isAuthor || Portal.currentUser.isManager || Portal.currentUser.isResearcher
+        const isAdvancedUser = Portal.currentUser.isAdmin || Portal.currentUser.isAuthor || Portal.currentUser.isManager || Portal.currentUser.isResearcher
     return (isAdvancedUser)
   },
 
@@ -605,11 +611,11 @@ const StemFinder = Component({
     )
   },
 
-  handleFilterHeaderClick: function (e) {
+  handleFilterHeaderClick: function (e: any) {
     e.currentTarget.parentElement.classList.toggle(css.open)
   },
 
-  handleShowOnlyMine: function (e) {
+  handleShowOnlyMine: function (e: any) {
     this.setState({ includeMine: !this.state.includeMine }, this.search)
   },
 
@@ -682,6 +688,7 @@ const StemFinder = Component({
   showResources: function () {
     setTimeout(function () {
       const resourceItems = document.querySelectorAll('.resourceItem')
+      // @ts-expect-error TS(2339): Property 'style' does not exist on type 'Element'.
       resourceItems.forEach(function (resourceItem) { resourceItem.style.opacity = 1 })
     }, 500)
   },
@@ -698,21 +705,19 @@ const StemFinder = Component({
     let featuredCollections = this.state.featuredCollections
     featuredCollections = featuredCollections.sort(() => Math.random() - Math.random()).slice(0, 3)
     const resources = this.state.resources.slice(0, this.state.displayLimit)
-    return (
-      <>
-        {(!this.state.hideFeatured && this.state.initPage && this.noOptionsSelected() && featuredCollections.length > 0) &&
-          <FeaturedCollections featuredCollections={featuredCollections} />
-        }
-        {this.renderResultsHeader()}
-        <div className={css.finderResultsContainer}>
-          {resources.map((resource, index) => {
-            return <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />
-          })}
-        </div>
-        {this.state.searching ? <div className={css.loading}>Loading</div> : null}
-        {this.renderLoadMore()}
-      </>
-    )
+    return <>
+      {(!this.state.hideFeatured && this.state.initPage && this.noOptionsSelected() && featuredCollections.length > 0) &&
+        <FeaturedCollections featuredCollections={featuredCollections} />
+      }
+      {this.renderResultsHeader()}
+      <div className={css.finderResultsContainer}>
+        {resources.map((resource: any, index: any) => {
+          return <StemFinderResult key={`${resource.external_url}-${index}`} resource={resource} index={index} showResources={this.showResources} />
+        })}
+      </div>
+      {this.state.searching ? <div className={css.loading}>Loading</div> : null}
+      {this.renderLoadMore()}
+    </>;
   },
 
   render: function () {

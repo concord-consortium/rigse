@@ -10,7 +10,7 @@ const StemFinderResultStandards = Component({
 
   render: function () {
     const { standardStatements } = this.props
-    let helpers = {}
+    let helpers: any = {}
     let unhelped = []
 
     helpers.NGSS = StandardsHelpers.getStandardsHelper('NGSS')

@@ -1,13 +1,13 @@
-const cache = {}
+const cache: any = {}
 
-export const loadMaterialsCollections = (ids, callback) => {
+export const loadMaterialsCollections = (ids: any, callback: any) => {
   const onComplete = () => {
-    const data = ids.map(id => cache[id] || { name: 'MISSING-COLLECTION-' + id, materials: [] })
+    const data = ids.map((id: any) => cache[id] || { name: 'MISSING-COLLECTION-' + id, materials: [] })
     callback(data)
   }
 
   // ensure we only request each id once
-  const missingIds = ids.filter(id => !cache[id])
+  const missingIds = ids.filter((id: any) => !cache[id])
   if (missingIds.length === 0) {
     onComplete()
     return
@@ -21,7 +21,7 @@ export const loadMaterialsCollections = (ids, callback) => {
     },
     dataType: 'json',
     success: (missingData) => {
-      missingIds.forEach((id, index) => {
+      missingIds.forEach((id: any, index: any) => {
         cache[id] = missingData[index]
       })
     },
@@ -31,8 +31,8 @@ export const loadMaterialsCollections = (ids, callback) => {
   })
 }
 
-export const loadMaterialsCollection = (id, callback) => {
-  loadMaterialsCollections([id], (data) => {
+export const loadMaterialsCollection = (id: any, callback: any) => {
+  loadMaterialsCollections([id], (data: any) => {
     callback(data[0])
   })
 }

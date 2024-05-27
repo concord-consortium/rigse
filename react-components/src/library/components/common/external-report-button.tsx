@@ -4,7 +4,7 @@ import jQuery from 'jquery'
 // changed from string based form generation to using jQuery to fix issue with single quoted
 // values in json field (it was delimited with single quotes and would break if the json
 // contained values with single quotes)
-export const generateJQueryForm = (url, json, signature, jwtFromReportController, portalToken) => {
+export const generateJQueryForm = (url: any, json: any, signature: any, jwtFromReportController: any, portalToken: any) => {
   const form = jQuery('<form>', { action: url, method: 'POST', target: '_blank' })
     .append(jQuery('<input>', { type: 'hidden', name: 'allowDebug', value: '1' }))
     .append(jQuery('<input>', { type: 'hidden', name: 'json', value: JSON.stringify(json) }))
@@ -18,7 +18,7 @@ export const generateJQueryForm = (url, json, signature, jwtFromReportController
   return form
 }
 
-const postToUrl = (url, json, signature, jwtFromReportController, portalToken) => {
+const postToUrl = (url: any, json: any, signature: any, jwtFromReportController: any, portalToken: any) => {
   // Issue POST request to Log app. We can't use GET, as URL could get too long. Generating a fake
   // form is a way to send non-Ajax POST request and open the target page.
   const tempForm = generateJQueryForm(url, json, signature, jwtFromReportController, portalToken)
@@ -27,8 +27,8 @@ const postToUrl = (url, json, signature, jwtFromReportController, portalToken) =
   tempForm.remove()
 }
 
-export default class ExternalReportButton extends React.Component {
-  constructor (props) {
+export default class ExternalReportButton extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
   }
@@ -38,7 +38,7 @@ export default class ExternalReportButton extends React.Component {
     return <input style={{ marginRight: 10 }} type='submit' onClick={this.handleClick} disabled={isDisabled} value={label} />
   }
 
-  handleClick (event) {
+  handleClick (event: any) {
     const { reportUrl, queryUrl, queryParams, postToUrl, portalToken } = this.props
     // Make sure we don't submit a form if this component is part of a form (it's possible but not required).
     event.preventDefault()
@@ -61,7 +61,8 @@ export default class ExternalReportButton extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 ExternalReportButton.defaultProps = {
-  queryUrl: typeof Portal !== 'undefined' ? Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY : '',
+    queryUrl: typeof Portal !== 'undefined' ? Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY : '',
   postToUrl: postToUrl
 }

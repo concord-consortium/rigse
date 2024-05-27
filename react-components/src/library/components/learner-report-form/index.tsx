@@ -7,7 +7,7 @@ import { formatInputDateToMMDDYYYY } from '../../helpers/format-date'
 
 import css from './style.scss'
 
-const title = str => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
+const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
 
 // This param is used mostly for testing purposes. It allows to set a custom limit for the number of results,
 // so staging environments can test how the dropdowns behave when the number of results is too high.
@@ -16,7 +16,7 @@ const getQueryLimitParam = () => {
   return urlParams.get('queryLimit')
 }
 
-const hasAtLeastTwoAlphanumeric = (str) => {
+const hasAtLeastTwoAlphanumeric = (str: any) => {
   // This regular expression matches alphanumeric characters
   const matches = str.match(/[a-zA-Z0-9]/g)
   // Check if there are at least two alphanumeric characters
@@ -25,8 +25,8 @@ const hasAtLeastTwoAlphanumeric = (str) => {
 
 const queryCache = {}
 
-export default class LearnerReportForm extends React.Component {
-  constructor (props) {
+export default class LearnerReportForm extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       counts: {},
@@ -79,7 +79,7 @@ export default class LearnerReportForm extends React.Component {
   // All requests are cached, and if we make a duplicate request as one that
   // is still pending, the new callback is added as a chained promise, so that
   // no new request is made.
-  query (_params, fieldName, searchString) {
+  query (_params: any, fieldName: any, searchString: any) {
     if (fieldName) {
       this.setState({ [`waitingFor_${fieldName}`]: true })
     }
@@ -101,8 +101,9 @@ export default class LearnerReportForm extends React.Component {
 
     const cacheKey = JSON.stringify(params)
 
-    const handleResponse = data => {
+    const handleResponse = (data: any) => {
       let newState
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = data
       const aggs = data.aggregations
       if (fieldName) {
@@ -115,25 +116,27 @@ export default class LearnerReportForm extends React.Component {
             // some fields have a separate id aggregration that is filtered
             // based on the access of the current user
             // we use this to filter the buckets in the main field aggregration
-            const filteredIds = aggs[idsField].buckets.map(b =>
-              // sometimes this will be an integer and sometimes it will be a string
-              // convert it to a string for consistency
-              b.key.toString()
+            const filteredIds = aggs[idsField].buckets.map((b: any) => // sometimes this will be an integer and sometimes it will be a string
+            // convert it to a string for consistency
+            b.key.toString()
             )
 
-            buckets = buckets.filter(b => filteredIds.indexOf(b.key.match(/\d+/)[0]) !== -1)
+            buckets = buckets.filter((b: any) => filteredIds.indexOf(b.key.match(/\d+/)[0]) !== -1)
           }
 
+          // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           newState[`tooManyResults_${fieldName}`] = false
           newState.filterables[fieldName] = buckets
         } else {
           // ElasticSearch returns sum_other_doc_count (named overLimitCount here) if the number of buckets is over
           // a certain limit specified in the query. If this is the case, we don't display the results in the dropdown
           // and ask the user to refine their search.
+          // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
           newState[`tooManyResults_${fieldName}`] = true
           newState.filterables[fieldName] = []
         }
 
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         newState[`waitingFor_${fieldName}`] = false
       } else {
         newState = {
@@ -150,11 +153,16 @@ export default class LearnerReportForm extends React.Component {
       return data
     }
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     if (queryCache[cacheKey]?.then) { // already made a Promise that is still pending
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey].then(handleResponse) // chain a new Then
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     } else if (queryCache[cacheKey]) { // have data that has already returned
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       handleResponse(queryCache[cacheKey]) // use it directly
     } else {
+      // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = jQuery.ajax({ // make req and add new Promise to cache
         url: '/api/v1/report_learners_es',
         type: 'GET',
@@ -169,16 +177,19 @@ export default class LearnerReportForm extends React.Component {
     }
     for (var filter of ['schools', 'teachers', 'runnables', 'permission_forms']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
-        params[filter] = this.state[filter].map(v => v.value).sort().join(',')
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
+        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(',')
       }
     }
     for (filter of ['start_date', 'end_date']) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
+        // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
         params[filter] = formatInputDateToMMDDYYYY(this.state[filter])
       }
     }
     const customQueryLimit = getQueryLimitParam()
     if (customQueryLimit) {
+      // @ts-expect-error TS(2339): Property 'query_limit' does not exist on type '{ h... Remove this comment to see the full error message
       params.query_limit = customQueryLimit
     }
     return params
@@ -196,10 +207,15 @@ export default class LearnerReportForm extends React.Component {
     // them all separately, as each dropdown may require a different query,
     // depending on the other filters. If the queries are the same, however,
     // no additional requests are made over the network
+    // @ts-expect-error TS(2554): Expected 3 arguments, but got 1.
     this.query(params)
+    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, 'schools')
+    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, 'teachers')
+    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, 'runnables')
+    // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
     this.query(params, 'permission_forms')
   }
 
@@ -221,7 +237,7 @@ export default class LearnerReportForm extends React.Component {
     }
   }
 
-  renderInput (name, titleOverride) {
+  renderInput (name: any, titleOverride?: any) {
     if (!this.state.filterables[name]) { return }
     const agg = this.state.filterables[name]
 
@@ -229,19 +245,19 @@ export default class LearnerReportForm extends React.Component {
     const placeholder = !isLoading ? 'Select ...' : 'Loading ...'
 
     // convert to all strings
-    let options = agg.map(function (f) { if (typeof f === 'string') { return f } else { return f.key } })
+    let options = agg.map(function (f: any) { if (typeof f === 'string') { return f } else { return f.key } })
 
     // rm dupes
-    options = options.filter((str, i) => options.indexOf(str) === i)
+    options = options.filter((str: any, i: any) => options.indexOf(str) === i)
 
     // split into values/labels
-    options = options.map(function (f) {
+    options = options.map(function (f: any) {
       const idName = typeof f === 'string' ? f.split(/:(.+)/) : f.key.split(/:(.+)/)
       return { value: idName[0], label: idName[1] }
     })
 
     // rm messed-up ES values
-    options = options.filter(o => o.value.indexOf('%{') < 0)
+    options = options.filter((o: any) => o.value.indexOf('%{') < 0)
 
     // average keystroke delay is 100-200ms
     const debouncedHandleTextInputChange = debounce(350, (value) => {
@@ -259,14 +275,16 @@ export default class LearnerReportForm extends React.Component {
       this.query(this.getQueryParams(), name, value)
     })
 
-    const handleSelectChange = value => {
+    const handleSelectChange = (value: any) => {
       this.setState({ [name]: value }, () => {
         this.updateFilters()
         this.updateQueryParams()
       })
     }
 
-    const noOptionsMessage = ({ inputValue }) => {
+    const noOptionsMessage = ({
+      inputValue
+    }: any) => {
       if (this.state[`tooManyResults_${name}`]) {
         return 'Too many results. Please refine your search to narrow down the list.'
       }
@@ -291,10 +309,10 @@ export default class LearnerReportForm extends React.Component {
     )
   }
 
-  renderDatePicker (name) {
+  renderDatePicker (name: any) {
     const label = name === 'start_date' ? 'Earliest date of last run' : 'Latest date of last run'
 
-    const handleChange = value => {
+    const handleChange = (value: any) => {
       // allow clearing of the date
       this.setState({ [name]: value || '' }, () => {
         this.updateFilters()
@@ -317,8 +335,8 @@ export default class LearnerReportForm extends React.Component {
     )
   }
 
-  renderCheck (name) {
-    const handleChange = evt => {
+  renderCheck (name: any) {
+    const handleChange = (evt: any) => {
       this.setState({ [name]: evt.target.checked }, () => {
         this.updateQueryParams()
       })
@@ -338,7 +356,7 @@ export default class LearnerReportForm extends React.Component {
     )
   }
 
-  renderButton (name) {
+  renderButton (name: any) {
     return (
       <input
         type='submit'
@@ -352,25 +370,28 @@ export default class LearnerReportForm extends React.Component {
     const { externalReports } = this.props
     const { queryParams, externalReportButtonDisabled } = this.state
     // ...LEARNER_QUERY is the renamed ...REPORT_QUERY, use a fallback to wait for the portal to update
-    const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
-    const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT
+        const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
+        const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT
 
-    externalReports.sort((a, b) => a.label.localeCompare(b.label))
-    const adminOnlyExternalReports = externalReports.filter(r => r.name.indexOf('[DEV]') !== -1)
-    const nonAdminExternalReports = externalReports.filter(r => adminOnlyExternalReports.indexOf(r) === -1)
+    externalReports.sort((a: any, b: any) => a.label.localeCompare(b.label))
+    const adminOnlyExternalReports = externalReports.filter((r: any) => r.name.indexOf('[DEV]') !== -1)
+    const nonAdminExternalReports = externalReports.filter((r: any) => adminOnlyExternalReports.indexOf(r) === -1)
 
-    const renderExternalReports = (reports) => {
-      return reports.map(lr => {
+    const renderExternalReports = (reports: any) => {
+      return reports.map((lr: any) => {
         const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl
         return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
-      })
+      });
     }
 
     return (
       <form method='get'>
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         {this.renderInput('schools')}
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         {this.renderInput('teachers')}
         {this.renderInput('runnables', 'Resources')}
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         {this.renderInput('permission_forms')}
 
         {this.renderDatePicker('start_date')}
@@ -381,7 +402,7 @@ export default class LearnerReportForm extends React.Component {
         <div style={{ marginTop: '12px' }}>
           {renderExternalReports(nonAdminExternalReports)}
         </div>
-        {Portal.currentUser.isAdmin && adminOnlyExternalReports.length > 0 && (
+                {Portal.currentUser.isAdmin && adminOnlyExternalReports.length > 0 && (
           <>
             <div style={{ marginTop: '12px' }}>
               <strong>For Developers Only:</strong>
@@ -414,6 +435,7 @@ export default class LearnerReportForm extends React.Component {
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 LearnerReportForm.defaultProps = {
   externalReports: []
 }

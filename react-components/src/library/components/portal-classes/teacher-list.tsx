@@ -1,8 +1,9 @@
 import React from 'react'
 import DeleteIcon from '../icons/delete-icon'
 
-export default class TeacherList extends React.Component {
-  constructor (props) {
+export default class TeacherList extends React.Component<any, any> {
+  selectRef: any;
+  constructor (props: any) {
     super(props)
     const { current, unassigned } = this.props.teachers
     this.state = {
@@ -20,7 +21,7 @@ export default class TeacherList extends React.Component {
     if (this.selectRef.current != null) {
       let { currentTeachers, unassignedTeachers } = this.state
       const id = parseInt(this.selectRef.current.value, 10)
-      const teacher = unassignedTeachers.find((t) => t.id === id)
+      const teacher = unassignedTeachers.find((t: any) => t.id === id)
       const { fromList, toList } = this.moveTeacher(teacher, { fromList: unassignedTeachers, toList: currentTeachers })
       this.setState({
         currentTeachers: toList,
@@ -30,7 +31,7 @@ export default class TeacherList extends React.Component {
     }
   }
 
-  handleUnassignTeacher (teacher) {
+  handleUnassignTeacher (teacher: any) {
     let { currentTeachers, unassignedTeachers } = this.state
     const confirmation = teacher.id === this.props.portalClassTeacher.id
       ? 'This action will remove YOU from this class.\n\nIf you remove yourself, you will lose all access to this class. Are you sure you want to do this?'
@@ -45,12 +46,12 @@ export default class TeacherList extends React.Component {
     }
   }
 
-  moveTeacher (teacher, lists) {
+  moveTeacher (teacher: any, lists: any) {
     let { fromList, toList } = lists
     toList = toList.slice()
     toList.push(teacher)
-    toList.sort((a, b) => a.name.localeCompare(b.name))
-    fromList = fromList.filter((t) => t.id !== teacher.id)
+    toList.sort((a: any, b: any) => a.name.localeCompare(b.name))
+    fromList = fromList.filter((t: any) => t.id !== teacher.id)
     return { fromList, toList }
   }
 
@@ -64,7 +65,7 @@ export default class TeacherList extends React.Component {
           {unassignedTeachers.length > 0
             ? <>
               <select id='teacher_id_selector' ref={this.selectRef}>
-                {unassignedTeachers.map((teacher) => <option key={teacher.id} value={teacher.id}>{teacher.name}</option>)}
+                {unassignedTeachers.map((teacher: any) => <option key={teacher.id} value={teacher.id}>{teacher.name}</option>)}
               </select>
               <input type='button' value='Add' onClick={this.handleAssignTeacher} />
               </>
@@ -81,7 +82,7 @@ export default class TeacherList extends React.Component {
         <div id='div_teacher_list'>
           {currentTeachers.length > 0
             ? <ul>
-              {currentTeachers.map((teacher) => {
+              {currentTeachers.map((teacher: any) => {
                 let deleteButton
                 if (currentTeachers.length === 1) {
                   deleteButton = <span><DeleteIcon disabled title='You cannot remove the last teacher from this class.' /></span>
@@ -95,6 +96,6 @@ export default class TeacherList extends React.Component {
           }
         </div>
       </div>
-    )
+    );
   }
 }

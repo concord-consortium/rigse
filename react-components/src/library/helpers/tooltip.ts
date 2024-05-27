@@ -3,7 +3,7 @@ import { render, unmount } from './react-render'
 var Tooltip = {
   mountPointId: 'portal-pages-tooltip-mount',
 
-  open: function (component) {
+  open: function (component: any) {
     var mountPoint = document.getElementById(this.mountPointId)
 
     if (!mountPoint) {

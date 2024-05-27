@@ -36,26 +36,26 @@ const StemFinderResult = Component({
     document.body.removeEventListener('touchend', this.handleTouchEnd)
   },
 
-  handleTouchStart: function (e) {
+  handleTouchStart: function (e: any) {
     e.stopPropagation()
     touchInitialized = true
     pageScrolling = false
   },
 
-  handleTouchMove: function (e) {
+  handleTouchMove: function (e: any) {
     e.stopPropagation()
     touchInitialized = true
     pageScrolling = true
   },
 
-  handleTouchEnd: function (e) {
+  handleTouchEnd: function (e: any) {
     e.stopPropagation()
     if (pageScrolling) {
 
     }
   },
 
-  handleMouseOver: function (e) {
+  handleMouseOver: function (e: any) {
     if (this.state.lightbox) {
       return
     }
@@ -71,11 +71,11 @@ const StemFinderResult = Component({
     this.setState({ hovering: false })
   },
 
-  toggleFavorite: function (e) {
+  toggleFavorite: function (e: any) {
     e.preventDefault()
     e.stopPropagation()
 
-    if (!Portal.currentUser.isLoggedIn || !Portal.currentUser.isTeacher) {
+        if (!Portal.currentUser.isLoggedIn || !Portal.currentUser.isTeacher) {
       let mouseX = e.pageX + 31
       let mouseY = e.pageY - 23
       jQuery('body').append('<div class="portal-pages-favorite-tooltip">Log in or sign up to save resources for quick access!</div>')
@@ -94,13 +94,13 @@ const StemFinderResult = Component({
     }.bind(this)
     if (resource.is_favorite) {
       jQuery.post('/api/v1/materials/remove_favorite', { favorite_id: resource.favorite_id }, done)
-      gtag('event', 'click', {
+            gtag('event', 'click', {
         'category': 'Favorite Button',
         'resource': `${resource.name} removed from favorites`
       })
     } else {
       jQuery.post('/api/v1/materials/add_favorite', { id: resource.id, material_type: resource.class_name_underscored }, done)
-      gtag('event', 'click', {
+            gtag('event', 'click', {
         'category': 'Favorite Button',
         'resource': `${resource.name} added to favorites`
       })
@@ -172,65 +172,65 @@ const StemFinderResult = Component({
     )
   },
 
-  handlePreviewClick: function (e) {
+  handlePreviewClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Resource Preview Button',
       'resource': resource.name
     })
   },
 
-  handleViewCollectionClick: function (e) {
+  handleViewCollectionClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Resource View Collection Button',
       'resource': resource.name
     })
   },
 
-  handleTeacherEditionClick: function (e) {
+  handleTeacherEditionClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Resource Teacher Edition Button',
       'resource': resource.name
     })
   },
 
-  handleTeacherResourcesClick: function (e) {
+  handleTeacherResourcesClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Resource Teacher Resources Button',
       'resource': resource.name
     })
   },
 
-  handleRubricDocClick: function (e) {
+  handleRubricDocClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Resource Rubric Doc Button',
       'resource': resource.name
     })
   },
 
-  handleAssignClick: function (e) {
+  handleAssignClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Assign to Class Button',
       'resource': resource.name
     })
   },
 
-  handleTeacherGuideClick: function (e) {
+  handleTeacherGuideClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Teacher Guide Link',
       'resource': resource.name
     })
   },
 
-  handleAddToCollectionClick: function (e) {
+  handleAddToCollectionClick: function (e: any) {
     const { resource } = this.props
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'Add to Collection Button',
       'resource': resource.name
     })
@@ -240,6 +240,7 @@ const StemFinderResult = Component({
     const { resource } = this.props
     const isCollection = resource.material_type === 'Collection'
     const isAssignWrapped = window.self !== window.top &&
+      // @ts-expect-error TS(2531): Object is possibly 'null'.
       window.self.location.hostname === window.top.location.hostname
     const assignHandler = resource.links.assign_material && isAssignWrapped
       ? `javascript: window.parent.${resource.links.assign_material.onclick}`
@@ -247,6 +248,7 @@ const StemFinderResult = Component({
         ? `javascript: ${resource.links.assign_material.onclick}`
         : null
     const assignLink = resource.links.assign_material && !isCollection
+      // @ts-expect-error TS(2322): Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message
       ? <a href={assignHandler} onClick={this.handleAssignClick}>{resource.links.assign_material.text}</a>
       : null
     const editLinkUrl = resource.lara_activity_or_sequence && resource.links.external_lara_edit
@@ -263,22 +265,22 @@ const StemFinderResult = Component({
     // const printLink = resource.links.print_url && !isCollection
     //   ? <a href={resource.links.print_url.url} target='_blank' rel='noopener'>{resource.links.print_url.text}</a>
     //   : null
-    const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
+        const teacherEditionLink = resource.has_teacher_edition && Portal.currentUser.isTeacher
       ? <a href={MakeTeacherEditionLink(resource.external_url)} target='_blank' rel='noopener' onClick={this.handleTeacherEditionClick}>Teacher Edition</a>
       : null
-    const teacherGuideLink = resource.links.teacher_guide && Portal.currentUser.isTeacher
+        const teacherGuideLink = resource.links.teacher_guide && Portal.currentUser.isTeacher
       ? <a href={resource.links.teacher_guide.url} target='_blank' rel='noopener' onClick={this.handleTeacherGuideClick}>{resource.links.teacher_guide.text}</a>
       : null
-    const teacherResourcesLink = resource.links.teacher_resources && Portal.currentUser.isTeacher
+        const teacherResourcesLink = resource.links.teacher_resources && Portal.currentUser.isTeacher
       ? <a href={resource.links.teacher_resources.url} target='_blank' rel='noopener' onClick={this.handleTeacherResourcesClick}>{resource.links.teacher_resources.text}</a>
       : null
-    const rubricDocLink = resource.links.rubric_doc && Portal.currentUser.isTeacher
+        const rubricDocLink = resource.links.rubric_doc && Portal.currentUser.isTeacher
       ? <a href={resource.links.rubric_doc.url} target='_blank' rel='noopener' onClick={this.handleRubricDocClick}>{resource.links.rubric_doc.text}</a>
       : null
-    const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+        const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.assign_collection.url} target='_blank' onClick={this.handleAddToCollectionClick}>{resource.links.assign_collection.text}</a>
       : null
-    const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+        const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.edit.url} target='_blank'>Settings</a>
       : null
 
@@ -330,13 +332,13 @@ const StemFinderResult = Component({
     )
   },
 
-  renderRelatedResources: function (e) {
+  renderRelatedResources: function (e: any) {
     const resource = this.props.resource
     if (resource.related_materials.length === 0 || resource.material_type === 'Collection') {
       return null
     }
 
-    const relatedResources = resource.related_materials.map(function (resource, i) {
+    const relatedResources = resource.related_materials.map(function (resource: any, i: any) {
       if (i < 2) {
         return RelatedResourceResult({ key: i, resource: resource, replaceResource: this.replaceResource })
       }
@@ -350,12 +352,12 @@ const StemFinderResult = Component({
     )
   },
 
-  toggleResource: function (e) {
+  toggleResource: function (e: any) {
     e.preventDefault()
     this.setState({ isOpen: !this.state.isOpen })
   },
 
-  toggleCollapsible: function (e) {
+  toggleCollapsible: function (e: any) {
     jQuery(e.currentTarget).parent().toggleClass(css.collapsibleOpen)
   },
 

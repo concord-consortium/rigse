@@ -3,7 +3,7 @@ import { throttle, debounce } from 'throttle-debounce'
 
 import css from './auto-suggest.scss'
 
-class Suggestion extends React.Component {
+class Suggestion extends React.Component<any, any> {
   render () {
     const { suggestion } = this.props
     const onClick = () => this.props.onClick(suggestion)
@@ -12,8 +12,14 @@ class Suggestion extends React.Component {
 }
 
 // adapted from https://www.peterbe.com/plog/how-to-throttle-and-debounce-an-autocomplete-input-in-react
-export default class AutoSuggest extends React.Component {
-  constructor (props) {
+export default class AutoSuggest extends React.Component<any, any> {
+  containerRef: any;
+  currentQuery: any;
+  debouncedSearch: any;
+  inputRef: any;
+  queryCache: any;
+  throttledSearch: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       query: props.query || '',
@@ -47,7 +53,7 @@ export default class AutoSuggest extends React.Component {
     window.removeEventListener('click', this.handleOuterClick)
   }
 
-  handleOuterClick (e) {
+  handleOuterClick (e: any) {
     let el = e.target
     const container = this.containerRef.current
     if (container && this.state.showSuggestions) {
@@ -61,7 +67,7 @@ export default class AutoSuggest extends React.Component {
   }
 
   // eslint-disable-next-line camelcase
-  UNSAFE_componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps: any) {
     const { query, skipAutoSearch } = nextProps
     if (query !== undefined) {
       // reset and hide the suggestions when the query is changed
@@ -73,14 +79,15 @@ export default class AutoSuggest extends React.Component {
     }
   }
 
-  search (query) {
-    const setSuggestions = (suggestions, callback) => {
+  search (query: any) {
+    const setSuggestions = (suggestions: any, callback: any) => {
       const showSuggestions = suggestions.length > 0
       this.setState({ suggestions, selectedSuggestionIndex: -1, showSuggestions }, callback)
     }
     const trimmedQuery = query.trim()
     this.currentQuery = trimmedQuery
     if (trimmedQuery.length === 0) {
+      // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
       setSuggestions([])
     } else {
       const { getQueryParams } = this.props
@@ -88,6 +95,7 @@ export default class AutoSuggest extends React.Component {
       const data = `search_term=${encodeURIComponent(trimmedQuery)}${queryParams.length > 0 ? `&${queryParams}` : ''}`
 
       if (this.queryCache[data]) {
+        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
         setSuggestions(this.queryCache[data])
       } else {
         setSuggestions([], () => {
@@ -98,6 +106,7 @@ export default class AutoSuggest extends React.Component {
             success: results => {
               this.queryCache[results.search_term] = results.suggestions
               if (results.search_term === this.currentQuery) {
+                // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
                 setSuggestions(results.suggestions)
               }
             },
@@ -110,7 +119,7 @@ export default class AutoSuggest extends React.Component {
     }
   }
 
-  userInitiatedSearch (query, onHandler) {
+  userInitiatedSearch (query: any, onHandler: any) {
     this.setState({ query }, () => {
       if (onHandler) {
         onHandler(query)
@@ -123,15 +132,15 @@ export default class AutoSuggest extends React.Component {
     })
   }
 
-  handleSuggestionClick (query) {
+  handleSuggestionClick (query: any) {
     this.setState({ showSuggestions: false }, () => this.userInitiatedSearch(query, this.props.onSubmit))
   }
 
-  handleInputChange (e) {
+  handleInputChange (e: any) {
     this.userInitiatedSearch(e.target.value, this.props.onChange)
   }
 
-  handleKeyDown (e) {
+  handleKeyDown (e: any) {
     let handledKey = false
     const { query, suggestions, selectedSuggestionIndex, showSuggestions } = this.state
 
@@ -201,7 +210,7 @@ export default class AutoSuggest extends React.Component {
       return undefined
     }
 
-    const items = suggestions.map((suggestion, index) => {
+    const items = suggestions.map((suggestion: any, index: any) => {
       return <Suggestion key={suggestion} suggestion={suggestion} onClick={this.handleSuggestionClick} />
     })
 

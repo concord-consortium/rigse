@@ -2,15 +2,19 @@ import React from 'react'
 import TextInput from './text_input'
 import Formsy from 'formsy-react'
 
-export default class ForgotPasswordModal extends React.Component {
-  constructor (props) {
+export default class ForgotPasswordModal extends React.Component<any, any> {
+  static defaultProps = {
+    siteName: (window.Portal && window.Portal.siteName) || 'Portal'
+  }
+
+  constructor (props: any) {
     super(props)
 
     this.submit = this.submit.bind(this)
     this.handleShowSignup = this.handleShowSignup.bind(this)
   }
 
-  submit (loginData) {
+  submit (loginData: any) {
     const login = loginData.user.login
     const data = { login_or_email: login }
     jQuery.post('/api/v1/passwords/reset_password', data).done(function (response) {
@@ -35,9 +39,9 @@ export default class ForgotPasswordModal extends React.Component {
     })
   }
 
-  handleShowSignup (e) {
+  handleShowSignup (e: any) {
     e.preventDefault()
-    PortalComponents.renderSignupModal({ oauthProviders: this.props.oauthProviders })
+        PortalComponents.renderSignupModal({ oauthProviders: this.props.oauthProviders })
   }
 
   render () {
@@ -74,8 +78,4 @@ export default class ForgotPasswordModal extends React.Component {
       </div>
     )
   }
-}
-
-ForgotPasswordModal.defaultProps = {
-  siteName: (window.Portal && window.Portal.siteName) || 'Portal'
 }

@@ -12,14 +12,14 @@ const PageHeader = Component({
     return {
       windowWidth: window.innerWidth,
       nav_menu_collapsed: true,
-      loggedIn: Portal.currentUser.isLoggedIn,
+            loggedIn: Portal.currentUser.isLoggedIn,
       opacity: 0,
       userId: 0,
       logo_class: 'concord-logo ' + this.props.logo_class,
-      oauthProviders: this.props.oauthProviders || Portal.oauthProviders || {},
-      theme: this.props.theme || Portal.theme || 'default',
-      homePath: this.props.homePath || Portal.currentUser.homePath || '/',
-      isStudent: this.props.isStudent || Portal.currentUser.isStudent || false,
+            oauthProviders: this.props.oauthProviders || Portal.oauthProviders || {},
+            theme: this.props.theme || Portal.theme || 'default',
+            homePath: this.props.homePath || Portal.currentUser.homePath || '/',
+            isStudent: this.props.isStudent || Portal.currentUser.isStudent || false,
       sitewideAlert: this.props.sitewideAlert
     }
   },
@@ -31,46 +31,48 @@ const PageHeader = Component({
       jQuery.ajax({
         url: '/auth/user', // TODO: replace with Portal.API_V1 constant when available
         dataType: 'json'
-      }).done(function (data) {
+      }).done(function (data: any) {
         self.setState({ userId: data.id })
+        // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
         fadeIn(this, 1000)
       }.bind(this))
     } else {
+      // @ts-expect-error TS(2554): Expected 1 arguments, but got 2.
       fadeIn(this, 1000)
     }
   },
 
-  handleResize: function (e) {
+  handleResize: function (e: any) {
     this.setState({ windowWidth: window.innerWidth })
   },
 
-  handleLoginButton: function (e) {
+  handleLoginButton: function (e: any) {
     e.preventDefault()
     console.log('INFO calling renderLoginModal()')
-    PortalComponents.renderLoginModal(
+        PortalComponents.renderLoginModal(
       {
         oauthProviders: this.state.oauthProviders,
         afterSigninPath: this.props.afterSigninPath
       })
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'User Authentication',
       'label': 'User login button clicked'
     })
   },
 
-  handleRegisterButton: function (e) {
+  handleRegisterButton: function (e: any) {
     e.preventDefault()
-    PortalComponents.renderSignupModal(
+        PortalComponents.renderSignupModal(
       { oauthProviders: this.state.oauthProviders, closeable: true },
       'signup-default-modal'
     )
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'User Registration',
       'label': 'User register button clicked'
     })
   },
 
-  handleNavMenuToggle: function (e) {
+  handleNavMenuToggle: function (e: any) {
     let collapsed = !this.state.nav_menu_collapsed
     this.setState({ nav_menu_collapsed: collapsed })
     if (collapsed) {
@@ -80,7 +82,7 @@ const PageHeader = Component({
     }
   },
 
-  toggleTooltip: function (e) {
+  toggleTooltip: function (e: any) {
     e.preventDefault()
     e.stopPropagation()
 
@@ -131,16 +133,16 @@ const PageHeader = Component({
     }
   },
 
-  renderProtectedLink: function (linkID, linkTitle, linkText) {
+  renderProtectedLink: function (linkID: any, linkTitle: any, linkText: any) {
     return (
       <a href='#' className={'portal-pages-main-nav-item__link'} id={linkID} title={linkTitle} onClick={this.toggleTooltip}>{linkText}</a>
     )
   },
 
-  renderNavLinks: function (e) {
+  renderNavLinks: function (e: any) {
     var headerItems = []
     var key = 1
-    var nextKey = (prefix) => `navLink_${prefix}_${key++}`
+    var nextKey = (prefix: any) => `navLink_${prefix}_${key++}`
     if (!this.state.isStudent) {
       if (this.state.theme === 'ngss-assessment') {
         headerItems.push(
@@ -223,7 +225,7 @@ const PageHeader = Component({
         {sitewideAlertBanner}
         <nav className='concord-navigation cols no-collapse'>
           <div className='logo-contain col-3'>
-            <a href={Portal.currentUser.homePath} title='Go to the Home Page'>
+                        <a href={Portal.currentUser.homePath} title='Go to the Home Page'>
               <div className={logoClass}>
                 <div className='concord-logo__linktext'>
                   {logoText}

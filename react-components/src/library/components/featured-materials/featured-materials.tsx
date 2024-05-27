@@ -1,8 +1,9 @@
 import React from 'react'
 import SMaterialsList from '../search/materials-list'
 
-export default class FeaturedMaterials extends React.Component {
-  constructor (props) {
+export default class FeaturedMaterials extends React.Component<any, any> {
+  mounted: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       materials: []
@@ -13,7 +14,7 @@ export default class FeaturedMaterials extends React.Component {
   componentDidMount () {
     this.mounted = true
     jQuery.ajax({
-      url: Portal.API_V1.MATERIALS_FEATURED,
+            url: Portal.API_V1.MATERIALS_FEATURED,
       data: this.props.queryString,
       dataType: 'json',
       success: data => {

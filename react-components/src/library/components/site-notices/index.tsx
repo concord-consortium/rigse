@@ -3,8 +3,15 @@ import Notices from './notices'
 
 import css from './style.scss'
 
-export default class SiteNotices extends React.Component {
-  constructor (props) {
+export default class SiteNotices extends React.Component<any, any> {
+  static defaultProps = {
+    // This path will return all site notices.
+    dataUrl: Portal.API_V1.SITE_NOTICES_INDEX,
+    // If initialData is not provided, component will use API (dataUrl) to get it.
+    initialData: null
+  }
+
+  constructor (props: any) {
     super(props)
     this.state = {
       notices: [],
@@ -48,11 +55,4 @@ export default class SiteNotices extends React.Component {
       </div>
     )
   }
-}
-
-SiteNotices.defaultProps = {
-  // This path will return all site notices.
-  dataUrl: Portal.API_V1.SITE_NOTICES_INDEX,
-  // If initialData is not provided, component will use API (dataUrl) to get it.
-  initialData: null
 }

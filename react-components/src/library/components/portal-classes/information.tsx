@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class PortalClassInformation extends React.Component {
+export default class PortalClassInformation extends React.Component<any, any> {
   render () {
     const { portalClass, portalClassTeacher } = this.props
     return (

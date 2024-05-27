@@ -5,19 +5,26 @@ import MBCollections from './collections'
 import MBOwnMaterials from './own-materials'
 import MBMaterialsByAuthor from './materials-by-author'
 
-export default class MaterialsBin extends React.Component {
-  constructor (props) {
+export default class MaterialsBin extends React.Component<any, any> {
+  _isSlugTaken: any;
+  constructor (props: any) {
     super(props)
 
     // it is usually very bad form in React to modify props but we will look the other way this time
     // otherwise we need to clone the array just to add the slug
-    var addSlugs = list => {
+    // @ts-expect-error TS(7023): 'addSlugs' implicitly has return type 'any' becaus... Remove this comment to see the full error message
+    var addSlugs = (list: any) => {
+      // @ts-expect-error TS(7024): Function implicitly has return type 'any' because ... Remove this comment to see the full error message
       return (() => {
         const result = []
         for (let item of Array.from(list)) {
+          // @ts-expect-error TS(2571): Object is of type 'unknown'.
           if (item.category) {
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             item.slug = this.generateSlug(item.category)
+            // @ts-expect-error TS(2571): Object is of type 'unknown'.
             if (item.children) {
+              // @ts-expect-error TS(2571): Object is of type 'unknown'.
               result.push(addSlugs(item.children))
             } else {
               result.push(undefined)
@@ -69,7 +76,7 @@ export default class MaterialsBin extends React.Component {
     this.setState({ selectedSlugs })
   }
 
-  handleCellClick (column, slug) {
+  handleCellClick (column: any, slug: any) {
     // Unselect all the cells that are to the right of modified column.
     const newSlugs = this.state.selectedSlugs.slice(0, column + 1)
     // Select clicked slug
@@ -77,11 +84,11 @@ export default class MaterialsBin extends React.Component {
     window.location.hash = newSlugs.join('|')
   }
 
-  isSlugSelected (column, slug) {
+  isSlugSelected (column: any, slug: any) {
     return this.state.selectedSlugs[column] === slug
   }
 
-  generateSlug (name) {
+  generateSlug (name: any) {
     if (this._isSlugTaken == null) {
       this._isSlugTaken = {}
     }
@@ -97,10 +104,10 @@ export default class MaterialsBin extends React.Component {
   // Raw form of @props.materials doesn't work well with table view.
   // Also, apply current state (selected cells and visibility).
   _getColumns () {
-    const columns = []
+    const columns: any = []
     // Adds all elements of `array` to column `columnIdx` and marks them as `visible`.
     // Note that the array is @params.materials at the beginning and then its child elements recursively.
-    var fillColumns = (array, columnIdx, visible) => {
+    var fillColumns = (array: any, columnIdx: any, visible: any) => {
       if (columnIdx == null) {
         columnIdx = 0
       }
@@ -110,7 +117,7 @@ export default class MaterialsBin extends React.Component {
       if (columns[columnIdx] == null) {
         columns[columnIdx] = []
       }
-      array.forEach(cellDef => {
+      array.forEach((cellDef: any) => {
         const selected = this.isSlugSelected(columnIdx, cellDef.slug)
         const rowIdx = columns[columnIdx].length
         columns[columnIdx].push((() => {
@@ -151,6 +158,7 @@ export default class MaterialsBin extends React.Component {
       })
     }
 
+    // @ts-expect-error TS(2554): Expected 3 arguments, but got 1.
     fillColumns(this.props.materials)
     return columns
   }
@@ -158,7 +166,8 @@ export default class MaterialsBin extends React.Component {
   render () {
     return (
       <div className='materials-bin'>
-        {this._getColumns().map((column, idx) => <div key={idx} className='mb-column'>{column}</div>)}
+        // @ts-expect-error TS(7006): Parameter 'column' implicitly has an 'any' type.
+        {this._getColumns().map((column: any, idx: number) => <div key={idx} className='mb-column'>{column}</div>)}
       </div>
     )
   }

@@ -4,7 +4,7 @@ import OfferingButtons from '../common/offering-buttons'
 
 import css from './style.scss'
 
-export default class OfferingDetails extends React.Component {
+export default class OfferingDetails extends React.Component<any, any> {
   render () {
     const { activityName, students, reportableActivities } = this.props.offering
     // Activities listed in the progress table are either reportable activities or just the main offering.

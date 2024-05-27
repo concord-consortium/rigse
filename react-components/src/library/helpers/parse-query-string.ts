@@ -1,10 +1,10 @@
 // from https://stackoverflow.com/questions/979975/
-const parseQueryString = function (queryString) {
+const parseQueryString = function (queryString?: any) {
   if (queryString == null) {
     queryString = window.location.search.replace(/^\?/, '')
   }
   let vars = queryString.split('&')
-  let params = {}
+  let params: any = {}
   for (let i = 0; i < vars.length; i++) {
     let pair = vars[i].split('=')
     // If first entry with this name

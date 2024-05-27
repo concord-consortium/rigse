@@ -14,13 +14,9 @@ const LightboxNav = Component({
 
   collectionViewsOptions: function () {
     const { collectionName, collectionViews } = this.state
-    return (
-      collectionViews.map(collection => (
-        collectionName !== collection.name
-          ? <option key={`collection-nav-${collection.id}-${collection.name}`} value={collection.id}>{collection.name} Collection</option>
-          : null
-      ))
-    )
+    return collectionViews.map((collection: any) => collectionName !== collection.name
+      ? <option key={`collection-nav-${collection.id}-${collection.name}`} value={collection.id}>{collection.name} Collection</option>
+      : null);
   },
 
   render: function () {

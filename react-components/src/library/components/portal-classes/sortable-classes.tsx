@@ -3,7 +3,7 @@ import ClassRow from './class-row'
 import { SortableContainer, SortableItem } from '../shared/sortable-helpers'
 import css from './style.scss'
 
-class ClassesTable extends React.Component {
+class ClassesTable extends React.Component<any, any> {
   render () {
     const { classes } = this.props
     if (classes.length === 0) {
@@ -13,24 +13,27 @@ class ClassesTable extends React.Component {
     return (
       <div className={css.manageClassesTable}>
         {
-          classes.map(clazz => (
-            <SortableItem key={clazz.id} id={clazz.id} className={css.sortableItem}>
-              <ClassRow
-                clazz={clazz}
-                handleCopy={this.props.handleCopy}
-                handleActiveToggle={this.props.handleActiveToggle}
-              />
-            </SortableItem>
-          ))
+          classes.map((clazz: any) => <SortableItem key={clazz.id} id={clazz.id} className={css.sortableItem}>
+            <ClassRow
+              clazz={clazz}
+              handleCopy={this.props.handleCopy}
+              handleActiveToggle={this.props.handleActiveToggle}
+            />
+          </SortableItem>)
         }
       </div>
-    )
+    );
   }
 }
 
-const SortableClasses = ({ classes, onSortEnd, handleCopy, handleActiveToggle }) => {
-  const renderDragPreview = itemId => {
-    const clazz = classes.find(clazz => clazz.id === itemId)
+const SortableClasses = ({
+  classes,
+  onSortEnd,
+  handleCopy,
+  handleActiveToggle
+}: any) => {
+  const renderDragPreview = (itemId: any) => {
+    const clazz = classes.find((clazz: any) => clazz.id === itemId)
     return (
       <ClassRow
         clazz={clazz}
@@ -42,7 +45,7 @@ const SortableClasses = ({ classes, onSortEnd, handleCopy, handleActiveToggle })
 
   return (
     <SortableContainer
-      items={classes.map(clazz => clazz.id)}
+      items={classes.map((clazz: any) => clazz.id)}
       renderDragPreview={renderDragPreview}
       onReorder={onSortEnd}
     >
@@ -52,7 +55,7 @@ const SortableClasses = ({ classes, onSortEnd, handleCopy, handleActiveToggle })
         handleActiveToggle={handleActiveToggle}
       />
     </SortableContainer>
-  )
+  );
 }
 
 export default SortableClasses

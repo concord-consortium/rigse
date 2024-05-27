@@ -5,11 +5,11 @@ import Formsy from 'formsy-react'
 
 var INVALID_CLASS_WORD = 'You must enter a valid class word'
 
-const classWordValidator = (value) => jQuery.get(Portal.API_V1.CLASSWORD + '?class_word=' + value)
-const registerStudent = (params) => jQuery.post(Portal.API_V1.STUDENTS, params)
+const classWordValidator = (value: any) => jQuery.get(Portal.API_V1.CLASSWORD + '?class_word=' + value)
+const registerStudent = (params: any) => jQuery.post(Portal.API_V1.STUDENTS, params)
 
-export default class StudentForm extends React.Component {
-  constructor (props) {
+export default class StudentForm extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       canSubmit: false
@@ -31,7 +31,7 @@ export default class StudentForm extends React.Component {
     })
   }
 
-  submit (data, resetForm, invalidateForm) {
+  submit (data: any, resetForm: any, invalidateForm: any) {
     const { basicData, onRegistration } = this.props
     const params = jQuery.extend({}, basicData, data)
 

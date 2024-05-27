@@ -20,7 +20,7 @@ const ResourceLicense = Component({
       : license.description.replace('the Concord Consortium', credits)
 
     // alter attribution values when all material should be attributed to a specific project or partner
-    if (Portal.theme === 'ngss-assessment') {
+        if (Portal.theme === 'ngss-assessment') {
       attributionName = 'The Next Generation Science Assessment Project'
       attributionUrl = 'http://nextgenscienceassessment.org/'
       licenseDescription = license.description.replace('the Concord Consortium', attributionName)

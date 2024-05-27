@@ -1,9 +1,8 @@
 import React from 'react'
-// import 'react-day-picker/style.css'
 import css from './style.scss'
 
-export default class ResearcherClassesTable extends React.Component {
-  constructor (props) {
+export default class ResearcherClassesTable extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       sortedClasses: props.classes,
@@ -18,7 +17,7 @@ export default class ResearcherClassesTable extends React.Component {
     this.sortClasses()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate (prevProps: any) {
     if (this.props.classes !== prevProps.classes) {
       this.sortClasses(this.props.classes)
     }
@@ -28,7 +27,7 @@ export default class ResearcherClassesTable extends React.Component {
     const fieldName = this.state.sortBy
     const direction = this.state.sortDirection
     this.setState({
-      sortedClasses: classesToSort.slice().sort((a, b) => {
+      sortedClasses: classesToSort.slice().sort((a: any, b: any) => {
         // Using localeCompare for a more natural sort order
         const comparison = a[fieldName].toString().localeCompare(b[fieldName].toString(), 'en', { sensitivity: 'base' })
         return direction === 'asc' ? comparison : -comparison
@@ -36,14 +35,14 @@ export default class ResearcherClassesTable extends React.Component {
     })
   }
 
-  fieldSortIcon (fieldName) {
+  fieldSortIcon (fieldName: any) {
     if (this.state.sortBy === fieldName) {
       return this.state.sortDirection === 'asc' ? css.asc : css.desc
     }
     return ''
   }
 
-  handleHeaderClick (fieldName) {
+  handleHeaderClick (fieldName: any) {
     const direction = this.state.sortBy === fieldName && this.state.sortDirection === 'asc' ? 'desc' : 'asc'
     this.setState({
       sortBy: fieldName,
@@ -51,11 +50,11 @@ export default class ResearcherClassesTable extends React.Component {
     }, () => this.sortClasses())
   }
 
-  handleShowSchoolNameChange (e) {
+  handleShowSchoolNameChange (e: any) {
     this.setState({ showSchoolName: e.target.checked })
   }
 
-  renderHeader (label, fieldName) {
+  renderHeader (label: any, fieldName: any) {
     return (
       <th onClick={this.handleHeaderClick.bind(this, fieldName)}>
         <span className={css.header}>
@@ -92,7 +91,7 @@ export default class ResearcherClassesTable extends React.Component {
           </thead>
           <tbody>
             {
-              sortedClasses.map((c, i) => (
+              sortedClasses.map((c: any, i: any) => (
                 <tr key={i}>
                   <td>{c.cohort_names}</td>
                   <td>{c.teacher_names}</td>
@@ -105,10 +104,11 @@ export default class ResearcherClassesTable extends React.Component {
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }
 
+// @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 ResearcherClassesTable.defaultProps = {
   classes: []
 }

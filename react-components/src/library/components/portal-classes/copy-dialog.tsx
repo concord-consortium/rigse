@@ -2,8 +2,8 @@ import React from 'react'
 
 import css from './style.scss'
 
-export default class CopyDialog extends React.Component {
-  constructor (props) {
+export default class CopyDialog extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     const { name, classWord, description } = props.clazz
     this.state = {
@@ -17,15 +17,15 @@ export default class CopyDialog extends React.Component {
     this.handleSave = this.handleSave.bind(this)
   }
 
-  handleUpdateName (e) {
+  handleUpdateName (e: any) {
     this.setState({ name: e.target.value })
   }
 
-  handleUpdateClassWord (e) {
+  handleUpdateClassWord (e: any) {
     this.setState({ classWord: e.target.value })
   }
 
-  handleUpdateDescription (e) {
+  handleUpdateDescription (e: any) {
     this.setState({ description: e.target.value })
   }
 
@@ -38,7 +38,7 @@ export default class CopyDialog extends React.Component {
     const { handleCancel, saving } = this.props
     const { name, classWord, description } = this.state
 
-    const cancelSubmit = (e) => {
+    const cancelSubmit = (e: any) => {
       e.preventDefault()
       e.stopPropagation()
     }
@@ -65,7 +65,8 @@ export default class CopyDialog extends React.Component {
                   <td><textarea name='description' value={description} onChange={this.handleUpdateDescription} /></td>
                 </tr>
                 <tr>
-                  <td colSpan='2' className={css.buttons}>
+                  // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
+                  <td colSpan={2} className={css.buttons}>
                     <button disabled={saveDisabled} onClick={this.handleSave}>{saving ? 'Saving ...' : 'Save'}</button>
                     <button onClick={handleCancel}>Cancel</button>
                   </td>

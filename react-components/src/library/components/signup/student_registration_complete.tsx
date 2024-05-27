@@ -2,21 +2,21 @@ import React from 'react'
 import Formsy from 'formsy-react'
 import TextInput from './text_input'
 
-export default class StudentRegistrationComplete extends React.Component {
-  constructor (props) {
+export default class StudentRegistrationComplete extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.submit = this.submit.bind(this)
   }
 
   componentDidMount () {
-    gtag('event', 'click', {
+        gtag('event', 'click', {
       'category': 'User Registration',
       'label': 'Form',
       'action': 'Final Step Completed - Student'
     })
   }
 
-  submit (data) {
+  submit (data: any) {
     if (this.props.afterSigninPath) {
       data.after_sign_in_path = this.props.afterSigninPath
     }
@@ -26,6 +26,7 @@ export default class StudentRegistrationComplete extends React.Component {
       if (response.redirect_path) {
         window.location = response.redirect_path
       } else {
+        // @ts-expect-error TS(2554): Expected 0 arguments, but got 1.
         window.location.reload(true)
       }
     }).fail(function (err) {

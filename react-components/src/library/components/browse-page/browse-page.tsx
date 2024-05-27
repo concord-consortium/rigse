@@ -36,7 +36,7 @@ const BrowsePage = Component({
     }
   },
 
-  handlePreviewClick: function (e) {
+  handlePreviewClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Resource Preview Button',
@@ -44,7 +44,7 @@ const BrowsePage = Component({
     })
   },
 
-  handleTeacherEditionClick: function (e) {
+  handleTeacherEditionClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Resource Teacher Edition Button',
@@ -52,7 +52,7 @@ const BrowsePage = Component({
     })
   },
 
-  handleTeacherResourcesClick: function (e) {
+  handleTeacherResourcesClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'browse page - resource teacher resources button',
@@ -60,7 +60,7 @@ const BrowsePage = Component({
     })
   },
 
-  handleAssignClick: function (e) {
+  handleAssignClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Assign to Class Button',
@@ -68,7 +68,7 @@ const BrowsePage = Component({
     })
   },
 
-  handleTeacherGuideClick: function (e) {
+  handleTeacherGuideClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Teacher Guide Link',
@@ -76,7 +76,7 @@ const BrowsePage = Component({
     })
   },
 
-  handleRubricDocClick: function (e) {
+  handleRubricDocClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Rubric Doc Link',
@@ -84,7 +84,7 @@ const BrowsePage = Component({
     })
   },
 
-  handleAddToCollectionClick: function (e) {
+  handleAddToCollectionClick: function (e: any) {
     const resource = this.state.resource
     gtag('event', 'click', {
       'category': 'Browse Page - Add to Collection Button',
@@ -92,12 +92,13 @@ const BrowsePage = Component({
     })
   },
 
-  handleSocialMediaShare: function (e) {
+  handleSocialMediaShare: function (e: any) {
+    const jQueryWindow = jQuery(window)
     e.preventDefault()
     const width = 575
     const height = 400
-    const left = (jQuery(window).width() - width) / 2
-    const top = (jQuery(window).height() - height) / 2
+    const left = ((jQueryWindow.width() ?? 0) - width) / 2
+    const top = ((jQueryWindow.height() ?? 0) - height) / 2
     const url = e.target.href
     const opts = 'status=1' +
       ',width=' + width +
@@ -118,7 +119,7 @@ const BrowsePage = Component({
     }
     const activities = resource.activities
 
-    const includedActivities = activities.map(function (activity, index) {
+    const includedActivities = activities.map(function (activity: any, index: any) {
       return (
         <span>
           <em>
@@ -146,7 +147,7 @@ const BrowsePage = Component({
       return null
     }
 
-    const relatedResources = resource.related_materials.map(function (resource, i) {
+    const relatedResources = resource.related_materials.map(function (resource: any, i: any) {
       if (i < 2) {
         return RelatedResourceResult({ key: i, resource: resource, replaceResource: this.replaceResource })
       }
@@ -226,7 +227,7 @@ const BrowsePage = Component({
     }
 
     return (
-      <div class='portal-pages-resource-lightbox-standards'>
+      <div className='portal-pages-resource-lightbox-standards'>
         <hr />
         <h2>Standards</h2>
         <StemFinderResultStandards standardStatements={resource.standard_statements} />
@@ -267,11 +268,11 @@ const BrowsePage = Component({
             {resource.icon.url && <div className={css.resourcePreviewImage}>
               <img src={resource.icon.url} alt={resource.name} />
             </div>}
-            {resource.subject_areas.length !== 0 && <div class={css.resourceMetadataGroup}>
+            {resource.subject_areas.length !== 0 && <div className={css.resourceMetadataGroup}>
               <h2>Subject Areas</h2>
               <SubjectAreas subjectAreas={resource.subject_areas} />
             </div>}
-            {resource.grade_levels.length !== 0 && <div class={css.resourceMetadataGroup}>
+            {resource.grade_levels.length !== 0 && <div className={css.resourceMetadataGroup}>
               <h2>Grade Levels</h2>
               <GradeLevels resource={resource} />
             </div>}

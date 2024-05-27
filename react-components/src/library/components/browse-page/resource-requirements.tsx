@@ -30,6 +30,7 @@ const ResourceRequirements = Component({
         }
       }
 
+      // @ts-expect-error TS(2322): Type 'Element' is not assignable to type 'string'.
       requirementsSensors = <p>This resource requires the use of {sensorTypes} {sensorTerm}. You will also need the Concord Consortium's SensorConnector software installed. Learn more about supported sensors and download the SensorConnector from <a href='https://sensorconnector.concord.org/' target='_blank'>sensorconnector.concord.org</a>.</p>
     }
     return (

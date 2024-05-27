@@ -3,8 +3,12 @@ import React from 'react'
 import ModalDialog from '../shared/modal-dialog'
 import modalDialogCSS from '../shared/modal-dialog.scss'
 
-export default class RegisterStudentModal extends React.Component {
-  constructor (props) {
+export default class RegisterStudentModal extends React.Component<any, any> {
+  firstNameRef: any;
+  lastNameRef: any;
+  passwordConfirmationRef: any;
+  passwordRef: any;
+  constructor (props: any) {
     super(props)
     this.handleCancel = this.handleCancel.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -15,11 +19,11 @@ export default class RegisterStudentModal extends React.Component {
     this.passwordConfirmationRef = React.createRef()
   }
 
-  getInputValue (ref) {
+  getInputValue (ref: any) {
     return ref.current ? ref.current.value.trim() : ''
   }
 
-  handleSubmit (e) {
+  handleSubmit (e: any) {
     e.preventDefault()
     e.stopPropagation()
 
@@ -65,7 +69,8 @@ export default class RegisterStudentModal extends React.Component {
                 <td><input id='passwordConfirmation' type='password' name='passwordConfirmation' ref={this.passwordConfirmationRef} /></td>
               </tr>
               <tr>
-                <td colSpan='2' className={modalDialogCSS.buttons}>
+                // @ts-expect-error TS(2322): Type 'string' is not assignable to type 'number'.
+                <td colSpan={2} className={modalDialogCSS.buttons}>
                   <input type='submit' value='Submit' />
                   <button onClick={this.handleCancel}>Cancel</button>
                 </td>

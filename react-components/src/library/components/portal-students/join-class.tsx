@@ -7,8 +7,9 @@ export const CONFIRMING_CLASS_WORD = 'confirmClassWord'
 export const JOIN_CLASS = 'joinClass'
 export const JOINING_CLASS = 'joiningClass'
 
-export class JoinClass extends React.Component {
-  constructor (props) {
+export class JoinClass extends React.Component<any, any> {
+  classWordRef: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       classWord: '',
@@ -27,12 +28,12 @@ export class JoinClass extends React.Component {
     this.setState({ formState: ENTER_CLASS_WORD })
   }
 
-  handleSubmit (e) {
+  handleSubmit (e: any) {
     e.preventDefault()
 
     let { formState, classWord } = this.state
 
-    const onError = (err) => {
+    const onError = (err: any) => {
       this.setState({ error: err.message || 'Unable to join class!' })
       this.setState({ formState: ENTER_CLASS_WORD })
     }
@@ -42,7 +43,7 @@ export class JoinClass extends React.Component {
         classWord = this.classWordRef.current ? this.classWordRef.current.value.trim() : ''
         if (classWord.length > 0) {
           this.setState({ formState: CONFIRMING_CLASS_WORD }, () => {
-            const onSuccess = (result) => this.setState({ error: null, classWord, teacherName: result.teacher_name, formState: JOIN_CLASS })
+            const onSuccess = (result: any) => this.setState({ error: null, classWord, teacherName: result.teacher_name, formState: JOIN_CLASS })
             this.apiCall('confirm', { data: { class_word: classWord }, onSuccess, onError })
           })
         }
@@ -57,14 +58,15 @@ export class JoinClass extends React.Component {
     }
   }
 
-  showError (err, message) {
+  showError (err: any, message: any) {
     this.setState({ error: err.message || message })
   }
 
-  apiCall (action, options) {
+  apiCall (action: any, options: any) {
     const basePath = '/api/v1/students'
     const { data, onSuccess, onError } = options
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const { url, type } = {
       confirm: { url: `${basePath}/confirm_class_word`, type: 'POST' },
       join: { url: `${basePath}/join_class`, type: 'POST' }
@@ -102,7 +104,7 @@ export class JoinClass extends React.Component {
           <li>
             <label htmlFor='classWord'>New Class Word: </label>
             <p>Not case sensitive</p>
-            <input type='text' live='false' id='classWord' name='classWord' ref={this.classWordRef} size={30} disabled={confirmingClassWord} />
+            <input type='text' id='classWord' name='classWord' ref={this.classWordRef} size={30} disabled={confirmingClassWord} />
           </li>
           <li>
             <input type='submit' disabled={confirmingClassWord} value={confirmingClassWord ? 'Submitting ...' : 'Submit'} />

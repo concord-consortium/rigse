@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default class MBMaterial extends React.Component {
-  constructor (props) {
+export default class MBMaterial extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       descriptionVisible: false,
@@ -13,22 +13,22 @@ export default class MBMaterial extends React.Component {
     this.archive = this.archive.bind(this)
   }
 
-  assignToSpecificClass (e) {
-    Portal.assignMaterialToSpecificClass(e.target.checked, this.props.assignToSpecificClass, this.props.material.id, this.props.material.class_name)
+  assignToSpecificClass (e: any) {
+        Portal.assignMaterialToSpecificClass(e.target.checked, this.props.assignToSpecificClass, this.props.material.id, this.props.material.class_name)
     this.setState({ assigned: e.target.checked })
   }
 
-  toggleDescription (e) {
+  toggleDescription (e: any) {
     this.setState({ descriptionVisible: !this.state.descriptionVisible })
     e.preventDefault()
   }
 
-  assignToClass (e) {
+  assignToClass (e: any) {
     const isAssignWrapped = window.self !== window.top &&
-      window.self.location.hostname === window.top.location.hostname
+      window.self.location.hostname === window.top?.location.hostname
     isAssignWrapped
       ? window.parent.Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
-      : Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
+            : Portal.assignMaterialToClass(this.props.material.id, this.props.material.class_name)
     e.preventDefault()
   }
 
@@ -37,7 +37,7 @@ export default class MBMaterial extends React.Component {
   }
 
   archive () {
-    return Portal.confirm({
+        return Portal.confirm({
       message: `Archive '${this.props.material.name}'?`,
       callback: () => {
         return this.props.archive(this.props.material.id, this.props.material.archive_url)

@@ -1,7 +1,7 @@
 import apiPost from './post'
 
-const api = (endPoints) => {
-  return (action, options) => {
+const api = (endPoints: any) => {
+  return (action: any, options: any) => {
     const endPoint = endPoints[action]
     if (endPoint) {
       const { url } = endPoint
@@ -15,7 +15,7 @@ const api = (endPoints) => {
     } else {
       window.alert(`No API endpoint found for '${action}'`)
     }
-  }
+  };
 }
 
 export default api

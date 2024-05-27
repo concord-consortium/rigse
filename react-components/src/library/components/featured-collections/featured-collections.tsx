@@ -3,7 +3,7 @@ import FeaturedCollectionsCard from './featured-collections-card'
 
 import css from './featured-collections.scss'
 
-export default class FeaturedCollections extends React.Component {
+export default class FeaturedCollections extends React.Component<any, any> {
   shouldComponentUpdate () {
     return false
   }
@@ -17,11 +17,11 @@ export default class FeaturedCollections extends React.Component {
           <p>Collections are curated groups of complementary resources that focus on a particular topic. <a className='special-link' href='/collections'>View all</a></p>
         </div>
         <div className={css.finderResultsFeaturedCards}>
-          {featuredCollections.map(function (featuredCollection, index) {
+          {featuredCollections.map(function (featuredCollection: any, index: any) {
             return FeaturedCollectionsCard({ key: featuredCollection.id, featuredCollection: featuredCollection })
           })}
         </div>
       </div>
-    )
+    );
   }
 }

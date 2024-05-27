@@ -2,7 +2,6 @@ import React from 'react'
 
 import RegisterStudentModal from './register-student-modal'
 import StudentRosterRow from './student-roster-row'
-// import StudentRosterHeader from './student-roster-header'
 import ModalDialog from '../shared/modal-dialog'
 
 import api from '../../helpers/api'
@@ -19,8 +18,8 @@ const apiCall = api({
 
 const REGISTERED_STUDENT_HASH_MARKER = '#registered_student'
 
-export default class StudentRoster extends React.Component {
-  constructor (props) {
+export default class StudentRoster extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
 
     this.state = {
@@ -45,7 +44,7 @@ export default class StudentRoster extends React.Component {
     }
   }
 
-  handleRemoveStudent (student) {
+  handleRemoveStudent (student: any) {
     const { clazz } = this.props
     if (window.confirm(`This will remove the student: '${student.name}' from the class: ${clazz.name}.\n\nAre you sure you want to do this?`)) {
       apiCall('remove', {
@@ -58,7 +57,7 @@ export default class StudentRoster extends React.Component {
     }
   }
 
-  handleChangePassword (student) {
+  handleChangePassword (student: any) {
     if (student.is_oauth_user) {
       window.alert(`This student is authenticated as a ${student.oauth_provider} user. You cannot change this password.`)
     } else {
@@ -66,7 +65,7 @@ export default class StudentRoster extends React.Component {
     }
   }
 
-  handleAddStudent (otherStudent) {
+  handleAddStudent (otherStudent: any) {
     apiCall('add', {
       data: {
         clazz_id: this.props.clazz.id,
@@ -77,7 +76,7 @@ export default class StudentRoster extends React.Component {
     })
   }
 
-  handleRegisterStudent (fields) {
+  handleRegisterStudent (fields: any) {
     const { firstName, lastName, password, passwordConfirmation } = fields
     apiCall('register', {
       data: {
@@ -127,7 +126,7 @@ export default class StudentRoster extends React.Component {
     )
   }
 
-  renderStudents (canEdit) {
+  renderStudents (canEdit: any) {
     const { students } = this.props
 
     if (students.length === 0) {
@@ -144,18 +143,16 @@ export default class StudentRoster extends React.Component {
             <th>Assignments Started</th>
             {canEdit ? <th className='hide_in_print' /> : undefined}
           </tr>
-          {students.map(student => (
-            <StudentRosterRow
-              key={student.student_id}
-              student={student}
-              canEdit={canEdit}
-              onRemoveStudent={this.handleRemoveStudent}
-              onChangePassword={this.handleChangePassword}
-            />
-          ))}
+          {students.map((student: any) => <StudentRosterRow
+            key={student.student_id}
+            student={student}
+            canEdit={canEdit}
+            onRemoveStudent={this.handleRemoveStudent}
+            onChangePassword={this.handleChangePassword}
+          />)}
         </tbody>
       </table>
-    )
+    );
   }
 
   render () {

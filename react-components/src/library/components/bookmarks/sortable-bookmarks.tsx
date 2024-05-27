@@ -3,14 +3,14 @@ import BookmarkRow from './bookmark-row'
 import { SortableContainer, SortableItem } from '../shared/sortable-helpers'
 import css from './style.scss'
 
-class Bookmarks extends React.Component {
+class Bookmarks extends React.Component<any, any> {
   render () {
     const { bookmarks } = this.props
 
     return (
       <div className={css.editBookmarksTable}>
         {
-          bookmarks.map((bookmark, index) => (
+          bookmarks.map((bookmark: any, index: any) => (
             <SortableItem key={bookmark.id} id={bookmark.id} className={css.sortableItem}>
               <BookmarkRow
                 key={bookmark.id}
@@ -24,13 +24,19 @@ class Bookmarks extends React.Component {
           ))
         }
       </div>
-    )
+    );
   }
 }
 
-const SortableBookmarks = ({ bookmarks, handleUpdate, handleDelete, handleVisibilityToggle, onSortEnd }) => {
-  const renderDragPreview = itemId => {
-    const bookmark = bookmarks.find(bookmark => bookmark.id === itemId)
+const SortableBookmarks = ({
+  bookmarks,
+  handleUpdate,
+  handleDelete,
+  handleVisibilityToggle,
+  onSortEnd
+}: any) => {
+  const renderDragPreview = (itemId: any) => {
+    const bookmark = bookmarks.find((bookmark: any) => bookmark.id === itemId)
     return (
       <BookmarkRow
         bookmark={bookmark}
@@ -43,7 +49,7 @@ const SortableBookmarks = ({ bookmarks, handleUpdate, handleDelete, handleVisibi
 
   return (
     <SortableContainer
-      items={bookmarks.map(bookmark => bookmark.id)}
+      items={bookmarks.map((bookmark: any) => bookmark.id)}
       renderDragPreview={renderDragPreview}
       onReorder={onSortEnd}
     >
@@ -54,7 +60,7 @@ const SortableBookmarks = ({ bookmarks, handleUpdate, handleDelete, handleVisibi
         handleVisibilityToggle={handleVisibilityToggle}
       />
     </SortableContainer>
-  )
+  );
 }
 
 export default SortableBookmarks

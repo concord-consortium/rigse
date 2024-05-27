@@ -8,8 +8,8 @@ module.exports = {
   mode: devMode ? 'development' : 'production',
   devtool: devMode ? 'inline-source-map' : false,
   entry: {
-    'react-components': './src/library/library.js',
-    'react-test-globals': './src/react-test-globals.js'
+    'react-components': './src/library/library.tsx',
+    'react-test-globals': './src/react-test-globals.ts'
   },
   output: {
     // path: path.resolve(destFolder, './library'),
@@ -68,6 +68,9 @@ module.exports = {
         type: 'asset/inline',
       }
     ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   externals: {
     'jquery': 'jQuery',

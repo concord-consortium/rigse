@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client'
 
 const reactRootMap = new Map()
 
-export const render = function (component, idOrElement) {
+export const render = function (component: any, idOrElement: any) {
   const element = typeof idOrElement === 'string' ? document.getElementById(idOrElement) : idOrElement
 
   if (!reactRootMap.has(element)) {
@@ -16,7 +16,7 @@ export const render = function (component, idOrElement) {
   root.render(component)
 }
 
-export const unmount = function (idOrElement) {
+export const unmount = function (idOrElement: any) {
   const element = typeof idOrElement === 'string' ? document.getElementById(idOrElement) : idOrElement
 
   if (reactRootMap.has(element)) {

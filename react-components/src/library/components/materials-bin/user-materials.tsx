@@ -2,8 +2,8 @@ import React from 'react'
 
 import MBUserMaterialsContainer from './user-materials-container'
 
-export default class MBUserMaterials extends React.Component {
-  constructor (props) {
+export default class MBUserMaterials extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       materialsVisible: false

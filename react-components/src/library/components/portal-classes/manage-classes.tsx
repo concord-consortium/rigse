@@ -5,8 +5,9 @@ import CopyDialog from './copy-dialog'
 
 import css from './style.scss'
 
-export default class ManageClasses extends React.Component {
-  constructor (props) {
+export default class ManageClasses extends React.Component<any, any> {
+  handleCopyCancel: any;
+  constructor (props: any) {
     super(props)
     this.state = {
       classes: this.props.classes,
@@ -20,11 +21,11 @@ export default class ManageClasses extends React.Component {
     this.handleCopyCancel = () => this.handleCopy(null)
   }
 
-  handleCopy (clazz) {
+  handleCopy (clazz: any) {
     this.setState({ copyClazz: clazz })
   }
 
-  handleSaveCopy (values) {
+  handleSaveCopy (values: any) {
     const onSuccess = () => window.location.reload()
     this.setState({ saving: true }, () => {
       this.apiCall('copy', { clazz: this.state.copyClazz, data: values, onSuccess })
@@ -35,7 +36,7 @@ export default class ManageClasses extends React.Component {
     })
   }
 
-  handleActiveToggle (clazz) {
+  handleActiveToggle (clazz: any) {
     const toggle = () => {
       clazz.is_archived = !clazz.is_archived
       this.setState({ classes: this.state.classes })
@@ -50,12 +51,15 @@ export default class ManageClasses extends React.Component {
       })
   }
 
-  handleSortEnd ({ oldIndex, newIndex }) {
+  handleSortEnd ({
+    oldIndex,
+    newIndex
+  }: any) {
     let { classes } = this.state
     classes = arrayMove(classes, oldIndex, newIndex)
     this.setState({ classes })
 
-    const ids = classes.map(c => c.id)
+    const ids = classes.map((c: any) => c.id)
     this.apiCall('sort', { data: { ids } })
       .catch(err => {
         this.setState({ classes: arrayMove(classes, newIndex, oldIndex) })
@@ -63,7 +67,7 @@ export default class ManageClasses extends React.Component {
       })
   }
 
-  showError (err, message) {
+  showError (err: any, message: any) {
     if (err.message) {
       window.alert(`${message}\n${err.message}`)
     } else {
@@ -71,13 +75,14 @@ export default class ManageClasses extends React.Component {
     }
   }
 
-  apiCall (action, options) {
+  apiCall (action: any, options: any) {
     const teacherClassesBasePath = '/api/v1/teacher_classes'
     const classesBasePath = '/api/v1/classes'
     let { clazz, data, onSuccess } = options
 
     clazz = clazz || { id: 0 }
 
+    // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     const { url, type } = {
       copy: { url: `${teacherClassesBasePath}/${clazz.id}/copy`, type: 'POST' },
       sort: { url: `${teacherClassesBasePath}/sort`, type: 'POST' },
@@ -112,7 +117,7 @@ export default class ManageClasses extends React.Component {
 
   render () {
     const { classes, copyClazz, saving } = this.state
-    const numActiveClasses = classes.filter(c => c.is_archived === false).length
+    const numActiveClasses = classes.filter((c: any) => c.is_archived === false).length
 
     return (
       <>

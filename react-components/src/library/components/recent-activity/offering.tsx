@@ -4,8 +4,8 @@ import OfferingButtons from '../common/offering-buttons'
 
 import css from './style.scss'
 
-export default class Offering extends React.Component {
-  constructor (props) {
+export default class Offering extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.state = {
       detailsVisible: false

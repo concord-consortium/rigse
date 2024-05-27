@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default class SMaterialIcon extends React.Component {
-  constructor (props) {
+export default class SMaterialIcon extends React.Component<any, any> {
+  constructor (props: any) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
   }
@@ -81,7 +81,7 @@ export default class SMaterialIcon extends React.Component {
       border = '0px'
     }
 
-    const containerStyle = { 'border': border }
+    const containerStyle: any = { 'border': border }
 
     //
     // Check for caller overrides
@@ -100,10 +100,11 @@ export default class SMaterialIcon extends React.Component {
       // Set favorite info.
       //
       let outlineClass
-      let favClass = favClassMap[false]
+      let favClass = favClassMap['false']
       const favStar = '\u2605'
       const outlineStar = '\u2606'
       if (starred) {
+        // @ts-expect-error TS(2538): Type 'true' cannot be used as an index type.
         favClass += ' ' + favClassMap[true]
       } else {
         outlineClass = favClass + ' ' + favOutlineClass

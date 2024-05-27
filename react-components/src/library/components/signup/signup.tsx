@@ -9,8 +9,14 @@ import UserTypeSelector from './user_type_selector'
 
 import ParseQueryString from '../../helpers/parse-query-string'
 
-export default class SignUp extends React.Component {
-  constructor (props) {
+export default class SignUp extends React.Component<any, any> {
+  static defaultProps = {
+    siteName: (window.Portal && window.Portal.siteName) || 'Portal',
+    signupText: 'Next',
+    anonymous: window.Portal && window.Portal.currentUser.isAnonymous
+  }
+
+  constructor (props: any) {
     super(props)
     this.state = {
       userType: null,
@@ -27,12 +33,12 @@ export default class SignUp extends React.Component {
     this.onTeacherRegistration = this.onTeacherRegistration.bind(this)
   }
 
-  onUserTypeSelect (data) {
+  onUserTypeSelect (data: any) {
     let newUrl = window.location.protocol + '//' + window.location.host + window.location.pathname
     let queryString = '?'
 
     if (window.location.search) {
-      let params = ParseQueryString()
+      let params: any = ParseQueryString()
       let paramKeys = Object.keys(params)
       for (let i = 0; i < paramKeys.length; i++) {
         if (paramKeys[i] !== 'userType') {
@@ -49,20 +55,20 @@ export default class SignUp extends React.Component {
     })
   }
 
-  onBasicDataSubmit (data) {
+  onBasicDataSubmit (data: any) {
     data.sign_up_path = window.location.pathname
     this.setState({
       basicData: data
     })
   }
 
-  onStudentRegistration (data) {
+  onStudentRegistration (data: any) {
     this.setState({
       studentData: data
     })
   }
 
-  onTeacherRegistration (data) {
+  onTeacherRegistration (data: any) {
     this.setState({
       teacherData: data
     })
@@ -175,10 +181,4 @@ export default class SignUp extends React.Component {
       </div>
     )
   }
-}
-
-SignUp.defaultProps = {
-  siteName: (window.Portal && window.Portal.siteName) || 'Portal',
-  signupText: 'Next',
-  anonymous: window.Portal && window.Portal.currentUser.isAnonymous
 }

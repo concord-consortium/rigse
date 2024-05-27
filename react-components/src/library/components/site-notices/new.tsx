@@ -5,7 +5,7 @@ import css from './style.scss'
 const SiteNoticesNewForm = () => {
   useEffect(() => {
     // See: app/helpers/tiny_mce_helper.rb
-    window.initTinyMCE()
+    (window as any).initTinyMCE()
   }, [])
 
   const authToken = jQuery('meta[name="csrf-token"]').attr('content')
@@ -14,7 +14,7 @@ const SiteNoticesNewForm = () => {
       <h1>Create Notice</h1>
       <form acceptCharset='UTF-8' action={Portal.API_V1.SITE_NOTICES_CREATE} method='post'>
         <div id='editor' className={css.adminSiteNoticesEditEditor}>
-          <textarea className={css.tinymce_textarea} rows='40' name='notice_html' defaultValue={''} />
+          <textarea className={css.tinymce_textarea} rows={40} name='notice_html' defaultValue={''} />
         </div>
         <div className={css.adminSiteNoticesEditBackLink}>
           <a href='/admin/site_notices'>Cancel</a>

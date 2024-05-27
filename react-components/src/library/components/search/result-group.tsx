@@ -4,15 +4,17 @@ import SPaginationInfo from './pagination-info'
 import SPagination from './pagination'
 import SMaterialsList from './materials-list'
 
-export default class SearchResultGroup extends React.Component {
-  constructor (props) {
+export default class SearchResultGroup extends React.Component<any, any> {
+  materialType: any;
+  pageParam: any;
+  constructor (props: any) {
     super(props)
     this.state = Object.assign({ loading: false }, this.props)
     this.onPaginationSelect = this.onPaginationSelect.bind(this)
     this.updateState = this.updateState.bind(this)
   }
 
-  onPaginationSelect (page) {
+  onPaginationSelect (page: any) {
     if (page !== this.state.group.pagination.current_page) {
       jQuery(`#${this.pageParam}`).val(page)
       let query = jQuery('#material_search_form').serialize()
@@ -36,7 +38,7 @@ export default class SearchResultGroup extends React.Component {
     }
   }
 
-  updateState (groupData) {
+  updateState (groupData: any) {
     this.setState({ loading: false, group: groupData.results[0] })
   }
 

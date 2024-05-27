@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class StudentFormSideInfo extends React.Component {
+export default class StudentFormSideInfo extends React.Component<any, any> {
   render () {
     return (
       <div>

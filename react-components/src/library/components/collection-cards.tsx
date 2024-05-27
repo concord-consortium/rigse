@@ -19,8 +19,8 @@ const CollectionCards = Component({
       jQuery.ajax({
         url: '/api/v1/projects', // TODO: replace with Portal.API_V1 constant when available
         dataType: 'json'
-      }).done(function (data) {
-        var collections = data.reduce(function (collections, collection) {
+      }).done(function (data: any) {
+        var collections = data.reduce(function (collections: any, collection: any) {
           if (collection.landing_page_slug) {
             collection.filteredDescription = portalObjectHelpers.textOfHtml(collection.project_card_description)
             collections.push(collection)
@@ -40,15 +40,15 @@ const CollectionCards = Component({
 
         this.setState({ collections: collections })
 
-        fadeIn(this, 1000)
+        fadeIn(this)
       }.bind(this))
     }.bind(this))
   },
 
   renderCollectionCards: function () {
-    let collectionsCards = []
+    let collectionsCards: any = []
     let defaultProjectCardImageUrl = 'https://learn-resources.concord.org/images/collections/default-collection.jpg'
-    this.state.collections.map(function (collection) {
+    this.state.collections.map(function (collection: any) {
       collectionsCards.push(<div key={collection.landing_page_slug} className={'portal-pages-collections-card col-4'}>
         <a href={'/' + collection.landing_page_slug}>
           <div className={'portal-pages-collections-card-image-preview'}>
