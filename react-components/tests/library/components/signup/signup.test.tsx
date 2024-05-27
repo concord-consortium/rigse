@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import SignUp from "../../../../src/library/components/signup/signup";

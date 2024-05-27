@@ -1,4 +1,3 @@
-/* globals describe it expect */
 
 import React from "react";
 import { render, screen } from "@testing-library/react";
@@ -15,8 +14,7 @@ describe("When I try to render signup basic data form", () => {
     const thirdPartyLoginOptions = screen.getByTestId("third-party-login-options");
     expect(thirdPartyLoginOptions).toBeInTheDocument();
 
-    // @ts-expect-error TS(2769): No overload matches this call.
-    const submitButton = screen.getByRole("button", { type: "submit" });
+    const submitButton = screen.getByRole("button");
     expect(submitButton).toBeInTheDocument();
   });
 
@@ -34,8 +32,7 @@ describe("When I try to render signup basic data form", () => {
     expect(screen.getByText("Password")).toBeInTheDocument();
     expect(screen.getByText("Confirm Password")).toBeInTheDocument();
 
-    // @ts-expect-error TS(2769): No overload matches this call.
-    const submitButton = screen.getByRole("button", { type: "submit" });
+    const submitButton = screen.getByRole("button");
     expect(submitButton).toBeInTheDocument();
     expect(submitButton).toBeDisabled();
   });

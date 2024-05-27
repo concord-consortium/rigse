@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import UserTypeSelector from "../../../../src/library/components/signup/user_type_selector";

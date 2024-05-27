@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import React from "react";
 import Formsy from "formsy-react";
 import { render, screen } from "@testing-library/react";

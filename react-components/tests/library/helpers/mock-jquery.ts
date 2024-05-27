@@ -1,8 +1,12 @@
+import jQuery from "jquery";
+
 declare global {
   interface Window {
     jQuery: any;
   }
 }
+
+window.jQuery = jQuery;
 
 export const mockJqueryAjaxSuccess = (result: any) => {
   const realJQuery = window.jQuery;

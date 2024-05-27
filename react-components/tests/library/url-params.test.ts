@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import { appendOfferingApiQueryParams } from "../../src/library/url-params";
 
 describe("appendOfferingApiQueryParams", () => {

@@ -86,19 +86,19 @@ describe("When I try to render class setup form", () => {
     expect(teacherList).toHaveTextContent("Tester, J. (joetester)");
 
     const deleteIcons = screen.getAllByAltText(/Remove/);
-    const savedConfirm = global.confirm;
+    const savedConfirm = window.confirm;
 
     // simulate cancelling confirmation
-    global.confirm = () => false;
+    window.confirm = () => false;
     fireEvent.click(deleteIcons[0]);
     expect(teacherList).toHaveTextContent("Bobberton, B. (bob)");
     expect(teacherList).toHaveTextContent("Tester, J. (joetester)");
 
     // simulate accepting confirmation
-    global.confirm = () => true;
+    window.confirm = () => true;
     fireEvent.click(deleteIcons[0]);
     expect(teacherList).toHaveTextContent("Tester, J. (joetester)");
 
-    global.confirm = savedConfirm;
+    window.confirm = savedConfirm;
   });
 });

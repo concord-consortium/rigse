@@ -119,11 +119,11 @@ describe("When I try to render sortable bookmarks", () => {
     // before delete
     expect(screen.getByText("Link 1")).toBeInTheDocument();
 
-    global.confirm = jest.fn(() => false);
+    window.confirm = jest.fn(() => false);
     fireEvent.click(deleteButton);
     expect(screen.getByText("Link 1")).toBeInTheDocument();
 
-    global.confirm = jest.fn(() => true);
+    window.confirm = jest.fn(() => true);
     fireEvent.click(deleteButton);
     expect(screen.queryByText("Link 1")).not.toBeInTheDocument();
   });

@@ -22,10 +22,8 @@ describe("When I try to render materials-bin materials category", () => {
     const container = screen.getByText("children...").parentElement;
     expect(container).toHaveClass("mb-cell", "mb-category", "mb-clickable", "foo", "mb-selected");
 
-
     expect(handleClick).not.toHaveBeenCalled();
-    // @ts-expect-error TS(2345): Argument of type 'HTMLElement | null' is not assig... Remove this comment to see the full error message
-    fireEvent.click(container);
+    fireEvent.click(container!);
     expect(handleClick).toHaveBeenCalled();
   });
 });

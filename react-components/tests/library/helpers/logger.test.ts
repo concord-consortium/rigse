@@ -1,4 +1,3 @@
-/* globals describe it expect */
 
 import { mockJquery } from "./mock-jquery";
 import { getDefaultData, logEvent, postLogEvent } from "../../../src/library/helpers/logger";

@@ -67,22 +67,20 @@ describe("When I try to render sortable material collection items", () => {
     // before delete
     expect(screen.getByText("Material Collection Item")).toBeInTheDocument();
 
-    const savedConfirm = global.confirm;
+    const savedConfirm = window.confirm;
 
     // with cancel on the confirmation
-    global.confirm = () => false;
-    // @ts-expect-error TS(2345): Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-    fireEvent.click(deleteButton);
+    window.confirm = () => false;
+    fireEvent.click(deleteButton!);
     expect(screen.getByText("Material Collection Item")).toBeInTheDocument();
 
     // with ok on the confirmation
-    global.confirm = () => true;
-    // @ts-expect-error TS(2345): Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-    fireEvent.click(deleteButton);
+    window.confirm = () => true;
+    fireEvent.click(deleteButton!);
     await waitFor(() => {
       expect(screen.getByText(/No materials have been added to this collection/)).toBeInTheDocument();
     });
 
-    global.confirm = savedConfirm;
+    window.confirm = savedConfirm;
   });
 });

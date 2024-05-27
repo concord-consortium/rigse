@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import React from "react";
 import { render } from "@testing-library/react";
 import SPagination from "../../../../src/library/components/search/pagination";

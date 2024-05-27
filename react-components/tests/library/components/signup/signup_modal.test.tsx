@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import SignupModal from "../../../../src/library/components/signup/signup_modal";
@@ -8,10 +7,8 @@ describe("When I try to render signup modal", () => {
     render(<SignupModal />);
 
     expect(screen.getByText("Signing Up", { exact: false })).toBeInTheDocument();
-    // @ts-expect-error TS(2769): No overload matches this call.
-    expect(screen.getByRole("button", { name: "I am a Teacher", exact: false })).toBeInTheDocument();
-    // @ts-expect-error TS(2769): No overload matches this call.
-    expect(screen.getByRole("button", { name: "I am a Student", exact: false })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "I am a Teacher" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "I am a Student" })).toBeInTheDocument();
     expect(screen.getByText("Already have an account?", { exact: false })).toBeInTheDocument();
     expect(screen.getByText("Log in »", { exact: false })).toBeInTheDocument();
     expect(screen.getByText("Why sign up?", { exact: false })).toBeInTheDocument();

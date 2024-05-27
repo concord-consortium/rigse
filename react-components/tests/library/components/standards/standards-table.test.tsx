@@ -1,4 +1,3 @@
-/* globals describe it expect */
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import StandardsTable, { PAGE_SIZE } from "../../../../src/library/components/standards/standards-table";

@@ -13,14 +13,13 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "strict": true,
-    "types": ["jest", "node", "@testing-library/jest-dom"],
+    "types": [],
     "jsx": "react",
     "lib": ["dom", "dom.iterable", "es2018"]
   },
   "include": [
     "./src/**/*",
     "./tests/**/*",
-    "./global.d.ts",
-    "./global-mod.d.ts"
+    "./global.d.ts"
   ]
 }

@@ -61,8 +61,7 @@ describe("When I try to render materials-bin user materials", () => {
     render(<MBUserMaterials userId={1} name="Collection Name" />);
 
     const toggleButton = screen.getByText("Collection Name").closest(".mb-collection-name");
-    // @ts-expect-error TS(2345): Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-    fireEvent.click(toggleButton);
+    fireEvent.click(toggleButton!);
 
     await waitFor(() => {
       const collectionHeader = screen.getByRole("heading", { level: 3 });

@@ -1,7 +1,9 @@
-import '@testing-library/jest-dom'
-import jQuery from 'jquery'
+import "@testing-library/jest-dom";
 
-window.jQuery = jQuery;
-window.alert = jest.fn();
-// mock google tag manager
-window.gtag = jest.fn();
+declare global {
+  interface Window {
+    gtag: any;
+  }
+}
+
+window.gtag = jest.fn(); // google tag manager
