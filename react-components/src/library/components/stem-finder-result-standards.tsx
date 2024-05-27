@@ -1,60 +1,60 @@
-import React from 'react'
-import Component from '../helpers/component'
-import StandardsHelpers from '../helpers/standards-helpers'
+import React from "react";
+import Component from "../helpers/component";
+import StandardsHelpers from "../helpers/standards-helpers";
 
 const StemFinderResultStandards = Component({
 
-  shouldComponentUpdate: function () {
-    return false
+  shouldComponentUpdate () {
+    return false;
   },
 
-  render: function () {
-    const { standardStatements } = this.props
-    let helpers: any = {}
-    let unhelped = []
+  render () {
+    const { standardStatements } = this.props;
+    const helpers: any = {};
+    const unhelped = [];
 
-    helpers.NGSS = StandardsHelpers.getStandardsHelper('NGSS')
+    helpers.NGSS = StandardsHelpers.getStandardsHelper("NGSS");
 
     for (let i = 0; i < standardStatements.length; i++) {
-      let statement = standardStatements[i]
-      let helper = helpers[statement.type]
+      const statement = standardStatements[i];
+      const helper = helpers[statement.type];
 
       if (helper) {
-        helper.add(statement)
+        helper.add(statement);
       } else {
-        unhelped.push(statement)
+        unhelped.push(statement);
       }
     }
 
-    const unhelpedStandards = unhelped.map(function (statement) {
-      let description = statement.description
-      if (Array.isArray && Array.isArray(description)) {
-        let formatted = ''
+    const unhelpedStandards = unhelped.map(function (statement, idx) {
+      let description = statement.description;
+      if (Array.isArray(description)) {
+        let formatted = "";
         for (let i = 0; i < description.length; i++) {
-          if (description[i].endsWith(':')) {
-            description[i] += ' '
-          } else if (!description[i].endsWith('.')) {
-            description[i] += '. '
+          if (description[i].endsWith(":")) {
+            description[i] += " ";
+          } else if (!description[i].endsWith(".")) {
+            description[i] += ". ";
           }
-          formatted += description[i]
+          formatted += description[i];
         }
-        description = formatted
+        description = formatted;
       }
       return (
-        <div>
-          <h3>{statement.notation}</h3>
-          {description}
+        <div key={idx}>
+          <h3>{ statement.notation }</h3>
+          { description }
         </div>
-      )
-    })
+      );
+    });
 
     return (
       <>
-        {helpers.NGSS.getDiv()}
-        {unhelpedStandards}
+        { helpers.NGSS.getDiv() }
+        { unhelpedStandards }
       </>
-    )
+    );
   }
-})
+});
 
-export default StemFinderResultStandards
+export default StemFinderResultStandards;

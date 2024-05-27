@@ -1,33 +1,33 @@
-import React from 'react'
+import React from "react";
 
-import MBUserMaterialsContainer from './user-materials-container'
+import MBUserMaterialsContainer from "./user-materials-container";
 
 export default class MBUserMaterials extends React.Component<any, any> {
   constructor (props: any) {
-    super(props)
+    super(props);
     this.state = {
       materialsVisible: false
-    }
-    this.toggleMaterials = this.toggleMaterials.bind(this)
+    };
+    this.toggleMaterials = this.toggleMaterials.bind(this);
   }
 
   toggleMaterials () {
-    this.setState({ materialsVisible: !this.state.materialsVisible })
+    this.setState((prevState: any) => ({ materialsVisible: !prevState.materialsVisible }));
   }
 
   renderToggleIcon () {
     if (this.state.materialsVisible) {
-      return '-'
+      return "-";
     } else {
-      return '+'
+      return "+";
     }
   }
 
   render () {
     return (
       <div>
-        <div className='mb-collection-name mb-clickable' onClick={this.toggleMaterials}>
-          <span className='mb-toggle-symbol'>{this.renderToggleIcon()}</span> {this.props.name}
+        <div className="mb-collection-name mb-clickable" onClick={this.toggleMaterials}>
+          <span className="mb-toggle-symbol">{ this.renderToggleIcon() }</span> { this.props.name }
         </div>
 
         <MBUserMaterialsContainer
@@ -37,6 +37,6 @@ export default class MBUserMaterials extends React.Component<any, any> {
           archive={this.props.archiveSingle}
         />
       </div>
-    )
+    );
   }
 }

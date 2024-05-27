@@ -1,16 +1,16 @@
-const cache: any = {}
+const cache: any = {};
 
 export const loadMaterialsCollections = (ids: any, callback: any) => {
   const onComplete = () => {
-    const data = ids.map((id: any) => cache[id] || { name: 'MISSING-COLLECTION-' + id, materials: [] })
-    callback(data)
-  }
+    const data = ids.map((id: any) => cache[id] || { name: "MISSING-COLLECTION-" + id, materials: [] });
+    callback(data);
+  };
 
   // ensure we only request each id once
-  const missingIds = ids.filter((id: any) => !cache[id])
+  const missingIds = ids.filter((id: any) => !cache[id]);
   if (missingIds.length === 0) {
-    onComplete()
-    return
+    onComplete();
+    return;
   }
 
   jQuery.ajax({
@@ -19,20 +19,20 @@ export const loadMaterialsCollections = (ids: any, callback: any) => {
       id: missingIds,
       skip_lightbox_reloads: true
     },
-    dataType: 'json',
+    dataType: "json",
     success: (missingData) => {
       missingIds.forEach((id: any, index: any) => {
-        cache[id] = missingData[index]
-      })
+        cache[id] = missingData[index];
+      });
     },
     complete: () => {
-      onComplete()
+      onComplete();
     }
-  })
-}
+  });
+};
 
 export const loadMaterialsCollection = (id: any, callback: any) => {
   loadMaterialsCollections([id], (data: any) => {
-    callback(data[0])
-  })
-}
+    callback(data[0]);
+  });
+};

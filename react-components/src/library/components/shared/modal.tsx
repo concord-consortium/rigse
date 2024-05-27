@@ -1,16 +1,16 @@
-import React from 'react'
+import React from "react";
 
-import css from './modal.scss'
+import css from "./modal.scss";
 
 export default class Modal extends React.Component<any, any> {
   render () {
-    const { children } = this.props
+    const { children } = this.props;
 
     return (
-      <div className={css.modal} role='dialog'>
-        <div className={css.background} data-testid='modal-background' />
-        {children}
+      <div className={css.modal} role="dialog">
+        <div className={css.background} data-testid="modal-background" />
+        { children }
       </div>
-    )
+    );
   }
 }

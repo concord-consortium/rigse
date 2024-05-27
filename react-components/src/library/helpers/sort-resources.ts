@@ -1,25 +1,25 @@
 const sortResources = function (resources: any, sortMethod: any) {
-  const sortedResources = sortMethod === 'Newest'
+  const sortedResources = sortMethod === "Newest"
     ? resources.sort(sortByNewest)
-    : sortMethod === 'Oldest'
+    : sortMethod === "Oldest"
       ? resources.sort(sortByOldest)
-      : resources.sort(sortByName)
+      : resources.sort(sortByName);
 
-  return sortedResources
-}
+  return sortedResources;
+};
 
 const sortByName = function (a: any, b: any) {
-  const aName = a.name
-  const bName = b.name
-  if (aName === null || aName === '') {
-    return 1
+  const aName = a.name;
+  const bName = b.name;
+  if (aName === null || aName === "") {
+    return 1;
   }
-  if (bName === null || bName === '') {
-    return -1
+  if (bName === null || bName === "") {
+    return -1;
   }
   // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-  return ((aName.toUpperCase() > bName.toUpperCase()) - (bName.toUpperCase() > aName.toUpperCase()))
-}
+  return ((aName.toUpperCase() > bName.toUpperCase()) - (bName.toUpperCase() > aName.toUpperCase()));
+};
 
 /*
 
@@ -38,12 +38,12 @@ const sortByTimeRequiredDesc = function (a, b) {
 
 const sortByNewest = function (a: any, b: any) {
   // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-  return ((b.created_at > a.created_at) - (a.created_at > b.created_at))
-}
+  return ((b.created_at > a.created_at) - (a.created_at > b.created_at));
+};
 
 const sortByOldest = function (a: any, b: any) {
   // @ts-expect-error TS(2362): The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
-  return ((a.created_at > b.created_at) - (b.created_at > a.created_at))
-}
+  return ((a.created_at > b.created_at) - (b.created_at > a.created_at));
+};
 
-export default sortResources
+export default sortResources;

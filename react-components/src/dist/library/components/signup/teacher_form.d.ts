@@ -8,7 +8,6 @@ export default class TeacherForm extends React.Component<any, any> {
     getCountries(callback: any): void;
     addNewSchool(): void;
     goBackToSchoolList(): void;
-    showZipcodeHelp(): void;
     checkIfUS(option: any): void;
     zipcodeValidation(values: any, value: any): any;
     zipOrPostal(): "ZIP code" | "postal code";

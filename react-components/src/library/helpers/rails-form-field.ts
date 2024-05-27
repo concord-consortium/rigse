@@ -4,8 +4,8 @@ const railsFormField = (prefix: any) => {
       id: `${prefix}_${field}`,
       name: `${prefix}[${field}]`,
       htmlFor: field
-    }
+    };
   };
-}
+};
 
-export default railsFormField
+export default railsFormField;

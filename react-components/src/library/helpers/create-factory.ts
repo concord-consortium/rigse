@@ -1,5 +1,5 @@
-import React from 'react'
+import React from "react";
 
-const createFactory = (type: any): React.FC<any> => React.createElement.bind(null, type)
+const createFactory = (type: any): React.FC<any> => React.createElement.bind(null, type);
 
-export default createFactory
+export default createFactory;

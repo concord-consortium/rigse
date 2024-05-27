@@ -1,24 +1,24 @@
-import React from 'react'
-import createFactory from '../../helpers/create-factory'
+import React from "react";
+import createFactory from "../../helpers/create-factory";
 
-import MBFetchDataHOC from './fetch-data-hoc'
-import MBMaterialsCollection from './materials-collection'
+import MBFetchDataHOC from "./fetch-data-hoc";
+import MBMaterialsCollection from "./materials-collection";
 
 class _MBCollections extends React.Component<any, any> {
   archive: any;
   getVisibilityClass () {
     if (!this.props.visible) {
-      return 'mb-hidden'
+      return "mb-hidden";
     } else {
-      return ''
+      return "";
     }
   }
 
   render () {
-    const className = `mb-cell ${this.getVisibilityClass()}`
+    const className = `mb-cell ${this.getVisibilityClass()}`;
     return (
       <div className={className}>
-        {this.props.collectionsData != null
+        { this.props.collectionsData != null
           ? this.props.collectionsData.map((collection: any, idx: any) =>
             <MBMaterialsCollection
               key={idx}
@@ -29,7 +29,7 @@ class _MBCollections extends React.Component<any, any> {
               teacherGuideUrl={this.props.collections[idx].teacherGuideUrl}
               assignToSpecificClass={this.props.assignToSpecificClass}
             />)
-          : <div className='loading'>loading</div>}
+          : <div className="loading">loading</div> }
       </div>
     );
   }
@@ -37,9 +37,9 @@ class _MBCollections extends React.Component<any, any> {
 
 const MBCollections = createFactory(MBFetchDataHOC(_MBCollections, () => ({
 
-  dataStateKey: 'collectionsData',
+  dataStateKey: "collectionsData",
 
-    dataUrl: Portal.API_V1.MATERIALS_BIN_COLLECTIONS,
+  dataUrl: Portal.API_V1.MATERIALS_BIN_COLLECTIONS,
 
   requestParams () {
     if (this.props.assignToSpecificClass) {
@@ -51,6 +51,6 @@ const MBCollections = createFactory(MBFetchDataHOC(_MBCollections, () => ({
       return { id: this.props.collections.map((c: any) => c.id) };
     }
   }
-})))
+})));
 
-export default MBCollections
+export default MBCollections;

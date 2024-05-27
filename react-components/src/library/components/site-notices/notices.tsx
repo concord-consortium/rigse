@@ -1,12 +1,12 @@
-import React from 'react'
-import Notice from './notice'
+import React from "react";
+import Notice from "./notice";
 
-import css from './style.scss'
+import css from "./style.scss";
 
 export default class Notices extends React.Component<any, any> {
   constructor (props: any) {
-    super(props)
-    this.renderNoNotices = this.renderNoNotices.bind(this)
+    super(props);
+    this.renderNoNotices = this.renderNoNotices.bind(this);
   }
 
   renderNoNotices () {
@@ -15,24 +15,24 @@ export default class Notices extends React.Component<any, any> {
         You have no notices.<br />
         To create a notice click the "Create New Notice" button.
       </div>
-    )
+    );
   }
 
   render () {
-    const { notices, receivedData } = this.props
+    const { notices, receivedData } = this.props;
 
     if (!receivedData) {
       return (
         <div>
           Loading notices...
         </div>
-      )
+      );
     }
 
     if (notices.length === 0) {
       return (
         this.renderNoNotices()
-      )
+      );
     }
 
     return (

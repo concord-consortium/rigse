@@ -1,20 +1,20 @@
-var fadeIn = function (component: any) {
-  var fadeInDuration = component.props.fadeIn || 0
+const fadeIn = function (component: any) {
+  const fadeInDuration = component.props.fadeIn || 0;
   if (isNaN(fadeInDuration) || !fadeInDuration) {
-    component.setState({ opacity: 1 })
-    return
+    component.setState({ opacity: 1 });
+    return;
   }
 
-  var interval = 10
-  var increment = interval / fadeInDuration
-  var animateOpacity = function () {
-    var opacity = Math.min(component.state.opacity + increment, 1)
-    component.setState({ opacity: opacity })
+  const interval = 10;
+  const increment = interval / fadeInDuration;
+  const animateOpacity = function () {
+    const opacity = Math.min(component.state.opacity + increment, 1);
+    component.setState({ opacity });
     if (opacity === 1) {
-      window.clearInterval(animation)
+      window.clearInterval(animation);
     }
-  }
-  var animation = window.setInterval(animateOpacity, interval)
-}
+  };
+  const animation = window.setInterval(animateOpacity, interval);
+};
 
-export default fadeIn
+export default fadeIn;

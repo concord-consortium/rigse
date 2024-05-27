@@ -1,56 +1,56 @@
-import React from 'react'
-import Component from '../helpers/component'
-import StemFinder from './stem-finder'
-import LightboxNav from './lightbox-nav'
+import React from "react";
+import Component from "../helpers/component";
+import StemFinder from "./stem-finder";
+import LightboxNav from "./lightbox-nav";
 
-import css from './resource-finder-lightbox.scss'
+import css from "./resource-finder-lightbox.scss";
 
 const ResourceFinderLightbox = Component({
-  getInitialState: function () {
+  getInitialState () {
     return {
       collectionViews: this.props.collectionViews,
       handleNav: this.props.handleNav
-    }
+    };
   },
 
-  componentDidMount: function () {
-    jQuery('html, body').css('overflow', 'hidden')
-    jQuery('.home-page-content').addClass('blurred')
+  componentDidMount () {
+    jQuery("html, body").css("overflow", "hidden");
+    jQuery(".home-page-content").addClass("blurred");
     // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.querySelector(`.${css.portalPagesResourceFinderLightboxBackground}`).classList.add(css.visible)
+    document.querySelector(`.${css.portalPagesResourceFinderLightboxBackground}`).classList.add(css.visible);
     // @ts-expect-error TS(2531): Object is possibly 'null'.
-    document.querySelector(`.${css.portalPagesResourceFinderLightboxContainer}`).classList.add(css.visible)
+    document.querySelector(`.${css.portalPagesResourceFinderLightboxContainer}`).classList.add(css.visible);
   },
 
-  componentWillUnmount: function () {
-    jQuery('html, body').css('overflow', 'auto')
-    jQuery('.home-page-content').removeClass('blurred')
+  componentWillUnmount () {
+    jQuery("html, body").css("overflow", "auto");
+    jQuery(".home-page-content").removeClass("blurred");
   },
 
-  handleClose: function (e: any) {
+  handleClose (e: any) {
     if (e.target.className === css.portalPagesResourceFinderLightboxBackgroundClose ||
         e.target.className === css.portalPagesResourceFinderLightbox) {
-      this.props.closeLightbox(e)
+      this.props.closeLightbox(e);
     }
   },
 
-  handleSwitchSource: function (e: any) {
-    const { handleNav } = this.state
-    const collectionId = e.target.value
-    handleNav(e, collectionId)
+  handleSwitchSource (e: any) {
+    const { handleNav } = this.state;
+    const collectionId = e.target.value;
+    handleNav(e, collectionId);
   },
 
-  render: function () {
-    const { collectionViews } = this.state
+  render () {
+    const { collectionViews } = this.state;
     return (
       <div>
         <div className={css.portalPagesResourceFinderLightboxBackground} />
-        <div id='pprfl' className={css.portalPagesResourceFinderLightboxContainer}>
-          <div id='finderLightbox' className={css.portalPagesResourceFinderLightbox} onClick={(e) => this.handleClose(e)}>
+        <div id="pprfl" className={css.portalPagesResourceFinderLightboxContainer}>
+          <div id="finderLightbox" className={css.portalPagesResourceFinderLightbox} onClick={(e) => this.handleClose(e)}>
             <div className={css.portalPagesResourceFinderLightboxBackgroundClose} onClick={(e) => this.handleClose(e)}>
               x
             </div>
-            <div id='finderLightboxModal' className={css.portalPagesResourceFinderLightboxModal}>
+            <div id="finderLightboxModal" className={css.portalPagesResourceFinderLightboxModal}>
               <LightboxNav collectionViews={collectionViews} handleSwitchSource={(e: any) => this.handleSwitchSource(e)} />
               <StemFinder hideFeatured />
             </div>
@@ -59,6 +59,6 @@ const ResourceFinderLightbox = Component({
       </div>
     );
   }
-})
+});
 
-export default ResourceFinderLightbox
+export default ResourceFinderLightbox;

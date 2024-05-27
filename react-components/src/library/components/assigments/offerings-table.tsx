@@ -1,7 +1,7 @@
-import React from 'react'
-import OfferingRow from './offering-row'
-import { SortableContainer, SortableItem } from '../shared/sortable-helpers'
-import css from './style.scss'
+import React from "react";
+import OfferingRow from "./offering-row";
+import { SortableContainer, SortableItem } from "../shared/sortable-helpers";
+import css from "./style.scss";
 
 const Offerings = ({
   readOnly,
@@ -12,10 +12,10 @@ const Offerings = ({
   clazz
 }: any) => {
   return (
-    <div className={`${css.offeringsTable} ${readOnly ? css.readOnly : ''}`}>
+    <div className={`${css.offeringsTable} ${readOnly ? css.readOnly : ""}`}>
       <div className={css.headers}>
         <span className={css.activityNameCell}>Name</span>
-        {/* Empty icon cell just to make sure that total width is correct */}
+        { /* Empty icon cell just to make sure that total width is correct */ }
         <span className={css.iconCell} />
         <span className={css.checkboxCell}>Active</span>
         <span className={css.checkboxCell}>Locked</span>
@@ -37,17 +37,17 @@ const Offerings = ({
       }
     </div>
   );
-}
+};
 
 const OfferingsTable = (props: any) => {
-  const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, requestOfferingDetails, clazz, readOnly } = props
+  const { offerings, offeringDetails, onOfferingsReorder, onOfferingUpdate, requestOfferingDetails, clazz, readOnly } = props;
 
   if (offerings.length === 0) {
-    return <div className={css.noMaterials}>No materials have been assigned to this class.</div>
+    return <div className={css.noMaterials}>No materials have been assigned to this class.</div>;
   }
 
   const renderDragPreview = (itemId: any) => {
-    const offering = offerings.find((offering: any) => offering.id === itemId)
+    const offering = offerings.find((_offering: any) => _offering.id === itemId);
     return (
       <OfferingRow
         offering={offering}
@@ -56,8 +56,8 @@ const OfferingsTable = (props: any) => {
         requestOfferingDetails={requestOfferingDetails}
         onOfferingUpdate={onOfferingUpdate} readOnly={readOnly}
       />
-    )
-  }
+    );
+  };
 
   return (
     <SortableContainer
@@ -75,6 +75,6 @@ const OfferingsTable = (props: any) => {
       />
     </SortableContainer>
   );
-}
+};
 
-export default OfferingsTable
+export default OfferingsTable;

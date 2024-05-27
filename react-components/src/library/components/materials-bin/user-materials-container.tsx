@@ -1,36 +1,38 @@
-import React from 'react'
-import createFactory from '../../helpers/create-factory'
+import React from "react";
+import createFactory from "../../helpers/create-factory";
 
-import MBFetchDataHOC from './fetch-data-hoc'
-import MBMaterialsCollection from './materials-collection'
+import MBFetchDataHOC from "./fetch-data-hoc";
+import MBMaterialsCollection from "./materials-collection";
 
 class _MBUserMaterialsContainer extends React.Component<any, any> {
   archive: any;
   getVisibilityClass () {
     if (!this.props.visible) {
-      return 'mb-hidden'
+      return "mb-hidden";
     } else {
-      return ''
+      return "";
     }
   }
 
   render () {
     return (
       <div className={this.getVisibilityClass()}>
-        {this.props.materials
-          ? <MBMaterialsCollection
-            materials={this.props.materials}
-            assignToSpecificClass={this.props.assignToSpecificClass}
-            archive={this.archive}
-          />
-          : <div>Loading...</div>}
+        {
+          this.props.materials ?
+            <MBMaterialsCollection
+              materials={this.props.materials}
+              assignToSpecificClass={this.props.assignToSpecificClass}
+              archive={this.archive}
+            />
+            : <div>Loading...</div>
+        }
       </div>
-    )
+    );
   }
 }
 
 const MBUserMaterialsContainer = createFactory(MBFetchDataHOC(_MBUserMaterialsContainer, () => ({
-  dataStateKey: 'materials',
+  dataStateKey: "materials",
 
   dataUrl: Portal.API_V1.MATERIALS_BIN_UNOFFICIAL_MATERIALS,
 
@@ -39,11 +41,11 @@ const MBUserMaterialsContainer = createFactory(MBFetchDataHOC(_MBUserMaterialsCo
       return {
         user_id: this.props.userId,
         assigned_to_class: this.props.assignToSpecificClass
-      }
+      };
     } else {
-      return { user_id: this.props.userId }
+      return { user_id: this.props.userId };
     }
   }
-})))
+})));
 
-export default MBUserMaterialsContainer
+export default MBUserMaterialsContainer;

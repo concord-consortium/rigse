@@ -1,13 +1,13 @@
-import React from 'react'
-import { throttle, debounce } from 'throttle-debounce'
+import React from "react";
+import { throttle, debounce } from "throttle-debounce";
 
-import css from './auto-suggest.scss'
+import css from "./auto-suggest.scss";
 
 class Suggestion extends React.Component<any, any> {
   render () {
-    const { suggestion } = this.props
-    const onClick = () => this.props.onClick(suggestion)
-    return <div className={css.suggestion} onClick={onClick}>{suggestion}</div>
+    const { suggestion } = this.props;
+    const onClick = () => this.props.onClick(suggestion);
+    return <div className={css.suggestion} onClick={onClick}>{ suggestion }</div>;
   }
 }
 
@@ -20,101 +20,101 @@ export default class AutoSuggest extends React.Component<any, any> {
   queryCache: any;
   throttledSearch: any;
   constructor (props: any) {
-    super(props)
+    super(props);
     this.state = {
-      query: props.query || '',
+      query: props.query || "",
       suggestions: [],
       selectedSuggestionIndex: -1,
       showSuggestions: false
-    }
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.handleKeyDown = this.handleKeyDown.bind(this)
-    this.handleSuggestionClick = this.handleSuggestionClick.bind(this)
-    this.handleOuterClick = this.handleOuterClick.bind(this)
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleSuggestionClick = this.handleSuggestionClick.bind(this);
+    this.handleOuterClick = this.handleOuterClick.bind(this);
 
-    this.debouncedSearch = debounce(1000, this.search)
-    this.throttledSearch = throttle(500, this.search)
-    this.currentQuery = ''
-    this.queryCache = {}
-    this.inputRef = React.createRef()
-    this.containerRef = React.createRef()
+    this.debouncedSearch = debounce(1000, this.search);
+    this.throttledSearch = throttle(500, this.search);
+    this.currentQuery = "";
+    this.queryCache = {};
+    this.inputRef = React.createRef();
+    this.containerRef = React.createRef();
   }
 
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount () {
-    window.addEventListener('click', this.handleOuterClick)
-    const { query } = this.state
+    window.addEventListener("click", this.handleOuterClick);
+    const { query } = this.state;
     if (query.length > 0) {
-      this.search(query)
+      this.search(query);
     }
   }
 
   componentWillUnmount () {
-    window.removeEventListener('click', this.handleOuterClick)
+    window.removeEventListener("click", this.handleOuterClick);
   }
 
   handleOuterClick (e: any) {
-    let el = e.target
-    const container = this.containerRef.current
+    let el = e.target;
+    const container = this.containerRef.current;
     if (container && this.state.showSuggestions) {
       while (el && (el !== container)) {
-        el = el.parentNode
+        el = el.parentNode;
       }
       if (!el) {
-        this.setState({ showSuggestions: false })
+        this.setState({ showSuggestions: false });
       }
     }
   }
 
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillReceiveProps (nextProps: any) {
-    const { query, skipAutoSearch } = nextProps
+    const { query, skipAutoSearch } = nextProps;
     if (query !== undefined) {
       // reset and hide the suggestions when the query is changed
       this.setState({ query, suggestions: [], selectedSuggestionIndex: -1, showSuggestions: false }, () => {
         if (!skipAutoSearch && (query.length > 0)) {
-          this.search(query)
+          this.search(query);
         }
-      })
+      });
     }
   }
 
   search (query: any) {
     const setSuggestions = (suggestions: any, callback: any) => {
-      const showSuggestions = suggestions.length > 0
-      this.setState({ suggestions, selectedSuggestionIndex: -1, showSuggestions }, callback)
-    }
-    const trimmedQuery = query.trim()
-    this.currentQuery = trimmedQuery
+      const showSuggestions = suggestions.length > 0;
+      this.setState({ suggestions, selectedSuggestionIndex: -1, showSuggestions }, callback);
+    };
+    const trimmedQuery = query.trim();
+    this.currentQuery = trimmedQuery;
     if (trimmedQuery.length === 0) {
       // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-      setSuggestions([])
+      setSuggestions([]);
     } else {
-      const { getQueryParams } = this.props
-      const queryParams = getQueryParams ? (getQueryParams() || '').replace(/search_term=([^&]*&?)/, '') : ''
-      const data = `search_term=${encodeURIComponent(trimmedQuery)}${queryParams.length > 0 ? `&${queryParams}` : ''}`
+      const { getQueryParams } = this.props;
+      const queryParams = getQueryParams ? (getQueryParams() || "").replace(/search_term=([^&]*&?)/, "") : "";
+      const data = `search_term=${encodeURIComponent(trimmedQuery)}${queryParams.length > 0 ? `&${queryParams}` : ""}`;
 
       if (this.queryCache[data]) {
         // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-        setSuggestions(this.queryCache[data])
+        setSuggestions(this.queryCache[data]);
       } else {
         setSuggestions([], () => {
           jQuery.ajax({
-            url: '/api/v1/search/search_suggestions',
+            url: "/api/v1/search/search_suggestions",
             data,
-            dataType: 'json',
+            dataType: "json",
             success: results => {
-              this.queryCache[results.search_term] = results.suggestions
+              this.queryCache[results.search_term] = results.suggestions;
               if (results.search_term === this.currentQuery) {
                 // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-                setSuggestions(results.suggestions)
+                setSuggestions(results.suggestions);
               }
             },
             error: () => {
-              console.error('GET search suggestions failed')
+              console.error("GET search suggestions failed");
             }
-          })
-        })
+          });
+        });
       }
     }
   }
@@ -122,113 +122,111 @@ export default class AutoSuggest extends React.Component<any, any> {
   userInitiatedSearch (query: any, onHandler: any) {
     this.setState({ query }, () => {
       if (onHandler) {
-        onHandler(query)
+        onHandler(query);
       }
-      if ((query.length < 5) || query.endsWith(' ')) {
-        this.throttledSearch(query)
+      if ((query.length < 5) || query.endsWith(" ")) {
+        this.throttledSearch(query);
       } else {
-        this.debouncedSearch(query)
+        this.debouncedSearch(query);
       }
-    })
+    });
   }
 
   handleSuggestionClick (query: any) {
-    this.setState({ showSuggestions: false }, () => this.userInitiatedSearch(query, this.props.onSubmit))
+    this.setState({ showSuggestions: false }, () => this.userInitiatedSearch(query, this.props.onSubmit));
   }
 
   handleInputChange (e: any) {
-    this.userInitiatedSearch(e.target.value, this.props.onChange)
+    this.userInitiatedSearch(e.target.value, this.props.onChange);
   }
 
   handleKeyDown (e: any) {
-    let handledKey = false
-    const { query, suggestions, selectedSuggestionIndex, showSuggestions } = this.state
+    let handledKey = false;
+    const { query, suggestions, selectedSuggestionIndex, showSuggestions } = this.state;
+    const { onChange, onSubmit } = this.props;
+    const suggestion = suggestions[selectedSuggestionIndex];
+    const hasSuggestionSelected = suggestion !== undefined;
 
     switch (e.keyCode) {
       case 13: // enter
-        const { onChange, onSubmit } = this.props
-        const suggestion = suggestions[selectedSuggestionIndex]
-        const hasSuggestionSelected = suggestion !== undefined
         if (showSuggestions && hasSuggestionSelected) {
           this.setState({ query: suggestion, showSuggestions: false, selectedSuggestionIndex: -1 }, () => {
             if (onChange) {
-              onChange(suggestion)
+              onChange(suggestion);
             }
             if (onSubmit) {
-              onSubmit(suggestion)
+              onSubmit(suggestion);
             }
-          })
-          handledKey = true
+          });
+          handledKey = true;
         } else if (onSubmit) {
-          onSubmit(query)
-          handledKey = true
+          onSubmit(query);
+          handledKey = true;
         }
-        break
+        break;
       case 27: // escape
         if (showSuggestions) {
-          this.setState({ showSuggestions: false, selectedSuggestionIndex: -1 })
-          handledKey = true
+          this.setState({ showSuggestions: false, selectedSuggestionIndex: -1 });
+          handledKey = true;
         }
-        break
+        break;
       case 38: // up arrow
         if (showSuggestions) {
           if (selectedSuggestionIndex > 0) {
-            const index = selectedSuggestionIndex - 1
-            const query = suggestions[index]
-            this.setState({ selectedSuggestionIndex: index, query })
+            const index = selectedSuggestionIndex - 1;
+            this.setState({ selectedSuggestionIndex: index, query: suggestions[index] });
           } else {
-            this.setState({ selectedSuggestionIndex: -1, showSuggestions: false })
+            this.setState({ selectedSuggestionIndex: -1, showSuggestions: false });
           }
-          handledKey = true
+          handledKey = true;
         }
-        break
+        break;
       case 40: // down arrow
         if (showSuggestions) {
           if (selectedSuggestionIndex < suggestions.length - 1) {
-            const index = selectedSuggestionIndex + 1
-            const query = suggestions[index]
-            this.setState({ selectedSuggestionIndex: index, query })
-            handledKey = true
+            const index = selectedSuggestionIndex + 1;
+            this.setState({ selectedSuggestionIndex: index, query: suggestions[index] });
+            handledKey = true;
           }
         } else if (suggestions.length > 0) {
-          this.setState({ selectedSuggestionIndex: 0, showSuggestions: true })
-          handledKey = true
+          this.setState({ selectedSuggestionIndex: 0, showSuggestions: true });
+          handledKey = true;
         }
-        break
+        break;
     }
 
     if (handledKey) {
-      e.preventDefault()
-      e.stopPropagation()
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 
   renderSuggestions () {
-    const { suggestions, showSuggestions } = this.state
+    const { suggestions, showSuggestions } = this.state;
 
     if (!showSuggestions || (suggestions.length === 0)) {
-      return undefined
+      return undefined;
     }
 
     const items = suggestions.map((suggestion: any, index: any) => {
-      return <Suggestion key={suggestion} suggestion={suggestion} onClick={this.handleSuggestionClick} />
-    })
+      return <Suggestion key={suggestion} suggestion={suggestion} onClick={this.handleSuggestionClick} />;
+    });
 
-    let style = {}
+    let style = {};
     if (this.inputRef.current) {
-      const width = this.inputRef.current.getBoundingClientRect().width
-      style = { width }
+      const width = this.inputRef.current.getBoundingClientRect().width;
+      style = { width };
     }
 
     return (
-      <div id='suggestions' className={css.suggestions} style={style}>
+      <div id="suggestions" className={css.suggestions} style={style}>
         { items }
       </div>
-    )
+    );
   }
 
   render () {
-    const { name, placeholder, id } = this.props
+    const { name, placeholder, id } = this.props;
 
     return (
       <div className={css.autoSuggest} ref={this.containerRef}>
@@ -237,22 +235,22 @@ export default class AutoSuggest extends React.Component<any, any> {
           ref={this.inputRef}
           name={name || undefined}
           placeholder={placeholder}
-          type='text'
-          autoComplete='off'
+          type="text"
+          autoComplete="off"
           value={this.state.query}
           onChange={this.handleInputChange}
           onKeyDown={this.handleKeyDown}
         />
         <input
           id={css.keywordSubmit}
-          type='submit'
-          name='keywordSubmit'
-          value='Go'
+          type="submit"
+          name="keywordSubmit"
+          value="Go"
           onKeyDown={this.handleKeyDown}
           onClick={this.handleKeyDown}
         />
-        {this.renderSuggestions()}
+        { this.renderSuggestions() }
       </div>
-    )
+    );
   }
 }

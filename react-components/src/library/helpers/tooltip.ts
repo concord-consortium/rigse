@@ -1,25 +1,25 @@
-import { render, unmount } from './react-render'
+import { render, unmount } from "./react-render";
 
-var Tooltip = {
-  mountPointId: 'portal-pages-tooltip-mount',
+const Tooltip = {
+  mountPointId: "portal-pages-tooltip-mount",
 
-  open: function (component: any) {
-    var mountPoint = document.getElementById(this.mountPointId)
+  open (component: any) {
+    let mountPoint = document.getElementById(this.mountPointId);
 
     if (!mountPoint) {
-      mountPoint = document.createElement('DIV')
-      mountPoint.id = this.mountPointId
-      document.body.appendChild(mountPoint)
+      mountPoint = document.createElement("DIV");
+      mountPoint.id = this.mountPointId;
+      document.body.appendChild(mountPoint);
     }
-    render(component, mountPoint)
+    render(component, mountPoint);
   },
 
-  close: function () {
-    var mountPoint = document.getElementById(this.mountPointId)
+  close () {
+    const mountPoint = document.getElementById(this.mountPointId);
 
-    unmount(mountPoint)
+    unmount(mountPoint);
   }
 
-}
+};
 
-export default Tooltip
+export default Tooltip;

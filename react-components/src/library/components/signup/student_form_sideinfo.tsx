@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export default class StudentFormSideInfo extends React.Component<any, any> {
   render () {
@@ -8,6 +8,6 @@ export default class StudentFormSideInfo extends React.Component<any, any> {
           Enter the class word your teacher gave you. If you don't know what the class word is, ask your teacher.
         </p>
       </div>
-    )
+    );
   }
 }

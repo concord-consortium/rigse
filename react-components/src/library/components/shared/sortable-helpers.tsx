@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from '@dnd-kit/core'
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import React, { useState } from "react";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const isInteractiveElement = (element: any) => {
   const interactiveElements = [
-    'a',
-    'button',
-    'input',
-    'textarea',
-    'select',
-    'option'
-  ]
+    "a",
+    "button",
+    "input",
+    "textarea",
+    "select",
+    "option"
+  ];
   if (interactiveElements.includes(element.tagName.toLowerCase())) {
-    return true
+    return true;
   }
-  return false
-}
+  return false;
+};
 
 // This is a custom sensor that prevents dragging if the pointer is over an interactive element like a button or input.
 // This way, we don't need to provide custom drag handles. Usually, we can just wrap the whole item in a draggable element.
@@ -24,16 +24,16 @@ const isInteractiveElement = (element: any) => {
 class PointerSensorWithoutInteractiveElements extends PointerSensor {
   static activators = [
     {
-      eventName: 'onPointerDown',
+      eventName: "onPointerDown",
       // @ts-expect-error TS(7031): Binding element 'event' implicitly has an 'any' ty... Remove this comment to see the full error message
       handler: ({ nativeEvent: event }) => {
         if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
-          return false
+          return false;
         }
-        return true
+        return true;
       }
     }
-  ]
+  ];
 }
 
 // - `items` is an array of unique keys for each item in the list.
@@ -46,23 +46,23 @@ export const SortableContainer = ({
   renderDragPreview,
   children
 }: any) => {
-  const [dragPreviewId, setDragPreviewId] = useState(null)
+  const [dragPreviewId, setDragPreviewId] = useState(null);
 
   const handleDragStart = (event: any) => {
-    const { active } = event
-    setDragPreviewId(active.id)
-  }
+    const { active } = event;
+    setDragPreviewId(active.id);
+  };
 
   const handleDragEnd = (event: any) => {
-    const { active, over } = event
+    const { active, over } = event;
     if (active.id !== over.id) {
-      const oldIndex = items.indexOf(active.id)
-      const newIndex = items.indexOf(over.id)
-      onReorder({ oldIndex, newIndex })
+      const oldIndex = items.indexOf(active.id);
+      const newIndex = items.indexOf(over.id);
+      onReorder({ oldIndex, newIndex });
     }
 
-    setDragPreviewId(null)
-  }
+    setDragPreviewId(null);
+  };
 
   const sensors = useSensors(
     // @ts-expect-error TS(2345): Argument of type 'typeof PointerSensorWithoutInter... Remove this comment to see the full error message
@@ -70,15 +70,15 @@ export const SortableContainer = ({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
     })
-  )
+  );
 
-  const renderDragPreviewWithBg = (dragPreviewId: any) => {
+  const renderDragPreviewWithBg = (_dragPreviewId: any) => {
     return (
-      <div style={{ boxShadow: '0 0 10px rgba(0, 0, 0, 0.35)', backgroundColor: 'white' }}>
-        { renderDragPreview(dragPreviewId) }
+      <div style={{ boxShadow: "0 0 10px rgba(0, 0, 0, 0.35)", backgroundColor: "white" }}>
+        { renderDragPreview(_dragPreviewId) }
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <DndContext
@@ -94,11 +94,11 @@ export const SortableContainer = ({
         { children }
       </SortableContext>
       <DragOverlay>
-        {dragPreviewId ? renderDragPreviewWithBg(dragPreviewId) : null}
+        { dragPreviewId ? renderDragPreviewWithBg(dragPreviewId) : null }
       </DragOverlay>
     </DndContext>
-  )
-}
+  );
+};
 
 export const SortableItem = ({
   id,
@@ -106,21 +106,21 @@ export const SortableItem = ({
   className,
   children
 }: any) => {
-  const { attributes, listeners, setNodeRef, transform, transition, active } = useSortable({ id, disabled })
+  const { attributes, listeners, setNodeRef, transform, transition, active } = useSortable({ id, disabled });
 
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
     // hide the original item while dragging, as we use a custom drag preview
-    visibility: active?.id === id ? 'hidden' : 'visible',
+    visibility: active?.id === id ? "hidden" : "visible",
     // important, otherwise dragging won't work on mobile (bubbling event causes scrolling)
-    touchAction: 'none'
-  }
+    touchAction: "none"
+  };
 
   return (
     // @ts-expect-error TS(2322): Type '{ transform: string | undefined; transition:... Remove this comment to see the full error message
     <div ref={setNodeRef} className={className} style={style} {...attributes} {...listeners}>
       { children }
     </div>
-  )
-}
+  );
+};

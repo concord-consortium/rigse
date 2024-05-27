@@ -1,55 +1,55 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { createElement } from "react";
+import ReactDOM from "react-dom/client";
 
-import CollectionsPage from './components/collections-page'
-import CollectionCards from './components/collection-cards'
-import HeaderFilter from './components/header-filter'
-import ResourceLightbox from './components/resource-lightbox'
-import ResourceFinderLightbox from './components/resource-finder-lightbox'
-import StemFinderResult from './components/stem-finder-result'
-import StemFinder from './components/stem-finder'
-import PageHeader from './components/page-header'
-import PageFooter from './components/page-footer'
-import MaterialsCollection from './components/materials-collection'
-import GradeLevels from './components/grade-levels'
-import Tooltip from './components/tooltip'
-import ParseQueryString from './helpers/parse-query-string'
-import { MakeTeacherEditionLinks } from './helpers/make-teacher-edition-links'
-import * as signupFunctions from './components/signup/signup_functions'
-import RecentActivity from './components/recent-activity'
-import Assignments from './components/assigments'
-import Navigation from './components/navigation'
-import RunWithCollaborators from './components/run-with-collaborators'
-import LearnerReportForm from './components/learner-report-form'
-import UserReportForm from './components/user-report-form'
-import ResearcherClassesForm from './components/researcher-classes-form'
-import SiteNotices from './components/site-notices'
-import SiteNoticesNewForm from './components/site-notices/new'
-import SiteNoticesEditForm from './components/site-notices/edit'
-import ShowSiteNotices from './components/site-notices/show'
-import FeaturedMaterials from './components/featured-materials/featured-materials'
-import SearchResults from './components/search/results'
-import SMaterialsList from './components/search/materials-list'
-import MaterialsBin from './components/materials-bin/materials-bin'
-import openAssignToClassModal from './components/assign-to-class/assign-to-class'
-import PortalClassSetupForm from './components/portal-classes/setup-form'
-import EditBookmarks from './components/bookmarks/edit'
-import ManageClasses from './components/portal-classes/manage-classes'
-import EditMaterialsCollectionList from './components/materials-collection/edit-list'
-import JoinClass from './components/portal-students/join-class'
-import StudentRoster from './components/portal-classes/student-roster'
-import AutoSuggest from './components/search/auto-suggest'
-import StandardsTable from './components/standards/standards-table'
-import StemFinderResultStandards from './components/stem-finder-result-standards'
-import BrowsePage from './components/browse-page/browse-page'
-import ResourceRequirements from './components/browse-page/resource-requirements'
-import ResourceLicense from './components/browse-page/resource-license'
-import ResourceProjects from './components/browse-page/resource-projects'
-import showTab from './helpers/tabs'
-import { loadMaterialsCollections } from './helpers/materials-collection-cache'
-import { render } from './helpers/react-render'
+import CollectionsPage from "./components/collections-page";
+import CollectionCards from "./components/collection-cards";
+import HeaderFilter from "./components/header-filter";
+import ResourceLightbox from "./components/resource-lightbox";
+import ResourceFinderLightbox from "./components/resource-finder-lightbox";
+import StemFinderResult from "./components/stem-finder-result";
+import StemFinder from "./components/stem-finder";
+import PageHeader from "./components/page-header";
+import PageFooter from "./components/page-footer";
+import MaterialsCollection from "./components/materials-collection";
+import GradeLevels from "./components/grade-levels";
+import Tooltip from "./components/tooltip";
+import ParseQueryString from "./helpers/parse-query-string";
+import { MakeTeacherEditionLinks } from "./helpers/make-teacher-edition-links";
+import * as signupFunctions from "./components/signup/signup_functions";
+import RecentActivity from "./components/recent-activity";
+import Assignments from "./components/assigments";
+import Navigation from "./components/navigation";
+import RunWithCollaborators from "./components/run-with-collaborators";
+import LearnerReportForm from "./components/learner-report-form";
+import UserReportForm from "./components/user-report-form";
+import ResearcherClassesForm from "./components/researcher-classes-form";
+import SiteNotices from "./components/site-notices";
+import SiteNoticesNewForm from "./components/site-notices/new";
+import SiteNoticesEditForm from "./components/site-notices/edit";
+import ShowSiteNotices from "./components/site-notices/show";
+import FeaturedMaterials from "./components/featured-materials/featured-materials";
+import SearchResults from "./components/search/results";
+import SMaterialsList from "./components/search/materials-list";
+import MaterialsBin from "./components/materials-bin/materials-bin";
+import openAssignToClassModal from "./components/assign-to-class/assign-to-class";
+import PortalClassSetupForm from "./components/portal-classes/setup-form";
+import EditBookmarks from "./components/bookmarks/edit";
+import ManageClasses from "./components/portal-classes/manage-classes";
+import EditMaterialsCollectionList from "./components/materials-collection/edit-list";
+import JoinClass from "./components/portal-students/join-class";
+import StudentRoster from "./components/portal-classes/student-roster";
+import AutoSuggest from "./components/search/auto-suggest";
+import StandardsTable from "./components/standards/standards-table";
+import StemFinderResultStandards from "./components/stem-finder-result-standards";
+import BrowsePage from "./components/browse-page/browse-page";
+import ResourceRequirements from "./components/browse-page/resource-requirements";
+import ResourceLicense from "./components/browse-page/resource-license";
+import ResourceProjects from "./components/browse-page/resource-projects";
+import showTab from "./helpers/tabs";
+import { loadMaterialsCollections } from "./helpers/materials-collection-cache";
+import { render } from "./helpers/react-render";
 
-import './library.scss'
+import "./library.scss";
 
 declare global {
   const Portal: any;
@@ -69,14 +69,14 @@ declare global {
 }
 
 // previously React and ReactDOM were set by the react-rails gem
-window.React = React
-window.ReactDOM = ReactDOM
+window.React = React;
+window.ReactDOM = ReactDOM;
 
 const renderComponentFn = function (ComponentClass: any) {
   return function (options: any, id: any) {
-    render(ComponentClass(options), id)
+    render(ComponentClass(options), id);
   };
-}
+};
 
 // to ease the transition from portal-pages maintain both namespaces
 window.PortalPages = window.PortalComponents = {
@@ -87,26 +87,26 @@ window.PortalPages = window.PortalComponents = {
   // the STEM Resource Finder, a collection page, or a direct resource url.
   initialPath: window.location.pathname,
 
-  MakeTeacherEditionLinks: MakeTeacherEditionLinks,
-  ParseQueryString: ParseQueryString,
-  render: render,
+  MakeTeacherEditionLinks,
+  ParseQueryString,
+  render,
 
-  CollectionsPage: CollectionsPage,
+  CollectionsPage,
   renderCollectionsPage: renderComponentFn(CollectionsPage),
 
-  RecentActivity: RecentActivity,
-  renderRecentActivity: function (options: any, id: any) {
-    render(React.createElement(RecentActivity, options), id)
+  RecentActivity,
+  renderRecentActivity (options: any, id: any) {
+    render(createElement(RecentActivity, options), id);
   },
 
-  Assignments: Assignments,
-  renderAssignments: function (options: any, id: any) {
-    render(React.createElement(Assignments, options), id)
+  Assignments,
+  renderAssignments (options: any, id: any) {
+    render(createElement(Assignments, options), id);
   },
 
-  LearnerReportForm: LearnerReportForm,
-  renderLearnerReportForm: function (options: any, id: any) {
-    render(React.createElement(LearnerReportForm, options), id)
+  LearnerReportForm,
+  renderLearnerReportForm (options: any, id: any) {
+    render(createElement(LearnerReportForm, options), id);
   },
 
   // renderResearcherReportForm was renamed renderLearnerReportForm so to allow
@@ -114,73 +114,73 @@ window.PortalPages = window.PortalComponents = {
   // NOTE: this should be removed once the user report work in the portal is in production
   //       and no other code references this export.
   ResearcherReportForm: LearnerReportForm,
-  renderResearcherReportForm: function (options: any, id: any) {
-    render(React.createElement(LearnerReportForm, options), id)
+  renderResearcherReportForm (options: any, id: any) {
+    render(createElement(LearnerReportForm, options), id);
   },
 
-  UserReportForm: UserReportForm,
-  renderUserReportForm: function (options: any, id: any) {
-    render(React.createElement(UserReportForm, options), id)
+  UserReportForm,
+  renderUserReportForm (options: any, id: any) {
+    render(createElement(UserReportForm, options), id);
   },
 
-  ResearcherClassesForm: ResearcherClassesForm,
-  renderResearcherClassesForm: function (options: any, id: any) {
-    render(React.createElement(ResearcherClassesForm, options), id)
+  ResearcherClassesForm,
+  renderResearcherClassesForm (options: any, id: any) {
+    render(createElement(ResearcherClassesForm, options), id);
   },
 
-  Navigation: Navigation,
-  renderNavigation: function (options: any, id: any) {
-    render(React.createElement(Navigation, options), id)
+  Navigation,
+  renderNavigation (options: any, id: any) {
+    render(createElement(Navigation, options), id);
   },
 
-  SiteNotices: SiteNotices,
-  renderSiteNotices: function (options: any, id: any) {
-    render(React.createElement(SiteNotices, options), id)
+  SiteNotices,
+  renderSiteNotices (options: any, id: any) {
+    render(createElement(SiteNotices, options), id);
   },
 
-  SiteNoticesNewForm: SiteNoticesNewForm,
-  renderSiteNoticesNewForm: function (options: any, id: any) {
-    render(React.createElement(SiteNoticesNewForm, options), id)
+  SiteNoticesNewForm,
+  renderSiteNoticesNewForm (options: any, id: any) {
+    render(createElement(SiteNoticesNewForm, options), id);
   },
 
-  SiteNoticesEditForm: SiteNoticesEditForm,
-  renderSiteNoticesEditForm: function (options: any, id: any) {
-    render(React.createElement(SiteNoticesEditForm, options), id)
+  SiteNoticesEditForm,
+  renderSiteNoticesEditForm (options: any, id: any) {
+    render(createElement(SiteNoticesEditForm, options), id);
   },
 
-  ShowSiteNotices: ShowSiteNotices,
-  renderShowSiteNotices: function (options: any, id: any) {
-    render(React.createElement(ShowSiteNotices, options), id)
+  ShowSiteNotices,
+  renderShowSiteNotices (options: any, id: any) {
+    render(createElement(ShowSiteNotices, options), id);
   },
 
-  CollectionCards: CollectionCards,
+  CollectionCards,
   renderCollectionCards: renderComponentFn(CollectionCards),
 
-  HeaderFilter: HeaderFilter,
+  HeaderFilter,
   renderHeaderFilter: renderComponentFn(HeaderFilter),
 
-  BrowsePage: BrowsePage,
+  BrowsePage,
   renderBrowsePage: renderComponentFn(BrowsePage),
 
-  ResourceLightbox: ResourceLightbox,
+  ResourceLightbox,
   renderResourceLightbox: renderComponentFn(ResourceLightbox),
 
-  ResourceFinderLightbox: ResourceFinderLightbox,
+  ResourceFinderLightbox,
   renderResourceFinderLightbox: renderComponentFn(ResourceFinderLightbox),
 
-  StemFinderResult: StemFinderResult,
+  StemFinderResult,
   renderStemFinderResult: renderComponentFn(StemFinderResult),
 
-  StemFinder: StemFinder,
+  StemFinder,
   renderStemFinder: renderComponentFn(StemFinder),
 
-  PageHeader: PageHeader,
+  PageHeader,
   renderPageHeader: renderComponentFn(PageHeader),
 
-  PageFooter: PageFooter,
+  PageFooter,
   renderPageFooter: renderComponentFn(PageFooter),
 
-  GradeLevels: GradeLevels,
+  GradeLevels,
   renderGradeLevels: renderComponentFn(GradeLevels),
 
   //
@@ -192,17 +192,17 @@ window.PortalPages = window.PortalComponents = {
   // Params
   //    properties  - A properties object. E.g. { oauthProviders: [ ... ] }
   //
-  renderSignupModal: function (properties: any) {
-    signupFunctions.openSignupModal(properties)
+  renderSignupModal (properties: any) {
+    signupFunctions.openSignupModal(properties);
   },
-  renderLoginModal: function (properties: any) {
-    signupFunctions.openLoginModal(properties)
+  renderLoginModal (properties: any) {
+    signupFunctions.openLoginModal(properties);
   },
-  renderForgotPasswordModal: function (properties: any) {
-    signupFunctions.openForgotPasswordModal(properties)
+  renderForgotPasswordModal (properties: any) {
+    signupFunctions.openForgotPasswordModal(properties);
   },
-  renderAssignToClassModal: function (properties: any) {
-    openAssignToClassModal(properties)
+  renderAssignToClassModal (properties: any) {
+    openAssignToClassModal(properties);
   },
 
   //
@@ -214,123 +214,123 @@ window.PortalPages = window.PortalComponents = {
   //
   renderSignupForm: signupFunctions.renderSignupForm,
 
-  MaterialsCollection: MaterialsCollection,
+  MaterialsCollection,
 
   // this loads a set of materials collections in a single AJAX call and caches them for use
   // in a later call to renderMaterialsCollection
-  loadMaterialsCollections: function (ids: any, callback: any) {
-    loadMaterialsCollections(ids, callback)
+  loadMaterialsCollections (ids: any, callback: any) {
+    loadMaterialsCollections(ids, callback);
   },
 
   // this is a different format to match to existing project pages which had 2 formats itself
-  renderMaterialsCollection: function (collectionId: any, selectorOrElement: any, limitOrOptions: any) {
-    let options = limitOrOptions || {}
-    if (typeof limitOrOptions === 'number') {
-      options = { limit: limitOrOptions }
+  renderMaterialsCollection (collectionId: any, selectorOrElement: any, limitOrOptions: any) {
+    let options = limitOrOptions || {};
+    if (typeof limitOrOptions === "number") {
+      options = { limit: limitOrOptions };
     }
-    options.collection = collectionId
-    render(MaterialsCollection(options), jQuery(selectorOrElement)[0])
+    options.collection = collectionId;
+    render(MaterialsCollection(options), jQuery(selectorOrElement)[0]);
   },
 
-  Tooltip: Tooltip,
+  Tooltip,
   renderTooltip: renderComponentFn(Tooltip),
 
-  RunWithCollaborators: RunWithCollaborators,
+  RunWithCollaborators,
   renderRunWithCollaborators: renderComponentFn(RunWithCollaborators),
 
-  FeaturedMaterials: FeaturedMaterials,
-  renderFeaturedMaterials: function (selectorOrElement: any) {
-    let query = window.location.search
-    if (query[0] === '?') {
-      query = query.slice(1)
+  FeaturedMaterials,
+  renderFeaturedMaterials (selectorOrElement: any) {
+    let query = window.location.search;
+    if (query[0] === "?") {
+      query = query.slice(1);
     }
-    render(React.createElement(FeaturedMaterials, { queryString: query }), jQuery(selectorOrElement)[0])
+    render(createElement(FeaturedMaterials, { queryString: query }), jQuery(selectorOrElement)[0]);
   },
 
-  SearchResults: SearchResults,
-  renderSearchResults: function (results: any, selectorOrElement: any) {
-    const element = jQuery(selectorOrElement)[0]
-    render(React.createElement(SearchResults, { results }), element)
+  SearchResults,
+  renderSearchResults (results: any, selectorOrElement: any) {
+    const element = jQuery(selectorOrElement)[0];
+    render(createElement(SearchResults, { results }), element);
   },
-  renderSearchMessage: function (message: any, selectorOrElement: any) {
-    const element = jQuery(selectorOrElement)[0]
-    render(<span>{message}</span>, element)
-  },
-
-  SMaterialsList: SMaterialsList,
-  renderMaterialsList: function (materials: any, selectorOrElement: any) {
-    render(React.createElement(SMaterialsList, { materials }), jQuery(selectorOrElement)[0])
+  renderSearchMessage (message: any, selectorOrElement: any) {
+    const element = jQuery(selectorOrElement)[0];
+    render(<span>{ message }</span>, element);
   },
 
-  MaterialsBin: MaterialsBin,
-  renderMaterialsBin: function (definition: any, selectorOrElement: any, queryString: any = null) {
+  SMaterialsList,
+  renderMaterialsList (materials: any, selectorOrElement: any) {
+    render(createElement(SMaterialsList, { materials }), jQuery(selectorOrElement)[0]);
+  },
+
+  MaterialsBin,
+  renderMaterialsBin (definition: any, selectorOrElement: any, queryString: any = null) {
     if (queryString === null) {
-      queryString = window.location.search
+      queryString = window.location.search;
     }
-    const matches = queryString.match(/assign_to_class=(\d+)/)
-    const assignToSpecificClass = matches ? matches[1] : null
-    render(React.createElement(MaterialsBin, { materials: definition, assignToSpecificClass }), jQuery(selectorOrElement)[0])
+    const matches = queryString.match(/assign_to_class=(\d+)/);
+    const assignToSpecificClass = matches ? matches[1] : null;
+    render(createElement(MaterialsBin, { materials: definition, assignToSpecificClass }), jQuery(selectorOrElement)[0]);
   },
 
-  PortalClassSetupForm: PortalClassSetupForm,
-  renderPortalClassSetupForm: function (options: any, id: any) {
-    render(React.createElement(PortalClassSetupForm, options), id)
+  PortalClassSetupForm,
+  renderPortalClassSetupForm (options: any, id: any) {
+    render(createElement(PortalClassSetupForm, options), id);
   },
 
-  EditBookmarks: EditBookmarks,
-  renderEditBookmarks: function (options: any, id: any) {
-    render(React.createElement(EditBookmarks, options), id)
+  EditBookmarks,
+  renderEditBookmarks (options: any, id: any) {
+    render(createElement(EditBookmarks, options), id);
   },
 
-  ManageClasses: ManageClasses,
-  renderManageClasses: function (options: any, id: any) {
-    render(React.createElement(ManageClasses, options), id)
+  ManageClasses,
+  renderManageClasses (options: any, id: any) {
+    render(createElement(ManageClasses, options), id);
   },
 
-  EditMaterialsCollectionList: EditMaterialsCollectionList,
-  renderEditMaterialsCollectionList: function (options: any, id: any) {
-    render(React.createElement(EditMaterialsCollectionList, options), id)
+  EditMaterialsCollectionList,
+  renderEditMaterialsCollectionList (options: any, id: any) {
+    render(createElement(EditMaterialsCollectionList, options), id);
   },
 
-  JoinClass: JoinClass,
-  renderJoinClass: function (options: any, id: any) {
-    render(React.createElement(JoinClass, options), id)
+  JoinClass,
+  renderJoinClass (options: any, id: any) {
+    render(createElement(JoinClass, options), id);
   },
 
-  StudentRoster: StudentRoster,
-  renderStudentRoster: function (options: any, id: any) {
-    render(React.createElement(StudentRoster, options), id)
+  StudentRoster,
+  renderStudentRoster (options: any, id: any) {
+    render(createElement(StudentRoster, options), id);
   },
 
-  AutoSuggest: AutoSuggest,
-  renderAutoSuggest: function (options: any, id: any) {
-    render(React.createElement(AutoSuggest, options), id)
+  AutoSuggest,
+  renderAutoSuggest (options: any, id: any) {
+    render(createElement(AutoSuggest, options), id);
   },
 
-  StandardsTable: StandardsTable,
-  renderStandardsTable: function (options: any, id: any) {
-    render(React.createElement(StandardsTable, options), id)
+  StandardsTable,
+  renderStandardsTable (options: any, id: any) {
+    render(createElement(StandardsTable, options), id);
   },
 
-  StemFinderResultStandards: StemFinderResultStandards,
-  renderStemFinderResultStandards: function (options: any, id: any) {
-    render(React.createElement(StemFinderResultStandards, options), id)
+  StemFinderResultStandards,
+  renderStemFinderResultStandards (options: any, id: any) {
+    render(createElement(StemFinderResultStandards, options), id);
   },
 
-  ResourceRequirements: ResourceRequirements,
-  renderResourceRequirements: function (options: any, id: any) {
-    render(React.createElement(ResourceRequirements, options), id)
+  ResourceRequirements,
+  renderResourceRequirements (options: any, id: any) {
+    render(createElement(ResourceRequirements, options), id);
   },
 
-  ResourceLicense: ResourceLicense,
-  renderResourceLicense: function (options: any, id: any) {
-    render(React.createElement(ResourceLicense, options), id)
+  ResourceLicense,
+  renderResourceLicense (options: any, id: any) {
+    render(createElement(ResourceLicense, options), id);
   },
 
-  ResourceProjects: ResourceProjects,
-  renderResourceProjects: function (options: any, id: any) {
-    render(React.createElement(ResourceProjects, options), id)
+  ResourceProjects,
+  renderResourceProjects (options: any, id: any) {
+    render(createElement(ResourceProjects, options), id);
   },
 
-  showTab: showTab
-}
+  showTab
+};

@@ -1,20 +1,20 @@
-import React from 'react'
-import ClassAssignments from './class-assignments'
-import { reportableActivityMapping, studentMapping } from '../common/offering-progress/helpers'
-import sortByName from '../../helpers/sort-by-name'
-import OfferingsTable from './offerings-table'
-import { arrayMove } from '@dnd-kit/sortable'
-import { appendOfferingApiQueryParams } from '../../url-params'
+import React from "react";
+import ClassAssignments from "./class-assignments";
+import { reportableActivityMapping, studentMapping } from "../common/offering-progress/helpers";
+import sortByName from "../../helpers/sort-by-name";
+import OfferingsTable from "./offerings-table";
+import { arrayMove } from "@dnd-kit/sortable";
+import { appendOfferingApiQueryParams } from "../../url-params";
 
 const addQueryParam = (url: any, param: any, value: any) => {
-  const urlObj = new URL(url)
-  urlObj.searchParams.append(param, value)
-  return urlObj.toString()
-}
+  const urlObj = new URL(url);
+  urlObj.searchParams.append(param, value);
+  return urlObj.toString();
+};
 
 const teachersMapping = (data: any) => {
-  return data.map((teacher: any) => `${teacher.first_name} ${teacher.last_name}`).join(', ');
-}
+  return data.map((teacher: any) => `${teacher.first_name} ${teacher.last_name}`).join(", ");
+};
 
 const offeringsListMapping = (data: any) => {
   return data.map((offering: any) => ({
@@ -24,25 +24,25 @@ const offeringsListMapping = (data: any) => {
     locked: offering.locked,
     active: offering.active
   }));
-}
+};
 
 const externalReportMapping = (data: any, researcher: any) => {
   if (!data) {
-    return null
+    return null;
   }
   return {
     name: data.name,
     launchText: data.launch_text,
-    url: researcher ? addQueryParam(data.url, 'researcher', 'true') : data.url
-  }
-}
+    url: researcher ? addQueryParam(data.url, "researcher", "true") : data.url
+  };
+};
 
 const externalReportsArrayMapping = (data: any, researcher: any) => {
   if (!data) {
-    return []
+    return [];
   }
   return (researcher ? data.filter((r: any) => r.supports_researchers) : data).map((r: any) => externalReportMapping(r, researcher));
-}
+};
 
 const classMapping = (data: any, researcher: any) => {
   return data && {
@@ -54,8 +54,8 @@ const classMapping = (data: any, researcher: any) => {
     editPath: data.edit_path,
     assignMaterialsPath: data.assign_materials_path,
     externalClassReports: externalReportsArrayMapping(data.external_class_reports, researcher)
-  }
-}
+  };
+};
 
 const offeringDetailsMapping = (data: any, researcher: any) => {
   return {
@@ -66,14 +66,14 @@ const offeringDetailsMapping = (data: any, researcher: any) => {
     hasTeacherEdition: data.has_teacher_edition,
     reportUrl: data.report_url,
     externalReports: externalReportsArrayMapping(data.external_reports, researcher),
-    reportableActivities: data.reportable_activities && data.reportable_activities.map((a: any) => reportableActivityMapping(a)),
+    reportableActivities: data.reportable_activities?.map((a: any) => reportableActivityMapping(a)),
     students: data.students.map((s: any) => studentMapping(s, researcher)).sort(sortByName)
   };
-}
+};
 
 export default class Assignments extends React.Component<any, any> {
   constructor (props: any) {
-    super(props)
+    super(props);
     this.state = {
       loading: !props.initialClassData,
       // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
@@ -82,22 +82,22 @@ export default class Assignments extends React.Component<any, any> {
       offerings: props.initialClassData ? offeringsListMapping(props.initialClassData.offerings) : [],
       // Detailed offering data which can be used to generate progress report.
       offeringDetails: {}
-    }
-    this.onOfferingsReorder = this.onOfferingsReorder.bind(this)
-    this.onOfferingUpdate = this.onOfferingUpdate.bind(this)
-    this.requestOfferingDetails = this.requestOfferingDetails.bind(this)
-    this.handleNewAssignments = this.handleNewAssignments.bind(this)
+    };
+    this.onOfferingsReorder = this.onOfferingsReorder.bind(this);
+    this.onOfferingUpdate = this.onOfferingUpdate.bind(this);
+    this.requestOfferingDetails = this.requestOfferingDetails.bind(this);
+    this.handleNewAssignments = this.handleNewAssignments.bind(this);
   }
 
   componentDidMount () {
-    const { classDataUrl, initialClassData } = this.props
+    const { classDataUrl, initialClassData } = this.props;
     if (classDataUrl && !initialClassData) {
-      this.getClassData()
+      this.getClassData();
     }
   }
 
   getClassData () {
-    const { classDataUrl } = this.props
+    const { classDataUrl } = this.props;
     jQuery.ajax({
       url: classDataUrl,
       success: data => {
@@ -106,12 +106,12 @@ export default class Assignments extends React.Component<any, any> {
           // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
           clazz: classMapping(data),
           offerings: offeringsListMapping(data.offerings)
-        })
+        });
       },
       error: () => {
-        console.error(`GET ${classDataUrl} failed, can't render Assignment page`)
+        console.error(`GET ${classDataUrl} failed, can't render Assignment page`);
       }
-    })
+    });
   }
 
   onOfferingsReorder ({
@@ -119,70 +119,70 @@ export default class Assignments extends React.Component<any, any> {
     newIndex
   }: any) {
     if (oldIndex === newIndex) {
-      return
+      return;
     }
-    const { offerings } = this.state
-    const offeringApiUrl = offerings[oldIndex].apiUrl
-    this.setState({ offerings: arrayMove(offerings, oldIndex, newIndex) })
+    const { offerings } = this.state;
+    const offeringApiUrl = offerings[oldIndex].apiUrl;
+    this.setState({ offerings: arrayMove(offerings, oldIndex, newIndex) });
     jQuery.ajax({
-      type: 'PUT',
+      type: "PUT",
       url: offeringApiUrl,
       data: {
         position: newIndex
       },
       error: () => {
-        window.alert('Reordering failed, please try to reload page and try again.')
-        this.setState({ offerings: offerings })
+        window.alert("Reordering failed, please try to reload page and try again.");
+        this.setState({ offerings });
       }
-    })
+    });
   }
 
   onOfferingUpdate (offering: any, prop: any, value: any) {
-    const { offerings } = this.state
-    const newOffering = Object.assign({}, offering, { [prop]: value })
-    const newOfferings = offerings.slice()
-    newOfferings.splice(offerings.indexOf(offering), 1, newOffering)
-    this.setState({ offerings: newOfferings })
+    const { offerings } = this.state;
+    const newOffering = { ...offering, [prop]: value };
+    const newOfferings = offerings.slice();
+    newOfferings.splice(offerings.indexOf(offering), 1, newOffering);
+    this.setState({ offerings: newOfferings });
     jQuery.ajax({
-      type: 'PUT',
+      type: "PUT",
       url: offering.apiUrl,
       data: {
         [prop]: value
       },
       error: () => {
-        window.alert('Offering update failed, please try to reload page and try again.')
+        window.alert("Offering update failed, please try to reload page and try again.");
       }
-    })
+    });
   }
 
   requestOfferingDetails (offering: any) {
-    const { researcher } = this.props
+    const { researcher } = this.props;
 
     jQuery.ajax({
-      type: 'GET',
+      type: "GET",
       url: appendOfferingApiQueryParams(offering.apiUrl, researcher ? { researcher: true } : {}),
       success: data => {
-        const newData = offeringDetailsMapping(data, researcher)
-        const { offeringDetails } = this.state
+        const newData = offeringDetailsMapping(data, researcher);
+        const { offeringDetails } = this.state;
         this.setState({
-          offeringDetails: Object.assign({}, offeringDetails, { [offering.id]: newData })
-        })
+          offeringDetails: { ...offeringDetails, [offering.id]: newData }
+        });
       },
       error: () => {
-        window.alert('Offering details loading failed, please try to reload page and try again.')
+        window.alert("Offering details loading failed, please try to reload page and try again.");
       }
-    })
+    });
   }
 
   handleNewAssignments () {
-    this.getClassData()
+    this.getClassData();
   }
 
   render () {
-    const { researcher } = this.props
-    const { loading, clazz, offerings, offeringDetails } = this.state
+    const { researcher } = this.props;
+    const { loading, clazz, offerings, offeringDetails } = this.state;
     if (loading) {
-      return null
+      return null;
     }
     return (
       <div>
@@ -197,7 +197,7 @@ export default class Assignments extends React.Component<any, any> {
           onOfferingUpdate={this.onOfferingUpdate}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -209,4 +209,4 @@ Assignments.defaultProps = {
   researcher: false,
   // If initialData is not provided, component will use API (dataUrl) to get it.
   initialClassData: null
-}
+};

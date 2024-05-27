@@ -1,5 +1,5 @@
-import React from 'react'
-import createReactClass from 'create-react-class'
+import React from "react";
+import createReactClass from "create-react-class";
 
 // This was converted from a React 15 mixin to a high-order component (HOC)
 //
@@ -13,92 +13,98 @@ import createReactClass from 'create-react-class'
 //  - .processData() (method), it can process raw AJAX response before state is updated
 
 export default function MBFetchDataHOC (WrappedComponent: any, optionsFn: any) {
-  return createReactClass({
+  const MBFetchData = createReactClass({
     getInitialState () {
-      const state: any = {}
-      const { dataStateKey } = optionsFn()
-      state[dataStateKey] = null
-      return state
+      const state: any = {};
+      const { dataStateKey } = optionsFn();
+      state[dataStateKey] = null;
+      return state;
     },
 
     componentDidMount () {
       // Download data only if component is visibile.
-      this.mounted = true
+      this.mounted = true;
       if (this.props.visible) {
-        this.fetchData()
+        this.fetchData();
       }
     },
 
     componentWillUnmount () {
-      this.mounted = false
+      this.mounted = false;
     },
 
     UNSAFE_componentWillReceiveProps (nextProps: any) {
       // Download data only if component is going to be visibile.
       if (nextProps.visible) {
-        this.fetchData()
+        this.fetchData();
       }
     },
 
     fetchData () {
-      const { dataUrl, dataStateKey, requestParams, processData } = optionsFn()
+      const { dataUrl, dataStateKey, requestParams, processData } = optionsFn();
 
       // Don't download data if it's been already done.
       if (this.state[dataStateKey] != null) {
-        return
+        return;
       }
-      const params = (requestParams != null) ? requestParams.call(this) : {}
+      const params = (requestParams != null) ? requestParams.call(this) : {};
       jQuery.ajax({
         url: dataUrl,
         data: params,
-        dataType: 'json',
+        dataType: "json",
         success: data => {
           if (this.mounted) {
-            const newState: any = {}
+            const newState: any = {};
             // Use processData method if defined.
-            newState[dataStateKey] = (processData != null) ? processData.call(this, data) : data
-            this.setState(newState)
+            newState[dataStateKey] = (processData != null) ? processData.call(this, data) : data;
+            this.setState(newState);
           }
         }
-      })
+      });
     },
 
     archive (materialId: any, archiveUrl: any) {
       if (!this.state.collectionsData) {
-        return
+        return;
       }
       // TODO: this uses normal requests instead of JSON
       return jQuery.ajax({
         url: archiveUrl,
         success: data => {
-          const newState = this.state.collectionsData.map(function (d: any) {
-            // @ts-expect-error TS(2339): Property 'clone' does not exist on type 'ObjectCon... Remove this comment to see the full error message
-            const copy = Object.clone(d)
-            copy.materials = d.materials.filter((m: any) => m.id !== materialId)
-            return copy
-          })
-          return this.setState({ collectionsData: newState })
+          return this.setState((prevState: any) => {
+            const newState = prevState.collectionsData.map((d: any) => {
+              const copy = { ...d };
+              copy.materials = d.materials.filter((m: any) => m.id !== materialId);
+              return copy;
+            });
+            return { collectionsData: newState };
+          });
         }
       });
     },
 
     archiveSingle (materialId: any, archiveUrl: any) {
       if (!this.state.materials) {
-        return
+        return;
       }
       // TODO: this uses normal requests instead of JSON
       return jQuery.ajax({
         url: archiveUrl,
         success: data => {
-          const newState = this.state.materials.filter((m: any) => m.id !== materialId)
-          return this.setState({ materials: newState })
+          return this.setState((prevState: any) => {
+            const newState = prevState.materials.filter((m: any) => m.id !== materialId);
+            return { materials: newState };
+          });
         }
       });
     },
 
-    render: function () {
+    render () {
       // Use JSX spread syntax to pass all props and state down automatically.
-      return <WrappedComponent {...this.props} {...this.state} archive={this.archive} archiveSingle={this.archiveSingle} />
+      return <WrappedComponent {...this.props} {...this.state} archive={this.archive} archiveSingle={this.archiveSingle} />;
     }
   });
+
+  MBFetchData.displayName = "MBFetchDataHOC";
+  return MBFetchData;
 }

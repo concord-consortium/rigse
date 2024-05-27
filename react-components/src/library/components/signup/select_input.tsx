@@ -1,38 +1,38 @@
-import React from 'react'
-import Select from 'react-select'
-import { withFormsy } from 'formsy-react'
+import React from "react";
+import Select from "react-select";
+import { withFormsy } from "formsy-react";
 
 class SelectInput extends React.Component<any, any> {
   options: any;
   constructor (props: any) {
-    super(props)
-    this.changeValue = this.changeValue.bind(this)
+    super(props);
+    this.changeValue = this.changeValue.bind(this);
     this.state = {
       loading: true
-    }
-    this.options = []
+    };
+    this.options = [];
   }
 
   componentDidMount () {
     this.props.loadOptions((options: any) => {
       this.setState({
         loading: false,
-        options: options
-      })
-    })
+        options
+      });
+    });
   }
 
   changeValue (option: any) {
-    this.props.setValue(option)
-    this.props.onChange(option)
+    this.props.setValue(option);
+    this.props.onChange(option);
   }
 
   render () {
-    const { loading, options } = this.state
-    const { placeholder, disabled } = this.props
-    let className = 'select-input'
+    const { loading, options } = this.state;
+    const { placeholder, disabled } = this.props;
+    let className = "select-input";
     if (this.props.value) {
-      className += ' valid'
+      className += " valid";
     }
 
     return (
@@ -44,14 +44,14 @@ class SelectInput extends React.Component<any, any> {
           options={options}
           isSearchable
           disabled={disabled}
-          value={this.props.value || ''}
+          value={this.props.value || ""}
           onChange={this.changeValue}
           clearable={false}
         />
-        {this.props.errorMessage ? <div className='input-error'>{this.props.errorMessage}</div> : undefined}
+        { this.props.errorMessage ? <div className="input-error">{ this.props.errorMessage }</div> : undefined }
       </div>
-    )
+    );
   }
 }
 
-export default withFormsy(SelectInput)
+export default withFormsy(SelectInput);

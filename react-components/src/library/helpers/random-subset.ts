@@ -1,9 +1,9 @@
-import shuffleArray from './shuffle-array'
+import shuffleArray from "./shuffle-array";
 
-var randomSubset = function (array: any) {
-  var count = Math.round(Math.random() * array.length)
-  var subset = array.slice(0, count)
-  return shuffleArray(subset)
-}
+const randomSubset = function (array: any) {
+  const count = Math.round(Math.random() * array.length);
+  const subset = array.slice(0, count);
+  return shuffleArray(subset);
+};
 
-export default randomSubset
+export default randomSubset;

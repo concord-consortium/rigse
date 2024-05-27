@@ -1,34 +1,34 @@
-import React from 'react'
-import Component from '../helpers/component'
-import cookieHelpers from '../helpers/cookie-helpers'
+import React from "react";
+import Component from "../helpers/component";
+import cookieHelpers from "../helpers/cookie-helpers";
 
-import css from './sitewide-alert.scss'
+import css from "./sitewide-alert.scss";
 
 const SitewideAlert = Component({
-  getInitialState: function () {
+  getInitialState () {
     return {
       alertDismissed: false,
       content: this.props.content,
       cookieName: cookieHelpers.setCookieName(this.props.content)
-    }
+    };
   },
 
-  componentWillMount: function () {
-    const { cookieName } = this.state
-    const alertDismissed = !!cookieHelpers.readCookie(cookieName)
-    this.setState({ alertDismissed: alertDismissed })
+  componentWillMount () {
+    const { cookieName } = this.state;
+    const alertDismissed = !!cookieHelpers.readCookie(cookieName);
+    this.setState({ alertDismissed });
   },
 
-  handleAlertClose: function () {
-    const { cookieName } = this.state
-    cookieHelpers.createCookie(cookieName, 'true', 30)
-    this.setState({ alertDismissed: true })
+  handleAlertClose () {
+    const { cookieName } = this.state;
+    cookieHelpers.createCookie(cookieName, "true", 30);
+    this.setState({ alertDismissed: true });
   },
 
-  render: function () {
-    const { alertDismissed, content } = this.state
+  render () {
+    const { alertDismissed, content } = this.state;
     if (alertDismissed) {
-      return null
+      return null;
     }
     return (
       <div className={css.alertBarContain}>
@@ -37,8 +37,8 @@ const SitewideAlert = Component({
           <span dangerouslySetInnerHTML={{ __html: content }} />
         </div>
       </div>
-    )
+    );
   }
-})
+});
 
-export default SitewideAlert
+export default SitewideAlert;

@@ -1,54 +1,54 @@
-import React from 'react'
-import Component from '../helpers/component'
+import React from "react";
+import Component from "../helpers/component";
 
 const Tooltip = Component({
-  getInitialState: function () {
+  getInitialState () {
     return {
       id: this.props.id,
       text: this.props.text,
       posx: this.props.posx,
       posy: this.props.posy,
-      type: this.props.type || '',
+      type: this.props.type || "",
       close_delay: this.props.close_delay || 3000
-    }
+    };
   },
 
-  getDefaultProps: function () {
-    return {}
+  getDefaultProps () {
+    return {};
   },
 
-  componentDidMount: function () {
-    this.setTimer()
+  componentDidMount () {
+    this.setTimer();
   },
 
-  componentWillUnmount: function () {
-    window.clearTimeout(this._timer)
+  componentWillUnmount () {
+    window.clearTimeout(this._timer);
   },
 
-  setTimer: function () {
+  setTimer () {
     if (this._timer != null) {
-      window.clearTimeout(this._timer)
+      window.clearTimeout(this._timer);
     }
 
     this._timer = window.setTimeout(function () {
-      jQuery('#' + this.state.id).fadeOut()
-      this._timer = null
-    }.bind(this), this.state.close_delay)
+      jQuery("#" + this.state.id).fadeOut();
+      this._timer = null;
+    }.bind(this), this.state.close_delay);
   },
 
-  handleClose: function (e: any) {
-    this.props.toggleTooltip(e)
+  handleClose (e: any) {
+    this.props.toggleTooltip(e);
   },
 
-  render: function (e: any) {
+  render (e: any) {
     return (
-      <div className='portal-pages-tooltip-wrapper' onClick={this.handleClose}>
-        <div className={'portal-pages-tooltip ' + this.state.type} id={this.state.id} style={{ left: this.state.posx, top: this.state.posy }} onClick={this.handleClose}>
-          <p>{this.state.text}</p>
+      <div className="portal-pages-tooltip-wrapper" onClick={this.handleClose}>
+        <div className={"portal-pages-tooltip " + this.state.type} id={this.state.id} style={{ left: this.state.posx, top: this.state.posy }} onClick={this.handleClose}>
+          <p>{ this.state.text }</p>
         </div>
       </div>
-    )
+    );
   }
-})
+});
 
-export default Tooltip
+export default Tooltip;

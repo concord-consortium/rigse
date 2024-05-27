@@ -1,33 +1,33 @@
-import React from 'react'
-import Select from 'react-select'
-import { debounce } from 'throttle-debounce'
-import jQuery from 'jquery'
-import ExternalReportButton from '../common/external-report-button'
-import { formatInputDateToMMDDYYYY } from '../../helpers/format-date'
+import React from "react";
+import Select from "react-select";
+import { debounce } from "throttle-debounce";
+import jQuery from "jquery";
+import ExternalReportButton from "../common/external-report-button";
+import { formatInputDateToMMDDYYYY } from "../../helpers/format-date";
 
-import css from './style.scss'
+import css from "./style.scss";
 
-const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
+const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, " ");
 
 // This param is used mostly for testing purposes. It allows to set a custom limit for the number of results,
 // so staging environments can test how the dropdowns behave when the number of results is too high.
 const getQueryLimitParam = () => {
-  const urlParams = new URLSearchParams(window.location.search)
-  return urlParams.get('queryLimit')
-}
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("queryLimit");
+};
 
 const hasAtLeastTwoAlphanumeric = (str: any) => {
   // This regular expression matches alphanumeric characters
-  const matches = str.match(/[a-zA-Z0-9]/g)
+  const matches = str.match(/[a-zA-Z0-9]/g);
   // Check if there are at least two alphanumeric characters
-  return matches && matches.length >= 2
-}
+  return matches && matches.length >= 2;
+};
 
-const queryCache = {}
+const queryCache = {};
 
 export default class LearnerReportForm extends React.Component<any, any> {
   constructor (props: any) {
-    super(props)
+    super(props);
     this.state = {
       counts: {},
       // the current values of the filters
@@ -35,8 +35,8 @@ export default class LearnerReportForm extends React.Component<any, any> {
       teachers: [],
       runnables: [],
       permission_forms: [],
-      start_date: '',
-      end_date: '',
+      start_date: "",
+      end_date: "",
       hide_names: false,
       // all possible values for each pulldown
       filterables: {
@@ -56,19 +56,18 @@ export default class LearnerReportForm extends React.Component<any, any> {
       tooManyResults_runnables: false,
       tooManyResults_permission_forms: false,
       // state of the text input within the dropdown
-      textInput_schools: '',
-      textInput_teachers: '',
-      textInput_runnables: '',
-      textInput_permission_forms: '',
+      textInput_schools: "",
+      textInput_teachers: "",
+      textInput_runnables: "",
+      textInput_permission_forms: "",
 
       externalReportButtonDisabled: true,
       queryParams: {}
-    }
+    };
   }
 
-  // eslint-disable-next-line
   UNSAFE_componentWillMount () {
-    this.updateFilters()
+    this.updateFilters();
   }
 
   // Queries ES using the portal API
@@ -81,35 +80,35 @@ export default class LearnerReportForm extends React.Component<any, any> {
   // no new request is made.
   query (_params: any, fieldName: any, searchString: any) {
     if (fieldName) {
-      this.setState({ [`waitingFor_${fieldName}`]: true })
+      this.setState({ [`waitingFor_${fieldName}`]: true });
     }
 
-    const params = jQuery.extend({}, _params) // clone
+    const params = jQuery.extend({}, _params); // clone
     if (fieldName) {
       // we remove the value of each field from the filter query for that
       // dropdown, as we want to know all possible values for that dropdown
       // given only the other filters
-      delete params[fieldName]
+      delete params[fieldName];
     }
     // Ignore any search string that doesn't have at least two alphanumeric characters. The API uses Elasticsearch's
     // match_prefix_query filter, and it doesn't really work well with special characters. As long as they're surrounded
     // by alphanumeric characters, things work predictably. However, queries like "?", "!", or "??" will usually return
     // empty results, even if there are matches in the index.
     if (searchString && hasAtLeastTwoAlphanumeric(searchString)) {
-      params[fieldName] = searchString
+      params[fieldName] = searchString;
     }
 
-    const cacheKey = JSON.stringify(params)
+    const cacheKey = JSON.stringify(params);
 
     const handleResponse = (data: any) => {
-      let newState
+      let newState;
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      queryCache[cacheKey] = data
-      const aggs = data.aggregations
+      queryCache[cacheKey] = data;
+      const aggs = data.aggregations;
       if (fieldName) {
-        newState = { filterables: this.state.filterables }
-        let { buckets, sum_other_doc_count: overLimitCount } = aggs[fieldName]
-        const idsField = `${fieldName}_ids`
+        newState = { filterables: this.state.filterables };
+        let { buckets, sum_other_doc_count: overLimitCount } = aggs[fieldName];
+        const idsField = `${fieldName}_ids`;
 
         if (overLimitCount === 0) {
           if (aggs[idsField]) {
@@ -118,26 +117,26 @@ export default class LearnerReportForm extends React.Component<any, any> {
             // we use this to filter the buckets in the main field aggregration
             const filteredIds = aggs[idsField].buckets.map((b: any) => // sometimes this will be an integer and sometimes it will be a string
             // convert it to a string for consistency
-            b.key.toString()
-            )
+              b.key.toString()
+            );
 
-            buckets = buckets.filter((b: any) => filteredIds.indexOf(b.key.match(/\d+/)[0]) !== -1)
+            buckets = buckets.filter((b: any) => filteredIds.indexOf(b.key.match(/\d+/)[0]) !== -1);
           }
 
           // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-          newState[`tooManyResults_${fieldName}`] = false
-          newState.filterables[fieldName] = buckets
+          newState[`tooManyResults_${fieldName}`] = false;
+          newState.filterables[fieldName] = buckets;
         } else {
           // ElasticSearch returns sum_other_doc_count (named overLimitCount here) if the number of buckets is over
           // a certain limit specified in the query. If this is the case, we don't display the results in the dropdown
           // and ask the user to refine their search.
           // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-          newState[`tooManyResults_${fieldName}`] = true
-          newState.filterables[fieldName] = []
+          newState[`tooManyResults_${fieldName}`] = true;
+          newState.filterables[fieldName] = [];
         }
 
         // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-        newState[`waitingFor_${fieldName}`] = false
+        newState[`waitingFor_${fieldName}`] = false;
       } else {
         newState = {
           counts: {
@@ -147,153 +146,153 @@ export default class LearnerReportForm extends React.Component<any, any> {
             teachers: aggs.count_teachers.value,
             runnables: aggs.count_runnables.value
           }
-        }
+        };
       }
-      this.setState(newState)
-      return data
-    }
+      this.setState(newState);
+      return data;
+    };
 
     // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     if (queryCache[cacheKey]?.then) { // already made a Promise that is still pending
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      queryCache[cacheKey].then(handleResponse) // chain a new Then
+      queryCache[cacheKey].then(handleResponse); // chain a new Then
     // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     } else if (queryCache[cacheKey]) { // have data that has already returned
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      handleResponse(queryCache[cacheKey]) // use it directly
+      handleResponse(queryCache[cacheKey]); // use it directly
     } else {
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = jQuery.ajax({ // make req and add new Promise to cache
-        url: '/api/v1/report_learners_es',
-        type: 'GET',
+        url: "/api/v1/report_learners_es",
+        type: "GET",
         data: params
-      }).then(handleResponse)
+      }).then(handleResponse);
     }
   }
 
   getQueryParams () {
     const params = {
-      hide_names: this.state['hide_names']
-    }
-    for (var filter of ['schools', 'teachers', 'runnables', 'permission_forms']) {
+      hide_names: this.state.hide_names
+    };
+    for (const filter of ["schools", "teachers", "runnables", "permission_forms"]) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(',')
+        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(",");
       }
     }
-    for (filter of ['start_date', 'end_date']) {
+    for (const filter of ["start_date", "end_date"]) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-        params[filter] = formatInputDateToMMDDYYYY(this.state[filter])
+        params[filter] = formatInputDateToMMDDYYYY(this.state[filter]);
       }
     }
-    const customQueryLimit = getQueryLimitParam()
+    const customQueryLimit = getQueryLimitParam();
     if (customQueryLimit) {
       // @ts-expect-error TS(2339): Property 'query_limit' does not exist on type '{ h... Remove this comment to see the full error message
-      params.query_limit = customQueryLimit
+      params.query_limit = customQueryLimit;
     }
-    return params
+    return params;
   }
 
   updateQueryParams () {
-    const queryParams = this.getQueryParams()
-    const externalReportButtonDisabled = Object.keys(queryParams).length === 0
-    this.setState({ queryParams, externalReportButtonDisabled })
+    const queryParams = this.getQueryParams();
+    const externalReportButtonDisabled = Object.keys(queryParams).length === 0;
+    this.setState({ queryParams, externalReportButtonDisabled });
   }
 
   updateFilters () {
-    const params = this.getQueryParams()
+    const params = this.getQueryParams();
     // update the counts, and the values in all the dropdowns. We have to do
     // them all separately, as each dropdown may require a different query,
     // depending on the other filters. If the queries are the same, however,
     // no additional requests are made over the network
     // @ts-expect-error TS(2554): Expected 3 arguments, but got 1.
-    this.query(params)
+    this.query(params);
     // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
-    this.query(params, 'schools')
+    this.query(params, "schools");
     // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
-    this.query(params, 'teachers')
+    this.query(params, "teachers");
     // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
-    this.query(params, 'runnables')
+    this.query(params, "runnables");
     // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
-    this.query(params, 'permission_forms')
+    this.query(params, "permission_forms");
   }
 
   renderTopInfo () {
-    const { counts } = this.state
+    const { counts } = this.state;
     if ((Object.keys(counts)).length > 0) {
       return Object.keys(counts).map(k => {
         // rename runnables to resources
-        const label = k === 'runnables' ? 'resources' : k
+        const label = k === "runnables" ? "resources" : k;
         return (
           <span key={k} style={{ paddingLeft: 12 }}>
-            <span style={{ fontWeight: 'bold' }}>{label}</span>
-            <span style={{ paddingLeft: 6 }}>{this.state.counts[k]}</span>
+            <span style={{ fontWeight: "bold" }}>{ label }</span>
+            <span style={{ paddingLeft: 6 }}>{ this.state.counts[k] }</span>
           </span>
-        )
-      })
+        );
+      });
     } else {
-      return <i className='wait-icon fa fa-spinner fa-spin' />
+      return <i className="wait-icon fa fa-spinner fa-spin" />;
     }
   }
 
   renderInput (name: any, titleOverride?: any) {
-    if (!this.state.filterables[name]) { return }
-    const agg = this.state.filterables[name]
+    if (!this.state.filterables[name]) { return; }
+    const agg = this.state.filterables[name];
 
-    const isLoading = this.state[`waitingFor_${name}`]
-    const placeholder = !isLoading ? 'Select ...' : 'Loading ...'
+    const isLoading = this.state[`waitingFor_${name}`];
+    const placeholder = !isLoading ? "Select ..." : "Loading ...";
 
     // convert to all strings
-    let options = agg.map(function (f: any) { if (typeof f === 'string') { return f } else { return f.key } })
+    let options = agg.map(function (f: any) { if (typeof f === "string") { return f; } else { return f.key; } });
 
     // rm dupes
-    options = options.filter((str: any, i: any) => options.indexOf(str) === i)
+    options = options.filter((str: any, i: any) => options.indexOf(str) === i);
 
     // split into values/labels
     options = options.map(function (f: any) {
-      const idName = typeof f === 'string' ? f.split(/:(.+)/) : f.key.split(/:(.+)/)
-      return { value: idName[0], label: idName[1] }
-    })
+      const idName = typeof f === "string" ? f.split(/:(.+)/) : f.key.split(/:(.+)/);
+      return { value: idName[0], label: idName[1] };
+    });
 
     // rm messed-up ES values
-    options = options.filter((o: any) => o.value.indexOf('%{') < 0)
+    options = options.filter((o: any) => o.value.indexOf("%{") < 0);
 
     // average keystroke delay is 100-200ms
     const debouncedHandleTextInputChange = debounce(350, (value) => {
-      const previousValue = this.state[`textInput_${name}`]
-      this.setState({ [`textInput_${name}`]: value })
+      const previousValue = this.state[`textInput_${name}`];
+      this.setState({ [`textInput_${name}`]: value });
 
       if (value.startsWith(previousValue) && !this.state[`tooManyResults_${name}`]) {
         // Nothing to do, as the user keeps narrowing the search in a way that doesn't require querying the server.
         // Filtering will be done on the client side by the React Select component.
-        return
+        return;
       }
       // In any other scenario, such as the user deleting a character, completely clearing the search box, or changing
       // the search text, we need to query the server to obtain a new list of options. It's likely that some of these
       // queries are already cached.
-      this.query(this.getQueryParams(), name, value)
-    })
+      this.query(this.getQueryParams(), name, value);
+    });
 
     const handleSelectChange = (value: any) => {
       this.setState({ [name]: value }, () => {
-        this.updateFilters()
-        this.updateQueryParams()
-      })
-    }
+        this.updateFilters();
+        this.updateQueryParams();
+      });
+    };
 
     const noOptionsMessage = ({
       inputValue
     }: any) => {
       if (this.state[`tooManyResults_${name}`]) {
-        return 'Too many results. Please refine your search to narrow down the list.'
+        return "Too many results. Please refine your search to narrow down the list.";
       }
-      return 'No results found.'
-    }
+      return "No results found.";
+    };
 
     return (
-      <div style={{ marginTop: '6px' }}>
-        <span>{titleOverride || title(name)}</span>
+      <div style={{ marginTop: "6px" }}>
+        <span>{ titleOverride || title(name) }</span>
         <Select
           name={name}
           options={options}
@@ -306,117 +305,114 @@ export default class LearnerReportForm extends React.Component<any, any> {
           onChange={handleSelectChange}
         />
       </div>
-    )
+    );
   }
 
   renderDatePicker (name: any) {
-    const label = name === 'start_date' ? 'Earliest date of last run' : 'Latest date of last run'
+    const label = name === "start_date" ? "Earliest date of last run" : "Latest date of last run";
 
     const handleChange = (value: any) => {
       // allow clearing of the date
-      this.setState({ [name]: value || '' }, () => {
-        this.updateFilters()
-        this.updateQueryParams()
-      })
-    }
+      this.setState({ [name]: value || "" }, () => {
+        this.updateFilters();
+        this.updateQueryParams();
+      });
+    };
 
     return (
-      <div style={{ marginTop: '6px' }}>
+      <div style={{ marginTop: "6px" }}>
         <label>
-          <div>{label}</div>
+          <div>{ label }</div>
           <input
-            type='date'
+            type="date"
             name={name}
             value={this.state[name]}
             onChange={handleChange}
           />
         </label>
       </div>
-    )
+    );
   }
 
   renderCheck (name: any) {
     const handleChange = (evt: any) => {
       this.setState({ [name]: evt.target.checked }, () => {
-        this.updateQueryParams()
-      })
-    }
+        this.updateQueryParams();
+      });
+    };
     return (
       <div>
         <label>
           <input
             name={name}
-            type='checkbox'
+            type="checkbox"
             checked={this.state[name]}
             onChange={handleChange}
           />
-          {title(name)}
+          { title(name) }
         </label>
       </div>
-    )
+    );
   }
 
   renderButton (name: any) {
     return (
       <input
-        type='submit'
-        name='commit'
+        type="submit"
+        name="commit"
         value={name}
       />
-    )
+    );
   }
 
   renderForm () {
-    const { externalReports } = this.props
-    const { queryParams, externalReportButtonDisabled } = this.state
+    const { externalReports } = this.props;
+    const { queryParams, externalReportButtonDisabled } = this.state;
     // ...LEARNER_QUERY is the renamed ...REPORT_QUERY, use a fallback to wait for the portal to update
-        const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY
-        const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT
+    const learnerQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY || Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_QUERY;
+    const jwtQueryUrl = Portal.API_V1.EXTERNAL_RESEARCHER_REPORT_LEARNER_QUERY_JWT;
 
-    externalReports.sort((a: any, b: any) => a.label.localeCompare(b.label))
-    const adminOnlyExternalReports = externalReports.filter((r: any) => r.name.indexOf('[DEV]') !== -1)
-    const nonAdminExternalReports = externalReports.filter((r: any) => adminOnlyExternalReports.indexOf(r) === -1)
+    externalReports.sort((a: any, b: any) => a.label.localeCompare(b.label));
+    const adminOnlyExternalReports = externalReports.filter((r: any) => r.name.indexOf("[DEV]") !== -1);
+    const nonAdminExternalReports = externalReports.filter((r: any) => adminOnlyExternalReports.indexOf(r) === -1);
 
     const renderExternalReports = (reports: any) => {
       return reports.map((lr: any) => {
-        const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl
-        return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />
+        const queryUrl = lr.useQueryJwt ? jwtQueryUrl : learnerQueryUrl;
+        return <ExternalReportButton key={lr.url + lr.label} label={lr.label} reportUrl={lr.url} queryUrl={queryUrl} isDisabled={externalReportButtonDisabled} queryParams={queryParams} />;
       });
-    }
+    };
 
     return (
-      <form method='get'>
-        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-        {this.renderInput('schools')}
-        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-        {this.renderInput('teachers')}
-        {this.renderInput('runnables', 'Resources')}
-        // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-        {this.renderInput('permission_forms')}
+      <form method="get">
+        { this.renderInput("schools") }
+        { this.renderInput("teachers") }
+        { this.renderInput("runnables", "Resources") }
+        { this.renderInput("permission_forms") }
 
-        {this.renderDatePicker('start_date')}
-        {this.renderDatePicker('end_date')}
+        { this.renderDatePicker("start_date") }
+        { this.renderDatePicker("end_date") }
 
-        {this.renderCheck('hide_names')}
+        { this.renderCheck("hide_names") }
 
-        <div style={{ marginTop: '12px' }}>
-          {renderExternalReports(nonAdminExternalReports)}
+        <div style={{ marginTop: "12px" }}>
+          { renderExternalReports(nonAdminExternalReports) }
         </div>
-                {Portal.currentUser.isAdmin && adminOnlyExternalReports.length > 0 && (
+        { Portal.currentUser.isAdmin && adminOnlyExternalReports.length > 0 && (
           <>
-            <div style={{ marginTop: '12px' }}>
+            <div style={{ marginTop: "12px" }}>
               <strong>For Developers Only:</strong>
             </div>
             <div>
-              {renderExternalReports(adminOnlyExternalReports)}
+              { renderExternalReports(adminOnlyExternalReports) }
             </div>
           </>
-        )}
-        <div style={{ marginTop: '24px' }}>
-          Need help?  Read the <a target='_blank' href='https://docs.google.com/document/d/1jNKjSworR_1ARdSPT8vq6PElKqZ-7zw8BFanZiVcxPs/edit'>Researcher Reports &amp; Logs User Guide</a>.
+        ) }
+        <div style={{ marginTop: "24px" }}>
+          Need help?  Read the <a target="_blank" href="https://docs.google.com/document/d/1jNKjSworR_1ARdSPT8vq6PElKqZ-7zw8BFanZiVcxPs/edit" rel="noreferrer">Researcher Reports &amp; Logs User Guide</a>.
         </div>
       </form>
-    )
+    );
   }
 
   render () {
@@ -424,18 +420,18 @@ export default class LearnerReportForm extends React.Component<any, any> {
       <div className={css.learnerReportForm}>
         <div>
           <h3>Your filter matches:</h3>
-          {this.renderTopInfo()}
+          { this.renderTopInfo() }
         </div>
-        {this.renderForm()}
-        {/* Spacer element is added so there's some space for the date picker element. Portal footer doesn't
-            work too well with this form otherwise. */}
+        { this.renderForm() }
+        { /* Spacer element is added so there's some space for the date picker element. Portal footer doesn't
+            work too well with this form otherwise. */ }
         <div className={css.spacerForDayPicker} />
       </div>
-    )
+    );
   }
 }
 
 // @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 LearnerReportForm.defaultProps = {
   externalReports: []
-}
+};

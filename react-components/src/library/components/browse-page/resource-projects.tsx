@@ -1,37 +1,35 @@
-import React from 'react'
-import Component from '../../helpers/component'
-import pluralize from '../../helpers/pluralize'
+import React from "react";
+import Component from "../../helpers/component";
+import pluralize from "../../helpers/pluralize";
 
-import css from './style.scss'
+import css from "./style.scss";
 
 const ResourceProjects = Component({
-  render: function () {
-    const projects = this.props.projects
-    const numProjects = projects.length
+  render () {
+    const projects = this.props.projects;
+    const numProjects = projects.length;
     if (numProjects === 0) {
-      return null
+      return null;
     }
 
     const projectsList = projects.map(function (project: any, index: any) {
       return (
         <span key={project.landing_page_url}>
           <strong>
-            {project.landing_page_url ? <a href={project.landing_page_url}>{project.name}</a> : project.name}
+            { project.landing_page_url ? <a href={project.landing_page_url}>{ project.name }</a> : project.name }
           </strong>
-          {index !== numProjects - 1 ? ' and ' : ''}
+          { index !== numProjects - 1 ? " and " : "" }
         </span>
-      )
-    })
+      );
+    });
 
     return (
-      // @ts-expect-error TS(2322): Type '{ children: Element[]; class: any; }' is not... Remove this comment to see the full error message
-      <div class={css.resourceMetadataGroup}>
+      <div className={css.resourceMetadataGroup}>
         <h2>Learn More</h2>
-        // @ts-expect-error TS(2554): Expected 3 arguments, but got 2.
-        <p>This resource is part of the Concord Consortium&apos;s {projectsList} {pluralize(numProjects, ' project')}.</p>
+        <p>This resource is part of the Concord Consortium&apos;s { projectsList } { pluralize(numProjects, " project") }.</p>
       </div>
-    )
+    );
   }
-})
+});
 
-export default ResourceProjects
+export default ResourceProjects;

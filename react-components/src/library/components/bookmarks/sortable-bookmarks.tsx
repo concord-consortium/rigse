@@ -1,11 +1,11 @@
-import React from 'react'
-import BookmarkRow from './bookmark-row'
-import { SortableContainer, SortableItem } from '../shared/sortable-helpers'
-import css from './style.scss'
+import React from "react";
+import BookmarkRow from "./bookmark-row";
+import { SortableContainer, SortableItem } from "../shared/sortable-helpers";
+import css from "./style.scss";
 
 class Bookmarks extends React.Component<any, any> {
   render () {
-    const { bookmarks } = this.props
+    const { bookmarks } = this.props;
 
     return (
       <div className={css.editBookmarksTable}>
@@ -36,7 +36,7 @@ const SortableBookmarks = ({
   onSortEnd
 }: any) => {
   const renderDragPreview = (itemId: any) => {
-    const bookmark = bookmarks.find((bookmark: any) => bookmark.id === itemId)
+    const bookmark = bookmarks.find((_bookmark: any) => _bookmark.id === itemId);
     return (
       <BookmarkRow
         bookmark={bookmark}
@@ -44,8 +44,8 @@ const SortableBookmarks = ({
         handleDelete={handleDelete}
         handleVisibilityToggle={handleVisibilityToggle}
       />
-    )
-  }
+    );
+  };
 
   return (
     <SortableContainer
@@ -61,6 +61,6 @@ const SortableBookmarks = ({
       />
     </SortableContainer>
   );
-}
+};
 
-export default SortableBookmarks
+export default SortableBookmarks;

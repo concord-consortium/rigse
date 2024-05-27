@@ -1,18 +1,18 @@
-import React from 'react'
-import Select from 'react-select'
-import jQuery from 'jquery'
-import ResearcherClassesTable from './table'
+import React from "react";
+import Select from "react-select";
+import jQuery from "jquery";
+import ResearcherClassesTable from "./table";
 
-import css from './style.scss'
+import css from "./style.scss";
 
-const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, ' ')
-const pluralize = (count: any, singular: any, plural: any) => count === 1 ? `${count} ${singular}` : `${count} ${plural}`
+const title = (str: any) => (str.charAt(0).toUpperCase() + str.slice(1)).replace(/_/g, " ");
+const pluralize = (count: any, singular: any, plural: any) => count === 1 ? `${count} ${singular}` : `${count} ${plural}`;
 
-const queryCache = {}
+const queryCache = {};
 
 export default class ResearcherClassesForm extends React.Component<any, any> {
   constructor (props: any) {
-    super(props)
+    super(props);
     this.state = {
       // the current values of the filters
       teachers: [],
@@ -32,39 +32,39 @@ export default class ResearcherClassesForm extends React.Component<any, any> {
       waitingFor_runnables: false,
       // checkbox options
       removeCCTeachers: false
-    }
+    };
   }
 
   noFilterSelected () {
-    return this.state.teachers.length === 0 && this.state.cohorts.length === 0 && this.state.runnables.length === 0
+    return this.state.teachers.length === 0 && this.state.cohorts.length === 0 && this.state.runnables.length === 0;
   }
 
   // If we pass a field name, the filter box for that field will *not* be
   // updated, but all others will. This lets us find all possible values
   // for a dropdown given all the other filters.
   query (_params: any, _fieldName: any) {
-    const params = jQuery.extend({}, _params) // clone
+    const params = jQuery.extend({}, _params); // clone
     if (_fieldName) {
-      this.setState({ [`waitingFor_${_fieldName}`]: true })
-      params.load_only = _fieldName
+      this.setState({ [`waitingFor_${_fieldName}`]: true });
+      params.load_only = _fieldName;
     }
 
     if (_fieldName) {
       // we remove the value of each field from the filter query for that
       // dropdown, as we want to know all possible values for that dropdown
       // given only the other filters
-      delete params[_fieldName]
+      delete params[_fieldName];
     }
 
-    const cacheKey = JSON.stringify(params)
+    const cacheKey = JSON.stringify(params);
 
     const handleResponse = (data: any) => {
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      queryCache[cacheKey] = data
+      queryCache[cacheKey] = data;
       this.setState((prevState: any) => {
-        const hits = data.hits
-        const totals = data.totals
-        const newState = {}
+        const hits = data.hits;
+        const totals = data.totals;
+        const newState = {};
         if (totals) {
           // @ts-expect-error TS(2339): Property 'stats' does not exist on type '{}'.
           newState.stats = {
@@ -72,52 +72,52 @@ export default class ResearcherClassesForm extends React.Component<any, any> {
             teachers: totals.teachers,
             runnables: totals.runnables,
             classes: totals.classes
-          }
+          };
         }
         if (hits.classes) {
           // @ts-expect-error TS(2339): Property 'classes' does not exist on type '{}'.
-          newState.classes = hits.classes
+          newState.classes = hits.classes;
         } else {
           // @ts-expect-error TS(2339): Property 'filterables' does not exist on type '{}'... Remove this comment to see the full error message
-          newState.filterables = { ...prevState.filterables }
+          newState.filterables = { ...prevState.filterables };
           // @ts-expect-error TS(2339): Property 'filterables' does not exist on type '{}'... Remove this comment to see the full error message
-          newState.filterables[_fieldName] = hits[_fieldName]
+          newState.filterables[_fieldName] = hits[_fieldName];
           // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-          newState[`waitingFor_${_fieldName}`] = false
+          newState[`waitingFor_${_fieldName}`] = false;
         }
-        return newState
-      })
+        return newState;
+      });
 
-      return data
-    }
+      return data;
+    };
 
     // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     if ((queryCache[cacheKey] != null ? queryCache[cacheKey].then : undefined)) { // already made a Promise that is still pending
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      queryCache[cacheKey].then(handleResponse) // chain a new Then
+      queryCache[cacheKey].then(handleResponse); // chain a new Then
     // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
     } else if (queryCache[cacheKey]) { // have data that has already returned
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-      handleResponse(queryCache[cacheKey]) // use it directly
+      handleResponse(queryCache[cacheKey]); // use it directly
     } else {
       // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
       queryCache[cacheKey] = jQuery.ajax({ // make req and add new Promise to cache
-        url: '/api/v1/research_classes',
-        type: 'GET',
+        url: "/api/v1/research_classes",
+        type: "GET",
         data: params
-      }).then(handleResponse)
+      }).then(handleResponse);
     }
   }
 
   getQueryParams () {
-    const params = { remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }
-    for (var filter of ['teachers', 'cohorts', 'runnables']) {
+    const params = { remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId };
+    for (const filter of ["teachers", "cohorts", "runnables"]) {
       if ((this.state[filter] != null ? this.state[filter].length : undefined) > 0) {
         // @ts-expect-error TS(7053): Element implicitly has an 'any' type because expre... Remove this comment to see the full error message
-        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(',')
+        params[filter] = this.state[filter].map((v: any) => v.value).sort().join(",");
       }
     }
-    return params
+    return params;
   }
 
   updateFilters () {
@@ -132,44 +132,44 @@ export default class ResearcherClassesForm extends React.Component<any, any> {
           cohorts: [],
           runnables: []
         }
-      })
-      return
+      });
+      return;
     }
-    const params = this.getQueryParams()
+    const params = this.getQueryParams();
     // @ts-expect-error TS(2554): Expected 2 arguments, but got 1.
-    this.query(params)
-    this.query(params, 'teachers')
-    this.query(params, 'cohorts')
-    this.query(params, 'runnables')
+    this.query(params);
+    this.query(params, "teachers");
+    this.query(params, "cohorts");
+    this.query(params, "runnables");
   }
 
   renderInput (name: any, titleOverride?: any) {
-    if (!this.state.filterables[name]) { return }
+    if (!this.state.filterables[name]) { return; }
 
-    const hits = this.state.filterables[name]
+    const hits = this.state.filterables[name];
 
-    const isLoading = this.state[`waitingFor_${name}`]
-    const placeholder = !isLoading ? 'Select or search...' : 'Loading ...'
+    const isLoading = this.state[`waitingFor_${name}`];
+    const placeholder = !isLoading ? "Select or search..." : "Loading ...";
 
     const options = hits.map((hit: any) => {
-      return { value: hit.id, label: hit.label }
-    })
+      return { value: hit.id, label: hit.label };
+    });
 
     const handleSelectChange = (value: any) => {
       this.setState({ [name]: value || [] }, () => {
-        this.updateFilters()
-      })
-    }
+        this.updateFilters();
+      });
+    };
 
     const handleLoadAll = () => {
       if (this.noFilterSelected()) {
-        this.query({ load_only: name, remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }, name)
+        this.query({ load_only: name, remove_cc_teachers: this.state.removeCCTeachers, project_id: this.props.projectId }, name);
       }
-    }
+    };
 
     return (
-      <div style={{ marginTop: '6px' }}>
-        <span>{`${titleOverride || title(name)}`}</span>
+      <div style={{ marginTop: "6px" }}>
+        <span>{ `${titleOverride || title(name)}` }</span>
         <Select
           name={name}
           options={options}
@@ -182,43 +182,43 @@ export default class ResearcherClassesForm extends React.Component<any, any> {
           maxMenuHeight={200}
         />
       </div>
-    )
+    );
   }
 
   renderForm () {
     const handleRemoveCCTeachers = (e: any) => {
       this.setState({ removeCCTeachers: e.target.checked }, () => {
-        this.updateFilters()
-      })
-    }
+        this.updateFilters();
+      });
+    };
 
     return (
-      <form method='get'>
-        {this.renderInput('cohorts')}
-        {this.renderInput('teachers')}
+      <form method="get">
+        { this.renderInput("cohorts") }
+        { this.renderInput("teachers") }
         <div>
-          <input type='checkbox' checked={this.state.removeCCTeachers} onChange={handleRemoveCCTeachers} /> Remove Concord Consortium Teachers? *
+          <input type="checkbox" checked={this.state.removeCCTeachers} onChange={handleRemoveCCTeachers} /> Remove Concord Consortium Teachers? *
         </div>
-        <div style={{ fontSize: '0.8em' }}>
+        <div style={{ fontSize: "0.8em" }}>
           * Concord Consortium Teachers belong to schools named "Concord Consortium".
         </div>
-        {this.renderInput('runnables', 'Resources')}
+        { this.renderInput("runnables", "Resources") }
       </form>
-    )
+    );
   }
 
   // Render summary of the filters that lists all of the filter counts.
   renderSummary () {
     if (!this.state.stats) {
-      return null
+      return null;
     }
-    const { cohorts, teachers, runnables, classes } = this.state.stats
+    const { cohorts, teachers, runnables, classes } = this.state.stats;
 
     // Use the pluralize function for each filterable entity
-    const cohortsCount = pluralize(cohorts, 'cohort', 'cohorts')
-    const teachersCount = pluralize(teachers, 'teacher', 'teachers')
-    const resourcesCount = pluralize(runnables, 'resource', 'resources')
-    const classesCount = pluralize(classes, 'class', 'classes')
+    const cohortsCount = pluralize(cohorts, "cohort", "cohorts");
+    const teachersCount = pluralize(teachers, "teacher", "teachers");
+    const resourcesCount = pluralize(runnables, "resource", "resources");
+    const classesCount = pluralize(classes, "class", "classes");
 
     const handleResetAllFilters = () => {
       this.setState({
@@ -226,37 +226,37 @@ export default class ResearcherClassesForm extends React.Component<any, any> {
         cohorts: [],
         runnables: []
       }, () => {
-        this.updateFilters()
-      })
-    }
+        this.updateFilters();
+      });
+    };
 
     return (
       <div className={css.summary}>
-        <div>Your filter matches: {cohortsCount}, {teachersCount}, {resourcesCount}, {classesCount}.</div>
+        <div>Your filter matches: { cohortsCount }, { teachersCount }, { resourcesCount }, { classesCount }.</div>
         <button onClick={handleResetAllFilters}>Reset All</button>
       </div>
-    )
+    );
   }
 
   render () {
-    const classes = this.state.classes
+    const classes = this.state.classes;
 
     return (
       <div className={css.researcherClassesForm}>
-        {this.renderForm()}
+        { this.renderForm() }
         <div className={css.bottom}>
-          {this.renderSummary()}
+          { this.renderSummary() }
           {
             classes.length > 0 &&
             <ResearcherClassesTable classes={classes} />
           }
         </div>
       </div>
-    )
+    );
   }
 }
 
 // @ts-expect-error TS(2339): Property 'defaultProps' does not exist on type 'ty... Remove this comment to see the full error message
 ResearcherClassesForm.defaultProps = {
-  projectId: ''
-}
+  projectId: ""
+};

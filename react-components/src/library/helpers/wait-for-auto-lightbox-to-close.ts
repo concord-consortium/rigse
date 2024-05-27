@@ -1,15 +1,15 @@
-var waitForAutoShowingLightboxToClose = function (callback: any) {
-    if (PortalComponents && PortalComponents.settings.autoShowingLightboxResource) {
-    var pollForChange = function () {
-            if (!PortalComponents.settings.autoShowingLightboxResource) {
-        window.clearInterval(pollInterval)
-        callback()
+const waitForAutoShowingLightboxToClose = function (callback: any) {
+  if (PortalComponents?.settings.autoShowingLightboxResource) {
+    const pollForChange = function () {
+      if (!PortalComponents.settings.autoShowingLightboxResource) {
+        window.clearInterval(pollInterval);
+        callback();
       }
-    }
-    var pollInterval = window.setInterval(pollForChange, 10)
+    };
+    const pollInterval = window.setInterval(pollForChange, 10);
   } else {
-    callback()
+    callback();
   }
-}
+};
 
-export default waitForAutoShowingLightboxToClose
+export default waitForAutoShowingLightboxToClose;
