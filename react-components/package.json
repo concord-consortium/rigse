@@ -23,18 +23,34 @@
     "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
   "jest": {
-    "moduleNameMapper": {
-      "\\.(css|less|scss)$": "identity-obj-proxy"
-    },
-    "modulePaths": [
-      "src/library"
+    "preset": "ts-jest/presets/js-with-ts",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.js"
     ],
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
       "url": "http://portal-test.concord.org"
     },
-    "setupFilesAfterEnv": [
-      "<rootDir>/setupTests.js"
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/cypress/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|sass)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json"
     ]
   },
   "repository": {
@@ -85,6 +101,7 @@
     "sass": "^1.77.2",
     "sass-loader": "^14.2.1",
     "style-loader": "^4.0.0",
+    "ts-jest": "^29.1.3",
     "ts-loader": "^9.5.1",
     "ts-migrate": "^0.1.35",
     "webpack": "^5.91.0",
