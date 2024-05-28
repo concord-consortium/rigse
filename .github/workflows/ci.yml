@@ -64,7 +64,7 @@ jobs:
           TEST_SOLR_PORT: 8981
     env:
       RAILS_ENV: ${{ matrix.env }}
-      CHROMEDRIVER_VERSION: '114.0.5735.90'
+      CHROMEDRIVER_VERSION: '125.0.6422.78'
     defaults:
       run:
         working-directory: ./rails/
@@ -78,19 +78,19 @@ jobs:
           bundler-cache: true # use Actions cache to significantly speed up subsequent runs
           working-directory: ./rails/
       # Install ChromeDriver (wiping out whatever version was previously installed on Actions Runner)
-      - name: Install ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
-        with:
-          chromedriver-version: ${{ env.CHROMEDRIVER_VERSION }}
+      #- name: Install ChromeDriver
+      #  uses: nanasess/setup-chromedriver@v2
+      #  with:
+      #    chromedriver-version: ${{ env.CHROMEDRIVER_VERSION }}
       # Remove existing Google Chrome as ChromeDriver will default to it (setup-chrome installs under /opt/hostedtoolcache/setup-chrome/)
-      - name: Remove Existing Google Chrome (so ChromeDriver doesn't use it instead of manually installed version)
-        run: sudo apt-get remove google-chrome-stable
+      #- name: Remove Existing Google Chrome (so ChromeDriver doesn't use it instead of manually installed version)
+      #  run: sudo apt-get remove google-chrome-stable
       # Install Google Chrome browser (that matches ChromeDriver version from previous Actions step)
-      - name: Install Google Chrome
-        id: install-chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: ${{ env.CHROMEDRIVER_VERSION }}
+      #- name: Install Google Chrome
+      #  id: install-chrome
+      #  uses: browser-actions/setup-chrome@v1
+      #  with:
+      #    chrome-version: ${{ env.CHROMEDRIVER_VERSION }}
 
       - run: cp -v ./config/database.github_actions.yml ./config/database.yml
       - run: cp -v ./config/app_environment_variables.sample.rb ./config/app_environment_variables.rb
