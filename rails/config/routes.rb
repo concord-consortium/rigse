@@ -238,6 +238,7 @@ RailsPortal::Application.routes.draw do
           get  :remove_form
         end
       end
+      resources :permission_forms_v2
 
       post 'permission_forms/update_forms' => 'permission_forms#update_forms', :as => :update_permissions_forms
       resources :site_notices
