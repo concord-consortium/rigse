@@ -1,12 +1,6 @@
 #permission-forms-v2-page
 
 :javascript
-  // may want to see these for debugging later...
-  // var permissionForms = #{@permission_forms.to_json.html_safe};
-  // var projects = #{@projects.to_json.html_safe}
-  // console.log("| @permissionForms: ", permissionForms);
-  // console.log("| @projects: ", projects);
-
   PortalComponents.renderPermissionFormsV2({
     dataUrl: Portal.API_V1.PERMISSION_FORMS_INDEX
   }, 'permission-forms-v2-page')

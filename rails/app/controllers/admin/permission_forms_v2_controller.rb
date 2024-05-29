@@ -6,9 +6,5 @@ class Admin::PermissionFormsV2Controller < ApplicationController
 
   def index
     authorize Portal::PermissionForm
-    # TODO: figure out why this form not loads
-    # form = TeacherSearchForm.new(params[:form])
-    @projects = policy_scope(Admin::Project).order("name ASC")
-    @permission_forms = policy_scope(Portal::PermissionForm)
   end
 end
