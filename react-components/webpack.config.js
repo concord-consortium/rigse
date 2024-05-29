@@ -8,8 +8,8 @@ module.exports = {
   mode: devMode ? 'development' : 'production',
   devtool: devMode ? 'inline-source-map' : false,
   entry: {
-    'react-components': './src/library/library.js',
-    'react-test-globals': './src/react-test-globals.js'
+    'react-components': './src/library/library.tsx',
+    'react-test-globals': './src/react-test-globals.ts'
   },
   output: {
     // path: path.resolve(destFolder, './library'),
@@ -21,14 +21,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
-        }
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
       },
       {
         test: [/node_modules[\\/].*\.(css|scss)$/, /library.scss$/],
@@ -54,9 +48,12 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              esModule: false,
+              modules: {
+                localIdentName: '[local]--[hash:base64:8]'
+              },
               sourceMap: true,
-              localIdentName: '[local]--[hash:base64:8]'
+              importLoaders: 1
             }
           },
           {
@@ -66,14 +63,14 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-        loader: 'url-loader',
-        options: {
-          // set limit to a very large number so that all assets are bundled into the css file
-          // TODO: newer webpack versions allow for false to disable the limit
-          limit: 1000000
-        }
+        // All assets are bundled into the JS file. This is currently required because of the Rails pipeline and
+        // the build system of this package.
+        type: 'asset/inline',
       }
     ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   externals: {
     'jquery': 'jQuery',

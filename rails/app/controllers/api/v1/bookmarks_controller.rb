@@ -77,7 +77,7 @@ class API::V1::BookmarksController < API::APIController
     end
 
     bookmarks = ids.map { |i| Portal::Bookmark.find(i) }
-    position = 0
+    position = 1
     bookmarks.each do |bookmark|
       if bookmark.changeable?(auth[:user])
         bookmark.position = position

@@ -1,17 +1,17 @@
 /* Columns */
 
 @mixin generate-col($_cols, $_width, $_gutters, $_col_wrapper:cols) {
-  $_total: $_cols * ($_width + $_gutters);
-  $_margin: ($_gutters / $_total) * 100;
+  $_total: calc($_cols * ($_width + $_gutters));
+  $_margin: calc(($_gutters / $_total) * 100);
 
   @for $i from 1 through $_cols {
-    $_col-width:((($_width * $i) + ($_gutters * ($i - 1)))/$_total);
+    $_col-width: calc((($_width * $i) + ($_gutters * ($i - 1)))/$_total);
     $_col-margin-left:$_margin * 1%;
 
     %col-#{$i}-of-#{$_cols} {
       float: left;
-      margin-left: (1% * $_margin) / 2;
-      margin-right: (1% * $_margin) / 2;
+      margin-left: calc((1% * $_margin) / 2);
+      margin-right: calc((1% * $_margin) / 2);
       width: $_col-width * 100%;
 
       &.reversed {

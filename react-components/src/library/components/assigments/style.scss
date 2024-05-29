@@ -92,22 +92,26 @@
       padding: 0 0 0 15px;
     }
   }
-  .activityNameCell {
-    flex: 5;
+}
+
+.sortableItem {
+  &:nth-child(even) {
+    background-color: #f1f1f1;
   }
+}
+
+.activityNameCell {
+  flex: 5;
 }
 
 .offering {
   border-bottom: solid 1px #ccc;
   padding: 15px;
 
-  &:nth-child(even) {
-    background-color: #f1f1f1;
-  }
-
   div:first-child {
     display: flex;
-    flex-flow: row no-wrap;
+    flex-flow: row nowrap;
+    align-items: center;
   }
   .loading {
     margin-top: 10px;
@@ -117,8 +121,8 @@
 }
 
 .iconCell {
+  width: 25px;
   display: inline-block;
-  flex: .25;
   padding-top: 3px;
   padding-right: 5px;
   font-size: 0.95em;
@@ -140,17 +144,19 @@
 }
 
 .checkboxCell {
-  display: inline-block;
-  flex: 1;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding-right: 5px;
-  text-align: center;
 }
 
 .detailsCell {
+  width: 130px;
   align-self: center;
-  display: inline-block;
-  flex: 2;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .offeringDetails {
@@ -173,20 +179,6 @@
         text-align: left;
         text-transform: uppercase;
         width: 100%;
-      }
-    }
-  }
-
-  .offeringsTable {
-    .activityNameCell {
-      flex: 4;
-    }
-    .detailsCell {
-      flex: 1.5;
-    }
-    .offering {
-      .activityNameCell {
-        flex: 3;
       }
     }
   }

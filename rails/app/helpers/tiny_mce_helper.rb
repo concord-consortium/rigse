@@ -2,9 +2,13 @@
 # the gem ships with some nice rails helpers.
 module TinyMceHelper
 
+  # Export the initTinyMCE function to window namespace so it can be manually called in React components that might
+  # render with a delay. It's not ideal, and we should eventually move away from this approach in React components, but
+  # it is how things are currently implemented. However, it was no longer working with React 18, probably due to updates
+  # in the rendering process.
   def mce_init_string
     <<HEREDOC
-tinyMCE.init({
+window.initTinyMCE = function () { tinyMCE.init({
     theme : 'advanced',
     mode : 'textareas',
     plugins : "paste, safari",
@@ -35,7 +39,8 @@ tinyMCE.init({
     convert_fonts_to_spans : true,
     theme_advanced_path : false,
     valid_elements: #{valid_elements}
-});
+})};
+window.initTinyMCE();
 HEREDOC
   end
 
@@ -43,7 +48,7 @@ HEREDOC
     case(n)
     when 1
       "bold,italic,underline,|,sup,sub,|,bullist,numlist,|,link,image,|,pastetext,pasteword,selectall,|,justifyleft,justifycenter,justifyright"
-    else 
+    else
       ""
     end
   end

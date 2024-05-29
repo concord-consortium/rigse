@@ -12,14 +12,16 @@
   margin: 10px 0;
 }
 
+.sortableItem {
+  &:nth-child(even) {
+    background-color: #f1f1f1;
+  }
+}
+
 .manageClassRow {
   border-bottom: solid 1px #ccc;
   display: flex;
   padding: 15px;
-
-  &:nth-child(even) {
-    background-color: #f1f1f1;
-  }
 }
 
 .manageClassName {

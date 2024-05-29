@@ -324,7 +324,7 @@
     }
   }
 
-  &.closed {
+  .closed {
     ul {
       max-height: 0;
       overflow: hidden;
@@ -334,7 +334,7 @@
 
   .head {
     cursor: pointer;
-  
+
     &.closed:after {
       content: "\e905";
       font-family: 'icomoon';
