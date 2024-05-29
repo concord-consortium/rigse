@@ -77,6 +77,9 @@ jobs:
         with:
           bundler-cache: true # use Actions cache to significantly speed up subsequent runs
           working-directory: ./rails/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.18.0'
       # Install ChromeDriver (wiping out whatever version was previously installed on Actions Runner)
       - name: Install ChromeDriver
         uses: nanasess/setup-chromedriver@v2
@@ -110,6 +113,12 @@ jobs:
       - run: bundle exec rake app:setup:create_default_data
         env:
           RAILS_ENV: cucumber
+      - name: Install react-components dependencies
+        working-directory: ./rails/react-components/
+        run: npm ci
+      - name: Build react-components (before assets:precompile!)
+        working-directory: ./rails/react-components/
+        run: npm run build
       - run: bundle exec rake assets:precompile
         name: Precompile assets
         env:
@@ -117,6 +126,31 @@ jobs:
 
       - run: bundle exec rake ci:${{ matrix.test_suite }}
         name: Run Rake ci:${{ matrix.test_suite }} task
+
+  test-react-components:
+    name: Run react-components tests
+    runs-on: ubuntu-latest
+    needs: lint
+    defaults:
+      run:
+        working-directory: ./rails/react-components/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.18.0'
+      - name: Install react-components dependencies
+        working-directory: ./rails/react-components/
+        run: npm ci
+      - name: Lint react-components
+        working-directory: ./rails/react-components/
+        run: npm run lint
+      - name: Build react-components
+        working-directory: ./rails/react-components/
+        run: npm run build
+      - name: Test react-components
+        working-directory: ./rails/react-components/
+        run: npm run test
 
   build:
     name: Build Docker image

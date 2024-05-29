@@ -11,9 +11,9 @@
     "lint:fix": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
     "lint:style": "eslint -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
     "lint:style:fix": "eslint --fix -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
-    "build": "npm run lint:style:fix && cross-env NODE_ENV=production webpack",
-    "dev:build": "npm run lint:style:fix && cross-env NODE_ENV=development webpack",
-    "watch": "cross-env NODE_ENV=development webpack --watch",
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev:build": "cross-env NODE_ENV=development webpack",
+    "build:watch": "cross-env NODE_ENV=development webpack --watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
