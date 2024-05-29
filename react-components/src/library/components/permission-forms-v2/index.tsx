@@ -1,6 +1,6 @@
 import React from "react";
 
-class PermissionForms extends React.Component {
+export default class PermissionFormsV2 extends React.Component<any, any> {
   render() {
     return (
       <div>
@@ -10,4 +10,3 @@ class PermissionForms extends React.Component {
   }
 }
 
-export default PermissionForms;
