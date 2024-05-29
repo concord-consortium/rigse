@@ -4,13 +4,12 @@
   hello I am the new permission form page.  I can't seem to get data to arrive here from rails:
   = @permission_forms.inspect
   = @projects.inspect
-  = @myvar.inspect
+  = @myvar
 
 
 :javascript
   var permissionFormsV2 = #{@permission_forms.to_json.html_safe};
   console.log("| permission forms from rails: ", permissionFormsV2);
-  console.log("| PortalComponents.PermissionFormsV2: ", PortalComponents.PermissionFormsV2);
   PortalComponents.renderPermissionFormsV2  ({
     dataUrl: Portal.API_V1, // TODO figure out correct API endpoint
   }, 'permission-forms-v2-page')
