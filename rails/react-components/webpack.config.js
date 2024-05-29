@@ -1,6 +1,6 @@
 const path = require('path')
 
-const destFolder = path.resolve(__dirname, '../rails/app/assets/javascripts/builds')
+const destFolder = path.resolve(__dirname, '../app/assets/javascripts/builds')
 const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
