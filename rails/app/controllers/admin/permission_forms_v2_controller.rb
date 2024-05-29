@@ -13,6 +13,5 @@ class Admin::PermissionFormsV2Controller < ApplicationController
     @teachers = form.search current_visitor
     @projects = policy_scope(Admin::Project).order("name ASC")
     @permission_forms = policy_scope(Portal::PermissionForm)
-    @myvar = "hello from ruby"
   end
 end
