@@ -11,9 +11,10 @@ class Admin::PermissionFormsV2Controller < ApplicationController
     # PUNDIT_REVIEW_SCOPE
     # PUNDIT_CHECK_SCOPE (did not find instance)
     # @permission_forms = policy_scope(Portal::PermissionForm)
-    form = TeacherSearchForm.new(params[:form])
-    @teachers = form.search current_visitor
+    # form = TeacherSearchForm.new(params[:form])
+    # @teachers = form.search current_visitor
     @projects = policy_scope(Admin::Project).order("name ASC")
     @permission_forms = policy_scope(Portal::PermissionForm)
+    @myvar = "hello from ruby"
   end
 end
