@@ -1,7 +1,17 @@
+ARG NODE_VERSION=18.16.0
 ARG RUBY_VERSION=2.7
+
+FROM node:${NODE_VERSION}-alpine AS node
 # Stick to Alpine <= 3.13 to avoid issues with ECS Docker
 # See: https://github.com/docker-library/ruby/issues/351#issue-940462153
 FROM docker.io/ruby:${RUBY_VERSION}-alpine3.12
+
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
+
+RUN node -v
 
 RUN true
 

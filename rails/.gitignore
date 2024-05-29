@@ -89,3 +89,8 @@ certs
 coverage
 
 /config/master.key
+
+/app/assets/javascripts/builds/*
+!/app/assets/javascripts/builds/.keep
+
+node_modules

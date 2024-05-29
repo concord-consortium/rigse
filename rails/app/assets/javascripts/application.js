@@ -50,5 +50,5 @@
 = require 'secondary-menu-toggle'
 = require 'user-admin'
 = require 'copy-to-clipboard'
-= require 'react-components'
+= require 'builds/react-components'
 */
