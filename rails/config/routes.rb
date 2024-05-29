@@ -484,6 +484,10 @@ RailsPortal::Application.routes.draw do
             post :remove_material
           end
         end
+
+        namespace :permission_forms do
+          get :index
+        end
       end
     end
 

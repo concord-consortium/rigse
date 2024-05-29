@@ -1,13 +1,12 @@
 #permission-forms-v2-page
 
-%p
-  hello I am the new permission form page.  I can't seem to get data to arrive here from rails:
-  = @permission_forms.inspect
-  = @projects.inspect
-
 :javascript
-  var permissionFormsV2 = #{@permission_forms.to_json.html_safe};
-  console.log("| permission forms from rails: ", permissionFormsV2);
-  PortalComponents.renderPermissionFormsV2  ({
-    dataUrl: Portal.API_V1, // TODO figure out correct API endpoint
+  // may want to see these for debugging later...
+  // var permissionForms = #{@permission_forms.to_json.html_safe};
+  // var projects = #{@projects.to_json.html_safe}
+  // console.log("| @permissionForms: ", permissionForms);
+  // console.log("| @projects: ", projects);
+
+  PortalComponents.renderPermissionFormsV2({
+    dataUrl: Portal.API_V1.PERMISSION_FORMS_INDEX
   }, 'permission-forms-v2-page')
