@@ -370,6 +370,9 @@ export default class LearnerReportForm extends React.Component<any, any> {
       });
     };
 
+    // only admins and managers can see names
+    const showHideNames = Portal.currentUser.isAdmin || Portal.currentUser.isManager;
+
     return (
       <form method="get">
         { this.renderInput("schools") }
@@ -380,7 +383,7 @@ export default class LearnerReportForm extends React.Component<any, any> {
         { this.renderDatePicker("start_date") }
         { this.renderDatePicker("end_date") }
 
-        { this.renderCheck("hide_names") }
+        { showHideNames && this.renderCheck("hide_names") }
 
         <div style={{ marginTop: "12px" }}>
           { renderExternalReports(nonAdminExternalReports) }

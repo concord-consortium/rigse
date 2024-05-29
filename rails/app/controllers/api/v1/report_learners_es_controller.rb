@@ -94,6 +94,12 @@ class API::V1::ReportLearnersEsController < API::APIController
   def external_report_query_jwt
     authorize Portal::PermissionForm
 
+    # only admins and managers can see names
+    force_hide_names = !current_user || !current_user.has_role?(%w{admin manager})
+    if force_hide_names
+      params["hide_names"] = "true"
+    end
+
     response = {
       token: SignedJWT::create_portal_token(current_user, {}, 3600),   # just sets uid
       json: {
