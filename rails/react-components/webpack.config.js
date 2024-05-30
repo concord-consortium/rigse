@@ -1,6 +1,6 @@
 const path = require('path')
 
-const destFolder = path.resolve(__dirname, 'dist')
+const destFolder = path.resolve(__dirname, '../app/assets/javascripts/builds')
 const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
@@ -12,7 +12,6 @@ module.exports = {
     'react-test-globals': './src/react-test-globals.ts'
   },
   output: {
-    // path: path.resolve(destFolder, './library'),
     path: destFolder,
     filename: '[name].js',
     // publicPath: '../'

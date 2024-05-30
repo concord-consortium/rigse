@@ -7,19 +7,15 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-serve",
-    "start:prod": "cross-env NODE_ENV=production webpack-serve",
     "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
     "lint:style": "eslint -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
     "lint:style:fix": "eslint --fix -c \".eslintrc.style.js\" \"./src/**/*.{js,jsx,ts,tsx}\" \"./tests/**/*.{js,jsx,ts,tsx}\"",
-    "build": "npm run lint:style:fix && npm run build-library && npm run copy-files",
-    "dev:build": "npm run dev:build-library && npm run copy-files",
-    "build-library": "cross-env NODE_ENV=production webpack",
-    "dev:build-library": "cross-env NODE_ENV=development webpack",
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev:build": "cross-env NODE_ENV=development webpack",
+    "build:watch": "cross-env NODE_ENV=development webpack --watch",
     "test": "jest",
     "test:watch": "jest --watch",
-    "copy-files": "cp ./dist/react-components.js ../rails/app/assets/javascripts/ && cp ./dist/react-test-globals.js ../rails/app/assets/javascripts/",
     "stats": "cross-env NODE_ENV=production webpack --profile --json > stats.json"
   },
   "jest": {

@@ -1,4 +1,4 @@
-//= require react-test-globals
+//= require builds/react-test-globals
 
 // helper methods
 window.renderStatic = function(reactClass, props ) {
