@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "../../helpers/react-render";
+import { render, unmount } from "../../helpers/react-render";
 import SignupModal from "./signup_modal";
 import Signup from "./signup";
 import LoginModal from "./login_modal";
@@ -28,21 +28,43 @@ export const renderSignupForm = (properties: any, selectorOrElement: any) => {
   render(<Signup {...properties} />, jQuery(selectorOrElement)[0]);
 };
 
-const openModal = (type: any, properties: any = {}, closeFunc?: any) => {
-  const modalContainerId = modalClasses[type.toString()];
-  const modalContainerSelector = "#" + modalContainerId;
+const getModalContainerId = (type: any) => modalClasses[type.toString()];
+
+const getModalContainerSelector = (type: any) => "#" + getModalContainerId(type);
+
+const getModalContainer = (type: any) => {
+  const modalContainerSelector = getModalContainerSelector(type);
   let modalContainer = jQuery(modalContainerSelector);
   if (modalContainer.length === 0) {
-    modalContainer = jQuery("<div id='" + modalContainerId + "'>").appendTo("body");
+    modalContainer = jQuery("<div id='" + getModalContainerId(type) + "'>").appendTo("body");
   }
+  return modalContainer[0];
+}
+
+const hideModalOfType = (type: any) => {
+  const modalContainer = getModalContainer(type);
+  Modal.hideModal();
+  // This should not be necessary; however, all this code is an awkward mix of React and non-React code (such as jQuery
+  // manipulation of the DOM). Many of the components are not designed properly and assume that they are never updated
+  // in their lifecycle, so they don't handle property updates well. Therefore, we unmount them here to avoid any issues,
+  // as that's what happened before (prior to maintenance and the upgrade to React 18).
+  unmount(modalContainer);
+}
+
+const openModal = (type: any, properties: any = {}, closeFunc?: () => void) => {
+  const modalContainer = getModalContainer(type);
 
   if (properties.closeable == null) {
     properties.closeable = true;
   }
 
-  render(React.createElement(type, properties), modalContainer[0]);
+  if (!closeFunc) {
+    closeFunc = () => hideModalOfType(type);
+  }
 
-  return Modal.showModal(modalContainerSelector,
+  render(React.createElement(type, properties), modalContainer);
+
+  return Modal.showModal(getModalContainerSelector(type),
     undefined,
     undefined,
     closeFunc,
@@ -58,14 +80,15 @@ export const openForgotPasswordModal = (properties: any) => {
 };
 
 export const openSignupModal = (properties: any) => {
-  let closeFunc = null;
+  let closeFunc = undefined;
   if (properties.omniauth) {
     closeFunc = function () {
       let redirectPath = null;
       if (properties.omniauth && properties.omniauth_origin) {
         redirectPath = properties.omniauth_origin;
       }
-      logout(Modal.hideModal, Modal.hideModal, redirectPath);
+      const hideModal = () => hideModalOfType(SignupModal);
+      logout(hideModal, hideModal, redirectPath);
     };
   }
   openModal(SignupModal, properties, closeFunc);

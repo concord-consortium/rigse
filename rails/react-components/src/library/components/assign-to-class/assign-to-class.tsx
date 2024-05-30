@@ -1,11 +1,11 @@
 import React from "react";
-import { render } from "../../helpers/react-render";
+import { render, unmount } from "../../helpers/react-render";
 import Modal from "../../helpers/modal";
 import AssignModal from "./assign-modal";
 
 import css from "./style.scss";
 
-const openModal = (type: any, properties: any = {}, closeFunc: any) => {
+const openModal = (type: any, properties: any = {}) => {
   const modalContainerSelector = "#" + css.assignModal;
   let modalContainer = jQuery(modalContainerSelector);
   if (modalContainer.length === 0) {
@@ -15,6 +15,16 @@ const openModal = (type: any, properties: any = {}, closeFunc: any) => {
   if (properties.closeable == null) {
     properties.closeable = true;
   }
+
+  const closeFunc = () => {
+    Modal.hideModal();
+    // This should not be necessary; however, all this code is an awkward mix of React and non-React code (such as jQuery
+    // manipulation of the DOM). Many of the components are not designed properly and assume that they are never updated
+    // in their lifecycle, so they don't handle property updates well. Therefore, we unmount them here to avoid any issues,
+    // as that's what happened before (prior to maintenance and the upgrade to React 18).
+    unmount(modalContainer[0]);
+  }
+  properties.closeFunc = closeFunc;
 
   render(React.createElement(type, properties), modalContainer[0]);
 
@@ -31,7 +41,6 @@ export default function openAssignToClassModal (properties: any) {
     Interactive: "interactive"
   };
   const materialType = materialTypes[properties.material_type];
-  properties.closeFunc = Modal.hideModal;
   const data = {
     id: properties.material_id,
     material_type: materialType,
@@ -43,7 +52,7 @@ export default function openAssignToClassModal (properties: any) {
       properties.previewUrl = response.preview_url;
       properties.resourceType = response.material_type.toLowerCase();
       properties.savesStudentData = response.saves_student_data;
-      openModal(AssignModal, properties, Modal.hideModal);
+      openModal(AssignModal, properties);
     })
     .fail(function (err) {
       if (err?.responseText) {
