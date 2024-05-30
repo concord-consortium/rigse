@@ -67,7 +67,7 @@ RUN \
   && cp -r ./docker/prod/config/initializers/ ./config/
 
 # Change to the react-components directory and run npm build BEFORE rails assets precompile
-RUN cd react-components && npm install && npm run build && cd ..
+RUN cd react-components && npm ci && npm run build && cd ..
 
 # Set production
 ENV RAILS_ENV=production

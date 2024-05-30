@@ -40,11 +40,11 @@ fi
 
 if [ "$RAILS_ENV" = "production" ]; then
   # Build react components, prod version
-  cd react-components && npm install && npm run build && cd ..
+  cd react-components && npm ci && npm run build && cd ..
   bundle exec rake assets:precompile
 else
   # Build react components, dev version
-  cd react-components && npm install && npm run dev:build && cd ..
+  cd react-components && npm ci && npm run dev:build && cd ..
 fi
 
 bundle exec rails s -b 0.0.0.0
