@@ -25,7 +25,7 @@ export default class UserTypeSelector extends React.Component<any, any> {
     });
 
     PortalComponents.renderLoginModal({
-      oauthProviders: this.state.oauthProviders,
+      oauthProviders: this.props.oauthProviders,
       afterSigninPath: this.props.afterSigninPath
     });
     gtag("event", "click", {
