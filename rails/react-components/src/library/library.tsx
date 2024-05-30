@@ -18,6 +18,7 @@ import { MakeTeacherEditionLinks } from "./helpers/make-teacher-edition-links";
 import * as signupFunctions from "./components/signup/signup_functions";
 import RecentActivity from "./components/recent-activity";
 import Assignments from "./components/assigments";
+import PermissionFormsV2 from "./components/permission-forms-v2";
 import Navigation from "./components/navigation";
 import RunWithCollaborators from "./components/run-with-collaborators";
 import LearnerReportForm from "./components/learner-report-form";
@@ -97,6 +98,11 @@ window.PortalPages = window.PortalComponents = {
 
   CollectionsPage,
   renderCollectionsPage: renderComponentFn(CollectionsPage),
+
+  PermissionFormsV2,
+  renderPermissionFormsV2 (options: any, id: any) {
+    render(createElement(PermissionFormsV2, options), id);
+  },
 
   RecentActivity,
   renderRecentActivity (options: any, id: any) {
