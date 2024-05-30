@@ -11,7 +11,6 @@ const CollectionLightbox = Component({
       collectionName: "",
       collectionViews: this.props.collectionViews,
       handleNav: this.props.handleNav,
-      isLoaded: false,
       landingPageSlug: null,
       returnPath: null,
       returnLinkText: null
@@ -26,7 +25,6 @@ const CollectionLightbox = Component({
       success: function (data: any) {
         this.setState({
           collectionName: data.name,
-          isLoaded: true,
           landingPageSlug: data.landing_page_slug
         });
         jQuery("html, body").css("overflow", "hidden");
@@ -104,10 +102,7 @@ const CollectionLightbox = Component({
   },
 
   render () {
-    const { collectionName, collectionViews, isLoaded, landingPageSlug, returnPath } = this.state;
-    if (!isLoaded) {
-      return (null);
-    }
+    const { collectionName, collectionViews, landingPageSlug, returnPath } = this.state;
     return (
       <div>
         <div className={css.portalPagesCollectionLightboxBackground} />
