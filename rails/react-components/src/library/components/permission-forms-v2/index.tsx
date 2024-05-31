@@ -43,12 +43,11 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
         },
         body: JSON.stringify({ permission_form: { ...formData } })
       });
-      // QUESTION: it seems like the default beahvior, even though I am not
-      // submitting a form is to reload the page.  That is fine for now, but
-      // do we want more of a single page app kind of beahvior?
-      // E.g.an optimistic update if the `data` comes back correctly below?
-      //const data = await response.json()
+      const data = await response.json()
       if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      if (data.id){
+        setPermissionForms([...permissionForms, {id: data.id, url: data.url, name: data.name}]);
+      }
       setFormData(emptyFormData);
     }
     catch (e) {
@@ -65,7 +64,7 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
         )) }
       </div>
 
-      <form className="permission-form-form">
+      <div className="permission-form-form">
         <h3>Create new Permission form</h3>
 
         <label>Name:</label>
@@ -78,7 +77,7 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
         <input type="text" name="url" onChange={handleFormChange} />
 
         <button onClick={createNewPermissionForm}>Create</button>
-      </form>
+      </div>
     </div>
   );
 }
