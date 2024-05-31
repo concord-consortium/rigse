@@ -127,6 +127,7 @@ export default class SignUp extends React.Component<any, any> {
       // teacherReg: this.onTeacherRegistration,
       form = <UserTypeSelector
         anonymous={anonymous}
+        oauthProviders={oauthProviders}
         onUserTypeSelect={this.onUserTypeSelect}
       />;
     } else if (basicData) {
