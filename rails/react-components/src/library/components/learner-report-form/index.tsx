@@ -295,11 +295,12 @@ export default class LearnerReportForm extends React.Component<any, any> {
     );
   }
 
-  renderDatePicker (name: any) {
+  renderDatePicker (name: "start_date" | "end_date") {
     const label = name === "start_date" ? "Earliest date of last run" : "Latest date of last run";
 
-    const handleChange = (value: any) => {
-      // allow clearing of the date
+    const handleChange = (event: any) => {
+      const { value } = event.target;
+
       this.setState({ [name]: value || "" }, () => {
         this.updateFilters();
         this.updateQueryParams();
