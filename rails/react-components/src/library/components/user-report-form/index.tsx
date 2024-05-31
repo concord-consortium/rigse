@@ -196,16 +196,13 @@ export default class UserReportForm extends React.Component<any, any> {
     );
   }
 
-  renderDatePicker (name: any) {
+  renderDatePicker (name: "start_date" | "end_date") {
     const label = name === "start_date" ? "Earliest date" : "Latest date";
 
     const handleChange = (event: any) => {
       const { value } = event.target;
-      if (!value) {
-        // Incorrect date.
-        return;
-      }
-      this.setState({ [name]: value }, () => {
+
+      this.setState({ [name]: value || "" }, () => {
         this.updateQueryParams();
       });
     };
