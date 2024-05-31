@@ -4,10 +4,10 @@ interface IProps {
   dataUrl: string;
 }
 
-const emptyFormData = { name: '', project_id: '', url: '' };
+const emptyFormData = { name: "", project_id: "", url: ""};
 
 export default function PermissionFormsV2({dataUrl}: IProps) {
-  const authToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
   const [permissionForms, setPermissionForms] = useState<any>(null);
   const [formData, setFormData] = useState(emptyFormData);
 
@@ -36,10 +36,10 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
     if (!authToken) return;
     try {
       const response = await fetch(dataUrl, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': authToken
+          "Content-Type": "application/json",
+          "X-CSRF-Token": authToken
         },
         body: JSON.stringify({ permission_form: { ...formData } })
       });
