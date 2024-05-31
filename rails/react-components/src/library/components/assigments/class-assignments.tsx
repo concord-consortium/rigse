@@ -127,6 +127,7 @@ export default class ClassAssignments extends React.Component<any, any> {
 
   render () {
     const { clazz } = this.props;
+    console.log("| class: ", clazz);
     return (
       <div className={css.classAssignments}>
         <header>
@@ -143,9 +144,20 @@ export default class ClassAssignments extends React.Component<any, any> {
             </tr>
           </tbody>
         </table>
-        <div className={css.reports}>
+        <div className={css.reports}>FOO
           {
-            clazz.externalClassReports.map((r: any) => <a key={r.url} href={r.url} target="_blank" className={commonCss.smallButton} title={r.name} rel="noreferrer">{ r.launchText }</a>)
+            clazz.externalClassReports.map((r: any) => (
+              <a
+                key={r.url}
+                href={r.url}
+                target="_blank"
+                className={commonCss.smallButton}
+                title={r.name}
+                rel="noreferrer"
+              >
+                {r.launchText}
+              </a>
+            ))
           }
         </div>
       </div>

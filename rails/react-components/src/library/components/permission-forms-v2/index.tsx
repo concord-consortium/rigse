@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import PermissionFormRow from "./permission-form-row";
+import css from "./style.scss"
 interface IProps {
   dataUrl: string;
 }
@@ -59,9 +60,20 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
     <div>
       <div className="permission-forms-list">
         <h2>Permission Forms</h2>
-        { permissionForms?.map((permissionForm: any) => (
-          <p key={permissionForm.id}>{ permissionForm.id }: { permissionForm.name }</p>
-        )) }
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>URL</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {permissionForms?.map((permissionForm: any) => (
+              <PermissionFormRow key={permissionForm.id} permissionForm={permissionForm} />
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="permission-form-form">
