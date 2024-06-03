@@ -11,10 +11,15 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
   const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
   const [permissionForms, setPermissionForms] = useState<any>(null);
   const [formData, setFormData] = useState(emptyFormData);
+  const [showForm, setShowForm] = useState(false);
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const handleCreateNewFormClick = () => {
+    setShowForm(true);
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,15 +62,31 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
   };
 
   return (
-    <div>
-      <div className="permission-forms-list">
-        <h2>Permission Forms</h2>
-        <table>
+    <div className={css.permissionForms}>
+      <div className={css.tableAndControls}>
+        <h2>Permission Form Options</h2>
+        <p>Breadcrumbs...</p>
+
+        <h3>Create / Manage Project Permission Forms</h3>
+        <div className={css.controlsArea}>
+          <div className={css.leftSide}>
+            <div>Project:</div>
+            <select>
+              <option value="one">one</option>
+              <option value="two">two</option>
+              <option value="archived">three</option>
+            </select>
+          </div>
+          <div className={css.rightSide}>
+            <button onClick={handleCreateNewFormClick}>Create New Permission Form</button>
+          </div>
+        </div>
+        <table className={css.permissionFormsTable}>
           <thead>
             <tr>
               <th>Name</th>
               <th>URL</th>
-              <th>ID</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -76,20 +97,22 @@ export default function PermissionFormsV2({dataUrl}: IProps) {
         </table>
       </div>
 
-      <div className="permission-form-form">
-        <h3>Create new Permission form</h3>
+      { showForm &&
+        <div className={css.newForm}>
+          <h3>Create new Permission form</h3>
 
-        <label>Name:</label>
-        <input type="text" name="name" onChange={handleFormChange} />
+          <label>Name:</label>
+          <input type="text" name="name" onChange={handleFormChange} />
 
-        <label>Project:</label>
-        <input type="text" name="project" onChange={handleFormChange} />
+          <label>Project:</label>
+          <input type="text" name="project" onChange={handleFormChange} />
 
-        <label>URL:</label>
-        <input type="text" name="url" onChange={handleFormChange} />
+          <label>URL:</label>
+          <input type="text" name="url" onChange={handleFormChange} />
 
-        <button onClick={createNewPermissionForm}>Create</button>
-      </div>
+          <button onClick={createNewPermissionForm}>Create</button>
+        </div>
+      }
     </div>
   );
 }

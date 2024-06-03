@@ -11,11 +11,10 @@ interface PermissionFormRowProps {
 
 const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm }) => {
   return (
-    <tr>
-      <td>{permissionForm.name}</td>
-      <td>{permissionForm.url}</td>
-      <td>{permissionForm.id}</td>
-      <td>
+    <tr className={css.permissionFormRow}>
+      <td className={css.nameColumn}>{permissionForm.name}</td>
+      <td className={css.urlColumn}>{permissionForm.url}</td>
+      <td className={css.buttonsColumn}>
         <button className={css.basicButton}>Edit</button>
         <button className={css.basicButton}>Archive</button>
         <button className={css.basicButton}>Delete</button>
