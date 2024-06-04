@@ -4,23 +4,22 @@ import Component from "../helpers/component";
 import css from "./lightbox-nav.scss";
 
 const LightboxNav = Component({
-  getInitialState () {
-    return {
-      collectionName: this.props.collectionName || "all resources",
-      collectionViews: this.props.collectionViews,
-      handleSwitchSource: this.props.handleSwitchSource
-    };
+
+  getCollectionName() {
+    return this.props.collectionName || "all resources";
   },
 
   collectionViewsOptions () {
-    const { collectionName, collectionViews } = this.state;
+    const collectionName = this.getCollectionName();
+    const { collectionViews } = this.props;
     return collectionViews.map((collection: any) => collectionName !== collection.name
       ? <option key={`collection-nav-${collection.id}-${collection.name}`} value={collection.id}>{ collection.name } Collection</option>
       : null);
   },
 
   render () {
-    const { collectionName, handleSwitchSource } = this.state;
+    const collectionName = this.getCollectionName();
+    const { handleSwitchSource } = this.props;
     const collectionRef = collectionName === "all resources"
       ? <strong>{ collectionName }</strong>
       : <span>the <strong>{ collectionName } Collection</strong></span>;
