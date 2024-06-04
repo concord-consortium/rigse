@@ -23,7 +23,7 @@ const openModal = (type: any, properties: any = {}) => {
     // in their lifecycle, so they don't handle property updates well. Therefore, we unmount them here to avoid any issues,
     // as that's what happened before (prior to maintenance and the upgrade to React 18).
     unmount(modalContainer[0]);
-  }
+  };
   properties.closeFunc = closeFunc;
 
   render(React.createElement(type, properties), modalContainer[0]);

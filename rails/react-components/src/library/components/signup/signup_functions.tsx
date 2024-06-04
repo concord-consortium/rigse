@@ -39,7 +39,7 @@ const getModalContainer = (type: any) => {
     modalContainer = jQuery("<div id='" + getModalContainerId(type) + "'>").appendTo("body");
   }
   return modalContainer[0];
-}
+};
 
 const hideModalOfType = (type: any) => {
   const modalContainer = getModalContainer(type);
@@ -49,7 +49,7 @@ const hideModalOfType = (type: any) => {
   // in their lifecycle, so they don't handle property updates well. Therefore, we unmount them here to avoid any issues,
   // as that's what happened before (prior to maintenance and the upgrade to React 18).
   unmount(modalContainer);
-}
+};
 
 const openModal = (type: any, properties: any = {}, closeFunc?: () => void) => {
   const modalContainer = getModalContainer(type);
