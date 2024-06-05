@@ -8,6 +8,7 @@ export default function PermissionFormsV2() {
   const permissionFormsUrl = Portal.API_V1.PERMISSION_FORMS;
   const projectsUrl = Portal.API_V1.PROJECTS;
   const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
+
   const [permissionForms, setPermissionForms] = useState<any>(null);
   const [projects, setProjects] = useState<any>(null);
   const [formData, setFormData] = useState(emptyFormData);
@@ -31,6 +32,7 @@ export default function PermissionFormsV2() {
     setCurrentSelectedProject(e.target.value);
   };
 
+  // fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,13 +54,14 @@ export default function PermissionFormsV2() {
     fetchData();
   }, [permissionFormsUrl, projectsUrl]);
 
+  // update visible permissions when project changes
   useEffect(() => {
-    if (currentSelectedProject === "") {
-      setVisibleForms(permissionForms);
-    } else {
-      const belongsToProject = (form: any) => form.project_id === Number(currentSelectedProject);
-      setVisibleForms(permissionForms?.filter(belongsToProject));
-    }
+    const belongsToSelectedProject = (form: any) => form.project_id === Number(currentSelectedProject);
+    const formsToDisplay = currentSelectedProject === ""
+      ? permissionForms
+      : permissionForms?.filter(belongsToSelectedProject);
+
+    setVisibleForms(formsToDisplay);
   }, [permissionForms, currentSelectedProject]);
 
   const createNewPermissionForm = async () => {
@@ -141,9 +144,20 @@ export default function PermissionFormsV2() {
           </select>
 
           <label>URL:</label>
-          <input type="text" name="url" onChange={handleFormInputChange} />
+          <input type="text" name="url" onChange={handleFormInputChange}/>
 
-          <button onClick={createNewPermissionForm}>Create</button>
+          <div className={css.formButtonArea}>
+            <button>
+              Cancel
+            </button>
+
+            <button
+              disabled={!formData.name || !formData.project_id}
+              onClick={createNewPermissionForm}
+            >
+              Save
+            </button>
+          </div>
         </div>
       }
     </div>

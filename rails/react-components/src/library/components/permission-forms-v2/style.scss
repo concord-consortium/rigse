@@ -83,4 +83,19 @@
       font-weight: 300;
     }
   }
+
+  .newForm {
+    width: 400px;
+    border-top:30px solid $col-link;
+  }
+
+  .formButtonArea {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+
+    button {
+      margin-left: 10px;
+    }
+  }
 }
