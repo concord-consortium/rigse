@@ -32,6 +32,11 @@ export default function PermissionFormsV2() {
     setCurrentSelectedProject(e.target.value);
   };
 
+  const handleCancelClick = () => {
+    setShowForm(false);
+    setFormData(emptyFormData);
+  };
+
   // fetch data
   useEffect(() => {
     const fetchData = async () => {
@@ -147,7 +152,7 @@ export default function PermissionFormsV2() {
           <input type="text" name="url" onChange={handleFormInputChange}/>
 
           <div className={css.formButtonArea}>
-            <button>
+            <button className={css.cancelButton} onClick={handleCancelClick}>
               Cancel
             </button>
 
