@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PermissionFormRow from "./permission-form-row";
 import css from "./style.scss"
+import { CreateNewPermissionForm } from "./create-new-permission-form";
 
 const emptyFormData = { name: "", project_id: "", url: ""};
 
@@ -128,42 +129,17 @@ export default function PermissionFormsV2() {
             ))}
           </tbody>
         </table>
-
       </div>
 
       { showForm &&
-        <div className={css.newForm}>
-          <h3>Create new Permission form</h3>
-
-          <label>Name:</label>
-          <input type="text" name="name" onChange={handleFormInputChange} />
-
-          <label>Project:</label>
-          <select name="project_id" onChange={handleFormProjectSelectChange}>
-            <option value="">Select a project...</option>
-            {projects?.map((project: any) => (
-              <option key={project.id} value={project.id}>
-                {project.name}
-              </option>
-            ))}
-          </select>
-
-          <label>URL:</label>
-          <input type="text" name="url" onChange={handleFormInputChange}/>
-
-          <div className={css.formButtonArea}>
-            <button className={css.cancelButton} onClick={handleCancelClick}>
-              Cancel
-            </button>
-
-            <button
-              disabled={!formData.name || !formData.project_id}
-              onClick={createNewPermissionForm}
-            >
-              Save
-            </button>
-          </div>
-        </div>
+        <CreateNewPermissionForm
+          formData={formData}
+          handleFormInputChange={handleFormInputChange}
+          handleFormProjectSelectChange={handleFormProjectSelectChange}
+          createNewPermissionForm={createNewPermissionForm}
+          handleCancelClick={handleCancelClick}
+          projects={projects}
+        />
       }
     </div>
   );
