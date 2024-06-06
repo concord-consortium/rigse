@@ -144,9 +144,11 @@ export default class ClassAssignments extends React.Component<any, any> {
           </tbody>
         </table>
         <div className={css.reports}>
-          {
-            clazz.externalClassReports.map((r: any) => <a key={r.url} href={r.url} target="_blank" className={commonCss.smallButton} title={r.name} rel="noreferrer">{ r.launchText }</a>)
-          }
+          { clazz.externalClassReports.map((r: any) => (
+            <a key={r.url} href={r.url} target="_blank" className={commonCss.smallButton} title={r.name} rel="noreferrer">
+              {r.launchText}
+            </a>
+          ))}
         </div>
       </div>
     );

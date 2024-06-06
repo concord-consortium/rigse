@@ -193,15 +193,32 @@ https://docs.docker.com/docker-for-mac/networking/#/i-want-to-connect-from-a-con
 ## Running rspec and cucumber tests with docker
 
 1. Connect to the running docker instance of your "app" service.
-    docker-compose exec app bash
+
+```
+docker-compose exec app bash
+```
+
 2. Then in the container, the first time you need to create the test and feature databases
-    RAILS_ENV=test bundle exec rake db:create
-    RAILS_ENV=cucumber bundle exec rake db:create
-2. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
-    * `docker/dev/run-spec.sh`
-    * `docker/dev/run-cucumber.sh`
+
+```
+RAILS_ENV=test bundle exec rake db:create
+RAILS_ENV=cucumber bundle exec rake db:create
+```
+
+3. Invoke the appropriate `run-<test>.sh` script. This should be one of the following scripts which will be mounted in the `/rigse` directory:
+
+```
+docker/dev/run-spec.sh
+docker/dev/run-cucumber.sh
+```
+
+4. Note that within the bash session you can also run an indivdual test using bundle exec. For example:
+
+```
+bundle exec rspec spec/controllers/api/v1/permission_forms_controller_spec.rb
+```
 
 ## Docker crashing or running very slow
 
 It is possible that not enough memory is available to Docker. Make sure that it is at least 4GiB-5GiB (default: 2GiB).
-If you are using OS X, go to `Preferences...` and then `Advanced` tab.  
+If you are using OS X, go to `Preferences...` and then `Advanced` tab.

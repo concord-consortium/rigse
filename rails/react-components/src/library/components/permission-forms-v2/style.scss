@@ -1,0 +1,146 @@
+@import "../../../shared/styles/variables/colors";
+@import "../../../shared/styles/variables/variables";
+
+
+.permissionForms {
+  h2, h3 {
+    color: $col-link;
+    font-family: museo-sans, verdana, helvetica, arial, sans-serif;
+  }
+
+  h3 {
+    padding-top:20px;
+    margin-bottom: 20px;
+    border-top: 1px solid #aaa;
+  }
+
+  .controlsArea {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    div {
+      display: flex;
+    }
+
+    .leftSide {
+      width: 50%;
+      justify-content: flex-start;
+      > div {
+        align-items: center;
+        margin-right:15px;
+      }
+      select {
+        width: 400px;
+      }
+    }
+
+    .rightSide {
+      justify-content: flex-end;
+    }
+  }
+  .permissionFormsTable {
+    margin-top:20px;
+    width: 100%;
+
+    tr {
+      // every other row is background #f9f9f9
+      &:nth-child(odd) {
+        background-color: #f9f9f9;
+      }
+    }
+    th {
+      text-align: left;
+      background-color: white;
+    }
+
+    .nameColumn {
+      max-width: 400px;
+      min-width: 150px;
+      padding-left:15px;
+    }
+
+    .buttonsColumn {
+      flex-grow: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .urlColumn {
+      max-width: 300px;
+      color: $col-link;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .basicButton {
+      display: inline-block;
+      color: $col-link;
+      background-color: transparent;
+      border: transparent;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+  }
+
+  // temporary styles until modal implemented
+  .newForm {
+    width: 400px;
+    border: 3px solid $col-link;
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+    margin-top:20px;
+    margin-bottom: 20px;
+  }
+
+  .formTop {
+    background-color: $col-link;
+    height: 40px;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    margin-bottom:5px;
+  }
+
+  .formRow {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+
+    label {
+      width: 80px;
+      margin-right: 10px;
+      text-align: left;
+      text-transform: capitalize;
+      font-weight: 300;
+      padding-left:10px;
+    }
+
+    input {
+      height: 40px;
+      width: 258px;
+      font-family: museo-sans, verdana, helvetica, arial, sans-serif !important;
+      padding-left: 10px;
+      font-weight: 300;
+    }
+  }
+
+  .formButtonArea {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0px;
+    padding: 10px;
+    margin-right:10px;
+
+    button {
+      margin-left: 8px;
+    }
+
+    .cancelButton {
+      background-color: #ccc;
+      border-color: #ccc;
+      color:#333;
+    }
+  }
+}

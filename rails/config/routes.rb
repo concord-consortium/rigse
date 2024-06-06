@@ -485,9 +485,7 @@ RailsPortal::Application.routes.draw do
           end
         end
 
-        namespace :permission_forms do
-          get :index
-        end
+        resources :permission_forms, only: [:index, :create]
       end
     end
 
