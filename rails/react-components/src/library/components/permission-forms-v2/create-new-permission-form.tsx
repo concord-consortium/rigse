@@ -49,29 +49,34 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
 
   return (
     <div className={css.newForm}>
-      <h3>Create new Permission form</h3>
+      <div className={css.formTop}>
+        {formData.name.length > 0 ? "Edit: " + formData.name : "New form"}
+      </div>
 
-      <label>Name:</label>
-      <div><input type="text" name="name" onChange={handleFormInputChange} autoComplete="off" /></div>
+      <div className={css.formRow}>
+        <label>Name:</label>
+        <div><input type="text" name="name" onChange={handleFormInputChange} autoComplete="off" /></div>
+      </div>
 
-      <label>Project:</label>
-      <select value={selectValue} name="project_id" onChange={handleFormProjectSelectChange}>
-        <option value="">Select a project...</option>
-        {projects?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
-      </select>
+      <div className={css.formRow}>
+        <label>Project:</label>
+        <select value={selectValue} name="project_id" onChange={handleFormProjectSelectChange}>
+          <option value="">Select a project...</option>
+          {projects?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
+      </div>
 
-      <label>URL:</label>
-      <input type="text" name="url" onChange={handleFormInputChange}/>
+      <div className={css.formRow}>
+        <label>URL:</label>
+        <input type="text" name="url" onChange={handleFormInputChange} autoComplete="off"/>
+      </div>
 
       <div className={css.formButtonArea}>
-        <button
-          disabled={!formData.name || !formData.project_id}
-          onClick={createNewPermissionForm}
-        >
-          Save
-        </button>
         <button className={css.cancelButton} onClick={onFormCancel}>
           Cancel
+        </button>
+        <button disabled={!formData.name || !formData.project_id} onClick={createNewPermissionForm}>
+          Save
         </button>
       </div>
     </div>
