@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import css from './style.scss';
+import React, { useState } from "react";
+import { IProject, IPermissionForm, CurrentSelectedProject } from "./permission-form-types";
 
-type CreateNewPermissionFormProps = {
-  currentSelectedProject: any;
-  projects: any;
+import css from "./style.scss";
+
+interface CreateNewPermissionFormProps {
+  currentSelectedProject: CurrentSelectedProject;
+  projects: IProject[];
   onFormCancel: () => void;
-  onFormSave: (newForm: any) => void;
-};
+  onFormSave: (newForm: IPermissionForm) => void;
+}
 
 export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFormSave, onFormCancel }: CreateNewPermissionFormProps) => {
-  const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
+  const authToken = document.querySelector("meta[name=\"csrf-token\"]")?.getAttribute("content");
   const currentSelectedProjectValue = currentSelectedProject ? Number(currentSelectedProject): "";
   const [formData, setFormData] = useState({ name: "", project_id: currentSelectedProjectValue, url: "" });
   const [selectValue, setSelectValue] = useState(Number(currentSelectedProject));
@@ -20,7 +22,7 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
   const handleFormProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectValue(Number(e.target.value));
     setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
-  }
+  };
 
   const createNewPermissionForm = async () => {
     if (!authToken) return;
@@ -33,7 +35,7 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
         },
         body: JSON.stringify({ permission_form: { ...formData } })
       });
-      const data = await response.json()
+      const data = await response.json();
       if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
       if (data.id){
         onFormSave(data);
@@ -55,20 +57,23 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
       <label>Project:</label>
       <select value={selectValue} name="project_id" onChange={handleFormProjectSelectChange}>
         <option value="">Select a project...</option>
-        {projects?.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+        {projects?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
       </select>
 
       <label>URL:</label>
       <input type="text" name="url" onChange={handleFormInputChange}/>
-      <button
-        disabled={!formData.name || !formData.project_id}
-        onClick={createNewPermissionForm}
-      >
-        Save
-      </button>
-      <button className={css.cancelButton} onClick={onFormCancel}>
-        Cancel
-      </button>
+
+      <div className={css.formButtonArea}>
+        <button
+          disabled={!formData.name || !formData.project_id}
+          onClick={createNewPermissionForm}
+        >
+          Save
+        </button>
+        <button className={css.cancelButton} onClick={onFormCancel}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 };

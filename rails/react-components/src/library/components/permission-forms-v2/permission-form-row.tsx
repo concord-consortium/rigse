@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import css from "./style.scss";
+import { IPermissionForm } from "./permission-form-types";
+
 
 interface PermissionFormRowProps {
-  permissionForm: {
-    id: string;
-    name: string;
-    url: string;
-  };
+  permissionForm: IPermissionForm;
 }
 
 const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm }) => {

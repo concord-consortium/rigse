@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import PermissionFormRow from "./permission-form-row";
 import { useFetch } from "./use-fetch";
-import css from "./style.scss"
 import { CreateNewPermissionForm } from "./create-new-permission-form";
+import PermissionFormRow from "./permission-form-row";
+import { IPermissionForm, IProject, CurrentSelectedProject } from "./permission-form-types";
+
+import css from "./style.scss";
 
 export default function PermissionFormsV2() {
   // Fetch permission forms and projects on load
@@ -10,12 +12,12 @@ export default function PermissionFormsV2() {
   const { data: projectsData } = useFetch(Portal.API_V1.PROJECTS, null);
 
   // State for permission forms and projects
-  const [permissionForms, setPermissionForms] = useState<any>(null);
-  const [projects, setProjects] = useState<any>(null);
+  const [permissionForms, setPermissionForms] = useState<IPermissionForm[]>([]);
+  const [projects, setProjects] = useState<IProject[]>([]);
 
   // State for UI
   const [showForm, setShowForm] = useState(false);
-  const [currentSelectedProject, setCurrentSelectedProject] = useState<any>(""); // TODO this can be too many things
+  const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
   const [visibleForms, setVisibleForms] = useState(permissionForms);
 
   // Update state when data is fetched
@@ -24,7 +26,7 @@ export default function PermissionFormsV2() {
 
   // update visible permissions list when project changes
   useEffect(() => {
-    const belongsToSelectedProject = (form: any) => form.project_id === Number(currentSelectedProject);
+    const belongsToSelectedProject = (form: IPermissionForm) => form.project_id === Number(currentSelectedProject);
     const formsToDisplay = currentSelectedProject === ""
     ? permissionForms
     : permissionForms?.filter(belongsToSelectedProject);
@@ -33,13 +35,12 @@ export default function PermissionFormsV2() {
   }, [permissionForms, currentSelectedProject]);
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("| PARENT changing currentSelectedProject to: ", e.target.value);
-    setCurrentSelectedProject(e.target.value);
+    setCurrentSelectedProject(e.target.value as CurrentSelectedProject);
   };
 
-  const updatePermissionForms = (newForm: any) => {
+  const updatePermissionForms = (newForm: IPermissionForm) => {
     setPermissionForms([...permissionForms, newForm]);
-    setCurrentSelectedProject(newForm.project_id);
+    setCurrentSelectedProject(newForm.project_id as CurrentSelectedProject);
     setShowForm(false);
   };
 
@@ -56,7 +57,7 @@ export default function PermissionFormsV2() {
             <div>Project:</div>
             <select value={currentSelectedProject} onChange={handleProjectSelectChange}>
               <option value="">Select project..</option>
-              {projects && projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              {projects?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
 
@@ -70,7 +71,7 @@ export default function PermissionFormsV2() {
             <tr><th>Name</th><th>URL</th><th></th></tr>
           </thead>
           <tbody>
-            {visibleForms?.map((permissionForm: any) => (
+            {visibleForms?.map((permissionForm: IPermissionForm) => (
               <PermissionFormRow key={permissionForm.id} permissionForm={permissionForm} />
             ))}
           </tbody>
