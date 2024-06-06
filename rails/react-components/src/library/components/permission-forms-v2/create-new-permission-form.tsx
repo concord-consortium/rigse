@@ -10,11 +10,12 @@ type CreateNewPermissionFormProps = {
 
 export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFormSave, onFormCancel }: CreateNewPermissionFormProps) => {
   const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
-  const [formData, setFormData] = useState({ name: "", project_id: currentSelectedProject, url: "" });
+  const [formData, setFormData] = useState({ name: "", project_id: "", url: "" });
   const [selectValue, setSelectValue] = useState(Number(currentSelectedProject));
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
 
   const handleFormProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectValue(Number(e.target.value));
@@ -43,11 +44,6 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
       console.error(`POST ${Portal.API_V1.PERMISSION_FORMS} failed.`, e);
     }
   };
-
-  // useEffect(() => {
-  //   console.log("| tryno change form select value from ", selectValue, " to ", Number(currentSelectedProject));
-  //   setSelectValue(Number(currentSelectedProject));
-  // }, [currentSelectedProject]);
 
   return (
     <div className={css.newForm}>
