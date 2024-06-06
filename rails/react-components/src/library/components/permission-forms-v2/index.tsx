@@ -43,7 +43,7 @@ export default function PermissionFormsV2() {
 
           <div className={css.leftSide}>
             <div>Project:</div>
-            <select value={currentSelectedProject} onChange={handleProjectSelectChange}>
+            <select data-testid="top-project-select" value={currentSelectedProject} onChange={handleProjectSelectChange}>
               <option value="">Select project..</option>
               {projectsData?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
