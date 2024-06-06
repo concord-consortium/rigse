@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, act, fireEvent, getByTestId } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import PermissionFormsV2 from "../../../../src/library/components/permission-forms-v2";
 import { useFetch } from "../../../../src/library/hooks/use-fetch";
 
@@ -15,13 +15,13 @@ window.Portal = {
 describe("PermissionFormsV2", () => {
   beforeEach(() => {
     const mockPermissions = [
-      { id: 1, name: 'Form 1', project_id: 1 },
-      { id: 2, name: 'Form 2', project_id: 2 },
-      { id: 3, name: 'Form 3', project_id: 1 },
+      { id: 1, name: "Form 1", project_id: 1 },
+      { id: 2, name: "Form 2", project_id: 2 },
+      { id: 3, name: "Form 3", project_id: 1 },
     ];
     const mockProjects = [
-      { id: 1, name: 'Project 1' },
-      { id: 2, name: 'Project 2' },
+      { id: 1, name: "Project 1" },
+      { id: 2, name: "Project 2" },
     ];
 
     (useFetch as jest.Mock).mockImplementation((url: string) => {
@@ -42,15 +42,17 @@ describe("PermissionFormsV2", () => {
   it("renders and filters list of permission forms", () => {
     render(<PermissionFormsV2 />);
 
-    expect(screen.getByText('Form 1')).toBeInTheDocument();
-    expect(screen.getByText('Form 2')).toBeInTheDocument();
-    expect(screen.getByText('Form 3')).toBeInTheDocument();
+    // check that all permission forms are there
+    expect(screen.getByText("Form 1")).toBeInTheDocument();
+    expect(screen.getByText("Form 2")).toBeInTheDocument();
+    expect(screen.getByText("Form 3")).toBeInTheDocument();
 
-    const projectSelect = screen.getByTestId('top-project-select');
+    // filter by project 1
+    const projectSelect = screen.getByTestId("top-project-select");
     fireEvent.change(projectSelect, { target: { value: 1 } });
 
-    expect(screen.getByText('Form 1')).toBeInTheDocument();
-    expect(screen.getByText('Form 3')).toBeInTheDocument();
-    expect(screen.queryByText('Form 2')).not.toBeInTheDocument();
+    expect(screen.getByText("Form 1")).toBeInTheDocument();
+    expect(screen.getByText("Form 3")).toBeInTheDocument();
+    expect(screen.queryByText("Form 2")).not.toBeInTheDocument();
   });
 });
