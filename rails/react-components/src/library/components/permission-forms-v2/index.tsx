@@ -6,7 +6,7 @@ import { CreateNewPermissionForm } from "./create-new-permission-form";
 const emptyFormData = { name: "", project_id: "", url: ""};
 
 export default function PermissionFormsV2() {
-  const permissionFormsUrl = Portal.API_V1.PERMISSION_FORMS;
+  const permissionsUrl = Portal.API_V1.PERMISSION_FORMS;
   const projectsUrl = Portal.API_V1.PROJECTS;
   const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
 
@@ -42,7 +42,7 @@ export default function PermissionFormsV2() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const permissionResponse = await fetch(permissionFormsUrl);
+        const permissionResponse = await fetch(permissionsUrl);
         if (!permissionResponse.ok) throw new Error(`HTTP error: ${permissionResponse.status}`);
         const permissionData = await permissionResponse.json();
         setPermissionForms(permissionData);
@@ -53,12 +53,12 @@ export default function PermissionFormsV2() {
         setProjects(projectsData);
       }
       catch (e) {
-        console.error(`GET ${permissionFormsUrl} failed.`, e);
+        console.error(`GET ${permissionsUrl} failed.`, e);
       }
     };
 
     fetchData();
-  }, [permissionFormsUrl, projectsUrl]);
+  }, [permissionsUrl, projectsUrl]);
 
   // update visible permissions list when project changes
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function PermissionFormsV2() {
   const createNewPermissionForm = async () => {
     if (!authToken) return;
     try {
-      const response = await fetch(permissionFormsUrl, {
+      const response = await fetch(permissionsUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function PermissionFormsV2() {
       setFormData(emptyFormData);
     }
     catch (e) {
-      console.error(`POST ${permissionFormsUrl} failed.`, e);
+      console.error(`POST ${permissionsUrl} failed.`, e);
     }
   };
 
