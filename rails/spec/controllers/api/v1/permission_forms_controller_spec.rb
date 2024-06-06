@@ -1,9 +1,14 @@
 require 'spec_helper'
 
 RSpec.describe API::V1::PermissionFormsController, type: :controller do
-  describe '#index' do
+  let(:admin)         { FactoryBot.generate(:admin_user) }
+
+  before do
+    sign_in admin
+  end
+
+  describe 'get an ok response from the index endpoint' do
     it 'GET index' do
-      skip "Skipping this test for now"
       get :index
       expect(response).to have_http_status(:ok)
     end
