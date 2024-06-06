@@ -19,7 +19,6 @@ export const useFetch = (url: string, initialData: any) => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [url]);
 

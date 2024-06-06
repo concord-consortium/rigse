@@ -3,15 +3,15 @@ import css from './style.scss';
 
 type CreateNewPermissionFormProps = {
   currentSelectedProject: any;
-  handleCancelClick: () => void;
-  updatePermissionForms: (newForm: any) => void;
   projects: any;
+  onFormCancel: () => void;
+  onFormSave: (newForm: any) => void;
 };
 
 const emptyFormData = { name: "", project_id: "", url: ""};
 const permissionsUrl = Portal.API_V1.PERMISSION_FORMS;
 
-export const CreateNewPermissionForm = ({ currentSelectedProject, handleCancelClick, projects, updatePermissionForms }: CreateNewPermissionFormProps) => {
+export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFormSave, onFormCancel }: CreateNewPermissionFormProps) => {
   const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
   const [formData, setFormData] = useState({ name: "", project_id: currentSelectedProject, url: "" });
 
@@ -37,7 +37,7 @@ export const CreateNewPermissionForm = ({ currentSelectedProject, handleCancelCl
       const data = await response.json()
       if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
       if (data.id){
-        updatePermissionForms(data);
+        onFormSave(data);
       }
       setFormData(emptyFormData);
     }
@@ -71,7 +71,7 @@ export const CreateNewPermissionForm = ({ currentSelectedProject, handleCancelCl
       >
         Save
       </button>
-      <button className={css.cancelButton} onClick={handleCancelClick}>
+      <button className={css.cancelButton} onClick={onFormCancel}>
         Cancel
       </button>
     </div>

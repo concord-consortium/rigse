@@ -5,26 +5,22 @@ import css from "./style.scss"
 import { CreateNewPermissionForm } from "./create-new-permission-form";
 
 export default function PermissionFormsV2() {
-  const permissionsUrl = Portal.API_V1.PERMISSION_FORMS;
-  const projectsUrl = Portal.API_V1.PROJECTS;
+  // Fetch permission forms and projects on load
+  const { data: permissionsData } = useFetch(Portal.API_V1.PERMISSION_FORMS, null);
+  const { data: projectsData } = useFetch(Portal.API_V1.PROJECTS, null);
 
+  // State for permission forms and projects
   const [permissionForms, setPermissionForms] = useState<any>(null);
-  const { data: permissionsData, isLoading: permissionsLoading, error: permissionsError } = useFetch(permissionsUrl, null);
-
   const [projects, setProjects] = useState<any>(null);
-  const { data: projectsData, isLoading: projectsLoading, error: projectsError } = useFetch(projectsUrl, null);
 
+  // State for UI
   const [showForm, setShowForm] = useState(false);
   const [currentSelectedProject, setCurrentSelectedProject] = useState("");
   const [visibleForms, setVisibleForms] = useState(permissionForms);
 
-  useEffect(() => {
-    setPermissionForms(permissionsData);
-  }, [permissionsData]);
-
-  useEffect(() => {
-    setProjects(projectsData);
-  }, [projectsData]);
+  // Update state when data is fetched
+  useEffect(() => setPermissionForms(permissionsData), [permissionsData]);
+  useEffect(() => setProjects(projectsData), [projectsData]);
 
   const handleCreateNewFormClick = () => {
     setShowForm(true);
@@ -32,10 +28,6 @@ export default function PermissionFormsV2() {
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCurrentSelectedProject(e.target.value);
-  };
-
-  const handleCancelClick = () => {
-    setShowForm(false);
   };
 
   const updatePermissionForms = (newForm: any) => {
@@ -91,8 +83,8 @@ export default function PermissionFormsV2() {
       {showForm &&
         <CreateNewPermissionForm
           currentSelectedProject={currentSelectedProject}
-          handleCancelClick={handleCancelClick}
-          updatePermissionForms={updatePermissionForms}
+          onFormCancel={() => setShowForm(false)}
+          onFormSave={updatePermissionForms}
           projects={projects}
         />
       }
