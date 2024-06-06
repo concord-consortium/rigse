@@ -38,7 +38,7 @@ export default function PermissionFormsV2() {
     setFormData(emptyFormData);
   };
 
-  // fetch data
+  // fetch data for permissions and projects
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,7 +60,7 @@ export default function PermissionFormsV2() {
     fetchData();
   }, [permissionFormsUrl, projectsUrl]);
 
-  // update visible permissions when project changes
+  // update visible permissions list when project changes
   useEffect(() => {
     const belongsToSelectedProject = (form: any) => form.project_id === Number(currentSelectedProject);
     const formsToDisplay = currentSelectedProject === ""
@@ -70,6 +70,7 @@ export default function PermissionFormsV2() {
     setVisibleForms(formsToDisplay);
   }, [permissionForms, currentSelectedProject]);
 
+  // create new permission and update list when data comes back
   const createNewPermissionForm = async () => {
     if (!authToken) return;
     try {
@@ -134,6 +135,7 @@ export default function PermissionFormsV2() {
       { showForm &&
         <CreateNewPermissionForm
           formData={formData}
+          currentSelectedProject={currentSelectedProject}
           handleFormInputChange={handleFormInputChange}
           handleFormProjectSelectChange={handleFormProjectSelectChange}
           createNewPermissionForm={createNewPermissionForm}

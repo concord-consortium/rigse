@@ -4,6 +4,7 @@ import css from './style.scss';
 // make a type for the props
 type CreateNewPermissionFormProps = {
   formData: any;
+  currentSelectedProject: any;
   handleFormInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFormProjectSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   createNewPermissionForm: () => void;
