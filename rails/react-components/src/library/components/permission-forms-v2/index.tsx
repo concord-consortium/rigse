@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from "react";
 import PermissionFormRow from "./permission-form-row";
+import { useFetch } from "./use-fetch";
 import css from "./style.scss"
 import { CreateNewPermissionForm } from "./create-new-permission-form";
-
-const emptyFormData = { name: "", project_id: "", url: ""};
 
 export default function PermissionFormsV2() {
   const permissionsUrl = Portal.API_V1.PERMISSION_FORMS;
   const projectsUrl = Portal.API_V1.PROJECTS;
-  const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
 
   const [permissionForms, setPermissionForms] = useState<any>(null);
+  const { data: permissionsData, isLoading: permissionsLoading, error: permissionsError } = useFetch(permissionsUrl, null);
+
   const [projects, setProjects] = useState<any>(null);
-  const [formData, setFormData] = useState(emptyFormData);
+  const { data: projectsData, isLoading: projectsLoading, error: projectsError } = useFetch(projectsUrl, null);
+
   const [showForm, setShowForm] = useState(false);
   const [currentSelectedProject, setCurrentSelectedProject] = useState("");
   const [visibleForms, setVisibleForms] = useState(permissionForms);
 
-  const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  useEffect(() => {
+    setPermissionForms(permissionsData);
+  }, [permissionsData]);
 
-  const handleFormProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
-  }
+  useEffect(() => {
+    setProjects(projectsData);
+  }, [projectsData]);
 
   const handleCreateNewFormClick = () => {
     setShowForm(true);
@@ -35,30 +36,11 @@ export default function PermissionFormsV2() {
 
   const handleCancelClick = () => {
     setShowForm(false);
-    setFormData(emptyFormData);
   };
 
-  // fetch data for permissions and projects
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const permissionResponse = await fetch(permissionsUrl);
-        if (!permissionResponse.ok) throw new Error(`HTTP error: ${permissionResponse.status}`);
-        const permissionData = await permissionResponse.json();
-        setPermissionForms(permissionData);
-
-        const projectsResponse = await fetch(projectsUrl);
-        if (!projectsResponse.ok) throw new Error(`HTTP error: ${projectsResponse.status}`);
-        const projectsData = await projectsResponse.json();
-        setProjects(projectsData);
-      }
-      catch (e) {
-        console.error(`GET ${permissionsUrl} failed.`, e);
-      }
-    };
-
-    fetchData();
-  }, [permissionsUrl, projectsUrl]);
+  const updatePermissionForms = (newForm: any) => {
+    setPermissionForms([...permissionForms, newForm]);
+  };
 
   // update visible permissions list when project changes
   useEffect(() => {
@@ -69,32 +51,6 @@ export default function PermissionFormsV2() {
 
     setVisibleForms(formsToDisplay);
   }, [permissionForms, currentSelectedProject]);
-
-  // create new permission and update list when data comes back
-  const createNewPermissionForm = async () => {
-    if (!authToken) return;
-    try {
-      const response = await fetch(permissionsUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": authToken
-        },
-        body: JSON.stringify({ permission_form: { ...formData } })
-      });
-      const data = await response.json()
-      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-      if (data.id){
-        setPermissionForms([...permissionForms, {
-          id: data.id, url: data.url, project_id: data.project_id, name: data.name
-        }]);
-      }
-      setFormData(emptyFormData);
-    }
-    catch (e) {
-      console.error(`POST ${permissionsUrl} failed.`, e);
-    }
-  };
 
   return (
     <div className={css.permissionForms}>
@@ -132,14 +88,11 @@ export default function PermissionFormsV2() {
         </table>
       </div>
 
-      { showForm &&
+      {showForm &&
         <CreateNewPermissionForm
-          formData={formData}
           currentSelectedProject={currentSelectedProject}
-          handleFormInputChange={handleFormInputChange}
-          handleFormProjectSelectChange={handleFormProjectSelectChange}
-          createNewPermissionForm={createNewPermissionForm}
           handleCancelClick={handleCancelClick}
+          updatePermissionForms={updatePermissionForms}
           projects={projects}
         />
       }

@@ -1,45 +1,79 @@
-import React from 'react';
+import React, { useState } from 'react';
 import css from './style.scss';
 
-// make a type for the props
 type CreateNewPermissionFormProps = {
-  formData: any;
   currentSelectedProject: any;
-  handleFormInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleFormProjectSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  createNewPermissionForm: () => void;
   handleCancelClick: () => void;
+  updatePermissionForms: (newForm: any) => void;
   projects: any;
 };
 
-export const CreateNewPermissionForm = ({ formData, handleFormInputChange, handleFormProjectSelectChange, projects, createNewPermissionForm, handleCancelClick }: CreateNewPermissionFormProps) => (
-  <div className={css.newForm}>
-    <h3>Create new Permission form</h3>
+const emptyFormData = { name: "", project_id: "", url: ""};
+const permissionsUrl = Portal.API_V1.PERMISSION_FORMS;
 
-    <label>Name:</label>
-    <input type="text" name="name" onChange={handleFormInputChange} />
+export const CreateNewPermissionForm = ({ currentSelectedProject, handleCancelClick, projects, updatePermissionForms }: CreateNewPermissionFormProps) => {
+  const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
+  const [formData, setFormData] = useState({ name: "", project_id: currentSelectedProject, url: "" });
 
-    <label>Project:</label>
-    <select name="project_id" onChange={handleFormProjectSelectChange}>
-      <option value="">Select a project...</option>
-      {projects?.map((project: any) => (
-        <option key={project.id} value={project.id}>
-          {project.name}
-        </option>
-      ))}
-    </select>
+  const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    <label>URL:</label>
-    <input type="text" name="url" onChange={handleFormInputChange}/>
+  const handleFormProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
+  }
 
-    <div className={css.formButtonArea}>
+  const createNewPermissionForm = async () => {
+    if (!authToken) return;
+    try {
+      const response = await fetch(permissionsUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": authToken
+        },
+        body: JSON.stringify({ permission_form: { ...formData } })
+      });
+      const data = await response.json()
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      if (data.id){
+        updatePermissionForms(data);
+      }
+      setFormData(emptyFormData);
+    }
+    catch (e) {
+      console.error(`POST ${permissionsUrl} failed.`, e);
+    }
+  };
+
+  return (
+    <div className={css.newForm}>
+      <h3>Create new Permission form</h3>
+
+      <label>Name:</label>
+      <input type="text" name="name" onChange={handleFormInputChange} />
+
+      <label>Project:</label>
+      <select name="project_id" onChange={handleFormProjectSelectChange}>
+        <option value="">Select a project...</option>
+        {projects?.map((project: any) => (
+          <option key={project.id} value={project.id}>
+            {project.name}
+          </option>
+        ))}
+      </select>
+
+      <label>URL:</label>
+      <input type="text" name="url" onChange={handleFormInputChange}/>
+      <button
+        disabled={!formData.name || !formData.project_id}
+        onClick={createNewPermissionForm}
+      >
+        Save
+      </button>
       <button className={css.cancelButton} onClick={handleCancelClick}>
         Cancel
       </button>
-
-      <button disabled={!formData.name || !formData.project_id} onClick={createNewPermissionForm}>
-        Save
-      </button>
     </div>
-  </div>
-);
+  );
+};
