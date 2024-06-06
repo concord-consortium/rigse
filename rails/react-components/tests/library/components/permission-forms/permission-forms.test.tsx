@@ -24,22 +24,33 @@ describe("PermissionFormsV2", () => {
       { id: 2, name: 'Project 2' },
     ];
 
-    (useFetch as jest.Mock)
-      .mockImplementationOnce(() => ({
-        data: mockPermissions,
-        refetch: jest.fn().mockResolvedValue({ data: mockPermissions }),
-      }))
-      .mockImplementationOnce(() => ({
-        data: mockProjects,
-        refetch: jest.fn().mockResolvedValue({ data: mockProjects }),
-      }));
+    (useFetch as jest.Mock).mockImplementation((url: string) => {
+      if (url === window.Portal.API_V1.PERMISSION_FORMS) {
+        return {
+          data: mockPermissions,
+          refetch: jest.fn().mockResolvedValue({ data: mockPermissions }),
+        };
+      } else if (url === window.Portal.API_V1.PROJECTS) {
+        return {
+          data: mockProjects,
+          refetch: jest.fn().mockResolvedValue({ data: mockProjects }),
+        };
+      }
+    });
   });
 
-  it("renders initial list of permission forms", () => {
-    const { debug } = render(<PermissionFormsV2 />);
+  it("renders and filters list of permission forms", () => {
+    render(<PermissionFormsV2 />);
 
     expect(screen.getByText('Form 1')).toBeInTheDocument();
     expect(screen.getByText('Form 2')).toBeInTheDocument();
     expect(screen.getByText('Form 3')).toBeInTheDocument();
+
+    const projectSelect = screen.getByTestId('top-project-select');
+    fireEvent.change(projectSelect, { target: { value: 1 } });
+
+    expect(screen.getByText('Form 1')).toBeInTheDocument();
+    expect(screen.getByText('Form 3')).toBeInTheDocument();
+    expect(screen.queryByText('Form 2')).not.toBeInTheDocument();
   });
 });
