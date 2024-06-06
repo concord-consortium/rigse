@@ -10,12 +10,12 @@ type CreateNewPermissionFormProps = {
 
 export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFormSave, onFormCancel }: CreateNewPermissionFormProps) => {
   const authToken = document.querySelector("meta[name='csrf-token']")?.getAttribute("content");
-  const [formData, setFormData] = useState({ name: "", project_id: "", url: "" });
+  const currentSelectedProjectValue = currentSelectedProject ? Number(currentSelectedProject): "";
+  const [formData, setFormData] = useState({ name: "", project_id: currentSelectedProjectValue, url: "" });
   const [selectValue, setSelectValue] = useState(Number(currentSelectedProject));
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
 
   const handleFormProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectValue(Number(e.target.value));
@@ -50,7 +50,7 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
       <h3>Create new Permission form</h3>
 
       <label>Name:</label>
-      <input type="text" name="name" onChange={handleFormInputChange} />
+      <div><input type="text" name="name" onChange={handleFormInputChange} autoComplete="off" /></div>
 
       <label>Project:</label>
       <select value={selectValue} name="project_id" onChange={handleFormProjectSelectChange}>

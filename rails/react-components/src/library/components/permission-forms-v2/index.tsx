@@ -40,6 +40,7 @@ export default function PermissionFormsV2() {
   const updatePermissionForms = (newForm: any) => {
     setPermissionForms([...permissionForms, newForm]);
     setCurrentSelectedProject(newForm.project_id);
+    setShowForm(false);
   };
 
   return (
