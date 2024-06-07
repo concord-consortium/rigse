@@ -87,10 +87,17 @@
 
       .urlColumn {
         max-width: 300px;
-        color: $col-link;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        color: #555;
+        a {
+          color: $col-link;
+          text-decoration: none;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
       }
 
       .basicButton {
