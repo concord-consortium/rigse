@@ -48,11 +48,10 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
   };
 
   return (
-    <div className={css.newForm}>
+    <div className={css.newPermissionForm}>
       <div className={css.formTop}>
-        {formData.name.length > 0 ? "Edit: " + formData.name : "New form"}
+        Create New Permission Form
       </div>
-
       <div className={css.formRow}>
         <label>Name:</label>
         <div><input type="text" name="name" onChange={handleFormInputChange} autoComplete="off" /></div>
