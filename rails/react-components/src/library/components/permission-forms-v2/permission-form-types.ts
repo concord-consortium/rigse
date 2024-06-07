@@ -5,9 +5,11 @@ export interface IPermissionForm {
   name: string;
   project_id?: number | string; // need to fix this
   url?: string;
- }
+}
 
 export interface IProject {
   id: string;
   name: string;
- }
+}
+
+export type PermissionsTab = "projectsTab" | "studentsTab";

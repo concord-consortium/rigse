@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useFetch } from "../../hooks/use-fetch";
 import { CreateNewPermissionForm } from "./create-new-permission-form";
+import { IPermissionForm, IProject, CurrentSelectedProject, PermissionsTab } from "./permission-form-types";
 import PermissionFormRow from "./permission-form-row";
-import { IPermissionForm, IProject, CurrentSelectedProject } from "./permission-form-types";
+import ModalDialog from "../shared/modal-dialog";
 
 import css from "./style.scss";
 
@@ -12,7 +13,8 @@ export default function PermissionFormsV2() {
   const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS, []);
 
   // State for UI
-  const [showForm, setShowForm] = useState(false);
+  const [openTab, setOpenTab] = useState<PermissionsTab>("projectsTab");
+  const [showCreateNewFormModal, setShowCreateNewFormModal] = useState(false);
   const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -21,7 +23,7 @@ export default function PermissionFormsV2() {
 
   const handleFormSave = (newForm: IPermissionForm) => {
     setCurrentSelectedProject(newForm.project_id as CurrentSelectedProject);
-    setShowForm(false);
+    setShowCreateNewFormModal(false);
     refetchPermissions();
   };
 
@@ -34,45 +36,63 @@ export default function PermissionFormsV2() {
 
   return (
     <div className={css.permissionForms}>
-      <div className={css.tableAndControls}>
+
+      <div className={css.tabArea}>
         <h2>Permission Form Options</h2>
-        <p>Tabs</p>
-
-        <h3>Create / Manage Project Permission Forms</h3>
-        <div className={css.controlsArea}>
-
-          <div className={css.leftSide}>
-            <div>Project:</div>
-            <select data-testid="top-project-select" value={currentSelectedProject} onChange={handleProjectSelectChange}>
-              <option value="">Select project..</option>
-              {projectsData?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-          </div>
-
-          <div className={css.rightSide}>
-            <button onClick={() => setShowForm(true)}>Create New Permission Form</button>
-          </div>
+        <div className={css.tabs}>
+          <button
+            className={openTab === "projectsTab" ? css.activeTab : ""}
+            onClick={() => setOpenTab("projectsTab")}
+          >
+            Create / Manage Project Permission Forms
+          </button>
+          <button
+            className={openTab === "studentsTab" ? css.activeTab : ""}
+            onClick={() => setOpenTab("studentsTab")}
+          >
+            Manage Student Permissions
+          </button>
         </div>
-
-        <table className={css.permissionFormsTable}>
-          <thead>
-            <tr><th>Name</th><th>URL</th><th></th></tr>
-          </thead>
-          <tbody>
-            {getFilteredForms()?.map((permissionForm: IPermissionForm) => (
-              <PermissionFormRow key={permissionForm.id} permissionForm={permissionForm} />
-            ))}
-          </tbody>
-        </table>
       </div>
 
-      {showForm &&
-        <CreateNewPermissionForm
-          currentSelectedProject={currentSelectedProject}
-          onFormCancel={() => setShowForm(false)}
-          onFormSave={handleFormSave}
-          projects={projectsData}
-        />
+      { openTab === "projectsTab" &&
+        <div className={css.projectPermissionsTabContent}>
+          <h3>Create/Manage Project Permission Forms</h3>
+          <div className={css.controlsArea}>
+            <div className={css.leftSide}>
+              <div>Project:</div>
+              <select data-testid="top-project-select" value={currentSelectedProject} onChange={handleProjectSelectChange}>
+                <option value="">Select project..</option>
+                {projectsData?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+            <div className={css.rightSide}>
+              <button onClick={() => setShowCreateNewFormModal(true)}>Create New Permission Form</button>
+            </div>
+          </div>
+
+          <table className={css.permissionFormsTable}>
+            <thead>
+              <tr><th>Name</th><th>URL</th><th></th></tr>
+            </thead>
+            <tbody>
+              {getFilteredForms()?.map((permissionForm: IPermissionForm) => (
+                <PermissionFormRow key={permissionForm.id} permissionForm={permissionForm} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      }
+
+      {showCreateNewFormModal &&
+        <ModalDialog styles={{ padding: "0px"}}>
+          <CreateNewPermissionForm
+            currentSelectedProject={currentSelectedProject}
+            onFormCancel={() => setShowCreateNewFormModal(false)}
+            onFormSave={handleFormSave}
+            projects={projectsData}
+          />
+        </ModalDialog>
       }
     </div>
   );
