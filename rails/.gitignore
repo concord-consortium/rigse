@@ -92,5 +92,7 @@ coverage
 
 /app/assets/javascripts/builds/*
 !/app/assets/javascripts/builds/.keep
+/app/assets/stylesheets/builds/*
+!/app/assets/stylesheets/builds/.keep
 
 node_modules

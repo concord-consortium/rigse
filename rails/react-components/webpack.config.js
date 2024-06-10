@@ -1,10 +1,13 @@
-const path = require('path')
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const destFolder = path.resolve(__dirname, '../app/assets/javascripts/builds')
-const devMode = process.env.NODE_ENV !== 'production'
+// `railsAssetsPath` needs to match `config.assets.prefix` in Rails.
+// If you change it in Rails, you need to change it here as well.
+const railsAssetsPath = '/assets/builds/';
+const jsDestFolder = path.resolve(__dirname, '../app/assets/javascripts/builds');
+const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  // development mode makes webpack-server reload pages faster
   mode: devMode ? 'development' : 'production',
   devtool: devMode ? 'inline-source-map' : false,
   entry: {
@@ -12,11 +15,10 @@ module.exports = {
     'react-test-globals': './src/react-test-globals.ts'
   },
   output: {
-    path: destFolder,
+    path: jsDestFolder,
     filename: '[name].js',
-    // publicPath: '../'
+    publicPath: railsAssetsPath
   },
-
   module: {
     rules: [
       {
@@ -27,7 +29,7 @@ module.exports = {
         test: [/node_modules[\\/].*\.(css|scss)$/, /library.scss$/],
         use: [
           {
-            loader: 'style-loader',
+            loader: MiniCssExtractPlugin.loader
           },
           {
             loader: 'css-loader'
@@ -42,7 +44,7 @@ module.exports = {
         exclude: [/node_modules/, /library.scss$/],
         use: [
           {
-            loader: 'style-loader'
+            loader: MiniCssExtractPlugin.loader
           },
           {
             loader: 'css-loader',
@@ -62,9 +64,10 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-        // All assets are bundled into the JS file. This is currently required because of the Rails pipeline and
-        // the build system of this package.
-        type: 'asset/inline',
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][hash][ext]'
+        }
       }
     ]
   },
@@ -72,6 +75,11 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   externals: {
-    'jquery': 'jQuery',
-  }
-}
+    'jquery': 'jQuery'
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '../../stylesheets/builds/[name].css',
+    }),
+  ],
+};
