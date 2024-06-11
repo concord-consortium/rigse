@@ -40,7 +40,7 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
       if (data.id){
         onFormSave(data);
       }
-      setFormData({ name: "", project_id: "", url: ""});
+      setFormData({ name: "", project_id: "", url: "" });
     }
     catch (e) {
       console.error(`POST ${Portal.API_V1.PERMISSION_FORMS} failed.`, e);
@@ -61,7 +61,7 @@ export const CreateNewPermissionForm = ({ projects, currentSelectedProject, onFo
         <label>Project:</label>
         <select value={selectValue} name="project_id" onChange={handleFormProjectSelectChange}>
           <option value="">Select a project...</option>
-          {projects?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
+          { projects?.map((p: IProject) => <option key={p.id} value={p.id}>{ p.name }</option>) }
         </select>
       </div>
 

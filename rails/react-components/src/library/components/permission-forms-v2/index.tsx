@@ -63,7 +63,7 @@ export default function PermissionFormsV2() {
               <div>Project:</div>
               <select data-testid="top-project-select" value={currentSelectedProject} onChange={handleProjectSelectChange}>
                 <option value="">Select project..</option>
-                {projectsData?.map((p: IProject) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                { projectsData?.map((p: IProject) => <option key={p.id} value={p.id}>{ p.name }</option>) }
               </select>
             </div>
             <div className={css.rightSide}>
@@ -76,16 +76,16 @@ export default function PermissionFormsV2() {
               <tr><th>Name</th><th>URL</th><th></th></tr>
             </thead>
             <tbody>
-              {getFilteredForms()?.map((permissionForm: IPermissionForm) => (
+              { getFilteredForms()?.map((permissionForm: IPermissionForm) => (
                 <PermissionFormRow key={permissionForm.id} permissionForm={permissionForm} />
-              ))}
+              )) }
             </tbody>
           </table>
         </div>
       }
 
-      {showCreateNewFormModal &&
-        <ModalDialog styles={{ padding: "0px"}}>
+      { showCreateNewFormModal &&
+        <ModalDialog styles={{ padding: "0px" }}>
           <CreateNewPermissionForm
             currentSelectedProject={currentSelectedProject}
             onFormCancel={() => setShowCreateNewFormModal(false)}
