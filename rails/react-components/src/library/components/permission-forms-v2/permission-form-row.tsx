@@ -20,7 +20,7 @@ function ensureUrlProtocol(url: string): string {
 }
 
 function renderLinkOrSpan(urlValue: string): React.ReactElement | string {
-  const urlWithProtocol = ensureUrlProtocol(urlValue);
+  const urlWithProtocol = ensureUrlProtocol(urlValue.trim());
   try {
     const urlObj = new URL(urlWithProtocol);
     return <a href={urlObj.toString()} target="_blank">{urlObj.toString()}</a>;
