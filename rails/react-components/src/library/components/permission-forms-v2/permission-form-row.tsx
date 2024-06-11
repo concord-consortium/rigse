@@ -4,6 +4,7 @@ import { IPermissionForm } from "./permission-form-types";
 
 interface PermissionFormRowProps {
   permissionForm: IPermissionForm;
+  onEdit: (permissionForm: IPermissionForm) => void;
 }
 
 function ensureUrlProtocol(url: string): string {
@@ -29,13 +30,17 @@ function renderLinkOrSpan(urlValue: string): React.ReactElement | string {
   }
 }
 
-const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm }) => {
+const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, onEdit }) => {
+  const handleEdit = () => {
+    onEdit(permissionForm);
+  };
+
   return (
     <tr className={css.permissionFormRow}>
       <td className={css.nameColumn}>{ permissionForm.name }</td>
       <td className={css.urlColumn}>{ renderLinkOrSpan(permissionForm.url ?? "") }</td>
       <td className={css.buttonsColumn}>
-        <button className={css.basicButton}>Edit</button>
+        <button className={css.basicButton} onClick={handleEdit}>Edit</button>
         <button className={css.basicButton}>Archive</button>
         <button className={css.basicButton}>Delete</button>
       </td>
