@@ -286,10 +286,7 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     redirect_path = view_context.current_user_home_path
 
-    if BoolENV['RESEARCHER_REPORT_ONLY']
-      # force all users to try to go to the researcher page on a report only portal
-      redirect_path = learner_report_path
-    elsif params[:after_sign_in_path].present?
+    if params[:after_sign_in_path].present?
       # the check for to see if the user has permission to view the after_sigin_in_path
       # page is handled by the controller of this new page.
       # if the user doesn't have permission to see the new page they will be sent to their
