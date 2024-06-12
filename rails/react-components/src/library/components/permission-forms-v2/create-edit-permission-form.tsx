@@ -20,11 +20,11 @@ export const CreateEditPermissionForm = ({ projects, currentSelectedProject, exi
   });
 
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prevFormData => ({ ...prevFormData, [e.target.name]: e.target.value }));
   };
 
   const handleFormProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
+    setFormData(prevFormData => ({ ...prevFormData, [e.target.name]: Number(e.target.value) }));
   };
 
   const handleFormSave = () => {
