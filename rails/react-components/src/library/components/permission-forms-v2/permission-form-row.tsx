@@ -4,6 +4,7 @@ import { IPermissionForm } from "./permission-form-types";
 
 interface PermissionFormRowProps {
   permissionForm: IPermissionForm;
+  onEdit: (permissionForm: IPermissionForm) => void;
 }
 
 function ensureUrlProtocol(url: string): string {
@@ -14,7 +15,7 @@ function ensureUrlProtocol(url: string): string {
   const urlPattern = /^(http:\/\/|https:\/\/)/i;
   // If the URL does not start with http:// or https://, prepend https://
   if (!urlPattern.test(url)) {
-      return `https://${url}`;
+    return `https://${url}`;
   }
   return url;
 }
@@ -23,19 +24,23 @@ function renderLinkOrSpan(urlValue: string): React.ReactElement | string {
   const urlWithProtocol = ensureUrlProtocol(urlValue.trim());
   try {
     const urlObj = new URL(urlWithProtocol);
-    return <a href={urlObj.toString()} target="_blank">{urlObj.toString()}</a>;
+    return <a href={urlObj.toString()} target="_blank" rel="noreferrer">{ urlObj.toString() }</a>;
   } catch (_) {
-    return <span className={css.invalidLink}>{urlValue}</span>;
+    return <span className={css.invalidLink}>{ urlValue }</span>;
   }
 }
 
-const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm }) => {
+const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, onEdit }) => {
+  const handleEdit = () => {
+    onEdit(permissionForm);
+  };
+
   return (
     <tr className={css.permissionFormRow}>
-      <td className={css.nameColumn}>{permissionForm.name}</td>
-      <td className={css.urlColumn}>{renderLinkOrSpan(permissionForm.url ?? "")}</td>
+      <td className={css.nameColumn}>{ permissionForm.name }</td>
+      <td className={css.urlColumn}>{ renderLinkOrSpan(permissionForm.url ?? "") }</td>
       <td className={css.buttonsColumn}>
-        <button className={css.basicButton}>Edit</button>
+        <button className={css.basicButton} onClick={handleEdit}>Edit</button>
         <button className={css.basicButton}>Archive</button>
         <button className={css.basicButton}>Delete</button>
       </td>

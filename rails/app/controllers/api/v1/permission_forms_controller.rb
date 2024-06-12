@@ -16,6 +16,16 @@ class API::V1::PermissionFormsController < API::APIController
     end
   end
 
+  def update
+    @permission_form = Portal::PermissionForm.find(params[:id])
+    authorize @permission_form
+    if @permission_form.update(permission_form_params)
+      render :json => @permission_form
+    else
+      render :json => { :errors => @permission_form.errors }, :status => 422
+    end
+  end
+
   private
 
   def permission_form_params
