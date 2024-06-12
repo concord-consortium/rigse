@@ -26,6 +26,13 @@ class API::V1::PermissionFormsController < API::APIController
     end
   end
 
+  def destroy
+    @permission_form = Portal::PermissionForm.find(params[:id])
+    authorize @permission_form
+    @permission_form.destroy
+    render :json => { :message => "Permission form deleted" }
+  end
+
   private
 
   def permission_form_params

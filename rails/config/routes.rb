@@ -485,7 +485,7 @@ RailsPortal::Application.routes.draw do
           end
         end
 
-        resources :permission_forms, only: [:index, :create, :update]
+        resources :permission_forms, only: [:index, :create, :update, :destroy]
       end
     end
 

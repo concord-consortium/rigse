@@ -15,7 +15,7 @@ const getAuthToken = () => {
   return authToken;
 };
 
-const request = async ({ url, method, body }: { url: string, method: string, body: string }) => {
+const request = async ({ url, method, body }: { url: string, method: string, body?: string }) => {
   try {
     const response = await fetch(url, {
       method,
@@ -48,6 +48,12 @@ const editPermissionForm = async (formData: IPermissionFormFormData): Promise<IP
     url: `${Portal.API_V1.PERMISSION_FORMS}/${formData.id}`,
     method: "PUT",
     body: JSON.stringify({ permission_form: { ...formData } })
+  });
+
+const deletePermissionForm = async (permissionFormId: string) =>
+  request({
+    url: `${Portal.API_V1.PERMISSION_FORMS}/${permissionFormId}`,
+    method: "DELETE"
   });
 
 export default function PermissionFormsV2() {
@@ -89,6 +95,11 @@ export default function PermissionFormsV2() {
       setEditForm(false);
       refetchPermissions();
     }
+  };
+
+  const handleDeleteClick = async (permissionFormId: string) => {
+    await deletePermissionForm(permissionFormId);
+    refetchPermissions();
   };
 
   const getFilteredForms = () => {
@@ -142,7 +153,12 @@ export default function PermissionFormsV2() {
             <tbody>
               {
                 getFilteredForms()?.map((permissionForm: IPermissionForm) => (
-                  <PermissionFormRow key={permissionForm.id} permissionForm={permissionForm} onEdit={handleEditClick} />
+                  <PermissionFormRow
+                    key={permissionForm.id}
+                    permissionForm={permissionForm}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                  />
                 ))
               }
             </tbody>
