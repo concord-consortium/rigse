@@ -5,6 +5,7 @@ import { IPermissionForm } from "./permission-form-types";
 interface PermissionFormRowProps {
   permissionForm: IPermissionForm;
   onEdit: (permissionForm: IPermissionForm) => void;
+  onDelete: (permissionFormId: string) => void;
 }
 
 function ensureUrlProtocol(url: string): string {
@@ -30,9 +31,15 @@ function renderLinkOrSpan(urlValue: string): React.ReactElement | string {
   }
 }
 
-const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, onEdit }) => {
+const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, onEdit, onDelete }) => {
   const handleEdit = () => {
     onEdit(permissionForm);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete permission form "${permissionForm.name}"?`)) {
+      onDelete(permissionForm.id);
+    }
   };
 
   return (
@@ -42,7 +49,7 @@ const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, o
       <td className={css.buttonsColumn}>
         <button className={css.basicButton} onClick={handleEdit}>Edit</button>
         <button className={css.basicButton}>Archive</button>
-        <button className={css.basicButton}>Delete</button>
+        <button className={css.basicButton} onClick={handleDelete}>Delete</button>
       </td>
     </tr>
   );
