@@ -13,7 +13,7 @@ const getAuthToken = () => {
     throw new Error("CSRF token not found.");
   }
   return authToken;
-}
+};
 
 const request = async ({ url, method, body }: { url: string, method: string, body: string }) => {
   try {
@@ -34,7 +34,7 @@ const request = async ({ url, method, body }: { url: string, method: string, bod
     console.error(`${method} ${url} failed.`, e);
   }
   return null;
-}
+};
 
 const createNewPermissionForm = async (formData: IPermissionFormFormData): Promise<IPermissionForm | null> =>
   request({
@@ -67,7 +67,7 @@ export default function PermissionFormsV2() {
 
   const handleCreateFormClick = () => {
     setShowCreateNewFormModal(true);
-  }
+  };
 
   const handleCreateFormSave = async (newFormData: IPermissionFormFormData) => {
     const newForm = await createNewPermissionForm(newFormData);
@@ -80,7 +80,7 @@ export default function PermissionFormsV2() {
 
   const handleEditClick = (permissionForm: IPermissionForm) => {
     setEditForm(permissionForm);
-  }
+  };
 
   const handleEditSave = async (newFormData: IPermissionFormFormData) => {
     const updatedForm = await editPermissionForm(newFormData);

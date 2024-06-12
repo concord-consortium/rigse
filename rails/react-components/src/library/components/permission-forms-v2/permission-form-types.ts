@@ -7,7 +7,7 @@ export interface IPermissionForm {
   url?: string;
 }
 
-export type IPermissionFormFormData = Partial<IPermissionForm>
+export type IPermissionFormFormData = Partial<IPermissionForm>;
 
 export interface IProject {
   id: string;
