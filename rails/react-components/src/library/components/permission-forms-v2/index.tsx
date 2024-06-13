@@ -56,6 +56,17 @@ const deletePermissionForm = async (permissionFormId: string) =>
     method: "DELETE"
   });
 
+const getFilteredForms = (forms: IPermissionForm[], projectId: string | number) =>
+  projectId === "" ? forms : forms.filter((form: IPermissionForm) => form.project_id === Number(projectId));
+
+// Sort forms by is_archived first and then by name
+const sortForms = (forms: IPermissionForm[]) => forms.sort((a, b) => {
+  if (a.is_archived === b.is_archived) {
+    return a.name.localeCompare(b.name);
+  }
+  return a.is_archived ? 1 : -1;
+});
+
 export default function PermissionFormsV2() {
   // Fetch projects and permission forms (with refetch function) on initial load
   const { data: permissionsData, refetch: refetchPermissions } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
@@ -84,11 +95,18 @@ export default function PermissionFormsV2() {
     }
   };
 
-  const handleEditClick = (permissionForm: IPermissionForm) => {
+  const handleEditButtonClick = (permissionForm: IPermissionForm) => {
     setEditForm(permissionForm);
   };
 
-  const handleEditSave = async (newFormData: IPermissionFormFormData) => {
+  const handleEdit = async (permissionForm: IPermissionForm) => {
+    const updatedForm = await editPermissionForm(permissionForm);
+    if (updatedForm) {
+      refetchPermissions();
+    }
+  };
+
+  const handleEditModalSave = async (newFormData: IPermissionFormFormData) => {
     const updatedForm = await editPermissionForm(newFormData);
     if (updatedForm) {
       setCurrentSelectedProject(updatedForm.project_id as CurrentSelectedProject);
@@ -102,12 +120,7 @@ export default function PermissionFormsV2() {
     refetchPermissions();
   };
 
-  const getFilteredForms = () => {
-    const belongsToSelectedProject = (form: IPermissionForm) => form.project_id === Number(currentSelectedProject);
-    return currentSelectedProject === ""
-      ? permissionsData
-      : permissionsData?.filter(belongsToSelectedProject);
-  };
+  const processedForms = sortForms(getFilteredForms(permissionsData, currentSelectedProject));
 
   return (
     <div className={css.permissionForms}>
@@ -152,11 +165,12 @@ export default function PermissionFormsV2() {
             </thead>
             <tbody>
               {
-                getFilteredForms()?.map((permissionForm: IPermissionForm) => (
+                processedForms.map((permissionForm: IPermissionForm) => (
                   <PermissionFormRow
                     key={permissionForm.id}
                     permissionForm={permissionForm}
-                    onEdit={handleEditClick}
+                    onEditModalToggle={handleEditButtonClick}
+                    onEdit={handleEdit}
                     onDelete={handleDeleteClick}
                   />
                 ))
@@ -183,7 +197,7 @@ export default function PermissionFormsV2() {
           <CreateEditPermissionForm
             existingFormData={editForm}
             onFormCancel={() => setEditForm(false)}
-            onFormSave={handleEditSave}
+            onFormSave={handleEditModalSave}
             projects={projectsData}
           />
         </ModalDialog>

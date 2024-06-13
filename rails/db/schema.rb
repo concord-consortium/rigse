@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_04_03_132757) do
+ActiveRecord::Schema.define(version: 2024_06_13_164923) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1278,6 +1278,7 @@ ActiveRecord::Schema.define(version: 2024_04_03_132757) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "project_id"
+    t.boolean "is_archived", default: false, null: false
   end
 
   create_table "portal_school_memberships", id: :integer, charset: "utf8", force: :cascade do |t|

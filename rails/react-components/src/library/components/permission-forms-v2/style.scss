@@ -72,42 +72,6 @@
         text-align: left;
         background-color: white;
       }
-
-      .nameColumn {
-        max-width: 400px;
-        min-width: 150px;
-        padding-left:15px;
-      }
-
-      .buttonsColumn {
-        flex-grow: 1;
-        display: flex;
-        justify-content: flex-end;
-      }
-
-      .urlColumn {
-        max-width: 300px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: #555;
-        a {
-          color: $col-link;
-          text-decoration: none;
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-
-      .basicButton {
-        display: inline-block;
-        color: $col-link;
-        background-color: transparent;
-        border: transparent;
-        text-transform: uppercase;
-        font-weight: 300;
-      }
     }
   }
 
