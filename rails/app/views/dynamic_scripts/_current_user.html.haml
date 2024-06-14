@@ -9,6 +9,9 @@
     get isAdmin() {
       return "#{current_visitor.has_role?('admin')}" === "true";
     },
+    get isAdminForAnyProject() {
+      return "#{current_visitor.is_project_admin?}" === "true";
+    },
     get isManager() {
       return "#{current_visitor.has_role?('manager')}" === "true";
     },
