@@ -7,7 +7,7 @@ jest.mock("../../../../src/library/hooks/use-fetch");
 
 window.Portal = {
   API_V1: {
-    PROJECTS: "/api/v1/projects",
+    PROJECTS_WITH_PERMISSIONS: "/api/v1/projects/index_with_permissions",
     PERMISSION_FORMS: "/api/v1/permission_forms",
   }
 };
@@ -30,7 +30,7 @@ describe("PermissionFormsV2", () => {
           data: mockPermissions,
           refetch: jest.fn().mockResolvedValue({ data: mockPermissions }),
         };
-      } else if (url === window.Portal.API_V1.PROJECTS) {
+      } else if (url === window.Portal.API_V1.PROJECTS_WITH_PERMISSIONS) {
         return {
           data: mockProjects,
           refetch: jest.fn().mockResolvedValue({ data: mockProjects }),
