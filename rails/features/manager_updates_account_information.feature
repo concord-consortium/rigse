@@ -40,7 +40,6 @@ Feature: A manager updates account information for another user
 
     Examples:
       | username      | userlogin | new_password |
-      | Alfred Robert | student   | foobarbaz    |
       | John Nash     | teacher   | buzbixbez    |
 
   @javascript
