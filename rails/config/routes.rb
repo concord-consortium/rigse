@@ -322,7 +322,11 @@ RailsPortal::Application.routes.draw do
       namespace :v1 do
         devise_for :users
         resources :countries
-        resources :projects
+        resources :projects, only: [:index, :show] do
+          collection do
+            get :index_with_permissions
+          end
+        end
         resources :teachers do
           collection do
             get :email_available

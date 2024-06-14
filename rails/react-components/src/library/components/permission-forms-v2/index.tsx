@@ -3,6 +3,7 @@ import { useFetch } from "../../hooks/use-fetch";
 import { CreateEditPermissionForm } from "./create-edit-permission-form";
 import { IPermissionForm, IPermissionFormFormData, IProject, CurrentSelectedProject, PermissionsTab } from "./permission-form-types";
 import PermissionFormRow from "./permission-form-row";
+import { ProjectSelect } from "./project-select";
 import ModalDialog from "../shared/modal-dialog";
 
 import css from "./style.scss";
@@ -59,10 +60,12 @@ const deletePermissionForm = async (permissionFormId: string) =>
 const getFilteredForms = (forms: IPermissionForm[], projectId: string | number) =>
   projectId === "" ? forms : forms.filter((form: IPermissionForm) => form.project_id === Number(projectId));
 
+const sortByName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
+
 // Sort forms by is_archived first and then by name
 const sortForms = (forms: IPermissionForm[]) => forms.sort((a, b) => {
   if (a.is_archived === b.is_archived) {
-    return a.name.localeCompare(b.name);
+    return sortByName(a, b);
   }
   return a.is_archived ? 1 : -1;
 });
@@ -70,7 +73,7 @@ const sortForms = (forms: IPermissionForm[]) => forms.sort((a, b) => {
 export default function PermissionFormsV2() {
   // Fetch projects and permission forms (with refetch function) on initial load
   const { data: permissionsData, refetch: refetchPermissions } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
-  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS, []);
+  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
 
   // State for UI
   const [openTab, setOpenTab] = useState<PermissionsTab>("projectsTab");
@@ -148,11 +151,7 @@ export default function PermissionFormsV2() {
           <h3>Create/Manage Project Permission Forms</h3>
           <div className={css.controlsArea}>
             <div className={css.leftSide}>
-              <div>Project:</div>
-              <select data-testid="top-project-select" value={currentSelectedProject} onChange={handleProjectSelectChange}>
-                <option value="">Select project..</option>
-                { projectsData?.map((p: IProject) => <option key={p.id} value={p.id}>{ p.name }</option>) }
-              </select>
+              <ProjectSelect projects={projectsData} value={currentSelectedProject} onChange={handleProjectSelectChange} />
             </div>
             <div className={css.rightSide}>
               <button onClick={handleCreateFormClick}>Create New Permission Form</button>

@@ -9,12 +9,14 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-left: 5px;
+    max-width: 300px;
   }
 
   .urlColumn {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-width: 250px;
     a {
       color: $col-link;
       text-decoration: none;

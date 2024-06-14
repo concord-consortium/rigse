@@ -48,7 +48,7 @@ describe("PermissionFormsV2", () => {
     expect(screen.getByText("Form 3")).toBeInTheDocument();
 
     // filter by project 1
-    const projectSelect = screen.getByTestId("top-project-select");
+    const projectSelect = screen.getByTestId("project-select");
     fireEvent.change(projectSelect, { target: { value: 1 } });
 
     expect(screen.getByText("Form 1")).toBeInTheDocument();
