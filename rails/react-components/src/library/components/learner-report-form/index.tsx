@@ -371,8 +371,8 @@ export default class LearnerReportForm extends React.Component<any, any> {
       });
     };
 
-    // only admins and managers can see names
-    const showHideNames = Portal.currentUser.isAdmin || Portal.currentUser.isManager;
+    // only site admins, project admins (of any project) and managers can see names
+    const showHideNames = Portal.currentUser.isAdmin || Portal.currentUser.isAdminForAnyProject || Portal.currentUser.isManager;
 
     return (
       <form method="get">

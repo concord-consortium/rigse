@@ -94,8 +94,11 @@ class API::V1::ReportLearnersEsController < API::APIController
   def external_report_query_jwt
     authorize Portal::PermissionForm
 
-    # only admins and managers can see names
-    force_hide_names = !current_user || !current_user.has_role?(%w{admin manager})
+    # only site admins, project admins (of any project) and managers can see names
+    is_admin_or_manager = current_user && current_user.has_role?(%w{admin manager})
+    is_admin_of_any_project = current_user && current_user.is_project_admin?
+    current_user_can_see_names = is_admin_or_manager || is_admin_of_any_project
+    force_hide_names = !current_user || !current_user_can_see_names
     if force_hide_names
       params["hide_names"] = "true"
     end
