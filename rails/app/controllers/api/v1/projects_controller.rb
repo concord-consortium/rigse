@@ -1,15 +1,16 @@
 class API::V1::ProjectsController < API::APIController
 
   def index
-    projects = Admin::Project.select {|p| policy(p).visible?}
-    result = projects.map{ |p| {
-      name: p.name,
-      id: p.id,
-      landing_page_slug: p.landing_page_slug,
-      project_card_image_url: p.project_card_image_url,
-      project_card_description: p.project_card_description,
-      public: p.public} }
-    render :json => result
+    projects = Admin::Project.select { |p| policy(p).visible? }
+    result = projects.map { |p| project_to_hash(p) }
+    render json: result
+  end
+
+  # Returns all the projects that user has a full access to.
+  def index_with_permissions
+    projects = policy_scope(Admin::Project)
+    result = projects.map { |p| project_to_hash(p) }
+    render json: result
   end
 
   def show
@@ -22,6 +23,19 @@ class API::V1::ProjectsController < API::APIController
     render status: 400, json: {
       success: false,
       message: exception.message
+    }
+  end
+
+  private
+
+  def project_to_hash(project)
+    {
+      name: project.name,
+      id: project.id,
+      landing_page_slug: project.landing_page_slug,
+      project_card_image_url: project.project_card_image_url,
+      project_card_description: project.project_card_description,
+      public: project.public
     }
   end
 

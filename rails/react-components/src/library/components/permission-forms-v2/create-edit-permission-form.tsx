@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ProjectSelect } from "./project-select";
 import { IProject, IPermissionFormFormData, CurrentSelectedProject, IPermissionForm } from "./permission-form-types";
 
 import css from "./style.scss";
@@ -42,11 +43,7 @@ export const CreateEditPermissionForm = ({ projects, currentSelectedProject, exi
       </div>
 
       <div className={css.formRow}>
-        <label>Project:</label>
-        <select value={formData.project_id} name="project_id" onChange={handleFormProjectSelectChange}>
-          <option value="">Select a project...</option>
-          { projects?.map((p: IProject) => <option key={p.id} value={p.id}>{ p.name }</option>) }
-        </select>
+        <ProjectSelect projects={projects} value={formData.project_id} onChange={handleFormProjectSelectChange} />
       </div>
 
       <div className={css.formRow}>
