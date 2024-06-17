@@ -40,7 +40,7 @@
         %li.trail=link_to('Authoring', authoring_path)
       - if is_admin_or_project_admin_or_project_researcher
         %li= link_to 'Permission Forms', admin_permission_forms_path
-        %li= link_to 'Permission Forms V2', admin_permission_forms_v2_index_path
+        %li= link_to 'Permission Forms V2 (DEV ONLY)', admin_permission_forms_v2_index_path
       - if is_admin_or_project_admin
         %li= link_to 'Projects', admin_projects_path
         %li= link_to 'Materials Collections', materials_collections_path
