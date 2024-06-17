@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import PermissionFormsV2 from "../../../../src/library/components/permission-forms-v2";
+import ManageFormsTab from "../../../../src/library/components/permission-forms-v2/manage-forms-tab";
 import { useFetch } from "../../../../src/library/hooks/use-fetch";
 
 jest.mock("../../../../src/library/hooks/use-fetch");
@@ -12,7 +12,7 @@ window.Portal = {
   }
 };
 
-describe("PermissionFormsV2", () => {
+describe("ManageFormsTab", () => {
   beforeEach(() => {
     const mockPermissions = [
       { id: 1, name: "Form 1", project_id: 1 },
@@ -40,7 +40,7 @@ describe("PermissionFormsV2", () => {
   });
 
   it("renders and filters list of permission forms", () => {
-    render(<PermissionFormsV2 />);
+    render(<ManageFormsTab />);
 
     // check that all permission forms are there
     expect(screen.getByText("Form 1")).toBeInTheDocument();

@@ -15,4 +15,4 @@ export interface IProject {
   name: string;
 }
 
-export type PermissionsTab = "projectsTab" | "studentsTab";
+export type PermissionsTab = "manageFormsTab" | "studentsTab";
