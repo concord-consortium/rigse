@@ -131,18 +131,18 @@ export default function PermissionFormsV2() {
       <div className={css.tabArea}>
         <h2>Permission Form Options</h2>
         <div className={css.tabs}>
-          <button
-            className={openTab === "projectsTab" ? css.activeTab : ""}
-            onClick={() => setOpenTab("projectsTab")}
-          >
-            Create / Manage Project Permission Forms
-          </button>
-          <button
+          <a
             className={openTab === "studentsTab" ? css.activeTab : ""}
             onClick={() => setOpenTab("studentsTab")}
           >
             Manage Student Permissions
-          </button>
+          </a>
+          <a
+            className={openTab === "projectsTab" ? css.activeTab : ""}
+            onClick={() => setOpenTab("projectsTab")}
+          >
+            Create / Manage Project Permission Forms
+          </a>
         </div>
       </div>
 
