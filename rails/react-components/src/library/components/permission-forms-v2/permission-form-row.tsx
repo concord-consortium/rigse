@@ -1,9 +1,12 @@
 import React from "react";
-import css from "./style.scss";
 import { IPermissionForm } from "./permission-form-types";
+import { clsx } from "clsx";
+
+import css from "./permission-form-row.scss";
 
 interface PermissionFormRowProps {
   permissionForm: IPermissionForm;
+  onEditModalToggle: (permissionForm: IPermissionForm) => void;
   onEdit: (permissionForm: IPermissionForm) => void;
   onDelete: (permissionFormId: string) => void;
 }
@@ -31,9 +34,15 @@ function renderLinkOrSpan(urlValue: string): React.ReactElement | string {
   }
 }
 
-const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, onEdit, onDelete }) => {
-  const handleEdit = () => {
-    onEdit(permissionForm);
+const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, onEditModalToggle, onEdit, onDelete }) => {
+  const handleEditModal = () => {
+    onEditModalToggle(permissionForm);
+  };
+
+  const handleArchiveUnarchive = () => {
+    if (window.confirm(`Are you sure you want to ${permissionForm.is_archived ? "unarchive" : "archive"} permission form "${permissionForm.name}"?`)) {
+      onEdit({ ...permissionForm, is_archived: !permissionForm.is_archived });
+    }
   };
 
   const handleDelete = () => {
@@ -43,12 +52,18 @@ const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, o
   };
 
   return (
-    <tr className={css.permissionFormRow}>
+    <tr className={clsx(css.permissionFormRow, { [css.isArchived]: permissionForm.is_archived })}>
       <td className={css.nameColumn}>{ permissionForm.name }</td>
       <td className={css.urlColumn}>{ renderLinkOrSpan(permissionForm.url ?? "") }</td>
-      <td className={css.buttonsColumn}>
-        <button className={css.basicButton} onClick={handleEdit}>Edit</button>
-        <button className={css.basicButton}>Archive</button>
+      <td className={css.editColumn}>
+        <button className={css.basicButton} onClick={handleEditModal}>Edit</button>
+      </td>
+      <td className={css.archiveColumn}>
+        <button className={css.basicButton} onClick={handleArchiveUnarchive}>
+          { permissionForm.is_archived ? "Unarchive" : "Archive" }
+        </button>
+      </td>
+      <td className={css.deleteColumn}>
         <button className={css.basicButton} onClick={handleDelete}>Delete</button>
       </td>
     </tr>

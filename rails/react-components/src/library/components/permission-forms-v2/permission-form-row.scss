@@ -1,0 +1,55 @@
+@import "../../../shared/styles/variables/colors";
+@import "../../../shared/styles/variables/variables";
+
+.permissionFormRow {
+  color: #555;
+
+  .nameColumn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 5px;
+  }
+
+  .urlColumn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    a {
+      color: $col-link;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .editColumn {
+    width: 75px;
+  }
+  .archiveColumn {
+    width: 125px;
+  }
+  .deleteColumn {
+    width: 95px;
+  }
+
+  &.isArchived {
+    .nameColumn, .urlColumn, .urlColumn a {
+      color: #3f3f3f;
+      opacity: 0.5;
+      font-style: italic;
+    }
+  }
+
+  .basicButton {
+    display: inline-block;
+    color: $col-link;
+    background-color: transparent;
+    border: transparent;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+}
+
+

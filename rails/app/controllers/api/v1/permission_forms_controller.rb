@@ -36,6 +36,6 @@ class API::V1::PermissionFormsController < API::APIController
   private
 
   def permission_form_params
-    params.require(:permission_form).permit(:name, :project_id, :url)
+    params.require(:permission_form).permit(:name, :project_id, :url, :is_archived)
   end
 end
