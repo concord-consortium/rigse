@@ -2,7 +2,9 @@ import React from "react";
 import Formsy from "formsy-react";
 import TextInput from "./text_input";
 
-const PASS_TOO_SHORT = "Password is too short";
+const MIN_PASSWORD_LENGTH = 6;
+
+const PASS_TOO_SHORT = `Password is too short, must be at least ${MIN_PASSWORD_LENGTH} characters.`;
 const PASS_NOT_MATCH = "Passwords do not match";
 const INVALID_FIRST_NAME = "Invalid first name. Use only letters and numbers.";
 const INVALID_LAST_NAME = "Invalid last name. Use only letters and numbers.";
@@ -15,20 +17,20 @@ export default class BasicDataForm extends React.Component<any, any> {
   constructor (props: any) {
     super(props);
     this.state = {
-      canSubmit: false,
-      password: ""
+      canSubmit: false
     };
 
-    this.onChange = this.onChange.bind(this);
     this.onBasicFormValid = this.onBasicFormValid.bind(this);
     this.onBasicFormInvalid = this.onBasicFormInvalid.bind(this);
     this.submit = this.submit.bind(this);
+    this.passwordMatchValidator = this.passwordMatchValidator.bind(this);
   }
 
-  onChange (model: any) {
-    this.setState({
-      password: model.password
-    });
+  passwordMatchValidator({password, password_confirmation}: {password: string, password_confirmation: string}) {
+    if ((password?.length > 0) && (password_confirmation?.length > 0) && (password !== password_confirmation)) {
+      return false;
+    }
+    return true;
   }
 
   onBasicFormValid () {
@@ -82,7 +84,7 @@ export default class BasicDataForm extends React.Component<any, any> {
     }
 
     return (
-      <Formsy onValidSubmit={this.submit} onValid={this.onBasicFormValid} onInvalid={this.onBasicFormInvalid} onChange={this.onChange} role="form" aria-roledescription="form">
+      <Formsy onValidSubmit={this.submit} onValid={this.onBasicFormValid} onInvalid={this.onBasicFormInvalid} role="form" aria-roledescription="form">
         <div className="third-party-login-options testy" data-testid="third-party-login-options">
           { providerComponents }
         </div>
@@ -95,9 +97,9 @@ export default class BasicDataForm extends React.Component<any, any> {
               <dt className="two-col">Last Name</dt>
               <dd className="name_wrapper last-name-wrapper two-col"><TextInput name="last_name" placeholder="" required asyncValidation={nameValidator} asyncValidationError={INVALID_LAST_NAME} /></dd>
               <dt>Password</dt>
-              <dd><TextInput name="password" placeholder="" type="password" required validations={"minLength:6,maxLength:10"} validationError={PASS_TOO_SHORT} /></dd>
+              <dd><TextInput name="password" placeholder="" type="password" required validations={`minLength:${MIN_PASSWORD_LENGTH}`} validationError={PASS_TOO_SHORT} /></dd>
               <dt>Confirm Password</dt>
-              <dd><TextInput name="password_confirmation" placeholder="" type="password" required validations={"equals:" + this.state.password} validationError={PASS_NOT_MATCH} /></dd>
+              <dd><TextInput name="password_confirmation" placeholder="" type="password" required validations={{passwordMatchValidator: this.passwordMatchValidator}} validationError={PASS_NOT_MATCH} /></dd>
             </dl>
           </div>
         }
