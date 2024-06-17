@@ -1,0 +1,36 @@
+@import "../../../shared/styles/variables/variables";
+
+.permissionForms {
+  h2, h3 {
+    color: $col-link;
+    font-family: museo-sans, verdana, helvetica, arial, sans-serif;
+  }
+
+  h3 {
+    padding-top:20px;
+    margin-bottom: 20px;
+    border-top: 1px solid #aaa;
+  }
+
+  .tabArea {
+    .tabs {
+      display:flex;
+      justify-content: left;
+      margin-bottom: 20px;
+
+      a {
+        margin-right: 20px;
+        color: $col-blue;
+        &:hover {
+          color: lighten($col-blue, 10%);
+        }
+      }
+
+      .activeTab {
+        color: $col-link;
+        font-weight: 500;
+        pointer-events: none;
+      }
+    }
+  }
+}
