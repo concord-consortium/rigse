@@ -1,0 +1,49 @@
+@import "../../../shared/styles/variables/variables";
+
+.studentsTabContent {
+  .controlsArea {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    label {
+      text-transform: none;
+      font-weight: 300;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    div {
+      display: flex;
+    }
+
+    .leftSide {
+      display: flex;
+      flex-direction: column;
+
+      .leftSideFirstRow {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+
+        button {
+          margin-left: 20px;
+        }
+      }
+    }
+
+    .rightSide {
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-weight: 500;
+        margin-bottom: 13px;
+      }
+      select {
+        width: 280px;
+      }
+    }
+  }
+}

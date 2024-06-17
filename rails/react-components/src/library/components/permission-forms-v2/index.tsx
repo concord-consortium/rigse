@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { PermissionsTab } from "./permission-form-types";
+import StudentsTab from "./students-tab";
 import ManageFormsTab from "./manage-forms-tab";
 
 import css from "./index.scss";
 
 export default function PermissionFormsV2() {
   // State for UI
-  const [openTab, setOpenTab] = useState<PermissionsTab>("manageFormsTab");
+  const [openTab, setOpenTab] = useState<PermissionsTab>("studentsTab");
 
   return (
     <div className={css.permissionForms}>
@@ -31,7 +32,7 @@ export default function PermissionFormsV2() {
 
       <h3>{ openTab === "manageFormsTab" ? "Create/ Manage Project Permission Forms" : "Manage Student Permissions" }</h3>
 
-      { openTab === "manageFormsTab" && <ManageFormsTab /> }
+      { openTab === "manageFormsTab" ? <ManageFormsTab /> : <StudentsTab /> }
     </div>
   );
 }
