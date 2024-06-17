@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ProjectSelect } from "./project-select";
 import { IProject, IPermissionFormFormData, CurrentSelectedProject, IPermissionForm } from "./permission-form-types";
 
-import css from "./style.scss";
+import css from "./create-edit-permission-form.scss";
 
 interface CreateEditPermissionFormProps {
   existingFormData?: IPermissionForm;
@@ -33,13 +33,9 @@ export const CreateEditPermissionForm = ({ projects, currentSelectedProject, exi
   };
 
   return (
-    <div className={css.newPermissionForm}>
+    <div className={css.createEditPermissionForm}>
       <div className={css.formTop}>
         { existingFormData ? `EDIT: ${existingFormData.name}` : "Create New Permission Form" }
-      </div>
-      <div className={css.formRow}>
-        <label>Name:</label>
-        <div><input type="text" name="name" value={formData.name} onChange={handleFormInputChange} autoComplete="off" /></div>
       </div>
 
       <div className={css.formRow}>
@@ -47,8 +43,13 @@ export const CreateEditPermissionForm = ({ projects, currentSelectedProject, exi
       </div>
 
       <div className={css.formRow}>
+        <label>Name:</label>
+        <div><input className={css.name} type="text" name="name" value={formData.name} onChange={handleFormInputChange} autoComplete="off" /></div>
+      </div>
+
+      <div className={css.formRow}>
         <label>URL:</label>
-        <input type="text" name="url" value={formData.url} onChange={handleFormInputChange} autoComplete="off"/>
+        <input className={css.url} type="text" name="url" value={formData.url} onChange={handleFormInputChange} autoComplete="off"/>
       </div>
 
       <div className={css.formButtonArea}>
@@ -56,7 +57,7 @@ export const CreateEditPermissionForm = ({ projects, currentSelectedProject, exi
           Cancel
         </button>
         <button disabled={!formData.name || !formData.project_id} onClick={handleFormSave}>
-          Save
+          { existingFormData ? "Save Changes" : "Save" }
         </button>
       </div>
     </div>

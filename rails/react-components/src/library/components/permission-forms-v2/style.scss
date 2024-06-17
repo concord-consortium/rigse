@@ -1,4 +1,3 @@
-@import "../../../shared/styles/variables/colors";
 @import "../../../shared/styles/variables/variables";
 
 
@@ -19,16 +18,19 @@
       display:flex;
       justify-content: left;
       margin-bottom: 20px;
-      button {
-        background-color:white;
-        padding: 10px;
-        color: $col-link;
-        margin-right:20px;
-        border:0px;
-        font-weight: 200;
+
+      a {
+        margin-right: 20px;
+        color: $col-blue;
+        &:hover {
+          color: lighten($col-blue, 10%);
+        }
       }
+
       .activeTab {
-        color:#0592af;
+        color: $col-link;
+        font-weight: 500;
+        pointer-events: none;
       }
     }
   }
@@ -79,65 +81,6 @@
       th {
         text-align: left;
         background-color: white;
-      }
-    }
-  }
-
-  .newPermissionForm {
-    width: 420px;
-
-    .formTop {
-      display: flex;
-      align-content: center;
-      background-color: $col-link;
-      color: white;
-      font-weight: bold;
-      padding: 10px;
-      margin-bottom:10px;
-    }
-
-    .formRow {
-      display: flex;
-      align-items: center;
-      padding: 10px 20px;
-
-      label {
-        width: 80px;
-        text-align: left;
-        text-transform: capitalize;
-        font-weight: 300;
-      }
-
-      input {
-        height: 40px;
-        width: 258px;
-        font-family: museo-sans, verdana, helvetica, arial, sans-serif !important;
-        padding-left: 12px;
-        font-weight: 300;
-      }
-
-      select {
-        width: 271px;
-        font-weight: 300;
-        font-family: museo-sans, verdana, helvetica, arial, sans-serif !important;
-      }
-    }
-
-    .formButtonArea {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 0px;
-      padding: 10px 20px;
-      margin-bottom:10px;
-
-      button:first-child {
-        margin-right: 8px;
-      }
-
-      .cancelButton {
-        background-color: #ccc;
-        border-color: #ccc;
-        color:#333;
       }
     }
   }
