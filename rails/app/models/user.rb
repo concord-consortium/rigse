@@ -77,6 +77,11 @@ class User < ApplicationRecord
   after_update :set_passive_users_as_pending
   after_create :set_passive_users_as_pending
 
+  def self.per_page
+    # number of results to show in admin/users (default is 30)
+    10
+  end
+
   # strip leading and trailing spaces from names, login and email
   def strip_spaces
     # these are conditionalized because it is called before the validation

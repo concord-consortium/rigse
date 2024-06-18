@@ -41,8 +41,10 @@ class UsersController < ApplicationController
 
     search_scope = policy_scope(User)
     search_scope = search_scope
-      .includes(:imported_user, :portal_student, :authentications, :teacher_cohorts, :student_cohorts, :roles)
-      .includes({ portal_teacher: [:schools, teacher_clazzes: [:clazz]] })
+      .includes(:imported_user, :portal_student, :authentications, :roles)
+      .includes({ teacher_cohorts: [:project] })
+      .includes({ student_cohorts: [:project] })
+      .includes({ portal_teacher: [:schools] })
     search_scope = search_scope.joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
