@@ -1,13 +1,10 @@
-@import "../../../shared/styles/variables/variables";
+@import "../../../../shared/styles/variables/variables";
 
 .permissionFormRow {
-  color: #555;
-
   .nameColumn {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding-left: 5px;
     max-width: 300px;
   }
 
@@ -43,6 +40,10 @@
     border: transparent;
     text-transform: uppercase;
     font-weight: 300;
+
+    &:hover {
+      color: $col-gold;
+    }
   }
 }
 

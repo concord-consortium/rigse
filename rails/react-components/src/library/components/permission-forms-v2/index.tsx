@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { PermissionsTab } from "./permission-form-types";
-import StudentsTab from "./students-tab";
-import ManageFormsTab from "./manage-forms-tab";
+import StudentsTab from "./students-tab/students-tab";
+import ManageFormsTab from "./manage-forms-tab/manage-forms-tab";
+import { LinkButton } from "./common/link-button";
 
 import css from "./index.scss";
+
+type PermissionsTab = "manageFormsTab" | "studentsTab";
 
 export default function PermissionFormsV2() {
   // State for UI
@@ -15,18 +17,12 @@ export default function PermissionFormsV2() {
       <div className={css.tabArea}>
         <h2>Permission Form Options</h2>
         <div className={css.tabs}>
-          <a
-            className={openTab === "studentsTab" ? css.activeTab : ""}
-            onClick={() => setOpenTab("studentsTab")}
-          >
+          <LinkButton active={openTab === "studentsTab"} disabled={openTab === "studentsTab"} onClick={() => setOpenTab("studentsTab")}>
             Manage Student Permissions
-          </a>
-          <a
-            className={openTab === "manageFormsTab" ? css.activeTab : ""}
-            onClick={() => setOpenTab("manageFormsTab")}
-          >
+          </LinkButton>
+          <LinkButton active={openTab === "manageFormsTab"} disabled={openTab === "manageFormsTab"} onClick={() => setOpenTab("manageFormsTab")}>
             Create / Manage Project Permission Forms
-          </a>
+          </LinkButton>
         </div>
       </div>
 

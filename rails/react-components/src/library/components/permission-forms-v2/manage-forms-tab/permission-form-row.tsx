@@ -1,6 +1,6 @@
 import React from "react";
-import { IPermissionForm } from "./permission-form-types";
 import { clsx } from "clsx";
+import { IPermissionForm } from "./types";
 
 import css from "./permission-form-row.scss";
 

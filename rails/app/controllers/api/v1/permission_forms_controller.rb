@@ -33,6 +33,22 @@ class API::V1::PermissionFormsController < API::APIController
     render :json => { :message => "Permission form deleted" }
   end
 
+  def search_teachers
+    authorize Portal::PermissionForm
+
+    teachers = Pundit.policy_scope(current_user, Portal::Teacher).joins(:user)
+
+    if params[:name].empty?
+      return render :json => []
+    end
+
+    value = "%#{params[:name]}%"
+
+    teachers = teachers.where("users.login LIKE :value OR users.first_name LIKE :value OR users.last_name LIKE :value OR users.email LIKE :value", value: value)
+
+    render :json => teachers.map { |t| { id: t.id, name: t.user.name, email: t.user.email, login: t.user.login } }
+  end
+
   private
 
   def permission_form_params

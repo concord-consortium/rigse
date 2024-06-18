@@ -1,10 +1,16 @@
-@import "../../../shared/styles/variables/variables";
+@import "../../../../shared/styles/variables/variables";
 
 .studentsTabContent {
+  i {
+    font-size: 12px;
+    margin-left: 5px;
+    vertical-align: baseline;
+  }
+
   .controlsArea {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     label {
       text-transform: none;
@@ -45,5 +51,12 @@
         width: 280px;
       }
     }
+  }
+
+  tr.expanded:nth-child(odd) {
+    background-color: #f1f1f1;
+  }
+  tr.expanded:nth-child(even) {
+    background-color: transparent;
   }
 }

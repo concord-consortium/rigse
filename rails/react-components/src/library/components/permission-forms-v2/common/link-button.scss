@@ -1,0 +1,27 @@
+@import "../../../../shared/styles/variables/variables";
+
+.linkButton {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  text-decoration: none;
+  color: $col-blue;
+  font-weight: 300;
+
+  &:hover {
+    background: none;
+    border: none;
+    color: lighten($col-blue, 10%);
+  }
+
+  &.active {
+    color: $col-link;
+    font-weight: 500;
+  }
+
+  &.disabled {
+    pointer-events: none;
+  }
+}

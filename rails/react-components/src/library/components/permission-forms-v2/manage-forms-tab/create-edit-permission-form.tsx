@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ProjectSelect } from "./project-select";
-import { IProject, IPermissionFormFormData, CurrentSelectedProject, IPermissionForm } from "./permission-form-types";
+import { ProjectSelect } from "../common/project-select";
+import { IProject, IPermissionFormFormData, CurrentSelectedProject, IPermissionForm } from "./types";
 
 import css from "./create-edit-permission-form.scss";
 

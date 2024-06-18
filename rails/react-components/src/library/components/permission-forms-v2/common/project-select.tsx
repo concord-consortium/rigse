@@ -1,5 +1,5 @@
 import React from "react";
-import { IProject } from "./permission-form-types";
+import { IProject } from "./types";
 
 interface IProjectSelectProps {
   projects: IProject[];

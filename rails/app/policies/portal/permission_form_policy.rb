@@ -49,4 +49,10 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   def destroy?
     admin? || (manager_or_researcher_or_project_researcher? && user.projects.include?(record.project))
   end
+
+  # Permission Forms V2 UI:
+
+  def search_teachers?
+    manager_or_researcher_or_project_researcher?
+  end
 end
