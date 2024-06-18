@@ -489,7 +489,11 @@ RailsPortal::Application.routes.draw do
           end
         end
 
-        resources :permission_forms, only: [:index, :create, :update, :destroy]
+        resources :permission_forms, only: [:index, :create, :update, :destroy] do
+          collection do
+            post :search_teachers
+          end
+        end
       end
     end
 

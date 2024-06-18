@@ -1,10 +1,10 @@
-@import "../../../shared/styles/variables/variables";
+@import "../../../../shared/styles/variables/variables";
 
 .manageFormsTabContent {
   .controlsArea {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     label {
       text-transform: none;
@@ -32,21 +32,6 @@
 
     .rightSide {
       justify-content: flex-end;
-    }
-  }
-  .permissionFormsTable {
-    margin-top:20px;
-    width: 100%;
-
-    tr {
-      // every other row is background #f9f9f9
-      &:nth-child(odd) {
-        background-color: #f9f9f9;
-      }
-    }
-    th {
-      text-align: left;
-      background-color: white;
     }
   }
 }

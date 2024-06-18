@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import ManageFormsTab from "../../../../src/library/components/permission-forms-v2/manage-forms-tab";
+import ManageFormsTab from "../../../../src/library/components/permission-forms-v2/manage-forms-tab/manage-forms-tab";
 import { useFetch } from "../../../../src/library/hooks/use-fetch";
 
 jest.mock("../../../../src/library/hooks/use-fetch");

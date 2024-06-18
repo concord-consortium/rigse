@@ -1,0 +1,105 @@
+import React, { useState } from "react";
+import { useFetch } from "../../../hooks/use-fetch";
+import { IProject, CurrentSelectedProject, ITeacher } from "./types";
+import { ProjectSelect } from "../common/project-select";
+import { request } from "../../../helpers/api/request";
+import { LinkButton } from "../common/link-button";
+import { ClassesTable } from "./classes-table";
+
+import css from "./students-tab.scss";
+
+const searchTeachers = async (name: string) =>
+  request({
+    url: Portal.API_V1.PERMISSION_FORMS_SEARCH_TEACHER,
+    method: "POST",
+    body: JSON.stringify({ name })
+  });
+
+export default function StudentsTab() {
+  // Fetch projects (with refetch function) on initial load
+  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
+  const [ teachers, setTeachers ] = useState<ITeacher[]>([]);
+  const [ selectedTeacherId, setSelectedTeacherId ] = useState<string | null>(null);
+  const[ teacherName, setTeacherName ] = useState<string>("");
+
+  // State for UI
+  const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
+
+  const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentSelectedProject(e.target.value as CurrentSelectedProject);
+  };
+
+  const handleTeacherNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTeacherName(e.target.value);
+  };
+
+  const handleSearchClick = async () => {
+    setTeachers(await searchTeachers(teacherName));
+  };
+
+  const handleViewClassesClick = (teacherId: string) => {
+    setSelectedTeacherId((prevSelectedTeacher: string | null) => prevSelectedTeacher === teacherId ? null : teacherId);
+  };
+
+  return (
+    <div className={css.studentsTabContent}>
+      <div className={css.controlsArea}>
+        <div className={css.leftSide}>
+          <div className={css.leftSideFirstRow}>
+            <input type="text" value={teacherName} onChange={handleTeacherNameChange} />
+            <button onClick={handleSearchClick}>Search</button>
+          </div>
+          <div>
+            search for teachers by firstname, lastname, login, or email.
+          </div>
+        </div>
+        <div className={css.rightSide}>
+          <div className={css.title}>Filter permission forms by:</div>
+          <div>
+            <ProjectSelect projects={projectsData} value={currentSelectedProject} onChange={handleProjectSelectChange} />
+          </div>
+        </div>
+      </div>
+
+      {
+        teachers.length > 0 &&
+        <table className={css.teachersTable}>
+          <thead>
+            <tr><th>Teacher Name</th><th>Teacher Email</th><th>Teacher Login</th><th></th></tr>
+          </thead>
+          <tbody>
+            {
+              teachers.map(teacher => (
+                <>
+                  <tr>
+                    <td>{teacher.name}</td>
+                    <td>{teacher.email}</td>
+                    <td>{teacher.login}</td>
+                    <td>
+                      <LinkButton onClick={() => handleViewClassesClick(teacher.id)} active={selectedTeacherId === teacher.id}>
+                        {
+                          selectedTeacherId === teacher.id ? "Hide Classes" : "View Classes"
+                        }
+                        {
+                          selectedTeacherId === teacher.id ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />
+                        }
+                      </LinkButton>
+                    </td>
+                  </tr>
+                  {
+                    selectedTeacherId === teacher.id &&
+                    <tr className={css.expanded}>
+                      <td colSpan={4}>
+                        <ClassesTable teacherId={teacher.id} currentSelectedProject={currentSelectedProject} />
+                      </td>
+                    </tr>
+                  }
+                </>
+              ))
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  );
+}

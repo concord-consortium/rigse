@@ -1,6 +1,19 @@
 @import "../../../shared/styles/variables/variables";
 
 .permissionForms {
+  .tabArea {
+    .tabs {
+      display:flex;
+      justify-content: left;
+      margin-bottom: 20px;
+
+      button {
+        margin-right: 20px;
+      }
+    }
+  }
+
+  // Common styles for both tabs:
   h2, h3 {
     color: $col-link;
     font-family: museo-sans, verdana, helvetica, arial, sans-serif;
@@ -26,24 +39,28 @@
     font-family: $font-museo-sans !important;
   }
 
-  .tabArea {
-    .tabs {
-      display:flex;
-      justify-content: left;
-      margin-bottom: 20px;
+  table {
+    margin-top: 20px;
+    width: 100%;
 
-      a {
-        margin-right: 20px;
-        color: $col-blue;
-        &:hover {
-          color: lighten($col-blue, 10%);
-        }
+    tr {
+      &:nth-child(even) {
+        background-color: #f1f1f1;
       }
+    }
+    th {
+      text-align: left;
+      font-weight: 500;
+    }
+    td, th {
+      height: 44px;
+      padding: 0;
 
-      .activeTab {
-        color: $col-link;
-        font-weight: 500;
-        pointer-events: none;
+      &:first-child {
+        padding-left: 5px;
+      }
+      &:last-child {
+        padding-right: 5px;
       }
     }
   }

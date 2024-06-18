@@ -1,5 +1,3 @@
-export type CurrentSelectedProject = number | "";
-
 export interface IPermissionForm {
   id: string;
   name: string;
@@ -8,11 +6,9 @@ export interface IPermissionForm {
   url?: string;
 }
 
-export type IPermissionFormFormData = Partial<IPermissionForm>;
-
 export interface IProject {
   id: string;
   name: string;
 }
 
-export type PermissionsTab = "manageFormsTab" | "studentsTab";
+export type CurrentSelectedProject = number | "";

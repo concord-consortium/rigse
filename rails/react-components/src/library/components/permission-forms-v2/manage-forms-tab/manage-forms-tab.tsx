@@ -1,41 +1,13 @@
 import React, { useState } from "react";
-import { useFetch } from "../../hooks/use-fetch";
+import { useFetch } from "../../../hooks/use-fetch";
 import { CreateEditPermissionForm } from "./create-edit-permission-form";
-import { IPermissionForm, IPermissionFormFormData, IProject, CurrentSelectedProject } from "./permission-form-types";
+import { IPermissionForm, IPermissionFormFormData, IProject, CurrentSelectedProject } from "./types";
 import PermissionFormRow from "./permission-form-row";
-import { ProjectSelect } from "./project-select";
-import ModalDialog from "../shared/modal-dialog";
+import { ProjectSelect } from "../common/project-select";
+import ModalDialog from "../../shared/modal-dialog";
+import { request } from "../../../helpers/api/request";
 
 import css from "./manage-forms-tab.scss";
-
-const getAuthToken = () => {
-  const authToken = document.querySelector("meta[name=\"csrf-token\"]")?.getAttribute("content");
-  if (!authToken) {
-    throw new Error("CSRF token not found.");
-  }
-  return authToken;
-};
-
-const request = async ({ url, method, body }: { url: string, method: string, body?: string }) => {
-  try {
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": getAuthToken()
-      },
-      body
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
-    }
-    return data;
-  } catch (e) {
-    console.error(`${method} ${url} failed.`, e);
-  }
-  return null;
-};
 
 const createNewPermissionForm = async (formData: IPermissionFormFormData): Promise<IPermissionForm | null> =>
   request({

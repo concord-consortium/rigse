@@ -1,0 +1,10 @@
+@import "../../../../shared/styles/variables/variables";
+
+table.classesTable {
+  margin-top: 0 !important;
+  border-top: 1px solid gray;
+
+  tr {
+    background-color: transparent;
+  }
+}
