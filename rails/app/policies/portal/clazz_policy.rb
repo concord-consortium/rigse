@@ -50,6 +50,12 @@ class Portal::ClazzPolicy < ApplicationPolicy
     class_teacher_or_admin? || class_researcher? || class_student?
   end
 
+  # Used by Portal::API::V1::PermissionFormsController:
+
+  def class_permission_forms?
+    admin? || class_project_admin?
+  end
+
   private
 
   def class_student?
@@ -66,5 +72,9 @@ class Portal::ClazzPolicy < ApplicationPolicy
 
   def class_researcher?
     user && record && user.is_researcher_for_clazz?(record)
+  end
+
+  def class_project_adin?
+    user && record && user.is_project_admin_for_clazz?(record)
   end
 end

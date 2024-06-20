@@ -36,17 +36,50 @@ class API::V1::PermissionFormsController < API::APIController
   def search_teachers
     authorize Portal::PermissionForm
 
-    teachers = Pundit.policy_scope(current_user, Portal::Teacher).joins(:user)
-
-    if params[:name].empty?
-      return render :json => []
+    if params[:name].blank?
+      return render json: []
     end
 
     value = "%#{params[:name]}%"
 
-    teachers = teachers.where("users.login LIKE :value OR users.first_name LIKE :value OR users.last_name LIKE :value OR users.email LIKE :value", value: value)
+    teachers = Pundit.policy_scope(current_user, Portal::Teacher)
+      .joins(:user)
+      .where("users.login LIKE :value OR users.first_name LIKE :value OR users.last_name LIKE :value OR users.email LIKE :value", value: value)
 
-    render :json => teachers.map { |t| { id: t.id, name: t.user.name, email: t.user.email, login: t.user.login } }
+    teacher_data = teachers.map do |teacher|
+      {
+        id: teacher.id,
+        name: teacher.user.name,
+        email: teacher.user.email,
+        login: teacher.user.login
+      }
+    end
+
+    render json: teacher_data
+  end
+
+  def class_permission_forms
+    clazz = Portal::Clazz.find(params[:class_id])
+
+    authorize clazz, :class_permission_forms?
+
+    students = clazz.students.includes(:permission_forms)
+
+    permission_forms_data = students.map do |student|
+      {
+        id: student.id,
+        name: student.user.name,
+        login: student.user.login,
+        permission_forms: student.permission_forms.select(:id, :name).map do |form|
+          {
+            id: form.id,
+            name: form.name
+          }
+        end
+      }
+    end
+
+    render json: permission_forms_data
   end
 
   private

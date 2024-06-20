@@ -24,7 +24,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user && user.has_role?('manager','admin','researcher')
+      if user && user.has_role?('admin')
         all
       elsif user && (user.is_project_admin? || user.is_project_researcher?)
         # prevents a bunch of unnecessary model loads by not using the model scopes
@@ -43,12 +43,24 @@ class Portal::TeacherPolicy < ApplicationPolicy
     end
   end
 
+  def can_view_teacher?
+    return true if owner? || admin?
+
+    if user.is_project_admin? || user.is_project_researcher?
+      sql = Portal::TeacherPolicy.teacher_query(user)
+      teacher_ids = Portal::Teacher.connection.select_values(sql)
+      return teacher_ids.include?(record.id.to_s)
+    end
+
+    false
+  end
+
   def show?
-    owner? || admin?
+    can_view_teacher?
   end
 
   def get_teacher_project_views?
-    owner? || admin?
+    can_view_teacher?
   end
 
 end

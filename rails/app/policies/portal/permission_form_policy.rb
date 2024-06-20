@@ -2,7 +2,7 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      if user.has_role?('manager','admin','researcher')
+      if user.has_role?('admin')
         all
       elsif user.is_project_admin? || user.is_project_researcher?
         where = []
@@ -42,17 +42,21 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
     manager_or_researcher_or_project_researcher?
   end
 
+  # API::V1::PermissionFormsController:
+
   def create?
-    manager_or_researcher_or_project_researcher?
+    admin_or_project_admin?
+  end
+
+  def update?
+    admin? || project_admin?(record.project)
   end
 
   def destroy?
-    admin? || (manager_or_researcher_or_project_researcher? && user.projects.include?(record.project))
+    admin? || project_admin?(record.project)
   end
 
-  # Permission Forms V2 UI:
-
   def search_teachers?
-    manager_or_researcher_or_project_researcher?
+    admin_or_project_admin?
   end
 end

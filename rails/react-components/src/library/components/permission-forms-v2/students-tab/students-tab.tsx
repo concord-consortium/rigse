@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 import { useFetch } from "../../../hooks/use-fetch";
 import { IProject, CurrentSelectedProject, ITeacher } from "./types";
 import { ProjectSelect } from "../common/project-select";
@@ -10,17 +11,16 @@ import css from "./students-tab.scss";
 
 const searchTeachers = async (name: string) =>
   request({
-    url: Portal.API_V1.PERMISSION_FORMS_SEARCH_TEACHER,
-    method: "POST",
-    body: JSON.stringify({ name })
+    url: Portal.API_V1.permissionFormsSearchTeacher(name),
+    method: "GET"
   });
 
 export default function StudentsTab() {
   // Fetch projects (with refetch function) on initial load
   const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
-  const [ teachers, setTeachers ] = useState<ITeacher[]>([]);
-  const [ selectedTeacherId, setSelectedTeacherId ] = useState<string | null>(null);
-  const[ teacherName, setTeacherName ] = useState<string>("");
+  const [teachers, setTeachers] = useState<ITeacher[]>([]);
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
+  const[teacherName, setTeacherName] = useState<string>("");
 
   // State for UI
   const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
@@ -69,33 +69,36 @@ export default function StudentsTab() {
           </thead>
           <tbody>
             {
-              teachers.map(teacher => (
-                <>
-                  <tr>
-                    <td>{teacher.name}</td>
-                    <td>{teacher.email}</td>
-                    <td>{teacher.login}</td>
-                    <td>
-                      <LinkButton onClick={() => handleViewClassesClick(teacher.id)} active={selectedTeacherId === teacher.id}>
-                        {
-                          selectedTeacherId === teacher.id ? "Hide Classes" : "View Classes"
-                        }
-                        {
-                          selectedTeacherId === teacher.id ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />
-                        }
-                      </LinkButton>
-                    </td>
-                  </tr>
-                  {
-                    selectedTeacherId === teacher.id &&
-                    <tr className={css.expanded}>
-                      <td colSpan={4}>
-                        <ClassesTable teacherId={teacher.id} currentSelectedProject={currentSelectedProject} />
+              teachers.map(teacher => {
+                const active = selectedTeacherId === teacher.id;
+                return (
+                  <>
+                    <tr className={clsx({ [css.activeRow]: active })}>
+                      <td>{ teacher.name }</td>
+                      <td>{ teacher.email }</td>
+                      <td>{ teacher.login }</td>
+                      <td>
+                        <LinkButton onClick={() => handleViewClassesClick(teacher.id)} active={active}>
+                          {
+                            active ? "Hide Classes" : "View Classes"
+                          }
+                          {
+                            active ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />
+                          }
+                        </LinkButton>
                       </td>
                     </tr>
-                  }
-                </>
-              ))
+                    {
+                      active &&
+                      <tr className={css.expanded}>
+                        <td colSpan={4}>
+                          <ClassesTable teacherId={teacher.id} currentSelectedProject={currentSelectedProject} />
+                        </td>
+                      </tr>
+                    }
+                  </>
+                );
+              })
             }
           </tbody>
         </table>

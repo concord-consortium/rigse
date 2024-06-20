@@ -338,6 +338,7 @@ RailsPortal::Application.routes.draw do
             get :get_enews_subscription
             post :update_enews_subscription
             get :get_teacher_project_views
+            get :classes
           end
         end
         resources :students do
@@ -491,7 +492,8 @@ RailsPortal::Application.routes.draw do
 
         resources :permission_forms, only: [:index, :create, :update, :destroy] do
           collection do
-            post :search_teachers
+            get :search_teachers
+            get :class_permission_forms
           end
         end
       end
