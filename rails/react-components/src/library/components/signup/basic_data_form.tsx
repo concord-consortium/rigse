@@ -26,7 +26,7 @@ export default class BasicDataForm extends React.Component<any, any> {
     this.passwordMatchValidator = this.passwordMatchValidator.bind(this);
   }
 
-  passwordMatchValidator({password, password_confirmation}: {password: string, password_confirmation: string}) {
+  passwordMatchValidator({ password, password_confirmation }: {password: string, password_confirmation: string}) {
     if ((password?.length > 0) && (password_confirmation?.length > 0) && (password !== password_confirmation)) {
       return false;
     }
@@ -99,7 +99,7 @@ export default class BasicDataForm extends React.Component<any, any> {
               <dt>Password</dt>
               <dd><TextInput name="password" placeholder="" type="password" required validations={`minLength:${MIN_PASSWORD_LENGTH}`} validationError={PASS_TOO_SHORT} /></dd>
               <dt>Confirm Password</dt>
-              <dd><TextInput name="password_confirmation" placeholder="" type="password" required validations={{passwordMatchValidator: this.passwordMatchValidator}} validationError={PASS_NOT_MATCH} /></dd>
+              <dd><TextInput name="password_confirmation" placeholder="" type="password" required validations={{ passwordMatchValidator: this.passwordMatchValidator }} validationError={PASS_NOT_MATCH} /></dd>
             </dl>
           </div>
         }
