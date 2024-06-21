@@ -59,6 +59,6 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
 
   def search_teachers?
     # In fact this method should be named: admin_or_project_admin_or_project_researcher
-    manager_or_researcher_or_project_researcher??
+    manager_or_researcher_or_project_researcher?
   end
 end
