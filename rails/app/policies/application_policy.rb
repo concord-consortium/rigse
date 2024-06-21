@@ -89,8 +89,12 @@ class ApplicationPolicy
     user && (record.respond_to?(:changeable?) ? record.changeable?(user) : true)
   end
 
-  def project_admin?
-    user && user.is_project_admin?
+  def project_admin?(project = nil)
+    user && user.is_project_admin?(project)
+  end
+
+  def project_researcher?(project = nil)
+    user && user.is_project_researcher?(project)
   end
 
   # from old restricted_controller
@@ -119,6 +123,7 @@ class ApplicationPolicy
     user && (user.is_project_admin? || has_roles?('admin','manager'))
   end
 
+  # In fact this method should be named: admin_or_project_admin_or_project_researcher
   def manager_or_researcher_or_project_researcher?
     user && (user.is_project_researcher? || manager_or_researcher?)
   end

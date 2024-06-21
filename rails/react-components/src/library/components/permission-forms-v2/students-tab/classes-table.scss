@@ -4,7 +4,11 @@ table.classesTable {
   margin-top: 0 !important;
   border-top: 1px solid gray;
 
-  tr {
+  & > thead > tr, & > tbody > tr {
     background-color: transparent;
+  }
+
+  .activeRow {
+    font-weight: 500;
   }
 }

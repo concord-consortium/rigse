@@ -173,6 +173,20 @@ class API::V1::TeachersController < API::APIController
     return render :json => recent_collections_pages.to_json
   end
 
+  def classes
+    teacher_id = params.require(:id)
+    teacher = Portal::Teacher.find(teacher_id)
+
+    authorize teacher, :show?
+
+    # Fetch only non-archived classes using pluck
+    classes = teacher.clazzes.where(is_archived: false).pluck(:id, :name, :class_hash, :class_word).map do |id, name, class_hash, class_word|
+      { id: id, name: name, class_hash: class_hash, class_word: class_word }
+    end
+
+    render json: classes
+  end
+
   private
 
   def school_params_provided?
