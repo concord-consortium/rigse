@@ -37,8 +37,8 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
           classesData.map((classInfo) => {
             const active = selectedClassId === classInfo.id;
             return (
-              <>
-                <tr key={classInfo.id} className={clsx({ [css.activeRow]: active })}>
+              <React.Fragment key={classInfo.id}>
+                <tr className={clsx({ [css.activeRow]: active })}>
                   <td>{ classInfo.name }</td>
                   <td>{ classInfo.class_word }</td>
                   <td>
@@ -60,7 +60,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
                     </td>
                   </tr>
                 }
-              </>
+              </React.Fragment>
             );
           })
         }

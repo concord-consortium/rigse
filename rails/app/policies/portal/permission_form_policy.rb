@@ -45,18 +45,20 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   # API::V1::PermissionFormsController:
 
   def create?
-    admin_or_project_admin?
+    # In fact this method should be named: admin_or_project_admin_or_project_researcher
+    manager_or_researcher_or_project_researcher?
   end
 
   def update?
-    admin? || project_admin?(record.project)
+    admin? || project_admin?(record.project) || project_researcher?(record.project)
   end
 
   def destroy?
-    admin? || project_admin?(record.project)
+    admin? || project_admin?(record.project) || project_researcher?(record.project)
   end
 
   def search_teachers?
-    admin_or_project_admin?
+    # In fact this method should be named: admin_or_project_admin_or_project_researcher
+    manager_or_researcher_or_project_researcher??
   end
 end

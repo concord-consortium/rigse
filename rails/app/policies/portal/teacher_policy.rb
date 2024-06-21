@@ -44,6 +44,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
   end
 
   def can_view_teacher?
+    return false if user.nil?
     return true if owner? || admin?
 
     if user.is_project_admin? || user.is_project_researcher?

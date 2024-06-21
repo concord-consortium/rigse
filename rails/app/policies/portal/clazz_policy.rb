@@ -53,7 +53,7 @@ class Portal::ClazzPolicy < ApplicationPolicy
   # Used by Portal::API::V1::PermissionFormsController:
 
   def class_permission_forms?
-    admin? || class_project_admin?
+    admin? || class_project_admin? || class_researcher?
   end
 
   private
@@ -74,7 +74,7 @@ class Portal::ClazzPolicy < ApplicationPolicy
     user && record && user.is_researcher_for_clazz?(record)
   end
 
-  def class_project_adin?
+  def class_project_admin?
     user && record && user.is_project_admin_for_clazz?(record)
   end
 end

@@ -72,7 +72,7 @@ export default function StudentsTab() {
               teachers.map(teacher => {
                 const active = selectedTeacherId === teacher.id;
                 return (
-                  <>
+                  <React.Fragment key={teacher.id}>
                     <tr className={clsx({ [css.activeRow]: active })}>
                       <td>{ teacher.name }</td>
                       <td>{ teacher.email }</td>
@@ -96,7 +96,7 @@ export default function StudentsTab() {
                         </td>
                       </tr>
                     }
-                  </>
+                  </React.Fragment>
                 );
               })
             }
