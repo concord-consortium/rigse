@@ -1,6 +1,8 @@
 @import "../../../shared/styles/variables/variables";
 
 .permissionForms {
+  margin-bottom: 200px; // for dropdown menu
+
   .tabArea {
     .tabs {
       display:flex;
