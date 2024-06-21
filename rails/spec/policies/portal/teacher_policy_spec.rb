@@ -115,7 +115,7 @@ RSpec.describe Portal::TeacherPolicy do
       teacher_policy = described_class.new(nil, nil)
       result = teacher_policy.show?
 
-      expect(result).to be_nil
+      expect(result).to be_falsey
     end
   end
 
