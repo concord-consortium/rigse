@@ -44,4 +44,50 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
     expect(response).to have_http_status(:ok)
     expect(Portal::PermissionForm.count).to eq(0)
   end
+
+  describe 'when user is a project admin' do
+    let (:project) { FactoryBot.create(:project) }
+    let (:another_project) { FactoryBot.create(:project) }
+    let (:project_admin) { FactoryBot.generate(:author_user) }
+
+    before do
+      sign_in project_admin
+      project_admin.add_role_for_project('admin', project)
+    end
+
+    it 'DELETE is allowed if the permission form belongs to the project' do
+      permission_form = Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: project.id)
+      expect(Portal::PermissionForm.count).to eq(1)
+      delete :destroy, params: { id: permission_form.id }
+      expect(response).to have_http_status(:ok)
+      expect(Portal::PermissionForm.count).to eq(0)
+    end
+
+    it 'DELETE is not allowed if the permission form does not belongs to the project' do
+      permission_form = Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: another_project.id )
+      expect(Portal::PermissionForm.count).to eq(1)
+      delete :destroy, params: { id: permission_form.id }
+      expect(response).to have_http_status(:forbidden)
+      expect(Portal::PermissionForm.count).to eq(1)
+    end
+  end
+
+  describe 'when user is a project researcher' do
+    let (:project) { FactoryBot.create(:project) }
+    let (:project_researcher) { FactoryBot.generate(:author_user) }
+
+    before do
+      sign_in project_researcher
+      project_researcher.add_role_for_project('researcher', project)
+    end
+
+    it 'DELETE is now allowed' do
+      permission_form = Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: project.id)
+      expect(Portal::PermissionForm.count).to eq(1)
+      delete :destroy, params: { id: permission_form.id }
+      expect(response).to have_http_status(:forbidden)
+      expect(Portal::PermissionForm.count).to eq(1)
+    end
+  end
+
 end

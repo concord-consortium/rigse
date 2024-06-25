@@ -54,7 +54,7 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def destroy?
-    admin? || record && (project_admin?(record.project) || project_researcher?(record.project))
+    admin? || record && (project_admin?(record.project))
   end
 
   def search_teachers?
