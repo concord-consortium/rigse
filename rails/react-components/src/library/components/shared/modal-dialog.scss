@@ -23,21 +23,12 @@
     }
   }
 
-  // theme specific styles override above
   &.orange {
     border-color: #ea6d2f;
-
-    .dialogTitleBar {
-      background-color: #ea6d2f;
-    }
   }
 
   &.teal {
     border-color: #0592af;
-
-    .dialogTitleBar {
-      background-color: #0592af;
-    }
   }
 }
 

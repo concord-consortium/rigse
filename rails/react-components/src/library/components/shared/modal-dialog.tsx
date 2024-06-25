@@ -5,12 +5,12 @@ import css from "./modal-dialog.scss";
 interface IProps {
   children?: React.ReactNode;
   title?: string;
-  colorTheme?: "orange" | "teal";
+  borderColor?: "orange" | "teal";
 }
 export default class ModalDialog extends React.Component<IProps> {
   render () {
-    const { title, children, colorTheme } = this.props;
-    const themeClass = colorTheme || "teal";
+    const { title, children, borderColor } = this.props;
+    const themeClass = borderColor || "teal";
 
     return (
       <Modal>
