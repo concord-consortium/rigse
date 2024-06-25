@@ -18,7 +18,8 @@ const searchTeachers = async (name: string) =>
 export default function StudentsTab() {
   // Fetch projects (with refetch function) on initial load
   const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
-  const [teachers, setTeachers] = useState<ITeacher[]>([]);
+  // `null` means no search has been done yet, while an empty array means no results were found.
+  const [teachers, setTeachers] = useState<ITeacher[] | null>(null);
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
   const[teacherName, setTeacherName] = useState<string>("");
 
@@ -34,6 +35,7 @@ export default function StudentsTab() {
   };
 
   const handleSearchClick = async () => {
+    setSelectedTeacherId(null);
     setTeachers(await searchTeachers(teacherName));
   };
 
@@ -60,9 +62,12 @@ export default function StudentsTab() {
           </div>
         </div>
       </div>
-
       {
-        teachers.length > 0 &&
+        teachers && teachers.length === 0 &&
+        <div className={css.noResults}>No teachers found.</div>
+      }
+      {
+        teachers && teachers.length > 0 &&
         <table className={css.teachersTable}>
           <thead>
             <tr><th>Teacher Name</th><th>Teacher Email</th><th>Teacher Login</th><th></th></tr>

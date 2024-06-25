@@ -53,6 +53,10 @@
     }
   }
 
+  .noResults {
+    font-weight: 500;
+  }
+
   .teachersTable {
     & > tbody > tr > td {
       &:first-child {
