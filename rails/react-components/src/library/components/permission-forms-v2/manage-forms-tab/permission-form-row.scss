@@ -1,28 +1,15 @@
 @import "../../../../shared/styles/variables/variables";
+@import "./vars";
 
 .permissionFormRow {
-  .nameColumn {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 300px;
-  }
-
-  .urlColumn {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 250px;
-  }
-
   .editColumn {
-    width: 75px;
+    width: $editColumnWidth;
   }
   .archiveColumn {
-    width: 125px;
+    width: $archiveColumnWidth;
   }
   .deleteColumn {
-    width: 95px;
+    width: $deleteColumnWidth;
   }
 
   &.isArchived {
@@ -40,6 +27,7 @@
     border: transparent;
     text-transform: uppercase;
     font-weight: 300;
+    padding: 0;
 
     &:hover {
       color: $col-gold;

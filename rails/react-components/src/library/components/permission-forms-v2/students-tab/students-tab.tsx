@@ -70,7 +70,7 @@ export default function StudentsTab() {
         teachers && teachers.length > 0 &&
         <table className={css.teachersTable}>
           <thead>
-            <tr><th>Teacher Name</th><th>Teacher Email</th><th>Teacher Login</th><th></th></tr>
+            <tr><th>Teacher Name</th><th>Teacher Email</th><th>Teacher Login</th><th className={css.expandButton} /></tr>
           </thead>
           <tbody>
             {
@@ -82,7 +82,7 @@ export default function StudentsTab() {
                       <td>{ teacher.name }</td>
                       <td>{ teacher.email }</td>
                       <td>{ teacher.login }</td>
-                      <td>
+                      <td className={css.expandButton}>
                         <LinkButton onClick={() => handleViewClassesClick(teacher.id)} active={active}>
                           {
                             active ? "Hide Classes" : "Show Classes"

@@ -81,11 +81,11 @@ export const StudentsTable = ({ classId }: IProps) => {
     <table className={css.studentsTable}>
       <thead>
         <tr>
-          <th><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
+          <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
           <th>Student Name</th>
           <th>Username</th>
-          <th>Permission Forms</th>
-          <th></th>
+          <th className={css.permissionFormsColumn}>Permission Forms</th>
+          <th className={css.expandButtonColumn}></th>
         </tr>
       </thead>
       <tbody>
@@ -93,11 +93,13 @@ export const StudentsTable = ({ classId }: IProps) => {
           studentsData.map((studentInfo) => {
             return (
               <tr key={studentInfo.id}>
-                <td><input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} /></td>
+                <td className={css.checkboxColumn}>
+                  <input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
+                </td>
                 <td>{ studentInfo.name }</td>
                 <td>{ studentInfo.login }</td>
-                <td>{ studentInfo.permission_forms.map(pf => pf.name).join(", ") }</td>
-                <td><button className={css.basicButton}>Edit</button></td>
+                <td className={css.permissionFormsColumn}>{ studentInfo.permission_forms.map(pf => pf.name).join(", ") }</td>
+                <td className={css.expandButtonColumn}><button className={css.basicButton}>Edit</button></td>
               </tr>
             );
           })
