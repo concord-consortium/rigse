@@ -44,7 +44,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
                   <td>
                     <LinkButton onClick={() => handleViewStudentsClick(classInfo.id)} active={active}>
                       {
-                        active ? "Hide Students" : "View Students"
+                        active ? "Hide Students" : "Show Students"
                       }
                       {
                         active ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />

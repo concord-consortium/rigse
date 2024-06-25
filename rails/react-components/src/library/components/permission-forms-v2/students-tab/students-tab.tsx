@@ -85,7 +85,7 @@ export default function StudentsTab() {
                       <td>
                         <LinkButton onClick={() => handleViewClassesClick(teacher.id)} active={active}>
                           {
-                            active ? "Hide Classes" : "View Classes"
+                            active ? "Hide Classes" : "Show Classes"
                           }
                           {
                             active ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />
