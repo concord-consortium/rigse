@@ -71,10 +71,11 @@ class API::V1::PermissionFormsController < API::APIController
         id: student.id,
         name: student.user.name,
         login: student.user.login,
-        permission_forms: student.permission_forms.select(:id, :name).map do |form|
+        permission_forms: student.permission_forms.select(:id, :name, :is_archived).map do |form|
           {
             id: form.id,
-            name: form.name
+            name: form.name,
+            is_archived: form.is_archived
           }
         end
       }

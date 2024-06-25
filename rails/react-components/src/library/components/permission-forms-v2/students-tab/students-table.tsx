@@ -15,6 +15,8 @@ type PermissionFormOption = {
   label: string;
 };
 
+const nonArchived = (forms: IPermissionForm[]) => forms.filter(form => !form.is_archived);
+
 export const StudentsTable = ({ classId }: IProps) => {
   const { data: studentsData, isLoading: studentsLoading } = useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
   const { data: permissionForms, isLoading: permissionFormsLoading } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
@@ -22,15 +24,16 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [permissionFormsToAdd, setPermissionFormsToAdd] = useState<readonly PermissionFormOption[]>([]);
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
 
+  const nonArchivedPermissionForms = nonArchived(permissionForms);
   // When preparing the options for the Select component, we need to filter out the permission forms that are already
   // selected to add or remove in the opposite dropdown. Both permissionFormsToAdd and permissionFormsToRemove need
   // to be mutually exclusive.
   const permissionFormToAddOptions = Object.freeze(
-    permissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
+    nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
   const permissionFormToRemoveOptions = Object.freeze(
-    permissionForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
+    nonArchivedPermissionForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
   if (studentsLoading) {
@@ -98,7 +101,7 @@ export const StudentsTable = ({ classId }: IProps) => {
                 </td>
                 <td>{ studentInfo.name }</td>
                 <td>{ studentInfo.login }</td>
-                <td className={css.permissionFormsColumn}>{ studentInfo.permission_forms.map(pf => pf.name).join(", ") }</td>
+                <td className={css.permissionFormsColumn}>{ nonArchived(studentInfo.permission_forms).map(pf => pf.name).join(", ") }</td>
                 <td className={css.expandButtonColumn}><button className={css.basicButton}>Edit</button></td>
               </tr>
             );
