@@ -148,6 +148,72 @@ RSpec.describe API::V1::TeachersController, type: :controller do
     end
   end
 
+  describe '#classes' do
+    let(:teacher) { FactoryBot.create(:portal_teacher) }
+
+    context 'when a signed in teacher accesses their own classes' do
+      before(:each) do
+        sign_in teacher.user
+      end
+
+      it 'GET classes' do
+        get :classes, params: { :id => teacher.id }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to match([
+          hash_including('id' => teacher.clazzes[0].id)
+        ])
+      end
+    end
+
+    context 'when a project admin accesses a teacher\'s classes' do
+      let (:project) { FactoryBot.create(:project) }
+      let (:project_admin) { FactoryBot.generate(:author_user) }
+      let (:cohort) { FactoryBot.create(:admin_cohort, project: project) }
+
+      before(:each) do
+        sign_in project_admin
+        project_admin.add_role_for_project('admin', project)
+      end
+
+      it 'GET classes' do
+        get :classes, params: { :id => teacher.id }
+        expect(response).to have_http_status(:forbidden)
+
+        teacher.cohorts << cohort
+
+        get :classes, params: { :id => teacher.id }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to match([
+          hash_including('id' => teacher.clazzes[0].id)
+        ])
+      end
+    end
+
+    context 'when a project researcher accesses a teacher\'s classes' do
+      let (:project) { FactoryBot.create(:project) }
+      let (:project_researcher) { FactoryBot.generate(:author_user) }
+      let (:cohort) { FactoryBot.create(:admin_cohort, project: project) }
+
+      before(:each) do
+        sign_in project_researcher
+        project_researcher.add_role_for_project('researcher', project)
+      end
+
+      it 'GET classes' do
+        get :classes, params: { :id => teacher.id }
+        expect(response).to have_http_status(:forbidden)
+
+        teacher.cohorts << cohort
+
+        get :classes, params: { :id => teacher.id }
+        expect(response).to have_http_status(:ok)
+        expect(JSON.parse(response.body)).to match([
+          hash_including('id' => teacher.clazzes[0].id)
+        ])
+      end
+    end
+  end
+
   # TODO: auto-generated
   describe '#email_available' do
     it 'GET email_available' do
@@ -199,7 +265,7 @@ RSpec.describe API::V1::TeachersController, type: :controller do
           expect(response).to have_http_status(:ok)
         end
       end
-  
+
       describe '#update_enews_subscription' do
         it 'GET update_enews_subscription' do
           get :update_enews_subscription, params: { id: teacher.id, status: 'subbed' }
