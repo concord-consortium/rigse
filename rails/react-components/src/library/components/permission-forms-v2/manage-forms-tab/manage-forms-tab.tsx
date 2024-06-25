@@ -127,7 +127,7 @@ export default function ManageFormsTab() {
       </table>
       {
         showCreateNewFormModal &&
-        <ModalDialog styles={{ padding: "0px" }}>
+        <ModalDialog colorTheme="teal">
           <CreateEditPermissionForm
             currentSelectedProject={currentSelectedProject}
             onFormCancel={() => setShowCreateNewFormModal(false)}
@@ -138,7 +138,7 @@ export default function ManageFormsTab() {
       }
       {
         editForm &&
-        <ModalDialog styles={{ padding: "0px" }}>
+        <ModalDialog colorTheme="orange">
           <CreateEditPermissionForm
             existingFormData={editForm}
             onFormCancel={() => setEditForm(false)}
