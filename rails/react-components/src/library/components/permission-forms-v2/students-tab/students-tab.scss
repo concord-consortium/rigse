@@ -70,11 +70,8 @@
       font-weight: 500;
     }
 
-    tr.expanded:nth-child(odd) {
+    .rowWithBackground {
       background-color: #f1f1f1;
-    }
-    tr.expanded:nth-child(even) {
-      background-color: transparent;
     }
   }
 }

@@ -74,11 +74,13 @@ export default function StudentsTab() {
           </thead>
           <tbody>
             {
-              teachers.map(teacher => {
+              teachers.map((teacher, idx) => {
                 const active = selectedTeacherId === teacher.id;
+                // Typical pattern with CSS nth-child won't work, as we inject additional row when user expands a teacher.
+                const background = idx % 2 === 1;
                 return (
                   <React.Fragment key={teacher.id}>
-                    <tr className={clsx({ [css.activeRow]: active })}>
+                    <tr className={clsx({ [css.activeRow]: active, [css.rowWithBackground]: background })}>
                       <td>{ teacher.name }</td>
                       <td>{ teacher.email }</td>
                       <td>{ teacher.login }</td>
@@ -95,7 +97,7 @@ export default function StudentsTab() {
                     </tr>
                     {
                       active &&
-                      <tr className={css.expanded}>
+                      <tr className={clsx({ [css.rowWithBackground]: background })}>
                         <td colSpan={4}>
                           <ClassesTable teacherId={teacher.id} currentSelectedProject={currentSelectedProject} />
                         </td>
