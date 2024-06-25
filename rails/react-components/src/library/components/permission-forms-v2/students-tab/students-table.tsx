@@ -4,6 +4,8 @@ import { useFetch } from "../../../hooks/use-fetch";
 import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
 
 import css from "./students-table.scss";
+import ModalDialog from "../../shared/modal-dialog";
+import { EditStudentPermissionsForm } from "./edit-student-permissions-form";
 
 interface IProps {
   classId: string;
@@ -21,6 +23,8 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [isStudentSelected, setIsStudentSelected] = useState<Record<string, boolean>>({});
   const [permissionFormsToAdd, setPermissionFormsToAdd] = useState<readonly PermissionFormOption[]>([]);
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
+  const [editStudent, setEditStudent] = useState<IStudent | null>(null);
+
 
   // When preparing the options for the Select component, we need to filter out the permission forms that are already
   // selected to add or remove in the opposite dropdown. Both permissionFormsToAdd and permissionFormsToRemove need
@@ -74,77 +78,96 @@ export const StudentsTable = ({ classId }: IProps) => {
     setPermissionFormsToRemove(selectedOptions);
   };
 
+  const handleEditClick = (studentId: string) => {
+    const student = studentsData.find(s => s.id === studentId);
+    if (student) {
+      setEditStudent(student);
+    }
+  };
+
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
   return (
-    <table className={css.studentsTable}>
-      <thead>
-        <tr>
-          <th><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
-          <th>Student Name</th>
-          <th>Username</th>
-          <th>Permission Forms</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          studentsData.map((studentInfo) => {
-            return (
-              <tr key={studentInfo.id}>
-                <td><input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} /></td>
-                <td>{ studentInfo.name }</td>
-                <td>{ studentInfo.login }</td>
-                <td>{ studentInfo.permission_forms.map(pf => pf.name).join(", ") }</td>
-                <td><button className={css.basicButton}>Edit</button></td>
-              </tr>
-            );
-          })
-        }
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colSpan={5}>
-            <div className={css.tableFooter}>
-              <div className={css.summary}>
-                { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
-              </div>
-              <div className={css.permissionFormSelects}>
-                <div className={css.selectContainer}>
-                  Add:
-                  <Select<PermissionFormOption, true>
-                    className={css.permissionFormSelect}
-                    // TODO: temporarily ignoring typing issue that I cannot understand
-                    options={permissionFormToAddOptions}
-                    isMulti={true}
-                    placeholder="Select permission form(s)..."
-                    isLoading={permissionFormsLoading}
-                    value={permissionFormsToAdd}
-                    onChange={handlePermissionFormToAddSelectChange}
-                  />
+    <>
+      <table className={css.studentsTable}>
+        <thead>
+          <tr>
+            <th><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
+            <th>Student Name</th>
+            <th>Username</th>
+            <th>Permission Forms</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            studentsData.map((studentInfo) => {
+              return (
+                <tr key={studentInfo.id}>
+                  <td><input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} /></td>
+                  <td>{ studentInfo.name }</td>
+                  <td>{ studentInfo.login }</td>
+                  <td>{ studentInfo.permission_forms.map(pf => pf.name).join(", ") }</td>
+                  <button className={css.basicButton} onClick={() => handleEditClick(studentInfo.id)}>Edit</button>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={5}>
+              <div className={css.tableFooter}>
+                <div className={css.summary}>
+                  { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
                 </div>
-                <div className={css.selectContainer}>
-                  Remove:
-                  <Select<PermissionFormOption, true>
-                    className={css.permissionFormSelect}
-                    // TODO: temporarily ignoring typing issue that I cannot understand
-                    options={permissionFormToRemoveOptions}
-                    isMulti={true}
-                    placeholder="Select permission form(s)..."
-                    isLoading={permissionFormsLoading}
-                    value={permissionFormsToRemove}
-                    onChange={handlePermissionFormToRemoveSelectChange}
-                  />
+                <div className={css.permissionFormSelects}>
+                  <div className={css.selectContainer}>
+                    Add:
+                    <Select<PermissionFormOption, true>
+                      className={css.permissionFormSelect}
+                      // TODO: temporarily ignoring typing issue that I cannot understand
+                      options={permissionFormToAddOptions}
+                      isMulti={true}
+                      placeholder="Select permission form(s)..."
+                      isLoading={permissionFormsLoading}
+                      value={permissionFormsToAdd}
+                      onChange={handlePermissionFormToAddSelectChange}
+                    />
+                  </div>
+                  <div className={css.selectContainer}>
+                    Remove:
+                    <Select<PermissionFormOption, true>
+                      className={css.permissionFormSelect}
+                      // TODO: temporarily ignoring typing issue that I cannot understand
+                      options={permissionFormToRemoveOptions}
+                      isMulti={true}
+                      placeholder="Select permission form(s)..."
+                      isLoading={permissionFormsLoading}
+                      value={permissionFormsToRemove}
+                      onChange={handlePermissionFormToRemoveSelectChange}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <button className={css.saveChangesButton}>Save Changes</button>
                 </div>
               </div>
-              <div>
-                <button className={css.saveChangesButton}>Save Changes</button>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      { editStudent &&
+        <ModalDialog>
+          <EditStudentPermissionsForm
+            existingFormData={editStudent}
+            student={editStudent}
+            onFormSave={()=> console.log("| implement a dave handler")}
+            onFormCancel={() => setEditStudent(null)}
+          />
+        </ModalDialog>
+      }
+    </>
   );
 };

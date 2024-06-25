@@ -1,0 +1,54 @@
+@import "../../../../shared/styles/variables/variables";
+
+.editStudentPerimissionsForm {
+  width: 600px;
+
+  .formTop {
+    display: flex;
+    align-content: center;
+    background-color: $col-link;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom:10px;
+  }
+
+  .formRow {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+
+    label {
+      width: 80px;
+      text-align: left;
+      text-transform: capitalize;
+      font-weight: 300;
+    }
+  }
+
+  .name {
+    width: 273px;
+  }
+
+  .url {
+    width: 450px;
+  }
+
+  .formButtonArea {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0px;
+    padding: 10px 20px;
+    margin-bottom:10px;
+
+    button:first-child {
+      margin-right: 8px;
+    }
+
+    .cancelButton {
+      background-color: #ccc;
+      border-color: #ccc;
+      color:#333;
+    }
+  }
+}
