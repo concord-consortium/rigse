@@ -159,9 +159,10 @@ export const StudentsTable = ({ classId }: IProps) => {
         </tfoot>
       </table>
       { editStudent &&
-        <ModalDialog borderColor="orange">
+        <ModalDialog borderColor="teal">
           <EditStudentPermissionsForm
             existingFormData={editStudent}
+            permissionForms={permissionForms}
             student={editStudent}
             onFormSave={()=> console.log("| implement a save handler")}
             onFormCancel={() => setEditStudent(null)}

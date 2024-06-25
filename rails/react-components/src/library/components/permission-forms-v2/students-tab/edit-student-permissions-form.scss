@@ -1,16 +1,15 @@
 @import "../../../../shared/styles/variables/variables";
 
 .editStudentPerimissionsForm {
-  width: 600px;
+  width: 400px;
 
   .formTop {
     display: flex;
     align-content: center;
-    background-color: $col-link;
+    background-color: $blue;
     color: white;
     font-weight: bold;
     padding: 10px;
-    margin-bottom:10px;
   }
 
   .formRow {
@@ -38,11 +37,18 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 0px;
-    padding: 10px 20px;
-    margin-bottom:10px;
+    padding: 10px 10px;
+    padding-bottom:10px;
+    background-color: $blue;
 
     button:first-child {
       margin-right: 8px;
+    }
+
+    .saveChangesButton {
+      background-color: $permission-gold;
+      border-color: $permission-gold;
+      color: white;
     }
 
     .cancelButton {
