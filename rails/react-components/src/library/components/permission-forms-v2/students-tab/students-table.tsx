@@ -122,7 +122,9 @@ export const StudentsTable = ({ classId }: IProps) => {
     }
   };
 
-  const handleSaveStudentPermissions = async () => {
+  // this is passed and called from onFormSave in EditStudentPermissionsForm
+  // the actual API call happens there
+  const handleSaveStudentPermissionsSuccess = async () => {
     setEditStudent(null);
     refetchStudentsData();
   }
@@ -223,7 +225,7 @@ export const StudentsTable = ({ classId }: IProps) => {
             student={editStudent}
             permissionForms={permissionForms}
             onFormCancel={() => setEditStudent(null)}
-            onFormSave={handleSaveStudentPermissions}
+            onFormSave={handleSaveStudentPermissionsSuccess}
             classId={classId}
           />
         </ModalDialog>
