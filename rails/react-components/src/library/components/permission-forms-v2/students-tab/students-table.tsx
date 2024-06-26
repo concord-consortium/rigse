@@ -85,6 +85,10 @@ export const StudentsTable = ({ classId }: IProps) => {
     }
   };
 
+  const handleStudentPermissionFormSave = (newPermissionForms: IPermissionForm[]) => {
+    // Update the student's permission forms via the API
+  };
+
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
@@ -161,10 +165,8 @@ export const StudentsTable = ({ classId }: IProps) => {
       { editStudent &&
         <ModalDialog borderColor="teal">
           <EditStudentPermissionsForm
-            existingFormData={editStudent}
-            permissionForms={permissionForms}
             student={editStudent}
-            onFormSave={()=> console.log("| implement a save handler")}
+            permissionForms={permissionForms}
             onFormCancel={() => setEditStudent(null)}
           />
         </ModalDialog>

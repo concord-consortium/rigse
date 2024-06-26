@@ -1,20 +1,49 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { IPermissionForm, IStudent } from "./types";
+import { useFetch } from "../../../hooks/use-fetch";
 
 import css from "./edit-student-permissions-form.scss";
 
 interface CreateEditPermissionFormProps {
-  existingFormData?: any;
   student: IStudent;
   permissionForms: IPermissionForm[];
   onFormCancel: () => void;
-  onFormSave: (newForm: any) => void;
 }
 
-export const EditStudentPermissionsForm = ({ student, existingFormData, permissionForms, onFormSave, onFormCancel }: CreateEditPermissionFormProps) => {
+export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCancel }: CreateEditPermissionFormProps) => {
+  const [localPermissions, setLocalPermissions] = useState(student.permission_forms || {});
 
-  const disabled = false;
-  console.log("| student: ", student);
+  useEffect(() => setLocalPermissions(student.permission_forms), []);
+
+  const handlePermissionChange = (changedPermissionId: string) => {
+    const shouldAddPermission = !localPermissions.some(lp => lp.id === changedPermissionId);
+    const shouldRemovePermission = localPermissions.some(lp => lp.id === changedPermissionId);
+
+    let newPermissions: IPermissionForm[] = [];
+
+    if (shouldAddPermission) {
+      const permissionToAdd = permissionForms.find(pf => pf.id === changedPermissionId);
+      if (permissionToAdd) newPermissions = [...localPermissions, permissionToAdd];
+    }
+
+    if (shouldRemovePermission) {
+      newPermissions = localPermissions.filter(lp => lp.id !== changedPermissionId);
+    }
+
+    const definedPermissions = newPermissions.filter((p): p is IPermissionForm => p !== undefined);
+    setLocalPermissions(definedPermissions);
+  };
+
+
+  const handleFormSave = async () => {
+    console.log("| save the changes: student:", student.id, "should have permissions: ",  localPermissions);
+  };
+
+  // Check if there are any changes to the permissions so we know whether to enable the save button
+  const savedIds = student.permission_forms.map(pf => pf.id).sort();
+  const newIds = localPermissions.map(lp => lp.id).sort();
+  const hasChanges = savedIds.length !== newIds.length || savedIds.some((id, i) => id !== newIds[i]);
+
   return (
     <div className={css.editStudentPerimissionsForm}>
       <div className={css.formTop}>
@@ -22,12 +51,16 @@ export const EditStudentPermissionsForm = ({ student, existingFormData, permissi
       </div>
 
       {permissionForms.map((p, i) => {
-        console.log("| one of all existing p forms: ", p.id, p.name);
-        const isChecked = student.permission_forms.some(pf => pf.id === p.id);
+        const isChecked = localPermissions.some(lp => lp.id === p.id);
 
         return (
           <div key={i} className={css.formRow}>
-            <input type="checkbox" checked={isChecked} /> {p.name}
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => handlePermissionChange(p.id)}
+            />
+            {p.name}
           </div>
         );
       })}
@@ -36,8 +69,8 @@ export const EditStudentPermissionsForm = ({ student, existingFormData, permissi
         <button className={css.cancelButton} onClick={onFormCancel}>
           Cancel
         </button>
-        <button disabled={disabled} className={css.saveChangesButton} onClick={onFormSave}>
-          { existingFormData ? "Save Changes" : "Save" }
+        <button disabled={!hasChanges} className={css.saveChangesButton} onClick={handleFormSave}>
+          { isSaving ? 'Saving...' : 'Save Changes' }
         </button>
       </div>
     </div>
