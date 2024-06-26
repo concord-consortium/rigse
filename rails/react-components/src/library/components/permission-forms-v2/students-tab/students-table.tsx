@@ -119,8 +119,10 @@ export const StudentsTable = ({ classId }: IProps) => {
                 <div className={css.selectContainer}>
                   Add:
                   <Select<PermissionFormOption, true>
+                    classNames={{
+                      option: () => css.permissionFormSelectOption
+                    }}
                     className={css.permissionFormSelect}
-                    // TODO: temporarily ignoring typing issue that I cannot understand
                     options={permissionFormToAddOptions}
                     isMulti={true}
                     placeholder="Select permission form(s)..."
@@ -132,8 +134,10 @@ export const StudentsTable = ({ classId }: IProps) => {
                 <div className={css.selectContainer}>
                   Remove:
                   <Select<PermissionFormOption, true>
+                    classNames={{
+                      option: () => css.permissionFormSelectOption
+                    }}
                     className={css.permissionFormSelect}
-                    // TODO: temporarily ignoring typing issue that I cannot understand
                     options={permissionFormToRemoveOptions}
                     isMulti={true}
                     placeholder="Select permission form(s)..."

@@ -70,6 +70,11 @@
       font-weight: 500;
     }
 
+    .classesTableRow {
+      // Necessary for dropdown to work correctly.
+      overflow: visible;
+    }
+
     .rowWithBackground {
       background-color: #f1f1f1;
     }
