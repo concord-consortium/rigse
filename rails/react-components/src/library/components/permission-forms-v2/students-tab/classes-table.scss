@@ -11,4 +11,9 @@ table.classesTable {
   .activeRow {
     font-weight: 500;
   }
+
+  .studentsTableRow {
+    // Necessary for dropdown to work correctly.
+    overflow: visible;
+  }
 }

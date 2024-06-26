@@ -14,6 +14,16 @@ table.studentsTable {
     }
   }
 
+  & > tfoot > tr > td {
+    // Necessary for dropdown to work correctly.
+    overflow: visible;
+  }
+
+  .permissionFormSelectOption {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .checkboxColumn {
     width: 35px;
   }

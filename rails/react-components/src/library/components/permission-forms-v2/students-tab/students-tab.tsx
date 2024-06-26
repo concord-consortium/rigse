@@ -98,7 +98,7 @@ export default function StudentsTab() {
                     {
                       active &&
                       <tr className={clsx({ [css.rowWithBackground]: background })}>
-                        <td colSpan={4}>
+                        <td colSpan={4} className={css.classesTableRow}>
                           <ClassesTable teacherId={teacher.id} currentSelectedProject={currentSelectedProject} />
                         </td>
                       </tr>
