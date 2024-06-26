@@ -20,7 +20,7 @@ type PermissionFormOption = {
 
 const nonArchived = (forms: IPermissionForm[]) => forms.filter(form => !form.is_archived);
 
-const bulkUpdatePermissionForms = async (
+export const bulkUpdatePermissionForms = async (
   { classId, selectedStudentIds, addFormIds, removeFormIds }:
   { classId: string; selectedStudentIds: string[]; addFormIds: string[]; removeFormIds: string[]; }
 ) =>
@@ -45,6 +45,7 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [editStudent, setEditStudent] = useState<IStudent | null>(null);
   const [requestInProgress, setRequestInProgress] = useState(false);
 
+  console.log("| 🤔 what is studentsData", studentsData);
   const nonArchivedPermissionForms = nonArchived(permissionForms);
   const permissionFormToAddOptions = Object.freeze(
     nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
@@ -121,6 +122,11 @@ export const StudentsTable = ({ classId }: IProps) => {
       alert("Failed to update permission forms");
     }
   };
+
+  const handleSaveStudentPermissions = async () => {
+    setEditStudent(null);
+    refetchStudentsData();
+  }
 
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
@@ -218,6 +224,8 @@ export const StudentsTable = ({ classId }: IProps) => {
             student={editStudent}
             permissionForms={permissionForms}
             onFormCancel={() => setEditStudent(null)}
+            onFormSave={handleSaveStudentPermissions}
+            classId={classId}
           />
         </ModalDialog>
       }

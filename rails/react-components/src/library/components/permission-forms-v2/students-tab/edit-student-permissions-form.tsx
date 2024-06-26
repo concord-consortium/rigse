@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { IPermissionForm, IStudent } from "./types";
-import { useFetch } from "../../../hooks/use-fetch";
+import { bulkUpdatePermissionForms } from "./students-table";
 
 import css from "./edit-student-permissions-form.scss";
 
@@ -8,13 +8,19 @@ interface CreateEditPermissionFormProps {
   student: IStudent;
   permissionForms: IPermissionForm[];
   onFormCancel: () => void;
+  onFormSave: () => void;
+  classId: string;
 }
 
-export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCancel }: CreateEditPermissionFormProps) => {
+export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCancel, onFormSave, classId }: CreateEditPermissionFormProps) => {
   const [localPermissions, setLocalPermissions] = useState(student.permission_forms || {});
+  const [idsToRemove, setIdsToRemove] = useState<string[]>([]);
+  const [idsToAdd, setIdsToAdd] = useState<string[]>([]);
 
   useEffect(() => setLocalPermissions(student.permission_forms), []);
 
+  // whenever a permission checkbox changes we figure out if it represents an add or a remove
+  // we update the form state and the idsToAdd and idsToRemove arrays accordingly
   const handlePermissionChange = (changedPermissionId: string) => {
     const shouldAddPermission = !localPermissions.some(lp => lp.id === changedPermissionId);
     const shouldRemovePermission = localPermissions.some(lp => lp.id === changedPermissionId);
@@ -23,11 +29,15 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
 
     if (shouldAddPermission) {
       const permissionToAdd = permissionForms.find(pf => pf.id === changedPermissionId);
-      if (permissionToAdd) newPermissions = [...localPermissions, permissionToAdd];
+      if (permissionToAdd) {
+        newPermissions = [...localPermissions, permissionToAdd];
+        setIdsToAdd([...idsToAdd, changedPermissionId]);
+      }
     }
 
     if (shouldRemovePermission) {
       newPermissions = localPermissions.filter(lp => lp.id !== changedPermissionId);
+      setIdsToRemove([...idsToRemove, changedPermissionId]);
     }
 
     const definedPermissions = newPermissions.filter((p): p is IPermissionForm => p !== undefined);
@@ -35,7 +45,20 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
   };
 
   const handleFormSave = async () => {
-    console.log("| save the changes: student:", student.id, "should have permissions: ",  localPermissions);
+    const response = await bulkUpdatePermissionForms({
+      classId,
+      selectedStudentIds: [student.id.toString()],
+      addFormIds: idsToAdd,
+      removeFormIds: idsToRemove
+    });
+
+    if (response) {
+      setIdsToAdd([]);
+      setIdsToRemove([]);
+      onFormSave();
+    } else {
+      alert("Failed to update permission forms");
+    }
   };
 
   // Check if there are any changes to the permissions so we know whether to enable the save button
