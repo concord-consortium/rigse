@@ -34,7 +34,6 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
     setLocalPermissions(definedPermissions);
   };
 
-
   const handleFormSave = async () => {
     console.log("| save the changes: student:", student.id, "should have permissions: ",  localPermissions);
   };
@@ -70,7 +69,7 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
           Cancel
         </button>
         <button disabled={!hasChanges} className={css.saveChangesButton} onClick={handleFormSave}>
-          { isSaving ? 'Saving...' : 'Save Changes' }
+          Save Changes
         </button>
       </div>
     </div>

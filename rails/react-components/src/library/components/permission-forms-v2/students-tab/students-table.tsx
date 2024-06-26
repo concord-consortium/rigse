@@ -25,7 +25,6 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
   const [editStudent, setEditStudent] = useState<IStudent | null>(null);
 
-
   // When preparing the options for the Select component, we need to filter out the permission forms that are already
   // selected to add or remove in the opposite dropdown. Both permissionFormsToAdd and permissionFormsToRemove need
   // to be mutually exclusive.
@@ -83,10 +82,6 @@ export const StudentsTable = ({ classId }: IProps) => {
     if (student) {
       setEditStudent(student);
     }
-  };
-
-  const handleStudentPermissionFormSave = (newPermissionForms: IPermissionForm[]) => {
-    // Update the student's permission forms via the API
   };
 
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
