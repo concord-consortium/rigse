@@ -40,7 +40,8 @@ class API::V1::PermissionFormsController < API::APIController
       return render json: []
     end
 
-    value = "%#{params[:name]}%"
+    # Use sanitize_sql_like to escape special characters
+    value = "%#{ActiveRecord::Base.sanitize_sql_like(params[:name])}%"
 
     teachers = Pundit.policy_scope(current_user, Portal::Teacher)
       .joins(:user)

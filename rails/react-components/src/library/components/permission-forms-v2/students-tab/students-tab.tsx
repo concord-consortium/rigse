@@ -18,7 +18,8 @@ const searchTeachers = async (name: string) =>
 export default function StudentsTab() {
   // Fetch projects (with refetch function) on initial load
   const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
-  const [teachers, setTeachers] = useState<ITeacher[]>([]);
+  // `null` means no search has been done yet, while an empty array means no results were found.
+  const [teachers, setTeachers] = useState<ITeacher[] | null>(null);
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
   const[teacherName, setTeacherName] = useState<string>("");
 
@@ -34,6 +35,7 @@ export default function StudentsTab() {
   };
 
   const handleSearchClick = async () => {
+    setSelectedTeacherId(null);
     setTeachers(await searchTeachers(teacherName));
   };
 
@@ -60,27 +62,32 @@ export default function StudentsTab() {
           </div>
         </div>
       </div>
-
       {
-        teachers.length > 0 &&
+        teachers && teachers.length === 0 &&
+        <div className={css.noResults}>No teachers found.</div>
+      }
+      {
+        teachers && teachers.length > 0 &&
         <table className={css.teachersTable}>
           <thead>
-            <tr><th>Teacher Name</th><th>Teacher Email</th><th>Teacher Login</th><th></th></tr>
+            <tr><th>Teacher Name</th><th>Teacher Email</th><th>Teacher Login</th><th className={css.expandButton} /></tr>
           </thead>
           <tbody>
             {
-              teachers.map(teacher => {
+              teachers.map((teacher, idx) => {
                 const active = selectedTeacherId === teacher.id;
+                // Typical pattern with CSS nth-child won't work, as we inject additional row when user expands a teacher.
+                const background = idx % 2 === 1;
                 return (
                   <React.Fragment key={teacher.id}>
-                    <tr className={clsx({ [css.activeRow]: active })}>
+                    <tr className={clsx({ [css.activeRow]: active, [css.rowWithBackground]: background })}>
                       <td>{ teacher.name }</td>
                       <td>{ teacher.email }</td>
                       <td>{ teacher.login }</td>
-                      <td>
+                      <td className={css.expandButton}>
                         <LinkButton onClick={() => handleViewClassesClick(teacher.id)} active={active}>
                           {
-                            active ? "Hide Classes" : "View Classes"
+                            active ? "Hide Classes" : "Show Classes"
                           }
                           {
                             active ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />
@@ -90,7 +97,7 @@ export default function StudentsTab() {
                     </tr>
                     {
                       active &&
-                      <tr className={css.expanded}>
+                      <tr className={clsx({ [css.rowWithBackground]: background })}>
                         <td colSpan={4}>
                           <ClassesTable teacherId={teacher.id} currentSelectedProject={currentSelectedProject} />
                         </td>

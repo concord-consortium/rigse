@@ -53,25 +53,25 @@
     }
   }
 
+  .noResults {
+    font-weight: 500;
+  }
+
   .teachersTable {
     & > tbody > tr > td {
-      &:first-child {
-        padding-left: 5px;
-      }
-      &:last-child {
-        padding-right: 5px;
-      }
+      max-width: 230px;
+    }
+
+    .expandButton {
+      width: 115px;
     }
 
     .activeRow {
       font-weight: 500;
     }
 
-    tr.expanded:nth-child(odd) {
+    .rowWithBackground {
       background-color: #f1f1f1;
-    }
-    tr.expanded:nth-child(even) {
-      background-color: transparent;
     }
   }
 }

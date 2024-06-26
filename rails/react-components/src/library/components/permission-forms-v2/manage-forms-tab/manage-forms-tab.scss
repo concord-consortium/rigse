@@ -1,4 +1,5 @@
 @import "../../../../shared/styles/variables/variables";
+@import "./vars";
 
 .manageFormsTabContent {
   .controlsArea {
@@ -33,5 +34,21 @@
     .rightSide {
       justify-content: flex-end;
     }
+  }
+
+  tr {
+    &:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+  }
+
+  .editColumn {
+    width: $editColumnWidth;
+  }
+  .archiveColumn {
+    width: $archiveColumnWidth;
+  }
+  .deleteColumn {
+    width: $deleteColumnWidth;
   }
 }

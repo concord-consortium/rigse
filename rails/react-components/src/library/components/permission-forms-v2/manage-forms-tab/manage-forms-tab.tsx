@@ -109,7 +109,7 @@ export default function ManageFormsTab() {
 
       <table className={css.permissionFormsTable}>
         <thead>
-          <tr><th>Name</th><th>URL</th><th></th></tr>
+          <tr><th>Name</th><th>URL</th><th className={css.editColumn} /><th className={css.archiveColumn} /><th className={css.deleteColumn} /></tr>
         </thead>
         <tbody>
           {

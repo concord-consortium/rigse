@@ -14,13 +14,17 @@ table.studentsTable {
     }
   }
 
-  & > tbody > tr > td, & > thead > tr > th {
-    &:first-child {
-      padding-left: 5px;
-    }
-    &:last-child {
-      padding-right: 5px;
-    }
+  .checkboxColumn {
+    width: 35px;
+  }
+
+  .permissionFormsColumn {
+    width: 320px;
+  }
+
+  .expandButtonColumn {
+    width: 70px;
+    text-align: center;
   }
 
   input[type="checkbox"] {
@@ -37,6 +41,7 @@ table.studentsTable {
     border: transparent;
     text-transform: uppercase;
     font-weight: 300;
+    padding: 0;
 
     &:hover {
       color: $col-gold;
