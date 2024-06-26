@@ -45,7 +45,6 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [editStudent, setEditStudent] = useState<IStudent | null>(null);
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  console.log("| 🤔 what is studentsData", studentsData);
   const nonArchivedPermissionForms = nonArchived(permissionForms);
   const permissionFormToAddOptions = Object.freeze(
     nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
