@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { useFetch } from "../../../hooks/use-fetch";
+import { request } from "../../../helpers/api/request";
 import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
 
 import css from "./students-table.scss";
@@ -17,17 +18,31 @@ type PermissionFormOption = {
 
 const nonArchived = (forms: IPermissionForm[]) => forms.filter(form => !form.is_archived);
 
+const bulkUpdatePermissionForms = async (
+  { classId, selectedStudentIds, addFormIds, removeFormIds }:
+  { classId: string; selectedStudentIds: string[]; addFormIds: string[]; removeFormIds: string[]; }
+) =>
+  request({
+    url: Portal.API_V1.PERMISSION_FORMS_BULK_UPDATE,
+    method: "POST",
+    body: JSON.stringify({
+      class_id: classId,
+      student_ids: selectedStudentIds,
+      add_permission_form_ids: addFormIds,
+      remove_permission_form_ids: removeFormIds
+    })
+  });
+
 export const StudentsTable = ({ classId }: IProps) => {
-  const { data: studentsData, isLoading: studentsLoading } = useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
+  const { data: studentsData, isLoading: studentsLoading, refetch: refetchStudentsData } =
+    useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
   const { data: permissionForms, isLoading: permissionFormsLoading } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
   const [isStudentSelected, setIsStudentSelected] = useState<Record<string, boolean>>({});
   const [permissionFormsToAdd, setPermissionFormsToAdd] = useState<readonly PermissionFormOption[]>([]);
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
+  const [requestInProgress, setRequestInProgress] = useState(false);
 
   const nonArchivedPermissionForms = nonArchived(permissionForms);
-  // When preparing the options for the Select component, we need to filter out the permission forms that are already
-  // selected to add or remove in the opposite dropdown. Both permissionFormsToAdd and permissionFormsToRemove need
-  // to be mutually exclusive.
   const permissionFormToAddOptions = Object.freeze(
     nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
@@ -36,7 +51,8 @@ export const StudentsTable = ({ classId }: IProps) => {
     nonArchivedPermissionForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
-  if (studentsLoading) {
+  // studentsData.length === 0 prevents the "Loading..." message from showing up when the students are re-fetched after update.
+  if (studentsLoading && studentsData.length === 0) {
     return (<div>Loading...</div>);
   }
   if (!studentsData.length) {
@@ -75,6 +91,25 @@ export const StudentsTable = ({ classId }: IProps) => {
 
   const handlePermissionFormToRemoveSelectChange = (selectedOptions: readonly PermissionFormOption[]) => {
     setPermissionFormsToRemove(selectedOptions);
+  };
+
+  const handleSaveChanges = async () => {
+    setRequestInProgress(true);
+    const response = await bulkUpdatePermissionForms({
+      classId,
+      selectedStudentIds: Object.keys(isStudentSelected).filter(id => isStudentSelected[id]),
+      addFormIds: permissionFormsToAdd.map(form => form.value),
+      removeFormIds: permissionFormsToRemove.map(form => form.value)
+    });
+    setRequestInProgress(false);
+
+    if (response) {
+      refetchStudentsData();
+      setPermissionFormsToAdd([]);
+      setPermissionFormsToRemove([]);
+    } else {
+      alert("Failed to update permission forms");
+    }
   };
 
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
@@ -148,7 +183,16 @@ export const StudentsTable = ({ classId }: IProps) => {
                 </div>
               </div>
               <div>
-                <button className={css.saveChangesButton}>Save Changes</button>
+                <button
+                  className={css.saveChangesButton}
+                  onClick={handleSaveChanges}
+                  disabled={requestInProgress || selectedStudentsCount === 0 || permissionFormsToAdd.length === 0 && permissionFormsToRemove.length === 0}
+                >
+                  Save Changes
+                </button>
+                {
+                  requestInProgress && <span className={css.updateInProgress}>Updating...</span>
+                }
               </div>
             </div>
           </td>

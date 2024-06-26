@@ -93,11 +93,21 @@ table.studentsTable {
       margin-top: 10px;
       background-color: $col-blue;
       border-color: $col-blue;
+      display: inline-block;
 
       &:hover {
         background-color: $col-lightblue;
         border-color: $col-lightblue;
       }
+
+      &:disabled {
+        pointer-events: none;
+        filter: grayscale(1);
+      }
+    }
+
+    .updateInProgress {
+      margin-left: 10px;
     }
   }
 }

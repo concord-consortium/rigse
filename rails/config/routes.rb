@@ -494,6 +494,7 @@ RailsPortal::Application.routes.draw do
           collection do
             get :search_teachers
             get :class_permission_forms
+            post :bulk_update
           end
         end
       end

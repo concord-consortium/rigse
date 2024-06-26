@@ -71,7 +71,7 @@ class API::V1::PermissionFormsController < API::APIController
         id: student.id,
         name: student.user.name,
         login: student.user.login,
-        permission_forms: student.permission_forms.select(:id, :name, :is_archived).map do |form|
+        permission_forms: policy_scope(student.permission_forms).select(:id, :name, :is_archived).map do |form|
           {
             id: form.id,
             name: form.name,
@@ -82,6 +82,61 @@ class API::V1::PermissionFormsController < API::APIController
     end
 
     render json: permission_forms_data
+  end
+
+  # POST /api/v1/permission_forms/bulk_update
+  # Accepted params:
+  #   - class_id
+  #   - list of student IDs
+  #   - list of permission form IDs to add
+  #   - list of permission form IDs to remove
+  def bulk_update
+    class_id = params[:class_id]
+    student_ids = params[:student_ids]
+    add_permission_form_ids = params[:add_permission_form_ids] || []
+    remove_permission_form_ids = params[:remove_permission_form_ids] || []
+
+    # Verify that the specified class exists
+    clazz = Portal::Clazz.find(class_id)
+
+    # Ensure user has authorization for the specified class
+    authorize clazz, :class_permission_forms?
+
+    # Fetch the students that belong to the specified class
+    students = clazz.students.where(id: student_ids).includes(:permission_forms)
+
+    # Verify that all specified student IDs belong to the class
+    if students.length != student_ids.length
+      render json: { error: "Some students do not belong to the specified class" }, status: :unprocessable_entity
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      students.each do |student|
+        # Add permission forms
+        add_permission_form_ids.each do |form_id|
+          permission_form = Portal::PermissionForm.find(form_id)
+          next if student.permission_forms.exists?(form_id)
+          authorize permission_form, :update?
+          student.permission_forms << permission_form
+        end
+
+        # Remove permission forms
+        remove_permission_form_ids.each do |form_id|
+          permission_form = Portal::PermissionForm.find(form_id)
+          if student.permission_forms.exists?(form_id)
+            authorize permission_form, :update?
+            student.permission_forms.delete(permission_form)
+          end
+        end
+      end
+    end
+
+    render json: { message: "Bulk update successful" }
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { error: e.message }, status: :not_found
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private
