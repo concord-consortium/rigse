@@ -50,7 +50,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
     if user.is_project_admin? || user.is_project_researcher?
       sql = Portal::TeacherPolicy.teacher_query(user)
       teacher_ids = Portal::Teacher.connection.select_values(sql)
-      return teacher_ids.include?(record.id.to_s)
+      return teacher_ids.include?(record.id)
     end
 
     false

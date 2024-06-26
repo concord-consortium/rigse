@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import { useFetch } from "../../../hooks/use-fetch";
+import { request } from "../../../helpers/api/request";
 import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
 
 import css from "./students-table.scss";
@@ -17,26 +18,44 @@ type PermissionFormOption = {
   label: string;
 };
 
+const nonArchived = (forms: IPermissionForm[]) => forms.filter(form => !form.is_archived);
+
+const bulkUpdatePermissionForms = async (
+  { classId, selectedStudentIds, addFormIds, removeFormIds }:
+  { classId: string; selectedStudentIds: string[]; addFormIds: string[]; removeFormIds: string[]; }
+) =>
+  request({
+    url: Portal.API_V1.PERMISSION_FORMS_BULK_UPDATE,
+    method: "POST",
+    body: JSON.stringify({
+      class_id: classId,
+      student_ids: selectedStudentIds,
+      add_permission_form_ids: addFormIds,
+      remove_permission_form_ids: removeFormIds
+    })
+  });
+
 export const StudentsTable = ({ classId }: IProps) => {
-  const { data: studentsData, isLoading: studentsLoading } = useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
+  const { data: studentsData, isLoading: studentsLoading, refetch: refetchStudentsData } =
+    useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
   const { data: permissionForms, isLoading: permissionFormsLoading } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
   const [isStudentSelected, setIsStudentSelected] = useState<Record<string, boolean>>({});
   const [permissionFormsToAdd, setPermissionFormsToAdd] = useState<readonly PermissionFormOption[]>([]);
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
   const [editStudent, setEditStudent] = useState<IStudent | null>(null);
+  const [requestInProgress, setRequestInProgress] = useState(false);
 
-  // When preparing the options for the Select component, we need to filter out the permission forms that are already
-  // selected to add or remove in the opposite dropdown. Both permissionFormsToAdd and permissionFormsToRemove need
-  // to be mutually exclusive.
+  const nonArchivedPermissionForms = nonArchived(permissionForms);
   const permissionFormToAddOptions = Object.freeze(
-    permissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
+    nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
   const permissionFormToRemoveOptions = Object.freeze(
-    permissionForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
+    nonArchivedPermissionForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
-  if (studentsLoading) {
+  // studentsData.length === 0 prevents the "Loading..." message from showing up when the students are re-fetched after update.
+  if (studentsLoading && studentsData.length === 0) {
     return (<div>Loading...</div>);
   }
   if (!studentsData.length) {
@@ -84,88 +103,111 @@ export const StudentsTable = ({ classId }: IProps) => {
     }
   };
 
+  const handleSaveChanges = async () => {
+    setRequestInProgress(true);
+    const response = await bulkUpdatePermissionForms({
+      classId,
+      selectedStudentIds: Object.keys(isStudentSelected).filter(id => isStudentSelected[id]),
+      addFormIds: permissionFormsToAdd.map(form => form.value),
+      removeFormIds: permissionFormsToRemove.map(form => form.value)
+    });
+    setRequestInProgress(false);
+
+    if (response) {
+      refetchStudentsData();
+      setPermissionFormsToAdd([]);
+      setPermissionFormsToRemove([]);
+    } else {
+      alert("Failed to update permission forms");
+    }
+  };
+
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
   return (
-    <>
-      <table className={css.studentsTable}>
-        <thead>
-          <tr>
-            <th><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
-            <th>Student Name</th>
-            <th>Username</th>
-            <th>Permission Forms</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            studentsData.map((studentInfo) => {
-              return (
-                <tr key={studentInfo.id}>
-                  <td><input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} /></td>
-                  <td>{ studentInfo.name }</td>
-                  <td>{ studentInfo.login }</td>
-                  <td>{ studentInfo.permission_forms.map(pf => pf.name).join(", ") }</td>
-                  <button className={css.basicButton} onClick={() => handleEditClick(studentInfo.id)}>Edit</button>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={5}>
-              <div className={css.tableFooter}>
-                <div className={css.summary}>
-                  { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
+    <table className={css.studentsTable}>
+      <thead>
+        <tr>
+          <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
+          <th>Student Name</th>
+          <th>Username</th>
+          <th className={css.permissionFormsColumn}>Permission Forms</th>
+          <th className={css.expandButtonColumn}></th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          studentsData.map((studentInfo) => {
+            return (
+              <tr key={studentInfo.id}>
+                <td className={css.checkboxColumn}>
+                  <input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
+                </td>
+                <td>{ studentInfo.name }</td>
+                <td>{ studentInfo.login }</td>
+                <td className={css.permissionFormsColumn}>{ nonArchived(studentInfo.permission_forms).map(pf => pf.name).join(", ") }</td>
+                <td className={css.expandButtonColumn}><button className={css.basicButton}>Edit</button></td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colSpan={5}>
+            <div className={css.tableFooter}>
+              <div className={css.summary}>
+                { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
+              </div>
+              <div className={css.permissionFormSelects}>
+                <div className={css.selectContainer}>
+                  Add:
+                  <Select<PermissionFormOption, true>
+                    classNames={{
+                      option: () => css.permissionFormSelectOption
+                    }}
+                    className={css.permissionFormSelect}
+                    options={permissionFormToAddOptions}
+                    isMulti={true}
+                    placeholder="Select permission form(s)..."
+                    isLoading={permissionFormsLoading}
+                    value={permissionFormsToAdd}
+                    onChange={handlePermissionFormToAddSelectChange}
+                  />
                 </div>
-                <div className={css.permissionFormSelects}>
-                  <div className={css.selectContainer}>
-                    Add:
-                    <Select<PermissionFormOption, true>
-                      className={css.permissionFormSelect}
-                      // TODO: temporarily ignoring typing issue that I cannot understand
-                      options={permissionFormToAddOptions}
-                      isMulti={true}
-                      placeholder="Select permission form(s)..."
-                      isLoading={permissionFormsLoading}
-                      value={permissionFormsToAdd}
-                      onChange={handlePermissionFormToAddSelectChange}
-                    />
-                  </div>
-                  <div className={css.selectContainer}>
-                    Remove:
-                    <Select<PermissionFormOption, true>
-                      className={css.permissionFormSelect}
-                      // TODO: temporarily ignoring typing issue that I cannot understand
-                      options={permissionFormToRemoveOptions}
-                      isMulti={true}
-                      placeholder="Select permission form(s)..."
-                      isLoading={permissionFormsLoading}
-                      value={permissionFormsToRemove}
-                      onChange={handlePermissionFormToRemoveSelectChange}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <button className={css.saveChangesButton}>Save Changes</button>
+                <div className={css.selectContainer}>
+                  Remove:
+                  <Select<PermissionFormOption, true>
+                    classNames={{
+                      option: () => css.permissionFormSelectOption
+                    }}
+                    className={css.permissionFormSelect}
+                    options={permissionFormToRemoveOptions}
+                    isMulti={true}
+                    placeholder="Select permission form(s)..."
+                    isLoading={permissionFormsLoading}
+                    value={permissionFormsToRemove}
+                    onChange={handlePermissionFormToRemoveSelectChange}
+                  />
                 </div>
               </div>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-      { editStudent &&
-        <ModalDialog borderColor="teal">
-          <EditStudentPermissionsForm
-            student={editStudent}
-            permissionForms={permissionForms}
-            onFormCancel={() => setEditStudent(null)}
-          />
-        </ModalDialog>
-      }
-    </>
+              <div>
+                <button
+                  className={css.saveChangesButton}
+                  onClick={handleSaveChanges}
+                  disabled={requestInProgress || selectedStudentsCount === 0 || permissionFormsToAdd.length === 0 && permissionFormsToRemove.length === 0}
+                >
+                  Save Changes
+                </button>
+                {
+                  requestInProgress && <span className={css.updateInProgress}>Updating...</span>
+                }
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   );
 };

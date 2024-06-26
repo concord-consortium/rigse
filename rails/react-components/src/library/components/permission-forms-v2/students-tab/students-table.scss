@@ -14,13 +14,27 @@ table.studentsTable {
     }
   }
 
-  & > tbody > tr > td, & > thead > tr > th {
-    &:first-child {
-      padding-left: 5px;
-    }
-    &:last-child {
-      padding-right: 5px;
-    }
+  & > tfoot > tr > td {
+    // Necessary for dropdown to work correctly.
+    overflow: visible;
+  }
+
+  .permissionFormSelectOption {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .checkboxColumn {
+    width: 35px;
+  }
+
+  .permissionFormsColumn {
+    width: 320px;
+  }
+
+  .expandButtonColumn {
+    width: 70px;
+    text-align: center;
   }
 
   input[type="checkbox"] {
@@ -37,6 +51,7 @@ table.studentsTable {
     border: transparent;
     text-transform: uppercase;
     font-weight: 300;
+    padding: 0;
 
     &:hover {
       color: $col-gold;
@@ -78,11 +93,21 @@ table.studentsTable {
       margin-top: 10px;
       background-color: $col-blue;
       border-color: $col-blue;
+      display: inline-block;
 
       &:hover {
         background-color: $col-lightblue;
         border-color: $col-lightblue;
       }
+
+      &:disabled {
+        pointer-events: none;
+        filter: grayscale(1);
+      }
+    }
+
+    .updateInProgress {
+      margin-left: 10px;
     }
   }
 }

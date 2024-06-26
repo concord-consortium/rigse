@@ -44,7 +44,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
                   <td>
                     <LinkButton onClick={() => handleViewStudentsClick(classInfo.id)} active={active}>
                       {
-                        active ? "Hide Students" : "View Students"
+                        active ? "Hide Students" : "Show Students"
                       }
                       {
                         active ? <i className="icon-caret-up" /> : <i className="icon-caret-down" />
@@ -55,7 +55,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
                 {
                   active &&
                   <tr>
-                    <td colSpan={3}>
+                    <td colSpan={3} className={css.studentsTableRow}>
                       <StudentsTable classId={classInfo.id} currentSelectedProject={currentSelectedProject} />
                     </td>
                   </tr>
