@@ -53,7 +53,7 @@ class Portal::ClazzPolicy < ApplicationPolicy
   # Used by Portal::API::V1::PermissionFormsController:
 
   def class_permission_forms?
-    admin? || class_project_admin? || class_researcher?
+    admin? || class_teacher? || class_project_admin? || class_researcher?
   end
 
   private
