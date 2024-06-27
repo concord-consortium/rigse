@@ -26,7 +26,7 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.can_manage_permission_forms?
+    manager_or_researcher_or_project_researcher?
   end
 
   def external_report_query?
@@ -46,6 +46,10 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   # API::V1::PermissionFormsController:
+
+  def permission_forms_v2_index?
+    user && user.can_manage_permission_forms?
+  end
 
   def projects?
     user && user.can_manage_permission_forms?

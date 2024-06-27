@@ -5,6 +5,6 @@ class Admin::PermissionFormsV2Controller < ApplicationController
   end
 
   def index
-    authorize Portal::PermissionForm
+    authorize Portal::PermissionForm, :permission_forms_v2_index?
   end
 end
