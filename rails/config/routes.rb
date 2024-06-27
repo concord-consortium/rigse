@@ -323,9 +323,6 @@ RailsPortal::Application.routes.draw do
         devise_for :users
         resources :countries
         resources :projects, only: [:index, :show] do
-          collection do
-            get :index_with_permissions
-          end
         end
         resources :teachers do
           collection do
@@ -494,6 +491,7 @@ RailsPortal::Application.routes.draw do
           collection do
             get :search_teachers
             get :class_permission_forms
+            get :projects
             post :bulk_update
           end
         end

@@ -45,7 +45,7 @@ const sortForms = (forms: IPermissionForm[]) => forms.sort((a, b) => {
 export default function ManageFormsTab() {
   // Fetch projects and permission forms (with refetch function) on initial load
   const { data: permissionsData, refetch: refetchPermissions } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
-  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
+  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PERMISSION_FORMS_PROJECTS, []);
 
   // State for UI
   const [showCreateNewFormModal, setShowCreateNewFormModal] = useState(false);

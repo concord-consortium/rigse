@@ -303,7 +303,7 @@ describe User do
       user.add_role_for_project('admin', project)
     end
 
-    it "should be a project admin for the project now " do
+    it "should be a project admin for the project now" do
       expect(user.is_project_admin?(project)).to eq true
     end
 
@@ -311,9 +311,11 @@ describe User do
       before(:each) do
         user.add_role_for_project('admin', project)
       end
-      it "should still be an admin of the project " do
+
+      it "should still be an admin of the project" do
         expect(user.is_project_admin?(project)).to eq true
       end
+
       it "should only be admin for one project" do
         expect(user.admin_for_projects.size).to eq(1)
       end
@@ -321,21 +323,45 @@ describe User do
 
     describe "when expiration date for researcher role is set and it's not expired" do
       before(:each) do
-        user.add_role_for_project('researcher', project, Time.now + 1.day)
+        user.add_role_for_project('researcher', project, expiration_date: Time.now + 1.day)
       end
-      it "should be a project researcher for the project now " do
+
+      it "should be a project researcher for the project now" do
         expect(user.is_project_researcher?(project)).to eq true
-        expect(user.is_project_researcher?(project, true)).to eq true # allow_expired=true
+        expect(user.is_project_researcher?(project, allow_expired: true)).to eq true
       end
     end
 
     describe "when expiration date for researcher role is set and it's expired" do
       before(:each) do
-        user.add_role_for_project('researcher', project, Time.now - 1.day)
+        user.add_role_for_project('researcher', project, expiration_date: Time.now - 1.day)
       end
-      it "should not be a project researcher for the project now " do
+
+      it "should not be a project researcher for the project now" do
         expect(user.is_project_researcher?(project)).to eq false
-        expect(user.is_project_researcher?(project, true)).to eq true # allow_expired=true
+        expect(user.is_project_researcher?(project, allow_expired: true)).to eq true
+      end
+    end
+
+    describe "when can_manage_permission_forms is set for researcher role" do
+      before(:each) do
+        user.add_role_for_project('researcher', project, can_manage_permission_forms: true)
+      end
+
+      it "should be a project researcher for the project now and can manage permission forms" do
+        expect(user.is_project_researcher?(project)).to eq true
+        expect(user.is_project_researcher?(project, check_can_manage_permission_forms: true)).to eq true
+      end
+    end
+
+    describe "when can_manage_permission_forms is not set for researcher role" do
+      before(:each) do
+        user.add_role_for_project('researcher', project, can_manage_permission_forms: false)
+      end
+
+      it "should be a project researcher for the project now but cannot manage permission forms" do
+        expect(user.is_project_researcher?(project)).to eq true
+        expect(user.is_project_researcher?(project, check_can_manage_permission_forms: true)).to eq false
       end
     end
   end
@@ -361,6 +387,67 @@ describe User do
       end
       it "should only be admin for no projects" do
         expect(user.admin_for_projects.size).to eq(0)
+      end
+    end
+  end
+
+  describe "#expiration_date_for_project" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:user) { FactoryBot.create(:user) }
+
+    it "returns nil if the user is not a researcher for the project" do
+      expect(user.expiration_date_for_project(project)).to be_nil
+    end
+
+    context "when the user is a researcher for the project with expiration date set" do
+      let(:date) { Time.zone.parse("2030-01-01") }
+      before { user.add_role_for_project('researcher', project, expiration_date: date) }
+
+      it "returns the expiration date for the project researcher role" do
+        expect(user.expiration_date_for_project(project)).to eq(date)
+      end
+    end
+  end
+
+  describe "#can_manage_permission_forms?" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:user) { FactoryBot.create(:user) }
+
+    context "when the user is an admin" do
+      before { user.add_role('admin') }
+
+      it "returns true" do
+        expect(user.can_manage_permission_forms?(project)).to eq(true)
+      end
+    end
+
+    context "when the user is a project admin" do
+      before { user.add_role_for_project('admin', project) }
+
+      it "returns true" do
+        expect(user.can_manage_permission_forms?(project)).to eq(true)
+      end
+    end
+
+    context "when the user is a project researcher with permission to manage forms" do
+      before { user.add_role_for_project('researcher', project, can_manage_permission_forms: true) }
+
+      it "returns true" do
+        expect(user.can_manage_permission_forms?(project)).to eq(true)
+      end
+    end
+
+    context "when the user is a project researcher without permission to manage forms" do
+      before { user.add_role_for_project('researcher', project) }
+
+      it "returns false" do
+        expect(user.can_manage_permission_forms?(project)).to eq(false)
+      end
+    end
+
+    context "when the user has no special roles for the project" do
+      it "returns false" do
+        expect(user.can_manage_permission_forms?(project)).to eq(false)
       end
     end
   end

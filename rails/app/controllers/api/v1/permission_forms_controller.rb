@@ -33,6 +33,15 @@ class API::V1::PermissionFormsController < API::APIController
     render :json => { :message => "Permission form deleted" }
   end
 
+  def projects
+    authorize Portal::PermissionForm
+    projects = policy_scope(Admin::Project)
+    filtered_projects = projects.select do |project|
+      current_user.can_manage_permission_forms?(project)
+    end
+    render json: filtered_projects
+  end
+
   def search_teachers
     authorize Portal::PermissionForm
 

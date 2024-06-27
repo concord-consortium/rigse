@@ -12,8 +12,11 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
           params[:admin_project_ids] = user.admin_for_projects.map { |p| p.id }
         end
         if user.is_project_researcher?
+          researcher_project_ids = user.researcher_for_projects.select do |project|
+            user.is_project_researcher?(project, check_can_manage_permission_forms: true)
+          end.map(&:id)
           where << "(project_id in (:researcher_project_ids))"
-          params[:researcher_project_ids] = user.researcher_for_projects.map { |p| p.id }
+          params[:researcher_project_ids] = researcher_project_ids
         end
         scope.where([where.join(" OR "), params])
       else
@@ -23,7 +26,7 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def index?
-    manager_or_researcher_or_project_researcher?
+    user && user.can_manage_permission_forms?
   end
 
   def external_report_query?
@@ -44,13 +47,16 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
 
   # API::V1::PermissionFormsController:
 
+  def projects?
+    user && user.can_manage_permission_forms?
+  end
+
   def create?
-    # In fact this method should be named: admin_or_project_admin_or_project_researcher
-    manager_or_researcher_or_project_researcher?
+    user && user.can_manage_permission_forms?
   end
 
   def update?
-    admin? || record && (project_admin?(record.project) || project_researcher?(record.project))
+    record && user && user.can_manage_permission_forms?(record.project)
   end
 
   def destroy?
@@ -58,7 +64,6 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def search_teachers?
-    # In fact this method should be named: admin_or_project_admin_or_project_researcher
-    manager_or_researcher_or_project_researcher?
+    user && user.can_manage_permission_forms?
   end
 end
