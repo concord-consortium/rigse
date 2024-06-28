@@ -23,6 +23,11 @@
     }
   }
 
+  // applies to the dialogs in student-roster
+  .registerAnotherStudentDialogContent, form {
+    padding: 20px;
+  }
+
   &.orange {
     border-color: #ea6d2f;
   }
