@@ -146,7 +146,7 @@ export const StudentsTable = ({ classId }: IProps) => {
             <th>Student Name</th>
             <th>Username</th>
             <th className={css.permissionFormsColumn} colSpan={2}>
-            <div role="button" onClick={handleClickPermissionExpandToggle}>
+              <div role="button" onClick={handleClickPermissionExpandToggle}>
                 Permission Forms
                 { permissionsExpanded
                   ? <i className="icon icon-caret-up"></i>
