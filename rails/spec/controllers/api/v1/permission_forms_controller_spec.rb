@@ -49,14 +49,14 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
     it 'returns an empty array if the name is blank' do
       get :search_teachers, params: { name: '' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to eq([])
+      expect(JSON.parse(response.body)["teachers"]).to eq([])
     end
 
     it 'returns a list of teachers with login matching the name' do
       teacher = FactoryBot.create(:teacher, user: FactoryBot.create(:user, login: 'test_teacher'))
       get :search_teachers, params: { name: 'test_teacher' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to match([
+      expect(JSON.parse(response.body)["teachers"]).to match([
         hash_including('id' => teacher.id, 'name' => teacher.user.name, 'email' => teacher.user.email, 'login' => teacher.user.login)
       ])
     end
@@ -65,7 +65,7 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       teacher = FactoryBot.create(:teacher, user: FactoryBot.create(:user, email: 'test_teacher@mail.com'))
       get :search_teachers, params: { name: 'test_teacher' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to match([
+      expect(JSON.parse(response.body)["teachers"]).to match([
         hash_including('id' => teacher.id, 'name' => teacher.user.name, 'email' => teacher.user.email, 'login' => teacher.user.login)
       ])
     end
@@ -74,13 +74,13 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       teacher = FactoryBot.create(:teacher, user: FactoryBot.create(:user, first_name: 'John', last_name: 'Doe'))
       get :search_teachers, params: { name: 'John' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to match([
+      expect(JSON.parse(response.body)["teachers"]).to match([
         hash_including('id' => teacher.id, 'name' => teacher.user.name, 'email' => teacher.user.email, 'login' => teacher.user.login)
       ])
 
       get :search_teachers, params: { name: 'Doe' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to match([
+      expect(JSON.parse(response.body)["teachers"]).to match([
         hash_including('id' => teacher.id, 'name' => teacher.user.name, 'email' => teacher.user.email, 'login' => teacher.user.login)
       ])
     end
@@ -89,11 +89,20 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       teacher = FactoryBot.create(:teacher, user: FactoryBot.create(:user, login: 'test_teacher'))
       get :search_teachers, params: { name: 't__t_teacher' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to eq([])
+      expect(JSON.parse(response.body)["teachers"]).to eq([])
 
       get :search_teachers, params: { name: 't%t_teacher' }
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).to eq([])
+      expect(JSON.parse(response.body)["teachers"]).to eq([])
+    end
+
+    it 'returns a list of teachers with provided limit' do
+      FactoryBot.create_list(:teacher, 5, user: FactoryBot.create(:user, login: 'test_teacher'))
+      get :search_teachers, params: { name: 'test_teacher', limit: 3 }
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)["teachers"].size).to eq(3)
+      expect(JSON.parse(response.body)["limit_applied"]).to eq(true)
+      expect(JSON.parse(response.body)["total_teachers_count"]).to eq(5)
     end
   end
 
@@ -134,8 +143,8 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
 
       expect(response).to have_http_status(:ok)
       body = JSON.parse(response.body)
-      expect(body.size).to eq(1)
-      expect(JSON.parse(response.body)).to match([
+      expect(body["teachers"].size).to eq(1)
+      expect(body["teachers"]).to match([
         hash_including('id' => teacher1.id)
       ])
     end
@@ -218,8 +227,8 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
 
       expect(response).to have_http_status(:ok)
       body = JSON.parse(response.body)
-      expect(body.size).to eq(1)
-      expect(JSON.parse(response.body)).to match([
+      expect(body["teachers"].size).to eq(1)
+      expect(body["teachers"]).to match([
         hash_including('id' => teacher1.id)
       ])
     end

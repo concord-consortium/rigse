@@ -105,8 +105,8 @@
     PERMISSION_FORMS: "#{api_v1_permission_forms_path}",
     PERMISSION_FORMS_PROJECTS: "#{projects_api_v1_permission_forms_path}",
     PERMISSION_FORMS_SEARCH_TEACHER: "#{search_teachers_api_v1_permission_forms_path}",
-    permissionFormsSearchTeacher(name) {
-      return this.PERMISSION_FORMS_SEARCH_TEACHER + "?name=" + name;
+    permissionFormsSearchTeacher(name, limit = 50) {
+      return this.PERMISSION_FORMS_SEARCH_TEACHER + "?name=" + name + "&limit=" + limit;
     },
     PERMISSION_FORMS_CLASS_PERMISSION_FORMS: "#{class_permission_forms_api_v1_permission_forms_path}",
     permissionFormsClassPermissionForms(classId) {
