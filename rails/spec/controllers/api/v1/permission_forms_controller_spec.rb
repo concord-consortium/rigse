@@ -193,7 +193,6 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       Portal::PermissionForm.create!(name: 'Test Form 2', url: 'http://example2.com', project_id: another_project.id)
       get :index
       expect(response).to have_http_status(:ok)
-      puts JSON.parse(response.body)
       expect(JSON.parse(response.body).size).to eq(1)
       expect(JSON.parse(response.body)).to match([
         hash_including('name' => 'Test Form 1', 'url' => 'http://example1.com', 'project_id' => project.id)
