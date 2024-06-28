@@ -106,21 +106,23 @@ export default class StudentRoster extends React.Component<any, any> {
 
   handleRegisterAnotherStudent () {
     this.setState({
-      showRegisterStudentModal: true,
-      showRegisterAnotherStudentModal: false
+      showRegisterStudentModal: false,
+      showRegisterAnotherStudentModal: true
     });
   }
 
   renderRegisterAnotherModal () {
     return (
-      <ModalDialog title="Success! The student was registered and added to the class">
-        <p>
-          Do you wish to register and add another student?
-        </p>
-        <p className={modalDialogCSS.buttons}>
-          <button onClick={this.handleRegisterAnotherStudent}>Add Another Student</button>
-          <button onClick={this.handleToggleRegisterAnotherModal}>Cancel</button>
-        </p>
+      <ModalDialog title="Success! The student was registered and added to the class" borderColor="orange">
+        <div className={modalDialogCSS.registerAnotherStudentDialogContent}>
+          <p>
+            Do you wish to register and add another student?
+          </p>
+          <p className={modalDialogCSS.buttons}>
+            <button onClick={this.handleRegisterAnotherStudent}>Add Another Student</button>
+            <button onClick={this.handleToggleRegisterAnotherModal}>Cancel</button>
+          </p>
+        </div>
       </ModalDialog>
     );
   }

@@ -48,7 +48,7 @@ export default class RegisterStudentModal extends React.Component<any, any> {
 
   render () {
     return (
-      <ModalDialog title="Register & Add New Student">
+      <ModalDialog title="Register & Add New Student" borderColor="orange">
         <form onSubmit={this.handleSubmit}>
           <table>
             <tbody>
