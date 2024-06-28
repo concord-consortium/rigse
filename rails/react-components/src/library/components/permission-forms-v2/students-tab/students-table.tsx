@@ -128,7 +128,7 @@ export const StudentsTable = ({ classId }: IProps) => {
   const handleSaveStudentPermissionsSuccess = async () => {
     setEditStudent(null);
     refetchStudentsData();
-  }
+  };
 
   const handleClickPermissionExpandToggle = () => {
     setPermissionsExpanded(!permissionsExpanded);
@@ -139,7 +139,7 @@ export const StudentsTable = ({ classId }: IProps) => {
 
   return (
     <>
-      <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ''}`}>
+      <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ""}`}>
         <thead>
           <tr>
             <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
