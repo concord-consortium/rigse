@@ -59,7 +59,7 @@ describe Admin::PermissionFormsController do
     describe "when user is a project researcher" do
       let(:user) do
         user = FactoryBot.create(:confirmed_user)
-        user.add_role_for_project('researcher', @project2)
+        user.add_role_for_project('researcher', @project2, can_manage_permission_forms: true)
         user
       end
 

@@ -12,11 +12,8 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
           params[:admin_project_ids] = user.admin_for_projects.map { |p| p.id }
         end
         if user.is_project_researcher?
-          researcher_project_ids = user.researcher_for_projects.select do |project|
-            user.is_project_researcher?(project, check_can_manage_permission_forms: true)
-          end.map(&:id)
           where << "(project_id in (:researcher_project_ids))"
-          params[:researcher_project_ids] = researcher_project_ids
+          params[:researcher_project_ids] = user.researcher_for_projects.map { |p| p.id }
         end
         scope.where([where.join(" OR "), params])
       else
