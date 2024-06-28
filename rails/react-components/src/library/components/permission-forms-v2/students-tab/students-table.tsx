@@ -149,8 +149,8 @@ export const StudentsTable = ({ classId }: IProps) => {
             <div role="button" onClick={handleClickPermissionExpandToggle}>
                 Permission Forms
                 { permissionsExpanded
-                  ? <i className="icon icon-caret-down"></i>
-                  : <i className="icon icon-caret-up"></i>
+                  ? <i className="icon icon-caret-up"></i>
+                  : <i className="icon icon-caret-down"></i>
                 }
               </div>
             </th>
