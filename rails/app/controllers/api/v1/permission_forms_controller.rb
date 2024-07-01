@@ -47,15 +47,29 @@ class API::V1::PermissionFormsController < API::APIController
     authorize Portal::PermissionForm
 
     if params[:name].blank?
-      return render json: []
+      return render json: {
+        teachers: [],
+        total_teachers_count: 0,
+        limit_applied: false
+      }
     end
+
+    # Set default limit to 50 if not provided
+    limit = params[:limit].present? ? params[:limit].to_i : 50
 
     # Use sanitize_sql_like to escape special characters
     value = "%#{ActiveRecord::Base.sanitize_sql_like(params[:name])}%"
 
-    teachers = Pundit.policy_scope(current_user, Portal::Teacher)
+    base_query = Pundit.policy_scope(current_user, Portal::Teacher)
       .joins(:user)
       .where("users.login LIKE :value OR users.first_name LIKE :value OR users.last_name LIKE :value OR users.email LIKE :value", value: value)
+      .order("users.first_name, users.last_name")
+
+    # Get total count of matching teachers
+    total_teachers_count = base_query.count
+
+    # Get the limited set of teachers
+    teachers = base_query.limit(limit)
 
     teacher_data = teachers.map do |teacher|
       {
@@ -66,7 +80,13 @@ class API::V1::PermissionFormsController < API::APIController
       }
     end
 
-    render json: teacher_data
+    result = {
+      teachers: teacher_data,
+      total_teachers_count: total_teachers_count,
+      limit_applied: total_teachers_count > limit
+    }
+
+    render json: result
   end
 
   def class_permission_forms
@@ -74,7 +94,7 @@ class API::V1::PermissionFormsController < API::APIController
 
     authorize clazz, :class_permission_forms?
 
-    students = clazz.students.includes(:permission_forms)
+    students = clazz.students.includes(:permission_forms, :user).order("users.first_name, users.last_name")
 
     permission_forms_data = students.map do |student|
       {

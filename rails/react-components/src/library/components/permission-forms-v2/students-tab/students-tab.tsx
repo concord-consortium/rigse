@@ -9,9 +9,16 @@ import { ClassesTable } from "./classes-table";
 
 import css from "./students-tab.scss";
 
+// This param is used mostly for testing purposes. It allows to set a custom limit for the number of results,
+// so staging environments can test how the search behaves when limit is reached.
+const getTeachersLimit = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("teachersLimit") || 50;
+};
+
 const searchTeachers = async (name: string) =>
   request({
-    url: Portal.API_V1.permissionFormsSearchTeacher(name),
+    url: Portal.API_V1.permissionFormsSearchTeacher(name, getTeachersLimit()),
     method: "GET"
   });
 
@@ -20,6 +27,7 @@ export default function StudentsTab() {
   const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PERMISSION_FORMS_PROJECTS, []);
   // `null` means no search has been done yet, while an empty array means no results were found.
   const [teachers, setTeachers] = useState<ITeacher[] | null>(null);
+  const [teachersLimitApplied, setTeachersLimitApplied] = useState<boolean>(false);
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
   const[teacherName, setTeacherName] = useState<string>("");
 
@@ -36,7 +44,9 @@ export default function StudentsTab() {
 
   const handleSearchClick = async () => {
     setSelectedTeacherId(null);
-    setTeachers(await searchTeachers(teacherName));
+    const { teachers: foundTeachers, limit_applied } = await searchTeachers(teacherName);
+    setTeachers(foundTeachers);
+    setTeachersLimitApplied(limit_applied);
   };
 
   const handleViewClassesClick = (teacherId: string) => {
@@ -64,7 +74,13 @@ export default function StudentsTab() {
       </div>
       {
         teachers && teachers.length === 0 &&
-        <div className={css.noResults}>No teachers found.</div>
+        <div className={css.searchResultsNotice}>No teachers found.</div>
+      }
+      {
+        teachersLimitApplied &&
+        <div className={css.searchResultsNotice}>
+          Search results have been limited to { getTeachersLimit() } teachers. Please refine your search.
+        </div>
       }
       {
         teachers && teachers.length > 0 &&
