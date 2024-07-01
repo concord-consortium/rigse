@@ -33,18 +33,21 @@
         %li= link_to 'Users', users_path
 
   %div{ class: 'admin-links-cols__column' }
-    %h3
-      Project Admin & Authoring Links
-    %ul
-      - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
-        %li.trail=link_to('Authoring', authoring_path)
-      - if is_admin_or_project_admin_or_project_researcher
-        %li= link_to 'Permission Forms', admin_permission_forms_path
-        %li= link_to 'Permission Forms V2 (DEV ONLY)', admin_permission_forms_v2_index_path
-      - if is_admin_or_project_admin
-        %li= link_to 'Projects', admin_projects_path
-        %li= link_to 'Materials Collections', materials_collections_path
-        %li= link_to 'Users', users_path
+    - # if user can't even manage permission forms, don't show the section as it'd be empty
+    - can_manage_permission_forms = current_visitor.can_manage_permission_forms?
+    - if can_manage_permission_forms
+      %h3
+        Project Admin & Authoring Links
+      %ul
+        - if current_visitor.has_role?('admin', 'manager', 'researcher', 'author')
+          %li.trail=link_to('Authoring', authoring_path)
+        - if can_manage_permission_forms
+          %li= link_to 'Permission Forms', admin_permission_forms_path
+          %li= link_to 'Permission Forms V2 (DEV ONLY)', admin_permission_forms_v2_index_path
+        - if is_admin_or_project_admin
+          %li= link_to 'Projects', admin_projects_path
+          %li= link_to 'Materials Collections', materials_collections_path
+          %li= link_to 'Users', users_path
 
     - if current_visitor.has_role?('admin', 'manager','researcher') || current_visitor.is_project_admin? || current_visitor.is_project_researcher?
       %h3 Researcher Reports

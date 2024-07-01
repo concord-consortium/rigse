@@ -6,13 +6,6 @@ class API::V1::ProjectsController < API::APIController
     render json: result
   end
 
-  # Returns all the projects that user has a full access to.
-  def index_with_permissions
-    projects = policy_scope(Admin::Project)
-    result = projects.map { |p| project_to_hash(p) }
-    render json: result
-  end
-
   def show
     project = Admin::Project.find(params[:id])
     authorize project, :api_show?

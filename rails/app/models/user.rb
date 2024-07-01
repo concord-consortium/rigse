@@ -412,19 +412,34 @@ class User < ApplicationRecord
     end
   end
 
-  def is_project_researcher?(project=nil, allow_expired=false)
-    target_association = allow_expired ? researcher_for_projects_inc_expired : researcher_for_projects
+  def is_project_researcher?(project = nil, allow_expired: false, check_can_manage_permission_forms: false)
+    target_association = allow_expired ? _project_user_researchers_inc_expired : _project_user_researchers
 
-    if project
-      target_association.include? project
+    if check_can_manage_permission_forms
+      if project
+        target_association.where(project_id: project.id, can_manage_permission_forms: true).exists?
+      else
+        target_association.where(can_manage_permission_forms: true).exists?
+      end
     else
-      target_association.length > 0
+      if project
+        target_association.where(project_id: project.id).exists?
+      else
+        target_association.exists?
+      end
     end
   end
 
   def expiration_date_for_project(project)
     project_user = self.project_users.where(project_id: project.id, is_researcher: true).first
     project_user&.expiration_date
+  end
+
+  def can_manage_permission_forms?(project = nil, allow_expired: false)
+    return true if has_role?('admin')
+    return true if is_project_admin?(project)
+    return true if is_project_researcher?(project, allow_expired: allow_expired, check_can_manage_permission_forms: true)
+    return false
   end
 
   def is_project_cohort_member?(project=nil)
@@ -473,12 +488,13 @@ class User < ApplicationRecord
     false
   end
 
-  def add_role_for_project(role, project, expiration_date=nil)
+  def add_role_for_project(role, project, expiration_date: nil, can_manage_permission_forms: false)
     role_attribute = "is_#{role}"
     project_user = project_users.find_by_project_id project.id
     project_user ||= Admin::ProjectUser.create!(project_id: project.id, user_id: self.id)
     project_user[role_attribute] = true
     project_user.expiration_date = expiration_date
+    project_user.can_manage_permission_forms = can_manage_permission_forms
     project_user.save
   end
 
@@ -487,19 +503,25 @@ class User < ApplicationRecord
       role_attribute = "is_#{role}"
       project_user[role_attribute] = false
       project_user.expiration_date = nil
+      project_user.can_manage_permission_forms = false
       project_user.save
     end
   end
 
-  def set_role_for_projects(role, possible_projects, selected_project_ids, expiration_dates={})
-    possible_projects.each do |project|
-      if selected_project_ids.find { |id| id.to_i == project.id }
-        add_role_for_project(role,project, expiration_dates[project.id.to_s])
-      else
-        remove_role_for_project(role,project)
-      end
+  def set_role_for_projects(role, possible_projects, selected_project_ids, expiration_dates={}, can_manage_permission_forms={})
+  possible_projects.each do |project|
+    if selected_project_ids.find { |id| id.to_i == project.id }
+      add_role_for_project(
+        role,
+        project,
+        expiration_date: expiration_dates[project.id.to_s],
+        can_manage_permission_forms: can_manage_permission_forms[project.id.to_s] == 'true'
+      )
+    else
+      remove_role_for_project(role, project)
     end
   end
+end
 
   # Class method for returning the memoized anonymous user
   #

@@ -2,35 +2,45 @@ class API::V1::PermissionFormsController < API::APIController
 
   # GET /api/v1/permission_forms/index
   def index
-    @permission_forms = policy_scope(Portal::PermissionForm)
-    render :json => @permission_forms
+    authorize Portal::PermissionForm, :permission_forms_v2_index?
+    permission_forms = managment_policy_scope(Portal::PermissionForm)
+    render :json => permission_forms
   end
 
   def create
     authorize Portal::PermissionForm
-    @permission_form = Portal::PermissionForm.new(permission_form_params)
-    if @permission_form.save
-      render :json => @permission_form
+    permission_form = Portal::PermissionForm.new(permission_form_params)
+    if permission_form.save
+      render :json => permission_form
     else
-      render :json => { :errors => @permission_form.errors }, :status => 422
+      render :json => { :errors => permission_form.errors }, :status => 422
     end
   end
 
   def update
-    @permission_form = Portal::PermissionForm.find(params[:id])
-    authorize @permission_form
-    if @permission_form.update(permission_form_params)
-      render :json => @permission_form
+    permission_form = Portal::PermissionForm.find(params[:id])
+    authorize permission_form
+    if permission_form.update(permission_form_params)
+      render :json => permission_form
     else
-      render :json => { :errors => @permission_form.errors }, :status => 422
+      render :json => { :errors => permission_form.errors }, :status => 422
     end
   end
 
   def destroy
-    @permission_form = Portal::PermissionForm.find(params[:id])
-    authorize @permission_form
-    @permission_form.destroy
+    permission_form = Portal::PermissionForm.find(params[:id])
+    authorize permission_form
+    permission_form.destroy
     render :json => { :message => "Permission form deleted" }
+  end
+
+  def projects
+    authorize Portal::PermissionForm
+    projects = policy_scope(Admin::Project)
+    filtered_projects = projects.select do |project|
+      current_user.can_manage_permission_forms?(project)
+    end
+    render json: filtered_projects
   end
 
   def search_teachers
@@ -71,7 +81,7 @@ class API::V1::PermissionFormsController < API::APIController
         id: student.id,
         name: student.user.name,
         login: student.user.login,
-        permission_forms: policy_scope(student.permission_forms).select(:id, :name, :is_archived).map do |form|
+        permission_forms: managment_policy_scope(student.permission_forms).select(:id, :name, :is_archived).map do |form|
           {
             id: form.id,
             name: form.name,
@@ -140,6 +150,18 @@ class API::V1::PermissionFormsController < API::APIController
   end
 
   private
+
+  # Default scope is too wide, we need extra filtering for project researchers.
+  # Pundint doesn't seem to be flexible enough to handle this, so we need to do it manually.
+  def managment_policy_scope(scope)
+    scope = policy_scope(scope)
+    if current_user.is_project_researcher?
+      researcher_project_ids = current_user._project_user_researchers.where(can_manage_permission_forms: true).pluck(:project_id)
+      scope.where(project_id: researcher_project_ids)
+    else
+      scope
+    end
+  end
 
   def permission_form_params
     params.require(:permission_form).permit(:name, :project_id, :url, :is_archived)

@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   public
 
   def new
-    #This method is called when a user tries to register as a member
+    # This method is called when a user tries to register as a member
     @user = User.new
   end
 
@@ -63,6 +63,7 @@ class UsersController < ApplicationController
       format.xml  { render :xml => @user }
     end
   end
+
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
@@ -134,11 +135,8 @@ class UsersController < ApplicationController
 
   def update
     if params[:commit] == "Cancel"
-
       redirect_to view_context.class_link_for_user
-
     else
-
       @user = User.find(params[:id])
       authorize @user
       respond_to do |format|
@@ -162,13 +160,15 @@ class UsersController < ApplicationController
             if params[:user][:has_projects_in_form]
               all_projects = Admin::Project.all
               expiration_dates = params[:user][:project_expiration_dates] || {}
+              can_manage_permission_forms = params[:user][:project_can_manage_permission_forms] || {}
               @user.set_role_for_projects('admin', all_projects, params[:user][:admin_project_ids] || [], expiration_dates)
-              @user.set_role_for_projects('researcher', all_projects, params[:user][:researcher_project_ids] || [], expiration_dates)
+              @user.set_role_for_projects('researcher', all_projects, params[:user][:researcher_project_ids] || [], expiration_dates, can_manage_permission_forms)
             end
           elsif current_visitor.is_project_admin?
             if params[:user][:has_projects_in_form]
               expiration_dates = params[:user][:project_expiration_dates] || {}
-              @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [], expiration_dates)
+              can_manage_permission_forms = params[:user][:project_can_manage_permission_forms] || {}
+              @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [], expiration_dates, can_manage_permission_forms)
             end
           end
 
@@ -221,7 +221,7 @@ class UsersController < ApplicationController
     render :plain => "#{params[:username]} logged in"
   end
 
-  #Used for activation of users by a manager/admin
+  # Used for activation of users by a manager/admin
   def confirm
     user = User.find(params[:id])
     authorize user
@@ -258,7 +258,8 @@ class UsersController < ApplicationController
       respond_to do |format|
         if params[:user][:has_projects_in_form]
           expiration_dates = params[:user][:project_expiration_dates] || {}
-          @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [], expiration_dates)
+          can_manage_permission_forms = params[:user][:project_can_manage_permission_forms] || {}
+          @user.set_role_for_projects('researcher', current_visitor.admin_for_projects, params[:user][:researcher_project_ids] || [], expiration_dates, can_manage_permission_forms)
         end
         if @user.portal_teacher && params[:user][:has_cohorts_in_form] && policy(@current_user).add_teachers_to_cohorts?
           @user.portal_teacher.set_cohorts_by_id(params[:user][:cohort_ids] || [])

@@ -44,13 +44,20 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
 
   # API::V1::PermissionFormsController:
 
+  def permission_forms_v2_index?
+    user && user.can_manage_permission_forms?
+  end
+
+  def projects?
+    user && user.can_manage_permission_forms?
+  end
+
   def create?
-    # In fact this method should be named: admin_or_project_admin_or_project_researcher
-    manager_or_researcher_or_project_researcher?
+    user && user.can_manage_permission_forms?
   end
 
   def update?
-    admin? || record && (project_admin?(record.project) || project_researcher?(record.project))
+    record && user && user.can_manage_permission_forms?(record.project)
   end
 
   def destroy?
@@ -58,7 +65,6 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
   end
 
   def search_teachers?
-    # In fact this method should be named: admin_or_project_admin_or_project_researcher
-    manager_or_researcher_or_project_researcher?
+    user && user.can_manage_permission_forms?
   end
 end

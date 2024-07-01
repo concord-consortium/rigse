@@ -17,7 +17,7 @@ const searchTeachers = async (name: string) =>
 
 export default function StudentsTab() {
   // Fetch projects (with refetch function) on initial load
-  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PROJECTS_WITH_PERMISSIONS, []);
+  const { data: projectsData } = useFetch<IProject[]>(Portal.API_V1.PERMISSION_FORMS_PROJECTS, []);
   // `null` means no search has been done yet, while an empty array means no results were found.
   const [teachers, setTeachers] = useState<ITeacher[] | null>(null);
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);

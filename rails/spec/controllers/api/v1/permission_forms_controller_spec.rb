@@ -141,16 +141,65 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
     end
   end
 
-  describe 'when user is a project researcher' do
+  describe 'when user is a project researcher without access to manage permission forms' do
     let (:project) { FactoryBot.create(:project) }
     let (:project_researcher) { FactoryBot.generate(:author_user) }
 
     before do
       sign_in project_researcher
-      project_researcher.add_role_for_project('researcher', project)
+      project_researcher.add_role_for_project('researcher', project, can_manage_permission_forms: false)
     end
 
-    it 'DELETE is now allowed' do
+    it 'GET index is not allowed' do
+      Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: 1)
+      get :index
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'DELETE is not allowed' do
+      permission_form = Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: project.id)
+      expect(Portal::PermissionForm.count).to eq(1)
+      delete :destroy, params: { id: permission_form.id }
+      expect(response).to have_http_status(:forbidden)
+      expect(Portal::PermissionForm.count).to eq(1)
+    end
+
+    it 'GET search_teachers is not allowed' do
+      teacher1 = FactoryBot.create(:teacher, user: FactoryBot.create(:user, login: 'test_teacher1'))
+      cohort = FactoryBot.create(:admin_cohort, project: project)
+      teacher1.cohorts << cohort
+
+      teacher2 = FactoryBot.create(:teacher, user: FactoryBot.create(:user, login: 'test_teacher2'))
+
+      get :search_teachers, params: { name: 'test_teacher' }
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
+
+  describe 'when user is a project researcher with access to manage permission forms' do
+    let (:project) { FactoryBot.create(:project) }
+    let (:another_project) { FactoryBot.create(:project) }
+    let (:project_researcher) { FactoryBot.generate(:author_user) }
+
+    before do
+      sign_in project_researcher
+      project_researcher.add_role_for_project('researcher', project, can_manage_permission_forms: true)
+      project_researcher.add_role_for_project('researcher', another_project, can_manage_permission_forms: false)
+    end
+
+    it 'GET index returns permission forms from the project' do
+      Portal::PermissionForm.create!(name: 'Test Form 1', url: 'http://example1.com', project_id: project.id)
+      Portal::PermissionForm.create!(name: 'Test Form 2', url: 'http://example2.com', project_id: another_project.id)
+      get :index
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body).size).to eq(1)
+      expect(JSON.parse(response.body)).to match([
+        hash_including('name' => 'Test Form 1', 'url' => 'http://example1.com', 'project_id' => project.id)
+      ])
+    end
+
+    it 'DELETE is not allowed' do
       permission_form = Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: project.id)
       expect(Portal::PermissionForm.count).to eq(1)
       delete :destroy, params: { id: permission_form.id }
