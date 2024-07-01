@@ -4,7 +4,7 @@ table.studentsTable {
   margin-top: 0 !important;
 
   & > thead > tr > th, & > tfoot > tr {
-    background-color: #f8ac1a;
+    background-color: $permission-gold;
   }
 
   & > tbody > tr {
@@ -17,6 +17,14 @@ table.studentsTable {
   & > tfoot > tr > td {
     // Necessary for dropdown to work correctly.
     overflow: visible;
+  }
+
+  &.expandedPermissions {
+    td.permissionFormsColumn {
+      overflow: visible;
+      white-space: normal;
+      text-overflow: none;
+    }
   }
 
   .permissionFormSelectOption {

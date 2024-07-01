@@ -1,10 +1,10 @@
 .dialog {
   z-index: 4;
-  padding: 20px;
   background-color: #fff;
-  border: solid 2px #ea6d2f;
+  border: solid 2px;
 
-  .title {
+  .dialogTitleBar {
+    padding: 20px;
     font-size: 1.2em;
     font-weight: bold;
   }
@@ -21,6 +21,19 @@
       display: inline;
       margin: 20px 0 0 10px;
     }
+  }
+
+  // applies to the dialogs in student-roster
+  .registerAnotherStudentDialogContent, form {
+    padding: 20px;
+  }
+
+  &.orange {
+    border-color: #ea6d2f;
+  }
+
+  &.teal {
+    border-color: #0592af;
   }
 }
 

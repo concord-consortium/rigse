@@ -1,0 +1,68 @@
+@import "../../../../shared/styles/variables/variables";
+
+.editStudentPerimissionsForm {
+  width: 400px;
+
+  .formTop {
+    display: flex;
+    align-content: center;
+    background-color: $blue;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+  }
+
+  .formRow {
+    display: flex;
+    align-items: center;
+    padding: 10px 5px;
+
+    label {
+      width: 80px;
+      text-align: left;
+      text-transform: capitalize;
+      font-weight: 300;
+    }
+
+    input[type="checkbox"] {
+      margin-left: 5px;
+      margin-right: 5px;
+      vertical-align: middle;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  .name {
+    width: 273px;
+  }
+
+  .url {
+    width: 450px;
+  }
+
+  .formButtonArea {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0px;
+    padding: 10px 10px;
+    padding-bottom:10px;
+    background-color: $blue;
+
+    button:first-child {
+      margin-right: 8px;
+    }
+
+    .saveChangesButton {
+      background-color: $permission-gold;
+      border-color: $permission-gold;
+      color: white;
+    }
+
+    .cancelButton {
+      background-color: #ccc;
+      border-color: #ccc;
+      color:#333;
+    }
+  }
+}

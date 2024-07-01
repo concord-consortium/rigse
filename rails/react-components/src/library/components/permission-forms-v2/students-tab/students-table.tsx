@@ -3,6 +3,8 @@ import Select from "react-select";
 import { useFetch } from "../../../hooks/use-fetch";
 import { request } from "../../../helpers/api/request";
 import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
+import ModalDialog from "../../shared/modal-dialog";
+import { EditStudentPermissionsForm } from "./edit-student-permissions-form";
 
 import css from "./students-table.scss";
 
@@ -18,7 +20,7 @@ type PermissionFormOption = {
 
 const nonArchived = (forms: IPermissionForm[]) => forms.filter(form => !form.is_archived);
 
-const bulkUpdatePermissionForms = async (
+export const bulkUpdatePermissionForms = async (
   { classId, selectedStudentIds, addFormIds, removeFormIds }:
   { classId: string; selectedStudentIds: string[]; addFormIds: string[]; removeFormIds: string[]; }
 ) =>
@@ -40,7 +42,9 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [isStudentSelected, setIsStudentSelected] = useState<Record<string, boolean>>({});
   const [permissionFormsToAdd, setPermissionFormsToAdd] = useState<readonly PermissionFormOption[]>([]);
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
+  const [editStudent, setEditStudent] = useState<IStudent | null>(null);
   const [requestInProgress, setRequestInProgress] = useState(false);
+  const [permissionsExpanded, setPermissionsExpanded] = useState(false);
 
   const nonArchivedPermissionForms = nonArchived(permissionForms);
   const permissionFormToAddOptions = Object.freeze(
@@ -93,6 +97,13 @@ export const StudentsTable = ({ classId }: IProps) => {
     setPermissionFormsToRemove(selectedOptions);
   };
 
+  const handleEditClick = (studentId: string) => {
+    const student = studentsData.find(s => s.id === studentId);
+    if (student) {
+      setEditStudent(student);
+    }
+  };
+
   const handleSaveChanges = async () => {
     setRequestInProgress(true);
     const response = await bulkUpdatePermissionForms({
@@ -112,92 +123,134 @@ export const StudentsTable = ({ classId }: IProps) => {
     }
   };
 
+  // this is passed and called from onFormSave in EditStudentPermissionsForm
+  // the actual API call happens there
+  const handleSaveStudentPermissionsSuccess = async () => {
+    setEditStudent(null);
+    refetchStudentsData();
+  };
+
+  const handleClickPermissionExpandToggle = () => {
+    setPermissionsExpanded(prevPermissionsExpanded => !prevPermissionsExpanded);
+  };
+
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
   return (
-    <table className={css.studentsTable}>
-      <thead>
-        <tr>
-          <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
-          <th>Student Name</th>
-          <th>Username</th>
-          <th className={css.permissionFormsColumn}>Permission Forms</th>
-          <th className={css.expandButtonColumn}></th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          studentsData.map((studentInfo) => {
-            return (
-              <tr key={studentInfo.id}>
-                <td className={css.checkboxColumn}>
-                  <input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
-                </td>
-                <td>{ studentInfo.name }</td>
-                <td>{ studentInfo.login }</td>
-                <td className={css.permissionFormsColumn}>{ nonArchived(studentInfo.permission_forms).map(pf => pf.name).join(", ") }</td>
-                <td className={css.expandButtonColumn}><button className={css.basicButton}>Edit</button></td>
-              </tr>
-            );
-          })
-        }
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colSpan={5}>
-            <div className={css.tableFooter}>
-              <div className={css.summary}>
-                { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
-              </div>
-              <div className={css.permissionFormSelects}>
-                <div className={css.selectContainer}>
-                  Add:
-                  <Select<PermissionFormOption, true>
-                    classNames={{
-                      option: () => css.permissionFormSelectOption
-                    }}
-                    className={css.permissionFormSelect}
-                    options={permissionFormToAddOptions}
-                    isMulti={true}
-                    placeholder="Select permission form(s)..."
-                    isLoading={permissionFormsLoading}
-                    value={permissionFormsToAdd}
-                    onChange={handlePermissionFormToAddSelectChange}
-                  />
-                </div>
-                <div className={css.selectContainer}>
-                  Remove:
-                  <Select<PermissionFormOption, true>
-                    classNames={{
-                      option: () => css.permissionFormSelectOption
-                    }}
-                    className={css.permissionFormSelect}
-                    options={permissionFormToRemoveOptions}
-                    isMulti={true}
-                    placeholder="Select permission form(s)..."
-                    isLoading={permissionFormsLoading}
-                    value={permissionFormsToRemove}
-                    onChange={handlePermissionFormToRemoveSelectChange}
-                  />
-                </div>
-              </div>
-              <div>
-                <button
-                  className={css.saveChangesButton}
-                  onClick={handleSaveChanges}
-                  disabled={requestInProgress || selectedStudentsCount === 0 || permissionFormsToAdd.length === 0 && permissionFormsToRemove.length === 0}
-                >
-                  Save Changes
-                </button>
-                {
-                  requestInProgress && <span className={css.updateInProgress}>Updating...</span>
+    <>
+      <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ""}`}>
+        <thead>
+          <tr>
+            <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
+            <th>Student Name</th>
+            <th>Username</th>
+            <th className={css.permissionFormsColumn} colSpan={2}>
+              <div role="button" onClick={handleClickPermissionExpandToggle}>
+                Permission Forms
+                { permissionsExpanded
+                  ? <i className="icon icon-caret-up"></i>
+                  : <i className="icon icon-caret-down"></i>
                 }
               </div>
-            </div>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            studentsData.map((studentInfo) => {
+              return (
+                <tr key={studentInfo.id}>
+                  <td className={css.checkboxColumn}>
+                    <input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
+                  </td>
+                  <td>{ studentInfo.name }</td>
+                  <td>{ studentInfo.login }</td>
+                  <td className={css.permissionFormsColumn}>
+                    {
+                      nonArchived(studentInfo.permission_forms).map((pf, i, forms) => (
+                        <React.Fragment key={pf.id}>
+                          {pf.name}
+                          {i < forms.length - 1 && (permissionsExpanded ? <br /> : ", ")}
+                        </React.Fragment>
+                      ))
+                    }
+                  </td>
+                  <td className={css.expandButtonColumn}>
+                    <button className={css.basicButton} onClick={() => handleEditClick(studentInfo.id)}>Edit</button>
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={5}>
+              <div className={css.tableFooter}>
+                <div className={css.summary}>
+                  { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
+                </div>
+                <div className={css.permissionFormSelects}>
+                  <div className={css.selectContainer}>
+                    Add:
+                    <Select<PermissionFormOption, true>
+                      classNames={{
+                        option: () => css.permissionFormSelectOption
+                      }}
+                      className={css.permissionFormSelect}
+                      options={permissionFormToAddOptions}
+                      isMulti={true}
+                      placeholder="Select permission form(s)..."
+                      isLoading={permissionFormsLoading}
+                      value={permissionFormsToAdd}
+                      onChange={handlePermissionFormToAddSelectChange}
+                    />
+                  </div>
+                  <div className={css.selectContainer}>
+                    Remove:
+                    <Select<PermissionFormOption, true>
+                      classNames={{
+                        option: () => css.permissionFormSelectOption
+                      }}
+                      className={css.permissionFormSelect}
+                      options={permissionFormToRemoveOptions}
+                      isMulti={true}
+                      placeholder="Select permission form(s)..."
+                      isLoading={permissionFormsLoading}
+                      value={permissionFormsToRemove}
+                      onChange={handlePermissionFormToRemoveSelectChange}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <button
+                    className={css.saveChangesButton}
+                    onClick={handleSaveChanges}
+                    disabled={requestInProgress || selectedStudentsCount === 0 || permissionFormsToAdd.length === 0 && permissionFormsToRemove.length === 0}
+                  >
+                    Save Changes
+                  </button>
+                  {
+                    requestInProgress && <span className={css.updateInProgress}>Updating...</span>
+                  }
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      { editStudent &&
+        <ModalDialog borderColor="teal">
+          <EditStudentPermissionsForm
+            student={editStudent}
+            permissionForms={permissionForms}
+            onFormCancel={() => setEditStudent(null)}
+            onFormSave={handleSaveStudentPermissionsSuccess}
+            classId={classId}
+          />
+        </ModalDialog>
+      }
+    </>
   );
 };
