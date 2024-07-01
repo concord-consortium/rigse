@@ -44,6 +44,7 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
   const [editStudent, setEditStudent] = useState<IStudent | null>(null);
   const [requestInProgress, setRequestInProgress] = useState(false);
+  const [permissionsExpanded, setPermissionsExpanded] = useState(false);
 
   const nonArchivedPermissionForms = nonArchived(permissionForms);
   const permissionFormToAddOptions = Object.freeze(
@@ -127,21 +128,32 @@ export const StudentsTable = ({ classId }: IProps) => {
   const handleSaveStudentPermissionsSuccess = async () => {
     setEditStudent(null);
     refetchStudentsData();
-  }
+  };
+
+  const handleClickPermissionExpandToggle = () => {
+    setPermissionsExpanded(prevPermissionsExpanded => !prevPermissionsExpanded);
+  };
 
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
   return (
     <>
-      <table className={css.studentsTable}>
+      <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ""}`}>
         <thead>
           <tr>
             <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
             <th>Student Name</th>
             <th>Username</th>
-            <th className={css.permissionFormsColumn}>Permission Forms</th>
-            <th className={css.expandButtonColumn}></th>
+            <th className={css.permissionFormsColumn} colSpan={2}>
+              <div role="button" onClick={handleClickPermissionExpandToggle}>
+                Permission Forms
+                { permissionsExpanded
+                  ? <i className="icon icon-caret-up"></i>
+                  : <i className="icon icon-caret-down"></i>
+                }
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -154,7 +166,16 @@ export const StudentsTable = ({ classId }: IProps) => {
                   </td>
                   <td>{ studentInfo.name }</td>
                   <td>{ studentInfo.login }</td>
-                  <td className={css.permissionFormsColumn}>{ nonArchived(studentInfo.permission_forms).map(pf => pf.name).join(", ") }</td>
+                  <td className={css.permissionFormsColumn}>
+                    {
+                      nonArchived(studentInfo.permission_forms).map((pf, i, forms) => (
+                        <React.Fragment key={pf.id}>
+                          {pf.name}
+                          {i < forms.length - 1 && (permissionsExpanded ? <br /> : ", ")}
+                        </React.Fragment>
+                      ))
+                    }
+                  </td>
                   <td className={css.expandButtonColumn}>
                     <button className={css.basicButton} onClick={() => handleEditClick(studentInfo.id)}>Edit</button>
                   </td>

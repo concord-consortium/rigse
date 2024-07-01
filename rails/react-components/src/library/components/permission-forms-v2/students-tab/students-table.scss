@@ -19,6 +19,14 @@ table.studentsTable {
     overflow: visible;
   }
 
+  &.expandedPermissions {
+    td.permissionFormsColumn {
+      overflow: visible;
+      white-space: normal;
+      text-overflow: none;
+    }
+  }
+
   .permissionFormSelectOption {
     overflow: hidden;
     text-overflow: ellipsis;
