@@ -44,8 +44,8 @@ export default function StudentsTab() {
 
   const handleSearchClick = async () => {
     setSelectedTeacherId(null);
-    const { teachers, limit_applied } = await searchTeachers(teacherName);
-    setTeachers(teachers);
+    const { teachers: foundTeachers, limit_applied } = await searchTeachers(teacherName);
+    setTeachers(foundTeachers);
     setTeachersLimitApplied(limit_applied);
   };
 
@@ -79,7 +79,7 @@ export default function StudentsTab() {
       {
         teachersLimitApplied &&
         <div className={css.searchResultsNotice}>
-          Search results have been limited to {getTeachersLimit()} teachers. Please refine your search.
+          Search results have been limited to { getTeachersLimit() } teachers. Please refine your search.
         </div>
       }
       {
