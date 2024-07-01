@@ -131,7 +131,7 @@ export const StudentsTable = ({ classId }: IProps) => {
   };
 
   const handleClickPermissionExpandToggle = () => {
-    setPermissionsExpanded(!permissionsExpanded);
+    setPermissionsExpanded(prevPermissionsExpanded => !prevPermissionsExpanded);
   };
 
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
