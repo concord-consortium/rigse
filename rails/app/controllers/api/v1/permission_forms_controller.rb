@@ -184,7 +184,7 @@ class API::V1::PermissionFormsController < API::APIController
   private
 
   # Default scope is too wide, we need extra filtering for project researchers.
-  # Pundint doesn't seem to be flexible enough to handle this, so we need to do it manually.
+  # Pundit doesn't seem to be flexible enough to handle this, so we need to do it manually.
   def management_policy_scope(scope)
     if current_user.has_role?('admin')
       # Admin users have access to all projects
