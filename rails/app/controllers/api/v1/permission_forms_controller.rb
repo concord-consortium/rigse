@@ -3,7 +3,7 @@ class API::V1::PermissionFormsController < API::APIController
   # GET /api/v1/permission_forms/index
   def index
     authorize Portal::PermissionForm, :permission_forms_v2_index?
-    permission_forms = managment_policy_scope(Portal::PermissionForm)
+    permission_forms = management_policy_scope(Portal::PermissionForm)
 
     permission_forms_with_permissions = permission_forms.map do |permission_form|
       {
@@ -113,7 +113,7 @@ class API::V1::PermissionFormsController < API::APIController
         id: student.id,
         name: student.user.name,
         login: student.user.login,
-        permission_forms: managment_policy_scope(student.permission_forms).select(:id, :name, :is_archived).map do |form|
+        permission_forms: management_policy_scope(student.permission_forms).select(:id, :name, :is_archived).map do |form|
           {
             id: form.id,
             name: form.name,
@@ -185,13 +185,22 @@ class API::V1::PermissionFormsController < API::APIController
 
   # Default scope is too wide, we need extra filtering for project researchers.
   # Pundint doesn't seem to be flexible enough to handle this, so we need to do it manually.
-  def managment_policy_scope(scope)
-    scope = policy_scope(scope)
-    if current_user.is_project_researcher?
-      researcher_project_ids = current_user._project_user_researchers.where(can_manage_permission_forms: true).pluck(:project_id)
-      scope.where(project_id: researcher_project_ids)
+  def management_policy_scope(scope)
+    if current_user.has_role?('admin')
+      # Admin users have access to all projects
+      scope.all
+    elsif current_user.is_project_admin? || current_user.is_project_researcher?
+      admin_project_ids = current_user.admin_for_projects.pluck(:id)
+      manageable_project_ids = current_user._project_user_researchers.where(can_manage_permission_forms: true).pluck(:project_id)
+
+      # Combine these two sets of project ids to determine the final scope
+      final_project_ids = (admin_project_ids + manageable_project_ids).uniq
+
+      # Filter the scope to include only the relevant project IDs
+      scope.where(project_id: final_project_ids)
     else
-      scope
+      # No access for users without the relevant roles
+      scope.none
     end
   end
 
