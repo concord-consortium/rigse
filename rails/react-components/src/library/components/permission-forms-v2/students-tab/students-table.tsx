@@ -35,7 +35,7 @@ export const bulkUpdatePermissionForms = async (
     })
   });
 
-export const StudentsTable = ({ classId }: IProps) => {
+export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const { data: studentsData, isLoading: studentsLoading, refetch: refetchStudentsData } =
     useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
   const { data: permissionForms, isLoading: permissionFormsLoading } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
@@ -137,6 +137,17 @@ export const StudentsTable = ({ classId }: IProps) => {
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
+  const getStudentForms = (studentInfo: IStudent, allForms: IPermissionForm[], currentSelectedProject: CurrentSelectedProject, ) => {
+    if (currentSelectedProject === "") {
+      return nonArchived(studentInfo.permission_forms);
+    } else {
+      // TODO: fix typing in CurrentSelectedProject and IPermissionForm.project_id that requires us to re-cast string
+      const project_id = parseInt(currentSelectedProject.toString());
+      const studentFormIds = nonArchived(studentInfo.permission_forms).map(pf => pf.id);
+      return allForms.filter(pf => studentFormIds.includes(pf.id) && pf.project_id === project_id);
+    }
+  };
+
   return (
     <>
       <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ""}`}>
@@ -159,6 +170,7 @@ export const StudentsTable = ({ classId }: IProps) => {
         <tbody>
           {
             studentsData.map((studentInfo) => {
+              const studentPermissionForms = getStudentForms(studentInfo, permissionForms, currentSelectedProject);
               return (
                 <tr key={studentInfo.id}>
                   <td className={css.checkboxColumn}>
@@ -168,7 +180,7 @@ export const StudentsTable = ({ classId }: IProps) => {
                   <td>{ studentInfo.login }</td>
                   <td className={css.permissionFormsColumn}>
                     {
-                      nonArchived(studentInfo.permission_forms).map((pf, i, forms) => (
+                      studentPermissionForms.map((pf, i, forms) => (
                         <React.Fragment key={pf.id}>
                           {pf.name}
                           {i < forms.length - 1 && (permissionsExpanded ? <br /> : ", ")}
