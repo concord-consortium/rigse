@@ -18,11 +18,18 @@ export const request = async ({ url, method, body }: { url: string, method: stri
     });
     const data = await response.json();
     if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
+      switch (response.status) {
+        case 404:
+          throw new Error('Resource not found.');
+        case 403:
+          throw new Error('You are not authorized to perform this action.');
+        default:
+          throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+      }
     }
     return data;
-  } catch (e) {
-    console.error(`${method} ${url} failed.`, e);
+  } catch (e: any) {
+    window.alert(e.message);
   }
   return null;
 };

@@ -51,4 +51,8 @@
   .deleteColumn {
     width: $deleteColumnWidth;
   }
+  .hiddenColumn {
+    width: 0;
+    padding: 0;
+  }
 }

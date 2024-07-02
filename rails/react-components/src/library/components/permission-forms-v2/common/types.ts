@@ -2,6 +2,7 @@ export interface IPermissionForm {
   id: string;
   name: string;
   is_archived: boolean;
+  can_delete: boolean;
   project_id?: number | string; // need to fix this
   url?: string;
 }
