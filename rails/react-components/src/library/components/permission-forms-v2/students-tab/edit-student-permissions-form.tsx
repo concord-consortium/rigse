@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { IPermissionForm, IStudent } from "./types";
 import { bulkUpdatePermissionForms } from "./students-table";
 
@@ -68,7 +68,7 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
         { `EDIT: ${student.name}` }
       </div>
 
-      {permissionForms.map((p, i) => {
+      { permissionForms.map((p, i) => {
         const isChecked = localPermissions.some(lp => lp.id === p.id);
 
         return (
@@ -78,10 +78,10 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
               checked={isChecked}
               onChange={() => handlePermissionChange(p.id)}
             />
-            {p.name}
+            { p.name }
           </div>
         );
-      })}
+      }) }
 
       <div className={css.formButtonArea}>
         <button className={css.cancelButton} onClick={onFormCancel}>

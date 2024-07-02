@@ -170,8 +170,8 @@ export const StudentsTable = ({ classId }: IProps) => {
                     {
                       nonArchived(studentInfo.permission_forms).map((pf, i, forms) => (
                         <React.Fragment key={pf.id}>
-                          {pf.name}
-                          {i < forms.length - 1 && (permissionsExpanded ? <br /> : ", ")}
+                          { pf.name }
+                          { i < forms.length - 1 && (permissionsExpanded ? <br /> : ", ") }
                         </React.Fragment>
                       ))
                     }

@@ -6,7 +6,14 @@ export const getAuthToken = () => {
   return authToken;
 };
 
-export const request = async ({ url, method, body }: { url: string, method: string, body?: string }) => {
+interface IOptions {
+  url: string;
+  method: string;
+  body?: string;
+  onError?: (error: Error) => void;
+}
+
+export const request = async ({ url, method, body, onError }: IOptions) => {
   try {
     const response = await fetch(url, {
       method,
@@ -16,20 +23,24 @@ export const request = async ({ url, method, body }: { url: string, method: stri
       },
       body
     });
-    const data = await response.json();
     if (!response.ok) {
+      const info = `${method} ${url}`;
       switch (response.status) {
         case 404:
-          throw new Error('Resource not found.');
+          throw new Error(`${info}: Resource not found.`);
         case 403:
-          throw new Error('You are not authorized to perform this action.');
+          throw new Error(`${info}: You are not authorized to perform this action.`);
         default:
-          throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+          throw new Error(`${info}: Request failed with HTTP error ${response.status} ${response.statusText}`);
       }
     }
-    return data;
+    return await response.json();
   } catch (e: any) {
-    window.alert(e.message);
+    if (onError) {
+      onError(e);
+    } else {
+      window.alert(e.message);
+    }
   }
   return null;
 };
