@@ -151,7 +151,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
         <thead>
           <tr>
             <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
-            <th>Student Name NOICE</th>
+            <th>Student Name</th>
             <th>Username</th>
             <th className={css.permissionFormsColumn} colSpan={2}>
               <div role="button" onClick={handleClickPermissionExpandToggle}>
