@@ -7,7 +7,7 @@
     - projects.each_with_index do |project, i|
       - checkbox_id = "project-#{i}-researcher"
       - expiration_date = @user.expiration_date_for_project(project)
-      - can_manage_permission_forms = @user.can_manage_permission_forms?(project, allow_expired: true)
+      - can_manage_permission_forms = @user.is_project_researcher?(project, allow_expired: true, check_can_manage_permission_forms: true)
       - is_researcher = @user.researcher_for_projects_inc_expired.include?(project)
       %li
         .inline-fields
