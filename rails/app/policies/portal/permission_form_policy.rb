@@ -5,12 +5,9 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
       if user.has_role?('admin')
         scope.all
       elsif user.is_project_admin? || user.is_project_researcher?
-        admin_project_ids = user.admin_for_projects.pluck(:id)
-        researcher_project_ids = user.researcher_for_projects.pluck(:id)
-
-        final_project_ids = (admin_project_ids + researcher_project_ids).uniq
-
-        scope.where(project_id: final_project_ids)
+        admin_project_ids = user.admin_for_projects.select(:id)
+        researcher_project_ids = user.researcher_for_projects.select(:id)
+        scope.where("project_id IN (?) OR project_id IN (?)", admin_project_ids, researcher_project_ids)
       else
         scope.none
       end

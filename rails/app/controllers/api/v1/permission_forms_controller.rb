@@ -190,14 +190,9 @@ class API::V1::PermissionFormsController < API::APIController
       # Admin users have access to all projects
       scope.all
     elsif current_user.is_project_admin? || current_user.is_project_researcher?
-      admin_project_ids = current_user.admin_for_projects.pluck(:id)
-      manageable_project_ids = current_user._project_user_researchers.where(can_manage_permission_forms: true).pluck(:project_id)
-
-      # Combine these two sets of project ids to determine the final scope
-      final_project_ids = (admin_project_ids + manageable_project_ids).uniq
-
-      # Filter the scope to include only the relevant project IDs
-      scope.where(project_id: final_project_ids)
+      admin_project_ids = current_user.admin_for_projects.select(:id)
+      manageable_project_ids = current_user._project_user_researchers.where(can_manage_permission_forms: true).select(:project_id)
+      scope.where("project_id IN (?) OR project_id IN (?)", admin_project_ids, manageable_project_ids)
     else
       # No access for users without the relevant roles
       scope.none
