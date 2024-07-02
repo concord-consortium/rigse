@@ -435,10 +435,10 @@ class User < ApplicationRecord
     project_user&.expiration_date
   end
 
-  def can_manage_permission_forms?(project = nil, allow_expired: false)
+  def can_manage_permission_forms?(project = nil)
     return true if has_role?('admin')
     return true if is_project_admin?(project)
-    return true if is_project_researcher?(project, allow_expired: allow_expired, check_can_manage_permission_forms: true)
+    return true if is_project_researcher?(project, check_can_manage_permission_forms: true)
     return false
   end
 
