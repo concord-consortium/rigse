@@ -13,12 +13,12 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'returns a list of permission forms including the created one' do
+    it 'returns a list of permission forms including permissions' do
       Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: 1)
       get :index
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body)).to match([
-        hash_including('name' => 'Test Form', 'url' => 'http://example.com', 'project_id' => 1)
+        hash_including('name' => 'Test Form', 'url' => 'http://example.com', 'project_id' => 1, 'is_archived' => false, 'can_delete' => true)
       ])
     end
   end
@@ -116,6 +116,17 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       project_admin.add_role_for_project('admin', project)
     end
 
+    it 'GET index returns permission forms from the project' do
+      Portal::PermissionForm.create!(name: 'Test Form 1', url: 'http://example1.com', project_id: project.id)
+      Portal::PermissionForm.create!(name: 'Test Form 2', url: 'http://example2.com', project_id: another_project.id)
+      get :index
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body).size).to eq(1)
+      expect(JSON.parse(response.body)).to match([
+        hash_including('name' => 'Test Form 1', 'url' => 'http://example1.com', 'project_id' => project.id, 'is_archived' => false, 'can_delete' => true)
+      ])
+    end
+
     it 'DELETE is allowed if the permission form belongs to the project' do
       permission_form = Portal::PermissionForm.create!(name: 'Test Form', url: 'http://example.com', project_id: project.id)
       expect(Portal::PermissionForm.count).to eq(1)
@@ -203,8 +214,9 @@ RSpec.describe API::V1::PermissionFormsController, type: :controller do
       get :index
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body).size).to eq(1)
+      # Note that researchers are never allowed to delete a permission form
       expect(JSON.parse(response.body)).to match([
-        hash_including('name' => 'Test Form 1', 'url' => 'http://example1.com', 'project_id' => project.id)
+        hash_including('name' => 'Test Form 1', 'url' => 'http://example1.com', 'project_id' => project.id, 'is_archived' => false, 'can_delete' => false)
       ])
     end
 

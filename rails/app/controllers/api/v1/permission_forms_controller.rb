@@ -4,7 +4,19 @@ class API::V1::PermissionFormsController < API::APIController
   def index
     authorize Portal::PermissionForm, :permission_forms_v2_index?
     permission_forms = managment_policy_scope(Portal::PermissionForm)
-    render :json => permission_forms
+
+    permission_forms_with_permissions = permission_forms.map do |permission_form|
+      {
+        id: permission_form.id,
+        name: permission_form.name,
+        project_id: permission_form.project_id,
+        url: permission_form.url,
+        is_archived: permission_form.is_archived,
+        can_delete: Pundit.policy(current_user, permission_form).destroy?
+      }
+    end
+
+    render json: permission_forms_with_permissions
   end
 
   def create

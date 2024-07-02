@@ -64,7 +64,7 @@ const PermissionFormRow: React.FC<PermissionFormRowProps> = ({ permissionForm, o
         </button>
       </td>
       <td className={css.deleteColumn}>
-        <button className={css.basicButton} onClick={handleDelete}>Delete</button>
+        { permissionForm.can_delete && <button className={css.basicButton} onClick={handleDelete}>Delete</button> }
       </td>
     </tr>
   );

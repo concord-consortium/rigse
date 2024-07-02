@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { clsx } from "clsx";
 import { useFetch } from "../../../hooks/use-fetch";
 import { CreateEditPermissionForm } from "./create-edit-permission-form";
 import { IPermissionForm, IPermissionFormFormData, IProject, CurrentSelectedProject } from "./types";
@@ -95,6 +96,7 @@ export default function ManageFormsTab() {
   };
 
   const processedForms = sortForms(getFilteredForms(permissionsData, currentSelectedProject));
+  const cantDeleteAnyForm = processedForms.every((form: IPermissionForm) => form.can_delete === false);
 
   return (
     <div className={css.manageFormsTabContent}>
@@ -109,7 +111,12 @@ export default function ManageFormsTab() {
 
       <table className={css.permissionFormsTable}>
         <thead>
-          <tr><th>Name</th><th>URL</th><th className={css.editColumn} /><th className={css.archiveColumn} /><th className={css.deleteColumn} /></tr>
+          <tr>
+            <th>Name</th><th>URL</th>
+            <th className={css.editColumn} />
+            <th className={css.archiveColumn} />
+            <th className={clsx(css.deleteColumn, { [css.hiddenColumn]: cantDeleteAnyForm })} />
+          </tr>
         </thead>
         <tbody>
           {
