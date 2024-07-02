@@ -151,6 +151,18 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
     }
   };
 
+  const getProjectForms = (allForms: IPermissionForm[], currentSelectedProject: CurrentSelectedProject ) => {
+    if (currentSelectedProject === "") {
+      return nonArchived(allForms);
+    } else {
+      // TODO: fix typing in CurrentSelectedProject and IPermissionForm.project_id that requires us to re-cast string
+      const project_id = parseInt(currentSelectedProject.toString());
+      return allForms.filter(pf => pf.project_id === project_id);
+    }
+  };
+
+  const permissionFormsOfProject = getProjectForms(nonArchivedPermissionForms, currentSelectedProject);
+
   return (
     <>
       <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ""}`}>
@@ -259,7 +271,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
         <ModalDialog borderColor="teal">
           <EditStudentPermissionsForm
             student={editStudent}
-            permissionForms={permissionForms}
+            permissionForms={permissionFormsOfProject}
             onFormCancel={() => setEditStudent(null)}
             onFormSave={handleSaveStudentPermissionsSuccess}
             classId={classId}
