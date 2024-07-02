@@ -1,9 +1,10 @@
+export type CurrentSelectedProject = number | null;
 export interface IPermissionForm {
   id: string;
   name: string;
   is_archived: boolean;
   can_delete: boolean;
-  project_id?: number | string; // need to fix this
+  project_id: CurrentSelectedProject;
   url?: string;
 }
 
@@ -12,4 +13,3 @@ export interface IProject {
   name: string;
 }
 
-export type CurrentSelectedProject = number | "";

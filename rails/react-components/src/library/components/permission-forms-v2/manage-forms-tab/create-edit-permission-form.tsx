@@ -16,7 +16,7 @@ export const CreateEditPermissionForm = ({ projects, currentSelectedProject, exi
   const [formData, setFormData] = useState<IPermissionFormFormData>({
     id: existingFormData?.id || undefined,
     name: existingFormData?.name || "",
-    project_id: existingFormData?.project_id || (currentSelectedProject ? Number(currentSelectedProject) : ""),
+    project_id: existingFormData?.project_id || (currentSelectedProject ? currentSelectedProject : null),
     url: existingFormData?.url || ""
   });
 

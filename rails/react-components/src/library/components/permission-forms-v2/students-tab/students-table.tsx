@@ -18,7 +18,13 @@ type PermissionFormOption = {
   label: string;
 };
 
-const nonArchived = (forms: IPermissionForm[]) => forms.filter(form => !form.is_archived);
+const nonArchived = (forms: IPermissionForm[]) => {
+  return forms.filter(form => !form.is_archived);
+};
+
+const inProject = (forms: IPermissionForm[], projectId: CurrentSelectedProject) => {
+  return forms.filter(form => form.project_id === projectId);
+};
 
 export const bulkUpdatePermissionForms = async (
   { classId, selectedStudentIds, addFormIds, removeFormIds }:
@@ -35,7 +41,7 @@ export const bulkUpdatePermissionForms = async (
     })
   });
 
-export const StudentsTable = ({ classId }: IProps) => {
+export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const { data: studentsData, isLoading: studentsLoading, refetch: refetchStudentsData } =
     useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
   const { data: permissionForms, isLoading: permissionFormsLoading } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
@@ -47,6 +53,8 @@ export const StudentsTable = ({ classId }: IProps) => {
   const [permissionsExpanded, setPermissionsExpanded] = useState(false);
 
   const nonArchivedPermissionForms = nonArchived(permissionForms);
+  const inProjectPermissionForms = inProject(permissionForms, currentSelectedProject);
+
   const permissionFormToAddOptions = Object.freeze(
     nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
@@ -143,7 +151,7 @@ export const StudentsTable = ({ classId }: IProps) => {
         <thead>
           <tr>
             <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
-            <th>Student Name</th>
+            <th>Student Name NOICE</th>
             <th>Username</th>
             <th className={css.permissionFormsColumn} colSpan={2}>
               <div role="button" onClick={handleClickPermissionExpandToggle}>

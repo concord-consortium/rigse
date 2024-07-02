@@ -30,8 +30,14 @@ const deletePermissionForm = async (permissionFormId: string) =>
     method: "DELETE"
   });
 
-const getFilteredForms = (forms: IPermissionForm[], projectId: string | number) =>
-  projectId === "" ? forms : forms.filter((form: IPermissionForm) => form.project_id === Number(projectId));
+const getFormsByProject = (forms: IPermissionForm[], projectId: CurrentSelectedProject) => {
+  if (projectId === null) {
+    return forms;
+  } else {
+    return forms.filter((form: IPermissionForm) => form.project_id === projectId);
+  }
+}
+  // projectId === "" ? forms : forms.filter((form: IPermissionForm) => form.project_id === Number(projectId));
 
 const sortByName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
 
@@ -51,10 +57,10 @@ export default function ManageFormsTab() {
   // State for UI
   const [showCreateNewFormModal, setShowCreateNewFormModal] = useState(false);
   const [editForm, setEditForm] = useState<IPermissionForm | false>(false);
-  const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
+  const [currentSelectedProject, setCurrentSelectedProject] = useState<CurrentSelectedProject>(null);
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentSelectedProject(e.target.value as CurrentSelectedProject);
+    setCurrentSelectedProject(e.target.value === '' ? null : Number(e.target.value));
   };
 
   const handleCreateFormClick = () => {
@@ -95,7 +101,7 @@ export default function ManageFormsTab() {
     refetchPermissions();
   };
 
-  const processedForms = sortForms(getFilteredForms(permissionsData, currentSelectedProject));
+  const processedForms = sortForms(getFormsByProject(permissionsData, currentSelectedProject));
   const cantDeleteAnyForm = processedForms.every((form: IPermissionForm) => form.can_delete === false);
 
   return (
