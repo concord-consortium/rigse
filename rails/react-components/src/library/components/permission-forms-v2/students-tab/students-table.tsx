@@ -3,8 +3,9 @@ import Select from "react-select";
 import { useFetch } from "../../../hooks/use-fetch";
 import { request } from "../../../helpers/api/request";
 import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
-import ModalDialog from "../../shared/modal-dialog";
 import { EditStudentPermissionsForm } from "./edit-student-permissions-form";
+import { filteredByProject, formsOfStudent, nonArchived } from "../common/permission-utils";
+import ModalDialog from "../../shared/modal-dialog";
 
 import css from "./students-table.scss";
 
@@ -18,13 +19,6 @@ type PermissionFormOption = {
   label: string;
 };
 
-const nonArchived = (forms: IPermissionForm[]) => {
-  return forms.filter(form => !form.is_archived);
-};
-
-const inProject = (forms: IPermissionForm[], projectId: CurrentSelectedProject) => {
-  return forms.filter(form => form.project_id === projectId);
-};
 
 export const bulkUpdatePermissionForms = async (
   { classId, selectedStudentIds, addFormIds, removeFormIds }:
@@ -52,15 +46,14 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [permissionsExpanded, setPermissionsExpanded] = useState(false);
 
-  const nonArchivedPermissionForms = nonArchived(permissionForms);
-  const inProjectPermissionForms = inProject(permissionForms, currentSelectedProject);
+  const currentForms = filteredByProject(nonArchived(permissionForms), currentSelectedProject);
 
   const permissionFormToAddOptions = Object.freeze(
-    nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
+    currentForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
   const permissionFormToRemoveOptions = Object.freeze(
-    nonArchivedPermissionForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
+    currentForms.filter(pf => !permissionFormsToAdd.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
   // studentsData.length === 0 prevents the "Loading..." message from showing up when the students are re-fetched after update.
@@ -167,6 +160,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
         <tbody>
           {
             studentsData.map((studentInfo) => {
+              const studentForms = formsOfStudent(currentForms, studentInfo);
               return (
                 <tr key={studentInfo.id}>
                   <td className={css.checkboxColumn}>
@@ -176,7 +170,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
                   <td>{ studentInfo.login }</td>
                   <td className={css.permissionFormsColumn}>
                     {
-                      nonArchived(studentInfo.permission_forms).map((pf, i, forms) => (
+                      studentForms.map((pf, i, forms) => (
                         <React.Fragment key={pf.id}>
                           { pf.name }
                           { i < forms.length - 1 && (permissionsExpanded ? <br /> : ", ") }
@@ -252,7 +246,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
         <ModalDialog borderColor="teal">
           <EditStudentPermissionsForm
             student={editStudent}
-            permissionForms={permissionForms}
+            permissionForms={currentForms}
             onFormCancel={() => setEditStudent(null)}
             onFormSave={handleSaveStudentPermissionsSuccess}
             classId={classId}
