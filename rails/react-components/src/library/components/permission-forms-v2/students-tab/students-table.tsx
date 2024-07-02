@@ -46,8 +46,11 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [permissionsExpanded, setPermissionsExpanded] = useState(false);
 
-  const nonArchivedPermissionForms = nonArchived(permissionForms);
-  const permissionFormToAddOptions = Object.freeze(
+  const nonArchivedPermissionForms = currentSelectedProject === ""
+    ? nonArchived(permissionForms)
+    : nonArchived(permissionForms).filter(pf => pf.project_id === parseInt(currentSelectedProject.toString()));
+
+    const permissionFormToAddOptions = Object.freeze(
     nonArchivedPermissionForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
   );
 
