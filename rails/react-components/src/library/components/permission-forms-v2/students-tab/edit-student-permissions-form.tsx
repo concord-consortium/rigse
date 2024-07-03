@@ -67,21 +67,22 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
       <div className={css.formTop}>
         { `EDIT: ${student.name}` }
       </div>
+      <div className={css.scrollableWrapper}>
+        { permissionForms.map((p, i) => {
+          const isChecked = localPermissions.some(lp => lp.id === p.id);
 
-      { permissionForms.map((p, i) => {
-        const isChecked = localPermissions.some(lp => lp.id === p.id);
-
-        return (
-          <div key={i} className={css.formRow}>
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={() => handlePermissionChange(p.id)}
-            />
-            { p.name }
-          </div>
-        );
-      }) }
+          return (
+            <div key={i} className={css.formRow}>
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={() => handlePermissionChange(p.id)}
+              />
+              { p.name }
+            </div>
+          );
+        }) }
+      </div>
 
       <div className={css.formButtonArea}>
         <button className={css.cancelButton} onClick={onFormCancel}>

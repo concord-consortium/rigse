@@ -32,10 +32,10 @@ export default function StudentsTab() {
   const[teacherName, setTeacherName] = useState<string>("");
 
   // State for UI
-  const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
+  const [currentSelectedProject, setCurrentSelectedProject] = useState<CurrentSelectedProject>(null);
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentSelectedProject(e.target.value as CurrentSelectedProject);
+    setCurrentSelectedProject(e.target.value === "" ? null : Number(e.target.value));
   };
 
   const handleTeacherNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

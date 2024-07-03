@@ -3,10 +3,11 @@ import { clsx } from "clsx";
 import { useFetch } from "../../../hooks/use-fetch";
 import { CreateEditPermissionForm } from "./create-edit-permission-form";
 import { IPermissionForm, IPermissionFormFormData, IProject, CurrentSelectedProject } from "./types";
-import PermissionFormRow from "./permission-form-row";
 import { ProjectSelect } from "../common/project-select";
-import ModalDialog from "../../shared/modal-dialog";
 import { request } from "../../../helpers/api/request";
+import { filteredByProject, sortedByArchiveAndName } from "../common/permission-utils";
+import PermissionFormRow from "./permission-form-row";
+import ModalDialog from "../../shared/modal-dialog";
 
 import css from "./manage-forms-tab.scss";
 
@@ -30,19 +31,6 @@ const deletePermissionForm = async (permissionFormId: string) =>
     method: "DELETE"
   });
 
-const getFilteredForms = (forms: IPermissionForm[], projectId: string | number) =>
-  projectId === "" ? forms : forms.filter((form: IPermissionForm) => form.project_id === Number(projectId));
-
-const sortByName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
-
-// Sort forms by is_archived first and then by name
-const sortForms = (forms: IPermissionForm[]) => forms.sort((a, b) => {
-  if (a.is_archived === b.is_archived) {
-    return sortByName(a, b);
-  }
-  return a.is_archived ? 1 : -1;
-});
-
 export default function ManageFormsTab() {
   // Fetch projects and permission forms (with refetch function) on initial load
   const { data: permissionsData, refetch: refetchPermissions } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
@@ -51,10 +39,10 @@ export default function ManageFormsTab() {
   // State for UI
   const [showCreateNewFormModal, setShowCreateNewFormModal] = useState(false);
   const [editForm, setEditForm] = useState<IPermissionForm | false>(false);
-  const [currentSelectedProject, setCurrentSelectedProject] = useState<number | "">("");
+  const [currentSelectedProject, setCurrentSelectedProject] = useState<CurrentSelectedProject>(null);
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentSelectedProject(e.target.value as CurrentSelectedProject);
+    setCurrentSelectedProject(e.target.value === "" ? null : Number(e.target.value));
   };
 
   const handleCreateFormClick = () => {
@@ -95,7 +83,7 @@ export default function ManageFormsTab() {
     refetchPermissions();
   };
 
-  const processedForms = sortForms(getFilteredForms(permissionsData, currentSelectedProject));
+  const processedForms = sortedByArchiveAndName(filteredByProject(permissionsData, currentSelectedProject));
   const cantDeleteAnyForm = processedForms.every((form: IPermissionForm) => form.can_delete === false);
 
   return (

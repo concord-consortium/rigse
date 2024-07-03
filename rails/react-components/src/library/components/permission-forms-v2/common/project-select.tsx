@@ -1,10 +1,10 @@
 import React from "react";
-import { IProject } from "./types";
+import { CurrentSelectedProject, IProject } from "./types";
 
 interface IProjectSelectProps {
   projects: IProject[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  value?: string | number;
+  value?: CurrentSelectedProject;
 }
 
 export const ProjectSelect = ({ projects, value, onChange }: IProjectSelectProps) => {
@@ -12,7 +12,7 @@ export const ProjectSelect = ({ projects, value, onChange }: IProjectSelectProps
   return (
     <>
       <label>Project:</label>
-      <select data-testid="project-select" value={value} name="project_id" onChange={onChange}>
+      <select data-testid="project-select" value={value ?? undefined} name="project_id" onChange={onChange}>
         <option value="">Select a project...</option>
         { sortedProjects?.map((p: IProject) => <option key={p.id} value={p.id}>{ p.name }</option>) }
       </select>

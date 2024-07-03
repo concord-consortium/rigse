@@ -12,10 +12,17 @@
     padding: 10px;
   }
 
+  .scrollableWrapper {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
   .formRow {
-    display: flex;
     align-items: center;
     padding: 10px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     label {
       width: 80px;
