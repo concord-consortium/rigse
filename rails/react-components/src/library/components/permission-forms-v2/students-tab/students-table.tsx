@@ -46,7 +46,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const [requestInProgress, setRequestInProgress] = useState(false);
   const [permissionsExpanded, setPermissionsExpanded] = useState(false);
 
-  const currentForms = filteredByProject(nonArchived(permissionForms), currentSelectedProject);
+  const currentForms = filteredByProject(nonArchived(permissionForms), currentSelectedProject).sort((a, b) => a.name.localeCompare(b.name));
 
   const permissionFormToAddOptions = Object.freeze(
     currentForms.filter(pf => !permissionFormsToRemove.find(pfr => pfr.value === pf.id)).map(pf => ({ value: pf.id, label: pf.name }))
