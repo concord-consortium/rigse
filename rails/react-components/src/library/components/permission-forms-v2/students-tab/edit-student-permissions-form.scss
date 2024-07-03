@@ -1,15 +1,44 @@
 @import "../../../../shared/styles/variables/variables";
 
 .editStudentPerimissionsForm {
-  width: 400px;
+  width: 540px;
 
   .formTop {
     display: flex;
+    justify-content: space-between;
     align-content: center;
     background-color: $blue;
     color: white;
     font-weight: bold;
     padding: 10px;
+
+    .studentName {
+      align-content: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .closeButton button {
+      padding: 0px;
+      border: none;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50px;
+      background-color: white;
+      &:hover {
+        background-color: darken(white, 10%);
+      }
+      i {
+        color: $blue;
+        margin: 0 auto;
+        font-size: 16px;
+      }
+    }
   }
 
   .scrollableWrapper {
@@ -40,6 +69,12 @@
     }
   }
 
+  .scrollableWrapper .formRow {
+    &:nth-child(even) {
+      background-color: #f5f5f5;
+    }
+  }
+
   .name {
     width: 273px;
   }
@@ -64,12 +99,20 @@
       background-color: $permission-gold;
       border-color: $permission-gold;
       color: white;
+      &:not(:disabled):hover {
+        background-color: darken($permission-gold, 10%);
+        border-color: darken($permission-gold, 10%);
+      }
     }
 
     .cancelButton {
       background-color: #ccc;
       border-color: #ccc;
       color:#333;
+      &:not(:disabled):hover {
+        background-color: darken(#ccc, 10%);
+        border-color: darken(#ccc, 10%);
+      }
     }
   }
 }

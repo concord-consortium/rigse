@@ -61,14 +61,22 @@ export const EditStudentPermissionsForm = ({ student, permissionForms, onFormCan
   const savedIds = student.permission_forms.map(pf => pf.id).sort();
   const newIds = localPermissions.map(lp => lp.id).sort();
   const hasChanges = savedIds.length !== newIds.length || savedIds.some((id, i) => id !== newIds[i]);
+  const sortedPermissions = permissionForms.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className={css.editStudentPerimissionsForm}>
       <div className={css.formTop}>
-        { `EDIT: ${student.name}` }
+        <div className={css.studentName}>
+        { `EDIT Permission Forms for: ${student.name}` }
+        </div>
+        <div className={css.closeButton}>
+          <button onClick={onFormCancel}>
+            <i className="icon-close" />
+          </button>
+        </div>
       </div>
       <div className={css.scrollableWrapper}>
-        { permissionForms.map((p, i) => {
+        { sortedPermissions.map((p, i) => {
           const isChecked = localPermissions.some(lp => lp.id === p.id);
 
           return (
