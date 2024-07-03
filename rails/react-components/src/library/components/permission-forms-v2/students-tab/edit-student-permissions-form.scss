@@ -12,6 +12,11 @@
     padding: 10px;
   }
 
+  .scrollableWrapper {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
   .formRow {
     align-items: center;
     padding: 10px 5px;
