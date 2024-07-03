@@ -38,7 +38,7 @@ class API::V1::ReportLearnersEsController < API::APIController
   #   Returns list of report_learners matching filters, up to max size, no aggregations
   #
   def index
-    authorize Portal::PermissionForm
+    authorize Portal::PermissionForm, :report_learners_es_index?
 
     if !ENV['ELASTICSEARCH_URL']
       return error("Elasticsearch endpoint url not set")

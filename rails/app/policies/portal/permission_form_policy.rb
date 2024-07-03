@@ -1,5 +1,7 @@
 class Portal::PermissionFormPolicy < ApplicationPolicy
 
+  # User by API::V1::ReportLearnersEsController:
+
   class Scope < Scope
     def resolve
       if user.has_role?('admin')
@@ -14,7 +16,7 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
     end
   end
 
-  def index?
+  def report_learners_es_index?
     manager_or_researcher_or_project_researcher?
   end
 
@@ -30,13 +32,9 @@ class Portal::PermissionFormPolicy < ApplicationPolicy
     manager_or_researcher_or_project_researcher?
   end
 
-  def update_forms?
-    manager_or_researcher_or_project_researcher?
-  end
-
   # API::V1::PermissionFormsController:
 
-  def permission_forms_v2_index?
+  def index?
     user && user.can_manage_permission_forms?
   end
 

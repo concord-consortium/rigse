@@ -2,18 +2,11 @@ class API::V1::PermissionFormsController < API::APIController
 
   # GET /api/v1/permission_forms/index
   def index
-    authorize Portal::PermissionForm, :permission_forms_v2_index?
+    authorize Portal::PermissionForm
     permission_forms = management_policy_scope(Portal::PermissionForm)
 
-    permission_forms_with_permissions = permission_forms.map do |permission_form|
-      {
-        id: permission_form.id,
-        name: permission_form.name,
-        project_id: permission_form.project_id,
-        url: permission_form.url,
-        is_archived: permission_form.is_archived,
-        can_delete: Pundit.policy(current_user, permission_form).destroy?
-      }
+    permission_forms_with_permissions = permission_forms.map do |form|
+      permission_form_hash(form).merge(can_delete: Pundit.policy(current_user, form).destroy?)
     end
 
     render json: permission_forms_with_permissions
@@ -113,12 +106,8 @@ class API::V1::PermissionFormsController < API::APIController
         id: student.id,
         name: student.user.name,
         login: student.user.login,
-        permission_forms: management_policy_scope(student.permission_forms).select(:id, :name, :is_archived).map do |form|
-          {
-            id: form.id,
-            name: form.name,
-            is_archived: form.is_archived
-          }
+        permission_forms: management_policy_scope(student.permission_forms).map do |form|
+          permission_form_hash(form)
         end
       }
     end
@@ -197,6 +186,16 @@ class API::V1::PermissionFormsController < API::APIController
       # No access for users without the relevant roles
       scope.none
     end
+  end
+
+  def permission_form_hash(permission_form)
+    {
+      id: permission_form.id,
+      name: permission_form.name,
+      project_id: permission_form.project_id,
+      url: permission_form.url,
+      is_archived: permission_form.is_archived
+    }
   end
 
   def permission_form_params

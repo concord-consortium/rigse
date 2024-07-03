@@ -7,7 +7,7 @@ import css from "./index.scss";
 
 type PermissionsTab = "manageFormsTab" | "studentsTab";
 
-export default function PermissionFormsV2() {
+export default function PermissionForms() {
   // State for UI
   const [openTab, setOpenTab] = useState<PermissionsTab>("studentsTab");
 
