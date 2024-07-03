@@ -5,7 +5,7 @@ export const filteredByProject = (forms: IPermissionForm[], projectId: CurrentSe
   return projectId === null
     ? forms
     : forms.filter((form: IPermissionForm) => form.project_id === projectId);
-}
+};
 
 export const nonArchived = (forms: IPermissionForm[]) => {
   return forms.filter(form => !form.is_archived);
@@ -21,4 +21,4 @@ export const sortedByArchiveAndName = (forms: IPermissionForm[]) => forms.sort((
 export const formsOfStudent = (forms: IPermissionForm[], studentInfo: IStudent) => {
   const ids = studentInfo.permission_forms.map(form => form.id);
   return forms.filter(form => ids.includes(form.id));
-}
+};

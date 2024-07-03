@@ -42,7 +42,7 @@ export default function ManageFormsTab() {
   const [currentSelectedProject, setCurrentSelectedProject] = useState<CurrentSelectedProject>(null);
 
   const handleProjectSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentSelectedProject(e.target.value === '' ? null : Number(e.target.value));
+    setCurrentSelectedProject(e.target.value === "" ? null : Number(e.target.value));
   };
 
   const handleCreateFormClick = () => {
