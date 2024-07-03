@@ -38,6 +38,7 @@ class Portal::Learner < ApplicationRecord
   # see offering_controller#show run_resource_html block
   def update_last_run
     self.report_learner.update_attribute('last_run', Time.now)
+    self.update_report_model_cache()
   end
 
   # 2021-06-21 NP: method deligation because maybe report_learner will go away

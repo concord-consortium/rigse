@@ -14,6 +14,7 @@ class Portal::OfferingsController < ApplicationController
     if portal_student = current_visitor.portal_student
       # create a learner for the user if one doesnt' exist
       learner = @offering.find_or_create_learner(portal_student)
+      learner.update_last_run()
     end
     learner
   end
@@ -36,42 +37,41 @@ class Portal::OfferingsController < ApplicationController
       }
 
       format.run_resource_html   {
-         if learner = setup_portal_student
-          learner.update_last_run
-           cookies[:save_path] = @offering.runnable.save_path
-           cookies[:learner_id] = learner.id
-           cookies[:student_name] = "#{current_visitor.first_name} #{current_visitor.last_name}"
-           cookies[:activity_name] = @offering.runnable.name
-           cookies[:class_id] = learner.offering.clazz.id
-           cookies[:student_id] = learner.student.id
-           cookies[:runnable_id] = @offering.runnable.id
-         else
-           # session[:put_path] = nil
-         end
-         external_activity = @offering.runnable
-         if external_activity.lara_activity_or_sequence?
-           uri = URI.parse(external_activity.url)
-           uri.query = {
-             :externalId => learner.id,
-             :returnUrl => learner.remote_endpoint_url,
-             :logging => @offering.clazz.logging || @offering.runnable.logging,
-             :domain => root_url,
-             :domain_uid => current_visitor.id,
-             :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
-             :context_id => @offering.clazz.class_hash,
-             # platform_id and platform_user_id are similiar to domain and domain_uid.
-             # However, LARA uses domain and domain_uid to authenticate the user,
-             # while the platform params are moving towards LTI compatible launching
-             # More specifically LARA removes domain and domain_uid from URL,
-             # so it is harder to use the domain params to setup the run in LARA.
-             :platform_id => APP_CONFIG[:site_url],
-             :platform_user_id => current_visitor.id,
-             :resource_link_id => @offering.id
-           }.to_query
-           redirect_to(uri.to_s)
-         else
-           redirect_to(@offering.runnable.url(learner, root_url))
-         end
+        if learner = setup_portal_student
+          cookies[:save_path] = @offering.runnable.save_path
+          cookies[:learner_id] = learner.id
+          cookies[:student_name] = "#{current_visitor.first_name} #{current_visitor.last_name}"
+          cookies[:activity_name] = @offering.runnable.name
+          cookies[:class_id] = learner.offering.clazz.id
+          cookies[:student_id] = learner.student.id
+          cookies[:runnable_id] = @offering.runnable.id
+        else
+          # session[:put_path] = nil
+        end
+        external_activity = @offering.runnable
+        if external_activity.lara_activity_or_sequence?
+          uri = URI.parse(external_activity.url)
+          uri.query = {
+            :externalId => learner.id,
+            :returnUrl => learner.remote_endpoint_url,
+            :logging => @offering.clazz.logging || @offering.runnable.logging,
+            :domain => root_url,
+            :domain_uid => current_visitor.id,
+            :class_info_url => @offering.clazz.class_info_url(request.protocol, request.host_with_port),
+            :context_id => @offering.clazz.class_hash,
+            # platform_id and platform_user_id are similiar to domain and domain_uid.
+            # However, LARA uses domain and domain_uid to authenticate the user,
+            # while the platform params are moving towards LTI compatible launching
+            # More specifically LARA removes domain and domain_uid from URL,
+            # so it is harder to use the domain params to setup the run in LARA.
+            :platform_id => APP_CONFIG[:site_url],
+            :platform_user_id => current_visitor.id,
+            :resource_link_id => @offering.id
+          }.to_query
+          redirect_to(uri.to_s)
+        else
+          redirect_to(@offering.runnable.url(learner, root_url))
+        end
        }
     end
   end
