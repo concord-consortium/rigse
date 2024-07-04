@@ -21,9 +21,7 @@ table.studentsTable {
 
   &.expandedPermissions {
     td.permissionFormsColumn {
-      overflow: visible;
       white-space: normal;
-      text-overflow: none;
     }
   }
 
@@ -32,8 +30,19 @@ table.studentsTable {
     text-overflow: ellipsis;
   }
 
+  .permissionFormSelectMenuList {
+    max-height: 250px;
+  }
+
   .checkboxColumn {
     width: 35px;
+  }
+
+  th.permissionFormsColumn {
+    cursor: pointer;
+    &:hover {
+      background-color: lighten($permission-gold, 5%);
+    }
   }
 
   .permissionFormsColumn {

@@ -8,7 +8,7 @@ interface PermissionFormRowProps {
   permissionForm: IPermissionForm;
   onEditModalToggle: (permissionForm: IPermissionForm) => void;
   onEdit: (permissionForm: IPermissionForm) => void;
-  onDelete: (permissionFormId: string) => void;
+  onDelete: (permissionFormId: number) => void;
 }
 
 function ensureUrlProtocol(url: string): string {

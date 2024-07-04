@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import clsx from "clsx";
 import { useFetch } from "../../../hooks/use-fetch";
 import { request } from "../../../helpers/api/request";
 import { CurrentSelectedProject, IPermissionForm, IStudent } from "./types";
@@ -10,19 +11,19 @@ import ModalDialog from "../../shared/modal-dialog";
 import css from "./students-table.scss";
 
 interface IProps {
-  classId: string;
+  classId: number;
   currentSelectedProject: CurrentSelectedProject;
 }
 
 type PermissionFormOption = {
-  value: string;
+  value: number;
   label: string;
 };
 
 
 export const bulkUpdatePermissionForms = async (
   { classId, selectedStudentIds, addFormIds, removeFormIds }:
-  { classId: string; selectedStudentIds: string[]; addFormIds: string[]; removeFormIds: string[]; }
+  { classId: number; selectedStudentIds: number[]; addFormIds: number[]; removeFormIds: number[]; }
 ) =>
   request({
     url: Portal.API_V1.PERMISSION_FORMS_BULK_UPDATE,
@@ -39,7 +40,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const { data: studentsData, isLoading: studentsLoading, refetch: refetchStudentsData } =
     useFetch<IStudent[]>(Portal.API_V1.permissionFormsClassPermissionForms(classId), []);
   const { data: permissionForms, isLoading: permissionFormsLoading } = useFetch<IPermissionForm[]>(Portal.API_V1.PERMISSION_FORMS, []);
-  const [isStudentSelected, setIsStudentSelected] = useState<Record<string, boolean>>({});
+  const [isStudentSelected, setIsStudentSelected] = useState<Record<number, boolean>>({});
   const [permissionFormsToAdd, setPermissionFormsToAdd] = useState<readonly PermissionFormOption[]>([]);
   const [permissionFormsToRemove, setPermissionFormsToRemove] = useState<readonly PermissionFormOption[]>([]);
   const [editStudent, setEditStudent] = useState<IStudent | null>(null);
@@ -65,7 +66,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   }
 
   const handleStudentSelectedToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const studentId = e.target.name;
+    const studentId = Number(e.target.name);
     if (e.target.checked) {
       setIsStudentSelected(prevIsStudentSelected => ({ ...prevIsStudentSelected, [studentId]: true }));
     } else {
@@ -98,7 +99,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
     setPermissionFormsToRemove(selectedOptions);
   };
 
-  const handleEditClick = (studentId: string) => {
+  const handleEditClick = (studentId: number) => {
     const student = studentsData.find(s => s.id === studentId);
     if (student) {
       setEditStudent(student);
@@ -109,7 +110,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
     setRequestInProgress(true);
     const response = await bulkUpdatePermissionForms({
       classId,
-      selectedStudentIds: Object.keys(isStudentSelected).filter(id => isStudentSelected[id]),
+      selectedStudentIds: Object.keys(isStudentSelected).filter(id => isStudentSelected[Number(id)]).map(id => Number(id)),
       addFormIds: permissionFormsToAdd.map(form => form.value),
       removeFormIds: permissionFormsToRemove.map(form => form.value)
     });
@@ -124,11 +125,22 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
     }
   };
 
-  // this is passed and called from onFormSave in EditStudentPermissionsForm
-  // the actual API call happens there
-  const handleSaveStudentPermissionsSuccess = async () => {
-    setEditStudent(null);
-    refetchStudentsData();
+  const handleSaveStudentPermissions = async ({ studentId, idsToAdd, idsToRemove }: { studentId: number; idsToAdd: number[]; idsToRemove: number[] }) => {
+    setRequestInProgress(true);
+    const response = await bulkUpdatePermissionForms({
+      classId,
+      selectedStudentIds: [studentId],
+      addFormIds: idsToAdd,
+      removeFormIds: idsToRemove
+    });
+    setRequestInProgress(false);
+
+    if (response) {
+      setEditStudent(null);
+      refetchStudentsData();
+    } else {
+      alert("Failed to update permission forms");
+    }
   };
 
   const handleClickPermissionExpandToggle = () => {
@@ -138,15 +150,20 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
   const selectedStudentsCount = Object.keys(isStudentSelected).length;
   const allStudentsSelected = Object.keys(isStudentSelected).length === studentsData.length;
 
+  const permissionFormsSelectClassNames = {
+    option: () => css.permissionFormSelectOption,
+    menuList: () => css.permissionFormSelectMenuList
+  };
+
   return (
     <>
-      <table className={`${css.studentsTable} ${permissionsExpanded ? css.expandedPermissions : ""}`}>
+      <table className={clsx(css.studentsTable, { [css.expandedPermissions]: permissionsExpanded })}>
         <thead>
           <tr>
             <th className={css.checkboxColumn}><input type="checkbox" checked={allStudentsSelected} onChange={handleSelectAllChange} /></th>
             <th>Student Name</th>
             <th>Username</th>
-            <th className={css.permissionFormsColumn} colSpan={2}>
+            <th className={css.permissionFormsColumn}>
               <div role="button" onClick={handleClickPermissionExpandToggle}>
                 Permission Forms
                 { permissionsExpanded
@@ -155,6 +172,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
                 }
               </div>
             </th>
+            <th className={css.expandButtonColumn}></th>
           </tr>
         </thead>
         <tbody>
@@ -164,7 +182,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
               return (
                 <tr key={studentInfo.id}>
                   <td className={css.checkboxColumn}>
-                    <input type="checkbox" name={studentInfo.id} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
+                    <input type="checkbox" name={studentInfo.id.toString()} checked={isStudentSelected[studentInfo.id] ?? false} onChange={handleStudentSelectedToggle} />
                   </td>
                   <td>{ studentInfo.name }</td>
                   <td>{ studentInfo.login }</td>
@@ -191,15 +209,13 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
             <td colSpan={5}>
               <div className={css.tableFooter}>
                 <div className={css.summary}>
-                  { selectedStudentsCount } selected { selectedStudentsCount === 1 ? "student" : "students" }
+                  { selectedStudentsCount } { selectedStudentsCount === 1 ? "student" : "students" } selected
                 </div>
                 <div className={css.permissionFormSelects}>
                   <div className={css.selectContainer}>
                     Add:
                     <Select<PermissionFormOption, true>
-                      classNames={{
-                        option: () => css.permissionFormSelectOption
-                      }}
+                      classNames={permissionFormsSelectClassNames}
                       className={css.permissionFormSelect}
                       options={permissionFormToAddOptions}
                       isMulti={true}
@@ -212,9 +228,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
                   <div className={css.selectContainer}>
                     Remove:
                     <Select<PermissionFormOption, true>
-                      classNames={{
-                        option: () => css.permissionFormSelectOption
-                      }}
+                      classNames={permissionFormsSelectClassNames}
                       className={css.permissionFormSelect}
                       options={permissionFormToRemoveOptions}
                       isMulti={true}
@@ -248,8 +262,7 @@ export const StudentsTable = ({ classId, currentSelectedProject }: IProps) => {
             student={editStudent}
             permissionForms={currentForms}
             onFormCancel={() => setEditStudent(null)}
-            onFormSave={handleSaveStudentPermissionsSuccess}
-            classId={classId}
+            onFormSave={handleSaveStudentPermissions}
           />
         </ModalDialog>
       }
