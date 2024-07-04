@@ -233,14 +233,8 @@ RailsPortal::Application.routes.draw do
       resources :clients
       resources :tools
       resources :external_reports
-      resources :permission_forms do
-        member do
-          get  :remove_form
-        end
-      end
-      resources :permission_forms_v2
+      resources :permission_forms
 
-      post 'permission_forms/update_forms' => 'permission_forms#update_forms', :as => :update_permissions_forms
       resources :site_notices
 
       get '/learner_detail/:id_or_key.:format' => 'learner_details#show',  :as => :learner_detail
