@@ -1181,6 +1181,34 @@ protected
       }
       it { is_expected.to be false}
     end
+
+    context "when check_can_manage_permission_forms is true" do
+      subject { user.is_researcher_for_clazz?(clazz, check_can_manage_permission_forms: true) }
+
+      context "when the user is not a researcher for the class" do
+        it { is_expected.to be false}
+      end
+
+      context "when the user is a researcher for the class but cannot manage permission forms" do
+        let(:user) {
+          researcher = FactoryBot.generate(:researcher_user)
+          researcher.researcher_for_projects << project
+          researcher
+        }
+        it { is_expected.to be false}
+      end
+
+      context "when the user is a researcher for the class and can manage permission forms" do
+        let(:user) {
+          researcher = FactoryBot.generate(:researcher_user)
+          researcher.researcher_for_projects << project
+          researcher.add_role_for_project('researcher', project, can_manage_permission_forms: true)
+          researcher
+        }
+        it { is_expected.to be true}
+      end
+    end
+
   end
 
   # TODO: auto-generated

@@ -164,10 +164,6 @@ class API::V1::PermissionFormsController < API::APIController
     end
 
     render json: { message: "Bulk update successful" }
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { error: e.message }, status: :not_found
-  rescue => e
-    render json: { error: e.message }, status: :unprocessable_entity
   end
 
   private

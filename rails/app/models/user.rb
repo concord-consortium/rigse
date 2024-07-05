@@ -454,10 +454,12 @@ class User < ApplicationRecord
     is_project_admin?(project) || is_project_researcher?(project) || is_project_cohort_member?(project)
   end
 
-  def is_researcher_for_clazz?(clazz)
+  def is_researcher_for_clazz?(clazz, check_can_manage_permission_forms: false)
     # check if class has teacher in a cohort of a project the user is a researcher of using a explicit join to avoid a
     # bunch of unneeded object instantiation
-    researcher_for_projects
+    projects_scope = check_can_manage_permission_forms ? researcher_for_projects.where("can_manage_permission_forms = ?", true) : researcher_for_projects
+
+    projects_scope
       .joins("INNER JOIN admin_cohorts __ac ON __ac.project_id = admin_projects.id")
       .joins("INNER JOIN admin_cohort_items __aci ON __aci.admin_cohort_id = __ac.id AND __aci.item_type = 'Portal::Teacher'")
       .joins("INNER JOIN portal_teachers __pt ON __pt.id = __aci.item_id")
