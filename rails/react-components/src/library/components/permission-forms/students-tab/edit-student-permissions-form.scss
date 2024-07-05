@@ -1,6 +1,6 @@
 @import "../../../../shared/styles/variables/variables";
 
-.editStudentPerimissionsForm {
+.editStudentPermissionsForm {
   width: 540px;
 
   .formTop {
@@ -10,7 +10,7 @@
     background-color: $blue;
     color: white;
     font-weight: bold;
-    padding: 10px;
+    padding: 8px 10px;
 
     .studentName {
       align-content: center;
@@ -22,13 +22,13 @@
     .closeButton button {
       padding: 0px;
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 27px;
+      height: 27px;
       text-align: center;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50px;
+      border-radius: 50%;
       background-color: white;
       &:hover {
         background-color: darken(white, 10%);
@@ -36,14 +36,14 @@
       i {
         color: $blue;
         margin: 0 auto;
-        font-size: 16px;
+        font-size: 15px;
       }
     }
   }
 
   .scrollableWrapper {
     max-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
   }
 
   .formRow {

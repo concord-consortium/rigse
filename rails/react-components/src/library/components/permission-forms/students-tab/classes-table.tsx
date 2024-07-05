@@ -8,13 +8,13 @@ import { CurrentSelectedProject, IClassBasicInfo } from "./types";
 import css from "./classes-table.scss";
 
 interface IProps {
-  teacherId: string;
+  teacherId: number;
   currentSelectedProject: CurrentSelectedProject;
 }
 
 export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
   const { data: classesData, isLoading } = useFetch<IClassBasicInfo[]>(Portal.API_V1.teacherClasses(teacherId), []);
-  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
   if (isLoading) {
     return (<div>Loading...</div>);
@@ -23,8 +23,8 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
     return (<div>No classes found</div>);
   }
 
-  const handleViewStudentsClick = (classId: string) => {
-    setSelectedClassId((prevSelectedClass: string | null) => prevSelectedClass === classId ? null : classId);
+  const handleViewStudentsClick = (classId: number) => {
+    setSelectedClassId((prevSelectedClass: number | null) => prevSelectedClass === classId ? null : classId);
   };
 
   return (

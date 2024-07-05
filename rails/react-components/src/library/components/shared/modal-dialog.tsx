@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "./modal";
 import css from "./modal-dialog.scss";
 
@@ -7,20 +7,29 @@ interface IProps {
   title?: string;
   borderColor?: "orange" | "teal";
 }
-export default class ModalDialog extends React.Component<IProps> {
-  render () {
-    const { title, children, borderColor } = this.props;
-    const themeClass = borderColor || "teal";
 
-    return (
-      <Modal>
-        <div className={`${css.dialog} ${css[themeClass]}`}>
-          { title && <div className={css.dialogTitleBar}>{ title }</div> }
-          <div className={css.dialogContent}>
-            { children }
-          </div>
+const ModalDialog  = ({ title, children, borderColor }: IProps) => {
+  const themeClass = borderColor || "teal";
+
+  useEffect(() => {
+    const previousOverflowValue = document.body.style.getPropertyValue("overflow");
+    const previousOverflowPriority = document.body.style.getPropertyPriority("overflow");
+    document.body.style.setProperty("overflow", "hidden", "important");
+    return () => {
+      document.body.style.setProperty("overflow", previousOverflowValue, previousOverflowPriority);
+    };
+  }, []);
+
+  return (
+    <Modal>
+      <div className={`${css.dialog} ${css[themeClass]}`}>
+        { title && <div className={css.dialogTitleBar}>{ title }</div> }
+        <div className={css.dialogContent}>
+          { children }
         </div>
-      </Modal>
-    );
-  }
-}
+      </div>
+    </Modal>
+  );
+};
+
+export default ModalDialog;

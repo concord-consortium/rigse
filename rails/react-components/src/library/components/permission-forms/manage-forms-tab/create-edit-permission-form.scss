@@ -4,13 +4,14 @@
   width: 600px;
 
   .formTop {
-    display: flex;
-    align-content: center;
     background-color: $col-link;
     color: white;
     font-weight: bold;
     padding: 10px;
     margin-bottom:10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .formRow {

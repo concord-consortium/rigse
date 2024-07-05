@@ -28,7 +28,7 @@ export default function StudentsTab() {
   // `null` means no search has been done yet, while an empty array means no results were found.
   const [teachers, setTeachers] = useState<ITeacher[] | null>(null);
   const [teachersLimitApplied, setTeachersLimitApplied] = useState<boolean>(false);
-  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
+  const [selectedTeacherId, setSelectedTeacherId] = useState<number | null>(null);
   const[teacherName, setTeacherName] = useState<string>("");
 
   // State for UI
@@ -42,6 +42,12 @@ export default function StudentsTab() {
     setTeacherName(e.target.value);
   };
 
+  const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
   const handleSearchClick = async () => {
     setSelectedTeacherId(null);
     const { teachers: foundTeachers, limit_applied } = await searchTeachers(teacherName);
@@ -49,8 +55,8 @@ export default function StudentsTab() {
     setTeachersLimitApplied(limit_applied);
   };
 
-  const handleViewClassesClick = (teacherId: string) => {
-    setSelectedTeacherId((prevSelectedTeacher: string | null) => prevSelectedTeacher === teacherId ? null : teacherId);
+  const handleViewClassesClick = (teacherId: number) => {
+    setSelectedTeacherId((prevSelectedTeacher: number | null) => prevSelectedTeacher === teacherId ? null : teacherId);
   };
 
   return (
@@ -58,7 +64,7 @@ export default function StudentsTab() {
       <div className={css.controlsArea}>
         <div className={css.leftSide}>
           <div className={css.leftSideFirstRow}>
-            <input type="text" value={teacherName} onChange={handleTeacherNameChange} />
+            <input type="text" value={teacherName} onChange={handleTeacherNameChange} onKeyDown={handleEnterKey} />
             <button onClick={handleSearchClick}>Search</button>
           </div>
           <div>

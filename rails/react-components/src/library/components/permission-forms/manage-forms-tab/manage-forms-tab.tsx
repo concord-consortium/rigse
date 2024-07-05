@@ -25,7 +25,7 @@ const editPermissionForm = async (formData: IPermissionFormFormData): Promise<IP
     body: JSON.stringify({ permission_form: { ...formData } })
   });
 
-const deletePermissionForm = async (permissionFormId: string) =>
+const deletePermissionForm = async (permissionFormId: number) =>
   request({
     url: `${Portal.API_V1.PERMISSION_FORMS}/${permissionFormId}`,
     method: "DELETE"
@@ -78,7 +78,7 @@ export default function ManageFormsTab() {
     }
   };
 
-  const handleDeleteClick = async (permissionFormId: string) => {
+  const handleDeleteClick = async (permissionFormId: number) => {
     await deletePermissionForm(permissionFormId);
     refetchPermissions();
   };
