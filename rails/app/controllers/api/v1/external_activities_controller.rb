@@ -56,7 +56,9 @@ class API::V1::ExternalActivitiesController < API::APIController
       :thumbnail_url          => params[:thumbnail_url],
       :author_email           => params[:author_email],
       :is_locked              => params[:is_locked],
-      :student_report_enabled => params[:student_report_enabled]
+      :student_report_enabled => params[:student_report_enabled],
+      :rubric_url             => params[:rubric_url],
+      :rubric_doc_url         => params[:rubric_doc_url]
     )
 
     if params[:external_report_url]
@@ -84,7 +86,7 @@ class API::V1::ExternalActivitiesController < API::APIController
     external_activity = ExternalActivity.where(url: params[:url]).first
     authorize external_activity
 
-    permitted_params = params.permit(:name, :student_report_enabled, :thumbnail_url, :is_locked, :append_auth_token, :save_path, :publication_status)
+    permitted_params = params.permit(:name, :student_report_enabled, :thumbnail_url, :is_locked, :append_auth_token, :save_path, :publication_status, :rubric_url, :rubric_doc_url)
 
     if external_activity.update(permitted_params)
       render :json => { success: true }, :status => :ok

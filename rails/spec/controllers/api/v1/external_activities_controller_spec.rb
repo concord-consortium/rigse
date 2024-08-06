@@ -7,6 +7,8 @@ describe API::V1::ExternalActivitiesController do
   let(:manager_user)      { FactoryBot.generate(:manager_user)    }
   let(:researcher_user)   { FactoryBot.generate(:researcher_user) }
   let(:author_user)       { FactoryBot.generate(:author_user)     }
+  let(:rubric_url)        { "https://example.com/rubric"          }
+  let(:rubric_doc_url)    { "https://example.com/rubric_doc"      }
 
   describe "#create" do
     context "with a guest" do
@@ -97,6 +99,14 @@ describe API::V1::ExternalActivitiesController do
       it "succeeds with valid minimal parameters" do
         post :create, params: { :name => "test", :url => "http://example.com/", :type => "Activity" }
         expect(response.status).to eql(201)
+      end
+
+      it "succeeds with rubric parameters" do
+        post :create, params: { :name => "test", :url => "http://example.com/", :type => "Activity", :rubric_url => rubric_url, :rubric_doc_url => rubric_doc_url}
+        expect(response.status).to eql(201)
+        created_activity = ExternalActivity.last
+        expect(created_activity.rubric_url).to eql(rubric_url)
+        expect(created_activity.rubric_doc_url).to eql(rubric_doc_url)
       end
     end
   end
@@ -208,14 +218,22 @@ describe API::V1::ExternalActivitiesController do
         expect(response.status).to eql(403)
       end
 
-      it "should update an activity they did author" do
+      it "should update an activity they did author (with rubric parameters)" do
         my_url = "http://activity.com/activity/2"
         post :create, params: { :name => "My Cool Activity", :url => my_url, :type => "Activity" }
+        created_activity = ExternalActivity.last
+        expect(created_activity.rubric_url).to eql(nil)
+        expect(created_activity.rubric_doc_url).to eql(nil)
         my_valid_parameters = {
-          url: my_url
+          url: my_url,
+          rubric_url: rubric_url,
+          rubric_doc_url: rubric_doc_url
         }
         post :update_by_url, params: my_valid_parameters
         expect(response.body).to eql('{"success":true}')
+        created_activity.reload
+        expect(created_activity.rubric_url).to eql(rubric_url)
+        expect(created_activity.rubric_doc_url).to eql(rubric_doc_url)
       end
     end
 
