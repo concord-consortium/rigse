@@ -39,7 +39,11 @@ class API::V1::SearchController < API::APIController
     results = []
     @search.results.each do |type, values|
       next if type == :all
-      results.push group_data(type.downcase, values)
+      if type == :project
+        results.push project_data(values)
+      else
+        results.push group_data(type.downcase, values)
+      end
     end
     results
   end
@@ -52,6 +56,45 @@ class API::V1::SearchController < API::APIController
       type: type.to_s.pluralize,
       header: view_context.t(type).pluralize.titleize,
       materials: materials_data(collection, nil, params[:include_related].to_i || 0, skip_lightbox_reloads),
+      pagination: {
+        current_page: collection.current_page,
+        total_pages: collection.total_pages,
+        start_item: collection.offset + 1,
+        end_item: collection.offset + collection.length,
+        total_items: collection.total_entries,
+        per_page: collection.per_page
+      }
+    }
+  end
+
+  def project_data(collection)
+    projects = []
+    collection.each do |project|
+      tags = {}
+      tags['subject_areas']   = []
+      tags['grade_levels']    = []
+
+      tags.each do |key, value|
+        list = project.send(key)
+        list.each do |o|
+          tags[key].push o.name
+        end
+      end
+
+      project_data = {
+        id: project.id,
+        name: project.name,
+        subject_areas:    tags['subject_areas'],
+        grade_levels:     tags['grade_levels'],
+      }
+
+      projects.push project_data
+    end
+
+    {
+      type: "projects",
+      header: view_context.t("HomePage.SearchResults.Projects"),
+      projects: projects,
       pagination: {
         current_page: collection.current_page,
         total_pages: collection.total_pages,

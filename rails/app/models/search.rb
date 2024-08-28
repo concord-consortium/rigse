@@ -27,6 +27,7 @@ class Search
   attr_accessor :no_sensors
   attr_accessor :sensors
   attr_accessor :project_ids
+  attr_accessor :search_projects
 
   attr_accessor :available_subject_areas
   attr_accessor :available_grade_level_groups
@@ -144,7 +145,8 @@ class Search
     self.include_mine         = opts[:include_mine]        || false
     self.include_official     = opts[:include_official]    || false
     self.include_templates    = opts[:include_templates]   || false
-    self.show_archived     = opts[:show_archived]    || false
+    self.show_archived        = opts[:show_archived]       || false
+    self.search_projects      = opts[:search_projects]     || false
 
     self.fetch_available_filter_options()
 
@@ -205,6 +207,27 @@ class Search
     self.results[:all] = []
     self.hits[:all] = []
     self.total_entries[:all] = 0
+
+    if self.search_projects
+      # need to use #solr_search instead of #search as the project model already has a non-solr search method
+      _results = Admin::Project.solr_search do |s|
+        s.fulltext(self.text)
+        s.with(:public, true)
+        search_by_grade_levels(s)
+        search_by_subject_areas(s)
+
+        s.order_by(:name)
+
+        # no pagination on project searches, all results are shown on the first page load
+      end
+
+      self.results[:all] += _results.results
+      self.hits[:all]    += _results.hits
+      self.total_entries[:all] += _results.results.total_entries
+      self.results[:project] = _results.results
+      self.hits[:project]    = _results.hits
+      self.total_entries[:project] = _results.results.total_entries
+    end
 
     self.clean_material_types.each do |type|
 

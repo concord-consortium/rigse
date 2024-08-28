@@ -140,6 +140,8 @@ en:
           in the upper left to search all resources or view curated Collections of
           resources by clicking the Collections link above.
           </p>
+    SearchResults:
+      Projects: Collections
 
   search:
     only_mine: Resources I authored

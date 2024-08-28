@@ -648,5 +648,107 @@ describe Search do
       end
     end
 
+    context "for projects" do
+      # create projects
+      let(:foo_project) {
+        FactoryBot.create(:project, name: "Foo", landing_page_slug: "first-project", public: true,
+          landing_page_content: "The foo project has content about cats",
+          project_card_description: "This is the description about felines",
+          grade_level_list: ["1", "2"], subject_area_list: ["Math"]
+        )
+      }
+      let(:bar_project) {
+        FactoryBot.create(:project, name: "Bar", landing_page_slug: "second-project", public: true,
+          landing_page_content: "The bar project also has content about cats",
+          project_card_description: "This is also the description about felines",
+          grade_level_list: ["1", "3"], subject_area_list: ["Math", "Chemistry"]
+        )
+      }
+      let(:baz_project) {
+        FactoryBot.create(:project, name: "Baz", landing_page_slug: "third-project", public: false,
+          landing_page_content: "The baz project is private and should not show in search results",
+          project_card_description: "This is the description about private projects",
+          grade_level_list: ["1", "2"], subject_area_list: ["Math"]
+        )
+      }
+      let(:search_opts) { { :search_projects => true } }
+
+      before(:each) do
+        foo_project
+        bar_project
+        baz_project
+        Admin::Project.reindex
+        Sunspot.commit
+      end
+
+      describe "with no options" do
+        it "returns in alphabetical name order filtering out private projects" do
+          expect(subject.results[:project].length).to eq(2)
+          expect(subject.results[:project][0].public).to be(true)
+          expect(subject.results[:project][1].public).to be(true)
+
+          expect(subject.results[:project][0].id).to be(bar_project.id)
+          expect(subject.results[:project][1].id).to be(foo_project.id)
+        end
+      end
+
+      describe "by name" do
+        let(:search_opts) { {:search_projects => true, :search_term => "foo"} }
+
+        it "results in 1 result" do
+          expect(subject.results[:project].length).to eq(1)
+          expect(subject.results[:project][0].id).to be(foo_project.id)
+        end
+      end
+
+      describe "by landing page content" do
+        let(:search_opts) { {:search_projects => true, :search_term => "cats"} }
+
+        it "results in 2 results" do
+          expect(subject.results[:project].length).to eq(2)
+
+          expect(subject.results[:project][0].id).to be(bar_project.id)
+          expect(subject.results[:project][1].id).to be(foo_project.id)
+        end
+      end
+
+      describe "by project card description" do
+        let(:search_opts) { {:search_projects => true, :search_term => "felines"} }
+
+        it "results in 2 results" do
+          expect(subject.results[:project].length).to eq(2)
+
+          expect(subject.results[:project][0].id).to be(bar_project.id)
+          expect(subject.results[:project][1].id).to be(foo_project.id)
+        end
+      end
+
+      describe "by landing page slug" do
+        let(:search_opts) { {:search_projects => true, :search_term => "second"} }
+
+        it "results in 1 result" do
+          expect(subject.results[:project].length).to eq(1)
+          expect(subject.results[:project][0].id).to be(bar_project.id)
+        end
+      end
+
+      describe "by grade levels" do
+        let(:search_opts) { {:search_projects => true, :grade_level_groups => ["3-4"]} }
+
+        it "results in 1 results" do
+          expect(subject.results[:project].length).to eq(1)
+          expect(subject.results[:project][0].id).to be(bar_project.id)
+        end
+      end
+
+      describe "by subject areas" do
+        let(:search_opts) { {:search_projects => true, :subject_areas => ["Chemistry"]} }
+
+        it "results in 1 results" do
+          expect(subject.results[:project].length).to eq(1)
+          expect(subject.results[:project][0].id).to be(bar_project.id)
+        end
+      end
+    end
   end
 end

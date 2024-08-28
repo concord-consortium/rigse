@@ -38,6 +38,29 @@ class Admin::Project < ApplicationRecord
     project_users.where(is_researcher:true).map { |ru| ru.user }
   end
 
+  # this has to be set AFTER SearchableModel is included so that sunspot doesn't alias #solr_search to #search
+  searchable do
+    text :name
+    string :name
+
+    text :landing_page_content
+    text :project_card_description
+    text :landing_page_slug
+
+    boolean :public
+
+    time    :updated_at
+    time    :created_at
+
+    string  :grade_levels, :multiple => true do
+      grade_level_list
+    end
+
+    string  :subject_areas, :multiple => true do
+      subject_area_list
+    end
+  end
+
   has_many :project_materials, dependent: :destroy
   has_many :external_activities, through: :project_materials, source: :material, source_type: 'ExternalActivity'
   has_many :interactives, through: :project_materials, source: :material, source_type: 'Interactive'
