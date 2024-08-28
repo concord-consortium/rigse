@@ -85,4 +85,12 @@ class Admin::ProjectPolicy < ApplicationPolicy
   def research_classes?
     update_or_edit? || user && user.is_project_researcher?(record)
   end
+
+  def edit_grade_levels?
+    new_or_create? || update_or_edit?
+  end
+
+  def edit_subject_areas?
+    new_or_create? || update_or_edit?
+  end
 end

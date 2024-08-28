@@ -81,6 +81,14 @@ class Admin::ProjectsController < ApplicationController
     authorize Admin::Project
     @project = Admin::Project.new(admin_project_strong_params(params[:admin_project]))
 
+    if params[:update_grade_levels]
+      @project.grade_level_list = (params[:grade_levels] || [])
+    end
+
+    if params[:update_subject_areas]
+      @project.subject_area_list = (params[:subject_areas] || [])
+    end
+
     if @project.save
       redirect_to admin_projects_url, notice: 'Project was successfully created.'
     else
@@ -92,6 +100,15 @@ class Admin::ProjectsController < ApplicationController
   def update
     @project = Admin::Project.find(params[:id])
     authorize @project
+
+    if params[:update_grade_levels]
+      @project.grade_level_list = (params[:grade_levels] || [])
+    end
+
+    if params[:update_subject_areas]
+      @project.subject_area_list = (params[:subject_areas] || [])
+    end
+
     if @project.update(admin_project_strong_params(params[:admin_project]))
       redirect_to @project, notice: 'Project was successfully updated.'
     else

@@ -77,9 +77,11 @@ describe Admin::ProjectsController do
         end
 
         it "assigns a newly created project as @project" do
-          post :create, params: { :admin_project => valid_attributes }
+          post :create, params: { :admin_project => valid_attributes, update_grade_levels: true, grade_levels: ["1", "2"], update_subject_areas: true, subject_areas: ["Math", "Physical Science"] }
           expect(assigns(:project)).to be_a(Admin::Project)
           expect(assigns(:project)).to be_persisted
+          expect(assigns(:project).grade_level_list).to match_array(["1", "2"])
+          expect(assigns(:project).subject_area_list).to match_array(["Math", "Physical Science"])
         end
 
         it "redirects to the projects index" do
@@ -119,8 +121,10 @@ describe Admin::ProjectsController do
         end
 
         it "assigns the requested project as @project" do
-          put :update, params: { :id => project.to_param, :admin_project => valid_attributes }
+          put :update, params: { :id => project.to_param, :admin_project => valid_attributes, update_grade_levels: true, grade_levels: ["3", "4"], update_subject_areas: true, subject_areas: ["Physics"]  }
           expect(assigns(:project)).to eq(project)
+          expect(assigns(:project).grade_level_list).to match_array(["3", "4"])
+          expect(assigns(:project).subject_area_list).to match_array(["Physics"])
         end
 
         it "redirects to the project" do

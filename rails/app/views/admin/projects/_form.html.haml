@@ -29,6 +29,8 @@
         %li
           Project card description:
           = f.text_area :project_card_description
+      = render :partial => 'shared/grade_levels_edit', :locals => { :object => @project }
+      = render :partial => 'shared/subject_areas_edit', :locals => { :object => @project }
       %hr
       -# If we don't have an ID yet (new record), we can't display associations
       - if @project.id

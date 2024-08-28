@@ -3,6 +3,9 @@ class Admin::Project < ApplicationRecord
 
   self.table_name = 'admin_projects'
 
+  acts_as_taggable_on :grade_levels
+  acts_as_taggable_on :subject_areas
+
   def changeable?(user)
     # project admins can change the projects they are admins of
     if user.is_project_admin? && user.admin_for_projects.include?(self)
