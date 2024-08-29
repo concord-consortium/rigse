@@ -1,6 +1,5 @@
 import React from "react";
 
-import Component from "../helpers/component";
 import StemFinderResult from "./stem-finder-result";
 import sortByName from "../helpers/sort-by-name";
 import sortResources from "../helpers/sort-resources";
@@ -16,9 +15,60 @@ import css from "./stem-finder.scss";
 
 const DISPLAY_LIMIT_INCREMENT = 6;
 
-const StemFinder = Component({
+interface SubjectArea {
+  key: string;
+  title: string;
+  searchAreas: string[]
+}
 
-  getInitialState () {
+interface GradeLevel {
+  key: string;
+  title: string;
+  grades: string[];
+  label: string;
+  searchGroups: string[];
+}
+
+interface Props {
+  hideFeatured?: boolean;
+  subjectAreaKey?: string;
+  gradeLevelKey?: string;
+  sortOrder?: string;
+}
+
+interface State {
+  collections: any[],
+  displayLimit: number,
+  featuredCollections: any[],
+  firstSearch: boolean,
+  gradeLevelsSelected: GradeLevel[],
+  gradeLevelsSelectedMap: Record<string, GradeLevel|undefined>,
+  hideFeatured: boolean,
+  includeOfficial: boolean,
+  includeContributed: boolean,
+  includeMine: boolean,
+  initPage: boolean,
+  isSmallScreen: boolean,
+  keyword: string,
+  lastSearchResultCount: number,
+  noResourcesFound: boolean,
+  numTotalResources: number,
+  opacity: number,
+  resources: any[],
+  searching: boolean,
+  searchInput: string,
+  searchPage: number,
+  sortOrder: string,
+  subjectAreasSelected: SubjectArea[],
+  subjectAreasSelectedMap: Record<string, SubjectArea|undefined>,
+  usersAuthoredResourcesCount: number
+}
+
+class StemFinder extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props);
+
     const hideFeatured = this.props.hideFeatured || false;
     let subjectAreaKey = this.props.subjectAreaKey;
     let gradeLevelKey = this.props.gradeLevelKey;
@@ -72,7 +122,7 @@ const StemFinder = Component({
       }
     }
 
-    return {
+    this.state = {
       collections: [],
       displayLimit: DISPLAY_LIMIT_INCREMENT,
       featuredCollections: [],
@@ -99,7 +149,7 @@ const StemFinder = Component({
       subjectAreasSelectedMap,
       usersAuthoredResourcesCount: 0
     };
-  },
+  }
 
   //
   // If the current URL is formatted to include stem finder filters,
@@ -119,7 +169,7 @@ const StemFinder = Component({
     }
 
     return ret;
-  },
+  }
 
   mapSubjectArea (subjectArea: any) {
     switch (subjectArea) {
@@ -130,15 +180,15 @@ const StemFinder = Component({
         return "engineering-tech";
     }
     return subjectArea;
-  },
+  }
 
   UNSAFE_componentWillMount () {
-    waitForAutoShowingLightboxToClose(function () {
+    waitForAutoShowingLightboxToClose(() => {
       this.search();
-    }.bind(this));
-  },
+    });
+  }
 
-  handlePageScroll (event: any) {
+  handlePageScroll = (event: any) => {
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     if (
       scrollTop > window.innerHeight / 2 &&
@@ -148,9 +198,9 @@ const StemFinder = Component({
     ) {
       this.search(true);
     }
-  },
+  };
 
-  handleLightboxScroll (event: any) {
+  handleLightboxScroll = (event: any) => {
     const scrollTop = event.srcElement.scrollTop;
     if (
       scrollTop > window.innerHeight / 3 &&
@@ -160,7 +210,7 @@ const StemFinder = Component({
     ) {
       this.search(true);
     }
-  },
+  };
 
   componentDidMount () {
     if (document.getElementById("pprfl")) {
@@ -172,7 +222,7 @@ const StemFinder = Component({
     window.addEventListener("resize", () => {
       this.setState({ isSmallScreen: window.innerWidth <= 768 });
     });
-  },
+  }
 
   componentWillUnmount () {
     if (document.getElementById("pprfl")) {
@@ -180,9 +230,9 @@ const StemFinder = Component({
     } else {
       document.removeEventListener("scroll", this.handlePageScroll);
     }
-  },
+  }
 
-  getQueryParams (incremental: any, keyword: any) {
+  getQueryParams = (incremental: any, keyword: any) => {
     const searchPage = incremental ? this.state.searchPage + 1 : 1;
     let query = keyword !== undefined ? ["search_term=", encodeURIComponent(keyword)] : [];
     query = query.concat([
@@ -191,29 +241,29 @@ const StemFinder = Component({
       "&model_types=All",
       "&include_related=0",
       "&investigation_page=",
-      searchPage,
+      String(searchPage),
       "&activity_page=",
-      searchPage,
+      String(searchPage),
       "&interactive_page=",
-      searchPage,
+      String(searchPage),
       "&collection_page=",
-      searchPage,
+      String(searchPage),
       "&per_page=",
-      DISPLAY_LIMIT_INCREMENT
+      String(DISPLAY_LIMIT_INCREMENT)
     ]);
 
     // subject areas
-    this.state.subjectAreasSelected.forEach(function (subjectArea: any) {
-      subjectArea.searchAreas.forEach(function (searchArea: any) {
+    this.state.subjectAreasSelected.forEach((subjectArea: any) => {
+      subjectArea.searchAreas.forEach((searchArea: any) => {
         query.push("&subject_areas[]=");
         query.push(encodeURIComponent(searchArea));
       });
     });
 
     // grade
-    this.state.gradeLevelsSelected.forEach(function (gradeFilter: any) {
+    this.state.gradeLevelsSelected.forEach((gradeFilter: any) => {
       if (gradeFilter.searchGroups) {
-        gradeFilter.searchGroups.forEach(function (searchGroup: any) {
+        gradeFilter.searchGroups.forEach((searchGroup: any) => {
           query.push("&grade_level_groups[]=");
           query.push(encodeURIComponent(searchGroup));
         });
@@ -227,10 +277,16 @@ const StemFinder = Component({
     query.push(includedResources);
 
     return query.join("");
-  },
+  };
 
-  search (incremental: any) {
+  search (incremental?: any) {
+    /* eslint-disable react/no-access-state-in-setstate */
     const displayLimit = incremental ? this.state.displayLimit + DISPLAY_LIMIT_INCREMENT : DISPLAY_LIMIT_INCREMENT;
+    const featuredCollections = incremental ? this.state.featuredCollections.slice(0) : [];
+    let resources = incremental ? this.state.resources.slice(0) : [];
+    const searchPage = incremental ? this.state.searchPage + 1 : 1;
+    const keyword = jQuery.trim(this.state.searchInput);
+    /* eslint-enable react/no-access-state-in-setstate */
 
     // short circuit further incremental searches when all data has been downloaded
     if (incremental && (this.state.lastSearchResultCount === 0)) {
@@ -240,11 +296,6 @@ const StemFinder = Component({
       return;
     }
 
-    const featuredCollections = incremental ? this.state.featuredCollections.slice(0) : [];
-    let resources = incremental ? this.state.resources.slice(0) : [];
-    const searchPage = incremental ? this.state.searchPage + 1 : 1;
-
-    const keyword = jQuery.trim(this.state.searchInput);
     if (keyword !== "") {
       gtag("event", "search", {
         "category": "Home Page Search",
@@ -264,14 +315,14 @@ const StemFinder = Component({
       url: Portal.API_V1.SEARCH,
       data: this.getQueryParams(incremental, keyword),
       dataType: "json"
-    }).done(function (result1: any) {
+    }).done((result1: any) => {
       let numTotalResources = 0;
       const results = result1.results;
       const usersAuthoredResourcesCount = result1.filters.number_authored_resources;
       let lastSearchResultCount = 0;
 
-      results.forEach(function (result: any) {
-        result.materials.forEach(function (material: any) {
+      results.forEach((result: any) => {
+        result.materials.forEach((material: any) => {
           portalObjectHelpers.processResource(material);
           resources.push(material);
           if (material.material_type === "Collection") {
@@ -305,8 +356,8 @@ const StemFinder = Component({
       });
 
       this.showResources();
-    }.bind(this));
-  },
+    });
+  }
 
   buildFilterId (filterKey: any) {
     const filterKeyWords = filterKey.split("-");
@@ -314,13 +365,13 @@ const StemFinder = Component({
       ? filterKeyWords[0] + filterKeyWords[1].charAt(0).toUpperCase() + filterKeyWords[1].slice(1)
       : filterKeyWords[0];
     return filterId;
-  },
+  }
 
   scrollToFinder () {
     if (document.getElementById("finderLightbox")) {
       document.getElementById("finderLightbox")?.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     }
-  },
+  }
 
   noOptionsSelected () {
     if (
@@ -331,45 +382,48 @@ const StemFinder = Component({
     } else {
       return false;
     }
-  },
+  }
 
   renderLogo (subjectArea: any) {
     const filterId = this.buildFilterId(subjectArea.key);
     const selected = this.state.subjectAreasSelectedMap[subjectArea.key];
     const className = selected ? css.selected : null;
 
-    const clicked = function () {
-      const subjectAreasSelected = this.state.subjectAreasSelected.slice();
-      const subjectAreasSelectedMap = this.state.subjectAreasSelectedMap;
-      const index = subjectAreasSelected.indexOf(subjectArea);
+    const clicked = () => {
+      this.setState((prev) => {
+        const subjectAreasSelected = prev.subjectAreasSelected.slice();
+        const subjectAreasSelectedMap = prev.subjectAreasSelectedMap;
+        const index = subjectAreasSelected.indexOf(subjectArea);
 
-      if (index === -1) {
-        subjectAreasSelectedMap[subjectArea.key] = subjectArea;
-        subjectAreasSelected.push(subjectArea);
-        jQuery("#" + css[filterId]).addClass(css.selected);
-        gtag("event", "click", {
-          "category": "Home Page Filter",
-          "label": subjectArea.title
-        });
-      } else {
-        subjectAreasSelectedMap[subjectArea.key] = undefined;
-        subjectAreasSelected.splice(index, 1);
-        jQuery("#" + css[filterId]).removeClass(css.selected);
-      }
-      this.setState({ subjectAreasSelected, subjectAreasSelectedMap }, this.search);
-      this.scrollToFinder();
-      this.setState({
-        hideFeatured: true,
-        initPage: false
-      });
-    }.bind(this);
+        if (index === -1) {
+          subjectAreasSelectedMap[subjectArea.key] = subjectArea;
+          subjectAreasSelected.push(subjectArea);
+          jQuery("#" + css[filterId]).addClass(css.selected);
+          gtag("event", "click", {
+            "category": "Home Page Filter",
+            "label": subjectArea.title
+          });
+        } else {
+          subjectAreasSelectedMap[subjectArea.key] = undefined;
+          subjectAreasSelected.splice(index, 1);
+          jQuery("#" + css[filterId]).removeClass(css.selected);
+        }
+        this.scrollToFinder();
+        return {
+          subjectAreasSelected,
+          subjectAreasSelectedMap,
+          hideFeatured: true,
+          initPage: false
+        };
+      }, this.search);
+    };
 
     return (
       <li key={subjectArea.key} id={css[filterId]} className={className} onClick={clicked}>
         { subjectArea.title }
       </li>
     );
-  },
+  }
 
   renderGLLogo (gradeLevel: any) {
     let className = "portal-pages-finder-form-filters-logo";
@@ -380,38 +434,41 @@ const StemFinder = Component({
       className += " " + css.selected;
     }
 
-    const clicked = function () {
-      const gradeLevelsSelected = this.state.gradeLevelsSelected.slice();
-      const gradeLevelsSelectedMap = this.state.gradeLevelsSelectedMap;
-      const index = gradeLevelsSelected.indexOf(gradeLevel);
+    const clicked = () => {
+      this.setState((prev) => {
+        const gradeLevelsSelected = prev.gradeLevelsSelected.slice();
+        const gradeLevelsSelectedMap = prev.gradeLevelsSelectedMap;
+        const index = gradeLevelsSelected.indexOf(gradeLevel);
 
-      if (index === -1) {
-        gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel;
-        gradeLevelsSelected.push(gradeLevel);
-        jQuery("#" + css[filterId]).addClass(css.selected);
-        gtag("event", "click", {
-          "category": "Home Page Filter",
-          "label": gradeLevel.title
-        });
-      } else {
-        gradeLevelsSelectedMap[gradeLevel.key] = undefined;
-        gradeLevelsSelected.splice(index, 1);
-        jQuery("#" + css[filterId]).removeClass(css.selected);
-      }
-      this.setState({ gradeLevelsSelected, gradeLevelsSelectedMap }, this.search);
-      this.scrollToFinder();
-      this.setState({
-        hideFeatured: true,
-        initPage: false
-      });
-    }.bind(this);
+        if (index === -1) {
+          gradeLevelsSelectedMap[gradeLevel.key] = gradeLevel;
+          gradeLevelsSelected.push(gradeLevel);
+          jQuery("#" + css[filterId]).addClass(css.selected);
+          gtag("event", "click", {
+            "category": "Home Page Filter",
+            "label": gradeLevel.title
+          });
+        } else {
+          gradeLevelsSelectedMap[gradeLevel.key] = undefined;
+          gradeLevelsSelected.splice(index, 1);
+          jQuery("#" + css[filterId]).removeClass(css.selected);
+        }
+        this.scrollToFinder();
+        return {
+          gradeLevelsSelected,
+          gradeLevelsSelectedMap,
+          hideFeatured: true,
+          initPage: false
+        };
+      }, this.search);
+    };
 
     return (
       <li key={gradeLevel.key} id={css[filterId]} className={className} onClick={clicked}>
         { gradeLevel.title }
       </li>
     );
-  },
+  }
 
   renderSubjectAreas () {
     const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`;
@@ -419,13 +476,13 @@ const StemFinder = Component({
       <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Subject</h2>
         <ul>
-          { filters.subjectAreas.map(function (subjectArea: any) {
+          { filters.subjectAreas.map((subjectArea: any) => {
             return this.renderLogo(subjectArea);
-          }.bind(this)) }
+          }) }
         </ul>
       </div>
     );
-  },
+  }
 
   renderGradeLevels () {
     const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`;
@@ -433,37 +490,37 @@ const StemFinder = Component({
       <div className={containerClassName}>
         <h2 onClick={this.handleFilterHeaderClick}>Grade Level</h2>
         <ul>
-          { filters.gradeFilters.map(function (gradeLevel: any) {
+          { filters.gradeFilters.map((gradeLevel: any) => {
             return this.renderGLLogo(gradeLevel);
-          }.bind(this)) }
+          }) }
         </ul>
       </div>
     );
-  },
+  }
 
-  handleOfficialClick (e: any) {
+  handleOfficialClick = (e: any) => {
     e.currentTarget.classList.toggle(css.selected);
-    this.setState({
+    this.setState((prev) => ({
       hideFeatured: true,
-      includeOfficial: !this.state.includeOfficial
-    }, this.search);
+      includeOfficial: !prev.includeOfficial
+    }), this.search);
     gtag("event", "click", {
       "category": "Home Page Filter",
       "label": "Official"
     });
-  },
+  };
 
-  handleCommunityClick (e: any) {
+  handleCommunityClick = (e: any) => {
     e.currentTarget.classList.toggle(css.selected);
-    this.setState({
+    this.setState((prev) => ({
       hideFeatured: true,
-      includeContributed: !this.state.includeContributed
-    }, this.search);
+      includeContributed: !prev.includeContributed
+    }), this.search);
     gtag("event", "click", {
       "category": "Home Page Filter",
       "label": "Community"
     });
-  },
+  };
 
   clearFilters () {
     jQuery(".portal-pages-finder-form-subject-areas-logo").removeClass(css.selected);
@@ -473,15 +530,15 @@ const StemFinder = Component({
       keyword: "",
       searchInput: ""
     }, this.search);
-  },
+  }
 
   clearKeyword () {
     this.setState({ keyword: "", searchInput: "" }, () => this.search());
-  },
+  }
 
   toggleFilter (type: any, filter: any) {
     this.setState({ initPage: false });
-    const selectedKey = type + "Selected";
+    const selectedKey: ("gradeLevelsSelected"|"subjectAreasSelected") = (type + "Selected") as any;
     const selectedFilters = this.state[selectedKey].slice();
     const index = selectedFilters.indexOf(filter);
     if (index === -1) {
@@ -498,13 +555,13 @@ const StemFinder = Component({
     const state: any = {};
     state[selectedKey] = selectedFilters;
     this.setState(state, this.search);
-  },
+  }
 
-  handleSearchInputChange (searchInput: any) {
+  handleSearchInputChange = (searchInput: any) => {
     this.setState({ searchInput });
-  },
+  };
 
-  handleSearchSubmit (e: any) {
+  handleSearchSubmit = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.search();
@@ -513,9 +570,9 @@ const StemFinder = Component({
       hideFeatured: true,
       initPage: false
     });
-  },
+  };
 
-  handleAutoSuggestSubmit (searchInput: any) {
+  handleAutoSuggestSubmit = (searchInput: any) => {
     this.setState({
       hideFeatured: true,
       initPage: false
@@ -524,9 +581,9 @@ const StemFinder = Component({
       this.search();
       this.scrollToFinder();
     });
-  },
+  };
 
-  handleSortSelection (e: any) {
+  handleSortSelection = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
@@ -541,7 +598,7 @@ const StemFinder = Component({
       "category": "Finder Sort",
       "label": e.target.value
     });
-  },
+  };
 
   renderSearch () {
     const containerClassName = this.state.isSmallScreen ? css.finderOptionsContainer : `${css.finderOptionsContainer} ${css.open}`;
@@ -563,12 +620,12 @@ const StemFinder = Component({
         </form>
       </div>
     );
-  },
+  }
 
   isAdvancedUser () {
     const isAdvancedUser = Portal.currentUser.isAdmin || Portal.currentUser.isAuthor || Portal.currentUser.isManager || Portal.currentUser.isResearcher;
     return (isAdvancedUser);
-  },
+  }
 
   renderAdvanced () {
     return (
@@ -585,7 +642,7 @@ const StemFinder = Component({
         </div>
       </>
     );
-  },
+  }
 
   renderForm () {
     const isAdvancedUser = this.isAdvancedUser();
@@ -599,15 +656,15 @@ const StemFinder = Component({
         </div>
       </div>
     );
-  },
+  }
 
-  handleFilterHeaderClick (e: any) {
+  handleFilterHeaderClick = (e: any) => {
     e.currentTarget.parentElement.classList.toggle(css.open);
-  },
+  };
 
-  handleShowOnlyMine (e: any) {
-    this.setState({ includeMine: !this.state.includeMine }, this.search);
-  },
+  handleShowOnlyMine = (e: any) => {
+    this.setState((prev) => ({ includeMine: !prev.includeMine }), this.search);
+  };
 
   renderShowOnly () {
     const { includeMine } = this.state;
@@ -616,7 +673,7 @@ const StemFinder = Component({
         <label htmlFor="includeMine"><input type="checkbox" name="includeMine" value="true" id="includeMine" onChange={this.handleShowOnlyMine} defaultChecked={includeMine} /> Show only resources I authored</label>
       </div>
     );
-  },
+  }
 
   renderSortMenu () {
     const sortValues = ["Alphabetical", "Newest", "Oldest"];
@@ -625,13 +682,13 @@ const StemFinder = Component({
       <div className={css.sortMenu}>
         <label htmlFor="sort">Sort by</label>
         <select name="sort" value={this.state.sortOrder} onChange={this.handleSortSelection}>
-          { sortValues.map(function (sortValue, index) {
+          { sortValues.map((sortValue, index) => {
             return <option key={`${sortValue}-${index}`} value={sortValue}>{ sortValue }</option>;
           }) }
         </select>
       </div>
     );
-  },
+  }
 
   renderResultsHeader () {
     const { displayLimit, noResourcesFound, numTotalResources, searching, usersAuthoredResourcesCount } = this.state;
@@ -667,20 +724,20 @@ const StemFinder = Component({
         { this.renderSortMenu() }
       </div>
     );
-  },
+  }
 
   renderLoadMore () {
     if ((this.state.resources.length === 0) || (this.state.displayLimit >= this.state.numTotalResources)) {
       return null;
     }
-  },
+  }
 
   showResources () {
-    setTimeout(function () {
+    setTimeout(() => {
       const resourceItems = document.querySelectorAll(".resourceItem");
       resourceItems.forEach((resourceItem) => { (resourceItem as HTMLElement).style.opacity = "1"; });
     }, 500);
-  },
+  }
 
   renderResults () {
     if (this.state.firstSearch) {
@@ -709,7 +766,7 @@ const StemFinder = Component({
         { this.renderLoadMore() }
       </>
     );
-  },
+  }
 
   render () {
     return (
@@ -721,6 +778,6 @@ const StemFinder = Component({
       </div>
     );
   }
-});
+}
 
 export default StemFinder;
