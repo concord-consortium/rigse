@@ -83,6 +83,12 @@ const renderComponentFn = function (ComponentClass: any) {
   };
 };
 
+const renderComponentTagFn = function (ComponentClass: any) {
+  return function (options: any, id: any) {
+    render(<ComponentClass {...options} />, id);
+  };
+};
+
 // to ease the transition from portal-pages maintain both namespaces
 window.PortalPages = window.PortalComponents = {
   settings: {}, // default to empty, used to set flags from portal templates
@@ -182,7 +188,7 @@ window.PortalPages = window.PortalComponents = {
   renderStemFinderResult: renderComponentFn(StemFinderResult),
 
   StemFinder,
-  renderStemFinder: renderComponentFn(StemFinder),
+  renderStemFinder: renderComponentTagFn(StemFinder),
 
   PageHeader,
   renderPageHeader: renderComponentFn(PageHeader),
