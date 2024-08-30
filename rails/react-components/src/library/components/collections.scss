@@ -1,0 +1,32 @@
+@import '../../shared/styles/variables/_variables.scss';
+
+.finderResultsCollections {
+  margin-bottom: 30px;
+
+  .finderResultsCollectionsHeader {
+    margin-bottom: 10px;
+
+    .finderResultsCollectionsCount {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .findResultsCollectionsShowMore {
+    display: flex;
+    justify-content: center;
+
+    button {
+      background: $col-blue;
+      color: $white;
+      padding: 6px 20px;
+      display: inline-block;
+      border-radius: 4px;
+      font-weight: bold;
+
+      &:hover, &:active {
+        background: #ffc321;
+      }
+    }
+  }
+}
