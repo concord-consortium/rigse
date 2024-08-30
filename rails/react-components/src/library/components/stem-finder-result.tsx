@@ -357,7 +357,7 @@ const StemFinderResult = Component({
   },
 
   render () {
-    const { resource, index } = this.props;
+    const { resource, index, opacity } = this.props;
     const resourceTypeClass = resource.material_type.toLowerCase();
     const finderResultClasses = this.state.isOpen ? `resourceItem ${css.finderResult} ${css.open} ${css[resourceTypeClass]}` : `resourceItem ${css.finderResult} ${css[resourceTypeClass]}`;
     const resourceName = resource.name;
@@ -367,9 +367,14 @@ const StemFinderResult = Component({
     const projectNameRegex = / |-|\./g;
     const projectClass = projectName ? projectName.replace(projectNameRegex, "").toLowerCase() : null;
     const transitionDelay = 100 * index;
+    const style: React.CSSProperties = { transitionDelay: transitionDelay + "ms" };
+
+    if (opacity !== undefined) {
+      style.opacity = opacity;
+    }
 
     return (
-      <div className={finderResultClasses} style={{ transitionDelay: transitionDelay + "ms" }}>
+      <div className={finderResultClasses} style={style}>
         <div className={css.finderResultImagePreview}>
           <img alt={resource.name} src={resource.icon.url} />
         </div>
@@ -389,10 +394,9 @@ const StemFinderResult = Component({
         <div className={css.previewLink}>
           { resource.material_type !== "Collection"
             ? <a className={css.previewLinkButton} href={resource.links.preview.url} target="_blank" onClick={this.handlePreviewClick} rel="noreferrer">{ resource.links.preview.text }</a>
-            : <a className={css.previewLinkButton} href={resource.links.preview.url} target="_blank" onClick={this.handleViewCollectionClick} rel="noreferrer">View Collection</a>
+            : <a className={css.previewLinkButton} href={resource.links.preview.url} target="_blank" onClick={this.handleViewCollectionClick} rel="noreferrer">Go to Collection</a>
           }
-          { resource.material_type !== "Collection" &&
-            <div className={`${css.projectLabel} ${css[projectClass]}`}>
+          { <div className={`${css.projectLabel} ${css[projectClass]}`}>
               { projectName }
             </div>
           }
