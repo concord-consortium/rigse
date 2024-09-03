@@ -36,13 +36,13 @@
         .filter-group__options.webkit_scrollbars
           = check_box_tag 'material_properties[]', SearchModelInterface::RunsInBrowser, @form_model.runs_in_browser, :id => 'runs_in_browser'
           %label.tooltip
-            Runs In Browser
+            Runs in browser
             %span.tip
               These materials do not launch a Java webstart application.
           %br
           = check_box_tag 'material_properties[]', SearchModelInterface::RequiresDownload, @form_model.requires_download, :id => 'requires_download'
           %label.tooltip
-            Requires Download
+            Requires download
             %span.tip
               These materials download a file to your computer, and start using Java Web Start.
           %br

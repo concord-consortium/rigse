@@ -12,9 +12,14 @@ ngss-assessment-theme-styles {
         background-size: 325px 100px;
     }
   }
-  
+
   #footer {
     font-size: 15px;
     text-align: center;
+  }
+
+  .search-form__ngss_info {
+    // hide link to NGSS Pathfinder when on NGSS portal
+    display: none;
   }
 }

@@ -36,6 +36,20 @@
       width: 350px;
     }
   }
+  .search-form__ngss_info {
+    font-size: 18px;
+    line-height: normal;
+    text-align: center;
+    vertical-align: middle;
+
+    @media screen and (max-width: 950px) {
+      br { display: none;} // remove line break on smaller screens
+    }
+
+    a {
+      color: #ea6d2f;
+    }
+  }
   input[type="submit"] {
     padding: 12px 20px 11px !important;
     width: auto !important;
@@ -75,8 +89,8 @@
      .filter-group__options {
        background: #fff;
        border: solid 1px #999;
-       height: 126px;
-       max-height: 126px;
+       height: 146px;
+       max-height: 146px;
        overflow-x: hidden;
        overflow-y: scroll;
        padding: 5px;
@@ -85,6 +99,11 @@
 
        label {
          text-transform: none;
+         vertical-align: middle;
+       }
+
+       input[type="checkbox"] {
+        vertical-align: middle;
        }
 
        &.select-menu {
@@ -118,7 +137,6 @@
 
        .filter-group__options {
          height: auto;
-         max-height: 63px;
        }
      }
    }

@@ -1,13 +1,21 @@
 @import '../../../shared/styles/variables/_variables.scss';
 
 .finderResultsFeatured {
-  border-bottom: solid 5px rgba(51, 51, 51, .25);
-  margin: 0 0 20px;
+  margin: 0;
   padding: 0 0 20px;
   width: 100%;
 
   .finderResultsFeaturedHeader {
     overflow: hidden;
+
+    .finderResultsFeaturedTitle {
+      display: flex;
+      justify-content: space-between;
+
+      a {
+        margin-right: 25px;
+      }
+    }
 
     a, a:visited {
       color: $col-darkgray;

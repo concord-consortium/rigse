@@ -7,6 +7,8 @@
         SEARCH
       .search-form__field
         #auto-suggest-placeholder
+      .search-form__ngss_info
+        Search here or head over to our <br/> <a href="https://concord.org/ngss/">NGSS Pathfinder!</a>
     = render :partial=>"search/filters"
     = hidden_field_tag 'investigation_page', (@form_model.investigation_page rescue 1)
     = hidden_field_tag 'activity_page', (@form_model.activity_page rescue 1)
@@ -38,7 +40,8 @@
         name: "search_term",
         query: query,
         onSubmit: autoSuggestSubmit,
-        getQueryParams: function () { return jQuery(form).serialize() }
+        getQueryParams: function () { return jQuery(form).serialize() },
+        placeholder: "Type search term here"
       }, 'auto-suggest-placeholder')
     }
 

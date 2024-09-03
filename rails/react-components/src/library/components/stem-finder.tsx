@@ -713,12 +713,16 @@ class StemFinder extends React.Component<Props, State> {
     if (noResourcesFound || searching) {
       return (
         <div className={finderHeaderClass}>
-          <h2>Activities List</h2>
-          { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
-          <div className={css.finderHeaderResourceCount}>
-            { noResourcesFound ? "No Resources Found" : "Loading..." }
+          <h2>Activities</h2>
+          <div className={css.finderHeaderWrapper}>
+            <div className={css.finderHeaderLeft}>
+              <div className={css.finderHeaderResourceCount}>
+                { noResourcesFound ? "No Resources Found" : "Loading..." }
+              </div>
+              { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
+            </div>
+            { this.renderSortMenu() }
           </div>
-          { this.renderSortMenu() }
         </div>
       );
     }
@@ -729,15 +733,19 @@ class StemFinder extends React.Component<Props, State> {
     jQuery("#portal-pages-finder").removeClass("loading");
     return (
       <div className={finderHeaderClass}>
-        <h2>Activities List</h2>
-        { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
-        <div className={css.finderHeaderResourceCount}>
-          { showingAll && multipleResources ? "Showing All " : "Showing " }
-          <strong>
-            { resourceCount + " " + pluralize(resourceCount, "Activity", "Activities") }
-          </strong>
+        <h2>Activities</h2>
+        <div className={css.finderHeaderWrapper}>
+          <div className={css.finderHeaderLeft}>
+            <div className={css.finderHeaderResourceCount}>
+              { showingAll && multipleResources ? "Showing All " : "Showing " }
+              <strong>
+                { resourceCount + " " + pluralize(resourceCount, "Activity", "Activities") }
+              </strong>
+            </div>
+            { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
+          </div>
+          { this.renderSortMenu() }
         </div>
-        { this.renderSortMenu() }
       </div>
     );
   }

@@ -3,7 +3,7 @@
     Sensors
   .filter-group__options.webkit_scrollbars
     = check_box_tag 'no_sensors', '1', @form_model.no_sensors, :id=>'sensor_0', :class=>'sensor_filter_item'
-    = label_tag 'sensor_0', 'Sensors Not Necessary', :class=>'sensors_label'
+    = label_tag 'sensor_0', 'Sensors not necessary', :class=>'sensors_label'
     %br
     - @form_model.available_sensors.uniq.sort_by { |sensor| sensor.downcase }.each do |sensor|
       - id = "sensor_#{sensor.squish.downcase.tr(" ","_")}"

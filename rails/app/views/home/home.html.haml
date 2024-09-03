@@ -1,5 +1,12 @@
 = render :partial => "notice"
 
+- # hide intro for logged in users
+- if @current_user != nil
+  %style{media: "screen"}
+    :plain
+      #page-introduction { display: none; }
+      .portal-pages-header-contain { margin-bottom: 0; }
+      #portal-pages-finder { padding-top: 20px !important; }
 .landing-container
   .home-page-content
     - if custom_content.blank?
