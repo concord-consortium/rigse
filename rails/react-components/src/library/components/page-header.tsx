@@ -177,6 +177,11 @@ const PageHeader = Component({
             <a href="/about" className="portal-pages-main-nav-item__link" title="Learn More about the STEM Resource Finder">About</a>
           </li>
         );
+        headerItems.push(
+          <li key={nextKey("Help")} className={"portal-pages-main-nav-item portal-pages-main-nav-help" + (this.props.isHelp ? " current-menu-item" : "")}>
+            <a href="/help" className="portal-pages-main-nav-item__link" title="Get help with using the STEM Resource Finder">Help</a>
+          </li>
+        );
       }
     }
 

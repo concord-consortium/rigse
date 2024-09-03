@@ -7,6 +7,8 @@
   - options[:sitewideAlert] = current_settings.sitewide_alert
 - if local_assigns[:extra_options]
   - options.merge!(extra_options)
+- elsif @extra_options
+  - options.merge!(@extra_options)
 
 %script{:type=>"text/javascript"}
   var pageHeaderOptions = #{raw options.to_json};

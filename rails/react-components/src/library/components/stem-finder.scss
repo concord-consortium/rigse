@@ -51,7 +51,7 @@
         padding: 7px 5px 6px;
         width: calc(100% - 59px);
 
-        &::-webkit-input-placeholder, 
+        &::-webkit-input-placeholder,
         &::-moz-placeholder,
         &::placeholder {
           color: #ff0000;
@@ -206,7 +206,8 @@
 }
 
 .advancedSearchLink {
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 500;
   text-align: center;
 
   a {
@@ -233,6 +234,19 @@
     line-height: .8;
     width: 100%;
   }
+  .finderHeaderWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 5px 0 -3px 0;
+    width: 100%;
+    align-items: flex-end;
+  }
+  .finderHeaderLeft {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
   .finderHeaderResourceCount {
     align-self: center;
     color: $col-darkgray;
@@ -241,7 +255,7 @@
     display: flex;
     font-size: 14px;
     width: 217px;
-    
+
     label {
       align-self: center;
       color: $col-darkgray;
@@ -264,12 +278,12 @@
 }
 
 @media(hover: hover) and (pointer: fine) {
-  .finderOptionsContainer { 
+  .finderOptionsContainer {
     ul {
       list-style: none;
       margin: 0;
       padding: 0;
-  
+
       li {
         &:hover {
           background: $col-gold;

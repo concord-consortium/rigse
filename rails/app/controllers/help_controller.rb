@@ -3,6 +3,7 @@ class HelpController < ApplicationController
   def index
     help_type = current_settings.help_type
     get_help_page(help_type)
+    @extra_options = {:isHelp => true}
   end
 
   def preview_help_page

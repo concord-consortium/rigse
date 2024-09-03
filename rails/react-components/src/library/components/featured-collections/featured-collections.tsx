@@ -14,7 +14,10 @@ export default class FeaturedCollections extends React.Component<any, any> {
       <div className={css.finderResultsFeatured}>
         <div className={css.finderResultsFeaturedHeader}>
           <h2>Featured Collections</h2>
-          <p>Collections are curated groups of complementary resources that focus on a particular topic. <a className="special-link" href="/collections">View all</a></p>
+          <div className={css.finderResultsFeaturedTitle}>
+            <div>Collections include a <strong>related set</strong> of student and teacher resources.</div>
+            <a className="special-link" href="/collections">View all Collections</a>
+          </div>
         </div>
         <div className={css.finderResultsFeaturedCards}>
           { featuredCollections.map(function (featuredCollection: any, index: any) {
