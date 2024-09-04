@@ -41,9 +41,10 @@
     line-height: normal;
     text-align: center;
     vertical-align: middle;
+    display: none;
 
-    @media screen and (max-width: 950px) {
-      br { display: none;} // remove line break on smaller screens
+    @media screen and (min-width: 1170px) {
+      & { display: block;} // show only on larger screens
     }
 
     a {
@@ -65,7 +66,6 @@
  font-size: 12px;
  margin-top: 10px;
  min-height: 20px;
- padding: 5px;
  position: relative;
 
  #showhidefilters {
@@ -80,78 +80,89 @@
    flex-flow: row wrap;
    height: auto;
    min-height: 400px;
+   align-content: flex-start;
+   gap: 10px;
+   padding: 10px;
 
-   .filter-group {
-     flex: 23.25%;
-     max-width: 23.25%;
-     padding: .875%;
+   .filter-row {
+     display: flex;
+     width: 100%;
+     flex-grow: 1;
+     gap: 10px;
 
-     .filter-group__options {
-       background: #fff;
-       border: solid 1px #999;
-       height: 146px;
-       max-height: 146px;
-       overflow-x: hidden;
-       overflow-y: scroll;
-       padding: 5px;
-       text-overflow: ellipsis;
-       white-space: nowrap;
-
-       label {
-         text-transform: none;
-         vertical-align: middle;
-       }
-
-       input[type="checkbox"] {
-        vertical-align: middle;
-       }
-
-       &.select-menu {
-         background: transparent;
-         border: none;
-         height: auto;
-         margin-top: -2.5px;
-         padding: 0;
-
-         select {
-           background: #fff;
-           border: solid 1px #999;
-         }
-       }
+     &.flex-col {
+      flex-direction: column;
      }
-     &.two-col {
-       flex: 48.25%;
-       max-width: 48.25%;
+     &.flex-row {
+      flex-direction: row;
      }
-   }
-   .filter-stack-wrap {
-     flex: 23.25%;
-     max-width: 23.25%;
-     padding: .875%;
-
-     .filter-group {
-       flex: 100%;
-       margin-bottom: 1.75%;
-       max-width: 100%;
-       padding: 0;
-
-       .filter-group__options {
-         height: auto;
-       }
+     &.full-height {
+      height: 100%;
      }
-   }
-   .full-col {
-     flex: 98.25%;
-     height: 25px;
-     max-height: 25px;
-     max-width: 98.25%;
-     padding: .875%;
 
-     .filterheader {
-       float: left;
-       margin-right: 5px;
+     &.flex-shrink {
+      flex-grow: 0;
      }
-   }
+
+    .filter-group {
+      flex: 1;
+
+      &.sort-by {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 10px;
+
+        select {
+          padding: 5px;
+        }
+      }
+
+      .filter-group__options {
+        background: #fff;
+        border: solid 1px #999;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding: 5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-height: 125px;
+
+        &.auto-overflow {
+          overflow: auto;
+        }
+
+        &.projects {
+          max-height: 150px;
+        }
+        &.sensors {
+          max-height: 300px;
+        }
+
+        label {
+          text-transform: none;
+          vertical-align: middle;
+        }
+
+        input[type="checkbox"] {
+          vertical-align: middle;
+        }
+
+        &.select-menu {
+          background: transparent;
+          border: none;
+          height: auto;
+          margin-top: -2.5px;
+          padding: 0;
+
+          select {
+            background: #fff;
+            border: solid 1px #999;
+          }
+        }
+      }
+    }
+  }
  }
 }
 .filters {

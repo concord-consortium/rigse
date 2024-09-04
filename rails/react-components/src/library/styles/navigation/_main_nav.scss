@@ -1,6 +1,9 @@
 .portal-pages-header-contain {
   height: 195px;
-  margin-bottom: 30px;
+  margin-bottom: 0;
+}
+.portal-pages-hero {
+  margin-bottom: 10px !important;
 }
 
 /* top bar */
@@ -45,7 +48,7 @@
 }
 .concord-logo {
   background: url(./assets/banners/concord-logo.svg) no-repeat center;
-  height: 91px;
+  height: 45px;
   overflow: hidden;
   text-indent: 300px;
   white-space: nowrap;
@@ -57,11 +60,11 @@
 
   }
 .theme-learn .logo-contain {
-  margin-bottom: 0;
+  margin: 10px 0;
   }
 .theme-learn .concord-logo {
   background: url(./assets/banners/concord-logo.svg) no-repeat top;
-  height: 120px;
+  // height: 120px;
   position: relative;
   text-indent: 0;
 
@@ -75,8 +78,13 @@
       position: absolute;
       text-indent: 100%;
       white-space: nowrap;
-      }
   }
+}
+@media screen and (max-width: 950px) {
+  .theme-learn .mobile-nav-contain {
+    margin-top: 20px;
+  }
+}
 
 .portal-pages-nav-auth {
   min-width: 200px;
@@ -85,7 +93,7 @@
 
 .portal-pages-main-nav-contain {
   position: relative;
-  margin-top: 65px;
+  margin-top: 10px;
   text-align: right;
 }
 
@@ -102,7 +110,7 @@
       transition: .2s;
       z-index: 100;
     }
-  
+
     > a {
       padding: 0 0 8px 0;
       cursor: pointer;
@@ -220,7 +228,7 @@
   opacity: 1;
   text-align: left;
   transition: .2s;
-  
+
   &:last-of-type {
     margin: 0 0 4px 0;
   }
@@ -235,7 +243,8 @@
     display: none;
   }
   .logo-contain {
-    margin-top: 12px;
+    margin: 10px 0 0 0;
+
     .concord-logo {
       background: url(./assets/banners/concord-logo-small.png) no-repeat center top;
       background-size: 100%;

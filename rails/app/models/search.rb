@@ -13,6 +13,10 @@ class Search
   attr_accessor :investigation_page
   attr_accessor :interactive_page
   attr_accessor :collection_page
+  attr_accessor :activity_per_page
+  attr_accessor :investigation_per_page
+  attr_accessor :interactive_per_page
+  attr_accessor :collection_per_page
   attr_accessor :per_page
   attr_accessor :user_id
   attr_accessor :user
@@ -134,17 +138,21 @@ class Search
     self.sort_order     = opts[:sort_order]     || Newest
     self.per_page       = opts[:per_page]       || 10
 
-    self.activity_page        = opts[:activity_page]       || 1
-    self.investigation_page   = opts[:investigation_page]  || 1
-    self.interactive_page     = opts[:interactive_page]    || 1
-    self.collection_page      = opts[:collection_page]     || 1
-    self.without_teacher_only = opts[:without_teacher_only]|| true
-    self.material_properties  = opts[:material_properties] || []
-    self.include_contributed  = opts[:include_contributed] || false
-    self.include_mine         = opts[:include_mine]        || false
-    self.include_official     = opts[:include_official]    || false
-    self.include_templates    = opts[:include_templates]   || false
-    self.show_archived     = opts[:show_archived]    || false
+    self.activity_page          = opts[:activity_page]          || 1
+    self.investigation_page     = opts[:investigation_page]     || 1
+    self.interactive_page       = opts[:interactive_page]       || 1
+    self.collection_page        = opts[:collection_page]        || 1
+    self.activity_per_page      = opts[:activity_per_page]      || self.per_page
+    self.investigation_per_page = opts[:investigation_per_page] || self.per_page
+    self.interactive_per_page   = opts[:interactive_per_page]   || self.per_page
+    self.collection_per_page    = opts[:collection_per_page]    || self.per_page
+    self.without_teacher_only   = opts[:without_teacher_only]   || true
+    self.material_properties    = opts[:material_properties]    || []
+    self.include_contributed    = opts[:include_contributed]    || false
+    self.include_mine           = opts[:include_mine]           || false
+    self.include_official       = opts[:include_official]       || false
+    self.include_templates      = opts[:include_templates]      || false
+    self.show_archived          = opts[:show_archived]          || false
 
     self.fetch_available_filter_options()
 
@@ -250,13 +258,13 @@ class Search
         add_custom_search_filters(s)
 
         if (type == ActivityMaterial)
-          s.paginate(:page => self.activity_page, :per_page => self.per_page)
+          s.paginate(:page => self.activity_page, :per_page => self.activity_per_page)
         elsif (type == InvestigationMaterial)
-          s.paginate(:page => self.investigation_page, :per_page => self.per_page)
+          s.paginate(:page => self.investigation_page, :per_page => self.investigation_per_page)
         elsif (type == InteractiveMaterial)
-          s.paginate(:page => self.interactive_page, :per_page => self.per_page)
+          s.paginate(:page => self.interactive_page, :per_page => self.interactive_per_page)
         elsif (type == CollectionMaterial)
-          s.paginate(:page => self.collection_page, :per_page => self.per_page)
+          s.paginate(:page => self.collection_page, :per_page => self.collection_per_page)
         end
 
       end
