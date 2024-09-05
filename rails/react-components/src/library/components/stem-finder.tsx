@@ -241,7 +241,9 @@ class StemFinder extends React.Component<Props, State> {
     query = query.concat([
       "&skip_lightbox_reloads=true",
       "&sort_order=Alphabetical",
-      "&model_types=All",
+      "&material_types[]=Investigation",
+      "&material_types[]=Activity",
+      "&material_types[]=Interactive",
       "&include_related=0",
       "&investigation_page=",
       String(searchPage),
@@ -249,11 +251,16 @@ class StemFinder extends React.Component<Props, State> {
       String(searchPage),
       "&interactive_page=",
       String(searchPage),
-      "&collection_page=",
-      String(searchPage),
       "&per_page=",
       String(DISPLAY_LIMIT_INCREMENT)
     ]);
+
+    // only search collections on first search and gather all of them at once
+    if (!incremental) {
+      query.push("&material_types[]=Collection");
+      query.push("&collection_page=1");
+      query.push("&collection_per_page=1000");
+    }
 
     // subject areas
     this.state.subjectAreasSelected.forEach((subjectArea: any) => {

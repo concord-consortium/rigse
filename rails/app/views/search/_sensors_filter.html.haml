@@ -1,7 +1,7 @@
 -if @form_model.available_sensors.size > 0
   %h2.filterheader
     Sensors
-  .filter-group__options.webkit_scrollbars
+  .filter-group__options.webkit_scrollbars.sensors
     = check_box_tag 'no_sensors', '1', @form_model.no_sensors, :id=>'sensor_0', :class=>'sensor_filter_item'
     = label_tag 'sensor_0', 'Sensors not necessary', :class=>'sensors_label'
     %br
