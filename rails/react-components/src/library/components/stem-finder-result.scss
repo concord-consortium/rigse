@@ -254,6 +254,24 @@
       }
     }
 
+    .previewCollectionButton {
+      background: $col-orange;
+      border: solid 2px $col-orange;
+      border-radius: 4px;
+      color: #fff;
+      display: block;
+      font: 700 14px/1 museo-sans, Arial, Helvetica, sans-serif;
+      line-height: .8;
+      padding: 10px;
+      text-align: center;
+
+      &:hover, &:active {
+        background: $col-gold;
+        border-color: $col-gold;
+        color: $white;
+      }
+    }
+
     .projectLabel {
       font-size: 12px;
       font-weight: 500;

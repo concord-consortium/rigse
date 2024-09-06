@@ -250,6 +250,10 @@
   .finderHeaderResourceCount {
     align-self: center;
     color: $col-darkgray;
+
+    span {
+      font-weight: bold;
+    }
   }
   .showOnly, .sortMenu {
     display: flex;

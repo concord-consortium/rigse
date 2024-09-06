@@ -1,7 +1,7 @@
 @import '../../shared/styles/variables/_variables.scss';
 
 .finderResultsCollections {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 
   .finderResultsCollectionsHeader {
     margin-bottom: 10px;
@@ -23,6 +23,8 @@
       display: inline-block;
       border-radius: 4px;
       font-weight: bold;
+      font-size: 16px;
+      margin-top: 5px;
 
       &:hover, &:active {
         background: #ffc321;
