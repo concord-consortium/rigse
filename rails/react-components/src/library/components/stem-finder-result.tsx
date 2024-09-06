@@ -394,7 +394,7 @@ const StemFinderResult = Component({
         <div className={css.previewLink}>
           { resource.material_type !== "Collection"
             ? <a className={css.previewLinkButton} href={resource.links.preview.url} target="_blank" onClick={this.handlePreviewClick} rel="noreferrer">{ resource.links.preview.text }</a>
-            : <a className={css.previewLinkButton} href={resource.links.preview.url} target="_blank" onClick={this.handleViewCollectionClick} rel="noreferrer">Go to Collection</a>
+            : <a className={css.previewCollectionButton} href={resource.links.preview.url} target="_blank" onClick={this.handleViewCollectionClick} rel="noreferrer">Go to Collection</a>
           }
           { <div className={`${css.projectLabel} ${css[projectClass]}`}>
               { projectName }

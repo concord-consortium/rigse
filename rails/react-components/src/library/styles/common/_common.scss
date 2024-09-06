@@ -3,9 +3,9 @@
 @import "forms";
 
 /*
- * Some of these rules are here to counteract rules set in 
+ * Some of these rules are here to counteract rules set in
  * https://portal-pages.concord.org/site-redesign/site-redesign.css
- * We should at some point reconcile the two sets of rules and 
+ * We should at some point reconcile the two sets of rules and
  * possibly do away with the site-redesign.css file.
 */
 
@@ -42,7 +42,7 @@ body.member-visitor {
 
 .home-page-content {
   .portal-pages-hero h1 {
-    font: 100 40px museo, sans-serif !important;
+    font: 100 32px museo, sans-serif !important;
     line-height: 46px !important;
 
     strong:before {
@@ -66,6 +66,7 @@ body.member-visitor {
       form input[type="text"] {
         font-size: 12px;
         width: calc(100% - 69px) !important;
+        font-size: 14px;
       }
       form input[type="submit"] {
         font-size: 15px;
@@ -80,7 +81,7 @@ body.member-visitor {
     .portal-pages-finder-form-subject-areas-logo-inner {
       display: none !important;
     }
-    .portal-pages-finder-form-subject-areas-logo-label, 
+    .portal-pages-finder-form-subject-areas-logo-label,
     .portal-pages-finder-form-filters-logo-label {
       font-size: 16px;
       font-weight: 300;

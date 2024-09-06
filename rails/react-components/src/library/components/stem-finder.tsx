@@ -724,7 +724,7 @@ class StemFinder extends React.Component<Props, State> {
           <div className={css.finderHeaderWrapper}>
             <div className={css.finderHeaderLeft}>
               <div className={css.finderHeaderResourceCount}>
-                { noResourcesFound ? "No Resources Found" : "Loading..." }
+                { noResourcesFound ? <div>No <span>Activities</span> matching your search</div> : "Loading..." }
               </div>
               { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
             </div>
@@ -745,9 +745,7 @@ class StemFinder extends React.Component<Props, State> {
           <div className={css.finderHeaderLeft}>
             <div className={css.finderHeaderResourceCount}>
               { showingAll && multipleResources ? "Showing All " : "Showing " }
-              <strong>
-                { resourceCount + " " + pluralize(resourceCount, "Activity", "Activities") }
-              </strong>
+              <strong>{ resourceCount + " " + pluralize(resourceCount, "Activity", "Activities") }</strong> matching your search
             </div>
             { (this.isAdvancedUser() || usersAuthoredResourcesCount > 0) && this.renderShowOnly() }
           </div>
