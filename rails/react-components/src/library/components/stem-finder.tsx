@@ -63,7 +63,8 @@ interface State {
   sortOrder: string,
   subjectAreasSelected: SubjectArea[],
   subjectAreasSelectedMap: Record<string, SubjectArea|undefined>,
-  usersAuthoredResourcesCount: number
+  usersAuthoredResourcesCount: number,
+  showAllCollections: boolean,
 }
 
 class StemFinder extends React.Component<Props, State> {
@@ -150,7 +151,8 @@ class StemFinder extends React.Component<Props, State> {
       sortOrder,
       subjectAreasSelected,
       subjectAreasSelectedMap,
-      usersAuthoredResourcesCount: 0
+      usersAuthoredResourcesCount: 0,
+      showAllCollections: false,
     };
   }
 
@@ -296,7 +298,7 @@ class StemFinder extends React.Component<Props, State> {
     let resources = incremental ? this.state.resources.slice(0) : [];
     const searchPage = incremental ? this.state.searchPage + 1 : 1;
     const keyword = jQuery.trim(this.state.searchInput);
-    const collections: any[] = [];
+    const collections = incremental ? this.state.collections.slice(0) : [];
     /* eslint-enable react/no-access-state-in-setstate */
 
     // short circuit further incremental searches when all data has been downloaded
@@ -338,7 +340,6 @@ class StemFinder extends React.Component<Props, State> {
           portalObjectHelpers.processResource(material);
           if (material.material_type === "Collection") {
             featuredCollections.push(material);
-            // only set collections on initial search
             if (!incremental) {
               collections.push(material);
             }
@@ -591,14 +592,16 @@ class StemFinder extends React.Component<Props, State> {
     this.scrollToFinder();
     this.setState({
       hideFeatured: true,
-      initPage: false
+      initPage: false,
+      showAllCollections: false,
     });
   };
 
   handleAutoSuggestSubmit = (searchInput: any) => {
     this.setState({
       hideFeatured: true,
-      initPage: false
+      initPage: false,
+      showAllCollections: false,
     });
     this.setState({ searchInput }, () => {
       this.search();
@@ -768,13 +771,15 @@ class StemFinder extends React.Component<Props, State> {
     }, 500);
   }
 
-  renderCollections () {
-    const { collections, searchInput, numTotalCollections, initPage, hideFeatured, keyword } = this.state;
-    const validSearchInput = keyword.length > 0 && (searchInput.trim() === keyword);
-    const showCollections = !initPage && (validSearchInput || !this.noOptionsSelected()) && collections.length > 0;
+  handleShowAllCollections = () => {
+    this.setState({ showAllCollections: true });
+  };
 
-    if (showCollections) {
-      return <Collections collections={collections} numTotalCollections={numTotalCollections} />;
+  renderCollections () {
+    const { collections, numTotalCollections, initPage, hideFeatured, searching, showAllCollections } = this.state;
+
+    if (!initPage) {
+      return <Collections collections={collections} numTotalCollections={numTotalCollections} searching={searching} showAllCollections={showAllCollections} enableShowAllCollections={this.handleShowAllCollections} />;
     }
 
     let featuredCollections = this.state.featuredCollections;

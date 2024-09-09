@@ -7,32 +7,19 @@ import css from "./collections.scss";
 interface Props {
   collections: any[]
   numTotalCollections: number;
-}
-
-interface State {
-  showAll: boolean;
+  searching: boolean;
+  showAllCollections: boolean;
+  enableShowAllCollections: () => void;
 }
 
 const initialDisplayCount = 2;
 
-export default class Collections extends React.Component<Props, State> {
-  constructor (props: Props) {
-    super(props);
-
-    this.state = {
-      showAll: false
-    };
-  }
-
-  handleShowMore = () => {
-    this.setState({showAll: true});
-  };
+export default class Collections extends React.Component<Props> {
 
   render () {
-    const { showAll } = this.state;
-    const { collections, numTotalCollections } = this.props;
-    const displayCount = showAll ? numTotalCollections : initialDisplayCount;
-    const showingAll = showAll || displayCount >= numTotalCollections;
+    const { collections, numTotalCollections, searching, showAllCollections, enableShowAllCollections } = this.props;
+    const displayCount = showAllCollections ? numTotalCollections : initialDisplayCount;
+    const showingAll = showAllCollections || displayCount >= numTotalCollections;
     const collectionCount = showingAll ? numTotalCollections : displayCount + " of " + numTotalCollections;
     const displayCollections = collections.slice(0, displayCount);
 
@@ -42,16 +29,18 @@ export default class Collections extends React.Component<Props, State> {
           <h2>Collections</h2>
           <div className={css.finderResultsCollectionsCount}>
             <div>
-              Showing <strong>{ collectionCount + " " + pluralize(collectionCount, "Collection", "Collections") }</strong> matching your search
+              {searching ? "Loading..." : <>Showing <strong>{ collectionCount + " " + pluralize(collectionCount, "Collection", "Collections") }</strong> matching your search</>}
             </div>
           </div>
         </div>
+        {!searching &&
         <div className={css.finderResultsContainer}>
           { displayCollections.map((collection: any, index: any) => {
             return <StemFinderResult key={`${collection.external_url}-${index}`} resource={collection} index={index} opacity={1} />;
           }) }
         </div>
-        {!showingAll && <div className={css.findResultsCollectionsShowMore}><button onClick={this.handleShowMore}>Show More</button></div>}
+        }
+        {!searching && !showingAll && <div className={css.findResultsCollectionsShowMore}><button onClick={() => enableShowAllCollections()}>Show More</button></div>}
       </div>
     );
   }
