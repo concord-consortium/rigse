@@ -132,7 +132,7 @@ RSpec.feature 'Teachers and anonymous users should be able to see an assign butt
           first(".unassigned_activity_class").click
           click_on "Save"
         end
-        expect(page).to have_content("is assigned to the selected class(es) successfully.")
+        expect(page).to have_content("has now been successfully assigned to the selected class(es).")
       end
     end
 
