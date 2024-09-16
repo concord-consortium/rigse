@@ -236,7 +236,7 @@ export default class AssignModal extends React.Component<any, any> {
   resourceAssigned () {
     return (
       <ReactModal ariaHideApp={false} isOpen={this.state.showModal} onRequestClose={this.props.closeFunc} className={css.confirmDialog} overlayClassName={css.confirmDialogOverlay} portalClassName={css.confirmDialogPortal}>
-        <p>The { this.props.resourceType } <strong>{ this.props.resourceTitle }</strong> is assigned to the selected class(es) successfully.</p>
+        <p>The { this.props.resourceType } <strong>{ this.props.resourceTitle }</strong> has now been successfully assigned to the selected class(es).</p>
         <button onClick={this.closeConfirmModal}>OK</button>
       </ReactModal>
     );
