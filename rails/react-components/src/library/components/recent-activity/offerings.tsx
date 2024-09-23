@@ -31,9 +31,10 @@ export default class Offerings extends React.Component<any, any> {
       return (
         <>
           <p className={css.noActivity}>No recent activity.</p>
-          <p><strong>You have not yet added students to your classes.</strong> Have your students create student accounts on the site using your class's unique
-            class word to enroll in your class. You can also manually register your students by clicking "Classes" on the left, then on the name of a class.
-            Next click the "Student Roster" link for that class, and then on "Register &amp; Add a New Student."
+          <p><strong>You have not yet added students to your classes.</strong>
+             To add a new student to your class, please instruct them to create an account on the STEM Resource Finder.
+             After creating their account, they can join your class using a unique 'class word' that you provide.
+             For detailed instructions on this process, please refer to our updated User Guide at: <a href="https://learn.concord.org/help" target="_blank" rel="noreferrer">https://learn.concord.org/help</a>.
           </p>
           <p>As your students register and get started on the assigned activities, their progress will be displayed here.</p>
         </>
