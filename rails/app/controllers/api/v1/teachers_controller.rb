@@ -179,7 +179,14 @@ class API::V1::TeachersController < API::APIController
 
     authorize teacher, :show?
 
-    classes = teacher.clazzes.pluck(:id, :name, :class_hash, :class_word, :is_archived).map do |id, name, class_hash, class_word, is_archived|
+    include_archived = params[:include_archived] == "true"
+    if include_archived
+      clazzes = teacher.clazzes
+    else
+      clazzes = teacher.clazzes.where(is_archived: false)
+    end
+
+    classes = clazzes.pluck(:id, :name, :class_hash, :class_word, :is_archived).map do |id, name, class_hash, class_word, is_archived|
       { id: id, name: name, class_hash: class_hash, class_word: class_word, is_archived: is_archived }
     end
 
