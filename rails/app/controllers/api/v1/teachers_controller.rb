@@ -179,9 +179,8 @@ class API::V1::TeachersController < API::APIController
 
     authorize teacher, :show?
 
-    # Fetch only non-archived classes using pluck
-    classes = teacher.clazzes.where(is_archived: false).pluck(:id, :name, :class_hash, :class_word).map do |id, name, class_hash, class_word|
-      { id: id, name: name, class_hash: class_hash, class_word: class_word }
+    classes = teacher.clazzes.pluck(:id, :name, :class_hash, :class_word, :is_archived).map do |id, name, class_hash, class_word, is_archived|
+      { id: id, name: name, class_hash: class_hash, class_word: class_word, is_archived: is_archived }
     end
 
     render json: classes

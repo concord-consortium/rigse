@@ -30,7 +30,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
   return (
     <table className={css.classesTable}>
       <thead>
-        <tr><th>Class Name</th><th>Class Word</th><th></th></tr>
+        <tr><th>Class Name</th><th>Class Word</th><th>Class Status</th><th></th></tr>
       </thead>
       <tbody>
         {
@@ -41,6 +41,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
                 <tr className={clsx({ [css.activeRow]: active })}>
                   <td>{ classInfo.name }</td>
                   <td>{ classInfo.class_word }</td>
+                  <td>{ classInfo.is_archived ? "Archived" : "Active" }</td>
                   <td>
                     <LinkButton onClick={() => handleViewStudentsClick(classInfo.id)} active={active}>
                       {
