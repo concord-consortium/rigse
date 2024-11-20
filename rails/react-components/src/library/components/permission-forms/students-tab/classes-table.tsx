@@ -13,7 +13,8 @@ interface IProps {
 }
 
 export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
-  const { data: classesData, isLoading } = useFetch<IClassBasicInfo[]>(Portal.API_V1.teacherClasses(teacherId), []);
+  const classesUrl = `${Portal.API_V1.teacherClasses(teacherId)}?include_archived=true`;
+  const { data: classesData, isLoading } = useFetch<IClassBasicInfo[]>(classesUrl, []);
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
   if (isLoading) {
