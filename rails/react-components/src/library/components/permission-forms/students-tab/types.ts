@@ -20,4 +20,5 @@ export interface IClassBasicInfo {
   id: number;
   name: string;
   class_word: string;
+  is_archived: boolean;
 }
