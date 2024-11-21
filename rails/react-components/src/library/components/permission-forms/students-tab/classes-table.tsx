@@ -57,7 +57,7 @@ export const ClassesTable = ({ teacherId, currentSelectedProject }: IProps) => {
                 {
                   active &&
                   <tr>
-                    <td colSpan={3} className={css.studentsTableRow}>
+                    <td colSpan={4} className={css.studentsTableRow}>
                       <StudentsTable classId={classInfo.id} currentSelectedProject={currentSelectedProject} />
                     </td>
                   </tr>
