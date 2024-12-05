@@ -17,6 +17,9 @@ class Portal::Learner < ApplicationRecord
   has_one :report_learner_only_id, -> { select "id, learner_id" }, :class_name => "Report::Learner",
     :foreign_key => "learner_id", :inverse_of => :learner
 
+  has_many :portal_runs, :dependent => :destroy, :class_name => "Portal::Run",
+    :foreign_key => "learner_id", :inverse_of => :portal_learner
+
   default_value_for :secure_key do
     UUIDTools::UUID.random_create.to_s
   end
@@ -37,7 +40,9 @@ class Portal::Learner < ApplicationRecord
   # 2021-06-21 NP: We update last_run when the run button pressed
   # see offering_controller#show run_resource_html block
   def update_last_run
-    self.report_learner.update_attribute('last_run', Time.now)
+    time = Time.now
+    self.portal_runs.create(start_time: time)
+    self.report_learner.update_attribute('last_run', time)
     self.update_report_model_cache()
   end
 
