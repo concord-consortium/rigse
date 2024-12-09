@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_09_134710) do
+ActiveRecord::Schema.define(version: 2024_12_05_161847) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1284,6 +1284,12 @@ ActiveRecord::Schema.define(version: 2024_12_09_134710) do
     t.boolean "is_archived", default: false, null: false
   end
 
+  create_table "portal_runs", charset: "utf8", force: :cascade do |t|
+    t.datetime "start_time", null: false
+    t.integer "learner_id", null: false
+    t.index ["learner_id"], name: "fk_rails_06fb23e107"
+  end
+
   create_table "portal_school_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
@@ -1576,4 +1582,5 @@ ActiveRecord::Schema.define(version: 2024_12_09_134710) do
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 
+  add_foreign_key "portal_runs", "portal_learners", column: "learner_id"
 end
