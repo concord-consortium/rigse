@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_27_133234) do
+ActiveRecord::Schema.define(version: 2024_12_09_134710) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -544,6 +544,8 @@ ActiveRecord::Schema.define(version: 2024_06_27_133234) do
     t.integer "has_grade_levels_id"
     t.string "has_grade_levels_type"
     t.integer "grade_id"
+    t.index ["grade_id"], name: "by_grade_id"
+    t.index ["has_grade_levels_id", "has_grade_levels_type"], name: "by_grade_levels_id_and_type"
   end
 
   create_table "portal_grade_levels_teachers", id: false, charset: "utf8", force: :cascade do |t|
