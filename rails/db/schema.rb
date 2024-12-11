@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_09_134710) do
+ActiveRecord::Schema.define(version: 2024_12_11_155304) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1288,6 +1288,7 @@ ActiveRecord::Schema.define(version: 2024_12_09_134710) do
     t.datetime "start_time", null: false
     t.integer "learner_id", null: false
     t.index ["learner_id"], name: "fk_rails_06fb23e107"
+    t.index ["start_time"], name: "index_portal_runs_on_start_time"
   end
 
   create_table "portal_school_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
