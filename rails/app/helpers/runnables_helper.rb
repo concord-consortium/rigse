@@ -30,6 +30,8 @@ module RunnablesHelper
     options         = popup_options_for(offering)
     options[:href]  = !offering.locked ? run_url_for(offering) : "javascript:void(0)"
     options[:class] = student_run_button_css(offering, ["solo"])
+    # Disable button for 10 seconds after click, to prevent accidental double-clicks
+    options[:onclick] = "if (this.classList.contains('disabled')) { event.preventDefault(); } else { this.classList.add('disabled'); setTimeout(() => { this.classList.remove('disabled'); }, 10000); }"
 
     capture_haml do
       haml_tag :a, options do
