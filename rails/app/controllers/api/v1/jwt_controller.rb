@@ -160,7 +160,9 @@ class API::V1::JwtController < API::APIController
       claims = {
         :domain => root_url,
         :user_type => "researcher",
-        :user_id => url_for(user)
+        :user_id => url_for(user),
+        :first_name => user.first_name,
+        :last_name => user.last_name
       }
     elsif learner
       offering = learner.offering

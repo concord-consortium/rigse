@@ -650,6 +650,8 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
             expect(decoded_token[:data]["domain"]).to eql root_url
             expect(decoded_token[:data]["user_type"]).to eq "researcher"
             expect(decoded_token[:data]["user_id"]).not_to be_nil
+            expect(decoded_token[:data]["first_name"]).to eql user.first_name
+            expect(decoded_token[:data]["last_name"]).to eql user.last_name
           end
         end
       end
