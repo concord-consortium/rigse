@@ -636,6 +636,22 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
             end
           end
         end
+
+        context "and the jwt is requested as a researcher" do
+          it "returns a valid JWT with researcher params" do
+            post :portal, params: { :researcher => "true" }, session: { :format => :json }
+            expect(response.status).to eq(201)
+
+            body = JSON.parse(response.body)
+            token = body["token"]
+            decoded_token = SignedJWT::decode_portal_token(token)
+
+            expect(decoded_token[:data]["uid"]).to eql user.id
+            expect(decoded_token[:data]["domain"]).to eql root_url
+            expect(decoded_token[:data]["user_type"]).to eq "researcher"
+            expect(decoded_token[:data]["user_id"]).not_to be_nil
+          end
+        end
       end
 
       context "and the token has a learner" do
