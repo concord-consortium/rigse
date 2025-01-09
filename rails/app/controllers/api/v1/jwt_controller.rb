@@ -149,7 +149,22 @@ class API::V1::JwtController < API::APIController
     user, learner, teacher = handle_initial_auth
 
     claims = {}
-    if learner
+    if params[:researcher] == "true"
+      # Note: no check is done to see if the user is a researcher for any projects.
+      # The researcher user_type is used only by clients to know what type of JWT they have
+      # and all requests to the portal using the JWT are checked for permissions using the user_id
+      # which will check if the user has permissions to access the data.
+      # These JWTs are used currently only by generated links in reports and those links may
+      # be used by people who are not researchers but have access to the data as project admins
+      # or site admins.
+      claims = {
+        :domain => root_url,
+        :user_type => "researcher",
+        :user_id => url_for(user),
+        :first_name => user.first_name,
+        :last_name => user.last_name
+      }
+    elsif learner
       offering = learner.offering
       claims = {
         :domain => root_url,
