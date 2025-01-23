@@ -144,6 +144,8 @@ services:
       LARA_DOMAIN: "${LARA_DOMAIN:-app.lara.docker}"
       LARA_TOOL_ID: "${LARA_DOMAIN:-app.lara.docker}.${USER}"
 
+      REPORT_SERVER_REPORTS_URL: "${REPORT_SERVER_REPORTS_URL:-https://report-server.concordqa.org/reports}"
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true

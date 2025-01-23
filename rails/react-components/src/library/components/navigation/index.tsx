@@ -65,10 +65,10 @@ export default class Navigation extends React.Component<any, any> {
   }
 
   renderLink (linkDef: any) {
-    const { popOut, iconName, label, url, onClick } = linkDef;
+    const { popOut, iconName, label, url, onClick, noIcon } = linkDef;
     const { location } = this.state;
     const target = popOut ? "_blank" : "_self";
-    const icon = popOut && iconName !== "icon-help" ? "icon-arrow-circle-right" : iconName;
+    const icon = noIcon ? undefined : (popOut && iconName !== "icon-help" ? "icon-arrow-circle-right" : iconName);
     const classNames = this.getLinkClasses(linkDef);
     const selected = linkDef.id === location;
     if (selected) {

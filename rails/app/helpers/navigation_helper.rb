@@ -38,6 +38,11 @@ module NavigationHelper
     current_visitor.is_project_researcher?
   end
 
+  def show_researcher_report_links
+    # same user check as admin links but may be different in the future
+    show_admin_links && ENV['REPORT_SERVER_REPORTS_URL'].present?
+  end
+
   def show_research_projects_links
     current_visitor.is_project_researcher?
   end
@@ -137,6 +142,17 @@ module NavigationHelper
       label: nav_label('admin'),
       url: admin_path,
       sort: 2
+    }
+  end
+
+  def researcher_report_link_params
+    {
+      id: '/researcher_reports',
+      label: nav_label('researcher_reports'),
+      url: ENV['REPORT_SERVER_REPORTS_URL'],
+      sort: 3,
+      popOut: true,
+      noIcon: true
     }
   end
 
@@ -309,6 +325,10 @@ module NavigationHelper
 
     if show_admin_links
       service.add_item admin_link_params
+    end
+
+    if show_researcher_report_links
+      service.add_item researcher_report_link_params
     end
 
     if show_switch_user_link

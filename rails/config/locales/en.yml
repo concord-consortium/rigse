@@ -168,6 +168,7 @@ en:
     links: Links
     switch_back: Switch back
     research_projects: Research Projects
+    researcher_reports: Researcher Reports
 
 'en-HAS':
   activerecord:

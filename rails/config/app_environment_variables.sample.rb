@@ -14,6 +14,11 @@ ENV['ELASTICSEARCH_URL'] ||= 'http://search-has-portal-prod-xruhhhyiv2fugtujtzbg
 # ENV['LOGGER_URI'] ||= 'https://logger.concord.org/logs'    # production
 # ENV['LOGGER_URI'] ||= 'https://logger.concordqa.org/logs'  # staging / development
 
+# REPORT_SERVER_REPORTS_URL:
+# URL for the report server reports used in the sidebar
+# ENV['REPORT_SERVER_REPORTS_URL'] ||= 'https://report-server.concord.org/reports'
+
+# TBD: remove this when the separate report server is no longer needed
 # Researcher report link can point to a different portal instance to avoid overloading the main server.
 # ENV['RESEARCHER_REPORT_HOST'] ||= 'https://research-report-portal.concord.org'
 # Portal that is dedicated to the research report should enable option below to disable all the links that could
