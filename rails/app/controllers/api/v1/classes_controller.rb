@@ -9,7 +9,9 @@ class API::V1::ClassesController < API::APIController
 
     authorize clazz, :api_show?
 
-    anonymize_students = !current_user.has_full_access_to_student_data?(clazz)
+    researcher_view = params[:researcher].present? && params[:researcher] != 'false'
+
+    anonymize_students = researcher_view || !current_user.has_full_access_to_student_data?(clazz)
 
     render_info(clazz, anonymize_students)
   end
