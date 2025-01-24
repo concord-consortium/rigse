@@ -45,6 +45,8 @@ describe API::V1::JwtController, :type => :controller do
   let(:learner_token)   { addTokenForLearner(user, client, learner, expires) }
   let(:teacher_token)   { addTokenForTeacher(user, client, class_teacher, expires) }
   let(:researcher_token) { addToken(researcher, client, expires) }
+  let(:project_admin_token) { addToken(project_admin, client, expires) }
+  let(:site_admin_token) { addToken(site_admin, client, expires) }
   let(:runnable)        { FactoryBot.create(:external_activity, runnable_opts)    }
   let(:offering)        { FactoryBot.create(:portal_offering, offering_opts)    }
   let(:clazz)           { FactoryBot.create(:portal_clazz, teachers: [class_teacher], students:[student], logging: true, class_hash: "test") }
@@ -63,6 +65,12 @@ describe API::V1::JwtController, :type => :controller do
     researcher.researcher_for_projects << project
     researcher
   }
+  let(:project_admin)      {
+    project_admin = FactoryBot.generate(:author_user)
+    project_admin.admin_for_projects << project
+    project_admin
+  }
+  let(:site_admin)      { FactoryBot.generate(:admin_user) }
   let(:domain_matchers) { "http://x.y.z" }   # don't know why this is required
   let(:client)          { Client.create(
          :name       => "test_api_client",
@@ -516,7 +524,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         end
       end
 
-      context "and the params has the researcher flag" do
+      context "and the params has the researcher flag as a researcher user" do
         before(:each) {
           set_auth_token(researcher_token)
           FirebaseApp.create!(firebase_app_attributes)
@@ -542,7 +550,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           context "and the class hash is valid but the researcher does not have access via the cohort" do
             it "returns 400" do
               post :firebase, params: { :firebase_app => "test app", :class_hash => other_clazz.class_hash, :researcher => "true" }, session: { :format => :json }
-              expect(response.body).to match(/As a researcher you do not have access to the requested class_hash/)
+              expect(response.body).to match(/You do not have access to the requested class_hash as a researcher/)
               expect(response.status).to eq(400)
             end
           end
@@ -559,6 +567,61 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               )
             end
           end
+        end
+      end
+
+      context "and the params has the researcher flag as a project admin user" do
+        before(:each) {
+          set_auth_token(project_admin_token)
+          FirebaseApp.create!(firebase_app_attributes)
+        }
+
+        context "and the class hash is valid but the project admin does not have access via the cohort" do
+          it "returns 400" do
+            post :firebase, params: { :firebase_app => "test app", :class_hash => other_clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+            expect(response.body).to match(/You do not have access to the requested class_hash as a researcher/)
+            expect(response.status).to eq(400)
+          end
+        end
+
+        context "and the class_hash is for a class of the project admin" do
+          it "returns a valid JWT with this class hash" do
+
+            post :firebase, params: {:firebase_app => "test app", :class_hash => clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+            decoded_token = decode_token()
+
+            expect(decoded_token[:data]["claims"]).to include(
+              "user_type" => "researcher",
+              "class_hash" => clazz.class_hash
+            )
+          end
+        end
+      end
+
+      context "and the params has the researcher flag as a site admin" do
+        before(:each) {
+          set_auth_token(site_admin_token)
+          FirebaseApp.create!(firebase_app_attributes)
+        }
+
+        it "returns a valid JWT with this class hash" do
+          post :firebase, params: {:firebase_app => "test app", :class_hash => clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+          decoded_token = decode_token()
+
+          expect(decoded_token[:data]["claims"]).to include(
+            "user_type" => "researcher",
+            "class_hash" => clazz.class_hash
+          )
+        end
+
+        it "returns a valid JWT with the other class hash" do
+          post :firebase, params: {:firebase_app => "test app", :class_hash => other_clazz.class_hash, :researcher => "true" }, session: { :format => :json }
+          decoded_token = decode_token()
+
+          expect(decoded_token[:data]["claims"]).to include(
+            "user_type" => "researcher",
+            "class_hash" => other_clazz.class_hash
+          )
         end
       end
     end
