@@ -255,6 +255,11 @@ Parameters:
     Default: https://logger.concord.org/logs
     Description: Protocol relative uri for log manager api endpoint. Default is https://logger.concord.org/logs.
 
+  ReportServerReportsUrl:
+    Type: String
+    Default: https://report-server.concord.org/reports
+    Description: URL of the root report page report server. This is used in the sidebar link for report server.
+
 Conditions:
   PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
   CreateLoadBalancerHTTPRedirectCond:
@@ -554,6 +559,8 @@ Resources:
               Value: !Ref RailsSecretKeyBase
             - Name: LOGGER_URI
               Value: !Ref LoggerUri
+            - Name: REPORT_SERVER_REPORTS_URL
+              Value: !Ref ReportServerReportsURL
 
   # Notes from 2017-11-14:
   # Values where changed to match the changed made to the CPU reservation value for the
@@ -1064,6 +1071,8 @@ Resources:
               Value: !Ref RailsSecretKeyBase
             - Name: LOGGER_URI
               Value: !Ref LoggerUri
+            - Name: REPORT_SERVER_REPORTS_URL
+              Value: !Ref ReportServerReportsURL
 
   WorkerService:
     Type: AWS::ECS::Service
