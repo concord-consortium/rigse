@@ -560,7 +560,7 @@ Resources:
             - Name: LOGGER_URI
               Value: !Ref LoggerUri
             - Name: REPORT_SERVER_REPORTS_URL
-              Value: !Ref ReportServerReportsURL
+              Value: !Ref ReportServerReportsUrl
 
   # Notes from 2017-11-14:
   # Values where changed to match the changed made to the CPU reservation value for the
@@ -1072,7 +1072,7 @@ Resources:
             - Name: LOGGER_URI
               Value: !Ref LoggerUri
             - Name: REPORT_SERVER_REPORTS_URL
-              Value: !Ref ReportServerReportsURL
+              Value: !Ref ReportServerReportsUrl
 
   WorkerService:
     Type: AWS::ECS::Service
