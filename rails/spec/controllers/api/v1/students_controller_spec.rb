@@ -271,4 +271,32 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
   end
 
+  # describe '#get_feedback_metadata' do
+    # it 'should fail without a user' do
+      # get :get_feedback_metadata
+    # end
+
+    # failures:
+    # no user
+    # user not student
+    # missing
+    # url = ENV['FEEDBACK_METADATA_URL']
+    # source = ENV['FEEDBACK_METADATA_SOURCE']
+    # token = ENV['FEEDBACK_METADATA_BEARER_TOKEN']
+
+    # it 'returns the full Firebase function result' do
+      # stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_URL" => "http://example.com"))
+#
+      # stub = WebMock.stub_request(:get, ENV['FEEDBACK_METADATA_URL'])
+          # .with{ |request|
+            # doc = JSON.parse(request.body)["doc"]
+            # doc["learner_id"] == learner.id && doc["permission_forms_id"] == [permission_form.id] }
+          # .to_return(status: 200, body: "", headers: {})
+#
+      # get :get_feedback_metadata
+#
+      # expect(response).to have_http_status(:bad_request)
+    # end
+  # end
+
 end

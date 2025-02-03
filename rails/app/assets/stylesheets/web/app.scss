@@ -1485,10 +1485,19 @@ ul.quiet_list {
     color: gray;
   }
   .run_buttons {
+    display: flex;
+    align-items: center;
+    margin-top: 1em;
+
     .button {
-      margin-top: 1em;
       margin-left: 0px;
       margin-right: 1em;
+    }
+
+    .feedback_metadata {
+      display: flex;
+      gap: 7px;
+      align-items: center;
     }
   }
   .not_run {

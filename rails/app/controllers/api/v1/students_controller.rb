@@ -215,6 +215,35 @@ class API::V1::StudentsController < API::APIController
     render_ok
   end
 
+  def get_feedback_metadata
+    if !current_user || !current_user.portal_student
+      return error("You must be a student to use this endpoint")
+    end
+
+    platform_id = APP_CONFIG[:site_url]
+    platform_student_id = current_user.id
+
+    url = ENV['FEEDBACK_METADATA_URL']
+    source = ENV['FEEDBACK_METADATA_SOURCE']
+    token = ENV['FEEDBACK_METADATA_BEARER_TOKEN']
+
+    if !url
+      return error("Feedback metadata URL not configured")
+    end
+    if !source
+      return error("Feedback metadata source not configured")
+    end
+    if !source
+      return error("Feedback metadata bearer token not configured")
+    end
+
+    uri = URI.parse(url)
+    uri.query = URI.encode_www_form({ source: source, platform_id: platform_id, platform_student_id: platform_student_id })
+
+    response = HTTParty.get(uri, headers: { "Authorization" => "Bearer #{token}" })
+    render json: response.body
+  end
+
   private
 
   def render_ok

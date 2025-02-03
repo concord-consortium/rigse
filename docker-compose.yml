@@ -146,6 +146,10 @@ services:
 
       REPORT_SERVER_REPORTS_URL: "${REPORT_SERVER_REPORTS_URL:-https://report-server.concordqa.org/reports}"
 
+      FEEDBACK_METADATA_URL: "${FEEDBACK_METADATA_URL:-https://us-central1-report-service-dev.cloudfunctions.net/api/student_feedback_metadata}"
+      FEEDBACK_METADATA_SOURCE: "${FEEDBACK_METADATA_SOURCE:-authoring.lara.staging.concord.org}"
+      FEEDBACK_METADATA_BEARER_TOKEN:
+
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true
     tty: true
