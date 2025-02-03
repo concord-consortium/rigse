@@ -1,5 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'uri'
 
 RSpec.describe API::V1::StudentsController, type: :controller do
   let(:student) { FactoryBot.create(:full_portal_student) }
@@ -271,32 +272,74 @@ RSpec.describe API::V1::StudentsController, type: :controller do
     end
   end
 
-  # describe '#get_feedback_metadata' do
-    # it 'should fail without a user' do
-      # get :get_feedback_metadata
-    # end
+  describe '#get_feedback_metadata' do
+    bearer_token = "abc123"
 
-    # failures:
-    # no user
-    # user not student
-    # missing
-    # url = ENV['FEEDBACK_METADATA_URL']
-    # source = ENV['FEEDBACK_METADATA_SOURCE']
-    # token = ENV['FEEDBACK_METADATA_BEARER_TOKEN']
+    before :each do
+      student_user.portal_student = student
 
-    # it 'returns the full Firebase function result' do
-      # stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_URL" => "http://example.com"))
-#
-      # stub = WebMock.stub_request(:get, ENV['FEEDBACK_METADATA_URL'])
-          # .with{ |request|
-            # doc = JSON.parse(request.body)["doc"]
-            # doc["learner_id"] == learner.id && doc["permission_forms_id"] == [permission_form.id] }
-          # .to_return(status: 200, body: "", headers: {})
-#
-      # get :get_feedback_metadata
-#
-      # expect(response).to have_http_status(:bad_request)
-    # end
-  # end
+      stub_const("ENV", ENV.to_h.merge(
+        "FEEDBACK_METADATA_URL" => "http://example.com",
+        "FEEDBACK_METADATA_SOURCE" => "authoring.example.org",
+        "FEEDBACK_METADATA_BEARER_TOKEN" => bearer_token
+      ))
+    end
+
+    it 'should fail without a user' do
+      get :get_feedback_metadata
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a student to use this endpoint"}')
+    end
+
+    it 'should fail when the user is not a student' do
+      sign_in teacher_user
+      get :get_feedback_metadata
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a student to use this endpoint"}')
+    end
+
+    it 'should fail when the feedback metadata URL is not configured' do
+      stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_URL" => nil))
+      sign_in student_user
+      get :get_feedback_metadata
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Feedback metadata URL not configured"}')
+    end
+
+    it 'should fail when the feedback metadata source is not configured' do
+      stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_SOURCE" => nil))
+      sign_in student_user
+      get :get_feedback_metadata
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Feedback metadata source not configured"}')
+    end
+
+    it 'should fail when the feedback metadata bearer token is not configured' do
+      stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_BEARER_TOKEN" => nil))
+      sign_in student_user
+      get :get_feedback_metadata
+      expect(response).to have_http_status(:bad_request)
+      expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Feedback metadata bearer token not configured"}')
+    end
+
+    it 'returns feedback metadata for signed-in student' do
+      sign_in student_user
+
+      stubbed_response = { "success": true, "result": { "foo": "bar" } }.to_json
+      expected_query = URI.encode_www_form(
+        source: ENV['FEEDBACK_METADATA_SOURCE'],
+        platform_id: APP_CONFIG[:site_url] || "http://learn.concord.org",
+        platform_student_id: student_user.id
+      )
+      stub_request(:get, ENV['FEEDBACK_METADATA_URL'])
+        .with(query: expected_query, headers: {"Authorization"=>"Bearer #{bearer_token}"})
+        .to_return(status: 200, body: stubbed_response, headers: { "Content-Type" => "application/json" })
+
+      get :get_feedback_metadata
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to eq(stubbed_response)
+    end
+
+  end
 
 end
