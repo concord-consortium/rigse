@@ -70,7 +70,15 @@ class Portal::OfferingsController < ApplicationController
           }.to_query
           redirect_to(uri.to_s)
         else
-          redirect_to(@offering.runnable.url(learner, root_url))
+          redirect_url = @offering.runnable.url(learner, root_url)
+          if params[:show_feedback].present?
+            uri = URI.parse(redirect_url)
+            query_params = URI.decode_www_form(uri.query || "")
+            query_params << ["showFeedback", "true"]
+            uri.query = URI.encode_www_form(query_params)
+            redirect_url = uri.to_s
+          end
+          redirect_to(redirect_url)
         end
        }
     end
