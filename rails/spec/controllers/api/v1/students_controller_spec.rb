@@ -279,9 +279,9 @@ RSpec.describe API::V1::StudentsController, type: :controller do
       student_user.portal_student = student
 
       stub_const("ENV", ENV.to_h.merge(
-        "FEEDBACK_METADATA_URL" => "http://example.com",
-        "FEEDBACK_METADATA_SOURCE" => "authoring.example.org",
-        "FEEDBACK_METADATA_BEARER_TOKEN" => bearer_token
+        "REPORT_SERVICE_URL" => "http://example.com",
+        "REPORT_SERVICE_SOURCE" => "authoring.example.org",
+        "REPORT_SERVICE_BEARER_TOKEN" => bearer_token
       ))
     end
 
@@ -298,24 +298,24 @@ RSpec.describe API::V1::StudentsController, type: :controller do
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"You must be a student to use this endpoint"}')
     end
 
-    it 'should fail when the feedback metadata URL is not configured' do
-      stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_URL" => nil))
+    it 'should fail when the report service URL is not configured' do
+      stub_const("ENV", ENV.to_h.merge("REPORT_SERVICE_URL" => nil))
       sign_in student_user
       get :get_feedback_metadata
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Feedback metadata URL not configured"}')
     end
 
-    it 'should fail when the feedback metadata source is not configured' do
-      stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_SOURCE" => nil))
+    it 'should fail when the report service source is not configured' do
+      stub_const("ENV", ENV.to_h.merge("REPORT_SERVICE_SOURCE" => nil))
       sign_in student_user
       get :get_feedback_metadata
       expect(response).to have_http_status(:bad_request)
       expect(response.body).to eq('{"success":false,"response_type":"ERROR","message":"Feedback metadata source not configured"}')
     end
 
-    it 'should fail when the feedback metadata bearer token is not configured' do
-      stub_const("ENV", ENV.to_h.merge("FEEDBACK_METADATA_BEARER_TOKEN" => nil))
+    it 'should fail when the report service bearer token is not configured' do
+      stub_const("ENV", ENV.to_h.merge("REPORT_SERVICE_BEARER_TOKEN" => nil))
       sign_in student_user
       get :get_feedback_metadata
       expect(response).to have_http_status(:bad_request)
@@ -327,11 +327,11 @@ RSpec.describe API::V1::StudentsController, type: :controller do
 
       stubbed_response = { "success": true, "result": { "foo": "bar" } }.to_json
       expected_query = URI.encode_www_form(
-        source: ENV['FEEDBACK_METADATA_SOURCE'],
+        source: ENV['REPORT_SERVICE_SOURCE'],
         platform_id: APP_CONFIG[:site_url] || "http://learn.concord.org",
         platform_student_id: student_user.id
       )
-      stub_request(:get, ENV['FEEDBACK_METADATA_URL'])
+      stub_request(:get, "#{ENV['REPORT_SERVICE_URL']}/student_feedback_metadata")
         .with(query: expected_query, headers: {"Authorization"=>"Bearer #{bearer_token}"})
         .to_return(status: 200, body: stubbed_response, headers: { "Content-Type" => "application/json" })
 

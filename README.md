@@ -93,9 +93,8 @@ With the following settings you can:
 4. Add a Firebase App for report-service-dev with `docker-compose exec app bundle exec app:setup:add_report_service_firebase_app`, it will ask for the "private_key", paste in the private key from report-service-dev firebase app in learn.staging.concord.org
 5. in LARA: `cp .env-osx-sample .env`
 6. in LARA `.env`:
-    1. set `REPORT_SERVICE_TOKEN` (see the comment in the .env-osx-sample file)
-    2. set `LARA_PROTOCOL=https`
-    3. set `PORTAL_PROTOCOL=https`
+    1. set `LARA_PROTOCOL=https`
+    2. set `PORTAL_PROTOCOL=https`
 7. start up LARA: `docker-compose up`
 8. Setup admin access to LARA using a portal SSO login:
     1. Go to https://app.lara.docker
@@ -151,7 +150,7 @@ Notes:
     2. Set `PORTAL_HOST` to `app.portal.docker` or whatever domain your local portal is
     3. Set `PORTAL_PROTOCOL=https`
     4. set `LARA_PROTOCOL=https`
-    5. Set `REPORT_SERVICE_TOKEN` (see the comment in the .env file)
+    5. Set `REPORT_SERVICE_BEARER_TOKEN` (see the comment in the .env file)
     6. set `REPORT_SERVICE_URL` (see the value in the .env-osx-sample file)
 5. Stop your Lara services if they are running, and update them with `docker-compose up`
 6. If you want admin access to Lara when signing in with a portal user, you will need to first login to LARA
@@ -189,7 +188,7 @@ When you run the portal-report if you just see a spinner. Here are some steps to
     1. Go to the firebase console and open the report-service-dev firestore.
     2. Look in the sources collection
     3. You should see a `app.lara.docker.{$USER}` collection (USER is your local username)
-    4. If you don't see this collection then your LARA is not properly publishing the report structure to the report-service. In LARA check the values of `REPORT_SERVICE_TOKEN` and `REPORT_SERVICE_URL` (see above). A less common error would be a misconfigured `LARA_HOST` and `TOOL_ID` setup.
+    4. If you don't see this collection then your LARA is not properly publishing the report structure to the report-service. In LARA check the values of `REPORT_SERVICE_BEARER_TOKEN` and `REPORT_SERVICE_URL` (see above). A less common error would be a misconfigured `LARA_HOST` and `TOOL_ID` setup.
     5. After fixing these values update your lara app so it picks up the variables with `docker-compose up`. And make a change to your activity so it republishes the structure to Firestore. Check that the `app.lara.docker.{$USER}` collection is there now.
 2. Verify the resource structure added to firestore has the right URL:
     1. Go to the firebase console and open the report-service-dev firestore.

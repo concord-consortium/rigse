@@ -216,9 +216,9 @@ class API::V1::StudentsController < API::APIController
   end
 
   def get_feedback_metadata
-    url = ENV['FEEDBACK_METADATA_URL']
-    source = ENV['FEEDBACK_METADATA_SOURCE']
-    token = ENV['FEEDBACK_METADATA_BEARER_TOKEN']
+    url = ENV['REPORT_SERVICE_URL']
+    source = ENV['REPORT_SERVICE_SOURCE']
+    token = ENV['REPORT_SERVICE_BEARER_TOKEN']
 
     if !url
       return error("Feedback metadata URL not configured")
@@ -238,6 +238,7 @@ class API::V1::StudentsController < API::APIController
     platform_student_id = current_user.id
 
     uri = URI.parse(url)
+    uri.path = uri.path.gsub(/\/?$/, '/student_feedback_metadata')
     uri.query = URI.encode_www_form({ source: source, platform_id: platform_id, platform_student_id: platform_student_id })
 
     response = HTTParty.get(uri, headers: { "Authorization" => "Bearer #{token}" })
