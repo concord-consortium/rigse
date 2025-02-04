@@ -37,7 +37,8 @@ class Portal::OfferingPolicy < ApplicationPolicy
 
   # Used by Portal::OfferingsController:
   def show?
-    class_teacher_or_admin? || (class_student? && !record.locked)
+    # if locked, only show if the show_feedback param is present so the student can see feedback
+    class_teacher_or_admin? || (class_student? && (!record.locked || params[:show_feedback].present?))
   end
 
   def destroy?
