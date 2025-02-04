@@ -117,11 +117,6 @@ services:
       TEST_LOG_LEVEL: "${TEST_LOG_LEVEL:-WARN}"
       DEV_LOG_LEVEL: "${DEV_LOG_LEVEL:-DEBUG}"
 
-      #
-      # Source for report service lookups
-      #
-      REPORT_SERVICE_SOURCE: "app_lara_docker"
-
       # Used by imagemagick to add attribution to the images in the image library
       # the DejaVu-Sans font is provided by the docker image this one is built on
       WATERMARK_FONT: "${WATERMARK_FONT:-DejaVu-Sans}"
@@ -145,6 +140,13 @@ services:
       LARA_TOOL_ID: "${LARA_DOMAIN:-app.lara.docker}.${USER}"
 
       REPORT_SERVER_REPORTS_URL: "${REPORT_SERVER_REPORTS_URL:-https://report-server.concordqa.org/reports}"
+
+      #
+      # Report Service settings (used for feedback lookup)
+      #
+      REPORT_SERVICE_URL: "${REPORT_SERVICE_URL:-https://us-central1-report-service-dev.cloudfunctions.net/api}"
+      REPORT_SERVICE_SOURCE: "${REPORT_SERVICE_SOURCE:-authoring.lara.staging.concord.org}"
+      REPORT_SERVICE_BEARER_TOKEN:
 
     # open standard in and turn on tty so we can attach to the container and debug it
     stdin_open: true

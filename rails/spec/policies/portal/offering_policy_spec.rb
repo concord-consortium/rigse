@@ -182,16 +182,6 @@ RSpec.describe Portal::OfferingPolicy do
   end
 
   # TODO: auto-generated
-  describe '#student_report?' do
-    it 'student_report?' do
-      offering_policy = described_class.new(nil, nil)
-      result = offering_policy.student_report?
-
-      expect(result).to be_nil
-    end
-  end
-
-  # TODO: auto-generated
   describe '#report?' do
     it 'report?' do
       offering_policy = described_class.new(nil, nil)

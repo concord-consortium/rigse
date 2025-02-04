@@ -70,7 +70,15 @@ class Portal::OfferingsController < ApplicationController
           }.to_query
           redirect_to(uri.to_s)
         else
-          redirect_to(@offering.runnable.url(learner, root_url))
+          redirect_url = @offering.runnable.url(learner, root_url)
+          if params[:show_feedback].present?
+            uri = URI.parse(redirect_url)
+            query_params = URI.decode_www_form(uri.query || "")
+            query_params << ["showFeedback", "true"]
+            uri.query = URI.encode_www_form(query_params)
+            redirect_url = uri.to_s
+          end
+          redirect_to(redirect_url)
         end
        }
     end
@@ -141,18 +149,6 @@ class Portal::OfferingsController < ApplicationController
 
     head :ok
 
-  end
-
-  # report shown to students
-  def student_report
-    offering_id = params[:id]
-    offering = Portal::Offering.find(offering_id)
-    authorize offering
-    student_id = current_visitor.portal_student.id
-    report = DefaultReportService::default_report_for_offering(offering)
-    raise ActionController::RoutingError.new('Default Report Not Found') unless report
-    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_id: student_id })
-    redirect_to next_url
   end
 
   # This is in fact a default external report.

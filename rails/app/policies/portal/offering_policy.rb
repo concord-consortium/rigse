@@ -60,10 +60,6 @@ class Portal::OfferingPolicy < ApplicationPolicy
     class_teacher_or_admin? || class_student?
   end
 
-  def student_report?
-    class_student?
-  end
-
   def report?
     class_teacher_or_admin? || class_researcher?
   end

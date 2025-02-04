@@ -11,3 +11,37 @@
     %ul.quiet_list
       %li
         .tiny= "No offerings available."
+
+:javascript
+  // get the feedback metadata for the student and update the offerings
+  jQuery(document).ready(function () {
+    jQuery.ajax({
+      url: Portal.API_V1.GET_FEEDBACK_METADATA,
+      success: function(result) {
+        if (result && result.success && result.result) {
+          var feedbackMap = result.result;
+          Object.keys(feedbackMap).forEach((offeringId) => {
+            const metadata = feedbackMap[offeringId]
+            if (metadata && metadata.updatedAt) {
+              const updatedAt = new Date(feedbackMap[offeringId].updatedAt * 1000);
+              const time = new Intl.DateTimeFormat(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: undefined
+              }).format(updatedAt);
+
+              // feedback_metadata_text is within feedback_metadata and feedback_metadata
+              // also includes an image which is why we don't just set the .html() on feedback_metadata
+              jQuery("[data-offering-id=" + offeringId + "] .feedback_metadata_text")
+                .html("Teacher Feedback, updated " + time)
+              jQuery("[data-offering-id=" + offeringId + "] .feedback_metadata")
+                .show();
+            }
+          });
+        }
+      },
+    });
+  });

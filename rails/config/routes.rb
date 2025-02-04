@@ -120,8 +120,6 @@ RailsPortal::Application.routes.draw do
           post :answers
           post :offering_collapsed_status
           get :activity_report
-          get :student_report
-          post :student_report
         end
       end
 
@@ -340,6 +338,7 @@ RailsPortal::Application.routes.draw do
             post :register
             # post :add_to_class
             post :remove_from_class
+            get :get_feedback_metadata
           end
           member do
             post :check_password

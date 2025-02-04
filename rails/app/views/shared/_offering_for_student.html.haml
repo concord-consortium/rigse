@@ -13,7 +13,11 @@
             %span.name= offering.name
           .run_buttons
             =student_run_buttons(offering)
-            %span.last_run= student_status.last_run_string
+            %div
+              %span.last_run= student_status.last_run_string
+              %div.feedback_metadata{style: "display: none"}
+                =image_tag("teacher-feedback-icon.svg")
+                %a.feedback_metadata_text{:href => run_url_for(offering, {:show_feedback => true}), :target => "_blank"}
           / displayed when the student is already running the activity.
           .run_in_progress{:style => "display: none;"}
             .status
@@ -27,14 +31,6 @@
               You haven't started this yet.
             - percentage = student_status.complete_percent
             .run_graph{style: "display: #{student_status.never_run ? 'none' : 'block'}"}
-              - if student_status.display_report_link?
-                %span.lightbox_report_link
-                  - if percentage > 99
-                    =link_to t("StudentProgress.GenerateReport.Done"), student_report_portal_offering_url(offering), target: "_blank"
-                  - else
-                    =link_to t("StudentProgress.GenerateReport.NotDone"), student_report_portal_offering_url(offering)
-                %br
-
               - external_reports = offering.runnable.external_reports.where(allowed_for_students: true)
               - if params[:add_external_report]
                 - additional_report = ExternalReport.find_by_id(params[:add_external_report])

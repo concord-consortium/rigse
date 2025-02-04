@@ -128,7 +128,10 @@
     // Logging
     getLogManagerUrl: function () {
       return "#{ENV['LOGGER_URI']}" || "https://logger.concord.org/logs"
-    }
+    },
+
+    // feedback
+    GET_FEEDBACK_METADATA: "#{get_feedback_metadata_api_v1_students_path}"
   };
 - if current_user.present?
   - if current_user.portal_teacher

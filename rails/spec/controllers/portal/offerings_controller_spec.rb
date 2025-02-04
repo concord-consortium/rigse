@@ -272,44 +272,6 @@ describe Portal::OfferingsController do
     end
   end
 
-  describe '#student_report' do
-    let(:external_activity) { FactoryBot.create(:external_activity) }
-    let(:clazz)       { FactoryBot.create(:portal_clazz) }
-    let(:offering)    { FactoryBot.create(:portal_offering, runnable: external_activity, clazz: clazz)}
-    let(:post_params) { { id: offering.id } }
-    let(:student)     { FactoryBot.create(:full_portal_student) }
-
-    before(:each) do
-      sign_in student.user
-      student.clazzes << clazz
-    end
-
-    describe "When the student requests the default report" do
-      let(:report_url)  { "https://concord-consortium.github.io/portal-report/" }
-
-      describe "when offering report is used" do
-        before(:each) do
-          # Ensure that default report is available.
-          FactoryBot.create(:default_lara_report, { url: report_url })
-        end
-
-        it "should redirect to the default reporting service" do
-          get :student_report, params: post_params
-          expect(response.location).to match(/#{report_url}/)
-        end
-        it "should provide studentId" do
-          get :student_report, params: post_params
-          expect(response.location).to include("studentId=#{student.user.id}")
-        end
-        it "should not include researcher=true parameter" do
-          get :report, params: post_params
-          expect(response.location).not_to include("researcher=")
-        end
-      end
-    end
-  end
-
-
   # TODO: auto-generated
   describe '#update' do
     it 'PATCH update' do
@@ -352,15 +314,6 @@ describe Portal::OfferingsController do
       admin = FactoryBot.generate :admin_user
       sign_in admin
       get :deactivate, params: { id: FactoryBot.create(:portal_offering).to_param }
-
-      expect(response).to have_http_status(:redirect)
-    end
-  end
-
-  # TODO: auto-generated
-  describe '#student_report' do
-    it 'GET student_report' do
-      get :student_report, params: { id: FactoryBot.create(:portal_offering).to_param }
 
       expect(response).to have_http_status(:redirect)
     end

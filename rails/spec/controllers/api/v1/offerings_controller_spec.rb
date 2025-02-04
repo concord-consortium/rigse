@@ -12,7 +12,8 @@ describe API::V1::OfferingsController do
   let(:clazz)             { FactoryBot.create(:portal_clazz, name: 'test class', teachers: [teacher], students:[student_a, student_b]) }
   let(:student_a)         { FactoryBot.create(:full_portal_student) }
   let(:student_b)         { FactoryBot.create(:full_portal_student) }
-  let(:offering)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable}) }
+  let(:locked)            { false }
+  let(:offering)          { FactoryBot.create(:portal_offering, {clazz: clazz, runnable: runnable, locked: locked}) }
 
   before(:each) {
     # This silences warnings in the console when running
@@ -101,6 +102,7 @@ describe API::V1::OfferingsController do
         expect(json["clazz_id"]).to eq clazz.id
         expect(json["clazz_info_url"]).to eq "http://test.host/api/v1/classes/#{clazz.id}"
         expect(json["activity"]).to eq runnable.name
+        expect(json["locked"]).to eq false
         expect(json["report_url"]).to eql report_portal_offering_url(id: offering.id, host: 'test.host')
 
         expect(json["preview_url"]).to eql external_activity_url(runnable, {logging: true, format: runnable.run_format})
@@ -121,6 +123,17 @@ describe API::V1::OfferingsController do
         expect(student2["last_run"]).to eq nil
         expect(student2["total_progress"]).to eq 0
         expect(student2["detailed_progress"]).to eq nil
+      end
+
+      describe "when offering is locked" do
+        let(:locked) { true }
+
+        it "returns locked:true" do
+          get :show, params: { id: offering.id }
+          expect(response.status).to eq 200
+          json = JSON.parse(response.body)
+          expect(json["locked"]).to eq true
+        end
       end
     end
 

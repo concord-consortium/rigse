@@ -102,7 +102,6 @@ Also the learner (student, offering) is added to the access grant of the token.
 
 ## Launching
 The offering_controller provides the following actions for reports:
-- student_report
 - report
 - external_report
 

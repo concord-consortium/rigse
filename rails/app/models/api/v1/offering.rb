@@ -65,6 +65,7 @@ class API::V1::Offering
   attribute :reportable, Boolean
   attribute :reportable_activities, Array
   attribute :students, Array[OfferingStudent]
+  attribute :locked, Boolean
 
   def report_attributes(report, offering, protocol, host_with_port)
     {
@@ -112,5 +113,6 @@ class API::V1::Offering
     end
 
     self.students = offering.clazz.students.map { |s| OfferingStudent.new(s, offering, protocol, host_with_port, anonymize_students) }
+    self.locked = offering.locked
   end
 end

@@ -260,6 +260,20 @@ Parameters:
     Default: https://report-server.concord.org/reports
     Description: URL of the root report page report server. This is used in the sidebar link for report server.
 
+  ReportServiceURL:
+    Type: String
+    Default: https://us-central1-report-service-pro.cloudfunctions.net/api
+    Description: URL of the API endpoint in the report-service Firebase Functions API (use https://us-central1-report-service-dev.cloudfunctions.net/api for staging)
+
+  ReportServiceBearerToken:
+    Type: String
+    Description: Server-to-server bearer token for report-service API (see report-service project)
+
+  ReportServiceSource:
+    Type: String
+    Default: authoring.concord.org
+    Description: Source collection for report service data (use authoring.lara.staging.concord.org for staging)
+
 Conditions:
   PortalPagesLibraryDefined: !Not [!Equals [!Ref PortalPagesLibraryVersion, ""]]
   CreateLoadBalancerHTTPRedirectCond:
@@ -561,6 +575,12 @@ Resources:
               Value: !Ref LoggerUri
             - Name: REPORT_SERVER_REPORTS_URL
               Value: !Ref ReportServerReportsUrl
+            - Name: REPORT_SERVICE_URL
+              Value: !Ref ReportServiceURL
+            - Name: REPORT_SERVICE_BEARER_TOKEN
+              Value: !Ref ReportServiceBearerToken
+            - Name: REPORT_SERVICE_SOURCE
+              Value: !Ref ReportServiceSource
 
   # Notes from 2017-11-14:
   # Values where changed to match the changed made to the CPU reservation value for the
@@ -1073,6 +1093,12 @@ Resources:
               Value: !Ref LoggerUri
             - Name: REPORT_SERVER_REPORTS_URL
               Value: !Ref ReportServerReportsUrl
+            - Name: REPORT_SERVICE_URL
+              Value: !Ref ReportServiceURL
+            - Name: REPORT_SERVICE_BEARER_TOKEN
+              Value: !Ref ReportServiceBearerToken
+            - Name: REPORT_SERVICE_SOURCE
+              Value: !Ref ReportServiceSource
 
   WorkerService:
     Type: AWS::ECS::Service
