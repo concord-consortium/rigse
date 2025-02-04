@@ -15,7 +15,7 @@
             =student_run_buttons(offering)
             %div
               %span.last_run= student_status.last_run_string
-              %div.feedback_metadata{style: "display: none", :data => {:link => run_url_for(offering)}}
+              %div.feedback_metadata{style: "display: none"}
                 =image_tag("teacher-feedback-icon.svg")
                 %a.feedback_metadata_text{:href => run_url_for(offering, {:show_feedback => true}), :target => "_blank"}
           / displayed when the student is already running the activity.
