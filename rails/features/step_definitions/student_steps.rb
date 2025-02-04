@@ -88,11 +88,6 @@ Then /^I should not see the run link for "([^"]*)"$/ do | runnable_name |
   expect(page).not_to have_content(runnable_name)
 end
 
-Then /^I should see a link to generate a report of my work$/ do
-  text = I18n.t("StudentProgress.GenerateReport.NotDone")
-  expect(page).to have_selector("div.run_graph", text: /#{text}/i, visible: true)
-end
-
 Then /^I should not see a link to generate a report of my work$/ do
   expect(page).not_to have_selector("div.run_graph", text: /generate a report of my work/i, visible: true)
 end

@@ -31,14 +31,6 @@
               You haven't started this yet.
             - percentage = student_status.complete_percent
             .run_graph{style: "display: #{student_status.never_run ? 'none' : 'block'}"}
-              - if student_status.display_report_link?
-                %span.lightbox_report_link
-                  - if percentage > 99
-                    =link_to t("StudentProgress.GenerateReport.Done"), student_report_portal_offering_url(offering), target: "_blank"
-                  - else
-                    =link_to t("StudentProgress.GenerateReport.NotDone"), student_report_portal_offering_url(offering)
-                %br
-
               - external_reports = offering.runnable.external_reports.where(allowed_for_students: true)
               - if params[:add_external_report]
                 - additional_report = ExternalReport.find_by_id(params[:add_external_report])

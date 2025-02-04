@@ -143,18 +143,6 @@ class Portal::OfferingsController < ApplicationController
 
   end
 
-  # report shown to students
-  def student_report
-    offering_id = params[:id]
-    offering = Portal::Offering.find(offering_id)
-    authorize offering
-    student_id = current_visitor.portal_student.id
-    report = DefaultReportService::default_report_for_offering(offering)
-    raise ActionController::RoutingError.new('Default Report Not Found') unless report
-    next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, { student_id: student_id })
-    redirect_to next_url
-  end
-
   # This is in fact a default external report.
   def report
     offering_id = params[:id]

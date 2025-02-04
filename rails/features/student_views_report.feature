@@ -26,7 +26,6 @@ Feature: Student views report
     Then the browser should send a GET to "http://fake-lara.com/mock_html/test-external-activity25.html"
     When I visit my classes page
     Then I should see "Last run"
-    When I should see a link to generate a report of my work
 
   @mechanize
   Scenario: Student does not see report link if student report is disabled
