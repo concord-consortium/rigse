@@ -67,6 +67,16 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
+    if @user.portal_student
+      # Find the list of options for the "primary account" pulldown
+      student = @user.portal_student
+      # At least for now, the only potential primaries are other students in the same class
+      @classmates = student.clazzes.includes(:students).flat_map(&:students).uniq - [student]
+      # Accounts that are secondary cannot be primary too
+      @classmates = @classmates.reject { |s| s.user.primary_account }
+    else
+      @classmates = []
+    end
     authorize @user
     @roles = Role.all
     @projects = Admin::Project.all_sorted
@@ -146,6 +156,16 @@ class UsersController < ApplicationController
           @mc_status = 'subscribed'
         end
         params[:user].delete :enews_subscription
+
+        # Set / unset primary account
+        primary_id = params[:user][:primary_account_id]
+        if primary_id == ""
+          @user.primary_account = nil
+          @user.save
+        elsif primary_id 
+          @user.primary_account = User.find(params[:user][:primary_account_id])
+          @user.save
+        end
 
         if @user.update(user_strong_params(params[:user]))
 

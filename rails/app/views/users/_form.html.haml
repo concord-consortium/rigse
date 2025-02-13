@@ -6,6 +6,15 @@
   .aligned
     %ul.quiet_list
       %li
+        = f.label :primary_account_id, 'Primary account', :class => "left"
+        %div Normally 'None'; points to another account if this user has multiple accounts and this is not considered the primary one
+        = f.collection_select :primary_account_id, @classmates, :user_id, ->(s) { "#{s.name} (id=#{s.user_id})" }, { include_blank: "None" }, { disabled: @classmates.empty? }
+      - if not @user.secondary_accounts.empty?
+        %li
+          %div 
+            %strong Secondary accounts:  
+            #{@user.secondary_accounts.map { |s|"#{s.name} (id=#{s.id})" }.join(', ')}
+      %li
         = f.label :first_name, 'First name', :class => "left"
         = f.text_field :first_name, :live => false
       %li

@@ -7,12 +7,14 @@
     %th ID
     %th Name
     %th School
+    %th Classword
     %th 
   - @portal_clazzes.each do |portal_clazz|
     %tr
       %td= portal_clazz.id
       %td= portal_clazz.name
       %td= portal_clazz.school.name
+      %td= portal_clazz.class_word
       %td= link_to 'Class list', class_list_portal_clazz_path(portal_clazz)
   
 %br
