@@ -67,6 +67,8 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
+    authorize @user
+    @can_set_primary = true
     if @user.portal_student
       # Find the list of options for the "primary account" pulldown
       student = @user.portal_student
@@ -77,7 +79,6 @@ class UsersController < ApplicationController
     else
       @classmates = []
     end
-    authorize @user
     @roles = Role.all
     @projects = Admin::Project.all_sorted
   end

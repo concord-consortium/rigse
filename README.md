@@ -370,15 +370,19 @@ introduction](http://robots.thoughtbot.com/post/159807023/waiting-for-a-factory-
 
 **Running all the rspec tests:**
 
-    bundle exec rake spec
+    bundle exec rspec
 
 **Running a single file:**
 
-    bundle exec rake spec SPEC=spec/routing/dataservice/bundle_contents_routing_spec.rb
+    bundle exec rspec spec/controllers/home_controller_spec.rb 
+
+or add a line number to run just one test in the file (this line number may change over time!)
+
+    bundle exec rspec spec/controllers/home_controller_spec.rb:62
 
 **Running a single directory:**
 
-    bundle exec rake spec SPEC=spec/routing/dataservice
+    bundle exec rspec spec/controllers
 
 **Running all the controller tests:**
 
