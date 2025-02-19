@@ -182,6 +182,9 @@ module RailsPortal
 
     # Allow requests from any domain (skips DNS rebinding attack guards)
     config.hosts = nil
+
+    # Set the default queue adapter to DelayedJob
+    config.active_job.queue_adapter = :delayed_job
   end
 
   # ANONYMOUS_USER = User.find_by_login('anonymous')

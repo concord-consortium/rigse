@@ -1,6 +1,7 @@
 require 'rake'
 
-class API::V1::ReindexSolrJob
+class API::V1::ReindexSolrJob < ApplicationJob
+  queue_as :default
 
   # this is an approximation of whether the documents in Solr
   # match the number of activities in the database

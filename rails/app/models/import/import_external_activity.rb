@@ -1,6 +1,7 @@
-class Import::ImportExternalActivity < Struct.new(:import,:data_json,:portal_url,:auth_url,:current_visitor_id)
+class Import::ImportExternalActivity < ApplicationJob
+  queue_as :default
 
-  def perform
+  def perform(import, data_json, portal_url, auth_url, current_visitor_id)
     if import.import_type == Import::Import::IMPORT_TYPE_ACTIVITY
       import_activity(data_json,import)
     else

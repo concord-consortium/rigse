@@ -60,6 +60,8 @@ module Delayed::Worker::Scaler
     end
 
     def jobs
+      # TODO: After migrating from DelayedJob on the backend (e.g., to Sidekiq), revisit
+      # this method and change to use an appropriate query.
       Delayed::Job.where(failed_at: nil)
     end
 
