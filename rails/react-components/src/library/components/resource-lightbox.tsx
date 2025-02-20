@@ -389,6 +389,13 @@ const ResourceLightbox = Component({
     const resource = this.state.resource;
     const showTeacherResourcesButton = this.props.showTeacherResourcesButton;
     const links = resource.links;
+    const isCollection = resource.material_type === "Collection";
+
+    // no assignable links for collections
+    if (isCollection) {
+      return null;
+    }
+
     return (
       <span>
         { Portal.currentUser.isTeacher && resource.has_teacher_edition ? <a className="teacherEditionLink portal-pages-secondary-button" href={MakeTeacherEditionLink(resource.external_url)} target="_blank" onClick={this.handleTeacherEditionClick} rel="noreferrer">Teacher Edition</a> : null }
