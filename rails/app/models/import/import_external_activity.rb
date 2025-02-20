@@ -2,8 +2,10 @@ class Import::ImportExternalActivity < ApplicationJob
   queue_as :default
 
   def perform(import, data_json, portal_url, auth_url, current_visitor_id)
+    # Store import as an instance variable for use in other methods
+    @import = import
     if import.import_type == Import::Import::IMPORT_TYPE_ACTIVITY
-      import_activity(data_json,import)
+      import_activity(data_json, import, portal_url, auth_url, current_visitor_id)
     else
       import.total_imports = data_json.size
 
@@ -20,7 +22,7 @@ class Import::ImportExternalActivity < ApplicationJob
         activity_url = activity[:activity_url] + "/export_json.json"
         activity_url = activity_url + "?activity_type=prepost&page_id=#{activity[:page_id]}" if activity[:page_id]
         activity_json = get_json(activity_url)
-        import_object = import_activity(activity_json,import_object,activity[:activity_url])
+        import_object = import_activity(activity_json, import_object, activity[:activity_url], portal_url, auth_url, current_visitor_id)
         if import_object.progress == 100
           activity[:success] = true
         end
@@ -38,8 +40,8 @@ class Import::ImportExternalActivity < ApplicationJob
   end
 
   def error(job, exception)
-    import.update_attribute(:job_finished_at, Time.current)
-    import.update_attribute(:progress, -1)
+    @import.update_attribute(:job_finished_at, Time.current)
+    @import.update_attribute(:progress, -1)
   end
 
   protected
@@ -51,7 +53,7 @@ class Import::ImportExternalActivity < ApplicationJob
     return activity_json if activity_json
   end
 
-  def import_activity(activity_json,import_object,imported_activity_url=nil)
+  def import_activity(activity_json, import_object, imported_activity_url=nil, portal_url, auth_url, current_visitor_id)
     begin
       Timeout.timeout(90) {
         client = Client.where(:site_url => APP_CONFIG[:authoring_site_url]).first!
