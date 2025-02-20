@@ -380,7 +380,10 @@ const StemFinderResult = Component({
         </div>
         <div className={css.finderResultText}>
           <div className={css.finderResultTextName}>
-            <a href={resourceLink} target="_blank" title={resourceName} rel="noreferrer">{ resourceName }</a>
+            {resource.material_type !== "Collection"
+              ? <a href={resourceLink} target="_blank" title={resourceName} rel="noreferrer">{ resourceName }</a>
+              : <a href={resource.links.preview.url} target="_blank" title={resourceName} rel="noreferrer" onClick={this.handleViewCollectionClick}>{ resourceName }</a>
+            }
           </div>
           <div className={css.metaTags}>
             <GradeLevels resource={resource} />

@@ -197,12 +197,24 @@ const BrowsePage = Component({
   renderAssignableLinks () {
     const resource = this.state.resource;
     const links = resource.links;
+    const isCollection = resource.material_type === "Collection";
 
     const editLink = resource.lara_activity_or_sequence && links.external_lara_edit
       ? links.external_lara_edit.url
       : links.external_edit
         ? links.external_edit.url
         : null;
+
+    // only allow admin links for collections
+    if (isCollection) {
+      return (
+        <>
+          { links.external_copy ? <a className="portal-pages-secondary-button" href={links.external_copy.url}>Copy</a> : null }
+          { editLink ? <a className="portal-pages-secondary-button" href={editLink}>Edit</a> : null }
+          { links.edit ? <a className="portal-pages-secondary-button" href={links.edit.url}>Settings</a> : null }
+        </>
+      );
+    }
 
     return (
       <>
