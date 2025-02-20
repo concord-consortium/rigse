@@ -27,6 +27,7 @@ Feature: A manager updates account information for another user
   Scenario Outline: Managers can change a users password
     When I am logged in with the username mymanager
     And I am on the user list page
+    And I click "View/Manage" for user: "<userlogin>"
     And I click "Reset Password" for user: "<userlogin>"
     Then I should see "Password for <username> (<userlogin>)"
     When I fill in "user_reset_password_password" with "<new_password>"

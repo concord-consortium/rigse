@@ -41,10 +41,7 @@ class UsersController < ApplicationController
 
     search_scope = policy_scope(User)
     search_scope = search_scope
-      .includes(:imported_user, :portal_student, :authentications, :roles)
-      .includes({ teacher_cohorts: [:project] })
-      .includes({ student_cohorts: [:project] })
-      .includes({ portal_teacher: [:schools] })
+      .includes(:roles)
     search_scope = search_scope.joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
@@ -163,7 +160,7 @@ class UsersController < ApplicationController
         if primary_id == ""
           @user.primary_account = nil
           @user.save
-        elsif primary_id 
+        elsif primary_id
           @user.primary_account = User.find(params[:user][:primary_account_id])
           @user.save
         end
