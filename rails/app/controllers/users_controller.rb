@@ -40,12 +40,6 @@ class UsersController < ApplicationController
       "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
 
     search_scope = policy_scope(User)
-    search_scope = search_scope
-      .includes(:imported_user, :portal_student, :authentications, :roles)
-      .includes({ teacher_cohorts: [:project] })
-      .includes({ student_cohorts: [:project] })
-      .includes({ portal_teacher: [:schools] })
-    search_scope = search_scope.joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
@@ -163,7 +157,7 @@ class UsersController < ApplicationController
         if primary_id == ""
           @user.primary_account = nil
           @user.save
-        elsif primary_id 
+        elsif primary_id
           @user.primary_account = User.find(params[:user][:primary_account_id])
           @user.save
         end

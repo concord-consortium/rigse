@@ -1,76 +1,83 @@
 - imported_user = user.imported_user
 %div{:id=>"action_menu_wrapper"}
   %div{ :id => dom_id_for(user, :item), :class => 'item' }
-    %div.action_menu
+    %div.action_menu{:style=>"margin-bottom: 5px !important"}
       %div.action_menu_header_left{:style=>"white-space: nowrap"}
-        =link_to name_for_component(user), user
+        =link_to user.name, user
+        - if controller.action_name == "index"
+          %span= "(id: #{user.id}, username: #{user.login}, email: #{user.email})"
         - if imported_user
           %span.tiny{:style=>"font-weight:normal"}
             (Imported)
-        - if user.portal_teacher
-          %span.badge= "Teacher"
-        - if user.portal_student
-          %span.badge= "Student"
-        - if user.is_oauth_user?
-          %span.badge= "#{user.authentications[0].provider.titleize} user"
+        - if controller.action_name == "show"
+          - if user.portal_teacher
+            %span.badge= "Teacher"
+          - if user.portal_student
+            %span.badge= "Student"
+          - if user.is_oauth_user?
+            %span.badge= "#{user.authentications[0].provider.titleize} user"
       %div.action_menu_header_right
         %ul.menu
-          - if user.portal_teacher && policy(user).teacher_page?
-            %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
-          - if user.portal_student && policy(user).student_page?
-            %li.menu=link_to 'Student Page', portal_student_path(user.portal_student)
-          - if policy(user).edit?
-            %li.menu=link_to 'edit', edit_user_path(user)
+          - if controller.action_name == "show"
+            - if user.portal_teacher && policy(user).teacher_page?
+              %li.menu=link_to 'Teacher Page', portal_teacher_path(user.portal_teacher)
+            - if user.portal_student && policy(user).student_page?
+              %li.menu=link_to 'Student Page', portal_student_path(user.portal_student)
+            - if policy(user).edit?
+              %li.menu=link_to 'edit', edit_user_path(user)
+            - else
+              - if policy(user).limited_edit?
+                %li.menu=link_to 'edit', limited_edit_user_path(user)
+            - if policy(user).destroy? && user.id != 1
+              - delete_user_form_id = "delete_user_form_id_#{user.id}"
+              %li.menu=link_to 'Delete', 'javascript: void(0);', :onclick => "confirmUserDelete('#{delete_user_form_id}', '#{user.login}')"
+              = form_for user, :url => user, :html => { :method => :delete, :class=> "hidden", :id=> delete_user_form_id}  do |form|
+                = hidden_field_tag 'user[id]', user.id
+                = hidden_field_tag 'commit', 'Delete'
+            - if policy(user).reset_password? && !user.is_oauth_user?
+              %li.menu=link_to 'Reset Password', reset_password_user_path(user)
+            - if user.state == 'pending' && policy(user).confirm?
+              %li.menu=link_to 'Activate', confirm_user_path(user)
+            - if(user != current_visitor) && policy(user).switch?
+              - switch_user_form_id = "switch_user_id_#{user.id}"
+              %li.menu=link_to 'Switch', 'javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
+              = form_for user, :url => switch_user_path(user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
+                = hidden_field_tag 'user[id]', user.id
+                = hidden_field_tag 'commit', 'Switch'
           - else
-            - if policy(user).limited_edit?
-              %li.menu=link_to 'edit', limited_edit_user_path(user)
-          - if policy(user).destroy? && user.id != 1
-            - delete_user_form_id = "delete_user_form_id_#{user.id}"
-            %li.menu=link_to 'Delete', 'javascript: void(0);', :onclick => "confirmUserDelete('#{delete_user_form_id}', '#{user.login}')"
-            = form_for user, :url => user, :html => { :method => :delete, :class=> "hidden", :id=> delete_user_form_id}  do |form|
-              = hidden_field_tag 'user[id]', user.id
-              = hidden_field_tag 'commit', 'Delete'
-          - if policy(user).reset_password? && !user.is_oauth_user?
-            %li.menu=link_to 'Reset Password', reset_password_user_path(user)
-          - if user.state == 'pending' && policy(user).confirm?
-            %li.menu=link_to 'Activate', confirm_user_path(user)
-          - if(user != current_visitor) && policy(user).switch?
-            - switch_user_form_id = "switch_user_id_#{user.id}"
-            %li.menu=link_to 'Switch', 'javascript: void(0);',:onclick => "$('#{switch_user_form_id}').submit();"
-            = form_for user, :url => switch_user_path(user), :html => { :method => :put,:class=> "hidden" ,:id=> switch_user_form_id}  do |form|
-              = hidden_field_tag 'user[id]', user.id
-              = hidden_field_tag 'commit', 'Switch'
+            %li.menu=link_to 'View/Manage', user_path(user)
 
-    %div{:id => dom_id_for(user, :details), :class => 'tiny'}
-      %ul.menu_h
-        %li
-          login:
-          = user.login
-        %br
-        %li
-          email:
-          = user.email
-        %br
-        %li
-          Roles:
-          = user.roles.map{|r| r.title.capitalize}.join(', ')
-        %br
-        - if user.portal_teacher
+    - if controller.action_name == "show"
+      %div{:id => dom_id_for(user, :details), :class => 'tiny'}
+        %ul.menu_h
           %li
-            Cohorts:
-          - user.portal_teacher.cohorts.each do |c|
-            %li
-              = c.fullname
+            login:
+            = user.login
           %br
           %li
-            Schools:
-            %li
-              = "#{user.portal_teacher.school_names.join(', ')}"
+            email:
+            = user.email
           %br
-      - if user.primary_account
-        %li 
-          Secondary account for: #{user.primary_account.name} (id=#{user.primary_account.id}}
-      %li
-        Status: #{user.state}
-        - if imported_user
-          = "(#{imported_user.is_verified ? "verified" : "not-verfied"})"
+          %li
+            Roles:
+            = user.roles.map{|r| r.title.capitalize}.join(', ')
+          %br
+          - if user.portal_teacher
+            %li
+              Cohorts:
+            - user.portal_teacher.cohorts.each do |c|
+              %li
+                = c.fullname
+            %br
+            %li
+              Schools:
+              %li
+                = "#{user.portal_teacher.school_names.join(', ')}"
+            %br
+        - if user.primary_account
+          %li
+            Secondary account for: #{user.primary_account.name} (id=#{user.primary_account.id}}
+        %li
+          Status: #{user.state}
+          - if imported_user
+            = "(#{imported_user.is_verified ? "verified" : "not-verfied"})"
