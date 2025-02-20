@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_11_155304) do
+ActiveRecord::Schema.define(version: 2025_02_12_200518) do
 
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
@@ -1577,11 +1577,14 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.boolean "email_subscribed", default: false
     t.boolean "can_add_teachers_to_cohorts", default: false
     t.datetime "reset_password_sent_at"
+    t.integer "primary_account_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["id"], name: "index_users_on_id_and_type"
     t.index ["login"], name: "index_users_on_login", unique: true
+    t.index ["primary_account_id"], name: "index_users_on_primary_account_id"
   end
 
   add_foreign_key "portal_runs", "portal_learners", column: "learner_id"
+  add_foreign_key "users", "users", column: "primary_account_id"
 end

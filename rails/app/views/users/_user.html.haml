@@ -67,6 +67,9 @@
             %li
               = "#{user.portal_teacher.school_names.join(', ')}"
           %br
+      - if user.primary_account
+        %li 
+          Secondary account for: #{user.primary_account.name} (id=#{user.primary_account.id}}
       %li
         Status: #{user.state}
         - if imported_user
