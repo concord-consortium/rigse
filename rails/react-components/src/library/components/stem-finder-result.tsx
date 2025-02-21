@@ -272,7 +272,7 @@ const StemFinderResult = Component({
     const rubricDocLink = resource.links.rubric_doc && Portal.currentUser.isTeacher
       ? <a href={resource.links.rubric_doc.url} target="_blank" rel="noopener noreferrer" onClick={this.handleRubricDocClick}>{ resource.links.rubric_doc.text }</a>
       : null;
-    const assignCollectionLink = resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
+    const assignCollectionLink = !isCollection && resource.links.assign_collection && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
       ? <a href={resource.links.assign_collection.url} target="_blank" onClick={this.handleAddToCollectionClick} rel="noreferrer">{ resource.links.assign_collection.text }</a>
       : null;
     const portalSettingsLink = resource.links.edit && (Portal.currentUser.isAdmin || Portal.currentUser.isManager)
