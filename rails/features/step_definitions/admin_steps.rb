@@ -28,6 +28,7 @@ Then /^I switch to "([^"]*)" in the user list by searching "([^"]*)"$/ do |fulln
   fill_in("search", :with => search)
   click_button('Search')
   within(:xpath,"//div[@class='action_menu' and contains(.,'#{fullname}')]") do
+    click_link('View/Manage')
     click_link('Switch')
   end
 end
@@ -41,8 +42,9 @@ Then /^(?:|I )activate the user from user list by searching "([^"]*)"$/ do |sear
   fill_in("search", :with => search)
   click_button('Search')
   within(:xpath,"//div[@id='action_menu_wrapper' and contains(.,'#{search}')]") do
-    click_link('Activate')
+    click_link('View/Manage')
   end
+  click_link('Activate')
 end
 
 Then /^(?:|I )should see "([^"]*)" in the input box of external URL for help page on settings page$/ do |url|

@@ -790,6 +790,12 @@ form {
           label {
             width: auto;
           }
+
+          input[type="checkbox"] {
+            display: inline-block;
+            width: auto;
+            margin: 0 5px;
+          }
         }
 
         input[type="checkbox"] {
