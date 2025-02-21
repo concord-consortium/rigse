@@ -25,7 +25,7 @@ class Import::ImportsController < ApplicationController
     import = Import::Import.create!
     import.upload_data = file_data
     import.save!
-    job = Delayed::Job.enqueue Import::ImportSchoolsAndDistricts.new(import.id)
+    job = Import::ImportSchoolsAndDistricts.perform_later(import.id)
     import.update_attribute(:job_id, job.id)
     import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_SCHOOL_DISTRICT)
     redirect_to :action => "import_school_district_status"
@@ -53,7 +53,7 @@ class Import::ImportsController < ApplicationController
     import = Import::Import.create!
     import.upload_data = file_data
     import.save!
-    job = Delayed::Job.enqueue Import::ImportUsers.new(import.id)
+    job = Import::ImportUsers.perform_later(import.id)
     import.update_attribute(:job_id, job.id)
     import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_USER)
     redirect_to :action => "import_user_status"
@@ -169,7 +169,7 @@ class Import::ImportsController < ApplicationController
       import = Import::Import.create!()
       import.update_attribute(:import_type, Import::Import::IMPORT_TYPE_ACTIVITY)
       import.update_attribute(:user_id, current_visitor.id)
-      job = Delayed::Job.enqueue Import::ImportExternalActivity.new(import,json_object,req_url,auth_url,current_visitor.id)
+      job = Import::ImportExternalActivity.perform_later(import, json_object, req_url, auth_url, current_visitor.id)
       import.update_attribute(:job_id, job.id)
       redirect_to action: :import_activity_progress
     rescue => e
@@ -279,7 +279,7 @@ class Import::ImportsController < ApplicationController
     auth_url = get_authoring_url
     import = Import::Import.create!()
     import.update_attribute(:import_type,Import::Import::IMPORT_TYPE_BATCH_ACTIVITY)
-    job = Delayed::Job.enqueue Import::ImportExternalActivity.new(import,json_object,req_url,auth_url,current_visitor.id)#delayed job method,send import_job in params
+    job = Import::ImportExternalActivity.perform_later(import, json_object, req_url, auth_url, current_visitor.id)
     import.update_attribute(:job_id,job.id)
     redirect_to :action => "batch_import_status"
   end

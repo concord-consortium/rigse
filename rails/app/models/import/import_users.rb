@@ -1,5 +1,9 @@
-class Import::ImportUsers < Struct.new(:import_id)
-  def perform
+class Import::ImportUsers < ApplicationJob
+  queue_as :default
+
+  def perform(import_id)
+    # Store import_id as an instance variable for use in other methods
+    @import_id = import_id
     import = Import::Import.find(import_id)
     content_hash = JSON.parse(import.upload_data, :symbolize_names => true)
     total_users_count = content_hash[:users].size
@@ -74,7 +78,7 @@ class Import::ImportUsers < Struct.new(:import_id)
   end
 
   def error(job, exception)
-    import = Import::Import.find(import_id)
+    import = Import::Import.find(@import_id)
     import.update_attribute(:progress, -1)
   end
 end
