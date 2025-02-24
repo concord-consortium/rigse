@@ -14,8 +14,7 @@ require File.expand_path("../../lib/rack/expand_b64_gzip", __FILE__)
 
 module RailsPortal
   class Application < Rails::Application
-    config.load_defaults 6.0
-    config.autoloader = :classic
+    config.load_defaults 7.0
 
     config.assets.precompile << 'delayed/web/application.css'
     config.rails_lts_options = { default: :compatible }
@@ -42,9 +41,15 @@ module RailsPortal
     end
     Bundler.require(*Rails.groups(extra_groups)) if defined?(Bundler)
 
-    config.autoload_paths += Dir["#{config.root}/lib/**/"] # include lib and all subdirectories
-    config.autoload_paths += Dir["#{config.root}/app/pdfs/**/"] # include app/reports and all subdirectories
-    config.autoload_paths += Dir["#{config.root}/app/helpers/"] # include app/helpers and all subdirectories
+    # Custom directories with classes and modules you want to be autoloadable.
+    config.autoload_paths << Rails.root.join("lib")
+    config.autoload_paths << Rails.root.join("app/pdfs")
+    config.autoload_paths << Rails.root.join("app/helpers")
+    # These are here to verify zeitwerk autoloading
+    # See: https://guides.rubyonrails.org/v7.0/classic_to_zeitwerk_howto.html#config-eager-load-paths
+    config.eager_load_paths << Rails.root.join("lib")
+    config.eager_load_paths << Rails.root.join("app/pdfs")
+    config.eager_load_paths << Rails.root.join("app/helpers")
 
     config.filter_parameters << :password << :password_confirmation
 
@@ -152,7 +157,7 @@ module RailsPortal
     config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
 
     # do not initialize on precompile so that the Dockerfile can run the precompile
-    if BoolENV['DOCKER_NO_INIT_ON_PRECOMPILE']
+    if BoolEnv['DOCKER_NO_INIT_ON_PRECOMPILE']
       config.assets.initialize_on_precompile = false
     end
 

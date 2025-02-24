@@ -6,8 +6,8 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   let(:request)       { double('request') }
   let(:mapping)       { Devise.mappings[:user] }
   let(:expires_in)    { 10.minutes.to_i }
-  let(:token)         { SignedJWT.create_portal_token(user, {}, expires_in) }
-  let(:decoded_token) { SignedJWT::decode_portal_token(token) }
+  let(:token)         { SignedJwt.create_portal_token(user, {}, expires_in) }
+  let(:decoded_token) { SignedJwt::decode_portal_token(token) }
   let(:headers)       { {"Authorization" => "Bearer/JWT #{token}"} }
   let(:user)          { FactoryBot.create(:user) }
   let(:params)        { {} }
@@ -38,7 +38,7 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   end
 
   context 'a user with a valid authentication token with claims' do
-    let(:token) { SignedJWT.create_portal_token(user, {bar: true, baz: 'bam'}, 10.minutes.to_i) }
+    let(:token) { SignedJwt.create_portal_token(user, {bar: true, baz: 'bam'}, 10.minutes.to_i) }
 
     it 'should authenticate the user' do
       expect(strategy.authenticate!).to eql :success
@@ -58,8 +58,8 @@ describe JwtBearerTokenAuthenticatable::BearerToken do
   end
 
   context 'a user with one expired authentication token, and a valid token' do
-    let(:good_token)    { SignedJWT.create_portal_token(user, {}, 10.minutes.to_i) }
-    let(:expired_token) { SignedJWT.create_portal_token(user, {}, -10.minutes.to_i) }
+    let(:good_token)    { SignedJwt.create_portal_token(user, {}, 10.minutes.to_i) }
+    let(:expired_token) { SignedJwt.create_portal_token(user, {}, -10.minutes.to_i) }
     context 'when sending the good bearer token' do
       let(:token) { good_token }
       it "should authenticate" do

@@ -16,7 +16,7 @@ end
 
 class ApplicationController < ActionController::Base
   include Clipboard
-  include Pundit
+  include Pundit::Authorization
 
   protect_from_forgery prepend: false
 
@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
       render :html => "<div class='flash_error'>#{error_message}</div>", :status => 403
     else
       if current_user
-        if BoolENV['RESEARCHER_REPORT_ONLY']
+        if BoolEnv['RESEARCHER_REPORT_ONLY']
           # if we are here then current user is not authorized to access the reports.
           # The normal code path would send them in a redirect loop
           # instead sign them out and show them a page telling them this ia report only portal

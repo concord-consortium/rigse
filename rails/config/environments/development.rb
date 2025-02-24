@@ -69,7 +69,7 @@ RailsPortal::Application.configure do
 
   config.after_initialize do
     Bullet.enable = true
-    Bullet.bullet_logger = !BoolENV["RAILS_STDOUT_LOGGING"]
+    Bullet.bullet_logger = !BoolEnv["RAILS_STDOUT_LOGGING"]
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end

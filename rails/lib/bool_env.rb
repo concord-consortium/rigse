@@ -1,4 +1,4 @@
-module BoolENV
+class BoolEnv
   BOOL_TRUE = ["yes", "true", "1"]
 
   def self.[](env_variable)

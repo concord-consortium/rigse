@@ -29,7 +29,7 @@ RailsPortal::Application.configure do
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
-  if BoolENV['RAILS_STDOUT_LOGGING']
+  if BoolEnv['RAILS_STDOUT_LOGGING']
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
 

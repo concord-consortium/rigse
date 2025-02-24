@@ -3,7 +3,7 @@ require File.expand_path('../../spec_helper', __FILE__)
 describe LogConfig do
   before(:each) do
     # Force STDOUT logging for newly created logs
-    allow(BoolENV).to receive(:[]).with("RAILS_STDOUT_LOGGING").and_return(true)
+    allow(BoolEnv).to receive(:[]).with("RAILS_STDOUT_LOGGING").and_return(true)
   end
 
   describe 'configure' do
