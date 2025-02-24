@@ -154,7 +154,7 @@ module RailsPortal
     )
 
     # pre-compile any fonts in the assets/ directory as well
-    config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
+    config.assets.precompile << %w( *.svg *.eot *.woff *.ttf )
 
     # do not initialize on precompile so that the Dockerfile can run the precompile
     if BoolEnv['DOCKER_NO_INIT_ON_PRECOMPILE']
