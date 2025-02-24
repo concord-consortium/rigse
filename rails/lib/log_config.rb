@@ -11,7 +11,7 @@ module LogConfig
     # Disable logging to file. It might have performance impact while using
     # Docker for Mac (slow filesystem sync).
     if BoolEnv['RAILS_STDOUT_LOGGING']
-      conf.logger = Logger.new(STDOUT)
+      conf.logger = ActiveSupport::Logger.new(STDOUT)
       conf.logger.level = conf.log_level
     end
   end

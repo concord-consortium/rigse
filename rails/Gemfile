@@ -17,6 +17,7 @@ gem 'aws-sdk-s3'
 gem 'axlsx'
 gem 'bootsnap'
 gem 'coffee-rails'
+gem 'concurrent-ruby', '=1.3.4'
 # was sub-dependency of react-rails, needed in test setup code
 gem 'connection_pool'
 gem 'daemons'
