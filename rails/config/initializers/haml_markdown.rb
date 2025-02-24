@@ -1,8 +1,13 @@
-module Haml::Filters::Markdown
-  include Haml::Filters::Base
+require 'haml'
+require 'haml/filters'
+require 'redcarpet'
 
-  def render(text)
-    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
-    markdown.render(text)
+module Haml
+  module Filters
+    class Markdown < Base
+      def render(text)
+        Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(text)
+      end
+    end
   end
 end

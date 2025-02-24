@@ -1,3 +1,4 @@
+require 'sprockets/railtie'
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
@@ -26,7 +27,7 @@ module RailsPortal
     # Bundler.require(:default, Rails.env) if defined?(Bundler)
     # Fixes a Compass bug, per http://stackoverflow.com/questions/6005361/sass-import-error-in-rails-3-app-file-to-import-not-found-or-unreadable-comp?rq=1
     app_environment_variables = File.join(Rails.root, 'config', 'app_environment_variables.rb')
-    if File.exists?(app_environment_variables)
+    if File.exist?(app_environment_variables)
       load(app_environment_variables)
     else
       # TODO: Should we just die here otherwise?

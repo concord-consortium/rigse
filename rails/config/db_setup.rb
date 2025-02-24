@@ -27,15 +27,15 @@ def rails_file_path(*args)
   File.join([Rails.root] + args)
 end
 
-def create_db(hash)  
+def create_db(hash)
   database = hash['database']
   username = hash['username']
   password = hash['password']
-  
+
   # delete first:
   %x[ mysqladmin -f -u #{@db_admin_username} -p#{@db_admin_pass}  drop #{database} ]
   %x[ mysqladmin -f -u #{@db_admin_username} -p#{@db_admin_pass}  create #{database} ]
-  
+
   @hosts.each do |h|
     %x[ mysql mysql -u #{@db_admin_username} -p#{@db_admin_pass} -e "grant all on #{database}.* to '#{username}'@'#{h}'  identified by '#{password}';" ]
   end
@@ -43,9 +43,9 @@ end
 
 
 db_config_path = rails_file_path(%w{config database.yml})
-if File.exists?(db_config_path)
+if File.exist?(db_config_path)
   @db_config = YAML::load_file(db_config_path)
-  @db_config.each do |c| 
+  @db_config.each do |c|
     puts c.class
     puts c.inspect
     if c[1]

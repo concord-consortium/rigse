@@ -1,4 +1,4 @@
-if File.exists?("#{::Rails.root.to_s}/config/mailer.yml") || ::Rails.env == "test" || ::Rails.env == "cucumber"
+if File.exist?("#{::Rails.root.to_s}/config/mailer.yml") || ::Rails.env == "test" || ::Rails.env == "cucumber"
   require "action_mailer"
   if ::Rails.env == "test" || ::Rails.env == "cucumber"
     puts "Overriding ActionMailer config and setting test mode"

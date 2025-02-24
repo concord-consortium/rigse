@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-gem 'rails', '6.1.4'
+gem 'rails', '7.0.8.7'
 
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
@@ -34,7 +34,7 @@ gem 'haml'
 gem 'httparty'
 gem 'json'
 gem 'jwt'
-gem 'jquery-fileupload-rails'
+# gem 'jquery-fileupload-rails'
 gem 'mimemagic', '0.3.10'
 gem 'mysql2', platforms: [:ruby, :mingw]
 
@@ -53,13 +53,13 @@ gem 'redcarpet',            '~> 2.1.1'
 gem 'responders'
 gem 'rollbar'
 gem 'sanitize'
-gem 'sass',                 '~> 3.4.0'
-gem 'sass-rails' # if running rails 3.1 or greater
+# gem 'sass',                 '~> 3.4.0'
+# gem 'sass-rails' # if running rails 3.1 or greater
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'test-unit',            '~> 3.0'
 gem 'tinymce-rails',        '~>3.5.6'
-gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'sprockets-rails'
 gem 'sprockets', '~> 3'
 gem 'terser'
 # 2021-06-24 NP: We could / should probably get rid of this.
@@ -89,8 +89,8 @@ group :test, :cucumber do
   gem 'capybara-mechanize'
   gem 'capybara-screenshot'
   gem 'ci_reporter'
-  gem 'cucumber'
-  gem 'cucumber-rails', require: false
+  # gem 'cucumber'
+  # gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'delorean'
   gem 'email_spec'
@@ -110,13 +110,13 @@ end
 group :test, :cucumber, :development do
   # this is included in development so the mock data can be loaded in dev db
   gem 'factory_bot'
-  gem 'guard'
-  gem 'guard-cucumber'
-  gem 'guard-rspec'
+  # gem 'guard'
+  # gem 'guard-cucumber'
+  # gem 'guard-rspec'
   gem 'highline'
   gem 'launchy'
   gem 'pry'
   gem 'pry-byebug'
-  gem 'remarkable_activerecord', '~> 3.1.13', require: nil
+  # gem 'remarkable_activerecord', '~> 3.1.13', require: nil
   gem 'simplecov', require: false
 end
