@@ -6,10 +6,10 @@
 4. Resolve gem dependency issues until the bundle update succeeds.
 5. Complete upgrade tasks in the [6.1 to 7.0 upgrade guide](https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#upgrading-from-rails-6-1-to-rails-7-0)
 
-- [ ] ActionView::Helpers::UrlHelper#button_to changed behavior
-- [ ] Spring
-- [ ] Sprockets is now an optional dependency
-- [ ] Applications need to run in zeitwerk mode
+- [X] ActionView::Helpers::UrlHelper#button_to changed behavior
+- [X] Spring
+- [X] Sprockets is now an optional dependency
+- [X] Applications need to run in zeitwerk mode
 - [ ] The setter config.autoloader= has been deleted
 - [ ] ActiveSupport::Dependencies private API has been deleted
 - [ ] Autoloading during initialization
