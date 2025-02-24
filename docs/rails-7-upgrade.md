@@ -10,17 +10,17 @@
 - [X] Spring
 - [X] Sprockets is now an optional dependency
 - [X] Applications need to run in zeitwerk mode
-- [ ] The setter config.autoloader= has been deleted
-- [ ] ActiveSupport::Dependencies private API has been deleted
-- [ ] Autoloading during initialization
-- [ ] Ability to configure config.autoload_once_paths
-- [ ] ActionDispatch::Request#content_type now returns Content-Type header as it is.
-- [ ] Key generator digest class change requires a cookie rotator
-- [ ] Digest class for ActiveSupport::Digest changing to SHA256
-- [ ] New ActiveSupport::Cache serialization format
-- [ ] Active Storage video preview image generation
-- [ ] Active Storage default variant processor changed to :vips
-- [ ] Rails version is now included in the Active Record schema dump
+- [X] The setter config.autoloader= has been deleted
+- [X] ActiveSupport::Dependencies private API has been deleted
+- [X] Autoloading during initialization
+- [X] Ability to configure config.autoload_once_paths
+- [X] ActionDispatch::Request#content_type now returns Content-Type header as it is.
+- [X] Key generator digest class change requires a cookie rotator
+- [X] Digest class for ActiveSupport::Digest changing to SHA256
+- [X] New ActiveSupport::Cache serialization format
+- [X] Active Storage video preview image generation
+- [X] Active Storage default variant processor changed to :vips
+- [X] Rails version is now included in the Active Record schema dump
 
 6. Create a PR and insure all the tests pass.
 7. After review/approval merge the branch into the `lara-upgrade` branch.

@@ -1,3 +1,5 @@
+require "logger"
+
 require 'sprockets/railtie'
 require File.expand_path('../boot', __FILE__)
 
