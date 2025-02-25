@@ -115,6 +115,15 @@ class API::V1::StudentsController < API::APIController
     if user_attributes[:last_name].nil?
       return error("Missing user last_name parameter")
     end
+    if user_attributes[:password].nil?
+      return error("Password can't be blank.")
+    end
+    if user_attributes[:password_confirmation].nil?
+      return error("Password confirmation can't be blank.")
+    end
+    if user_attributes[:password] != user_attributes[:password_confirmation]
+      return error("Password confirmation doesn't match Password")
+    end
 
     portal_clazz = result[:portal_clazz]
     if !portal_clazz.is_teacher?(current_user)
@@ -128,7 +137,8 @@ class API::V1::StudentsController < API::APIController
 
     user = User.new(user_strong_params(user_attributes))
     if !user.valid?
-      return error(user.errors.full_messages.uniq.join(". ").gsub("..", "."))
+      error_messages = user.errors.map { |options| options.message }.uniq.join  (", ").gsub("..", ".")
+      return error(error_messages)
     end
 
     # temporarily disable sending email notifications for state change events

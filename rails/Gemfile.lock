@@ -278,9 +278,8 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    haml (6.3.0)
-      temple (>= 0.8.2)
-      thor
+    haml (5.2.1)
+      temple (>= 0.8.0)
       tilt
     hashdiff (1.1.2)
     hashie (5.0.0)
@@ -513,10 +512,10 @@ GEM
     rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (7.1.1)
-      actionpack (>= 7.0)
-      activesupport (>= 7.0)
-      railties (>= 7.0)
+    rspec-rails (6.1.5)
+      actionpack (>= 6.1)
+      activesupport (>= 6.1)
+      railties (>= 6.1)
       rspec-core (~> 3.13)
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
@@ -562,7 +561,7 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
-    spring (4.2.1)
+    spring (3.1.1)
     spring-commands-cucumber (1.0.1)
       spring (>= 0.9.1)
     spring-commands-rspec (1.0.4)
@@ -596,7 +595,7 @@ GEM
     thread_safe (0.3.6)
     tilt (2.6.0)
     timeout (0.4.3)
-    tinymce-rails (7.7.0)
+    tinymce-rails (4.9.4)
       railties (>= 3.1.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -675,7 +674,7 @@ DEPENDENCIES
   guard
   guard-cucumber
   guard-rspec
-  haml
+  haml (~> 5.2)
   highline
   httparty
   jquery-fileupload-rails
@@ -707,23 +706,24 @@ DEPENDENCIES
   responders
   rollbar
   rspec
-  rspec-activemodel-mocks
+  rspec-activemodel-mocks (~> 1.2, >= 1.2.1)
   rspec-collection_matchers
-  rspec-rails
+  rspec-rails (~> 6.0)
   ruby-debug
   sanitize
   sass
   sass-rails
   simplecov
-  spring
+  spring (~> 3.0)
   spring-commands-cucumber
-  spring-commands-rspec
+  spring-commands-rspec (~> 1.0, >= 1.0.4)
   sprockets (= 3.7.5)
+  sprockets-rails
   sunspot_rails
   sunspot_solr
   terser
   test-unit
-  tinymce-rails
+  tinymce-rails (~> 4.9.4, = 4.9.4)
   useragent
   uuidtools
   virtus

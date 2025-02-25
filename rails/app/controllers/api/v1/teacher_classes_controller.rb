@@ -63,7 +63,11 @@ class API::V1::TeacherClassesController < API::APIController
     class_to_copy.teachers.each do |other_teacher|
       new_clazz.add_teacher(other_teacher)
     end
-    return error(new_clazz.errors.full_messages.join(" and ")) if !new_clazz.save
+    if !new_clazz.save
+      error_messages = new_clazz.errors.map { |options| options.message }.join(", ")
+      return error(error_messages)
+    end
+
 
     class_to_copy.offerings.each do |offering|
       new_offering = Portal::Offering.where(clazz_id: new_clazz.id, runnable_type: offering.runnable_type, runnable_id: offering.runnable_id).first_or_create

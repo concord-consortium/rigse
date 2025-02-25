@@ -31,7 +31,7 @@ gem 'devise-token_authenticatable'
 gem 'dynamic_form', '~> 1.1.4'
 gem 'exception_notification'
 gem 'font-awesome-rails'
-gem 'haml'
+gem 'haml', '~> 5.2'
 gem 'httparty'
 gem 'json'
 gem 'jwt'
@@ -60,8 +60,8 @@ gem 'sass-rails' # if running rails 3.1 or greater
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'test-unit'
-gem 'tinymce-rails'
-# gem 'sprockets-rails'
+gem 'tinymce-rails', '~> 4.9.4', '= 4.9.4'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'sprockets', '=3.7.5'
 gem 'terser'
 # 2021-06-24 NP: We could / should probably get rid of this.
@@ -81,7 +81,7 @@ group :development do
   gem 'better_errors'
   gem 'rake'
   gem 'ruby-debug', platforms: [:mri_18, :mingw_18]
-  gem 'spring'
+  gem 'spring', '~> 3.0'
 end
 
 group :test, :cucumber do
@@ -97,12 +97,12 @@ group :test, :cucumber do
   gem 'json-schema'
   gem 'rails-controller-testing'
   gem 'rspec'
-  gem 'rspec-activemodel-mocks'
+  gem "rspec-activemodel-mocks", '~> 1.2', '>= 1.2.1'
   gem 'rspec-collection_matchers'
-  gem 'rspec-rails'
+  gem "rspec-rails", '~> 6.0'
   # gem 'selenium-webdriver'
   gem 'spring-commands-cucumber'
-  gem 'spring-commands-rspec'
+  gem "spring-commands-rspec", "~> 1.0", ">= 1.0.4"
   gem 'webdrivers'
   gem 'webmock', require: false
 end
