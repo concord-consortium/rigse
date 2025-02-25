@@ -110,7 +110,7 @@ end
 group :test, :cucumber, :development do
   gem 'bullet'
   # this is included in development so the mock data can be loaded in dev db
-  gem 'factory_bot'
+  gem "factory_bot", "=5.2"
   gem 'guard'
   gem 'guard-cucumber'
   gem 'guard-rspec'
