@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_12_11_155304) do
+ActiveRecord::Schema[7.0].define(version: 2025_02_26_146000) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
@@ -30,6 +30,34 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_11_155304) do
     t.index ["learner_id"], name: "index_access_grants_on_learner_id"
     t.index ["teacher_id"], name: "index_access_grants_on_teacher_id"
     t.index ["user_id"], name: "index_access_grants_on_user_id"
+  end
+
+  create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", charset: "utf8", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", charset: "utf8", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "admin_cohort_items", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -328,10 +356,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_11_155304) do
     t.string "publication_status", default: "published"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.integer "image_file_size"
-    t.datetime "image_updated_at", precision: nil
     t.string "license_code"
     t.integer "width", default: 0
     t.integer "height", default: 0
@@ -1582,5 +1606,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_12_11_155304) do
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "portal_runs", "portal_learners", column: "learner_id"
 end
