@@ -373,7 +373,7 @@ class Portal::ClazzesController < ApplicationController
     report = ExternalReport.find(params[:report_id])
     additional_params = { researcher: params[:researcher] }
     next_url = report.url_for_class(portal_clazz, current_visitor, request.protocol, request.host_with_port, additional_params)
-    redirect_to next_url
+    redirect_to next_url, allow_other_host: true
   end
 
   private

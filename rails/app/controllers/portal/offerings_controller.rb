@@ -68,7 +68,7 @@ class Portal::OfferingsController < ApplicationController
             :platform_user_id => current_visitor.id,
             :resource_link_id => @offering.id
           }.to_query
-          redirect_to(uri.to_s)
+          redirect_to uri.to_s, allow_other_host: true
         else
           redirect_url = @offering.runnable.url(learner, root_url)
           if params[:show_feedback].present?
@@ -78,7 +78,7 @@ class Portal::OfferingsController < ApplicationController
             uri.query = URI.encode_www_form(query_params)
             redirect_url = uri.to_s
           end
-          redirect_to(redirect_url)
+          redirect_to redirect_url, allow_other_host: true
         end
        }
     end
@@ -161,7 +161,7 @@ class Portal::OfferingsController < ApplicationController
     raise ActionController::RoutingError.new('Default Report Not Found') unless report
     additional_params = { researcher: researcher }
     next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, additional_params)
-    redirect_to next_url
+    redirect_to next_url, allow_other_host: true
   end
 
   def external_report
@@ -173,7 +173,7 @@ class Portal::OfferingsController < ApplicationController
     report = ExternalReport.find(report_id)
     additional_params = { researcher: researcher }
     next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port, additional_params)
-    redirect_to next_url
+    redirect_to next_url, allow_other_host: true
   end
 
   private
