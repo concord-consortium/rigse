@@ -96,4 +96,6 @@ RailsPortal::Application.configure do
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
 
+  config.active_storage.service = :amazon
+
 end
