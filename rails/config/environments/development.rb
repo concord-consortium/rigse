@@ -94,5 +94,7 @@ RailsPortal::Application.configure do
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
 
+  config.active_storage.service = :local
+
   LogConfig.configure(config, ENV['DEV_LOG_LEVEL'], 'DEBUG')
 end
