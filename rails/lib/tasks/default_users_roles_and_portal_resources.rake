@@ -77,7 +77,7 @@ namespace :app do
     end
 
     task :load_factory_bot do
-      # FactoryBot.find_definitions
+      FactoryBot.find_definitions
     end
 
     desc "Deletes the default data"
