@@ -72,9 +72,11 @@ class Search
 
   def self.clean_search_terms (term)
     return NoSearchTerm if (term.nil? || term.blank?)
-    # http://rubular.com/r/ML9V9EMCKh (include apostrophe)
-    not_valid_chars = /[-+]+/
-    term.gsub(not_valid_chars,' ').strip
+    # escape all special solr characters with a slash so they are treated as literals
+    # see: https://solr.apache.org/guide/7_5/the-standard-query-parser.html#escaping-special-characters
+    # note: \\\\ escapes the backslash itself (\\ in Ruby string to \ in output) where
+    #       \1 refers to the matched character from the capturing group.
+    term.gsub(/([+\-\&\|\!\(\)\{\}\[\]\^"~\*\?:\/])/, '\\\\\1').strip
   end
 
   def user
