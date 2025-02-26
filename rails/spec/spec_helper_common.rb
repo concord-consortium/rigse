@@ -65,7 +65,8 @@ class ActiveRecord::Base
   end
 
   def self.current_database_configuration_name
-    configurations.to_h.find { |_k, v| v['database'] == connection.current_database }[0]
+    config = configurations.configs_for(env_name: Rails.env).find { |cfg| cfg.database == connection.current_database }
+    config&.env_name
   end
 end
 ActiveRecord::Base.set_shared_connection

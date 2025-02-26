@@ -6,6 +6,8 @@ require 'rake'
 # require 'ci/reporter/rake/rspec'     # use this if you're using RSpec
 # require 'ci/reporter/rake/cucumber'  # use this if you're using Cucumber
 
+require 'webdrivers'
+
 begin
   require "rspec/core/rake_task"
 rescue LoadError
