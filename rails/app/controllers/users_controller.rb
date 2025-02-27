@@ -41,9 +41,19 @@ class UsersController < ApplicationController
 
     search_scope = policy_scope(User)
     search_scope = search_scope
-      .includes(:roles)
     search_scope = search_scope.joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
+
+    # to avoid loading the heavy associations to display the badges
+    user_ids = @users.map(&:id).join(',')
+    fetch_user_ids = ->(table) do
+      return Set.new if user_ids.empty?
+      query = "SELECT user_id FROM #{table} WHERE user_id IN (#{user_ids})"
+      ActiveRecord::Base.connection.exec_query(query).rows.flatten.to_set
+    end
+    @teacher_ids = fetch_user_ids.call('portal_teachers')
+    @student_ids = fetch_user_ids.call('portal_students')
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @users }
