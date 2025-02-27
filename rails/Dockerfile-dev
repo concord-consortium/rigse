@@ -13,7 +13,25 @@ RUN node -v
 
 RUN true
 
-RUN apk add \
+RUN apk add --no-cache \
+  chromium \
+  chromium-chromedriver \
+  nss \
+  bash \
+  xvfb \
+  openjdk8-jre \
+  ttf-freefont \
+  libx11 \
+  libxcomposite \
+  libxcursor \
+  libxdamage \
+  libxi \
+  libxrandr \
+  libxrender \
+  libxshmfence \
+  libxtst \
+  udev \
+  dbus \
   openssl \
   libssl3 \
   ca-certificates \
