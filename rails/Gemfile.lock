@@ -703,6 +703,7 @@ DEPENDENCIES
   sanitize
   sass
   sass-rails
+  selenium-webdriver
   simplecov
   spring (~> 3.0)
   spring-commands-cucumber
