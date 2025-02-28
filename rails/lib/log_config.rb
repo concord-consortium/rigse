@@ -10,8 +10,8 @@ module LogConfig
     conf.log_level = level if AVAILABLE_LOG_LEVELS.include? level
     # Disable logging to file. It might have performance impact while using
     # Docker for Mac (slow filesystem sync).
-    if BoolENV['RAILS_STDOUT_LOGGING']
-      conf.logger = Logger.new(STDOUT)
+    if BoolEnv['RAILS_STDOUT_LOGGING']
+      conf.logger = ActiveSupport::Logger.new(STDOUT)
       conf.logger.level = conf.log_level
     end
   end

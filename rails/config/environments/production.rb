@@ -29,7 +29,7 @@ RailsPortal::Application.configure do
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
-  if BoolENV['RAILS_STDOUT_LOGGING']
+  if BoolEnv['RAILS_STDOUT_LOGGING']
     config.logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
   end
 
@@ -95,5 +95,7 @@ RailsPortal::Application.configure do
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
+
+  config.active_storage.service = :amazon
 
 end

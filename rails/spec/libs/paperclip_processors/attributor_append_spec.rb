@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe AttributorAppend do
+RSpec.describe PaperclipProcessors::AttributorAppend do
 
   # TODO: auto-generated
   describe '#make' do

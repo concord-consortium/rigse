@@ -11,7 +11,7 @@
 
 - [:error, :important,:alert].each do |key|
   - unless flash[key].blank?
-    - encoded_msg = URI::encode("#{flash[key]}")
+    - encoded_msg = ERB::Util.url_encode("#{flash[key]}")
     :javascript
       document.whenReady( function() {
         Lightbox.flash(decodeURIComponent("#{key}"), decodeURIComponent("#{encoded_msg}"));

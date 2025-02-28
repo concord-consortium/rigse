@@ -1,5 +1,18 @@
 require_relative "../../lib/log_config"
 
+ENV["RAILS_ENV"] = 'test'
+
+# needed to generate signed portal tokens
+ENV["JWT_HMAC_SECRET"] = 'foo'
+
+# needed for testing google auth
+ENV['GOOGLE_CLIENT_KEY'] = '1234'
+ENV['GOOGLE_CLIENT_SECRET'] = '1234'
+
+# needed for testing schoology auth
+ENV['SCHOOLOGY_CONSUMER_KEY'] = '1234'
+ENV['SCHOOLOGY_CONSUMER_SECRET'] = '1234'
+
 RailsPortal::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -7,10 +20,10 @@ RailsPortal::Application.configure do
   # test suite.  You never need to work with it otherwise.  Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
-  config.cache_classes = true
+  config.cache_classes = false
 
   # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
-  config.eager_load = true  # normally false unless you use a tool that preloads your test environment
+  config.eager_load = false  # normally false unless you use a tool that preloads your test environment
 
   # this will fall back to autoloading to files outside the app folder
   config.enable_dependency_loading = true
@@ -75,6 +88,8 @@ RailsPortal::Application.configure do
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
+
+  config.active_storage.service = :test
 
   LogConfig.configure(config, ENV['TEST_LOG_LEVEL'], 'WARN')
 end

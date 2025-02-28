@@ -1,7 +1,7 @@
-require 'large_class'
-require 'mixed_runnable_type_class'
-
 module MockData
+  include LargeClass
+  include MixedRunnableTypeClass
+
   def self.default_teacher
     return @default_teacher if @default_teacher
     teacher_user = User.find_by_login 'teacher'

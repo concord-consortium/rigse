@@ -6,7 +6,7 @@ class API::V1::JwtController < API::APIController
   # use exceptions to return errors
   # instead of directly calling APIController#error
   rescue_from StandardError, with: :error_400
-  rescue_from SignedJWT::Error, with: :error_500
+  rescue_from SignedJwt::Error, with: :error_500
 
   private
   def error_400(e)
@@ -184,7 +184,7 @@ class API::V1::JwtController < API::APIController
     end
     add_admin_claims(user,claims)
 
-    render status: 201, json: {token: SignedJWT::create_portal_token(user, claims, 3600)}
+    render status: 201, json: {token: SignedJwt::create_portal_token(user, claims, 3600)}
   end
 
 
@@ -309,7 +309,7 @@ class API::V1::JwtController < API::APIController
     # the firebase uid must be between 1-36 characters and unique across all portals, MD5 yields a 32 byte string
     uid = Digest::MD5.hexdigest(jwt_user_id(user))
 
-    render status: 201, json: {token: SignedJWT::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
+    render status: 201, json: {token: SignedJwt::create_firebase_token(uid, params[:firebase_app], 3600, claims)}
   end
 
 end

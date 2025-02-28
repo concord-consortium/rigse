@@ -58,7 +58,7 @@ class API::V1::ClassesController < API::APIController
     render :json => {
       offerings: clazz.offerings.includes(:runnable).map do |offering|
 
-        portal_token = SignedJWT::create_portal_token(current_user, {
+        portal_token = SignedJwt::create_portal_token(current_user, {
           offering_info_url: api_v1_offering_url(offering.id)
         })
         params = {portal_token: portal_token}.to_param

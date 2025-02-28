@@ -1,6 +1,6 @@
 module ApplicationHelper
   include Clipboard
-  include Pundit
+  include Pundit::Authorization
 
   def current_settings
     @_settings ||= Admin::Settings.default_settings
@@ -590,7 +590,7 @@ module ApplicationHelper
     if current_user.nil?
       # anonymous home is the '/'
       root_path
-    elsif BoolENV['RESEARCHER_REPORT_ONLY']
+    elsif BoolEnv['RESEARCHER_REPORT_ONLY']
       learner_report_path
     elsif current_user.portal_student
       my_classes_path

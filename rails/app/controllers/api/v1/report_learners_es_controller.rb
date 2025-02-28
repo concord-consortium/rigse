@@ -74,7 +74,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     # Note that we're not generating JWT. We're only signing generated query JSON, so the external report can verify
     # that it's coming from the Portal and it hasn't been modified on the way. The external report app needs to know
     # hmac_secret to verify query and signature.
-    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, response.to_json)
+    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJwt.hmac_secret, response.to_json)
     render json: {
       json: response,
       signature: signature
@@ -82,7 +82,7 @@ class API::V1::ReportLearnersEsController < API::APIController
   end
 
   skip_before_action :verify_authenticity_token
-  rescue_from SignedJWT::Error, with: :error_500
+  rescue_from SignedJwt::Error, with: :error_500
 
   # returns a JWT containing the uuid of the requester, alongside the original query and some other parameters.
   # By sending back the JWT and query to external_report_learners_from_jwt, we can make an authorized request
@@ -104,7 +104,7 @@ class API::V1::ReportLearnersEsController < API::APIController
     end
 
     response = {
-      token: SignedJWT::create_portal_token(current_user, {}, 3600),   # just sets uid
+      token: SignedJwt::create_portal_token(current_user, {}, 3600),   # just sets uid
       json: {
         query: params,
         type: "learners",

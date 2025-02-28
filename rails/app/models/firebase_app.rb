@@ -14,7 +14,7 @@ class FirebaseApp < ApplicationRecord
   def is_valid_private_key?
     if !private_key.blank?
       escaped_private_key = replace_newlines(private_key)
-      if !SignedJWT::is_valid_private_key?(escaped_private_key)
+      if !SignedJwt::is_valid_private_key?(escaped_private_key)
         errors.add(:private_key, "is not valid (attempted signing failed)")
       end
     end

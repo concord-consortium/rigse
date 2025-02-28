@@ -26,7 +26,7 @@ class HelpController < ApplicationController
       render :template => "help/no_help_page"
     when 'external url'
       external_url = current_settings.external_url
-      redirect_to "#{external_url}"
+      redirect_to "#{external_url}", allow_other_host: true
     when 'help custom html'
       @help_page_content = current_settings.custom_help_page_html
     end

@@ -1,19 +1,22 @@
-require 'attributor_overlay'
-class AttributorAppend < AttributorOverlay
-  def make
-    wm_dst = make_watermark
+require_relative 'attributor_overlay'
 
-    dst = Tempfile.new(@basename)
-    dst.binmode
+module PaperclipProcessors
+  module AttributorAppend
+    def make
+      wm_dst = make_watermark
 
-    composite_params = "#{fromfile} #{tofile(wm_dst)} -append #{tofile(dst)}"
+      dst = Tempfile.new(@basename)
+      dst.binmode
 
-    begin
-      success = Paperclip.run("convert", composite_params)
-    rescue Paperclip::Error => e
-      raise Paperclip::Error, "There was an error adding attribution to #{@basename}: #{e}" if @whiny
+      composite_params = "#{fromfile} #{tofile(wm_dst)} -append #{tofile(dst)}"
+
+      begin
+        success = Paperclip.run("convert", composite_params)
+      rescue Paperclip::Error => e
+        raise Paperclip::Error, "There was an error adding attribution to #{@basename}: #{e}" if @whiny
+      end
+
+      dst
     end
-
-    dst
   end
 end

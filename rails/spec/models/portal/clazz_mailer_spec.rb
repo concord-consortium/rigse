@@ -77,8 +77,8 @@ describe Portal::ClazzMailer do
       end
       it "sends a notification email to project admins" do
         expect(subject).to_not be_a(ActionMailer::Base::NullMail)
-        expect(subject.To.value.join).to include("Project Manager")
-        expect(subject.To.value.join).to include("Second Manager")
+        expect(subject.To.value).to include("Project Manager")
+        expect(subject.To.value).to include("Second Manager")
       end
     end
     context "when teacher is in two cohorts" do
@@ -91,8 +91,8 @@ describe Portal::ClazzMailer do
       end
       it "sends a notification email to both project admins" do
         expect(subject).to_not be_a(ActionMailer::Base::NullMail)
-        expect(subject.To.value.join).to include("Project Manager")
-        expect(subject.To.value.join).to include("Second Manager")
+        expect(subject.To.value).to include("Project Manager")
+        expect(subject.To.value).to include("Second Manager")
       end
     end
     context "when teacher is in a cohort of a project with a nil admin" do
@@ -105,8 +105,8 @@ describe Portal::ClazzMailer do
       end
       it "sends a notification email only to the first admins" do
         expect(subject).to_not be_a(ActionMailer::Base::NullMail)
-        expect(subject.To.value.join).to include("Project Manager")
-        expect(subject.To.value.join).to_not include("Second Manager")
+        expect(subject.To.value).to include("Project Manager")
+        expect(subject.To.value).to_not include("Second Manager")
       end
     end
   end

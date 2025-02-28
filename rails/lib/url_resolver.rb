@@ -1,6 +1,6 @@
-class URLResolver
+class UrlResolver
   include Rails.application.routes.url_helpers
-  
+
   def getUrl(method, options = {})
     options[:script_name] ||= ApplicationController.config.relative_url_root
     eval("#{method}(options)")

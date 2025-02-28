@@ -48,7 +48,7 @@ class ExternalActivitiesController < ApplicationController
            query["domain"] = root_url
            query["domain_uid"] = current_visitor.id
            uri.query = Rack::Utils.build_query(query)
-           redirect_to(uri.to_s)
+           redirect_to uri.to_s, allow_other_host: true
         else
           redirect_to(@external_activity.url)
         end

@@ -14,7 +14,7 @@ class Portal::TeacherPolicy < ApplicationPolicy
       AND
           __apu_scope.user_id = #{user.id}
       AND
-          (__apu_scope.is_admin = 1 OR (__apu_scope.is_researcher = 1 AND (__apu_scope.expiration_date IS NULL OR expiration_date > '#{Date.today.to_s(:db)}')))
+          (__apu_scope.is_admin = 1 OR (__apu_scope.is_researcher = 1 AND (__apu_scope.expiration_date IS NULL OR expiration_date > '#{Date.today.to_fs(:db)}')))
       UNION
         SELECT id
         FROM portal_teachers

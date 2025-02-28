@@ -11,6 +11,7 @@ ENV['GOOGLE_CLIENT_SECRET'] = '1234'
 ENV['SCHOOLOGY_CONSUMER_KEY'] = '1234'
 ENV['SCHOOLOGY_CONSUMER_SECRET'] = '1234'
 
+require 'support/regex_constants.rb'
 
 require 'simplecov'
 SimpleCov.start do

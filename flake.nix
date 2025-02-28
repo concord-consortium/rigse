@@ -42,7 +42,7 @@
           GOOGLE_ANALYTICS_MEASUREMENT_ID = "G-G4ZNE5X0T6";
 
           packages = with pkgs; [
-            ruby_2_7
+            ruby_3_2
             # Required to install "mysql2" Ruby Gem
             libmysqlclient
             # "! Unable to load application: ExecJS::RuntimeUnavailable: Could not find a JavaScript runtime. See https://github.com/rails/execjs for a list of available runtimes.

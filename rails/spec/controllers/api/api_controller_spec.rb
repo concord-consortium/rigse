@@ -139,7 +139,7 @@ RSpec.describe API::APIController, type: :controller do
           let(:user)           { FactoryBot.create(:user) }
           let(:claims)         { {} }
           let(:expires)        { 3600 }
-          let(:user_jwt_token) { SignedJWT.create_portal_token(user, claims, expires) }
+          let(:user_jwt_token) { SignedJwt.create_portal_token(user, claims, expires) }
           before(:each) {
             set_jwt_bearer_token(user_jwt_token)
           }

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe AttributorOverlay do
+RSpec.describe PaperclipProcessors::AttributorOverlay do
 
   # TODO: auto-generated
   describe '#make' do

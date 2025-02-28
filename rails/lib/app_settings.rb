@@ -6,7 +6,7 @@ module AppSettings
   APP_SETTINGS_PATH = File.expand_path("../../config/settings.yml", __FILE__)
 
   def settings_exists?(path=APP_SETTINGS_PATH)
-    File.exists?(path) && File.stat(path).size > 0
+    File.exist?(path) && File.stat(path).size > 0
   end
 
   def load_app_settings(env=::Rails.env)
@@ -25,14 +25,14 @@ module AppSettings
 
   def load_settings(path)
     begin
-      YAML::load(ERB.new(IO.read(path)).result)
+      YAML.safe_load(ERB.new(IO.read(path)).result, permitted_classes: [Symbol], aliases: true)
     rescue Errno::ENOENT
       {}
     end
   end
 
   def save_app_settings(new_app_settings, path=APP_SETTINGS_PATH)
-    if File.exists?(path)
+    if File.exist?(path)
       path =  Pathname.new(path).realpath.to_s
     end
     new_settings = load_all_app_settings.merge(symbolize_app_settings(new_app_settings))

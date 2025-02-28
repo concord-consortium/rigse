@@ -65,7 +65,7 @@ namespace :db do
         cmd << " -p'#{db_config["password"]}'"
       end
       db_path = "db/#{Rails.env}_data.sql"
-      `gunzip --force #{db_path}.gz` if File.exists? db_path + '.gz'
+      `gunzip --force #{db_path}.gz` if File.exist? db_path + '.gz'
       cmd << " #{db_config["database"]} < #{db_path}"
       # puts "Fetching database\n#{cmd}"
       puts "Loading database from: #{db_path}"

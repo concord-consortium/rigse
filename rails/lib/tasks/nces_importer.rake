@@ -3,15 +3,15 @@ require 'fileutils'
 
 namespace :portal do
   namespace :setup do
-    
+
     nces_dir = File.join(::Rails.root.to_s, 'config', 'nces_data')
     school_layout_file = File.join(nces_dir, 'psu061blay.txt')
     district_layout_file = File.join(nces_dir, 'pau061blay.txt')
 
-    # 
+    #
     # task: portal:setup:download_nces_data
     # Download NCES CCD data files from NCES website
-    # 
+    #
     desc 'Download NCES CCD data files from NCES website'
     task :download_nces_data => :environment do
       if Portal::StateOrProvince.configured.empty?
@@ -21,11 +21,11 @@ namespace :portal do
 
       puts <<-HEREDOC
 
-Download District and School NCES Common Core of Data files from the 
+Download District and School NCES Common Core of Data files from the
 NCES website: http://nces.ed.gov/ccd/data/zip/
 
       HEREDOC
-      FileUtils.mkdir_p(nces_dir) unless File.exists?(nces_dir)
+      FileUtils.mkdir_p(nces_dir) unless File.exist?(nces_dir)
       Dir.chdir(nces_dir) do
         has_curl = system("which curl")
         files = [
@@ -39,7 +39,7 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
           'http://nces.ed.gov/ccd/data/txt/pau061blay.txt'
         ]
         files.each do |url_str|
-          if File.exists?(File.basename(url_str))
+          if File.exist?(File.basename(url_str))
             puts "  data file already exists: #{File.basename(url_str)}"
           else
             if has_curl
@@ -60,7 +60,7 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
       puts
     end
 
-    # 
+    #
     # task: portal:setup:generate_nces_tables_migration
     # Generate migration file for nces tables
     #
@@ -71,21 +71,21 @@ NCES website: http://nces.ed.gov/ccd/data/zip/
       parser.create_tables_migration
     end
 
-    # 
+    #
     # task: portal:setup:generate_nces_indexes_migration
     # Generate migration file for nces indexes
-    # 
+    #
     # FIXME: This task currently fails with
     #   "\xC2" from ASCII-8BIT to UTF-8
     #   lib/nces_parser.rb:313:in `write'
     # This may be fixable in a manner similar to https://github.com/concord-consortium/rigse/commit/4d78fc4ee
-    
+
     desc 'Generate migration file for nces indexes'
     task :generate_nces_indexes_migration => :environment do
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006)
       parser.create_indexes_migration
     end
-    
+
     desc 'Import NCES data from files: config/nces_data/* -- uses APP_CONFIG[:states_and_provinces] if defined to filter on states'
     task :import_nces_from_files => :environment do
       puts <<-HEREDOC
@@ -111,10 +111,10 @@ If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and p
       school_data_fpaths = school_data_fnames.collect { |f| File.join(nces_dir, f) }
       parser = NcesParser.new(district_layout_file, school_layout_file, 2006, states_and_provinces)
       parser.load_db(district_data_fpaths, school_data_fpaths)
-      
+
       # if there are any existing Portal Districts or Schools fix the foreign keys that
       # reference the nces models by using the leaid and ncessch attributes.
-      
+
       if Portal::District.real.count > 0
         puts "Re-linking existing #{Portal::District.count} Portal::District models with new Portal::Nces06District models"
         Portal::District.real.find_in_batches(:batch_size => 500) do |portal_districts|
@@ -139,13 +139,13 @@ If APP_CONFIG[:states_and_provinces] is nil then data from all NCES states and p
         end
       end
       puts
-      
+
     end
 
     #
     # task: portal:setup:create_districts_and_schools_from_nces_data
     # Create districts and schools from NCES records for States listed in settings.yml
-    # 
+    #
     desc 'Create districts and schools from NCES records for States listed in settings.yml'
     task :create_districts_and_schools_from_nces_data => :environment do
       states_and_provinces = Portal::StateOrProvince.configured
@@ -161,20 +161,20 @@ Set these for this application in config/settings.yml.
 
   Example from file: config/settings.yml:
 
-    active_school_levels: 
+    active_school_levels:
       - "2"
       - "3"
 
 NCES School levels are used as the keys.
- 
-The following codes were calculated from the school's corresponding GSLO and GSHI values: 
+
+The following codes were calculated from the school's corresponding GSLO and GSHI values:
   1 = Primary (low grade = PK through 03; high grade = PK through 08)
   2 = Middle (low grade = 04 through 07; high grade = 04 through 09)
   3 = High (low grade = 07 through 12; high grade = 12 only
   4 = Other (any other configuration not falling within the above three categories, including ungraded)
 
       HEREDOC
-      
+
       portal_school_field_names = [:name, :uuid, :state, :ncessch, :zipcode, :district_id, :nces_school_id]
       portal_district_field_names = [:name, :uuid, :state, :leaid, :zipcode, :nces_district_id]
       import_options = { :validate => false }
@@ -218,7 +218,7 @@ The following codes were calculated from the school's corresponding GSLO and GSH
               print '.'
               STDOUT.flush
             end
-            unless (nces_school_levels & active_school_levels).empty?          
+            unless (nces_school_levels & active_school_levels).empty?
               nces_schools.each do |nces_school|
                 school_values << [nces_school.capitalized_name, UUIDTools::UUID.timestamp_create.to_s, portal_district.state, nces_school.NCESSCH, nces_school.LZIP,  portal_district.id, nces_school.id]
               end

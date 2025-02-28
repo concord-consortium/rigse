@@ -61,7 +61,7 @@ class API::V1::ReportUsersController < API::APIController
       end_date: params[:end_date]
     }
 
-    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, query.to_json)
+    signature = OpenSSL::HMAC.hexdigest("SHA256", SignedJwt.hmac_secret, query.to_json)
     render json: {
       json: query,
       signature: signature

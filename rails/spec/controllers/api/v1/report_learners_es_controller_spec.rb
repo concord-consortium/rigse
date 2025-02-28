@@ -241,7 +241,7 @@ describe API::V1::ReportLearnersEsController do
         expect(filter["user"]["id"]).to eq url_for_admin_user
         expect(filter["user"]["email"]).to eq admin_user.email
 
-        expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJWT.hmac_secret, resp["json"].to_json)
+        expect(resp["signature"]).to eq OpenSSL::HMAC.hexdigest("SHA256", SignedJwt.hmac_secret, resp["json"].to_json)
       end
     end
   end
@@ -416,7 +416,7 @@ describe API::V1::ReportLearnersEsController do
 
     describe "simple user access" do
       before (:each) do
-        jwt = SignedJWT::create_portal_token(simple_user, {}, 3600)
+        jwt = SignedJwt::create_portal_token(simple_user, {}, 3600)
         set_jwt_bearer_token(jwt)
       end
 
@@ -430,7 +430,7 @@ describe API::V1::ReportLearnersEsController do
 
     describe "admin access" do
       before (:each) do
-        jwt = SignedJWT::create_portal_token(admin_user, {}, 3600)
+        jwt = SignedJwt::create_portal_token(admin_user, {}, 3600)
         set_jwt_bearer_token(jwt)
       end
 
@@ -577,7 +577,7 @@ describe API::V1::ReportLearnersEsController do
 
     describe "manager access" do
       before (:each) do
-        jwt = SignedJWT::create_portal_token(manager_user, {}, 3600)
+        jwt = SignedJwt::create_portal_token(manager_user, {}, 3600)
         set_jwt_bearer_token(jwt)
       end
 
@@ -597,7 +597,7 @@ describe API::V1::ReportLearnersEsController do
         user = FactoryBot.create(:confirmed_user)
         user.add_role_for_project('researcher', @project1)
 
-        jwt = SignedJWT::create_portal_token(user, {}, 3600)
+        jwt = SignedJwt::create_portal_token(user, {}, 3600)
         set_jwt_bearer_token(jwt)
       end
 
@@ -611,7 +611,7 @@ describe API::V1::ReportLearnersEsController do
 
     describe "school without district" do
       before (:each) do
-        jwt = SignedJWT::create_portal_token(admin_user, {}, 3600)
+        jwt = SignedJwt::create_portal_token(admin_user, {}, 3600)
         set_jwt_bearer_token(jwt)
       end
 

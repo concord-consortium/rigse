@@ -20,42 +20,47 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 # requires gem uuidtools version 2.0.0 or newer
+#
+# ==================
+# ActsAsReplicatable
+# ==================
+# Specify this act if you want to be able to replicate models from one instance of this web application to another.
+# But ... so far all this plugin does is create and save a uuid for model instances.
+#
+# Example
+# =======
+#
+# You need to add a uuid attribute (string, limit=36) to the models you use this plugin with.
+#
+#   t.column :uuid, :string, :limit => 36
+#
+# Then in the model definition add:
+#
+#   acts_as_replicatable
+#
+# Written by Stephen Bannasch
 
 require 'uuidtools'
 
-module Foo #:nodoc:
-  module Acts #:nodoc:
-    # Specify this act if you want to be able to replicate models from one instance of this web application to another.
-    # But ... so far all this plugin does is create and save a uuid for model instances.
-    module Replicatable
+module ActsAsReplicatable
+  def self.included(base)
+    base.extend ClassMethods
+  end
 
-      def self.included(base) # :nodoc:
-        base.extend ClassMethods
+  module ClassMethods
+    def acts_as_replicatable
+      send :include, ActsAsReplicatable::InstanceMethods
+
+      class_eval do
+        before_create :generate_uuid
+        before_save :generate_uuid
       end
+    end
+  end
 
-      module ClassMethods
-        def acts_as_replicatable
-
-          send :include, Foo::Acts::Replicatable::InstanceMethods
-
-          class_eval do
-            before_create  :generate_uuid
-            before_save    :generate_uuid
-          end
-        end
-      end
-
-      module InstanceMethods
-        def generate_uuid
-          # if we have a uuid, don't generate a new one
-          if ! self.uuid
-            self.uuid = UUIDTools::UUID.timestamp_create.to_s
-          end
-        end
-      end
-
+  module InstanceMethods
+    def generate_uuid
+      self.uuid ||= UUIDTools::UUID.timestamp_create.to_s
     end
   end
 end
-
-# ApplicationRecord.send :include, Foo::Acts::Replicatable

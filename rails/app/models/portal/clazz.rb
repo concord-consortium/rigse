@@ -27,9 +27,9 @@ class Portal::Clazz < ApplicationRecord
 
   before_validation :class_word_lowercase
   before_validation :class_word_strip
-  validates_presence_of :class_word
-  validates_uniqueness_of :class_word, :case_sensitive => false
-  validates_presence_of :name
+  validates_uniqueness_of :class_word, :case_sensitive => false, :message => "Class word has already been taken"
+  validates_presence_of :class_word, :message => "Class word can't be blank"
+  validates_presence_of :name, :message => "Name can't be blank"
 
   before_save :generate_class_hash
 
