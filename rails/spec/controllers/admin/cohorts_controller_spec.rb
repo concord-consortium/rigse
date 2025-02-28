@@ -1,12 +1,5 @@
 require 'spec_helper'
 
-
-RegexForAuthFailShow = /can not view the requested resource/
-RegexForAuthFailNew = /can not create the requested resource/
-RegexForAuthFailModify = /can not update the requested resource/
-RegexForAuthFailDestroy = /can not destroy the requested resource/
-RegexDeleteSuccess = /(.*) was deleted/
-
 describe Admin::CohortsController do
   before(:each) do
     # This isn't required but silences warnings in the console when running
@@ -38,7 +31,7 @@ describe Admin::CohortsController do
           get :show, params: { id: cohort.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexForAuthFailShow)
+          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_SHOW)
         end
       end
     end
@@ -48,7 +41,7 @@ describe Admin::CohortsController do
         get :new
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexForAuthFailNew)
+        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
       end
     end
 
@@ -57,7 +50,7 @@ describe Admin::CohortsController do
         put :create
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexForAuthFailNew)
+        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
       end
     end
 
@@ -66,7 +59,7 @@ describe Admin::CohortsController do
         put :update, params: { id:@cohort_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexForAuthFailModify)
+        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_MODIFY)
       end
     end
     describe 'Destroy' do
@@ -74,7 +67,7 @@ describe Admin::CohortsController do
         delete :destroy, params: { id: @cohort_1.id }
         # Redirect, and show error when not allowed:
         expect(response).to have_http_status(:redirect)
-        expect(request.flash['alert']).to match(RegexForAuthFailDestroy)
+        expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_DESTROY)
       end
     end
   end
@@ -141,7 +134,7 @@ describe Admin::CohortsController do
           get :show, params: { id:@cohort_2.id }
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexForAuthFailShow)
+          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_SHOW)
         end
       end
     end
@@ -237,7 +230,7 @@ describe Admin::CohortsController do
           post :create, params: valid_params
           # Redirect, and show error when not allowed:
           expect(response).to have_http_status(:redirect)
-          expect(request.flash['alert']).to match(RegexForAuthFailNew)
+          expect(request.flash['alert']).to match(RegexConstants::AUTH_FAIL_NEW)
         end
       end
 
