@@ -2,7 +2,6 @@
 
 # To use this you must edit your .env file and change `COMPOSE_FILE` var
 # to include `docker/dev/docker-compose-no-logstash.yml`
-version: '3'
 services:
   app:
     ports:
