@@ -28,7 +28,7 @@ class CapybaraInitializer
     # ChromeDriver version shipped with GitHub Actions: https://github.com/actions/runner-images/blob/d5d4c565dffff750a33f0f7d020bc12a4a896d90/images/linux/Ubuntu2204-Readme.md?plain=1#L158
     # Latest ChromeDriver version available for download: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
     # See: https://github.com/hitobito/hitobito/blob/c5a459a95feefc32f7caa4c3bd5b36c7cb149916/spec/spec_helper.rb#L190-L196
-    Webdrivers::Chromedriver.required_version = '114.0.5735.90' # Pin ChromeDriver version
+    # Webdrivers::Chromedriver.required_version = '114.0.5735.90' # Pin ChromeDriver version
 
     # Register the driver
     Capybara.register_driver(:selenium) { |app| driver(app) }
@@ -45,7 +45,31 @@ class CapybaraInitializer
   private
 
   def driver(app)
-    Capybara::Selenium::Driver.new(app, driver_options)
+    # Capybara::Selenium::Driver.new(app, driver_options)
+    Capybara::Selenium::Driver.new(app, browser: :chrome, options: selenium_options)
+  end
+
+  def selenium_options
+    options = Selenium::WebDriver::Chrome::Options.new
+    options.binary = "/usr/bin/chromium"
+    unique_user_data_dir = "/dev/shm/chrome-profile-#{Process.pid}"
+    FileUtils.mkdir_p(unique_user_data_dir)
+    FileUtils.chmod(0o777, unique_user_data_dir)
+    chrome_options.each { |opt| options.add_argument(opt) }
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--user-data-dir=#{unique_user_data_dir}")
+    # options.add_argument("disable-gpu")
+    # options.add_argument("disable-software-rasterizer")
+    # options.add_argument("disable-dev-shm-usage") # Needed for some CI environments
+    # options.add_argument("disable-setuid-sandbox")
+    # options.add_argument("remote-debugging-port=9222") # Ensures Chrome debugging works
+    # options.add_argument("disable-extensions")
+    # options.add_argument("incognito") # Starts a fresh session each time
+    # options.add_argument("disable-cache") # Prevents session persistence
+    # options.add_argument("no-default-browser-check")
+    # options.add_argument("disable-background-networking")
+    options
   end
 
   def driver_options

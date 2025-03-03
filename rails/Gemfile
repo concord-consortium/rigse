@@ -59,7 +59,7 @@ gem 'sass-rails' # if running rails 3.1 or greater
 gem 'sunspot_rails'
 gem 'sunspot_solr' # optional pre-packaged Solr distribution
 gem 'test-unit'
-gem 'tinymce-rails', '~> 4.9.4', '= 4.9.4'
+gem 'tinymce-rails', '~>3.5.6'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'sprockets', '=3.7.5'
 gem 'terser'
@@ -88,7 +88,7 @@ group :test, :cucumber do
   gem 'capybara-mechanize'
   gem 'capybara-screenshot'
   gem 'ci_reporter'
-  gem 'cucumber'
+  gem 'cucumber', '~> 4.1.0'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'delorean'
@@ -99,7 +99,7 @@ group :test, :cucumber do
   gem "rspec-activemodel-mocks", '~> 1.2', '>= 1.2.1'
   gem 'rspec-collection_matchers'
   gem "rspec-rails", '~> 6.0'
-  # gem 'selenium-webdriver'
+  gem 'selenium-webdriver'
   gem 'spring-commands-cucumber'
   gem "spring-commands-rspec", "~> 1.0", ">= 1.0.4"
   gem 'webdrivers'

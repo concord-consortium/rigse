@@ -18,7 +18,9 @@ WebMock.disable_net_connect!(allow_localhost: true, :allow =>
                                 [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
                                     'host.docker.internal:9515',
-                                    'chromedriver.storage.googleapis.com'
+                                    'chromedriver.storage.googleapis.com',
+                                    'googlechromelabs.github.io',
+                                    'storage.googleapis.com',
                                 ]
                             )
 
