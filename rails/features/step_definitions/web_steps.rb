@@ -317,7 +317,7 @@ And /^I receive a file for download with a filename like "(.+)"$/ do |filename|
   expect(headers).to match(pattern)
 end
 
-And /^(?:|I )fill "(.*)" in the tinymce editor with id "(.*)"$/ do |html, editor_id|
+And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor_id|
   # make sure the editor is on the page, this also triggers capybara to do its
   # automatic waiting if it isn't on the page yet
   expect(page).to have_css("##{editor_id}", visible: false)

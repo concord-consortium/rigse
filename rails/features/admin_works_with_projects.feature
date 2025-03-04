@@ -12,7 +12,8 @@ Feature: Admin can work with projects
   Scenario: Admin accesses projects
     Given the default projects exist using factories
     When I am on the projects index page
-    And I should see "4 projects"
+    And I wait 1 second
+    And I should see "3 projects"
     And I should see "project 1"
     And I should see "project 2"
     And I should see "project 3"

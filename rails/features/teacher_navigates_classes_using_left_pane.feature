@@ -13,7 +13,8 @@ Feature: Teacher navigates using left pane
 
   @javascript
   Scenario: Teachers can see their class name
-    Then I should see "Classese"
+    When I follow "Classes"
+    Then I should see "My Class"
 
   @javascript
   Scenario: Teacher visits Student Roster page
