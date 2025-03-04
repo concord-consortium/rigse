@@ -1,6 +1,9 @@
 RailsPortal::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  # This is not the Rails 8 way, but we want to be able to set the secret key base via an environment variable.
+  config.secret_key_base = ENV["RAILS_SECRET_KEY_BASE"] || raise("Missing RAILS_SECRET_KEY_BASE")
+
   # The production environment is meant for finished, "live" apps.
   # Code is not reloaded between requests
   config.cache_classes = true
