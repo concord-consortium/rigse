@@ -127,7 +127,7 @@ describe Admin::SettingsController do
         expect(Admin::Settings).to receive(:new).and_return(mock_settings(:save => true))
         expect(mock_settings).to receive(:save).and_return(mock_settings(:save => true))
         post :create, params: { admin_settings: {} }
-        expect(response).to redirect_to(admin_setting_url(mock_settings))
+        expect(response).to redirect_to(admin_setting_url(mock_settings, host: 'test.host'))
       end
     end
 
@@ -174,7 +174,7 @@ describe Admin::SettingsController do
         expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update => true))
         expect(mock_settings).to receive(:update).and_return(mock_settings(:save => true))
         put :update, params: { :id => "1" }
-        expect(response).to redirect_to(admin_setting_url(mock_settings))
+        expect(response).to redirect_to(admin_setting_url(mock_settings, host: 'test.host'))
       end
     end
 
@@ -196,7 +196,7 @@ describe Admin::SettingsController do
         expect(Admin::Settings).to receive(:find).and_return(mock_settings(:update => false))
         expect(mock_settings).to receive(:update).and_return(mock_settings(:update => false))
         put :update, params: { :id => "1" }
-        expect(response).to redirect_to(admin_setting_url(mock_settings))
+        expect(response).to redirect_to(admin_setting_url(mock_settings, host: 'test.host'))
       end
     end
 
@@ -213,7 +213,7 @@ describe Admin::SettingsController do
       expect(Admin::Settings).to receive(:find).and_return(mock_settings(:destroy => true))
       expect(mock_settings).to receive(:destroy)
       delete :destroy, params: { :id => "1" }
-      expect(response).to redirect_to(admin_settings_url)
+      expect(response).to redirect_to(admin_settings_url(host: 'test.host'))
     end
   end
 end

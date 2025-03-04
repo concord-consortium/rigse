@@ -58,7 +58,7 @@ describe Admin::TagsController do
       it "redirects to the created tags" do
         allow(Admin::Tag).to receive(:new).and_return(mock_tags(:save => true))
         post :create, params: { :admin_tag => {} }
-        expect(response).to redirect_to(admin_tag_url(mock_tags))
+        expect(response).to redirect_to(admin_tag_url(mock_tags, host: 'test.host'))
       end
     end
 
@@ -96,7 +96,7 @@ describe Admin::TagsController do
       it "redirects to the tags" do
         allow(Admin::Tag).to receive(:find).and_return(mock_tags(:update => true))
         put :update, params: { :id => "1" }
-        expect(response).to redirect_to(admin_tag_url(mock_tags))
+        expect(response).to redirect_to(admin_tag_url(mock_tags, host: 'test.host'))
       end
     end
 
@@ -134,7 +134,7 @@ describe Admin::TagsController do
       allow(Admin::Tag).to receive(:find)
         .and_return(mock_tags(destroy: true, name:'tag'))
       delete :destroy, params: { :id => "1" }
-      expect(response).to redirect_to(admin_tags_url)
+      expect(response).to redirect_to(admin_tags_url(host: 'test.host'))
     end
   end
 end
