@@ -4,11 +4,13 @@
 # FactoryBot.generate :member_role
 # FactoryBot.generate :guest_role
 #
-%w| guest member admin researcher manager author|.each_with_index do |role_name, index|
-  FactoryBot.register_sequence(FactoryBot::Sequence.new(:"#{role_name}_role".to_sym) do
-    Role.find_by_title(role_name) ||
-        FactoryBot.create(:role, :title => role_name, :position => index)
-  end)
+FactoryBot.define do
+  %w[guest member admin researcher manager author].each_with_index do |role_name, index|
+    sequence(:"#{role_name}_role") do
+      Role.find_by_title(role_name) ||
+        FactoryBot.create(:role, title: role_name, position: index)
+    end
+  end
 end
 
 ##
