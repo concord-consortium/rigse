@@ -53,7 +53,6 @@ WORKDIR $APP_HOME
 
 USER app
 
-# RUN gem update --system 3.3.22 && gem --version
 RUN gem install json -v 2.6.3
 
 # Copy Gemfile and its lock file
