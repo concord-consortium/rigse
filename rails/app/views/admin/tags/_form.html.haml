@@ -1,6 +1,7 @@
 .item
   = edit_menu_for(admin_tag, f, { :omit_cancel => true })
-  = error_messages_for :admin_tag
+  - if admin_tag.errors.any?
+    = admin_tag.errors.map(&:full_message).join(', ')
   .content
     %p
       %ul.menu_v
@@ -11,5 +12,5 @@
         %li
           Tag:
           =f.text_field :tag
-    
-    
+
+
