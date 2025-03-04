@@ -9,6 +9,10 @@ class ExternalReport < ApplicationRecord
   has_many :external_activity_reports
   has_many :external_activities, through: :external_activity_reports
 
+  # validates :name, presence: { message: "Name can't be blank" }
+  # validates :url, presence: { message: "URL can't be blank" }
+  # validates :launch_text, presence: { message: "Launch text can't be blank" }
+
   ReportTokenValidFor = 2.hours
 
   def options_for_client

@@ -3,8 +3,8 @@
     - if portal_school.errors.any?
       %ul.menu_v.error-explanation
         %li School can't be saved, there are errors in form:
-        - portal_school.errors.full_messages.each do |msg|
-          %li= msg
+        - portal_school.errors.each do |error|
+          %li= error.message
     %p
       %ul.menu_v
         %li

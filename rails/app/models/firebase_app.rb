@@ -5,6 +5,10 @@ class FirebaseApp < ApplicationRecord
   validates_format_of :client_email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, :message => 'is not a valid email address'
   validates_presence_of :private_key, :message => "can't be blank"
 
+  # validates :name, presence: { message: "Name can't be blank" }
+  # validates :client_email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i, message: 'You must enter a valid email address' }
+  # validates :private_key, presence: { message: "Private key can't be blank" }
+
   validate :is_valid_private_key?
 
   before_save :replace_newlines_in_private_key

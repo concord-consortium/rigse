@@ -170,8 +170,6 @@ module MockData
 
       #create schools if default district is present
 
-
-
       puts
       puts
 
@@ -195,6 +193,7 @@ module MockData
             school.name = school_info[:name]
             school.description = school_info[:description]
             school.district_id = default_district.id
+
             school.save!
 
             update_count += 1
@@ -649,7 +648,7 @@ module MockData
       puts
       MaterialsCollection.destroy_all
       Admin::Project.destroy_all
-      default_project = FactoryBot.create(:project, name: 'default data project')
+      default_project = FactoryBot.create(:project, name: 'default data project', landing_page_slug: 'default-data-project')
       DEFAULT_DATA[:materials_collections].each do |key, mc|
         if (mc[:items_count])
           FactoryBot.create(:materials_collection_with_items, mc.merge(project: default_project))

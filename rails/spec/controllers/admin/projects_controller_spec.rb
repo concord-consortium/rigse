@@ -24,7 +24,7 @@ describe Admin::ProjectsController do
     generate_default_settings_with_mocks
   end
   let(:project) { FactoryBot.create(:project, landing_page_slug: 'foo-proj', landing_page_content: '<h1>Foo</h1>') }
-  let(:valid_attributes) { { name: "Some name" } }
+  let(:valid_attributes) { { name: "Some name", landing_page_slug: "some-name" } }
 
   describe 'when user is an admin' do
     before(:each) do
@@ -76,7 +76,7 @@ describe Admin::ProjectsController do
 
         it "redirects to the projects index" do
           post :create, params: { :admin_project => valid_attributes, :only_path => true }
-          expect(response).to redirect_to(admin_projects_url)
+          expect(response).to redirect_to(admin_projects_url(host: 'test.host'))
         end
       end
 
@@ -148,16 +148,16 @@ describe Admin::ProjectsController do
 
       it "redirects to the projects list" do
         delete :destroy, params: { :id => project.to_param }
-        expect(response).to redirect_to(admin_projects_url)
+        expect(response).to redirect_to(admin_projects_url(host: 'test.host'))
       end
     end
   end
 
   describe 'when user is a project admin' do
     let(:user) { FactoryBot.create(:user) }
-    let(:project_1) { FactoryBot.create(:project, name: 'project_1') }
-    let(:project_2) { FactoryBot.create(:project, name: 'project_2') }
-    let(:project_3) { FactoryBot.create(:project, name: 'project_3') }
+    let(:project_1) { FactoryBot.create(:project, name: 'project_1', landing_page_slug: 'project-1') }
+    let(:project_2) { FactoryBot.create(:project, name: 'project_2', landing_page_slug: 'project-2') }
+    let(:project_3) { FactoryBot.create(:project, name: 'project_3', landing_page_slug: 'project-3') }
     let(:users_projects) { [project, project_1] }
     let(:other_projects)  { [project_2, project_3] }
 

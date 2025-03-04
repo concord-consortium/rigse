@@ -37,6 +37,11 @@ class Portal::School < ApplicationRecord
   scope :virtual, -> { where('nces_school_id is NULL') }
   scope :has_teachers, -> { joins(:members).group(:school_id) }
 
+  # validates :name, presence: { message: "Name can't be blank" }
+  # validates :zipcode, presence: { message: "ZIP code can't be blank" }
+  # validates :city, presence: { message: "City can't be blank" }
+  # validates :state, presence: { message: "State can't be blank" }
+
   # TODO: Maybe this?  But also maybe nces_id.nil? technique instead??
   [:virtual?, :real?].each {|method| delegate method, :to=> :district }
 

@@ -72,7 +72,7 @@ describe Portal::StudentsController do
       stub_user_with_params
       post :create, params: @params_for_creation
 
-      expect(response).to redirect_to(thanks_for_sign_up_url(:type=>"student", :login=>@new_user.login))
+      expect(response).to redirect_to(thanks_for_sign_up_url(type: "student", login: @new_user.login, host: 'test.host'))
 
     end
 
@@ -80,7 +80,7 @@ describe Portal::StudentsController do
     it "does not show any of the students classes after successful creation" do
       stub_user_with_params
       post :create, params: @params_for_creation
-      expect(response).to redirect_to(thanks_for_sign_up_url(:type=>"student",:login=>@new_user.login))
+      expect(response).to redirect_to(thanks_for_sign_up_url(type: "student", login: @new_user.login, host: 'test.host'))
     end
 
     it "does not create a user or a student when given incorrect password_confirmation" do

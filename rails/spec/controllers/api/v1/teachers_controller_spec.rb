@@ -124,8 +124,8 @@ RSpec.describe API::V1::TeachersController, type: :controller do
   describe '#get_teacher_project_views' do
     before(:each) do
       @teacher = FactoryBot.create(:portal_teacher)
-      @project1 = FactoryBot.create(:project, name: 'Test Project One')
-      @project2 = FactoryBot.create(:project, name: 'Test Project Two')
+      @project1 = FactoryBot.create(:project, name: 'Test Project One', landing_page_slug: 'test-project-1')
+      @project2 = FactoryBot.create(:project, name: 'Test Project Two', landing_page_slug: 'test-project-2')
       @teacher.record_project_view(@project1)
     end
 

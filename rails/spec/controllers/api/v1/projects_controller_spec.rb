@@ -7,7 +7,7 @@ RSpec.describe API::V1::ProjectsController, type: :controller do
   describe '#show' do
     before(:each) do
       @teacher = FactoryBot.create(:portal_teacher)
-      @project1 = FactoryBot.create(:project, name: 'Test Project One')
+      @project1 = FactoryBot.create(:project, name: 'Test Project One', landing_page_slug: 'test-project-1')
     end
 
     context 'when an anonymous user tries to access a project' do

@@ -148,7 +148,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
         decoded_token = decode_token()
         expect(decoded_token[:data]).to include(
           "uid" => uid,
-          "domain" => root_url,
+          "domain" => "http://test.host/",
           "externalId" => learner.id,
           "returnUrl" => be_present,
           "logging" => true,
@@ -246,7 +246,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
                   expect(decoded_token[:data]).to include(
                     "uid" => uid,
                     "domain_uid" => user.id,
-                    "domain" => root_url
+                    "domain" => "http://test.host/"
                   )
                   expect(decoded_token[:data]["claims"]).to include(
                     "user_type" => "teacher",
@@ -366,7 +366,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               FactoryBot.create(:full_portal_learner, offering: offering)
             }
 
-            let(:other_project) { FactoryBot.create(:project) }
+            let(:other_project) { FactoryBot.create(:project, name: "Other Project", landing_page_slug: "other-project") }
             let(:other_permision_form) { FactoryBot.create(:permission_form, project: other_project) }
 
             let(:other_project_student) {
@@ -478,7 +478,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
 
               expect(decoded_token[:data]).to include(
                   "uid" => uid,
-                  "domain" => root_url
+                  "domain" => "http://test.host/"
                 )
 
               expect(decoded_token[:data]["claims"]).to include(
@@ -677,7 +677,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
               decoded_token = SignedJwt::decode_portal_token(token)
 
               expect(decoded_token[:data]["uid"]).to eql user.id
-              expect(decoded_token[:data]["domain"]).to eql root_url
+              expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
               expect(decoded_token[:data]["user_type"]).to eq "learner"
               expect(decoded_token[:data]["user_id"]).not_to be_nil
               expect(decoded_token[:data]["learner_id"]).to eq learner.id
@@ -710,7 +710,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
             decoded_token = SignedJwt::decode_portal_token(token)
 
             expect(decoded_token[:data]["uid"]).to eql user.id
-            expect(decoded_token[:data]["domain"]).to eql root_url
+            expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
             expect(decoded_token[:data]["user_type"]).to eq "researcher"
             expect(decoded_token[:data]["user_id"]).not_to be_nil
             expect(decoded_token[:data]["first_name"]).to eql user.first_name
@@ -733,7 +733,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           decoded_token = SignedJwt::decode_portal_token(token)
 
           expect(decoded_token[:data]["uid"]).to eql user.id
-          expect(decoded_token[:data]["domain"]).to eql root_url
+          expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
           expect(decoded_token[:data]["user_type"]).to eq "learner"
           expect(decoded_token[:data]["user_id"]).not_to be_nil
           expect(decoded_token[:data]["learner_id"]).to eq learner.id
@@ -756,7 +756,7 @@ SHlL1Ceaqm35aMguGMBcTs6T5jRJ36K2OPEXU2ZOiRygxcZhFw==
           decoded_token = SignedJwt::decode_portal_token(token)
 
           expect(decoded_token[:data]["uid"]).to eql user.id
-          expect(decoded_token[:data]["domain"]).to eql root_url
+          expect(decoded_token[:data]["domain"]).to eql "http://test.host/"
           expect(decoded_token[:data]["user_type"]).to eq "teacher"
           expect(decoded_token[:data]["user_id"]).not_to be_nil
           expect(decoded_token[:data]["teacher_id"]).to eq class_teacher.id

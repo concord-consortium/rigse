@@ -1,5 +1,5 @@
 Given("a project called {string}") do |name|
-  FactoryBot.create(:project, name: name)
+  FactoryBot.create(:project, name: name, landing_page_slug: name)
 end
 
 Given("the default projects exist using factories") do

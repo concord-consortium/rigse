@@ -1,5 +1,8 @@
 class CommonsLicense < ApplicationRecord
   self.primary_key = :code
+  # validates :code, presence: { message: "Code can't be blank" }
+  # validates :name, presence: { message: "Name can't be blank" }
+
   before_save :default_paths
 
   Site = "creativecommons.org"

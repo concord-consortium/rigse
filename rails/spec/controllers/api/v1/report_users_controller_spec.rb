@@ -57,7 +57,7 @@ describe API::V1::ReportUsersController do
       @teacher5 = FactoryBot.create(:portal_teacher)
       @teacher6 = FactoryBot.create(:portal_teacher)
 
-      @project1 = FactoryBot.create(:project, name: 'Project 1')
+      @project1 = FactoryBot.create(:project, name: 'Project 1', landing_page_slug: 'project-1')
 
       @cohort1 = FactoryBot.create(:admin_cohort)
       @cohort2 = FactoryBot.create(:admin_cohort, project: @project1)

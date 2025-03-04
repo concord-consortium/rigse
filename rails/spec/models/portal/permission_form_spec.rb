@@ -13,7 +13,7 @@ describe Portal::PermissionForm do
   end
 
   describe "#fullname" do
-    let(:project) { FactoryBot.create(:project, name: "project a") }
+    let(:project) { FactoryBot.create(:project, name: "project a", landing_page_slug: 'project-a') }
     let(:permission_form_args) do
       {
           name: "permission_a",

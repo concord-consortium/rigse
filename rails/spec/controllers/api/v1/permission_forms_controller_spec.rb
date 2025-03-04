@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe API::V1::PermissionFormsController, type: :controller do
   let (:project) { FactoryBot.create(:project) }
-  let (:another_project) { FactoryBot.create(:project) }
+  let (:another_project) { FactoryBot.create(:project, name: "Another Project", landing_page_slug: "another-project") }
   let(:admin) { FactoryBot.generate(:admin_user) }
   let (:project_admin) { FactoryBot.generate(:author_user) }
   let (:project_researcher) { FactoryBot.generate(:author_user) }
