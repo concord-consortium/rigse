@@ -41,7 +41,11 @@ RUN apk add \
   # to your Gemfile and run bundle install (TZInfo::DataSourceNotFound)"
   tzdata \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
-  openjdk8-jre
+  openjdk8-jre \
+  # Required for Selenium Webdriver
+  chromium \
+  chromium-chromedriver \
+  gcompat glib nss libxcb libgcc
 
 ENV APP_HOME /rigse/
 

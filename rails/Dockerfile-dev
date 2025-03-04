@@ -43,7 +43,11 @@ RUN apk add \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
   openjdk8-jre \
   # Alpine Linux doesn't include bash by default
-  bash
+  bash \
+  # Required for Selenium Webdriver
+  chromium \
+  chromium-chromedriver \
+  gcompat glib nss libxcb libgcc
 
 # This is currently commented out, as installing Chrome on Alpine Linux needs to be done in a different way,
 # and this linux distribution is missing multiple dependencies required for installing Chrome.
