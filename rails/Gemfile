@@ -41,9 +41,9 @@ gem 'mysql2', platforms: [:ruby, :mingw]
 
 gem 'nokogiri'
 gem 'oj'
-gem 'omniauth'
-gem 'omniauth-google-oauth2' # For google login integration.
-gem 'omniauth-oauth' # For schoology integration.
+gem 'omniauth', "~> 1.1.4"
+gem 'omniauth-google-oauth2', "~> 0.2.2" # For google login integration.
+gem 'omniauth-oauth', "~> 1.1.0" # For schoology integration.
 gem 'open4'
 gem 'pundit'
 # cors is allowed for all groups because cors is always enabled for the interactives/export_model_library
