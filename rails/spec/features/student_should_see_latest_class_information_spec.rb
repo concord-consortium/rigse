@@ -16,6 +16,7 @@ RSpec.feature 'Student should see latest class information', :WebDriver => true 
     create_class_in_js_context
     login_as('taylor')
     visit root_path
+    sleep 1
     first(:link, 'Basic Electronics').click
     expect(page).to have_content('Class Word: betrx')
     expect(page).to have_content('NON LINEAR DEVICES')

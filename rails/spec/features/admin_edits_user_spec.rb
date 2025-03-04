@@ -27,10 +27,13 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
 
     scenario 'Portal admin can see both teachers and student in user list.', js: true do
       search_for_user(@student_name)
+      sleep 1
       expect(page).to have_content(@student_name)
       search_for_user(@teacher1_name)
+      sleep 1
       expect(page).to have_content(@teacher1_name)
       search_for_user(@teacher2_name)
+      sleep 1
       expect(page).to have_content(@teacher2_name)
     end
 
@@ -201,6 +204,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
   def add_teacher_to_cohort(cohort)
     check(cohort)
     click_button('Save')
+    sleep 1
     expect(current_path).to eq '/users'
     expect(page.body).to match(%r{#{'successfully updated'}}i)
   end
