@@ -12,7 +12,7 @@ if Rails.env.development?
   # devs don't need to remember to start it.
   # 2021-06-14 NP:  We could set `delay_jobs` to false like we did for tests above
   # see: https://github.com/collectiveidea/delayed_job#gory-details
-  # Delayed::Backend::ActiveRecord::Job.send(:include, Delayed::Worker::Scaler)
+  Delayed::Backend::ActiveRecord::Job.send(:include, Delayed::Worker::Scaler)
 end
 
 if BoolEnv['RAILS_STDOUT_LOGGING']

@@ -1,18 +1,5 @@
 require_relative "../../lib/log_config"
 
-ENV["RAILS_ENV"] = 'test'
-
-# needed to generate signed portal tokens
-ENV["JWT_HMAC_SECRET"] = 'foo'
-
-# needed for testing google auth
-ENV['GOOGLE_CLIENT_KEY'] = '1234'
-ENV['GOOGLE_CLIENT_SECRET'] = '1234'
-
-# needed for testing schoology auth
-ENV['SCHOOLOGY_CONSUMER_KEY'] = '1234'
-ENV['SCHOOLOGY_CONSUMER_SECRET'] = '1234'
-
 RailsPortal::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -42,7 +29,6 @@ RailsPortal::Application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.default_url_options = {:protocol => APP_CONFIG[:protocol], :host => APP_CONFIG[:host] }
-  # Rails.application.routes.default_url_options[:host] = APP_CONFIG[:host]
   config.action_mailer.asset_host = APP_CONFIG[:protocol] + '://' + APP_CONFIG[:host]
   config.action_mailer.delivery_method = :test
 

@@ -170,6 +170,8 @@ module MockData
 
       #create schools if default district is present
 
+
+
       puts
       puts
 
@@ -193,7 +195,6 @@ module MockData
             school.name = school_info[:name]
             school.description = school_info[:description]
             school.district_id = default_district.id
-
             school.save!
 
             update_count += 1
