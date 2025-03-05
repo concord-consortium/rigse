@@ -1,5 +1,5 @@
 class Import::Import < ApplicationRecord
-  serialize :import_data, JSON
+  serialize :import_data, coder: JSON
   IMPORT_TYPE_SCHOOL_DISTRICT = 0
   IMPORT_TYPE_USER = 1
   IMPORT_TYPE_ACTIVITY = 2

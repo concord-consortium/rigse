@@ -1,6 +1,8 @@
 = form_for portal_student do |f|
-  = error_messages_for 'user'
-  = error_messages_for 'portal_student', :object_name => 'student'
+  - if portal_student.user&.errors&.any?
+    = portal_student.user.errors.map(&:full_message).join(', ')
+  - if portal_student.errors.any?
+    = portal_student.errors.map(&:full_message).join(', ')
   %table.form
     %tr
       %td= label_tag :user, 'First Name:'
@@ -8,19 +10,19 @@
         = text_field :user, :first_name, {:live => false}
         - if portal_clazz
           = hidden_field :clazz, :id, {:value => portal_clazz.id}
-    %tr  
+    %tr
       %td= label_tag :user, 'Last Name:'
       %td= text_field :user, :last_name, {:live => false}
 
     %tr
       %td= label_tag :user, 'Password:'
-      %td= password_field :user, :password, {:live => false} 
+      %td= password_field :user, :password, {:live => false}
 
     %tr
       %td= label_tag :user, 'Password Again:'
       %td= password_field :user, :password_confirmation, {:live => false}
-    
-    - if signup 
+
+    - if signup
       - if current_settings.allow_default_class
         = hidden_field :clazz, :class_word, {:value => Portal::Clazz.default_class.class_word}
       - else
@@ -30,7 +32,7 @@
             .tiny.help (Not case sensitive)
           - value = portal_clazz ? portal_clazz.class_word : 'class word'
           %td= text_field :clazz, :class_word, {:live => false}
-        
+
       - if current_settings.use_student_security_questions
         %tr
           %td{:colspan => '2'}

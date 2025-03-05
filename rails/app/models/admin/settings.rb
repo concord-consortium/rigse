@@ -5,7 +5,7 @@ class Admin::Settings < ApplicationRecord
   DefaultPubInterval = 300  # default is five minues
   self.table_name = "admin_settings"
 
-  serialize :enabled_bookmark_types, Array
+  serialize :enabled_bookmark_types, type: Array
 
   after_initialize :init
 

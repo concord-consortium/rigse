@@ -1,6 +1,7 @@
 .item
   = edit_menu_for(admin_cohort, f, { :omit_cancel => true })
-  = error_messages_for :admin_cohort
+  - if admin_cohort.errors.any?
+    = admin_cohort.errors.map(&:full_message).join(', ')
   .content
     %p
       %ul.menu_v

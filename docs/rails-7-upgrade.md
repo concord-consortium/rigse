@@ -33,19 +33,19 @@
 4. Resolve gem dependency issues until the bundle update succeeds.
 5. Complete upgrade tasks in the [7.0 to 7.1 upgrade guide](https://guides.rubyonrails.org/upgrading_ruby_on_rails.html#upgrading-from-rails-7-0-to-rails-7-1)
 
-- [ ] Development and test environments secret_key_base file changed
-- [ ] Autoloaded paths are no longer in $LOAD_PATH
-- [ ] config.autoload_lib and config.autoload_lib_once
-- [ ] ActiveStorage::BaseController no longer includes the streaming concern
-- [ ] MemCacheStore and RedisCacheStore now use connection pooling by default
-- [ ] SQLite3Adapter now configured to be used in a strict strings mode
-- [ ] Support multiple preview paths for ActionMailer::Preview
-- [ ] config.i18n.raise_on_missing_translations = true now raises on any missing translation.
-- [ ] bin/rails test now runs test:prepare task
-- [ ] Import syntax from @rails/ujs is modified
-- [ ] Rails.logger now returns an ActiveSupport::BroadcastLogger instance
-- [ ] Active Record Encryption algorithm changes
-- [ ] New ways to handle exceptions in Controller Tests, Integration Tests, and System Tests
+- [x] Development and test environments secret_key_base file changed
+- [x] Autoloaded paths are no longer in $LOAD_PATH
+- [x] config.autoload_lib and config.autoload_lib_once
+- [x] ActiveStorage::BaseController no longer includes the streaming concern
+- [x] MemCacheStore and RedisCacheStore now use connection pooling by default
+- [x] SQLite3Adapter now configured to be used in a strict strings mode
+- [x] Support multiple preview paths for ActionMailer::Preview
+- [x] config.i18n.raise_on_missing_translations = true now raises on any missing translation.
+- [x] bin/rails test now runs test:prepare task
+- [x] Import syntax from @rails/ujs is modified
+- [x] Rails.logger now returns an ActiveSupport::BroadcastLogger instance
+- [x] Active Record Encryption algorithm changes
+- [x] New ways to handle exceptions in Controller Tests, Integration Tests, and System Tests
 
 7. Change `Dockerfile` and `Dockerfile-dev` to use `ruby-2.7.0-rails-7.1.5` in the `FROM` url.
 8. Create a PR and insure all the tests pass.

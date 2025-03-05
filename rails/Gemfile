@@ -4,7 +4,7 @@ YAML::ENGINE.yamler= 'psych' if defined?(YAML::ENGINE)
 source 'http://rubygems.org'
 
 #### COMMON
-gem 'rails', '7.0.8.7'
+gem 'rails', '~> 7.1.5'
 
 gem 'activemodel-serializers-xml'
 gem 'activerecord-import'
@@ -28,7 +28,6 @@ gem 'delayed-web'
 gem 'devise'
 gem 'devise-encryptable'
 gem 'devise-token_authenticatable'
-gem 'dynamic_form', '~> 1.1.4'
 gem 'exception_notification'
 gem 'font-awesome-rails'
 gem 'haml', '~> 5.2'
@@ -88,7 +87,7 @@ group :test, :cucumber do
   gem 'capybara-mechanize'
   gem 'capybara-screenshot'
   gem 'ci_reporter'
-  gem 'cucumber', '~> 4.1.0'
+  gem 'cucumber', '~> 9.2'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'delorean'
@@ -99,7 +98,7 @@ group :test, :cucumber do
   gem "rspec-activemodel-mocks", '~> 1.2', '>= 1.2.1'
   gem 'rspec-collection_matchers'
   gem "rspec-rails", '~> 6.0'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4.10'
   gem 'spring-commands-cucumber'
   gem "spring-commands-rspec", "~> 1.0", ">= 1.0.4"
   gem 'webdrivers'
@@ -120,3 +119,9 @@ group :test, :cucumber, :development do
   gem 'remarkable_activerecord'
   gem 'simplecov', require: false
 end
+
+# The gems below were determined to no longer be needed after the upgrade to Rails 7.
+# For now we're leaving them here for reference just in case we need to add them back
+# in the future.
+
+# gem 'dynamic_form', '~> 1.1.4'

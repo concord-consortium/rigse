@@ -1,6 +1,7 @@
 .item
   = edit_menu_for(materials_collection, f, { :omit_cancel => true })
-  = error_messages_for :materials_collection
+  - if materials_collection.errors.any?
+    = materials_collection.errors.map(&:full_message).join(', ')
   .content
     %p
       %ul.menu_v

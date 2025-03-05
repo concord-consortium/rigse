@@ -12,15 +12,12 @@ RailsPortal::Application.configure do
   # Eager loads all registered config.eager_load_namespaces. This includes your application, engines, Rails frameworks, and any other registered namespace.
   config.eager_load = false  # normally false unless you use a tool that preloads your test environment
 
-  # this will fall back to autoloading to files outside the app folder
-  config.enable_dependency_loading = true
-
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
   # Raise exceptions instead of rendering exception templates
-  config.action_dispatch.show_exceptions = false
+  config.action_dispatch.show_exceptions = :none
 
   # Disable request forgery protection in test environment
   config.action_controller.allow_forgery_protection    = false

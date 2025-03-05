@@ -3,9 +3,13 @@
 %p= 'Please enter a new password and confirm it.'
 
 = form_for :user_reset_password, :url => { :action => 'update_users_password' } do |f|
-  %div{:id => dom_id_for(@user_reset_password,:form), :class =>"action_menu reset_password"}
+  %div{:id => dom_id_for(@user_reset_password, :form), :class => "action_menu reset_password"}
     .padded_content
-      = f.error_messages :header_tag => 'h4', :header_message => "Your password could not be changed.", :message => ""
+      - if @user_reset_password.errors.any?
+        %h4 Your password could not be changed.
+        %ul
+          - @user_reset_password.errors.map(&:full_message).each do |msg|
+            %li= msg
 
     %fieldset
       %legend= "Password for #{@user_reset_password.name} (#{@user_reset_password.login})"

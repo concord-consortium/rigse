@@ -41,7 +41,11 @@ RUN apk add \
   # to your Gemfile and run bundle install (TZInfo::DataSourceNotFound)"
   tzdata \
   # See: https://github.com/sstephenson/ruby-yui-compressor#label-Installing+and+loading+Ruby-YUI+Compressor
-  openjdk8-jre
+  openjdk8-jre \
+  # Required for Selenium Webdriver
+  chromium \
+  chromium-chromedriver \
+  gcompat glib nss libxcb libgcc
 
 ENV APP_HOME /rigse/
 
@@ -78,7 +82,7 @@ ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
 # Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
 # Instead we need to fake some ENV Vars for the precompile ...
 # Run precompile rake task in order to at least generate the manifest file
-RUN SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
+RUN RAILS_SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
 
 # This font is used by imagemagick to add attribution to the images in the image library
 # the DejaVu-Sans font is provided by the docker image this one is built on
