@@ -65,9 +65,9 @@ class API::V1::UserRegistration
       u.errors.delete(:login)
       return true if u.errors.count == 0
     end
-    u.errors.each do |field,value|
-      if self.errors[field].blank?
-        self.errors.add(field, u.errors.full_message(field, value))
+    u.errors.each do |field, value|
+      if self.errors[field.type].blank?
+        self.errors.add(field.attribute, field.type)
       end
     end
     return false

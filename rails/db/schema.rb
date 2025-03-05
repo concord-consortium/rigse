@@ -10,18 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_12_11_155304) do
-
+ActiveRecord::Schema[7.0].define(version: 2025_02_26_146000) do
   create_table "access_grants", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "code"
     t.string "access_token"
     t.string "refresh_token"
-    t.datetime "access_token_expires_at"
+    t.datetime "access_token_expires_at", precision: nil
     t.integer "user_id"
     t.integer "client_id"
     t.string "state"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "learner_id"
     t.integer "teacher_id"
     t.index ["access_token"], name: "index_access_grants_on_access_token"
@@ -31,6 +30,34 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.index ["learner_id"], name: "index_access_grants_on_learner_id"
     t.index ["teacher_id"], name: "index_access_grants_on_teacher_id"
     t.index ["user_id"], name: "index_access_grants_on_user_id"
+  end
+
+  create_table "active_storage_attachments", charset: "utf8", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", charset: "utf8", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", charset: "utf8", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "admin_cohort_items", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -52,7 +79,7 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
 
   create_table "admin_notice_user_display_statuses", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "user_id"
-    t.datetime "last_collapsed_at_time"
+    t.datetime "last_collapsed_at_time", precision: nil
     t.boolean "collapsed_status"
     t.index ["user_id"], name: "index_admin_notice_user_display_statuses_on_user_id"
   end
@@ -61,8 +88,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "project_id"
     t.text "name", size: :medium
     t.text "href", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "link_id"
     t.boolean "pop_out"
     t.integer "position", default: 5
@@ -72,8 +99,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "project_id"
     t.integer "material_id"
     t.string "material_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["material_id", "material_type"], name: "admin_proj_mat_mat_idx"
     t.index ["project_id", "material_id", "material_type"], name: "admin_proj_mat_proj_mat_idx"
     t.index ["project_id"], name: "admin_proj_mat_proj_idx"
@@ -94,8 +121,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
 
   create_table "admin_projects", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "landing_page_slug"
     t.text "landing_page_content", size: :medium
     t.string "project_card_image_url"
@@ -108,8 +135,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "user_id"
     t.text "description", size: :medium
     t.string "uuid", limit: 36
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "home_page_content", size: :medium
     t.boolean "use_student_security_questions", default: false
     t.boolean "allow_default_class"
@@ -141,16 +168,16 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "notice_id"
     t.integer "user_id"
     t.boolean "notice_dismissed"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["notice_id"], name: "index_admin_site_notice_users_on_notice_id"
     t.index ["user_id"], name: "index_admin_site_notice_users_on_user_id"
   end
 
   create_table "admin_site_notices", id: :integer, charset: "utf8", force: :cascade do |t|
     t.text "notice_html", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "created_by"
     t.integer "updated_by"
     t.index ["created_by"], name: "index_admin_site_notices_on_created_by"
@@ -160,16 +187,16 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "admin_tags", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "scope"
     t.string "tag"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "authentications", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "provider"
     t.string "uid"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["provider", "uid"], name: "index_authentications_on_provider_and_uid"
     t.index ["user_id"], name: "index_authentications_on_user_id"
   end
@@ -177,16 +204,16 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "authoring_sites", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "clients", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "app_id"
     t.string "app_secret"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "site_url"
     t.string "domain_matchers"
     t.string "client_type", default: "confidential"
@@ -201,8 +228,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "legal"
     t.string "image"
     t.integer "number"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["code"], name: "index_commons_licenses_on_code"
   end
 
@@ -211,13 +238,13 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "attempts", default: 0
     t.text "handler", size: :long
     t.text "last_error", size: :medium
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
@@ -228,8 +255,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.text "archived_description", size: :medium
     t.text "url", size: :medium
     t.string "publication_status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "offerings_count", default: 0
     t.string "save_path"
     t.boolean "append_learner_id_to_url"
@@ -252,7 +279,7 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.text "author_url"
     t.text "print_url"
     t.boolean "is_archived", default: false
-    t.datetime "archive_date"
+    t.datetime "archive_date", precision: nil
     t.string "credits"
     t.string "license_code"
     t.boolean "append_auth_token"
@@ -288,8 +315,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "name"
     t.string "launch_text"
     t.integer "client_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "report_type", default: "offering"
     t.boolean "allowed_for_students", default: false
     t.string "default_report_for_source_type"
@@ -306,8 +333,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "user_id"
     t.integer "favoritable_id"
     t.string "favoritable_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["favoritable_id"], name: "index_favorites_on_favoritable_id"
     t.index ["favoritable_type"], name: "index_favorites_on_favoritable_type"
     t.index ["user_id", "favoritable_id", "favoritable_type"], name: "favorite_unique", unique: true
@@ -317,8 +344,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "name"
     t.string "client_email"
     t.text "private_key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_firebase_apps_on_name"
   end
 
@@ -327,12 +354,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "name"
     t.text "attribution", size: :medium
     t.string "publication_status", default: "published"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.integer "image_file_size"
-    t.datetime "image_updated_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "license_code"
     t.integer "width", default: 0
     t.integer "height", default: 0
@@ -367,14 +390,14 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
 
   create_table "imports", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "job_id"
-    t.datetime "job_finished_at"
+    t.datetime "job_finished_at", precision: nil
     t.integer "import_type"
     t.integer "progress"
     t.integer "total_imports"
     t.integer "user_id"
     t.text "upload_data", size: :long
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "import_data", size: :long
   end
 
@@ -389,8 +412,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "user_id"
     t.string "credits"
     t.string "publication_status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "full_window", default: false
     t.boolean "no_snapshots", default: false
     t.boolean "save_interactive_state", default: false
@@ -403,8 +426,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "material_type"
     t.integer "material_id"
     t.integer "position"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["material_id", "material_type", "position"], name: "material_idx"
     t.index ["materials_collection_id", "position"], name: "materials_collection_idx"
   end
@@ -413,25 +436,25 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "name"
     t.text "description", size: :medium
     t.integer "project_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["project_id"], name: "index_materials_collections_on_project_id"
   end
 
   create_table "passwords", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "reset_code"
-    t.datetime "expiration_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "expiration_date", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["user_id"], name: "index_passwords_on_user_id"
   end
 
   create_table "portal_bookmark_visits", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "bookmark_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "portal_bookmarks", id: :integer, charset: "utf8", force: :cascade do |t|
@@ -439,8 +462,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "type"
     t.string "url"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "position"
     t.integer "clazz_id"
     t.boolean "is_visible", default: true, null: false
@@ -453,15 +476,15 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
     t.string "class_word"
     t.string "status"
     t.integer "course_id"
     t.integer "semester_id"
     t.integer "teacher_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "section"
     t.boolean "default_class", default: false
     t.boolean "logging", default: false
@@ -473,15 +496,15 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "portal_collaboration_memberships", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "collaboration_id"
     t.integer "student_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["collaboration_id", "student_id"], name: "index_portal_coll_mem_on_collaboration_id_and_student_id"
   end
 
   create_table "portal_collaborations", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "owner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "offering_id"
     t.index ["offering_id"], name: "index_portal_collaborations_on_offering_id"
     t.index ["owner_id"], name: "index_portal_collaborations_on_owner_id"
@@ -495,8 +518,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "three_letter", limit: 3
     t.string "tld"
     t.integer "iso_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["iso_id"], name: "index_portal_countries_on_iso_id"
     t.index ["name"], name: "index_portal_countries_on_name"
     t.index ["two_letter"], name: "index_portal_countries_on_two_letter"
@@ -508,8 +531,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.text "description", size: :medium
     t.integer "school_id"
     t.string "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "course_number"
     t.index ["course_number"], name: "index_portal_courses_on_course_number"
     t.index ["name"], name: "index_portal_courses_on_name"
@@ -525,8 +548,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "nces_district_id"
     t.string "state", limit: 2
     t.string "leaid", limit: 7
@@ -539,8 +562,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "has_grade_levels_id"
     t.string "has_grade_levels_type"
     t.integer "grade_id"
@@ -559,16 +582,16 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "position"
     t.string "uuid"
     t.boolean "active", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "portal_learners", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.integer "student_id"
     t.integer "offering_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "secure_key"
     t.index ["offering_id"], name: "index_portal_learners_on_offering_id"
     t.index ["secure_key"], name: "index_portal_learners_on_sec_key", unique: true
@@ -1263,8 +1286,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "clazz_id"
     t.integer "runnable_id"
     t.string "runnable_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "active", default: true
     t.boolean "default_offering", default: false
     t.integer "position", default: 0
@@ -1278,14 +1301,14 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "portal_permission_forms", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "name"
     t.string "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "project_id"
     t.boolean "is_archived", default: false, null: false
   end
 
   create_table "portal_runs", charset: "utf8", force: :cascade do |t|
-    t.datetime "start_time", null: false
+    t.datetime "start_time", precision: nil, null: false
     t.integer "learner_id", null: false
     t.index ["learner_id"], name: "fk_rails_06fb23e107"
     t.index ["start_time"], name: "index_portal_runs_on_start_time"
@@ -1295,13 +1318,13 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
     t.integer "member_id"
     t.string "member_type"
     t.integer "school_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["member_type", "member_id"], name: "member_type_id_index"
     t.index ["school_id", "member_id", "member_type"], name: "school_memberships_long_idx"
   end
@@ -1311,8 +1334,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "name"
     t.text "description", size: :medium
     t.integer "district_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "nces_school_id"
     t.string "state", limit: 80
     t.string "zipcode", limit: 20
@@ -1330,12 +1353,12 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
     t.integer "clazz_id"
     t.integer "student_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["clazz_id"], name: "index_portal_student_clazzes_on_clazz_id"
     t.index ["student_id", "clazz_id"], name: "student_class_index"
   end
@@ -1344,8 +1367,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.boolean "signed"
     t.integer "portal_student_id"
     t.integer "portal_permission_form_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["portal_permission_form_id"], name: "p_s_p_form_id"
     t.index ["portal_student_id"], name: "index_portal_student_permission_forms_on_portal_student_id"
   end
@@ -1354,8 +1377,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "uuid", limit: 36
     t.integer "user_id"
     t.integer "grade_level_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["user_id"], name: "index_portal_students_on_user_id"
   end
 
@@ -1364,20 +1387,20 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "name"
     t.text "description", size: :medium
     t.integer "teacher_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "portal_teacher_clazzes", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.string "name"
     t.text "description", size: :medium
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
     t.integer "clazz_id"
     t.integer "teacher_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "position", default: 0
     t.index ["clazz_id"], name: "index_portal_teacher_clazzes_on_clazz_id"
     t.index ["teacher_id"], name: "index_portal_teacher_clazzes_on_teacher_id"
@@ -1394,8 +1417,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "portal_teachers", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "uuid", limit: 36
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "offerings_count", default: 0
     t.integer "left_pane_submenu_item"
     t.index ["user_id"], name: "index_portal_teachers_on_user_id"
@@ -1415,8 +1438,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.integer "user_id"
     t.integer "offering_id"
     t.integer "class_id"
-    t.datetime "last_run"
-    t.datetime "last_report"
+    t.datetime "last_run", precision: nil
+    t.datetime "last_report", precision: nil
     t.string "offering_name"
     t.string "teachers_name"
     t.string "student_name"
@@ -1469,8 +1492,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "sessions", id: :integer, charset: "utf8", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["session_id"], name: "index_sessions_on_session_id"
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
@@ -1480,8 +1503,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "jurisdiction"
     t.string "title"
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["name"], name: "index_standard_documents_on_name", unique: true
   end
 
@@ -1494,8 +1517,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.text "parents"
     t.string "material_type"
     t.integer "material_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "education_level"
     t.boolean "is_leaf"
     t.index ["uri", "material_type", "material_id"], name: "standard_unique", unique: true
@@ -1508,7 +1531,7 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "tagger_type"
     t.string "taggable_type"
     t.string "context"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -1529,8 +1552,8 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
   create_table "teacher_project_views", id: :integer, charset: "utf8", force: :cascade do |t|
     t.integer "viewed_project_id", null: false
     t.integer "teacher_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["teacher_id"], name: "index_teacher_project_views_on_teacher_id"
   end
 
@@ -1551,12 +1574,12 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.string "remember_token"
     t.string "confirmation_token"
     t.string "state", default: "passive", null: false
-    t.datetime "remember_created_at"
-    t.datetime "confirmed_at"
-    t.datetime "deleted_at"
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "deleted_at", precision: nil
     t.string "uuid", limit: 36
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "default_user", default: false
     t.boolean "site_admin", default: false
     t.string "external_id"
@@ -1566,22 +1589,24 @@ ActiveRecord::Schema.define(version: 2024_12_11_155304) do
     t.boolean "asked_age", default: false
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
     t.string "unconfirmed_email"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmation_sent_at", precision: nil
     t.boolean "require_portal_user_type", default: false
     t.string "sign_up_path"
     t.boolean "email_subscribed", default: false
     t.boolean "can_add_teachers_to_cohorts", default: false
-    t.datetime "reset_password_sent_at"
+    t.datetime "reset_password_sent_at", precision: nil
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["id"], name: "index_users_on_id_and_type"
     t.index ["login"], name: "index_users_on_login", unique: true
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "portal_runs", "portal_learners", column: "learner_id"
 end

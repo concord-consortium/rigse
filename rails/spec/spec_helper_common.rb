@@ -18,7 +18,9 @@ WebMock.disable_net_connect!(allow_localhost: true, :allow =>
                                 [   "#{SolrSpecHelper::SOLR_HOST}:#{SolrSpecHelper::SOLR_PORT}",
                                     "codeclimate.com",
                                     'host.docker.internal:9515',
-                                    'chromedriver.storage.googleapis.com'
+                                    'chromedriver.storage.googleapis.com',
+                                    'googlechromelabs.github.io',
+                                    'storage.googleapis.com',
                                 ]
                             )
 
@@ -65,7 +67,8 @@ class ActiveRecord::Base
   end
 
   def self.current_database_configuration_name
-    configurations.to_h.find { |_k, v| v['database'] == connection.current_database }[0]
+    config = configurations.configs_for(env_name: Rails.env).find { |cfg| cfg.database == connection.current_database }
+    config&.env_name
   end
 end
 ActiveRecord::Base.set_shared_connection
@@ -84,6 +87,7 @@ Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
+  config.include Rails.application.routes.url_helpers
 
   config.mock_with :rspec
 

@@ -9,7 +9,7 @@ describe User do
       @user = nil
       @creating_user = lambda do
         @user = create_user
-        violated "#{@user.errors.full_messages.to_sentence}" if @user.new_record?
+        violated "#{@user.errors.map(&:message).to_sentence}" if @user.new_record?
       end
     end
 
@@ -453,7 +453,7 @@ describe User do
   end
 
   describe "set_role_for_projects" do
-    let(:projects)         { 5.times.map { |i|  FactoryBot.create(:project, name: "project_#{i}")}  }
+    let(:projects)         { 5.times.map { |i|  FactoryBot.create(:project, name: "project_#{i}", landing_page_slug: "project-#{i}")}  }
     let(:user)             { FactoryBot.create(:user)    }
     let(:selected_projects){ [ projects.first] }
 

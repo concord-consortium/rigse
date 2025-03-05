@@ -15,8 +15,8 @@ if Rails.env.development?
   Delayed::Backend::ActiveRecord::Job.send(:include, Delayed::Worker::Scaler)
 end
 
-if BoolENV['RAILS_STDOUT_LOGGING']
-  Delayed::Worker.logger = Logger.new(STDOUT)
+if BoolEnv['RAILS_STDOUT_LOGGING']
+  Delayed::Worker.logger = ActiveSupport::Logger.new(STDOUT)
 else
   path = File.join(Rails.root, 'log', 'delayed_job.log')
   Delayed::Worker.logger = Logger.new(path)

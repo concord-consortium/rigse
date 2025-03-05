@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe URLResolver do
+RSpec.describe UrlResolver do
 
   # TODO: auto-generated
   describe '#getUrl' do

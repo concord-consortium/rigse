@@ -43,7 +43,7 @@ class AuthController < ApplicationController
     if current_user.nil?
       validation = AccessGrant.validate_oauth_authorize(params)
       if (!validation.valid)
-        redirect_to validation.error_redirect
+        redirect_to validation.error_redirect, allow_other_host: true
         return
       end
 

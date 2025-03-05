@@ -96,7 +96,7 @@ describe Portal::SchoolsController do
         allow(Portal::Nces06School).to receive(:find).with('123').and_return(@nces_school)
         allow(Portal::School).to receive(:find_or_create_using_nces_school).with(@nces_school).and_return(@school)
         post :create, params: { :nces_school => {:id => '123'} }
-        expect(response).to redirect_to(portal_school_url(@school))
+        expect(response).to redirect_to(portal_school_url(@school, host: 'test.host'))
       end
     end
 
@@ -139,7 +139,7 @@ describe Portal::SchoolsController do
         expect(@school).to receive(:update).and_return(true)
         allow(Portal::School).to receive(:find).and_return(@school)
         put :update, params: { :id => "1" }
-        expect(response).to redirect_to(portal_schools_url)
+        expect(response).to redirect_to(portal_schools_url(host: 'test.host'))
       end
     end
 
@@ -179,7 +179,7 @@ describe Portal::SchoolsController do
 
     it "redirects to the portal_schools list" do
       delete :destroy, params: { :id => "1" }
-      expect(response).to redirect_to(portal_schools_url)
+      expect(response).to redirect_to(portal_schools_url(host: 'test.host'))
     end
 
   end

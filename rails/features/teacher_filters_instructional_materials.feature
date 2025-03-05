@@ -17,7 +17,7 @@ Feature: Teacher filters instructional materials
       | model_types   | mt_Video  |
 
     # Create a first grade math activity:
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My grade 5 Math Activity"
     And I check "external_activity[is_official]"
@@ -28,7 +28,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a 7th grade Science Activity
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My grade 7 Science Activity"
     And I check "external_activity[is_official]"
@@ -37,7 +37,7 @@ Feature: Teacher filters instructional materials
     And I check "subject_areas_science"
     And I press "Save"
 
-   Given I am on the search instructional materials page
+   When I am on the search instructional materials page
    And I uncheck "Sequence"
    And I check "Math"
    And I wait for the search to be ready
@@ -75,7 +75,7 @@ Feature: Teacher filters instructional materials
       | sensors       | Motion      |
 
     # Create a temperature sensor activity:
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My Temperature Sensor Activity"
     And I check "external_activity[is_official]"
@@ -84,7 +84,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a force sensor activity:
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My Force Sensor Activity"
     And I check "external_activity[is_official]"
@@ -93,14 +93,14 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create an activity with no sensors:
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My No Sensor Activity"
     And I check "external_activity[is_official]"
     And I select "published" from "external_activity[publication_status]"
     And I press "Save"
 
-    Given I am on the search instructional materials page
+    When I am on the search instructional materials page
     And I uncheck "Sequence"
      And I check "Temperature"
      And I wait for the search to be ready

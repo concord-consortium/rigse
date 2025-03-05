@@ -4,7 +4,7 @@ describe Admin::Project do
   let (:project) { FactoryBot.create(:project) }
 
   it "should create a new instance given valid attributes" do
-    valid_attributes = { name: "test" }
+    valid_attributes = { name: "test", landing_page_slug: "test" }
     Admin::Project.create!(valid_attributes)
   end
 

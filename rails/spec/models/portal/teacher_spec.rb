@@ -6,44 +6,44 @@ describe Portal::Teacher do
     @virtual_teacher = FactoryBot.create(:portal_teacher)
     @virtual_teacher.clazzes << FactoryBot.create(:portal_clazz)
   end
-  
+
   it "should support nces teachers" do
     expect(@nces_teacher).not_to be_nil
   end
-  
+
   it "nces teachers should have at least one class" do
     expect(@nces_teacher.clazzes).not_to be_nil
     @nces_teacher.clazzes.size > 0
   end
-  
-  it "nces teachers class should be 'real'" do 
+
+  it "nces teachers class should be 'real'" do
     expect(@nces_teacher.clazzes[0]).to be_real
   end
-  
+
   it "virtual teachers should have virtual classes" do
     expect(@virtual_teacher.clazzes[0]).to be_virtual
   end
-  
+
   # new policy: Teachers CAN change their real clazzes
   # TODO: If we want to lock classes we need to implement a different mechanism
   it "teachers with real clazzes should be able to change them" do
     expect(@nces_teacher.clazzes[0]).to be_changeable(@nces_teacher)
   end
-  
+
   it "should support virtual teachers" do
     expect(@virtual_teacher).not_to be_nil
   end
-  
+
   it "virtual teachers can have classes" do
     expect(@virtual_teacher.clazzes).not_to be_nil
     expect(@virtual_teacher.clazzes.size).not_to be(0)
   end
-  
-  it "virtual teachers class should not be real" do 
+
+  it "virtual teachers class should not be real" do
     expect(@virtual_teacher.clazzes[0].real?).not_to be_truthy
     expect(@virtual_teacher.clazzes[0].virtual?).to be_truthy
   end
-  
+
   it "Teachers in virtual schools should be able to change their clazzes" do
     expect(@virtual_teacher.clazzes[0]).to be_changeable(@virtual_teacher)
   end
@@ -53,7 +53,7 @@ describe Portal::Teacher do
   #   @virtual_teacher.should be_valid
   #   @virtual_teacher.schools = []
   #   @virtual_teacher.should_not be_valid
-  #   
+  #
   #   @nces_teacher.should be_valid
   #   @nces_teacher.schools = []
   #   @nces_teacher.should_not be_valid
@@ -105,10 +105,10 @@ describe Portal::Teacher do
 
   describe 'record_project_view' do
     before(:each) do
-      @project1 = FactoryBot.create(:project, name: 'Test Project One')
-      @project2 = FactoryBot.create(:project, name: 'Test Project Two')
-      @project3 = FactoryBot.create(:project, name: 'Test Project Three')
-      @project4 = FactoryBot.create(:project, name: 'Test Project Four')
+      @project1 = FactoryBot.create(:project, name: 'Test Project One', landing_page_slug: 'test-project-1')
+      @project2 = FactoryBot.create(:project, name: 'Test Project Two', landing_page_slug: 'test-project-2')
+      @project3 = FactoryBot.create(:project, name: 'Test Project Three', landing_page_slug: 'test-project-3')
+      @project4 = FactoryBot.create(:project, name: 'Test Project Four', landing_page_slug: 'test-project-4')
       @virtual_teacher.record_project_view(@project1)
     end
 

@@ -76,7 +76,7 @@ class Portal::LearnersController < ApplicationController
     next_url = report.url_for_offering(offering, current_visitor, request.protocol, request.host_with_port,
       { student_id: student_id, activity_id: params[:activity_id] }
     )
-    redirect_to next_url
+    redirect_to next_url, allow_other_host: true
   end
 
   # GET /portal/learners/1

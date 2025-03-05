@@ -1,6 +1,6 @@
 # This is a docker-compose overlay that connects the portal to LARA via a
 # proxy container. It assumes the proxy container name is "http-proxy"
-# - If you are running dinghy on Mac OS, this is the name the dinghy proxy 
+# - If you are running dinghy on Mac OS, this is the name the dinghy proxy
 #   will have if you followed its documentation here:
 #   https://github.com/codekitchen/dinghy-http-proxy#os-x
 #
@@ -15,8 +15,6 @@
 #       container_name: http-proxy
 #
 # LARA host is assumed to be app.lara.docker. If not, you can set LARA_HOST in your environment (e.g. .env file).
-
-version: '3'
 services:
   app:
     environment:

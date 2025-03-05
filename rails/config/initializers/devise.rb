@@ -1,3 +1,6 @@
+require Rails.root.join("lib/bearer_token_authenticatable").to_s
+require Rails.root.join("lib/jwt_bearer_token_authenticatable").to_s
+
 # loads OmniAuth::Strategies::Schoology for omniauth configuration
 require File.expand_path("../../../lib/omni_auth/strategies/schoology", __FILE__)
 

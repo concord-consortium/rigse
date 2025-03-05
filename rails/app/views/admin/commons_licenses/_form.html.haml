@@ -3,8 +3,8 @@
     - if license.errors.any?
       %ul.menu_v.error-explanation
         %li License can't be saved, there are errors in form:
-        - license.errors.full_messages.each do |msg|
-          %li= msg
+        - license.errors.each do |error|
+          %li= error.message
     %p
       %ul.menu_v
         %li

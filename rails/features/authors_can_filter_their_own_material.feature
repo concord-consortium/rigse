@@ -61,5 +61,7 @@ Feature: Author can filter their own material
     And I wait 2 seconds
     Then the "include_official" checkbox should be checked
     Then I should see "external_activity_1"
-    And I should not see "external_activity_2"
+    # external_activity_2 is visible even though official is checked as we always show the user's own community activities
+    # so that ITSI non-authors can see the activities they create
+    And I should see "external_activity_2"
     And I should not see "external_activity_3"

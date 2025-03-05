@@ -321,7 +321,10 @@ And /^(?:|I )fill "(.*)" in the tinyMCE editor with id "(.*)"$/ do |html, editor
   # make sure the editor is on the page, this also triggers capybara to do its
   # automatic waiting if it isn't on the page yet
   expect(page).to have_css("##{editor_id}", visible: false)
-  execute_script("tinyMCE.getInstanceById('#{editor_id}').setContent('#{html}');")
+  editor_iframe = find("##{editor_id}_ifr", visible: true)
+
+  execute_script("tinymce.getInstanceById('#{editor_id}').setContent('#{html}');")
+
 end
 
 When /^I reload the page$/ do

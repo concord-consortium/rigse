@@ -112,10 +112,11 @@ class HomeController < ApplicationController
 
     uri = URI.parse(authoring_site.url)
     query = Rack::Utils.parse_query(uri.query)
-    query["portalJWT"] = SignedJWT::create_portal_token(current_user, {:user_type => "user", :user_id => url_for(current_user), :domain => root_url, first_name: current_user.first_name, last_name: current_user.last_name})
+    query["portalJWT"] = SignedJwt::create_portal_token(current_user, {:user_type => "user", :user_id => url_for(current_user), :domain => root_url, first_name: current_user.first_name, last_name: current_user.last_name})
     query["portalAction"] = "authoring_launch"
     uri.query = Rack::Utils.build_query(query)
-    redirect_to(uri.to_s)
+    redirect_to uri.to_s, allow_other_host: true
+
   end
 
   # view_context is a reference to the View template object

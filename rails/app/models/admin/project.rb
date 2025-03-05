@@ -50,10 +50,11 @@ class Admin::Project < ApplicationRecord
   has_many :links, class_name: 'Admin::ProjectLink', :dependent => :destroy
   accepts_nested_attributes_for :links, :reject_if => lambda { |link| link[:name].blank? or link[:href].blank? }, :allow_destroy => true
 
-  validates :name, presence: true
-  validates :landing_page_slug, uniqueness: {case_sensitive: true}, allow_nil: true
+  validates :name, presence: { message: "Name can't be blank" }
+  validates :landing_page_slug, uniqueness: { case_sensitive: true, message: "Landing page slug has already been taken" }, allow_nil: true
   validates :landing_page_slug, format: { with: /\A[a-z0-9\-]*\z/,
-                                          message: "only allows lower case letters, digits and '-' character" }
+                                          message: "Landing page slug only allows lower case letters, digits and '-' character" },
+                                allow_nil: true
 
   before_validation :nullify_empty_slug
 

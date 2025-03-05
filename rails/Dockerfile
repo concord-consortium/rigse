@@ -1,10 +1,8 @@
 ARG NODE_VERSION=18.18.0
-ARG RUBY_VERSION=2.7
+ARG RUBY_VERSION=3.2
 
 FROM node:${NODE_VERSION}-alpine AS node
-# Stick to Alpine <= 3.13 to avoid issues with ECS Docker
-# See: https://github.com/docker-library/ruby/issues/351#issue-940462153
-FROM docker.io/ruby:${RUBY_VERSION}-alpine3.12
+FROM ruby:${RUBY_VERSION}-alpine3.18
 
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/lib /usr/local/lib
@@ -16,6 +14,9 @@ RUN node -v
 RUN true
 
 RUN apk add \
+  openssl \
+  libssl3 \
+  ca-certificates \
   # The Ruby Gem "delayed-web" has a transitive depdency for "racc" which builds
   # native extensions and requires a C toolchain (it attempts to use gcc):
   # "Gem::Ext::BuildError: ERROR: Failed to build gem native extension."

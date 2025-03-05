@@ -4,6 +4,10 @@ describe "/external_activities/edit.html.haml" do
   let(:ext_act) { FactoryBot.create(:external_activity, :url => 'http://activities.com') }
 
   before(:each) do
+    # RAILS-UPGRADE-TODO: Find out why the next line is needed for these tests to pass. Since the upgrade from Rails v6.1 to 7.0
+    # the tests will fail without it. It has something to do with the partials rendered in the view. Rails
+    # can't seem to find the partial files without specifying the subdirectory in app/views here.
+    view.lookup_context.prefixes << "external_activities"
     assigns[:external_activity] = @external_activity = ext_act
     allow(view).to receive(:current_user).and_return(FactoryBot.generate(:admin_user))
   end

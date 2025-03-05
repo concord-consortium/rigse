@@ -8,8 +8,8 @@ describe "materials_collections/show" do
   end
 
   it "renders attributes in accordion (no materials)" do
-    project = FactoryBot.create(:project, name: "Some Project")
-    assign(:materials_collection, 
+    project = FactoryBot.create(:project, name: "Some Project", landing_page_slug: "some-project")
+    assign(:materials_collection,
       FactoryBot.create(:materials_collection, project: project))
     render
 

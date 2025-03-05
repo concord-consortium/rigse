@@ -16,7 +16,7 @@ module JwtBearerTokenAuthenticatable
     def decode_token
       return nil unless has_jwt_bearer_token?()
       strategy, token = get_strategy_and_token()
-      SignedJWT::decode_portal_token(token) rescue nil
+      SignedJwt::decode_portal_token(token) rescue nil
     end
 
     def has_jwt_bearer_token?

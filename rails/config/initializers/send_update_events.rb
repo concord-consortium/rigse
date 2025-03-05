@@ -1,1 +1,1 @@
-require 'send_update_events'
+require Rails.root.join("lib/send_update_events").to_s

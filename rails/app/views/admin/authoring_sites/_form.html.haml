@@ -3,8 +3,8 @@
     - if admin_authoring_site.errors.any?
       %ul.menu_v.error-explanation
         %li Authoring site can't be saved, there are errors in form:
-        - admin_authoring_site.errors.full_messages.each do |msg|
-          %li= msg
+        - admin_authoring_site.errors.each do |error|
+          %li= error.message
     %p
       %ul.menu_v
         %li

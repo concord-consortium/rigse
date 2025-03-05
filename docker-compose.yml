@@ -1,6 +1,5 @@
 # This file is meant for development, in production we use a slightly different
 # configuration
-version: '3'
 services:
   app:
     build:

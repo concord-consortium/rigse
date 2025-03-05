@@ -73,9 +73,9 @@ class API::APIController < ApplicationController
 
     elsif header && header =~ /^Bearer\/JWT (.*)$/i
       portal_token = $1
-      # if invalid this will raise a SignedJWT::Error which is a subclass of StandardError that the caller should be listening for
+      # if invalid this will raise a SignedJwt::Error which is a subclass of StandardError that the caller should be listening for
       # the expiration is checked within the JWT.decode function
-      decoded_token = SignedJWT::decode_portal_token(portal_token)
+      decoded_token = SignedJwt::decode_portal_token(portal_token)
       data = decoded_token[:data]
 
       user = User.find_by_id(data["uid"])

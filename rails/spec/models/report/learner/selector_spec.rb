@@ -8,7 +8,7 @@ describe Report::Learner::Selector do
   }
 
   let(:current_user)        { FactoryBot.generate(:admin_user) }
-  let(:project_a)           { FactoryBot.create(:project, name: "project-a") }
+  let(:project_a)           { FactoryBot.create(:project, name: "project-a", landing_page_slug: "project-a") }
   let(:permission_params_a) { { name: "a", project: project_a } }
   let(:permission_form_a)   { FactoryBot.create(:permission_form, permission_params_a) }
   let(:permission_params_b) { { name: "b" } }

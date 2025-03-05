@@ -69,7 +69,7 @@ RailsPortal::Application.configure do
 
   config.after_initialize do
     Bullet.enable = true
-    Bullet.bullet_logger = !BoolENV["RAILS_STDOUT_LOGGING"]
+    Bullet.bullet_logger = !BoolEnv["RAILS_STDOUT_LOGGING"]
     Bullet.rails_logger = true
     Bullet.add_footer = true
   end
@@ -93,6 +93,8 @@ RailsPortal::Application.configure do
 
   # Rails 5 defaults to disable submit
   config.action_view.automatically_disable_submit_tag = false
+
+  config.active_storage.service = :local
 
   LogConfig.configure(config, ENV['DEV_LOG_LEVEL'], 'DEBUG')
 end

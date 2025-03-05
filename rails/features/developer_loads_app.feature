@@ -1,8 +1,8 @@
 Feature: A developer loads home page without initializing data in database
-  As a Developer
+  As a developer
   I might load the app before I've finished the setup
   Because I don't read the documentation
-  
+
   @no-seeds
   Scenario: A developer looks at the home page
     Given I am on the home page
