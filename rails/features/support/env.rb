@@ -85,7 +85,7 @@ def add_browser_logs(scenario)
     # Getting current URL
     current_url = Capybara.current_url.to_s
     # Gather browser logs
-    logs = page.driver.browser.manage.logs.get(:browser).map {|line| [line.level, line.message]}
+    logs = page.driver.browser.logs.get(:browser).map {|line| [line.level, line.message]}
     # Remove warnings and info messages
     logs.reject! { |line| ['WARNING', 'INFO'].include?(line.first) }
     logs.any? == true

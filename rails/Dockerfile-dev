@@ -49,6 +49,9 @@ RUN apk add \
   chromium-chromedriver \
   gcompat glib nss libxcb libgcc
 
+RUN gem update --system 3.6.5
+RUN gem install bundler -v 2.6.5 --no-document
+
 # This is currently commented out, as installing Chrome on Alpine Linux needs to be done in a different way,
 # and this linux distribution is missing multiple dependencies required for installing Chrome.
 # Install Google Chrome for Selenium
