@@ -2,7 +2,6 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'factory_bot'
 FactoryBot.definition_file_paths = %w(factories)
 
-require 'webdrivers'
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'capybara/rspec'
