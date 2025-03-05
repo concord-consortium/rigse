@@ -17,5 +17,6 @@ Feature: Teacher creates new portal class
     And I fill in "portal_clazz[class_word]" with "WINSTON"
     And I check "portal_clazz[grade_levels][9]"
     And I press "Save"
-    Then the portal class "My New Class" should have been created
+    And I wait 2 seconds
+    Then the portal class "My New Class" should have been create
     And the class word for the portal class "My New Class" should be "winston"
