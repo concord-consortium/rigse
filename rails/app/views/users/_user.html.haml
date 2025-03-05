@@ -11,6 +11,9 @@
         - if imported_user
           %span.tiny{:style=>"font-weight:normal"}
             (Imported)
+        - if controller.action_name == "index"
+          - if is_student_email?(user.email)
+            %span.badge= "Student"
         - if controller.action_name == "show"
           - if user.portal_teacher
             %span.badge= "Teacher"
