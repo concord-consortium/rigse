@@ -84,6 +84,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a force sensor activity:
+    And I wait 2 seconds
     And I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My Force Sensor Activity"
