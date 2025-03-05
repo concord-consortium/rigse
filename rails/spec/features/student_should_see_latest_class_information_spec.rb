@@ -12,7 +12,7 @@ RSpec.feature 'Student should see latest class information', :WebDriver => true 
     expect(page).to have_content('Basic Electronics')
   end
 
-  # TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
+  # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
   # scenario 'Student should see all the updated information of a class', js: true do
   #   create_class_in_js_context
   #   login_as('taylor')

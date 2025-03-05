@@ -57,8 +57,6 @@ WORKDIR $APP_HOME
 
 USER app
 
-RUN gem install json -v 2.6.3
-
 # Copy Gemfile and its lock file
 COPY --chown=app ./Gemfile* $APP_HOME
 # TODO: bundle config set without 'development test'
