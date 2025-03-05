@@ -87,7 +87,7 @@ group :test, :cucumber do
   gem 'capybara-mechanize'
   gem 'capybara-screenshot'
   gem 'ci_reporter'
-  gem 'cucumber', '~> 7.1.0'
+  gem 'cucumber', '~> 9.2'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner'
   gem 'delorean'
