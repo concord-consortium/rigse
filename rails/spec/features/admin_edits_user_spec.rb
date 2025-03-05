@@ -25,7 +25,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       visit users_path
     end
 
-    # TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
+    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
     # scenario 'Portal admin can see both teachers and student in user list.', js: true do
     #   search_for_user(@student_name)
     #   expect(page).to have_content(@student_name)
@@ -35,7 +35,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
     #   expect(page).to have_content(@teacher2_name)
     # end
 
-    # TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
+    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
     # scenario 'Portal admin can add a teacher to a cohort.', js: true do
     #   search_for_user(@teacher1_name)
     #   visit_user_edit_page(@teacher1_name)
@@ -79,7 +79,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       expect(page).to_not have_content(@student_name)
     end
 
-    # TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
+    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
     # scenario 'Project admin can add a teacher to a cohort and then see their students in user list.', js: true do
     #   search_for_user(@teacher1_name)
     #   expect(page).to have_content(@teacher1_name)
@@ -107,7 +107,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
       expect(page.body).to match(%r{#{@cohort_b_name}}i)
     end
 
-    # TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
+    # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
     # scenario 'Project admin can add a teacher to a cohort and then fully edit user.', js: true do
     #   search_for_user(@teacher1_name)
     #   visit_user_edit_page(@teacher1_name)
@@ -202,7 +202,7 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
     click_link("edit")
   end
 
-  # TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
+  # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
   def add_teacher_to_cohort(cohort)
     check(cohort)
     click_button('Save')

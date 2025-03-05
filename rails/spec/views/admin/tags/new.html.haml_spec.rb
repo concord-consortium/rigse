@@ -4,7 +4,7 @@ describe "/admin/tags/new.html.haml" do
   include Admin::TagsHelper
 
   before(:each) do
-    # TODO: Find out why the next line is needed for these tests to pass. Since the upgrade from Rails v6.1 to 7.0
+    # RAILS-UPGRADE-TODO: Find out why the next line is needed for these tests to pass. Since the upgrade from Rails v6.1 to 7.0
     # the tests will fail without it. It has something to do with the partials rendered in the view. Rails
     # can't seem to find the partial files without specifying the subdirectory in app/views here.
     view.lookup_context.prefixes << "admin/tags"

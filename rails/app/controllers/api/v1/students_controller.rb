@@ -109,16 +109,16 @@ class API::V1::StudentsController < API::APIController
       return error("Missing user parameters")
     end
 
-    if user_attributes[:first_name].nil?
+    if user_attributes[:first_name].blank?
       return error("Missing user first_name parameter")
     end
-    if user_attributes[:last_name].nil?
+    if user_attributes[:last_name].blank?
       return error("Missing user last_name parameter")
     end
-    if user_attributes[:password].nil?
+    if user_attributes[:password].blank?
       return error("Password can't be blank.")
     end
-    if user_attributes[:password_confirmation].nil?
+    if user_attributes[:password_confirmation].blank?
       return error("Password confirmation can't be blank.")
     end
     if user_attributes[:password] != user_attributes[:password_confirmation]
