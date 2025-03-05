@@ -44,7 +44,7 @@ class CapybaraInitializer
   end
 
   def selenium_options
-    options = Selenium::WebDriver::Chrome::Options.new
+    options = Selenium::WebDriver::Options.chrome
     options.binary = "/usr/bin/chromium"
     unique_user_data_dir = "/dev/shm/chrome-profile-#{Process.pid}"
     FileUtils.mkdir_p(unique_user_data_dir)
