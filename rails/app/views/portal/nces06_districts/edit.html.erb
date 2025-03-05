@@ -1,7 +1,15 @@
 <h1>Editing nces06_district</h1>
 
 <% form_for(@nces06_district) do |f| %>
-  <%= f.error_messages %>
+    <% if @nces06_district.errors.any? %>
+    <div class="error-messages">
+      <ul>
+        <% @nces06_district.errors.map(&:full_message).each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <p>
     <%= f.submit 'Update' %>

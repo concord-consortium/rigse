@@ -1,7 +1,13 @@
 <h1>Editing subject</h1>
 
 <% form_for(@subject) do |f| %>
-  <%= f.error_messages %>
+  <% if @subject.errors.any? %>
+    <ul>
+      <% @subject.errors.map(&:full_message).each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
 
   <p>
     <%= f.submit 'Update' %>

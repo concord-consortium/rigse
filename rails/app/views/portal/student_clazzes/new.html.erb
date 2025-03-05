@@ -1,7 +1,15 @@
 <h1>New student_clazz</h1>
 
 <% form_for(@portal_student_clazz) do |f| %>
-  <%= f.error_messages %>
+  <% if @portal_student_clazz.errors.any? %>
+    <div class="error-messages">
+      <ul>
+        <% @portal_student_clazz.errors.map(&:full_message).each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <p>
     <%= f.submit 'Create' %>

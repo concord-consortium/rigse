@@ -1,7 +1,13 @@
 <h1>New school_membership</h1>
 
 <% form_for(@school_membership) do |f| %>
-  <%= f.error_messages %>
+  <% if @school_membership.errors.any? %>
+    <ul>
+      <% @school_membership.errors.map(&:full_message).each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
 
   <p>
     <%= f.submit 'Create' %>
