@@ -28,7 +28,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a 7th grade Science Activity
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My grade 7 Science Activity"
     And I check "external_activity[is_official]"
@@ -84,7 +84,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a force sensor activity:
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My Force Sensor Activity"
     And I check "external_activity[is_official]"
@@ -93,7 +93,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create an activity with no sensors:
-    And I am on the new material page
+    When I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My No Sensor Activity"
     And I check "external_activity[is_official]"
