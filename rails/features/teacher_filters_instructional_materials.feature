@@ -100,7 +100,7 @@ Feature: Teacher filters instructional materials
     And I select "published" from "external_activity[publication_status]"
     And I press "Save"
 
-    Given I am on the search instructional materials page
+    When I am on the search instructional materials page
     And I uncheck "Sequence"
      And I check "Temperature"
      And I wait for the search to be ready
