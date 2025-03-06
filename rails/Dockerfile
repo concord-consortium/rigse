@@ -50,7 +50,7 @@ RUN apk add \
 RUN gem update --system 3.6.5
 RUN gem install bundler -v 2.6.5 --no-document
 
-ENV APP_HOME /rigse/
+ENV APP_HOME=/rigse/
 
 RUN adduser -D -u 13000 app
 
