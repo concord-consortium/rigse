@@ -63,8 +63,7 @@ USER app
 # Copy Gemfile and its lock file
 COPY --chown=app ./Gemfile* $APP_HOME
 # TODO: bundle config set without 'development test'
-RUN bundle config set without 'development test'
-RUN bundle install
+RUN bundle install --without development test
 COPY --chown=app ./ $APP_HOME
 
 RUN \
