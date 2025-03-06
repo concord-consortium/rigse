@@ -25,7 +25,6 @@ SimpleCov.start do
 end
 
 ENV['RAILS_ENV'] = 'cucumber'
-ENV['RAILS_SECRET_KEY_BASE'] = 'a4c92197b158570f42dd9fb0124dfc96ba858167187b6afaa8f10d1c2c542afa3721737874e49cb0dcd71f58f78c4d3f4dc14e57d67ae110e15114628cee8a43'
 
 require 'cucumber/rails'
 require 'cucumber/rails/capybara/javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript

@@ -4,7 +4,7 @@ RailsPortal::Application.configure do
   # Edit at your own peril - it's recommended to regenerate this file
   # in the future when you upgrade to a newer version of Cucumber.
 
-  config.secret_key_base = ENV["RAILS_SECRET_KEY_BASE"]
+  config.secret_key_base = 'a4c92197b158570f42dd9fb0124dfc96ba858167187b6afaa8f10d1c2c542afa3721737874e49cb0dcd71f58f78c4d3f4dc14e57d67ae110e15114628cee8a43'
 
   # IMPORTANT: Setting config.cache_classes to false is known to
   # break Cucumber's use_transactional_fixtures method.
