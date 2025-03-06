@@ -60,7 +60,14 @@ USER app
 # Copy Gemfile and its lock file
 COPY --chown=app ./Gemfile* $APP_HOME
 # TODO: bundle config set without 'development test'
-RUN bundle install --without development test
+
+# Determine Bundler version and install it, then copy the Gemfile.lock created during build so
+# it isn't overridden by the following add
+RUN BUNDLER_VERSION=$(grep -A1 "BUNDLED WITH" Gemfile.lock | tail -n1) && \
+    gem install bundler -v "$BUNDLER_VERSION" && \
+    bundle _"$BUNDLER_VERSION"_ install --without development test && \
+    cp Gemfile.lock Gemfile.lock-docker
+
 COPY --chown=app ./ $APP_HOME
 
 RUN \
@@ -82,7 +89,7 @@ ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
 # Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
 # Instead we need to fake some ENV Vars for the precompile ...
 # Run precompile rake task in order to at least generate the manifest file
-RUN RAILS_SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
+RUN RAILS_SECRET_KEY_BASE=dummy bundle exec rake assets:precompile --trace
 
 # This font is used by imagemagick to add attribution to the images in the image library
 # the DejaVu-Sans font is provided by the docker image this one is built on
