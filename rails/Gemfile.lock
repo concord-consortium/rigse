@@ -251,8 +251,11 @@ GEM
       actionmailer (>= 5.2, < 8)
       activesupport (>= 5.2, < 8)
     execjs (2.10.0)
-    factory_bot (5.2.0)
-      activesupport (>= 4.2.0)
+    factory_bot (6.5.1)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
     faraday (0.17.6)
       multipart-post (>= 1.2, < 3)
     ffi (1.17.1-x86_64-linux-gnu)
@@ -673,7 +676,8 @@ DEPENDENCIES
   devise-token_authenticatable
   email_spec
   exception_notification
-  factory_bot (= 5.2)
+  factory_bot (~> 6.5)
+  factory_bot_rails
   font-awesome-rails
   guard
   guard-cucumber
