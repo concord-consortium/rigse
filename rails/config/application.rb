@@ -23,15 +23,6 @@ module RailsPortal
       g.test_framework :rspec
     end
 
-    # Bundler.require(:default, Rails.env) if defined?(Bundler)
-    # Fixes a Compass bug, per http://stackoverflow.com/questions/6005361/sass-import-error-in-rails-3-app-file-to-import-not-found-or-unreadable-comp?rq=1
-    app_environment_variables = File.join(Rails.root, 'config', 'app_environment_variables.rb')
-    if File.exist?(app_environment_variables)
-      load(app_environment_variables)
-    else
-      # TODO: Should we just die here otherwise?
-      puts "please create the file #{app_environment_variables}, or set ENV"
-    end
     extra_groups = {:assets => %w(development test cucumber)}
     if ENV['PORTAL_FEATURES'] && !ENV['PORTAL_FEATURES'].empty?
       ENV['PORTAL_FEATURES'].split(/\s+/).each do |feature|
