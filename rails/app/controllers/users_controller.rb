@@ -39,10 +39,7 @@ class UsersController < ApplicationController
       "LEFT JOIN roles_users ON users.id = roles_users.user_id " +
       "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
 
-    search_scope = policy_scope(User)
-    search_scope = search_scope
-      .includes(:roles)
-    search_scope = search_scope.joins(join_string).where(user_types).distinct()
+    search_scope = policy_scope(User).joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
