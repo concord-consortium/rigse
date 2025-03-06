@@ -64,6 +64,7 @@ USER app
 COPY --chown=app ./Gemfile* $APP_HOME
 # TODO: bundle config set without 'development test'
 RUN bundle config set without 'development test'
+RUN bundle install
 COPY --chown=app ./ $APP_HOME
 
 RUN \
