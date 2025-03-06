@@ -18,28 +18,38 @@ class UsersController < ApplicationController
   def index
     authorize User
 
+    search_for_portal_admins = params[:portal_admin].to_s.length > 0
+    search_for_project_admins = params[:project_admin].to_s.length > 0
+    search_for_project_researchers = params[:project_researcher].to_s.length > 0
+
+    joins = []
     user_type_conditions = []
 
-    if params[:portal_admin].to_s.length > 0
+    if search_for_portal_admins
       admin_role_id = Role.where(title: 'admin').first.id
       user_type_conditions << "roles_users.role_id = #{admin_role_id}"
+      joins << "LEFT JOIN roles_users ON users.id = roles_users.user_id "
     end
 
-    if params[:project_admin].to_s.length > 0
-      user_type_conditions << 'admin_project_users.is_admin = true'
+    if search_for_project_admins || search_for_project_researchers
+      if search_for_project_admins
+        user_type_conditions << 'admin_project_users.is_admin = true'
+      end
+
+      if search_for_project_researchers
+        user_type_conditions << 'admin_project_users.is_researcher = true'
+      end
+
+      joins << "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
     end
 
-    if params[:project_researcher].to_s.length > 0
-      user_type_conditions << 'admin_project_users.is_researcher = true'
+    search_scope = policy_scope(User)
+    if user_type_conditions.length > 0
+      user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
+      join_string = joins.join(" ")
+      search_scope = search_scope.joins(join_string).where(user_types).distinct()
     end
 
-    user_types = user_type_conditions.map { |uc| uc }.join(" OR ")
-
-    join_string =
-      "LEFT JOIN roles_users ON users.id = roles_users.user_id " +
-      "LEFT JOIN admin_project_users ON users.id = admin_project_users.user_id "
-
-    search_scope = policy_scope(User).joins(join_string).where(user_types).distinct()
     @users = search_scope.search(params[:search], params[:page], nil)
     respond_to do |format|
       format.html # index.html.erb
