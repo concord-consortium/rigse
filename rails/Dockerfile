@@ -83,9 +83,8 @@ ENV RAILS_ENV=production
 # otherwise somewhere in the initializers it tries to connect to the database which will fail
 ENV DOCKER_NO_INIT_ON_PRECOMPILE=true
 # Seems like the above doesn't work anymore: https://github.com/rails/rails/issues/32947
-# Instead we need to fake some ENV Vars for the precompile ...
 # Run precompile rake task in order to at least generate the manifest file
-RUN RAILS_SECRET_KEY_BASE=dummy bundle exec rake assets:precompile
+RUN ENV["RAILS_SECRET_KEY_BASE"]=dummy bundle exec rake assets:precompile
 
 # This font is used by imagemagick to add attribution to the images in the image library
 # the DejaVu-Sans font is provided by the docker image this one is built on
