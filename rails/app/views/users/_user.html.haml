@@ -1,4 +1,3 @@
-- imported_user = user.imported_user
 %div{:id=>"action_menu_wrapper"}
   %div{ :id => dom_id_for(user, :item), :class => 'item' }
     %div.action_menu{:style=>"margin-bottom: 5px !important"}
@@ -6,15 +5,15 @@
         =link_to user.name, user
         - if controller.action_name == "index"
           %span= "(id: #{user.id}, username: #{user.login}, email: #{maybe_redact_student_email(user.email)})"
-          - if user.primary_account
+          - if user.primary_account_id
             %span.badge= "Secondary Account"
-        - if imported_user
-          %span.tiny{:style=>"font-weight:normal"}
-            (Imported)
         - if controller.action_name == "index"
           - if is_student_email?(user.email)
             %span.badge= "Student"
         - if controller.action_name == "show"
+          - if user.imported_user
+            %span.tiny{:style=>"font-weight:normal"}
+              (Imported)
           - if user.portal_teacher
             %span.badge= "Teacher"
           - if user.portal_student
@@ -84,5 +83,5 @@
             Secondary account for: #{user.primary_account.name} (id=#{user.primary_account.id}}
         %li
           Status: #{user.state}
-          - if imported_user
-            = "(#{imported_user.is_verified ? "verified" : "not-verfied"})"
+          - if user.imported_user
+            = "(#{user.imported_user.is_verified ? "verified" : "not-verified"})"
