@@ -5,8 +5,8 @@ RailsPortal::Application.configure do
   # in the future when you upgrade to a newer version of Cucumber.
 
   puts "ALL ENV: #{ENV.inspect}"
-  # # This is not the Rails 8 way, but we want to be able to set the secret key base via an environment variable.
-  # config.secret_key_base = ENV["RAILS_SECRET_KEY_BASE"] || raise("Missing RAILS_SECRET_KEY_BASE")
+  config.secret_key_base = "dummy"
+
 
   # IMPORTANT: Setting config.cache_classes to false is known to
   # break Cucumber's use_transactional_fixtures method.

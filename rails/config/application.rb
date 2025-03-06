@@ -146,11 +146,8 @@ module RailsPortal
 
     # pre-compile any fonts in the assets/ directory as well
     config.assets.precompile << %w( *.svg *.eot *.woff *.ttf )
+    config.assets.initialize_on_precompile = false
 
-    # do not initialize on precompile so that the Dockerfile can run the precompile
-    if BoolEnv['DOCKER_NO_INIT_ON_PRECOMPILE']
-      config.assets.initialize_on_precompile = false
-    end
 
     # use json format for serilized cookies
     config.action_dispatch.cookies_serializer = :hybrid
