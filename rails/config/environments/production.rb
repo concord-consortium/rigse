@@ -91,8 +91,6 @@ RailsPortal::Application.configure do
   # config.action_mailer.deliver_later_queue_name = :new_queue_name
   # 2. This only is valid for PostgreSQL
   # config.active_record.dump_schemas = :all
-  # 3. Commented out because this needs Ruby 2.4 to work
-  # ActiveSupport.to_time_preserves_timezone = false
   #
   # END OF RAILS 5 OPTIONS
 

@@ -17,7 +17,7 @@ RSpec.describe Admin::AuthoringSitesController, type: :controller do
   end
 
   before(:each) do
-    sign_in admin_user
+    warden.set_user(admin_user, scope: :user)
   end
 
   describe "GET new" do

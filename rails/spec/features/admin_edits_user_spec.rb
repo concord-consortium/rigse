@@ -202,7 +202,6 @@ RSpec.feature 'Admin goes to users page', :WebDriver => true do
     click_link("edit")
   end
 
-  # RAILS-UPGRADE-TODO: Reinstate this after finished upgrading Rails to v8. It's passing in dev but not in CI.
   def add_teacher_to_cohort(cohort)
     check(cohort)
     click_button('Save')
