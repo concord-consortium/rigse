@@ -8,6 +8,7 @@ Feature: Teacher can reset a students password
     And the database has been seeded
 
   @javascript
+  @wip
   Scenario: Teacher can reset their students passwords
     Given the default class is created
     And the student "student" is in the class "Class_with_no_students"

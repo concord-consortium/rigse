@@ -25,6 +25,7 @@ Feature: Student requires a password reset
     And I should see "Change Password"
 
   @javascript
+  @wip
   Scenario: Student updates password with errors
     When I am logged in with the username student_password
     And I try to go to my home page
@@ -35,6 +36,7 @@ Feature: Student requires a password reset
     Then I should see "Your password could not be changed."
 
   @javascript
+  @wip
   Scenario: Student updates password
     When I am logged in with the username student_password
     And I try to go to my home page

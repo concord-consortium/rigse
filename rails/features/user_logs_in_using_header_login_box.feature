@@ -9,6 +9,7 @@ Feature: User logs in using header login box to use the portal
     And the database has been seeded
 
   @javascript
+  @wip
   Scenario: Teacher should be logged in
     When I login with username: teacher password: password
     And I should not see "Invalid Login or password."

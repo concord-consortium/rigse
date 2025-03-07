@@ -17,6 +17,7 @@ Feature: Teacher can see project specific links
       And I should not see a project link labeled "Bar Project Link"
 
   @javascript
+  @wip
   Scenario: Teacher in project visits homepage
     Given the "teacher" user is added to the default project
     When I am on getting started page

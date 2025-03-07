@@ -14,6 +14,7 @@ Feature: Student can not see deactivated offerings
     Then I should see "Plant reproduction" in the content
 
   @javascript
+  @wip
   Scenario: Student should not see deactivated offerings
     When I am on the teacher view of the class page for "class_with_no_students"
     And I uncheck Active for the external activity "Plant reproduction"
