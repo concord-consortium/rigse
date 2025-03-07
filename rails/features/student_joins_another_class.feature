@@ -9,7 +9,7 @@ Feature: Student joins another class
     And the database has been seeded
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Student joins another class
     And the class "My Class" has the class word "word"
     And the student "student" belongs to class "Class_with_no_students"
@@ -41,7 +41,7 @@ Feature: Student joins another class
     Then the student "student" should belong to the class "My Class"
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: With the default class enabled, student joins another class
     Given the option to allow default classes is enabled
     And the class "My Class" has the class word "word"

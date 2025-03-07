@@ -11,7 +11,7 @@ Feature: Admin switches to a different user
     And a student user named "Joe Switchuser" exists
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin switches to student
     When I am logged in with the username j_admin
     And I am on the user list page
@@ -22,7 +22,7 @@ Feature: Admin switches to a different user
     And I should see "Joe Switchuser"
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin switches back to admin
     When I am logged in with the username j_admin
     And I am on the user list page

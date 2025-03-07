@@ -16,7 +16,7 @@ Feature: Admin can add, edit and remove notices
     Then I should see "Notice for users"
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin can edit notices
     Given a notice "Notice for admin"
     And am on the site notices index page
@@ -51,7 +51,7 @@ Feature: Admin can add, edit and remove notices
     Then I should be on "the site notices index page"
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin can cancel notice editing
     Given a notice "Notice for admin"
     And am on the site notices index page

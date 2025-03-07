@@ -38,14 +38,14 @@ Feature: Admin can work with materials collections
 
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin views existing Materials Collection via the show link
     When I am on the materials collection index page
     And I click on the id link for materials collection "Collection 4"
     Then I should be on the show page for materials collection "Collection 4"
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin edits existing Materials Collection
     When I am on the materials collection index page
     And I click on the edit link for materials collection "Collection 4"
@@ -80,7 +80,7 @@ Feature: Admin can work with materials collections
 
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin deletes existing Materials Collection
     When I am on the materials collection index page
     And I click on the delete link for materials collection "Collection 2"
@@ -89,7 +89,7 @@ Feature: Admin can work with materials collections
     Then I should not see "Collection 2"
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin cancels deleting existing Materials Collection
     When I am on the materials collection index page
     And I click on the delete link for materials collection "Collection 1"

@@ -9,7 +9,7 @@ Feature: Teacher filters instructional materials
     And I am logged in with the username admin
 
   @javascript @search
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Searching Tagged materials
     # the default data includes grade levels and many tags already
     Given the following Admin::tag records exist:
@@ -68,7 +68,7 @@ Feature: Teacher filters instructional materials
    And I should not see "My grade 7 Science Activity"
 
   @javascript @search
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Searching Materials tagged with Sensors
     Given the following Admin::tag records exist:
       | scope         | tag         |

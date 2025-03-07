@@ -85,7 +85,7 @@ Feature: User works with materials bin
     And 2 materials should be visible
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: User changes category
     When I visit the route /foo-bar
     And I click category "Cat B"
@@ -99,7 +99,7 @@ Feature: User works with materials bin
     Then category "Cat C" should be visible
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Author can see his own materials
     Given I am logged in with the username author
     When I visit the route /foo-bar
@@ -108,7 +108,7 @@ Feature: User works with materials bin
     And some materials should be visible
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: User can see materials grouped by authors
     Given I am logged in with the username teacher
     And user "foobar" authored unofficial material "ext act"

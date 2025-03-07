@@ -43,7 +43,7 @@ Feature: A manager updates account information for another user
       | John Nash     | teacher   | buzbixbez    |
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Managers can activate users
     When there is an unactivated user named "justsignedup"
     And I am logged in with the username mymanager

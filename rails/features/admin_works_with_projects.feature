@@ -9,7 +9,7 @@ Feature: Admin can work with projects
     And the database has been seeded
     And I am logged in with the username admin
 
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin accesses projects
     Given the default projects exist using factories
     When I am on the projects index page
@@ -20,7 +20,7 @@ Feature: Admin can work with projects
     And I should see "project 3"
     And I should see "create Project"
 
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Admin creates a new project
     When I am on the projects index page
     And I click "create Project"

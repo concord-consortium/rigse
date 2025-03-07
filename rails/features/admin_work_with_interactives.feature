@@ -34,7 +34,7 @@ Feature: Admin can work with interactives
   # This is loading the materials info I think because
   # related_materials_wrapper seems to be added to to the interactives show page
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Tagging Interactives
     Given the following Admin::tag records exist:
       | scope         | tag      |

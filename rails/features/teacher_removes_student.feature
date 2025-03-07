@@ -10,7 +10,7 @@ Feature: Teacher removes a student
 
 
   @javascript
-  @wip
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Teacher removes a student
     When the student "student" belongs to class "Class_with_no_students"
     And I login with username: teacher password: password
