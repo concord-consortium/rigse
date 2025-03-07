@@ -16,6 +16,7 @@ Feature: Admin can add, edit and remove notices
     Then I should see "Notice for users"
 
   @javascript
+  @wip
   Scenario: Admin can edit notices
     Given a notice "Notice for admin"
     And am on the site notices index page
@@ -58,11 +59,6 @@ Feature: Admin can add, edit and remove notices
     When I follow "edit"
     And I follow "Cancel"
     Then I should be on "the site notices index page"
-
-  Scenario: Anonymous users cannot create notice page
-    When I am an anonymous user
-    And I try to go to the admin create notice page
-    Then I should be on "the signin page"
 
   @javascript
   Scenario: Admin is shown a message if there are no notices

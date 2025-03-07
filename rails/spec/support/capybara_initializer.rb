@@ -54,6 +54,7 @@ class CapybaraInitializer
     options.add_argument("--user-data-dir=#{unique_user_data_dir}")
     options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1440,900")
+    options.add_argument('--disable-features=PermissionsPolicy')
     if headless
       options.add_argument("--headless=new")
     end
