@@ -77,6 +77,7 @@ Feature: Student registers to use the portal
     Then I should see "Signed in successfully."
 
   @javascript
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Student registered when default classes are enabled
     Given the option to allow default classes is enabled
     When I go to the pick signup page

@@ -1,8 +1,4 @@
 require File.expand_path("../../config/environment", __FILE__)
-require 'factory_bot'
-FactoryBot.definition_file_paths = %w(factories)
-
-require 'webdrivers'
 require 'rspec/rails'
 require 'rspec/mocks'
 require 'capybara/rspec'
@@ -86,9 +82,6 @@ end
 Mysql2::Client.prepend(MutexLockedQuerying)
 
 RSpec.configure do |config|
-  config.include FactoryBot::Syntax::Methods
-  config.include Rails.application.routes.url_helpers
-
   config.mock_with :rspec
 
   config.around(:example, type: :feature) do |example|
@@ -126,6 +119,6 @@ rescue => exception
   exit 1
 end
 
-# Prevent Factory definitions from being loaded multiple times
-# But allow access to cucumber specs and db prep
-@defs_loaded ||= FactoryBot.find_definitions and true
+# # Prevent Factory definitions from being loaded multiple times
+# # But allow access to cucumber specs and db prep
+# @defs_loaded ||= FactoryBot.find_definitions and true

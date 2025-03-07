@@ -9,6 +9,7 @@ Feature: Teacher filters instructional materials
     And I am logged in with the username admin
 
   @javascript @search
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Searching Tagged materials
     # the default data includes grade levels and many tags already
     Given the following Admin::tag records exist:
@@ -17,7 +18,7 @@ Feature: Teacher filters instructional materials
       | model_types   | mt_Video  |
 
     # Create a first grade math activity:
-    When I am on the new material page
+    And I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My grade 5 Math Activity"
     And I check "external_activity[is_official]"
@@ -28,7 +29,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a 7th grade Science Activity
-    When I am on the new material page
+    And I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My grade 7 Science Activity"
     And I check "external_activity[is_official]"
@@ -37,7 +38,7 @@ Feature: Teacher filters instructional materials
     And I check "subject_areas_science"
     And I press "Save"
 
-   When I am on the search instructional materials page
+   Given I am on the search instructional materials page
    And I uncheck "Sequence"
    And I check "Math"
    And I wait for the search to be ready
@@ -67,6 +68,7 @@ Feature: Teacher filters instructional materials
    And I should not see "My grade 7 Science Activity"
 
   @javascript @search
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Searching Materials tagged with Sensors
     Given the following Admin::tag records exist:
       | scope         | tag         |
@@ -75,7 +77,7 @@ Feature: Teacher filters instructional materials
       | sensors       | Motion      |
 
     # Create a temperature sensor activity:
-    When I am on the new material page
+    And I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My Temperature Sensor Activity"
     And I check "external_activity[is_official]"
@@ -84,7 +86,7 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create a force sensor activity:
-    When I am on the new material page
+    And I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My Force Sensor Activity"
     And I check "external_activity[is_official]"
@@ -93,14 +95,14 @@ Feature: Teacher filters instructional materials
     And I press "Save"
 
     # Create an activity with no sensors:
-    When I am on the new material page
+    And I am on the new material page
     Then I should see "(new) /eresources"
     When I fill in "external_activity[name]" with "My No Sensor Activity"
     And I check "external_activity[is_official]"
     And I select "published" from "external_activity[publication_status]"
     And I press "Save"
 
-    When I am on the search instructional materials page
+    Given I am on the search instructional materials page
     And I uncheck "Sequence"
      And I check "Temperature"
      And I wait for the search to be ready

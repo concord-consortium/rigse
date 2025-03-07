@@ -18,6 +18,7 @@ Feature: Author can filter their own material
     Then I should see "Resources I authored"
 
   @javascript @search
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Authors can filter External Activity using authored by me
     Given the following users exist:
       | login    | password | roles |

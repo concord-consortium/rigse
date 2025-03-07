@@ -47,7 +47,7 @@ RUN apk add \
   chromium-chromedriver \
   gcompat glib nss libxcb libgcc
 
-ENV APP_HOME /rigse/
+ENV APP_HOME=/rigse/
 
 RUN adduser -D -u 13000 app
 

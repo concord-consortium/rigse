@@ -49,17 +49,16 @@ class CapybaraInitializer
     unique_user_data_dir = "/dev/shm/chrome-profile-#{Process.pid}"
     FileUtils.mkdir_p(unique_user_data_dir)
     FileUtils.chmod(0o777, unique_user_data_dir)
-    chrome_options.each { |opt| options.add_argument(opt) }
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--user-data-dir=#{unique_user_data_dir}")
-    options
-  end
-
-  def chrome_options
-    %w(no-sandbox disable-gpu window-size=1440,900).tap do |a|
-      a << 'headless' if headless?
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1440,900")
+    options.add_argument('--disable-features=PermissionsPolicy')
+    if headless
+      options.add_argument("--headless=new")
     end
+    options
   end
 
   def docker?

@@ -213,13 +213,6 @@ students:
     uuid: 00000000-0000-0000-0000-000000000037
 
   student_9:
-    login: Switchuser
-    first_name: Joe
-    last_name: Switchuser
-    email: student@mailinator8.com
-    uuid: 00000000-0000-0000-0000-000000000038
-
-  student_10:
     login: davy
     first_name: Davy
     last_name: Crocket

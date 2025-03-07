@@ -64,12 +64,12 @@ WORKDIR /usr/local/bin
 RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/db049716e42767d39961e95dd9696103dca813f1/wait-for-it.sh && \
     chmod +x wait-for-it.sh
 
-ENV APP_HOME /rigse
+ENV APP_HOME=/rigse
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
 # use a mounted volume so the gems don't need to be rebundled each time
-ENV BUNDLE_PATH /bundle
+ENV BUNDLE_PATH=/bundle
 
 ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
   BUNDLE_JOBS=2 \

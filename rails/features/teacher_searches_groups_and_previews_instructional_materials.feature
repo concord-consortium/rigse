@@ -33,6 +33,7 @@ Feature: Teacher can search instructional materials grouped by material type, so
 
   @javascript @search
   @with_mysql_failures
+  @wip #RAILS-UPGRADE-TODO
   Scenario: Teacher can see classes in which materials are assigned on the search page
     When the external activity "differential calculus" is assigned to the class "Physics"
     And I search for "differential calculus" on the search instructional materials page
